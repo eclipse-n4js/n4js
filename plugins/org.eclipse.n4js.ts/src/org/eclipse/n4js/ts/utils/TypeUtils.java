@@ -539,56 +539,75 @@ public class TypeUtils {
 	 * support structural typing).
 	 * </ol>
 	 *
+	 * @param targetAlreadyCopied
+	 *            if <code>true</code>, will try(!) to change the given <code>target</code> in place without copying it.
+	 *            IMPORTANT: because in-place modification cannot be guaranteed, the client must still use the returned
+	 *            reference instead of relying on the passed-in reference being updated!
+	 *
 	 * @see #concatTypingStrategies(TypingStrategy, TypingStrategy)
 	 */
-	public static TypeArgument mergeTypeModifiers(TypeArgument target, TypeRef source) {
+	public static TypeArgument mergeTypeModifiers(TypeArgument target, TypeRef source, boolean targetAlreadyCopied) {
 		if (target instanceof Wildcard) {
-			return mergeTypeModifiers((Wildcard) target, source);
+			return mergeTypeModifiers((Wildcard) target, source, targetAlreadyCopied);
 		} else {
-			return mergeTypeModifiers((TypeRef) target, source);
+			return mergeTypeModifiers((TypeRef) target, source, targetAlreadyCopied);
 		}
 	}
 
-	/** Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef)}, but for the special case of {@link Wildcard}s. */
-	public static Wildcard mergeTypeModifiers(Wildcard target, TypeRef source) {
+	/**
+	 * Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef, boolean)}, but for the special case of
+	 * {@link Wildcard}s.
+	 */
+	public static Wildcard mergeTypeModifiers(Wildcard target, TypeRef source, boolean targetAlreadyCopied) {
 		final TypeRef ub = target.getDeclaredOrImplicitUpperBound();
 		if (ub != null) {
-			final TypeRef ubMerged = mergeTypeModifiers(ub, source);
+			final TypeRef ubMerged = mergeTypeModifiers(ub, source, false);
 			if (ubMerged != ub) {
-				target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+				if (!targetAlreadyCopied) {
+					target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+				}
 				target.setDeclaredUpperBound(ubMerged);
 			}
 		}
 		return target;
 	}
 
-	/** Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef)}, but for the special case of {@link TypeRef}s. */
-	public static TypeRef mergeTypeModifiers(TypeRef target, TypeRef source) {
+	/**
+	 * Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef, boolean)}, but for the special case of
+	 * {@link TypeRef}s.
+	 */
+	public static TypeRef mergeTypeModifiers(TypeRef target, TypeRef source, boolean targetAlreadyCopied) {
 		if (target instanceof ExistentialTypeRef) {
 			final Wildcard wc = ((ExistentialTypeRef) target).getWildcard();
 			if (wc != null) {
-				final Wildcard wcMerged = mergeTypeModifiers(wc, source);
+				final Wildcard wcMerged = mergeTypeModifiers(wc, source, false);
 				if (wcMerged != wc) {
-					target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+					if (!targetAlreadyCopied) {
+						target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+					}
 					((ExistentialTypeRef) target).setWildcard(wcMerged);
 				}
 			}
 			return target;
 		} else {
 			TypeRef result = target;
-			result = mergeTypingStrategies(result, source.getTypingStrategy());
-			result = mergeDynamicModifiers(result, source.isDynamic(), result != target);
+			result = mergeTypingStrategies(result, source.getTypingStrategy(), targetAlreadyCopied);
+			result = mergeDynamicModifiers(result, source.isDynamic(), targetAlreadyCopied || result != target);
 			return result;
 		}
 	}
 
 	// must adhere to the on-demand copy semantics specified in API doc of #mergeTypeModifiers(TypeRef, ...)
-	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source) {
+	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source, boolean targetAlreadyCopied) {
 		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source);
 		if (combined != target.getTypingStrategy()) {
 			if (target instanceof ParameterizedTypeRef && !(target instanceof FunctionTypeRef)) {
-				final ParameterizedTypeRefStructural ptrs = copyToParameterizedTypeRefStructural(
-						(ParameterizedTypeRef) target);
+				final ParameterizedTypeRefStructural ptrs;
+				if (!targetAlreadyCopied || !(target instanceof ParameterizedTypeRefStructural)) {
+					ptrs = copyToParameterizedTypeRefStructural((ParameterizedTypeRef) target);
+				} else {
+					ptrs = (ParameterizedTypeRefStructural) target;
+				}
 				ptrs.setTypingStrategy(combined);
 				target = ptrs;
 			} else {

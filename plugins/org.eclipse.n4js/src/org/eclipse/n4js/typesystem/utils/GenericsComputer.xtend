@@ -153,7 +153,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			val actualTypeArgCasted = actualTypeArg as TypeRef; // otherwise #hasSubstitutionFor() would not have returned true
 			val fromEnv = G.environment.get(actualTypeArgCasted.declaredType);
 			actualTypeArg = if(fromEnv instanceof TypeRef) {
-				TypeUtils.mergeTypeModifiers(fromEnv, actualTypeArgCasted)
+				TypeUtils.mergeTypeModifiers(fromEnv, actualTypeArgCasted, false)
 			} else {
 				fromEnv
 			};

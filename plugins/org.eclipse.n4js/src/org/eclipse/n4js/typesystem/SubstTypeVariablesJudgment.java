@@ -219,8 +219,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				if (replacementFromEnvUntyped instanceof TypeArgument) {
 					// we have a single substitution!
 					final TypeArgument replacementFromEnv = (TypeArgument) replacementFromEnvUntyped;
-					final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeRef, typeVar,
-							replacementFromEnv);
+					final TypeRef replacementPrepared = prepareTypeVariableReplacement(replacementFromEnv,
+							typeRef, typeVar);
 					result = replacementPrepared;
 				} else if (replacementFromEnvUntyped instanceof List<?>) {
 					// we have multiple substitutions!
@@ -231,8 +231,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					final List<TypeRef> l = CollectionLiterals.newArrayList();
 					for (int i = 0; i < l_raw.size(); i++) {
 						final TypeArgument replacementFromEnv = l_raw.get(i);
-						final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeRef, typeVar,
-								replacementFromEnv);
+						final TypeRef replacementPrepared = prepareTypeVariableReplacement(replacementFromEnv,
+								typeRef, typeVar);
 						l.add(replacementPrepared);
 					}
 					if (typeVar.isDeclaredCovariant()) {
@@ -253,21 +253,24 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			return result;
 		}
 
-		private TypeRef prepareTypeVariableReplacement(ParameterizedTypeRef originalTypeRef, TypeVariable typeVar,
-				TypeArgument replacementArg) {
+		private TypeRef prepareTypeVariableReplacement(TypeArgument replacementArg,
+				ParameterizedTypeRef originalTypeRef, TypeVariable typeVar) {
+
+			final TypeArgument replacementArgInitial = replacementArg;
 
 			// merge type modifiers
-			replacementArg = TypeUtils.mergeTypeModifiers(replacementArg, originalTypeRef);
+			replacementArg = TypeUtils.mergeTypeModifiers(replacementArg, originalTypeRef, false);
 			if (replacementArg instanceof TypeRef) {
-				final TypeRef aliasTypeRef = ((TypeRef) replacementArg).getOriginalAliasTypeRef();
-				if (aliasTypeRef != null) {
-					final TypeRef aliasTypeRefMerged = TypeUtils.mergeTypeModifiers(aliasTypeRef, originalTypeRef);
-					if (aliasTypeRefMerged != aliasTypeRef
-							&& aliasTypeRefMerged instanceof ParameterizedTypeRef) {
-						final ParameterizedTypeRef aliasTypeRefMergedCasted = (ParameterizedTypeRef) aliasTypeRefMerged;
-						replacementArg = TypeUtils.copyPartial(replacementArg,
-								TypeRefsPackage.Literals.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF);
-						((TypeRef) replacementArg).setOriginalAliasTypeRef(aliasTypeRefMergedCasted);
+				final TypeRef aliasRef = ((TypeRef) replacementArg).getOriginalAliasTypeRef();
+				if (aliasRef != null) {
+					final TypeRef aliasRefMerged = TypeUtils.mergeTypeModifiers(aliasRef, originalTypeRef, false);
+					if (aliasRefMerged != aliasRef && aliasRefMerged instanceof ParameterizedTypeRef) {
+						final ParameterizedTypeRef aliasRefMergedCasted = (ParameterizedTypeRef) aliasRefMerged;
+						if (replacementArg == replacementArgInitial) {
+							replacementArg = TypeUtils.copyPartial(replacementArg,
+									TypeRefsPackage.Literals.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF);
+						}
+						((TypeRef) replacementArg).setOriginalAliasTypeRef(aliasRefMergedCasted);
 					}
 				}
 			}

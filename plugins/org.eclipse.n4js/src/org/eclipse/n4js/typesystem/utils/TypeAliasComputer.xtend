@@ -50,7 +50,7 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 				originalAliasTypeRef = TypeUtils.copy(typeRef as ParameterizedTypeRef);
 			}
 			resolvedTypeRef.originalAliasTypeRef = originalAliasTypeRef;
-			resolvedTypeRef = TypeUtils.mergeTypeModifiers(resolvedTypeRef, currTypeRef);
+			resolvedTypeRef = TypeUtils.mergeTypeModifiers(resolvedTypeRef, currTypeRef, true);
 
 			// if we have a parameterized type reference to a generic type alias, we have to substitute
 			// to not lose the bindings defined by the type arguments in 'typeRef':
