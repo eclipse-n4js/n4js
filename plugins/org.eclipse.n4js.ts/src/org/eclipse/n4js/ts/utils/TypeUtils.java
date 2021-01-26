@@ -1071,33 +1071,38 @@ public class TypeUtils {
 	 * the given typeRef references a type variable or contains a reference to a type variable.
 	 */
 	public static boolean isOrContainsRefToTypeVar(EObject obj, TypeVariable... typeVars) {
-		return isOrContainsRefToTypeVar(obj, false, typeVars);
+		return isOrContainsRefToTypeVar(obj, false, typeVars, new RecursionGuard<>());
 	}
 
 	/**
 	 * Like {@link #isOrContainsRefToTypeVar(EObject, TypeVariable...)}, but checks for inference variables.
 	 */
 	public static boolean isOrContainsRefToInfVar(EObject obj, InferenceVariable... infVars) {
-		return isOrContainsRefToTypeVar(obj, true, infVars);
+		return isOrContainsRefToTypeVar(obj, true, infVars, new RecursionGuard<>());
 	}
 
-	private static boolean isOrContainsRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable... typeVars) {
+	private static boolean isOrContainsRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable[] typeVars,
+			RecursionGuard<EObject> guard) {
 		if (obj == null)
 			return false;
-		if (isRefToTypeVar(obj, checkForInfVars, typeVars))
+		if (!guard.tryNext(obj)) {
+			return false;
+		}
+		if (isRefToTypeVar(obj, checkForInfVars, typeVars, guard))
 			return true;
 		if (obj instanceof ExistentialTypeRef) {
-			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars)) {
+			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars, guard)) {
 				return true;
 			}
 		}
 		final Iterator<EObject> iter = obj.eAllContents();
 		while (iter.hasNext()) {
 			EObject curr = iter.next();
-			if (isRefToTypeVar(curr, checkForInfVars, typeVars))
+			if (isRefToTypeVar(curr, checkForInfVars, typeVars, guard))
 				return true;
 			if (curr instanceof ExistentialTypeRef) {
-				if (isOrContainsRefToTypeVar(((ExistentialTypeRef) curr).getWildcard(), checkForInfVars, typeVars)) {
+				if (isOrContainsRefToTypeVar(((ExistentialTypeRef) curr).getWildcard(), checkForInfVars, typeVars,
+						guard)) {
 					return true;
 				}
 			}
@@ -1105,11 +1110,13 @@ public class TypeUtils {
 		return false;
 	}
 
-	private static boolean isRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable... typeVars) {
+	private static boolean isRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable[] typeVars,
+			RecursionGuard<EObject> guard) {
 		// special case: for StructuralTypeRef we have to consider the TStructuralType as well
 		if (obj instanceof StructuralTypeRef
 				// FIXME should better use #getStructuralMembers() in next line???
-				&& isOrContainsRefToTypeVar(((StructuralTypeRef) obj).getStructuralType(), checkForInfVars, typeVars))
+				&& isOrContainsRefToTypeVar(((StructuralTypeRef) obj).getStructuralType(), checkForInfVars, typeVars,
+						guard))
 			return true;
 		final Class<?> expectedType = checkForInfVars ? InferenceVariable.class : TypeVariable.class;
 		return obj instanceof TypeRef
@@ -1209,11 +1216,12 @@ public class TypeUtils {
 	 */
 	public static Set<TypeVariable> getTypeVarsInStructMembers(StructuralTypeRef typeRef) {
 		final Set<TypeVariable> result = new HashSet<>();
-		primCollectTypeVarsInStructMembers(typeRef, result);
+		primCollectTypeVarsInStructMembers(typeRef, result, new RecursionGuard<>());
 		return result;
 	}
 
-	private static void primCollectTypeVarsInStructMembers(StructuralTypeRef typeRef, Set<TypeVariable> addHere) {
+	private static void primCollectTypeVarsInStructMembers(StructuralTypeRef typeRef, Set<TypeVariable> addHere,
+			RecursionGuard<Object> guard) {
 		typeRef.getStructuralMembers().forEach(currM -> {
 			currM.eAllContents().forEachRemaining(currObj -> {
 				if (currObj instanceof ParameterizedTypeRef
@@ -1222,7 +1230,9 @@ public class TypeUtils {
 					addHere.add(tv);
 				}
 				if (currObj instanceof StructuralTypeRef) {
-					primCollectTypeVarsInStructMembers((StructuralTypeRef) currObj, addHere);
+					if (guard.tryNext(currObj)) {
+						primCollectTypeVarsInStructMembers((StructuralTypeRef) currObj, addHere, guard);
+					}
 				}
 			});
 		});
