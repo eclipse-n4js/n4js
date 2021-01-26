@@ -200,7 +200,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1_5 = (Group)cAlternatives_1.eContents().get(5);
 		private final Action cN4TypeAliasDeclarationAnnotationListAction_1_5_0 = (Action)cGroup_1_5.eContents().get(0);
 		private final Assignment cDeclaredModifiersAssignment_1_5_1 = (Assignment)cGroup_1_5.eContents().get(1);
-		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_1_5_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_5_1.eContents().get(0);
+		private final RuleCall cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_5_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_5_1.eContents().get(0);
 		private final Keyword cTypeKeyword_1_5_2 = (Keyword)cGroup_1_5.eContents().get(2);
 		private final Assignment cNameAssignment_1_5_3 = (Assignment)cGroup_1_5.eContents().get(3);
 		private final RuleCall cNameBindingIdentifierParserRuleCall_1_5_3_0 = (RuleCall)cNameAssignment_1_5_3.eContents().get(0);
@@ -236,7 +236,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	'{'
 		//	literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*
 		//	'}'
-		//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
+		//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 		//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 		//	'='
 		//	actualTypeRef=TypeRef);
@@ -252,8 +252,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield=false> VersionDeclaration? TypeVariables?
 		//InterfaceExtendsList?) Members<Yield=false> | {N4EnumDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
 		//'enum' name=BindingIdentifier<Yield=false> VersionDeclaration? '{' literals+=N4EnumLiteral (','
-		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'type'
-		//name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef)
+		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
+		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
+		//actualTypeRef=TypeRef)
 		public Group getGroup() { return cGroup; }
 		
 		//AnnotationList
@@ -269,7 +270,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//TypeVariables? InterfaceExtendsList?) Members<Yield=false> | {N4EnumDeclaration.annotationList=current}
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield=false> VersionDeclaration? '{'
 		//literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
-		//declaredModifiers+=N4Modifier* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef)
+		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
+		//actualTypeRef=TypeRef)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{ExportDeclaration.annotationList=current} ExportDeclarationImpl
@@ -459,18 +461,18 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_1_4_8() { return cRightCurlyBracketKeyword_1_4_8; }
 		
-		//{N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'type'
+		//{N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst* 'type'
 		//name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef
 		public Group getGroup_1_5() { return cGroup_1_5; }
 		
 		//{N4TypeAliasDeclaration.annotationList=current}
 		public Action getN4TypeAliasDeclarationAnnotationListAction_1_5_0() { return cN4TypeAliasDeclarationAnnotationListAction_1_5_0; }
 		
-		//declaredModifiers+=N4Modifier*
+		//declaredModifiers+=N4ModifierWithoutConst*
 		public Assignment getDeclaredModifiersAssignment_1_5_1() { return cDeclaredModifiersAssignment_1_5_1; }
 		
-		//N4Modifier
-		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_5_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_5_1_0; }
+		//N4ModifierWithoutConst
+		public RuleCall getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_5_1_0() { return cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_5_1_0; }
 		
 		//'type'
 		public Keyword getTypeKeyword_1_5_2() { return cTypeKeyword_1_5_2; }
@@ -848,7 +850,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1_4 = (Group)cAlternatives_1.eContents().get(4);
 		private final Action cN4TypeAliasDeclarationAnnotationListAction_1_4_0 = (Action)cGroup_1_4.eContents().get(0);
 		private final Assignment cDeclaredModifiersAssignment_1_4_1 = (Assignment)cGroup_1_4.eContents().get(1);
-		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_1_4_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_4_1.eContents().get(0);
+		private final RuleCall cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_4_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_4_1.eContents().get(0);
 		private final Keyword cTypeKeyword_1_4_2 = (Keyword)cGroup_1_4.eContents().get(2);
 		private final Assignment cNameAssignment_1_4_3 = (Assignment)cGroup_1_4.eContents().get(3);
 		private final RuleCall cNameBindingIdentifierParserRuleCall_1_4_3_0 = (RuleCall)cNameAssignment_1_4_3.eContents().get(0);
@@ -881,7 +883,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	'{'
 		//	literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*
 		//	'}'
-		//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
+		//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 		//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 		//	'='
 		//	actualTypeRef=TypeRef);
@@ -897,8 +899,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredModifiers+=N4Modifier* 'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
 		//TypeVariables? InterfaceExtendsList?) Members<Yield> | {N4EnumDeclaration.annotationList=current}
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield> '{' literals+=N4EnumLiteral (','
-		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'type'
-		//name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef)
+		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
+		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
+		//actualTypeRef=TypeRef)
 		public Group getGroup() { return cGroup; }
 		
 		//AnnotationList
@@ -914,8 +917,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredModifiers+=N4Modifier* 'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
 		//TypeVariables? InterfaceExtendsList?) Members<Yield> | {N4EnumDeclaration.annotationList=current}
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield> '{' literals+=N4EnumLiteral (','
-		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'type'
-		//name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef)
+		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
+		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
+		//actualTypeRef=TypeRef)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{FunctionDeclaration.annotationList=current} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak
@@ -1110,18 +1114,18 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_1_3_7() { return cRightCurlyBracketKeyword_1_3_7; }
 		
-		//{N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier* 'type'
+		//{N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst* 'type'
 		//name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef
 		public Group getGroup_1_4() { return cGroup_1_4; }
 		
 		//{N4TypeAliasDeclaration.annotationList=current}
 		public Action getN4TypeAliasDeclarationAnnotationListAction_1_4_0() { return cN4TypeAliasDeclarationAnnotationListAction_1_4_0; }
 		
-		//declaredModifiers+=N4Modifier*
+		//declaredModifiers+=N4ModifierWithoutConst*
 		public Assignment getDeclaredModifiersAssignment_1_4_1() { return cDeclaredModifiersAssignment_1_4_1; }
 		
-		//N4Modifier
-		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_4_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_4_1_0; }
+		//N4ModifierWithoutConst
+		public RuleCall getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_4_1_0() { return cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_4_1_0; }
 		
 		//'type'
 		public Keyword getTypeKeyword_1_4_2() { return cTypeKeyword_1_4_2; }
@@ -8482,7 +8486,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cN4TypeAliasDeclarationAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Assignment cDeclaredModifiersAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0 = (RuleCall)cDeclaredModifiersAssignment_0_0_1.eContents().get(0);
+		private final RuleCall cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0 = (RuleCall)cDeclaredModifiersAssignment_0_0_1.eContents().get(0);
 		private final Keyword cTypeKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
 		private final Assignment cNameAssignment_0_0_3 = (Assignment)cGroup_0_0.eContents().get(3);
 		private final RuleCall cNameBindingIdentifierParserRuleCall_0_0_3_0 = (RuleCall)cNameAssignment_0_0_3.eContents().get(0);
@@ -8492,30 +8496,30 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cActualTypeRefTypeRefParserRuleCall_3_0 = (RuleCall)cActualTypeRefAssignment_3.eContents().get(0);
 		
 		//N4TypeAliasDeclaration <Yield>:
-		//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4Modifier*
+		//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst*
 		//	'type' name=BindingIdentifier<Yield>?) TypeVariables?
 		//	'='
 		//	actualTypeRef=TypeRef;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4Modifier* 'type' name=BindingIdentifier<Yield>?) TypeVariables? '='
-		//actualTypeRef=TypeRef
+		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield>?)
+		//TypeVariables? '=' actualTypeRef=TypeRef
 		public Group getGroup() { return cGroup; }
 		
-		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4Modifier* 'type' name=BindingIdentifier<Yield>?)
+		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield>?)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//({N4TypeAliasDeclaration} declaredModifiers+=N4Modifier* 'type' name=BindingIdentifier<Yield>?)
+		//({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield>?)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4TypeAliasDeclaration}
 		public Action getN4TypeAliasDeclarationAction_0_0_0() { return cN4TypeAliasDeclarationAction_0_0_0; }
 		
-		//declaredModifiers+=N4Modifier*
+		//declaredModifiers+=N4ModifierWithoutConst*
 		public Assignment getDeclaredModifiersAssignment_0_0_1() { return cDeclaredModifiersAssignment_0_0_1; }
 		
-		//N4Modifier
-		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0; }
+		//N4ModifierWithoutConst
+		public RuleCall getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0() { return cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0; }
 		
 		//'type'
 		public Keyword getTypeKeyword_0_0_2() { return cTypeKeyword_0_0_2; }
@@ -10456,6 +10460,73 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//"const"
 		public Keyword getConstConstKeyword_7_0() { return cConstConstKeyword_7_0; }
 	}
+	public class N4ModifierWithoutConstElements extends AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4ModifierWithoutConst");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cPrivateEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cPrivatePrivateKeyword_0_0 = (Keyword)cPrivateEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cProjectEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cProjectProjectKeyword_1_0 = (Keyword)cProjectEnumLiteralDeclaration_1.eContents().get(0);
+		private final EnumLiteralDeclaration cProtectedEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
+		private final Keyword cProtectedProtectedKeyword_2_0 = (Keyword)cProtectedEnumLiteralDeclaration_2.eContents().get(0);
+		private final EnumLiteralDeclaration cPublicEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
+		private final Keyword cPublicPublicKeyword_3_0 = (Keyword)cPublicEnumLiteralDeclaration_3.eContents().get(0);
+		private final EnumLiteralDeclaration cExternalEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
+		private final Keyword cExternalExternalKeyword_4_0 = (Keyword)cExternalEnumLiteralDeclaration_4.eContents().get(0);
+		private final EnumLiteralDeclaration cAbstractEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
+		private final Keyword cAbstractAbstractKeyword_5_0 = (Keyword)cAbstractEnumLiteralDeclaration_5.eContents().get(0);
+		private final EnumLiteralDeclaration cStaticEnumLiteralDeclaration_6 = (EnumLiteralDeclaration)cAlternatives.eContents().get(6);
+		private final Keyword cStaticStaticKeyword_6_0 = (Keyword)cStaticEnumLiteralDeclaration_6.eContents().get(0);
+		
+		//enum N4ModifierWithoutConst returns N4Modifier:
+		//	private | project | protected | public | external | abstract | static;
+		public EnumRule getRule() { return rule; }
+		
+		//private | project | protected | public | external | abstract | static
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//private
+		public EnumLiteralDeclaration getPrivateEnumLiteralDeclaration_0() { return cPrivateEnumLiteralDeclaration_0; }
+		
+		//"private"
+		public Keyword getPrivatePrivateKeyword_0_0() { return cPrivatePrivateKeyword_0_0; }
+		
+		//project
+		public EnumLiteralDeclaration getProjectEnumLiteralDeclaration_1() { return cProjectEnumLiteralDeclaration_1; }
+		
+		//"project"
+		public Keyword getProjectProjectKeyword_1_0() { return cProjectProjectKeyword_1_0; }
+		
+		//protected
+		public EnumLiteralDeclaration getProtectedEnumLiteralDeclaration_2() { return cProtectedEnumLiteralDeclaration_2; }
+		
+		//"protected"
+		public Keyword getProtectedProtectedKeyword_2_0() { return cProtectedProtectedKeyword_2_0; }
+		
+		//public
+		public EnumLiteralDeclaration getPublicEnumLiteralDeclaration_3() { return cPublicEnumLiteralDeclaration_3; }
+		
+		//"public"
+		public Keyword getPublicPublicKeyword_3_0() { return cPublicPublicKeyword_3_0; }
+		
+		//external
+		public EnumLiteralDeclaration getExternalEnumLiteralDeclaration_4() { return cExternalEnumLiteralDeclaration_4; }
+		
+		//"external"
+		public Keyword getExternalExternalKeyword_4_0() { return cExternalExternalKeyword_4_0; }
+		
+		//abstract
+		public EnumLiteralDeclaration getAbstractEnumLiteralDeclaration_5() { return cAbstractEnumLiteralDeclaration_5; }
+		
+		//"abstract"
+		public Keyword getAbstractAbstractKeyword_5_0() { return cAbstractAbstractKeyword_5_0; }
+		
+		//static
+		public EnumLiteralDeclaration getStaticEnumLiteralDeclaration_6() { return cStaticEnumLiteralDeclaration_6; }
+		
+		//"static"
+		public Keyword getStaticStaticKeyword_6_0() { return cStaticStaticKeyword_6_0; }
+	}
 	
 	private final ScriptElements pScript;
 	private final ScriptElementElements pScriptElement;
@@ -10671,6 +10742,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final N4EnumLiteralElements pN4EnumLiteral;
 	private final N4TypeAliasDeclarationElements pN4TypeAliasDeclaration;
 	private final N4ModifierElements eN4Modifier;
+	private final N4ModifierWithoutConstElements eN4ModifierWithoutConst;
 	private final N4MemberDeclarationElements pN4MemberDeclaration;
 	private final AnnotatedN4MemberDeclarationElements pAnnotatedN4MemberDeclaration;
 	private final FieldDeclarationImplElements pFieldDeclarationImpl;
@@ -10931,6 +11003,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pN4EnumLiteral = new N4EnumLiteralElements();
 		this.pN4TypeAliasDeclaration = new N4TypeAliasDeclarationElements();
 		this.eN4Modifier = new N4ModifierElements();
+		this.eN4ModifierWithoutConst = new N4ModifierWithoutConstElements();
 		this.pN4MemberDeclaration = new N4MemberDeclarationElements();
 		this.pAnnotatedN4MemberDeclaration = new AnnotatedN4MemberDeclarationElements();
 		this.pFieldDeclarationImpl = new FieldDeclarationImplElements();
@@ -11055,7 +11128,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	'{'
 	//	literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*
 	//	'}'
-	//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
+	//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 	//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 	//	'='
 	//	actualTypeRef=TypeRef);
@@ -11158,7 +11231,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	'{'
 	//	literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*
 	//	'}'
-	//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4Modifier*
+	//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 	//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 	//	'='
 	//	actualTypeRef=TypeRef);
@@ -13388,7 +13461,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//N4TypeAliasDeclaration <Yield>:
-	//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4Modifier*
+	//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst*
 	//	'type' name=BindingIdentifier<Yield>?) TypeVariables?
 	//	'='
 	//	actualTypeRef=TypeRef;
@@ -13408,6 +13481,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public EnumRule getN4ModifierRule() {
 		return getN4ModifierAccess().getRule();
+	}
+	
+	//enum N4ModifierWithoutConst returns N4Modifier:
+	//	private | project | protected | public | external | abstract | static;
+	public N4ModifierWithoutConstElements getN4ModifierWithoutConstAccess() {
+		return eN4ModifierWithoutConst;
+	}
+	
+	public EnumRule getN4ModifierWithoutConstRule() {
+		return getN4ModifierWithoutConstAccess().getRule();
 	}
 	
 	//N4MemberDeclaration <Yield>:

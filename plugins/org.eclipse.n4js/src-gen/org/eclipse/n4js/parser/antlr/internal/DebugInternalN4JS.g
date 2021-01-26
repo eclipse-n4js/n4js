@@ -75,7 +75,7 @@ ruleScriptElement:
 		)
 		    |
 		(
-			(ruleN4Modifier
+			(ruleN4ModifierWithoutConst
 			*
 			'type'
 			ruleBindingIdentifier
@@ -165,7 +165,7 @@ ruleAnnotatedScriptElement:
 		)*
 		'}'
 		    |
-		ruleN4Modifier
+		ruleN4ModifierWithoutConst
 		*
 		'type'
 		ruleBindingIdentifier
@@ -293,7 +293,7 @@ ruleExportableElement:
 		)
 		    |
 		(
-			(ruleN4Modifier
+			(ruleN4ModifierWithoutConst
 			*
 			'type'
 			ruleBindingIdentifier
@@ -378,7 +378,7 @@ ruleAnnotatedExportableElement:
 		)*
 		'}'
 		    |
-		ruleN4Modifier
+		ruleN4ModifierWithoutConst
 		*
 		'type'
 		ruleBindingIdentifier
@@ -6969,13 +6969,13 @@ ruleN4EnumLiteral:
 // Rule N4TypeAliasDeclaration
 ruleN4TypeAliasDeclaration:
 	(
-		(ruleN4Modifier
+		(ruleN4ModifierWithoutConst
 		*
 		'type'
 		ruleBindingIdentifier
 		?
 		)=>
-		ruleN4Modifier
+		ruleN4ModifierWithoutConst
 		*
 		'type'
 		ruleBindingIdentifier
@@ -9583,6 +9583,25 @@ ruleN4Modifier:
 		'static'
 		    |
 		'const'
+	)
+;
+
+// Rule N4ModifierWithoutConst
+ruleN4ModifierWithoutConst:
+	(
+		'private'
+		    |
+		'project'
+		    |
+		'protected'
+		    |
+		'public'
+		    |
+		'external'
+		    |
+		'abstract'
+		    |
+		'static'
 	)
 ;
 

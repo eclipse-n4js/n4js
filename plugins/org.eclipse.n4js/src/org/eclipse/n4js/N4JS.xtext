@@ -105,7 +105,7 @@ AnnotatedScriptElement returns ScriptElement:
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'
 	|	{N4TypeAliasDeclaration.annotationList=current}
-		(declaredModifiers+=N4Modifier)*
+		(declaredModifiers+=N4ModifierWithoutConst)*
 		'type' name=BindingIdentifier<Yield=false>
 		TypeVariables?
 		'='	
@@ -190,7 +190,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'
 	|	{N4TypeAliasDeclaration.annotationList=current}
-		(declaredModifiers+=N4Modifier)*
+		(declaredModifiers+=N4ModifierWithoutConst)*
 		'type' name=BindingIdentifier<Yield=false>
 		TypeVariables?
 		'='	
@@ -1361,7 +1361,7 @@ N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=
 N4TypeAliasDeclaration <Yield>:
 	=>(
 		{N4TypeAliasDeclaration}
-		(declaredModifiers+=N4Modifier)*
+		(declaredModifiers+=N4ModifierWithoutConst)*
 		'type' name=BindingIdentifier<Yield>?
 	)
 	TypeVariables?
@@ -1372,7 +1372,11 @@ N4TypeAliasDeclaration <Yield>:
 
 // grammar allows use of these modifiers in many places that are not actually valid;
 // this is checked in N4JSSyntaxValidator (see N4Modifier in N4JS.xcore for details)
-enum N4Modifier: private | project | protected | public | external | abstract | static | const;
+enum N4Modifier:
+	private | project | protected | public | external | abstract | static | const;
+enum N4ModifierWithoutConst returns N4Modifier:
+	private | project | protected | public | external | abstract | static;
+
 
 N4MemberDeclaration <Yield>:
 	AnnotatedN4MemberDeclaration<Yield>

@@ -297,7 +297,7 @@ ruleScriptElement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				Type
@@ -863,9 +863,9 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_5_1_0());
+							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_5_1_0());
 						}
-						lv_declaredModifiers_37_0=ruleN4Modifier
+						lv_declaredModifiers_37_0=ruleN4ModifierWithoutConst
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedScriptElementRule());
@@ -874,7 +874,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 								$current,
 								"declaredModifiers",
 								lv_declaredModifiers_37_0,
-								"org.eclipse.n4js.N4JS.N4Modifier");
+								"org.eclipse.n4js.N4JS.N4ModifierWithoutConst");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -1467,7 +1467,7 @@ ruleExportableElement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				Type
@@ -2036,9 +2036,9 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_4_1_0());
+							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_4_1_0());
 						}
-						lv_declaredModifiers_37_0=ruleN4Modifier
+						lv_declaredModifiers_37_0=ruleN4ModifierWithoutConst
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedExportableElementRule());
@@ -2047,7 +2047,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 								$current,
 								"declaredModifiers",
 								lv_declaredModifiers_37_0,
-								"org.eclipse.n4js.N4JS.N4Modifier");
+								"org.eclipse.n4js.N4JS.N4ModifierWithoutConst");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -29795,7 +29795,7 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				Type
@@ -29817,9 +29817,9 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
+							newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0());
 						}
-						lv_declaredModifiers_1_0=ruleN4Modifier
+						lv_declaredModifiers_1_0=ruleN4ModifierWithoutConst
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getN4TypeAliasDeclarationRule());
@@ -29828,7 +29828,7 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 								$current,
 								"declaredModifiers",
 								lv_declaredModifiers_1_0,
-								"org.eclipse.n4js.N4JS.N4Modifier");
+								"org.eclipse.n4js.N4JS.N4ModifierWithoutConst");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -39554,6 +39554,73 @@ ruleN4Modifier returns [Enumerator current=null]
 			{
 				$current = grammarAccess.getN4ModifierAccess().getConstEnumLiteralDeclaration_7().getEnumLiteral().getInstance();
 				newLeafNode(enumLiteral_7, grammarAccess.getN4ModifierAccess().getConstEnumLiteralDeclaration_7());
+			}
+		)
+	)
+;
+
+// Rule N4ModifierWithoutConst
+ruleN4ModifierWithoutConst returns [Enumerator current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			enumLiteral_0=Private
+			{
+				$current = grammarAccess.getN4ModifierWithoutConstAccess().getPrivateEnumLiteralDeclaration_0().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_0, grammarAccess.getN4ModifierWithoutConstAccess().getPrivateEnumLiteralDeclaration_0());
+			}
+		)
+		    |
+		(
+			enumLiteral_1=Project
+			{
+				$current = grammarAccess.getN4ModifierWithoutConstAccess().getProjectEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_1, grammarAccess.getN4ModifierWithoutConstAccess().getProjectEnumLiteralDeclaration_1());
+			}
+		)
+		    |
+		(
+			enumLiteral_2=Protected
+			{
+				$current = grammarAccess.getN4ModifierWithoutConstAccess().getProtectedEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_2, grammarAccess.getN4ModifierWithoutConstAccess().getProtectedEnumLiteralDeclaration_2());
+			}
+		)
+		    |
+		(
+			enumLiteral_3=Public
+			{
+				$current = grammarAccess.getN4ModifierWithoutConstAccess().getPublicEnumLiteralDeclaration_3().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_3, grammarAccess.getN4ModifierWithoutConstAccess().getPublicEnumLiteralDeclaration_3());
+			}
+		)
+		    |
+		(
+			enumLiteral_4=External
+			{
+				$current = grammarAccess.getN4ModifierWithoutConstAccess().getExternalEnumLiteralDeclaration_4().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_4, grammarAccess.getN4ModifierWithoutConstAccess().getExternalEnumLiteralDeclaration_4());
+			}
+		)
+		    |
+		(
+			enumLiteral_5=Abstract
+			{
+				$current = grammarAccess.getN4ModifierWithoutConstAccess().getAbstractEnumLiteralDeclaration_5().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_5, grammarAccess.getN4ModifierWithoutConstAccess().getAbstractEnumLiteralDeclaration_5());
+			}
+		)
+		    |
+		(
+			enumLiteral_6=Static
+			{
+				$current = grammarAccess.getN4ModifierWithoutConstAccess().getStaticEnumLiteralDeclaration_6().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_6, grammarAccess.getN4ModifierWithoutConstAccess().getStaticEnumLiteralDeclaration_6());
 			}
 		)
 	)

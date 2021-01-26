@@ -10038,6 +10038,22 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+// Rule N4ModifierWithoutConst
+ruleN4ModifierWithoutConst
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getAlternatives()); }
+		(rule__N4ModifierWithoutConst__Alternatives)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getAlternatives()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__Script__Alternatives_2
 	@init {
 		int stackSize = keepStackSize();
@@ -15147,6 +15163,57 @@ rule__N4Modifier__Alternatives
 		{ before(grammarAccess.getN4ModifierAccess().getConstEnumLiteralDeclaration_7()); }
 		(Const)
 		{ after(grammarAccess.getN4ModifierAccess().getConstEnumLiteralDeclaration_7()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__N4ModifierWithoutConst__Alternatives
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getPrivateEnumLiteralDeclaration_0()); }
+		(Private)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getPrivateEnumLiteralDeclaration_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getProjectEnumLiteralDeclaration_1()); }
+		(Project)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getProjectEnumLiteralDeclaration_1()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getProtectedEnumLiteralDeclaration_2()); }
+		(Protected)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getProtectedEnumLiteralDeclaration_2()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getPublicEnumLiteralDeclaration_3()); }
+		(Public)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getPublicEnumLiteralDeclaration_3()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getExternalEnumLiteralDeclaration_4()); }
+		(External)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getExternalEnumLiteralDeclaration_4()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getAbstractEnumLiteralDeclaration_5()); }
+		(Abstract)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getAbstractEnumLiteralDeclaration_5()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4ModifierWithoutConstAccess().getStaticEnumLiteralDeclaration_6()); }
+		(Static)
+		{ after(grammarAccess.getN4ModifierWithoutConstAccess().getStaticEnumLiteralDeclaration_6()); }
 	)
 ;
 finally {
@@ -77450,9 +77517,9 @@ rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_5_1
 	}
 :
 	(
-		{ before(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_5_1_0()); }
-		ruleN4Modifier
-		{ after(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_5_1_0()); }
+		{ before(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_5_1_0()); }
+		ruleN4ModifierWithoutConst
+		{ after(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_5_1_0()); }
 	)
 ;
 finally {
@@ -77882,9 +77949,9 @@ rule__AnnotatedExportableElement__DeclaredModifiersAssignment_1_4_1
 	}
 :
 	(
-		{ before(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_4_1_0()); }
-		ruleN4Modifier
-		{ after(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_4_1_0()); }
+		{ before(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_4_1_0()); }
+		ruleN4ModifierWithoutConst
+		{ after(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_4_1_0()); }
 	)
 ;
 finally {
@@ -86966,9 +87033,9 @@ rule__N4TypeAliasDeclaration__DeclaredModifiersAssignment_0_0_1
 	}
 :
 	(
-		{ before(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0()); }
-		ruleN4Modifier
-		{ after(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0()); }
+		{ before(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0()); }
+		ruleN4ModifierWithoutConst
+		{ after(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0()); }
 	)
 ;
 finally {

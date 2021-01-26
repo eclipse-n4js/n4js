@@ -192,7 +192,7 @@ ruleScriptElement
 		((
 			(
 				(
-					ruleN4Modifier
+					ruleN4ModifierWithoutConst
 				)
 			)*
 			Type
@@ -407,7 +407,7 @@ ruleAnnotatedScriptElement
 		(
 			(
 				(
-					ruleN4Modifier
+					ruleN4ModifierWithoutConst
 				)
 			)*
 			TypeKeyword_1_5_2=Type
@@ -751,7 +751,7 @@ ruleExportableElement
 		((
 			(
 				(
-					ruleN4Modifier
+					ruleN4ModifierWithoutConst
 				)
 			)*
 			Type
@@ -972,7 +972,7 @@ ruleAnnotatedExportableElement
 		(
 			(
 				(
-					ruleN4Modifier
+					ruleN4ModifierWithoutConst
 				)
 			)*
 			TypeKeyword_1_4_2=Type
@@ -16526,7 +16526,7 @@ ruleN4TypeAliasDeclaration
 		((
 			(
 				(
-					ruleN4Modifier
+					ruleN4ModifierWithoutConst
 				)
 			)*
 			Type
@@ -16540,7 +16540,7 @@ ruleN4TypeAliasDeclaration
 		(
 			(
 				(
-					ruleN4Modifier
+					ruleN4ModifierWithoutConst
 				)
 			)*
 			TypeKeyword_0_0_2=Type
@@ -22541,6 +22541,54 @@ ruleN4Modifier
 	(
 		ConstConstKeyword_7_0=Const {
 			announce($ConstConstKeyword_7_0, grammarAccess.getN4ModifierAccess().getConstEnumLiteralDeclaration_7());
+		}
+	)
+)
+;
+
+// Rule N4ModifierWithoutConst
+ruleN4ModifierWithoutConst
+:
+(
+	(
+		PrivatePrivateKeyword_0_0=Private {
+			announce($PrivatePrivateKeyword_0_0, grammarAccess.getN4ModifierWithoutConstAccess().getPrivateEnumLiteralDeclaration_0());
+		}
+	)
+	    |
+	(
+		ProjectProjectKeyword_1_0=Project {
+			announce($ProjectProjectKeyword_1_0, grammarAccess.getN4ModifierWithoutConstAccess().getProjectEnumLiteralDeclaration_1());
+		}
+	)
+	    |
+	(
+		ProtectedProtectedKeyword_2_0=Protected {
+			announce($ProtectedProtectedKeyword_2_0, grammarAccess.getN4ModifierWithoutConstAccess().getProtectedEnumLiteralDeclaration_2());
+		}
+	)
+	    |
+	(
+		PublicPublicKeyword_3_0=Public {
+			announce($PublicPublicKeyword_3_0, grammarAccess.getN4ModifierWithoutConstAccess().getPublicEnumLiteralDeclaration_3());
+		}
+	)
+	    |
+	(
+		ExternalExternalKeyword_4_0=External {
+			announce($ExternalExternalKeyword_4_0, grammarAccess.getN4ModifierWithoutConstAccess().getExternalEnumLiteralDeclaration_4());
+		}
+	)
+	    |
+	(
+		AbstractAbstractKeyword_5_0=Abstract {
+			announce($AbstractAbstractKeyword_5_0, grammarAccess.getN4ModifierWithoutConstAccess().getAbstractEnumLiteralDeclaration_5());
+		}
+	)
+	    |
+	(
+		StaticStaticKeyword_6_0=Static {
+			announce($StaticStaticKeyword_6_0, grammarAccess.getN4ModifierWithoutConstAccess().getStaticEnumLiteralDeclaration_6());
 		}
 	)
 )

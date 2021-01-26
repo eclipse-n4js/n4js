@@ -143,6 +143,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAdditiveOperatorAccess().getAlternatives(), "rule__AdditiveOperator__Alternatives");
 			builder.put(grammarAccess.getEqualityOperatorAccess().getAlternatives(), "rule__EqualityOperator__Alternatives");
 			builder.put(grammarAccess.getN4ModifierAccess().getAlternatives(), "rule__N4Modifier__Alternatives");
+			builder.put(grammarAccess.getN4ModifierWithoutConstAccess().getAlternatives(), "rule__N4ModifierWithoutConst__Alternatives");
 			builder.put(grammarAccess.getScriptAccess().getGroup(), "rule__Script__Group__0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup(), "rule__AnnotatedScriptElement__Group__0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_0(), "rule__AnnotatedScriptElement__Group_1_0__0");
