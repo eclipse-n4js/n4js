@@ -72,8 +72,10 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
+import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
+import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -1098,5 +1100,15 @@ public class N4JSLanguageUtils {
 	def static boolean isValidLocationForAwait(EObject astNode) {
 		val containingFunDef = EcoreUtil2.getContainerOfType(astNode, FunctionDefinition);
 		return containingFunDef !== null && containingFunDef.async;
+	}
+
+	/** Tells whether the given type may be referenced structurally, i.e. with modifiers '~', '~~', '~r~', etc. */
+	def static boolean mayBeReferencedStructurally(Type type) {
+		return !(type instanceof PrimitiveType);
+	}
+
+	/** Tells whether the given type may be referenced dynamically, i.e. with modifier '+'. */
+	def static boolean mayBeReferencedDynamically(Type type) {
+		return !(type instanceof PrimitiveType) || type instanceof AnyType;
 	}
 }

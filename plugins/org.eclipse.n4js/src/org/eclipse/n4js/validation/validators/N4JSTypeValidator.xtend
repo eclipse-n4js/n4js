@@ -60,9 +60,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
-import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
@@ -193,7 +191,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * Add an issue if explicit use of structural type operator with a primitive type is detected.
 	 */
 	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
-		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
+		if (typeRef.typingStrategy != TypingStrategy.NOMINAL && !N4JSLanguageUtils.mayBeReferencedStructurally(typeRef.declaredType)) {
 			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
 		}
 	}
@@ -283,10 +281,10 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	/*
 	 * Constraints 08: primitive types except any must not be declared dynamic
 	 */
-	def internalCheckDynamic(ParameterizedTypeRef ref) {
+	def private internalCheckDynamic(ParameterizedTypeRef ref) {
 		if (ref.dynamic) {
 			val Type t = ref.declaredType;
-			if (t instanceof PrimitiveType && ! (t instanceof AnyType)) {
+			if (!N4JSLanguageUtils.mayBeReferencedDynamically(t)) {
 				addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(t.name), ref,
 					TYS_PRIMITIVE_TYPE_DYNAMIC);
 			}
