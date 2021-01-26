@@ -716,7 +716,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				if (propsTypeRef !== null) {
 					// Prevent "Cannot resolve to element" error message of unknown attributes since
 					// we want to issue a warning instead
-					val memberScope = memberScopingHelper.createMemberScope(propsTypeRef, context, checkVisibility,
+					val TypeRef propsTypeRefUB = ts.upperBoundWithReopenAndResolve(context.newRuleEnvironment, propsTypeRef, true);
+					val memberScope = memberScopingHelper.createMemberScope(propsTypeRefUB, context, checkVisibility,
 						staticAccess, structFieldInitMode);
 					return new DynamicPseudoScope(memberScope);
 				} else {
