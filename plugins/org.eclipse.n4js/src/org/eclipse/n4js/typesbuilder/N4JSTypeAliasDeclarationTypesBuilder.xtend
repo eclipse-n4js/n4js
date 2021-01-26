@@ -42,6 +42,7 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 
 		val typeAlias = TypesFactory.eINSTANCE.createTypeAlias();
 		typeAlias.name = n4TypeAlias.name;
+		typeAlias.exportedName = n4TypeAlias.exportedName;
 
 		typeAlias.setTypeAccessModifier(n4TypeAlias);
 		typeAlias.addCopyOfTypeParameters(n4TypeAlias, preLinkingPhase);
