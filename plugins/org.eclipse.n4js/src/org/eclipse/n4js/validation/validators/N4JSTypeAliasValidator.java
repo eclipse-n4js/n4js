@@ -21,6 +21,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAlias;
@@ -159,6 +160,19 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(IssueCodes.getMessageForTYS_STRUCTURAL_PRIMITIVE(),
 							typeRef, IssueCodes.TYS_STRUCTURAL_PRIMITIVE);
 				}
+			}
+		}
+		if (typeRef.eContainingFeature() == TypeRefsPackage.Literals.TYPE_TYPE_REF__TYPE_ARG) {
+			// we here only enforce what is usually enforced by the grammar, as defined in rule TypeArgInTypeTypeRef in
+			// file TypeExpressions.xtext:
+			boolean isValidTypeArgInTypeTypeRef = typeRefResolved instanceof ParameterizedTypeRef
+					&& !typeRefResolved.isUseSiteStructuralTyping()
+					&& !typeRefResolved.isDynamic();
+			// (note: no need to cover cases ThisTypeRefNominal and WildcardOldNotation from rule TypeArgInTypeTypeRef
+			// in TypeExpressions.xtext, because this-types and wildcards cannot appear as actual type of an alias)
+			if (!isValidTypeArgInTypeTypeRef) {
+				addIssue(IssueCodes.getMessageForALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF("{}"),
+						typeRef, IssueCodes.ALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF);
 			}
 		}
 	}

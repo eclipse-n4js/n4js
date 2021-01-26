@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+interface C {}
+interface D {}
+
+type A1 = C & D;
+type A2 = C | D;
+type A3 = (C)=>number;
+type A4 = C;
+type A5 = string;
+type A6 = ~Object with { prop: number };
+type A7 = type{C};
+type A8 = constructor{C};
+
+
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A1"
+let t01: type{A1};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A2"
+let t02: type{A2};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A3"
+let t03: type{A3};
+// XPECT noerrors -->
+let t04: type{A4};
+// XPECT noerrors -->
+let t05: type{A5};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A6"
+let t06: type{A6};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A7"
+let t07: type{A7};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A8"
+let t08: type{A8};
+
+
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A1"
+let t11: constructor{A1};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A2"
+let t12: constructor{A2};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A3"
+let t13: constructor{A3};
+// XPECT noerrors -->
+let t14: constructor{A4};
+// XPECT noerrors -->
+let t15: constructor{A5};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A6"
+let t16: constructor{A6};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A7"
+let t17: constructor{A7};
+// XPECT errors --> "A type alias may be used inside type{} or constructor{} only if its aliased type may be used at this location." at "A8"
+let t18: constructor{A8};
