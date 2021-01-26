@@ -12,13 +12,13 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-// XPECT errors --> "Cyclic type alias declaration: D -> C -> B -> A." at "D"
+// XPECT errors --> "Cyclic type alias declaration: D -> C -> B -> A." at "A"
 type A = D;
-// XPECT errors --> "Cyclic type alias declaration: A -> D -> C -> B." at "A"
+// XPECT errors --> "Cyclic type alias declaration: A -> D -> C -> B." at "B"
 type B = A;
-// XPECT errors --> "Cyclic type alias declaration: B -> A -> D -> C." at "B"
+// XPECT errors --> "Cyclic type alias declaration: B -> A -> D -> C." at "C"
 type C = B;
-// XPECT errors --> "Cyclic type alias declaration: C -> B -> A -> D." at "C"
+// XPECT errors --> "Cyclic type alias declaration: C -> B -> A -> D." at "D"
 type D = C;
 
 

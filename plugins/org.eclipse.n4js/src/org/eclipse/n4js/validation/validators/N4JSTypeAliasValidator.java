@@ -10,12 +10,14 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import java.util.Collections;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -56,36 +58,60 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 	/** Disallow cyclic alias declarations. */
 	@Check
 	public void checkCyclicAliasDeclaration(N4TypeAliasDeclaration n4TypeAliasDecl) {
-		Stack<TypeAlias> cycle = collectTypeAliasCycle(n4TypeAliasDecl.getDefinedTypeAsTypeAlias());
+		Stack<TypeAlias> cycle = collectTypeAliasCycle(n4TypeAliasDecl.getDefinedTypeAsTypeAlias(), null);
 		if (cycle == null) {
 			return; // no cycle
 		}
 		String cycleStr = cycle.stream().map(TypeAlias::getName).collect(Collectors.joining(" -> "));
 		addIssue(IssueCodes.getMessageForALI_CYCLIC_TYPE_ALIAS(cycleStr),
-				n4TypeAliasDecl, N4JSPackage.Literals.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF,
+				n4TypeAliasDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
 				IssueCodes.ALI_CYCLIC_TYPE_ALIAS);
 	}
 
-	private Stack<TypeAlias> collectTypeAliasCycle(TypeAlias typeAlias) {
-		RecursionGuard<TypeAlias> guard = null;
-		TypeAlias currAlias = typeAlias;
-		do {
-			if (currAlias == null) {
-				return null; // broken AST
+	/**
+	 * @param guard
+	 *            may be <code>null</code> to let the guard be created lazily on demand.
+	 * @return <code>null</code> if no cycle was found, otherwise the first cyclic path is returned.
+	 */
+	private Stack<TypeAlias> collectTypeAliasCycle(TypeAlias typeAlias, RecursionGuard<TypeAlias> guard) {
+		if (typeAlias == null) {
+			return null; // broken AST
+		}
+		final TypeRef actualTypeRef = typeAlias.getActualTypeRef();
+		if (actualTypeRef == null) {
+			return null; // broken AST
+		}
+		final Iterable<TypeRef> nextTypeRefs = actualTypeRef instanceof ComposedTypeRef
+				? ((ComposedTypeRef) actualTypeRef).getTypeRefs()
+				: Collections.singleton(actualTypeRef);
+		for (TypeRef nextTypeRef : nextTypeRefs) {
+			if (nextTypeRef == null) {
+				continue; // broken AST
 			}
-			final TypeRef currActualTypeRef = currAlias.getActualTypeRef();
-			if (currActualTypeRef == null) {
-				return null; // broken AST
+			if (nextTypeRef.isAliasUnresolved()) {
+				final TypeAlias nextAlias = (TypeAlias) nextTypeRef.getDeclaredType();
+				if (nextAlias == null) {
+					continue; // broken AST
+				}
+				if (guard == null) {
+					guard = new RecursionGuard<>();
+				}
+				if (guard.tryNext(nextAlias)) {
+					try {
+						final Stack<TypeAlias> result = collectTypeAliasCycle(nextAlias, guard);
+						if (result != null) {
+							return result;
+						}
+					} finally {
+						guard.done(nextAlias);
+					}
+				} else {
+					// cycle found!
+					return guard.getElements();
+				}
 			}
-			if (!currActualTypeRef.isAliasUnresolved()) {
-				return null;
-			}
-			if (guard == null) {
-				guard = new RecursionGuard<>();
-			}
-			currAlias = (TypeAlias) currActualTypeRef.getDeclaredType();
-		} while (guard.tryNext(currAlias));
-		return guard.getElements();
+		}
+		return null;
 	}
 
 	/** Disallow use of type aliases as values (for now). */
