@@ -113,6 +113,10 @@ import com.google.common.collect.Iterables;
 			return failure();
 		}
 
+		if (left == right) {
+			return success();
+		}
+
 		// ComposedTypeRef
 		if (left instanceof UnionTypeExpression) {
 			return applyUnion_Left(G, (UnionTypeExpression) left, right);
