@@ -197,8 +197,8 @@ public class N4JSTypeSystem {
 	 * <li>{@link TypeVariable}s.
 	 * </ul>
 	 * Use methods {@link #upperBoundWithReopen(RuleEnvironment, TypeArgument) #upperBoundWithReopen()} or
-	 * {@link #upperBoundWithReopenAndResolve(RuleEnvironment, TypeArgument, boolean) #upperBoundWithReopenAndResolve()}
-	 * for this purpose.
+	 * {@link #upperBoundWithReopenAndResolve(RuleEnvironment, TypeArgument) #upperBoundWithReopenAndResolve()} for this
+	 * purpose.
 	 */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyUpperBound(G, typeArgument, false, false);
@@ -223,9 +223,8 @@ public class N4JSTypeSystem {
 	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
 	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
 	 */
-	public TypeRef upperBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument,
-			boolean resolveTypeVariables) {
-		return boundJudgment.applyUpperBound(G, typeArgument, true, resolveTypeVariables);
+	public TypeRef upperBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, true);
 	}
 
 	/**
@@ -244,8 +243,8 @@ public class N4JSTypeSystem {
 	 * <li>{@link TypeVariable}s.
 	 * </ul>
 	 * Use methods {@link #lowerBoundWithReopen(RuleEnvironment, TypeArgument) #lowerBoundWithReopen()} or
-	 * {@link #lowerBoundWithReopenAndResolve(RuleEnvironment, TypeArgument, boolean) #lowerBoundWithReopenAndResolve()}
-	 * for this purpose.
+	 * {@link #lowerBoundWithReopenAndResolve(RuleEnvironment, TypeArgument) #lowerBoundWithReopenAndResolve()} for this
+	 * purpose.
 	 */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyLowerBound(G, typeArgument, false, false);
@@ -270,9 +269,8 @@ public class N4JSTypeSystem {
 	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
 	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
 	 */
-	public TypeRef lowerBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument,
-			boolean resolveTypeVariables) {
-		return boundJudgment.applyLowerBound(G, typeArgument, true, resolveTypeVariables);
+	public TypeRef lowerBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyLowerBound(G, typeArgument, true, true);
 	}
 
 	/**

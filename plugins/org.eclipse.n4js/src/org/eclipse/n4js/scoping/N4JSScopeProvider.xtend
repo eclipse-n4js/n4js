@@ -521,7 +521,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val G = propertyAccess.newRuleEnvironment;
 		val TypeRef typeRefRaw = ts.type(G, receiver);
 		// take upper bound to get rid of ExistentialTypeRefs, ThisTypeRefs, etc.
-		val TypeRef typeRef = ts.upperBoundWithReopenAndResolve(G, typeRefRaw, true);
+		val TypeRef typeRef = ts.upperBoundWithReopenAndResolve(G, typeRefRaw);
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
@@ -716,7 +716,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				if (propsTypeRef !== null) {
 					// Prevent "Cannot resolve to element" error message of unknown attributes since
 					// we want to issue a warning instead
-					val TypeRef propsTypeRefUB = ts.upperBoundWithReopenAndResolve(context.newRuleEnvironment, propsTypeRef, true);
+					val TypeRef propsTypeRefUB = ts.upperBoundWithReopenAndResolve(context.newRuleEnvironment, propsTypeRef);
 					val memberScope = memberScopingHelper.createMemberScope(propsTypeRefUB, context, checkVisibility,
 						staticAccess, structFieldInitMode);
 					return new DynamicPseudoScope(memberScope);

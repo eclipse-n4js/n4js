@@ -119,7 +119,7 @@ package abstract class AbstractProcessor {
 					// invoke #resolveTypeAliases() here; however, since this code is running before TypeAliasProcessor,
 					// we still have to invoke #resolveTypeAliases():
 					val innerReturnTypeRefResolved = tsh.resolveTypeAliases(G, innerReturnTypeRef);
-					val innerReturnTypeRefResolvedUB = ts.upperBoundWithReopenAndResolve(G, innerReturnTypeRefResolved, true);
+					val innerReturnTypeRefResolvedUB = ts.upperBoundWithReopenAndResolve(G, innerReturnTypeRefResolved);
 					val scope = G.builtInTypeScope;
 					val needsRewrite =
 						(isAsync && !isGenerator && !TypeUtils.isPromise(innerReturnTypeRefResolvedUB, scope)) ||

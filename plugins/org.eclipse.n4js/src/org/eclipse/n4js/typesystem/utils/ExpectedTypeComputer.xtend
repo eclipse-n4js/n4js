@@ -146,7 +146,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 				val yieldTypeRef = tsh.getGeneratorTYield(G, actualReturnTypeRef);
 				val yieldTypeRefCopy = TypeUtils.copyWithProxies(yieldTypeRef);
 				if (yieldExpr.isMany()) {
-					val exprTypeRef = ts.upperBoundWithReopenAndResolve(G, exprTypeRefRaw, true);
+					val exprTypeRef = ts.upperBoundWithReopenAndResolve(G, exprTypeRefRaw);
 					if (TypeUtils.isGeneratorOrAsyncGenerator(exprTypeRef, scope)) {
 						val nextTypeRef = tsh.getGeneratorTNext(G, actualReturnTypeRef);
 						val nextTypeRefCopy = TypeUtils.copyWithProxies(nextTypeRef);
@@ -177,7 +177,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	private def TypeRef getAndResolveOuterReturnType(RuleEnvironment G, TFunction tFun) {
 		val actualReturnTypeRef = tFun.returnTypeRef;
 		if (actualReturnTypeRef !== null) {
-			return ts.upperBoundWithReopenAndResolve(G, actualReturnTypeRef, true);
+			return ts.upperBoundWithReopenAndResolve(G, actualReturnTypeRef);
 		}
 		return null;
 	}

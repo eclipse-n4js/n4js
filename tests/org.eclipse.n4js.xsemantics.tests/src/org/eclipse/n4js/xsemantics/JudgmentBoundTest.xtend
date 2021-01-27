@@ -102,17 +102,15 @@ class JudgmentBoundTest extends AbstractTypesystemTest {
 		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopen(_G, thisOfC));
 		assertTypeEquals(typeVarBelowC,    ts.lowerBoundWithReopen(_G, typeVarBelowC));
 
-		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, captureExtC, true));
-		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopenAndResolve(_G, captureSupC, true));
-		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, thisOfC, true));
-		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, typeVarBelowC, true));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, captureExtC));
+		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopenAndResolve(_G, captureSupC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, thisOfC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, typeVarBelowC));
 
-		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, captureExtC, true));
-		assertTypeEquals(C.ref,            ts.lowerBoundWithReopenAndResolve(_G, captureSupC, true));
-		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, thisOfC, true));
-		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, typeVarBelowC, true));
-
-		// FIXME more tests!!!
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, captureExtC));
+		assertTypeEquals(C.ref,            ts.lowerBoundWithReopenAndResolve(_G, captureSupC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, thisOfC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, typeVarBelowC));
 	}
 
 	@Test

@@ -502,7 +502,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val G = funDef.newRuleEnvironment;
 		val returnTypeRefRaw2 = tsh.resolveTypeAliases(G, returnTypeRefRaw); // returnTypeRefRaw was taken directly from AST -> must resolve aliases
-		val returnTypeRef = ts.upperBoundWithReopenAndResolve(G, returnTypeRefRaw2, true);
+		val returnTypeRef = ts.upperBoundWithReopenAndResolve(G, returnTypeRefRaw2);
 		val async = funDef.async;
 		val isGeneratorType = TypeUtils.isGenerator(returnTypeRef, G.builtInTypeScope);
 		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRef, G.builtInTypeScope);
