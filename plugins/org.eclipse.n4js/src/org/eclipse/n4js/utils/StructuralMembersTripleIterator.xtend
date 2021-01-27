@@ -186,7 +186,8 @@ class StructuralMembersTripleIterator implements Iterator<StructuralMembersTripl
 	}
 
 	/** Made public only to allow access from tests. Don't use from outside. */
-	def static TMember[] toSortedArray(Iterable<TMember> members) {
+	def static synchronized TMember[] toSortedArray(Iterable<TMember> members) {
+		// Takes 3sec in OPR build
 		return members.toSet.sortWith(MEMBERS_BY_NameTypeAndAccess);
 	}
 }

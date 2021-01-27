@@ -113,6 +113,11 @@ import com.google.common.collect.Iterables;
 			return failure();
 		}
 
+		if (left == right) {
+			// TODO: GH-2051: Comment out to see failing tests (search for 'GH-2051')
+			return success();
+		}
+
 		// ComposedTypeRef
 		if (left instanceof UnionTypeExpression) {
 			return applyUnion_Left(G, (UnionTypeExpression) left, right);
