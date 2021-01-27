@@ -114,6 +114,7 @@ import com.google.common.collect.Iterables;
 		}
 
 		if (left == right) {
+			// TODO: GH-2051: Comment out to see failing tests (search for 'GH-2051')
 			return success();
 		}
 
