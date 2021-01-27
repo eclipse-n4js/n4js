@@ -841,5 +841,5 @@ ia2 = ia5
 ia3 = ia5
 // XPECT noerrors --> "" at "ia5"
 ia4 = ia5
-// XPECT errors --> "~i~A5 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ia5"
+// GH-2051 XPECT noerrors --> "~i~A5 is not a structural subtype of ~i~A5: missing getter s; s failed: non-optional writable field requires a readable field or a getter in subtype." at "ia5"
 ia5 = ia5

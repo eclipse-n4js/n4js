@@ -106,12 +106,18 @@ import com.google.common.collect.Iterables;
 	}
 
 	private Result doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+		if (leftArg == null || rightArg == null) {
+			return failure();
+		}
+
+		if (leftArg == rightArg) {
+			// TODO: GH-2051: Comment out to see failing tests (search for 'GH-2051')
+			return success();
+		}
+
 		// get rid of wildcards by taking their upper/lower bound
 		final TypeRef leftRef = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
 		final TypeRef rightRef = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
-		if (leftRef == null || rightRef == null) {
-			return failure();
-		}
 
 		final TypeRef left = replaceAndResolveAlias(G, leftRef);
 		final TypeRef right = replaceAndResolveAlias(G, rightRef);
