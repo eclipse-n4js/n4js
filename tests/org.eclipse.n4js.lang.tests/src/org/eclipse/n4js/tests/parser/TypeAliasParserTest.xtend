@@ -80,6 +80,21 @@ class TypeAliasParserTest extends AbstractParserTest {
 	}
 
 	@Test
+	def void testExportedDefault() {
+		val script = '''
+			export default type A = string;
+		'''.parseESSuccessfully;
+
+		val exportDecl = script.scriptElements.get(0) as ExportDeclaration;
+		val aliasDecl = exportDecl.exportedElement as N4TypeAliasDeclaration;
+		assertNotNull(aliasDecl);
+		assertTrue(aliasDecl.exported);
+		assertEquals("A", aliasDecl.name);
+		assertEquals("default", aliasDecl.exportedName);
+		assertEquals(#[], aliasDecl.declaredModifiers);
+	}
+
+	@Test
 	def void testVarIsStillAVar() {
 		val script = '''
 			class C {}
