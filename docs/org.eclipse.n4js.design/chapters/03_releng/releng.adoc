@@ -185,7 +185,6 @@ Available system properties:
 noTests::               if defined (i.e. "-DnoTests"), suppress execution of all tests
 languageVersion::       an optional version string to show in the Eclipse About dialog of IDE products (should be defined by publishing builds)
 startAndKeepVerdaccio:: if defined (i.e. "-DstartAndKeepVerdaccio"), enforce starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
-fatUpdateSite::         if set to true (i.e. "-DfatUpdateSite=true"), the generated update site will include all third-party dependencies
 
 
 
