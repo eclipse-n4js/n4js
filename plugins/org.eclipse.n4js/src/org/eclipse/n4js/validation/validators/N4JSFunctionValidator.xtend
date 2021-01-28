@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructSetter
@@ -507,10 +508,10 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRefUB, G.builtInTypeScope);
 		if (async && isGeneratorType) {
 			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.generatorType.name, "synchronous", G.asyncGeneratorType.name),
-				returnTypeRefInAST, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+				returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
 		} else if (!async && isAsyncGeneratorType) {
 			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.asyncGeneratorType.name, "asynchronous", G.generatorType.name),
-				returnTypeRefInAST, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+				returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
 		}
 	}
 
