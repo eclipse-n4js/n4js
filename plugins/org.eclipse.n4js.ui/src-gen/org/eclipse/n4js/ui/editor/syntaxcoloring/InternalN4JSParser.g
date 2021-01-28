@@ -430,8 +430,8 @@ ruleAnnotatedScriptElement
 			}
 			(
 				(
-					ActualTypeRefTypeRefParserRuleCall_1_5_6_0=ruleTypeRef{
-						announce($ActualTypeRefTypeRefParserRuleCall_1_5_6_0.start, $ActualTypeRefTypeRefParserRuleCall_1_5_6_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getActualTypeRefAssignment_1_5_6());
+					DeclaredTypeRefTypeRefParserRuleCall_1_5_6_0=ruleTypeRef{
+						announce($DeclaredTypeRefTypeRefParserRuleCall_1_5_6_0.start, $DeclaredTypeRefTypeRefParserRuleCall_1_5_6_0.stop, grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefAssignment_1_5_6());
 					}
 				)
 			)
@@ -995,8 +995,8 @@ ruleAnnotatedExportableElement
 			}
 			(
 				(
-					ActualTypeRefTypeRefParserRuleCall_1_4_6_0=ruleTypeRef{
-						announce($ActualTypeRefTypeRefParserRuleCall_1_4_6_0.start, $ActualTypeRefTypeRefParserRuleCall_1_4_6_0.stop, grammarAccess.getAnnotatedExportableElementAccess().getActualTypeRefAssignment_1_4_6());
+					DeclaredTypeRefTypeRefParserRuleCall_1_4_6_0=ruleTypeRef{
+						announce($DeclaredTypeRefTypeRefParserRuleCall_1_4_6_0.start, $DeclaredTypeRefTypeRefParserRuleCall_1_4_6_0.stop, grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefAssignment_1_4_6());
 					}
 				)
 			)
@@ -16565,8 +16565,8 @@ ruleN4TypeAliasDeclaration
 	}
 	(
 		(
-			ActualTypeRefTypeRefParserRuleCall_3_0=ruleTypeRef{
-				announce($ActualTypeRefTypeRefParserRuleCall_3_0.start, $ActualTypeRefTypeRefParserRuleCall_3_0.stop, grammarAccess.getN4TypeAliasDeclarationAccess().getActualTypeRefAssignment_3());
+			DeclaredTypeRefTypeRefParserRuleCall_3_0=ruleTypeRef{
+				announce($DeclaredTypeRefTypeRefParserRuleCall_3_0.start, $DeclaredTypeRefTypeRefParserRuleCall_3_0.stop, grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefAssignment_3());
 			}
 		)
 	)

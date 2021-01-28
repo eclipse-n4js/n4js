@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ts.types;
 
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,40 +20,12 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * A type alias.
  * <!-- end-model-doc -->
  *
- * <p>
- * The following features are supported:
- * </p>
- * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.TypeAlias#getActualTypeRef <em>Actual Type Ref</em>}</li>
- * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTypeAlias()
  * @model
  * @generated
  */
-public interface TypeAlias extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement {
-	/**
-	 * Returns the value of the '<em><b>Actual Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Actual Type Ref</em>' containment reference.
-	 * @see #setActualTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTypeAlias_ActualTypeRef()
-	 * @model containment="true"
-	 * @generated
-	 */
-	TypeRef getActualTypeRef();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TypeAlias#getActualTypeRef <em>Actual Type Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Actual Type Ref</em>' containment reference.
-	 * @see #getActualTypeRef()
-	 * @generated
-	 */
-	void setActualTypeRef(TypeRef value);
-
+public interface TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

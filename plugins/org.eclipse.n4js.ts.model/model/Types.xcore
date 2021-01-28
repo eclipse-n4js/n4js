@@ -1713,9 +1713,7 @@ class TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement {
 /*
  * A type alias.
  */
-class TypeAlias extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement {
-
-	contains TypeRef actualTypeRef
+class TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
 
 	op boolean isAlias() {
 		return true;

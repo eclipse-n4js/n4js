@@ -3396,16 +3396,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTypeAlias_ActualTypeRef() {
-		return (EReference)typeAliasEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getTypeAlias__IsAlias() {
 		return typeAliasEClass.getEOperations().get(0);
 	}
@@ -3967,7 +3957,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tEnumLiteralEClass, TENUM_LITERAL__VALUE_NUMBER);
 
 		typeAliasEClass = createEClass(TYPE_ALIAS);
-		createEReference(typeAliasEClass, TYPE_ALIAS__ACTUAL_TYPE_REF);
 		createEOperation(typeAliasEClass, TYPE_ALIAS___IS_ALIAS);
 
 		syntaxRelatedTElementEClass = createEClass(SYNTAX_RELATED_TELEMENT);
@@ -4131,6 +4120,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tEnumLiteralEClass.getESuperTypes().add(this.getIdentifiableElement());
 		typeAliasEClass.getESuperTypes().add(this.getGenericType());
 		typeAliasEClass.getESuperTypes().add(this.getAccessibleTypeElement());
+		typeAliasEClass.getESuperTypes().add(this.getTTypedElement());
 		typeAliasEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tVariableEClass.getESuperTypes().add(this.getTExportableElement());
 		tVariableEClass.getESuperTypes().add(this.getTConstableElement());
@@ -4608,7 +4598,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTEnumLiteral_ValueNumber(), theEcorePackage.getEBigDecimal(), "valueNumber", null, 0, 1, TEnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typeAliasEClass, TypeAlias.class, "TypeAlias", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypeAlias_ActualTypeRef(), theTypeRefsPackage.getTypeRef(), null, "actualTypeRef", null, 0, 1, TypeAlias.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTypeAlias__IsAlias(), theEcorePackage.getEBoolean(), "isAlias", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

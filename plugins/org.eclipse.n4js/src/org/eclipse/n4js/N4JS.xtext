@@ -109,7 +109,7 @@ AnnotatedScriptElement returns ScriptElement:
 		'type' name=BindingIdentifier<Yield=false>
 		TypeVariables?
 		'='	
-		actualTypeRef=TypeRef
+		declaredTypeRef=TypeRef
 	)
 ;
 
@@ -194,7 +194,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		'type' name=BindingIdentifier<Yield=false>
 		TypeVariables?
 		'='	
-		actualTypeRef=TypeRef
+		declaredTypeRef=TypeRef
 	)
 ;
 
@@ -1366,7 +1366,7 @@ N4TypeAliasDeclaration <Yield>:
 	)
 	TypeVariables?
 	'='	
-	actualTypeRef=TypeRef
+	declaredTypeRef=TypeRef
 ;
 
 

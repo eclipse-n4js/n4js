@@ -6411,16 +6411,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getN4TypeAliasDeclaration_ActualTypeRef() {
-		return (EReference)n4TypeAliasDeclarationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias() {
 		return n4TypeAliasDeclarationEClass.getEOperations().get(0);
 	}
@@ -8147,7 +8137,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(n4EnumLiteralEClass, N4_ENUM_LITERAL__DEFINED_LITERAL);
 
 		n4TypeAliasDeclarationEClass = createEClass(N4_TYPE_ALIAS_DECLARATION);
-		createEReference(n4TypeAliasDeclarationEClass, N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF);
 		createEOperation(n4TypeAliasDeclarationEClass, N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS);
 
 		modifiableElementEClass = createEClass(MODIFIABLE_ELEMENT);
@@ -8541,6 +8530,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4EnumLiteralEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getN4TypeDeclaration());
 		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
+		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getTypedElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getTypeProvidingElement());
@@ -9344,7 +9334,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getN4EnumLiteral_DefinedLiteral(), theTypesPackage.getTEnumLiteral(), null, "definedLiteral", null, 0, 1, N4EnumLiteral.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(n4TypeAliasDeclarationEClass, N4TypeAliasDeclaration.class, "N4TypeAliasDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getN4TypeAliasDeclaration_ActualTypeRef(), theTypeRefsPackage.getTypeRef(), null, "actualTypeRef", null, 0, 1, N4TypeAliasDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias(), theTypesPackage.getTypeAlias(), "getDefinedTypeAsTypeAlias", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

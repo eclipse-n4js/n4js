@@ -1631,11 +1631,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseN4TypeAliasDeclaration(n4TypeAliasDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4TypeAliasDeclaration);
 				if (result == null) result = caseGenericDeclaration(n4TypeAliasDeclaration);
+				if (result == null) result = caseTypedElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseN4TypeDefinition(n4TypeAliasDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseModifiableElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseExportableElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseNamedElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseTypeProvidingElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseAnnotableElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseScriptElement(n4TypeAliasDeclaration);

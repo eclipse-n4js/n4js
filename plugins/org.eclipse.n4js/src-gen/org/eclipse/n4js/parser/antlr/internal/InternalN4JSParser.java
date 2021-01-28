@@ -627,7 +627,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Enumerator lv_declaredModifiers_37_0 = null;
         AntlrDatatypeRuleToken lv_name_39_0 = null;
         EObject this_TypeVariables_40 = null;
-        EObject lv_actualTypeRef_42_0 = null;
+        EObject lv_declaredTypeRef_42_0 = null;
         	enterRule();
         try {
             {
@@ -1447,10 +1447,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getActualTypeRefTypeRefParserRuleCall_1_5_6_0());
+                      							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_5_6_0());
                     }
                     pushFollow(FOLLOW_2);
-                    lv_actualTypeRef_42_0=ruleTypeRef();
+                    lv_declaredTypeRef_42_0=ruleTypeRef();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -1459,8 +1459,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							}
                       							set(
                       								current,
-                      								"actualTypeRef",
-                      								lv_actualTypeRef_42_0,
+                      								"declaredTypeRef",
+                      								lv_declaredTypeRef_42_0,
                       								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                       							afterParserOrEnumRuleCall();
                     }
@@ -2358,7 +2358,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Enumerator lv_declaredModifiers_37_0 = null;
         AntlrDatatypeRuleToken lv_name_39_0 = null;
         EObject this_TypeVariables_40 = null;
-        EObject lv_actualTypeRef_42_0 = null;
+        EObject lv_declaredTypeRef_42_0 = null;
         	enterRule();
         try {
             {
@@ -3185,10 +3185,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getActualTypeRefTypeRefParserRuleCall_1_4_6_0());
+                      							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_6_0());
                     }
                     pushFollow(FOLLOW_2);
-                    lv_actualTypeRef_42_0=ruleTypeRef();
+                    lv_declaredTypeRef_42_0=ruleTypeRef();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -3197,8 +3197,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							}
                       							set(
                       								current,
-                      								"actualTypeRef",
-                      								lv_actualTypeRef_42_0,
+                      								"declaredTypeRef",
+                      								lv_declaredTypeRef_42_0,
                       								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                       							afterParserOrEnumRuleCall();
                     }
@@ -42840,7 +42840,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Enumerator lv_declaredModifiers_1_0 = null;
         AntlrDatatypeRuleToken lv_name_3_0 = null;
         EObject this_TypeVariables_4 = null;
-        EObject lv_actualTypeRef_6_0 = null;
+        EObject lv_declaredTypeRef_6_0 = null;
         	enterRule();
         try {
             {
@@ -42959,10 +42959,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             if ( state.backtracking==0 ) {
-              					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getActualTypeRefTypeRefParserRuleCall_3_0());
+              					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefTypeRefParserRuleCall_3_0());
             }
             pushFollow(FOLLOW_2);
-            lv_actualTypeRef_6_0=ruleTypeRef();
+            lv_declaredTypeRef_6_0=ruleTypeRef();
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -42971,8 +42971,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					set(
               						current,
-              						"actualTypeRef",
-              						lv_actualTypeRef_6_0,
+              						"declaredTypeRef",
+              						lv_declaredTypeRef_6_0,
               						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
               					afterParserOrEnumRuleCall();
             }
@@ -66823,7 +66823,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_12;
         }
         public String getDescription() {
-            return "392:3: ( ( () this_ExportDeclarationImpl_2= ruleExportDeclarationImpl[$current] ) | ( () this_ImportDeclarationImpl_4= ruleImportDeclarationImpl[$current] ) | ( () ( ( ( ( ( ruleN4Modifier ) )* ruleAsyncNoTrailingLineBreak[null] Function ) )=> ( ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_7= ruleAsyncNoTrailingLineBreak[$current] ( ( Function )=>this_FunctionImpl_8= ruleFunctionImpl[$current] ) ) ) ) | ( ( ( () ( (lv_declaredModifiers_10_0= ruleN4Modifier ) )* otherlv_11= Class ( (lv_typingStrategy_12_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_13_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_14= ruleVersionDeclaration[$current] )? (this_TypeVariables_15= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_16= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_18_0= ruleN4Modifier ) )* otherlv_19= Interface ( (lv_typingStrategy_20_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_21_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_22= ruleVersionDeclaration[$current] )? (this_TypeVariables_23= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_24= ruleInterfaceExtendsList[$current] )? ) ) this_Members_25= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_27_0= ruleN4Modifier ) )* otherlv_28= Enum ( (lv_name_29_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_30= ruleVersionDeclaration[$current] )? otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_actualTypeRef_42_0= ruleTypeRef ) ) ) )";
+            return "392:3: ( ( () this_ExportDeclarationImpl_2= ruleExportDeclarationImpl[$current] ) | ( () this_ImportDeclarationImpl_4= ruleImportDeclarationImpl[$current] ) | ( () ( ( ( ( ( ruleN4Modifier ) )* ruleAsyncNoTrailingLineBreak[null] Function ) )=> ( ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_7= ruleAsyncNoTrailingLineBreak[$current] ( ( Function )=>this_FunctionImpl_8= ruleFunctionImpl[$current] ) ) ) ) | ( ( ( () ( (lv_declaredModifiers_10_0= ruleN4Modifier ) )* otherlv_11= Class ( (lv_typingStrategy_12_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_13_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_14= ruleVersionDeclaration[$current] )? (this_TypeVariables_15= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_16= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_18_0= ruleN4Modifier ) )* otherlv_19= Interface ( (lv_typingStrategy_20_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_21_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_22= ruleVersionDeclaration[$current] )? (this_TypeVariables_23= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_24= ruleInterfaceExtendsList[$current] )? ) ) this_Members_25= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_27_0= ruleN4Modifier ) )* otherlv_28= Enum ( (lv_name_29_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_30= ruleVersionDeclaration[$current] )? otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_declaredTypeRef_42_0= ruleTypeRef ) ) ) )";
         }
     }
     static final String dfa_13s = "\13\uffff";
@@ -67869,7 +67869,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_37;
         }
         public String getDescription() {
-            return "1564:3: ( ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_3= ruleAsyncNoTrailingLineBreak[$current] this_FunctionImpl_4= ruleFunctionImpl[$current] ) | ( () ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* ( (lv_varStmtKeyword_7_0= ruleVariableStatementKeyword ) ) ( (lv_varDeclsOrBindings_8_0= ruleExportedVariableDeclarationOrBinding ) ) (otherlv_9= Comma ( (lv_varDeclsOrBindings_10_0= ruleExportedVariableDeclarationOrBinding ) ) )* ruleSemi ) | ( ( ( () ( (lv_declaredModifiers_13_0= ruleN4Modifier ) )* otherlv_14= Class ( (lv_typingStrategy_15_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_16_0= ruleBindingIdentifier ) ) (this_TypeVariables_17= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_18= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_20_0= ruleN4Modifier ) )* otherlv_21= Interface ( (lv_typingStrategy_22_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_23_0= ruleBindingIdentifier ) ) (this_TypeVariables_24= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_25= ruleInterfaceExtendsList[$current] )? ) ) this_Members_26= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_28_0= ruleN4Modifier ) )* otherlv_29= Enum ( (lv_name_30_0= ruleBindingIdentifier ) ) otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_actualTypeRef_42_0= ruleTypeRef ) ) ) )";
+            return "1564:3: ( ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_3= ruleAsyncNoTrailingLineBreak[$current] this_FunctionImpl_4= ruleFunctionImpl[$current] ) | ( () ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* ( (lv_varStmtKeyword_7_0= ruleVariableStatementKeyword ) ) ( (lv_varDeclsOrBindings_8_0= ruleExportedVariableDeclarationOrBinding ) ) (otherlv_9= Comma ( (lv_varDeclsOrBindings_10_0= ruleExportedVariableDeclarationOrBinding ) ) )* ruleSemi ) | ( ( ( () ( (lv_declaredModifiers_13_0= ruleN4Modifier ) )* otherlv_14= Class ( (lv_typingStrategy_15_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_16_0= ruleBindingIdentifier ) ) (this_TypeVariables_17= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_18= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_20_0= ruleN4Modifier ) )* otherlv_21= Interface ( (lv_typingStrategy_22_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_23_0= ruleBindingIdentifier ) ) (this_TypeVariables_24= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_25= ruleInterfaceExtendsList[$current] )? ) ) this_Members_26= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_28_0= ruleN4Modifier ) )* otherlv_29= Enum ( (lv_name_30_0= ruleBindingIdentifier ) ) otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_declaredTypeRef_42_0= ruleTypeRef ) ) ) )";
         }
     }
     static final String dfa_38s = "\14\uffff";

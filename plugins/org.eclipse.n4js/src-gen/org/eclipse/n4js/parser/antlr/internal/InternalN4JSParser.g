@@ -922,17 +922,17 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getActualTypeRefTypeRefParserRuleCall_1_5_6_0());
+							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_5_6_0());
 						}
-						lv_actualTypeRef_42_0=ruleTypeRef
+						lv_declaredTypeRef_42_0=ruleTypeRef
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedScriptElementRule());
 							}
 							set(
 								$current,
-								"actualTypeRef",
-								lv_actualTypeRef_42_0,
+								"declaredTypeRef",
+								lv_declaredTypeRef_42_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
@@ -2095,17 +2095,17 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getActualTypeRefTypeRefParserRuleCall_1_4_6_0());
+							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_6_0());
 						}
-						lv_actualTypeRef_42_0=ruleTypeRef
+						lv_declaredTypeRef_42_0=ruleTypeRef
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedExportableElementRule());
 							}
 							set(
 								$current,
-								"actualTypeRef",
-								lv_actualTypeRef_42_0,
+								"declaredTypeRef",
+								lv_declaredTypeRef_42_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
@@ -29878,17 +29878,17 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getActualTypeRefTypeRefParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefTypeRefParserRuleCall_3_0());
 				}
-				lv_actualTypeRef_6_0=ruleTypeRef
+				lv_declaredTypeRef_6_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4TypeAliasDeclarationRule());
 					}
 					set(
 						$current,
-						"actualTypeRef",
-						lv_actualTypeRef_6_0,
+						"declaredTypeRef",
+						lv_declaredTypeRef_6_0,
 						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}

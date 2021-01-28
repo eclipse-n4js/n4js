@@ -30,6 +30,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
+import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -46,7 +48,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeAliasDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeAliasDeclarationImpl#getActualTypeRef <em>Actual Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeAliasDeclarationImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
  * </ul>
  *
  * @generated
@@ -63,14 +65,14 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 	protected EList<TypeVariable> typeVars;
 
 	/**
-	 * The cached value of the '{@link #getActualTypeRef() <em>Actual Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getDeclaredTypeRef() <em>Declared Type Ref</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getActualTypeRef()
+	 * @see #getDeclaredTypeRef()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef actualTypeRef;
+	protected TypeRef declaredTypeRef;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -110,8 +112,8 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 	 * @generated
 	 */
 	@Override
-	public TypeRef getActualTypeRef() {
-		return actualTypeRef;
+	public TypeRef getDeclaredTypeRef() {
+		return declaredTypeRef;
 	}
 
 	/**
@@ -119,11 +121,11 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetActualTypeRef(TypeRef newActualTypeRef, NotificationChain msgs) {
-		TypeRef oldActualTypeRef = actualTypeRef;
-		actualTypeRef = newActualTypeRef;
+	public NotificationChain basicSetDeclaredTypeRef(TypeRef newDeclaredTypeRef, NotificationChain msgs) {
+		TypeRef oldDeclaredTypeRef = declaredTypeRef;
+		declaredTypeRef = newDeclaredTypeRef;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF, oldActualTypeRef, newActualTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF, oldDeclaredTypeRef, newDeclaredTypeRef);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -135,18 +137,18 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 	 * @generated
 	 */
 	@Override
-	public void setActualTypeRef(TypeRef newActualTypeRef) {
-		if (newActualTypeRef != actualTypeRef) {
+	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
+		if (newDeclaredTypeRef != declaredTypeRef) {
 			NotificationChain msgs = null;
-			if (actualTypeRef != null)
-				msgs = ((InternalEObject)actualTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF, null, msgs);
-			if (newActualTypeRef != null)
-				msgs = ((InternalEObject)newActualTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF, null, msgs);
-			msgs = basicSetActualTypeRef(newActualTypeRef, msgs);
+			if (declaredTypeRef != null)
+				msgs = ((InternalEObject)declaredTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF, null, msgs);
+			if (newDeclaredTypeRef != null)
+				msgs = ((InternalEObject)newDeclaredTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF, null, msgs);
+			msgs = basicSetDeclaredTypeRef(newDeclaredTypeRef, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF, newActualTypeRef, newActualTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF, newDeclaredTypeRef, newDeclaredTypeRef));
 	}
 
 	/**
@@ -170,8 +172,8 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 		switch (featureID) {
 			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__TYPE_VARS:
 				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
-			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF:
-				return basicSetActualTypeRef(null, msgs);
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF:
+				return basicSetDeclaredTypeRef(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -186,8 +188,8 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 		switch (featureID) {
 			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__TYPE_VARS:
 				return getTypeVars();
-			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF:
-				return getActualTypeRef();
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF:
+				return getDeclaredTypeRef();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -205,8 +207,8 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 				getTypeVars().clear();
 				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
 				return;
-			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF:
-				setActualTypeRef((TypeRef)newValue);
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF:
+				setDeclaredTypeRef((TypeRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -223,8 +225,8 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__TYPE_VARS:
 				getTypeVars().clear();
 				return;
-			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF:
-				setActualTypeRef((TypeRef)null);
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF:
+				setDeclaredTypeRef((TypeRef)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -240,8 +242,8 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 		switch (featureID) {
 			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__TYPE_VARS:
 				return typeVars != null && !typeVars.isEmpty();
-			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF:
-				return actualTypeRef != null;
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF:
+				return declaredTypeRef != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -259,6 +261,17 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 				default: return -1;
 			}
 		}
+		if (baseClass == TypeProvidingElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == TypedElement.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF;
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -272,6 +285,17 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 		if (baseClass == GenericDeclaration.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.GENERIC_DECLARATION__TYPE_VARS: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION__TYPE_VARS;
+				default: return -1;
+			}
+		}
+		if (baseClass == TypeProvidingElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == TypedElement.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF;
 				default: return -1;
 			}
 		}

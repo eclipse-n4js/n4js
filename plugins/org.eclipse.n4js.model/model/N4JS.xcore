@@ -2114,8 +2114,7 @@ class N4EnumLiteral extends NamedElement, TypableElement {
 }
 
 
-class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration {
-	contains TypeRef actualTypeRef
+class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, TypedElement {
 
 	op TypeAlias getDefinedTypeAsTypeAlias() {
 		return definedType as TypeAlias;

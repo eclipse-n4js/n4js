@@ -2287,7 +2287,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             annotationList=AnnotatedExportableElement_N4TypeAliasDeclaration_1_4_0 
 	 *             declaredModifiers+=N4ModifierWithoutConst* 
 	 *             name=BindingIdentifier 
-	 *             actualTypeRef=TypeRef
+	 *             declaredTypeRef=TypeRef
 	 *         ) | 
 	 *         (
 	 *             (
@@ -2296,9 +2296,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             ) 
 	 *             typeVars+=TypeVariable 
 	 *             typeVars+=TypeVariable* 
-	 *             (actualTypeRef=TypeRef | actualTypeRef=TypeRef)
+	 *             (declaredTypeRef=TypeRef | declaredTypeRef=TypeRef)
 	 *         ) | 
-	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? actualTypeRef=TypeRef)
+	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRef=TypeRef)
 	 *     )
 	 */
 	protected void sequence_AnnotatedExportableElement_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -2317,7 +2317,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4ModifierWithoutConst* 
 	 *         name=BindingIdentifier 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         actualTypeRef=TypeRef
+	 *         declaredTypeRef=TypeRef
 	 *     )
 	 */
 	protected void sequence_AnnotatedExportableElement_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -4442,7 +4442,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             annotationList=AnnotatedScriptElement_N4TypeAliasDeclaration_1_5_0 
 	 *             declaredModifiers+=N4ModifierWithoutConst* 
 	 *             name=BindingIdentifier 
-	 *             actualTypeRef=TypeRef
+	 *             declaredTypeRef=TypeRef
 	 *         ) | 
 	 *         (
 	 *             (
@@ -4451,9 +4451,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             ) 
 	 *             typeVars+=TypeVariable 
 	 *             typeVars+=TypeVariable* 
-	 *             (actualTypeRef=TypeRef | actualTypeRef=TypeRef)
+	 *             (declaredTypeRef=TypeRef | declaredTypeRef=TypeRef)
 	 *         ) | 
-	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? actualTypeRef=TypeRef)
+	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRef=TypeRef)
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -4471,7 +4471,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4ModifierWithoutConst* 
 	 *         name=BindingIdentifier 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         actualTypeRef=TypeRef
+	 *         declaredTypeRef=TypeRef
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -20080,7 +20080,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4TypeAliasDeclaration returns N4TypeAliasDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? (typeVars+=TypeVariable typeVars+=TypeVariable*)? actualTypeRef=TypeRef)
+	 *     (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? (typeVars+=TypeVariable typeVars+=TypeVariable*)? declaredTypeRef=TypeRef)
 	 */
 	protected void sequence_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -206,8 +206,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameBindingIdentifierParserRuleCall_1_5_3_0 = (RuleCall)cNameAssignment_1_5_3.eContents().get(0);
 		private final RuleCall cTypeVariablesParserRuleCall_1_5_4 = (RuleCall)cGroup_1_5.eContents().get(4);
 		private final Keyword cEqualsSignKeyword_1_5_5 = (Keyword)cGroup_1_5.eContents().get(5);
-		private final Assignment cActualTypeRefAssignment_1_5_6 = (Assignment)cGroup_1_5.eContents().get(6);
-		private final RuleCall cActualTypeRefTypeRefParserRuleCall_1_5_6_0 = (RuleCall)cActualTypeRefAssignment_1_5_6.eContents().get(0);
+		private final Assignment cDeclaredTypeRefAssignment_1_5_6 = (Assignment)cGroup_1_5.eContents().get(6);
+		private final RuleCall cDeclaredTypeRefTypeRefParserRuleCall_1_5_6_0 = (RuleCall)cDeclaredTypeRefAssignment_1_5_6.eContents().get(0);
 		
 		///**
 		// * Left factored, annotated script elements.
@@ -239,7 +239,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 		//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 		//	'='
-		//	actualTypeRef=TypeRef);
+		//	declaredTypeRef=TypeRef);
 		@Override public ParserRule getRule() { return rule; }
 		
 		//AnnotationList ({ExportDeclaration.annotationList=current} ExportDeclarationImpl |
@@ -254,7 +254,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'enum' name=BindingIdentifier<Yield=false> VersionDeclaration? '{' literals+=N4EnumLiteral (','
 		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
 		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
-		//actualTypeRef=TypeRef)
+		//declaredTypeRef=TypeRef)
 		public Group getGroup() { return cGroup; }
 		
 		//AnnotationList
@@ -271,7 +271,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield=false> VersionDeclaration? '{'
 		//literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
 		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
-		//actualTypeRef=TypeRef)
+		//declaredTypeRef=TypeRef)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{ExportDeclaration.annotationList=current} ExportDeclarationImpl
@@ -462,7 +462,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getRightCurlyBracketKeyword_1_4_8() { return cRightCurlyBracketKeyword_1_4_8; }
 		
 		//{N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst* 'type'
-		//name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef
+		//name=BindingIdentifier<Yield=false> TypeVariables? '=' declaredTypeRef=TypeRef
 		public Group getGroup_1_5() { return cGroup_1_5; }
 		
 		//{N4TypeAliasDeclaration.annotationList=current}
@@ -489,11 +489,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'='
 		public Keyword getEqualsSignKeyword_1_5_5() { return cEqualsSignKeyword_1_5_5; }
 		
-		//actualTypeRef=TypeRef
-		public Assignment getActualTypeRefAssignment_1_5_6() { return cActualTypeRefAssignment_1_5_6; }
+		//declaredTypeRef=TypeRef
+		public Assignment getDeclaredTypeRefAssignment_1_5_6() { return cDeclaredTypeRefAssignment_1_5_6; }
 		
 		//TypeRef
-		public RuleCall getActualTypeRefTypeRefParserRuleCall_1_5_6_0() { return cActualTypeRefTypeRefParserRuleCall_1_5_6_0; }
+		public RuleCall getDeclaredTypeRefTypeRefParserRuleCall_1_5_6_0() { return cDeclaredTypeRefTypeRefParserRuleCall_1_5_6_0; }
 	}
 	public class ExportDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportDeclaration");
@@ -856,8 +856,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameBindingIdentifierParserRuleCall_1_4_3_0 = (RuleCall)cNameAssignment_1_4_3.eContents().get(0);
 		private final RuleCall cTypeVariablesParserRuleCall_1_4_4 = (RuleCall)cGroup_1_4.eContents().get(4);
 		private final Keyword cEqualsSignKeyword_1_4_5 = (Keyword)cGroup_1_4.eContents().get(5);
-		private final Assignment cActualTypeRefAssignment_1_4_6 = (Assignment)cGroup_1_4.eContents().get(6);
-		private final RuleCall cActualTypeRefTypeRefParserRuleCall_1_4_6_0 = (RuleCall)cActualTypeRefAssignment_1_4_6.eContents().get(0);
+		private final Assignment cDeclaredTypeRefAssignment_1_4_6 = (Assignment)cGroup_1_4.eContents().get(6);
+		private final RuleCall cDeclaredTypeRefTypeRefParserRuleCall_1_4_6_0 = (RuleCall)cDeclaredTypeRefAssignment_1_4_6.eContents().get(0);
 		
 		///**
 		// * Left factored, annotated exportable elements.
@@ -886,7 +886,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 		//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 		//	'='
-		//	actualTypeRef=TypeRef);
+		//	declaredTypeRef=TypeRef);
 		@Override public ParserRule getRule() { return rule; }
 		
 		//AnnotationList ({FunctionDeclaration.annotationList=current} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak
@@ -901,7 +901,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield> '{' literals+=N4EnumLiteral (','
 		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
 		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
-		//actualTypeRef=TypeRef)
+		//declaredTypeRef=TypeRef)
 		public Group getGroup() { return cGroup; }
 		
 		//AnnotationList
@@ -919,7 +919,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredModifiers+=N4Modifier* 'enum' name=BindingIdentifier<Yield> '{' literals+=N4EnumLiteral (','
 		//literals+=N4EnumLiteral)* '}' | {N4TypeAliasDeclaration.annotationList=current}
 		//declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield=false> TypeVariables? '='
-		//actualTypeRef=TypeRef)
+		//declaredTypeRef=TypeRef)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//{FunctionDeclaration.annotationList=current} declaredModifiers+=N4Modifier* AsyncNoTrailingLineBreak
@@ -1115,7 +1115,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getRightCurlyBracketKeyword_1_3_7() { return cRightCurlyBracketKeyword_1_3_7; }
 		
 		//{N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst* 'type'
-		//name=BindingIdentifier<Yield=false> TypeVariables? '=' actualTypeRef=TypeRef
+		//name=BindingIdentifier<Yield=false> TypeVariables? '=' declaredTypeRef=TypeRef
 		public Group getGroup_1_4() { return cGroup_1_4; }
 		
 		//{N4TypeAliasDeclaration.annotationList=current}
@@ -1142,11 +1142,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'='
 		public Keyword getEqualsSignKeyword_1_4_5() { return cEqualsSignKeyword_1_4_5; }
 		
-		//actualTypeRef=TypeRef
-		public Assignment getActualTypeRefAssignment_1_4_6() { return cActualTypeRefAssignment_1_4_6; }
+		//declaredTypeRef=TypeRef
+		public Assignment getDeclaredTypeRefAssignment_1_4_6() { return cDeclaredTypeRefAssignment_1_4_6; }
 		
 		//TypeRef
-		public RuleCall getActualTypeRefTypeRefParserRuleCall_1_4_6_0() { return cActualTypeRefTypeRefParserRuleCall_1_4_6_0; }
+		public RuleCall getDeclaredTypeRefTypeRefParserRuleCall_1_4_6_0() { return cDeclaredTypeRefTypeRefParserRuleCall_1_4_6_0; }
 	}
 	public class ImportDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportDeclaration");
@@ -8492,18 +8492,18 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameBindingIdentifierParserRuleCall_0_0_3_0 = (RuleCall)cNameAssignment_0_0_3.eContents().get(0);
 		private final RuleCall cTypeVariablesParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		private final Keyword cEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cActualTypeRefAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cActualTypeRefTypeRefParserRuleCall_3_0 = (RuleCall)cActualTypeRefAssignment_3.eContents().get(0);
+		private final Assignment cDeclaredTypeRefAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cDeclaredTypeRefTypeRefParserRuleCall_3_0 = (RuleCall)cDeclaredTypeRefAssignment_3.eContents().get(0);
 		
 		//N4TypeAliasDeclaration <Yield>:
 		//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst*
 		//	'type' name=BindingIdentifier<Yield>?) TypeVariables?
 		//	'='
-		//	actualTypeRef=TypeRef;
+		//	declaredTypeRef=TypeRef;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield>?)
-		//TypeVariables? '=' actualTypeRef=TypeRef
+		//TypeVariables? '=' declaredTypeRef=TypeRef
 		public Group getGroup() { return cGroup; }
 		
 		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield>?)
@@ -8536,11 +8536,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'='
 		public Keyword getEqualsSignKeyword_2() { return cEqualsSignKeyword_2; }
 		
-		//actualTypeRef=TypeRef
-		public Assignment getActualTypeRefAssignment_3() { return cActualTypeRefAssignment_3; }
+		//declaredTypeRef=TypeRef
+		public Assignment getDeclaredTypeRefAssignment_3() { return cDeclaredTypeRefAssignment_3; }
 		
 		//TypeRef
-		public RuleCall getActualTypeRefTypeRefParserRuleCall_3_0() { return cActualTypeRefTypeRefParserRuleCall_3_0; }
+		public RuleCall getDeclaredTypeRefTypeRefParserRuleCall_3_0() { return cDeclaredTypeRefTypeRefParserRuleCall_3_0; }
 	}
 	public class N4MemberDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4MemberDeclaration");
@@ -11131,7 +11131,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 	//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 	//	'='
-	//	actualTypeRef=TypeRef);
+	//	declaredTypeRef=TypeRef);
 	public AnnotatedScriptElementElements getAnnotatedScriptElementAccess() {
 		return pAnnotatedScriptElement;
 	}
@@ -11234,7 +11234,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| {N4TypeAliasDeclaration.annotationList=current} declaredModifiers+=N4ModifierWithoutConst*
 	//	'type' name=BindingIdentifier<Yield=false> TypeVariables?
 	//	'='
-	//	actualTypeRef=TypeRef);
+	//	declaredTypeRef=TypeRef);
 	public AnnotatedExportableElementElements getAnnotatedExportableElementAccess() {
 		return pAnnotatedExportableElement;
 	}
@@ -13464,7 +13464,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst*
 	//	'type' name=BindingIdentifier<Yield>?) TypeVariables?
 	//	'='
-	//	actualTypeRef=TypeRef;
+	//	declaredTypeRef=TypeRef;
 	public N4TypeAliasDeclarationElements getN4TypeAliasDeclarationAccess() {
 		return pN4TypeAliasDeclaration;
 	}

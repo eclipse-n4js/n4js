@@ -78,7 +78,7 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 		if (typeAlias == null) {
 			return null; // broken AST
 		}
-		final TypeRef actualTypeRef = typeAlias.getActualTypeRef();
+		final TypeRef actualTypeRef = typeAlias.getTypeRef();
 		if (actualTypeRef == null) {
 			return null; // broken AST
 		}

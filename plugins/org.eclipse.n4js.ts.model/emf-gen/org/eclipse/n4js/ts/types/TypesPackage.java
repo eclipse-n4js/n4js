@@ -12725,22 +12725,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME = GENERIC_TYPE_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS__TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Actual Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_ALIAS__ACTUAL_TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int TYPE_ALIAS__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Type Alias</em>' class.
@@ -16089,17 +16089,6 @@ public interface TypesPackage extends EPackage {
 	EClass getTypeAlias();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TypeAlias#getActualTypeRef <em>Actual Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Actual Type Ref</em>'.
-	 * @see org.eclipse.n4js.ts.types.TypeAlias#getActualTypeRef()
-	 * @see #getTypeAlias()
-	 * @generated
-	 */
-	EReference getTypeAlias_ActualTypeRef();
-
-	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeAlias#isAlias() <em>Is Alias</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18645,14 +18634,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TYPE_ALIAS = eINSTANCE.getTypeAlias();
-
-		/**
-		 * The meta object literal for the '<em><b>Actual Type Ref</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TYPE_ALIAS__ACTUAL_TYPE_REF = eINSTANCE.getTypeAlias_ActualTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Alias</b></em>' operation.

@@ -12804,13 +12804,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION__TYPE_VARS = N4_TYPE_DECLARATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Actual Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF = N4_TYPE_DECLARATION_FEATURE_COUNT + 1;
+	int N4_TYPE_ALIAS_DECLARATION__DECLARED_TYPE_REF = N4_TYPE_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>N4 Type Alias Declaration</em>' class.
@@ -12894,13 +12894,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION___IS_EXTERNAL = N4_TYPE_DECLARATION___IS_EXTERNAL;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF = N4_TYPE_DECLARATION_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Defined Type As Type Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = N4_TYPE_DECLARATION_OPERATION_COUNT + 0;
+	int N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>N4 Type Alias Declaration</em>' class.
@@ -12909,7 +12918,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
+	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ModifiableElementImpl <em>Modifiable Element</em>}' class.
@@ -21288,17 +21297,6 @@ public interface N4JSPackage extends EPackage {
 	EClass getN4TypeAliasDeclaration();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4TypeAliasDeclaration#getActualTypeRef <em>Actual Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Actual Type Ref</em>'.
-	 * @see org.eclipse.n4js.n4JS.N4TypeAliasDeclaration#getActualTypeRef()
-	 * @see #getN4TypeAliasDeclaration()
-	 * @generated
-	 */
-	EReference getN4TypeAliasDeclaration_ActualTypeRef();
-
-	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4TypeAliasDeclaration#getDefinedTypeAsTypeAlias() <em>Get Defined Type As Type Alias</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26514,14 +26512,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass N4_TYPE_ALIAS_DECLARATION = eINSTANCE.getN4TypeAliasDeclaration();
-
-		/**
-		 * The meta object literal for the '<em><b>Actual Type Ref</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference N4_TYPE_ALIAS_DECLARATION__ACTUAL_TYPE_REF = eINSTANCE.getN4TypeAliasDeclaration_ActualTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Defined Type As Type Alias</b></em>' operation.
