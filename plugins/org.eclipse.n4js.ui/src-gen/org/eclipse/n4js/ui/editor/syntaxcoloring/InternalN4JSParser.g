@@ -8309,8 +8309,8 @@ ruleAnnotatedPropertyAssignment
 					)?
 					(
 						(
-							DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0=ruleTypeRefWithModifiers{
-								announce($DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.start, $DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefAssignment_1_3_0_0_2());
+							DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0=ruleTypeRefWithModifiers{
+								announce($DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.start, $DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTAssignment_1_3_0_0_2());
 							}
 						)
 					)?
@@ -8780,8 +8780,8 @@ norm1_AnnotatedPropertyAssignment
 					)?
 					(
 						(
-							DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0=ruleTypeRefWithModifiers{
-								announce($DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.start, $DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefAssignment_1_3_0_0_2());
+							DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0=ruleTypeRefWithModifiers{
+								announce($DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.start, $DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0.stop, grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTAssignment_1_3_0_0_2());
 							}
 						)
 					)?
@@ -8922,8 +8922,8 @@ rulePropertyMethodDeclaration
 			)?
 			(
 				(
-					DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0=ruleTypeRefWithModifiers{
-						announce($DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0.start, $DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0.stop, grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefAssignment_0_0_2());
+					DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0=ruleTypeRefWithModifiers{
+						announce($DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0.start, $DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0.stop, grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTAssignment_0_0_2());
 					}
 				)
 			)?
@@ -9027,8 +9027,8 @@ norm1_PropertyMethodDeclaration
 			)?
 			(
 				(
-					DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0=ruleTypeRefWithModifiers{
-						announce($DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0.start, $DeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0.stop, grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefAssignment_0_0_2());
+					DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0=ruleTypeRefWithModifiers{
+						announce($DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0.start, $DeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0.stop, grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTAssignment_0_0_2());
 					}
 				)
 			)?
@@ -21582,8 +21582,8 @@ ruleColonSepDeclaredReturnTypeRef
 	}
 	(
 		(
-			DeclaredReturnTypeRefTypeRefParserRuleCall_1_0=ruleTypeRef{
-				announce($DeclaredReturnTypeRefTypeRefParserRuleCall_1_0.start, $DeclaredReturnTypeRefTypeRefParserRuleCall_1_0.stop, grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefAssignment_1());
+			DeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0=ruleTypeRef{
+				announce($DeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0.start, $DeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0.stop, grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefInASTAssignment_1());
 			}
 		)
 	)

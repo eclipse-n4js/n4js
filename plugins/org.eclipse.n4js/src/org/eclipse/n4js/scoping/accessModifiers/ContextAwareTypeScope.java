@@ -43,7 +43,7 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 
 		this.isValidLocationForNull = false; // in the source code, 'null' is never a valid type
 
-		this.isValidLocationForVoid = eRef == N4JSPackage.eINSTANCE.getFunctionDefinition_DeclaredReturnTypeRef()
+		this.isValidLocationForVoid = eRef == N4JSPackage.eINSTANCE.getFunctionDefinition_DeclaredReturnTypeRefInAST()
 				|| eRef == TypeRefsPackage.eINSTANCE.getFunctionTypeExpression_ReturnTypeRef()
 				|| eRef == TypesPackage.eINSTANCE.getTFunction_ReturnTypeRef()
 				// void is not truly allowed as the return type of a getter, but there's a separate validation for

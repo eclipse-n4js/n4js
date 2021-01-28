@@ -2822,13 +2822,22 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__FPARS = N4JSPackage.N4_METHOD_DECLARATION__FPARS;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.

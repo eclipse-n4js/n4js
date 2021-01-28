@@ -134,6 +134,6 @@ class FunctionsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		assertTypeVariables(phase, n4Function, resource)
 
-		Assert.assertNull("no return type expected", n4Function.declaredReturnTypeRef)
+		Assert.assertNull("no return type expected", n4Function.declaredReturnTypeRefInAST)
 	}
 }

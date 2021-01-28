@@ -138,8 +138,8 @@ public class JSDocEditStrategy extends MultiLineTerminalsEditStrategy {
 	 *            - The N4MethodDeclaration of the next astElement in relation to the cursor position is expected here.
 	 */
 	private void getRetAndFPars(List<String> retAndFPars, N4MethodDeclaration methodDecl) {
-		if (methodDecl.getDeclaredReturnTypeRef() != null) {
-			if ((methodDecl.getDeclaredReturnTypeRef().getDeclaredType() instanceof VoidTypeImpl)) {
+		if (methodDecl.getDeclaredReturnTypeRefInAST() != null) {
+			if ((methodDecl.getDeclaredReturnTypeRefInAST().getDeclaredType() instanceof VoidTypeImpl)) {
 				retAndFPars.add("void");
 			} else {
 				// e.g. ThisTypeRefNominal or ParameterizedTypeRef

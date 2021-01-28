@@ -162,7 +162,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 			 * TODO IDE-1579 this branch skips makePromiseIfAsync.
 			 * Question: could this result in 'void' as inferred return type (for an async method)?
 			 */
-			functionType.returnTypeRef = TypeUtils.copyWithProxies(functionExpr.declaredReturnTypeRef) ?: TypeUtils.createDeferredTypeRef		
+			functionType.returnTypeRef = TypeUtils.copyWithProxies(functionExpr.declaredReturnTypeRefInAST) ?: TypeUtils.createDeferredTypeRef		
 		// note: handling of the return type of async functions not done here, see TypeProcessor#handleAsyncFunctionDeclaration()
 	}
 

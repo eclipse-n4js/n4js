@@ -212,17 +212,17 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkThisTypeRef(ThisTypeRef thisTypeRef) {
-		if (thisTypeRef instanceof BoundThisTypeRef) {
+	def checkThisTypeRef(ThisTypeRef thisTypeRefInAST) {
+		if (thisTypeRefInAST instanceof BoundThisTypeRef) {
 			// the below validations do not apply to BoundThisTypeRefs
 			// (note: normally, BoundThisTypeRefs should never appear in the AST, anyway; but asserting this to be true
 			// is not the job of this validation)
 			return;
 		}
-		if (!(thisTypeRef.isUsedStructurallyAsFormalParametersInTheConstructor 
-			|| thisTypeRef.isUsedAtCovariantPositionInClassifierDeclaration 
-			|| thisTypeRef.isUsedInVariableWithSyntaxError)) {
-			addIssue(IssueCodes.getMessageForAST_THIS_WRONG_PLACE, thisTypeRef, IssueCodes.AST_THIS_WRONG_PLACE);
+		if (!(thisTypeRefInAST.isUsedStructurallyAsFormalParametersInTheConstructor 
+			|| thisTypeRefInAST.isUsedAtCovariantPositionInClassifierDeclaration 
+			|| thisTypeRefInAST.isUsedInVariableWithSyntaxError)) {
+			addIssue(IssueCodes.getMessageForAST_THIS_WRONG_PLACE, thisTypeRefInAST, IssueCodes.AST_THIS_WRONG_PLACE);
 		}
 	}
 
@@ -238,17 +238,17 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		return false
 	}
 
-	def private boolean isUsedAtCovariantPositionInClassifierDeclaration(ThisTypeRef thisTypeRef) {
-		val classifierDecl = EcoreUtil2.getContainerOfType(thisTypeRef, N4ClassifierDeclaration);
+	def private boolean isUsedAtCovariantPositionInClassifierDeclaration(ThisTypeRef thisTypeRefInAST) {
+		val classifierDecl = EcoreUtil2.getContainerOfType(thisTypeRefInAST, N4ClassifierDeclaration);
 		if (classifierDecl !== null) {
 			// exception: disallow for static members of interfaces
 			if (classifierDecl instanceof N4InterfaceDeclaration) {
-				val memberDecl = EcoreUtil2.getContainerOfType(thisTypeRef, N4MemberDeclaration);
+				val memberDecl = EcoreUtil2.getContainerOfType(thisTypeRefInAST, N4MemberDeclaration);
 				if (memberDecl !== null && memberDecl.static) {
 					return false;
 				}
 			}
-			val varianceOfPos = N4JSLanguageUtils.getVarianceOfPosition(thisTypeRef);
+			val varianceOfPos = N4JSLanguageUtils.getVarianceOfPosition(thisTypeRefInAST);
 			if (varianceOfPos !== null) {
 				return varianceOfPos === Variance.CO;
 			}
@@ -435,7 +435,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (TypeUtils.isVoid(expectedTypeRef) || singleExprArrowFunction.isReturnValueOptional) {
 					return; // all good
 				}
-				if (singleExprArrowFunction.declaredReturnTypeRef === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
+				if (singleExprArrowFunction.declaredReturnTypeRefInAST === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
 					val message = IssueCodes.
 						getMessageForFUN_SINGLE_EXP_LAMBDA_IMPLICIT_RETURN_ALLOWED_UNLESS_VOID();
 					addIssue(message, expression,

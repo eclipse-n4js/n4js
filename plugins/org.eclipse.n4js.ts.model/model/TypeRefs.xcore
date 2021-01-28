@@ -156,13 +156,13 @@ abstract class TypeRef extends TypeArgument, Versionable {
 		return true;
 	}
 
-	/* Returns true iff this is an <em>unresolved</em> reference to an alias. */
+	/* Returns true iff this is an <em>unresolved</em> reference to a type alias. */
 	op boolean isAliasUnresolved() {
 		val declType = declaredType;
 		return declType !== null && declType.isAlias();
 	}
 
-	/* Returns true iff this is a <em>resolved</em> reference to an alias. */
+	/* Returns true iff this is a <em>resolved</em> reference to a type alias. */
 	op boolean isAliasResolved() {
 		return originalAliasTypeRef !== null;
 	}

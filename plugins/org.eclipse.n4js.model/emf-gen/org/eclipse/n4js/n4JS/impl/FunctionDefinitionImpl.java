@@ -53,6 +53,7 @@ import org.eclipse.n4js.ts.types.Type;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDeclaredReturnTypeRef <em>Declared Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDeclaredReturnTypeRefInAST <em>Declared Return Type Ref In AST</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  * </ul>
@@ -101,7 +102,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	protected EList<FormalParameter> fpars;
 
 	/**
-	 * The cached value of the '{@link #getDeclaredReturnTypeRef() <em>Declared Return Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getDeclaredReturnTypeRef() <em>Declared Return Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getDeclaredReturnTypeRef()
@@ -109,6 +110,16 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * @ordered
 	 */
 	protected TypeRef declaredReturnTypeRef;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredReturnTypeRefInAST() <em>Declared Return Type Ref In AST</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredReturnTypeRefInAST()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef declaredReturnTypeRefInAST;
 
 	/**
 	 * The default value of the '{@link #isGenerator() <em>Generator</em>}' attribute.
@@ -252,6 +263,14 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 */
 	@Override
 	public TypeRef getDeclaredReturnTypeRef() {
+		if (declaredReturnTypeRef != null && declaredReturnTypeRef.eIsProxy()) {
+			InternalEObject oldDeclaredReturnTypeRef = (InternalEObject)declaredReturnTypeRef;
+			declaredReturnTypeRef = (TypeRef)eResolveProxy(oldDeclaredReturnTypeRef);
+			if (declaredReturnTypeRef != oldDeclaredReturnTypeRef) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, oldDeclaredReturnTypeRef, declaredReturnTypeRef));
+			}
+		}
 		return declaredReturnTypeRef;
 	}
 
@@ -260,11 +279,43 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef, NotificationChain msgs) {
+	public TypeRef basicGetDeclaredReturnTypeRef() {
+		return declaredReturnTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef) {
 		TypeRef oldDeclaredReturnTypeRef = declaredReturnTypeRef;
 		declaredReturnTypeRef = newDeclaredReturnTypeRef;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, oldDeclaredReturnTypeRef, declaredReturnTypeRef));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredReturnTypeRefInAST() {
+		return declaredReturnTypeRefInAST;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDeclaredReturnTypeRefInAST(TypeRef newDeclaredReturnTypeRefInAST, NotificationChain msgs) {
+		TypeRef oldDeclaredReturnTypeRefInAST = declaredReturnTypeRefInAST;
+		declaredReturnTypeRefInAST = newDeclaredReturnTypeRefInAST;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, oldDeclaredReturnTypeRef, newDeclaredReturnTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST, oldDeclaredReturnTypeRefInAST, newDeclaredReturnTypeRefInAST);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -276,18 +327,18 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef) {
-		if (newDeclaredReturnTypeRef != declaredReturnTypeRef) {
+	public void setDeclaredReturnTypeRefInAST(TypeRef newDeclaredReturnTypeRefInAST) {
+		if (newDeclaredReturnTypeRefInAST != declaredReturnTypeRefInAST) {
 			NotificationChain msgs = null;
-			if (declaredReturnTypeRef != null)
-				msgs = ((InternalEObject)declaredReturnTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, null, msgs);
-			if (newDeclaredReturnTypeRef != null)
-				msgs = ((InternalEObject)newDeclaredReturnTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, null, msgs);
-			msgs = basicSetDeclaredReturnTypeRef(newDeclaredReturnTypeRef, msgs);
+			if (declaredReturnTypeRefInAST != null)
+				msgs = ((InternalEObject)declaredReturnTypeRefInAST).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST, null, msgs);
+			if (newDeclaredReturnTypeRefInAST != null)
+				msgs = ((InternalEObject)newDeclaredReturnTypeRefInAST).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST, null, msgs);
+			msgs = basicSetDeclaredReturnTypeRefInAST(newDeclaredReturnTypeRefInAST, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, newDeclaredReturnTypeRef, newDeclaredReturnTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST, newDeclaredReturnTypeRefInAST, newDeclaredReturnTypeRefInAST));
 	}
 
 	/**
@@ -343,7 +394,7 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 */
 	@Override
 	public boolean isReturnValueOptional() {
-		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getDeclaredReturnTypeRef() != null) && this.getDeclaredReturnTypeRef().isFollowedByQuestionMark()));
+		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getDeclaredReturnTypeRefInAST() != null) && this.getDeclaredReturnTypeRefInAST().isFollowedByQuestionMark()));
 	}
 
 	/**
@@ -410,8 +461,8 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 		switch (featureID) {
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
-			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF:
-				return basicSetDeclaredReturnTypeRef(null, msgs);
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				return basicSetDeclaredReturnTypeRefInAST(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -432,7 +483,10 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				return getFpars();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF:
-				return getDeclaredReturnTypeRef();
+				if (resolve) return getDeclaredReturnTypeRef();
+				return basicGetDeclaredReturnTypeRef();
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				return getDeclaredReturnTypeRefInAST();
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				return isGenerator();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:
@@ -462,6 +516,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return;
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF:
 				setDeclaredReturnTypeRef((TypeRef)newValue);
+				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				setDeclaredReturnTypeRefInAST((TypeRef)newValue);
 				return;
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				setGenerator((Boolean)newValue);
@@ -493,6 +550,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF:
 				setDeclaredReturnTypeRef((TypeRef)null);
 				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				setDeclaredReturnTypeRefInAST((TypeRef)null);
+				return;
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				setGenerator(GENERATOR_EDEFAULT);
 				return;
@@ -519,6 +579,8 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF:
 				return declaredReturnTypeRef != null;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				return declaredReturnTypeRefInAST != null;
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				return generator != GENERATOR_EDEFAULT;
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:

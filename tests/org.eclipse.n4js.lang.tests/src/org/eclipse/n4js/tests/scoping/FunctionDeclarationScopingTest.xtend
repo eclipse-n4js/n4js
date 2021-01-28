@@ -61,7 +61,7 @@ class FunctionDeclarationScopingTest {
 		val funcDecl = script.eAllContents.filter(FunctionDeclaration).head;
 		val tfunc = funcDecl.definedType as TFunction
 		val typeVar = tfunc.typeVars.head
-		assertEquals(funcDecl.declaredReturnTypeRef.declaredType, typeVar)
+		assertEquals(funcDecl.declaredReturnTypeRefInAST.declaredType, typeVar)
 		assertEquals(funcDecl.fpars.get(0).declaredTypeRef.declaredType, typeVar)
 		// ensure that we do not compare nonsense:
 		assertNotEquals(funcDecl.fpars.get(1).declaredTypeRef.declaredType, typeVar)

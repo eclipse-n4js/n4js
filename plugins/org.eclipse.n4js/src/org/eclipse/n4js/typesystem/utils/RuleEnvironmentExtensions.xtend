@@ -1129,7 +1129,7 @@ class RuleEnvironmentExtensions {
 	 */
 	public def static boolean isInReturnDeclaration_Of_StaticMethod(EObject locationToCheck,N4MethodDeclaration container) {
 		if( ! container.isStatic ) return false;
-		val isInReturn = EcoreUtil2.isAncestor(container.declaredReturnTypeRef,locationToCheck)
+		val isInReturn = EcoreUtil2.isAncestor(container.declaredReturnTypeRefInAST,locationToCheck)
 		return isInReturn;
 	}
 

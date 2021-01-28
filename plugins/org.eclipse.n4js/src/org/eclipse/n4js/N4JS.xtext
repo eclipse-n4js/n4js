@@ -680,7 +680,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 			'set' ->declaredName=LiteralOrComputedPropertyName <Yield>
 		) (declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' body=Block<Yield=false>
 	| =>({PropertyMethodDeclaration.annotationList=current}
-			TypeVariables? declaredReturnTypeRef=TypeRefWithModifiers?
+			TypeVariables? declaredReturnTypeRefInAST=TypeRefWithModifiers?
 			(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
 			)
@@ -692,7 +692,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
-		TypeVariables? declaredReturnTypeRef=TypeRefWithModifiers?
+		TypeVariables? declaredReturnTypeRefInAST=TypeRefWithModifiers?
 		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>

@@ -36,7 +36,6 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructSetter
@@ -496,22 +495,22 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		if (!funDef.generator) {
 			return;
 		}
-		val returnTypeRefRaw = funDef.declaredReturnTypeRef;
-		if (returnTypeRefRaw === null) {
+		val returnTypeRefInAST = funDef.declaredReturnTypeRefInAST;
+		val returnTypeRef = funDef.declaredReturnTypeRef;
+		if (returnTypeRef === null) {
 			return;
 		}
 		val G = funDef.newRuleEnvironment;
-		val returnTypeRefRaw2 = tsh.resolveTypeAliases(G, returnTypeRefRaw); // returnTypeRefRaw was taken directly from AST -> must resolve aliases
-		val returnTypeRef = ts.upperBoundWithReopenAndResolve(G, returnTypeRefRaw2);
+		val returnTypeRefUB = ts.upperBoundWithReopenAndResolve(G, returnTypeRef);
 		val async = funDef.async;
-		val isGeneratorType = TypeUtils.isGenerator(returnTypeRef, G.builtInTypeScope);
-		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRef, G.builtInTypeScope);
+		val isGeneratorType = TypeUtils.isGenerator(returnTypeRefUB, G.builtInTypeScope);
+		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRefUB, G.builtInTypeScope);
 		if (async && isGeneratorType) {
 			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.generatorType.name, "synchronous", G.asyncGeneratorType.name),
-				returnTypeRefRaw, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+				returnTypeRefInAST, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
 		} else if (!async && isAsyncGeneratorType) {
 			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.asyncGeneratorType.name, "asynchronous", G.generatorType.name),
-				returnTypeRefRaw, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+				returnTypeRefInAST, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
 		}
 	}
 

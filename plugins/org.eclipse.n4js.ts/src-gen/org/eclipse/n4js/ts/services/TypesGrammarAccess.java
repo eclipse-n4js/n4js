@@ -3013,7 +3013,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//// used in N4JS.xtext
 	//fragment ColonSepDeclaredReturnTypeRef *:
-	//	':' declaredReturnTypeRef=super::TypeRef;
+	//	':' declaredReturnTypeRefInAST=super::TypeRef;
 	public TypeExpressionsGrammarAccess.ColonSepDeclaredReturnTypeRefElements getColonSepDeclaredReturnTypeRefAccess() {
 		return gaTypeExpressions.getColonSepDeclaredReturnTypeRefAccess();
 	}

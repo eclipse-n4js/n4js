@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.transpiler.Transformation
@@ -45,6 +46,7 @@ class TrimTransformation extends Transformation {
 	override transform() {
 		// 1) remove all typeRefs
 		collectNodes(state.im, TypeRef, false).forEach[remove(it)];
+		collectNodes(state.im, FunctionDefinition, true).forEach[it.declaredReturnTypeRef = null];
 		// 2) remove all type typeVars:
 		collectNodes(state.im, TypeVariable, false).forEach[remove(it)]
 		// 3) remove all type alias declarations

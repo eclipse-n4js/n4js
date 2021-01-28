@@ -442,40 +442,40 @@ public class N4JSLanguageUtils {
 	 * <li>some error occurred, e.g. invalid TModule, broken AST.
 	 * </ol>
 	 */
-	def public static Variance getVarianceOfPosition(TypeRef typeRef) {
+	def public static Variance getVarianceOfPosition(TypeRef typeRefInAST) {
 		// note: we have commutativity, so normally order would not matter below; however, due to the quick exit on INV
 		// together with the special cases of private members and final fields (handled via a return type of null)
 		// we must check position in classifier first!
-		val v1 = getVarianceOfPositionInClassifier(typeRef);
+		val v1 = getVarianceOfPositionInClassifier(typeRefInAST);
 		if(v1===null || v1===Variance.INV) {
 			return v1;
 		}
-		val v2 = getVarianceOfPositionRelativeToItsRoot(typeRef);
+		val v2 = getVarianceOfPositionRelativeToItsRoot(typeRefInAST);
 		return v1.mult(v2);
 	}
 	/**
-	 * Most client code should use {@link #getVarianceOfPosition(ParameterizedTypeRef)}!
+	 * Most client code should use {@link #getVarianceOfPosition(TypeRef)}!
 	 * <p>
 	 * Same as {@link #getVarianceOfPosition(TypeRef)}, but <b>does not take into account nesting of type references
 	 * within other type references.</b> This is covered by method {@link #getVarianceOfPositionRelativeToItsRoot(TypeRef)}.
 	 */
-	def public static Variance getVarianceOfPositionInClassifier(TypeRef typeRef) {
-		if(typeRef===null)
+	def public static Variance getVarianceOfPositionInClassifier(TypeRef typeRefInAST) {
+		if(typeRefInAST===null)
 			return null;
-		val rootTypeRef = TypeUtils.getRootTypeRef(typeRef);
-		val tClassifier = EcoreUtil2.getContainerOfType(rootTypeRef, N4ClassifierDeclaration)?.definedType as TClassifier;
+		val rootTypeRefInAST = TypeUtils.getRootTypeRef(typeRefInAST);
+		val tClassifier = EcoreUtil2.getContainerOfType(rootTypeRefInAST, N4ClassifierDeclaration)?.definedType as TClassifier;
 		if(tClassifier===null)
 			return null; // not contained in a class/interface declaration with a properly defined type in TModule
-		val parent = rootTypeRef.eContainer;
+		val parent = rootTypeRefInAST.eContainer;
 		val grandParent = parent?.eContainer;
 		return switch(parent) {
-			FormalParameter case parent.declaredTypeRef===rootTypeRef && grandParent.isNonPrivateMemberOf(tClassifier):
+			FormalParameter case parent.declaredTypeRef===rootTypeRefInAST && grandParent.isNonPrivateMemberOf(tClassifier):
 				Variance.CONTRA
-			N4MethodDeclaration case parent.declaredReturnTypeRef===rootTypeRef && parent.isNonPrivateMemberOf(tClassifier):
+			N4MethodDeclaration case parent.declaredReturnTypeRefInAST===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier):
 				Variance.CO
-			N4GetterDeclaration case parent.declaredTypeRef===rootTypeRef && parent.isNonPrivateMemberOf(tClassifier):
+			N4GetterDeclaration case parent.declaredTypeRef===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier):
 				Variance.CO
-			N4FieldDeclaration case parent.declaredTypeRef===rootTypeRef && parent.isNonPrivateMemberOf(tClassifier): {
+			N4FieldDeclaration case parent.declaredTypeRef===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier): {
 				val tField = parent.definedField;
 				if(tField.final) {
 					Variance.CO // final field is like a getter
@@ -483,7 +483,7 @@ public class N4JSLanguageUtils {
 					Variance.INV
 				}
 			}
-			N4ClassifierDeclaration case parent.superClassifierRefs.exists[it===rootTypeRef]: {
+			N4ClassifierDeclaration case parent.superClassifierRefs.exists[it===rootTypeRefInAST]: {
 				// typeRef is used in the "extends" or "implements" clause of the declaration of tClassifier
 				// -> this mainly depends on the variance of the classifier being extended
 				Variance.CO
@@ -493,15 +493,15 @@ public class N4JSLanguageUtils {
 		};
 	}
 	/**
-	 * Most client code should use {@link #getVarianceOfPosition(ParameterizedTypeRef)}!
+	 * Most client code should use {@link #getVarianceOfPosition(TypeRef)}!
 	 * <p>
 	 * Returns variance of the given type reference's position relative to its root type reference as defined by
 	 * {@link TypeUtils#getRootTypeRef(TypeRef)}. In case of error, a best effort is made. Never returns
 	 * <code>null</code>.
 	 */
-	def public static Variance getVarianceOfPositionRelativeToItsRoot(TypeRef typeRef) {
+	def public static Variance getVarianceOfPositionRelativeToItsRoot(TypeRef typeRefInAST) {
 		var v = Variance.CO;
-		var curr = typeRef;
+		var curr = typeRefInAST;
 		while(curr!==null) {
 			val parent = EcoreUtil2.getContainerOfType(curr.eContainer, TypeRef);
 			if(parent!==null) {

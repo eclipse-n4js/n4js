@@ -195,7 +195,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		
 		if (migration.targetVersion == 0) {
 			val message = IssueCodes.getMessageForIDL_MIGRATION_VERSION_CANNOT_BE_INFERRED("target", migration.name);
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF,
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST,
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
 		}
@@ -223,7 +223,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		
 		if (!isVersionExclusive(migration.targetTypeRefs)) {
 			val message = IssueCodes.getMessageForIDL_MIGRATION_AMBIGUOUS_VERSION("target", migration.name);
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF,
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST,
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
 		}
@@ -485,7 +485,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			val parameterIndex = migration.fpars.indexOf(typeRef.eContainer as TFormalParameter);
 			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, parameterIndex, issueCode);
 		} else if (typeRef.eContainer instanceof TMigration) {
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, issueCode);
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST, issueCode);
 		} else {
 			// Unknown case. Fall-back to EObject based issue marking.
 			addIssue(message, typeRef, issueCode); 

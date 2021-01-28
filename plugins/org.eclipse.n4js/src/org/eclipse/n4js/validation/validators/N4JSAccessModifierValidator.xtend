@@ -171,12 +171,12 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private isReturnTypeButNotOfAGetter(TypeRef typeRef, EObject parent) {
-		(parent instanceof FunctionDefinition && (parent as FunctionDefinition).declaredReturnTypeRef === typeRef &&
+	def private isReturnTypeButNotOfAGetter(TypeRef typeRefInAST, EObject parent) {
+		(parent instanceof FunctionDefinition && (parent as FunctionDefinition).declaredReturnTypeRefInAST === typeRefInAST &&
 			!(parent instanceof N4GetterDeclaration)) ||
-			(parent instanceof TFunction && (parent as TFunction).returnTypeRef === typeRef &&
+			(parent instanceof TFunction && (parent as TFunction).returnTypeRef === typeRefInAST &&
 				!(parent instanceof TGetter)) ||
-			(parent instanceof FunctionTypeExpression && (parent as FunctionTypeExpression).returnTypeRef === typeRef)
+			(parent instanceof FunctionTypeExpression && (parent as FunctionTypeExpression).returnTypeRef === typeRefInAST)
 	}
 
 	@Check

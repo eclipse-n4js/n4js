@@ -241,10 +241,7 @@ import com.google.common.base.Strings;
 		write("get ");
 		processPropertyName(original);
 		write("() ");
-		if (original.getDeclaredTypeRef() != null) {
-			processReturnTypeRef(original.getDeclaredTypeRef());
-			write(' ');
-		}
+		processDeclaredTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -285,10 +282,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getDeclaredReturnTypeRef() != null) {
-			processReturnTypeRef(original.getDeclaredReturnTypeRef());
-			write(' ');
-		}
+		processReturnTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -321,10 +315,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getDeclaredReturnTypeRef() != null) {
-			processReturnTypeRef(original.getDeclaredReturnTypeRef());
-			write(' ');
-		}
+		processReturnTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -350,10 +341,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getDeclaredReturnTypeRef() != null) {
-			processReturnTypeRef(original.getDeclaredReturnTypeRef());
-			write(' ');
-		}
+		processReturnTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -366,7 +354,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(')');
-		processReturnTypeRef(original.getDeclaredReturnTypeRef());
+		processReturnTypeRef(original, "");
 		write("=>");
 		if (original.isHasBracesAroundBody()) {
 			process(original.getBody());
@@ -394,7 +382,7 @@ import com.google.common.base.Strings;
 			write("...");
 		}
 		write(original.getName());
-		processTypeRef(original.getDeclaredTypeRef());
+		processDeclaredTypeRef(original, "");
 		if (original.getInitializer() != null) {
 			write("=");
 			process(original.getInitializer());
@@ -453,7 +441,7 @@ import com.google.common.base.Strings;
 	public Boolean caseVariableDeclaration(VariableDeclaration original) {
 		processAnnotations(original.getAnnotations());
 		write(original.getName());
-		processTypeRef(original.getDeclaredTypeRef());
+		processDeclaredTypeRef(original, "");
 		if (original.getExpression() != null) {
 			write(" = ");
 			process(original.getExpression());
@@ -1335,7 +1323,11 @@ import com.google.common.base.Strings;
 		}
 	}
 
-	private void processReturnTypeRef(TypeRef returnTypeRef) {
+	@SuppressWarnings("unused")
+	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
+		TypeRef returnTypeRef = funDef.getDeclaredReturnTypeRef();
+		if (returnTypeRef == null)
+			returnTypeRef = funDef.getDeclaredReturnTypeRefInAST();
 		if (returnTypeRef == null)
 			return;
 
@@ -1343,19 +1335,23 @@ import com.google.common.base.Strings;
 		throw new IllegalStateException("Return type reference still left in code. typeref=" + returnTypeRef + " in "
 				+ EcoreUtil2.getContainerOfType(returnTypeRef, FunctionOrFieldAccessor.class));
 
-		// if(returnTypeRef!=null) {
 		// write(" : ");
 		// process(returnTypeRef);
-		// write(' ');
-		// }
+		// write(suffix);
 	}
 
-	private void processTypeRef(TypeRef declaredTypeRef) {
+	@SuppressWarnings("unused")
+	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {
+		TypeRef declaredTypeRef = elem.getDeclaredTypeRef();
 		if (declaredTypeRef == null)
 			return;
 
 		// In case of plain-JS output no types will be written
 		throw new IllegalStateException("Type reference still left in code. typeRef=" + declaredTypeRef);
+
+		// write(" : ");
+		// process(declaredTypeRef);
+		// write(suffix);
 	}
 
 	private void processTypeParams(EList<TypeVariable> typeParams) {

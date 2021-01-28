@@ -123,7 +123,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  Returns true iff this is an <em>unresolved</em> reference to an alias.
+	 *  Returns true iff this is an <em>unresolved</em> reference to a type alias.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -134,7 +134,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  Returns true iff this is a <em>resolved</em> reference to an alias.
+	 *  Returns true iff this is a <em>resolved</em> reference to a type alias.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

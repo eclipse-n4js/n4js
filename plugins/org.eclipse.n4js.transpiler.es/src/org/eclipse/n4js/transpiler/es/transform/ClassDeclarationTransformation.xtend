@@ -136,7 +136,7 @@ class ClassDeclarationTransformation extends Transformation {
 				N4GetterDeclaration:
 					currMember.declaredTypeRef = null
 				N4MethodDeclaration:
-					currMember.declaredReturnTypeRef = null
+					currMember.declaredReturnTypeRefInAST = null
 			}
 		}
 	}

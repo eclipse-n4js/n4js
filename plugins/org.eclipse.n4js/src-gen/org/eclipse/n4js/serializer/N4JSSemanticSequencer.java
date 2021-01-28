@@ -2047,7 +2047,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -2071,7 +2071,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -2961,7 +2961,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block
 	 *     )
 	 */
@@ -2984,7 +2984,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block
 	 *     )
 	 */
@@ -3685,7 +3685,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -3711,7 +3711,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -3769,7 +3769,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (declaredModifiers+=N4Modifier+ declaredAsync?='async' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -3790,7 +3790,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         ((declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName) | (generator?='*' declaredName=LiteralOrComputedPropertyName)) 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -3931,7 +3931,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (
 	 *             (
 	 *                 (annotationList=AnnotatedPropertyAssignment_PropertyMethodDeclaration_1_3_0_0_0 typeVars+=TypeVariable typeVars+=TypeVariable*) 
-	 *                 declaredReturnTypeRef=TypeRefWithModifiers? 
+	 *                 declaredReturnTypeRefInAST=TypeRefWithModifiers? 
 	 *                 declaredAsync?='async'? 
 	 *                 ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
@@ -3940,7 +3940,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                     annotationList=AnnotatedPropertyAssignment_PropertyMethodDeclaration_1_3_0_0_0 | 
 	 *                     (annotationList=AnnotatedPropertyAssignment_PropertyMethodDeclaration_1_3_0_0_0 typeVars+=TypeVariable typeVars+=TypeVariable*)
 	 *                 )? 
-	 *                 declaredReturnTypeRef=TypeRefWithModifiers? 
+	 *                 declaredReturnTypeRefInAST=TypeRefWithModifiers? 
 	 *                 ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName)
 	 *             )
 	 *         ) 
@@ -4000,7 +4000,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyMethodDeclaration_1_3_0_0_0 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         declaredReturnTypeRef=TypeRefWithModifiers? 
+	 *         declaredReturnTypeRefInAST=TypeRefWithModifiers? 
 	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         body=Block?
@@ -4176,7 +4176,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -4199,7 +4199,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -7412,7 +7412,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (
-	 *             (declaredAsync?='async'? (fpars+=FormalParameter fpars+=FormalParameter*)? declaredReturnTypeRef=TypeRef?) | 
+	 *             (declaredAsync?='async'? (fpars+=FormalParameter fpars+=FormalParameter*)? declaredReturnTypeRefInAST=TypeRef?) | 
 	 *             fpars+=BindingIdentifierAsFormalParameter
 	 *         )? 
 	 *         ((hasBracesAroundBody?='{' body=BlockMinusBraces) | body=ExpressionDisguisedAsBlock)
@@ -7489,7 +7489,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block
 	 *     )
 	 */
@@ -7514,7 +7514,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -7535,7 +7535,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredAsync?='async'? 
 	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -7552,7 +7552,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         declaredReturnTypeRef=TypeRefWithModifiers? 
+	 *         declaredReturnTypeRefInAST=TypeRefWithModifiers? 
 	 *         declaredAsync?='async'? 
 	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
@@ -9836,7 +9836,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRef=TypeRef? 
+	 *         declaredReturnTypeRefInAST=TypeRef? 
 	 *         body=Block
 	 *     )
 	 */
@@ -9851,7 +9851,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4CallableConstructorDeclaration returns N4MethodDeclaration
 	 *
 	 * Constraint:
-	 *     ((fpars+=FormalParameter fpars+=FormalParameter*)? declaredReturnTypeRef=TypeRef? body=Block?)
+	 *     ((fpars+=FormalParameter fpars+=FormalParameter*)? declaredReturnTypeRefInAST=TypeRef? body=Block?)
 	 */
 	protected void sequence_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

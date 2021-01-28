@@ -39474,9 +39474,9 @@ rule__AnnotatedPropertyAssignment__Group_1_3_0_0__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefAssignment_1_3_0_0_2()); }
-	(rule__AnnotatedPropertyAssignment__DeclaredReturnTypeRefAssignment_1_3_0_0_2)?
-	{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefAssignment_1_3_0_0_2()); }
+	{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTAssignment_1_3_0_0_2()); }
+	(rule__AnnotatedPropertyAssignment__DeclaredReturnTypeRefInASTAssignment_1_3_0_0_2)?
+	{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTAssignment_1_3_0_0_2()); }
 )
 ;
 finally {
@@ -40608,9 +40608,9 @@ norm1_AnnotatedPropertyAssignment__Group_1_3_0_0__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefAssignment_1_3_0_0_2()); }
-	(norm1_AnnotatedPropertyAssignment__DeclaredReturnTypeRefAssignment_1_3_0_0_2)?
-	{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefAssignment_1_3_0_0_2()); }
+	{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTAssignment_1_3_0_0_2()); }
+	(norm1_AnnotatedPropertyAssignment__DeclaredReturnTypeRefInASTAssignment_1_3_0_0_2)?
+	{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTAssignment_1_3_0_0_2()); }
 )
 ;
 finally {
@@ -41094,9 +41094,9 @@ rule__PropertyMethodDeclaration__Group_0_0__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefAssignment_0_0_2()); }
-	(rule__PropertyMethodDeclaration__DeclaredReturnTypeRefAssignment_0_0_2)?
-	{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefAssignment_0_0_2()); }
+	{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTAssignment_0_0_2()); }
+	(rule__PropertyMethodDeclaration__DeclaredReturnTypeRefInASTAssignment_0_0_2)?
+	{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTAssignment_0_0_2()); }
 )
 ;
 finally {
@@ -41445,9 +41445,9 @@ norm1_PropertyMethodDeclaration__Group_0_0__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefAssignment_0_0_2()); }
-	(norm1_PropertyMethodDeclaration__DeclaredReturnTypeRefAssignment_0_0_2)?
-	{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefAssignment_0_0_2()); }
+	{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTAssignment_0_0_2()); }
+	(norm1_PropertyMethodDeclaration__DeclaredReturnTypeRefInASTAssignment_0_0_2)?
+	{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTAssignment_0_0_2()); }
 )
 ;
 finally {
@@ -76147,9 +76147,9 @@ rule__ColonSepDeclaredReturnTypeRef__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefAssignment_1()); }
-	(rule__ColonSepDeclaredReturnTypeRef__DeclaredReturnTypeRefAssignment_1)
-	{ after(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefAssignment_1()); }
+	{ before(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefInASTAssignment_1()); }
+	(rule__ColonSepDeclaredReturnTypeRef__DeclaredReturnTypeRefInASTAssignment_1)
+	{ after(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefInASTAssignment_1()); }
 )
 ;
 finally {
@@ -82784,15 +82784,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__AnnotatedPropertyAssignment__DeclaredReturnTypeRefAssignment_1_3_0_0_2
+rule__AnnotatedPropertyAssignment__DeclaredReturnTypeRefInASTAssignment_1_3_0_0_2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
+		{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
 		ruleTypeRefWithModifiers
-		{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
+		{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
 	)
 ;
 finally {
@@ -83017,15 +83017,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-norm1_AnnotatedPropertyAssignment__DeclaredReturnTypeRefAssignment_1_3_0_0_2
+norm1_AnnotatedPropertyAssignment__DeclaredReturnTypeRefInASTAssignment_1_3_0_0_2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
+		{ before(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
 		ruleTypeRefWithModifiers
-		{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
+		{ after(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0()); }
 	)
 ;
 finally {
@@ -83126,15 +83126,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__PropertyMethodDeclaration__DeclaredReturnTypeRefAssignment_0_0_2
+rule__PropertyMethodDeclaration__DeclaredReturnTypeRefInASTAssignment_0_0_2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
+		{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
 		ruleTypeRefWithModifiers
-		{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
+		{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
 	)
 ;
 finally {
@@ -83190,15 +83190,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-norm1_PropertyMethodDeclaration__DeclaredReturnTypeRefAssignment_0_0_2
+norm1_PropertyMethodDeclaration__DeclaredReturnTypeRefInASTAssignment_0_0_2
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
+		{ before(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
 		ruleTypeRefWithModifiers
-		{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
+		{ after(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_2_0()); }
 	)
 ;
 finally {
@@ -89583,15 +89583,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ColonSepDeclaredReturnTypeRef__DeclaredReturnTypeRefAssignment_1
+rule__ColonSepDeclaredReturnTypeRef__DeclaredReturnTypeRefInASTAssignment_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefTypeRefParserRuleCall_1_0()); }
+		{ before(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0()); }
 		ruleTypeRef
-		{ after(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefTypeRefParserRuleCall_1_0()); }
+		{ after(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0()); }
 	)
 ;
 finally {

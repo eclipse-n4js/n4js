@@ -1874,7 +1874,7 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DEFINITION__FPARS = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1883,13 +1883,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION__GENERATOR = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 4;
+	int FUNCTION_DEFINITION__GENERATOR = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -1898,7 +1907,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION__DECLARED_ASYNC = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 5;
+	int FUNCTION_DEFINITION__DECLARED_ASYNC = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Function Definition</em>' class.
@@ -1907,7 +1916,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION_FEATURE_COUNT = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 6;
+	int FUNCTION_DEFINITION_FEATURE_COUNT = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -2272,7 +2281,7 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION__FPARS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2281,13 +2290,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 7;
+
+	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__GENERATOR = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 7;
+	int FUNCTION_DECLARATION__GENERATOR = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -2296,7 +2314,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__DECLARED_ASYNC = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 8;
+	int FUNCTION_DECLARATION__DECLARED_ASYNC = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -2305,7 +2323,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__TYPE_VARS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 9;
+	int FUNCTION_DECLARATION__TYPE_VARS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2314,7 +2332,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__NAME = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 10;
+	int FUNCTION_DECLARATION__NAME = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>migration Context</b></em>' containment reference.
@@ -2323,7 +2341,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__MIGRATION_CONTEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 11;
+	int FUNCTION_DECLARATION__MIGRATION_CONTEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 12;
 
 	/**
 	 * The number of structural features of the '<em>Function Declaration</em>' class.
@@ -2332,7 +2350,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 12;
+	int FUNCTION_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -2552,13 +2570,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_EXPRESSION__FPARS = FUNCTION_DEFINITION__FPARS;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int FUNCTION_EXPRESSION__DECLARED_RETURN_TYPE_REF = FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_EXPRESSION__DECLARED_RETURN_TYPE_REF_IN_AST = FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -2796,13 +2823,22 @@ public interface N4JSPackage extends EPackage {
 	int ARROW_FUNCTION__FPARS = FUNCTION_EXPRESSION__FPARS;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int ARROW_FUNCTION__DECLARED_RETURN_TYPE_REF = FUNCTION_EXPRESSION__DECLARED_RETURN_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARROW_FUNCTION__DECLARED_RETURN_TYPE_REF_IN_AST = FUNCTION_EXPRESSION__DECLARED_RETURN_TYPE_REF_IN_AST;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -6784,7 +6820,7 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_METHOD_DECLARATION__FPARS = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -6793,13 +6829,22 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 6;
+
+	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__GENERATOR = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 6;
+	int PROPERTY_METHOD_DECLARATION__GENERATOR = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -6808,7 +6853,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 7;
+	int PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -6817,7 +6862,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 8;
+	int PROPERTY_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
@@ -6826,7 +6871,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 9;
+	int PROPERTY_METHOD_DECLARATION__DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>Property Method Declaration</em>' class.
@@ -6835,7 +6880,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 10;
+	int PROPERTY_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -13773,13 +13818,22 @@ public interface N4JSPackage extends EPackage {
 	int METHOD_DECLARATION__FPARS = FUNCTION_DEFINITION__FPARS;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
 	int METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF = FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST = FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -14080,7 +14134,7 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION__FPARS = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -14089,13 +14143,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 6;
+
+	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__GENERATOR = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 6;
+	int N4_METHOD_DECLARATION__GENERATOR = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -14104,7 +14167,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 7;
+	int N4_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -14113,7 +14176,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 8;
+	int N4_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
@@ -14122,7 +14185,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 9;
+	int N4_METHOD_DECLARATION__DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -14131,7 +14194,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 10;
+	int N4_METHOD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>N4 Method Declaration</em>' class.
@@ -14140,7 +14203,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 11;
+	int N4_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -17345,15 +17408,26 @@ public interface N4JSPackage extends EPackage {
 	EReference getFunctionDefinition_Fpars();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRef <em>Declared Return Type Ref</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRef <em>Declared Return Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Declared Return Type Ref</em>'.
+	 * @return the meta object for the reference '<em>Declared Return Type Ref</em>'.
 	 * @see org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRef()
 	 * @see #getFunctionDefinition()
 	 * @generated
 	 */
 	EReference getFunctionDefinition_DeclaredReturnTypeRef();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefInAST <em>Declared Return Type Ref In AST</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Declared Return Type Ref In AST</em>'.
+	 * @see org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefInAST()
+	 * @see #getFunctionDefinition()
+	 * @generated
+	 */
+	EReference getFunctionDefinition_DeclaredReturnTypeRefInAST();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.FunctionDefinition#isGenerator <em>Generator</em>}'.
@@ -23232,12 +23306,20 @@ public interface N4JSPackage extends EPackage {
 		EReference FUNCTION_DEFINITION__FPARS = eINSTANCE.getFunctionDefinition_Fpars();
 
 		/**
-		 * The meta object literal for the '<em><b>Declared Return Type Ref</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Declared Return Type Ref</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF = eINSTANCE.getFunctionDefinition_DeclaredReturnTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST = eINSTANCE.getFunctionDefinition_DeclaredReturnTypeRefInAST();
 
 		/**
 		 * The meta object literal for the '<em><b>Generator</b></em>' attribute feature.

@@ -62,7 +62,7 @@ class TypeScopingTest {
 		val c = script1.scriptElements.last as N4ClassDeclaration
 		val d = script2.scriptElements.last as N4ClassDeclaration
 		val m = d.ownedMembers.head as N4MethodDeclaration
-		val returnType = (m.declaredReturnTypeRef as ParameterizedTypeRef).declaredType
+		val returnType = (m.declaredReturnTypeRefInAST as ParameterizedTypeRef).declaredType
 		val firstParamType = (m.fpars.head.declaredTypeRef as ParameterizedTypeRef).declaredType
 		Assert.assertSame(returnType, firstParamType)
 		Assert.assertSame(c.definedTypeAsClass, returnType)
@@ -80,7 +80,7 @@ class TypeScopingTest {
 		'''.parse(uri, rs)
 		val c = script.scriptElements.last as N4ClassDeclaration
 		val m = c.ownedMembers.head as N4MethodDeclaration
-		val returnType = (m.declaredReturnTypeRef as ParameterizedTypeRef).declaredType
+		val returnType = (m.declaredReturnTypeRefInAST as ParameterizedTypeRef).declaredType
 		val firstParamType = (m.fpars.head.declaredTypeRef as ParameterizedTypeRef).declaredType
 		Assert.assertSame((m.definedType as TMethod).typeVars.head, firstParamType)
 		Assert.assertSame(c.definedTypeAsClass.typeVars.head, returnType)

@@ -82,6 +82,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getDeclaredReturnTypeRef <em>Declared Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getDeclaredReturnTypeRefInAST <em>Declared Return Type Ref In AST</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
@@ -163,7 +164,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	protected EList<FormalParameter> fpars;
 
 	/**
-	 * The cached value of the '{@link #getDeclaredReturnTypeRef() <em>Declared Return Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getDeclaredReturnTypeRef() <em>Declared Return Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getDeclaredReturnTypeRef()
@@ -171,6 +172,16 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * @ordered
 	 */
 	protected TypeRef declaredReturnTypeRef;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredReturnTypeRefInAST() <em>Declared Return Type Ref In AST</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredReturnTypeRefInAST()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef declaredReturnTypeRefInAST;
 
 	/**
 	 * The default value of the '{@link #isGenerator() <em>Generator</em>}' attribute.
@@ -457,6 +468,14 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 */
 	@Override
 	public TypeRef getDeclaredReturnTypeRef() {
+		if (declaredReturnTypeRef != null && declaredReturnTypeRef.eIsProxy()) {
+			InternalEObject oldDeclaredReturnTypeRef = (InternalEObject)declaredReturnTypeRef;
+			declaredReturnTypeRef = (TypeRef)eResolveProxy(oldDeclaredReturnTypeRef);
+			if (declaredReturnTypeRef != oldDeclaredReturnTypeRef) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF, oldDeclaredReturnTypeRef, declaredReturnTypeRef));
+			}
+		}
 		return declaredReturnTypeRef;
 	}
 
@@ -465,11 +484,43 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef, NotificationChain msgs) {
+	public TypeRef basicGetDeclaredReturnTypeRef() {
+		return declaredReturnTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef) {
 		TypeRef oldDeclaredReturnTypeRef = declaredReturnTypeRef;
 		declaredReturnTypeRef = newDeclaredReturnTypeRef;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF, oldDeclaredReturnTypeRef, declaredReturnTypeRef));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredReturnTypeRefInAST() {
+		return declaredReturnTypeRefInAST;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDeclaredReturnTypeRefInAST(TypeRef newDeclaredReturnTypeRefInAST, NotificationChain msgs) {
+		TypeRef oldDeclaredReturnTypeRefInAST = declaredReturnTypeRefInAST;
+		declaredReturnTypeRefInAST = newDeclaredReturnTypeRefInAST;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF, oldDeclaredReturnTypeRef, newDeclaredReturnTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST, oldDeclaredReturnTypeRefInAST, newDeclaredReturnTypeRefInAST);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -481,18 +532,18 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef) {
-		if (newDeclaredReturnTypeRef != declaredReturnTypeRef) {
+	public void setDeclaredReturnTypeRefInAST(TypeRef newDeclaredReturnTypeRefInAST) {
+		if (newDeclaredReturnTypeRefInAST != declaredReturnTypeRefInAST) {
 			NotificationChain msgs = null;
-			if (declaredReturnTypeRef != null)
-				msgs = ((InternalEObject)declaredReturnTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF, null, msgs);
-			if (newDeclaredReturnTypeRef != null)
-				msgs = ((InternalEObject)newDeclaredReturnTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF, null, msgs);
-			msgs = basicSetDeclaredReturnTypeRef(newDeclaredReturnTypeRef, msgs);
+			if (declaredReturnTypeRefInAST != null)
+				msgs = ((InternalEObject)declaredReturnTypeRefInAST).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST, null, msgs);
+			if (newDeclaredReturnTypeRefInAST != null)
+				msgs = ((InternalEObject)newDeclaredReturnTypeRefInAST).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST, null, msgs);
+			msgs = basicSetDeclaredReturnTypeRefInAST(newDeclaredReturnTypeRefInAST, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF, newDeclaredReturnTypeRef, newDeclaredReturnTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST, newDeclaredReturnTypeRefInAST, newDeclaredReturnTypeRefInAST));
 	}
 
 	/**
@@ -731,7 +782,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 */
 	@Override
 	public boolean isReturnValueOptional() {
-		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getDeclaredReturnTypeRef() != null) && this.getDeclaredReturnTypeRef().isFollowedByQuestionMark()));
+		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getDeclaredReturnTypeRefInAST() != null) && this.getDeclaredReturnTypeRefInAST().isFollowedByQuestionMark()));
 	}
 
 	/**
@@ -857,8 +908,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return basicSet_lok(null, msgs);
 			case N4JSPackage.FUNCTION_DECLARATION__FPARS:
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
-			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF:
-				return basicSetDeclaredReturnTypeRef(null, msgs);
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				return basicSetDeclaredReturnTypeRefInAST(null, msgs);
 			case N4JSPackage.FUNCTION_DECLARATION__TYPE_VARS:
 				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.FUNCTION_DECLARATION__MIGRATION_CONTEXT:
@@ -889,7 +940,10 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			case N4JSPackage.FUNCTION_DECLARATION__FPARS:
 				return getFpars();
 			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF:
-				return getDeclaredReturnTypeRef();
+				if (resolve) return getDeclaredReturnTypeRef();
+				return basicGetDeclaredReturnTypeRef();
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				return getDeclaredReturnTypeRefInAST();
 			case N4JSPackage.FUNCTION_DECLARATION__GENERATOR:
 				return isGenerator();
 			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_ASYNC:
@@ -935,6 +989,9 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return;
 			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF:
 				setDeclaredReturnTypeRef((TypeRef)newValue);
+				return;
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				setDeclaredReturnTypeRefInAST((TypeRef)newValue);
 				return;
 			case N4JSPackage.FUNCTION_DECLARATION__GENERATOR:
 				setGenerator((Boolean)newValue);
@@ -985,6 +1042,9 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF:
 				setDeclaredReturnTypeRef((TypeRef)null);
 				return;
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				setDeclaredReturnTypeRefInAST((TypeRef)null);
+				return;
 			case N4JSPackage.FUNCTION_DECLARATION__GENERATOR:
 				setGenerator(GENERATOR_EDEFAULT);
 				return;
@@ -1026,6 +1086,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF:
 				return declaredReturnTypeRef != null;
+			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST:
+				return declaredReturnTypeRefInAST != null;
 			case N4JSPackage.FUNCTION_DECLARATION__GENERATOR:
 				return generator != GENERATOR_EDEFAULT;
 			case N4JSPackage.FUNCTION_DECLARATION__DECLARED_ASYNC:
@@ -1101,6 +1163,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			switch (derivedFeatureID) {
 				case N4JSPackage.FUNCTION_DECLARATION__FPARS: return N4JSPackage.FUNCTION_DEFINITION__FPARS;
 				case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF;
+				case N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST;
 				case N4JSPackage.FUNCTION_DECLARATION__GENERATOR: return N4JSPackage.FUNCTION_DEFINITION__GENERATOR;
 				case N4JSPackage.FUNCTION_DECLARATION__DECLARED_ASYNC: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC;
 				default: return -1;
@@ -1186,6 +1249,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			switch (baseFeatureID) {
 				case N4JSPackage.FUNCTION_DEFINITION__FPARS: return N4JSPackage.FUNCTION_DECLARATION__FPARS;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF: return N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF;
+				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST: return N4JSPackage.FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_IN_AST;
 				case N4JSPackage.FUNCTION_DEFINITION__GENERATOR: return N4JSPackage.FUNCTION_DECLARATION__GENERATOR;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC: return N4JSPackage.FUNCTION_DECLARATION__DECLARED_ASYNC;
 				default: return -1;

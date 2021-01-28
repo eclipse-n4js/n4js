@@ -64,7 +64,7 @@ class ClassWithConstructorTypesBuilderTest extends AbstractParserTest {
 		assertEquals("constructor", ctor.name);
 		assertTrue(ctorDecl.constructor);
 		assertTrue(ctor.constructor);
-		assertNull(ctorDecl.declaredReturnTypeRef);
+		assertNull(ctorDecl.declaredReturnTypeRefInAST);
 		assertTrue(ctor.returnTypeRef instanceof DeferredTypeRef);
 
 		val mDecl = classDecl.getOwnedMembers.get(1) as N4MethodDeclaration

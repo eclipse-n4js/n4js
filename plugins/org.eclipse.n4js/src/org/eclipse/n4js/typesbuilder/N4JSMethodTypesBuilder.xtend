@@ -140,7 +140,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 */
 	def private void setReturnTypeConsideringThis(TMethod methodType, N4MethodDeclaration methodDecl,
 		BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
-		if (methodDecl.isConstructor || methodDecl.declaredReturnTypeRef instanceof ThisTypeRef) {
+		if (methodDecl.isConstructor || methodDecl.declaredReturnTypeRefInAST instanceof ThisTypeRef) {
 			// special case: TypeDeferredProcessor will create a BoundThisTypeRef via Xsemantics judgment 'thisTypeRef'
 			methodType.returnTypeRef = TypeUtils.createDeferredTypeRef
 		} else {

@@ -159,7 +159,7 @@ class ASTStructureAssertionExtension {
 	}
 
 	def assertReturnTypeRef(String phase, FunctionDefinition function, Resource newN4jsResource) {
-		assertTrue("Should have parameterized type ref", function.declaredReturnTypeRef instanceof ParameterizedTypeRef)
+		assertTrue("Should have parameterized type ref", function.declaredReturnTypeRefInAST instanceof ParameterizedTypeRef)
 		val parameterizedTypeRef = function.declaredReturnTypeRef as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, newN4jsResource.contents.size)
 
