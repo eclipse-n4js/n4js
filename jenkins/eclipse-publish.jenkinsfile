@@ -72,7 +72,7 @@ pipeline {
         stage('Build (no tests)') {
             steps {
                 dir('n4js') {
-                    sh "mvn $MAVEN_OPTIONS -PbuildProduct -DlanguageVersion=${LANGUAGE_VERSION} -DexcludeJRE -DnoTests clean verify"
+                    sh "mvn $MAVEN_OPTIONS -DlanguageVersion=${LANGUAGE_VERSION} -DnoTests clean verify"
                 }
 
                 // assert that the headless builder reports the correct version
@@ -82,46 +82,6 @@ pipeline {
                     if (versionOfHeadlessBuilder != expectedVersion) {
                         error "headless builder reported an incorrect version: ${versionOfHeadlessBuilder}"
                     }
-                }
-            }
-        }
-
-        stage('Sign macOS product') {
-            steps {
-                dir('n4js/target/products') {
-                    sh "pwd"
-
-                    // sign the macOS product
-                    sh """\
-                        cp ../../builds/org.eclipse.n4js.product.build/signing-entitlements.xml .
-                        mv      n4js-ide_macos.zip          unsigned_n4js-ide_macos.zip
-                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@signing-entitlements.xml http://build.eclipse.org:31338/macsign.php
-                    """
-
-                    // bundle macOS product into a signed .dmg image
-                    sh """\
-                        curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
-                    """
-
-                    // notarize the .dmg image (with stapling)
-                    sh """\
-                        mv      n4js-ide_macos.dmg             unnotarized_n4js-ide_macos.dmg
-                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.dmg n4js-ide_macos.dmg true
-                    """
-
-                    // delete macOS .zip archive
-                    // NOTE: if we ever want to ship the .zip archive again in the future, we'd have to do two things here ...
-                    // 1) unzip and re-zip 'n4js-ide_macos.zip' in order to fix a problem on macOS Mojave (not Catalina) when
-                    //    double-clicking a zip archive in Finder (for the zip archive obtained from the signing service
-                    //    Finder would create an app bundle containing files with incorrect file permissions):
-                    //        unzip n4js-ide_macos.zip
-                    //        zip -r n4js-ide_macos.zip n4jsIDE.app
-                    // 2) notarize 'n4js-ide_macos.zip' using the script notarize.sh as for the dmg image above, but this time
-                    //    without stapling (not supported for zip archives):
-                    //        notarize.sh unnotarized_n4js-ide_macos.zip n4js-ide_macos.zip false
-                    sh """\
-                        rm n4js-ide_macos.zip
-                    """
                 }
             }
         }
