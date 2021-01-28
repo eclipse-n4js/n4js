@@ -960,9 +960,9 @@ public class TypeUtils {
 		else if (m instanceof TField)
 			return ((TField) m).getTypeRef();
 		else if (m instanceof TGetter)
-			return ((TGetter) m).getDeclaredTypeRef(); // TODO should use actual(!) type here, but not available yet!
+			return ((TGetter) m).getTypeRef();
 		else if (m instanceof TSetter)
-			return ((TSetter) m).getDeclaredTypeRef(); // note: this returns typeRef of the fpar
+			return ((TSetter) m).getTypeRef(); // note: this returns typeRef of the fpar
 		else if (m instanceof TMethod)
 			return ((TMethod) m).getReturnTypeRef();
 		else
@@ -978,7 +978,7 @@ public class TypeUtils {
 		if (m instanceof TField)
 			((TField) m).setTypeRef(typeRef);
 		else if (m instanceof TGetter)
-			((TGetter) m).setDeclaredTypeRef(typeRef);
+			((TGetter) m).setTypeRef(typeRef);
 		else if (m instanceof TSetter) {
 			final TSetter s = (TSetter) m;
 			if (s.getFpar() == null)

@@ -456,9 +456,9 @@ import org.eclipse.xtext.naming.QualifiedName;
 		if (m instanceof TStructField) {
 			return ((TStructField) m).getTypeRef();
 		} else if (m instanceof TStructGetter) {
-			return ((TStructGetter) m).getDeclaredTypeRef();
+			return ((TStructGetter) m).getTypeRef();
 		} else if (m instanceof TStructSetter) {
-			return ((TStructSetter) m).getDeclaredTypeRef();
+			return ((TStructSetter) m).getTypeRef();
 		} else if (m instanceof TStructMethod) {
 			return ((TStructMethod) m).getReturnTypeRef();
 		}

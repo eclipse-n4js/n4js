@@ -264,7 +264,7 @@ TGetter: =>
 	  	(name=TypesIdentifier | name=TypesComputedPropertyName)
   	)
 	(optional?='?')?
-  	'(' ')' ColonSepDeclaredTypeRef
+  	'(' ')' ColonSepTypeRef
 ;
 
 TSetter: =>

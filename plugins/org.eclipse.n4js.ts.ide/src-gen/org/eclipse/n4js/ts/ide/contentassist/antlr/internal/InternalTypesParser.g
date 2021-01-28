@@ -1708,23 +1708,6 @@ finally {
 }
 
 
-// Rule ColonSepDeclaredTypeRef
-ruleColonSepDeclaredTypeRef 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getColonSepDeclaredTypeRefAccess().getGroup()); }
-		(rule__ColonSepDeclaredTypeRef__Group__0)
-		{ after(grammarAccess.getColonSepDeclaredTypeRefAccess().getGroup()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
 // Rule ColonSepTypeRef
 ruleColonSepTypeRef 
 	@init {
@@ -8182,9 +8165,9 @@ rule__TGetter__Group__4__Impl
 	}
 :
 (
-	{ before(grammarAccess.getTGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); }
-	ruleColonSepDeclaredTypeRef
-	{ after(grammarAccess.getTGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); }
+	{ before(grammarAccess.getTGetterAccess().getColonSepTypeRefParserRuleCall_4()); }
+	ruleColonSepTypeRef
+	{ after(grammarAccess.getTGetterAccess().getColonSepTypeRefParserRuleCall_4()); }
 )
 ;
 finally {
@@ -13160,60 +13143,6 @@ finally {
 }
 
 
-rule__ColonSepDeclaredTypeRef__Group__0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__ColonSepDeclaredTypeRef__Group__0__Impl
-	rule__ColonSepDeclaredTypeRef__Group__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__ColonSepDeclaredTypeRef__Group__0__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getColonSepDeclaredTypeRefAccess().getColonKeyword_0()); }
-	Colon
-	{ after(grammarAccess.getColonSepDeclaredTypeRefAccess().getColonKeyword_0()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__ColonSepDeclaredTypeRef__Group__1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__ColonSepDeclaredTypeRef__Group__1__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__ColonSepDeclaredTypeRef__Group__1__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefAssignment_1()); }
-	(rule__ColonSepDeclaredTypeRef__DeclaredTypeRefAssignment_1)
-	{ after(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefAssignment_1()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
 rule__ColonSepTypeRef__Group__0
 	@init {
 		int stackSize = keepStackSize();
@@ -13528,9 +13457,9 @@ rule__TStructGetter__Group__4__Impl
 	}
 :
 (
-	{ before(grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); }
-	(ruleColonSepDeclaredTypeRef)?
-	{ after(grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); }
+	{ before(grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4()); }
+	(ruleColonSepTypeRef)?
+	{ after(grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4()); }
 )
 ;
 finally {
@@ -16722,21 +16651,6 @@ rule__TypeVariables__TypeVarsAssignment_2_1
 		{ before(grammarAccess.getTypeVariablesAccess().getTypeVarsTypeVariableParserRuleCall_2_1_0()); }
 		ruleTypeVariable
 		{ after(grammarAccess.getTypeVariablesAccess().getTypeVarsTypeVariableParserRuleCall_2_1_0()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__ColonSepDeclaredTypeRef__DeclaredTypeRefAssignment_1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_0()); }
-		ruleTypeRef
-		{ after(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_0()); }
 	)
 ;
 finally {

@@ -226,7 +226,7 @@ class DestructureHelper {
 		if(m!==null && !m.eIsProxy) {
 			val result = switch(m) {
 				TField: m.typeRef
-				TGetter: m.declaredTypeRef
+				TGetter: m.typeRef
 			};
 			if(result!==null) {
 				// substitute type variables in 'result'

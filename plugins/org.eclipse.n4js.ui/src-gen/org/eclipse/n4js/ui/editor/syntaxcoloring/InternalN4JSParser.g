@@ -21674,7 +21674,7 @@ ruleTStructGetter
 		announce($RightParenthesisKeyword_3, grammarAccess.getTStructGetterAccess().getRightParenthesisKeyword_3());
 	}
 	(
-		ColonSepDeclaredTypeRefParserRuleCall_4=ruleColonSepDeclaredTypeRef{ announce($ColonSepDeclaredTypeRefParserRuleCall_4.start, $ColonSepDeclaredTypeRefParserRuleCall_4.stop, grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); }
+		ColonSepTypeRefParserRuleCall_4=ruleColonSepTypeRef{ announce($ColonSepTypeRefParserRuleCall_4.start, $ColonSepTypeRefParserRuleCall_4.stop, grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4()); }
 	)?
 )
 ;

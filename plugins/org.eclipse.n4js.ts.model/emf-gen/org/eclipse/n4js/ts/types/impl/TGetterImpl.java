@@ -37,21 +37,21 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TGetterImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TGetterImpl#getTypeRef <em>Type Ref</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	/**
-	 * The cached value of the '{@link #getDeclaredTypeRef() <em>Declared Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredTypeRef()
+	 * @see #getTypeRef()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef declaredTypeRef;
+	protected TypeRef typeRef;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -78,8 +78,8 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredTypeRef() {
-		return declaredTypeRef;
+	public TypeRef getTypeRef() {
+		return typeRef;
 	}
 
 	/**
@@ -87,11 +87,11 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDeclaredTypeRef(TypeRef newDeclaredTypeRef, NotificationChain msgs) {
-		TypeRef oldDeclaredTypeRef = declaredTypeRef;
-		declaredTypeRef = newDeclaredTypeRef;
+	public NotificationChain basicSetTypeRef(TypeRef newTypeRef, NotificationChain msgs) {
+		TypeRef oldTypeRef = typeRef;
+		typeRef = newTypeRef;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TGETTER__DECLARED_TYPE_REF, oldDeclaredTypeRef, newDeclaredTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TGETTER__TYPE_REF, oldTypeRef, newTypeRef);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -103,18 +103,18 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
-		if (newDeclaredTypeRef != declaredTypeRef) {
+	public void setTypeRef(TypeRef newTypeRef) {
+		if (newTypeRef != typeRef) {
 			NotificationChain msgs = null;
-			if (declaredTypeRef != null)
-				msgs = ((InternalEObject)declaredTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TGETTER__DECLARED_TYPE_REF, null, msgs);
-			if (newDeclaredTypeRef != null)
-				msgs = ((InternalEObject)newDeclaredTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TGETTER__DECLARED_TYPE_REF, null, msgs);
-			msgs = basicSetDeclaredTypeRef(newDeclaredTypeRef, msgs);
+			if (typeRef != null)
+				msgs = ((InternalEObject)typeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TGETTER__TYPE_REF, null, msgs);
+			if (newTypeRef != null)
+				msgs = ((InternalEObject)newTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TGETTER__TYPE_REF, null, msgs);
+			msgs = basicSetTypeRef(newTypeRef, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TGETTER__DECLARED_TYPE_REF, newDeclaredTypeRef, newDeclaredTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TGETTER__TYPE_REF, newTypeRef, newTypeRef));
 	}
 
 	/**
@@ -141,10 +141,10 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 			strb.append("?");
 		}
 		strb.append("()");
-		TypeRef _declaredTypeRef = this.getDeclaredTypeRef();
-		boolean _tripleNotEquals = (_declaredTypeRef != null);
+		TypeRef _typeRef = this.getTypeRef();
+		boolean _tripleNotEquals = (_typeRef != null);
 		if (_tripleNotEquals) {
-			strb.append(": ").append(this.getDeclaredTypeRef().getTypeRefAsString());
+			strb.append(": ").append(this.getTypeRef().getTypeRefAsString());
 		}
 		return strb.toString();
 	}
@@ -157,8 +157,8 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypesPackage.TGETTER__DECLARED_TYPE_REF:
-				return basicSetDeclaredTypeRef(null, msgs);
+			case TypesPackage.TGETTER__TYPE_REF:
+				return basicSetTypeRef(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -171,8 +171,8 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.TGETTER__DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
+			case TypesPackage.TGETTER__TYPE_REF:
+				return getTypeRef();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -185,8 +185,8 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.TGETTER__DECLARED_TYPE_REF:
-				setDeclaredTypeRef((TypeRef)newValue);
+			case TypesPackage.TGETTER__TYPE_REF:
+				setTypeRef((TypeRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -200,8 +200,8 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TGETTER__DECLARED_TYPE_REF:
-				setDeclaredTypeRef((TypeRef)null);
+			case TypesPackage.TGETTER__TYPE_REF:
+				setTypeRef((TypeRef)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -215,8 +215,8 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TGETTER__DECLARED_TYPE_REF:
-				return declaredTypeRef != null;
+			case TypesPackage.TGETTER__TYPE_REF:
+				return typeRef != null;
 		}
 		return super.eIsSet(featureID);
 	}

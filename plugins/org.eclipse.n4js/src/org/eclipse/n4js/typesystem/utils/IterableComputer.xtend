@@ -143,7 +143,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 						result = m.returnTypeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 					else if(m instanceof TGetter) {
-						result = m.declaredTypeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
+						result = m.typeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 				}
 				else {

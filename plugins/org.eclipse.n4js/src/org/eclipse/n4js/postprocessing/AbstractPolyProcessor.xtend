@@ -244,7 +244,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			TField:
 				m.typeRef
 			TGetter:
-				m.declaredTypeRef
+				m.typeRef
 			TSetter:
 				m?.fpar.typeRef
 			TMethod:
@@ -259,7 +259,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			TField:
 				m.typeRef = type
 			TGetter:
-				m.declaredTypeRef = type
+				m.typeRef = type
 			TSetter:
 				if (m.fpar !== null) m.fpar.typeRef = type
 			TMethod:

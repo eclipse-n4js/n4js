@@ -9224,7 +9224,7 @@ ruleTStructGetter:
 	?
 	'('
 	')'
-	ruleColonSepDeclaredTypeRef?
+	ruleColonSepTypeRef?
 ;
 
 // Rule TStructSetter

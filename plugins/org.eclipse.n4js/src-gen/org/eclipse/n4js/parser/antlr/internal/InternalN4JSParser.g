@@ -38160,11 +38160,11 @@ ruleTStructGetter returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getTStructGetterRule());
 				}
-				newCompositeNode(grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4());
+				newCompositeNode(grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4());
 			}
-			this_ColonSepDeclaredTypeRef_6=ruleColonSepDeclaredTypeRef[$current]
+			this_ColonSepTypeRef_6=ruleColonSepTypeRef[$current]
 			{
-				$current = $this_ColonSepDeclaredTypeRef_6.current;
+				$current = $this_ColonSepTypeRef_6.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?

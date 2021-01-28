@@ -57,7 +57,7 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 				} else {
 					getterDef.declaredTypeRef
 				};
-			getterType.declaredTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
+			getterType.typeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
 		}
 	}
 

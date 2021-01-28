@@ -76346,9 +76346,9 @@ rule__TStructGetter__Group__4__Impl
 	}
 :
 (
-	{ before(grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); }
-	(ruleColonSepDeclaredTypeRef)?
-	{ after(grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); }
+	{ before(grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4()); }
+	(ruleColonSepTypeRef)?
+	{ after(grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4()); }
 )
 ;
 finally {

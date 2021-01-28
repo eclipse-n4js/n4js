@@ -180,9 +180,9 @@ class StyledTextCalculationHelper {
 			styledText.append("?");
 		}
 
-		if (tgetter.declaredTypeRef !== null) {
+		if (tgetter.typeRef !== null) {
 			styledText.append(": ");
-			styledText.append(getTypeRefDescription(tgetter.declaredTypeRef));
+			styledText.append(getTypeRefDescription(tgetter.typeRef));
 		}
 
 		return styledText;

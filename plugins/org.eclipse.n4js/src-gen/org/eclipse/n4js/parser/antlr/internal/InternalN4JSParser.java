@@ -55050,7 +55050,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Token otherlv_4=null;
         Token otherlv_5=null;
         AntlrDatatypeRuleToken lv_name_2_0 = null;
-        EObject this_ColonSepDeclaredTypeRef_6 = null;
+        EObject this_ColonSepTypeRef_6 = null;
         	enterRule();
         try {
             {
@@ -55135,14 +55135,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       				if (current==null) {
                       					current = createModelElement(grammarAccess.getTStructGetterRule());
                       				}
-                      				newCompositeNode(grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4());
+                      				newCompositeNode(grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4());
                     }
                     pushFollow(FOLLOW_2);
-                    this_ColonSepDeclaredTypeRef_6=ruleColonSepDeclaredTypeRef(current);
+                    this_ColonSepTypeRef_6=ruleColonSepTypeRef(current);
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      				current = this_ColonSepDeclaredTypeRef_6;
+                      				current = this_ColonSepTypeRef_6;
                       				afterParserOrEnumRuleCall();
                     }
                     }

@@ -39585,7 +39585,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         Token LeftParenthesisKeyword_2=null;
         Token RightParenthesisKeyword_3=null;
         InternalN4JSParser.ruleIdentifierName_return NameIdentifierNameParserRuleCall_0_0_2_0 = null;
-        InternalN4JSParser.ruleColonSepDeclaredTypeRef_return ColonSepDeclaredTypeRefParserRuleCall_4 = null;
+        InternalN4JSParser.ruleColonSepTypeRef_return ColonSepTypeRefParserRuleCall_4 = null;
         try {
             {
             {
@@ -39642,11 +39642,11 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                 case 1 :
                     {
                     pushFollow(FOLLOW_2);
-                    ColonSepDeclaredTypeRefParserRuleCall_4=ruleColonSepDeclaredTypeRef();
+                    ColonSepTypeRefParserRuleCall_4=ruleColonSepTypeRef();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                       announce((ColonSepDeclaredTypeRefParserRuleCall_4!=null?((Token)ColonSepDeclaredTypeRefParserRuleCall_4.start):null), (ColonSepDeclaredTypeRefParserRuleCall_4!=null?((Token)ColonSepDeclaredTypeRefParserRuleCall_4.stop):null), grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4()); 
+                       announce((ColonSepTypeRefParserRuleCall_4!=null?((Token)ColonSepTypeRefParserRuleCall_4.start):null), (ColonSepTypeRefParserRuleCall_4!=null?((Token)ColonSepTypeRefParserRuleCall_4.stop):null), grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4()); 
                     }
                     }
                     break;

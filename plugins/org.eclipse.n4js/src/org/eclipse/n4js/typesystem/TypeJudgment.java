@@ -263,13 +263,13 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseTGetter(TGetter tGetter) {
-			final TypeRef declTypeRef = tGetter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = tGetter.getTypeRef();
 			return declTypeRef != null ? declTypeRef : anyTypeRef(G);
 		}
 
 		@Override
 		public TypeRef caseTSetter(TSetter tSetter) {
-			final TypeRef declTypeRef = tSetter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = tSetter.getTypeRef();
 			return declTypeRef != null ? declTypeRef : anyTypeRef(G);
 		}
 
@@ -441,7 +441,7 @@ import com.google.inject.Inject;
 				return declTypeRef;
 			} else {
 				final TGetter defGetter = getter.getDefinedGetter();
-				final TypeRef defDeclTypeRef = defGetter != null ? defGetter.getDeclaredTypeRef() : null;
+				final TypeRef defDeclTypeRef = defGetter != null ? defGetter.getTypeRef() : null;
 				if (defDeclTypeRef != null) {
 					return defDeclTypeRef;
 				} else {
@@ -457,7 +457,7 @@ import com.google.inject.Inject;
 				return declTypeRef;
 			} else {
 				final TSetter defSetter = setter.getDefinedSetter();
-				final TypeRef defDeclTypeRef = defSetter != null ? defSetter.getDeclaredTypeRef() : null;
+				final TypeRef defDeclTypeRef = defSetter != null ? defSetter.getTypeRef() : null;
 				if (defDeclTypeRef != null) {
 					return defDeclTypeRef;
 				} else {

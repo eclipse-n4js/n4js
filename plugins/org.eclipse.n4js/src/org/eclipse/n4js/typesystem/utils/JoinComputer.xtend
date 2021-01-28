@@ -325,12 +325,12 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 	}
 
 	private def dispatch substituted(RuleEnvironment G, TGetter member) {
-		if (member.declaredTypeRef !== null && member.declaredTypeRef.parameterized) {
+		if (member.typeRef !== null && member.typeRef.parameterized) {
 			val subst = TypesFactory.eINSTANCE.createTStructGetter();
 			subst.name = member.name;
-			subst.declaredTypeRef = ts.substTypeVariables(G, member.declaredTypeRef);
-			if (subst.declaredTypeRef === null) {
-				subst.declaredTypeRef = G.anyTypeRef;
+			subst.typeRef = ts.substTypeVariables(G, member.typeRef);
+			if (subst.typeRef === null) {
+				subst.typeRef = G.anyTypeRef;
 			}
 			return subst;
 		} else {

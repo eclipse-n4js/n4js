@@ -213,6 +213,7 @@ fragment TypeVariables*:
 	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
 ;
 
+// used in N4JS.xtext
 fragment ColonSepDeclaredTypeRef*:
 	':' declaredTypeRef=TypeRef
 ;
@@ -234,7 +235,7 @@ TStructGetter:
 	'get'
 	name=IdentifierName)
 	(optional?='?')?
-	'(' ')' ColonSepDeclaredTypeRef?
+	'(' ')' ColonSepTypeRef?
 ;
 
 TStructSetter:

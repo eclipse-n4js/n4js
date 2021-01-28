@@ -36,9 +36,9 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -286,7 +286,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final TGetter g = TypesFactory.eINSTANCE.createTGetter();
 			g.setComposed(true);
 			g.setName(memberName);
-			g.setDeclaredTypeRef(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
+			g.setTypeRef(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
 			return g;
 		}
 	}

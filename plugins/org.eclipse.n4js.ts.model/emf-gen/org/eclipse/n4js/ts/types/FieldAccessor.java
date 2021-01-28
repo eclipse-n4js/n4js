@@ -107,7 +107,7 @@ public interface FieldAccessor extends TMemberWithAccessModifier {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeRef getDeclaredTypeRef();
+	TypeRef getTypeRef();
 
 	/**
 	 * <!-- begin-user-doc -->

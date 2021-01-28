@@ -77,7 +77,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		} else {
 			// funDef === null, so maybe we are in a getter:
 			if (fofa instanceof GetterDeclaration) {
-				return fofa?.definedGetter?.declaredTypeRef;
+				return fofa?.definedGetter?.typeRef;
 			}
 		}
 		return null; // null means: no type expectation

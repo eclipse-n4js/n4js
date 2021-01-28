@@ -96,10 +96,10 @@ public class N4JSObjectLiteralTypesBuilder {
 		getter.optional = getterDecl.declaredOptional;
 		if (getterDecl.declaredTypeRef !== null) {
 			if (!preLinkingPhase) {
-				getter.declaredTypeRef = TypeUtils.copyWithProxies(getterDecl.declaredTypeRef)
+				getter.typeRef = TypeUtils.copyWithProxies(getterDecl.declaredTypeRef)
 			}
 		} else {
-			getter.declaredTypeRef = TypeUtils.createDeferredTypeRef;
+			getter.typeRef = TypeUtils.createDeferredTypeRef;
 		}
 		getter.astElement = getterDecl;
 		getterDecl.definedGetter = getter;
