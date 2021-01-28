@@ -31,7 +31,6 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -47,6 +46,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -172,7 +172,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private isReturnTypeButNotOfAGetter(TypeRef typeRef, EObject parent) {
-		(parent instanceof FunctionDefinition && (parent as FunctionDefinition).returnTypeRef === typeRef &&
+		(parent instanceof FunctionDefinition && (parent as FunctionDefinition).declaredReturnTypeRef === typeRef &&
 			!(parent instanceof N4GetterDeclaration)) ||
 			(parent instanceof TFunction && (parent as TFunction).returnTypeRef === typeRef &&
 				!(parent instanceof TGetter)) ||

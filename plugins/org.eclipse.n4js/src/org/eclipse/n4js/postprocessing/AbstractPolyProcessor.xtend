@@ -91,7 +91,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			}
 			FunctionExpression:
 				obj.fpars.exists[declaredTypeRef === null] // type of 1 or more fpars is undeclared
-				|| obj.returnTypeRef === null // return type is undeclared
+				|| obj.declaredReturnTypeRef === null // return type is undeclared
 				// note: if the FunctionExpression is generic, this does *not* make it poly!
 			ArrayLiteral:
 				true

@@ -11,14 +11,14 @@
 package org.eclipse.n4js.tests.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.tests.typesbuilder.extensions.ASTStructureAssertionExtension
 import org.eclipse.n4js.tests.typesbuilder.extensions.TypesStructureAssertionExtension
 import org.eclipse.n4js.tests.typesbuilder.utils.AbstractTypesBuilderTest
 import org.eclipse.n4js.ts.types.TFunction
-import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
@@ -134,6 +134,6 @@ class FunctionsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		assertTypeVariables(phase, n4Function, resource)
 
-		Assert.assertNull("no return type expected", n4Function.returnTypeRef)
+		Assert.assertNull("no return type expected", n4Function.declaredReturnTypeRef)
 	}
 }

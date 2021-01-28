@@ -65,12 +65,12 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
-				if (functionDef.returnTypeRef === null) {
+				if (functionDef.declaredReturnTypeRef === null) {
 					if (!preLinkingPhase) {
 						inferReturnTypeFromReturnStatements(functionDef, builtInTypeScope)
 					}
 				} else {
-					functionDef.returnTypeRef
+					functionDef.declaredReturnTypeRef
 				};
 			functionType.returnTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
 			// note: handling of the return type of async functions not done here, see TypeProcessor#handleAsyncFunctionDeclaration()

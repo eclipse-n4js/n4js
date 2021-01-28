@@ -640,7 +640,7 @@ ruleFunctionHeader:
 	ruleStrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
@@ -653,7 +653,7 @@ norm1_FunctionHeader:
 	ruleStrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
@@ -666,7 +666,7 @@ norm2_FunctionHeader:
 	norm1_StrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
@@ -679,7 +679,7 @@ norm3_FunctionHeader:
 	norm1_StrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
@@ -783,7 +783,7 @@ ruleArrowExpression:
 	(
 		((
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -797,7 +797,7 @@ ruleArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -805,7 +805,7 @@ ruleArrowExpression:
 		)=>
 		(
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -819,7 +819,7 @@ ruleArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -842,7 +842,7 @@ norm1_ArrowExpression:
 	(
 		((
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -856,7 +856,7 @@ norm1_ArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -864,7 +864,7 @@ norm1_ArrowExpression:
 		)=>
 		(
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -878,7 +878,7 @@ norm1_ArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -901,7 +901,7 @@ norm2_ArrowExpression:
 	(
 		((
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -915,7 +915,7 @@ norm2_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -923,7 +923,7 @@ norm2_ArrowExpression:
 		)=>
 		(
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -937,7 +937,7 @@ norm2_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -960,7 +960,7 @@ norm3_ArrowExpression:
 	(
 		((
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -974,7 +974,7 @@ norm3_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -982,7 +982,7 @@ norm3_ArrowExpression:
 		)=>
 		(
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -996,7 +996,7 @@ norm3_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -6019,7 +6019,7 @@ ruleAssignmentExpression:
 		(
 			((
 				ruleStrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6033,7 +6033,7 @@ ruleAssignmentExpression:
 						ruleStrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
@@ -6073,7 +6073,7 @@ norm1_AssignmentExpression:
 		(
 			((
 				ruleStrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6087,7 +6087,7 @@ norm1_AssignmentExpression:
 						ruleStrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
@@ -6127,7 +6127,7 @@ norm2_AssignmentExpression:
 		(
 			((
 				norm1_StrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6141,7 +6141,7 @@ norm2_AssignmentExpression:
 						norm1_StrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
@@ -6183,7 +6183,7 @@ norm3_AssignmentExpression:
 		(
 			((
 				norm1_StrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6197,7 +6197,7 @@ norm3_AssignmentExpression:
 						norm1_StrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
@@ -7965,7 +7965,7 @@ norm1_MethodParamsAndBody:
 // Rule MethodParamsReturnAndBody
 ruleMethodParamsReturnAndBody:
 	ruleStrictFormalParameters
-	ruleColonSepReturnTypeRef?
+	ruleColonSepDeclaredReturnTypeRef?
 	(
 		('{'
 		)=>
@@ -7976,7 +7976,7 @@ ruleMethodParamsReturnAndBody:
 // Rule MethodParamsReturnAndBody
 norm1_MethodParamsReturnAndBody:
 	norm1_StrictFormalParameters
-	ruleColonSepReturnTypeRef?
+	ruleColonSepDeclaredReturnTypeRef?
 	(
 		('{'
 		)=>
@@ -9193,6 +9193,12 @@ ruleColonSepDeclaredTypeRef:
 
 // Rule ColonSepTypeRef
 ruleColonSepTypeRef:
+	':'
+	ruleTypeRef
+;
+
+// Rule ColonSepDeclaredReturnTypeRef
+ruleColonSepDeclaredReturnTypeRef:
 	':'
 	ruleTypeRef
 ;

@@ -285,8 +285,8 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getReturnTypeRef() != null) {
-			processReturnTypeRef(original.getReturnTypeRef());
+		if (original.getDeclaredReturnTypeRef() != null) {
+			processReturnTypeRef(original.getDeclaredReturnTypeRef());
 			write(' ');
 		}
 		process(original.getBody());
@@ -321,8 +321,8 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getReturnTypeRef() != null) {
-			processReturnTypeRef(original.getReturnTypeRef());
+		if (original.getDeclaredReturnTypeRef() != null) {
+			processReturnTypeRef(original.getDeclaredReturnTypeRef());
 			write(' ');
 		}
 		process(original.getBody());
@@ -350,8 +350,8 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getReturnTypeRef() != null) {
-			processReturnTypeRef(original.getReturnTypeRef());
+		if (original.getDeclaredReturnTypeRef() != null) {
+			processReturnTypeRef(original.getDeclaredReturnTypeRef());
 			write(' ');
 		}
 		process(original.getBody());
@@ -366,7 +366,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(')');
-		processReturnTypeRef(original.getReturnTypeRef());
+		processReturnTypeRef(original.getDeclaredReturnTypeRef());
 		write("=>");
 		if (original.isHasBracesAroundBody()) {
 			process(original.getBody());

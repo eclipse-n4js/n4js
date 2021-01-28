@@ -121,7 +121,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	
 	/** Checks that the #targetTypeRefs of TMigration aren't inferred but explicitly declared. */
 	private def boolean holdsExplicitlyDeclaresReturnType(FunctionDeclaration migrationDeclaration, TMigration tMigration) {
-		if (null === migrationDeclaration.returnTypeRef) {
+		if (null === migrationDeclaration.declaredReturnTypeRef) {
 			addIssue(IssueCodes.messageForIDL_MIGRATION_MUST_EXPLICITLY_DECLARE_RETURN_TYPE, migrationDeclaration,
 				N4JSPackage.Literals.FUNCTION_DECLARATION__NAME, IssueCodes.IDL_MIGRATION_MUST_EXPLICITLY_DECLARE_RETURN_TYPE);
 				return false;
@@ -195,7 +195,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		
 		if (migration.targetVersion == 0) {
 			val message = IssueCodes.getMessageForIDL_MIGRATION_VERSION_CANNOT_BE_INFERRED("target", migration.name);
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__RETURN_TYPE_REF,
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF,
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
 		}
@@ -223,7 +223,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		
 		if (!isVersionExclusive(migration.targetTypeRefs)) {
 			val message = IssueCodes.getMessageForIDL_MIGRATION_AMBIGUOUS_VERSION("target", migration.name);
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__RETURN_TYPE_REF,
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF,
 				IssueCodes.IDL_MIGRATION_VERSION_CANNOT_BE_INFERRED);
 			return false;
 		}
@@ -373,7 +373,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 	 * Returns a list of switch-recognizable {@link TypeRef type references} based on the source type refs of the given {@code migration}.
 	 * 
 	 * Returns an empty list if any of the given {@link TypeRef references} cannot be handled by a {@link SwitchCondition} 
-	 * (cf. {@link org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer.UnhandledTypeRefException}).
+	 * (cf. {@link MigrationSwitchComputer.UnhandledTypeRefException}).
 	 * 
 	 * Adds issues for unsupported type refs using {@link #addUnsupportedParameterTypeRefIssue}.
 	 */
@@ -485,7 +485,7 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 			val parameterIndex = migration.fpars.indexOf(typeRef.eContainer as TFormalParameter);
 			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__FPARS, parameterIndex, issueCode);
 		} else if (typeRef.eContainer instanceof TMigration) {
-			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__RETURN_TYPE_REF, issueCode);
+			addIssue(message, migration.astElement, N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF, issueCode);
 		} else {
 			// Unknown case. Fall-back to EObject based issue marking.
 			addIssue(message, typeRef, issueCode); 

@@ -148,9 +148,9 @@ public class N4JSObjectLiteralTypesBuilder {
 		// IMPORTANT: do not create the formal parameters as above for the property setters but instead create them with
 		// method N4JSFormalParameterTypesBuilder#createFormalParameter() (for consistency with methods in classes)
 		result.fpars += methodDecl.fpars.map[createFormalParameter(builtInTypeScope, preLinkingPhase)];
-		if (methodDecl.returnTypeRef !== null) {
+		if (methodDecl.declaredReturnTypeRef !== null) {
 			if (!preLinkingPhase) {
-				result.returnTypeRef = TypeUtils.copyWithProxies(methodDecl.returnTypeRef);
+				result.returnTypeRef = TypeUtils.copyWithProxies(methodDecl.declaredReturnTypeRef);
 			}
 		} else {
 			result.returnTypeRef = builtInTypeScope.voidTypeRef;

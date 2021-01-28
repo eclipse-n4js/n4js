@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tests.scoping
 
 import com.google.inject.Inject
+import com.google.inject.Provider
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -19,16 +21,14 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TField
-import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.ts.types.TMethod
-import com.google.inject.Provider
 
 /**
  */
@@ -62,7 +62,7 @@ class TypeScopingTest {
 		val c = script1.scriptElements.last as N4ClassDeclaration
 		val d = script2.scriptElements.last as N4ClassDeclaration
 		val m = d.ownedMembers.head as N4MethodDeclaration
-		val returnType = (m.returnTypeRef as ParameterizedTypeRef).declaredType
+		val returnType = (m.declaredReturnTypeRef as ParameterizedTypeRef).declaredType
 		val firstParamType = (m.fpars.head.declaredTypeRef as ParameterizedTypeRef).declaredType
 		Assert.assertSame(returnType, firstParamType)
 		Assert.assertSame(c.definedTypeAsClass, returnType)
@@ -80,7 +80,7 @@ class TypeScopingTest {
 		'''.parse(uri, rs)
 		val c = script.scriptElements.last as N4ClassDeclaration
 		val m = c.ownedMembers.head as N4MethodDeclaration
-		val returnType = (m.returnTypeRef as ParameterizedTypeRef).declaredType
+		val returnType = (m.declaredReturnTypeRef as ParameterizedTypeRef).declaredType
 		val firstParamType = (m.fpars.head.declaredTypeRef as ParameterizedTypeRef).declaredType
 		Assert.assertSame((m.definedType as TMethod).typeVars.head, firstParamType)
 		Assert.assertSame(c.definedTypeAsClass.typeVars.head, returnType)

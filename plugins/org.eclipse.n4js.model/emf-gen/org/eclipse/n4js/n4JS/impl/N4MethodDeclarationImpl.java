@@ -94,7 +94,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDefinedType <em>Defined Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getFpars <em>Fpars</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredReturnTypeRef <em>Declared Return Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
@@ -166,14 +166,14 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	protected EList<FormalParameter> fpars;
 
 	/**
-	 * The cached value of the '{@link #getReturnTypeRef() <em>Return Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getDeclaredReturnTypeRef() <em>Declared Return Type Ref</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getReturnTypeRef()
+	 * @see #getDeclaredReturnTypeRef()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef returnTypeRef;
+	protected TypeRef declaredReturnTypeRef;
 
 	/**
 	 * The default value of the '{@link #isGenerator() <em>Generator</em>}' attribute.
@@ -436,8 +436,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	@Override
-	public TypeRef getReturnTypeRef() {
-		return returnTypeRef;
+	public TypeRef getDeclaredReturnTypeRef() {
+		return declaredReturnTypeRef;
 	}
 
 	/**
@@ -445,11 +445,11 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetReturnTypeRef(TypeRef newReturnTypeRef, NotificationChain msgs) {
-		TypeRef oldReturnTypeRef = returnTypeRef;
-		returnTypeRef = newReturnTypeRef;
+	public NotificationChain basicSetDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef, NotificationChain msgs) {
+		TypeRef oldDeclaredReturnTypeRef = declaredReturnTypeRef;
+		declaredReturnTypeRef = newDeclaredReturnTypeRef;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF, oldReturnTypeRef, newReturnTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF, oldDeclaredReturnTypeRef, newDeclaredReturnTypeRef);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -461,18 +461,18 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	@Override
-	public void setReturnTypeRef(TypeRef newReturnTypeRef) {
-		if (newReturnTypeRef != returnTypeRef) {
+	public void setDeclaredReturnTypeRef(TypeRef newDeclaredReturnTypeRef) {
+		if (newDeclaredReturnTypeRef != declaredReturnTypeRef) {
 			NotificationChain msgs = null;
-			if (returnTypeRef != null)
-				msgs = ((InternalEObject)returnTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF, null, msgs);
-			if (newReturnTypeRef != null)
-				msgs = ((InternalEObject)newReturnTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF, null, msgs);
-			msgs = basicSetReturnTypeRef(newReturnTypeRef, msgs);
+			if (declaredReturnTypeRef != null)
+				msgs = ((InternalEObject)declaredReturnTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF, null, msgs);
+			if (newDeclaredReturnTypeRef != null)
+				msgs = ((InternalEObject)newDeclaredReturnTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF, null, msgs);
+			msgs = basicSetDeclaredReturnTypeRef(newDeclaredReturnTypeRef, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF, newReturnTypeRef, newReturnTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF, newDeclaredReturnTypeRef, newDeclaredReturnTypeRef));
 	}
 
 	/**
@@ -785,7 +785,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 */
 	@Override
 	public boolean isReturnValueOptional() {
-		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
+		return (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional()) || ((this.getDeclaredReturnTypeRef() != null) && this.getDeclaredReturnTypeRef().isFollowedByQuestionMark()));
 	}
 
 	/**
@@ -911,8 +911,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return basicSet_lok(null, msgs);
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
-			case N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF:
-				return basicSetReturnTypeRef(null, msgs);
+			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF:
+				return basicSetDeclaredReturnTypeRef(null, msgs);
 			case N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS:
 				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_TYPE_REF:
@@ -942,8 +942,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return getDeclaredVersion();
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return getFpars();
-			case N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF:
-				return getReturnTypeRef();
+			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF:
+				return getDeclaredReturnTypeRef();
 			case N4JSPackage.N4_METHOD_DECLARATION__GENERATOR:
 				return isGenerator();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC:
@@ -983,8 +983,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				getFpars().clear();
 				getFpars().addAll((Collection<? extends FormalParameter>)newValue);
 				return;
-			case N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF:
-				setReturnTypeRef((TypeRef)newValue);
+			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF:
+				setDeclaredReturnTypeRef((TypeRef)newValue);
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__GENERATOR:
 				setGenerator((Boolean)newValue);
@@ -1029,8 +1029,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
 				return;
-			case N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF:
-				setReturnTypeRef((TypeRef)null);
+			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF:
+				setDeclaredReturnTypeRef((TypeRef)null);
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__GENERATOR:
 				setGenerator(GENERATOR_EDEFAULT);
@@ -1069,8 +1069,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return DECLARED_VERSION_EDEFAULT == null ? declaredVersion != null : !DECLARED_VERSION_EDEFAULT.equals(declaredVersion);
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return fpars != null && !fpars.isEmpty();
-			case N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF:
-				return returnTypeRef != null;
+			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF:
+				return declaredReturnTypeRef != null;
 			case N4JSPackage.N4_METHOD_DECLARATION__GENERATOR:
 				return generator != GENERATOR_EDEFAULT;
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC:
@@ -1124,7 +1124,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		if (baseClass == FunctionDefinition.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_METHOD_DECLARATION__FPARS: return N4JSPackage.FUNCTION_DEFINITION__FPARS;
-				case N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF: return N4JSPackage.FUNCTION_DEFINITION__RETURN_TYPE_REF;
+				case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF;
 				case N4JSPackage.N4_METHOD_DECLARATION__GENERATOR: return N4JSPackage.FUNCTION_DEFINITION__GENERATOR;
 				case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC;
 				default: return -1;
@@ -1195,7 +1195,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		if (baseClass == FunctionDefinition.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.FUNCTION_DEFINITION__FPARS: return N4JSPackage.N4_METHOD_DECLARATION__FPARS;
-				case N4JSPackage.FUNCTION_DEFINITION__RETURN_TYPE_REF: return N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF;
+				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF: return N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF;
 				case N4JSPackage.FUNCTION_DEFINITION__GENERATOR: return N4JSPackage.N4_METHOD_DECLARATION__GENERATOR;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC: return N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC;
 				default: return -1;

@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.organize.imports
 
+import java.util.Collection
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.Type
-import java.util.Collection
 
 import static org.eclipse.n4js.AnnotationDefinition.*
 
@@ -59,7 +59,7 @@ class InjectedTypesResolverUtility {
 					// Binder's @Provides dependencies.
 					cl.ownedMethods.forEach [ m |
 						if (PROVIDES.hasAnnotation(m)) {
-							injections.add(getDeclaredTypeFromTypeRef(m.returnTypeRef));
+							injections.add(getDeclaredTypeFromTypeRef(m.declaredReturnTypeRef));
 							m.fpars.forEach[injections.add(getDeclaredTypeFromTypeRef(it.declaredTypeRef))];
 						}
 					];

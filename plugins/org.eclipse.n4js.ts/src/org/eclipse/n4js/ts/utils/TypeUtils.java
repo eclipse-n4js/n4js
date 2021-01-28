@@ -1547,7 +1547,7 @@ public class TypeUtils {
 		Objects.requireNonNull(funDef);
 
 		boolean async = funDef.isAsync();
-		TypeRef definedReturn = funDef.getReturnTypeRef();
+		TypeRef definedReturn = funDef.getDeclaredReturnTypeRef();
 		TypeArgument tYield;
 		TypeArgument tReturn = inferReturnTypeFromReturns(funDef, scope);
 

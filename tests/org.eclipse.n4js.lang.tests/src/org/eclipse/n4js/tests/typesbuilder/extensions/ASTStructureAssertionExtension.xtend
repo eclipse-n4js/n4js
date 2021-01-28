@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
@@ -39,8 +41,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
 
 import static org.junit.Assert.*
 
@@ -159,8 +159,8 @@ class ASTStructureAssertionExtension {
 	}
 
 	def assertReturnTypeRef(String phase, FunctionDefinition function, Resource newN4jsResource) {
-		assertTrue("Should have parameterized type ref", function.returnTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = function.returnTypeRef as ParameterizedTypeRef
+		assertTrue("Should have parameterized type ref", function.declaredReturnTypeRef instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = function.declaredReturnTypeRef as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, newN4jsResource.contents.size)
 
 		// test whether reference can be resolved

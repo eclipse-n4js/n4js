@@ -262,7 +262,7 @@ fragment FunctionHeader<Yield, Generator>*:
 	name=BindingIdentifier<Yield>?
 	VersionDeclaration?
 	StrictFormalParameters<Yield=Generator>
-	(-> ColonSepReturnTypeRef)?
+	(-> ColonSepDeclaredReturnTypeRef)?
 ;
 
 fragment FunctionBody <Yield, Expression>*:
@@ -301,8 +301,8 @@ ArrowExpression <In, Yield> returns ArrowFunction:
 			(
 					// we cannot use fragments here since we have to combine the terminals into a syntactic predicate
 					// also, we have to use explicit alternatives instead of making async optional due to a generation bug
-					StrictFormalParameters<Yield> ColonSepReturnTypeRef?
-				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepReturnTypeRef?
+					StrictFormalParameters<Yield> ColonSepDeclaredReturnTypeRef?
+				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 				| 	fpars+=BindingIdentifierAsFormalParameter<Yield>
 			)
 			/* no line terminator here, guaranteed implicitly */ '=>'
@@ -680,7 +680,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 			'set' ->declaredName=LiteralOrComputedPropertyName <Yield>
 		) (declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' body=Block<Yield=false>
 	| =>({PropertyMethodDeclaration.annotationList=current}
-			TypeVariables? returnTypeRef=TypeRefWithModifiers?
+			TypeVariables? declaredReturnTypeRef=TypeRefWithModifiers?
 			(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
 			)
@@ -692,7 +692,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
-		TypeVariables? returnTypeRef=TypeRefWithModifiers?
+		TypeVariables? declaredReturnTypeRef=TypeRefWithModifiers?
 		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
@@ -1445,7 +1445,7 @@ fragment MethodParamsAndBody <Generator>*:
 
 fragment MethodParamsReturnAndBody <Generator>*:
 	StrictFormalParameters<Yield=Generator>
-	ColonSepReturnTypeRef?
+	ColonSepDeclaredReturnTypeRef?
 	(body=Block<Yield=Generator>)?
 ;
 

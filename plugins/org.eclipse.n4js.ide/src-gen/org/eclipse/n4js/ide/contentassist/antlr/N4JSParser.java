@@ -610,6 +610,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypeVariablesAccess().getGroup_2(), "rule__TypeVariables__Group_2__0");
 			builder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getGroup(), "rule__ColonSepDeclaredTypeRef__Group__0");
 			builder.put(grammarAccess.getColonSepTypeRefAccess().getGroup(), "rule__ColonSepTypeRef__Group__0");
+			builder.put(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getGroup(), "rule__ColonSepDeclaredReturnTypeRef__Group__0");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getGroup(), "rule__ColonSepReturnTypeRef__Group__0");
 			builder.put(grammarAccess.getTStructFieldAccess().getGroup(), "rule__TStructField__Group__0");
 			builder.put(grammarAccess.getTStructGetterAccess().getGroup(), "rule__TStructGetter__Group__0");
@@ -817,14 +818,14 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredOptionalAssignment_1_2_1(), "rule__AnnotatedPropertyAssignment__DeclaredOptionalAssignment_1_2_1");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getFparAssignment_1_2_3(), "rule__AnnotatedPropertyAssignment__FparAssignment_1_2_3");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getBodyAssignment_1_2_5(), "rule__AnnotatedPropertyAssignment__BodyAssignment_1_2_5");
-			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getReturnTypeRefAssignment_1_3_0_0_2(), "rule__AnnotatedPropertyAssignment__ReturnTypeRefAssignment_1_3_0_0_2");
+			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefAssignment_1_3_0_0_2(), "rule__AnnotatedPropertyAssignment__DeclaredReturnTypeRefAssignment_1_3_0_0_2");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getGeneratorAssignment_1_3_0_0_3_0_0(), "rule__AnnotatedPropertyAssignment__GeneratorAssignment_1_3_0_0_3_0_0");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameAssignment_1_3_0_0_3_0_1(), "rule__AnnotatedPropertyAssignment__DeclaredNameAssignment_1_3_0_0_3_0_1");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameAssignment_1_3_0_0_3_1_0(), "rule__AnnotatedPropertyAssignment__DeclaredNameAssignment_1_3_0_0_3_1_0");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefAssignment_1_4_1(), "rule__AnnotatedPropertyAssignment__DeclaredTypeRefAssignment_1_4_1");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_4_2(), "rule__AnnotatedPropertyAssignment__ExpressionAssignment_1_4_2");
 			builder.put(grammarAccess.getAnnotatedPropertyAssignmentAccess().getExpressionAssignment_1_5_2(), "rule__AnnotatedPropertyAssignment__ExpressionAssignment_1_5_2");
-			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getReturnTypeRefAssignment_0_0_2(), "rule__PropertyMethodDeclaration__ReturnTypeRefAssignment_0_0_2");
+			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefAssignment_0_0_2(), "rule__PropertyMethodDeclaration__DeclaredReturnTypeRefAssignment_0_0_2");
 			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getGeneratorAssignment_0_0_4_0_0(), "rule__PropertyMethodDeclaration__GeneratorAssignment_0_0_4_0_0");
 			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameAssignment_0_0_4_0_1(), "rule__PropertyMethodDeclaration__DeclaredNameAssignment_0_0_4_0_1");
 			builder.put(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredNameAssignment_0_0_4_1_0(), "rule__PropertyMethodDeclaration__DeclaredNameAssignment_0_0_4_1_0");
@@ -1061,6 +1062,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_2_1(), "rule__TypeVariables__TypeVarsAssignment_2_1");
 			builder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefAssignment_1(), "rule__ColonSepDeclaredTypeRef__DeclaredTypeRefAssignment_1");
 			builder.put(grammarAccess.getColonSepTypeRefAccess().getTypeRefAssignment_1(), "rule__ColonSepTypeRef__TypeRefAssignment_1");
+			builder.put(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefAssignment_1(), "rule__ColonSepDeclaredReturnTypeRef__DeclaredReturnTypeRefAssignment_1");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getReturnTypeRefAssignment_1(), "rule__ColonSepReturnTypeRef__ReturnTypeRefAssignment_1");
 			builder.put(grammarAccess.getTStructFieldAccess().getNameAssignment_0(), "rule__TStructField__NameAssignment_0");
 			builder.put(grammarAccess.getTStructFieldAccess().getOptionalAssignment_1(), "rule__TStructField__OptionalAssignment_1");

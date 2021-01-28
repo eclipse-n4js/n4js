@@ -484,7 +484,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkNoThisAsyncMethod(FunctionDefinition funDef) {
 		if (funDef.isAsync) {
-			if (TypeUtils.isOrContainsThisType(funDef.returnTypeRef)) {
+			if (TypeUtils.isOrContainsThisType(funDef.declaredReturnTypeRef)) {
 				val message = messageForTYS_NON_THIS_ASYNC
 				addIssue(message, funDef, TYS_NON_THIS_ASYNC)
 			}
@@ -496,7 +496,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		if (!funDef.generator) {
 			return;
 		}
-		val returnTypeRefRaw = funDef.returnTypeRef;
+		val returnTypeRefRaw = funDef.declaredReturnTypeRef;
 		if (returnTypeRefRaw === null) {
 			return;
 		}

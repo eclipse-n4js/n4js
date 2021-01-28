@@ -114,7 +114,7 @@ abstract class AbstractCallExpressionTypesystemTest extends AbstractTypesystemTe
 		]
 
 		if (cfg.assignment) {
-			val declaredTypeRef = decl.returnTypeRef
+			val declaredTypeRef = decl.declaredReturnTypeRef
 			val expectedType = if (iter.hasNext)
 					iter.next()
 				else if (declaredTypeRef !== null)

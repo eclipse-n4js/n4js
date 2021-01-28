@@ -471,7 +471,7 @@ public class N4JSLanguageUtils {
 		return switch(parent) {
 			FormalParameter case parent.declaredTypeRef===rootTypeRef && grandParent.isNonPrivateMemberOf(tClassifier):
 				Variance.CONTRA
-			N4MethodDeclaration case parent.returnTypeRef===rootTypeRef && parent.isNonPrivateMemberOf(tClassifier):
+			N4MethodDeclaration case parent.declaredReturnTypeRef===rootTypeRef && parent.isNonPrivateMemberOf(tClassifier):
 				Variance.CO
 			N4GetterDeclaration case parent.declaredTypeRef===rootTypeRef && parent.isNonPrivateMemberOf(tClassifier):
 				Variance.CO

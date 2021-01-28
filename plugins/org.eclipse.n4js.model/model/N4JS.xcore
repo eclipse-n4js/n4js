@@ -537,7 +537,7 @@ abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningE
 	 */
 	op boolean isReturnValueOptional() {
 		return (definedFunction!==null && definedFunction.returnValueOptional) // see (*) below
-			|| (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
+			|| (declaredReturnTypeRef!==null && declaredReturnTypeRef.followedByQuestionMark);
 		// regarding (*) above: in case of arrow functions, the optionality of the return value can be "inferred" from a
 		// type expectation and in this case the 'returnValueOptional' flag will be true only in the defined function in
 		// the TModule; hence, it is important to check for an existing defined function here.
@@ -547,7 +547,7 @@ abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningE
 	 * In case it's not provided, this reference remains null.
 	 * In contrast, reference definedType contains a TFunction whose returnTypeRef is always non-null irrespective of whether the hint was provided or not.
 	 */
-	contains TypeRef returnTypeRef
+	contains TypeRef declaredReturnTypeRef
 
 	/*
 	 * Whether the function is a generator

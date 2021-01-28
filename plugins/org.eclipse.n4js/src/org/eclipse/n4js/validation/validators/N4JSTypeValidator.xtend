@@ -435,7 +435,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (TypeUtils.isVoid(expectedTypeRef) || singleExprArrowFunction.isReturnValueOptional) {
 					return; // all good
 				}
-				if (singleExprArrowFunction.returnTypeRef === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
+				if (singleExprArrowFunction.declaredReturnTypeRef === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
 					val message = IssueCodes.
 						getMessageForFUN_SINGLE_EXP_LAMBDA_IMPLICIT_RETURN_ALLOWED_UNLESS_VOID();
 					addIssue(message, expression,

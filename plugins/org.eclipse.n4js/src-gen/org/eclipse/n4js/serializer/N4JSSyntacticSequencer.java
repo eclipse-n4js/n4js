@@ -207,8 +207,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRef=TypeRef (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_2_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -292,11 +292,11 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredAsync?='async' NO_LINE_TERMINATOR? 'function' '(' ')' (ambiguity) (rule end)
 	 *     declaredModifiers+=N4Modifier 'function' '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRef=TypeRef (ambiguity) (rule end)
 	 *     declaredVersion=VERSION '(' ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
 	 *     name=BindingIdentifier '(' ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
 	 *     typeVars+=TypeVariable '>' '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_FunctionDeclaration_SemiParserRuleCall_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -338,8 +338,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) '(' ')' (ambiguity) (rule start)
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRef=TypeRef (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_N4CallableConstructorDeclaration_SemicolonKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -366,8 +366,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRef=TypeRef (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_N4MethodDeclaration_SemicolonKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -390,11 +390,11 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     NO_LINE_TERMINATOR?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' returnTypeRef=TypeRef
+	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' declaredReturnTypeRef=TypeRef
 	 *     declaredAsync?='async' (ambiguity) '(' ')' '=>' body=ExpressionDisguisedAsBlock
 	 *     declaredAsync?='async' (ambiguity) '(' ')' '=>' hasBracesAroundBody?='{'
 	 *     declaredAsync?='async' (ambiguity) '(' fpars+=FormalParameter
-	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' returnTypeRef=TypeRef
+	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' declaredReturnTypeRef=TypeRef
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' Semi? (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' body=Block

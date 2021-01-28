@@ -3567,11 +3567,11 @@ ruleFunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepDeclaredReturnTypeRef_4=ruleColonSepDeclaredReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_4.current;
+				$current = $this_ColonSepDeclaredReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -3650,11 +3650,11 @@ norm1_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepDeclaredReturnTypeRef_4=ruleColonSepDeclaredReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_4.current;
+				$current = $this_ColonSepDeclaredReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -3733,11 +3733,11 @@ norm2_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepDeclaredReturnTypeRef_4=ruleColonSepDeclaredReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_4.current;
+				$current = $this_ColonSepDeclaredReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -3816,11 +3816,11 @@ norm3_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepReturnTypeRefParserRuleCall_4());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_4());
 			}
-			this_ColonSepReturnTypeRef_4=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepDeclaredReturnTypeRef_4=ruleColonSepDeclaredReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_4.current;
+				$current = $this_ColonSepDeclaredReturnTypeRef_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -4281,7 +4281,7 @@ ruleArrowExpression returns [EObject current=null]
 					(
 						ruleStrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -4311,7 +4311,7 @@ ruleArrowExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -4343,11 +4343,11 @@ ruleArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_0_1());
 							}
-							this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_1=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_1.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_1.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -4412,11 +4412,11 @@ ruleArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_1_1());
 							}
-							this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_5=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_5.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_5.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -4529,7 +4529,7 @@ norm1_ArrowExpression returns [EObject current=null]
 					(
 						ruleStrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -4559,7 +4559,7 @@ norm1_ArrowExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -4591,11 +4591,11 @@ norm1_ArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_0_1());
 							}
-							this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_1=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_1.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_1.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -4660,11 +4660,11 @@ norm1_ArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_1_1());
 							}
-							this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_5=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_5.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_5.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -4777,7 +4777,7 @@ norm2_ArrowExpression returns [EObject current=null]
 					(
 						norm1_StrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -4807,7 +4807,7 @@ norm2_ArrowExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -4839,11 +4839,11 @@ norm2_ArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_0_1());
 							}
-							this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_1=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_1.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_1.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -4908,11 +4908,11 @@ norm2_ArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_1_1());
 							}
-							this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_5=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_5.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_5.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -5025,7 +5025,7 @@ norm3_ArrowExpression returns [EObject current=null]
 					(
 						norm1_StrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -5055,7 +5055,7 @@ norm3_ArrowExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -5087,11 +5087,11 @@ norm3_ArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_0_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_0_1());
 							}
-							this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_1=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_1.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_1.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -5156,11 +5156,11 @@ norm3_ArrowExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrowExpressionRule());
 								}
-								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepReturnTypeRefParserRuleCall_0_0_0_1_1());
+								newCompositeNode(grammarAccess.getArrowExpressionAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_1_1());
 							}
-							this_ColonSepReturnTypeRef_5=ruleColonSepReturnTypeRef[$current]
+							this_ColonSepDeclaredReturnTypeRef_5=ruleColonSepDeclaredReturnTypeRef[$current]
 							{
-								$current = $this_ColonSepReturnTypeRef_5.current;
+								$current = $this_ColonSepDeclaredReturnTypeRef_5.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -15740,17 +15740,17 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0());
+									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0());
 								}
-								lv_returnTypeRef_19_0=ruleTypeRefWithModifiers
+								lv_declaredReturnTypeRef_19_0=ruleTypeRefWithModifiers
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
 									}
 									set(
 										$current,
-										"returnTypeRef",
-										lv_returnTypeRef_19_0,
+										"declaredReturnTypeRef",
+										lv_declaredReturnTypeRef_19_0,
 										"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 									afterParserOrEnumRuleCall();
 								}
@@ -16419,17 +16419,17 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0());
+									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_1_3_0_0_2_0());
 								}
-								lv_returnTypeRef_19_0=ruleTypeRefWithModifiers
+								lv_declaredReturnTypeRef_19_0=ruleTypeRefWithModifiers
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
 									}
 									set(
 										$current,
-										"returnTypeRef",
-										lv_returnTypeRef_19_0,
+										"declaredReturnTypeRef",
+										lv_declaredReturnTypeRef_19_0,
 										"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 									afterParserOrEnumRuleCall();
 								}
@@ -16695,17 +16695,17 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0());
+							newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0());
 						}
-						lv_returnTypeRef_2_0=ruleTypeRefWithModifiers
+						lv_declaredReturnTypeRef_2_0=ruleTypeRefWithModifiers
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getPropertyMethodDeclarationRule());
 							}
 							set(
 								$current,
-								"returnTypeRef",
-								lv_returnTypeRef_2_0,
+								"declaredReturnTypeRef",
+								lv_declaredReturnTypeRef_2_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 							afterParserOrEnumRuleCall();
 						}
@@ -16893,17 +16893,17 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0());
+							newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getDeclaredReturnTypeRefTypeRefWithModifiersParserRuleCall_0_0_2_0());
 						}
-						lv_returnTypeRef_2_0=ruleTypeRefWithModifiers
+						lv_declaredReturnTypeRef_2_0=ruleTypeRefWithModifiers
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getPropertyMethodDeclarationRule());
 							}
 							set(
 								$current,
-								"returnTypeRef",
-								lv_returnTypeRef_2_0,
+								"declaredReturnTypeRef",
+								lv_declaredReturnTypeRef_2_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 							afterParserOrEnumRuleCall();
 						}
@@ -24970,7 +24970,7 @@ ruleAssignmentExpression returns [EObject current=null]
 					(
 						ruleStrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -25000,7 +25000,7 @@ ruleAssignmentExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -25148,7 +25148,7 @@ norm1_AssignmentExpression returns [EObject current=null]
 					(
 						ruleStrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -25178,7 +25178,7 @@ norm1_AssignmentExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -25326,7 +25326,7 @@ norm2_AssignmentExpression returns [EObject current=null]
 					(
 						norm1_StrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -25356,7 +25356,7 @@ norm2_AssignmentExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -25513,7 +25513,7 @@ norm3_AssignmentExpression returns [EObject current=null]
 					(
 						norm1_StrictFormalParameters[null]
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -25543,7 +25543,7 @@ norm3_AssignmentExpression returns [EObject current=null]
 							)
 						)
 						(
-							ruleColonSepReturnTypeRef[null]
+							ruleColonSepDeclaredReturnTypeRef[null]
 						)?
 					)
 					    |
@@ -32539,11 +32539,11 @@ ruleMethodParamsReturnAndBody[EObject in_current]  returns [EObject current=in_c
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getMethodParamsReturnAndBodyRule());
 				}
-				newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getColonSepReturnTypeRefParserRuleCall_1());
+				newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_1());
 			}
-			this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepDeclaredReturnTypeRef_1=ruleColonSepDeclaredReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_1.current;
+				$current = $this_ColonSepDeclaredReturnTypeRef_1.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -32601,11 +32601,11 @@ norm1_MethodParamsReturnAndBody[EObject in_current]  returns [EObject current=in
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getMethodParamsReturnAndBodyRule());
 				}
-				newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getColonSepReturnTypeRefParserRuleCall_1());
+				newCompositeNode(grammarAccess.getMethodParamsReturnAndBodyAccess().getColonSepDeclaredReturnTypeRefParserRuleCall_1());
 			}
-			this_ColonSepReturnTypeRef_1=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepDeclaredReturnTypeRef_1=ruleColonSepDeclaredReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_1.current;
+				$current = $this_ColonSepDeclaredReturnTypeRef_1.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -37963,6 +37963,42 @@ ruleColonSepTypeRef[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"typeRef",
 						lv_typeRef_1_0,
+						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+
+// Rule ColonSepDeclaredReturnTypeRef
+ruleColonSepDeclaredReturnTypeRef[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0=Colon
+		{
+			newLeafNode(otherlv_0, grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getColonKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefTypeRefParserRuleCall_1_0());
+				}
+				lv_declaredReturnTypeRef_1_0=ruleTypeRef
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getColonSepDeclaredReturnTypeRefRule());
+					}
+					set(
+						$current,
+						"declaredReturnTypeRef",
+						lv_declaredReturnTypeRef_1_0,
 						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}

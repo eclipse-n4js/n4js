@@ -222,6 +222,11 @@ fragment ColonSepTypeRef*:
 	':' typeRef=TypeRef
 ;
 
+// used in N4JS.xtext
+fragment ColonSepDeclaredReturnTypeRef*:
+	':' declaredReturnTypeRef=TypeRef
+;
+
 fragment ColonSepReturnTypeRef*:
 	':' returnTypeRef=TypeRef
 ;
