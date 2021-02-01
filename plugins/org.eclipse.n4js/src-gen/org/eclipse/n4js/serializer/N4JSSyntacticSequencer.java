@@ -182,7 +182,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
 	 *     declaredOptional?='?' '(' ')' (ambiguity) (rule end)
-	 *     declaredTypeRef=TypeRef (ambiguity) (rule end)
+	 *     declaredTypeRefInAST=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_0_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -353,7 +353,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
 	 *     declaredOptional?='?' '(' ')' (ambiguity) (rule end)
-	 *     declaredTypeRef=TypeRef (ambiguity) (rule end)
+	 *     declaredTypeRefInAST=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_N4GetterDeclaration_SemicolonKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

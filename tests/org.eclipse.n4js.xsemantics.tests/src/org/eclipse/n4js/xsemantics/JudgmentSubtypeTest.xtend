@@ -79,6 +79,11 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 			var x: Unknown1
 			var y: Unknown2
 		'''.parse
+		assertEquals(#[
+			"ERROR:Couldn't resolve reference to Type 'Unknown1'. (__synthetic0.n4js line : 1 column : 8)",
+			"ERROR:Couldn't resolve reference to Type 'Unknown2'. (__synthetic0.n4js line : 2 column : 8)"
+		], script.validate.map[toString]);
+
 		val lastTwoVars = script.scriptElements.reverseView.subList(0, 2)
 		val firstType = lastTwoVars.head.variableStatementDeclaredType
 		val secondType = lastTwoVars.last.variableStatementDeclaredType
@@ -93,6 +98,10 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 			var x: String
 			var y: Unknown
 		'''.parse
+		assertEquals(#[
+			"ERROR:Couldn't resolve reference to Type 'Unknown'. (__synthetic0.n4js line : 2 column : 8)"
+		], script.validate.map[toString]);
+
 		val lastTwoVars = script.scriptElements.reverseView.subList(0, 2)
 		val firstType = lastTwoVars.head.variableStatementDeclaredType
 		val secondType = lastTwoVars.last.variableStatementDeclaredType
@@ -107,6 +116,10 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 			var x: Unknown
 			var y: String
 		'''.parse
+		assertEquals(#[
+			"ERROR:Couldn't resolve reference to Type 'Unknown'. (__synthetic0.n4js line : 1 column : 8)"
+		], script.validate.map[toString]);
+
 		val lastTwoVars = script.scriptElements.reverseView.subList(0, 2)
 		val firstType = lastTwoVars.head.variableStatementDeclaredType
 		val secondType = lastTwoVars.last.variableStatementDeclaredType

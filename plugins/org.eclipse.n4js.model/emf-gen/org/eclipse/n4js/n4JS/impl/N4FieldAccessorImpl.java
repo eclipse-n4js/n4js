@@ -364,6 +364,16 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public FieldAccessor getDefinedAccessor() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -675,6 +685,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 		if (baseClass == TypeProvidingElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -689,6 +700,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT: return N4JSPackage.N4_FIELD_ACCESSOR___IS_ABSTRACT;
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME: return N4JSPackage.N4_FIELD_ACCESSOR___GET_NAME;
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -724,6 +736,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 		if (baseClass == org.eclipse.n4js.n4JS.FieldAccessor.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
 				case N4JSPackage.FIELD_ACCESSOR___GET_DEFINED_ACCESSOR: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DEFINED_ACCESSOR;
 				case N4JSPackage.FIELD_ACCESSOR___IS_OPTIONAL: return N4JSPackage.N4_FIELD_ACCESSOR___IS_OPTIONAL;
 				default: return -1;
@@ -746,6 +759,8 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 				return isValidName();
 			case N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
+			case N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 			case N4JSPackage.N4_FIELD_ACCESSOR___GET_DEFINED_ACCESSOR:
 				return getDefinedAccessor();
 			case N4JSPackage.N4_FIELD_ACCESSOR___IS_OPTIONAL:

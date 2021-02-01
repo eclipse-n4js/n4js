@@ -117,8 +117,8 @@ class N4JSScopingTest {
 		assertEquals(classDeclaration, tClass.astElement)
 
 		val variableDeclaration = script.eAllContents.filter(VariableDeclaration).head;
-		assertTrue(variableDeclaration.declaredTypeRef instanceof ParameterizedTypeRef)
-		val ptr = variableDeclaration.declaredTypeRef as ParameterizedTypeRef
+		assertTrue(variableDeclaration.declaredTypeRefInAST instanceof ParameterizedTypeRef)
+		val ptr = variableDeclaration.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals(tClass, ptr.declaredType)
 	}
 
@@ -186,7 +186,7 @@ class N4JSScopingTest {
 		assertEquals(classDeclaration, tClass.astElement)
 
 		val varDecl = program.eAllContents.filter(VariableDeclaration).last;
-		var ptr = varDecl.declaredTypeRef as ParameterizedTypeRef;
+		var ptr = varDecl.declaredTypeRefInAST as ParameterizedTypeRef;
 		assertEquals(definedType, ptr.declaredType);
 	}
 
@@ -255,7 +255,7 @@ class N4JSScopingTest {
 		// syntax ok?
 		assertTrue(typeClient.eResource.errors.empty)
 
-		val typeRefA = typeClient.scriptElements.filter(VariableStatement).last.varDecl.head.declaredTypeRef as ParameterizedTypeRef;
+		val typeRefA = typeClient.scriptElements.filter(VariableStatement).last.varDecl.head.declaredTypeRefInAST as ParameterizedTypeRef;
 		assertNotNull(typeRefA.declaredType);
 		assertFalse(typeRefA.declaredType.eIsProxy)
 
@@ -288,7 +288,7 @@ class N4JSScopingTest {
 		// syntax ok?
 		assertTrue(typeClient.eResource.errors.empty)
 
-		val typeRefA = typeClient.scriptElements.filter(VariableStatement).last.varDecl.head.declaredTypeRef as ParameterizedTypeRef;
+		val typeRefA = typeClient.scriptElements.filter(VariableStatement).last.varDecl.head.declaredTypeRefInAST as ParameterizedTypeRef;
 		assertNotNull(typeRefA.declaredType);
 		assertFalse(typeRefA.declaredType.eIsProxy)
 

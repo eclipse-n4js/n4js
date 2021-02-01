@@ -627,7 +627,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Enumerator lv_declaredModifiers_37_0 = null;
         AntlrDatatypeRuleToken lv_name_39_0 = null;
         EObject this_TypeVariables_40 = null;
-        EObject lv_declaredTypeRef_42_0 = null;
+        EObject lv_declaredTypeRefInAST_42_0 = null;
         	enterRule();
         try {
             {
@@ -1447,10 +1447,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_5_6_0());
+                      							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_5_6_0());
                     }
                     pushFollow(FOLLOW_2);
-                    lv_declaredTypeRef_42_0=ruleTypeRef();
+                    lv_declaredTypeRefInAST_42_0=ruleTypeRef();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -1459,8 +1459,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							}
                       							set(
                       								current,
-                      								"declaredTypeRef",
-                      								lv_declaredTypeRef_42_0,
+                      								"declaredTypeRefInAST",
+                      								lv_declaredTypeRefInAST_42_0,
                       								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                       							afterParserOrEnumRuleCall();
                     }
@@ -2358,7 +2358,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Enumerator lv_declaredModifiers_37_0 = null;
         AntlrDatatypeRuleToken lv_name_39_0 = null;
         EObject this_TypeVariables_40 = null;
-        EObject lv_declaredTypeRef_42_0 = null;
+        EObject lv_declaredTypeRefInAST_42_0 = null;
         	enterRule();
         try {
             {
@@ -3185,10 +3185,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_6_0());
+                      							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_4_6_0());
                     }
                     pushFollow(FOLLOW_2);
-                    lv_declaredTypeRef_42_0=ruleTypeRef();
+                    lv_declaredTypeRefInAST_42_0=ruleTypeRef();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -3197,8 +3197,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							}
                       							set(
                       								current,
-                      								"declaredTypeRef",
-                      								lv_declaredTypeRef_42_0,
+                      								"declaredTypeRefInAST",
+                      								lv_declaredTypeRefInAST_42_0,
                       								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                       							afterParserOrEnumRuleCall();
                     }
@@ -22530,7 +22530,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Token otherlv_25=null;
         Token otherlv_30=null;
         EObject this_PropertyAssignmentAnnotationList_0 = null;
-        EObject lv_declaredTypeRef_2_0 = null;
+        EObject lv_declaredTypeRefInAST_2_0 = null;
         EObject lv_declaredName_3_0 = null;
         EObject lv_expression_5_0 = null;
         EObject this_GetterHeader_7 = null;
@@ -22544,7 +22544,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject this_MethodParamsAndBody_22 = null;
         EObject lv_declaredName_23_0 = null;
         EObject this_MethodParamsAndBody_24 = null;
-        EObject lv_declaredTypeRef_27_0 = null;
+        EObject lv_declaredTypeRefInAST_27_0 = null;
         EObject lv_expression_28_0 = null;
         EObject lv_expression_31_0 = null;
         	enterRule();
@@ -22584,10 +22584,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             {
                             {
                             if ( state.backtracking==0 ) {
-                              									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
+                              									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
                             }
                             pushFollow(FOLLOW_109);
-                            lv_declaredTypeRef_2_0=ruleTypeRefWithModifiers();
+                            lv_declaredTypeRefInAST_2_0=ruleTypeRefWithModifiers();
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
@@ -22596,8 +22596,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									}
                               									set(
                               										current,
-                              										"declaredTypeRef",
-                              										lv_declaredTypeRef_2_0,
+                              										"declaredTypeRefInAST",
+                              										lv_declaredTypeRefInAST_2_0,
                               										"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
                               									afterParserOrEnumRuleCall();
                             }
@@ -23049,10 +23049,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             {
                             {
                             if ( state.backtracking==0 ) {
-                              							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_1_0());
+                              							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_4_1_0());
                             }
                             pushFollow(FOLLOW_113);
-                            lv_declaredTypeRef_27_0=ruleTypeRef();
+                            lv_declaredTypeRefInAST_27_0=ruleTypeRef();
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
@@ -23061,8 +23061,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							}
                               							set(
                               								current,
-                              								"declaredTypeRef",
-                              								lv_declaredTypeRef_27_0,
+                              								"declaredTypeRefInAST",
+                              								lv_declaredTypeRefInAST_27_0,
                               								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                               							afterParserOrEnumRuleCall();
                             }
@@ -23160,7 +23160,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Token otherlv_25=null;
         Token otherlv_30=null;
         EObject this_PropertyAssignmentAnnotationList_0 = null;
-        EObject lv_declaredTypeRef_2_0 = null;
+        EObject lv_declaredTypeRefInAST_2_0 = null;
         EObject lv_declaredName_3_0 = null;
         EObject lv_expression_5_0 = null;
         EObject this_GetterHeader_7 = null;
@@ -23174,7 +23174,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject this_MethodParamsAndBody_22 = null;
         EObject lv_declaredName_23_0 = null;
         EObject this_MethodParamsAndBody_24 = null;
-        EObject lv_declaredTypeRef_27_0 = null;
+        EObject lv_declaredTypeRefInAST_27_0 = null;
         EObject lv_expression_28_0 = null;
         EObject lv_expression_31_0 = null;
         	enterRule();
@@ -23214,10 +23214,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             {
                             {
                             if ( state.backtracking==0 ) {
-                              									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
+                              									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
                             }
                             pushFollow(FOLLOW_109);
-                            lv_declaredTypeRef_2_0=ruleTypeRefWithModifiers();
+                            lv_declaredTypeRefInAST_2_0=ruleTypeRefWithModifiers();
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
@@ -23226,8 +23226,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               									}
                               									set(
                               										current,
-                              										"declaredTypeRef",
-                              										lv_declaredTypeRef_2_0,
+                              										"declaredTypeRefInAST",
+                              										lv_declaredTypeRefInAST_2_0,
                               										"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
                               									afterParserOrEnumRuleCall();
                             }
@@ -23679,10 +23679,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             {
                             {
                             if ( state.backtracking==0 ) {
-                              							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_1_0());
+                              							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_4_1_0());
                             }
                             pushFollow(FOLLOW_113);
-                            lv_declaredTypeRef_27_0=ruleTypeRef();
+                            lv_declaredTypeRefInAST_27_0=ruleTypeRef();
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
@@ -23691,8 +23691,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							}
                               							set(
                               								current,
-                              								"declaredTypeRef",
-                              								lv_declaredTypeRef_27_0,
+                              								"declaredTypeRefInAST",
+                              								lv_declaredTypeRefInAST_27_0,
                               								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                               							afterParserOrEnumRuleCall();
                             }
@@ -24315,7 +24315,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject current = null;
         Token lv_declaredOptional_3_0=null;
         Token otherlv_4=null;
-        EObject lv_declaredTypeRef_1_0 = null;
+        EObject lv_declaredTypeRefInAST_1_0 = null;
         EObject lv_declaredName_2_0 = null;
         EObject lv_expression_5_0 = null;
         	enterRule();
@@ -24338,10 +24338,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_0_0_1_0());
+                      							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_1_0());
                     }
                     pushFollow(FOLLOW_109);
-                    lv_declaredTypeRef_1_0=ruleTypeRefWithModifiers();
+                    lv_declaredTypeRefInAST_1_0=ruleTypeRefWithModifiers();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -24350,8 +24350,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							}
                       							set(
                       								current,
-                      								"declaredTypeRef",
-                      								lv_declaredTypeRef_1_0,
+                      								"declaredTypeRefInAST",
+                      								lv_declaredTypeRefInAST_1_0,
                       								"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
                       							afterParserOrEnumRuleCall();
                     }
@@ -24450,7 +24450,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject current = null;
         Token lv_declaredOptional_3_0=null;
         Token otherlv_4=null;
-        EObject lv_declaredTypeRef_1_0 = null;
+        EObject lv_declaredTypeRefInAST_1_0 = null;
         EObject lv_declaredName_2_0 = null;
         EObject lv_expression_5_0 = null;
         	enterRule();
@@ -24473,10 +24473,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_0_0_1_0());
+                      							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_1_0());
                     }
                     pushFollow(FOLLOW_109);
-                    lv_declaredTypeRef_1_0=ruleTypeRefWithModifiers();
+                    lv_declaredTypeRefInAST_1_0=ruleTypeRefWithModifiers();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -24485,8 +24485,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							}
                       							set(
                       								current,
-                      								"declaredTypeRef",
-                      								lv_declaredTypeRef_1_0,
+                      								"declaredTypeRefInAST",
+                      								lv_declaredTypeRefInAST_1_0,
                       								"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
                       							afterParserOrEnumRuleCall();
                     }
@@ -24609,7 +24609,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     }
     public final EObject rulePropertyNameValuePairSingleName() throws RecognitionException {
         EObject current = null;
-        EObject lv_declaredTypeRef_0_0 = null;
+        EObject lv_declaredTypeRefInAST_0_0 = null;
         EObject lv_expression_1_0 = null;
         	enterRule();
         try {
@@ -24622,10 +24622,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefTypeRefParserRuleCall_0_0());
+                      					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_0_0());
                     }
                     pushFollow(FOLLOW_113);
-                    lv_declaredTypeRef_0_0=ruleTypeRef();
+                    lv_declaredTypeRefInAST_0_0=ruleTypeRef();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -24634,8 +24634,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					}
                       					set(
                       						current,
-                      						"declaredTypeRef",
-                      						lv_declaredTypeRef_0_0,
+                      						"declaredTypeRefInAST",
+                      						lv_declaredTypeRefInAST_0_0,
                       						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                       					afterParserOrEnumRuleCall();
                     }
@@ -24681,7 +24681,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     }
     public final EObject norm1_PropertyNameValuePairSingleName() throws RecognitionException {
         EObject current = null;
-        EObject lv_declaredTypeRef_0_0 = null;
+        EObject lv_declaredTypeRefInAST_0_0 = null;
         EObject lv_expression_1_0 = null;
         	enterRule();
         try {
@@ -24694,10 +24694,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefTypeRefParserRuleCall_0_0());
+                      					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_0_0());
                     }
                     pushFollow(FOLLOW_113);
-                    lv_declaredTypeRef_0_0=ruleTypeRef();
+                    lv_declaredTypeRefInAST_0_0=ruleTypeRef();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -24706,8 +24706,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					}
                       					set(
                       						current,
-                      						"declaredTypeRef",
-                      						lv_declaredTypeRef_0_0,
+                      						"declaredTypeRefInAST",
+                      						lv_declaredTypeRefInAST_0_0,
                       						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
                       					afterParserOrEnumRuleCall();
                     }
@@ -42840,7 +42840,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Enumerator lv_declaredModifiers_1_0 = null;
         AntlrDatatypeRuleToken lv_name_3_0 = null;
         EObject this_TypeVariables_4 = null;
-        EObject lv_declaredTypeRef_6_0 = null;
+        EObject lv_declaredTypeRefInAST_6_0 = null;
         	enterRule();
         try {
             {
@@ -42959,10 +42959,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             if ( state.backtracking==0 ) {
-              					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefTypeRefParserRuleCall_3_0());
+              					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_3_0());
             }
             pushFollow(FOLLOW_2);
-            lv_declaredTypeRef_6_0=ruleTypeRef();
+            lv_declaredTypeRefInAST_6_0=ruleTypeRef();
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -42971,8 +42971,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					set(
               						current,
-              						"declaredTypeRef",
-              						lv_declaredTypeRef_6_0,
+              						"declaredTypeRefInAST",
+              						lv_declaredTypeRefInAST_6_0,
               						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
               					afterParserOrEnumRuleCall();
             }
@@ -54757,7 +54757,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleColonSepDeclaredTypeRef(EObject in_current) throws RecognitionException {
         EObject current = in_current;
         Token otherlv_0=null;
-        EObject lv_declaredTypeRef_1_0 = null;
+        EObject lv_declaredTypeRefInAST_1_0 = null;
         	enterRule();
         try {
             {
@@ -54769,10 +54769,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             if ( state.backtracking==0 ) {
-              					newCompositeNode(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_0());
+              					newCompositeNode(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_0());
             }
             pushFollow(FOLLOW_2);
-            lv_declaredTypeRef_1_0=ruleTypeRef();
+            lv_declaredTypeRefInAST_1_0=ruleTypeRef();
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -54781,8 +54781,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					set(
               						current,
-              						"declaredTypeRef",
-              						lv_declaredTypeRef_1_0,
+              						"declaredTypeRefInAST",
+              						lv_declaredTypeRefInAST_1_0,
               						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
               					afterParserOrEnumRuleCall();
             }
@@ -66823,7 +66823,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_12;
         }
         public String getDescription() {
-            return "392:3: ( ( () this_ExportDeclarationImpl_2= ruleExportDeclarationImpl[$current] ) | ( () this_ImportDeclarationImpl_4= ruleImportDeclarationImpl[$current] ) | ( () ( ( ( ( ( ruleN4Modifier ) )* ruleAsyncNoTrailingLineBreak[null] Function ) )=> ( ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_7= ruleAsyncNoTrailingLineBreak[$current] ( ( Function )=>this_FunctionImpl_8= ruleFunctionImpl[$current] ) ) ) ) | ( ( ( () ( (lv_declaredModifiers_10_0= ruleN4Modifier ) )* otherlv_11= Class ( (lv_typingStrategy_12_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_13_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_14= ruleVersionDeclaration[$current] )? (this_TypeVariables_15= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_16= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_18_0= ruleN4Modifier ) )* otherlv_19= Interface ( (lv_typingStrategy_20_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_21_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_22= ruleVersionDeclaration[$current] )? (this_TypeVariables_23= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_24= ruleInterfaceExtendsList[$current] )? ) ) this_Members_25= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_27_0= ruleN4Modifier ) )* otherlv_28= Enum ( (lv_name_29_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_30= ruleVersionDeclaration[$current] )? otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_declaredTypeRef_42_0= ruleTypeRef ) ) ) )";
+            return "392:3: ( ( () this_ExportDeclarationImpl_2= ruleExportDeclarationImpl[$current] ) | ( () this_ImportDeclarationImpl_4= ruleImportDeclarationImpl[$current] ) | ( () ( ( ( ( ( ruleN4Modifier ) )* ruleAsyncNoTrailingLineBreak[null] Function ) )=> ( ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_7= ruleAsyncNoTrailingLineBreak[$current] ( ( Function )=>this_FunctionImpl_8= ruleFunctionImpl[$current] ) ) ) ) | ( ( ( () ( (lv_declaredModifiers_10_0= ruleN4Modifier ) )* otherlv_11= Class ( (lv_typingStrategy_12_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_13_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_14= ruleVersionDeclaration[$current] )? (this_TypeVariables_15= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_16= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_18_0= ruleN4Modifier ) )* otherlv_19= Interface ( (lv_typingStrategy_20_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_21_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_22= ruleVersionDeclaration[$current] )? (this_TypeVariables_23= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_24= ruleInterfaceExtendsList[$current] )? ) ) this_Members_25= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_27_0= ruleN4Modifier ) )* otherlv_28= Enum ( (lv_name_29_0= ruleBindingIdentifier ) ) (this_VersionDeclaration_30= ruleVersionDeclaration[$current] )? otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_declaredTypeRefInAST_42_0= ruleTypeRef ) ) ) )";
         }
     }
     static final String dfa_13s = "\13\uffff";
@@ -67869,7 +67869,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_37;
         }
         public String getDescription() {
-            return "1564:3: ( ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_3= ruleAsyncNoTrailingLineBreak[$current] this_FunctionImpl_4= ruleFunctionImpl[$current] ) | ( () ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* ( (lv_varStmtKeyword_7_0= ruleVariableStatementKeyword ) ) ( (lv_varDeclsOrBindings_8_0= ruleExportedVariableDeclarationOrBinding ) ) (otherlv_9= Comma ( (lv_varDeclsOrBindings_10_0= ruleExportedVariableDeclarationOrBinding ) ) )* ruleSemi ) | ( ( ( () ( (lv_declaredModifiers_13_0= ruleN4Modifier ) )* otherlv_14= Class ( (lv_typingStrategy_15_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_16_0= ruleBindingIdentifier ) ) (this_TypeVariables_17= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_18= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_20_0= ruleN4Modifier ) )* otherlv_21= Interface ( (lv_typingStrategy_22_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_23_0= ruleBindingIdentifier ) ) (this_TypeVariables_24= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_25= ruleInterfaceExtendsList[$current] )? ) ) this_Members_26= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_28_0= ruleN4Modifier ) )* otherlv_29= Enum ( (lv_name_30_0= ruleBindingIdentifier ) ) otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_declaredTypeRef_42_0= ruleTypeRef ) ) ) )";
+            return "1564:3: ( ( () ( (lv_declaredModifiers_2_0= ruleN4Modifier ) )* this_AsyncNoTrailingLineBreak_3= ruleAsyncNoTrailingLineBreak[$current] this_FunctionImpl_4= ruleFunctionImpl[$current] ) | ( () ( (lv_declaredModifiers_6_0= ruleN4Modifier ) )* ( (lv_varStmtKeyword_7_0= ruleVariableStatementKeyword ) ) ( (lv_varDeclsOrBindings_8_0= ruleExportedVariableDeclarationOrBinding ) ) (otherlv_9= Comma ( (lv_varDeclsOrBindings_10_0= ruleExportedVariableDeclarationOrBinding ) ) )* ruleSemi ) | ( ( ( () ( (lv_declaredModifiers_13_0= ruleN4Modifier ) )* otherlv_14= Class ( (lv_typingStrategy_15_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_16_0= ruleBindingIdentifier ) ) (this_TypeVariables_17= ruleTypeVariables[$current] )? (this_ClassExtendsImplements_18= ruleClassExtendsImplements[$current] )? ) | ( () ( (lv_declaredModifiers_20_0= ruleN4Modifier ) )* otherlv_21= Interface ( (lv_typingStrategy_22_0= ruleTypingStrategyDefSiteOperator ) )? ( (lv_name_23_0= ruleBindingIdentifier ) ) (this_TypeVariables_24= ruleTypeVariables[$current] )? (this_InterfaceExtendsList_25= ruleInterfaceExtendsList[$current] )? ) ) this_Members_26= ruleMembers[$current] ) | ( () ( (lv_declaredModifiers_28_0= ruleN4Modifier ) )* otherlv_29= Enum ( (lv_name_30_0= ruleBindingIdentifier ) ) otherlv_31= LeftCurlyBracket ( (lv_literals_32_0= ruleN4EnumLiteral ) ) (otherlv_33= Comma ( (lv_literals_34_0= ruleN4EnumLiteral ) ) )* otherlv_35= RightCurlyBracket ) | ( () ( (lv_declaredModifiers_37_0= ruleN4ModifierWithoutConst ) )* otherlv_38= Type ( (lv_name_39_0= ruleBindingIdentifier ) ) (this_TypeVariables_40= ruleTypeVariables[$current] )? otherlv_41= EqualsSign ( (lv_declaredTypeRefInAST_42_0= ruleTypeRef ) ) ) )";
         }
     }
     static final String dfa_38s = "\14\uffff";
@@ -73700,7 +73700,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_175;
         }
         public String getDescription() {
-            return "15279:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( ruleLiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= ruleLiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm1_AssignmentExpression ) ) ) | ( ( ( ( () ruleGetterHeader[null] ) )=> ( () this_GetterHeader_7= ruleGetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= ruleLiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= ruleFormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_declaredReturnTypeRefInAST_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )? ( (lv_expression_28_0= rulePropertyNameValuePairSingleNamePart ) ) ) | ( () otherlv_30= FullStopFullStopFullStop ( (lv_expression_31_0= norm1_AssignmentExpression ) ) ) )";
+            return "15279:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( ruleLiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRefInAST_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= ruleLiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm1_AssignmentExpression ) ) ) | ( ( ( ( () ruleGetterHeader[null] ) )=> ( () this_GetterHeader_7= ruleGetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= ruleLiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= ruleFormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_declaredReturnTypeRefInAST_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= ruleLiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRefInAST_27_0= ruleTypeRef ) )? ( (lv_expression_28_0= rulePropertyNameValuePairSingleNamePart ) ) ) | ( () otherlv_30= FullStopFullStopFullStop ( (lv_expression_31_0= norm1_AssignmentExpression ) ) ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -74533,7 +74533,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_181;
         }
         public String getDescription() {
-            return "15306:7: ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
+            return "15306:7: ( (lv_declaredTypeRefInAST_2_0= ruleTypeRefWithModifiers ) )?";
         }
     }
     static final String dfa_182s = "\10\4\1\uffff\1\4\4\134\1\uffff";
@@ -74613,7 +74613,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_190;
         }
         public String getDescription() {
-            return "15864:5: ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )?";
+            return "15864:5: ( (lv_declaredTypeRefInAST_27_0= ruleTypeRef ) )?";
         }
     }
     class DFA280 extends DFA {
@@ -74629,7 +74629,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_175;
         }
         public String getDescription() {
-            return "15958:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( norm1_LiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= norm1_LiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm3_AssignmentExpression ) ) ) | ( ( ( ( () norm1_GetterHeader[null] ) )=> ( () this_GetterHeader_7= norm1_GetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= norm1_LiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= norm1_FormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_declaredReturnTypeRefInAST_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )? ( (lv_expression_28_0= norm1_PropertyNameValuePairSingleNamePart ) ) ) | ( () otherlv_30= FullStopFullStopFullStop ( (lv_expression_31_0= norm3_AssignmentExpression ) ) ) )";
+            return "15958:3: ( ( ( ( ( () ( ( ruleTypeRefWithModifiers ) )? ( ( norm1_LiteralOrComputedPropertyName ) ) Colon ) )=> ( () ( (lv_declaredTypeRefInAST_2_0= ruleTypeRefWithModifiers ) )? ( (lv_declaredName_3_0= norm1_LiteralOrComputedPropertyName ) ) otherlv_4= Colon ) ) ( (lv_expression_5_0= norm3_AssignmentExpression ) ) ) | ( ( ( ( () norm1_GetterHeader[null] ) )=> ( () this_GetterHeader_7= norm1_GetterHeader[$current] ) ) ( ( ( () LeftCurlyBracket ) )=> (lv_body_8_0= ruleBlock ) ) ) | ( ( ( ( () Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=> ( () otherlv_10= Set ( ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT )=> (lv_declaredName_11_0= norm1_LiteralOrComputedPropertyName ) ) ) ) ( (lv_declaredOptional_12_0= QuestionMark ) )? otherlv_13= LeftParenthesis ( (lv_fpar_14_0= norm1_FormalParameter ) ) otherlv_15= RightParenthesis ( ( ( () LeftCurlyBracket ) )=> (lv_body_16_0= ruleBlock ) ) ) | ( ( ( ( () ( ruleTypeVariables[null] )? ( ( ruleTypeRefWithModifiers ) )? ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=> ( () (this_TypeVariables_18= ruleTypeVariables[$current] )? ( (lv_declaredReturnTypeRefInAST_19_0= ruleTypeRefWithModifiers ) )? ( ( ( (lv_generator_20_0= Asterisk ) ) ( (lv_declaredName_21_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_22= norm1_MethodParamsAndBody[$current] ) ) | ( ( (lv_declaredName_23_0= norm1_LiteralOrComputedPropertyName ) ) ( ( LeftParenthesis )=>this_MethodParamsAndBody_24= ruleMethodParamsAndBody[$current] ) ) ) ) ) (otherlv_25= Semicolon )? ) | ( () ( (lv_declaredTypeRefInAST_27_0= ruleTypeRef ) )? ( (lv_expression_28_0= norm1_PropertyNameValuePairSingleNamePart ) ) ) | ( () otherlv_30= FullStopFullStopFullStop ( (lv_expression_31_0= norm3_AssignmentExpression ) ) ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -75433,7 +75433,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_181;
         }
         public String getDescription() {
-            return "15985:7: ( (lv_declaredTypeRef_2_0= ruleTypeRefWithModifiers ) )?";
+            return "15985:7: ( (lv_declaredTypeRefInAST_2_0= ruleTypeRefWithModifiers ) )?";
         }
     }
     class DFA276 extends DFA {
@@ -75481,7 +75481,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_191;
         }
         public String getDescription() {
-            return "16543:5: ( (lv_declaredTypeRef_27_0= ruleTypeRef ) )?";
+            return "16543:5: ( (lv_declaredTypeRefInAST_27_0= ruleTypeRef ) )?";
         }
     }
     class DFA282 extends DFA {
@@ -75558,7 +75558,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_197;
         }
         public String getDescription() {
-            return "17067:5: ( (lv_declaredTypeRef_1_0= ruleTypeRefWithModifiers ) )?";
+            return "17067:5: ( (lv_declaredTypeRefInAST_1_0= ruleTypeRefWithModifiers ) )?";
         }
     }
     class DFA291 extends DFA {
@@ -75574,7 +75574,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_197;
         }
         public String getDescription() {
-            return "17187:5: ( (lv_declaredTypeRef_1_0= ruleTypeRefWithModifiers ) )?";
+            return "17187:5: ( (lv_declaredTypeRefInAST_1_0= ruleTypeRefWithModifiers ) )?";
         }
     }
     class DFA293 extends DFA {
@@ -75590,7 +75590,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_190;
         }
         public String getDescription() {
-            return "17283:3: ( (lv_declaredTypeRef_0_0= ruleTypeRef ) )?";
+            return "17283:3: ( (lv_declaredTypeRefInAST_0_0= ruleTypeRef ) )?";
         }
     }
     class DFA294 extends DFA {
@@ -75606,7 +75606,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_191;
         }
         public String getDescription() {
-            return "17334:3: ( (lv_declaredTypeRef_0_0= ruleTypeRef ) )?";
+            return "17334:3: ( (lv_declaredTypeRefInAST_0_0= ruleTypeRef ) )?";
         }
     }
     static final String dfa_198s = "\71\uffff";

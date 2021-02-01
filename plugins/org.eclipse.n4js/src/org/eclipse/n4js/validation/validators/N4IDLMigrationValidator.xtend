@@ -398,13 +398,14 @@ class N4IDLMigrationValidator extends AbstractN4JSDeclarativeValidator {
 		// Obtain AST-model TypeRef from TFormalParameter.
 		// This is ensured to not trigger any proxy resolution since the validation that uses this method 
 		// only concerns elements local to the module the validated type declaration resides in. 
-		val astTypeRef = (tParam.astElement as FormalParameter).declaredTypeRef;
+		val typeRef = (tParam.astElement as FormalParameter).declaredTypeRef;
+		val typeRefInAST = (tParam.astElement as FormalParameter).declaredTypeRefInAST;
 		
 		// skip composed type references, as there is validation for that case in {@link #checkMigration}.
-		if (astTypeRef instanceof ComposedTypeRef) { return; }
+		if (typeRef instanceof ComposedTypeRef) { return; }
 		
-		addIssue(IssueCodes.getMessageForIDL_MIGRATION_UNSUPPORTED_PARAMETER_TYPE(astTypeRef.typeRefAsString), 
-			astTypeRef, IssueCodes.IDL_MIGRATION_UNSUPPORTED_PARAMETER_TYPE)
+		addIssue(IssueCodes.getMessageForIDL_MIGRATION_UNSUPPORTED_PARAMETER_TYPE(typeRef.typeRefAsString), 
+			typeRefInAST, IssueCodes.IDL_MIGRATION_UNSUPPORTED_PARAMETER_TYPE)
 	}
 	
 	/**

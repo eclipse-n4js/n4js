@@ -46,7 +46,7 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
-				if (getterDef.declaredTypeRef === null) {
+				if (getterDef.declaredTypeRefInAST === null) {
 					if (!preLinkingPhase) {
 						if(getterType.isAbstract) {
 							builtInTypeScope.anyTypeRef
@@ -55,7 +55,7 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 						}
 					}
 				} else {
-					getterDef.declaredTypeRef
+					getterDef.declaredTypeRefInAST
 				};
 			getterType.typeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
 		}

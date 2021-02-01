@@ -54,6 +54,14 @@ public interface N4MemberAnnotationList extends AbstractAnnotationList, N4Member
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	TypeRef getDeclaredTypeRefInAST();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	String getName();
 
 } // N4MemberAnnotationList

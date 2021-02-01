@@ -12,8 +12,8 @@ package org.eclipse.n4js.tests.parser
 
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -123,7 +123,7 @@ class N4_21_InterfaceDeclarationsWithStructuralTypingTest extends AbstractParser
 	}
 
 	def void assertTypingStrategyOfFPar(TypingStrategy expectedStrategy, N4MethodDeclaration method) {
-		val ptrOfFPar = method.fpars.head.declaredTypeRef as ParameterizedTypeRef
+		val ptrOfFPar = method.fpars.head.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals("Expected " + expectedStrategy.getName + " but was " + ptrOfFPar.typingStrategy?.getName + ": ",
 			expectedStrategy, ptrOfFPar.typingStrategy);
 	}

@@ -17,9 +17,9 @@ import java.util.stream.IntStream
 import junit.framework.AssertionFailedError
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Assert
-import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 /**
  * N4IDL test-helper to create valid {@link TypeRef} instances from a given 

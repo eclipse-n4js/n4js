@@ -87,10 +87,10 @@ package class N4JSVariableStatementTypesBuilder {
 	}
 
 	def private void setVariableType(TVariable variable, ExportedVariableDeclaration n4VariableDeclaration, boolean preLinkingPhase) {
-		if(n4VariableDeclaration.declaredTypeRef!==null) {
+		if(n4VariableDeclaration.declaredTypeRefInAST!==null) {
 			if (!preLinkingPhase)
 			// 	type of field was declared explicitly
-				variable.typeRef = TypeUtils.copyWithProxies(n4VariableDeclaration.declaredTypeRef);
+				variable.typeRef = TypeUtils.copyWithProxies(n4VariableDeclaration.declaredTypeRefInAST);
 		}
 		else {
 			// in all other cases:

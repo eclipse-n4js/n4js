@@ -59,7 +59,8 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Same as {@link #getDeclaredReturnTypeRefRaw()}, but with type aliases being resolved.
+	 * Same as {@link #getDeclaredReturnTypeRefInAST()}, but with type aliases being resolved (if any).
+	 * The returned type reference may or may not be contained in the AST.
 	 * This is set during post-processing by {@code TypeRefProcessor}.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Declared Return Type Ref</em>' reference.

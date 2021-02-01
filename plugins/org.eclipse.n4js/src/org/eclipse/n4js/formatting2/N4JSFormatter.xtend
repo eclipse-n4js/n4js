@@ -323,7 +323,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		field.configureOptionality(document);
 		field.regionFor.keyword("=").prepend[oneSpace].append[oneSpace];
 		field.expression.format;
-		field.declaredTypeRef.format;
+		field.declaredTypeRefInAST.format;
 	}
 
 
@@ -417,7 +417,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 			it.configureAnnotationsInLine(document); // TODO maybe we need some in-line-annotation config here.
 //			it.regionFor.ruleCallTo( bindingIdentifierAsFormalParameterRule  ) // feature(N4JSPackage.Literals.FORMAL_PARAMETER__NAME)
 //				.prepend[oneSpace;newLines=0].append[]
-			it.declaredTypeRef.format(document);
+			it.declaredTypeRefInAST.format(document);
 			if( it.isVariadic )
 				it.regionFor.keyword("...").prepend[newLines=0;/*oneSpace;*/].append[newLines=0;noSpace];
 			if( it.hasInitializerAssignment ) {
@@ -996,7 +996,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		vDecl.previousHiddenRegion.set[oneSpace];
 		vDecl.regionFor.keyword("=").surround[oneSpace];
 		vDecl.expression.format;
-		vDecl.declaredTypeRef.format;
+		vDecl.declaredTypeRefInAST.format;
 	}
 
 	def dispatch void format(VariableBinding vBind, extension IFormattableDocument document) {

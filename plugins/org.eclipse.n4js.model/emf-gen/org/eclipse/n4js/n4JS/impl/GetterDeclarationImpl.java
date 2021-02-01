@@ -39,6 +39,7 @@ import org.eclipse.n4js.ts.types.TGetter;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.GetterDeclarationImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.GetterDeclarationImpl#getDeclaredTypeRefInAST <em>Declared Type Ref In AST</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.GetterDeclarationImpl#getDefinedGetter <em>Defined Getter</em>}</li>
  * </ul>
  *
@@ -46,7 +47,7 @@ import org.eclipse.n4js.ts.types.TGetter;
  */
 public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements GetterDeclaration {
 	/**
-	 * The cached value of the '{@link #getDeclaredTypeRef() <em>Declared Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getDeclaredTypeRef() <em>Declared Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getDeclaredTypeRef()
@@ -54,6 +55,16 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * @ordered
 	 */
 	protected TypeRef declaredTypeRef;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredTypeRefInAST() <em>Declared Type Ref In AST</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredTypeRefInAST()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef declaredTypeRefInAST;
 
 	/**
 	 * The cached value of the '{@link #getDefinedGetter() <em>Defined Getter</em>}' reference.
@@ -91,6 +102,14 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 */
 	@Override
 	public TypeRef getDeclaredTypeRef() {
+		if (declaredTypeRef != null && declaredTypeRef.eIsProxy()) {
+			InternalEObject oldDeclaredTypeRef = (InternalEObject)declaredTypeRef;
+			declaredTypeRef = (TypeRef)eResolveProxy(oldDeclaredTypeRef);
+			if (declaredTypeRef != oldDeclaredTypeRef) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF, oldDeclaredTypeRef, declaredTypeRef));
+			}
+		}
 		return declaredTypeRef;
 	}
 
@@ -99,11 +118,43 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDeclaredTypeRef(TypeRef newDeclaredTypeRef, NotificationChain msgs) {
+	public TypeRef basicGetDeclaredTypeRef() {
+		return declaredTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
 		TypeRef oldDeclaredTypeRef = declaredTypeRef;
 		declaredTypeRef = newDeclaredTypeRef;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF, oldDeclaredTypeRef, declaredTypeRef));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		return declaredTypeRefInAST;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDeclaredTypeRefInAST(TypeRef newDeclaredTypeRefInAST, NotificationChain msgs) {
+		TypeRef oldDeclaredTypeRefInAST = declaredTypeRefInAST;
+		declaredTypeRefInAST = newDeclaredTypeRefInAST;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF, oldDeclaredTypeRef, newDeclaredTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST, oldDeclaredTypeRefInAST, newDeclaredTypeRefInAST);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -115,18 +166,18 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
-		if (newDeclaredTypeRef != declaredTypeRef) {
+	public void setDeclaredTypeRefInAST(TypeRef newDeclaredTypeRefInAST) {
+		if (newDeclaredTypeRefInAST != declaredTypeRefInAST) {
 			NotificationChain msgs = null;
-			if (declaredTypeRef != null)
-				msgs = ((InternalEObject)declaredTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF, null, msgs);
-			if (newDeclaredTypeRef != null)
-				msgs = ((InternalEObject)newDeclaredTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF, null, msgs);
-			msgs = basicSetDeclaredTypeRef(newDeclaredTypeRef, msgs);
+			if (declaredTypeRefInAST != null)
+				msgs = ((InternalEObject)declaredTypeRefInAST).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST, null, msgs);
+			if (newDeclaredTypeRefInAST != null)
+				msgs = ((InternalEObject)newDeclaredTypeRefInAST).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST, null, msgs);
+			msgs = basicSetDeclaredTypeRefInAST(newDeclaredTypeRefInAST, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF, newDeclaredTypeRef, newDeclaredTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST, newDeclaredTypeRefInAST, newDeclaredTypeRefInAST));
 	}
 
 	/**
@@ -187,8 +238,8 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF:
-				return basicSetDeclaredTypeRef(null, msgs);
+			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST:
+				return basicSetDeclaredTypeRefInAST(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -202,7 +253,10 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
+				if (resolve) return getDeclaredTypeRef();
+				return basicGetDeclaredTypeRef();
+			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 			case N4JSPackage.GETTER_DECLARATION__DEFINED_GETTER:
 				if (resolve) return getDefinedGetter();
 				return basicGetDefinedGetter();
@@ -220,6 +274,9 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 		switch (featureID) {
 			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)newValue);
+				return;
+			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST:
+				setDeclaredTypeRefInAST((TypeRef)newValue);
 				return;
 			case N4JSPackage.GETTER_DECLARATION__DEFINED_GETTER:
 				setDefinedGetter((TGetter)newValue);
@@ -239,6 +296,9 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF:
 				setDeclaredTypeRef((TypeRef)null);
 				return;
+			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST:
+				setDeclaredTypeRefInAST((TypeRef)null);
+				return;
 			case N4JSPackage.GETTER_DECLARATION__DEFINED_GETTER:
 				setDefinedGetter((TGetter)null);
 				return;
@@ -256,6 +316,8 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 		switch (featureID) {
 			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF:
 				return declaredTypeRef != null;
+			case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST:
+				return declaredTypeRefInAST != null;
 			case N4JSPackage.GETTER_DECLARATION__DEFINED_GETTER:
 				return definedGetter != null;
 		}
@@ -272,6 +334,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 		if (baseClass == TypedElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF;
+				case N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}
@@ -288,6 +351,7 @@ public abstract class GetterDeclarationImpl extends FieldAccessorImpl implements
 		if (baseClass == TypedElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF: return N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF;
+				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_IN_AST: return N4JSPackage.GETTER_DECLARATION__DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}

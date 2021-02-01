@@ -367,7 +367,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkOptionalModifier(FormalParameter fpar) {
-		if(fpar.declaredTypeRef!==null && fpar.declaredTypeRef.followedByQuestionMark) {
+		if(fpar.declaredTypeRefInAST!==null && fpar.declaredTypeRefInAST.followedByQuestionMark) {
 			val String msg = getMessageForFUN_PARAM_OPTIONAL_WRONG_SYNTAX(fpar.name)
 			addIssue(msg, fpar, FUN_PARAM_OPTIONAL_WRONG_SYNTAX)
 		}

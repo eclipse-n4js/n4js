@@ -2171,6 +2171,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTypeProvidingElement__GetDeclaredTypeRefInAST() {
+		return typeProvidingElementEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTypedElement() {
 		return typedElementEClass;
 	}
@@ -2183,6 +2193,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EReference getTypedElement_DeclaredTypeRef() {
 		return (EReference)typedElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTypedElement_DeclaredTypeRefInAST() {
+		return (EReference)typedElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2711,7 +2731,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getFieldAccessor__GetDefinedAccessor() {
+	public EOperation getFieldAccessor__GetDeclaredTypeRefInAST() {
 		return fieldAccessorEClass.getEOperations().get(1);
 	}
 
@@ -2721,8 +2741,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getFieldAccessor__IsOptional() {
+	public EOperation getFieldAccessor__GetDefinedAccessor() {
 		return fieldAccessorEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getFieldAccessor__IsOptional() {
+		return fieldAccessorEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -4533,6 +4563,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getSetterDeclaration__GetDeclaredTypeRef() {
 		return setterDeclarationEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getSetterDeclaration__GetDeclaredTypeRefInAST() {
+		return setterDeclarationEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -6621,8 +6661,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberAnnotationList__GetName() {
+	public EOperation getN4MemberAnnotationList__GetDeclaredTypeRefInAST() {
 		return n4MemberAnnotationListEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4MemberAnnotationList__GetName() {
+		return n4MemberAnnotationListEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -7585,9 +7635,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		typeProvidingElementEClass = createEClass(TYPE_PROVIDING_ELEMENT);
 		createEOperation(typeProvidingElementEClass, TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF);
+		createEOperation(typeProvidingElementEClass, TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST);
 
 		typedElementEClass = createEClass(TYPED_ELEMENT);
 		createEReference(typedElementEClass, TYPED_ELEMENT__DECLARED_TYPE_REF);
+		createEReference(typedElementEClass, TYPED_ELEMENT__DECLARED_TYPE_REF_IN_AST);
 
 		variableEnvironmentElementEClass = createEClass(VARIABLE_ENVIRONMENT_ELEMENT);
 		createEOperation(variableEnvironmentElementEClass, VARIABLE_ENVIRONMENT_ELEMENT___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS);
@@ -7657,6 +7709,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		fieldAccessorEClass = createEClass(FIELD_ACCESSOR);
 		createEAttribute(fieldAccessorEClass, FIELD_ACCESSOR__DECLARED_OPTIONAL);
 		createEOperation(fieldAccessorEClass, FIELD_ACCESSOR___GET_DECLARED_TYPE_REF);
+		createEOperation(fieldAccessorEClass, FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST);
 		createEOperation(fieldAccessorEClass, FIELD_ACCESSOR___GET_DEFINED_ACCESSOR);
 		createEOperation(fieldAccessorEClass, FIELD_ACCESSOR___IS_OPTIONAL);
 
@@ -7899,6 +7952,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(setterDeclarationEClass, SETTER_DECLARATION__FPAR);
 		createEOperation(setterDeclarationEClass, SETTER_DECLARATION___GET_DEFINED_ACCESSOR);
 		createEOperation(setterDeclarationEClass, SETTER_DECLARATION___GET_DECLARED_TYPE_REF);
+		createEOperation(setterDeclarationEClass, SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST);
 
 		propertyGetterDeclarationEClass = createEClass(PROPERTY_GETTER_DECLARATION);
 		createEOperation(propertyGetterDeclarationEClass, PROPERTY_GETTER_DECLARATION___GET_DEFINED_GETTER);
@@ -8172,6 +8226,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4MemberAnnotationListEClass = createEClass(N4_MEMBER_ANNOTATION_LIST);
 		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT);
 		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF);
+		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF_IN_AST);
 		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_NAME);
 
 		n4FieldDeclarationEClass = createEClass(N4_FIELD_DECLARATION);
@@ -8661,8 +8716,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getTypeProvidingElement__GetDeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getTypeProvidingElement__GetDeclaredTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(typedElementEClass, TypedElement.class, "TypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypedElement_DeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), null, "declaredTypeRef", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypedElement_DeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), null, "declaredTypeRef", null, 0, 1, TypedElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypedElement_DeclaredTypeRefInAST(), theTypeRefsPackage.getTypeRef(), null, "declaredTypeRefInAST", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(variableEnvironmentElementEClass, VariableEnvironmentElement.class, "VariableEnvironmentElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -8752,6 +8810,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getFieldAccessor_DeclaredOptional(), theEcorePackage.getEBoolean(), "declaredOptional", null, 0, 1, FieldAccessor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getFieldAccessor__GetDeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getFieldAccessor__GetDeclaredTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getFieldAccessor__GetDefinedAccessor(), theTypesPackage.getFieldAccessor(), "getDefinedAccessor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9048,6 +9108,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getSetterDeclaration__GetDefinedAccessor(), theTypesPackage.getTSetter(), "getDefinedAccessor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getSetterDeclaration__GetDeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getSetterDeclaration__GetDeclaredTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(propertyGetterDeclarationEClass, PropertyGetterDeclaration.class, "PropertyGetterDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9383,6 +9445,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getN4MemberAnnotationList__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4MemberAnnotationList__GetDeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4MemberAnnotationList__GetDeclaredTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4MemberAnnotationList__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

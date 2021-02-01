@@ -40,7 +40,7 @@ class ClassDeclarationsTypeBuilderTest extends AbstractParserTest {
 		val fieldDecl = cdecl.getOwnedMembers.get(0) as N4FieldDeclaration
 		assertEquals("p", fieldDecl.getName);
 
-		val typeOfP = fieldDecl.declaredTypeRef as ParameterizedTypeRef
+		val typeOfP = fieldDecl.declaredTypeRefInAST as ParameterizedTypeRef
 		assertFalse(typeOfP.eIsProxy)
 
 		assertEquals("C", typeOfP.declaredType.name)

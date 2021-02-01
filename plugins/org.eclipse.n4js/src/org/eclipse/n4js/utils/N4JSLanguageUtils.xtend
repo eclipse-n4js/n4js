@@ -469,13 +469,13 @@ public class N4JSLanguageUtils {
 		val parent = rootTypeRefInAST.eContainer;
 		val grandParent = parent?.eContainer;
 		return switch(parent) {
-			FormalParameter case parent.declaredTypeRef===rootTypeRefInAST && grandParent.isNonPrivateMemberOf(tClassifier):
+			FormalParameter case parent.declaredTypeRefInAST===rootTypeRefInAST && grandParent.isNonPrivateMemberOf(tClassifier):
 				Variance.CONTRA
 			N4MethodDeclaration case parent.declaredReturnTypeRefInAST===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier):
 				Variance.CO
-			N4GetterDeclaration case parent.declaredTypeRef===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier):
+			N4GetterDeclaration case parent.declaredTypeRefInAST===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier):
 				Variance.CO
-			N4FieldDeclaration case parent.declaredTypeRef===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier): {
+			N4FieldDeclaration case parent.declaredTypeRefInAST===rootTypeRefInAST && parent.isNonPrivateMemberOf(tClassifier): {
 				val tField = parent.definedField;
 				if(tField.final) {
 					Variance.CO // final field is like a getter

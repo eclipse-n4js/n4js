@@ -202,6 +202,21 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		FormalParameter _fpar = this.getFpar();
+		TypeRef _declaredTypeRefInAST = null;
+		if (_fpar!=null) {
+			_declaredTypeRefInAST=_fpar.getDeclaredTypeRefInAST();
+		}
+		return _declaredTypeRefInAST;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.SETTER_DECLARATION__FPAR:
@@ -289,12 +304,14 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 		if (baseClass == TypeProvidingElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == FieldAccessor.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 				case N4JSPackage.FIELD_ACCESSOR___GET_DEFINED_ACCESSOR: return N4JSPackage.SETTER_DECLARATION___GET_DEFINED_ACCESSOR;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -314,6 +331,8 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 				return getDefinedAccessor();
 			case N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
+			case N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

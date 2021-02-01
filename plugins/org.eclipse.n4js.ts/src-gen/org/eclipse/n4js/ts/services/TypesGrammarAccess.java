@@ -2992,7 +2992,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//// used in N4JS.xtext
 	//fragment ColonSepDeclaredTypeRef *:
-	//	':' declaredTypeRef=super::TypeRef;
+	//	':' declaredTypeRefInAST=super::TypeRef;
 	public TypeExpressionsGrammarAccess.ColonSepDeclaredTypeRefElements getColonSepDeclaredTypeRefAccess() {
 		return gaTypeExpressions.getColonSepDeclaredTypeRefAccess();
 	}

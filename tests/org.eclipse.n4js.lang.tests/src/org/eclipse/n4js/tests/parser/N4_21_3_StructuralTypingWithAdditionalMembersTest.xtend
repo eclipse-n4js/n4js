@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
@@ -17,7 +18,6 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.junit.Test
 
 /**
@@ -43,11 +43,11 @@ class N4_21_3_StructuralTypingWithAdditionalMembersTest extends AbstractStructur
 		assertEquals(TypingStrategy.DEFAULT, D.typingStrategy)
 
 		assertAdditionalFieldsPTR(TypingStrategy.STRUCTURAL, #["s" -> "string"],
-			(D.ownedMembers.get(0) as N4FieldDeclaration).declaredTypeRef);
+			(D.ownedMembers.get(0) as N4FieldDeclaration).declaredTypeRefInAST);
 		assertAdditionalFieldsPTR(TypingStrategy.STRUCTURAL, #["s" -> "string"],
-			(D.ownedMembers.get(1) as N4MethodDeclaration).fpars.get(0).declaredTypeRef);
+			(D.ownedMembers.get(1) as N4MethodDeclaration).fpars.get(0).declaredTypeRefInAST);
 		assertAdditionalFieldsPTR(TypingStrategy.STRUCTURAL, #["s" -> "string"],
-			(script.scriptElements.get(2) as FunctionDeclaration).fpars.get(0).declaredTypeRef);
+			(script.scriptElements.get(2) as FunctionDeclaration).fpars.get(0).declaredTypeRefInAST);
 	}
 
 	@Test
@@ -68,11 +68,11 @@ class N4_21_3_StructuralTypingWithAdditionalMembersTest extends AbstractStructur
 		assertEquals(TypingStrategy.DEFAULT, D.typingStrategy)
 
 		assertAdditionalFieldsPTR(TypingStrategy.STRUCTURAL, #["s" -> "any"],
-			(D.ownedMembers.get(0) as N4FieldDeclaration).declaredTypeRef);
+			(D.ownedMembers.get(0) as N4FieldDeclaration).declaredTypeRefInAST);
 		assertAdditionalFieldsPTR(TypingStrategy.STRUCTURAL, #["s" -> "any"],
-			(D.ownedMembers.get(1) as N4MethodDeclaration).fpars.get(0).declaredTypeRef);
+			(D.ownedMembers.get(1) as N4MethodDeclaration).fpars.get(0).declaredTypeRefInAST);
 		assertAdditionalFieldsPTR(TypingStrategy.STRUCTURAL, #["s" -> "any"],
-			(script.scriptElements.get(2) as FunctionDeclaration).fpars.get(0).declaredTypeRef);
+			(script.scriptElements.get(2) as FunctionDeclaration).fpars.get(0).declaredTypeRefInAST);
 	}
 
 
@@ -109,7 +109,7 @@ class N4_21_3_StructuralTypingWithAdditionalMembersTest extends AbstractStructur
 		assertNotNull(script);
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		EcoreUtil.resolveAll(script)
-		val structTypeRef = (script.scriptElements.get(1) as FunctionDeclaration).fpars.get(0).declaredTypeRef as ParameterizedTypeRefStructural
+		val structTypeRef = (script.scriptElements.get(1) as FunctionDeclaration).fpars.get(0).declaredTypeRefInAST as ParameterizedTypeRefStructural
 		return structTypeRef.structuralMembers.get(index)
 	}
 

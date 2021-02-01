@@ -1344,6 +1344,8 @@ import com.google.common.base.Strings;
 	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {
 		TypeRef declaredTypeRef = elem.getDeclaredTypeRef();
 		if (declaredTypeRef == null)
+			declaredTypeRef = elem.getDeclaredTypeRefInAST();
+		if (declaredTypeRef == null)
 			return;
 
 		// In case of plain-JS output no types will be written

@@ -922,17 +922,17 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_5_6_0());
+							newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_5_6_0());
 						}
-						lv_declaredTypeRef_42_0=ruleTypeRef
+						lv_declaredTypeRefInAST_42_0=ruleTypeRef
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedScriptElementRule());
 							}
 							set(
 								$current,
-								"declaredTypeRef",
-								lv_declaredTypeRef_42_0,
+								"declaredTypeRefInAST",
+								lv_declaredTypeRefInAST_42_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
@@ -2095,17 +2095,17 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_6_0());
+							newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_4_6_0());
 						}
-						lv_declaredTypeRef_42_0=ruleTypeRef
+						lv_declaredTypeRefInAST_42_0=ruleTypeRef
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedExportableElementRule());
 							}
 							set(
 								$current,
-								"declaredTypeRef",
-								lv_declaredTypeRef_42_0,
+								"declaredTypeRefInAST",
+								lv_declaredTypeRefInAST_42_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
@@ -15306,17 +15306,17 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
+									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
 								}
-								lv_declaredTypeRef_2_0=ruleTypeRefWithModifiers
+								lv_declaredTypeRefInAST_2_0=ruleTypeRefWithModifiers
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
 									}
 									set(
 										$current,
-										"declaredTypeRef",
-										lv_declaredTypeRef_2_0,
+										"declaredTypeRefInAST",
+										lv_declaredTypeRefInAST_2_0,
 										"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 									afterParserOrEnumRuleCall();
 								}
@@ -15864,17 +15864,17 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_1_0());
+							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_4_1_0());
 						}
-						lv_declaredTypeRef_27_0=ruleTypeRef
+						lv_declaredTypeRefInAST_27_0=ruleTypeRef
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
 							}
 							set(
 								$current,
-								"declaredTypeRef",
-								lv_declaredTypeRef_27_0,
+								"declaredTypeRefInAST",
+								lv_declaredTypeRefInAST_27_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
@@ -15985,17 +15985,17 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 						(
 							(
 								{
-									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
+									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_1_0_0_0_1_0());
 								}
-								lv_declaredTypeRef_2_0=ruleTypeRefWithModifiers
+								lv_declaredTypeRefInAST_2_0=ruleTypeRefWithModifiers
 								{
 									if ($current==null) {
 										$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
 									}
 									set(
 										$current,
-										"declaredTypeRef",
-										lv_declaredTypeRef_2_0,
+										"declaredTypeRefInAST",
+										lv_declaredTypeRefInAST_2_0,
 										"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 									afterParserOrEnumRuleCall();
 								}
@@ -16543,17 +16543,17 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_4_1_0());
+							newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_4_1_0());
 						}
-						lv_declaredTypeRef_27_0=ruleTypeRef
+						lv_declaredTypeRefInAST_27_0=ruleTypeRef
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotatedPropertyAssignmentRule());
 							}
 							set(
 								$current,
-								"declaredTypeRef",
-								lv_declaredTypeRef_27_0,
+								"declaredTypeRefInAST",
+								lv_declaredTypeRefInAST_27_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
@@ -17067,17 +17067,17 @@ rulePropertyNameValuePair returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_0_0_1_0());
+							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_1_0());
 						}
-						lv_declaredTypeRef_1_0=ruleTypeRefWithModifiers
+						lv_declaredTypeRefInAST_1_0=ruleTypeRefWithModifiers
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
 							}
 							set(
 								$current,
-								"declaredTypeRef",
-								lv_declaredTypeRef_1_0,
+								"declaredTypeRefInAST",
+								lv_declaredTypeRefInAST_1_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 							afterParserOrEnumRuleCall();
 						}
@@ -17187,17 +17187,17 @@ norm1_PropertyNameValuePair returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefTypeRefWithModifiersParserRuleCall_0_0_1_0());
+							newCompositeNode(grammarAccess.getPropertyNameValuePairAccess().getDeclaredTypeRefInASTTypeRefWithModifiersParserRuleCall_0_0_1_0());
 						}
-						lv_declaredTypeRef_1_0=ruleTypeRefWithModifiers
+						lv_declaredTypeRefInAST_1_0=ruleTypeRefWithModifiers
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairRule());
 							}
 							set(
 								$current,
-								"declaredTypeRef",
-								lv_declaredTypeRef_1_0,
+								"declaredTypeRefInAST",
+								lv_declaredTypeRefInAST_1_0,
 								"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
 							afterParserOrEnumRuleCall();
 						}
@@ -17283,17 +17283,17 @@ rulePropertyNameValuePairSingleName returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefTypeRefParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_0_0());
 				}
-				lv_declaredTypeRef_0_0=ruleTypeRef
+				lv_declaredTypeRefInAST_0_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairSingleNameRule());
 					}
 					set(
 						$current,
-						"declaredTypeRef",
-						lv_declaredTypeRef_0_0,
+						"declaredTypeRefInAST",
+						lv_declaredTypeRefInAST_0_0,
 						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
@@ -17334,17 +17334,17 @@ norm1_PropertyNameValuePairSingleName returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefTypeRefParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getPropertyNameValuePairSingleNameAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_0_0());
 				}
-				lv_declaredTypeRef_0_0=ruleTypeRef
+				lv_declaredTypeRefInAST_0_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPropertyNameValuePairSingleNameRule());
 					}
 					set(
 						$current,
-						"declaredTypeRef",
-						lv_declaredTypeRef_0_0,
+						"declaredTypeRefInAST",
+						lv_declaredTypeRefInAST_0_0,
 						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
@@ -29878,17 +29878,17 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefTypeRefParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_3_0());
 				}
-				lv_declaredTypeRef_6_0=ruleTypeRef
+				lv_declaredTypeRefInAST_6_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4TypeAliasDeclarationRule());
 					}
 					set(
 						$current,
-						"declaredTypeRef",
-						lv_declaredTypeRef_6_0,
+						"declaredTypeRefInAST",
+						lv_declaredTypeRefInAST_6_0,
 						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
@@ -37916,17 +37916,17 @@ ruleColonSepDeclaredTypeRef[EObject in_current]  returns [EObject current=in_cur
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefInASTTypeRefParserRuleCall_1_0());
 				}
-				lv_declaredTypeRef_1_0=ruleTypeRef
+				lv_declaredTypeRefInAST_1_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getColonSepDeclaredTypeRefRule());
 					}
 					set(
 						$current,
-						"declaredTypeRef",
-						lv_declaredTypeRef_1_0,
+						"declaredTypeRefInAST",
+						lv_declaredTypeRefInAST_1_0,
 						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}

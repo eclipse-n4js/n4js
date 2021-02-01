@@ -285,6 +285,18 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_MEMBER_DECLARATION__OWNER:
@@ -471,6 +483,7 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 		if (baseClass == TypeProvidingElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}
@@ -518,6 +531,8 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				return getName();
 			case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
+			case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

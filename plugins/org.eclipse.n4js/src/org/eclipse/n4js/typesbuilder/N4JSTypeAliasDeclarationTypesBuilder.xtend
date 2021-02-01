@@ -50,7 +50,7 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 		typeAlias.copyAnnotations(n4TypeAlias, preLinkingPhase);
 
 		if (!preLinkingPhase) {
-			typeAlias.typeRef = TypeUtils.copyWithProxies(n4TypeAlias.declaredTypeRef);
+			typeAlias.typeRef = TypeUtils.copyWithProxies(n4TypeAlias.declaredTypeRefInAST);
 		}
 
 		typeAlias.astElement = n4TypeAlias;

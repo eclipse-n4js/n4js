@@ -1455,25 +1455,25 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepDeclaredTypeRef");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cColonKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cDeclaredTypeRefAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cDeclaredTypeRefTypeRefParserRuleCall_1_0 = (RuleCall)cDeclaredTypeRefAssignment_1.eContents().get(0);
+		private final Assignment cDeclaredTypeRefInASTAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cDeclaredTypeRefInASTTypeRefParserRuleCall_1_0 = (RuleCall)cDeclaredTypeRefInASTAssignment_1.eContents().get(0);
 		
 		//// used in N4JS.xtext
 		//fragment ColonSepDeclaredTypeRef *:
-		//	':' declaredTypeRef=TypeRef;
+		//	':' declaredTypeRefInAST=TypeRef;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//':' declaredTypeRef=TypeRef
+		//':' declaredTypeRefInAST=TypeRef
 		public Group getGroup() { return cGroup; }
 		
 		//':'
 		public Keyword getColonKeyword_0() { return cColonKeyword_0; }
 		
-		//declaredTypeRef=TypeRef
-		public Assignment getDeclaredTypeRefAssignment_1() { return cDeclaredTypeRefAssignment_1; }
+		//declaredTypeRefInAST=TypeRef
+		public Assignment getDeclaredTypeRefInASTAssignment_1() { return cDeclaredTypeRefInASTAssignment_1; }
 		
 		//TypeRef
-		public RuleCall getDeclaredTypeRefTypeRefParserRuleCall_1_0() { return cDeclaredTypeRefTypeRefParserRuleCall_1_0; }
+		public RuleCall getDeclaredTypeRefInASTTypeRefParserRuleCall_1_0() { return cDeclaredTypeRefInASTTypeRefParserRuleCall_1_0; }
 	}
 	public class ColonSepTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepTypeRef");
@@ -2955,7 +2955,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//// used in N4JS.xtext
 	//fragment ColonSepDeclaredTypeRef *:
-	//	':' declaredTypeRef=TypeRef;
+	//	':' declaredTypeRefInAST=TypeRef;
 	public ColonSepDeclaredTypeRefElements getColonSepDeclaredTypeRefAccess() {
 		return pColonSepDeclaredTypeRef;
 	}

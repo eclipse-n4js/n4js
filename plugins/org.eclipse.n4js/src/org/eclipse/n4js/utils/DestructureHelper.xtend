@@ -22,8 +22,10 @@ import org.eclipse.n4js.n4JS.DestructNode
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
+import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.postprocessing.ASTProcessor
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
@@ -380,22 +382,41 @@ class DestructureHelper {
 	}
 
 	/** Create expected type for a leaf DestructNode */
-	private def createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
+	private def TypeRef createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
 		val varDecl = leafNode.varDecl
 		val varRef = leafNode.varRef
 		if (varDecl !== null) {
 			// If it is a variable declaration, simply retrieve the declared type
-			var declaredTypeRef = varDecl.declaredTypeRef;
-			if (declaredTypeRef !== null) {
-				return declaredTypeRef
+			val declTypeRef = getDeclaredTypeRefOfVarDecl(G, varDecl);
+			if (declTypeRef !== null) {
+				return declTypeRef;
 			}
 		} else if (varRef !== null) {
 			// It is a variable reference, retrieve the declared type of the variable
-			if (varRef.id instanceof VariableDeclaration && (varRef.id as VariableDeclaration).declaredTypeRef !== null) {
-				return (varRef.id as VariableDeclaration).declaredTypeRef
+			val id = varRef.id;
+			if (id instanceof VariableDeclaration) {
+				val declTypeRef = getDeclaredTypeRefOfVarDecl(G, id);
+				if (declTypeRef !== null) {
+					return declTypeRef;
+				}
 			}
 		}
 		// In case the expected type does not exist, simply return null
 		return null
+	}
+
+	/**
+	 * This is invoked from {@code PolyProcessor#inferType(RuleEnvironment, Expression, ASTMetaInfoCache)}
+	 * and in case of for-of loops it may inspect its variable declaration before {@code TypeRefProcessor}
+	 * has processed that variable declaration (see order defined for ForStatement in
+	 * {@link ASTProcessor#childrenToBeProcessed(RuleEnvironment, EObject)}). Therefore, we cannot rely
+	 * on {@link TypedElement#getDeclaredTypeRef()} here.
+	 */
+	private def TypeRef getDeclaredTypeRefOfVarDecl(RuleEnvironment G, VariableDeclaration varDecl) {
+		val declaredTypeRefInAST = varDecl.declaredTypeRefInAST;
+		if (declaredTypeRefInAST !== null) {
+			return varDecl.declaredTypeRef ?: tsh.resolveTypeAliases(G, declaredTypeRefInAST);
+		}
+		return null;
 	}
 }

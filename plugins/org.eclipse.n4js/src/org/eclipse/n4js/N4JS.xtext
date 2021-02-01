@@ -109,7 +109,7 @@ AnnotatedScriptElement returns ScriptElement:
 		'type' name=BindingIdentifier<Yield=false>
 		TypeVariables?
 		'='	
-		declaredTypeRef=TypeRef
+		declaredTypeRefInAST=TypeRef
 	)
 ;
 
@@ -194,7 +194,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		'type' name=BindingIdentifier<Yield=false>
 		TypeVariables?
 		'='	
-		declaredTypeRef=TypeRef
+		declaredTypeRefInAST=TypeRef
 	)
 ;
 
@@ -670,7 +670,7 @@ PropertyAssignment <Yield>:
 AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 	PropertyAssignmentAnnotationList (
 	// TODO extract property header into an own instance to defer the object instantiation
-	=>(	{PropertyNameValuePair.annotationList=current} declaredTypeRef=TypeRefWithModifiers?
+	=>(	{PropertyNameValuePair.annotationList=current} declaredTypeRefInAST=TypeRefWithModifiers?
 			declaredName=LiteralOrComputedPropertyName<Yield> ':'
 		) expression=AssignmentExpression<In=true,Yield>
 	| =>({PropertyGetterDeclaration.annotationList=current}
@@ -685,7 +685,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
 			)
 		) ';'?
-	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? expression=PropertyNameValuePairSingleNamePart<Yield>
+	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRefInAST=TypeRef? expression=PropertyNameValuePairSingleNamePart<Yield>
 	| {PropertySpread.annotationList=current} '...' expression=AssignmentExpression<In=true,Yield>
 	)
 ;
@@ -705,7 +705,7 @@ PropertyMethodDeclaration <Yield>:
 PropertyNameValuePair <Yield>:
 	=> (
 		{PropertyNameValuePair}
-		declaredTypeRef=TypeRefWithModifiers?
+		declaredTypeRefInAST=TypeRefWithModifiers?
 		declaredName=LiteralOrComputedPropertyName<Yield>
 		(declaredOptional?='?')?
 		':'
@@ -714,7 +714,7 @@ PropertyNameValuePair <Yield>:
 ;
 
 PropertyNameValuePairSingleName <Yield>:
-	declaredTypeRef=TypeRef?
+	declaredTypeRefInAST=TypeRef?
 	expression=PropertyNameValuePairSingleNamePart<Yield>
 ;
 
@@ -1366,7 +1366,7 @@ N4TypeAliasDeclaration <Yield>:
 	)
 	TypeVariables?
 	'='	
-	declaredTypeRef=TypeRef
+	declaredTypeRefInAST=TypeRef
 ;
 
 

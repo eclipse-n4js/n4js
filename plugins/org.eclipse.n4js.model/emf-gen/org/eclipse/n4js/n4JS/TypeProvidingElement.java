@@ -33,9 +33,22 @@ public interface TypeProvidingElement extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
+	 * The returned type reference may or may not be contained in the AST.
+	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	TypeRef getDeclaredTypeRef();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getDeclaredTypeRefInAST();
 
 } // TypeProvidingElement

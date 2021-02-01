@@ -49,7 +49,7 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 				// void is not truly allowed as the return type of a getter, but there's a separate validation for
 				// that; so treat this case as legal here:
 				|| container instanceof GetterDeclaration
-						&& eRef == N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRef();
+						&& eRef == N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRefInAST();
 
 		this.isValidLocationForFunctionType = false
 				// the following is only required for content assist in JSXElements (main scoping works without this)

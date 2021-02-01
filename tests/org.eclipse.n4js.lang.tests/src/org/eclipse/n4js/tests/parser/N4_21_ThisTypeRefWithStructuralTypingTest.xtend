@@ -56,7 +56,7 @@ class N4_21_ThisTypeRefWithStructuralTypingTest extends AbstractStructuralTyping
 		assertTypingStrategyOfFPar(TypingStrategy.STRUCTURAL, p)
 
 		assertAdditionalFieldsThis(TypingStrategy.STRUCTURAL, #["s" -> "string"],
-			p.declaredTypeRef);
+			p.declaredTypeRefInAST);
 
 
 
@@ -64,8 +64,8 @@ class N4_21_ThisTypeRefWithStructuralTypingTest extends AbstractStructuralTyping
 
 
 	def void assertTypingStrategyOfFPar(TypingStrategy expectedStrategy, FormalParameter fpar) {
-		assertType(ThisTypeRef, fpar.declaredTypeRef)
-		val ptrOfFPar =fpar.declaredTypeRef as ThisTypeRef
+		assertType(ThisTypeRef, fpar.declaredTypeRefInAST)
+		val ptrOfFPar =fpar.declaredTypeRefInAST as ThisTypeRef
 		assertEquals("Expected " + expectedStrategy.getName + " but was " + ptrOfFPar.typingStrategy?.getName + ": ",
 			expectedStrategy, ptrOfFPar.typingStrategy);
 	}

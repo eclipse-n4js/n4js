@@ -352,9 +352,7 @@ import com.google.inject.Inject;
 			// note: keep this rule aligned with rules caseN4FieldDeclaration and casePropertyNameValuePair
 			final TypeRef T;
 			if (vdecl.getDeclaredTypeRef() != null) {
-				final TypeRef declaredTypeRef = vdecl.getDeclaredTypeRef();
-				// since we take this type reference directly from the AST, we still need to resolve aliases:
-				T = tsh.resolveTypeAliases(G, declaredTypeRef);
+				T = vdecl.getDeclaredTypeRef();
 			} else if (vdecl.eContainer() instanceof BindingElement) {
 				// guard against infinite recursion, e.g. for vars like this:
 				// var [a,b] = b; / var {a,b} = b;
@@ -468,6 +466,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseFormalParameter(FormalParameter fpar) {
+			final TypeRef fparTypeRefInAST = fpar.getDeclaredTypeRefInAST();
 			final TypeRef fparTypeRef = fpar.getDeclaredTypeRef();
 			final TypeRef T;
 			if (fparTypeRef != null) {
@@ -482,7 +481,7 @@ import com.google.inject.Inject;
 						&& hasFormalParameterWithThisType((FunctionTypeExpression) fparTypeRef);
 
 				if (case1 || case2) {
-					T = typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRef, fparTypeRef);
+					T = typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRefInAST, fparTypeRef);
 				} else {
 					// note: it's a bit cleaner to return the type from the TModule, if one was already determined
 					final TFormalParameter definedElem = fpar.getDefinedTypeElement();

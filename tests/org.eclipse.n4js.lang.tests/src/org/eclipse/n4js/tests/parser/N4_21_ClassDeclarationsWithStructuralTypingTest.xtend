@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -20,7 +21,6 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.junit.Test
-import org.eclipse.n4js.n4JS.ExportDeclaration
 
 /**
  * Parser tests for N4 specific types. Test methods with suffix "example" are taken from the N4JS spec.
@@ -123,7 +123,7 @@ class N4_21_ClassDeclarationsWithStructuralTypingTest extends AbstractParserTest
 	}
 
 	def void assertTypingStrategyOfFPar(TypingStrategy expectedStrategy, N4MethodDeclaration method) {
-		val ptrOfFPar = method.fpars.head.declaredTypeRef as ParameterizedTypeRef
+		val ptrOfFPar = method.fpars.head.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals("Expected " + expectedStrategy.getName + " but was " + ptrOfFPar.typingStrategy?.getName + ": ",
 			expectedStrategy, ptrOfFPar.typingStrategy);
 	}

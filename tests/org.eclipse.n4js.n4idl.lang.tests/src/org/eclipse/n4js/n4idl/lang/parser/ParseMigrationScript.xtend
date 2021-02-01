@@ -28,7 +28,7 @@ public class ParseMigrationScript extends AbstractN4IDLParserTest {
 			}
 		'''.parseSuccessfully
 		val mig = script.scriptElements.get(1) as FunctionDeclaration
-		assertEquals(1, mig.fpars.head.declaredTypeRef.version)
+		assertEquals(1, mig.fpars.head.declaredTypeRefInAST.version)
 		assertEquals(2, mig.declaredReturnTypeRefInAST.version)
 	}
 

@@ -200,6 +200,20 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		final EObject c = this.eContainer();
+		if ((c instanceof N4MemberDeclaration)) {
+			return ((N4MemberDeclaration)c).getDeclaredTypeRefInAST();
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getName() {
 		return null;
 	}
@@ -529,6 +543,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 		if (baseClass == TypeProvidingElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}
@@ -572,6 +587,8 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				return getDefinedTypeElement();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_NAME:
 				return getName();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_ABSTRACT:

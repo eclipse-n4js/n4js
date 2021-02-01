@@ -347,7 +347,7 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTStructMethodAccess().getNameAssignment_0_0_2(), "rule__TStructMethod__NameAssignment_0_0_2");
 			builder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_1(), "rule__TypeVariables__TypeVarsAssignment_1");
 			builder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_2_1(), "rule__TypeVariables__TypeVarsAssignment_2_1");
-			builder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefAssignment_1(), "rule__ColonSepDeclaredTypeRef__DeclaredTypeRefAssignment_1");
+			builder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefInASTAssignment_1(), "rule__ColonSepDeclaredTypeRef__DeclaredTypeRefInASTAssignment_1");
 			builder.put(grammarAccess.getColonSepTypeRefAccess().getTypeRefAssignment_1(), "rule__ColonSepTypeRef__TypeRefAssignment_1");
 			builder.put(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefInASTAssignment_1(), "rule__ColonSepDeclaredReturnTypeRef__DeclaredReturnTypeRefInASTAssignment_1");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getReturnTypeRefAssignment_1(), "rule__ColonSepReturnTypeRef__ReturnTypeRefAssignment_1");

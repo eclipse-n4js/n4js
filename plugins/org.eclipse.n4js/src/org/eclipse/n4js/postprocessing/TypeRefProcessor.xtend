@@ -36,7 +36,7 @@ package class TypeRefProcessor extends AbstractProcessor {
 
 	def void handleTypeRefs(RuleEnvironment G, EObject node, ASTMetaInfoCache cache) {
 		if (node instanceof TypedElement) {
-			// FIXME!!!
+			node.declaredTypeRef = doHandleTypeRef(G, node.declaredTypeRefInAST);
 		}
 		if (node instanceof FunctionDefinition) {
 			node.declaredReturnTypeRef = doHandleTypeRef(G, node.declaredReturnTypeRefInAST);

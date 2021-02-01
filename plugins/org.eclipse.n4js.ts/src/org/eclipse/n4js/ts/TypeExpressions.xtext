@@ -215,7 +215,7 @@ fragment TypeVariables*:
 
 // used in N4JS.xtext
 fragment ColonSepDeclaredTypeRef*:
-	':' declaredTypeRef=TypeRef
+	':' declaredTypeRefInAST=TypeRef
 ;
 
 fragment ColonSepTypeRef*:

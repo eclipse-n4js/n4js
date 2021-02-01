@@ -89,7 +89,7 @@ class ClassExpressionScopingTest {
 		Assert.assertSame("class3 correctly scoped", class3CallTarget.astElement, class3)
 		Assert.assertSame("class4 correctly scoped", class4CallTarget.astElement, class4)
 
-		val variableTypes = script.eAllContents.filter(N4FieldDeclaration).map[declaredTypeRef].filter(ParameterizedTypeRef).map[declaredType].toList
+		val variableTypes = script.eAllContents.filter(N4FieldDeclaration).map[declaredTypeRefInAST].filter(ParameterizedTypeRef).map[declaredType].toList
 		Assert.assertSame("class1 correctly scoped at type reference in variable declaration", (variableTypes.head as TClass).astElement, class1)
 
 		val assignmentPairs = script.eAllContents.filter(AssignmentExpression).filter[EcoreUtil2.getContainerOfType(it, N4MethodDeclaration) !== null].filter[lhs instanceof IdentifierRef && rhs instanceof IdentifierRef].map[(lhs as IdentifierRef).id -> (rhs as IdentifierRef).id].toList

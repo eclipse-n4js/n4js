@@ -72,7 +72,7 @@ class ReferenceFinderTest extends Assert {
 		assertEquals(1, result.size)
 		val varStmt = script.scriptElements.last as VariableStatement
 		val varDecl = varStmt.varDecl.head
-		val typeRef = varDecl.declaredTypeRef
+		val typeRef = varDecl.declaredTypeRefInAST
 		assertTrue(result.contains(typeRef)) // type in the var decl
 	}
 

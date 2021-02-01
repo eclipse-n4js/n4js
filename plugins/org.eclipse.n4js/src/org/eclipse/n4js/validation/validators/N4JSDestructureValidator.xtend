@@ -185,7 +185,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		if(node.varDecl!==null || node.varRef!==null) {
 			// binding target is a newly declared or existing variable
-			if(node.varDecl!==null && node.varDecl.declaredTypeRef===null) {
+			if(node.varDecl!==null && node.varDecl.declaredTypeRefInAST===null) {
 				// variable declared within pattern _without_ an explicitly declared type
 				// -> ignore this case
 				// (such a variable does not introduce any type expectation; instead,

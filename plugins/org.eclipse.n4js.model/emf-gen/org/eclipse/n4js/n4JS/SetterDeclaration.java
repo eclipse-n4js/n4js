@@ -91,12 +91,20 @@ public interface SetterDeclaration extends FieldAccessor {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getDeclaredTypeRef();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Returns the declared type of the formal parameter
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeRef getDeclaredTypeRef();
+	TypeRef getDeclaredTypeRefInAST();
 
 } // SetterDeclaration

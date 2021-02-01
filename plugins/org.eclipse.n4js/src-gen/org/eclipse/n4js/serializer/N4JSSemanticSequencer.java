@@ -2287,7 +2287,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             annotationList=AnnotatedExportableElement_N4TypeAliasDeclaration_1_4_0 
 	 *             declaredModifiers+=N4ModifierWithoutConst* 
 	 *             name=BindingIdentifier 
-	 *             declaredTypeRef=TypeRef
+	 *             declaredTypeRefInAST=TypeRef
 	 *         ) | 
 	 *         (
 	 *             (
@@ -2296,9 +2296,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             ) 
 	 *             typeVars+=TypeVariable 
 	 *             typeVars+=TypeVariable* 
-	 *             (declaredTypeRef=TypeRef | declaredTypeRef=TypeRef)
+	 *             (declaredTypeRefInAST=TypeRef | declaredTypeRefInAST=TypeRef)
 	 *         ) | 
-	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRef=TypeRef)
+	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRefInAST=TypeRef)
 	 *     )
 	 */
 	protected void sequence_AnnotatedExportableElement_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -2317,7 +2317,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4ModifierWithoutConst* 
 	 *         name=BindingIdentifier 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         declaredTypeRef=TypeRef
+	 *         declaredTypeRefInAST=TypeRef
 	 *     )
 	 */
 	protected void sequence_AnnotatedExportableElement_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -3810,7 +3810,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
+	 *         declaredTypeRefInAST=TypeRef? 
 	 *         expression=Expression?
 	 *     )
 	 */
@@ -3830,7 +3830,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
+	 *         declaredTypeRefInAST=TypeRef? 
 	 *         expression=Expression?
 	 *     )
 	 */
@@ -3850,7 +3850,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
+	 *         declaredTypeRefInAST=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -3869,7 +3869,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ((annotationList=AnnotatedN4MemberDeclaration_N4GetterDeclaration_1_0_0_0_0 declaredModifiers+=N4Modifier*) | declaredModifiers+=N4Modifier+)? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
+	 *         declaredTypeRefInAST=TypeRef? 
 	 *         (body=Block | body=Block)?
 	 *     )
 	 */
@@ -3963,7 +3963,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
+	 *         declaredTypeRefInAST=TypeRef? 
 	 *         body=Block
 	 *     )
 	 */
@@ -3982,7 +3982,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
-	 *         declaredTypeRef=TypeRef? 
+	 *         declaredTypeRefInAST=TypeRef? 
 	 *         (body=Block | body=Block)
 	 *     )
 	 */
@@ -4019,7 +4019,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyNameValuePair_1_0_0_0_0 
-	 *         declaredTypeRef=TypeRefWithModifiers? 
+	 *         declaredTypeRefInAST=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         expression=AssignmentExpression
 	 *     )
@@ -4037,7 +4037,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyNameValuePairSingleName_1_4_0 
-	 *         declaredTypeRef=TypeRef? 
+	 *         declaredTypeRefInAST=TypeRef? 
 	 *         expression=PropertyNameValuePairSingleNamePart
 	 *     )
 	 */
@@ -4055,10 +4055,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         (
 	 *             annotationList=AnnotatedPropertyAssignment_PropertyNameValuePairSingleName_1_4_0 
-	 *             declaredTypeRef=TypeRef? 
+	 *             declaredTypeRefInAST=TypeRef? 
 	 *             expression=PropertyNameValuePairSingleNamePart
 	 *         ) | 
-	 *         (declaredTypeRef=TypeRef? expression=PropertyNameValuePairSingleNamePart)
+	 *         (declaredTypeRefInAST=TypeRef? expression=PropertyNameValuePairSingleNamePart)
 	 *     )
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertyNameValuePairSingleName(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
@@ -4075,11 +4075,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         (
 	 *             annotationList=AnnotatedPropertyAssignment_PropertyNameValuePair_1_0_0_0_0 
-	 *             declaredTypeRef=TypeRefWithModifiers? 
+	 *             declaredTypeRefInAST=TypeRefWithModifiers? 
 	 *             declaredName=LiteralOrComputedPropertyName 
 	 *             expression=AssignmentExpression
 	 *         ) | 
-	 *         (declaredTypeRef=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? expression=AssignmentExpression)
+	 *         (declaredTypeRefInAST=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? expression=AssignmentExpression)
 	 *     )
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertyNameValuePair(ISerializationContext context, PropertyNameValuePair semanticObject) {
@@ -4442,7 +4442,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             annotationList=AnnotatedScriptElement_N4TypeAliasDeclaration_1_5_0 
 	 *             declaredModifiers+=N4ModifierWithoutConst* 
 	 *             name=BindingIdentifier 
-	 *             declaredTypeRef=TypeRef
+	 *             declaredTypeRefInAST=TypeRef
 	 *         ) | 
 	 *         (
 	 *             (
@@ -4451,9 +4451,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             ) 
 	 *             typeVars+=TypeVariable 
 	 *             typeVars+=TypeVariable* 
-	 *             (declaredTypeRef=TypeRef | declaredTypeRef=TypeRef)
+	 *             (declaredTypeRefInAST=TypeRef | declaredTypeRefInAST=TypeRef)
 	 *         ) | 
-	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRef=TypeRef)
+	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRefInAST=TypeRef)
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -4471,7 +4471,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4ModifierWithoutConst* 
 	 *         name=BindingIdentifier 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         declaredTypeRef=TypeRef
+	 *         declaredTypeRefInAST=TypeRef
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
@@ -8249,7 +8249,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (bindingPattern=BindingPattern | (annotations+=Annotation* variadic?='...'? name=BindingIdentifier declaredTypeRef=TypeRef?)) 
+	 *         (bindingPattern=BindingPattern | (annotations+=Annotation* variadic?='...'? name=BindingIdentifier declaredTypeRefInAST=TypeRef?)) 
 	 *         (hasInitializerAssignment?='=' initializer=AssignmentExpression?)?
 	 *     )
 	 */
@@ -9690,7 +9690,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CatchVariable returns CatchVariable
 	 *
 	 * Constraint:
-	 *     (bindingPattern=BindingPattern | (name=BindingIdentifier declaredTypeRef=TypeRef) | name=BindingIdentifier)
+	 *     (bindingPattern=BindingPattern | (name=BindingIdentifier declaredTypeRefInAST=TypeRef) | name=BindingIdentifier)
 	 */
 	protected void sequence_CatchVariable_ColonSepDeclaredTypeRef(ISerializationContext context, CatchVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9866,7 +9866,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ExportedVariableDeclaration returns ExportedVariableDeclaration
 	 *
 	 * Constraint:
-	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRef=TypeRef? expression=AssignmentExpression?)
+	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRefInAST=TypeRef? expression=AssignmentExpression?)
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_ExportedVariableDeclaration_VariableDeclarationImpl(ISerializationContext context, ExportedVariableDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9879,7 +9879,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4FieldDeclaration returns N4FieldDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? expression=Expression?)
+	 *     (
+	 *         declaredModifiers+=N4Modifier* 
+	 *         declaredName=LiteralOrComputedPropertyName 
+	 *         declaredOptional?='?'? 
+	 *         declaredTypeRefInAST=TypeRef? 
+	 *         expression=Expression?
+	 *     )
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9892,7 +9898,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4GetterDeclaration returns N4GetterDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? body=Block?)
+	 *     (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRefInAST=TypeRef? body=Block?)
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9905,7 +9911,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PropertyGetterDeclaration returns PropertyGetterDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? body=Block)
+	 *     (declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRefInAST=TypeRef? body=Block)
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9928,7 +9934,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     VariableDeclaration<AllowType> returns VariableDeclaration
 	 *
 	 * Constraint:
-	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRef=TypeRef? expression=AssignmentExpression?)
+	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRefInAST=TypeRef? expression=AssignmentExpression?)
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_VariableDeclaration_VariableDeclarationImpl(ISerializationContext context, VariableDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -20080,7 +20086,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4TypeAliasDeclaration returns N4TypeAliasDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? (typeVars+=TypeVariable typeVars+=TypeVariable*)? declaredTypeRef=TypeRef)
+	 *     (
+	 *         declaredModifiers+=N4ModifierWithoutConst* 
+	 *         name=BindingIdentifier? 
+	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
+	 *         declaredTypeRefInAST=TypeRef
+	 *     )
 	 */
 	protected void sequence_N4TypeAliasDeclaration_TypeVariables(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -23437,7 +23448,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PropertyNameValuePairSingleName returns PropertyNameValuePairSingleName
 	 *
 	 * Constraint:
-	 *     (declaredTypeRef=TypeRef? expression=PropertyNameValuePairSingleNamePart)
+	 *     (declaredTypeRefInAST=TypeRef? expression=PropertyNameValuePairSingleNamePart)
 	 */
 	protected void sequence_PropertyNameValuePairSingleName(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -23450,7 +23461,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PropertyNameValuePair returns PropertyNameValuePair
 	 *
 	 * Constraint:
-	 *     (declaredTypeRef=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? expression=AssignmentExpression)
+	 *     (declaredTypeRefInAST=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? expression=AssignmentExpression)
 	 */
 	protected void sequence_PropertyNameValuePair(ISerializationContext context, PropertyNameValuePair semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

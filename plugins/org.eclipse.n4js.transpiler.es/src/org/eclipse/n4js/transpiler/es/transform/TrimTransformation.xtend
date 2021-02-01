@@ -46,6 +46,7 @@ class TrimTransformation extends Transformation {
 	override transform() {
 		// 1) remove all typeRefs
 		collectNodes(state.im, TypeRef, false).forEach[remove(it)];
+		collectNodes(state.im, TypedElement, true).forEach[it.declaredTypeRef = null];
 		collectNodes(state.im, FunctionDefinition, true).forEach[it.declaredReturnTypeRef = null];
 		// 2) remove all type typeVars:
 		collectNodes(state.im, TypeVariable, false).forEach[remove(it)]

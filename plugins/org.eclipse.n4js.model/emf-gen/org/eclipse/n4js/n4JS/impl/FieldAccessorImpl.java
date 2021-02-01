@@ -180,6 +180,16 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public org.eclipse.n4js.ts.types.FieldAccessor getDefinedAccessor() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -384,6 +394,7 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 		if (baseClass == TypeProvidingElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}
@@ -414,6 +425,8 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 		switch (operationID) {
 			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
+			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 			case N4JSPackage.FIELD_ACCESSOR___GET_DEFINED_ACCESSOR:
 				return getDefinedAccessor();
 			case N4JSPackage.FIELD_ACCESSOR___IS_OPTIONAL:

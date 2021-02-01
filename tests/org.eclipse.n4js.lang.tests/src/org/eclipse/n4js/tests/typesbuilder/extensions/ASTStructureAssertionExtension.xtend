@@ -185,8 +185,8 @@ class ASTStructureAssertionExtension {
 		val parameter = function.fpars.filter[it.name == expectedName].head
 		assertNotNull(phase + ": Parameter should be found for name " + expectedName, parameter)
 		assertEquals(phase + ": Should have the expected variadic setup", variadic, parameter.variadic)
-		assertTrue("Should have parameterized type ref", parameter.declaredTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = parameter.declaredTypeRef as ParameterizedTypeRef
+		assertTrue("Should have parameterized type ref", parameter.declaredTypeRefInAST instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = parameter.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, newN4jsResource.contents.size)
 		val type = parameterizedTypeRef.declaredType;
 		assertNotNull(phase + ": declaredType should not be null", type)

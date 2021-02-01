@@ -396,7 +396,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				if (subtypeRes.failure) {
 					val message = getMessageForCLF_SPEC_WRONG_ADD_MEMBERTYPE(smember.name, description(tfield),
 						trimTypesystemMessage(subtypeRes));
-					val errMember = (ctor.fpars.get(parIndex).declaredTypeRef as StructuralTypeRef).structuralMembers.
+					val errMember = (ctor.fpars.get(parIndex).declaredTypeRefInAST as StructuralTypeRef).structuralMembers.
 						get(memberIndex);
 					val sourceObject = (if (errMember.astElement !== null) errMember.astElement else errMember);
 					addIssue(

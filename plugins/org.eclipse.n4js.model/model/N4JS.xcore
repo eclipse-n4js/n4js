@@ -278,7 +278,13 @@ class NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
  * Some rare elements have a declared type contained in some child element, e.g. getters.
  */
 interface TypeProvidingElement {
+	/*
+	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
+	 * The returned type reference may or may not be contained in the AST.
+	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 */
 	op TypeRef getDeclaredTypeRef()
+	op TypeRef getDeclaredTypeRefInAST()
 }
 
 /* A typed element, such as Variable, a Member or a NameValuePair, may provide a declared type.
@@ -289,7 +295,13 @@ interface TypeProvidingElement {
  * This is indicated by possibly unbound type parameters!
  */
 abstract class TypedElement extends TypeProvidingElement {
-	contains TypeRef declaredTypeRef
+	/*
+	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
+	 * The returned type reference may or may not be contained in the AST.
+	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 */
+	refers transient TypeRef declaredTypeRef
+	contains TypeRef declaredTypeRefInAST
 }
 
 // TODO jvp: check ECMAScript spec and probably update this environment things with function and classes
@@ -543,7 +555,8 @@ abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningE
 		// the TModule; hence, it is important to check for an existing defined function here.
 	}
 	/*
-	 * Same as {@link #getDeclaredReturnTypeRefRaw()}, but with type aliases being resolved.
+	 * Same as {@link #getDeclaredReturnTypeRefInAST()}, but with type aliases being resolved (if any).
+	 * The returned type reference may or may not be contained in the AST.
 	 * This is set during post-processing by {@code TypeRefProcessor}.
 	 */
 	refers transient TypeRef declaredReturnTypeRef
@@ -586,10 +599,13 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
 
 	boolean declaredOptional
 
+	op TypeRef getDeclaredTypeRef() {
+		return null;
+	}
 	/*
      * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
      */
-	op TypeRef getDeclaredTypeRef() {
+	op TypeRef getDeclaredTypeRefInAST() {
 		return null;
 	}
 	/*
@@ -1350,11 +1366,14 @@ abstract class SetterDeclaration extends FieldAccessor {
 	op TSetter getDefinedAccessor() {
 		return definedSetter;
 	}
+	op TypeRef getDeclaredTypeRef() {
+		return fpar?.declaredTypeRef;
+	}
 	/*
 	 * Returns the declared type of the formal parameter
 	 */
-	op TypeRef getDeclaredTypeRef() {
-		return fpar?.declaredTypeRef;
+	op TypeRef getDeclaredTypeRefInAST() {
+		return fpar?.declaredTypeRefInAST;
 	}
 }
 
@@ -2225,6 +2244,13 @@ class N4MemberAnnotationList extends AbstractAnnotationList, N4MemberDeclaration
 		val c = eContainer
 		if (c instanceof N4MemberDeclaration) {
 			return c.getDeclaredTypeRef();
+		}
+		return null
+	}
+	op TypeRef getDeclaredTypeRefInAST() {
+		val c = eContainer
+		if (c instanceof N4MemberDeclaration) {
+			return c.getDeclaredTypeRefInAST();
 		}
 		return null
 	}
