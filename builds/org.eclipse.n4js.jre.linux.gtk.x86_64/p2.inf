@@ -1,9 +1,0 @@
-instructions.configure = \
-  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:plugins/org.eclipse.n4js.jre.linux.gtk.x86_64_11.0.3.7/bin);
-
-instructions.unconfigure = \
-  org.eclipse.equinox.p2.touchpoint.eclipse.setJvm(jvm:null);
-
-instructions.install = \
-  org.eclipse.equinox.p2.touchpoint.eclipse.chmod(targetDir:${installFolder}/plugins/org.eclipse.n4js.jre.linux.gtk.x86_64_11.0.3.7,targetFile:bin,permissions:755,options:-R);\
-  org.eclipse.equinox.p2.touchpoint.eclipse.chmod(targetDir:${installFolder}/plugins/org.eclipse.n4js.jre.linux.gtk.x86_64_11.0.3.7/lib,targetFile:jexec,permissions:755);

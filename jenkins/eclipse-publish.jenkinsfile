@@ -72,7 +72,7 @@ pipeline {
         stage('Build (no tests)') {
             steps {
                 dir('n4js') {
-                    sh "mvn $MAVEN_OPTIONS -PbuildProduct -DlanguageVersion=${LANGUAGE_VERSION} -DexcludeJRE -DnoTests clean verify"
+                    sh "mvn $MAVEN_OPTIONS -DlanguageVersion=${LANGUAGE_VERSION} -DnoTests clean verify"
                 }
 
                 // assert that the headless builder reports the correct version
@@ -86,110 +86,44 @@ pipeline {
             }
         }
 
-        stage('Sign macOS product') {
-            steps {
-                dir('n4js/target/products') {
-                    sh "pwd"
-
-                    // sign the macOS product
-                    sh """\
-                        cp ../../builds/org.eclipse.n4js.product.build/signing-entitlements.xml .
-                        mv      n4js-ide_macos.zip          unsigned_n4js-ide_macos.zip
-                        curl -o n4js-ide_macos.zip -F file=@unsigned_n4js-ide_macos.zip -F entitlements=@signing-entitlements.xml http://build.eclipse.org:31338/macsign.php
-                    """
-
-                    // bundle macOS product into a signed .dmg image
-                    sh """\
-                        curl -o n4js-ide_macos.dmg -F sign=true -F source=@n4js-ide_macos.zip http://build.eclipse.org:31338/dmg-packager
-                    """
-
-                    // notarize the .dmg image (with stapling)
-                    sh """\
-                        mv      n4js-ide_macos.dmg             unnotarized_n4js-ide_macos.dmg
-                        ../../releng/utils/scripts/notarize.sh unnotarized_n4js-ide_macos.dmg n4js-ide_macos.dmg true
-                    """
-
-                    // delete macOS .zip archive
-                    // NOTE: if we ever want to ship the .zip archive again in the future, we'd have to do two things here ...
-                    // 1) unzip and re-zip 'n4js-ide_macos.zip' in order to fix a problem on macOS Mojave (not Catalina) when
-                    //    double-clicking a zip archive in Finder (for the zip archive obtained from the signing service
-                    //    Finder would create an app bundle containing files with incorrect file permissions):
-                    //        unzip n4js-ide_macos.zip
-                    //        zip -r n4js-ide_macos.zip n4jsIDE.app
-                    // 2) notarize 'n4js-ide_macos.zip' using the script notarize.sh as for the dmg image above, but this time
-                    //    without stapling (not supported for zip archives):
-                    //        notarize.sh unnotarized_n4js-ide_macos.zip n4js-ide_macos.zip false
-                    sh """\
-                        rm n4js-ide_macos.zip
-                    """
-                }
-            }
-        }
-
         stage('Deploy') {
             steps {
                 script {
-                    // delete artifacts we do not want to ship
-                    sh """
-                        cd n4js/target/products
-                        rm unsigned_*
-                        rm unnotarized_*
-                    """
-
                     // append language version to file names of products
                     sh """
                         cd n4js/target
                         mv n4jsc.jar                n4jsc_${LANGUAGE_VERSION}.jar
-                        cd products
-                        mv n4js-ide_win.zip         n4js-ide_win_${LANGUAGE_VERSION}.zip
-                        mv n4js-ide_macos.dmg       n4js-ide_macos_${LANGUAGE_VERSION}.dmg
-                        mv n4js-ide_linux-gtk.zip   n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip
                     """
 
-                    echo "Deploying version ${LANGUAGE_VERSION} of N4JS IDE and headless builder ..."
+                    echo "Deploying version ${LANGUAGE_VERSION} of N4JS ..."
 
-                    echo 'START: moving old products / update sites to archive.eclipse.org (those that are older than a week):'
+                    echo 'START: moving old products to archive.eclipse.org (those that are older than a week):'
                     sh """\
                         cd /home/data/httpd/download.eclipse.org/n4js
                         find products/nightly -mindepth 1 -maxdepth 1 -type d -not -name LATEST -mtime +7 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
-                        find updates/nightly  -mindepth 1 -maxdepth 1 -type d -not -name LATEST -mtime +7 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
                     """
-                    echo 'END: moving old products / update sites to archive.eclipse.org'
+                    echo 'END: moving old products'
 
-                    echo 'START: copying new products / update site to download.eclipse.org:'
+                    echo 'START: copying new products:'
                     def pathProductsVersion = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
-                    def pathUpdatesVersion  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
                     sh """\
                         mkdir -p ${pathProductsVersion}
-                        cp       n4js/target/products/*.zip  ${pathProductsVersion}
-                        cp       n4js/target/products/*.dmg  ${pathProductsVersion}
                         cp       n4js/target/*.jar           ${pathProductsVersion}
-
-                        mkdir -p ${pathUpdatesVersion}
-                        cp -R    n4js/builds/org.eclipse.n4js.product.build/target/repository/*  ${pathUpdatesVersion}
                     """
-                    echo 'END: copying new products / update site to download.eclipse.org'
+                    echo 'END: copying new products'
 
                     echo 'START: updating folder LATEST on download.eclipse.org:'
                     if (N4JS_LIBS_DIST_TAG == 'latest') {
                         def pathProductsLatest = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
-                        def pathUpdatesLatest  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
                         sh """\
                             rm -rf   ${pathProductsLatest}
                             mkdir -p ${pathProductsLatest}
                             cp -R    ${pathProductsVersion}/* ${pathProductsLatest}
-
-                            rm -rf   ${pathUpdatesLatest}
-                            mkdir -p ${pathUpdatesLatest}
-                            cp -R    ${pathUpdatesVersion}/*  ${pathUpdatesLatest}
                         """
 
                         // create copies of products without version suffix
                         sh """\
                             cp ${pathProductsLatest}/n4jsc_${LANGUAGE_VERSION}.jar               ${pathProductsLatest}/n4jsc.jar
-                            cp ${pathProductsLatest}/n4js-ide_win_${LANGUAGE_VERSION}.zip        ${pathProductsLatest}/n4js-ide_win.zip
-                            cp ${pathProductsLatest}/n4js-ide_macos_${LANGUAGE_VERSION}.dmg      ${pathProductsLatest}/n4js-ide_macos.dmg
-                            cp ${pathProductsLatest}/n4js-ide_linux-gtk_${LANGUAGE_VERSION}.zip  ${pathProductsLatest}/n4js-ide_linux-gtk.zip
                         """
                     } else {
                         echo 'SKIPPED! (because publishing with a dist-tag other than "latest")'
@@ -200,12 +134,8 @@ pipeline {
                     def output = sh returnStdout: true, script: """\
                         echo ******************** Products on download server:
                         ls -l /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly
-                        echo ******************** Update sites on download server:
-                        ls -l /home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly
                         echo ******************** Products on archive server:
                         ls -l /home/data/httpd/archive.eclipse.org/n4js/products/nightly
-                        echo ******************** Update sites on archive server:
-                        ls -l /home/data/httpd/archive.eclipse.org/n4js/updates/nightly
                         echo ********************
                     """
 

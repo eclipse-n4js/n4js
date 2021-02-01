@@ -42,17 +42,14 @@ pipeline {
                             // for adjusting the script only, renable later on:
                              '-Dmaven.test.failure.ignore',
                              "--fail-at-end",
-                            '-DWORKSPACE=' + env.WORKSPACE,
-                            '-DexcludeJRE'                               
+                            '-DWORKSPACE=' + env.WORKSPACE                               
                         ].join(' ')
                         def profiles = [
-                            'buildProduct',
                             'execute-plugin-tests',
                             'execute-plugin-ui-tests',
                             'execute-ecma-tests',
-                            'execute-accesscontrol-tests',
+                            'execute-accesscontrol-tests'
                          //   'execute-smoke-tests' // #1533
-                         //'execute-hlc-integration-tests'
                         ].join(',')
 
                         sh """\
