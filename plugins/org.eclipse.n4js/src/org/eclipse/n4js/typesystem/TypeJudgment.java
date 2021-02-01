@@ -1127,8 +1127,7 @@ import com.google.inject.Inject;
 		public TypeRef caseNewExpression(NewExpression e) {
 			TypeRef T = ts.type(G, e.getCallee());
 			if (T instanceof TypeTypeRef) {
-				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T,
-						e.getTypeArgs().toArray(new TypeArgument[0]));
+				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T, e);
 			}
 			return T;
 		}

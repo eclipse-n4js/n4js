@@ -4289,6 +4289,31 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+// Entry rule entryRuleTypeReferenceInAST
+entryRuleTypeReferenceInAST
+:
+{ before(grammarAccess.getTypeReferenceInASTRule()); }
+	 ruleTypeReferenceInAST
+{ after(grammarAccess.getTypeReferenceInASTRule()); } 
+	 EOF 
+;
+
+// Rule TypeReferenceInAST
+ruleTypeReferenceInAST 
+	@init {
+		int stackSize = keepStackSize();
+	}
+	:
+	(
+		{ before(grammarAccess.getTypeReferenceInASTAccess().getTypeRefInASTAssignment()); }
+		(rule__TypeReferenceInAST__TypeRefInASTAssignment)
+		{ after(grammarAccess.getTypeReferenceInASTAccess().getTypeRefInASTAssignment()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 // Entry rule entryRuleImportCallExpression
 entryRuleImportCallExpression
 :
@@ -83764,9 +83789,9 @@ rule__ConcreteTypeArguments__TypeArgsAssignment_1
 	}
 :
 	(
-		{ before(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeRefParserRuleCall_1_0()); }
-		ruleTypeRef
-		{ after(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeRefParserRuleCall_1_0()); }
+		{ before(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeReferenceInASTParserRuleCall_1_0()); }
+		ruleTypeReferenceInAST
+		{ after(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeReferenceInASTParserRuleCall_1_0()); }
 	)
 ;
 finally {
@@ -83779,9 +83804,24 @@ rule__ConcreteTypeArguments__TypeArgsAssignment_2_1
 	}
 :
 	(
-		{ before(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeRefParserRuleCall_2_1_0()); }
+		{ before(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeReferenceInASTParserRuleCall_2_1_0()); }
+		ruleTypeReferenceInAST
+		{ after(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeReferenceInASTParserRuleCall_2_1_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__TypeReferenceInAST__TypeRefInASTAssignment
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getTypeReferenceInASTAccess().getTypeRefInASTTypeRefParserRuleCall_0()); }
 		ruleTypeRef
-		{ after(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeRefParserRuleCall_2_1_0()); }
+		{ after(grammarAccess.getTypeReferenceInASTAccess().getTypeRefInASTTypeRefParserRuleCall_0()); }
 	)
 ;
 finally {

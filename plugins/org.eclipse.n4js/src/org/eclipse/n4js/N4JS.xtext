@@ -757,7 +757,11 @@ ParameterizedCallExpression <Yield>:
 ;
 
 fragment ConcreteTypeArguments*:
-	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
+	'<' typeArgs+=TypeReferenceInAST (',' typeArgs+=TypeReferenceInAST)* '>'
+;
+
+TypeReferenceInAST:
+	typeRefInAST=TypeRef
 ;
 
 ImportCallExpression<Yield>:

@@ -10046,8 +10046,8 @@ ruleConcreteTypeArguments
 	}
 	(
 		(
-			TypeArgsTypeRefParserRuleCall_1_0=ruleTypeRef{
-				announce($TypeArgsTypeRefParserRuleCall_1_0.start, $TypeArgsTypeRefParserRuleCall_1_0.stop, grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_1());
+			TypeArgsTypeReferenceInASTParserRuleCall_1_0=ruleTypeReferenceInAST{
+				announce($TypeArgsTypeReferenceInASTParserRuleCall_1_0.start, $TypeArgsTypeReferenceInASTParserRuleCall_1_0.stop, grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_1());
 			}
 		)
 	)
@@ -10058,8 +10058,8 @@ ruleConcreteTypeArguments
 		}
 		(
 			(
-				TypeArgsTypeRefParserRuleCall_2_1_0=ruleTypeRef{
-					announce($TypeArgsTypeRefParserRuleCall_2_1_0.start, $TypeArgsTypeRefParserRuleCall_2_1_0.stop, grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_2_1());
+				TypeArgsTypeReferenceInASTParserRuleCall_2_1_0=ruleTypeReferenceInAST{
+					announce($TypeArgsTypeReferenceInASTParserRuleCall_2_1_0.start, $TypeArgsTypeReferenceInASTParserRuleCall_2_1_0.stop, grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_2_1());
 				}
 			)
 		)
@@ -10068,6 +10068,25 @@ ruleConcreteTypeArguments
 	 {
 		announce($GreaterThanSignKeyword_3, grammarAccess.getConcreteTypeArgumentsAccess().getGreaterThanSignKeyword_3());
 	}
+)
+;
+
+// Entry rule entryRuleTypeReferenceInAST
+entryRuleTypeReferenceInAST
+	:
+	ruleTypeReferenceInAST
+	EOF;
+
+// Rule TypeReferenceInAST
+ruleTypeReferenceInAST
+@init {
+}:
+(
+	(
+		TypeRefInASTTypeRefParserRuleCall_0=ruleTypeRef{
+			announce($TypeRefInASTTypeRefParserRuleCall_0.start, $TypeRefInASTTypeRefParserRuleCall_0.stop, grammarAccess.getTypeReferenceInASTAccess().getTypeRefInASTAssignment());
+		}
+	)
 )
 ;
 

@@ -93,6 +93,15 @@ public interface N4JSFactory extends EFactory {
 	NamespaceImportSpecifier createNamespaceImportSpecifier();
 
 	/**
+	 * Returns a new object of class '<em>Type Reference In AST</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Type Reference In AST</em>'.
+	 * @generated
+	 */
+	TypeReferenceInAST createTypeReferenceInAST();
+
+	/**
 	 * Returns a new object of class '<em>Annotation List</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

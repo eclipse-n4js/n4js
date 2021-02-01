@@ -273,6 +273,16 @@ class NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
 // ****************************************************************************************************
 // Abstract Base Elements
 // ****************************************************************************************************
+
+class TypeReferenceInAST {
+	/*
+	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
+	 * The returned type reference may or may not be contained in the AST.
+	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 */
+	refers transient TypeRef typeRef
+	contains TypeRef typeRefInAST
+}
 /*
  * Element which may contain a declared type, typically a typed element.
  * Some rare elements have a declared type contained in some child element, e.g. getters.
@@ -1503,7 +1513,7 @@ class NewExpression extends Expression, ParameterizedAccess {
 }
 
 abstract class ParameterizedAccess {
-	contains TypeRef[] typeArgs
+	contains TypeReferenceInAST[] typeArgs
 	/**
 	 * Returns <code>true<code> if the expression has type arguments.
 	 */

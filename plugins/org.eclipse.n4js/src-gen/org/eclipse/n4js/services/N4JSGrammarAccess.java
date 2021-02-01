@@ -5227,43 +5227,58 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cTypeArgsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cTypeArgsTypeRefParserRuleCall_1_0 = (RuleCall)cTypeArgsAssignment_1.eContents().get(0);
+		private final RuleCall cTypeArgsTypeReferenceInASTParserRuleCall_1_0 = (RuleCall)cTypeArgsAssignment_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
 		private final Keyword cCommaKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cTypeArgsAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cTypeArgsTypeRefParserRuleCall_2_1_0 = (RuleCall)cTypeArgsAssignment_2_1.eContents().get(0);
+		private final RuleCall cTypeArgsTypeReferenceInASTParserRuleCall_2_1_0 = (RuleCall)cTypeArgsAssignment_2_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//fragment ConcreteTypeArguments *:
-		//	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>';
+		//	'<' typeArgs+=TypeReferenceInAST (',' typeArgs+=TypeReferenceInAST)* '>';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
+		//'<' typeArgs+=TypeReferenceInAST (',' typeArgs+=TypeReferenceInAST)* '>'
 		public Group getGroup() { return cGroup; }
 		
 		//'<'
 		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
 		
-		//typeArgs+=TypeRef
+		//typeArgs+=TypeReferenceInAST
 		public Assignment getTypeArgsAssignment_1() { return cTypeArgsAssignment_1; }
 		
-		//TypeRef
-		public RuleCall getTypeArgsTypeRefParserRuleCall_1_0() { return cTypeArgsTypeRefParserRuleCall_1_0; }
+		//TypeReferenceInAST
+		public RuleCall getTypeArgsTypeReferenceInASTParserRuleCall_1_0() { return cTypeArgsTypeReferenceInASTParserRuleCall_1_0; }
 		
-		//(',' typeArgs+=TypeRef)*
+		//(',' typeArgs+=TypeReferenceInAST)*
 		public Group getGroup_2() { return cGroup_2; }
 		
 		//','
 		public Keyword getCommaKeyword_2_0() { return cCommaKeyword_2_0; }
 		
-		//typeArgs+=TypeRef
+		//typeArgs+=TypeReferenceInAST
 		public Assignment getTypeArgsAssignment_2_1() { return cTypeArgsAssignment_2_1; }
 		
-		//TypeRef
-		public RuleCall getTypeArgsTypeRefParserRuleCall_2_1_0() { return cTypeArgsTypeRefParserRuleCall_2_1_0; }
+		//TypeReferenceInAST
+		public RuleCall getTypeArgsTypeReferenceInASTParserRuleCall_2_1_0() { return cTypeArgsTypeReferenceInASTParserRuleCall_2_1_0; }
 		
 		//'>'
 		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
+	}
+	public class TypeReferenceInASTElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TypeReferenceInAST");
+		private final Assignment cTypeRefInASTAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cTypeRefInASTTypeRefParserRuleCall_0 = (RuleCall)cTypeRefInASTAssignment.eContents().get(0);
+		
+		//TypeReferenceInAST:
+		//	typeRefInAST=TypeRef;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//typeRefInAST=TypeRef
+		public Assignment getTypeRefInASTAssignment() { return cTypeRefInASTAssignment; }
+		
+		//TypeRef
+		public RuleCall getTypeRefInASTTypeRefParserRuleCall_0() { return cTypeRefInASTTypeRefParserRuleCall_0; }
 	}
 	public class ImportCallExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportCallExpression");
@@ -10622,6 +10637,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final PropertySpreadElements pPropertySpread;
 	private final ParameterizedCallExpressionElements pParameterizedCallExpression;
 	private final ConcreteTypeArgumentsElements pConcreteTypeArguments;
+	private final TypeReferenceInASTElements pTypeReferenceInAST;
 	private final ImportCallExpressionElements pImportCallExpression;
 	private final LeftHandSideExpressionElements pLeftHandSideExpression;
 	private final ArgumentsWithParenthesesElements pArgumentsWithParentheses;
@@ -10883,6 +10899,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pPropertySpread = new PropertySpreadElements();
 		this.pParameterizedCallExpression = new ParameterizedCallExpressionElements();
 		this.pConcreteTypeArguments = new ConcreteTypeArgumentsElements();
+		this.pTypeReferenceInAST = new TypeReferenceInASTElements();
 		this.pImportCallExpression = new ImportCallExpressionElements();
 		this.pLeftHandSideExpression = new LeftHandSideExpressionElements();
 		this.pArgumentsWithParentheses = new ArgumentsWithParenthesesElements();
@@ -12236,13 +12253,23 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment ConcreteTypeArguments *:
-	//	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>';
+	//	'<' typeArgs+=TypeReferenceInAST (',' typeArgs+=TypeReferenceInAST)* '>';
 	public ConcreteTypeArgumentsElements getConcreteTypeArgumentsAccess() {
 		return pConcreteTypeArguments;
 	}
 	
 	public ParserRule getConcreteTypeArgumentsRule() {
 		return getConcreteTypeArgumentsAccess().getRule();
+	}
+	
+	//TypeReferenceInAST:
+	//	typeRefInAST=TypeRef;
+	public TypeReferenceInASTElements getTypeReferenceInASTAccess() {
+		return pTypeReferenceInAST;
+	}
+	
+	public ParserRule getTypeReferenceInASTRule() {
+		return getTypeReferenceInASTAccess().getRule();
 	}
 	
 	//ImportCallExpression <Yield>:

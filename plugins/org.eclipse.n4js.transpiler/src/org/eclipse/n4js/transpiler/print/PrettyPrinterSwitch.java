@@ -34,7 +34,6 @@ import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.Snippet;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -1364,7 +1363,7 @@ import com.google.common.base.Strings;
 		throw new IllegalStateException("Type reference still left in code. typeParams=" + typeParams);
 	}
 
-	private void processTypeArgs(EList<? extends TypeArgument> typeArgs) {
+	private void processTypeArgs(EList<? extends TypeReferenceInAST> typeArgs) {
 		if (typeArgs.isEmpty())
 			return;
 

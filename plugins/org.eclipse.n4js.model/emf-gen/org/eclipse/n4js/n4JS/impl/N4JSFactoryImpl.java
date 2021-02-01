@@ -74,6 +74,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER: return createNamedImportSpecifier();
 			case N4JSPackage.DEFAULT_IMPORT_SPECIFIER: return createDefaultImportSpecifier();
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER: return createNamespaceImportSpecifier();
+			case N4JSPackage.TYPE_REFERENCE_IN_AST: return createTypeReferenceInAST();
 			case N4JSPackage.ANNOTATION_LIST: return createAnnotationList();
 			case N4JSPackage.EXPRESSION_ANNOTATION_LIST: return createExpressionAnnotationList();
 			case N4JSPackage.ANNOTATION: return createAnnotation();
@@ -373,6 +374,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public NamespaceImportSpecifier createNamespaceImportSpecifier() {
 		NamespaceImportSpecifierImpl namespaceImportSpecifier = new NamespaceImportSpecifierImpl();
 		return namespaceImportSpecifier;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeReferenceInAST createTypeReferenceInAST() {
+		TypeReferenceInASTImpl typeReferenceInAST = new TypeReferenceInASTImpl();
+		return typeReferenceInAST;
 	}
 
 	/**

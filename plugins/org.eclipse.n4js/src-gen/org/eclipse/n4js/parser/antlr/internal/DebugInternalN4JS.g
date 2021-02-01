@@ -4298,12 +4298,17 @@ norm1_ParameterizedCallExpression:
 // Rule ConcreteTypeArguments
 ruleConcreteTypeArguments:
 	'<'
-	ruleTypeRef
+	ruleTypeReferenceInAST
 	(
 		','
-		ruleTypeRef
+		ruleTypeReferenceInAST
 	)*
 	'>'
+;
+
+// Rule TypeReferenceInAST
+ruleTypeReferenceInAST:
+	ruleTypeRef
 ;
 
 // Rule ImportCallExpression

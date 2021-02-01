@@ -233,8 +233,10 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression paExpr) {
 		if (paExpr.parameterized) {
 			val prop = paExpr.property;
-			if(prop instanceof Type)
-				G.addTypeMappings(prop.typeVars, paExpr.typeArgs);
+			if(prop instanceof Type) {
+				val typeArgs = paExpr.typeArgs.map[typeRef].toList;
+				G.addTypeMappings(prop.typeVars, typeArgs);
+			}
 		}
 	}
 
@@ -276,7 +278,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 
 		if(F.generic) {
 			val typeArgs = if(callExpr.parameterized) {
-				callExpr.typeArgs
+				callExpr.typeArgs.map[typeRef].toList
 			} else {
 				ASTMetaInfoUtils.getInferredTypeArgs(callExpr) ?: #[]
 			};

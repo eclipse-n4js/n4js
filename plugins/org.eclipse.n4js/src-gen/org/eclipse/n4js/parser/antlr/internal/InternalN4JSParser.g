@@ -18421,9 +18421,9 @@ ruleConcreteTypeArguments[EObject in_current]  returns [EObject current=in_curre
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeRefParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeReferenceInASTParserRuleCall_1_0());
 				}
-				lv_typeArgs_1_0=ruleTypeRef
+				lv_typeArgs_1_0=ruleTypeReferenceInAST
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getConcreteTypeArgumentsRule());
@@ -18432,7 +18432,7 @@ ruleConcreteTypeArguments[EObject in_current]  returns [EObject current=in_curre
 						$current,
 						"typeArgs",
 						lv_typeArgs_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+						"org.eclipse.n4js.N4JS.TypeReferenceInAST");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -18445,9 +18445,9 @@ ruleConcreteTypeArguments[EObject in_current]  returns [EObject current=in_curre
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeRefParserRuleCall_2_1_0());
+						newCompositeNode(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsTypeReferenceInASTParserRuleCall_2_1_0());
 					}
-					lv_typeArgs_3_0=ruleTypeRef
+					lv_typeArgs_3_0=ruleTypeReferenceInAST
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getConcreteTypeArgumentsRule());
@@ -18456,7 +18456,7 @@ ruleConcreteTypeArguments[EObject in_current]  returns [EObject current=in_curre
 							$current,
 							"typeArgs",
 							lv_typeArgs_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+							"org.eclipse.n4js.N4JS.TypeReferenceInAST");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -18466,6 +18466,42 @@ ruleConcreteTypeArguments[EObject in_current]  returns [EObject current=in_curre
 		{
 			newLeafNode(otherlv_4, grammarAccess.getConcreteTypeArgumentsAccess().getGreaterThanSignKeyword_3());
 		}
+	)
+;
+
+// Entry rule entryRuleTypeReferenceInAST
+entryRuleTypeReferenceInAST returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTypeReferenceInASTRule()); }
+	iv_ruleTypeReferenceInAST=ruleTypeReferenceInAST
+	{ $current=$iv_ruleTypeReferenceInAST.current; }
+	EOF;
+
+// Rule TypeReferenceInAST
+ruleTypeReferenceInAST returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getTypeReferenceInASTAccess().getTypeRefInASTTypeRefParserRuleCall_0());
+			}
+			lv_typeRefInAST_0_0=ruleTypeRef
+			{
+				if ($current==null) {
+					$current = createModelElementForParent(grammarAccess.getTypeReferenceInASTRule());
+				}
+				set(
+					$current,
+					"typeRefInAST",
+					lv_typeRefInAST_0_0,
+					"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+				afterParserOrEnumRuleCall();
+			}
+		)
 	)
 ;
 

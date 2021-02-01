@@ -38,6 +38,7 @@ import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.SwitchStatement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.TryStatement
+import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.WhileStatement
 import org.eclipse.n4js.n4JS.WithStatement
@@ -149,6 +150,14 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	/* **************************************************************
 	 * Internal Validations:
 	 */
+	/** Same as {@code #internalCheckTypeArguments()}, but accepts type arguments from AST. */
+	def protected void internalCheckTypeArgumentsInAST(List<? extends TypeVariable> typeVars,
+		List<? extends TypeReferenceInAST> typeArgsInAST, boolean allowAutoInference, IdentifiableElement parameterizedElement,
+		EObject source, EStructuralFeature feature) {
+
+		val typeArgs = typeArgsInAST.map[typeRef].toList;
+		internalCheckTypeArguments(typeVars, typeArgs, allowAutoInference, parameterizedElement, source, feature);
+	}
 	/**
 	 * Checks for (1) correct number of type arguments, (2) correct type of each type argument, and (3) consistency of
 	 * use-site and definition-site variance (in case of wildcards).

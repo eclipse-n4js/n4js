@@ -13,6 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -40,6 +41,9 @@ package class TypeRefProcessor extends AbstractProcessor {
 		}
 		if (node instanceof FunctionDefinition) {
 			node.declaredReturnTypeRef = doHandleTypeRef(G, node.declaredReturnTypeRefInAST);
+		}
+		if (node instanceof TypeReferenceInAST) {
+			node.typeRef = doHandleTypeRef(G, node.typeRefInAST);
 		}
 	}
 
