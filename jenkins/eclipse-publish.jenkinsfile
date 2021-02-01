@@ -101,13 +101,11 @@ pipeline {
                     sh """\
                         cd /home/data/httpd/download.eclipse.org/n4js
                         find products/nightly -mindepth 1 -maxdepth 1 -type d -not -name LATEST -mtime +7 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
-                        find updates/nightly  -mindepth 1 -maxdepth 1 -type d -not -name LATEST -mtime +7 -print -exec mv {} /home/data/httpd/archive.eclipse.org/n4js/{} \\;
                     """
                     echo 'END: moving old products'
 
                     echo 'START: copying new products:'
                     def pathProductsVersion = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
-                    def pathUpdatesVersion  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/$LANGUAGE_VERSION";
                     sh """\
                         mkdir -p ${pathProductsVersion}
                         cp       n4js/target/*.jar           ${pathProductsVersion}
@@ -117,7 +115,6 @@ pipeline {
                     echo 'START: updating folder LATEST on download.eclipse.org:'
                     if (N4JS_LIBS_DIST_TAG == 'latest') {
                         def pathProductsLatest = "/home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
-                        def pathUpdatesLatest  = "/home/data/httpd/download.eclipse.org/n4js/updates$DEBUG_DEPLOY_SUFFIX/nightly/LATEST";
                         sh """\
                             rm -rf   ${pathProductsLatest}
                             mkdir -p ${pathProductsLatest}
@@ -139,8 +136,6 @@ pipeline {
                         ls -l /home/data/httpd/download.eclipse.org/n4js/products$DEBUG_DEPLOY_SUFFIX/nightly
                         echo ******************** Products on archive server:
                         ls -l /home/data/httpd/archive.eclipse.org/n4js/products/nightly
-                        echo ******************** Update sites on archive server:
-                        ls -l /home/data/httpd/archive.eclipse.org/n4js/updates/nightly
                         echo ********************
                     """
 
