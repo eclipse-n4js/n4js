@@ -764,6 +764,10 @@ TypeReferenceInAST:
 	typeRefInAST=TypeRef
 ;
 
+ParameterizedTypeRefNominalInAST returns TypeReferenceInAST:
+	typeRefInAST=ParameterizedTypeRefNominal
+;
+
 ImportCallExpression<Yield>:
 	'import' ArgumentsWithParentheses<Yield> // import calls must have exactly one argument (allowing more flexibility here for better error messages)
 ;
@@ -1311,14 +1315,14 @@ fragment ClassExtendsImplements <Yield>*:
 
 fragment ClassExtendsClause <Yield>*:
 	'extends' (
-		  =>superClassRef=ParameterizedTypeRefNominal
+		  =>superClassRef=ParameterizedTypeRefNominalInAST
 		| superClassExpression=LeftHandSideExpression<Yield>
 	)
 ;
 
 fragment ClassImplementsList*:
-	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal
-	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
+	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
 ;
 
 N4ClassExpression <Yield>:
@@ -1342,8 +1346,8 @@ N4InterfaceDeclaration <Yield>:
 
 // we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
 fragment InterfaceExtendsList*:
-	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal
-	(',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
+	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	(',' superInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
 ;
 
 // cf. N4JSSpec §13

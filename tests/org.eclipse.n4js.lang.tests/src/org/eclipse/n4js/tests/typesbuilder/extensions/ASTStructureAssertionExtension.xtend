@@ -271,7 +271,7 @@ class ASTStructureAssertionExtension {
 
 	def assertSuperClass(String phase, N4ClassDeclaration n4Class, Resource resource, String expectedSuperClassName) {
 		assertNotNull(phase + ": Should have a super type", n4Class.getSuperClassRef)
-		val superType = assertTypeRef(phase, n4Class.getSuperClassRef, resource)
+		val superType = assertTypeRef(phase, n4Class.getSuperClassRef.typeRef, resource)
 		assertTrue(phase + ": Should have a TClass as super type", superType instanceof TClass)
 		assertEquals(phase + ": Should have the expected super class name", expectedSuperClassName, superType.name)
 	}
@@ -293,7 +293,7 @@ class ASTStructureAssertionExtension {
 	def assertConsumedRole(String phase, N4ClassDeclaration n4Class, Resource resource, int index,
 		String expectedConsumedRoleName) {
 		assertTrue(phase + ": Should have an interface at the index", n4Class.implementedInterfaceRefs.size > index)
-		val consumedType = assertTypeRef(phase, n4Class.implementedInterfaceRefs.get(index), resource)
+		val consumedType = assertTypeRef(phase, n4Class.implementedInterfaceRefs.get(index).typeRef, resource)
 		assertTrue(phase + ": Should have a TInterface as consumed type", consumedType instanceof TInterface)
 		assertEquals(phase + ": Should have the expected super class name", expectedConsumedRoleName, consumedType.name)
 	}
@@ -301,7 +301,7 @@ class ASTStructureAssertionExtension {
 	def assertConsumedRole(String phase, N4InterfaceDeclaration n4Role, Resource resource, int index,
 		String expectedConsumedRoleName) {
 		assertTrue(phase + ": Should have an interface at the index", n4Role.superInterfaceRefs.size > index)
-		val consumedType = assertTypeRef(phase, n4Role.superInterfaceRefs.get(index), resource)
+		val consumedType = assertTypeRef(phase, n4Role.superInterfaceRefs.get(index).typeRef, resource)
 		assertTrue(phase + ": Should have a TInterface as consumed type", consumedType instanceof TInterface)
 		assertEquals(phase + ": Should have the expected super class name", expectedConsumedRoleName, consumedType.name)
 	}
@@ -311,7 +311,7 @@ class ASTStructureAssertionExtension {
 		assertEquals(phase + ": " + n4Interface.name + " should have expected super interfaces count",
 			expectedSuperInterfaceNames.size, n4Interface.superInterfaceRefs.size)
 		expectedSuperInterfaceNames.map[expectedSuperInterfaceNames.indexOf(it) -> it].forEach [
-			val typeRef = n4Interface.superInterfaceRefs.get(it.key)
+			val typeRef = n4Interface.superInterfaceRefs.get(it.key).typeRef;
 			val type = typeRef.declaredType;
 			assertNotNull(phase + ": declaredType should not be null", type)
 			assertTrue(phase + ": declaredType should not a TInterface", type instanceof TInterface)
@@ -324,7 +324,7 @@ class ASTStructureAssertionExtension {
 		assertEquals(phase + ": " + n4Role.name + " should have expected implemented interfaces count",
 			expectedImplementedInterfaceNames.size, n4Role.superInterfaceRefs.size)
 		expectedImplementedInterfaceNames.map[expectedImplementedInterfaceNames.indexOf(it) -> it].forEach [
-			val typeRef = n4Role.superInterfaceRefs.get(it.key)
+			val typeRef = n4Role.superInterfaceRefs.get(it.key).typeRef;
 			val type = typeRef.declaredType;
 			assertNotNull(phase + ": declaredType should not be null", type)
 			assertTrue(phase + ": declaredType should not a TInterface", type instanceof TInterface)

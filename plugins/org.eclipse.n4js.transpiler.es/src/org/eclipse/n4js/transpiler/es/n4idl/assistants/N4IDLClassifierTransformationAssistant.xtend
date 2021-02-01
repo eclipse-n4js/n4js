@@ -56,6 +56,7 @@ class N4IDLClassifierTransformationAssistant extends TransformationAssistant {
 	 */
 	private def Iterable<ParameterizedTypeRef> getNonStructuralSuperClassifiers(N4ClassifierDeclaration declaration) {
 		declaration.implementedOrExtendedInterfaceRefs
+			.map[typeRef]
 			.filter[ref | includeInImplementedInterfaces(ref as ParameterizedTypeRef_IM)];
 	}
 	

@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.ecore.EFactory;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 /**
  * <!-- begin-user-doc -->
  * The <b>Factory</b> for the model.
@@ -99,7 +101,7 @@ public interface N4JSFactory extends EFactory {
 	 * @return a new object of class '<em>Type Reference In AST</em>'.
 	 * @generated
 	 */
-	TypeReferenceInAST createTypeReferenceInAST();
+	<T extends TypeRef> TypeReferenceInAST<T> createTypeReferenceInAST();
 
 	/**
 	 * Returns a new object of class '<em>Annotation List</em>'.

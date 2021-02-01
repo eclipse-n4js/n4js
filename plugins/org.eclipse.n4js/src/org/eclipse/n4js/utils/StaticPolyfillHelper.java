@@ -23,6 +23,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -166,8 +167,12 @@ public final class StaticPolyfillHelper {
 			if (null != scriptFiller) {
 				final N4ClassDeclaration staticPolyfiller = EcoreUtil2
 						.getAllContentsOfType(scriptFiller, N4ClassDeclaration.class).stream().filter(it -> {
+							final TypeRef superClassRef = it.getSuperClassRef() != null
+									? it.getSuperClassRef().getTypeRef()
+									: null;
 							return it.getDefinedTypeAsClass().isDeclaredStaticPolyfill() // is a static-polyfill
-									&& it.getSuperClassRef().getDeclaredType() == type; // extends this class explicitly
+									&& superClassRef != null
+									&& superClassRef.getDeclaredType() == type; // extends this class explicitly
 						}).findFirst().orElseGet(() -> {
 							return null;
 						});

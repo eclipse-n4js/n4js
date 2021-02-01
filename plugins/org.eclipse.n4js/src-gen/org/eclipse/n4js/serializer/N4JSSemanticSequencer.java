@@ -1314,8 +1314,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_TypeRefAnnotationArgument(context, (TypeRefAnnotationArgument) semanticObject); 
 				return; 
 			case N4JSPackage.TYPE_REFERENCE_IN_AST:
-				sequence_TypeReferenceInAST(context, (TypeReferenceInAST) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getParameterizedTypeRefNominalInASTRule()) {
+					sequence_ParameterizedTypeRefNominalInAST(context, (TypeReferenceInAST) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeReferenceInASTRule()) {
+					sequence_TypeReferenceInAST(context, (TypeReferenceInAST) semanticObject); 
+					return; 
+				}
+				else break;
 			case N4JSPackage.UNARY_EXPRESSION:
 				sequence_UnaryExpression(context, (UnaryExpression) semanticObject); 
 				return; 
@@ -2100,16 +2107,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION?)
 	 *         ) 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -2131,16 +2138,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         typingStrategy=TypingStrategyDefSiteOperator? 
 	 *         name=BindingIdentifier 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -2211,7 +2218,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION?)
 	 *         ) 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
+	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalInAST superInterfaceRefs+=ParameterizedTypeRefNominalInAST*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
 	 */
@@ -2232,7 +2239,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         typingStrategy=TypingStrategyDefSiteOperator? 
 	 *         name=BindingIdentifier 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
+	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalInAST superInterfaceRefs+=ParameterizedTypeRefNominalInAST*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
 	 */
@@ -3006,16 +3013,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedExpression_N4ClassExpression_1_0_0 
 	 *         name=BindingIdentifier? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -3656,16 +3663,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         ((annotationList=AnnotatedExpression_N4ClassExpression_1_0_0 name=BindingIdentifier?) | name=BindingIdentifier)? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -4229,16 +4236,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) 
 	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -4260,16 +4267,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier 
 	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -4376,7 +4383,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) 
 	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
+	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalInAST superInterfaceRefs+=ParameterizedTypeRefNominalInAST*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
 	 */
@@ -4397,7 +4404,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier 
 	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
+	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalInAST superInterfaceRefs+=ParameterizedTypeRefNominalInAST*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
 	 */
@@ -9723,16 +9730,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -9750,16 +9757,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         name=BindingIdentifier? 
-	 *         (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
+	 *         (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
 	 *         (
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominal* 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *             implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST* 
 	 *             (
-	 *                 (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)? 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal 
-	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominal*
+	 *                 (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)? 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST 
+	 *                 implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST*
 	 *             )* 
-	 *             (superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression)?
+	 *             (superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression)?
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
@@ -15931,7 +15938,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingIdentifier? 
 	 *         declaredVersion=VERSION? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
+	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalInAST superInterfaceRefs+=ParameterizedTypeRefNominalInAST*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
 	 */
@@ -22086,6 +22093,24 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getOctalIntLiteralAccess().getValueOCTAL_INTTerminalRuleCall_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ParameterizedTypeRefNominalInAST returns TypeReferenceInAST
+	 *
+	 * Constraint:
+	 *     typeRefInAST=ParameterizedTypeRefNominal
+	 */
+	protected void sequence_ParameterizedTypeRefNominalInAST(ISerializationContext context, TypeReferenceInAST semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getParameterizedTypeRefNominalInASTAccess().getTypeRefInASTParameterizedTypeRefNominalParserRuleCall_0(), semanticObject.getTypeRefInAST());
 		feeder.finish();
 	}
 	

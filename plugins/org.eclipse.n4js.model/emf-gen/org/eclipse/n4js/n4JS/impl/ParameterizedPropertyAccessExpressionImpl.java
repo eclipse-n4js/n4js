@@ -34,6 +34,8 @@ import org.eclipse.n4js.n4JS.ParameterizedAccess;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.TypeReferenceInAST;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
@@ -72,7 +74,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionWithTar
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeReferenceInAST> typeArgs;
+	protected EList<TypeReferenceInAST<TypeRef>> typeArgs;
 
 	/**
 	 * The cached value of the '{@link #getProperty() <em>Property</em>}' reference.
@@ -169,9 +171,9 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionWithTar
 	 * @generated
 	 */
 	@Override
-	public EList<TypeReferenceInAST> getTypeArgs() {
+	public EList<TypeReferenceInAST<TypeRef>> getTypeArgs() {
 		if (typeArgs == null) {
-			typeArgs = new EObjectContainmentEList<TypeReferenceInAST>(TypeReferenceInAST.class, this, N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS);
+			typeArgs = new EObjectContainmentEList<TypeReferenceInAST<TypeRef>>(TypeReferenceInAST.class, this, N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS);
 		}
 		return typeArgs;
 	}
@@ -311,7 +313,7 @@ public class ParameterizedPropertyAccessExpressionImpl extends ExpressionWithTar
 				return;
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TYPE_ARGS:
 				getTypeArgs().clear();
-				getTypeArgs().addAll((Collection<? extends TypeReferenceInAST>)newValue);
+				getTypeArgs().addAll((Collection<? extends TypeReferenceInAST<TypeRef>>)newValue);
 				return;
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY:
 				setProperty((IdentifiableElement)newValue);

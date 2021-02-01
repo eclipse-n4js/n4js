@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.Switch;
 
 import org.eclipse.n4js.n4JS.*;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 
@@ -36,7 +37,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
  * @see org.eclipse.n4js.n4JS.N4JSPackage
  * @generated
  */
-public class N4JSSwitch<T> extends Switch<T> {
+public class N4JSSwitch<T1> extends Switch<T1> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -78,23 +79,23 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject) {
+	protected T1 doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case N4JSPackage.NAMED_ELEMENT: {
 				NamedElement namedElement = (NamedElement)theEObject;
-				T result = caseNamedElement(namedElement);
+				T1 result = caseNamedElement(namedElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.CONTROL_FLOW_ELEMENT: {
 				ControlFlowElement controlFlowElement = (ControlFlowElement)theEObject;
-				T result = caseControlFlowElement(controlFlowElement);
+				T1 result = caseControlFlowElement(controlFlowElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.SCRIPT: {
 				Script script = (Script)theEObject;
-				T result = caseScript(script);
+				T1 result = caseScript(script);
 				if (result == null) result = caseVariableEnvironmentElement(script);
 				if (result == null) result = caseAnnotableElement(script);
 				if (result == null) result = caseControlFlowElement(script);
@@ -103,13 +104,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.SCRIPT_ELEMENT: {
 				ScriptElement scriptElement = (ScriptElement)theEObject;
-				T result = caseScriptElement(scriptElement);
+				T1 result = caseScriptElement(scriptElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.EXPORT_DECLARATION: {
 				ExportDeclaration exportDeclaration = (ExportDeclaration)theEObject;
-				T result = caseExportDeclaration(exportDeclaration);
+				T1 result = caseExportDeclaration(exportDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(exportDeclaration);
 				if (result == null) result = caseAnnotableElement(exportDeclaration);
 				if (result == null) result = caseScriptElement(exportDeclaration);
@@ -118,19 +119,19 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EXPORT_SPECIFIER: {
 				ExportSpecifier exportSpecifier = (ExportSpecifier)theEObject;
-				T result = caseExportSpecifier(exportSpecifier);
+				T1 result = caseExportSpecifier(exportSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.EXPORTABLE_ELEMENT: {
 				ExportableElement exportableElement = (ExportableElement)theEObject;
-				T result = caseExportableElement(exportableElement);
+				T1 result = caseExportableElement(exportableElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.IMPORT_DECLARATION: {
 				ImportDeclaration importDeclaration = (ImportDeclaration)theEObject;
-				T result = caseImportDeclaration(importDeclaration);
+				T1 result = caseImportDeclaration(importDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(importDeclaration);
 				if (result == null) result = caseAnnotableElement(importDeclaration);
 				if (result == null) result = caseScriptElement(importDeclaration);
@@ -139,20 +140,20 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.IMPORT_SPECIFIER: {
 				ImportSpecifier importSpecifier = (ImportSpecifier)theEObject;
-				T result = caseImportSpecifier(importSpecifier);
+				T1 result = caseImportSpecifier(importSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER: {
 				NamedImportSpecifier namedImportSpecifier = (NamedImportSpecifier)theEObject;
-				T result = caseNamedImportSpecifier(namedImportSpecifier);
+				T1 result = caseNamedImportSpecifier(namedImportSpecifier);
 				if (result == null) result = caseImportSpecifier(namedImportSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.DEFAULT_IMPORT_SPECIFIER: {
 				DefaultImportSpecifier defaultImportSpecifier = (DefaultImportSpecifier)theEObject;
-				T result = caseDefaultImportSpecifier(defaultImportSpecifier);
+				T1 result = caseDefaultImportSpecifier(defaultImportSpecifier);
 				if (result == null) result = caseNamedImportSpecifier(defaultImportSpecifier);
 				if (result == null) result = caseImportSpecifier(defaultImportSpecifier);
 				if (result == null) result = defaultCase(theEObject);
@@ -160,7 +161,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER: {
 				NamespaceImportSpecifier namespaceImportSpecifier = (NamespaceImportSpecifier)theEObject;
-				T result = caseNamespaceImportSpecifier(namespaceImportSpecifier);
+				T1 result = caseNamespaceImportSpecifier(namespaceImportSpecifier);
 				if (result == null) result = caseImportSpecifier(namespaceImportSpecifier);
 				if (result == null) result = caseTypeDefiningElement(namespaceImportSpecifier);
 				if (result == null) result = caseTypableElement(namespaceImportSpecifier);
@@ -168,45 +169,45 @@ public class N4JSSwitch<T> extends Switch<T> {
 				return result;
 			}
 			case N4JSPackage.TYPE_REFERENCE_IN_AST: {
-				TypeReferenceInAST typeReferenceInAST = (TypeReferenceInAST)theEObject;
-				T result = caseTypeReferenceInAST(typeReferenceInAST);
+				TypeReferenceInAST<?> typeReferenceInAST = (TypeReferenceInAST<?>)theEObject;
+				T1 result = caseTypeReferenceInAST(typeReferenceInAST);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.TYPE_PROVIDING_ELEMENT: {
 				TypeProvidingElement typeProvidingElement = (TypeProvidingElement)theEObject;
-				T result = caseTypeProvidingElement(typeProvidingElement);
+				T1 result = caseTypeProvidingElement(typeProvidingElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.TYPED_ELEMENT: {
 				TypedElement typedElement = (TypedElement)theEObject;
-				T result = caseTypedElement(typedElement);
+				T1 result = caseTypedElement(typedElement);
 				if (result == null) result = caseTypeProvidingElement(typedElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.VARIABLE_ENVIRONMENT_ELEMENT: {
 				VariableEnvironmentElement variableEnvironmentElement = (VariableEnvironmentElement)theEObject;
-				T result = caseVariableEnvironmentElement(variableEnvironmentElement);
+				T1 result = caseVariableEnvironmentElement(variableEnvironmentElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.THIS_TARGET: {
 				ThisTarget thisTarget = (ThisTarget)theEObject;
-				T result = caseThisTarget(thisTarget);
+				T1 result = caseThisTarget(thisTarget);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.THIS_ARG_PROVIDER: {
 				ThisArgProvider thisArgProvider = (ThisArgProvider)theEObject;
-				T result = caseThisArgProvider(thisArgProvider);
+				T1 result = caseThisArgProvider(thisArgProvider);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.VARIABLE: {
 				Variable variable = (Variable)theEObject;
-				T result = caseVariable(variable);
+				T1 result = caseVariable(variable);
 				if (result == null) result = caseTypedElement(variable);
 				if (result == null) result = caseIdentifiableElement(variable);
 				if (result == null) result = caseNamedElement(variable);
@@ -217,13 +218,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ANNOTABLE_ELEMENT: {
 				AnnotableElement annotableElement = (AnnotableElement)theEObject;
-				T result = caseAnnotableElement(annotableElement);
+				T1 result = caseAnnotableElement(annotableElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.ANNOTABLE_SCRIPT_ELEMENT: {
 				AnnotableScriptElement annotableScriptElement = (AnnotableScriptElement)theEObject;
-				T result = caseAnnotableScriptElement(annotableScriptElement);
+				T1 result = caseAnnotableScriptElement(annotableScriptElement);
 				if (result == null) result = caseAnnotableElement(annotableScriptElement);
 				if (result == null) result = caseScriptElement(annotableScriptElement);
 				if (result == null) result = defaultCase(theEObject);
@@ -231,7 +232,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ANNOTABLE_EXPRESSION: {
 				AnnotableExpression annotableExpression = (AnnotableExpression)theEObject;
-				T result = caseAnnotableExpression(annotableExpression);
+				T1 result = caseAnnotableExpression(annotableExpression);
 				if (result == null) result = caseAnnotableElement(annotableExpression);
 				if (result == null) result = caseExpression(annotableExpression);
 				if (result == null) result = caseTypableElement(annotableExpression);
@@ -241,13 +242,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ABSTRACT_ANNOTATION_LIST: {
 				AbstractAnnotationList abstractAnnotationList = (AbstractAnnotationList)theEObject;
-				T result = caseAbstractAnnotationList(abstractAnnotationList);
+				T1 result = caseAbstractAnnotationList(abstractAnnotationList);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.ANNOTATION_LIST: {
 				AnnotationList annotationList = (AnnotationList)theEObject;
-				T result = caseAnnotationList(annotationList);
+				T1 result = caseAnnotationList(annotationList);
 				if (result == null) result = caseAbstractAnnotationList(annotationList);
 				if (result == null) result = caseStatement(annotationList);
 				if (result == null) result = caseExportableElement(annotationList);
@@ -258,7 +259,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EXPRESSION_ANNOTATION_LIST: {
 				ExpressionAnnotationList expressionAnnotationList = (ExpressionAnnotationList)theEObject;
-				T result = caseExpressionAnnotationList(expressionAnnotationList);
+				T1 result = caseExpressionAnnotationList(expressionAnnotationList);
 				if (result == null) result = caseAbstractAnnotationList(expressionAnnotationList);
 				if (result == null) result = caseExpression(expressionAnnotationList);
 				if (result == null) result = caseTypableElement(expressionAnnotationList);
@@ -268,34 +269,34 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ANNOTATION: {
 				Annotation annotation = (Annotation)theEObject;
-				T result = caseAnnotation(annotation);
+				T1 result = caseAnnotation(annotation);
 				if (result == null) result = caseNamedElement(annotation);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.ANNOTATION_ARGUMENT: {
 				AnnotationArgument annotationArgument = (AnnotationArgument)theEObject;
-				T result = caseAnnotationArgument(annotationArgument);
+				T1 result = caseAnnotationArgument(annotationArgument);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.LITERAL_ANNOTATION_ARGUMENT: {
 				LiteralAnnotationArgument literalAnnotationArgument = (LiteralAnnotationArgument)theEObject;
-				T result = caseLiteralAnnotationArgument(literalAnnotationArgument);
+				T1 result = caseLiteralAnnotationArgument(literalAnnotationArgument);
 				if (result == null) result = caseAnnotationArgument(literalAnnotationArgument);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT: {
 				TypeRefAnnotationArgument typeRefAnnotationArgument = (TypeRefAnnotationArgument)theEObject;
-				T result = caseTypeRefAnnotationArgument(typeRefAnnotationArgument);
+				T1 result = caseTypeRefAnnotationArgument(typeRefAnnotationArgument);
 				if (result == null) result = caseAnnotationArgument(typeRefAnnotationArgument);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR: {
 				FunctionOrFieldAccessor functionOrFieldAccessor = (FunctionOrFieldAccessor)theEObject;
-				T result = caseFunctionOrFieldAccessor(functionOrFieldAccessor);
+				T1 result = caseFunctionOrFieldAccessor(functionOrFieldAccessor);
 				if (result == null) result = caseAnnotableElement(functionOrFieldAccessor);
 				if (result == null) result = caseVariableEnvironmentElement(functionOrFieldAccessor);
 				if (result == null) result = caseThisArgProvider(functionOrFieldAccessor);
@@ -305,7 +306,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.FUNCTION_DEFINITION: {
 				FunctionDefinition functionDefinition = (FunctionDefinition)theEObject;
-				T result = caseFunctionDefinition(functionDefinition);
+				T1 result = caseFunctionDefinition(functionDefinition);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDefinition);
 				if (result == null) result = caseTypeDefiningElement(functionDefinition);
 				if (result == null) result = caseVersionedElement(functionDefinition);
@@ -318,7 +319,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.FIELD_ACCESSOR: {
 				FieldAccessor fieldAccessor = (FieldAccessor)theEObject;
-				T result = caseFieldAccessor(fieldAccessor);
+				T1 result = caseFieldAccessor(fieldAccessor);
 				if (result == null) result = caseFunctionOrFieldAccessor(fieldAccessor);
 				if (result == null) result = caseTypeProvidingElement(fieldAccessor);
 				if (result == null) result = casePropertyNameOwner(fieldAccessor);
@@ -332,7 +333,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.FUNCTION_DECLARATION: {
 				FunctionDeclaration functionDeclaration = (FunctionDeclaration)theEObject;
-				T result = caseFunctionDeclaration(functionDeclaration);
+				T1 result = caseFunctionDeclaration(functionDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(functionDeclaration);
 				if (result == null) result = caseModifiableElement(functionDeclaration);
 				if (result == null) result = caseStatement(functionDeclaration);
@@ -354,7 +355,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.FUNCTION_EXPRESSION: {
 				FunctionExpression functionExpression = (FunctionExpression)theEObject;
-				T result = caseFunctionExpression(functionExpression);
+				T1 result = caseFunctionExpression(functionExpression);
 				if (result == null) result = caseFunctionDefinition(functionExpression);
 				if (result == null) result = caseAnnotableExpression(functionExpression);
 				if (result == null) result = caseGenericDeclaration(functionExpression);
@@ -373,7 +374,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ARROW_FUNCTION: {
 				ArrowFunction arrowFunction = (ArrowFunction)theEObject;
-				T result = caseArrowFunction(arrowFunction);
+				T1 result = caseArrowFunction(arrowFunction);
 				if (result == null) result = caseFunctionExpression(arrowFunction);
 				if (result == null) result = caseFunctionDefinition(arrowFunction);
 				if (result == null) result = caseAnnotableExpression(arrowFunction);
@@ -393,7 +394,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.LOCAL_ARGUMENTS_VARIABLE: {
 				LocalArgumentsVariable localArgumentsVariable = (LocalArgumentsVariable)theEObject;
-				T result = caseLocalArgumentsVariable(localArgumentsVariable);
+				T1 result = caseLocalArgumentsVariable(localArgumentsVariable);
 				if (result == null) result = caseVariable(localArgumentsVariable);
 				if (result == null) result = caseTypedElement(localArgumentsVariable);
 				if (result == null) result = caseIdentifiableElement(localArgumentsVariable);
@@ -405,7 +406,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.FORMAL_PARAMETER: {
 				FormalParameter formalParameter = (FormalParameter)theEObject;
-				T result = caseFormalParameter(formalParameter);
+				T1 result = caseFormalParameter(formalParameter);
 				if (result == null) result = caseAnnotableElement(formalParameter);
 				if (result == null) result = caseVariable(formalParameter);
 				if (result == null) result = caseTypedElement(formalParameter);
@@ -418,7 +419,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BLOCK: {
 				Block block = (Block)theEObject;
-				T result = caseBlock(block);
+				T1 result = caseBlock(block);
 				if (result == null) result = caseStatement(block);
 				if (result == null) result = caseVariableEnvironmentElement(block);
 				if (result == null) result = caseScriptElement(block);
@@ -428,7 +429,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.STATEMENT: {
 				Statement statement = (Statement)theEObject;
-				T result = caseStatement(statement);
+				T1 result = caseStatement(statement);
 				if (result == null) result = caseScriptElement(statement);
 				if (result == null) result = caseControlFlowElement(statement);
 				if (result == null) result = defaultCase(theEObject);
@@ -436,13 +437,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.VARIABLE_DECLARATION_CONTAINER: {
 				VariableDeclarationContainer variableDeclarationContainer = (VariableDeclarationContainer)theEObject;
-				T result = caseVariableDeclarationContainer(variableDeclarationContainer);
+				T1 result = caseVariableDeclarationContainer(variableDeclarationContainer);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.VARIABLE_STATEMENT: {
 				VariableStatement variableStatement = (VariableStatement)theEObject;
-				T result = caseVariableStatement(variableStatement);
+				T1 result = caseVariableStatement(variableStatement);
 				if (result == null) result = caseStatement(variableStatement);
 				if (result == null) result = caseVariableDeclarationContainer(variableStatement);
 				if (result == null) result = caseScriptElement(variableStatement);
@@ -452,7 +453,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT: {
 				ExportedVariableStatement exportedVariableStatement = (ExportedVariableStatement)theEObject;
-				T result = caseExportedVariableStatement(exportedVariableStatement);
+				T1 result = caseExportedVariableStatement(exportedVariableStatement);
 				if (result == null) result = caseVariableStatement(exportedVariableStatement);
 				if (result == null) result = caseExportableElement(exportedVariableStatement);
 				if (result == null) result = caseAnnotableScriptElement(exportedVariableStatement);
@@ -467,14 +468,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING: {
 				VariableDeclarationOrBinding variableDeclarationOrBinding = (VariableDeclarationOrBinding)theEObject;
-				T result = caseVariableDeclarationOrBinding(variableDeclarationOrBinding);
+				T1 result = caseVariableDeclarationOrBinding(variableDeclarationOrBinding);
 				if (result == null) result = caseControlFlowElement(variableDeclarationOrBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.VARIABLE_BINDING: {
 				VariableBinding variableBinding = (VariableBinding)theEObject;
-				T result = caseVariableBinding(variableBinding);
+				T1 result = caseVariableBinding(variableBinding);
 				if (result == null) result = caseVariableDeclarationOrBinding(variableBinding);
 				if (result == null) result = caseControlFlowElement(variableBinding);
 				if (result == null) result = defaultCase(theEObject);
@@ -482,7 +483,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EXPORTED_VARIABLE_BINDING: {
 				ExportedVariableBinding exportedVariableBinding = (ExportedVariableBinding)theEObject;
-				T result = caseExportedVariableBinding(exportedVariableBinding);
+				T1 result = caseExportedVariableBinding(exportedVariableBinding);
 				if (result == null) result = caseVariableBinding(exportedVariableBinding);
 				if (result == null) result = caseVariableDeclarationOrBinding(exportedVariableBinding);
 				if (result == null) result = caseControlFlowElement(exportedVariableBinding);
@@ -491,7 +492,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.VARIABLE_DECLARATION: {
 				VariableDeclaration variableDeclaration = (VariableDeclaration)theEObject;
-				T result = caseVariableDeclaration(variableDeclaration);
+				T1 result = caseVariableDeclaration(variableDeclaration);
 				if (result == null) result = caseVariableDeclarationOrBinding(variableDeclaration);
 				if (result == null) result = caseAnnotableElement(variableDeclaration);
 				if (result == null) result = caseVariable(variableDeclaration);
@@ -506,7 +507,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION: {
 				ExportedVariableDeclaration exportedVariableDeclaration = (ExportedVariableDeclaration)theEObject;
-				T result = caseExportedVariableDeclaration(exportedVariableDeclaration);
+				T1 result = caseExportedVariableDeclaration(exportedVariableDeclaration);
 				if (result == null) result = caseVariableDeclaration(exportedVariableDeclaration);
 				if (result == null) result = caseVariableDeclarationOrBinding(exportedVariableDeclaration);
 				if (result == null) result = caseAnnotableElement(exportedVariableDeclaration);
@@ -522,7 +523,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EMPTY_STATEMENT: {
 				EmptyStatement emptyStatement = (EmptyStatement)theEObject;
-				T result = caseEmptyStatement(emptyStatement);
+				T1 result = caseEmptyStatement(emptyStatement);
 				if (result == null) result = caseStatement(emptyStatement);
 				if (result == null) result = caseScriptElement(emptyStatement);
 				if (result == null) result = caseControlFlowElement(emptyStatement);
@@ -531,7 +532,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EXPRESSION_STATEMENT: {
 				ExpressionStatement expressionStatement = (ExpressionStatement)theEObject;
-				T result = caseExpressionStatement(expressionStatement);
+				T1 result = caseExpressionStatement(expressionStatement);
 				if (result == null) result = caseStatement(expressionStatement);
 				if (result == null) result = caseScriptElement(expressionStatement);
 				if (result == null) result = caseControlFlowElement(expressionStatement);
@@ -540,7 +541,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.IF_STATEMENT: {
 				IfStatement ifStatement = (IfStatement)theEObject;
-				T result = caseIfStatement(ifStatement);
+				T1 result = caseIfStatement(ifStatement);
 				if (result == null) result = caseStatement(ifStatement);
 				if (result == null) result = caseScriptElement(ifStatement);
 				if (result == null) result = caseControlFlowElement(ifStatement);
@@ -549,7 +550,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ITERATION_STATEMENT: {
 				IterationStatement iterationStatement = (IterationStatement)theEObject;
-				T result = caseIterationStatement(iterationStatement);
+				T1 result = caseIterationStatement(iterationStatement);
 				if (result == null) result = caseStatement(iterationStatement);
 				if (result == null) result = caseScriptElement(iterationStatement);
 				if (result == null) result = caseControlFlowElement(iterationStatement);
@@ -558,7 +559,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.DO_STATEMENT: {
 				DoStatement doStatement = (DoStatement)theEObject;
-				T result = caseDoStatement(doStatement);
+				T1 result = caseDoStatement(doStatement);
 				if (result == null) result = caseIterationStatement(doStatement);
 				if (result == null) result = caseStatement(doStatement);
 				if (result == null) result = caseScriptElement(doStatement);
@@ -568,7 +569,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.WHILE_STATEMENT: {
 				WhileStatement whileStatement = (WhileStatement)theEObject;
-				T result = caseWhileStatement(whileStatement);
+				T1 result = caseWhileStatement(whileStatement);
 				if (result == null) result = caseIterationStatement(whileStatement);
 				if (result == null) result = caseStatement(whileStatement);
 				if (result == null) result = caseScriptElement(whileStatement);
@@ -578,7 +579,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.FOR_STATEMENT: {
 				ForStatement forStatement = (ForStatement)theEObject;
-				T result = caseForStatement(forStatement);
+				T1 result = caseForStatement(forStatement);
 				if (result == null) result = caseVariableDeclarationContainer(forStatement);
 				if (result == null) result = caseIterationStatement(forStatement);
 				if (result == null) result = caseVariableEnvironmentElement(forStatement);
@@ -590,13 +591,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.LABEL_REF: {
 				LabelRef labelRef = (LabelRef)theEObject;
-				T result = caseLabelRef(labelRef);
+				T1 result = caseLabelRef(labelRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.CONTINUE_STATEMENT: {
 				ContinueStatement continueStatement = (ContinueStatement)theEObject;
-				T result = caseContinueStatement(continueStatement);
+				T1 result = caseContinueStatement(continueStatement);
 				if (result == null) result = caseStatement(continueStatement);
 				if (result == null) result = caseLabelRef(continueStatement);
 				if (result == null) result = caseScriptElement(continueStatement);
@@ -606,7 +607,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BREAK_STATEMENT: {
 				BreakStatement breakStatement = (BreakStatement)theEObject;
-				T result = caseBreakStatement(breakStatement);
+				T1 result = caseBreakStatement(breakStatement);
 				if (result == null) result = caseStatement(breakStatement);
 				if (result == null) result = caseLabelRef(breakStatement);
 				if (result == null) result = caseScriptElement(breakStatement);
@@ -616,7 +617,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.RETURN_STATEMENT: {
 				ReturnStatement returnStatement = (ReturnStatement)theEObject;
-				T result = caseReturnStatement(returnStatement);
+				T1 result = caseReturnStatement(returnStatement);
 				if (result == null) result = caseStatement(returnStatement);
 				if (result == null) result = caseScriptElement(returnStatement);
 				if (result == null) result = caseControlFlowElement(returnStatement);
@@ -625,7 +626,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.WITH_STATEMENT: {
 				WithStatement withStatement = (WithStatement)theEObject;
-				T result = caseWithStatement(withStatement);
+				T1 result = caseWithStatement(withStatement);
 				if (result == null) result = caseStatement(withStatement);
 				if (result == null) result = caseVariableEnvironmentElement(withStatement);
 				if (result == null) result = caseScriptElement(withStatement);
@@ -635,7 +636,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.SWITCH_STATEMENT: {
 				SwitchStatement switchStatement = (SwitchStatement)theEObject;
-				T result = caseSwitchStatement(switchStatement);
+				T1 result = caseSwitchStatement(switchStatement);
 				if (result == null) result = caseStatement(switchStatement);
 				if (result == null) result = caseVariableEnvironmentElement(switchStatement);
 				if (result == null) result = caseScriptElement(switchStatement);
@@ -645,14 +646,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ABSTRACT_CASE_CLAUSE: {
 				AbstractCaseClause abstractCaseClause = (AbstractCaseClause)theEObject;
-				T result = caseAbstractCaseClause(abstractCaseClause);
+				T1 result = caseAbstractCaseClause(abstractCaseClause);
 				if (result == null) result = caseControlFlowElement(abstractCaseClause);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.CASE_CLAUSE: {
 				CaseClause caseClause = (CaseClause)theEObject;
-				T result = caseCaseClause(caseClause);
+				T1 result = caseCaseClause(caseClause);
 				if (result == null) result = caseAbstractCaseClause(caseClause);
 				if (result == null) result = caseControlFlowElement(caseClause);
 				if (result == null) result = defaultCase(theEObject);
@@ -660,7 +661,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.DEFAULT_CLAUSE: {
 				DefaultClause defaultClause = (DefaultClause)theEObject;
-				T result = caseDefaultClause(defaultClause);
+				T1 result = caseDefaultClause(defaultClause);
 				if (result == null) result = caseAbstractCaseClause(defaultClause);
 				if (result == null) result = caseControlFlowElement(defaultClause);
 				if (result == null) result = defaultCase(theEObject);
@@ -668,7 +669,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.LABELLED_STATEMENT: {
 				LabelledStatement labelledStatement = (LabelledStatement)theEObject;
-				T result = caseLabelledStatement(labelledStatement);
+				T1 result = caseLabelledStatement(labelledStatement);
 				if (result == null) result = caseStatement(labelledStatement);
 				if (result == null) result = caseNamedElement(labelledStatement);
 				if (result == null) result = caseScriptElement(labelledStatement);
@@ -678,7 +679,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.THROW_STATEMENT: {
 				ThrowStatement throwStatement = (ThrowStatement)theEObject;
-				T result = caseThrowStatement(throwStatement);
+				T1 result = caseThrowStatement(throwStatement);
 				if (result == null) result = caseStatement(throwStatement);
 				if (result == null) result = caseScriptElement(throwStatement);
 				if (result == null) result = caseControlFlowElement(throwStatement);
@@ -687,7 +688,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.TRY_STATEMENT: {
 				TryStatement tryStatement = (TryStatement)theEObject;
-				T result = caseTryStatement(tryStatement);
+				T1 result = caseTryStatement(tryStatement);
 				if (result == null) result = caseStatement(tryStatement);
 				if (result == null) result = caseScriptElement(tryStatement);
 				if (result == null) result = caseControlFlowElement(tryStatement);
@@ -696,13 +697,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ABSTRACT_CATCH_BLOCK: {
 				AbstractCatchBlock abstractCatchBlock = (AbstractCatchBlock)theEObject;
-				T result = caseAbstractCatchBlock(abstractCatchBlock);
+				T1 result = caseAbstractCatchBlock(abstractCatchBlock);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.CATCH_BLOCK: {
 				CatchBlock catchBlock = (CatchBlock)theEObject;
-				T result = caseCatchBlock(catchBlock);
+				T1 result = caseCatchBlock(catchBlock);
 				if (result == null) result = caseAbstractCatchBlock(catchBlock);
 				if (result == null) result = caseVariableEnvironmentElement(catchBlock);
 				if (result == null) result = defaultCase(theEObject);
@@ -710,7 +711,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.CATCH_VARIABLE: {
 				CatchVariable catchVariable = (CatchVariable)theEObject;
-				T result = caseCatchVariable(catchVariable);
+				T1 result = caseCatchVariable(catchVariable);
 				if (result == null) result = caseVariable(catchVariable);
 				if (result == null) result = caseTypedElement(catchVariable);
 				if (result == null) result = caseIdentifiableElement(catchVariable);
@@ -722,14 +723,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.FINALLY_BLOCK: {
 				FinallyBlock finallyBlock = (FinallyBlock)theEObject;
-				T result = caseFinallyBlock(finallyBlock);
+				T1 result = caseFinallyBlock(finallyBlock);
 				if (result == null) result = caseAbstractCatchBlock(finallyBlock);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.DEBUGGER_STATEMENT: {
 				DebuggerStatement debuggerStatement = (DebuggerStatement)theEObject;
-				T result = caseDebuggerStatement(debuggerStatement);
+				T1 result = caseDebuggerStatement(debuggerStatement);
 				if (result == null) result = caseStatement(debuggerStatement);
 				if (result == null) result = caseScriptElement(debuggerStatement);
 				if (result == null) result = caseControlFlowElement(debuggerStatement);
@@ -738,7 +739,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PRIMARY_EXPRESSION: {
 				PrimaryExpression primaryExpression = (PrimaryExpression)theEObject;
-				T result = casePrimaryExpression(primaryExpression);
+				T1 result = casePrimaryExpression(primaryExpression);
 				if (result == null) result = caseExpression(primaryExpression);
 				if (result == null) result = caseTypableElement(primaryExpression);
 				if (result == null) result = caseControlFlowElement(primaryExpression);
@@ -747,7 +748,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PAREN_EXPRESSION: {
 				ParenExpression parenExpression = (ParenExpression)theEObject;
-				T result = caseParenExpression(parenExpression);
+				T1 result = caseParenExpression(parenExpression);
 				if (result == null) result = casePrimaryExpression(parenExpression);
 				if (result == null) result = caseExpression(parenExpression);
 				if (result == null) result = caseTypableElement(parenExpression);
@@ -757,7 +758,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.IDENTIFIER_REF: {
 				IdentifierRef identifierRef = (IdentifierRef)theEObject;
-				T result = caseIdentifierRef(identifierRef);
+				T1 result = caseIdentifierRef(identifierRef);
 				if (result == null) result = casePrimaryExpression(identifierRef);
 				if (result == null) result = caseStrictModeRelevant(identifierRef);
 				if (result == null) result = caseVersionable(identifierRef);
@@ -769,13 +770,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.STRICT_MODE_RELEVANT: {
 				StrictModeRelevant strictModeRelevant = (StrictModeRelevant)theEObject;
-				T result = caseStrictModeRelevant(strictModeRelevant);
+				T1 result = caseStrictModeRelevant(strictModeRelevant);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.SUPER_LITERAL: {
 				SuperLiteral superLiteral = (SuperLiteral)theEObject;
-				T result = caseSuperLiteral(superLiteral);
+				T1 result = caseSuperLiteral(superLiteral);
 				if (result == null) result = casePrimaryExpression(superLiteral);
 				if (result == null) result = caseExpression(superLiteral);
 				if (result == null) result = caseTypableElement(superLiteral);
@@ -785,7 +786,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.THIS_LITERAL: {
 				ThisLiteral thisLiteral = (ThisLiteral)theEObject;
-				T result = caseThisLiteral(thisLiteral);
+				T1 result = caseThisLiteral(thisLiteral);
 				if (result == null) result = casePrimaryExpression(thisLiteral);
 				if (result == null) result = caseStrictModeRelevant(thisLiteral);
 				if (result == null) result = caseExpression(thisLiteral);
@@ -796,7 +797,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ARRAY_LITERAL: {
 				ArrayLiteral arrayLiteral = (ArrayLiteral)theEObject;
-				T result = caseArrayLiteral(arrayLiteral);
+				T1 result = caseArrayLiteral(arrayLiteral);
 				if (result == null) result = casePrimaryExpression(arrayLiteral);
 				if (result == null) result = caseExpression(arrayLiteral);
 				if (result == null) result = caseTypableElement(arrayLiteral);
@@ -806,14 +807,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ARRAY_ELEMENT: {
 				ArrayElement arrayElement = (ArrayElement)theEObject;
-				T result = caseArrayElement(arrayElement);
+				T1 result = caseArrayElement(arrayElement);
 				if (result == null) result = caseTypableElement(arrayElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.ARRAY_PADDING: {
 				ArrayPadding arrayPadding = (ArrayPadding)theEObject;
-				T result = caseArrayPadding(arrayPadding);
+				T1 result = caseArrayPadding(arrayPadding);
 				if (result == null) result = caseArrayElement(arrayPadding);
 				if (result == null) result = caseTypableElement(arrayPadding);
 				if (result == null) result = defaultCase(theEObject);
@@ -821,7 +822,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.OBJECT_LITERAL: {
 				ObjectLiteral objectLiteral = (ObjectLiteral)theEObject;
-				T result = caseObjectLiteral(objectLiteral);
+				T1 result = caseObjectLiteral(objectLiteral);
 				if (result == null) result = casePrimaryExpression(objectLiteral);
 				if (result == null) result = caseThisTarget(objectLiteral);
 				if (result == null) result = caseTypeDefiningElement(objectLiteral);
@@ -833,7 +834,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_ASSIGNMENT: {
 				PropertyAssignment propertyAssignment = (PropertyAssignment)theEObject;
-				T result = casePropertyAssignment(propertyAssignment);
+				T1 result = casePropertyAssignment(propertyAssignment);
 				if (result == null) result = caseAnnotableElement(propertyAssignment);
 				if (result == null) result = caseVariableEnvironmentElement(propertyAssignment);
 				if (result == null) result = casePropertyNameOwner(propertyAssignment);
@@ -844,20 +845,20 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_NAME_OWNER: {
 				PropertyNameOwner propertyNameOwner = (PropertyNameOwner)theEObject;
-				T result = casePropertyNameOwner(propertyNameOwner);
+				T1 result = casePropertyNameOwner(propertyNameOwner);
 				if (result == null) result = caseNamedElement(propertyNameOwner);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME: {
 				LiteralOrComputedPropertyName literalOrComputedPropertyName = (LiteralOrComputedPropertyName)theEObject;
-				T result = caseLiteralOrComputedPropertyName(literalOrComputedPropertyName);
+				T1 result = caseLiteralOrComputedPropertyName(literalOrComputedPropertyName);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.ANNOTABLE_PROPERTY_ASSIGNMENT: {
 				AnnotablePropertyAssignment annotablePropertyAssignment = (AnnotablePropertyAssignment)theEObject;
-				T result = caseAnnotablePropertyAssignment(annotablePropertyAssignment);
+				T1 result = caseAnnotablePropertyAssignment(annotablePropertyAssignment);
 				if (result == null) result = casePropertyAssignment(annotablePropertyAssignment);
 				if (result == null) result = caseAnnotableElement(annotablePropertyAssignment);
 				if (result == null) result = caseVariableEnvironmentElement(annotablePropertyAssignment);
@@ -869,7 +870,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_ASSIGNMENT_ANNOTATION_LIST: {
 				PropertyAssignmentAnnotationList propertyAssignmentAnnotationList = (PropertyAssignmentAnnotationList)theEObject;
-				T result = casePropertyAssignmentAnnotationList(propertyAssignmentAnnotationList);
+				T1 result = casePropertyAssignmentAnnotationList(propertyAssignmentAnnotationList);
 				if (result == null) result = caseAbstractAnnotationList(propertyAssignmentAnnotationList);
 				if (result == null) result = casePropertyAssignment(propertyAssignmentAnnotationList);
 				if (result == null) result = caseAnnotableElement(propertyAssignmentAnnotationList);
@@ -882,7 +883,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR: {
 				PropertyNameValuePair propertyNameValuePair = (PropertyNameValuePair)theEObject;
-				T result = casePropertyNameValuePair(propertyNameValuePair);
+				T1 result = casePropertyNameValuePair(propertyNameValuePair);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertyNameValuePair);
 				if (result == null) result = caseTypedElement(propertyNameValuePair);
 				if (result == null) result = casePropertyAssignment(propertyNameValuePair);
@@ -897,7 +898,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME: {
 				PropertyNameValuePairSingleName propertyNameValuePairSingleName = (PropertyNameValuePairSingleName)theEObject;
-				T result = casePropertyNameValuePairSingleName(propertyNameValuePairSingleName);
+				T1 result = casePropertyNameValuePairSingleName(propertyNameValuePairSingleName);
 				if (result == null) result = casePropertyNameValuePair(propertyNameValuePairSingleName);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertyNameValuePairSingleName);
 				if (result == null) result = caseTypedElement(propertyNameValuePairSingleName);
@@ -913,7 +914,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION: {
 				PropertyMethodDeclaration propertyMethodDeclaration = (PropertyMethodDeclaration)theEObject;
-				T result = casePropertyMethodDeclaration(propertyMethodDeclaration);
+				T1 result = casePropertyMethodDeclaration(propertyMethodDeclaration);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertyMethodDeclaration);
 				if (result == null) result = caseMethodDeclaration(propertyMethodDeclaration);
 				if (result == null) result = casePropertyAssignment(propertyMethodDeclaration);
@@ -935,7 +936,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.GETTER_DECLARATION: {
 				GetterDeclaration getterDeclaration = (GetterDeclaration)theEObject;
-				T result = caseGetterDeclaration(getterDeclaration);
+				T1 result = caseGetterDeclaration(getterDeclaration);
 				if (result == null) result = caseFieldAccessor(getterDeclaration);
 				if (result == null) result = caseTypedElement(getterDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(getterDeclaration);
@@ -951,7 +952,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.SETTER_DECLARATION: {
 				SetterDeclaration setterDeclaration = (SetterDeclaration)theEObject;
-				T result = caseSetterDeclaration(setterDeclaration);
+				T1 result = caseSetterDeclaration(setterDeclaration);
 				if (result == null) result = caseFieldAccessor(setterDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(setterDeclaration);
 				if (result == null) result = caseTypeProvidingElement(setterDeclaration);
@@ -966,7 +967,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_GETTER_DECLARATION: {
 				PropertyGetterDeclaration propertyGetterDeclaration = (PropertyGetterDeclaration)theEObject;
-				T result = casePropertyGetterDeclaration(propertyGetterDeclaration);
+				T1 result = casePropertyGetterDeclaration(propertyGetterDeclaration);
 				if (result == null) result = caseGetterDeclaration(propertyGetterDeclaration);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertyGetterDeclaration);
 				if (result == null) result = caseFieldAccessor(propertyGetterDeclaration);
@@ -985,7 +986,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_SETTER_DECLARATION: {
 				PropertySetterDeclaration propertySetterDeclaration = (PropertySetterDeclaration)theEObject;
-				T result = casePropertySetterDeclaration(propertySetterDeclaration);
+				T1 result = casePropertySetterDeclaration(propertySetterDeclaration);
 				if (result == null) result = caseSetterDeclaration(propertySetterDeclaration);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertySetterDeclaration);
 				if (result == null) result = caseFieldAccessor(propertySetterDeclaration);
@@ -1003,7 +1004,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROPERTY_SPREAD: {
 				PropertySpread propertySpread = (PropertySpread)theEObject;
-				T result = casePropertySpread(propertySpread);
+				T1 result = casePropertySpread(propertySpread);
 				if (result == null) result = caseAnnotablePropertyAssignment(propertySpread);
 				if (result == null) result = casePropertyAssignment(propertySpread);
 				if (result == null) result = caseAnnotableElement(propertySpread);
@@ -1016,7 +1017,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EXPRESSION: {
 				Expression expression = (Expression)theEObject;
-				T result = caseExpression(expression);
+				T1 result = caseExpression(expression);
 				if (result == null) result = caseTypableElement(expression);
 				if (result == null) result = caseControlFlowElement(expression);
 				if (result == null) result = defaultCase(theEObject);
@@ -1024,7 +1025,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.NEW_TARGET: {
 				NewTarget newTarget = (NewTarget)theEObject;
-				T result = caseNewTarget(newTarget);
+				T1 result = caseNewTarget(newTarget);
 				if (result == null) result = caseExpression(newTarget);
 				if (result == null) result = caseTypableElement(newTarget);
 				if (result == null) result = caseControlFlowElement(newTarget);
@@ -1033,7 +1034,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.NEW_EXPRESSION: {
 				NewExpression newExpression = (NewExpression)theEObject;
-				T result = caseNewExpression(newExpression);
+				T1 result = caseNewExpression(newExpression);
 				if (result == null) result = caseExpression(newExpression);
 				if (result == null) result = caseParameterizedAccess(newExpression);
 				if (result == null) result = caseTypableElement(newExpression);
@@ -1043,13 +1044,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PARAMETERIZED_ACCESS: {
 				ParameterizedAccess parameterizedAccess = (ParameterizedAccess)theEObject;
-				T result = caseParameterizedAccess(parameterizedAccess);
+				T1 result = caseParameterizedAccess(parameterizedAccess);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.EXPRESSION_WITH_TARGET: {
 				ExpressionWithTarget expressionWithTarget = (ExpressionWithTarget)theEObject;
-				T result = caseExpressionWithTarget(expressionWithTarget);
+				T1 result = caseExpressionWithTarget(expressionWithTarget);
 				if (result == null) result = caseExpression(expressionWithTarget);
 				if (result == null) result = caseTypableElement(expressionWithTarget);
 				if (result == null) result = caseControlFlowElement(expressionWithTarget);
@@ -1058,7 +1059,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION: {
 				ParameterizedCallExpression parameterizedCallExpression = (ParameterizedCallExpression)theEObject;
-				T result = caseParameterizedCallExpression(parameterizedCallExpression);
+				T1 result = caseParameterizedCallExpression(parameterizedCallExpression);
 				if (result == null) result = caseExpressionWithTarget(parameterizedCallExpression);
 				if (result == null) result = caseParameterizedAccess(parameterizedCallExpression);
 				if (result == null) result = caseExpression(parameterizedCallExpression);
@@ -1069,7 +1070,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.IMPORT_CALL_EXPRESSION: {
 				ImportCallExpression importCallExpression = (ImportCallExpression)theEObject;
-				T result = caseImportCallExpression(importCallExpression);
+				T1 result = caseImportCallExpression(importCallExpression);
 				if (result == null) result = caseExpression(importCallExpression);
 				if (result == null) result = caseTypableElement(importCallExpression);
 				if (result == null) result = caseControlFlowElement(importCallExpression);
@@ -1078,14 +1079,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ARGUMENT: {
 				Argument argument = (Argument)theEObject;
-				T result = caseArgument(argument);
+				T1 result = caseArgument(argument);
 				if (result == null) result = caseTypableElement(argument);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION: {
 				IndexedAccessExpression indexedAccessExpression = (IndexedAccessExpression)theEObject;
-				T result = caseIndexedAccessExpression(indexedAccessExpression);
+				T1 result = caseIndexedAccessExpression(indexedAccessExpression);
 				if (result == null) result = caseExpressionWithTarget(indexedAccessExpression);
 				if (result == null) result = caseMemberAccess(indexedAccessExpression);
 				if (result == null) result = caseExpression(indexedAccessExpression);
@@ -1096,7 +1097,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.TAGGED_TEMPLATE_STRING: {
 				TaggedTemplateString taggedTemplateString = (TaggedTemplateString)theEObject;
-				T result = caseTaggedTemplateString(taggedTemplateString);
+				T1 result = caseTaggedTemplateString(taggedTemplateString);
 				if (result == null) result = caseExpressionWithTarget(taggedTemplateString);
 				if (result == null) result = caseExpression(taggedTemplateString);
 				if (result == null) result = caseTypableElement(taggedTemplateString);
@@ -1106,13 +1107,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.MEMBER_ACCESS: {
 				MemberAccess memberAccess = (MemberAccess)theEObject;
-				T result = caseMemberAccess(memberAccess);
+				T1 result = caseMemberAccess(memberAccess);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION: {
 				ParameterizedPropertyAccessExpression parameterizedPropertyAccessExpression = (ParameterizedPropertyAccessExpression)theEObject;
-				T result = caseParameterizedPropertyAccessExpression(parameterizedPropertyAccessExpression);
+				T1 result = caseParameterizedPropertyAccessExpression(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseExpressionWithTarget(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseMemberAccess(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseParameterizedAccess(parameterizedPropertyAccessExpression);
@@ -1124,7 +1125,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.AWAIT_EXPRESSION: {
 				AwaitExpression awaitExpression = (AwaitExpression)theEObject;
-				T result = caseAwaitExpression(awaitExpression);
+				T1 result = caseAwaitExpression(awaitExpression);
 				if (result == null) result = caseExpression(awaitExpression);
 				if (result == null) result = caseTypableElement(awaitExpression);
 				if (result == null) result = caseControlFlowElement(awaitExpression);
@@ -1133,7 +1134,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.PROMISIFY_EXPRESSION: {
 				PromisifyExpression promisifyExpression = (PromisifyExpression)theEObject;
-				T result = casePromisifyExpression(promisifyExpression);
+				T1 result = casePromisifyExpression(promisifyExpression);
 				if (result == null) result = caseExpression(promisifyExpression);
 				if (result == null) result = caseTypableElement(promisifyExpression);
 				if (result == null) result = caseControlFlowElement(promisifyExpression);
@@ -1142,7 +1143,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.YIELD_EXPRESSION: {
 				YieldExpression yieldExpression = (YieldExpression)theEObject;
-				T result = caseYieldExpression(yieldExpression);
+				T1 result = caseYieldExpression(yieldExpression);
 				if (result == null) result = caseExpression(yieldExpression);
 				if (result == null) result = caseTypableElement(yieldExpression);
 				if (result == null) result = caseControlFlowElement(yieldExpression);
@@ -1151,7 +1152,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.LITERAL: {
 				Literal literal = (Literal)theEObject;
-				T result = caseLiteral(literal);
+				T1 result = caseLiteral(literal);
 				if (result == null) result = casePrimaryExpression(literal);
 				if (result == null) result = caseExpression(literal);
 				if (result == null) result = caseTypableElement(literal);
@@ -1161,7 +1162,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.NULL_LITERAL: {
 				NullLiteral nullLiteral = (NullLiteral)theEObject;
-				T result = caseNullLiteral(nullLiteral);
+				T1 result = caseNullLiteral(nullLiteral);
 				if (result == null) result = caseLiteral(nullLiteral);
 				if (result == null) result = casePrimaryExpression(nullLiteral);
 				if (result == null) result = caseExpression(nullLiteral);
@@ -1172,7 +1173,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BOOLEAN_LITERAL: {
 				BooleanLiteral booleanLiteral = (BooleanLiteral)theEObject;
-				T result = caseBooleanLiteral(booleanLiteral);
+				T1 result = caseBooleanLiteral(booleanLiteral);
 				if (result == null) result = caseLiteral(booleanLiteral);
 				if (result == null) result = casePrimaryExpression(booleanLiteral);
 				if (result == null) result = caseExpression(booleanLiteral);
@@ -1183,7 +1184,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.STRING_LITERAL: {
 				StringLiteral stringLiteral = (StringLiteral)theEObject;
-				T result = caseStringLiteral(stringLiteral);
+				T1 result = caseStringLiteral(stringLiteral);
 				if (result == null) result = caseLiteral(stringLiteral);
 				if (result == null) result = casePrimaryExpression(stringLiteral);
 				if (result == null) result = caseExpression(stringLiteral);
@@ -1194,7 +1195,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.TEMPLATE_LITERAL: {
 				TemplateLiteral templateLiteral = (TemplateLiteral)theEObject;
-				T result = caseTemplateLiteral(templateLiteral);
+				T1 result = caseTemplateLiteral(templateLiteral);
 				if (result == null) result = casePrimaryExpression(templateLiteral);
 				if (result == null) result = caseExpression(templateLiteral);
 				if (result == null) result = caseTypableElement(templateLiteral);
@@ -1204,7 +1205,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.TEMPLATE_SEGMENT: {
 				TemplateSegment templateSegment = (TemplateSegment)theEObject;
-				T result = caseTemplateSegment(templateSegment);
+				T1 result = caseTemplateSegment(templateSegment);
 				if (result == null) result = caseLiteral(templateSegment);
 				if (result == null) result = casePrimaryExpression(templateSegment);
 				if (result == null) result = caseExpression(templateSegment);
@@ -1215,7 +1216,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.NUMERIC_LITERAL: {
 				NumericLiteral numericLiteral = (NumericLiteral)theEObject;
-				T result = caseNumericLiteral(numericLiteral);
+				T1 result = caseNumericLiteral(numericLiteral);
 				if (result == null) result = caseLiteral(numericLiteral);
 				if (result == null) result = casePrimaryExpression(numericLiteral);
 				if (result == null) result = caseExpression(numericLiteral);
@@ -1226,7 +1227,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.DOUBLE_LITERAL: {
 				DoubleLiteral doubleLiteral = (DoubleLiteral)theEObject;
-				T result = caseDoubleLiteral(doubleLiteral);
+				T1 result = caseDoubleLiteral(doubleLiteral);
 				if (result == null) result = caseNumericLiteral(doubleLiteral);
 				if (result == null) result = caseLiteral(doubleLiteral);
 				if (result == null) result = casePrimaryExpression(doubleLiteral);
@@ -1238,7 +1239,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ABSTRACT_INT_LITERAL: {
 				AbstractIntLiteral abstractIntLiteral = (AbstractIntLiteral)theEObject;
-				T result = caseAbstractIntLiteral(abstractIntLiteral);
+				T1 result = caseAbstractIntLiteral(abstractIntLiteral);
 				if (result == null) result = caseNumericLiteral(abstractIntLiteral);
 				if (result == null) result = caseLiteral(abstractIntLiteral);
 				if (result == null) result = casePrimaryExpression(abstractIntLiteral);
@@ -1250,7 +1251,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.INT_LITERAL: {
 				IntLiteral intLiteral = (IntLiteral)theEObject;
-				T result = caseIntLiteral(intLiteral);
+				T1 result = caseIntLiteral(intLiteral);
 				if (result == null) result = caseAbstractIntLiteral(intLiteral);
 				if (result == null) result = caseNumericLiteral(intLiteral);
 				if (result == null) result = caseLiteral(intLiteral);
@@ -1263,7 +1264,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BINARY_INT_LITERAL: {
 				BinaryIntLiteral binaryIntLiteral = (BinaryIntLiteral)theEObject;
-				T result = caseBinaryIntLiteral(binaryIntLiteral);
+				T1 result = caseBinaryIntLiteral(binaryIntLiteral);
 				if (result == null) result = caseAbstractIntLiteral(binaryIntLiteral);
 				if (result == null) result = caseNumericLiteral(binaryIntLiteral);
 				if (result == null) result = caseLiteral(binaryIntLiteral);
@@ -1276,7 +1277,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.OCTAL_INT_LITERAL: {
 				OctalIntLiteral octalIntLiteral = (OctalIntLiteral)theEObject;
-				T result = caseOctalIntLiteral(octalIntLiteral);
+				T1 result = caseOctalIntLiteral(octalIntLiteral);
 				if (result == null) result = caseAbstractIntLiteral(octalIntLiteral);
 				if (result == null) result = caseNumericLiteral(octalIntLiteral);
 				if (result == null) result = caseLiteral(octalIntLiteral);
@@ -1289,7 +1290,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.LEGACY_OCTAL_INT_LITERAL: {
 				LegacyOctalIntLiteral legacyOctalIntLiteral = (LegacyOctalIntLiteral)theEObject;
-				T result = caseLegacyOctalIntLiteral(legacyOctalIntLiteral);
+				T1 result = caseLegacyOctalIntLiteral(legacyOctalIntLiteral);
 				if (result == null) result = caseAbstractIntLiteral(legacyOctalIntLiteral);
 				if (result == null) result = caseNumericLiteral(legacyOctalIntLiteral);
 				if (result == null) result = caseLiteral(legacyOctalIntLiteral);
@@ -1302,7 +1303,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.HEX_INT_LITERAL: {
 				HexIntLiteral hexIntLiteral = (HexIntLiteral)theEObject;
-				T result = caseHexIntLiteral(hexIntLiteral);
+				T1 result = caseHexIntLiteral(hexIntLiteral);
 				if (result == null) result = caseAbstractIntLiteral(hexIntLiteral);
 				if (result == null) result = caseNumericLiteral(hexIntLiteral);
 				if (result == null) result = caseLiteral(hexIntLiteral);
@@ -1315,7 +1316,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.SCIENTIFIC_INT_LITERAL: {
 				ScientificIntLiteral scientificIntLiteral = (ScientificIntLiteral)theEObject;
-				T result = caseScientificIntLiteral(scientificIntLiteral);
+				T1 result = caseScientificIntLiteral(scientificIntLiteral);
 				if (result == null) result = caseAbstractIntLiteral(scientificIntLiteral);
 				if (result == null) result = caseNumericLiteral(scientificIntLiteral);
 				if (result == null) result = caseLiteral(scientificIntLiteral);
@@ -1328,7 +1329,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.REGULAR_EXPRESSION_LITERAL: {
 				RegularExpressionLiteral regularExpressionLiteral = (RegularExpressionLiteral)theEObject;
-				T result = caseRegularExpressionLiteral(regularExpressionLiteral);
+				T1 result = caseRegularExpressionLiteral(regularExpressionLiteral);
 				if (result == null) result = caseLiteral(regularExpressionLiteral);
 				if (result == null) result = casePrimaryExpression(regularExpressionLiteral);
 				if (result == null) result = caseExpression(regularExpressionLiteral);
@@ -1339,7 +1340,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.POSTFIX_EXPRESSION: {
 				PostfixExpression postfixExpression = (PostfixExpression)theEObject;
-				T result = casePostfixExpression(postfixExpression);
+				T1 result = casePostfixExpression(postfixExpression);
 				if (result == null) result = caseExpression(postfixExpression);
 				if (result == null) result = caseTypableElement(postfixExpression);
 				if (result == null) result = caseControlFlowElement(postfixExpression);
@@ -1348,7 +1349,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.UNARY_EXPRESSION: {
 				UnaryExpression unaryExpression = (UnaryExpression)theEObject;
-				T result = caseUnaryExpression(unaryExpression);
+				T1 result = caseUnaryExpression(unaryExpression);
 				if (result == null) result = caseExpression(unaryExpression);
 				if (result == null) result = caseTypableElement(unaryExpression);
 				if (result == null) result = caseControlFlowElement(unaryExpression);
@@ -1357,7 +1358,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.CAST_EXPRESSION: {
 				CastExpression castExpression = (CastExpression)theEObject;
-				T result = caseCastExpression(castExpression);
+				T1 result = caseCastExpression(castExpression);
 				if (result == null) result = caseExpression(castExpression);
 				if (result == null) result = caseTypableElement(castExpression);
 				if (result == null) result = caseControlFlowElement(castExpression);
@@ -1366,7 +1367,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.MULTIPLICATIVE_EXPRESSION: {
 				MultiplicativeExpression multiplicativeExpression = (MultiplicativeExpression)theEObject;
-				T result = caseMultiplicativeExpression(multiplicativeExpression);
+				T1 result = caseMultiplicativeExpression(multiplicativeExpression);
 				if (result == null) result = caseExpression(multiplicativeExpression);
 				if (result == null) result = caseTypableElement(multiplicativeExpression);
 				if (result == null) result = caseControlFlowElement(multiplicativeExpression);
@@ -1375,7 +1376,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ADDITIVE_EXPRESSION: {
 				AdditiveExpression additiveExpression = (AdditiveExpression)theEObject;
-				T result = caseAdditiveExpression(additiveExpression);
+				T1 result = caseAdditiveExpression(additiveExpression);
 				if (result == null) result = caseExpression(additiveExpression);
 				if (result == null) result = caseTypableElement(additiveExpression);
 				if (result == null) result = caseControlFlowElement(additiveExpression);
@@ -1384,7 +1385,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.SHIFT_EXPRESSION: {
 				ShiftExpression shiftExpression = (ShiftExpression)theEObject;
-				T result = caseShiftExpression(shiftExpression);
+				T1 result = caseShiftExpression(shiftExpression);
 				if (result == null) result = caseExpression(shiftExpression);
 				if (result == null) result = caseTypableElement(shiftExpression);
 				if (result == null) result = caseControlFlowElement(shiftExpression);
@@ -1393,7 +1394,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.RELATIONAL_EXPRESSION: {
 				RelationalExpression relationalExpression = (RelationalExpression)theEObject;
-				T result = caseRelationalExpression(relationalExpression);
+				T1 result = caseRelationalExpression(relationalExpression);
 				if (result == null) result = caseExpression(relationalExpression);
 				if (result == null) result = caseTypableElement(relationalExpression);
 				if (result == null) result = caseControlFlowElement(relationalExpression);
@@ -1402,7 +1403,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.EQUALITY_EXPRESSION: {
 				EqualityExpression equalityExpression = (EqualityExpression)theEObject;
-				T result = caseEqualityExpression(equalityExpression);
+				T1 result = caseEqualityExpression(equalityExpression);
 				if (result == null) result = caseExpression(equalityExpression);
 				if (result == null) result = caseTypableElement(equalityExpression);
 				if (result == null) result = caseControlFlowElement(equalityExpression);
@@ -1411,7 +1412,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BINARY_BITWISE_EXPRESSION: {
 				BinaryBitwiseExpression binaryBitwiseExpression = (BinaryBitwiseExpression)theEObject;
-				T result = caseBinaryBitwiseExpression(binaryBitwiseExpression);
+				T1 result = caseBinaryBitwiseExpression(binaryBitwiseExpression);
 				if (result == null) result = caseExpression(binaryBitwiseExpression);
 				if (result == null) result = caseTypableElement(binaryBitwiseExpression);
 				if (result == null) result = caseControlFlowElement(binaryBitwiseExpression);
@@ -1420,7 +1421,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BINARY_LOGICAL_EXPRESSION: {
 				BinaryLogicalExpression binaryLogicalExpression = (BinaryLogicalExpression)theEObject;
-				T result = caseBinaryLogicalExpression(binaryLogicalExpression);
+				T1 result = caseBinaryLogicalExpression(binaryLogicalExpression);
 				if (result == null) result = caseExpression(binaryLogicalExpression);
 				if (result == null) result = caseTypableElement(binaryLogicalExpression);
 				if (result == null) result = caseControlFlowElement(binaryLogicalExpression);
@@ -1429,7 +1430,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.COALESCE_EXPRESSION: {
 				CoalesceExpression coalesceExpression = (CoalesceExpression)theEObject;
-				T result = caseCoalesceExpression(coalesceExpression);
+				T1 result = caseCoalesceExpression(coalesceExpression);
 				if (result == null) result = caseExpression(coalesceExpression);
 				if (result == null) result = caseTypableElement(coalesceExpression);
 				if (result == null) result = caseControlFlowElement(coalesceExpression);
@@ -1438,7 +1439,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.CONDITIONAL_EXPRESSION: {
 				ConditionalExpression conditionalExpression = (ConditionalExpression)theEObject;
-				T result = caseConditionalExpression(conditionalExpression);
+				T1 result = caseConditionalExpression(conditionalExpression);
 				if (result == null) result = caseExpression(conditionalExpression);
 				if (result == null) result = caseTypableElement(conditionalExpression);
 				if (result == null) result = caseControlFlowElement(conditionalExpression);
@@ -1447,7 +1448,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ASSIGNMENT_EXPRESSION: {
 				AssignmentExpression assignmentExpression = (AssignmentExpression)theEObject;
-				T result = caseAssignmentExpression(assignmentExpression);
+				T1 result = caseAssignmentExpression(assignmentExpression);
 				if (result == null) result = caseExpression(assignmentExpression);
 				if (result == null) result = caseTypableElement(assignmentExpression);
 				if (result == null) result = caseControlFlowElement(assignmentExpression);
@@ -1456,7 +1457,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.COMMA_EXPRESSION: {
 				CommaExpression commaExpression = (CommaExpression)theEObject;
-				T result = caseCommaExpression(commaExpression);
+				T1 result = caseCommaExpression(commaExpression);
 				if (result == null) result = caseExpression(commaExpression);
 				if (result == null) result = caseTypableElement(commaExpression);
 				if (result == null) result = caseControlFlowElement(commaExpression);
@@ -1465,14 +1466,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.TYPE_DEFINING_ELEMENT: {
 				TypeDefiningElement typeDefiningElement = (TypeDefiningElement)theEObject;
-				T result = caseTypeDefiningElement(typeDefiningElement);
+				T1 result = caseTypeDefiningElement(typeDefiningElement);
 				if (result == null) result = caseTypableElement(typeDefiningElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.GENERIC_DECLARATION: {
 				GenericDeclaration genericDeclaration = (GenericDeclaration)theEObject;
-				T result = caseGenericDeclaration(genericDeclaration);
+				T1 result = caseGenericDeclaration(genericDeclaration);
 				if (result == null) result = caseTypeDefiningElement(genericDeclaration);
 				if (result == null) result = caseTypableElement(genericDeclaration);
 				if (result == null) result = defaultCase(theEObject);
@@ -1480,7 +1481,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_TYPE_DEFINITION: {
 				N4TypeDefinition n4TypeDefinition = (N4TypeDefinition)theEObject;
-				T result = caseN4TypeDefinition(n4TypeDefinition);
+				T1 result = caseN4TypeDefinition(n4TypeDefinition);
 				if (result == null) result = caseAnnotableElement(n4TypeDefinition);
 				if (result == null) result = caseTypeDefiningElement(n4TypeDefinition);
 				if (result == null) result = caseTypableElement(n4TypeDefinition);
@@ -1489,7 +1490,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_TYPE_DECLARATION: {
 				N4TypeDeclaration n4TypeDeclaration = (N4TypeDeclaration)theEObject;
-				T result = caseN4TypeDeclaration(n4TypeDeclaration);
+				T1 result = caseN4TypeDeclaration(n4TypeDeclaration);
 				if (result == null) result = caseN4TypeDefinition(n4TypeDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(n4TypeDeclaration);
 				if (result == null) result = caseModifiableElement(n4TypeDeclaration);
@@ -1504,7 +1505,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_CLASSIFIER_DECLARATION: {
 				N4ClassifierDeclaration n4ClassifierDeclaration = (N4ClassifierDeclaration)theEObject;
-				T result = caseN4ClassifierDeclaration(n4ClassifierDeclaration);
+				T1 result = caseN4ClassifierDeclaration(n4ClassifierDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4ClassifierDeclaration);
 				if (result == null) result = caseN4ClassifierDefinition(n4ClassifierDeclaration);
 				if (result == null) result = caseGenericDeclaration(n4ClassifierDeclaration);
@@ -1523,7 +1524,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_CLASSIFIER_DEFINITION: {
 				N4ClassifierDefinition n4ClassifierDefinition = (N4ClassifierDefinition)theEObject;
-				T result = caseN4ClassifierDefinition(n4ClassifierDefinition);
+				T1 result = caseN4ClassifierDefinition(n4ClassifierDefinition);
 				if (result == null) result = caseN4TypeDefinition(n4ClassifierDefinition);
 				if (result == null) result = caseAnnotableElement(n4ClassifierDefinition);
 				if (result == null) result = caseTypeDefiningElement(n4ClassifierDefinition);
@@ -1533,7 +1534,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_CLASS_DEFINITION: {
 				N4ClassDefinition n4ClassDefinition = (N4ClassDefinition)theEObject;
-				T result = caseN4ClassDefinition(n4ClassDefinition);
+				T1 result = caseN4ClassDefinition(n4ClassDefinition);
 				if (result == null) result = caseN4ClassifierDefinition(n4ClassDefinition);
 				if (result == null) result = caseThisTarget(n4ClassDefinition);
 				if (result == null) result = caseN4TypeDefinition(n4ClassDefinition);
@@ -1545,7 +1546,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_CLASS_DECLARATION: {
 				N4ClassDeclaration n4ClassDeclaration = (N4ClassDeclaration)theEObject;
-				T result = caseN4ClassDeclaration(n4ClassDeclaration);
+				T1 result = caseN4ClassDeclaration(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassDefinition(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4ClassDeclaration);
 				if (result == null) result = caseVersionable(n4ClassDeclaration);
@@ -1568,7 +1569,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_CLASS_EXPRESSION: {
 				N4ClassExpression n4ClassExpression = (N4ClassExpression)theEObject;
-				T result = caseN4ClassExpression(n4ClassExpression);
+				T1 result = caseN4ClassExpression(n4ClassExpression);
 				if (result == null) result = caseN4ClassDefinition(n4ClassExpression);
 				if (result == null) result = casePrimaryExpression(n4ClassExpression);
 				if (result == null) result = caseAnnotableExpression(n4ClassExpression);
@@ -1586,7 +1587,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_INTERFACE_DECLARATION: {
 				N4InterfaceDeclaration n4InterfaceDeclaration = (N4InterfaceDeclaration)theEObject;
-				T result = caseN4InterfaceDeclaration(n4InterfaceDeclaration);
+				T1 result = caseN4InterfaceDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseVersionable(n4InterfaceDeclaration);
 				if (result == null) result = caseVersionedElement(n4InterfaceDeclaration);
@@ -1608,7 +1609,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_ENUM_DECLARATION: {
 				N4EnumDeclaration n4EnumDeclaration = (N4EnumDeclaration)theEObject;
-				T result = caseN4EnumDeclaration(n4EnumDeclaration);
+				T1 result = caseN4EnumDeclaration(n4EnumDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4EnumDeclaration);
 				if (result == null) result = caseVersionable(n4EnumDeclaration);
 				if (result == null) result = caseVersionedElement(n4EnumDeclaration);
@@ -1626,7 +1627,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_ENUM_LITERAL: {
 				N4EnumLiteral n4EnumLiteral = (N4EnumLiteral)theEObject;
-				T result = caseN4EnumLiteral(n4EnumLiteral);
+				T1 result = caseN4EnumLiteral(n4EnumLiteral);
 				if (result == null) result = caseNamedElement(n4EnumLiteral);
 				if (result == null) result = caseTypableElement(n4EnumLiteral);
 				if (result == null) result = defaultCase(theEObject);
@@ -1634,7 +1635,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION: {
 				N4TypeAliasDeclaration n4TypeAliasDeclaration = (N4TypeAliasDeclaration)theEObject;
-				T result = caseN4TypeAliasDeclaration(n4TypeAliasDeclaration);
+				T1 result = caseN4TypeAliasDeclaration(n4TypeAliasDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4TypeAliasDeclaration);
 				if (result == null) result = caseGenericDeclaration(n4TypeAliasDeclaration);
 				if (result == null) result = caseTypedElement(n4TypeAliasDeclaration);
@@ -1653,13 +1654,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.MODIFIABLE_ELEMENT: {
 				ModifiableElement modifiableElement = (ModifiableElement)theEObject;
-				T result = caseModifiableElement(modifiableElement);
+				T1 result = caseModifiableElement(modifiableElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.N4_MEMBER_DECLARATION: {
 				N4MemberDeclaration n4MemberDeclaration = (N4MemberDeclaration)theEObject;
-				T result = caseN4MemberDeclaration(n4MemberDeclaration);
+				T1 result = caseN4MemberDeclaration(n4MemberDeclaration);
 				if (result == null) result = caseAnnotableElement(n4MemberDeclaration);
 				if (result == null) result = caseModifiableElement(n4MemberDeclaration);
 				if (result == null) result = caseTypeProvidingElement(n4MemberDeclaration);
@@ -1670,7 +1671,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ANNOTABLE_N4_MEMBER_DECLARATION: {
 				AnnotableN4MemberDeclaration annotableN4MemberDeclaration = (AnnotableN4MemberDeclaration)theEObject;
-				T result = caseAnnotableN4MemberDeclaration(annotableN4MemberDeclaration);
+				T1 result = caseAnnotableN4MemberDeclaration(annotableN4MemberDeclaration);
 				if (result == null) result = caseN4MemberDeclaration(annotableN4MemberDeclaration);
 				if (result == null) result = caseAnnotableElement(annotableN4MemberDeclaration);
 				if (result == null) result = caseModifiableElement(annotableN4MemberDeclaration);
@@ -1682,7 +1683,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST: {
 				N4MemberAnnotationList n4MemberAnnotationList = (N4MemberAnnotationList)theEObject;
-				T result = caseN4MemberAnnotationList(n4MemberAnnotationList);
+				T1 result = caseN4MemberAnnotationList(n4MemberAnnotationList);
 				if (result == null) result = caseAbstractAnnotationList(n4MemberAnnotationList);
 				if (result == null) result = caseN4MemberDeclaration(n4MemberAnnotationList);
 				if (result == null) result = caseAnnotableElement(n4MemberAnnotationList);
@@ -1695,7 +1696,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_FIELD_DECLARATION: {
 				N4FieldDeclaration n4FieldDeclaration = (N4FieldDeclaration)theEObject;
-				T result = caseN4FieldDeclaration(n4FieldDeclaration);
+				T1 result = caseN4FieldDeclaration(n4FieldDeclaration);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(n4FieldDeclaration);
 				if (result == null) result = caseTypedElement(n4FieldDeclaration);
 				if (result == null) result = caseThisArgProvider(n4FieldDeclaration);
@@ -1711,7 +1712,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.METHOD_DECLARATION: {
 				MethodDeclaration methodDeclaration = (MethodDeclaration)theEObject;
-				T result = caseMethodDeclaration(methodDeclaration);
+				T1 result = caseMethodDeclaration(methodDeclaration);
 				if (result == null) result = caseFunctionDefinition(methodDeclaration);
 				if (result == null) result = caseGenericDeclaration(methodDeclaration);
 				if (result == null) result = caseTypedElement(methodDeclaration);
@@ -1730,7 +1731,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_METHOD_DECLARATION: {
 				N4MethodDeclaration n4MethodDeclaration = (N4MethodDeclaration)theEObject;
-				T result = caseN4MethodDeclaration(n4MethodDeclaration);
+				T1 result = caseN4MethodDeclaration(n4MethodDeclaration);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(n4MethodDeclaration);
 				if (result == null) result = caseMethodDeclaration(n4MethodDeclaration);
 				if (result == null) result = caseN4MemberDeclaration(n4MethodDeclaration);
@@ -1753,7 +1754,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_FIELD_ACCESSOR: {
 				N4FieldAccessor n4FieldAccessor = (N4FieldAccessor)theEObject;
-				T result = caseN4FieldAccessor(n4FieldAccessor);
+				T1 result = caseN4FieldAccessor(n4FieldAccessor);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(n4FieldAccessor);
 				if (result == null) result = caseFieldAccessor(n4FieldAccessor);
 				if (result == null) result = caseN4MemberDeclaration(n4FieldAccessor);
@@ -1771,7 +1772,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_GETTER_DECLARATION: {
 				N4GetterDeclaration n4GetterDeclaration = (N4GetterDeclaration)theEObject;
-				T result = caseN4GetterDeclaration(n4GetterDeclaration);
+				T1 result = caseN4GetterDeclaration(n4GetterDeclaration);
 				if (result == null) result = caseGetterDeclaration(n4GetterDeclaration);
 				if (result == null) result = caseN4FieldAccessor(n4GetterDeclaration);
 				if (result == null) result = caseFieldAccessor(n4GetterDeclaration);
@@ -1792,7 +1793,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.N4_SETTER_DECLARATION: {
 				N4SetterDeclaration n4SetterDeclaration = (N4SetterDeclaration)theEObject;
-				T result = caseN4SetterDeclaration(n4SetterDeclaration);
+				T1 result = caseN4SetterDeclaration(n4SetterDeclaration);
 				if (result == null) result = caseSetterDeclaration(n4SetterDeclaration);
 				if (result == null) result = caseN4FieldAccessor(n4SetterDeclaration);
 				if (result == null) result = caseFieldAccessor(n4SetterDeclaration);
@@ -1812,14 +1813,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BINDING_PATTERN: {
 				BindingPattern bindingPattern = (BindingPattern)theEObject;
-				T result = caseBindingPattern(bindingPattern);
+				T1 result = caseBindingPattern(bindingPattern);
 				if (result == null) result = caseControlFlowElement(bindingPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.OBJECT_BINDING_PATTERN: {
 				ObjectBindingPattern objectBindingPattern = (ObjectBindingPattern)theEObject;
-				T result = caseObjectBindingPattern(objectBindingPattern);
+				T1 result = caseObjectBindingPattern(objectBindingPattern);
 				if (result == null) result = caseBindingPattern(objectBindingPattern);
 				if (result == null) result = caseControlFlowElement(objectBindingPattern);
 				if (result == null) result = defaultCase(theEObject);
@@ -1827,7 +1828,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.ARRAY_BINDING_PATTERN: {
 				ArrayBindingPattern arrayBindingPattern = (ArrayBindingPattern)theEObject;
-				T result = caseArrayBindingPattern(arrayBindingPattern);
+				T1 result = caseArrayBindingPattern(arrayBindingPattern);
 				if (result == null) result = caseBindingPattern(arrayBindingPattern);
 				if (result == null) result = caseControlFlowElement(arrayBindingPattern);
 				if (result == null) result = defaultCase(theEObject);
@@ -1835,7 +1836,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BINDING_PROPERTY: {
 				BindingProperty bindingProperty = (BindingProperty)theEObject;
-				T result = caseBindingProperty(bindingProperty);
+				T1 result = caseBindingProperty(bindingProperty);
 				if (result == null) result = casePropertyNameOwner(bindingProperty);
 				if (result == null) result = caseNamedElement(bindingProperty);
 				if (result == null) result = defaultCase(theEObject);
@@ -1843,47 +1844,47 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.BINDING_ELEMENT: {
 				BindingElement bindingElement = (BindingElement)theEObject;
-				T result = caseBindingElement(bindingElement);
+				T1 result = caseBindingElement(bindingElement);
 				if (result == null) result = caseControlFlowElement(bindingElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.JSX_CHILD: {
 				JSXChild jsxChild = (JSXChild)theEObject;
-				T result = caseJSXChild(jsxChild);
+				T1 result = caseJSXChild(jsxChild);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.JSX_ELEMENT_NAME: {
 				JSXElementName jsxElementName = (JSXElementName)theEObject;
-				T result = caseJSXElementName(jsxElementName);
+				T1 result = caseJSXElementName(jsxElementName);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.JSX_TEXT: {
 				JSXText jsxText = (JSXText)theEObject;
-				T result = caseJSXText(jsxText);
+				T1 result = caseJSXText(jsxText);
 				if (result == null) result = caseJSXChild(jsxText);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.JSX_EXPRESSION: {
 				JSXExpression jsxExpression = (JSXExpression)theEObject;
-				T result = caseJSXExpression(jsxExpression);
+				T1 result = caseJSXExpression(jsxExpression);
 				if (result == null) result = caseJSXChild(jsxExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.JSX_ATTRIBUTE: {
 				JSXAttribute jsxAttribute = (JSXAttribute)theEObject;
-				T result = caseJSXAttribute(jsxAttribute);
+				T1 result = caseJSXAttribute(jsxAttribute);
 				if (result == null) result = caseControlFlowElement(jsxAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE: {
 				JSXPropertyAttribute jsxPropertyAttribute = (JSXPropertyAttribute)theEObject;
-				T result = caseJSXPropertyAttribute(jsxPropertyAttribute);
+				T1 result = caseJSXPropertyAttribute(jsxPropertyAttribute);
 				if (result == null) result = caseJSXAttribute(jsxPropertyAttribute);
 				if (result == null) result = caseMemberAccess(jsxPropertyAttribute);
 				if (result == null) result = caseControlFlowElement(jsxPropertyAttribute);
@@ -1892,7 +1893,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: {
 				JSXSpreadAttribute jsxSpreadAttribute = (JSXSpreadAttribute)theEObject;
-				T result = caseJSXSpreadAttribute(jsxSpreadAttribute);
+				T1 result = caseJSXSpreadAttribute(jsxSpreadAttribute);
 				if (result == null) result = caseJSXAttribute(jsxSpreadAttribute);
 				if (result == null) result = caseControlFlowElement(jsxSpreadAttribute);
 				if (result == null) result = defaultCase(theEObject);
@@ -1900,7 +1901,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.JSX_ABSTRACT_ELEMENT: {
 				JSXAbstractElement jsxAbstractElement = (JSXAbstractElement)theEObject;
-				T result = caseJSXAbstractElement(jsxAbstractElement);
+				T1 result = caseJSXAbstractElement(jsxAbstractElement);
 				if (result == null) result = caseExpression(jsxAbstractElement);
 				if (result == null) result = caseTypableElement(jsxAbstractElement);
 				if (result == null) result = caseControlFlowElement(jsxAbstractElement);
@@ -1909,7 +1910,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.JSX_ELEMENT: {
 				JSXElement jsxElement = (JSXElement)theEObject;
-				T result = caseJSXElement(jsxElement);
+				T1 result = caseJSXElement(jsxElement);
 				if (result == null) result = caseJSXChild(jsxElement);
 				if (result == null) result = caseJSXAbstractElement(jsxElement);
 				if (result == null) result = caseExpression(jsxElement);
@@ -1920,7 +1921,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.JSX_FRAGMENT: {
 				JSXFragment jsxFragment = (JSXFragment)theEObject;
-				T result = caseJSXFragment(jsxFragment);
+				T1 result = caseJSXFragment(jsxFragment);
 				if (result == null) result = caseJSXChild(jsxFragment);
 				if (result == null) result = caseJSXAbstractElement(jsxFragment);
 				if (result == null) result = caseExpression(jsxFragment);
@@ -1931,13 +1932,13 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.VERSIONED_ELEMENT: {
 				VersionedElement versionedElement = (VersionedElement)theEObject;
-				T result = caseVersionedElement(versionedElement);
+				T1 result = caseVersionedElement(versionedElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.VERSIONED_IDENTIFIER_REF: {
 				VersionedIdentifierRef versionedIdentifierRef = (VersionedIdentifierRef)theEObject;
-				T result = caseVersionedIdentifierRef(versionedIdentifierRef);
+				T1 result = caseVersionedIdentifierRef(versionedIdentifierRef);
 				if (result == null) result = caseIdentifierRef(versionedIdentifierRef);
 				if (result == null) result = caseVersionedReference(versionedIdentifierRef);
 				if (result == null) result = casePrimaryExpression(versionedIdentifierRef);
@@ -1951,7 +1952,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			}
 			case N4JSPackage.MIGRATION_CONTEXT_VARIABLE: {
 				MigrationContextVariable migrationContextVariable = (MigrationContextVariable)theEObject;
-				T result = caseMigrationContextVariable(migrationContextVariable);
+				T1 result = caseMigrationContextVariable(migrationContextVariable);
 				if (result == null) result = caseVariable(migrationContextVariable);
 				if (result == null) result = caseTypedElement(migrationContextVariable);
 				if (result == null) result = caseIdentifiableElement(migrationContextVariable);
@@ -1976,7 +1977,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNamedElement(NamedElement object) {
+	public T1 caseNamedElement(NamedElement object) {
 		return null;
 	}
 
@@ -1991,7 +1992,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseControlFlowElement(ControlFlowElement object) {
+	public T1 caseControlFlowElement(ControlFlowElement object) {
 		return null;
 	}
 
@@ -2006,7 +2007,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScript(Script object) {
+	public T1 caseScript(Script object) {
 		return null;
 	}
 
@@ -2021,7 +2022,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScriptElement(ScriptElement object) {
+	public T1 caseScriptElement(ScriptElement object) {
 		return null;
 	}
 
@@ -2036,7 +2037,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExportDeclaration(ExportDeclaration object) {
+	public T1 caseExportDeclaration(ExportDeclaration object) {
 		return null;
 	}
 
@@ -2051,7 +2052,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExportSpecifier(ExportSpecifier object) {
+	public T1 caseExportSpecifier(ExportSpecifier object) {
 		return null;
 	}
 
@@ -2066,7 +2067,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExportableElement(ExportableElement object) {
+	public T1 caseExportableElement(ExportableElement object) {
 		return null;
 	}
 
@@ -2081,7 +2082,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseImportDeclaration(ImportDeclaration object) {
+	public T1 caseImportDeclaration(ImportDeclaration object) {
 		return null;
 	}
 
@@ -2096,7 +2097,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseImportSpecifier(ImportSpecifier object) {
+	public T1 caseImportSpecifier(ImportSpecifier object) {
 		return null;
 	}
 
@@ -2111,7 +2112,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNamedImportSpecifier(NamedImportSpecifier object) {
+	public T1 caseNamedImportSpecifier(NamedImportSpecifier object) {
 		return null;
 	}
 
@@ -2126,7 +2127,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDefaultImportSpecifier(DefaultImportSpecifier object) {
+	public T1 caseDefaultImportSpecifier(DefaultImportSpecifier object) {
 		return null;
 	}
 
@@ -2141,7 +2142,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNamespaceImportSpecifier(NamespaceImportSpecifier object) {
+	public T1 caseNamespaceImportSpecifier(NamespaceImportSpecifier object) {
 		return null;
 	}
 
@@ -2156,7 +2157,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeReferenceInAST(TypeReferenceInAST object) {
+	public <T extends TypeRef> T1 caseTypeReferenceInAST(TypeReferenceInAST<T> object) {
 		return null;
 	}
 
@@ -2171,7 +2172,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeProvidingElement(TypeProvidingElement object) {
+	public T1 caseTypeProvidingElement(TypeProvidingElement object) {
 		return null;
 	}
 
@@ -2186,7 +2187,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypedElement(TypedElement object) {
+	public T1 caseTypedElement(TypedElement object) {
 		return null;
 	}
 
@@ -2201,7 +2202,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariableEnvironmentElement(VariableEnvironmentElement object) {
+	public T1 caseVariableEnvironmentElement(VariableEnvironmentElement object) {
 		return null;
 	}
 
@@ -2216,7 +2217,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseThisTarget(ThisTarget object) {
+	public T1 caseThisTarget(ThisTarget object) {
 		return null;
 	}
 
@@ -2231,7 +2232,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseThisArgProvider(ThisArgProvider object) {
+	public T1 caseThisArgProvider(ThisArgProvider object) {
 		return null;
 	}
 
@@ -2246,7 +2247,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariable(Variable object) {
+	public T1 caseVariable(Variable object) {
 		return null;
 	}
 
@@ -2261,7 +2262,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotableElement(AnnotableElement object) {
+	public T1 caseAnnotableElement(AnnotableElement object) {
 		return null;
 	}
 
@@ -2276,7 +2277,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotableScriptElement(AnnotableScriptElement object) {
+	public T1 caseAnnotableScriptElement(AnnotableScriptElement object) {
 		return null;
 	}
 
@@ -2291,7 +2292,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotableExpression(AnnotableExpression object) {
+	public T1 caseAnnotableExpression(AnnotableExpression object) {
 		return null;
 	}
 
@@ -2306,7 +2307,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAbstractAnnotationList(AbstractAnnotationList object) {
+	public T1 caseAbstractAnnotationList(AbstractAnnotationList object) {
 		return null;
 	}
 
@@ -2321,7 +2322,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotationList(AnnotationList object) {
+	public T1 caseAnnotationList(AnnotationList object) {
 		return null;
 	}
 
@@ -2336,7 +2337,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExpressionAnnotationList(ExpressionAnnotationList object) {
+	public T1 caseExpressionAnnotationList(ExpressionAnnotationList object) {
 		return null;
 	}
 
@@ -2351,7 +2352,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotation(Annotation object) {
+	public T1 caseAnnotation(Annotation object) {
 		return null;
 	}
 
@@ -2366,7 +2367,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotationArgument(AnnotationArgument object) {
+	public T1 caseAnnotationArgument(AnnotationArgument object) {
 		return null;
 	}
 
@@ -2381,7 +2382,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLiteralAnnotationArgument(LiteralAnnotationArgument object) {
+	public T1 caseLiteralAnnotationArgument(LiteralAnnotationArgument object) {
 		return null;
 	}
 
@@ -2396,7 +2397,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeRefAnnotationArgument(TypeRefAnnotationArgument object) {
+	public T1 caseTypeRefAnnotationArgument(TypeRefAnnotationArgument object) {
 		return null;
 	}
 
@@ -2411,7 +2412,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionOrFieldAccessor(FunctionOrFieldAccessor object) {
+	public T1 caseFunctionOrFieldAccessor(FunctionOrFieldAccessor object) {
 		return null;
 	}
 
@@ -2426,7 +2427,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionDefinition(FunctionDefinition object) {
+	public T1 caseFunctionDefinition(FunctionDefinition object) {
 		return null;
 	}
 
@@ -2441,7 +2442,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFieldAccessor(FieldAccessor object) {
+	public T1 caseFieldAccessor(FieldAccessor object) {
 		return null;
 	}
 
@@ -2456,7 +2457,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionDeclaration(FunctionDeclaration object) {
+	public T1 caseFunctionDeclaration(FunctionDeclaration object) {
 		return null;
 	}
 
@@ -2471,7 +2472,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionExpression(FunctionExpression object) {
+	public T1 caseFunctionExpression(FunctionExpression object) {
 		return null;
 	}
 
@@ -2486,7 +2487,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseArrowFunction(ArrowFunction object) {
+	public T1 caseArrowFunction(ArrowFunction object) {
 		return null;
 	}
 
@@ -2501,7 +2502,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLocalArgumentsVariable(LocalArgumentsVariable object) {
+	public T1 caseLocalArgumentsVariable(LocalArgumentsVariable object) {
 		return null;
 	}
 
@@ -2516,7 +2517,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFormalParameter(FormalParameter object) {
+	public T1 caseFormalParameter(FormalParameter object) {
 		return null;
 	}
 
@@ -2531,7 +2532,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBlock(Block object) {
+	public T1 caseBlock(Block object) {
 		return null;
 	}
 
@@ -2546,7 +2547,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStatement(Statement object) {
+	public T1 caseStatement(Statement object) {
 		return null;
 	}
 
@@ -2561,7 +2562,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariableDeclarationContainer(VariableDeclarationContainer object) {
+	public T1 caseVariableDeclarationContainer(VariableDeclarationContainer object) {
 		return null;
 	}
 
@@ -2576,7 +2577,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariableStatement(VariableStatement object) {
+	public T1 caseVariableStatement(VariableStatement object) {
 		return null;
 	}
 
@@ -2591,7 +2592,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExportedVariableStatement(ExportedVariableStatement object) {
+	public T1 caseExportedVariableStatement(ExportedVariableStatement object) {
 		return null;
 	}
 
@@ -2606,7 +2607,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariableDeclarationOrBinding(VariableDeclarationOrBinding object) {
+	public T1 caseVariableDeclarationOrBinding(VariableDeclarationOrBinding object) {
 		return null;
 	}
 
@@ -2621,7 +2622,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariableBinding(VariableBinding object) {
+	public T1 caseVariableBinding(VariableBinding object) {
 		return null;
 	}
 
@@ -2636,7 +2637,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExportedVariableBinding(ExportedVariableBinding object) {
+	public T1 caseExportedVariableBinding(ExportedVariableBinding object) {
 		return null;
 	}
 
@@ -2651,7 +2652,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariableDeclaration(VariableDeclaration object) {
+	public T1 caseVariableDeclaration(VariableDeclaration object) {
 		return null;
 	}
 
@@ -2666,7 +2667,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExportedVariableDeclaration(ExportedVariableDeclaration object) {
+	public T1 caseExportedVariableDeclaration(ExportedVariableDeclaration object) {
 		return null;
 	}
 
@@ -2681,7 +2682,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseEmptyStatement(EmptyStatement object) {
+	public T1 caseEmptyStatement(EmptyStatement object) {
 		return null;
 	}
 
@@ -2696,7 +2697,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExpressionStatement(ExpressionStatement object) {
+	public T1 caseExpressionStatement(ExpressionStatement object) {
 		return null;
 	}
 
@@ -2711,7 +2712,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIfStatement(IfStatement object) {
+	public T1 caseIfStatement(IfStatement object) {
 		return null;
 	}
 
@@ -2726,7 +2727,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIterationStatement(IterationStatement object) {
+	public T1 caseIterationStatement(IterationStatement object) {
 		return null;
 	}
 
@@ -2741,7 +2742,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDoStatement(DoStatement object) {
+	public T1 caseDoStatement(DoStatement object) {
 		return null;
 	}
 
@@ -2756,7 +2757,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseWhileStatement(WhileStatement object) {
+	public T1 caseWhileStatement(WhileStatement object) {
 		return null;
 	}
 
@@ -2771,7 +2772,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseForStatement(ForStatement object) {
+	public T1 caseForStatement(ForStatement object) {
 		return null;
 	}
 
@@ -2786,7 +2787,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLabelRef(LabelRef object) {
+	public T1 caseLabelRef(LabelRef object) {
 		return null;
 	}
 
@@ -2801,7 +2802,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseContinueStatement(ContinueStatement object) {
+	public T1 caseContinueStatement(ContinueStatement object) {
 		return null;
 	}
 
@@ -2816,7 +2817,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBreakStatement(BreakStatement object) {
+	public T1 caseBreakStatement(BreakStatement object) {
 		return null;
 	}
 
@@ -2831,7 +2832,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseReturnStatement(ReturnStatement object) {
+	public T1 caseReturnStatement(ReturnStatement object) {
 		return null;
 	}
 
@@ -2846,7 +2847,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseWithStatement(WithStatement object) {
+	public T1 caseWithStatement(WithStatement object) {
 		return null;
 	}
 
@@ -2861,7 +2862,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSwitchStatement(SwitchStatement object) {
+	public T1 caseSwitchStatement(SwitchStatement object) {
 		return null;
 	}
 
@@ -2876,7 +2877,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAbstractCaseClause(AbstractCaseClause object) {
+	public T1 caseAbstractCaseClause(AbstractCaseClause object) {
 		return null;
 	}
 
@@ -2891,7 +2892,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCaseClause(CaseClause object) {
+	public T1 caseCaseClause(CaseClause object) {
 		return null;
 	}
 
@@ -2906,7 +2907,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDefaultClause(DefaultClause object) {
+	public T1 caseDefaultClause(DefaultClause object) {
 		return null;
 	}
 
@@ -2921,7 +2922,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLabelledStatement(LabelledStatement object) {
+	public T1 caseLabelledStatement(LabelledStatement object) {
 		return null;
 	}
 
@@ -2936,7 +2937,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseThrowStatement(ThrowStatement object) {
+	public T1 caseThrowStatement(ThrowStatement object) {
 		return null;
 	}
 
@@ -2951,7 +2952,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTryStatement(TryStatement object) {
+	public T1 caseTryStatement(TryStatement object) {
 		return null;
 	}
 
@@ -2966,7 +2967,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAbstractCatchBlock(AbstractCatchBlock object) {
+	public T1 caseAbstractCatchBlock(AbstractCatchBlock object) {
 		return null;
 	}
 
@@ -2981,7 +2982,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCatchBlock(CatchBlock object) {
+	public T1 caseCatchBlock(CatchBlock object) {
 		return null;
 	}
 
@@ -2996,7 +2997,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCatchVariable(CatchVariable object) {
+	public T1 caseCatchVariable(CatchVariable object) {
 		return null;
 	}
 
@@ -3011,7 +3012,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFinallyBlock(FinallyBlock object) {
+	public T1 caseFinallyBlock(FinallyBlock object) {
 		return null;
 	}
 
@@ -3026,7 +3027,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDebuggerStatement(DebuggerStatement object) {
+	public T1 caseDebuggerStatement(DebuggerStatement object) {
 		return null;
 	}
 
@@ -3041,7 +3042,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePrimaryExpression(PrimaryExpression object) {
+	public T1 casePrimaryExpression(PrimaryExpression object) {
 		return null;
 	}
 
@@ -3056,7 +3057,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParenExpression(ParenExpression object) {
+	public T1 caseParenExpression(ParenExpression object) {
 		return null;
 	}
 
@@ -3071,7 +3072,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIdentifierRef(IdentifierRef object) {
+	public T1 caseIdentifierRef(IdentifierRef object) {
 		return null;
 	}
 
@@ -3086,7 +3087,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStrictModeRelevant(StrictModeRelevant object) {
+	public T1 caseStrictModeRelevant(StrictModeRelevant object) {
 		return null;
 	}
 
@@ -3101,7 +3102,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSuperLiteral(SuperLiteral object) {
+	public T1 caseSuperLiteral(SuperLiteral object) {
 		return null;
 	}
 
@@ -3116,7 +3117,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseThisLiteral(ThisLiteral object) {
+	public T1 caseThisLiteral(ThisLiteral object) {
 		return null;
 	}
 
@@ -3131,7 +3132,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseArrayLiteral(ArrayLiteral object) {
+	public T1 caseArrayLiteral(ArrayLiteral object) {
 		return null;
 	}
 
@@ -3146,7 +3147,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseArrayElement(ArrayElement object) {
+	public T1 caseArrayElement(ArrayElement object) {
 		return null;
 	}
 
@@ -3161,7 +3162,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseArrayPadding(ArrayPadding object) {
+	public T1 caseArrayPadding(ArrayPadding object) {
 		return null;
 	}
 
@@ -3176,7 +3177,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseObjectLiteral(ObjectLiteral object) {
+	public T1 caseObjectLiteral(ObjectLiteral object) {
 		return null;
 	}
 
@@ -3191,7 +3192,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyAssignment(PropertyAssignment object) {
+	public T1 casePropertyAssignment(PropertyAssignment object) {
 		return null;
 	}
 
@@ -3206,7 +3207,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyNameOwner(PropertyNameOwner object) {
+	public T1 casePropertyNameOwner(PropertyNameOwner object) {
 		return null;
 	}
 
@@ -3221,7 +3222,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName object) {
+	public T1 caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName object) {
 		return null;
 	}
 
@@ -3236,7 +3237,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotablePropertyAssignment(AnnotablePropertyAssignment object) {
+	public T1 caseAnnotablePropertyAssignment(AnnotablePropertyAssignment object) {
 		return null;
 	}
 
@@ -3251,7 +3252,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyAssignmentAnnotationList(PropertyAssignmentAnnotationList object) {
+	public T1 casePropertyAssignmentAnnotationList(PropertyAssignmentAnnotationList object) {
 		return null;
 	}
 
@@ -3266,7 +3267,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyNameValuePair(PropertyNameValuePair object) {
+	public T1 casePropertyNameValuePair(PropertyNameValuePair object) {
 		return null;
 	}
 
@@ -3281,7 +3282,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyNameValuePairSingleName(PropertyNameValuePairSingleName object) {
+	public T1 casePropertyNameValuePairSingleName(PropertyNameValuePairSingleName object) {
 		return null;
 	}
 
@@ -3296,7 +3297,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyMethodDeclaration(PropertyMethodDeclaration object) {
+	public T1 casePropertyMethodDeclaration(PropertyMethodDeclaration object) {
 		return null;
 	}
 
@@ -3311,7 +3312,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseGetterDeclaration(GetterDeclaration object) {
+	public T1 caseGetterDeclaration(GetterDeclaration object) {
 		return null;
 	}
 
@@ -3326,7 +3327,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSetterDeclaration(SetterDeclaration object) {
+	public T1 caseSetterDeclaration(SetterDeclaration object) {
 		return null;
 	}
 
@@ -3341,7 +3342,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyGetterDeclaration(PropertyGetterDeclaration object) {
+	public T1 casePropertyGetterDeclaration(PropertyGetterDeclaration object) {
 		return null;
 	}
 
@@ -3356,7 +3357,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertySetterDeclaration(PropertySetterDeclaration object) {
+	public T1 casePropertySetterDeclaration(PropertySetterDeclaration object) {
 		return null;
 	}
 
@@ -3371,7 +3372,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertySpread(PropertySpread object) {
+	public T1 casePropertySpread(PropertySpread object) {
 		return null;
 	}
 
@@ -3386,7 +3387,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExpression(Expression object) {
+	public T1 caseExpression(Expression object) {
 		return null;
 	}
 
@@ -3401,7 +3402,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNewTarget(NewTarget object) {
+	public T1 caseNewTarget(NewTarget object) {
 		return null;
 	}
 
@@ -3416,7 +3417,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNewExpression(NewExpression object) {
+	public T1 caseNewExpression(NewExpression object) {
 		return null;
 	}
 
@@ -3431,7 +3432,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedAccess(ParameterizedAccess object) {
+	public T1 caseParameterizedAccess(ParameterizedAccess object) {
 		return null;
 	}
 
@@ -3446,7 +3447,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExpressionWithTarget(ExpressionWithTarget object) {
+	public T1 caseExpressionWithTarget(ExpressionWithTarget object) {
 		return null;
 	}
 
@@ -3461,7 +3462,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedCallExpression(ParameterizedCallExpression object) {
+	public T1 caseParameterizedCallExpression(ParameterizedCallExpression object) {
 		return null;
 	}
 
@@ -3476,7 +3477,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseImportCallExpression(ImportCallExpression object) {
+	public T1 caseImportCallExpression(ImportCallExpression object) {
 		return null;
 	}
 
@@ -3491,7 +3492,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseArgument(Argument object) {
+	public T1 caseArgument(Argument object) {
 		return null;
 	}
 
@@ -3506,7 +3507,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIndexedAccessExpression(IndexedAccessExpression object) {
+	public T1 caseIndexedAccessExpression(IndexedAccessExpression object) {
 		return null;
 	}
 
@@ -3521,7 +3522,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTaggedTemplateString(TaggedTemplateString object) {
+	public T1 caseTaggedTemplateString(TaggedTemplateString object) {
 		return null;
 	}
 
@@ -3536,7 +3537,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMemberAccess(MemberAccess object) {
+	public T1 caseMemberAccess(MemberAccess object) {
 		return null;
 	}
 
@@ -3551,7 +3552,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression object) {
+	public T1 caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression object) {
 		return null;
 	}
 
@@ -3566,7 +3567,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAwaitExpression(AwaitExpression object) {
+	public T1 caseAwaitExpression(AwaitExpression object) {
 		return null;
 	}
 
@@ -3581,7 +3582,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePromisifyExpression(PromisifyExpression object) {
+	public T1 casePromisifyExpression(PromisifyExpression object) {
 		return null;
 	}
 
@@ -3596,7 +3597,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseYieldExpression(YieldExpression object) {
+	public T1 caseYieldExpression(YieldExpression object) {
 		return null;
 	}
 
@@ -3611,7 +3612,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLiteral(Literal object) {
+	public T1 caseLiteral(Literal object) {
 		return null;
 	}
 
@@ -3626,7 +3627,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNullLiteral(NullLiteral object) {
+	public T1 caseNullLiteral(NullLiteral object) {
 		return null;
 	}
 
@@ -3641,7 +3642,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBooleanLiteral(BooleanLiteral object) {
+	public T1 caseBooleanLiteral(BooleanLiteral object) {
 		return null;
 	}
 
@@ -3656,7 +3657,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStringLiteral(StringLiteral object) {
+	public T1 caseStringLiteral(StringLiteral object) {
 		return null;
 	}
 
@@ -3671,7 +3672,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTemplateLiteral(TemplateLiteral object) {
+	public T1 caseTemplateLiteral(TemplateLiteral object) {
 		return null;
 	}
 
@@ -3686,7 +3687,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTemplateSegment(TemplateSegment object) {
+	public T1 caseTemplateSegment(TemplateSegment object) {
 		return null;
 	}
 
@@ -3701,7 +3702,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNumericLiteral(NumericLiteral object) {
+	public T1 caseNumericLiteral(NumericLiteral object) {
 		return null;
 	}
 
@@ -3716,7 +3717,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDoubleLiteral(DoubleLiteral object) {
+	public T1 caseDoubleLiteral(DoubleLiteral object) {
 		return null;
 	}
 
@@ -3731,7 +3732,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAbstractIntLiteral(AbstractIntLiteral object) {
+	public T1 caseAbstractIntLiteral(AbstractIntLiteral object) {
 		return null;
 	}
 
@@ -3746,7 +3747,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIntLiteral(IntLiteral object) {
+	public T1 caseIntLiteral(IntLiteral object) {
 		return null;
 	}
 
@@ -3761,7 +3762,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBinaryIntLiteral(BinaryIntLiteral object) {
+	public T1 caseBinaryIntLiteral(BinaryIntLiteral object) {
 		return null;
 	}
 
@@ -3776,7 +3777,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseOctalIntLiteral(OctalIntLiteral object) {
+	public T1 caseOctalIntLiteral(OctalIntLiteral object) {
 		return null;
 	}
 
@@ -3791,7 +3792,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLegacyOctalIntLiteral(LegacyOctalIntLiteral object) {
+	public T1 caseLegacyOctalIntLiteral(LegacyOctalIntLiteral object) {
 		return null;
 	}
 
@@ -3806,7 +3807,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseHexIntLiteral(HexIntLiteral object) {
+	public T1 caseHexIntLiteral(HexIntLiteral object) {
 		return null;
 	}
 
@@ -3821,7 +3822,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScientificIntLiteral(ScientificIntLiteral object) {
+	public T1 caseScientificIntLiteral(ScientificIntLiteral object) {
 		return null;
 	}
 
@@ -3836,7 +3837,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseRegularExpressionLiteral(RegularExpressionLiteral object) {
+	public T1 caseRegularExpressionLiteral(RegularExpressionLiteral object) {
 		return null;
 	}
 
@@ -3851,7 +3852,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePostfixExpression(PostfixExpression object) {
+	public T1 casePostfixExpression(PostfixExpression object) {
 		return null;
 	}
 
@@ -3866,7 +3867,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseUnaryExpression(UnaryExpression object) {
+	public T1 caseUnaryExpression(UnaryExpression object) {
 		return null;
 	}
 
@@ -3881,7 +3882,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCastExpression(CastExpression object) {
+	public T1 caseCastExpression(CastExpression object) {
 		return null;
 	}
 
@@ -3896,7 +3897,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMultiplicativeExpression(MultiplicativeExpression object) {
+	public T1 caseMultiplicativeExpression(MultiplicativeExpression object) {
 		return null;
 	}
 
@@ -3911,7 +3912,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAdditiveExpression(AdditiveExpression object) {
+	public T1 caseAdditiveExpression(AdditiveExpression object) {
 		return null;
 	}
 
@@ -3926,7 +3927,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseShiftExpression(ShiftExpression object) {
+	public T1 caseShiftExpression(ShiftExpression object) {
 		return null;
 	}
 
@@ -3941,7 +3942,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseRelationalExpression(RelationalExpression object) {
+	public T1 caseRelationalExpression(RelationalExpression object) {
 		return null;
 	}
 
@@ -3956,7 +3957,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseEqualityExpression(EqualityExpression object) {
+	public T1 caseEqualityExpression(EqualityExpression object) {
 		return null;
 	}
 
@@ -3971,7 +3972,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBinaryBitwiseExpression(BinaryBitwiseExpression object) {
+	public T1 caseBinaryBitwiseExpression(BinaryBitwiseExpression object) {
 		return null;
 	}
 
@@ -3986,7 +3987,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBinaryLogicalExpression(BinaryLogicalExpression object) {
+	public T1 caseBinaryLogicalExpression(BinaryLogicalExpression object) {
 		return null;
 	}
 
@@ -4001,7 +4002,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCoalesceExpression(CoalesceExpression object) {
+	public T1 caseCoalesceExpression(CoalesceExpression object) {
 		return null;
 	}
 
@@ -4016,7 +4017,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseConditionalExpression(ConditionalExpression object) {
+	public T1 caseConditionalExpression(ConditionalExpression object) {
 		return null;
 	}
 
@@ -4031,7 +4032,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAssignmentExpression(AssignmentExpression object) {
+	public T1 caseAssignmentExpression(AssignmentExpression object) {
 		return null;
 	}
 
@@ -4046,7 +4047,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCommaExpression(CommaExpression object) {
+	public T1 caseCommaExpression(CommaExpression object) {
 		return null;
 	}
 
@@ -4061,7 +4062,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeDefiningElement(TypeDefiningElement object) {
+	public T1 caseTypeDefiningElement(TypeDefiningElement object) {
 		return null;
 	}
 
@@ -4076,7 +4077,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseGenericDeclaration(GenericDeclaration object) {
+	public T1 caseGenericDeclaration(GenericDeclaration object) {
 		return null;
 	}
 
@@ -4091,7 +4092,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4TypeDefinition(N4TypeDefinition object) {
+	public T1 caseN4TypeDefinition(N4TypeDefinition object) {
 		return null;
 	}
 
@@ -4106,7 +4107,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4TypeDeclaration(N4TypeDeclaration object) {
+	public T1 caseN4TypeDeclaration(N4TypeDeclaration object) {
 		return null;
 	}
 
@@ -4121,7 +4122,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4ClassifierDeclaration(N4ClassifierDeclaration object) {
+	public T1 caseN4ClassifierDeclaration(N4ClassifierDeclaration object) {
 		return null;
 	}
 
@@ -4136,7 +4137,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4ClassifierDefinition(N4ClassifierDefinition object) {
+	public T1 caseN4ClassifierDefinition(N4ClassifierDefinition object) {
 		return null;
 	}
 
@@ -4151,7 +4152,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4ClassDefinition(N4ClassDefinition object) {
+	public T1 caseN4ClassDefinition(N4ClassDefinition object) {
 		return null;
 	}
 
@@ -4166,7 +4167,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4ClassDeclaration(N4ClassDeclaration object) {
+	public T1 caseN4ClassDeclaration(N4ClassDeclaration object) {
 		return null;
 	}
 
@@ -4181,7 +4182,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4ClassExpression(N4ClassExpression object) {
+	public T1 caseN4ClassExpression(N4ClassExpression object) {
 		return null;
 	}
 
@@ -4196,7 +4197,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4InterfaceDeclaration(N4InterfaceDeclaration object) {
+	public T1 caseN4InterfaceDeclaration(N4InterfaceDeclaration object) {
 		return null;
 	}
 
@@ -4211,7 +4212,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4EnumDeclaration(N4EnumDeclaration object) {
+	public T1 caseN4EnumDeclaration(N4EnumDeclaration object) {
 		return null;
 	}
 
@@ -4226,7 +4227,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4EnumLiteral(N4EnumLiteral object) {
+	public T1 caseN4EnumLiteral(N4EnumLiteral object) {
 		return null;
 	}
 
@@ -4241,7 +4242,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4TypeAliasDeclaration(N4TypeAliasDeclaration object) {
+	public T1 caseN4TypeAliasDeclaration(N4TypeAliasDeclaration object) {
 		return null;
 	}
 
@@ -4256,7 +4257,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseModifiableElement(ModifiableElement object) {
+	public T1 caseModifiableElement(ModifiableElement object) {
 		return null;
 	}
 
@@ -4271,7 +4272,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4MemberDeclaration(N4MemberDeclaration object) {
+	public T1 caseN4MemberDeclaration(N4MemberDeclaration object) {
 		return null;
 	}
 
@@ -4286,7 +4287,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotableN4MemberDeclaration(AnnotableN4MemberDeclaration object) {
+	public T1 caseAnnotableN4MemberDeclaration(AnnotableN4MemberDeclaration object) {
 		return null;
 	}
 
@@ -4301,7 +4302,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4MemberAnnotationList(N4MemberAnnotationList object) {
+	public T1 caseN4MemberAnnotationList(N4MemberAnnotationList object) {
 		return null;
 	}
 
@@ -4316,7 +4317,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4FieldDeclaration(N4FieldDeclaration object) {
+	public T1 caseN4FieldDeclaration(N4FieldDeclaration object) {
 		return null;
 	}
 
@@ -4331,7 +4332,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMethodDeclaration(MethodDeclaration object) {
+	public T1 caseMethodDeclaration(MethodDeclaration object) {
 		return null;
 	}
 
@@ -4346,7 +4347,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4MethodDeclaration(N4MethodDeclaration object) {
+	public T1 caseN4MethodDeclaration(N4MethodDeclaration object) {
 		return null;
 	}
 
@@ -4361,7 +4362,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4FieldAccessor(N4FieldAccessor object) {
+	public T1 caseN4FieldAccessor(N4FieldAccessor object) {
 		return null;
 	}
 
@@ -4376,7 +4377,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4GetterDeclaration(N4GetterDeclaration object) {
+	public T1 caseN4GetterDeclaration(N4GetterDeclaration object) {
 		return null;
 	}
 
@@ -4391,7 +4392,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4SetterDeclaration(N4SetterDeclaration object) {
+	public T1 caseN4SetterDeclaration(N4SetterDeclaration object) {
 		return null;
 	}
 
@@ -4406,7 +4407,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBindingPattern(BindingPattern object) {
+	public T1 caseBindingPattern(BindingPattern object) {
 		return null;
 	}
 
@@ -4421,7 +4422,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseObjectBindingPattern(ObjectBindingPattern object) {
+	public T1 caseObjectBindingPattern(ObjectBindingPattern object) {
 		return null;
 	}
 
@@ -4436,7 +4437,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseArrayBindingPattern(ArrayBindingPattern object) {
+	public T1 caseArrayBindingPattern(ArrayBindingPattern object) {
 		return null;
 	}
 
@@ -4451,7 +4452,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBindingProperty(BindingProperty object) {
+	public T1 caseBindingProperty(BindingProperty object) {
 		return null;
 	}
 
@@ -4466,7 +4467,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBindingElement(BindingElement object) {
+	public T1 caseBindingElement(BindingElement object) {
 		return null;
 	}
 
@@ -4481,7 +4482,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXChild(JSXChild object) {
+	public T1 caseJSXChild(JSXChild object) {
 		return null;
 	}
 
@@ -4496,7 +4497,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXElementName(JSXElementName object) {
+	public T1 caseJSXElementName(JSXElementName object) {
 		return null;
 	}
 
@@ -4511,7 +4512,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXText(JSXText object) {
+	public T1 caseJSXText(JSXText object) {
 		return null;
 	}
 
@@ -4526,7 +4527,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXExpression(JSXExpression object) {
+	public T1 caseJSXExpression(JSXExpression object) {
 		return null;
 	}
 
@@ -4541,7 +4542,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXAttribute(JSXAttribute object) {
+	public T1 caseJSXAttribute(JSXAttribute object) {
 		return null;
 	}
 
@@ -4556,7 +4557,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXPropertyAttribute(JSXPropertyAttribute object) {
+	public T1 caseJSXPropertyAttribute(JSXPropertyAttribute object) {
 		return null;
 	}
 
@@ -4571,7 +4572,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXSpreadAttribute(JSXSpreadAttribute object) {
+	public T1 caseJSXSpreadAttribute(JSXSpreadAttribute object) {
 		return null;
 	}
 
@@ -4586,7 +4587,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXAbstractElement(JSXAbstractElement object) {
+	public T1 caseJSXAbstractElement(JSXAbstractElement object) {
 		return null;
 	}
 
@@ -4601,7 +4602,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXElement(JSXElement object) {
+	public T1 caseJSXElement(JSXElement object) {
 		return null;
 	}
 
@@ -4616,7 +4617,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJSXFragment(JSXFragment object) {
+	public T1 caseJSXFragment(JSXFragment object) {
 		return null;
 	}
 
@@ -4631,7 +4632,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedElement(VersionedElement object) {
+	public T1 caseVersionedElement(VersionedElement object) {
 		return null;
 	}
 
@@ -4646,7 +4647,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+	public T1 caseVersionedIdentifierRef(VersionedIdentifierRef object) {
 		return null;
 	}
 
@@ -4661,7 +4662,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMigrationContextVariable(MigrationContextVariable object) {
+	public T1 caseMigrationContextVariable(MigrationContextVariable object) {
 		return null;
 	}
 
@@ -4676,7 +4677,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypableElement(TypableElement object) {
+	public T1 caseTypableElement(TypableElement object) {
 		return null;
 	}
 
@@ -4691,7 +4692,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIdentifiableElement(IdentifiableElement object) {
+	public T1 caseIdentifiableElement(IdentifiableElement object) {
 		return null;
 	}
 
@@ -4706,7 +4707,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionable(Versionable object) {
+	public T1 caseVersionable(Versionable object) {
 		return null;
 	}
 
@@ -4721,7 +4722,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedReference(VersionedReference object) {
+	public T1 caseVersionedReference(VersionedReference object) {
 		return null;
 	}
 
@@ -4737,7 +4738,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object) {
+	public T1 defaultCase(EObject object) {
 		return null;
 	}
 

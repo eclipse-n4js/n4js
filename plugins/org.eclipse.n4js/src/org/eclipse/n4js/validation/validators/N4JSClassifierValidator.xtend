@@ -12,6 +12,10 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.Multimaps
 import com.google.inject.Inject
+import java.util.Collection
+import java.util.HashMap
+import java.util.List
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
@@ -31,10 +35,6 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import java.util.Collection
-import java.util.HashMap
-import java.util.List
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -74,7 +74,7 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 		val superTypeRefs = switch(n4ClassifierDef) {
 			N4ClassDefinition: #[ n4ClassifierDef.superClassRef ] + n4ClassifierDef.implementedInterfaceRefs
 			N4InterfaceDeclaration: n4ClassifierDef.superInterfaceRefs
-		}.filterNull;
+		}.filterNull.map[typeRef].filterNull;
 		for(typeRef : superTypeRefs) {
 			for(typeArg : typeRef.typeArgs) {
 				if(typeArg instanceof Wildcard) {

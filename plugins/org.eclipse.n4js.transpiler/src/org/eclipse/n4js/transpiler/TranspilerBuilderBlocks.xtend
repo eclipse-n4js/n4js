@@ -79,6 +79,7 @@ import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.ThrowStatement
+import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -817,6 +818,13 @@ public class TranspilerBuilderBlocks
 		result.kind = PropertyNameKind.COMPUTED;
 		result.expression = nameExpr;
 		result.computedName = computedName;
+		return result;
+	}
+
+	public static def <T extends TypeRef> TypeReferenceInAST<T> _TypeReferenceInAST(T typeRef) {
+		val result = N4JSFactory.eINSTANCE.createTypeReferenceInAST();
+		result.typeRefInAST = TypeUtils.copyIfContained(typeRef);
+		result.typeRef = result.typeRefInAST;
 		return result;
 	}
 

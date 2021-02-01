@@ -18505,6 +18505,42 @@ ruleTypeReferenceInAST returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleParameterizedTypeRefNominalInAST
+entryRuleParameterizedTypeRefNominalInAST returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getParameterizedTypeRefNominalInASTRule()); }
+	iv_ruleParameterizedTypeRefNominalInAST=ruleParameterizedTypeRefNominalInAST
+	{ $current=$iv_ruleParameterizedTypeRefNominalInAST.current; }
+	EOF;
+
+// Rule ParameterizedTypeRefNominalInAST
+ruleParameterizedTypeRefNominalInAST returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getParameterizedTypeRefNominalInASTAccess().getTypeRefInASTParameterizedTypeRefNominalParserRuleCall_0());
+			}
+			lv_typeRefInAST_0_0=ruleParameterizedTypeRefNominal
+			{
+				if ($current==null) {
+					$current = createModelElementForParent(grammarAccess.getParameterizedTypeRefNominalInASTRule());
+				}
+				set(
+					$current,
+					"typeRefInAST",
+					lv_typeRefInAST_0_0,
+					"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+				afterParserOrEnumRuleCall();
+			}
+		)
+	)
+;
+
 // Entry rule entryRuleImportCallExpression
 entryRuleImportCallExpression returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getImportCallExpressionRule()); }
@@ -29056,14 +29092,14 @@ ruleClassExtendsClause[EObject in_current]  returns [EObject current=in_current]
 		(
 			(
 				((
-					ruleParameterizedTypeRefNominal
+					ruleParameterizedTypeRefNominalInAST
 				)
 				)=>
 				(
 					{
-						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0());
 					}
-					lv_superClassRef_1_0=ruleParameterizedTypeRefNominal
+					lv_superClassRef_1_0=ruleParameterizedTypeRefNominalInAST
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
@@ -29072,7 +29108,7 @@ ruleClassExtendsClause[EObject in_current]  returns [EObject current=in_current]
 							$current,
 							"superClassRef",
 							lv_superClassRef_1_0,
-							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+							"org.eclipse.n4js.N4JS.ParameterizedTypeRefNominalInAST");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -29118,14 +29154,14 @@ norm1_ClassExtendsClause[EObject in_current]  returns [EObject current=in_curren
 		(
 			(
 				((
-					ruleParameterizedTypeRefNominal
+					ruleParameterizedTypeRefNominalInAST
 				)
 				)=>
 				(
 					{
-						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0());
 					}
-					lv_superClassRef_1_0=ruleParameterizedTypeRefNominal
+					lv_superClassRef_1_0=ruleParameterizedTypeRefNominalInAST
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getClassExtendsClauseRule());
@@ -29134,7 +29170,7 @@ norm1_ClassExtendsClause[EObject in_current]  returns [EObject current=in_curren
 							$current,
 							"superClassRef",
 							lv_superClassRef_1_0,
-							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+							"org.eclipse.n4js.N4JS.ParameterizedTypeRefNominalInAST");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -29180,9 +29216,9 @@ ruleClassImplementsList[EObject in_current]  returns [EObject current=in_current
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0());
 				}
-				lv_implementedInterfaceRefs_1_0=ruleParameterizedTypeRefNominal
+				lv_implementedInterfaceRefs_1_0=ruleParameterizedTypeRefNominalInAST
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getClassImplementsListRule());
@@ -29191,7 +29227,7 @@ ruleClassImplementsList[EObject in_current]  returns [EObject current=in_current
 						$current,
 						"implementedInterfaceRefs",
 						lv_implementedInterfaceRefs_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+						"org.eclipse.n4js.N4JS.ParameterizedTypeRefNominalInAST");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -29204,9 +29240,9 @@ ruleClassImplementsList[EObject in_current]  returns [EObject current=in_current
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0());
+						newCompositeNode(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0());
 					}
-					lv_implementedInterfaceRefs_3_0=ruleParameterizedTypeRefNominal
+					lv_implementedInterfaceRefs_3_0=ruleParameterizedTypeRefNominalInAST
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getClassImplementsListRule());
@@ -29215,7 +29251,7 @@ ruleClassImplementsList[EObject in_current]  returns [EObject current=in_current
 							$current,
 							"implementedInterfaceRefs",
 							lv_implementedInterfaceRefs_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+							"org.eclipse.n4js.N4JS.ParameterizedTypeRefNominalInAST");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -29544,9 +29580,9 @@ ruleInterfaceExtendsList[EObject in_current]  returns [EObject current=in_curren
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0());
 				}
-				lv_superInterfaceRefs_2_0=ruleParameterizedTypeRefNominal
+				lv_superInterfaceRefs_2_0=ruleParameterizedTypeRefNominalInAST
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getInterfaceExtendsListRule());
@@ -29555,7 +29591,7 @@ ruleInterfaceExtendsList[EObject in_current]  returns [EObject current=in_curren
 						$current,
 						"superInterfaceRefs",
 						lv_superInterfaceRefs_2_0,
-						"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+						"org.eclipse.n4js.N4JS.ParameterizedTypeRefNominalInAST");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -29568,9 +29604,9 @@ ruleInterfaceExtendsList[EObject in_current]  returns [EObject current=in_curren
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0());
+						newCompositeNode(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0());
 					}
-					lv_superInterfaceRefs_4_0=ruleParameterizedTypeRefNominal
+					lv_superInterfaceRefs_4_0=ruleParameterizedTypeRefNominalInAST
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getInterfaceExtendsListRule());
@@ -29579,7 +29615,7 @@ ruleInterfaceExtendsList[EObject in_current]  returns [EObject current=in_curren
 							$current,
 							"superInterfaceRefs",
 							lv_superInterfaceRefs_4_0,
-							"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+							"org.eclipse.n4js.N4JS.ParameterizedTypeRefNominalInAST");
 						afterParserOrEnumRuleCall();
 					}
 				)

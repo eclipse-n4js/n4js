@@ -319,12 +319,12 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     'extends' | 'implements'
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     declaredModifiers+=N4Modifier 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     declaredVersion=VERSION (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     name=BindingIdentifier (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     typeVars+=TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     typingStrategy=TypingStrategyDefSiteOperator (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
+	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	 *     declaredModifiers+=N4Modifier 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	 *     declaredVersion=VERSION (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	 *     name=BindingIdentifier (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	 *     typeVars+=TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	 *     typingStrategy=TypingStrategyDefSiteOperator (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
 	 */
 	protected void emit_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

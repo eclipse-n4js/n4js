@@ -36,7 +36,7 @@ import org.eclipse.n4js.ts.types.TInterface;
 public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, VersionedElement {
 	/**
 	 * Returns the value of the '<em><b>Super Interface Refs</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.TypeReferenceInAST}<code>&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Super Interface Refs</em>' containment reference list.
@@ -44,7 +44,7 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ParameterizedTypeRef> getSuperInterfaceRefs();
+	EList<TypeReferenceInAST<ParameterizedTypeRef>> getSuperInterfaceRefs();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -60,18 +60,18 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
 	 * @generated
 	 */
-	Iterable<ParameterizedTypeRef> getSuperClassifierRefs();
+	Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getSuperClassifierRefs();
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
 	 * @generated
 	 */
-	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();
+	Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();
 
 	/**
 	 * <!-- begin-user-doc -->

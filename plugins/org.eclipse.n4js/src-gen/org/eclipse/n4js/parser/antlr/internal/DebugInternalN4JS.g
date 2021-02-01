@@ -4311,6 +4311,11 @@ ruleTypeReferenceInAST:
 	ruleTypeRef
 ;
 
+// Rule ParameterizedTypeRefNominalInAST
+ruleParameterizedTypeRefNominalInAST:
+	ruleParameterizedTypeRefNominal
+;
+
 // Rule ImportCallExpression
 ruleImportCallExpression:
 	'import'
@@ -6843,9 +6848,9 @@ ruleClassExtendsClause:
 	'extends'
 	(
 		(
-			(ruleParameterizedTypeRefNominal
+			(ruleParameterizedTypeRefNominalInAST
 			)=>
-			ruleParameterizedTypeRefNominal
+			ruleParameterizedTypeRefNominalInAST
 		)
 		    |
 		ruleLeftHandSideExpression
@@ -6857,9 +6862,9 @@ norm1_ClassExtendsClause:
 	'extends'
 	(
 		(
-			(ruleParameterizedTypeRefNominal
+			(ruleParameterizedTypeRefNominalInAST
 			)=>
-			ruleParameterizedTypeRefNominal
+			ruleParameterizedTypeRefNominalInAST
 		)
 		    |
 		norm1_LeftHandSideExpression
@@ -6869,10 +6874,10 @@ norm1_ClassExtendsClause:
 // Rule ClassImplementsList
 ruleClassImplementsList:
 	'implements'
-	ruleParameterizedTypeRefNominal
+	ruleParameterizedTypeRefNominalInAST
 	(
 		','
-		ruleParameterizedTypeRefNominal
+		ruleParameterizedTypeRefNominalInAST
 	)*
 ;
 
@@ -6927,10 +6932,10 @@ ruleInterfaceExtendsList:
 		    |
 		'implements'
 	)
-	ruleParameterizedTypeRefNominal
+	ruleParameterizedTypeRefNominalInAST
 	(
 		','
-		ruleParameterizedTypeRefNominal
+		ruleParameterizedTypeRefNominalInAST
 	)*
 ;
 

@@ -48,6 +48,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberType
@@ -152,7 +153,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 */
 	/** Same as {@code #internalCheckTypeArguments()}, but accepts type arguments from AST. */
 	def protected void internalCheckTypeArgumentsInAST(List<? extends TypeVariable> typeVars,
-		List<? extends TypeReferenceInAST> typeArgsInAST, boolean allowAutoInference, IdentifiableElement parameterizedElement,
+		List<? extends TypeReferenceInAST<TypeRef>> typeArgsInAST, boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
 
 		val typeArgs = typeArgsInAST.map[typeRef].toList;

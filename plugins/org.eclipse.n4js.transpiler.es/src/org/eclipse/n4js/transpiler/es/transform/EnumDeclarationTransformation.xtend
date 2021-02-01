@@ -82,7 +82,8 @@ class EnumDeclarationTransformation extends Transformation {
 		val fieldsForLiterals = enumDecl.literals.map[convertLiteralToField(it, classSTE)];
 
 		classDecl.declaredModifiers += enumDecl.declaredModifiers;  // reuse existing modifiers
-		classDecl.superClassRef = ImFactory.eINSTANCE.createParameterizedTypeRef_IM => [declaredType_IM = n4EnumSTE];
+		val newPTR = ImFactory.eINSTANCE.createParameterizedTypeRef_IM => [declaredType_IM = n4EnumSTE];
+		classDecl.superClassRef = _TypeReferenceInAST(newPTR);
 
 		classDecl.ownedMembersRaw += createEnumConstructor();
 		classDecl.ownedMembersRaw += fieldsForLiterals;

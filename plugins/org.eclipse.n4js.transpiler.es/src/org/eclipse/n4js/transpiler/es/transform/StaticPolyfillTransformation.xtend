@@ -91,7 +91,7 @@ class StaticPolyfillTransformation extends Transformation {
 	def private void doStaticPolyfilling(N4ClassDeclaration classFilled, N4ClassDeclaration classFiller) {
 		// fill additionally implemented interfaces
 		val currentIfcs = classFilled.implementedInterfaceRefs.filter(ParameterizedTypeRef_IM).map[declaredType_IM].filter(TInterface).toSet;
-		classFiller.implementedInterfaceRefs.forEach[classFilled.insertImplementedInterface(it, currentIfcs)];
+		classFiller.implementedInterfaceRefs.map[typeRef].forEach[classFilled.insertImplementedInterface(it, currentIfcs)];
 		// fill members
 		classFiller.ownedMembers.forEach[classFilled.insertMember(it)];
 	}
@@ -102,7 +102,7 @@ class StaticPolyfillTransformation extends Transformation {
 		if(ifcType instanceof TInterface) {
 			if(!currentIfcs.contains(ifcType)) { // avoid duplicates!
 				val ifcSTE = getSymbolTableEntryOriginal(ifcType, true);
-				classFilled.implementedInterfaceRefs += _ParameterizedTypeRef(ifcSTE);
+				classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceInAST(_ParameterizedTypeRef(ifcSTE));
 			}
 		}
 	}

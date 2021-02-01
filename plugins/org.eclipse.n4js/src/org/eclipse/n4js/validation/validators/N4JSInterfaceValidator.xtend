@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
@@ -18,8 +20,6 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -88,7 +88,7 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private internalCheckExtendedInterfaces(N4InterfaceDeclaration n4Interface) {
 		n4Interface.superInterfaceRefs.forEach[
-			val extendedType = it.declaredType
+			val extendedType = it.typeRef?.declaredType
 			// note: in case extendedType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 			if(extendedType !== null && extendedType.name !== null) {
 
@@ -111,7 +111,7 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 		val ifc = n4InterfaceDeclaration.definedType as TInterface;
 		val cycle = findCyclicInheritance(ifc);
 		if(cycle!==null) {
-			val miscreant = n4InterfaceDeclaration.superInterfaceRefs.findFirst[declaredType===cycle.get(1)];
+			val miscreant = n4InterfaceDeclaration.superInterfaceRefs.findFirst[typeRef?.declaredType===cycle.get(1)];
 			val message = IssueCodes.getMessageForCLF_INHERITANCE_CYCLE(cycle.map[name].join(", "));
 			addIssue(message, miscreant, IssueCodes.CLF_INHERITANCE_CYCLE);
 			return false;

@@ -209,7 +209,7 @@ import com.google.common.base.Strings;
 		write("class ");
 		write(original.getName());
 		write(' ');
-		final ParameterizedTypeRef superClassRef = original.getSuperClassRef();
+		final TypeReferenceInAST<ParameterizedTypeRef> superClassRef = original.getSuperClassRef();
 		final Expression superClassExpression = original.getSuperClassExpression();
 		if (superClassRef != null) {
 			// We cannot support this, because we cannot look up the symbol table entry for the TypeRef returned by
@@ -1363,7 +1363,7 @@ import com.google.common.base.Strings;
 		throw new IllegalStateException("Type reference still left in code. typeParams=" + typeParams);
 	}
 
-	private void processTypeArgs(EList<? extends TypeReferenceInAST> typeArgs) {
+	private void processTypeArgs(EList<? extends TypeReferenceInAST<TypeRef>> typeArgs) {
 		if (typeArgs.isEmpty())
 			return;
 

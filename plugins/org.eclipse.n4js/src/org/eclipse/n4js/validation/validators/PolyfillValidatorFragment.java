@@ -55,6 +55,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.TypeReferenceInAST;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -138,7 +139,8 @@ public class PolyfillValidatorFragment {
 				return false;
 			}
 
-			final Type superType = n4Class.getSuperClassRef().getDeclaredType();
+			final TypeReferenceInAST<ParameterizedTypeRef> superClassRef = n4Class.getSuperClassRef();
+			final Type superType = superClassRef != null ? superClassRef.getTypeRef().getDeclaredType() : null;
 			if (!(superType instanceof TClassifier)) { // TClass or TObjectPrototype
 				return true; // consequential error
 			}
@@ -218,7 +220,7 @@ public class PolyfillValidatorFragment {
 	 * Constraint (Polyfill Class) 156.1
 	 */
 	private boolean holdsExpliciteExtends(PolyfillValidationState state) {
-		final ParameterizedTypeRef filledTypeRef = state.n4Class.getSuperClassRef();
+		final TypeReferenceInAST<ParameterizedTypeRef> filledTypeRef = state.n4Class.getSuperClassRef();
 		if (filledTypeRef == null) { // (Polyfill Class) 156.1
 			final String msg = getMessageForCLF_POLYFILL_EXTEND_MISSING(state.name);
 			addIssue(state, msg, CLF_POLYFILL_EXTEND_MISSING);
@@ -335,7 +337,9 @@ public class PolyfillValidatorFragment {
 			return false;
 		}
 
-		EList<TypeArgument> args = state.n4Class.getSuperClassRef().getTypeArgs();
+		final TypeReferenceInAST<ParameterizedTypeRef> superClassRefInAST = state.n4Class.getSuperClassRef();
+		final ParameterizedTypeRef superClassRef = superClassRefInAST != null ? superClassRefInAST.getTypeRef() : null;
+		List<TypeArgument> args = superClassRef != null ? superClassRef.getTypeArgs() : Collections.emptyList();
 		if (args.size() != state.polyType.getTypeVars().size()) {
 			return true; // consequential error
 		}

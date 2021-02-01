@@ -31,7 +31,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * @model
  * @generated
  */
-public interface TypeReferenceInAST extends EObject {
+public interface TypeReferenceInAST<T extends TypeRef> extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -47,7 +47,7 @@ public interface TypeReferenceInAST extends EObject {
 	 * @model transient="true"
 	 * @generated
 	 */
-	TypeRef getTypeRef();
+	T getTypeRef();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceInAST#getTypeRef <em>Type Ref</em>}' reference.
@@ -57,7 +57,7 @@ public interface TypeReferenceInAST extends EObject {
 	 * @see #getTypeRef()
 	 * @generated
 	 */
-	void setTypeRef(TypeRef value);
+	void setTypeRef(T value);
 
 	/**
 	 * Returns the value of the '<em><b>Type Ref In AST</b></em>' containment reference.
@@ -69,7 +69,7 @@ public interface TypeReferenceInAST extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	TypeRef getTypeRefInAST();
+	T getTypeRefInAST();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceInAST#getTypeRefInAST <em>Type Ref In AST</em>}' containment reference.
@@ -79,6 +79,6 @@ public interface TypeReferenceInAST extends EObject {
 	 * @see #getTypeRefInAST()
 	 * @generated
 	 */
-	void setTypeRefInAST(TypeRef value);
+	void setTypeRefInAST(T value);
 
 } // TypeReferenceInAST

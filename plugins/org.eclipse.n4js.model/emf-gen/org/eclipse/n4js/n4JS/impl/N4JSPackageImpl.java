@@ -16,9 +16,11 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -1616,6 +1618,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EDataType iteratorOfReturnStatementEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType parameterizedTypeRefInASTIterableEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -7589,6 +7598,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getParameterizedTypeRefInASTIterable() {
+		return parameterizedTypeRefInASTIterableEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public N4JSFactory getN4JSFactory() {
 		return (N4JSFactory)getEFactoryInstance();
 	}
@@ -8385,6 +8404,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		iteratorOfYieldExpressionEDataType = createEDataType(ITERATOR_OF_YIELD_EXPRESSION);
 		iteratorOfStatementEDataType = createEDataType(ITERATOR_OF_STATEMENT);
 		iteratorOfReturnStatementEDataType = createEDataType(ITERATOR_OF_RETURN_STATEMENT);
+		parameterizedTypeRefInASTIterableEDataType = createEDataType(PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE);
 	}
 
 	/**
@@ -8416,8 +8436,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		TypeRefsPackage theTypeRefsPackage = (TypeRefsPackage)EPackage.Registry.INSTANCE.getEPackage(TypeRefsPackage.eNS_URI);
 
 		// Create type parameters
+		ETypeParameter typeReferenceInASTEClass_T = addETypeParameter(typeReferenceInASTEClass, "T");
 
 		// Set bounds for type parameters
+		EGenericType g1 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		typeReferenceInASTEClass_T.getEBounds().add(g1);
 
 		// Add supertypes to classes
 		scriptEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
@@ -8755,8 +8778,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getNamespaceImportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, NamespaceImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typeReferenceInASTEClass, TypeReferenceInAST.class, "TypeReferenceInAST", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypeReferenceInAST_TypeRef(), theTypeRefsPackage.getTypeRef(), null, "typeRef", null, 0, 1, TypeReferenceInAST.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTypeReferenceInAST_TypeRefInAST(), theTypeRefsPackage.getTypeRef(), null, "typeRefInAST", null, 0, 1, TypeReferenceInAST.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(typeReferenceInASTEClass_T);
+		initEReference(getTypeReferenceInAST_TypeRef(), g1, null, "typeRef", null, 0, 1, TypeReferenceInAST.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(typeReferenceInASTEClass_T);
+		initEReference(getTypeReferenceInAST_TypeRefInAST(), g1, null, "typeRefInAST", null, 0, 1, TypeReferenceInAST.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typeProvidingElementEClass, TypeProvidingElement.class, "TypeProvidingElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9190,7 +9215,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getNewExpression_WithArgs(), theEcorePackage.getEBoolean(), "withArgs", null, 0, 1, NewExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parameterizedAccessEClass, ParameterizedAccess.class, "ParameterizedAccess", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getParameterizedAccess_TypeArgs(), this.getTypeReferenceInAST(), null, "typeArgs", null, 0, -1, ParameterizedAccess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(this.getTypeReferenceInAST());
+		EGenericType g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getParameterizedAccess_TypeArgs(), g1, null, "typeArgs", null, 0, -1, ParameterizedAccess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getParameterizedAccess__IsParameterized(), theEcorePackage.getEBoolean(), "isParameterized", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9406,20 +9434,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassifierDefinition__GetOwnedSetters(), this.getN4SetterDeclaration(), "getOwnedSetters", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassifierDefinition__GetSuperClassifierRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassifierDefinition__GetSuperClassifierRefs(), this.getParameterizedTypeRefInASTIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefInASTIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4ClassDefinitionEClass, N4ClassDefinition.class, "N4ClassDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getN4ClassDefinition_SuperClassRef(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superClassRef", null, 0, 1, N4ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(this.getTypeReferenceInAST());
+		g2 = createEGenericType(theTypeRefsPackage.getParameterizedTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getN4ClassDefinition_SuperClassRef(), g1, null, "superClassRef", null, 0, 1, N4ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getN4ClassDefinition_SuperClassExpression(), this.getExpression(), null, "superClassExpression", null, 0, 1, N4ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getN4ClassDefinition_ImplementedInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRef(), null, "implementedInterfaceRefs", null, 0, -1, N4ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(this.getTypeReferenceInAST());
+		g2 = createEGenericType(theTypeRefsPackage.getParameterizedTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getN4ClassDefinition_ImplementedInterfaceRefs(), g1, null, "implementedInterfaceRefs", null, 0, -1, N4ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4ClassDefinition__GetDefinedTypeAsClass(), theTypesPackage.getTClass(), "getDefinedTypeAsClass", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassDefinition__GetSuperClassifierRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassDefinition__GetSuperClassifierRefs(), this.getParameterizedTypeRefInASTIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefInASTIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4ClassDeclarationEClass, N4ClassDeclaration.class, "N4ClassDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9431,13 +9465,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getN4ClassExpression_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4ClassExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(n4InterfaceDeclarationEClass, N4InterfaceDeclaration.class, "N4InterfaceDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getN4InterfaceDeclaration_SuperInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superInterfaceRefs", null, 0, -1, N4InterfaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(this.getTypeReferenceInAST());
+		g2 = createEGenericType(theTypeRefsPackage.getParameterizedTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getN4InterfaceDeclaration_SuperInterfaceRefs(), g1, null, "superInterfaceRefs", null, 0, -1, N4InterfaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4InterfaceDeclaration__GetDefinedTypeAsInterface(), theTypesPackage.getTInterface(), "getDefinedTypeAsInterface", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4InterfaceDeclaration__GetSuperClassifierRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4InterfaceDeclaration__GetSuperClassifierRefs(), this.getParameterizedTypeRefInASTIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), theTypesPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefInASTIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4InterfaceDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9714,6 +9751,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEDataType(iteratorOfYieldExpressionEDataType, Iterator.class, "IteratorOfYieldExpression", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.Iterator<org.eclipse.n4js.n4JS.YieldExpression>");
 		initEDataType(iteratorOfStatementEDataType, Iterator.class, "IteratorOfStatement", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.Iterator<org.eclipse.n4js.n4JS.Statement>");
 		initEDataType(iteratorOfReturnStatementEDataType, Iterator.class, "IteratorOfReturnStatement", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.Iterator<org.eclipse.n4js.n4JS.ReturnStatement>");
+		initEDataType(parameterizedTypeRefInASTIterableEDataType, Iterable.class, "ParameterizedTypeRefInASTIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<org.eclipse.n4js.n4JS.TypeReferenceInAST<org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef>>");
 
 		// Create resource
 		createResource(eNS_URI);

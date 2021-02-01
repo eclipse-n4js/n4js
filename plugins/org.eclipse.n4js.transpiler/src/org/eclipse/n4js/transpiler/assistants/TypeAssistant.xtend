@@ -74,7 +74,7 @@ class TypeAssistant extends TransformationAssistant {
 	 * Returns symbol table entry for super class of given class declaration.
 	 */
 	def public SymbolTableEntryOriginal getSuperClassSTE(N4ClassDeclaration classDecl) {
-		val superClassRef = classDecl.superClassRef;
+		val superClassRef = classDecl.superClassRef?.typeRef;
 		if(superClassRef instanceof ParameterizedTypeRef_IM) {
 			val superClassSTE = superClassRef.declaredType_IM;
 			if(superClassSTE instanceof SymbolTableEntryOriginal) {
@@ -93,7 +93,7 @@ class TypeAssistant extends TransformationAssistant {
 			N4InterfaceDeclaration: classifierDecl.superInterfaceRefs
 			default: throw new IllegalStateException("unsupported subclass of N4ClassifierDeclaration: " + classifierDecl?.name)
 		}
-		return superIfcRefs.map[superIfcRef|
+		return superIfcRefs.map[typeRef].map[superIfcRef|
 			if(superIfcRef instanceof ParameterizedTypeRef_IM) {
 				superIfcRef.declaredType_IM
 			}

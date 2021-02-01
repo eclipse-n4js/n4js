@@ -16891,6 +16891,16 @@ public interface N4JSPackage extends EPackage {
 	 */
 	int ITERATOR_OF_RETURN_STATEMENT = 197;
 
+	/**
+	 * The meta object id for the '<em>Parameterized Type Ref In AST Iterable</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefInASTIterable()
+	 * @generated
+	 */
+	int PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE = 198;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.NamedElement <em>Named Element</em>}'.
@@ -23013,6 +23023,17 @@ public interface N4JSPackage extends EPackage {
 	EDataType getIteratorOfReturnStatement();
 
 	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref In AST Iterable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Parameterized Type Ref In AST Iterable</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.n4JS.TypeReferenceInAST&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;&gt;"
+	 * @generated
+	 */
+	EDataType getParameterizedTypeRefInASTIterable();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -28150,6 +28171,16 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ITERATOR_OF_RETURN_STATEMENT = eINSTANCE.getIteratorOfReturnStatement();
+
+		/**
+		 * The meta object literal for the '<em>Parameterized Type Ref In AST Iterable</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefInASTIterable()
+		 * @generated
+		 */
+		EDataType PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE = eINSTANCE.getParameterizedTypeRefInASTIterable();
 
 	}
 

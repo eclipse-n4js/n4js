@@ -10090,6 +10090,25 @@ ruleTypeReferenceInAST
 )
 ;
 
+// Entry rule entryRuleParameterizedTypeRefNominalInAST
+entryRuleParameterizedTypeRefNominalInAST
+	:
+	ruleParameterizedTypeRefNominalInAST
+	EOF;
+
+// Rule ParameterizedTypeRefNominalInAST
+ruleParameterizedTypeRefNominalInAST
+@init {
+}:
+(
+	(
+		TypeRefInASTParameterizedTypeRefNominalParserRuleCall_0=ruleParameterizedTypeRefNominal{
+			announce($TypeRefInASTParameterizedTypeRefNominalParserRuleCall_0.start, $TypeRefInASTParameterizedTypeRefNominalParserRuleCall_0.stop, grammarAccess.getParameterizedTypeRefNominalInASTAccess().getTypeRefInASTAssignment());
+		}
+	)
+)
+;
+
 // Entry rule entryRuleImportCallExpression
 entryRuleImportCallExpression
 	:
@@ -16158,12 +16177,12 @@ ruleClassExtendsClause
 	(
 		(
 			((
-				ruleParameterizedTypeRefNominal
+				ruleParameterizedTypeRefNominalInAST
 			)
 			)=>
 			(
-				SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0=ruleParameterizedTypeRefNominal{
-					announce($SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.start, $SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_1_0());
+				SuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0=ruleParameterizedTypeRefNominalInAST{
+					announce($SuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0.start, $SuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_1_0());
 				}
 			)
 		)
@@ -16192,12 +16211,12 @@ norm1_ClassExtendsClause
 	(
 		(
 			((
-				ruleParameterizedTypeRefNominal
+				ruleParameterizedTypeRefNominalInAST
 			)
 			)=>
 			(
-				SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0=ruleParameterizedTypeRefNominal{
-					announce($SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.start, $SuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_1_0());
+				SuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0=ruleParameterizedTypeRefNominalInAST{
+					announce($SuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0.start, $SuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0.stop, grammarAccess.getClassExtendsClauseAccess().getSuperClassRefAssignment_1_0());
 				}
 			)
 		)
@@ -16225,8 +16244,8 @@ ruleClassImplementsList
 	}
 	(
 		(
-			ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0=ruleParameterizedTypeRefNominal{
-				announce($ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_1());
+			ImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0=ruleParameterizedTypeRefNominalInAST{
+				announce($ImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_1());
 			}
 		)
 	)
@@ -16237,8 +16256,8 @@ ruleClassImplementsList
 		}
 		(
 			(
-				ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0=ruleParameterizedTypeRefNominal{
-					announce($ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_2_1());
+				ImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0=ruleParameterizedTypeRefNominalInAST{
+					announce($ImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0.start, $ImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0.stop, grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsAssignment_2_1());
 				}
 			)
 		)
@@ -16391,8 +16410,8 @@ ruleInterfaceExtendsList
 	)
 	(
 		(
-			SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0=ruleParameterizedTypeRefNominal{
-				announce($SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0.stop, grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsAssignment_1());
+			SuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0=ruleParameterizedTypeRefNominalInAST{
+				announce($SuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0.stop, grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsAssignment_1());
 			}
 		)
 	)
@@ -16403,8 +16422,8 @@ ruleInterfaceExtendsList
 		}
 		(
 			(
-				SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0=ruleParameterizedTypeRefNominal{
-					announce($SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0.stop, grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsAssignment_2_1());
+				SuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0=ruleParameterizedTypeRefNominalInAST{
+					announce($SuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0.start, $SuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0.stop, grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsAssignment_2_1());
 				}
 			)
 		)

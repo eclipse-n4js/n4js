@@ -248,7 +248,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private boolean holdsSuperClass(N4ClassDeclaration n4Class) {
-		val superType = n4Class.superClassRef?.declaredType;
+		val superType = n4Class.superClassRef?.typeRef?.declaredType;
 		if (superType !== null && superType.name !== null) { // note: in case superType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 			if (superType instanceof PrimitiveType) {
@@ -321,7 +321,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private internalCheckImplementedInterfaces(N4ClassDeclaration n4Class) {
 		n4Class.implementedInterfaceRefs.forEach [
-			val consumedType = it.declaredType;
+			val consumedType = it.typeRef?.declaredType;
 			if (consumedType !== null && consumedType.name !== null) { // note: in case consumedType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 				// consumed type must be an interface

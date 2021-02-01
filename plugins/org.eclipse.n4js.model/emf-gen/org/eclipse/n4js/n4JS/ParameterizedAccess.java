@@ -14,6 +14,8 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Parameterized Access</b></em>'.
@@ -33,7 +35,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface ParameterizedAccess extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Type Args</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4JS.TypeReferenceInAST}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.TypeReferenceInAST}<code>&lt;org.eclipse.n4js.ts.typeRefs.TypeRef&gt;</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type Args</em>' containment reference list.
@@ -41,7 +43,7 @@ public interface ParameterizedAccess extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TypeReferenceInAST> getTypeArgs();
+	EList<TypeReferenceInAST<TypeRef>> getTypeArgs();
 
 	/**
 	 * <!-- begin-user-doc -->

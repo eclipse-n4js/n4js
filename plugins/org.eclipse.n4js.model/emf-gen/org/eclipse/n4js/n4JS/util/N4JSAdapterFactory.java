@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.n4js.n4JS.*;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 
@@ -130,7 +131,7 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createNamespaceImportSpecifierAdapter();
 			}
 			@Override
-			public Adapter caseTypeReferenceInAST(TypeReferenceInAST object) {
+			public <T extends TypeRef> Adapter caseTypeReferenceInAST(TypeReferenceInAST<T> object) {
 				return createTypeReferenceInASTAdapter();
 			}
 			@Override

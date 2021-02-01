@@ -460,6 +460,9 @@ public abstract class AbstractN4JSProposalProvider extends TypeExpressionsPropos
 	public void completeTypeReferenceInAST_TypeRefInAST(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
 	}
+	public void completeParameterizedTypeRefNominalInAST_TypeRefInAST(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
+	}
 	public void completeLeftHandSideExpression_OptionalChaining(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
 	}
@@ -1152,6 +1155,9 @@ public abstract class AbstractN4JSProposalProvider extends TypeExpressionsPropos
 		// subclasses may override
 	}
 	public void complete_TypeReferenceInAST(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// subclasses may override
+	}
+	public void complete_ParameterizedTypeRefNominalInAST(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
 	}
 	public void complete_ImportCallExpression(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {

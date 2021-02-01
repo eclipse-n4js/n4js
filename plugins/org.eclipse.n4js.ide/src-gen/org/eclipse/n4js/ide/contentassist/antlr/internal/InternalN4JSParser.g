@@ -4314,6 +4314,31 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+// Entry rule entryRuleParameterizedTypeRefNominalInAST
+entryRuleParameterizedTypeRefNominalInAST
+:
+{ before(grammarAccess.getParameterizedTypeRefNominalInASTRule()); }
+	 ruleParameterizedTypeRefNominalInAST
+{ after(grammarAccess.getParameterizedTypeRefNominalInASTRule()); } 
+	 EOF 
+;
+
+// Rule ParameterizedTypeRefNominalInAST
+ruleParameterizedTypeRefNominalInAST 
+	@init {
+		int stackSize = keepStackSize();
+	}
+	:
+	(
+		{ before(grammarAccess.getParameterizedTypeRefNominalInASTAccess().getTypeRefInASTAssignment()); }
+		(rule__ParameterizedTypeRefNominalInAST__TypeRefInASTAssignment)
+		{ after(grammarAccess.getParameterizedTypeRefNominalInASTAccess().getTypeRefInASTAssignment()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 // Entry rule entryRuleImportCallExpression
 entryRuleImportCallExpression
 :
@@ -83828,6 +83853,21 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__ParameterizedTypeRefNominalInAST__TypeRefInASTAssignment
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getParameterizedTypeRefNominalInASTAccess().getTypeRefInASTParameterizedTypeRefNominalParserRuleCall_0()); }
+		ruleParameterizedTypeRefNominal
+		{ after(grammarAccess.getParameterizedTypeRefNominalInASTAccess().getTypeRefInASTParameterizedTypeRefNominalParserRuleCall_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__LeftHandSideExpression__OptionalChainingAssignment_1_1
 	@init {
 		int stackSize = keepStackSize();
@@ -86859,9 +86899,9 @@ rule__ClassExtendsClause__SuperClassRefAssignment_1_0
 	}
 :
 	(
-		{ before(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0()); }
-		ruleParameterizedTypeRefNominal
-		{ after(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0()); }
+		{ before(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0()); }
+		ruleParameterizedTypeRefNominalInAST
+		{ after(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0()); }
 	)
 ;
 finally {
@@ -86889,9 +86929,9 @@ norm1_ClassExtendsClause__SuperClassRefAssignment_1_0
 	}
 :
 	(
-		{ before(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0()); }
-		ruleParameterizedTypeRefNominal
-		{ after(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0()); }
+		{ before(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0()); }
+		ruleParameterizedTypeRefNominalInAST
+		{ after(grammarAccess.getClassExtendsClauseAccess().getSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0()); }
 	)
 ;
 finally {
@@ -86919,9 +86959,9 @@ rule__ClassImplementsList__ImplementedInterfaceRefsAssignment_1
 	}
 :
 	(
-		{ before(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0()); }
-		ruleParameterizedTypeRefNominal
-		{ after(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0()); }
+		{ before(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0()); }
+		ruleParameterizedTypeRefNominalInAST
+		{ after(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0()); }
 	)
 ;
 finally {
@@ -86934,9 +86974,9 @@ rule__ClassImplementsList__ImplementedInterfaceRefsAssignment_2_1
 	}
 :
 	(
-		{ before(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0()); }
-		ruleParameterizedTypeRefNominal
-		{ after(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0()); }
+		{ before(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0()); }
+		ruleParameterizedTypeRefNominalInAST
+		{ after(grammarAccess.getClassImplementsListAccess().getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0()); }
 	)
 ;
 finally {
@@ -87024,9 +87064,9 @@ rule__InterfaceExtendsList__SuperInterfaceRefsAssignment_1
 	}
 :
 	(
-		{ before(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0()); }
-		ruleParameterizedTypeRefNominal
-		{ after(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0()); }
+		{ before(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0()); }
+		ruleParameterizedTypeRefNominalInAST
+		{ after(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0()); }
 	)
 ;
 finally {
@@ -87039,9 +87079,9 @@ rule__InterfaceExtendsList__SuperInterfaceRefsAssignment_2_1
 	}
 :
 	(
-		{ before(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0()); }
-		ruleParameterizedTypeRefNominal
-		{ after(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0()); }
+		{ before(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0()); }
+		ruleParameterizedTypeRefNominalInAST
+		{ after(grammarAccess.getInterfaceExtendsListAccess().getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0()); }
 	)
 ;
 finally {

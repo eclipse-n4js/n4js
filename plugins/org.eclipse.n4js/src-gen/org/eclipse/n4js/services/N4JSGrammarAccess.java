@@ -5280,6 +5280,21 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//TypeRef
 		public RuleCall getTypeRefInASTTypeRefParserRuleCall_0() { return cTypeRefInASTTypeRefParserRuleCall_0; }
 	}
+	public class ParameterizedTypeRefNominalInASTElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ParameterizedTypeRefNominalInAST");
+		private final Assignment cTypeRefInASTAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cTypeRefInASTParameterizedTypeRefNominalParserRuleCall_0 = (RuleCall)cTypeRefInASTAssignment.eContents().get(0);
+		
+		//ParameterizedTypeRefNominalInAST TypeReferenceInAST:
+		//	typeRefInAST=ParameterizedTypeRefNominal;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//typeRefInAST=ParameterizedTypeRefNominal
+		public Assignment getTypeRefInASTAssignment() { return cTypeRefInASTAssignment; }
+		
+		//ParameterizedTypeRefNominal
+		public RuleCall getTypeRefInASTParameterizedTypeRefNominalParserRuleCall_0() { return cTypeRefInASTParameterizedTypeRefNominalParserRuleCall_0; }
+	}
 	public class ImportCallExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportCallExpression");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -8139,29 +8154,29 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cExtendsKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cSuperClassRefAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
-		private final RuleCall cSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0 = (RuleCall)cSuperClassRefAssignment_1_0.eContents().get(0);
+		private final RuleCall cSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0 = (RuleCall)cSuperClassRefAssignment_1_0.eContents().get(0);
 		private final Assignment cSuperClassExpressionAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
 		private final RuleCall cSuperClassExpressionLeftHandSideExpressionParserRuleCall_1_1_0 = (RuleCall)cSuperClassExpressionAssignment_1_1.eContents().get(0);
 		
 		//fragment ClassExtendsClause <Yield> *:
-		//	'extends' (=> superClassRef=ParameterizedTypeRefNominal
+		//	'extends' (=> superClassRef=ParameterizedTypeRefNominalInAST
 		//	| superClassExpression=LeftHandSideExpression<Yield>);
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'extends' (=> superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression<Yield>)
+		//'extends' (=> superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression<Yield>)
 		public Group getGroup() { return cGroup; }
 		
 		//'extends'
 		public Keyword getExtendsKeyword_0() { return cExtendsKeyword_0; }
 		
-		//(=> superClassRef=ParameterizedTypeRefNominal | superClassExpression=LeftHandSideExpression<Yield>)
+		//(=> superClassRef=ParameterizedTypeRefNominalInAST | superClassExpression=LeftHandSideExpression<Yield>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
-		//=> superClassRef=ParameterizedTypeRefNominal
+		//=> superClassRef=ParameterizedTypeRefNominalInAST
 		public Assignment getSuperClassRefAssignment_1_0() { return cSuperClassRefAssignment_1_0; }
 		
-		//ParameterizedTypeRefNominal
-		public RuleCall getSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0() { return cSuperClassRefParameterizedTypeRefNominalParserRuleCall_1_0_0; }
+		//ParameterizedTypeRefNominalInAST
+		public RuleCall getSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0() { return cSuperClassRefParameterizedTypeRefNominalInASTParserRuleCall_1_0_0; }
 		
 		//superClassExpression=LeftHandSideExpression<Yield>
 		public Assignment getSuperClassExpressionAssignment_1_1() { return cSuperClassExpressionAssignment_1_1; }
@@ -8174,41 +8189,41 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cImplementsKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cImplementedInterfaceRefsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_1.eContents().get(0);
+		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
 		private final Keyword cCommaKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cImplementedInterfaceRefsAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_2_1.eContents().get(0);
+		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_2_1.eContents().get(0);
 		
 		//fragment ClassImplementsList *:
-		//	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (','
-		//	implementedInterfaceRefs+=ParameterizedTypeRefNominal)*;
+		//	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST (','
+		//	implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (','
-		//implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
+		//'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST (','
+		//implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
 		public Group getGroup() { return cGroup; }
 		
 		//'implements'
 		public Keyword getImplementsKeyword_0() { return cImplementsKeyword_0; }
 		
-		//implementedInterfaceRefs+=ParameterizedTypeRefNominal
+		//implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST
 		public Assignment getImplementedInterfaceRefsAssignment_1() { return cImplementedInterfaceRefsAssignment_1; }
 		
-		//ParameterizedTypeRefNominal
-		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0; }
+		//ParameterizedTypeRefNominalInAST
+		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0; }
 		
-		//(',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
+		//(',' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
 		public Group getGroup_2() { return cGroup_2; }
 		
 		//','
 		public Keyword getCommaKeyword_2_0() { return cCommaKeyword_2_0; }
 		
-		//implementedInterfaceRefs+=ParameterizedTypeRefNominal
+		//implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST
 		public Assignment getImplementedInterfaceRefsAssignment_2_1() { return cImplementedInterfaceRefsAssignment_2_1; }
 		
-		//ParameterizedTypeRefNominal
-		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0; }
+		//ParameterizedTypeRefNominalInAST
+		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0; }
 	}
 	public class N4ClassExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4ClassExpression");
@@ -8327,20 +8342,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cExtendsKeyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
 		private final Keyword cImplementsKeyword_0_1 = (Keyword)cAlternatives_0.eContents().get(1);
 		private final Assignment cSuperInterfaceRefsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0 = (RuleCall)cSuperInterfaceRefsAssignment_1.eContents().get(0);
+		private final RuleCall cSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0 = (RuleCall)cSuperInterfaceRefsAssignment_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
 		private final Keyword cCommaKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cSuperInterfaceRefsAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0 = (RuleCall)cSuperInterfaceRefsAssignment_2_1.eContents().get(0);
+		private final RuleCall cSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0 = (RuleCall)cSuperInterfaceRefsAssignment_2_1.eContents().get(0);
 		
 		//// we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
 		//fragment InterfaceExtendsList *:
-		//	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal (','
-		//	superInterfaceRefs+=ParameterizedTypeRefNominal)*;
+		//	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalInAST (','
+		//	superInterfaceRefs+=ParameterizedTypeRefNominalInAST)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal (','
-		//superInterfaceRefs+=ParameterizedTypeRefNominal)*
+		//('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalInAST (','
+		//superInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
 		public Group getGroup() { return cGroup; }
 		
 		//('extends' | 'implements')
@@ -8352,23 +8367,23 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'implements'
 		public Keyword getImplementsKeyword_0_1() { return cImplementsKeyword_0_1; }
 		
-		//superInterfaceRefs+=ParameterizedTypeRefNominal
+		//superInterfaceRefs+=ParameterizedTypeRefNominalInAST
 		public Assignment getSuperInterfaceRefsAssignment_1() { return cSuperInterfaceRefsAssignment_1; }
 		
-		//ParameterizedTypeRefNominal
-		public RuleCall getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0() { return cSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_1_0; }
+		//ParameterizedTypeRefNominalInAST
+		public RuleCall getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0() { return cSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_1_0; }
 		
-		//(',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
+		//(',' superInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
 		public Group getGroup_2() { return cGroup_2; }
 		
 		//','
 		public Keyword getCommaKeyword_2_0() { return cCommaKeyword_2_0; }
 		
-		//superInterfaceRefs+=ParameterizedTypeRefNominal
+		//superInterfaceRefs+=ParameterizedTypeRefNominalInAST
 		public Assignment getSuperInterfaceRefsAssignment_2_1() { return cSuperInterfaceRefsAssignment_2_1; }
 		
-		//ParameterizedTypeRefNominal
-		public RuleCall getSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0() { return cSuperInterfaceRefsParameterizedTypeRefNominalParserRuleCall_2_1_0; }
+		//ParameterizedTypeRefNominalInAST
+		public RuleCall getSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0() { return cSuperInterfaceRefsParameterizedTypeRefNominalInASTParserRuleCall_2_1_0; }
 	}
 	public class N4EnumDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4EnumDeclaration");
@@ -10638,6 +10653,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final ParameterizedCallExpressionElements pParameterizedCallExpression;
 	private final ConcreteTypeArgumentsElements pConcreteTypeArguments;
 	private final TypeReferenceInASTElements pTypeReferenceInAST;
+	private final ParameterizedTypeRefNominalInASTElements pParameterizedTypeRefNominalInAST;
 	private final ImportCallExpressionElements pImportCallExpression;
 	private final LeftHandSideExpressionElements pLeftHandSideExpression;
 	private final ArgumentsWithParenthesesElements pArgumentsWithParentheses;
@@ -10900,6 +10916,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pParameterizedCallExpression = new ParameterizedCallExpressionElements();
 		this.pConcreteTypeArguments = new ConcreteTypeArgumentsElements();
 		this.pTypeReferenceInAST = new TypeReferenceInASTElements();
+		this.pParameterizedTypeRefNominalInAST = new ParameterizedTypeRefNominalInASTElements();
 		this.pImportCallExpression = new ImportCallExpressionElements();
 		this.pLeftHandSideExpression = new LeftHandSideExpressionElements();
 		this.pArgumentsWithParentheses = new ArgumentsWithParenthesesElements();
@@ -12272,6 +12289,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeReferenceInASTAccess().getRule();
 	}
 	
+	//ParameterizedTypeRefNominalInAST TypeReferenceInAST:
+	//	typeRefInAST=ParameterizedTypeRefNominal;
+	public ParameterizedTypeRefNominalInASTElements getParameterizedTypeRefNominalInASTAccess() {
+		return pParameterizedTypeRefNominalInAST;
+	}
+	
+	public ParserRule getParameterizedTypeRefNominalInASTRule() {
+		return getParameterizedTypeRefNominalInASTAccess().getRule();
+	}
+	
 	//ImportCallExpression <Yield>:
 	//	'import' ArgumentsWithParentheses<Yield>;
 	public ImportCallExpressionElements getImportCallExpressionAccess() {
@@ -13400,7 +13427,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment ClassExtendsClause <Yield> *:
-	//	'extends' (=> superClassRef=ParameterizedTypeRefNominal
+	//	'extends' (=> superClassRef=ParameterizedTypeRefNominalInAST
 	//	| superClassExpression=LeftHandSideExpression<Yield>);
 	public ClassExtendsClauseElements getClassExtendsClauseAccess() {
 		return pClassExtendsClause;
@@ -13411,8 +13438,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment ClassImplementsList *:
-	//	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (','
-	//	implementedInterfaceRefs+=ParameterizedTypeRefNominal)*;
+	//	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST (','
+	//	implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST)*;
 	public ClassImplementsListElements getClassImplementsListAccess() {
 		return pClassImplementsList;
 	}
@@ -13452,8 +13479,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//// we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
 	//fragment InterfaceExtendsList *:
-	//	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal (','
-	//	superInterfaceRefs+=ParameterizedTypeRefNominal)*;
+	//	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalInAST (','
+	//	superInterfaceRefs+=ParameterizedTypeRefNominalInAST)*;
 	public InterfaceExtendsListElements getInterfaceExtendsListAccess() {
 		return pInterfaceExtendsList;
 	}

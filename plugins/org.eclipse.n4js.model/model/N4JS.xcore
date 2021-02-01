@@ -37,7 +37,6 @@ import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
-import org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
@@ -67,6 +66,7 @@ type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
 type IteratorOfStatement wraps Iterator<Statement>
 type IteratorOfReturnStatement wraps Iterator<ReturnStatement>
+type ParameterizedTypeRefInASTIterable wraps Iterable<TypeReferenceInAST<ParameterizedTypeRef>>
 
 /**
  * Common interface for all AST elements providing a name.
@@ -274,14 +274,14 @@ class NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
 // Abstract Base Elements
 // ****************************************************************************************************
 
-class TypeReferenceInAST {
+class TypeReferenceInAST<T extends TypeRef> {
 	/*
 	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
 	 * The returned type reference may or may not be contained in the AST.
 	 * This is set during post-processing by {@code TypeRefProcessor}.
 	 */
-	refers transient TypeRef typeRef
-	contains TypeRef typeRefInAST
+	refers transient T typeRef
+	contains T typeRefInAST
 }
 /*
  * Element which may contain a declared type, typically a typed element.
@@ -1513,7 +1513,7 @@ class NewExpression extends Expression, ParameterizedAccess {
 }
 
 abstract class ParameterizedAccess {
-	contains TypeReferenceInAST[] typeArgs
+	contains TypeReferenceInAST<TypeRef>[] typeArgs
 	/**
 	 * Returns <code>true<code> if the expression has type arguments.
 	 */
@@ -2048,14 +2048,14 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	/**
 	 * Derived, returns extended class (if any) and implemented or extended interfaces.
 	 */
-	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
-		return Collections.<ParameterizedTypeRef>emptyList;
+	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
+		return Collections.<TypeReferenceInAST<ParameterizedTypeRef>>emptyList;
 	}
 	/**
 	 * Derived, returns implemented or extended interfaces.
 	 */
-	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
-		return Collections.<ParameterizedTypeRef>emptyList;
+	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
+		return Collections.<TypeReferenceInAST<ParameterizedTypeRef>>emptyList;
 	}
 }
 
@@ -2063,19 +2063,19 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
  * Base class for {@link N4ClassDeclaration} and {@link N4ClassExpression}
  */
 abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
-	contains ParameterizedTypeRef superClassRef
+	contains TypeReferenceInAST<ParameterizedTypeRef> superClassRef
 	contains Expression superClassExpression
-	contains ParameterizedTypeRef[] implementedInterfaceRefs
+	contains TypeReferenceInAST<ParameterizedTypeRef>[] implementedInterfaceRefs
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TClass}.
 	 */
 	op TClass getDefinedTypeAsClass() {
 		return definedType as TClass;
 	}
-	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
 		return #[superClassRef] + implementedInterfaceRefs;
 	}
-	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
 		return implementedInterfaceRefs;
 	}
 }
@@ -2103,17 +2103,17 @@ class N4ClassExpression extends N4ClassDefinition, PrimaryExpression, AnnotableE
 }
 
 class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, VersionedElement {
-	contains ParameterizedTypeRef[] superInterfaceRefs
+	contains TypeReferenceInAST<ParameterizedTypeRef>[] superInterfaceRefs
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
 	 */
 	op TInterface getDefinedTypeAsInterface() {
 		return definedType as TInterface;
 	}
-	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
 		return superInterfaceRefs;
 	}
-	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
 	/*

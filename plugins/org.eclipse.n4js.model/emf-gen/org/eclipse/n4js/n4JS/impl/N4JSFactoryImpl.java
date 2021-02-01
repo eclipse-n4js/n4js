@@ -23,6 +23,9 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.n4js.n4JS.*;
 
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model <b>Factory</b>.
@@ -245,6 +248,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 				return createIteratorOfStatementFromString(eDataType, initialValue);
 			case N4JSPackage.ITERATOR_OF_RETURN_STATEMENT:
 				return createIteratorOfReturnStatementFromString(eDataType, initialValue);
+			case N4JSPackage.PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE:
+				return createParameterizedTypeRefInASTIterableFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -294,6 +299,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 				return convertIteratorOfStatementToString(eDataType, instanceValue);
 			case N4JSPackage.ITERATOR_OF_RETURN_STATEMENT:
 				return convertIteratorOfReturnStatementToString(eDataType, instanceValue);
+			case N4JSPackage.PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE:
+				return convertParameterizedTypeRefInASTIterableToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -382,8 +389,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
-	public TypeReferenceInAST createTypeReferenceInAST() {
-		TypeReferenceInASTImpl typeReferenceInAST = new TypeReferenceInASTImpl();
+	public <T extends TypeRef> TypeReferenceInAST<T> createTypeReferenceInAST() {
+		TypeReferenceInASTImpl<T> typeReferenceInAST = new TypeReferenceInASTImpl<T>();
 		return typeReferenceInAST;
 	}
 
@@ -2071,6 +2078,25 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	public String convertIteratorOfReturnStatementToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Iterable<TypeReferenceInAST<ParameterizedTypeRef>> createParameterizedTypeRefInASTIterableFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<TypeReferenceInAST<ParameterizedTypeRef>>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertParameterizedTypeRefInASTIterableToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
 	}
 
