@@ -9667,18 +9667,18 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Expression.CommaExpression_1_0 returns CastExpression
 	 *
 	 * Constraint:
-	 *     (expression=CastExpression_CastExpression_1_0_0_0 targetTypeRef=ArrayTypeExpression)
+	 *     (expression=CastExpression_CastExpression_1_0_0_0 targetTypeRefInAST=ArrayTypeExpression)
 	 */
 	protected void sequence_CastExpression(ISerializationContext context, CastExpression semanticObject) {
 		if (errorAcceptor != null) {
 			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__EXPRESSION) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__EXPRESSION));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF_IN_AST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF_IN_AST));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getCastExpressionAccess().getCastExpressionExpressionAction_1_0_0_0(), semanticObject.getExpression());
-		feeder.accept(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0(), semanticObject.getTargetTypeRef());
+		feeder.accept(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0(), semanticObject.getTargetTypeRefInAST());
 		feeder.finish();
 	}
 	

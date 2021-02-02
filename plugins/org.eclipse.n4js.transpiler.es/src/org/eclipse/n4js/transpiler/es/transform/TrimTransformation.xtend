@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import java.util.List
+import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.TypeReferenceInAST
@@ -46,11 +47,13 @@ class TrimTransformation extends Transformation {
 	}
 
 	override transform() {
+		// FIXME do not iterate as often!!!
 		// 1) remove all typeRefs
 		collectNodes(state.im, TypeRef, false).forEach[remove(it)];
 		((collectNodes(state.im, TypeReferenceInAST, false) as Object) as List<TypeReferenceInAST<?>>).forEach[remove(it)]; // cast required to avoid a warning
 		collectNodes(state.im, TypedElement, true).forEach[it.declaredTypeRef = null];
 		collectNodes(state.im, FunctionDefinition, true).forEach[it.declaredReturnTypeRef = null];
+		collectNodes(state.im, CastExpression, true).forEach[it.targetTypeRef = null];
 		// 2) remove all type typeVars:
 		collectNodes(state.im, TypeVariable, false).forEach[remove(it)]
 		// 3) remove all type alias declarations

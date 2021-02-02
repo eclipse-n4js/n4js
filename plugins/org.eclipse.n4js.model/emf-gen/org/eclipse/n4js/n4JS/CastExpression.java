@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.CastExpression#getExpression <em>Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRef <em>Target Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRefInAST <em>Target Type Ref In AST</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getCastExpression()
@@ -59,25 +60,47 @@ public interface CastExpression extends Expression {
 	void setExpression(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Target Type Ref</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Target Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Target Type Ref</em>' containment reference.
+	 * @return the value of the '<em>Target Type Ref</em>' reference.
 	 * @see #setTargetTypeRef(TypeRef)
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getCastExpression_TargetTypeRef()
-	 * @model containment="true"
+	 * @model transient="true"
 	 * @generated
 	 */
 	TypeRef getTargetTypeRef();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRef <em>Target Type Ref</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRef <em>Target Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Target Type Ref</em>' containment reference.
+	 * @param value the new value of the '<em>Target Type Ref</em>' reference.
 	 * @see #getTargetTypeRef()
 	 * @generated
 	 */
 	void setTargetTypeRef(TypeRef value);
+
+	/**
+	 * Returns the value of the '<em><b>Target Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Target Type Ref In AST</em>' containment reference.
+	 * @see #setTargetTypeRefInAST(TypeRef)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getCastExpression_TargetTypeRefInAST()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypeRef getTargetTypeRefInAST();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRefInAST <em>Target Type Ref In AST</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Target Type Ref In AST</em>' containment reference.
+	 * @see #getTargetTypeRefInAST()
+	 * @generated
+	 */
+	void setTargetTypeRefInAST(TypeRef value);
 
 } // CastExpression

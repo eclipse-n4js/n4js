@@ -1845,7 +1845,8 @@ class UnaryExpression extends Expression {
  */
 class CastExpression extends Expression {
 	contains Expression expression
-	contains TypeRef targetTypeRef
+	refers transient TypeRef targetTypeRef
+	contains TypeRef targetTypeRefInAST
 }
 
 class MultiplicativeExpression extends Expression {

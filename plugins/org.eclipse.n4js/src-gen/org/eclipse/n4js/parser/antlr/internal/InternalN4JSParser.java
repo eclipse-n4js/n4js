@@ -29123,7 +29123,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject current = null;
         Token otherlv_2=null;
         EObject this_PostfixExpression_0 = null;
-        EObject lv_targetTypeRef_3_0 = null;
+        EObject lv_targetTypeRefInAST_3_0 = null;
         	enterRule();
         try {
             {
@@ -29165,10 +29165,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0());
+                      						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0());
                     }
                     pushFollow(FOLLOW_2);
-                    lv_targetTypeRef_3_0=ruleArrayTypeExpression();
+                    lv_targetTypeRefInAST_3_0=ruleArrayTypeExpression();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -29177,8 +29177,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						}
                       						set(
                       							current,
-                      							"targetTypeRef",
-                      							lv_targetTypeRef_3_0,
+                      							"targetTypeRefInAST",
+                      							lv_targetTypeRefInAST_3_0,
                       							"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
                       						afterParserOrEnumRuleCall();
                     }
@@ -29205,7 +29205,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject current = null;
         Token otherlv_2=null;
         EObject this_PostfixExpression_0 = null;
-        EObject lv_targetTypeRef_3_0 = null;
+        EObject lv_targetTypeRefInAST_3_0 = null;
         	enterRule();
         try {
             {
@@ -29247,10 +29247,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0());
+                      						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0());
                     }
                     pushFollow(FOLLOW_2);
-                    lv_targetTypeRef_3_0=ruleArrayTypeExpression();
+                    lv_targetTypeRefInAST_3_0=ruleArrayTypeExpression();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
@@ -29259,8 +29259,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						}
                       						set(
                       							current,
-                      							"targetTypeRef",
-                      							lv_targetTypeRef_3_0,
+                      							"targetTypeRefInAST",
+                      							lv_targetTypeRefInAST_3_0,
                       							"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
                       						afterParserOrEnumRuleCall();
                     }

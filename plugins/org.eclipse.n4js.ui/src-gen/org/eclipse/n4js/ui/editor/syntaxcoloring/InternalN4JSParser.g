@@ -10937,8 +10937,8 @@ ruleCastExpression
 		)
 		(
 			(
-				TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression{
-					announce($TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.start, $TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
+				TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression{
+					announce($TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.start, $TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1());
 				}
 			)
 		)
@@ -10968,8 +10968,8 @@ norm1_CastExpression
 		)
 		(
 			(
-				TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression{
-					announce($TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.start, $TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
+				TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression{
+					announce($TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.start, $TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.stop, grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1());
 				}
 			)
 		)

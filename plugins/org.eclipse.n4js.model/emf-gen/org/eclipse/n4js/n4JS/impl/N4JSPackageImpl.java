@@ -5608,6 +5608,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getCastExpression_TargetTypeRefInAST() {
+		return (EReference)castExpressionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getMultiplicativeExpression() {
 		return multiplicativeExpressionEClass;
 	}
@@ -8149,6 +8159,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		castExpressionEClass = createEClass(CAST_EXPRESSION);
 		createEReference(castExpressionEClass, CAST_EXPRESSION__EXPRESSION);
 		createEReference(castExpressionEClass, CAST_EXPRESSION__TARGET_TYPE_REF);
+		createEReference(castExpressionEClass, CAST_EXPRESSION__TARGET_TYPE_REF_IN_AST);
 
 		multiplicativeExpressionEClass = createEClass(MULTIPLICATIVE_EXPRESSION);
 		createEReference(multiplicativeExpressionEClass, MULTIPLICATIVE_EXPRESSION__LHS);
@@ -9345,7 +9356,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(castExpressionEClass, CastExpression.class, "CastExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCastExpression_Expression(), this.getExpression(), null, "expression", null, 0, 1, CastExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getCastExpression_TargetTypeRef(), theTypeRefsPackage.getTypeRef(), null, "targetTypeRef", null, 0, 1, CastExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCastExpression_TargetTypeRef(), theTypeRefsPackage.getTypeRef(), null, "targetTypeRef", null, 0, 1, CastExpression.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCastExpression_TargetTypeRefInAST(), theTypeRefsPackage.getTypeRef(), null, "targetTypeRefInAST", null, 0, 1, CastExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(multiplicativeExpressionEClass, MultiplicativeExpression.class, "MultiplicativeExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getMultiplicativeExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, MultiplicativeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

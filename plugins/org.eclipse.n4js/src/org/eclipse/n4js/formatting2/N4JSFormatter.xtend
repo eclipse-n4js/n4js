@@ -599,7 +599,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 	def dispatch void format(CastExpression expr, extension IFormattableDocument document) {
 		expr.regionFor.keyword("as").prepend[newLines = 0; oneSpace].append[newLines = 0; oneSpace];
 		expr.expression.format;
-		expr.targetTypeRef.format;
+		expr.targetTypeRefInAST.format;
 	}
 
 	def dispatch void format(Block block, extension IFormattableDocument document) {

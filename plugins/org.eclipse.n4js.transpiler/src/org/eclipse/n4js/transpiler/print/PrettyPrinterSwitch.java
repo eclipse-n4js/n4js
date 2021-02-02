@@ -1051,7 +1051,11 @@ import com.google.common.base.Strings;
 	public Boolean caseCastExpression(CastExpression original) {
 		process(original.getExpression());
 		write(" as ");
-		write(original.getTargetTypeRef().getTypeRefAsString());
+		TypeRef targetTypeRef = original.getTargetTypeRef();
+		if (targetTypeRef == null) {
+			targetTypeRef = original.getTargetTypeRefInAST();
+		}
+		write(targetTypeRef.getTypeRefAsString());
 		return DONE;
 	}
 

@@ -20776,7 +20776,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         retval.start = input.LT(1);
         Token AsKeyword_1_0_0_1=null;
         InternalN4JSParser.rulePostfixExpression_return PostfixExpressionParserRuleCall_0 = null;
-        InternalN4JSParser.ruleArrayTypeExpression_return TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0 = null;
+        InternalN4JSParser.ruleArrayTypeExpression_return TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0 = null;
         try {
             {
             {
@@ -20806,11 +20806,11 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     pushFollow(FOLLOW_2);
-                    TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression();
+                    TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                      					announce((TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.start):null), (TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.stop):null), grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
+                      					announce((TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.start):null), (TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.stop):null), grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1());
                     }
                     }
                     }
@@ -20835,7 +20835,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         retval.start = input.LT(1);
         Token AsKeyword_1_0_0_1=null;
         InternalN4JSParser.norm1_PostfixExpression_return PostfixExpressionParserRuleCall_0 = null;
-        InternalN4JSParser.ruleArrayTypeExpression_return TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0 = null;
+        InternalN4JSParser.ruleArrayTypeExpression_return TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0 = null;
         try {
             {
             {
@@ -20865,11 +20865,11 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                     {
                     {
                     pushFollow(FOLLOW_2);
-                    TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression();
+                    TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0=ruleArrayTypeExpression();
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                      					announce((TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.start):null), (TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0.stop):null), grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1());
+                      					announce((TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.start):null), (TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0!=null?((Token)TargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0.stop):null), grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1());
                     }
                     }
                     }

@@ -47839,9 +47839,9 @@ rule__CastExpression__Group_1__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1()); }
-	(rule__CastExpression__TargetTypeRefAssignment_1_1)
-	{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1()); }
+	{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1()); }
+	(rule__CastExpression__TargetTypeRefInASTAssignment_1_1)
+	{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1()); }
 )
 ;
 finally {
@@ -48028,9 +48028,9 @@ norm1_CastExpression__Group_1__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1()); }
-	(norm1_CastExpression__TargetTypeRefAssignment_1_1)
-	{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefAssignment_1_1()); }
+	{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1()); }
+	(norm1_CastExpression__TargetTypeRefInASTAssignment_1_1)
+	{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTAssignment_1_1()); }
 )
 ;
 finally {
@@ -84518,30 +84518,30 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__CastExpression__TargetTypeRefAssignment_1_1
+rule__CastExpression__TargetTypeRefInASTAssignment_1_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
+		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0()); }
 		ruleArrayTypeExpression
-		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
+		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0()); }
 	)
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-norm1_CastExpression__TargetTypeRefAssignment_1_1
+norm1_CastExpression__TargetTypeRefInASTAssignment_1_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
+		{ before(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0()); }
 		ruleArrayTypeExpression
-		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0()); }
+		{ after(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0()); }
 	)
 ;
 finally {

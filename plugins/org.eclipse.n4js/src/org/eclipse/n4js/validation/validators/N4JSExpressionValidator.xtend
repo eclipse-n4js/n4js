@@ -1216,7 +1216,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkCastExpression(CastExpression castExpression) {
 		// avoid validating a broken AST
-		if (castExpression.expression === null || castExpression.targetTypeRef === null)
+		if (castExpression.expression === null || castExpression.targetTypeRefInAST === null)
 			return;
 
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(castExpression);

@@ -5883,20 +5883,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
 		private final Action cCastExpressionExpressionAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
 		private final Keyword cAsKeyword_1_0_0_1 = (Keyword)cGroup_1_0_0.eContents().get(1);
-		private final Assignment cTargetTypeRefAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0 = (RuleCall)cTargetTypeRefAssignment_1_1.eContents().get(0);
+		private final Assignment cTargetTypeRefInASTAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0 = (RuleCall)cTargetTypeRefInASTAssignment_1_1.eContents().get(0);
 		
 		///* Cast expression (N4JS 6.2.3) */ CastExpression <Yield Expression:
-		//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?;
+		//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRefInAST=ArrayTypeExpression)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?
+		//PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRefInAST=ArrayTypeExpression)?
 		public Group getGroup() { return cGroup; }
 		
 		//PostfixExpression<Yield>
 		public RuleCall getPostfixExpressionParserRuleCall_0() { return cPostfixExpressionParserRuleCall_0; }
 		
-		//(=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?
+		//(=> ({CastExpression.expression=current} 'as') targetTypeRefInAST=ArrayTypeExpression)?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//=> ({CastExpression.expression=current} 'as')
@@ -5911,11 +5911,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//'as'
 		public Keyword getAsKeyword_1_0_0_1() { return cAsKeyword_1_0_0_1; }
 		
-		//targetTypeRef=ArrayTypeExpression
-		public Assignment getTargetTypeRefAssignment_1_1() { return cTargetTypeRefAssignment_1_1; }
+		//targetTypeRefInAST=ArrayTypeExpression
+		public Assignment getTargetTypeRefInASTAssignment_1_1() { return cTargetTypeRefInASTAssignment_1_1; }
 		
 		//ArrayTypeExpression
-		public RuleCall getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0() { return cTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0; }
+		public RuleCall getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0() { return cTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0; }
 	}
 	public class UnaryExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.UnaryExpression");
@@ -12419,7 +12419,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	///* Cast expression (N4JS 6.2.3) */ CastExpression <Yield Expression:
-	//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?;
+	//	PostfixExpression<Yield> (=> ({CastExpression.expression=current} 'as') targetTypeRefInAST=ArrayTypeExpression)?;
 	public CastExpressionElements getCastExpressionAccess() {
 		return pCastExpression;
 	}

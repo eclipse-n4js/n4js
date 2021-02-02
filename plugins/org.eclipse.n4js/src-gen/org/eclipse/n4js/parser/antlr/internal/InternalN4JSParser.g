@@ -20308,17 +20308,17 @@ ruleCastExpression returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0());
 					}
-					lv_targetTypeRef_3_0=ruleArrayTypeExpression
+					lv_targetTypeRefInAST_3_0=ruleArrayTypeExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getCastExpressionRule());
 						}
 						set(
 							$current,
-							"targetTypeRef",
-							lv_targetTypeRef_3_0,
+							"targetTypeRefInAST",
+							lv_targetTypeRefInAST_3_0,
 							"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
 						afterParserOrEnumRuleCall();
 					}
@@ -20371,17 +20371,17 @@ norm1_CastExpression returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefArrayTypeExpressionParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getCastExpressionAccess().getTargetTypeRefInASTArrayTypeExpressionParserRuleCall_1_1_0());
 					}
-					lv_targetTypeRef_3_0=ruleArrayTypeExpression
+					lv_targetTypeRefInAST_3_0=ruleArrayTypeExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getCastExpressionRule());
 						}
 						set(
 							$current,
-							"targetTypeRef",
-							lv_targetTypeRef_3_0,
+							"targetTypeRefInAST",
+							lv_targetTypeRefInAST_3_0,
 							"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
 						afterParserOrEnumRuleCall();
 					}

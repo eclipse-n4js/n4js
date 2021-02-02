@@ -10405,7 +10405,7 @@ public interface N4JSPackage extends EPackage {
 	int CAST_EXPRESSION__EXPRESSION = EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Target Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Target Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -10414,13 +10414,22 @@ public interface N4JSPackage extends EPackage {
 	int CAST_EXPRESSION__TARGET_TYPE_REF = EXPRESSION_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Target Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CAST_EXPRESSION__TARGET_TYPE_REF_IN_AST = EXPRESSION_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Cast Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CAST_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+	int CAST_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
@@ -20950,15 +20959,26 @@ public interface N4JSPackage extends EPackage {
 	EReference getCastExpression_Expression();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRef <em>Target Type Ref</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRef <em>Target Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Target Type Ref</em>'.
+	 * @return the meta object for the reference '<em>Target Type Ref</em>'.
 	 * @see org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRef()
 	 * @see #getCastExpression()
 	 * @generated
 	 */
 	EReference getCastExpression_TargetTypeRef();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRefInAST <em>Target Type Ref In AST</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Target Type Ref In AST</em>'.
+	 * @see org.eclipse.n4js.n4JS.CastExpression#getTargetTypeRefInAST()
+	 * @see #getCastExpression()
+	 * @generated
+	 */
+	EReference getCastExpression_TargetTypeRefInAST();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.MultiplicativeExpression <em>Multiplicative Expression</em>}'.
@@ -26433,12 +26453,20 @@ public interface N4JSPackage extends EPackage {
 		EReference CAST_EXPRESSION__EXPRESSION = eINSTANCE.getCastExpression_Expression();
 
 		/**
-		 * The meta object literal for the '<em><b>Target Type Ref</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Target Type Ref</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference CAST_EXPRESSION__TARGET_TYPE_REF = eINSTANCE.getCastExpression_TargetTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Target Type Ref In AST</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CAST_EXPRESSION__TARGET_TYPE_REF_IN_AST = eINSTANCE.getCastExpression_TargetTypeRefInAST();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.MultiplicativeExpressionImpl <em>Multiplicative Expression</em>}' class.
