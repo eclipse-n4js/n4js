@@ -28634,17 +28634,17 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public final InternalN4JSParser.ruleTypeRefAnnotationArgument_return ruleTypeRefAnnotationArgument() throws RecognitionException {
         InternalN4JSParser.ruleTypeRefAnnotationArgument_return retval = new InternalN4JSParser.ruleTypeRefAnnotationArgument_return();
         retval.start = input.LT(1);
-        InternalN4JSParser.ruleTypeRef_return TypeRefTypeRefParserRuleCall_0 = null;
+        InternalN4JSParser.ruleTypeRef_return TypeRefInASTTypeRefParserRuleCall_0 = null;
         try {
             {
             {
             {
             pushFollow(FOLLOW_2);
-            TypeRefTypeRefParserRuleCall_0=ruleTypeRef();
+            TypeRefInASTTypeRefParserRuleCall_0=ruleTypeRef();
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-              			announce((TypeRefTypeRefParserRuleCall_0!=null?((Token)TypeRefTypeRefParserRuleCall_0.start):null), (TypeRefTypeRefParserRuleCall_0!=null?((Token)TypeRefTypeRefParserRuleCall_0.stop):null), grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefAssignment());
+              			announce((TypeRefInASTTypeRefParserRuleCall_0!=null?((Token)TypeRefInASTTypeRefParserRuleCall_0.start):null), (TypeRefInASTTypeRefParserRuleCall_0!=null?((Token)TypeRefInASTTypeRefParserRuleCall_0.stop):null), grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTAssignment());
             }
             }
             }

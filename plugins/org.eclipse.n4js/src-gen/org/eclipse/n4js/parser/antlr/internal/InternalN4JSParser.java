@@ -40205,17 +40205,17 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     }
     public final EObject ruleTypeRefAnnotationArgument() throws RecognitionException {
         EObject current = null;
-        EObject lv_typeRef_0_0 = null;
+        EObject lv_typeRefInAST_0_0 = null;
         	enterRule();
         try {
             {
             {
             {
             if ( state.backtracking==0 ) {
-              				newCompositeNode(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefTypeRefParserRuleCall_0());
+              				newCompositeNode(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTTypeRefParserRuleCall_0());
             }
             pushFollow(FOLLOW_2);
-            lv_typeRef_0_0=ruleTypeRef();
+            lv_typeRefInAST_0_0=ruleTypeRef();
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -40224,8 +40224,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               				}
               				set(
               					current,
-              					"typeRef",
-              					lv_typeRef_0_0,
+              					"typeRefInAST",
+              					lv_typeRefInAST_0_0,
               					"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
               				afterParserOrEnumRuleCall();
             }

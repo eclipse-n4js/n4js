@@ -497,7 +497,8 @@ class LiteralAnnotationArgument extends AnnotationArgument {
  * to access this information.
  */
 class TypeRefAnnotationArgument extends AnnotationArgument {
-	contains TypeRef typeRef
+	refers transient TypeRef typeRef
+	contains TypeRef typeRefInAST
 	op TypeRef value() {
 		return typeRef;
 	}

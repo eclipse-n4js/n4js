@@ -2568,6 +2568,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getTypeRefAnnotationArgument_TypeRefInAST() {
+		return (EReference)typeRefAnnotationArgumentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getTypeRefAnnotationArgument__Value() {
 		return typeRefAnnotationArgumentEClass.getEOperations().get(0);
 	}
@@ -7756,6 +7766,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		typeRefAnnotationArgumentEClass = createEClass(TYPE_REF_ANNOTATION_ARGUMENT);
 		createEReference(typeRefAnnotationArgumentEClass, TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF);
+		createEReference(typeRefAnnotationArgumentEClass, TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST);
 		createEOperation(typeRefAnnotationArgumentEClass, TYPE_REF_ANNOTATION_ARGUMENT___VALUE);
 
 		functionOrFieldAccessorEClass = createEClass(FUNCTION_OR_FIELD_ACCESSOR);
@@ -8857,7 +8868,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getLiteralAnnotationArgument__Value(), this.getLiteral(), "value", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(typeRefAnnotationArgumentEClass, TypeRefAnnotationArgument.class, "TypeRefAnnotationArgument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypeRefAnnotationArgument_TypeRef(), theTypeRefsPackage.getTypeRef(), null, "typeRef", null, 0, 1, TypeRefAnnotationArgument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypeRefAnnotationArgument_TypeRef(), theTypeRefsPackage.getTypeRef(), null, "typeRef", null, 0, 1, TypeRefAnnotationArgument.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypeRefAnnotationArgument_TypeRefInAST(), theTypeRefsPackage.getTypeRef(), null, "typeRefInAST", null, 0, 1, TypeRefAnnotationArgument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTypeRefAnnotationArgument__Value(), theTypeRefsPackage.getTypeRef(), "value", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

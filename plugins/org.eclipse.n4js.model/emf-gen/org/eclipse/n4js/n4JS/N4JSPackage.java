@@ -1747,7 +1747,7 @@ public interface N4JSPackage extends EPackage {
 	int TYPE_REF_ANNOTATION_ARGUMENT = 28;
 
 	/**
-	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1756,13 +1756,22 @@ public interface N4JSPackage extends EPackage {
 	int TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF = ANNOTATION_ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST = ANNOTATION_ARGUMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Type Ref Annotation Argument</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_ANNOTATION_ARGUMENT_FEATURE_COUNT = ANNOTATION_ARGUMENT_FEATURE_COUNT + 1;
+	int TYPE_REF_ANNOTATION_ARGUMENT_FEATURE_COUNT = ANNOTATION_ARGUMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Value As String</em>' operation.
@@ -17807,15 +17816,26 @@ public interface N4JSPackage extends EPackage {
 	EClass getTypeRefAnnotationArgument();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.TypeRefAnnotationArgument#getTypeRef <em>Type Ref</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.TypeRefAnnotationArgument#getTypeRef <em>Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Type Ref</em>'.
+	 * @return the meta object for the reference '<em>Type Ref</em>'.
 	 * @see org.eclipse.n4js.n4JS.TypeRefAnnotationArgument#getTypeRef()
 	 * @see #getTypeRefAnnotationArgument()
 	 * @generated
 	 */
 	EReference getTypeRefAnnotationArgument_TypeRef();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.TypeRefAnnotationArgument#getTypeRefInAST <em>Type Ref In AST</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Type Ref In AST</em>'.
+	 * @see org.eclipse.n4js.n4JS.TypeRefAnnotationArgument#getTypeRefInAST()
+	 * @see #getTypeRefAnnotationArgument()
+	 * @generated
+	 */
+	EReference getTypeRefAnnotationArgument_TypeRefInAST();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.TypeRefAnnotationArgument#value() <em>Value</em>}' operation.
@@ -23823,12 +23843,20 @@ public interface N4JSPackage extends EPackage {
 		EClass TYPE_REF_ANNOTATION_ARGUMENT = eINSTANCE.getTypeRefAnnotationArgument();
 
 		/**
-		 * The meta object literal for the '<em><b>Type Ref</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Type Ref</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF = eINSTANCE.getTypeRefAnnotationArgument_TypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Type Ref In AST</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST = eINSTANCE.getTypeRefAnnotationArgument_TypeRefInAST();
 
 		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' operation.

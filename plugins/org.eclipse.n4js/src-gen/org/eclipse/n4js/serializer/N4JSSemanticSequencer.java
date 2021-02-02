@@ -28200,15 +28200,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     TypeRefAnnotationArgument returns TypeRefAnnotationArgument
 	 *
 	 * Constraint:
-	 *     typeRef=TypeRef
+	 *     typeRefInAST=TypeRef
 	 */
 	protected void sequence_TypeRefAnnotationArgument(ISerializationContext context, TypeRefAnnotationArgument semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefTypeRefParserRuleCall_0(), semanticObject.getTypeRef());
+		feeder.accept(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTTypeRefParserRuleCall_0(), semanticObject.getTypeRefInAST());
 		feeder.finish();
 	}
 	

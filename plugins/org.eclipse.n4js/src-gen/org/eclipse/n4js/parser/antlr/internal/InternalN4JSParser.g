@@ -28355,17 +28355,17 @@ ruleTypeRefAnnotationArgument returns [EObject current=null]
 	(
 		(
 			{
-				newCompositeNode(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefTypeRefParserRuleCall_0());
+				newCompositeNode(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTTypeRefParserRuleCall_0());
 			}
-			lv_typeRef_0_0=ruleTypeRef
+			lv_typeRefInAST_0_0=ruleTypeRef
 			{
 				if ($current==null) {
 					$current = createModelElementForParent(grammarAccess.getTypeRefAnnotationArgumentRule());
 				}
 				set(
 					$current,
-					"typeRef",
-					lv_typeRef_0_0,
+					"typeRefInAST",
+					lv_typeRefInAST_0_0,
 					"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 				afterParserOrEnumRuleCall();
 			}

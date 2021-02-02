@@ -7164,9 +7164,9 @@ ruleTypeRefAnnotationArgument
 	}
 	:
 	(
-		{ before(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefAssignment()); }
-		(rule__TypeRefAnnotationArgument__TypeRefAssignment)
-		{ after(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefAssignment()); }
+		{ before(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTAssignment()); }
+		(rule__TypeRefAnnotationArgument__TypeRefInASTAssignment)
+		{ after(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTAssignment()); }
 	)
 ;
 finally {
@@ -86690,15 +86690,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__TypeRefAnnotationArgument__TypeRefAssignment
+rule__TypeRefAnnotationArgument__TypeRefInASTAssignment
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefTypeRefParserRuleCall_0()); }
+		{ before(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTTypeRefParserRuleCall_0()); }
 		ruleTypeRef
-		{ after(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefTypeRefParserRuleCall_0()); }
+		{ after(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTTypeRefParserRuleCall_0()); }
 	)
 ;
 finally {

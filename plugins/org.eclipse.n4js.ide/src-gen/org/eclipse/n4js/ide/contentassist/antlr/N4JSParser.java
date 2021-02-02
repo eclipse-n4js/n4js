@@ -926,7 +926,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getArgsAssignment_1_1_0(), "rule__AnnotationNoAtSign__ArgsAssignment_1_1_0");
 			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getArgsAssignment_1_1_1_1(), "rule__AnnotationNoAtSign__ArgsAssignment_1_1_1_1");
 			builder.put(grammarAccess.getLiteralAnnotationArgumentAccess().getLiteralAssignment(), "rule__LiteralAnnotationArgument__LiteralAssignment");
-			builder.put(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefAssignment(), "rule__TypeRefAnnotationArgument__TypeRefAssignment");
+			builder.put(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTAssignment(), "rule__TypeRefAnnotationArgument__TypeRefInASTAssignment");
 			builder.put(grammarAccess.getAnnotationListAccess().getAnnotationsAssignment_0_0_2(), "rule__AnnotationList__AnnotationsAssignment_0_0_2");
 			builder.put(grammarAccess.getAnnotationListAccess().getAnnotationsAssignment_1(), "rule__AnnotationList__AnnotationsAssignment_1");
 			builder.put(grammarAccess.getExpressionAnnotationListAccess().getAnnotationsAssignment_1(), "rule__ExpressionAnnotationList__AnnotationsAssignment_1");

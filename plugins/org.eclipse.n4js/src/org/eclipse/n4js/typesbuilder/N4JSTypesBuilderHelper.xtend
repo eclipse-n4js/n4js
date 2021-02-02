@@ -160,7 +160,7 @@ package class N4JSTypesBuilderHelper {
 					}
 					TypeRefAnnotationArgument: {
 						val arg = TypesFactory.eINSTANCE.createTAnnotationTypeRefArgument();
-						arg.typeRef = TypeUtils.copyWithProxies(typeRef);
+						arg.typeRef = TypeUtils.copyWithProxies(typeRefInAST);
 						return arg;
 					}
 				}
@@ -205,7 +205,7 @@ package class N4JSTypesBuilderHelper {
 
 	def private TypeRef internalGetDeclaredThisTypeFromAnnotation(AnnotableElement element) {
 		val annThis = AnnotationDefinition.THIS.getAnnotation(element);
-		return annThis?.args?.filter(TypeRefAnnotationArgument)?.head?.typeRef;
+		return annThis?.args?.filter(TypeRefAnnotationArgument)?.head?.typeRefInAST;
 	}
 
 

@@ -15810,8 +15810,8 @@ ruleTypeRefAnnotationArgument
 }:
 (
 	(
-		TypeRefTypeRefParserRuleCall_0=ruleTypeRef{
-			announce($TypeRefTypeRefParserRuleCall_0.start, $TypeRefTypeRefParserRuleCall_0.stop, grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefAssignment());
+		TypeRefInASTTypeRefParserRuleCall_0=ruleTypeRef{
+			announce($TypeRefInASTTypeRefParserRuleCall_0.start, $TypeRefInASTTypeRefParserRuleCall_0.stop, grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefInASTAssignment());
 		}
 	)
 )

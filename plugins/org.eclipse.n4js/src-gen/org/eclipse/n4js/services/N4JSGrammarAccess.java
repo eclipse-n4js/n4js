@@ -7794,18 +7794,18 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class TypeRefAnnotationArgumentElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TypeRefAnnotationArgument");
-		private final Assignment cTypeRefAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cTypeRefTypeRefParserRuleCall_0 = (RuleCall)cTypeRefAssignment.eContents().get(0);
+		private final Assignment cTypeRefInASTAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cTypeRefInASTTypeRefParserRuleCall_0 = (RuleCall)cTypeRefInASTAssignment.eContents().get(0);
 		
 		//TypeRefAnnotationArgument:
-		//	typeRef=TypeRef;
+		//	typeRefInAST=TypeRef;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//typeRef=TypeRef
-		public Assignment getTypeRefAssignment() { return cTypeRefAssignment; }
+		//typeRefInAST=TypeRef
+		public Assignment getTypeRefInASTAssignment() { return cTypeRefInASTAssignment; }
 		
 		//TypeRef
-		public RuleCall getTypeRefTypeRefParserRuleCall_0() { return cTypeRefTypeRefParserRuleCall_0; }
+		public RuleCall getTypeRefInASTTypeRefParserRuleCall_0() { return cTypeRefInASTTypeRefParserRuleCall_0; }
 	}
 	public class AnnotationListElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotationList");
@@ -13308,7 +13308,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypeRefAnnotationArgument:
-	//	typeRef=TypeRef;
+	//	typeRefInAST=TypeRef;
 	public TypeRefAnnotationArgumentElements getTypeRefAnnotationArgumentAccess() {
 		return pTypeRefAnnotationArgument;
 	}

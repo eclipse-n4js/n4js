@@ -1241,7 +1241,7 @@ LiteralAnnotationArgument:
 ;
 
 TypeRefAnnotationArgument:
-	typeRef=TypeRef
+	typeRefInAST=TypeRef
 ;
 
 AnnotationList:
