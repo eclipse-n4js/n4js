@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
-import java.util.List
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
@@ -48,17 +47,33 @@ class TrimTransformation extends Transformation {
 	}
 
 	override transform() {
-		// FIXME do not iterate as often!!!
-		// 1) remove all typeRefs
-		collectNodes(state.im, TypeRef, false).forEach[remove(it)];
-		((collectNodes(state.im, TypeReferenceInAST, false) as Object) as List<TypeReferenceInAST<?>>).forEach[remove(it)]; // cast required to avoid a warning
-		collectNodes(state.im, TypedElement, true).forEach[it.declaredTypeRef = null];
-		collectNodes(state.im, FunctionDefinition, true).forEach[it.declaredReturnTypeRef = null];
-		collectNodes(state.im, CastExpression, true).forEach[it.targetTypeRef = null];
-		collectNodes(state.im, TypeRefAnnotationArgument, true).forEach[it.typeRef = null];
-		// 2) remove all type typeVars:
-		collectNodes(state.im, TypeVariable, false).forEach[remove(it)]
-		// 3) remove all type alias declarations
-		collectNodes(state.im, N4TypeAliasDeclaration, false).forEach[remove(it)]
+		val toBeRemoved = newArrayList;
+		val iter = state.im.eAllContents;
+		while (iter.hasNext) {
+			val curr = iter.next;
+			if (curr instanceof TypeRef
+				|| curr instanceof TypeReferenceInAST
+				|| curr instanceof TypeVariable
+				|| curr instanceof N4TypeAliasDeclaration) {
+
+				toBeRemoved += curr;
+				iter.prune();
+			} else if (curr instanceof CastExpression) {
+				curr.targetTypeRef = null; // cross-reference -> won't confuse tree iterator
+			} else if (curr instanceof TypeRefAnnotationArgument) {
+				curr.typeRef = null; // cross-reference -> won't confuse tree iterator
+			} else {
+				if (curr instanceof TypedElement) {
+					curr.declaredTypeRef = null; // cross-reference -> won't confuse tree iterator
+				}
+				if (curr instanceof FunctionDefinition) {
+					curr.declaredReturnTypeRef = null; // cross-reference -> won't confuse tree iterator
+				}
+			}
+		}
+
+		for (obj : toBeRemoved) {
+			remove(obj);
+		}
 	}
 }
