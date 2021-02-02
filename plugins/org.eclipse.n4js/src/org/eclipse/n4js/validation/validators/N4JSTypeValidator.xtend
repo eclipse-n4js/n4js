@@ -41,6 +41,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
+import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -167,46 +168,46 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkParameterizedTypeRef(ParameterizedTypeRef paramTypeRef) {
-		val declaredType = paramTypeRef.declaredType;
+	def checkParameterizedTypeRef(ParameterizedTypeRef paramTypeRefInAST) {
+		val declaredType = paramTypeRefInAST.declaredType;
 		if (declaredType === null || declaredType.eIsProxy) {
 			return;
 		}
 
-		val isInTypeTypeRef = paramTypeRef.eContainer instanceof TypeTypeRef || (
-			paramTypeRef.eContainer instanceof Wildcard && paramTypeRef.eContainer.eContainer instanceof TypeTypeRef);
+		val isInTypeTypeRef = paramTypeRefInAST.eContainer instanceof TypeTypeRef || (
+			paramTypeRefInAST.eContainer instanceof Wildcard && paramTypeRefInAST.eContainer.eContainer instanceof TypeTypeRef);
 
 		if (isInTypeTypeRef) {
-			internalCheckValidTypeInTypeTypeRef(paramTypeRef);
+			internalCheckValidTypeInTypeTypeRef(paramTypeRefInAST);
 		} else {
-			internalCheckTypeArguments(declaredType.typeVars, paramTypeRef.typeArgs, false, declaredType, paramTypeRef,
+			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.typeArgs, false, declaredType, paramTypeRefInAST,
 				TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
 		}
-		internalCheckDynamic(paramTypeRef);
+		internalCheckDynamic(paramTypeRefInAST);
 
-		internalCheckStructuralPrimitiveTypeRef(paramTypeRef);
+		internalCheckStructuralPrimitiveTypeRef(paramTypeRefInAST);
 	}
 
 	/**
 	 * Add an issue if explicit use of structural type operator with a primitive type is detected.
 	 */
-	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
-		if (typeRef.typingStrategy != TypingStrategy.NOMINAL && !N4JSLanguageUtils.mayBeReferencedStructurally(typeRef.declaredType)) {
-			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
+	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRefInAST) {
+		if (typeRefInAST.typingStrategy != TypingStrategy.NOMINAL && !N4JSLanguageUtils.mayBeReferencedStructurally(typeRefInAST.declaredType)) {
+			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRefInAST, TYS_STRUCTURAL_PRIMITIVE);
 		}
 	}
 
-	def private void internalCheckValidTypeInTypeTypeRef(ParameterizedTypeRef paramTypeRef) {
+	def private void internalCheckValidTypeInTypeTypeRef(ParameterizedTypeRef paramTypeRefInAST) {
 		// IDE-785 uses ParamterizedTypeRefs in ClassifierTypeRefs. Currently Type Arguments are not supported in ClassifierTypeRefs, so
 		// we actively forbid them here. Will be loosened for IDE-1310
-		if (! paramTypeRef.typeArgs.isEmpty) {
-			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRef,
+		if (! paramTypeRefInAST.typeArgs.isEmpty) {
+			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF)
-		} else if (paramTypeRef instanceof FunctionTypeRef) {
-			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRef,
+		} else if (paramTypeRefInAST instanceof FunctionTypeRef) {
+			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
-		} else if (paramTypeRef.declaredType instanceof TFunction) {
-			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRef,
+		} else if (paramTypeRefInAST.declaredType instanceof TFunction) {
+			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
 		}
 	}
@@ -265,15 +266,19 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkSymbolReference(TypeRef typeRef) {
-		var bits = BuiltInTypeScope.get(typeRef?.eResource.resourceSet);
+	def checkSymbolReference(TypeRef typeRefInAST) {
+		val bits = BuiltInTypeScope.get(typeRefInAST.eResource.resourceSet);
+		val G = typeRefInAST.newRuleEnvironment;
+		val typeRef = tsh.resolveTypeAliasFlat(G, typeRefInAST);
 		if (typeRef.declaredType === bits.symbolObjectType) {
 			// we have a type reference to 'Symbol'
 			// -> the only allowed case is as target/receiver of a property access (i.e.: Symbol.iterator)
-			val parent = typeRef.eContainer;
-			if (!(parent instanceof ParameterizedPropertyAccessExpression) ||
-				(parent as ParameterizedPropertyAccessExpression).target !== typeRef) {
-				addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRef, BIT_SYMBOL_INVALID_USE);
+			val relevantNode = if (typeRefInAST.eContainer instanceof TypeReferenceInAST<?>) typeRefInAST.eContainer else typeRefInAST;
+			val parentNode = relevantNode.eContainer;
+			val isLegalUsage = parentNode instanceof ParameterizedPropertyAccessExpression
+				&& (parentNode as ParameterizedPropertyAccessExpression).target === relevantNode;
+			if (!isLegalUsage) {
+				addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
 			}
 		}
 	}
@@ -281,11 +286,11 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	/*
 	 * Constraints 08: primitive types except any must not be declared dynamic
 	 */
-	def private internalCheckDynamic(ParameterizedTypeRef ref) {
-		if (ref.dynamic) {
-			val Type t = ref.declaredType;
+	def private internalCheckDynamic(ParameterizedTypeRef refInAST) {
+		if (refInAST.dynamic) {
+			val Type t = refInAST.declaredType;
 			if (!N4JSLanguageUtils.mayBeReferencedDynamically(t)) {
-				addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(t.name), ref,
+				addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(t.name), refInAST,
 					TYS_PRIMITIVE_TYPE_DYNAMIC);
 			}
 		}

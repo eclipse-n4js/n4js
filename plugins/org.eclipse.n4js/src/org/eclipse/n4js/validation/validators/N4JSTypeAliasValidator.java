@@ -132,37 +132,37 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 	 * consider {@code ParameterizedTypeRef} here.
 	 */
 	@Check
-	public void checkTypeModifiersOfAlias(ParameterizedTypeRef typeRef) {
-		if (!typeRef.isAliasUnresolved()) {
+	public void checkTypeModifiersOfAlias(ParameterizedTypeRef typeRefInAST) {
+		if (!typeRefInAST.isAliasUnresolved()) {
 			return; // not a reference to an alias
 		}
-		final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(typeRef);
-		final TypeRef typeRefResolved = tsh.resolveTypeAliasFlat(G, typeRef);
-		if (typeRef.isDynamic()) {
+		final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(typeRefInAST);
+		final TypeRef typeRefResolved = tsh.resolveTypeAliasFlat(G, typeRefInAST);
+		if (typeRefInAST.isDynamic()) {
 			if (!(typeRefResolved instanceof ParameterizedTypeRef)) {
 				addIssue(IssueCodes.getMessageForALI_INVALID_MODIFIER("dynamically"),
-						typeRef, IssueCodes.ALI_INVALID_MODIFIER);
+						typeRefInAST, IssueCodes.ALI_INVALID_MODIFIER);
 			} else {
 				final Type declType = typeRefResolved.getDeclaredType();
 				if (!N4JSLanguageUtils.mayBeReferencedDynamically(declType)) {
 					addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(declType.getName()),
-							typeRef, IssueCodes.TYS_PRIMITIVE_TYPE_DYNAMIC);
+							typeRefInAST, IssueCodes.TYS_PRIMITIVE_TYPE_DYNAMIC);
 				}
 			}
 		}
-		if (typeRef.isUseSiteStructuralTyping()) {
+		if (typeRefInAST.isUseSiteStructuralTyping()) {
 			if (!(typeRefResolved instanceof ParameterizedTypeRef)) {
 				addIssue(IssueCodes.getMessageForALI_INVALID_MODIFIER("structurally"),
-						typeRef, IssueCodes.ALI_INVALID_MODIFIER);
+						typeRefInAST, IssueCodes.ALI_INVALID_MODIFIER);
 			} else {
 				final Type declType = typeRefResolved.getDeclaredType();
 				if (!N4JSLanguageUtils.mayBeReferencedStructurally(declType)) {
 					addIssue(IssueCodes.getMessageForTYS_STRUCTURAL_PRIMITIVE(),
-							typeRef, IssueCodes.TYS_STRUCTURAL_PRIMITIVE);
+							typeRefInAST, IssueCodes.TYS_STRUCTURAL_PRIMITIVE);
 				}
 			}
 		}
-		if (typeRef.eContainingFeature() == TypeRefsPackage.Literals.TYPE_TYPE_REF__TYPE_ARG) {
+		if (typeRefInAST.eContainingFeature() == TypeRefsPackage.Literals.TYPE_TYPE_REF__TYPE_ARG) {
 			// we here only enforce what is usually enforced by the grammar, as defined in rule TypeArgInTypeTypeRef in
 			// file TypeExpressions.xtext:
 			boolean isValidTypeArgInTypeTypeRef = typeRefResolved instanceof ParameterizedTypeRef
@@ -172,7 +172,7 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 			// in TypeExpressions.xtext, because this-types and wildcards cannot appear as actual type of an alias)
 			if (!isValidTypeArgInTypeTypeRef) {
 				addIssue(IssueCodes.getMessageForALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF("{}"),
-						typeRef, IssueCodes.ALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF);
+						typeRefInAST, IssueCodes.ALI_INVALID_TYPE_ALIAS_IN_TYPE_TYPE_REF);
 			}
 		}
 	}

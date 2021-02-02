@@ -189,11 +189,11 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def void checkN4StructuralWithOnTypeVariables(ParameterizedTypeRefStructural ptrs) {
-		if (!(ptrs.declaredType instanceof TypeVariable))
+	def void checkN4StructuralWithOnTypeVariables(ParameterizedTypeRefStructural ptrsInAST) {
+		if (!(ptrsInAST.declaredType instanceof TypeVariable))
 			return;
 
-		for (sm : ptrs.astStructuralMembers) {
+		for (sm : ptrsInAST.astStructuralMembers) {
 			val message = IssueCodes.getMessageForTYS_ADDITIONAL_STRUCTURAL_MEMBERS_ON_TYPE_VARS()
 			addIssue(message, sm, TYS_ADDITIONAL_STRUCTURAL_MEMBERS_ON_TYPE_VARS)
 		}
@@ -498,21 +498,21 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkDuplicateFieldsIn(ThisTypeRefStructural thisTypeRefStructural) {
-		val n4ClassifierDefinition = EcoreUtil2.getContainerOfType(thisTypeRefStructural, N4ClassifierDefinition)
+	def checkDuplicateFieldsIn(ThisTypeRefStructural thisTypeRefStructInAST) {
+		val n4ClassifierDefinition = EcoreUtil2.getContainerOfType(thisTypeRefStructInAST, N4ClassifierDefinition)
 		if (n4ClassifierDefinition !== null) {
 			val tClass = n4ClassifierDefinition.definedType
 			if (tClass instanceof TClass) {
-				internalCheckDuplicateFieldsIn(tClass, thisTypeRefStructural)
+				internalCheckDuplicateFieldsIn(tClass, thisTypeRefStructInAST)
 			}
 		}
 	}
 
-	private def internalCheckDuplicateFieldsIn(TClass tclass, ThisTypeRefStructural thisTypeRefStructural) {
-		val structFieldInitMode = thisTypeRefStructural.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+	private def internalCheckDuplicateFieldsIn(TClass tclass, ThisTypeRefStructural thisTypeRefStructInAST) {
+		val structFieldInitMode = thisTypeRefStructInAST.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val members = LazyOverrideAwareMemberCollector.collectAllMembers(tclass)
 		val membersByNameAndStatic = members.groupBy[Tuples.pair(name, static)];
-		val structuralMembersByNameAndStatic = thisTypeRefStructural.structuralMembers.groupBy [
+		val structuralMembersByNameAndStatic = thisTypeRefStructInAST.structuralMembers.groupBy [
 			Tuples.pair(name, static)
 		];
 		structuralMembersByNameAndStatic.keySet.forEach [
@@ -522,8 +522,8 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 				if (existingClassifierMember?.memberAccessModifier == MemberAccessModifier.PUBLIC) {
 					val message = getMessageForCLF_DUP_MEMBER(structuralFieldDuplicate.descriptionWithLine,
 						existingClassifierMember.descriptionWithLine);
-					val index = thisTypeRefStructural.structuralMembers.indexOf(structuralFieldDuplicate)
-					addIssue(message, thisTypeRefStructural,
+					val index = thisTypeRefStructInAST.structuralMembers.indexOf(structuralFieldDuplicate)
+					addIssue(message, thisTypeRefStructInAST,
 						TypeRefsPackage.Literals.STRUCTURAL_TYPE_REF__AST_STRUCTURAL_MEMBERS, index, CLF_DUP_MEMBER)
 				}
 			}

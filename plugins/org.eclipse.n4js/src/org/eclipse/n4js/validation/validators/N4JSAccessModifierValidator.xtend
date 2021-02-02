@@ -30,6 +30,7 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
+import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
@@ -144,11 +145,14 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkTypeRefOptionalFlag(TypeRef typeRef) {
-		if (typeRef.isFollowedByQuestionMark) {
-			val parent = typeRef.eContainer;
+	def checkTypeRefOptionalFlag(TypeRef typeRefInAST) {
+		if (typeRefInAST.isFollowedByQuestionMark) {
+			var parent = typeRefInAST.eContainer;
+			if (parent instanceof TypeReferenceInAST) {
+				parent = parent.eContainer;
+			}
 
-			val isLegalUseOfOptional = isReturnTypeButNotOfAGetter(typeRef, parent);
+			val isLegalUseOfOptional = isReturnTypeButNotOfAGetter(typeRefInAST, parent);
 
 			if(!isLegalUseOfOptional) {
 
@@ -156,15 +160,15 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 					return; // avoid duplicate error messages
 				} else if(parent instanceof N4FieldDeclaration || parent instanceof TField) {
 					val message = messageForCLF_FIELD_OPTIONAL_OLD_SYNTAX;
-					val node = NodeModelUtils.findActualNodeFor(typeRef)
+					val node = NodeModelUtils.findActualNodeFor(typeRefInAST)
 					if (node !== null) {
-						addIssue(message, typeRef, node.offset, node.length, CLF_FIELD_OPTIONAL_OLD_SYNTAX)
+						addIssue(message, typeRefInAST, node.offset, node.length, CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 					}
 				} else {
 					val message = messageForEXP_OPTIONAL_INVALID_PLACE;
-					val node = NodeModelUtils.findActualNodeFor(typeRef)
+					val node = NodeModelUtils.findActualNodeFor(typeRefInAST)
 					if (node !== null) {
-						addIssue(message, typeRef, node.offset, node.length, EXP_OPTIONAL_INVALID_PLACE)
+						addIssue(message, typeRefInAST, node.offset, node.length, EXP_OPTIONAL_INVALID_PLACE)
 					}
 				}
 			}
