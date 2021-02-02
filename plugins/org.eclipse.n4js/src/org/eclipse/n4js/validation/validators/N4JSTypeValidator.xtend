@@ -41,7 +41,6 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
-import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -272,14 +271,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		val typeRef = tsh.resolveTypeAliasFlat(G, typeRefInAST);
 		if (typeRef.declaredType === bits.symbolObjectType) {
 			// we have a type reference to 'Symbol'
-			// -> the only allowed case is as target/receiver of a property access (i.e.: Symbol.iterator)
-			val relevantNode = if (typeRefInAST.eContainer instanceof TypeReferenceInAST<?>) typeRefInAST.eContainer else typeRefInAST;
-			val parentNode = relevantNode.eContainer;
-			val isLegalUsage = parentNode instanceof ParameterizedPropertyAccessExpression
-				&& (parentNode as ParameterizedPropertyAccessExpression).target === relevantNode;
-			if (!isLegalUsage) {
-				addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
-			}
+			addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
 		}
 	}
 
