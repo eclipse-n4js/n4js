@@ -163,12 +163,16 @@ public final class StaticPolyfillHelper {
 			if (fillingResource == null)
 				return null;
 
+			// TODO GH-2055 avoid use of AST
 			final Script scriptFiller = fillingResource.getScriptResolved();
 			if (null != scriptFiller) {
 				final N4ClassDeclaration staticPolyfiller = EcoreUtil2
 						.getAllContentsOfType(scriptFiller, N4ClassDeclaration.class).stream().filter(it -> {
 							final TypeRef superClassRef = it.getSuperClassRef() != null
-									? it.getSuperClassRef().getTypeRef()
+									// next line: using #getTypeRef() would be more appropriate, but we do not need
+									// support for type aliases, here, and since we might be working on a reconciled AST
+									// here (see GH-2055), only #getTypeRefInAST() is available:
+									? it.getSuperClassRef().getTypeRefInAST()
 									: null;
 							return it.getDefinedTypeAsClass().isDeclaredStaticPolyfill() // is a static-polyfill
 									&& superClassRef != null
