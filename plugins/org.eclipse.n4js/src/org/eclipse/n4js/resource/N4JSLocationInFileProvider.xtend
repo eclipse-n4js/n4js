@@ -71,7 +71,8 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 		return super.getTextRegion(convertToSource(object), query);
 	}
 
-	def protected EObject convertToSource(EObject element) {
+	// TODO use N4JSASTUtils#getCorrespondingASTNode() instead, if possible
+	def private EObject convertToSource(EObject element) {
 		if (element === null || element.eIsProxy)
 			return null;
 		switch (element) {

@@ -37,9 +37,9 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.nodemodel.NodeModelAccess;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.ide.server.Document;
@@ -402,7 +402,7 @@ public class SemanticChangeProvider {
 				if (nodes != null && !nodes.isEmpty()) {
 					INode node = nodes.get(0);
 					EObject semElem = node.getSemanticElement();
-					if (semElem instanceof TypeVariable) {
+					if (semElem instanceof N4TypeVariable) {
 						offset = node.getOffset() - 1; // this respects '<' of a type variable, e.g. '<T> foo()'
 					} else {
 						offset = node.getOffset();

@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -25,6 +26,7 @@ import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -373,10 +375,6 @@ public abstract class N4JSASTUtils {
 	public static EObject getCorrespondingTypeModelElement(EObject obj) {
 		// is obj already a type model element?
 		if (obj != null && obj.eClass().getEPackage() == TypesPackage.eINSTANCE) {
-			// special case: is obj a TypeVariable used in the AST?
-			if (obj instanceof TypeVariable && ((TypeVariable) obj).getDefinedTypeVariable() != null) {
-				return ((TypeVariable) obj).getDefinedTypeVariable();
-			}
 			// special case: is obj a TStructMember used in the AST?
 			if (obj instanceof TStructMember && ((TStructMember) obj).getDefinedMember() != null)
 				return ((TStructMember) obj).getDefinedMember();
@@ -409,39 +407,41 @@ public abstract class N4JSASTUtils {
 		// is obj already an AST node?
 		if (obj != null && obj.eClass().getEPackage() == N4JSPackage.eINSTANCE) {
 			return obj;
-		} else if (obj instanceof TypeVariable && ((TypeVariable) obj).getDefinedTypeVariable() != null) {
-			return obj; // type variables with a non-null 'definedTypeVariable' property are AST nodes
 		}
 		// is obj a type model element related to an AST node?
 		if (obj instanceof SyntaxRelatedTElement) {
 			return ((SyntaxRelatedTElement) obj).getAstElement();
 		} else if (obj instanceof TypeVariable) {
-			N4TypeVariable n4TypeVar = getCorrespondingTypeVariableInAST((TypeVariable) obj);
-			if (n4TypeVar != null) {
-				return n4TypeVar;
-			} else if (isASTNode(obj)) {
-				return obj;
-			}
+			return getCorrespondingTypeVariableInAST((TypeVariable) obj);
 		}
 		return null;
 	}
 
 	/**
 	 * If the given type variable is located in the TModule, then this method returns its corresponding type variable in
-	 * the AST or <code>null</code> if it is not available or not found.
+	 * the AST or <code>null</code> if it is not available or not found. Usually returns a {@link N4TypeVariable}, but
+	 * in some cases also a {@link TypeVariable} may be returned.
 	 */
-	public static N4TypeVariable getCorrespondingTypeVariableInAST(TypeVariable tv) {
-		if (tv.getDefinedTypeVariable() != null) {
-			return null; // 'tv' is already an AST node (nested inside a TypeRef)
-		}
+	public static IdentifiableElement getCorrespondingTypeVariableInAST(TypeVariable tv) {
 		EObject containerInTModule = tv.eContainer();
-		EObject containerInAST = containerInTModule != null ? getCorrespondingASTNode(containerInTModule) : null;
-		if (containerInTModule instanceof Type && containerInAST instanceof GenericDeclaration) {
+		if (containerInTModule instanceof Type) {
 			List<TypeVariable> typeVarsInTModule = ((Type) containerInTModule).getTypeVars();
-			List<N4TypeVariable> typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
-			int idx = typeVarsInTModule.indexOf(tv);
-			if (idx >= 0 && idx < typeVarsInAST.size()) {
-				return typeVarsInAST.get(idx);
+			if (!typeVarsInTModule.isEmpty()) {
+				EObject containerInAST = getCorrespondingASTNode(containerInTModule);
+				List<? extends IdentifiableElement> typeVarsInAST = null;
+				if (containerInAST instanceof GenericDeclaration) {
+					typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
+				} else if (containerInAST instanceof TStructMethod) {
+					typeVarsInAST = ((TStructMethod) containerInAST).getTypeVars();
+				} else if (containerInAST instanceof FunctionTypeExpression) {
+					typeVarsInAST = ((FunctionTypeExpression) containerInAST).getTypeVars();
+				}
+				if (typeVarsInAST != null) {
+					int idx = typeVarsInTModule.indexOf(tv);
+					if (idx >= 0 && idx < typeVarsInAST.size()) {
+						return typeVarsInAST.get(idx);
+					}
+				}
 			}
 		}
 		return null;
