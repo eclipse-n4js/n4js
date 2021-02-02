@@ -60,17 +60,14 @@ pipeline {
                                 '--show-version',
                                 '-Dtycho.localArtifacts=ignore',
                                 '-Dmaven.test.failure.ignore',
-                                '-DWORKSPACE=' + env.WORKSPACE,
-                                '-DexcludeJRE'
+                                '-DWORKSPACE=' + env.WORKSPACE
                             ].join(' ')
                             def profiles = [
-                                'buildProduct',
                                 'execute-plugin-tests',
                                 'execute-plugin-ui-tests',
                                 'execute-ecma-tests',
                                 'execute-accesscontrol-tests',
                                 'execute-smoke-tests'
-	                            //'execute-hlc-integration-tests'
                             ].join(',')
 
                             sh "mvn -P${profiles} ${options} clean verify"
