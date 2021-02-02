@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -31,7 +32,6 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -226,17 +226,17 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def void checkUseOfDefinitionSiteVariance(TypeVariable typeVar) {
-		if((typeVar.declaredCovariant || typeVar.declaredContravariant) &&
-			!(typeVar.eContainer instanceof N4ClassifierDeclaration
-				&& typeVar.eContainmentFeature===N4JSPackage.eINSTANCE.genericDeclaration_TypeVars)) {
+	def void checkUseOfDefinitionSiteVariance(N4TypeVariable n4TypeVar) {
+		if((n4TypeVar.declaredCovariant || n4TypeVar.declaredContravariant) &&
+			!(n4TypeVar.eContainer instanceof N4ClassifierDeclaration
+				&& n4TypeVar.eContainmentFeature===N4JSPackage.eINSTANCE.genericDeclaration_TypeVars)) {
 			val message = messageForCLF_DEF_SITE_VARIANCE_ONLY_IN_CLASSIFIER;
-			val feature = if(typeVar.declaredCovariant) {
-				TypesPackage.eINSTANCE.typeVariable_DeclaredCovariant
+			val feature = if(n4TypeVar.declaredCovariant) {
+				N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredCovariant
 			} else {
-				TypesPackage.eINSTANCE.typeVariable_DeclaredContravariant
+				N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredContravariant
 			};
-			addIssue(message, typeVar, feature, CLF_DEF_SITE_VARIANCE_ONLY_IN_CLASSIFIER);
+			addIssue(message, n4TypeVar, feature, CLF_DEF_SITE_VARIANCE_ONLY_IN_CLASSIFIER);
 		}
 	}
 

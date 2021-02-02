@@ -47,6 +47,7 @@ import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Statement;
@@ -61,7 +62,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypeVariable;
 
 import org.eclipse.n4js.utils.EcoreUtilN4;
 
@@ -231,7 +231,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeVariable> typeVars;
+	protected EList<N4TypeVariable> typeVars;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -598,9 +598,9 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	 * @generated
 	 */
 	@Override
-	public EList<TypeVariable> getTypeVars() {
+	public EList<N4TypeVariable> getTypeVars() {
 		if (typeVars == null) {
-			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.FUNCTION_DECLARATION__TYPE_VARS);
+			typeVars = new EObjectContainmentEList<N4TypeVariable>(N4TypeVariable.class, this, N4JSPackage.FUNCTION_DECLARATION__TYPE_VARS);
 		}
 		return typeVars;
 	}
@@ -1001,7 +1001,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				return;
 			case N4JSPackage.FUNCTION_DECLARATION__TYPE_VARS:
 				getTypeVars().clear();
-				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				getTypeVars().addAll((Collection<? extends N4TypeVariable>)newValue);
 				return;
 			case N4JSPackage.FUNCTION_DECLARATION__NAME:
 				setName((String)newValue);

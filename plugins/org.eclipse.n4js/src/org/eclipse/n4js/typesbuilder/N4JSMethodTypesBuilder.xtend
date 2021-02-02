@@ -33,6 +33,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 @Singleton
 package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
 
+	@Inject extension N4JSTypeVariableTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
@@ -115,7 +116,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		val builtInTypeScope = BuiltInTypeScope.get(methodDecl.eResource.resourceSet)
 
 		methodType.setMemberAccessModifier(methodDecl)
-		methodType.addCopyOfTypeParameters(methodDecl, preLinkingPhase)
+		methodType.addTypeParameters(methodDecl, preLinkingPhase)
 		methodType.addFormalParameters(methodDecl, builtInTypeScope, preLinkingPhase)
 		methodType.setReturnTypeConsideringThis(methodDecl, builtInTypeScope, preLinkingPhase)
 		methodType.setDeclaredThisTypeFromAnnotation(methodDecl, preLinkingPhase)

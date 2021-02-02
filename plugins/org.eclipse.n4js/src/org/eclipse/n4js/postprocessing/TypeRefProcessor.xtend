@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.TypedElement
@@ -43,6 +44,9 @@ package class TypeRefProcessor extends AbstractProcessor {
 		}
 		if (node instanceof FunctionDefinition) {
 			node.declaredReturnTypeRef = doHandleTypeRef(G, node.declaredReturnTypeRefInAST);
+		}
+		if (node instanceof N4TypeVariable) {
+			node.declaredUpperBound = doHandleTypeRef(G, node.declaredUpperBoundInAST);
 		}
 		if (node instanceof CastExpression) {
 			node.targetTypeRef = doHandleTypeRef(G, node.targetTypeRefInAST);

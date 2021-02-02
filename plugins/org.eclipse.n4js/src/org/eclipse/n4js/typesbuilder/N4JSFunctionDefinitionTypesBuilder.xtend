@@ -33,6 +33,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
 
 	@Inject extension N4JSFormalParameterTypesBuilder
+	@Inject extension N4JSTypeVariableTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4IDLMigrationTypesBuilder
 
@@ -80,7 +81,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.setTypeAccessModifier(functionDecl)
 		functionType.setProvidedByRuntime(functionDecl, preLinkingPhase)
 		functionType.setReturnType(functionDecl, builtInTypeScope, preLinkingPhase)
-		functionType.addCopyOfTypeParameters(functionDecl, preLinkingPhase)
+		functionType.addTypeParameters(functionDecl, preLinkingPhase)
 		functionType.setDeclaredThisTypeFromAnnotation(functionDecl, preLinkingPhase)
 		functionType.copyAnnotations(functionDecl, preLinkingPhase)
 		functionType.declaredAsync = functionDecl.async // TODO change to declaredAsync once the annotation is gone
@@ -128,7 +129,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 		functionType.addFormalParametersWithInferredType(functionExpr, builtInTypeScope, preLinkingPhase)
 		functionType.setReturnTypeWithInferredType(functionExpr, builtInTypeScope, preLinkingPhase)
-		functionType.addCopyOfTypeParameters(functionExpr, preLinkingPhase)
+		functionType.addTypeParameters(functionExpr, preLinkingPhase)
 		functionType.setDeclaredThisTypeFromAnnotation(functionExpr, preLinkingPhase)
 
 		functionType.copyAnnotations(functionExpr, preLinkingPhase)

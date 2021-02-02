@@ -137,7 +137,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleVersionDeclaration?
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
@@ -147,7 +147,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleVersionDeclaration?
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleInterfaceExtendsList?
 		)
 		ruleMembers
@@ -169,7 +169,7 @@ ruleAnnotatedScriptElement:
 		*
 		'type'
 		ruleBindingIdentifier
-		ruleTypeVariables?
+		ruleTypeParameters?
 		'='
 		ruleTypeRef
 	)
@@ -352,7 +352,7 @@ ruleAnnotatedExportableElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
@@ -361,7 +361,7 @@ ruleAnnotatedExportableElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleInterfaceExtendsList?
 		)
 		ruleMembers
@@ -382,7 +382,7 @@ ruleAnnotatedExportableElement:
 		*
 		'type'
 		ruleBindingIdentifier
-		ruleTypeVariables?
+		ruleTypeParameters?
 		'='
 		ruleTypeRef
 	)
@@ -633,7 +633,7 @@ norm7_FunctionImplWithoutKeyword:
 
 // Rule FunctionHeader
 ruleFunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
 	ruleVersionDeclaration?
@@ -646,7 +646,7 @@ ruleFunctionHeader:
 
 // Rule FunctionHeader
 norm1_FunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
 	ruleVersionDeclaration?
@@ -659,7 +659,7 @@ norm1_FunctionHeader:
 
 // Rule FunctionHeader
 norm2_FunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
 	ruleVersionDeclaration?
@@ -672,7 +672,7 @@ norm2_FunctionHeader:
 
 // Rule FunctionHeader
 norm3_FunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
 	ruleVersionDeclaration?
@@ -1112,8 +1112,8 @@ norm1_AnnotatedExpression:
 	)
 ;
 
-// Rule TypeVariable
-ruleTypeVariable:
+// Rule N4TypeVariable
+ruleN4TypeVariable:
 	(
 		'out'
 		    |
@@ -3075,7 +3075,7 @@ rulePropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
+			(ruleTypeParameters?
 			ruleTypeRefWithModifiers
 			?
 			ruleAsyncNoTrailingLineBreak
@@ -3269,7 +3269,7 @@ norm1_PropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
+			(ruleTypeParameters?
 			ruleTypeRefWithModifiers
 			?
 			ruleAsyncNoTrailingLineBreak
@@ -3483,7 +3483,7 @@ ruleAnnotatedPropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
+			(ruleTypeParameters?
 			ruleTypeRefWithModifiers
 			?
 			(
@@ -3495,7 +3495,7 @@ ruleAnnotatedPropertyAssignment:
 				'('
 			)
 			)=>
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleTypeRefWithModifiers
 			?
 			(
@@ -3716,7 +3716,7 @@ norm1_AnnotatedPropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
+			(ruleTypeParameters?
 			ruleTypeRefWithModifiers
 			?
 			(
@@ -3728,7 +3728,7 @@ norm1_AnnotatedPropertyAssignment:
 				'('
 			)
 			)=>
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleTypeRefWithModifiers
 			?
 			(
@@ -3760,7 +3760,7 @@ norm1_AnnotatedPropertyAssignment:
 // Rule PropertyMethodDeclaration
 rulePropertyMethodDeclaration:
 	(
-		(ruleTypeVariables?
+		(ruleTypeParameters?
 		ruleTypeRefWithModifiers
 		?
 		ruleAsyncNoTrailingLineBreak
@@ -3773,7 +3773,7 @@ rulePropertyMethodDeclaration:
 			'('
 		)
 		)=>
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleTypeRefWithModifiers
 		?
 		ruleAsyncNoTrailingLineBreak
@@ -3798,7 +3798,7 @@ rulePropertyMethodDeclaration:
 // Rule PropertyMethodDeclaration
 norm1_PropertyMethodDeclaration:
 	(
-		(ruleTypeVariables?
+		(ruleTypeParameters?
 		ruleTypeRefWithModifiers
 		?
 		ruleAsyncNoTrailingLineBreak
@@ -3811,7 +3811,7 @@ norm1_PropertyMethodDeclaration:
 			'('
 		)
 		)=>
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleTypeRefWithModifiers
 		?
 		ruleAsyncNoTrailingLineBreak
@@ -6800,9 +6800,20 @@ ruleN4ClassDeclaration:
 		?
 		ruleVersionDeclaration?
 	)
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleClassExtendsImplements?
 	ruleMembers
+;
+
+// Rule TypeParameters
+ruleTypeParameters:
+	'<'
+	ruleN4TypeVariable
+	(
+		','
+		ruleN4TypeVariable
+	)*
+	'>'
 ;
 
 // Rule Members
@@ -6920,7 +6931,7 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleVersionDeclaration?
 	)
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleInterfaceExtendsList?
 	ruleMembers
 ;
@@ -6991,7 +7002,7 @@ ruleN4TypeAliasDeclaration:
 		ruleBindingIdentifier
 		?
 	)
-	ruleTypeVariables?
+	ruleTypeParameters?
 	'='
 	ruleTypeRef
 ;
@@ -7163,7 +7174,7 @@ ruleN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
@@ -7350,7 +7361,7 @@ norm1_N4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
@@ -7561,7 +7572,7 @@ ruleAnnotatedN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7574,7 +7585,7 @@ ruleAnnotatedN4MemberDeclaration:
 			)=>
 			ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7788,7 +7799,7 @@ norm1_AnnotatedN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7801,7 +7812,7 @@ norm1_AnnotatedN4MemberDeclaration:
 			)=>
 			ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7869,7 +7880,7 @@ ruleN4MethodDeclaration:
 	(
 		(ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -7882,7 +7893,7 @@ ruleN4MethodDeclaration:
 		)=>
 		ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -7907,7 +7918,7 @@ norm1_N4MethodDeclaration:
 	(
 		(ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -7920,7 +7931,7 @@ norm1_N4MethodDeclaration:
 		)=>
 		ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -9338,6 +9349,20 @@ ruleWildcardNewNotation:
 		'in'
 		ruleTypeRef
 	)
+;
+
+// Rule TypeVariable
+ruleTypeVariable:
+	(
+		'out'
+		    |
+		'in'
+	)?
+	RULE_IDENTIFIER
+	(
+		'extends'
+		ruleTypeRef
+	)?
 ;
 
 // Rule BindingIdentifier

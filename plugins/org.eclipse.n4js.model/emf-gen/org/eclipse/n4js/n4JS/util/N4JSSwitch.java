@@ -1479,6 +1479,16 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.N4_TYPE_VARIABLE: {
+				N4TypeVariable n4TypeVariable = (N4TypeVariable)theEObject;
+				T1 result = caseN4TypeVariable(n4TypeVariable);
+				if (result == null) result = caseTypeDefiningElement(n4TypeVariable);
+				if (result == null) result = caseIdentifiableElement(n4TypeVariable);
+				if (result == null) result = caseNamedElement(n4TypeVariable);
+				if (result == null) result = caseTypableElement(n4TypeVariable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.N4_TYPE_DEFINITION: {
 				N4TypeDefinition n4TypeDefinition = (N4TypeDefinition)theEObject;
 				T1 result = caseN4TypeDefinition(n4TypeDefinition);
@@ -4078,6 +4088,21 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseGenericDeclaration(GenericDeclaration object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>N4 Type Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>N4 Type Variable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseN4TypeVariable(N4TypeVariable object) {
 		return null;
 	}
 

@@ -1419,7 +1419,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeVarsTypeVariableParserRuleCall_2_1_0 = (RuleCall)cTypeVarsAssignment_2_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
-		//// TODO extract TypeVariableContainer to be used here
 		//fragment TypeVariables *:
 		//	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>';
 		@Override public ParserRule getRule() { return rule; }
@@ -2942,7 +2941,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMethodAccess().getRule();
 	}
 	
-	//// TODO extract TypeVariableContainer to be used here
 	//fragment TypeVariables *:
 	//	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>';
 	public TypeVariablesElements getTypeVariablesAccess() {

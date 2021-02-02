@@ -35,7 +35,6 @@ import org.eclipse.n4js.transpiler.im.Snippet;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -1359,7 +1358,7 @@ import com.google.common.base.Strings;
 		// write(suffix);
 	}
 
-	private void processTypeParams(EList<TypeVariable> typeParams) {
+	private void processTypeParams(EList<N4TypeVariable> typeParams) {
 		if (typeParams.isEmpty())
 			return;
 

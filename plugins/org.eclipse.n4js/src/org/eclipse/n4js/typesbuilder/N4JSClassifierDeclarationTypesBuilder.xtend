@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.TClassifier
 package abstract class N4JSClassifierDeclarationTypesBuilder {
 	
 	@Inject protected extension N4JSTypesBuilderHelper
+	@Inject protected extension N4JSTypeVariableTypesBuilder
 	@Inject protected extension N4JSFieldTypesBuilder
 	@Inject protected extension N4JSMethodTypesBuilder
 	@Inject protected extension N4JSGetterTypesBuilder

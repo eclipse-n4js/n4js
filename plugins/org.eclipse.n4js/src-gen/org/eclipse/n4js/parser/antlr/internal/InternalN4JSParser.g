@@ -589,11 +589,11 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedScriptElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_0_6());
+								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getTypeParametersParserRuleCall_1_3_0_0_6());
 							}
-							this_TypeVariables_15=ruleTypeVariables[$current]
+							this_TypeParameters_15=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_15.current;
+								$current = $this_TypeParameters_15.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -699,11 +699,11 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedScriptElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_3_0_1_6());
+								newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getTypeParametersParserRuleCall_1_3_0_1_6());
 							}
-							this_TypeVariables_23=ruleTypeVariables[$current]
+							this_TypeParameters_23=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_23.current;
+								$current = $this_TypeParameters_23.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -907,11 +907,11 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getAnnotatedScriptElementRule());
 						}
-						newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getTypeVariablesParserRuleCall_1_5_4());
+						newCompositeNode(grammarAccess.getAnnotatedScriptElementAccess().getTypeParametersParserRuleCall_1_5_4());
 					}
-					this_TypeVariables_40=ruleTypeVariables[$current]
+					this_TypeParameters_40=ruleTypeParameters[$current]
 					{
-						$current = $this_TypeVariables_40.current;
+						$current = $this_TypeParameters_40.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -1788,11 +1788,11 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedExportableElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getTypeVariablesParserRuleCall_1_2_0_0_5());
+								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getTypeParametersParserRuleCall_1_2_0_0_5());
 							}
-							this_TypeVariables_17=ruleTypeVariables[$current]
+							this_TypeParameters_17=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_17.current;
+								$current = $this_TypeParameters_17.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -1885,11 +1885,11 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedExportableElementRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getTypeVariablesParserRuleCall_1_2_0_1_5());
+								newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getTypeParametersParserRuleCall_1_2_0_1_5());
 							}
-							this_TypeVariables_24=ruleTypeVariables[$current]
+							this_TypeParameters_24=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_24.current;
+								$current = $this_TypeParameters_24.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -2080,11 +2080,11 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getAnnotatedExportableElementRule());
 						}
-						newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getTypeVariablesParserRuleCall_1_4_4());
+						newCompositeNode(grammarAccess.getAnnotatedExportableElementAccess().getTypeParametersParserRuleCall_1_4_4());
 					}
-					this_TypeVariables_40=ruleTypeVariables[$current]
+					this_TypeParameters_40=ruleTypeParameters[$current]
 					{
-						$current = $this_TypeVariables_40.current;
+						$current = $this_TypeParameters_40.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -3510,11 +3510,11 @@ ruleFunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeParametersParserRuleCall_0());
 			}
-			this_TypeVariables_0=ruleTypeVariables[$current]
+			this_TypeParameters_0=ruleTypeParameters[$current]
 			{
-				$current = $this_TypeVariables_0.current;
+				$current = $this_TypeParameters_0.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -3593,11 +3593,11 @@ norm1_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeParametersParserRuleCall_0());
 			}
-			this_TypeVariables_0=ruleTypeVariables[$current]
+			this_TypeParameters_0=ruleTypeParameters[$current]
 			{
-				$current = $this_TypeVariables_0.current;
+				$current = $this_TypeParameters_0.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -3676,11 +3676,11 @@ norm2_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeParametersParserRuleCall_0());
 			}
-			this_TypeVariables_0=ruleTypeVariables[$current]
+			this_TypeParameters_0=ruleTypeParameters[$current]
 			{
-				$current = $this_TypeVariables_0.current;
+				$current = $this_TypeParameters_0.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -3759,11 +3759,11 @@ norm3_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getFunctionHeaderRule());
 				}
-				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeVariablesParserRuleCall_0());
+				newCompositeNode(grammarAccess.getFunctionHeaderAccess().getTypeParametersParserRuleCall_0());
 			}
-			this_TypeVariables_0=ruleTypeVariables[$current]
+			this_TypeParameters_0=ruleTypeParameters[$current]
 			{
-				$current = $this_TypeVariables_0.current;
+				$current = $this_TypeParameters_0.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -5919,15 +5919,15 @@ norm1_AnnotatedExpression returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleTypeVariable
-entryRuleTypeVariable returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getTypeVariableRule()); }
-	iv_ruleTypeVariable=ruleTypeVariable
-	{ $current=$iv_ruleTypeVariable.current; }
+// Entry rule entryRuleN4TypeVariable
+entryRuleN4TypeVariable returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getN4TypeVariableRule()); }
+	iv_ruleN4TypeVariable=ruleN4TypeVariable
+	{ $current=$iv_ruleN4TypeVariable.current; }
 	EOF;
 
-// Rule TypeVariable
-ruleTypeVariable returns [EObject current=null]
+// Rule N4TypeVariable
+ruleN4TypeVariable returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -5940,11 +5940,11 @@ ruleTypeVariable returns [EObject current=null]
 				(
 					lv_declaredCovariant_0_0=Out
 					{
-						newLeafNode(lv_declaredCovariant_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
+						newLeafNode(lv_declaredCovariant_0_0, grammarAccess.getN4TypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getTypeVariableRule());
+							$current = createModelElement(grammarAccess.getN4TypeVariableRule());
 						}
 						setWithLastConsumed($current, "declaredCovariant", true, "out");
 					}
@@ -5955,11 +5955,11 @@ ruleTypeVariable returns [EObject current=null]
 				(
 					lv_declaredContravariant_1_0=In
 					{
-						newLeafNode(lv_declaredContravariant_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
+						newLeafNode(lv_declaredContravariant_1_0, grammarAccess.getN4TypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getTypeVariableRule());
+							$current = createModelElement(grammarAccess.getN4TypeVariableRule());
 						}
 						setWithLastConsumed($current, "declaredContravariant", true, "in");
 					}
@@ -5969,12 +5969,12 @@ ruleTypeVariable returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getTypeVariableAccess().getNameIdentifierOrThisParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getN4TypeVariableAccess().getNameIdentifierOrThisParserRuleCall_1_0());
 				}
 				lv_name_2_0=ruleIdentifierOrThis
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getTypeVariableRule());
+						$current = createModelElementForParent(grammarAccess.getN4TypeVariableRule());
 					}
 					set(
 						$current,
@@ -5988,22 +5988,22 @@ ruleTypeVariable returns [EObject current=null]
 		(
 			otherlv_3=Extends
 			{
-				newLeafNode(otherlv_3, grammarAccess.getTypeVariableAccess().getExtendsKeyword_2_0());
+				newLeafNode(otherlv_3, grammarAccess.getN4TypeVariableAccess().getExtendsKeyword_2_0());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundTypeRefParserRuleCall_2_1_0());
+						newCompositeNode(grammarAccess.getN4TypeVariableAccess().getDeclaredUpperBoundInASTTypeRefParserRuleCall_2_1_0());
 					}
-					lv_declaredUpperBound_4_0=ruleTypeRef
+					lv_declaredUpperBoundInAST_4_0=ruleTypeRef
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getTypeVariableRule());
+							$current = createModelElementForParent(grammarAccess.getN4TypeVariableRule());
 						}
 						set(
 							$current,
-							"declaredUpperBound",
-							lv_declaredUpperBound_4_0,
+							"declaredUpperBoundInAST",
+							lv_declaredUpperBoundInAST_4_0,
 							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
@@ -14891,7 +14891,7 @@ rulePropertyAssignment returns [EObject current=null]
 				(
 				)
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				(
 					(
@@ -15188,7 +15188,7 @@ norm1_PropertyAssignment returns [EObject current=null]
 				(
 				)
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				(
 					(
@@ -15683,7 +15683,7 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 						(
 						)
 						(
-							ruleTypeVariables[null]
+							ruleTypeParameters[null]
 						)?
 						(
 							(
@@ -15729,11 +15729,11 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedPropertyAssignmentRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getTypeVariablesParserRuleCall_1_3_0_0_1());
+								newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getTypeParametersParserRuleCall_1_3_0_0_1());
 							}
-							this_TypeVariables_18=ruleTypeVariables[$current]
+							this_TypeParameters_18=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_18.current;
+								$current = $this_TypeParameters_18.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -16362,7 +16362,7 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 						(
 						)
 						(
-							ruleTypeVariables[null]
+							ruleTypeParameters[null]
 						)?
 						(
 							(
@@ -16408,11 +16408,11 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedPropertyAssignmentRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getTypeVariablesParserRuleCall_1_3_0_0_1());
+								newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getTypeParametersParserRuleCall_1_3_0_0_1());
 							}
-							this_TypeVariables_18=ruleTypeVariables[$current]
+							this_TypeParameters_18=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_18.current;
+								$current = $this_TypeParameters_18.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -16637,7 +16637,7 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 				(
 				)
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				(
 					(
@@ -16684,11 +16684,11 @@ rulePropertyMethodDeclaration returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
 						}
-						newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getTypeVariablesParserRuleCall_0_0_1());
+						newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getTypeParametersParserRuleCall_0_0_1());
 					}
-					this_TypeVariables_1=ruleTypeVariables[$current]
+					this_TypeParameters_1=ruleTypeParameters[$current]
 					{
-						$current = $this_TypeVariables_1.current;
+						$current = $this_TypeParameters_1.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -16835,7 +16835,7 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 				(
 				)
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				(
 					(
@@ -16882,11 +16882,11 @@ norm1_PropertyMethodDeclaration returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
 						}
-						newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getTypeVariablesParserRuleCall_0_0_1());
+						newCompositeNode(grammarAccess.getPropertyMethodDeclarationAccess().getTypeParametersParserRuleCall_0_0_1());
 					}
-					this_TypeVariables_1=ruleTypeVariables[$current]
+					this_TypeParameters_1=ruleTypeParameters[$current]
 					{
-						$current = $this_TypeVariables_1.current;
+						$current = $this_TypeParameters_1.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -28828,11 +28828,11 @@ ruleN4ClassDeclaration returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getN4ClassDeclarationRule());
 				}
-				newCompositeNode(grammarAccess.getN4ClassDeclarationAccess().getTypeVariablesParserRuleCall_1());
+				newCompositeNode(grammarAccess.getN4ClassDeclarationAccess().getTypeParametersParserRuleCall_1());
 			}
-			this_TypeVariables_5=ruleTypeVariables[$current]
+			this_TypeParameters_5=ruleTypeParameters[$current]
 			{
-				$current = $this_TypeVariables_5.current;
+				$current = $this_TypeParameters_5.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -28859,6 +28859,71 @@ ruleN4ClassDeclaration returns [EObject current=null]
 		{
 			$current = $this_Members_7.current;
 			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
+
+// Rule TypeParameters
+ruleTypeParameters[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0=LessThanSign
+		{
+			newLeafNode(otherlv_0, grammarAccess.getTypeParametersAccess().getLessThanSignKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getTypeParametersAccess().getTypeVarsN4TypeVariableParserRuleCall_1_0());
+				}
+				lv_typeVars_1_0=ruleN4TypeVariable
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getTypeParametersRule());
+					}
+					add(
+						$current,
+						"typeVars",
+						lv_typeVars_1_0,
+						"org.eclipse.n4js.N4JS.N4TypeVariable");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			otherlv_2=Comma
+			{
+				newLeafNode(otherlv_2, grammarAccess.getTypeParametersAccess().getCommaKeyword_2_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getTypeParametersAccess().getTypeVarsN4TypeVariableParserRuleCall_2_1_0());
+					}
+					lv_typeVars_3_0=ruleN4TypeVariable
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getTypeParametersRule());
+						}
+						add(
+							$current,
+							"typeVars",
+							lv_typeVars_3_0,
+							"org.eclipse.n4js.N4JS.N4TypeVariable");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
+		otherlv_4=GreaterThanSign
+		{
+			newLeafNode(otherlv_4, grammarAccess.getTypeParametersAccess().getGreaterThanSignKeyword_3());
 		}
 	)
 ;
@@ -29521,11 +29586,11 @@ ruleN4InterfaceDeclaration returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getN4InterfaceDeclarationRule());
 				}
-				newCompositeNode(grammarAccess.getN4InterfaceDeclarationAccess().getTypeVariablesParserRuleCall_1());
+				newCompositeNode(grammarAccess.getN4InterfaceDeclarationAccess().getTypeParametersParserRuleCall_1());
 			}
-			this_TypeVariables_5=ruleTypeVariables[$current]
+			this_TypeParameters_5=ruleTypeParameters[$current]
 			{
-				$current = $this_TypeVariables_5.current;
+				$current = $this_TypeParameters_5.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -29935,11 +30000,11 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getN4TypeAliasDeclarationRule());
 				}
-				newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getTypeVariablesParserRuleCall_1());
+				newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getTypeParametersParserRuleCall_1());
 			}
-			this_TypeVariables_4=ruleTypeVariables[$current]
+			this_TypeParameters_4=ruleTypeParameters[$current]
 			{
-				$current = $this_TypeVariables_4.current;
+				$current = $this_TypeParameters_4.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -30191,7 +30256,7 @@ ruleN4MemberDeclaration returns [EObject current=null]
 					)
 				)*
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				ruleAsyncNoTrailingLineBreak[null]
 				(
@@ -30466,7 +30531,7 @@ norm1_N4MemberDeclaration returns [EObject current=null]
 					)
 				)*
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				ruleAsyncNoTrailingLineBreak[null]
 				(
@@ -30930,7 +30995,7 @@ ruleAnnotatedN4MemberDeclaration returns [EObject current=null]
 							)
 						)*
 						(
-							ruleTypeVariables[null]
+							ruleTypeParameters[null]
 						)?
 						(
 							(
@@ -30991,11 +31056,11 @@ ruleAnnotatedN4MemberDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getTypeVariablesParserRuleCall_1_2_0_0_2());
+								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getTypeParametersParserRuleCall_1_2_0_0_2());
 							}
-							this_TypeVariables_18=ruleTypeVariables[$current]
+							this_TypeParameters_18=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_18.current;
+								$current = $this_TypeParameters_18.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -31530,7 +31595,7 @@ norm1_AnnotatedN4MemberDeclaration returns [EObject current=null]
 							)
 						)*
 						(
-							ruleTypeVariables[null]
+							ruleTypeParameters[null]
 						)?
 						(
 							(
@@ -31591,11 +31656,11 @@ norm1_AnnotatedN4MemberDeclaration returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getTypeVariablesParserRuleCall_1_2_0_0_2());
+								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getTypeParametersParserRuleCall_1_2_0_0_2());
 							}
-							this_TypeVariables_18=ruleTypeVariables[$current]
+							this_TypeParameters_18=ruleTypeParameters[$current]
 							{
-								$current = $this_TypeVariables_18.current;
+								$current = $this_TypeParameters_18.current;
 								afterParserOrEnumRuleCall();
 							}
 						)?
@@ -32045,7 +32110,7 @@ ruleN4MethodDeclaration returns [EObject current=null]
 					)
 				)*
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				ruleAsyncNoTrailingLineBreak[null]
 				(
@@ -32106,11 +32171,11 @@ ruleN4MethodDeclaration returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
 						}
-						newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getTypeVariablesParserRuleCall_0_0_2());
+						newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getTypeParametersParserRuleCall_0_0_2());
 					}
-					this_TypeVariables_2=ruleTypeVariables[$current]
+					this_TypeParameters_2=ruleTypeParameters[$current]
 					{
-						$current = $this_TypeVariables_2.current;
+						$current = $this_TypeParameters_2.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -32243,7 +32308,7 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 					)
 				)*
 				(
-					ruleTypeVariables[null]
+					ruleTypeParameters[null]
 				)?
 				ruleAsyncNoTrailingLineBreak[null]
 				(
@@ -32304,11 +32369,11 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
 						}
-						newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getTypeVariablesParserRuleCall_0_0_2());
+						newCompositeNode(grammarAccess.getN4MethodDeclarationAccess().getTypeParametersParserRuleCall_0_0_2());
 					}
-					this_TypeVariables_2=ruleTypeVariables[$current]
+					this_TypeParameters_2=ruleTypeParameters[$current]
 					{
-						$current = $this_TypeVariables_2.current;
+						$current = $this_TypeParameters_2.current;
 						afterParserOrEnumRuleCall();
 					}
 				)?
@@ -36637,7 +36702,7 @@ ruleFunctionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"ownedTypeVars",
 							lv_ownedTypeVars_9_0,
-							"org.eclipse.n4js.N4JS.TypeVariable");
+							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -36661,7 +36726,7 @@ ruleFunctionTypeExpressionOLD returns [EObject current=null]
 								$current,
 								"ownedTypeVars",
 								lv_ownedTypeVars_11_0,
-								"org.eclipse.n4js.N4JS.TypeVariable");
+								"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -37934,7 +37999,7 @@ ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"typeVars",
 						lv_typeVars_1_0,
-						"org.eclipse.n4js.N4JS.TypeVariable");
+						"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -37958,7 +38023,7 @@ ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
 							$current,
 							"typeVars",
 							lv_typeVars_3_0,
-							"org.eclipse.n4js.N4JS.TypeVariable");
+							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -38809,6 +38874,99 @@ ruleWildcardNewNotation returns [EObject current=null]
 				)
 			)
 		)
+	)
+;
+
+// Entry rule entryRuleTypeVariable
+entryRuleTypeVariable returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTypeVariableRule()); }
+	iv_ruleTypeVariable=ruleTypeVariable
+	{ $current=$iv_ruleTypeVariable.current; }
+	EOF;
+
+// Rule TypeVariable
+ruleTypeVariable returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				(
+					lv_declaredCovariant_0_0=Out
+					{
+						newLeafNode(lv_declaredCovariant_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getTypeVariableRule());
+						}
+						setWithLastConsumed($current, "declaredCovariant", true, "out");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_declaredContravariant_1_0=In
+					{
+						newLeafNode(lv_declaredContravariant_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getTypeVariableRule());
+						}
+						setWithLastConsumed($current, "declaredContravariant", true, "in");
+					}
+				)
+			)
+		)?
+		(
+			(
+				lv_name_2_0=RULE_IDENTIFIER
+				{
+					newLeafNode(lv_name_2_0, grammarAccess.getTypeVariableAccess().getNameIDENTIFIERTerminalRuleCall_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTypeVariableRule());
+					}
+					setWithLastConsumed(
+						$current,
+						"name",
+						lv_name_2_0,
+						"org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER");
+				}
+			)
+		)
+		(
+			otherlv_3=Extends
+			{
+				newLeafNode(otherlv_3, grammarAccess.getTypeVariableAccess().getExtendsKeyword_2_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundTypeRefParserRuleCall_2_1_0());
+					}
+					lv_declaredUpperBound_4_0=ruleTypeRef
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getTypeVariableRule());
+						}
+						set(
+							$current,
+							"declaredUpperBound",
+							lv_declaredUpperBound_4_0,
+							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
 	)
 ;
 

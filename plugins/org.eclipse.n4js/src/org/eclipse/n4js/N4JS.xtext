@@ -85,14 +85,14 @@ AnnotatedScriptElement returns ScriptElement:
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
 				VersionDeclaration?
-				TypeVariables?
+				TypeParameters?
 				ClassExtendsImplements<Yield=false>?
 			|   {N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				'interface' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
 				VersionDeclaration?
-				TypeVariables?
+				TypeParameters?
 				InterfaceExtendsList?
 			)
 			Members<Yield=false>
@@ -107,7 +107,7 @@ AnnotatedScriptElement returns ScriptElement:
 	|	{N4TypeAliasDeclaration.annotationList=current}
 		(declaredModifiers+=N4ModifierWithoutConst)*
 		'type' name=BindingIdentifier<Yield=false>
-		TypeVariables?
+		TypeParameters?
 		'='	
 		declaredTypeRefInAST=TypeRef
 	)
@@ -173,12 +173,12 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 				(declaredModifiers+=N4Modifier)*
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield>
-				TypeVariables?
+				TypeParameters?
 				ClassExtendsImplements<Yield>?
 			|	{N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				('interface') typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
-				TypeVariables?
+				TypeParameters?
 				InterfaceExtendsList?
 			)
 			Members<Yield>
@@ -192,7 +192,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 	|	{N4TypeAliasDeclaration.annotationList=current}
 		(declaredModifiers+=N4ModifierWithoutConst)*
 		'type' name=BindingIdentifier<Yield=false>
-		TypeVariables?
+		TypeParameters?
 		'='	
 		declaredTypeRefInAST=TypeRef
 	)
@@ -258,7 +258,7 @@ fragment FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>*:
 ;
 
 fragment FunctionHeader<Yield, Generator>*:
-	TypeVariables?
+	TypeParameters?
 	name=BindingIdentifier<Yield>?
 	VersionDeclaration?
 	StrictFormalParameters<Yield=Generator>
@@ -342,10 +342,9 @@ AnnotatedExpression <Yield> returns Expression:
 	)
 ;
 
-@Override
-TypeVariable returns types::TypeVariable:
+N4TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
-	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?
+	name=IdentifierOrThis ('extends' declaredUpperBoundInAST=TypeRef)?
 ;
 
 FormalParameter <Yield>:
@@ -680,7 +679,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 			'set' ->declaredName=LiteralOrComputedPropertyName <Yield>
 		) (declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' body=Block<Yield=false>
 	| =>({PropertyMethodDeclaration.annotationList=current}
-			TypeVariables? declaredReturnTypeRefInAST=TypeRefWithModifiers?
+			TypeParameters? declaredReturnTypeRefInAST=TypeRefWithModifiers?
 			(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
 			)
@@ -692,7 +691,7 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
-		TypeVariables? declaredReturnTypeRefInAST=TypeRefWithModifiers?
+		TypeParameters? declaredReturnTypeRefInAST=TypeRefWithModifiers?
 		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
@@ -1296,9 +1295,13 @@ N4ClassDeclaration <Yield>:
 		name=BindingIdentifier<Yield>?
 		VersionDeclaration?
 	)
-	TypeVariables?
+	TypeParameters?
 	ClassExtendsImplements<Yield>?
 	Members<Yield>
+;
+
+fragment TypeParameters*:
+	'<' typeVars+=N4TypeVariable (',' typeVars+=N4TypeVariable)* '>'
 ;
 
 fragment Members <Yield>*:
@@ -1339,7 +1342,7 @@ N4InterfaceDeclaration <Yield>:
 		name=BindingIdentifier<Yield>?
 		VersionDeclaration?
 	)
-	TypeVariables?
+	TypeParameters?
 	InterfaceExtendsList?
 	Members<Yield>
 ;
@@ -1372,7 +1375,7 @@ N4TypeAliasDeclaration <Yield>:
 		(declaredModifiers+=N4ModifierWithoutConst)*
 		'type' name=BindingIdentifier<Yield>?
 	)
-	TypeVariables?
+	TypeParameters?
 	'='	
 	declaredTypeRefInAST=TypeRef
 ;
@@ -1408,7 +1411,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 		| 	=> ({N4SetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* 'set' -> declaredName=LiteralOrComputedPropertyName <Yield>)
 				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
 		| 	=> (
-				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables?
+				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeParameters?
 				(
 						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
@@ -1433,7 +1436,7 @@ N4FieldDeclaration <Yield>:
 ;
 
 N4MethodDeclaration <Yield>:
-	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
+	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeParameters?
 		AsyncNoTrailingLineBreak
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>

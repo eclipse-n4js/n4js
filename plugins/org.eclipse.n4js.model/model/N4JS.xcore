@@ -58,7 +58,6 @@ import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
 
@@ -1955,7 +1954,14 @@ abstract class GenericDeclaration extends TypeDefiningElement {
 	 * Type variables as declared by the declaration of the AST. These type variables are copied to the type model,
 	 * so in most cases, the type model type variables are to be used.
 	 */
-	contains TypeVariable[] typeVars
+	contains N4TypeVariable[] typeVars
+}
+
+class N4TypeVariable extends TypeDefiningElement, IdentifiableElement, NamedElement {
+	boolean declaredCovariant
+	boolean declaredContravariant
+	refers transient TypeRef declaredUpperBound
+	contains TypeRef declaredUpperBoundInAST
 }
 
 /*

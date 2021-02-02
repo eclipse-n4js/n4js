@@ -208,7 +208,6 @@ TStructMethod:
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 ;
 
-// TODO extract TypeVariableContainer to be used here
 fragment TypeVariables*:
 	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
 ;

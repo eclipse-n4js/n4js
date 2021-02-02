@@ -13,13 +13,13 @@ package org.eclipse.n4js.transpiler.es.transform
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.n4JS.TypeReferenceInAST
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeVariable
 
 /**
  * Removes all nodes from the intermediate model that are not required in the final output. Since such nodes might
@@ -53,11 +53,13 @@ class TrimTransformation extends Transformation {
 			val curr = iter.next;
 			if (curr instanceof TypeRef
 				|| curr instanceof TypeReferenceInAST
-				|| curr instanceof TypeVariable
+				|| curr instanceof N4TypeVariable
 				|| curr instanceof N4TypeAliasDeclaration) {
 
 				toBeRemoved += curr;
 				iter.prune();
+			} else if (curr instanceof N4TypeVariable) {
+				curr.declaredUpperBound = null; // cross-reference -> won't confuse tree iterator
 			} else if (curr instanceof CastExpression) {
 				curr.targetTypeRef = null; // cross-reference -> won't confuse tree iterator
 			} else if (curr instanceof TypeRefAnnotationArgument) {

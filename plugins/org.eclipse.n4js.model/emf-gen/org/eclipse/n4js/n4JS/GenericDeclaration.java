@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.TypeVariable;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Generic Declaration</b></em>'.
@@ -41,7 +39,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 public interface GenericDeclaration extends TypeDefiningElement {
 	/**
 	 * Returns the value of the '<em><b>Type Vars</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TypeVariable}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.N4TypeVariable}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -53,6 +51,6 @@ public interface GenericDeclaration extends TypeDefiningElement {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TypeVariable> getTypeVars();
+	EList<N4TypeVariable> getTypeVars();
 
 } // GenericDeclaration

@@ -110,6 +110,17 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Tells if given object is an <em>AST node</em>, i.e. contained below a {@link Script} element.
+	 * <p>
+	 * Note that it is not possible to tell AST nodes from type model elements only based on the object's type, because
+	 * there exist type model entities that may appear as a node in the AST (e.g. some TypeRefs, TStructField).
+	 */
+	public static boolean isASTNode(EObject obj) {
+		// note: despite its name, #getContainerOfType() returns 'obj' if instance of Script
+		return EcoreUtil2.getContainerOfType(obj, Script.class) != null;
+	}
+
+	/**
 	 * Returns <code>true</code> iff the given AST node belongs to top-level code, i.e. is not wrapped in a function or
 	 * field accessor.
 	 */
@@ -405,25 +416,29 @@ public abstract class N4JSASTUtils {
 		if (obj instanceof SyntaxRelatedTElement) {
 			return ((SyntaxRelatedTElement) obj).getAstElement();
 		} else if (obj instanceof TypeVariable) {
-			return getCorrespondingTypeVariableInAST((TypeVariable) obj);
+			N4TypeVariable n4TypeVar = getCorrespondingTypeVariableInAST((TypeVariable) obj);
+			if (n4TypeVar != null) {
+				return n4TypeVar;
+			} else if (isASTNode(obj)) {
+				return obj;
+			}
 		}
 		return null;
 	}
 
 	/**
 	 * If the given type variable is located in the TModule, then this method returns its corresponding type variable in
-	 * the AST or <code>null</code> if it is not available or not found. If the given type variable is already located
-	 * in the AST, it is returned unchanged.
+	 * the AST or <code>null</code> if it is not available or not found.
 	 */
-	public static TypeVariable getCorrespondingTypeVariableInAST(TypeVariable tv) {
+	public static N4TypeVariable getCorrespondingTypeVariableInAST(TypeVariable tv) {
 		if (tv.getDefinedTypeVariable() != null) {
-			return tv; // 'tv' is already an AST node
+			return null; // 'tv' is already an AST node (nested inside a TypeRef)
 		}
 		EObject containerInTModule = tv.eContainer();
 		EObject containerInAST = containerInTModule != null ? getCorrespondingASTNode(containerInTModule) : null;
 		if (containerInTModule instanceof Type && containerInAST instanceof GenericDeclaration) {
 			List<TypeVariable> typeVarsInTModule = ((Type) containerInTModule).getTypeVars();
-			List<TypeVariable> typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
+			List<N4TypeVariable> typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
 			int idx = typeVarsInTModule.indexOf(tv);
 			if (idx >= 0 && idx < typeVarsInAST.size()) {
 				return typeVarsInAST.get(idx);

@@ -62,6 +62,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
@@ -105,7 +106,6 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TStructMember
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtext.AbstractRule
 import org.eclipse.xtext.Keyword
@@ -898,16 +898,16 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		// just leave as is.
 	}
 
-	def dispatch void format(TypeVariable tv, extension IFormattableDocument document) {
+	def dispatch void format(N4TypeVariable tv, extension IFormattableDocument document) {
 		// "out"
-		if( tv.declaredCovariant ) { tv.regionFor.feature(TypesPackage.Literals.TYPE_VARIABLE__DECLARED_COVARIANT).append[oneSpace]; }
+		if( tv.declaredCovariant ) { tv.regionFor.feature(N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_COVARIANT).append[oneSpace]; }
 		// "in"
-		if( tv.declaredContravariant ) {tv.regionFor.feature(TypesPackage.Literals.TYPE_VARIABLE__DECLARED_CONTRAVARIANT).append[oneSpace];}
+		if( tv.declaredContravariant ) {tv.regionFor.feature(N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT).append[oneSpace];}
 
-		if( tv.declaredUpperBound!==null ) {
+		if( tv.declaredUpperBoundInAST!==null ) {
 			// "extends"
 			tv.regionFor.keyword("extends").surround[oneSpace];
-			val upperBound = tv.declaredUpperBound;
+			val upperBound = tv.declaredUpperBoundInAST;
 			upperBound.immediatelyFollowing.keyword("&").surround[oneSpace];
 			upperBound.format(document);
 		}

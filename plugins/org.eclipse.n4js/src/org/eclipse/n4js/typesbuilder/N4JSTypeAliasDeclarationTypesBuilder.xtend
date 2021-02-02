@@ -19,6 +19,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 
 class N4JSTypeAliasDeclarationTypesBuilder {
 
+	@Inject extension N4JSTypeVariableTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
 	def protected boolean relinkTypeAlias(N4TypeAliasDeclaration n4TypeAlias, TModule target, boolean preLinkingPhase, int idx) {
@@ -45,7 +46,7 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 		typeAlias.exportedName = n4TypeAlias.exportedName;
 
 		typeAlias.setTypeAccessModifier(n4TypeAlias);
-		typeAlias.addCopyOfTypeParameters(n4TypeAlias, preLinkingPhase);
+		typeAlias.addTypeParameters(n4TypeAlias, preLinkingPhase);
 
 		typeAlias.copyAnnotations(n4TypeAlias, preLinkingPhase);
 

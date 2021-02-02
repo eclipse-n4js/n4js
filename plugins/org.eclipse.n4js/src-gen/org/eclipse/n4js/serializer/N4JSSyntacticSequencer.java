@@ -297,7 +297,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
 	 *     name=BindingIdentifier '(' ')' (ambiguity) (rule end)
-	 *     typeVars+=TypeVariable '>' '(' ')' (ambiguity) (rule end)
+	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_FunctionDeclaration_SemiParserRuleCall_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -323,7 +323,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredModifiers+=N4Modifier 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
 	 *     declaredVersion=VERSION (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
 	 *     name=BindingIdentifier (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
-	 *     typeVars+=TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
+	 *     typeVars+=N4TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
 	 *     typingStrategy=TypingStrategyDefSiteOperator (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalInAST
 	 */
 	protected void emit_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -399,7 +399,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' Semi? (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' body=Block
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' fpars+=FormalParameter
-	 *     declaredAsync?='async' (ambiguity) 'function' '<' typeVars+=TypeVariable
+	 *     declaredAsync?='async' (ambiguity) 'function' '<' typeVars+=N4TypeVariable
 	 *     declaredAsync?='async' (ambiguity) 'function' declaredVersion=VERSION
 	 *     declaredAsync?='async' (ambiguity) 'function' generator?='*'
 	 *     declaredAsync?='async' (ambiguity) 'function' name=BindingIdentifier

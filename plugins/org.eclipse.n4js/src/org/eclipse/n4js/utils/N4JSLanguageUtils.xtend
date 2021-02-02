@@ -274,15 +274,9 @@ public class N4JSLanguageUtils {
 	}
 
 
-	/**
-	 * Tells if given object is an <em>AST node</em>, i.e. contained below a {@link Script} element.
-	 * <p>
-	 * Note that it is not possible to tell AST nodes from type model elements only based on the object's type, because
-	 * there exist type model entities that may appear as a node in the AST (e.g. some TypeRefs, TStructField).
-	 */
+	/** See {@link N4JSASTUtils#isASTNode(EObject)}. */
 	def static boolean isASTNode(EObject obj) {
-		// note: despite its name, #getContainerOfType() returns 'obj' if instance of Script
-		return EcoreUtil2.getContainerOfType(obj, Script)!==null;
+		return N4JSASTUtils.isASTNode(obj);
 	}
 
 	/**
@@ -341,7 +335,7 @@ public class N4JSLanguageUtils {
 		switch(astNode) {
 			ExportedVariableDeclaration: astNode.definedVariable
 			PropertyMethodDeclaration: astNode.definedMember
-			TypeDefiningElement: astNode.definedType
+			TypeDefiningElement: astNode.definedType // includes N4TypeVariable
 			N4MemberDeclaration case !(astNode instanceof N4MemberAnnotationList): astNode.definedTypeElement
 			PropertyAssignment case !(astNode instanceof PropertyAssignmentAnnotationList): astNode.definedMember
 			FormalParameter: astNode.definedTypeElement

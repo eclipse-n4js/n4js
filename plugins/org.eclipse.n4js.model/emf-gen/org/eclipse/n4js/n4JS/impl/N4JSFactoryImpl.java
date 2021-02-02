@@ -175,6 +175,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.CONDITIONAL_EXPRESSION: return createConditionalExpression();
 			case N4JSPackage.ASSIGNMENT_EXPRESSION: return createAssignmentExpression();
 			case N4JSPackage.COMMA_EXPRESSION: return createCommaExpression();
+			case N4JSPackage.N4_TYPE_VARIABLE: return createN4TypeVariable();
 			case N4JSPackage.N4_CLASS_DECLARATION: return createN4ClassDeclaration();
 			case N4JSPackage.N4_CLASS_EXPRESSION: return createN4ClassExpression();
 			case N4JSPackage.N4_INTERFACE_DECLARATION: return createN4InterfaceDeclaration();
@@ -1459,6 +1460,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public CommaExpression createCommaExpression() {
 		CommaExpressionImpl commaExpression = new CommaExpressionImpl();
 		return commaExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public N4TypeVariable createN4TypeVariable() {
+		N4TypeVariableImpl n4TypeVariable = new N4TypeVariableImpl();
+		return n4TypeVariable;
 	}
 
 	/**
