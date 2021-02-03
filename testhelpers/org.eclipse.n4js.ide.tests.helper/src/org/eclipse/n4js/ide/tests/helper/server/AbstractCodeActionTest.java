@@ -70,7 +70,9 @@ abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<N
 		textDocument.setUri(uri.toString());
 		codeActionParams.setTextDocument(textDocument);
 
-		CompletableFuture<List<Either<Command, CodeAction>>> future = languageServer.codeAction(codeActionParams);
+		CompletableFuture<List<Either<Command, CodeAction>>> future = injEnv.languageServer
+				.codeAction(codeActionParams);
+
 		List<Either<Command, CodeAction>> result = future.get();
 		if (tcac.getAssertCodeActions() != null) {
 			tcac.getAssertCodeActions().apply(result);

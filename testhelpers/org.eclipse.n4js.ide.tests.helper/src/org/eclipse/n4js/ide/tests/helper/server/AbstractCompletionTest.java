@@ -93,7 +93,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<T
 		textDocument.setUri(uri.toString());
 		completionParams.setTextDocument(textDocument);
 
-		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = languageServer
+		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = injEnv.languageServer
 				.completion(completionParams);
 
 		Either<List<CompletionItem>, CompletionList> result = future.get();

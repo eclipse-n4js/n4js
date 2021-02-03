@@ -195,7 +195,9 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(uriStr));
 		textDocumentPositionParams.setPosition(new Position(pos.line, pos.column));
-		Either<Range, PrepareRenameResult> result1 = languageServer.prepareRename(textDocumentPositionParams).get();
+		Either<Range, PrepareRenameResult> result1 = injEnv.languageServer.prepareRename(textDocumentPositionParams)
+				.get();
+
 		if (result1 == null || (result1.getLeft() == null && result1.getRight() == null)) {
 			fail("element cannot be renamed", sourceBefore, pos);
 		}
@@ -204,7 +206,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		renameParams.setTextDocument(new TextDocumentIdentifier(uriStr));
 		renameParams.setPosition(new Position(pos.line, pos.column));
 		renameParams.setNewName(config.newName);
-		WorkspaceEdit workspaceEdit = languageServer.rename(renameParams).get();
+		WorkspaceEdit workspaceEdit = injEnv.languageServer.rename(renameParams).get();
 
 		Map<FileURI, String> fileURI2ActualSourceAfter = applyWorkspaceEdit(config.projectsModulesSourcesBefore,
 				workspaceEdit, pos, config);

@@ -44,7 +44,7 @@ class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest {
 
 		val otherFileURI = getFileURIFromModuleName("Other");
 		Files.delete(otherFileURI.toFile.toPath);
-		languageServer.didChangeWatchedFiles(new DidChangeWatchedFilesParams(#[
+		injEnv.languageServer.didChangeWatchedFiles(new DidChangeWatchedFilesParams(#[
 			new FileEvent(otherFileURI.toString, FileChangeType.Deleted)
 		]));
 		joinServerRequests();
@@ -219,12 +219,12 @@ class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest {
 		val moduleURI = getFileURIFromModuleName(moduleName);
 		if (allIssues.size() === 1
 			&& allIssues.entries.head.key == moduleURI
-			&& languageClient.getIssueString(allIssues.entries.head.value) == desiredIssueStr) {
+			&& injEnv.languageClient.getIssueString(allIssues.entries.head.value) == desiredIssueStr) {
 			// desired issue showed up, so the incremental builder worked as intended, which is unexpected by this test:
 			Assert.fail("incremental builder produced the desired issue, so this #isAffected() bug is suddenly fixed!");
 		}
 		if (!allIssues.isEmpty) {
-			val allIssuesStr = issuesToString(Multimaps.transformValues(allIssues, [languageClient.getIssueString(it)]));
+			val allIssuesStr = issuesToString(Multimaps.transformValues(allIssues, [injEnv.languageClient.getIssueString(it)]));
 			Assert.fail("the incremental builder produced unexpected issues:\n" + allIssuesStr);
 		}
 		// ensure that the test data and the given 'desiredIssueStr' are still up-to-date by

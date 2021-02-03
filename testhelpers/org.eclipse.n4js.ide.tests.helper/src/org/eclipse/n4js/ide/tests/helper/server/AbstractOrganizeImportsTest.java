@@ -141,7 +141,8 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 		Range range = new Range(new Position(0, 0), new Position(0, 0));
 		CodeActionContext context = new CodeActionContext();
 		CodeActionParams params = new CodeActionParams(id, range, context);
-		CompletableFuture<List<Either<Command, CodeAction>>> codeActionFuture = languageServer.codeAction(params);
+		CompletableFuture<List<Either<Command, CodeAction>>> codeActionFuture = injEnv.languageServer
+				.codeAction(params);
 
 		List<Either<Command, CodeAction>> result = codeActionFuture.join();
 		Command organizeImportsCommand = result.stream()
@@ -154,7 +155,7 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 		ExecuteCommandParams execParams = new ExecuteCommandParams(
 				organizeImportsCommand.getCommand(),
 				organizeImportsCommand.getArguments());
-		CompletableFuture<Object> execFuture = languageServer.executeCommand(execParams);
+		CompletableFuture<Object> execFuture = injEnv.languageServer.executeCommand(execParams);
 		execFuture.join();
 
 		joinServerRequests();

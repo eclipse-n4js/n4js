@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
  * Base class for {@link AbstractIdeTest IDE tests} in which every test case has a uniform structure and behavior.
  */
 public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
-	static final String CURSOR_SYMBOL = "<|>";
+	static final public String CURSOR_SYMBOL = "<|>";
 
 	/** Data class for file content and position of a cursor symbol */
 	static class ContentAndPosition {

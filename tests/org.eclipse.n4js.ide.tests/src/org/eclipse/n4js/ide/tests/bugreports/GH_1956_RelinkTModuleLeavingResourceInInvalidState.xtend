@@ -59,7 +59,7 @@ class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest
 		// NOTE: even with notification the bug would occur, because this is only a change inside a comment and
 		// therefore resource "A" in resource set of editor "Main" won't be affected and thus won't be updated!
 
-		val h1 = languageServer.hover(textDocPos("Main", 1, 8));
+		val h1 = injEnv.languageServer.hover(textDocPos("Main", 1, 8));
 		joinServerRequests();
 // for the time being, we still have to log relink-failure due to hash mismatch as error, thus next line is commented out:
 //		assertNoErrorsInLogOrOutput(); // logged two exceptions
@@ -67,11 +67,11 @@ class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest
 clearLogMessages();
 clearOutput();
 
-		val h2 = languageServer.hover(textDocPos("Main", 0, 12));
+		val h2 = injEnv.languageServer.hover(textDocPos("Main", 0, 12));
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // logged hundreds of exceptions (via post-processing)
 
-		val d = languageServer.definition(textDocPos("Main", 0, 12));
+		val d = injEnv.languageServer.definition(textDocPos("Main", 0, 12));
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // logged hundreds of exceptions (via a different call path)
 

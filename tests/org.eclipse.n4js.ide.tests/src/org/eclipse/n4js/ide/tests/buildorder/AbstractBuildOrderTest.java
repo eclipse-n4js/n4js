@@ -69,9 +69,11 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 	}
 
 	final void assertBuildOrder(String buildOrder, Collection<Collection<String>> cycles) {
-		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
-		BuildOrderInfo projectBuildOrderInfo = projectBuildOrderFactory.createBuildOrderInfo(workspaceConfig);
-		BuildOrderIterator boIterator = projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig).visitAll();
+		WorkspaceConfigSnapshot workspaceConfig = injEnv.workspaceConfigProvider.getWorkspaceConfigSnapshot();
+		BuildOrderInfo projectBuildOrderInfo = injEnv.projectBuildOrderFactory.createBuildOrderInfo(workspaceConfig);
+		BuildOrderIterator boIterator = injEnv.projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig)
+				.visitAll();
+
 		try {
 			String names = IteratorExtensions.join(boIterator, ", ", it -> it.getName());
 			assertEquals(buildOrder, names);

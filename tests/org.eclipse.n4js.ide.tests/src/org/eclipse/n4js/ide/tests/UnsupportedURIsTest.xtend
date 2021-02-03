@@ -109,22 +109,22 @@ class UnsupportedURIsTest extends AbstractIdeTest {
 	// because AbstractIdeTest#openFile(FileURI), etc. force us to use file URIs, we here need custom implementations:
 
 	def private void openFile(URI uri, CharSequence content) {
-		val textDocument = new TextDocumentItem(uri.toString(), languageInfo.getLanguageName(), 1, toUnixLineSeparator(content));
-		languageServer.didOpen(new DidOpenTextDocumentParams(textDocument));
+		val textDocument = new TextDocumentItem(uri.toString(), injEnv.languageInfo.getLanguageName(), 1, toUnixLineSeparator(content));
+		injEnv.languageServer.didOpen(new DidOpenTextDocumentParams(textDocument));
 	}
 
 	def private void changeOpenedFile(URI uri, int newVersion, CharSequence newText) {
 		val docId = new VersionedTextDocumentIdentifier(uri.toString(), newVersion);
 		val changes = #[ new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, newText.toString) ];
-		languageServer.didChange(new DidChangeTextDocumentParams(docId, changes));
+		injEnv.languageServer.didChange(new DidChangeTextDocumentParams(docId, changes));
 	}
 
 	def private void closeFile(URI uri) {
-		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(uri.toString())));
+		injEnv.languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(uri.toString())));
 	}
 
 	def private CompletableFuture<Hover> hover(URI uri, int line, int column) {
-		return languageServer.hover(
+		return injEnv.languageServer.hover(
 			new TextDocumentPositionParams(
 				new TextDocumentIdentifier(uri.toString()),
 				new Position(line, column)));

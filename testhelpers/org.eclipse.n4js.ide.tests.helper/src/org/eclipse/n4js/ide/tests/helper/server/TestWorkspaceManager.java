@@ -352,21 +352,33 @@ public class TestWorkspaceManager {
 	}
 
 	private Project createTestOnDisk(Path destination, Map<String, Map<String, String>> projectsModulesContents) {
-
-		if (createdProject != null) {
-			throw new IllegalStateException("test was already created on disk");
-		}
-
+		final Project project;
 		if (projectsModulesContents.size() == 1) {
 			Entry<String, Map<String, String>> singleProject = projectsModulesContents.entrySet().iterator().next();
 			String projectName = singleProject.getKey();
 			Map<String, String> modulesContents = singleProject.getValue();
-			createdProject = createSimpleProject(projectName, modulesContents, HashMultimap.create(),
-					ProjectKind.TopLevel);
+			project = createSimpleProject(projectName, modulesContents, HashMultimap.create(), ProjectKind.TopLevel);
 		} else {
-			createdProject = createYarnProject(projectsModulesContents);
+			project = createYarnProject(projectsModulesContents);
 		}
 
+		createTestOnDisk(destination, project);
+
+		return project;
+	}
+
+	/** Creates the given project in the default root folder */
+	public Project createTestOnDisk(Project project) {
+		return createTestOnDisk(getRoot().toPath(), project);
+	}
+
+	/** Creates the given project in the given root folder */
+	public Project createTestOnDisk(Path destination, Project project) {
+		if (createdProject != null) {
+			throw new IllegalStateException("test was already created on disk");
+		}
+
+		createdProject = project;
 		destination.toFile().mkdirs();
 		createdProject.create(destination);
 

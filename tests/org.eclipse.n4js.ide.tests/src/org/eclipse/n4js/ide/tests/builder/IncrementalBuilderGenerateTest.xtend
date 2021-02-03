@@ -469,7 +469,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		assertTrue(projectStateInNodeModules.exists);
 		assertTrue(projectStateInOrdinaryProject.exists);
 
-		languageServer.getFrontend().clean();
+		injEnv.languageServer.getFrontend().clean();
 		joinServerRequests();
 
 		assertFalse(outputFileInNodeModules.exists);
@@ -477,7 +477,7 @@ class IncrementalBuilderGenerateTest extends AbstractIncrementalBuilderTest {
 		assertFalse(projectStateInNodeModules.exists);
 		assertFalse(projectStateInOrdinaryProject.exists);
 
-		languageServer.getFrontend().reinitWorkspace();
+		injEnv.languageServer.getFrontend().reinitWorkspace();
 		joinServerRequests();
 
 		assertFalse(outputFileInNodeModules.exists);

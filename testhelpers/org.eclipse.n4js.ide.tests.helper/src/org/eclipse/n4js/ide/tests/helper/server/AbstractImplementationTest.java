@@ -52,7 +52,7 @@ abstract public class AbstractImplementationTest extends AbstractStructuredIdeTe
 		String completeFileUri = getFileURIFromModuleName(dtc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(dtc.getLine(), dtc.getColumn()));
-		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementationsFuture = languageServer
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementationsFuture = injEnv.languageServer
 				.implementation(textDocumentPositionParams);
 
 		Either<List<? extends Location>, List<? extends LocationLink>> implementations = implementationsFuture.get();

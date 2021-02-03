@@ -40,7 +40,8 @@ abstract public class AbstractSignatureHelpTest extends AbstractStructuredIdeTes
 		String completeFileUri = getFileURIFromModuleName(shc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(shc.getLine(), shc.getColumn()));
-		CompletableFuture<SignatureHelp> signatureHelpFuture = languageServer.signatureHelp(textDocumentPositionParams);
+		CompletableFuture<SignatureHelp> signatureHelpFuture = injEnv.languageServer
+				.signatureHelp(textDocumentPositionParams);
 
 		SignatureHelp signatureHelp = signatureHelpFuture.get();
 		if (shc.getAssertSignatureHelp() != null) {
