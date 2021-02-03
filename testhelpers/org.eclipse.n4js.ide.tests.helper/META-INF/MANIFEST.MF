@@ -21,7 +21,9 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.lsp4j,
  org.eclipse.lsp4j.jsonrpc,
  org.eclipse.n4js.cli,
- org.eclipse.n4js.ts
+ org.eclipse.n4js.ts,
+ org.eclipse.xpect
 Export-Package: org.eclipse.n4js.ide.tests.helper.client,
- org.eclipse.n4js.ide.tests.helper.server
+ org.eclipse.n4js.ide.tests.helper.server,
+ org.eclipse.n4js.ide.tests.helper.server.xt
 Automatic-Module-Name: org.eclipse.n4js.ide.tests.helper
