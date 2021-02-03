@@ -258,7 +258,6 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseN4MemberDeclaration(delegatingMember);
 				if (result == null) result = caseAnnotableElement(delegatingMember);
 				if (result == null) result = caseModifiableElement(delegatingMember);
-				if (result == null) result = caseTypeProvidingElement(delegatingMember);
 				if (result == null) result = caseTypableElement(delegatingMember);
 				if (result == null) result = caseNamedElement(delegatingMember);
 				if (result == null) result = defaultCase(theEObject);
@@ -275,13 +274,13 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTypedElement(delegatingGetterDeclaration);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(delegatingGetterDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingGetterDeclaration);
+				if (result == null) result = caseTypeProvidingElement(delegatingGetterDeclaration);
 				if (result == null) result = casePropertyNameOwner(delegatingGetterDeclaration);
 				if (result == null) result = caseN4MemberDeclaration(delegatingGetterDeclaration);
 				if (result == null) result = caseAnnotableElement(delegatingGetterDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(delegatingGetterDeclaration);
 				if (result == null) result = caseThisArgProvider(delegatingGetterDeclaration);
 				if (result == null) result = caseTypableElement(delegatingGetterDeclaration);
-				if (result == null) result = caseTypeProvidingElement(delegatingGetterDeclaration);
 				if (result == null) result = caseNamedElement(delegatingGetterDeclaration);
 				if (result == null) result = caseModifiableElement(delegatingGetterDeclaration);
 				if (result == null) result = defaultCase(theEObject);
@@ -297,13 +296,13 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFieldAccessor(delegatingSetterDeclaration);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(delegatingSetterDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingSetterDeclaration);
+				if (result == null) result = caseTypeProvidingElement(delegatingSetterDeclaration);
 				if (result == null) result = casePropertyNameOwner(delegatingSetterDeclaration);
 				if (result == null) result = caseN4MemberDeclaration(delegatingSetterDeclaration);
 				if (result == null) result = caseAnnotableElement(delegatingSetterDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(delegatingSetterDeclaration);
 				if (result == null) result = caseThisArgProvider(delegatingSetterDeclaration);
 				if (result == null) result = caseTypableElement(delegatingSetterDeclaration);
-				if (result == null) result = caseTypeProvidingElement(delegatingSetterDeclaration);
 				if (result == null) result = caseNamedElement(delegatingSetterDeclaration);
 				if (result == null) result = caseModifiableElement(delegatingSetterDeclaration);
 				if (result == null) result = defaultCase(theEObject);
@@ -319,10 +318,8 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseN4MemberDeclaration(delegatingMethodDeclaration);
 				if (result == null) result = caseFunctionDefinition(delegatingMethodDeclaration);
 				if (result == null) result = caseGenericDeclaration(delegatingMethodDeclaration);
-				if (result == null) result = caseTypedElement(delegatingMethodDeclaration);
 				if (result == null) result = casePropertyNameOwner(delegatingMethodDeclaration);
 				if (result == null) result = caseModifiableElement(delegatingMethodDeclaration);
-				if (result == null) result = caseTypeProvidingElement(delegatingMethodDeclaration);
 				if (result == null) result = caseNamedElement(delegatingMethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingMethodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(delegatingMethodDeclaration);

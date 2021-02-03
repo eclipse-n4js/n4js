@@ -621,6 +621,11 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 				default: return -1;
 			}
 		}
+		if (baseClass == TypeProvidingElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == PropertyNameOwner.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_FIELD_ACCESSOR__DECLARED_NAME: return N4JSPackage.PROPERTY_NAME_OWNER__DECLARED_NAME;
@@ -660,6 +665,11 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 				default: return -1;
 			}
 		}
+		if (baseClass == TypeProvidingElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == PropertyNameOwner.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.PROPERTY_NAME_OWNER__DECLARED_NAME: return N4JSPackage.N4_FIELD_ACCESSOR__DECLARED_NAME;
@@ -682,13 +692,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == TypeProvidingElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
-				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
 		if (baseClass == NamedElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMED_ELEMENT___GET_NAME: return N4JSPackage.N4_FIELD_ACCESSOR___GET_NAME;
@@ -699,8 +702,6 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 			switch (baseOperationID) {
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_ABSTRACT: return N4JSPackage.N4_FIELD_ACCESSOR___IS_ABSTRACT;
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME: return N4JSPackage.N4_FIELD_ACCESSOR___GET_NAME;
-				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
-				case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -722,6 +723,13 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 				case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___IS_RETURN_VALUE_OPTIONAL: return N4JSPackage.N4_FIELD_ACCESSOR___IS_RETURN_VALUE_OPTIONAL;
 				case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___IS_ASYNC: return N4JSPackage.N4_FIELD_ACCESSOR___IS_ASYNC;
 				case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR;
+				default: return -1;
+			}
+		}
+		if (baseClass == TypeProvidingElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}

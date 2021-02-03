@@ -33,6 +33,7 @@ import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
+import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -607,6 +608,11 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == TypeProvidingElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == TypedElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF;
@@ -635,6 +641,11 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == TypeProvidingElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == TypedElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_DECLARATION__DECLARED_TYPE_REF;
@@ -675,6 +686,13 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_STATIC: return N4JSPackage.N4_FIELD_DECLARATION___IS_STATIC;
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME: return N4JSPackage.N4_FIELD_DECLARATION___GET_NAME;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == TypeProvidingElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
+				default: return -1;
 			}
 		}
 		if (baseClass == TypedElement.class) {

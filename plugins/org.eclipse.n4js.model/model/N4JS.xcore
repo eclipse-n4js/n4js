@@ -1345,7 +1345,7 @@ class PropertyNameValuePairSingleName extends PropertyNameValuePair {
 	}
 }
 
-class PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDeclaration, TypeProvidingElement  {
+class PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDeclaration  {
 	// IMPORTANT: don't introduce a property 'definedMethod' here, because PropertyMethodDeclaration inherits from
 	// TypeDefiningElement (via FunctionDefinition) and that class already has a property 'definedType' for this
 	// purpose; if we were using a separate property, it would break code that handles instances of
@@ -2198,7 +2198,7 @@ abstract class ModifiableElement {
 	N4Modifier[] declaredModifiers
 }
 
-abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypeProvidingElement, TypableElement, NamedElement {
+abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypableElement, NamedElement {
 	/**
 	 * The classifier owning this member.
 	 */
@@ -2258,24 +2258,9 @@ class N4MemberAnnotationList extends AbstractAnnotationList, N4MemberDeclaration
 		}
 		return null
 	}
-	op TypeRef getDeclaredTypeRef() {
-		val c = eContainer
-		if (c instanceof N4MemberDeclaration) {
-			return c.getDeclaredTypeRef();
-		}
-		return null
-	}
-	op TypeRef getDeclaredTypeRefInAST() {
-		val c = eContainer
-		if (c instanceof N4MemberDeclaration) {
-			return c.getDeclaredTypeRefInAST();
-		}
-		return null
-	}
 	op String getName() {
 		return null
 	}
-
 }
 
 class N4FieldDeclaration extends AnnotableN4MemberDeclaration, TypedElement, ThisArgProvider, PropertyNameOwner {
@@ -2312,7 +2297,7 @@ class N4FieldDeclaration extends AnnotableN4MemberDeclaration, TypedElement, Thi
 	}
 }
 
-abstract class MethodDeclaration extends FunctionDefinition, GenericDeclaration, TypedElement, PropertyNameOwner {
+abstract class MethodDeclaration extends FunctionDefinition, GenericDeclaration, PropertyNameOwner {
 	/**
 	 * Convenience method, returns true if an explicit call to the super constructor is found.
 	 * Of course, this is only allowed in constructors. Note that this method searches for ALL

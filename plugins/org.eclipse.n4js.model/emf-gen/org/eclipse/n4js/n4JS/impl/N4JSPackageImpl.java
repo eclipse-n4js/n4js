@@ -6776,28 +6776,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberAnnotationList__GetDeclaredTypeRef() {
-		return n4MemberAnnotationListEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getN4MemberAnnotationList__GetDeclaredTypeRefInAST() {
-		return n4MemberAnnotationListEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getN4MemberAnnotationList__GetName() {
-		return n4MemberAnnotationListEClass.getEOperations().get(3);
+		return n4MemberAnnotationListEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -8372,8 +8352,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		n4MemberAnnotationListEClass = createEClass(N4_MEMBER_ANNOTATION_LIST);
 		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT);
-		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF);
-		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF_IN_AST);
 		createEOperation(n4MemberAnnotationListEClass, N4_MEMBER_ANNOTATION_LIST___GET_NAME);
 
 		n4FieldDeclarationEClass = createEClass(N4_FIELD_DECLARATION);
@@ -8655,7 +8633,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		propertyNameValuePairSingleNameEClass.getESuperTypes().add(this.getPropertyNameValuePair());
 		propertyMethodDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		propertyMethodDeclarationEClass.getESuperTypes().add(this.getMethodDeclaration());
-		propertyMethodDeclarationEClass.getESuperTypes().add(this.getTypeProvidingElement());
 		getterDeclarationEClass.getESuperTypes().add(this.getFieldAccessor());
 		getterDeclarationEClass.getESuperTypes().add(this.getTypedElement());
 		setterDeclarationEClass.getESuperTypes().add(this.getFieldAccessor());
@@ -8753,7 +8730,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getTypedElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
-		n4MemberDeclarationEClass.getESuperTypes().add(this.getTypeProvidingElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getNamedElement());
 		annotableN4MemberDeclarationEClass.getESuperTypes().add(this.getN4MemberDeclaration());
@@ -8765,7 +8741,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4FieldDeclarationEClass.getESuperTypes().add(this.getPropertyNameOwner());
 		methodDeclarationEClass.getESuperTypes().add(this.getFunctionDefinition());
 		methodDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
-		methodDeclarationEClass.getESuperTypes().add(this.getTypedElement());
 		methodDeclarationEClass.getESuperTypes().add(this.getPropertyNameOwner());
 		n4MethodDeclarationEClass.getESuperTypes().add(this.getAnnotableN4MemberDeclaration());
 		n4MethodDeclarationEClass.getESuperTypes().add(this.getMethodDeclaration());
@@ -9623,10 +9598,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(n4MemberAnnotationListEClass, N4MemberAnnotationList.class, "N4MemberAnnotationList", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getN4MemberAnnotationList__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getN4MemberAnnotationList__GetDeclaredTypeRef(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getN4MemberAnnotationList__GetDeclaredTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4MemberAnnotationList__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

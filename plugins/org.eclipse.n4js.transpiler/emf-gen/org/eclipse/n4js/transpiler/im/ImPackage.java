@@ -1946,24 +1946,6 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___GET_ALL_ANNOTATIONS = N4JSPackage.N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_MEMBER___GET_DECLARED_TYPE_REF = N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_MEMBER___GET_DECLARED_TYPE_REF_IN_AST = N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2903,24 +2885,6 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__TYPE_VARS = N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION__DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type Ref In AST</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION__DECLARED_TYPE_REF_IN_AST = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_TYPE_REF_IN_AST;
-
-	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2982,24 +2946,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___GET_ALL_ANNOTATIONS = N4JSPackage.N4_METHOD_DECLARATION___GET_ALL_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 
 	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.

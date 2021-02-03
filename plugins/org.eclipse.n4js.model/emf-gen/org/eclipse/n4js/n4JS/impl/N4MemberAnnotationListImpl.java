@@ -45,9 +45,6 @@ import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.NamedElement;
-import org.eclipse.n4js.n4JS.TypeProvidingElement;
-
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -176,34 +173,6 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 		final EObject c = this.eContainer();
 		if ((c instanceof N4MemberDeclaration)) {
 			return ((N4MemberDeclaration)c).getDefinedTypeElement();
-		}
-		return null;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeRef getDeclaredTypeRef() {
-		final EObject c = this.eContainer();
-		if ((c instanceof N4MemberDeclaration)) {
-			return ((N4MemberDeclaration)c).getDeclaredTypeRef();
-		}
-		return null;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeRef getDeclaredTypeRefInAST() {
-		final EObject c = this.eContainer();
-		if ((c instanceof N4MemberDeclaration)) {
-			return ((N4MemberDeclaration)c).getDeclaredTypeRefInAST();
 		}
 		return null;
 	}
@@ -455,11 +424,6 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				default: return -1;
 			}
 		}
-		if (baseClass == TypeProvidingElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == TypableElement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
@@ -494,11 +458,6 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 		if (baseClass == ModifiableElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST__DECLARED_MODIFIERS;
-				default: return -1;
-			}
-		}
-		if (baseClass == TypeProvidingElement.class) {
-			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
@@ -540,13 +499,6 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				default: return -1;
 			}
 		}
-		if (baseClass == TypeProvidingElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF;
-				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF_IN_AST;
-				default: return -1;
-			}
-		}
 		if (baseClass == TypableElement.class) {
 			switch (baseOperationID) {
 				default: return -1;
@@ -585,10 +537,6 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 		switch (operationID) {
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT:
 				return getDefinedTypeElement();
-			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
-			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF_IN_AST:
-				return getDeclaredTypeRefInAST();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_NAME:
 				return getName();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_ABSTRACT:

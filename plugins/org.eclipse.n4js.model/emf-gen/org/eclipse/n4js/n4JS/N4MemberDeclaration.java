@@ -29,7 +29,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
  * @model abstract="true"
  * @generated
  */
-public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypeProvidingElement, TypableElement, NamedElement {
+public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypableElement, NamedElement {
 	/**
 	 * Returns the value of the '<em><b>Owner</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedMembersRaw <em>Owned Members Raw</em>}'.
