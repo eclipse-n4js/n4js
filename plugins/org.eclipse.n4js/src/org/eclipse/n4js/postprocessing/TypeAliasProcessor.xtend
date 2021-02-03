@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.EcoreUtilN4
 
 /**
  * Handles resolution of type aliases during post-processing.
@@ -66,7 +67,9 @@ class TypeAliasProcessor extends AbstractProcessor {
 		for (typeArg : l) {
 			val typeArgResolved = tsh.resolveTypeAliases(G, typeArg);
 			if (typeArgResolved !== typeArg) {
-				EcoreUtil.replace(typeArg, typeArgResolved);
+				EcoreUtilN4.doWithDeliver(false, [
+					EcoreUtil.replace(typeArg, typeArgResolved);
+				], typeArg.eContainer);
 			}
 		}
 	}
