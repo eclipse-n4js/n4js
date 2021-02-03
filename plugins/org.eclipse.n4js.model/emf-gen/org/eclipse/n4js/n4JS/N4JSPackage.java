@@ -11193,22 +11193,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_VARIABLE = 141;
 
 	/**
-	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_TYPE_VARIABLE__DEFINED_TYPE = TYPE_DEFINING_ELEMENT__DEFINED_TYPE;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__NAME = TYPE_DEFINING_ELEMENT_FEATURE_COUNT + 0;
+	int N4_TYPE_VARIABLE__NAME = TypesPackage.IDENTIFIABLE_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Defined Type Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Declared Covariant</b></em>' attribute.
@@ -11217,7 +11217,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__DECLARED_COVARIANT = TYPE_DEFINING_ELEMENT_FEATURE_COUNT + 1;
+	int N4_TYPE_VARIABLE__DECLARED_COVARIANT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Contravariant</b></em>' attribute.
@@ -11226,7 +11226,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT = TYPE_DEFINING_ELEMENT_FEATURE_COUNT + 2;
+	int N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Declared Upper Bound</b></em>' reference.
@@ -11235,7 +11235,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_DEFINING_ELEMENT_FEATURE_COUNT + 3;
+	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Declared Upper Bound In AST</b></em>' containment reference.
@@ -11244,7 +11244,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST = TYPE_DEFINING_ELEMENT_FEATURE_COUNT + 4;
+	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>N4 Type Variable</em>' class.
@@ -11253,7 +11253,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE_FEATURE_COUNT = TYPE_DEFINING_ELEMENT_FEATURE_COUNT + 5;
+	int N4_TYPE_VARIABLE_FEATURE_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -11262,7 +11262,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE___GET_CONTAINING_MODULE = TYPE_DEFINING_ELEMENT_OPERATION_COUNT + 0;
+	int N4_TYPE_VARIABLE___GET_CONTAINING_MODULE = TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -11271,7 +11271,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE___GET_NAME = TYPE_DEFINING_ELEMENT_OPERATION_COUNT + 1;
+	int N4_TYPE_VARIABLE___GET_NAME = TypesPackage.IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>N4 Type Variable</em>' class.
@@ -11280,7 +11280,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE_OPERATION_COUNT = TYPE_DEFINING_ELEMENT_OPERATION_COUNT + 2;
+	int N4_TYPE_VARIABLE_OPERATION_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4TypeDefinitionImpl <em>N4 Type Definition</em>}' class.
@@ -21431,6 +21431,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getN4TypeVariable();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Defined Type Variable</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4TypeVariable#getDefinedTypeVariable()
+	 * @see #getN4TypeVariable()
+	 * @generated
+	 */
+	EReference getN4TypeVariable_DefinedTypeVariable();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26863,6 +26874,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass N4_TYPE_VARIABLE = eINSTANCE.getN4TypeVariable();
+
+		/**
+		 * The meta object literal for the '<em><b>Defined Type Variable</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = eINSTANCE.getN4TypeVariable_DefinedTypeVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Covariant</b></em>' attribute feature.

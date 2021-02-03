@@ -13,6 +13,7 @@ package org.eclipse.n4js.n4JS;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,6 +24,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
@@ -33,7 +35,29 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * @model
  * @generated
  */
-public interface N4TypeVariable extends TypeDefiningElement, IdentifiableElement, NamedElement {
+public interface N4TypeVariable extends IdentifiableElement, NamedElement {
+	/**
+	 * Returns the value of the '<em><b>Defined Type Variable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Defined Type Variable</em>' reference.
+	 * @see #setDefinedTypeVariable(TypeVariable)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DefinedTypeVariable()
+	 * @model transient="true"
+	 * @generated
+	 */
+	TypeVariable getDefinedTypeVariable();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Defined Type Variable</em>' reference.
+	 * @see #getDefinedTypeVariable()
+	 * @generated
+	 */
+	void setDefinedTypeVariable(TypeVariable value);
+
 	/**
 	 * Returns the value of the '<em><b>Declared Covariant</b></em>' attribute.
 	 * <!-- begin-user-doc -->

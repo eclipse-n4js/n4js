@@ -1480,7 +1480,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.N4_TYPE_VARIABLE: {
 				N4TypeVariable n4TypeVariable = (N4TypeVariable)theEObject;
 				T1 result = caseN4TypeVariable(n4TypeVariable);
-				if (result == null) result = caseTypeDefiningElement(n4TypeVariable);
 				if (result == null) result = caseIdentifiableElement(n4TypeVariable);
 				if (result == null) result = caseNamedElement(n4TypeVariable);
 				if (result == null) result = caseTypableElement(n4TypeVariable);

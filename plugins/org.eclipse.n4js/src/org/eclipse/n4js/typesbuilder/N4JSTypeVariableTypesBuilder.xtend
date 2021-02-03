@@ -36,7 +36,7 @@ package class N4JSTypeVariableTypesBuilder {
 			return;
 		}
 		ensureEqualName(n4TypeVar, typeVar);
-		n4TypeVar.definedType = typeVar;
+		n4TypeVar.definedTypeVariable = typeVar;
 	}
 
 	def package void addTypeParameters(GenericType target, GenericDeclaration decl, boolean preLinkingPhase) {
@@ -53,7 +53,7 @@ package class N4JSTypeVariableTypesBuilder {
 			typeVar.declaredUpperBound = TypeUtils.copyWithProxies(n4TypeVar.declaredUpperBoundInAST);
 		}
 
-		n4TypeVar.definedType = typeVar;
+		n4TypeVar.definedTypeVariable = typeVar;
 
 		return typeVar;
 	}

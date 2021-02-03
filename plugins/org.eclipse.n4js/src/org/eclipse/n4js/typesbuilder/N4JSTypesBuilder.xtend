@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
-import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.Script
@@ -346,12 +345,6 @@ public class N4JSTypesBuilder {
 		return n4VariableStatement.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
 
-	def protected dispatch int relinkType(N4TypeVariable n4TypeVar, TModule target, boolean preLinkingPhase,
-		int idx) {
-		// type parameters are handled in their containing GenericDeclaration -> ignore them here
-		return idx;
-	}
-
 	def private void buildTypes(Script script, TModule target, boolean preLinkingPhase) {
 		for (n : script.eAllContents.toIterable) {
 			switch n {
@@ -414,9 +407,5 @@ public class N4JSTypesBuilder {
 	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, TModule target,
 		boolean preLinkingPhase) {
 		n4VariableStatement.createVariableTypes(target, preLinkingPhase)
-	}
-
-	def protected dispatch void createType(N4TypeVariable n4TypeVar, TModule target, boolean preLinkingPhase) {
-		// type parameters are handled in their containing GenericDeclaration -> ignore them here
 	}
 }

@@ -98,6 +98,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
 import org.eclipse.n4js.n4JS.NullLiteral;
@@ -1327,6 +1328,12 @@ import com.google.inject.Inject;
 		// ----------------------------------------------------------------------
 		// AST nodes: miscellaneous
 		// ----------------------------------------------------------------------
+
+		@Override
+		public TypeRef caseN4TypeVariable(N4TypeVariable n4TypeVar) {
+			final TypeRef typeRef = TypeUtils.wrapTypeInTypeRef(n4TypeVar.getDefinedTypeVariable());
+			return typeRef != null ? typeRef : unknown();
+		}
 
 		@Override
 		public TypeRef caseCatchVariable(CatchVariable catchVariable) {

@@ -10,12 +10,8 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -24,15 +20,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
-import org.eclipse.n4js.n4JS.NamedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
-import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.ts.types.TypeVariable;
 
-import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.n4js.ts.types.impl.IdentifiableElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,7 +35,7 @@ import org.eclipse.xtext.EcoreUtil2;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
@@ -51,26 +44,16 @@ import org.eclipse.xtext.EcoreUtil2;
  *
  * @generated
  */
-public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4TypeVariable {
+public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4TypeVariable {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * The cached value of the '{@link #getDefinedTypeVariable() <em>Defined Type Variable</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * @see #getDefinedTypeVariable()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
+	protected TypeVariable definedTypeVariable;
 
 	/**
 	 * The default value of the '{@link #isDeclaredCovariant() <em>Declared Covariant</em>}' attribute.
@@ -157,8 +140,25 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	 * @generated
 	 */
 	@Override
-	public String getName() {
-		return name;
+	public TypeVariable getDefinedTypeVariable() {
+		if (definedTypeVariable != null && definedTypeVariable.eIsProxy()) {
+			InternalEObject oldDefinedTypeVariable = (InternalEObject)definedTypeVariable;
+			definedTypeVariable = (TypeVariable)eResolveProxy(oldDefinedTypeVariable);
+			if (definedTypeVariable != oldDefinedTypeVariable) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE, oldDefinedTypeVariable, definedTypeVariable));
+			}
+		}
+		return definedTypeVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TypeVariable basicGetDefinedTypeVariable() {
+		return definedTypeVariable;
 	}
 
 	/**
@@ -167,11 +167,11 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	 * @generated
 	 */
 	@Override
-	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
+	public void setDefinedTypeVariable(TypeVariable newDefinedTypeVariable) {
+		TypeVariable oldDefinedTypeVariable = definedTypeVariable;
+		definedTypeVariable = newDefinedTypeVariable;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE, oldDefinedTypeVariable, definedTypeVariable));
 	}
 
 	/**
@@ -311,16 +311,6 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	 * @generated
 	 */
 	@Override
-	public TModule getContainingModule() {
-		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST:
@@ -337,8 +327,9 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
-				return getName();
+			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				if (resolve) return getDefinedTypeVariable();
+				return basicGetDefinedTypeVariable();
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				return isDeclaredCovariant();
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
@@ -360,8 +351,8 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
-				setName((String)newValue);
+			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				setDefinedTypeVariable((TypeVariable)newValue);
 				return;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				setDeclaredCovariant((Boolean)newValue);
@@ -387,8 +378,8 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
-				setName(NAME_EDEFAULT);
+			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				setDefinedTypeVariable((TypeVariable)null);
 				return;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				setDeclaredCovariant(DECLARED_COVARIANT_EDEFAULT);
@@ -414,8 +405,8 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
+				return definedTypeVariable != null;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				return declaredCovariant != DECLARED_COVARIANT_EDEFAULT;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
@@ -434,91 +425,11 @@ public class N4TypeVariableImpl extends TypeDefiningElementImpl implements N4Typ
 	 * @generated
 	 */
 	@Override
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == IdentifiableElement.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.N4_TYPE_VARIABLE__NAME: return TypesPackage.IDENTIFIABLE_ELEMENT__NAME;
-				default: return -1;
-			}
-		}
-		if (baseClass == NamedElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == IdentifiableElement.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.IDENTIFIABLE_ELEMENT__NAME: return N4JSPackage.N4_TYPE_VARIABLE__NAME;
-				default: return -1;
-			}
-		}
-		if (baseClass == NamedElement.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == IdentifiableElement.class) {
-			switch (baseOperationID) {
-				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return N4JSPackage.N4_TYPE_VARIABLE___GET_CONTAINING_MODULE;
-				default: return -1;
-			}
-		}
-		if (baseClass == NamedElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.NAMED_ELEMENT___GET_NAME: return N4JSPackage.N4_TYPE_VARIABLE___GET_NAME;
-				default: return -1;
-			}
-		}
-		return super.eDerivedOperationID(baseOperationID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case N4JSPackage.N4_TYPE_VARIABLE___GET_CONTAINING_MODULE:
-				return getContainingModule();
-		}
-		return super.eInvoke(operationID, arguments);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (name: ");
-		result.append(name);
-		result.append(", declaredCovariant: ");
+		result.append(" (declaredCovariant: ");
 		result.append(declaredCovariant);
 		result.append(", declaredContravariant: ");
 		result.append(declaredContravariant);

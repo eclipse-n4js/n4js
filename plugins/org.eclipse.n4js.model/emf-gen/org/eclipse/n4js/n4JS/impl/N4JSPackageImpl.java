@@ -6096,8 +6096,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getN4TypeVariable_DeclaredCovariant() {
-		return (EAttribute)n4TypeVariableEClass.getEStructuralFeatures().get(0);
+	public EReference getN4TypeVariable_DefinedTypeVariable() {
+		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -6106,7 +6106,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getN4TypeVariable_DeclaredContravariant() {
+	public EAttribute getN4TypeVariable_DeclaredCovariant() {
 		return (EAttribute)n4TypeVariableEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -6116,8 +6116,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getN4TypeVariable_DeclaredContravariant() {
+		return (EAttribute)n4TypeVariableEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getN4TypeVariable_DeclaredUpperBound() {
-		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(2);
+		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -6127,7 +6137,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EReference getN4TypeVariable_DeclaredUpperBoundInAST() {
-		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(3);
+		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -8269,6 +8279,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(genericDeclarationEClass, GENERIC_DECLARATION__TYPE_VARS);
 
 		n4TypeVariableEClass = createEClass(N4_TYPE_VARIABLE);
+		createEReference(n4TypeVariableEClass, N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE);
 		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_COVARIANT);
 		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT);
 		createEReference(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND);
@@ -8692,7 +8703,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		commaExpressionEClass.getESuperTypes().add(this.getExpression());
 		typeDefiningElementEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		genericDeclarationEClass.getESuperTypes().add(this.getTypeDefiningElement());
-		n4TypeVariableEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		n4TypeVariableEClass.getESuperTypes().add(theTypesPackage.getIdentifiableElement());
 		n4TypeVariableEClass.getESuperTypes().add(this.getNamedElement());
 		n4TypeDefinitionEClass.getESuperTypes().add(this.getAnnotableElement());
@@ -9472,6 +9482,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getGenericDeclaration_TypeVars(), this.getN4TypeVariable(), null, "typeVars", null, 0, -1, GenericDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(n4TypeVariableEClass, N4TypeVariable.class, "N4TypeVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getN4TypeVariable_DefinedTypeVariable(), theTypesPackage.getTypeVariable(), null, "definedTypeVariable", null, 0, 1, N4TypeVariable.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getN4TypeVariable_DeclaredCovariant(), theEcorePackage.getEBoolean(), "declaredCovariant", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getN4TypeVariable_DeclaredContravariant(), theEcorePackage.getEBoolean(), "declaredContravariant", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getN4TypeVariable_DeclaredUpperBound(), theTypeRefsPackage.getTypeRef(), null, "declaredUpperBound", null, 0, 1, N4TypeVariable.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
