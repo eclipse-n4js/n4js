@@ -43,6 +43,7 @@ import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
@@ -328,18 +329,20 @@ public class N4JSLanguageUtils {
 		|| astNode instanceof FormalParameter
 		|| astNode instanceof TStructMember // they can play the role of AST nodes!
 		|| astNode instanceof N4EnumLiteral
+		|| astNode instanceof N4TypeVariable
 	}
 
 	def static EObject getDefinedTypeModelElement(EObject astNode) {
 		switch(astNode) {
 			ExportedVariableDeclaration: astNode.definedVariable
 			PropertyMethodDeclaration: astNode.definedMember
-			TypeDefiningElement: astNode.definedType // includes N4TypeVariable
+			TypeDefiningElement: astNode.definedType
 			N4MemberDeclaration case !(astNode instanceof N4MemberAnnotationList): astNode.definedTypeElement
 			PropertyAssignment case !(astNode instanceof PropertyAssignmentAnnotationList): astNode.definedMember
 			FormalParameter: astNode.definedTypeElement
 			TStructMember case astNode.isASTNode: astNode.definedMember // note: a TStructMember may be an AST node or types model element!
 			N4EnumLiteral: astNode.definedLiteral
+			N4TypeVariable: astNode.definedTypeVariable
 		}
 	}
 
