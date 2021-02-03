@@ -348,10 +348,6 @@ Contributors:
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.eclipse.swtbot.eclipse.spy.views.EclipseSpyView">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.eclipse.n4js.product.activity"
             pattern=".*/org.eclipse.rse.ui.view.monitorView">
       </activityPatternBinding>
       <activityPatternBinding
@@ -801,10 +797,6 @@ Contributors:
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"
             pattern=".*/org.eclipse.rse.ui.preferences.RemoteSystemsPreferencePage">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.eclipse.swtbot.eclipse.ui.preferences.SWTBotPreferencePage">
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"

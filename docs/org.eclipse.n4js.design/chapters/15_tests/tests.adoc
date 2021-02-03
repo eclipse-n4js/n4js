@@ -1443,61 +1443,6 @@ def void testNoNPE_03() {
 
 The components that are used to implemement the smoke tests are the `SmokeTester` and the `ExceptionAnalyzer`. The smoke tester performs the permutation of the characters from the input model whereas the analyzer does the heavy lifting of passing the parsed model to various components such as the type system or the validation. Both utilities can be used to add either new smoke test documents or to check for the robustness of an implementation. It’s espeically useful to use the ExceptionAnalyzer in conjunction with existing test suites like the `LibraryParsingTestSuite` since it can be used instead of the other utilities like the `PositiveAnalyzer` or the `NegativeAnalyzer`.
 
-[[sec:UI_Tests_with_SWTBot]]
-[.language-n4js]
-==   UI Tests with SWTBot
-
-For testing functionality from the end-user perspective we use UI tests based on SWTBot http://eclipse.org/swtbot/.
-
-Since UI tests are usually rather fragile, it was decided to keep the number of these tests as low as possible. The main purpose of these tests is to ensure that the most fundamental IDE functionality is working properly, e.g. creating an N4JS project, creating a new N4JS file, running N4JS code in node.js.
-
-The tests have a number of SWTBot dependencies. For details, please refer to the latest target platform definition file.
-
-[[writing-swtbot-tests]]
-===   Writing SWTBot Tests
-
-The implementation is contained in bundle `org.eclipse.swtbot.tests`. Writing SWTBot tests is straightforward; see source code of `AbstractSwtBotTest` for usage and examples.
-
-Some hints:
-
-* Many methods of the SWTBot framework already include assertions. For example, the method `pass:[#]  menu(String)` to find a particular menu or menu item will assert that the item was found and otherwise throw an exception. Therefore, it is safe to write code like:
-+
-[source]
-----
-bot.menu("File").menu("New").menu("Project...").click();
-----
-* It is usually considered bad practice to use sleep delays in UI tests. Instead, wait for the element to appear using methods such as http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitUntil or http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitWhile.
-
-[[running-swtbot-tests]]
-===   Running SWTBot Tests
-
-To run the tests locally in Eclipse just right-click the bundle and select ``Run As > SWTBot Test``  . To run them locally via maven simply start a normal maven build, no additional command line arguments, etc. required.
-
-To run remotely in a Jenkins build: on Windows the build must be executed with a logged-in user; on Linux Xvfb and a window manager are required. The recommended window manager is metacity. More information can be found here: http://wiki.eclipse.org/SWTBot/Automate_test_execution.
-
-To use metacity, add the following pre-build shell command to the Jenkins build configuration:
-
-[source,bash]
-----
-sleep 5; metacity --replace --sm-disable &
-----
-
-The sleep is required because metacity depends on Xvfb to be fully initialized, which might take a moment on slower build nodes. The following Jenkins console log shows the expected output when starting Xvfb and metacitiy:
-
-[source,bash]
-----
-Xvfb starting$ Xvfb :1 -screen 0 1024x768x24 -fbdir /var/lib/build/2014-09-05_10-36-343337290231975947044xvfb
-[N4JS-IDE_Oliver] $ /bin/sh -xe /tmp/hudson4475531813520593700.sh
-+ sleep 5
-+ metacity --replace --sm-disable
-Xlib:  extension "RANDR" missing on display ":1.0".
-Window manager warning: 0 stored in GConf key /desktop/gnome/peripherals/mouse/cursor_size is out of range 1 to 128
-Process leaked file descriptors. See http://wiki.jenkins-ci.org/display/JENKINS/Spawning+processes+from+build for more information
-Parsing POMs
-...
-----
-
-The warnings and error messages in the above log are expected and are considered unharmful (cf. discussion with Jörg Baldzer).
 
 [[sec:Debugging_UI_Tests]]
 ==   Debugging UI Tests
