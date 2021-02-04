@@ -14,13 +14,16 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.xtext.lib.setup.workspace.WorkspaceDefaultsSetup;
 import org.junit.runner.RunWith;
 
 /**
  * NOTE: @XpectSuiteClasses annotation is used only to enable UI features of JUnit and .xt files. The JUnit runner is
  * completely independent form Xpect
  */
-@XpectSuiteClasses({ XtIdeTest.class })
+@XpectSuiteClasses({ XtIdeTest.class,
+		WorkspaceDefaultsSetup.class
+})
 @RunWith(XtParentRunner.class)
 @XtFolder("ideTests")
 public class XtTestSetupTest { // needs to be called test to get picked up by maven
