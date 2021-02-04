@@ -10,15 +10,17 @@
  */
 package org.eclipse.n4js.dirtystate
 
+import com.google.inject.Inject
 import java.util.Set
-import org.eclipse.core.resources.IFile
-import org.eclipse.emf.common.util.URI
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicReference
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
+import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.resource.XtextResource
-import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
 
 import static org.junit.Assert.*
@@ -26,53 +28,65 @@ import static org.junit.Assert.*
 /**
  * Base class for testing logic in {@link CanLoadFromDescriptionHelper}.
  */
-abstract class AbstractCanLoadFromDescriptionTest extends AbstractBuilderParticipantTest {
+abstract class AbstractCanLoadFromDescriptionTest extends AbstractIdeTest {
 
-	def protected IFile getOutputFileForTestFile(IFile file) {
-		val name = file.name;
-		val idx = name.lastIndexOf('.');
-		val baseName = if(idx>=0) name.substring(0, idx) else name;
-		val project = file.project;
-		return project.getFile(
-			N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
-			+ "/m/"
-			+ baseName + ".js"
-		);
+	@Inject
+	protected ResourceTaskManager resourceTaskManager;
+
+	override protected getIgnoredIssueCodes() {
+		return (super.getIgnoredIssueCodes() + #[
+			IssueCodes.LTD_ILLEGAL_LOADTIME_REFERENCE
+		]).toSet;
 	}
-	
+
 	/**
 	 * Execute the given unit of work with the resource of the given editor.
 	 */
-	def protected void assertResource(XtextEditor editor, IUnitOfWork.Void<XtextResource> unit) {
-		editor.getDocument().readOnly(unit);
+	def protected void assertResource(String moduleName, IUnitOfWork.Void<XtextResource> unit) {
+		val uri = getFileURIFromModuleName(moduleName).toURI;
+		val latch = new CountDownLatch(1);
+		val failure = new AtomicReference<AssertionError>();
+		resourceTaskManager.runInExistingContextVoid(uri, "#assertResource()", [ ctx, ci |
+			try {
+				unit.exec(ctx.resource);
+			} catch(AssertionError e) {
+				failure.set(e);
+			}
+			latch.countDown();
+		]);
+		latch.await();
+		if (failure.get !== null) {
+			throw new AssertionError("assertion failure in #assertResource()", failure.get);
+		}
 	}
-	
+
 	/**
 	 * Assert that the resources denoted by their URIs are loaded from source in the resource set of 
 	 * the given editor.
 	 */
-	def protected void assertFromSource(XtextEditor editor, Set<URI> uris) {
-		editor.assertResource [ resource |
+	def protected void assertFromSource(String moduleName, Set<FileURI> uris) {
+		assertResource(moduleName, [ resource |
 			val resourceSet = resource.resourceSet;
+			val emfURIs = uris.map[toURI].toSet;
 			resourceSet.resources.forEach [ other |
 				if (other instanceof N4JSResource) {
-					assertEquals(other.URI.toString + ' was loaded from source', uris.contains(other.URI), !other.isLoadedFromDescription)	
+					assertEquals(other.URI.toString + ' was loaded from source', emfURIs.contains(other.URI), !other.isLoadedFromDescription)	
 				}
 			]
-		]
+		]);
 	}
-	
+
 	/**
 	 * Assert that all but the primary resource in the editors resource set are loaded from the index.
 	 */
-	def protected void assertAllFromIndex(XtextEditor editor) {
-		editor.assertResource [ resource |
+	def protected void assertAllFromIndex(String moduleName) {
+		assertResource(moduleName, [ resource |
 			val resourceSet = resource.resourceSet;
 			resourceSet.resources.forEach [ other |
 				if (other instanceof N4JSResource) {
 					assertEquals(other.URI.toString + ' was loaded from source', other !== resource, other.isLoadedFromDescription)	
 				}
 			]
-		]
+		]);
 	}
 }
