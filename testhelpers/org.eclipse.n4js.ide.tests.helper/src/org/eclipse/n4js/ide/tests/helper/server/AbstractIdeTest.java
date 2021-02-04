@@ -639,6 +639,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.didChangeWatchedFiles(params);
 	}
 
+	/** Same as {@link #changeNonOpenedFile(String, Function)}, but replaces old content entirely. */
+	protected void changeNonOpenedFile(String moduleName, CharSequence newContent) {
+		changeNonOpenedFile(moduleName, oldContent -> newContent);
+	}
+
 	/**
 	 * Change a non-opened file <em>on disk</em> and notify the LSP server.
 	 * <p>
@@ -663,7 +668,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * @param modification
 	 *            a function returning the desired new content when given the file's current content on disk.
 	 */
-	protected void changeNonOpenedFile(String moduleName, Function<String, String> modification) {
+	protected void changeNonOpenedFile(String moduleName, Function<String, ? extends CharSequence> modification) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeNonOpenedFile(fileURI, modification);
 	}
@@ -677,7 +682,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * @param modification
 	 *            a function returning the desired new content when given the file's current content on disk.
 	 */
-	protected void changeNonOpenedFile(FileURI fileURI, Function<String, String> modification) {
+	protected void changeNonOpenedFile(FileURI fileURI, Function<String, ? extends CharSequence> modification) {
 		if (isOpen(fileURI)) {
 			Assert.fail("file is open: " + fileURI);
 		}
@@ -687,8 +692,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		sendDidChangeWatchedFiles(fileURI);
 	}
 
-	/** Same as {@link #changeOpenedFile(FileURI, String)}, but accepts a module name. */
-	protected void changeOpenedFile(String moduleName, String newContent) {
+	/** Same as {@link #changeOpenedFile(FileURI, CharSequence)}, but accepts a module name. */
+	protected void changeOpenedFile(String moduleName, CharSequence newContent) {
 		changeOpenedFile(getFileURIFromModuleName(moduleName), newContent);
 	}
 
@@ -696,12 +701,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #changeOpenedFile(FileURI, Function)}, but the desired new content is given as argument instead of
 	 * a modification function.
 	 */
-	protected void changeOpenedFile(FileURI fileURI, String newContent) {
+	protected void changeOpenedFile(FileURI fileURI, CharSequence newContent) {
 		changeOpenedFile(fileURI, oldContent -> newContent);
 	}
 
 	/** Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but accepts a module name. */
-	protected void changeOpenedFile(String moduleName, Function<String, String> modification) {
+	protected void changeOpenedFile(String moduleName, Function<String, ? extends CharSequence> modification) {
 		changeOpenedFile(getFileURIFromModuleName(moduleName), modification);
 	}
 
@@ -716,7 +721,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            will be invoked with the file's old content as argument and is expected to return the desired new
 	 *            content.
 	 */
-	protected void changeOpenedFile(FileURI fileURI, Function<String, String> modification) {
+	protected void changeOpenedFile(FileURI fileURI, Function<String, ? extends CharSequence> modification) {
 		changeOpenedFile(fileURI,
 				modification,
 				(oldContent, newContent) -> singletonList(new TextDocumentContentChangeEvent(newContent)));
@@ -724,7 +729,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Same as {@link #changeOpenedFile(FileURI, Pair...)}, but accepts a module name. */
 	@SafeVarargs
-	protected final void changeOpenedFile(String moduleName, Pair<String, String>... replacements) {
+	protected final void changeOpenedFile(String moduleName, Pair<String, ? extends CharSequence>... replacements) {
 		changeOpenedFile(getFileURIFromModuleName(moduleName), replacements);
 	}
 
@@ -735,13 +740,13 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * of the {@link #openFile(FileURI) #openFile()} methods.
 	 */
 	@SafeVarargs
-	protected final void changeOpenedFile(FileURI fileURI, Pair<String, String>... replacements) {
+	protected final void changeOpenedFile(FileURI fileURI, Pair<String, ? extends CharSequence>... replacements) {
 		changeOpenedFile(fileURI,
 				oldContent -> applyReplacements(oldContent, replacements),
 				(oldContent, newContent) -> replacementsToChangeEvents(oldContent, replacements));
 	}
 
-	private void changeOpenedFile(FileURI fileURI, Function<String, String> modification,
+	private void changeOpenedFile(FileURI fileURI, Function<String, ? extends CharSequence> modification,
 			BiFunction<String, String, List<TextDocumentContentChangeEvent>> changeComputer) {
 		if (!isOpen(fileURI)) {
 			Assert.fail("file is not open: " + fileURI);
@@ -751,8 +756,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		int oldVersion = info.version;
 		String oldContent = info.content;
 		int newVersion = oldVersion + 1;
-		String newContent = modification.apply(oldContent);
-		Assert.assertNotNull(newContent);
+		CharSequence newContentRaw = modification.apply(oldContent);
+		Assert.assertNotNull(newContentRaw);
+		String newContent = newContentRaw.toString();
 		info.version = newVersion;
 		info.content = newContent;
 		// 2) notify LSP server
@@ -921,7 +927,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * URI.
 	 */
 	@SafeVarargs
-	protected final void changeFileOnDiskWithoutNotification(String moduleName, Pair<String, String>... replacements) {
+	protected final void changeFileOnDiskWithoutNotification(String moduleName,
+			Pair<String, ? extends CharSequence>... replacements) {
+
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 	}
@@ -939,7 +947,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	@SafeVarargs
 	protected final Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
-			Pair<String, String>... replacements) {
+			Pair<String, ? extends CharSequence>... replacements) {
 		return changeFileOnDiskWithoutNotification(fileURI, content -> applyReplacements(content, replacements));
 	}
 
@@ -966,12 +974,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * @return a pair with the file's old content as key and its new content as value.
 	 */
 	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
-			Function<String, String> modification) {
+			Function<String, ? extends CharSequence> modification) {
 
 		try {
 			Path filePath = fileURI.toJavaIoFile().toPath();
 			String oldContent = Files.readString(filePath);
-			String newContent = modification.apply(oldContent);
+			String newContent = modification.apply(oldContent).toString();
 			Files.writeString(filePath, newContent, StandardOpenOption.TRUNCATE_EXISTING);
 			return new Pair<>(oldContent, newContent);
 		} catch (IOException e) {
@@ -1305,17 +1313,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	@SafeVarargs
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(String content,
-			Pair<String, String>... replacements) {
+			Pair<String, ? extends CharSequence>... replacements) {
 
 		return replacementsToChangeEvents(new XDocument(0, content), replacements);
 	}
 
 	@SafeVarargs
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(XDocument document,
-			Pair<String, String>... replacements) {
+			Pair<String, ? extends CharSequence>... replacements) {
 
 		List<TextDocumentContentChangeEvent> result = new ArrayList<>(replacements.length);
-		for (Pair<String, String> replacement : replacements) {
+		for (Pair<String, ? extends CharSequence> replacement : replacements) {
 			int offset = document.getContents().indexOf(replacement.getKey());
 			if (offset < 0) {
 				throw new IllegalArgumentException(
@@ -1323,7 +1331,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			}
 			int len = replacement.getKey().length();
 			Range range = new Range(document.getPosition(offset), document.getPosition(offset + len));
-			result.add(new TextDocumentContentChangeEvent(range, len, replacement.getValue()));
+			result.add(new TextDocumentContentChangeEvent(range, len, replacement.getValue().toString()));
 		}
 		return result;
 	}
@@ -1399,16 +1407,18 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Applies the given replacements to the given character sequence and returns the resulting string. */
 	@SafeVarargs
-	protected static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
+	protected static String applyReplacements(CharSequence oldContent,
+			Pair<String, ? extends CharSequence>... replacements) {
+
 		StringBuilder newContent = new StringBuilder(oldContent);
-		for (Pair<String, String> replacement : replacements) {
+		for (Pair<String, ? extends CharSequence> replacement : replacements) {
 			int offset = newContent.indexOf(replacement.getKey());
 			if (offset < 0) {
 				throw new IllegalArgumentException(
 						"string \"" + replacement.getKey() + "\" not found in content of document");
 			}
 			int len = replacement.getKey().length();
-			newContent.replace(offset, offset + len, replacement.getValue());
+			newContent.replace(offset, offset + len, replacement.getValue().toString());
 		}
 		return newContent.toString();
 	}

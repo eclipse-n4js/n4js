@@ -22,6 +22,7 @@ import org.eclipse.n4js.dirtystate.testdata.TransitiveInheritMemberTestFiles
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
 
+// converted from BuilderParticipantPluginTest
 /**
  * tests if the Xtext builder creates and removes error markers at affected resources when another resource breaks
  * references in them after saving
@@ -64,7 +65,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	def void testNewFileFixesLinkingIssue() throws Exception {
 		// create project and test files
 		testWorkspaceManager.createTestProjectOnDisk(
-				"pr0_0pa0/Class0" -> TestFiles.class0().toString
+				"pr0_0pa0/Class0" -> TestFiles.class0()
 		);
 		startAndWaitForLspServer();
 		assertIssues(
@@ -94,18 +95,18 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testMethodInRequiredClassRenamed() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			InheritanceTestFiles.module1() + "/A" -> InheritanceTestFiles.A().toString,
-			InheritanceTestFiles.module2() + "/B" -> InheritanceTestFiles.B().toString
+			InheritanceTestFiles.module1() + "/A" -> InheritanceTestFiles.A(),
+			InheritanceTestFiles.module2() + "/B" -> InheritanceTestFiles.B()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("A", [InheritanceTestFiles.AOtherMethodName().toString]);
+		changeNonOpenedFile("A", InheritanceTestFiles.AOtherMethodName());
 		joinServerRequests();
 		// One marker for using the old method name
 		assertIssues("B" -> #["(Error, [5:2 - 5:5], Couldn't resolve reference to IdentifiableElement 'foo'.)"]);
 
-		changeNonOpenedFile("A", [InheritanceTestFiles.A().toString]);
+		changeNonOpenedFile("A", InheritanceTestFiles.A());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -124,15 +125,15 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testMethodRenamedInSuperClassOfClassThatIsUsedToCallTheMethod() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			InheritanceTestFiles.module1() + "/A" -> InheritanceTestFiles.A().toString,
-			InheritanceTestFiles.module2() + "/B" -> InheritanceTestFiles.B().toString,
-			InheritanceTestFiles.module2() + "/C" -> InheritanceTestFiles.C().toString,
-			InheritanceTestFiles.module1() + "/D" -> InheritanceTestFiles.D().toString
+			InheritanceTestFiles.module1() + "/A" -> InheritanceTestFiles.A(),
+			InheritanceTestFiles.module2() + "/B" -> InheritanceTestFiles.B(),
+			InheritanceTestFiles.module2() + "/C" -> InheritanceTestFiles.C(),
+			InheritanceTestFiles.module1() + "/D" -> InheritanceTestFiles.D()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("A", [InheritanceTestFiles.AOtherMethodName().toString]);
+		changeNonOpenedFile("A", InheritanceTestFiles.AOtherMethodName());
 		joinServerRequests();
 		// First marker for using old method name
 		assertIssues(
@@ -141,7 +142,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 			"D" -> #["(Error, [7:14 - 7:18], Couldn't resolve reference to IdentifiableElement 'getB'.)"]
 		);
 
-		changeNonOpenedFile("A", [InheritanceTestFiles.A().toString]);
+		changeNonOpenedFile("A", InheritanceTestFiles.A());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -164,16 +165,16 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	// org.eclipse.n4js.resource.N4JSResource.getEncodedURI(N4JSResource.java:446)
 	def void testMutualDependency() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			TestFiles.mutualModuleFolder() + "/Brother" -> TestFiles.classBrother().toString,
-			TestFiles.mutualModuleFolder() + "/Sister" -> TestFiles.classSister().toString,
-			TestFiles.mutualModuleFolder() + "/Child" -> TestFiles.classChild().toString
+			TestFiles.mutualModuleFolder() + "/Brother" -> TestFiles.classBrother(),
+			TestFiles.mutualModuleFolder() + "/Sister" -> TestFiles.classSister(),
+			TestFiles.mutualModuleFolder() + "/Child" -> TestFiles.classChild()
 		);
 		startAndWaitForLspServer();
 		// expected markers
 		// Variable brother is used before it is declared
 		assertIssues("Sister" -> #["(Warning, [7:0 - 7:7], Variable brother is used before it is declared)"]);
 
-		changeNonOpenedFile("Sister", [TestFiles.classSisterNew().toString]);
+		changeNonOpenedFile("Sister", TestFiles.classSisterNew());
 		joinServerRequests();
 		// expected markers
 		// Couldn't resolve reference to TMember 'getBrother'. at brother.getSister().getBrother
@@ -200,7 +201,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 			]
 		);
 
-		changeNonOpenedFile("Sister", [TestFiles.classSister().toString]);
+		changeNonOpenedFile("Sister", TestFiles.classSister());
 		joinServerRequests();
 
 		// expected markers
@@ -226,21 +227,21 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testMethodInConsumedRoleRenamed() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA().toString,
-			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB().toString,
-			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC().toString
+			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA(),
+			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB(),
+			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("ARole", [RoleTestFiles.roleAChanged().toString]);
+		changeNonOpenedFile("ARole", RoleTestFiles.roleAChanged());
 		joinServerRequests();
 		assertIssues(
 			"BRole" -> #["(Error, [4:7 - 4:16], Couldn't resolve reference to IdentifiableElement 'myMethodA'.)"],
 			"CRole" -> #["(Error, [5:7 - 5:16], Couldn't resolve reference to IdentifiableElement 'myMethodA'.)"]
 		);
 
-		changeNonOpenedFile("ARole", [RoleTestFiles.roleA().toString]);
+		changeNonOpenedFile("ARole", RoleTestFiles.roleA());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -261,18 +262,18 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testMethodInConsumedRoleInBetweenRenamed() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA().toString,
-			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB().toString,
-			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC().toString
+			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA(),
+			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB(),
+			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("BRole", [RoleTestFiles.roleBChanged().toString]);
+		changeNonOpenedFile("BRole", RoleTestFiles.roleBChanged());
 		joinServerRequests();
 		assertIssues("CRole" -> #["(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"]);
 
-		changeNonOpenedFile("BRole", [RoleTestFiles.roleB().toString]);
+		changeNonOpenedFile("BRole", RoleTestFiles.roleB());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -293,21 +294,21 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testConsumedRoleInConsumedRoleInBetweenRemoved() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA().toString,
-			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB().toString,
-			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC().toString
+			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA(),
+			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB(),
+			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("BRole", [RoleTestFiles.roleBChanged2().toString]);
+		changeNonOpenedFile("BRole", RoleTestFiles.roleBChanged2());
 		joinServerRequests();
 		assertIssues(
 			"BRole" -> #["(Warning, [0:9 - 0:14], The import of ARole is unused.)"],
 			"CRole" -> #["(Error, [6:7 - 6:16], Couldn't resolve reference to IdentifiableElement 'myMethodB'.)"]
 		);
 
-		changeNonOpenedFile("BRole", [RoleTestFiles.roleBChanged3().toString]);
+		changeNonOpenedFile("BRole", RoleTestFiles.roleBChanged3());
 		joinServerRequests();
 		assertIssues(
 			"BRole" -> #["(Warning, [0:9 - 0:14], The import of ARole is unused.)"]
@@ -332,21 +333,21 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testSwitchFromRoleToClassMethod() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA().toString,
-			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB().toString,
-			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC().toString,
-			RoleTestFiles.moduleFolder() + "/D" -> RoleTestFiles.classD().toString,
-			RoleTestFiles.moduleFolder() + "/E" -> RoleTestFiles.classE().toString
+			RoleTestFiles.moduleFolder() + "/ARole" -> RoleTestFiles.roleA(),
+			RoleTestFiles.moduleFolder() + "/BRole" -> RoleTestFiles.roleB(),
+			RoleTestFiles.moduleFolder() + "/CRole" -> RoleTestFiles.roleC(),
+			RoleTestFiles.moduleFolder() + "/D" -> RoleTestFiles.classD(),
+			RoleTestFiles.moduleFolder() + "/E" -> RoleTestFiles.classE()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("E", [RoleTestFiles.classEChanged().toString]);
+		changeNonOpenedFile("E", RoleTestFiles.classEChanged());
 		joinServerRequests();
 		// File E should have no errors as now using method of D
 		assertIssues("E" -> #["(Warning, [1:9 - 1:14], The import of BRole is unused.)"]);
 
-		changeNonOpenedFile("D", [RoleTestFiles.classDChanged().toString]);
+		changeNonOpenedFile("D", RoleTestFiles.classDChanged());
 		joinServerRequests();
 		// File E should have errors after method not available anymore
 		assertIssues(
@@ -356,7 +357,7 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 			]
 		);
 
-		changeNonOpenedFile("E", [RoleTestFiles.classE().toString]);
+		changeNonOpenedFile("E", RoleTestFiles.classE());
 		joinServerRequests();
 		// File E should have no errors after method is available via role
 		assertNoIssues();
@@ -378,18 +379,18 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testMethodInImplementedInterfaceRenamed() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			InterfaceTestFiles.moduleFolder() + "/InterfaceA" -> InterfaceTestFiles.interfaceA().toString,
-			InterfaceTestFiles.moduleFolder() + "/InterfaceB" -> InterfaceTestFiles.interfaceB().toString,
-			InterfaceTestFiles.moduleFolder() + "/ClassWithInterfaces" -> InterfaceTestFiles.classWithInterfaces().toString
+			InterfaceTestFiles.moduleFolder() + "/InterfaceA" -> InterfaceTestFiles.interfaceA(),
+			InterfaceTestFiles.moduleFolder() + "/InterfaceB" -> InterfaceTestFiles.interfaceB(),
+			InterfaceTestFiles.moduleFolder() + "/ClassWithInterfaces" -> InterfaceTestFiles.classWithInterfaces()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("InterfaceA", [InterfaceTestFiles.interfaceAChanged().toString]);
+		changeNonOpenedFile("InterfaceA", InterfaceTestFiles.interfaceAChanged());
 		joinServerRequests();
 		assertIssues("ClassWithInterfaces" -> #["(Error, [4:7 - 4:15], Couldn't resolve reference to IdentifiableElement 'methodIA'.)"]);
 
-		changeNonOpenedFile("InterfaceA", [InterfaceTestFiles.interfaceA().toString]);
+		changeNonOpenedFile("InterfaceA", InterfaceTestFiles.interfaceA());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -413,21 +414,21 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testMethodChainingWithRenamingLastOne() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			MemberTestFiles.moduleFolder() + "/MyInterfaceFour" -> MemberTestFiles.myInterfaceFour().toString,
-			MemberTestFiles.moduleFolder() + "/MyRoleThree" -> MemberTestFiles.myRoleThree().toString,
-			MemberTestFiles.moduleFolder() + "/MyClassTwo" -> MemberTestFiles.myClassTwo().toString,
-			MemberTestFiles.moduleFolder() + "/MyVariableTwo" -> MemberTestFiles.myVariableTwo().toString,
-			MemberTestFiles.moduleFolder() + "/MyClassOne" -> MemberTestFiles.myClassOne().toString
+			MemberTestFiles.moduleFolder() + "/MyInterfaceFour" -> MemberTestFiles.myInterfaceFour(),
+			MemberTestFiles.moduleFolder() + "/MyRoleThree" -> MemberTestFiles.myRoleThree(),
+			MemberTestFiles.moduleFolder() + "/MyClassTwo" -> MemberTestFiles.myClassTwo(),
+			MemberTestFiles.moduleFolder() + "/MyVariableTwo" -> MemberTestFiles.myVariableTwo(),
+			MemberTestFiles.moduleFolder() + "/MyClassOne" -> MemberTestFiles.myClassOne()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("MyInterfaceFour", [MemberTestFiles.myInterfaceFourChanged().toString]);
+		changeNonOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFourChanged());
 		joinServerRequests();
 		// File MyClassOne with other missing method name in chain should have errors
 		assertIssues("MyClassOne" -> #["(Error, [5:35 - 5:47], Couldn't resolve reference to IdentifiableElement 'myMethodFour'.)"]);
 
-		changeNonOpenedFile("MyInterfaceFour", [MemberTestFiles.myInterfaceFour().toString]);
+		changeNonOpenedFile("MyInterfaceFour", MemberTestFiles.myInterfaceFour());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -483,19 +484,19 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testRenamingMethodAccessedViaSubclass() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			TransitiveInheritMemberTestFiles.moduleFolder() + "/C" -> TransitiveInheritMemberTestFiles.C().toString,
-			TransitiveInheritMemberTestFiles.moduleFolder() + "/B" -> TransitiveInheritMemberTestFiles.B().toString,
-			TransitiveInheritMemberTestFiles.moduleFolder() + "/A" -> TransitiveInheritMemberTestFiles.A().toString
+			TransitiveInheritMemberTestFiles.moduleFolder() + "/C" -> TransitiveInheritMemberTestFiles.C(),
+			TransitiveInheritMemberTestFiles.moduleFolder() + "/B" -> TransitiveInheritMemberTestFiles.B(),
+			TransitiveInheritMemberTestFiles.moduleFolder() + "/A" -> TransitiveInheritMemberTestFiles.A()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("C", [TransitiveInheritMemberTestFiles.CChanged().toString]);
+		changeNonOpenedFile("C", TransitiveInheritMemberTestFiles.CChanged());
 		joinServerRequests();
 		// File A with other missing method name in chain should have errors
 		assertIssues("A" -> #["(Error, [5:19 - 5:28], Couldn't resolve reference to IdentifiableElement 'myMethodC'.)"]);
 
-		changeNonOpenedFile("C", [TransitiveInheritMemberTestFiles.C().toString]);
+		changeNonOpenedFile("C", TransitiveInheritMemberTestFiles.C());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -515,18 +516,18 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testMethodCallWithCaseSensitiveMethodNames() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCallee" -> CaseSensitiveTestFiles.callee().toString,
-			CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCaller" -> CaseSensitiveTestFiles.caller().toString
+			CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCallee" -> CaseSensitiveTestFiles.callee(),
+			CaseSensitiveTestFiles.moduleFolder() + "/CaseSensitiveCaller" -> CaseSensitiveTestFiles.caller()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("CaseSensitiveCallee", [CaseSensitiveTestFiles.calleeChanged().toString]);
+		changeNonOpenedFile("CaseSensitiveCallee", CaseSensitiveTestFiles.calleeChanged());
 		joinServerRequests();
 		// File Caller with other missing method name in chain should have errors
 		assertIssues("CaseSensitiveCaller" -> #["(Error, [5:14 - 5:22], Couldn't resolve reference to IdentifiableElement 'mymethod'.)"]);
 
-		changeNonOpenedFile("CaseSensitiveCallee", [CaseSensitiveTestFiles.callee().toString]);
+		changeNonOpenedFile("CaseSensitiveCallee", CaseSensitiveTestFiles.callee());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -545,14 +546,14 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testStaticMethodCalls() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			StaticTestFiles.moduleFolder() + "/Callee" -> StaticTestFiles.callee().toString,
-			StaticTestFiles.moduleFolder() + "/SubCallee" -> StaticTestFiles.subCallee().toString,
-			StaticTestFiles.moduleFolder() + "/Caller" -> StaticTestFiles.caller().toString
+			StaticTestFiles.moduleFolder() + "/Callee" -> StaticTestFiles.callee(),
+			StaticTestFiles.moduleFolder() + "/SubCallee" -> StaticTestFiles.subCallee(),
+			StaticTestFiles.moduleFolder() + "/Caller" -> StaticTestFiles.caller()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("Callee", [StaticTestFiles.callee_changedStaticMember().toString]);
+		changeNonOpenedFile("Callee", StaticTestFiles.callee_changedStaticMember());
 		joinServerRequests();
 		// File SubCallee should have one error
 		// File Caller with field not static anymore should have errors
@@ -566,11 +567,11 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 			]
 		);
 
-		changeNonOpenedFile("Callee", [StaticTestFiles.callee().toString]);
+		changeNonOpenedFile("Callee", StaticTestFiles.callee());
 		joinServerRequests();
 		assertNoIssues();
 
-		changeNonOpenedFile("Callee", [StaticTestFiles.callee_changedNonStaticAccessors().toString]);
+		changeNonOpenedFile("Callee", StaticTestFiles.callee_changedNonStaticAccessors());
 		joinServerRequests();
 		// File Caller with getter static now should have errors (1 for static access in non-static context + 1 any is not sub type of string)
 		// File Callee should have one error, because of wrong this access
@@ -579,16 +580,16 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 			"Callee" -> #["(Error, [26:15 - 26:38], The non-static member myPrivateNonStaticField cannot be accessed from a static context.)"]
 		);
 
-		changeNonOpenedFile("Callee", [StaticTestFiles.callee().toString]);
+		changeNonOpenedFile("Callee", StaticTestFiles.callee());
 		joinServerRequests();
 		assertNoIssues();
 
-		changeNonOpenedFile("SubCallee", [StaticTestFiles.subCallee_changed().toString]);
+		changeNonOpenedFile("SubCallee", StaticTestFiles.subCallee_changed());
 		joinServerRequests();
 		// File Caller should have no errors as now linking to super class method
 		assertNoIssues();
 
-		changeNonOpenedFile("SubCallee", [StaticTestFiles.subCallee().toString]);
+		changeNonOpenedFile("SubCallee", StaticTestFiles.subCallee());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -607,18 +608,18 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testEnumLiterals() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			EnumTestFiles.moduleFolder() + "/MyEnum" -> EnumTestFiles.myEnum().toString,
-			EnumTestFiles.moduleFolder() + "/MyEnumUser" -> EnumTestFiles.myEnumUser().toString
+			EnumTestFiles.moduleFolder() + "/MyEnum" -> EnumTestFiles.myEnum(),
+			EnumTestFiles.moduleFolder() + "/MyEnumUser" -> EnumTestFiles.myEnumUser()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("MyEnum", [EnumTestFiles.myEnum_changed().toString]);
+		changeNonOpenedFile("MyEnum", EnumTestFiles.myEnum_changed());
 		joinServerRequests();
 		// File MyEnumUser with old literal should have errors
 		assertIssues("MyEnumUser" -> #["(Error, [5:22 - 5:25], Couldn't resolve reference to IdentifiableElement 'ONE'.)"]);
 
-		changeNonOpenedFile("MyEnum", [EnumTestFiles.myEnum().toString]);
+		changeNonOpenedFile("MyEnum", EnumTestFiles.myEnum());
 		joinServerRequests();
 		assertNoIssues();
 	}
@@ -639,18 +640,18 @@ public class BuilderParticipantIdeTest extends AbstractIdeTest {
 	@Test
 	def void testChangeOutsideWorkspaceAndRefreshInWorkspace() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
-			InheritanceTestFiles.module1() + "/A" -> InheritanceTestFiles.A().toString,
-			InheritanceTestFiles.module2() + "/B" -> InheritanceTestFiles.B().toString
+			InheritanceTestFiles.module1() + "/A" -> InheritanceTestFiles.A(),
+			InheritanceTestFiles.module2() + "/B" -> InheritanceTestFiles.B()
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
 
-		changeNonOpenedFile("A", [InheritanceTestFiles.AOtherMethodName().toString]);
+		changeNonOpenedFile("A", InheritanceTestFiles.AOtherMethodName());
 		joinServerRequests();
 		// File B should have errors as using old method name
 		assertIssues("B" -> #["(Error, [5:2 - 5:5], Couldn't resolve reference to IdentifiableElement 'foo'.)"]);
 
-		changeNonOpenedFile("A", [InheritanceTestFiles.A().toString]);
+		changeNonOpenedFile("A", InheritanceTestFiles.A());
 		joinServerRequests();
 		assertNoIssues();
 	}
