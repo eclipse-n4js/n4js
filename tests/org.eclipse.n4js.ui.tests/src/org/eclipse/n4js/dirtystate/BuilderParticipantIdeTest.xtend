@@ -22,11 +22,11 @@ import org.eclipse.n4js.dirtystate.testdata.TransitiveInheritMemberTestFiles
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
 
-// converted from BuilderParticipantPluginTest
 /**
  * tests if the Xtext builder creates and removes error markers at affected resources when another resource breaks
  * references in them after saving
  */
+// converted from BuilderParticipantPluginTest
 public class BuilderParticipantIdeTest extends AbstractIdeTest {
 
 	// @formatter:off

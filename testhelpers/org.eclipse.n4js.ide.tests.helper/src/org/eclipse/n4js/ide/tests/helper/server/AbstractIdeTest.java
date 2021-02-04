@@ -625,6 +625,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.didChangeWatchedFiles(params);
 	}
 
+	/** Same as {@link #deleteNonOpenedFile(FileURI)}, accepting a module name. */
+	protected void deleteNonOpenedFile(String moduleName) {
+		deleteNonOpenedFile(getFileURIFromModuleName(moduleName));
+	}
+
 	/** Delete a non-opened file <u>from disk</u> and notify the LSP server. */
 	protected void deleteNonOpenedFile(FileURI fileURI) {
 		if (isOpen(fileURI)) {
