@@ -135,17 +135,20 @@ public class TestWorkspaceManager {
 
 	/**
 	 * Returns file name and extension for a given file name. In case the given file name contains a known extension
-	 * (c.f. {@link N4JSGlobals#ALL_N4_FILE_EXTENSIONS}), this is recognized. Otherwise, the extension 'n4js' is added
-	 * as default.
+	 * (c.f. {@link N4JSGlobals#ALL_N4_FILE_EXTENSIONS}), this is recognized.
 	 */
 	public NameAndExtension getN4JSNameAndExtension(String fileName) {
 		String name = fileName;
 		String extension = null;
-		if (fileName != null && fileName.contains(".")) {
-			String[] split = fileName.split("\\.");
-			extension = split[split.length - 1];
-			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
-				name = fileName.substring(0, fileName.length() - extension.length() - 1);
+		if (fileName != null) {
+			int idxLastDot = fileName.lastIndexOf('.');
+			int idxLastSlash = fileName.lastIndexOf('/');
+			if (idxLastDot >= 0 && idxLastSlash < idxLastDot) {
+				String[] split = fileName.split("\\.");
+				extension = split[split.length - 1];
+				if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
+					name = fileName.substring(0, fileName.length() - extension.length() - 1);
+				}
 			}
 		}
 		return new NameAndExtension(name, extension);

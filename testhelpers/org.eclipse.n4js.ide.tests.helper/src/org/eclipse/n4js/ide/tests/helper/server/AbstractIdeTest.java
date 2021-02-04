@@ -82,6 +82,7 @@ import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.NameAndExtension;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -784,6 +785,30 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		joinServerRequests();
 	}
 
+	protected void createFile(String modulePathAndName, CharSequence content) {
+		createFile(DEFAULT_PROJECT_NAME, modulePathAndName, content);
+	}
+
+	protected void createFile(String projectName, String modulePathAndName, CharSequence content) {
+		FileURI projectRoot = toFileURI(getProjectRoot(projectName));
+		NameAndExtension nameAndExt = testWorkspaceManager.getN4JSNameAndExtension(modulePathAndName);
+		String filePathAndName = nameAndExt.extension == null
+				? modulePathAndName + "." + TestWorkspaceManager.DEFAULT_EXTENSION
+				: modulePathAndName;
+		FileURI fileURI = projectRoot.resolve(DEFAULT_SOURCE_FOLDER).resolve(filePathAndName);
+		createFile(fileURI, content);
+	}
+
+	/** Create a new file on disk and notify the LSP server. */
+	protected void createFile(FileURI fileURI, CharSequence content) {
+		// 1) create the file
+		createFileOnDiskWithoutNotification(fileURI, content);
+		// 2) notify server
+		FileEvent fileEvent = new FileEvent(fileURI.toString(), FileChangeType.Created);
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(Collections.singletonList(fileEvent));
+		languageServer.didChangeWatchedFiles(params);
+	}
+
 	/**
 	 * Same as {@link #createFileOnDiskWithoutNotification(FileURI, CharSequence)}, placing the new file next to an
 	 * existing module.
@@ -798,7 +823,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Create a new file on disk without notifying the LSP server about it. */
 	protected void createFileOnDiskWithoutNotification(FileURI fileURI, CharSequence content) {
 		Path filePath = fileURI.toJavaIoFile().toPath();
+		Path parentPath = filePath.normalize().getParent();
 		try {
+			if (parentPath != null && parentPath.getNameCount() > 0) {
+				Files.createDirectories(parentPath);
+			}
 			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);
 		} catch (IOException e) {
 			throw new RuntimeException("exception while creating file on disk", e);
