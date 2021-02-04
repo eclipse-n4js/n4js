@@ -44,7 +44,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		xtData = newXtData;
 
 		cleanupTestDataFolder();
-		testWorkspaceManager.createTestOnDisk(xtData.project);
+		testWorkspaceManager.createTestOnDisk(xtData.workspace);
 
 		for (MethodData startupMethod : xtData.startupMethodData) {
 			switch (startupMethod.name) {

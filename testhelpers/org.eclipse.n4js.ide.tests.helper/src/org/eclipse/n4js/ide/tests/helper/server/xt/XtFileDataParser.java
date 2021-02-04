@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 import static org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.DEFAULT_PROJECT_NAME;
 import static org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.DEFAULT_SOURCE_FOLDER;
 import static org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.VENDOR;
+import static org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.VENDOR_NAME;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +29,10 @@ import java.util.regex.Pattern;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
+import org.eclipse.n4js.tests.codegen.Workspace;
 
 import com.google.common.base.Preconditions;
 
@@ -53,6 +55,10 @@ public class XtFileDataParser {
 	/**
 	 */
 	static final String XT_RUNNER = "RUNNER";
+
+	/**
+	 */
+	static final String XT_WORKSPACE = "WORKSPACE";
 
 	/**
 	 * Pattern group name to reference the expectation stated after {@code --->}/{@code ---}. <br/>
@@ -93,22 +99,36 @@ public class XtFileDataParser {
 	/**
 	 */
 	static final Pattern XT_SETUP = Pattern.compile(
-			"XPECT_SETUP\\s+(?<" + XT_RUNNER + ">[\\w\\d\\.]+)[\\s\\S]*END_SETUP");
+			"XPECT_SETUP\\s+(?<" + XT_RUNNER + ">[\\w\\d\\.]+)[\\s\\S]*?(Workspace\\s*\\{(?<" + XT_WORKSPACE
+					+ ">[\\s\\S]*)\\}[\\s\\S]*)?END_SETUP");
 
 	/** Parses the contents of the given file */
 	static public XtFileData parse(File xtFile) throws IOException {
 		String xtFileContent = Files.readString(xtFile.toPath());
 
-		Project project = getDefaultProject(xtFile, xtFileContent);
-		String setupRunner = getSetupRunner(xtFileContent);
+		Matcher matcher = XT_SETUP.matcher(xtFileContent);
+		Preconditions.checkState(matcher.find());
+		String setupRunner = matcher.group(XT_RUNNER);
+		Preconditions.checkNotNull(setupRunner);
+		String setupWorkspace = matcher.group(XT_WORKSPACE);
+
+		Workspace workspace = getProject(xtFile, setupWorkspace, xtFileContent);
 		List<MethodData> startupMethodData = getDefaultStartupMethodData();
 		List<MethodData> teardownMethodData = getDefaultTeardownMethodData();
 		List<MethodData> testMethodData = getTestMethodData(xtFileContent);
-		return new XtFileData(xtFile, xtFileContent, setupRunner, project, startupMethodData, testMethodData,
+		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData,
 				teardownMethodData);
 	}
 
-	static Project getDefaultProject(File xtFile, String xtFileContent) {
+	static Workspace getProject(File xtFile, String setupWorkspace, String xtFileContent) {
+		if (setupWorkspace == null) {
+			return createDefaultProject(xtFile, xtFileContent);
+		} else {
+			return XtSetupWorkspaceParser.parse(xtFile, setupWorkspace, xtFileContent);
+		}
+	}
+
+	static Workspace createDefaultProject(File xtFile, String xtFileContent) {
 		String xtFileName = xtFile.getName();
 		Preconditions.checkArgument(xtFileName.endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
 
@@ -118,18 +138,13 @@ public class XtFileDataParser {
 
 		Module xtFileModule = new Module(moduleName, extension);
 		xtFileModule.setContents(xtFileContent);
-		SourceFolder srcFolder = new SourceFolder(DEFAULT_SOURCE_FOLDER);
+		Folder srcFolder = new Folder(DEFAULT_SOURCE_FOLDER);
 		srcFolder.addModule(xtFileModule);
-		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR + "_name");
+		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR_NAME);
 		project.addSourceFolder(srcFolder);
-		return project;
-	}
-
-	static String getSetupRunner(String xtFileContent) {
-		Matcher matcher = XT_SETUP.matcher(xtFileContent);
-		matcher.find();
-		String runner = matcher.group(XT_RUNNER);
-		return runner;
+		Workspace workspace = new Workspace();
+		workspace.addProject(project);
+		return workspace;
 	}
 
 	static List<XtFileData.MethodData> getDefaultStartupMethodData() {

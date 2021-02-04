@@ -4,15 +4,12 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
 package org.eclipse.n4js.tests.codegen
 
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
 import java.util.List
 import java.util.Map
 import java.util.Objects
@@ -21,67 +18,32 @@ import org.eclipse.n4js.N4JSGlobals
 /**
  * Generates code for a module containing imports and either given classifiers or contents.
  */
-class Module {
-	final String name;
-	final String fExtension;
+class Module extends OtherFile {
 	List<Classifier<?>> classifiers;
-	String contents;
 	Map<String, List<String>> imports;
 
 	/**
 	 * Creates a new instance with the given parameters.
-	 *
+	 * 
 	 * @param name the module name without extension
 	 */
 	public new(String name) {
-		this(name, N4JSGlobals.N4JS_FILE_EXTENSION);
+		super(name, N4JSGlobals.N4JS_FILE_EXTENSION);
 	}
 
 	/**
 	 * Creates a new instance with the given parameters.
-	 *
+	 * 
 	 * @param name the module name without extension
 	 */
 	public new(String name, String fExtension) {
-		this.name = Objects.requireNonNull(name);
-		this.fExtension = Objects.requireNonNull(fExtension);
+		super(name, fExtension);
 	}
-
-	/**
-	 * Returns the name of this module.
-	 *
-	 * @return the name of this module
-	 */
-	public def String getName() {
-		return name
-	}
-
-	/**
-	 * Returns the file extension of this module.
-	 *
-	 * @return the file extension of this module
-	 */
-	public def String getExtension() {
-		return fExtension
-	}
-
-
-	/**
-	 * Sets the given string of contents to the module built by this builder.
-	 * This will cause the classifiers to be ignored.
-	 *
-	 * @param contents the contents to add
-	 */
-	public def Module setContents(String contents) {
-		this.contents = contents;
-		return this;
-	}
-
 
 	/**
 	 * Adds the given classifier to the module built by this builder.
 	 * Note that the classifiers are ignored iff the contents are set.
-	 *
+	 * 
 	 * @param classifier the classifier to add
 	 */
 	public def Module addClassifier(Classifier<?> classifier) {
@@ -93,7 +55,7 @@ class Module {
 
 	/**
 	 * Adds an import to the module built by this builder.
-	 *
+	 * 
 	 * @param importedType the name of the type to be imported
 	 * @param sourceModule the module containing the imported type
 	 */
@@ -103,7 +65,7 @@ class Module {
 
 	/**
 	 * Adds an import to the module built by this builder.
-	 *
+	 * 
 	 * @param importedType the classifier representing the type to be imported
 	 * @param sourceModule the module containing the imported type
 	 */
@@ -111,10 +73,9 @@ class Module {
 		return addImport(importedType.name, sourceModule)
 	}
 
-
 	/**
 	 * Adds an import to the module built by this builder.
-	 *
+	 * 
 	 * @param importedType the name of the type to be imported
 	 * @param sourceModule the name of the module containing the imported type
 	 */
@@ -133,54 +94,29 @@ class Module {
 	}
 
 	/**
-	 * Creates this module as a file in the given parent directory, which must already exist.
-	 *
-	 * @param parentDirectory a file representing the parent directory
-	 */
-	public def create(File parentDirectory) {
-		Objects.requireNonNull(parentDirectory);
-		if (!parentDirectory.exists)
-			throw new IOException("Directory '" + parentDirectory + "' does not exist");
-		if (!parentDirectory.directory)
-			throw new IOException("'" + parentDirectory + "' is not a directory");
-
-		val File filePath = new File(parentDirectory, this.name.replace('/', File.separatorChar) + "." + fExtension);
-		filePath.parentFile.mkdirs();
-
-		var FileWriter out = null;
-		try {
-			out = new FileWriter(filePath);
-			out.write(generate().toString());
-		} finally {
-			if (out !== null)
-				out.close();
-		}
-	}
-
-	/**
 	 * Generates the N4JS code for this module.
 	 */
-	public def generate() '''
-	«IF hasImports»
-		«generateImports()»
-	«ENDIF»	
-	«IF hasContents»
-		«contents»
-	«ELSEIF hasClassifiers»
-		«generateClassifiers()»
-	«ENDIF»
+	public override generate() '''
+		«IF hasImports»
+			«generateImports()»
+		«ENDIF»	
+		«IF hasContents»
+			«contents»
+		«ELSEIF hasClassifiers»
+			«generateClassifiers()»
+		«ENDIF»
 	'''
 
 	private def generateImports() '''
-	«FOR entry: imports.entrySet()»
-	import { «FOR type: entry.value SEPARATOR ', '»«type»«ENDFOR» } from "«entry.key»";
-	«ENDFOR»
+		«FOR entry : imports.entrySet()»
+			import { «FOR type: entry.value SEPARATOR ', '»«type»«ENDFOR» } from "«entry.key»";
+		«ENDFOR»
 	'''
 
 	private def generateClassifiers() '''
-	«FOR classifier: classifiers»
-	«classifier.generate()»
-	«ENDFOR»
+		«FOR classifier : classifiers»
+			«classifier.generate()»
+		«ENDFOR»
 	'''
 
 	private def boolean hasClassifiers() {

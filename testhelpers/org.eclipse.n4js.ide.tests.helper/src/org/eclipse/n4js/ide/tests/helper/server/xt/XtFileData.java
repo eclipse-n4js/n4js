@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.utils.Strings;
 import org.junit.runner.Description;
 
@@ -85,12 +85,12 @@ public class XtFileData {
 	final public String content;
 	final public String setupRunnerName;
 	final public int[] lineLengths;
-	final public Project project;
+	final public Workspace workspace;
 	final public List<MethodData> startupMethodData;
 	final public List<MethodData> testMethodData;
 	final public List<MethodData> teardownMethodData;
 
-	public XtFileData(File xtFile, String content, String setupRunnerName, Project project,
+	public XtFileData(File xtFile, String content, String setupRunnerName, Workspace workspace,
 			List<MethodData> startupMethodData, List<MethodData> testMethodData, List<MethodData> teardownMethodData) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
@@ -100,7 +100,7 @@ public class XtFileData {
 		this.content = content;
 		this.setupRunnerName = setupRunnerName;
 		this.lineLengths = calculateLineLengths(content);
-		this.project = project;
+		this.workspace = workspace;
 		this.startupMethodData = startupMethodData;
 		this.testMethodData = testMethodData;
 		this.teardownMethodData = teardownMethodData;

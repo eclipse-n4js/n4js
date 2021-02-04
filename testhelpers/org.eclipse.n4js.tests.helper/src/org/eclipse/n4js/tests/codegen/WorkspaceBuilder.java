@@ -1,0 +1,131 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.tests.codegen;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ *
+ */
+public class WorkspaceBuilder {
+
+	abstract public class NamedEntityBuilder {
+		String name;
+	}
+
+	public class ProjectBuilder extends NamedEntityBuilder {
+		String vendor = "VENDOR";
+		String vendorName = "VENDOR_NAME";
+		Map<String, FolderBuilder> folders = new LinkedHashMap<>();
+
+		/** 	 */
+		public FolderBuilder getOrAddFolder(String path) {
+			if (folders.containsKey(path)) {
+				return folders.get(path);
+			}
+			return addFolder(path);
+		}
+
+		/**  */
+		public FolderBuilder addFolder(String folderName) {
+			FolderBuilder folderBuilder = new FolderBuilder();
+			folderBuilder.name = folderName;
+			folders.put(folderName, folderBuilder);
+			return folderBuilder;
+		}
+
+		/**  */
+		public Project build() {
+			Project project = new Project(name, vendor, vendorName);
+			for (FolderBuilder folderBuilder : folders.values()) {
+				project.addSourceFolder(folderBuilder.build());
+			}
+			return project;
+		}
+	}
+
+	public class FolderBuilder extends NamedEntityBuilder {
+		Map<String, ModuleBuilder> modules = new LinkedHashMap<>();
+		Map<String, OtherFileBuilder> files = new LinkedHashMap<>();
+		public boolean isSourceFolder;
+
+		/**  */
+		public OtherFileBuilder addFile(String name, String content) {
+			OtherFileBuilder fileBuilder = new OtherFileBuilder();
+			fileBuilder.name = name;
+			fileBuilder.content = content;
+			files.put(name, fileBuilder);
+			return fileBuilder;
+		}
+
+		public ModuleBuilder addModule(String name, String content) {
+			ModuleBuilder moduleBuilder = new ModuleBuilder();
+			moduleBuilder.name = name;
+			moduleBuilder.content = content;
+			modules.put(name, moduleBuilder);
+			return moduleBuilder;
+		}
+
+		/**  */
+		public Folder build() {
+			Folder folder = new Folder(name);
+			for (ModuleBuilder moduleBuilder : modules.values()) {
+				folder.modules.add(moduleBuilder.build());
+			}
+			for (OtherFileBuilder fileBuilder : files.values()) {
+				folder.files.add(fileBuilder.build());
+			}
+			return folder;
+		}
+	}
+
+	public class OtherFileBuilder extends NamedEntityBuilder {
+		String content;
+
+		/**  */
+		public OtherFile build() {
+			OtherFile module = new OtherFile(name, content);
+			return module;
+		}
+	}
+
+	public class ModuleBuilder extends OtherFileBuilder {
+
+		/**  */
+		@Override
+		public Module build() {
+			Module module = new Module(name, content);
+			return module;
+		}
+	}
+
+	Map<String, ProjectBuilder> projectBuilders = new LinkedHashMap<>();
+
+	/**
+	 */
+	public ProjectBuilder addProject(String projectName) {
+		ProjectBuilder prjBuilder = new ProjectBuilder();
+		prjBuilder.name = projectName;
+		projectBuilders.put(projectName, prjBuilder);
+		return prjBuilder;
+	}
+
+	/**  */
+	public Workspace build() {
+		Workspace workspace = new Workspace();
+		for (ProjectBuilder projectBuilder : projectBuilders.values()) {
+			workspace.addProject(projectBuilder.build());
+		}
+		return workspace;
+	}
+
+}
