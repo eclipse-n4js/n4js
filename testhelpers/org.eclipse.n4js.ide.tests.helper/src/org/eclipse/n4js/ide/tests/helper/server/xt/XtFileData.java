@@ -83,13 +83,14 @@ public class XtFileData {
 	final public File xtFile;
 	final public String workspacePath;
 	final public String content;
+	final public String setupRunnerName;
 	final public int[] lineLengths;
 	final public Project project;
 	final public List<MethodData> startupMethodData;
 	final public List<MethodData> testMethodData;
 	final public List<MethodData> teardownMethodData;
 
-	public XtFileData(File xtFile, String content, Project project,
+	public XtFileData(File xtFile, String content, String setupRunnerName, Project project,
 			List<MethodData> startupMethodData, List<MethodData> testMethodData, List<MethodData> teardownMethodData) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
@@ -97,6 +98,7 @@ public class XtFileData {
 		this.xtFile = xtFile;
 		this.workspacePath = computeWorkspacePath(xtFile);
 		this.content = content;
+		this.setupRunnerName = setupRunnerName;
 		this.lineLengths = calculateLineLengths(content);
 		this.project = project;
 		this.startupMethodData = startupMethodData;

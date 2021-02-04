@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.junit.runner.Description;
@@ -20,26 +21,27 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- *
+ * Runs all tests defined by {@value XtFileDataParser#XT_XPECT} of a single .xt file
  */
 public class XtFileRunner extends Runner {
 	final XtIdeTest ideTest;
 	final String folderName;
 	final File file;
+	final XtFileData xtFileData;
 
-	XtFileData xtFileData;
 	Description description;
 
-	/**
-	 */
-	public XtFileRunner(XtIdeTest ideTest, String folderName, File file) {
+	/** Constructor */
+	public XtFileRunner(XtIdeTest ideTest, String folderName, File file) throws IOException {
 		this.ideTest = ideTest;
 		this.folderName = folderName;
 		this.file = file;
+		this.xtFileData = XtFileDataParser.parse(file);
 	}
 
-	public String getName() {
-		return file.getName() + ": " + folderName;
+	/** @return {@link XtFileData#setupRunnerName} */
+	public String getSetupRunnerName() {
+		return xtFileData.setupRunnerName;
 	}
 
 	@Override
@@ -76,18 +78,9 @@ public class XtFileRunner extends Runner {
 		}
 	}
 
-	/** Also initializes {@link #xtFileData} */
 	private Description getOrCreateDescription() {
 		if (description != null) {
 			return description;
-		}
-
-		if (xtFileData == null) {
-			try {
-				xtFileData = XtFileDataParser.parse(file);
-			} catch (Throwable t) {
-				return Description.createSuiteDescription(t.getMessage());
-			}
 		}
 
 		if (xtFileData.testMethodData.isEmpty()) {
@@ -101,5 +94,9 @@ public class XtFileRunner extends Runner {
 			description.addChild(testMethodData.getDescription(xtFileData));
 		}
 		return description;
+	}
+
+	private String getName() {
+		return file.getName() + ": " + folderName;
 	}
 }

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xpect.ui.tests;
 
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
@@ -21,6 +22,7 @@ import org.junit.runner.RunWith;
  */
 @XpectSuiteClasses({ XtIdeTest.class })
 @RunWith(XtParentRunner.class)
+@XtFolder("ideTests")
 public class XtTestSetupTest { // needs to be called test to get picked up by maven
 	// NOOP
 }

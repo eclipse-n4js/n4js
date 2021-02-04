@@ -40,13 +40,20 @@ import com.google.common.base.Preconditions;
 public class XtFileDataParser {
 	/** Identifier of test cases {@code XPECT} */
 	static final String XT_XPECT = "XPECT";
+
 	/** Pattern group name to reference the comment stated before {@value #XT_XPECT} */
 	static final String XT_COMMENT = "COMMENT";
+
 	/**
 	 * Pattern group name to reference the method name and its arguments stated after {@value #XT_XPECT} but before
 	 * {@code --->}/{@code ---}
 	 */
 	static final String XT_METHOD = "METHOD";
+
+	/**
+	 */
+	static final String XT_RUNNER = "RUNNER";
+
 	/**
 	 * Pattern group name to reference the expectation stated after {@code --->}/{@code ---}. <br/>
 	 * <b>Note:</b> The expectation might still contain line breaks and comment artifacts like {@code //} (see
@@ -83,15 +90,22 @@ public class XtFileDataParser {
 			"[^\\n]*\\/\\*+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_XPECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)---(?<"
 					+ XT_EXPECTATION + ">[\\s\\S]*?)---[\\s\\S]*?\\*\\/");
 
+	/**
+	 */
+	static final Pattern XT_SETUP = Pattern.compile(
+			"XPECT_SETUP\\s+(?<" + XT_RUNNER + ">[\\w\\d\\.]+)[\\s\\S]*END_SETUP");
+
 	/** Parses the contents of the given file */
 	static public XtFileData parse(File xtFile) throws IOException {
 		String xtFileContent = Files.readString(xtFile.toPath());
 
 		Project project = getDefaultProject(xtFile, xtFileContent);
+		String setupRunner = getSetupRunner(xtFileContent);
 		List<MethodData> startupMethodData = getDefaultStartupMethodData();
 		List<MethodData> teardownMethodData = getDefaultTeardownMethodData();
 		List<MethodData> testMethodData = getTestMethodData(xtFileContent);
-		return new XtFileData(xtFile, xtFileContent, project, startupMethodData, testMethodData, teardownMethodData);
+		return new XtFileData(xtFile, xtFileContent, setupRunner, project, startupMethodData, testMethodData,
+				teardownMethodData);
 	}
 
 	static Project getDefaultProject(File xtFile, String xtFileContent) {
@@ -109,6 +123,13 @@ public class XtFileDataParser {
 		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR + "_name");
 		project.addSourceFolder(srcFolder);
 		return project;
+	}
+
+	static String getSetupRunner(String xtFileContent) {
+		Matcher matcher = XT_SETUP.matcher(xtFileContent);
+		matcher.find();
+		String runner = matcher.group(XT_RUNNER);
+		return runner;
 	}
 
 	static List<XtFileData.MethodData> getDefaultStartupMethodData() {

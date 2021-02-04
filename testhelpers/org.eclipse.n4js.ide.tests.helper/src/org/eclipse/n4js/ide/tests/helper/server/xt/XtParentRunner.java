@@ -25,23 +25,28 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
+import com.google.common.base.Preconditions;
+
 /**
  *
  */
 public class XtParentRunner extends ParentRunner<XtFileRunner> {
+	final Class<?> testClass;
 	final XtIdeTest ideTest = new XtIdeTest();
 	final Path currentProject;
 	final Path startLocation;
-	final String xtFilesFolder = "ideTests";
+	final String xtFilesFolder;
 
 	List<XtFileRunner> fileRunners;
 
 	/**
 	 */
 	public XtParentRunner(Class<?> testClass) throws InitializationError {
-		super(XtIdeTest.class);
-		currentProject = new File("").getAbsoluteFile().toPath();
-		startLocation = currentProject.resolve(xtFilesFolder);
+		super(XtIdeTest.class); // This will run methods annotated with @BeforeAll/@AfterAll
+		this.testClass = testClass;
+		this.currentProject = new File("").getAbsoluteFile().toPath();
+		this.xtFilesFolder = getFolder();
+		this.startLocation = currentProject.resolve(xtFilesFolder);
 	}
 
 	@Override
@@ -66,20 +71,37 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 
 		fileRunners = new ArrayList<>();
 		try {
+			String testClassName = testClass.getName();
 			Files.walkFileTree(startLocation, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
-						fileRunners.add(new XtFileRunner(ideTest, xtFilesFolder, file));
+						try {
+							XtFileRunner fileRunner = new XtFileRunner(ideTest, xtFilesFolder, file);
+							if (testClassName.equals(fileRunner.getSetupRunnerName())) {
+								fileRunners.add(fileRunner);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 					return FileVisitResult.CONTINUE;
 				}
 			});
-		} catch (IOException e) {
+		} catch (
+
+		IOException e) {
 			e.printStackTrace();
 		}
 		return fileRunners;
+	}
+
+	private String getFolder() {
+		XtFolder[] xtFolders = testClass.getAnnotationsByType(XtFolder.class);
+		Preconditions.checkState(xtFolders != null && xtFolders.length == 1);
+		String folder = xtFolders[0].value();
+		return folder;
 	}
 
 }
