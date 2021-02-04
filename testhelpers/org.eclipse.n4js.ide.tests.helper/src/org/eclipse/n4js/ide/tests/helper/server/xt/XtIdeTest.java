@@ -37,29 +37,6 @@ public class XtIdeTest extends AbstractIdeTest {
 
 	XtFileData xtData;
 
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void definition(MethodData data) throws InterruptedException, ExecutionException {
-		Preconditions.checkArgument(data.name.equals("definition"));
-		Preconditions.checkArgument(data.args.length > 1);
-		Preconditions.checkArgument(data.args[0].equals("at"));
-		Preconditions.checkArgument(data.args[1].startsWith("'"));
-		Preconditions.checkArgument(data.args[1].endsWith("'"));
-		String locationStr = data.args[1].substring(1, data.args[1].length() - 2);
-		int relLocationIdx = locationStr.contains(CURSOR) ? locationStr.indexOf(CURSOR) : 0;
-		locationStr = locationStr.replace(CURSOR, "");
-		int locationIdx = xtData.content.indexOf(locationStr, data.offset) + relLocationIdx;
-		Position position = xtData.getPosition(locationIdx);
-		FileURI uri = getFileURIFromModuleName(xtData.getModuleName());
-
-		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = callDefinition(
-				uri.toString(), position.line, position.column);
-
-		Either<List<? extends Location>, List<? extends LocationLink>> definitions = future.get();
-
-		String actualSignatureHelp = getStringLSP4J().toString4(definitions);
-		assertEquals(data.expectation, actualSignatureHelp.trim());
-	}
-
 	/**
 	 */
 	public void initializeXtFile(XtFileData newXtData) throws IOException {
@@ -98,4 +75,27 @@ public class XtIdeTest extends AbstractIdeTest {
 		deleteTestProject();
 	}
 
+	/** Calls LSP endpoint 'definition'. Converts {@link MethodData} to inputs and compares outputs to expectations. */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void definition(MethodData data) throws InterruptedException, ExecutionException {
+		Preconditions.checkArgument(data.name.equals("definition"));
+		Preconditions.checkArgument(data.args.length > 1);
+		Preconditions.checkArgument(data.args[0].equals("at"));
+		Preconditions.checkArgument(data.args[1].startsWith("'"));
+		Preconditions.checkArgument(data.args[1].endsWith("'"));
+		String locationStr = data.args[1].substring(1, data.args[1].length() - 2);
+		int relLocationIdx = locationStr.contains(CURSOR) ? locationStr.indexOf(CURSOR) : 0;
+		locationStr = locationStr.replace(CURSOR, "");
+		int locationIdx = xtData.content.indexOf(locationStr, data.offset) + relLocationIdx;
+		Position position = xtData.getPosition(locationIdx);
+		FileURI uri = getFileURIFromModuleName(xtData.getModuleName());
+
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = callDefinition(
+				uri.toString(), position.line, position.column);
+
+		Either<List<? extends Location>, List<? extends LocationLink>> definitions = future.get();
+
+		String actualSignatureHelp = getStringLSP4J().toString4(definitions);
+		assertEquals(data.expectation, actualSignatureHelp.trim());
+	}
 }
