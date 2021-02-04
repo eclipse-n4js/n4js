@@ -27,6 +27,7 @@ import org.eclipse.xtext.testing.HoverTestConfiguration;
  */
 abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverTestConfiguration> {
 
+
 	/** Call this method in a test */
 	protected void testAtCursor(String content, String expectation) throws Exception {
 		ContentAndPosition contentAndPosition = getContentAndPosition(content);
@@ -47,7 +48,7 @@ abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverT
 		String completeFileUri = getFileURIFromModuleName(htc.getFilePath()).toString();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(htc.getLine(), htc.getColumn()));
-		CompletableFuture<Hover> hoverFuture = injEnv.languageServer.hover(textDocumentPositionParams);
+		CompletableFuture<Hover> hoverFuture = languageServer.hover(textDocumentPositionParams);
 
 		Hover hover = hoverFuture.get();
 		if (htc.getAssertHover() != null) {

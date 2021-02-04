@@ -73,7 +73,7 @@ class RenameDisallowedTest extends AbstractIdeTest {
 		val textDocumentPositionParams = new TextDocumentPositionParams();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(fileURI.toString()));
 		textDocumentPositionParams.setPosition(new Position(line, column));
-		val result = injEnv.languageServer.prepareRename(textDocumentPositionParams).get();
+		val result = languageServer.prepareRename(textDocumentPositionParams).get();
 		assertTrue("expected rename to be disallowed but it is allowed",
 			result === null || (result.getLeft() === null && result.getRight() === null)
 		);

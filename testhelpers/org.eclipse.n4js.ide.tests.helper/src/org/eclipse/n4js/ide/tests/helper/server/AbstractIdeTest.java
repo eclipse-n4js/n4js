@@ -88,12 +88,20 @@ import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
+import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
+import org.eclipse.xtext.LanguageInfo;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -113,6 +121,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -178,8 +187,33 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		SYSTEM_OUT_REDIRECTER.unset();
 	}
 
-	/** Created with injection during {@link #createInjector()} */
-	protected IdeTestLspServer injEnv;
+	/** */
+	@Inject
+	protected BuilderFrontend lspBuilder;
+	/** */
+	@Inject
+	protected IResourceServiceProvider.Registry resourceServerProviderRegistry;
+	/** */
+	@Inject
+	protected UriExtensions uriExtensions;
+	/** */
+	@Inject
+	protected XLanguageServerImpl languageServer;
+	/** */
+	@Inject
+	protected ConcurrentIndex concurrentIndex;
+	/** */
+	@Inject
+	protected IdeTestLanguageClient languageClient;
+	/** */
+	@Inject
+	protected LanguageInfo languageInfo;
+	/** */
+	@Inject
+	protected BuildOrderFactory projectBuildOrderFactory;
+	/** */
+	@Inject
+	protected XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
 
 	/** Utility to create/delete the test workspace on disk */
 	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
@@ -212,12 +246,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	@After
 	final public void deleteTestProject() throws IOException {
 		try {
-			if (injEnv.languageClient != null) { // only if LSP server was started
+			if (languageClient != null) { // only if LSP server was started
 				assertNoErrorsInLog();
 			}
 			assertNoErrorsInOutput();
 		} finally {
-			if (injEnv.languageServer != null) { // only if LSP server was started
+			if (languageServer != null) { // only if LSP server was started
 				shutdownLspServer();
 			}
 			SYSTEM_OUT_REDIRECTER.clearSystemOut();
@@ -275,14 +309,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Shuts down a running LSP server. Does not clean disk. */
 	protected void shutdownLspServer() {
-		if (injEnv.languageServer == null) {
+		if (languageServer == null) {
 			throw new IllegalStateException("trying to shut down LSP server, but it was never started");
 		}
 		// clear thread pools
-		injEnv.languageServer.shutdown().join();
+		languageServer.shutdown().join();
 		openFiles.clear();
-		injEnv.languageClient.clearLogMessages();
-		injEnv.languageClient.clearIssues();
+		languageClient.clearLogMessages();
+		languageClient.clearIssues();
 		N4jscTestFactory.unset();
 	}
 
@@ -306,7 +340,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected Injector createInjector() {
 		N4jscTestFactory.set(true, getOverridingModule());
 		Injector injector = N4jscFactory.getOrCreateInjector();
-		injEnv = injector.getInstance(IdeTestLspServer.class);
+		injector.injectMembers(this);
 		if (enableProjectStatePersister()) {
 			ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
 			persisterConfig.setDeleteState(false);
@@ -342,12 +376,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		initParams.setCapabilities(capabilities);
 		initParams.setRootUri(new FileURI(root).toString());
 
-		injEnv.languageClient.addListener(this);
+		languageClient.addListener(this);
 
-		injEnv.languageServer.connect(injEnv.languageClient);
-		injEnv.languageServer.initialize(initParams)
-				.join(); // according to LSP, we must wait here before sending #initialized():
-		injEnv.languageServer.initialized(null);
+		languageServer.connect(languageClient);
+		languageServer.initialize(initParams)
+				.join(); // according to LSP, we must to wait here before sending #initialized():
+		languageServer.initialized(null);
 	}
 
 	@Override
@@ -373,7 +407,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Objects.requireNonNull(commandId);
 		Objects.requireNonNull(args);
 		ExecuteCommandParams params = new ExecuteCommandParams(commandId, Arrays.asList(args));
-		return injEnv.languageServer.executeCommand(params);
+		return languageServer.executeCommand(params);
 	}
 
 	/** Clears system output and error streams. */
@@ -384,12 +418,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Clear the log messages received from the server via LSP notification 'logMessage'. */
 	protected void clearLogMessages() {
-		injEnv.languageClient.clearLogMessages();
+		languageClient.clearLogMessages();
 	}
 
 	/** Returns the log messages received from the server since the last call to {@link #clearLogMessages()}. */
 	protected List<MessageParams> getLogMessages() {
-		return injEnv.languageClient.getLogMessages();
+		return languageClient.getLogMessages();
 	}
 
 	/** Like {@link #getLogMessages()}, but returns the messages as a string. */
@@ -425,7 +459,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				.map(fileURI -> new FileEvent(fileURI.toString(), FileChangeType.Changed))
 				.collect(Collectors.toList());
 		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
-		injEnv.languageServer.didChangeWatchedFiles(params);
+		languageServer.didChangeWatchedFiles(params);
 	}
 
 	/** Same as {@link #isOpen(FileURI)}, but accepts a module name. */
@@ -476,7 +510,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 
 		TextDocumentItem textDocument = new TextDocumentItem();
-		textDocument.setLanguageId(injEnv.languageInfo.getLanguageName());
+		textDocument.setLanguageId(languageInfo.getLanguageName());
 		textDocument.setUri(fileURI.toString());
 		textDocument.setVersion(1);
 		textDocument.setText(toUnixLineSeparator(content));
@@ -484,7 +518,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		DidOpenTextDocumentParams dotdp = new DidOpenTextDocumentParams();
 		dotdp.setTextDocument(textDocument);
 
-		injEnv.languageServer.didOpen(dotdp);
+		languageServer.didOpen(dotdp);
 		openFiles.put(fileURI, new OpenFileInfo(content));
 
 		joinServerRequests();
@@ -549,9 +583,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(
 					new VersionedTextDocumentIdentifier(fileURI.toString(), info.version + 1),
 					Collections.singletonList(new TextDocumentContentChangeEvent(contentOnDisk)));
-			injEnv.languageServer.didChange(params);
+			languageServer.didChange(params);
 		}
-		injEnv.languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
+		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
 		joinServerRequests();
 	}
 
@@ -591,7 +625,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				.collect(Collectors.toList());
 		Assert.assertFalse("at least one deleted file/folder must match the 'nameRegEx'", fileEvents.isEmpty());
 		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
-		injEnv.languageServer.didChangeWatchedFiles(params);
+		languageServer.didChangeWatchedFiles(params);
 	}
 
 	/** Delete a non-opened file <u>from disk</u> and notify the LSP server. */
@@ -605,7 +639,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		List<FileEvent> fileEvents = Collections.singletonList(
 				new FileEvent(fileURI.toString(), FileChangeType.Deleted));
 		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
-		injEnv.languageServer.didChangeWatchedFiles(params);
+		languageServer.didChangeWatchedFiles(params);
 	}
 
 	/**
@@ -728,7 +762,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), newVersion);
 		List<TextDocumentContentChangeEvent> changes = changeComputer.apply(oldContent, newContent);
 		DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(docId, changes);
-		injEnv.languageServer.didChange(params);
+		languageServer.didChange(params);
 		joinServerRequests();
 	}
 
@@ -749,7 +783,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		// 2) notify LSP server
 		VersionedTextDocumentIdentifier docId = new VersionedTextDocumentIdentifier(fileURI.toString(), info.version);
 		DidSaveTextDocumentParams didSaveParams = new DidSaveTextDocumentParams(docId);
-		injEnv.languageServer.didSave(didSaveParams);
+		languageServer.didSave(didSaveParams);
 		sendDidChangeWatchedFiles(fileURI);
 		joinServerRequests();
 	}
@@ -991,8 +1025,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Asserts the build order of all projects in the workspace. */
 	protected void assertProjectBuildOrder(String expectedProjectBuildOrder) {
-		WorkspaceConfigSnapshot workspaceConfig = injEnv.workspaceConfigProvider.getWorkspaceConfigSnapshot();
-		BuildOrderIterator iter = injEnv.projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig).visitAll();
+		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
+		BuildOrderIterator iter = projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig).visitAll();
 		String buildOrderString = org.eclipse.n4js.utils.Strings.toString(pd -> pd.getName(), () -> iter);
 		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);
 	}
@@ -1005,7 +1039,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Asserts that there are no ERRORs in the LSP log. */
 	protected void assertNoErrorsInLog() {
-		for (MessageParams msg : injEnv.languageClient.getLogMessages()) {
+		for (MessageParams msg : languageClient.getLogMessages()) {
 			String message = Strings.nullToEmpty(msg.getMessage());
 			assertNotEquals("Unexpected ERROR in log:\n" + message, MessageType.Error, msg.getType());
 		}
@@ -1079,10 +1113,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Does not check for errors on stdout and in the log; use {@link #assertNoErrorsInLogOrOutput()} for that.
 	 */
 	protected void assertNoErrors() {
-		Multimap<FileURI, Diagnostic> allErrors = injEnv.languageClient.getErrors();
+		Multimap<FileURI, Diagnostic> allErrors = languageClient.getErrors();
 		if (!allErrors.isEmpty()) {
 			Assert.fail("expected no errors in workspace, but found " + allErrors.size() + " errors:\n"
-					+ issuesToString(Multimaps.transformValues(allErrors, injEnv.languageClient::getIssueString)));
+					+ issuesToString(Multimaps.transformValues(allErrors, languageClient::getIssueString)));
 		}
 	}
 
@@ -1114,7 +1148,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		Set<FileURI> checkedModules = fileURIToExpectedIssues.keySet();
 
 		// check that there are no other issues in the workspace
-		Multimap<FileURI, Diagnostic> allIssues = injEnv.languageClient.getIssues();
+		Multimap<FileURI, Diagnostic> allIssues = languageClient.getIssues();
 		Set<FileURI> modulesWithIssues = allIssues.keySet();
 		Set<FileURI> uncheckedModulesWithIssues = new LinkedHashSet<>(modulesWithIssues);
 		uncheckedModulesWithIssues.removeAll(checkedModules);
@@ -1198,11 +1232,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * included in the returned list.
 	 */
 	protected List<String> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
-		Stream<Diagnostic> issuesInFile = injEnv.languageClient.getIssues().get(fileURI).stream();
+		Stream<Diagnostic> issuesInFile = languageClient.getIssues().get(fileURI).stream();
 		if (!withIgnoredIssues) {
 			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
 		}
-		return issuesInFile.map(issue -> injEnv.languageClient.getIssueString(issue)).collect(Collectors.toList());
+		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
 	}
 
 	/**
@@ -1212,7 +1246,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * {@link Multimaps#transformValues(Multimap, com.google.common.base.Function) transformValues()} as follows:
 	 *
 	 * <pre>
-	 * Multimaps.transformValues(uriToDiagnostic, server.languageClient::getIssueString)
+	 * Multimaps.transformValues(uriToDiagnostic, languageClient::getIssueString)
 	 * </pre>
 	 */
 	protected String issuesToString(Multimap<FileURI, String> issuesPerFile) {
@@ -1282,7 +1316,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Reads the resource description of the source file with the given URI from the index. */
 	protected IResourceDescription getResourceDescriptionFromIndex(String projectName, FileURI fileURI) {
-		ResourceDescriptionsData index = injEnv.concurrentIndex.getProjectIndex(projectName);
+		ResourceDescriptionsData index = concurrentIndex.getProjectIndex(projectName);
 		return index.getResourceDescription(fileURI.toURI());
 	}
 
@@ -1304,23 +1338,23 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * use in output presented to the user (e.g. messages of assertion errors).
 	 */
 	protected String getRelativePathFromFileUri(FileURI fileURI) {
-		URI relativeUri = injEnv.lspBuilder.makeWorkspaceRelative(fileURI.toURI());
+		URI relativeUri = lspBuilder.makeWorkspaceRelative(fileURI.toURI());
 		return relativeUri.toFileString();
 	}
 
 	/** Waits until the LSP server idles. */
 	protected void joinServerRequests() {
-		injEnv.languageServer.joinServerRequests();
+		languageServer.joinServerRequests();
 	}
 
 	/** @see IdeTestLanguageClient#getIssues() */
 	protected Multimap<FileURI, Diagnostic> getIssues() {
-		return injEnv.languageClient.getIssues();
+		return languageClient.getIssues();
 	}
 
 	/** @see IdeTestLanguageClient#getIssues(FileURI) */
 	protected Collection<Diagnostic> getIssues(FileURI uri) {
-		return injEnv.languageClient.getIssues(uri);
+		return languageClient.getIssues(uri);
 	}
 
 	/** */
@@ -1378,7 +1412,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(line, column));
-		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = injEnv.languageServer
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
 				.definition(textDocumentPositionParams);
 
 		return definitionsFuture;

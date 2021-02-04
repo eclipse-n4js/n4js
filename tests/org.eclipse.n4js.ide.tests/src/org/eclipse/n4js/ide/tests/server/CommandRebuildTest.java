@@ -47,7 +47,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 	/** remove generated files */
 	@After
 	public void cleanup() {
-		injEnv.languageServer.getFrontend().clean();
+		languageServer.getFrontend().clean();
 
 		// wait for previous command to finish
 		joinServerRequests();
@@ -78,7 +78,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		// send command under test
 		ExecuteCommandParams cmdCleanParams = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
 				Collections.emptyList());
-		CompletableFuture<Object> future = injEnv.languageServer.executeCommand(cmdCleanParams);
+		CompletableFuture<Object> future = languageServer.executeCommand(cmdCleanParams);
 		future.join();
 
 		// wait for previous command to finish
@@ -98,7 +98,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		test("class A { foo(a: A) { } } class Main { main(a: A) { a.foo(null); } }");
 
 		// send command under test
-		injEnv.languageServer.getFrontend().reinitWorkspace();
+		languageServer.getFrontend().reinitWorkspace();
 
 		// wait for previous command to finish
 		joinServerRequests();
@@ -129,7 +129,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 				Collections.singletonList("(Error, [0:15 - 0:21], string is not a subtype of number.)")));
 
 		// send command under test
-		injEnv.languageServer.getFrontend().clean();
+		languageServer.getFrontend().clean();
 
 		// wait for previous command to finish
 		joinServerRequests();
@@ -166,7 +166,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		// send command under test
 		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,
 				Collections.emptyList());
-		injEnv.languageServer.executeCommand(params).join();
+		languageServer.executeCommand(params).join();
 
 		// wait for previous command to finish
 		joinServerRequests();

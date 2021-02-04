@@ -66,7 +66,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4ts"));
 		// see position from test above
 		textDocumentPositionParams.setPosition(new Position(838, 15));
-		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = injEnv.languageServer
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
 				.definition(textDocumentPositionParams);
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 
