@@ -18,11 +18,13 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.utils.Strings;
 import org.junit.runner.Description;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 
 /**
  *
@@ -101,29 +103,33 @@ public class XtFileData {
 	}
 
 	final public File xtFile;
+	final public FileURI xtFileURI;
 	final public String workspacePath;
 	final public String content;
 	final public String setupRunnerName;
 	final public int[] lineLengths;
 	final public Workspace workspace;
 	final public List<MethodData> startupMethodData;
-	final public Collection<MethodData> testMethodData;
+	final public Collection<MethodData> testMethodData1;
+	final public Collection<MethodData> testMethodData2;
 	final public List<MethodData> teardownMethodData;
 
 	public XtFileData(File xtFile, String content, String setupRunnerName, Workspace workspace,
-			List<MethodData> startupMethodData, Collection<MethodData> testMethodData,
-			List<MethodData> teardownMethodData) {
+			List<MethodData> startupMethodData, Collection<MethodData> testMethodData1,
+			Collection<MethodData> testMethodData2, List<MethodData> teardownMethodData) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
 
 		this.xtFile = xtFile;
+		this.xtFileURI = new FileURI(xtFile);
 		this.workspacePath = computeWorkspacePath(xtFile);
 		this.content = content;
 		this.setupRunnerName = setupRunnerName;
 		this.lineLengths = calculateLineLengths(content);
 		this.workspace = workspace;
 		this.startupMethodData = startupMethodData;
-		this.testMethodData = testMethodData;
+		this.testMethodData1 = testMethodData1;
+		this.testMethodData2 = testMethodData2;
 		this.teardownMethodData = teardownMethodData;
 	}
 
@@ -166,5 +172,13 @@ public class XtFileData {
 		}
 
 		return new Position(lineLengths.length - 1, lineLengths[lineLengths.length - 1]);
+	}
+
+	public Iterable<MethodData> getTestMethodData() {
+		return Iterables.concat(testMethodData1, testMethodData2);
+	}
+
+	public boolean noTests() {
+		return !getTestMethodData().iterator().hasNext();
 	}
 }

@@ -118,9 +118,13 @@ public class XtFileDataParser {
 		Workspace workspace = getProject(xtFile, setupWorkspace, xtFileContent);
 		List<MethodData> startupMethodData = getDefaultStartupMethodData();
 		List<MethodData> teardownMethodData = getDefaultTeardownMethodData();
-		Collection<MethodData> testMethodData = getTestMethodData(xtFileContent);
-		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData,
-				teardownMethodData);
+
+		TreeSet<XtFileData.MethodData> testMethodData1 = new TreeSet<>();
+		TreeSet<XtFileData.MethodData> testMethodData2 = new TreeSet<>();
+		fillTestMethodData(xtFileContent, testMethodData1, testMethodData2);
+
+		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData1,
+				testMethodData2, teardownMethodData);
 	}
 
 	static Workspace getProject(File xtFile, String setupWorkspace, String xtFileContent) {
@@ -160,23 +164,25 @@ public class XtFileDataParser {
 		return Collections.emptyList();
 	}
 
-	static Collection<XtFileData.MethodData> getTestMethodData(String xtFileContent) {
-		Collection<XtFileData.MethodData> methodData = new TreeSet<>();
+	static void fillTestMethodData(String xtFileContent,
+			TreeSet<XtFileData.MethodData> testMethodData1, TreeSet<XtFileData.MethodData> testMethodData2) {
+
 		Map<String, Integer> methodNameCounters = new HashMap<>();
 
 		for (Matcher matcher = XT_SINGLE_LINE.matcher(xtFileContent); matcher.find();) {
-			methodData.add(createMethodData(matcher, null, methodNameCounters));
+			MethodData testMethodData = createMethodData(matcher, null, methodNameCounters);
+			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
 		}
 
 		for (Matcher matcher = XT_MULTI_LINE1.matcher(xtFileContent); matcher.find();) {
-			methodData.add(createMethodData(matcher, XT_COMMENT_ARTIFACT_1, methodNameCounters));
+			MethodData testMethodData = createMethodData(matcher, XT_COMMENT_ARTIFACT_1, methodNameCounters);
+			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
 		}
 
 		for (Matcher matcher = XT_MULTI_LINE2.matcher(xtFileContent); matcher.find();) {
-			methodData.add(createMethodData(matcher, XT_COMMENT_ARTIFACT_2, methodNameCounters));
+			MethodData testMethodData = createMethodData(matcher, XT_COMMENT_ARTIFACT_2, methodNameCounters);
+			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
 		}
-
-		return methodData;
 	}
 
 	private static MethodData createMethodData(Matcher matcher, String findAndRemove,
@@ -197,4 +203,21 @@ public class XtFileDataParser {
 		methodNameCounters.put(name, counter + 1);
 		return new MethodData(comment, name, args, counter, expectation, offset);
 	}
+
+	private static void addTestMethodData(Collection<XtFileData.MethodData> testMethodData1,
+			Collection<XtFileData.MethodData> testMethodData2, MethodData testMethodData) {
+
+		switch (testMethodData.name) {
+		case "nowarnings":
+		case "noerrors":
+		case "warnings":
+		case "errors":
+			testMethodData1.add(testMethodData);
+			break;
+		default:
+			testMethodData2.add(testMethodData);
+			break;
+		}
+	}
+
 }

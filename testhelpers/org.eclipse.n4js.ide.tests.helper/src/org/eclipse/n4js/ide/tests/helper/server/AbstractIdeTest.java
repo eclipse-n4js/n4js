@@ -1155,7 +1155,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		if (!uncheckedModulesWithIssues.isEmpty()) {
 			Multimap<FileURI, String> issuesPerUncheckedModule = LinkedHashMultimap.create();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
-				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
+				List<String> currModuleIssuesAsList = getIssueStringsInFile(currModuleURI, withIgnoredIssues);
 				issuesPerUncheckedModule.putAll(currModuleURI, currModuleIssuesAsList);
 			}
 			if (!issuesPerUncheckedModule.isEmpty()) { // empty if all remaining issues are ignored
@@ -1201,7 +1201,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			FileURI fileURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
 
-			List<String> actualIssues = getIssuesInFile(fileURI, withIgnoredIssues);
+			List<String> actualIssues = getIssueStringsInFile(fileURI, withIgnoredIssues);
 			Set<String> actualIssuesAsSet = IterableExtensions.toSet(
 					Iterables.transform(actualIssues, String::trim));
 			Set<String> expectedIssuesAsSet = IterableExtensions.toSet(
@@ -1231,8 +1231,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * <code>true</code>, even issues with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
 	 * included in the returned list.
 	 */
-	protected List<String> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
-		Stream<Diagnostic> issuesInFile = getDiagnosticsInFile(fileURI, withIgnoredIssues).stream();
+	protected List<String> getIssueStringsInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = getIssuesInFile(fileURI, withIgnoredIssues).stream();
 		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
 	}
 
@@ -1241,8 +1241,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * <code>true</code>, even diagnostics with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
 	 * included in the returned list.
 	 */
-	protected List<Diagnostic> getDiagnosticsInFile(FileURI fileURI, boolean withIgnoredIssues) {
-		Stream<Diagnostic> issuesInFile = getIssuesInFile(fileURI).stream();
+	protected List<Diagnostic> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = languageClient.getIssues(fileURI).stream();
 		if (!withIgnoredIssues) {
 			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
 		}
@@ -1364,7 +1364,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** @see IdeTestLanguageClient#getIssues(FileURI) */
 	protected Collection<Diagnostic> getIssuesInFile(FileURI uri) {
-		return languageClient.getIssues(uri);
+		return getIssuesInFile(uri, false);
 	}
 
 	/** */

@@ -55,7 +55,7 @@ public class XtFileRunner extends Runner {
 			notifier.fireTestRunStarted(getDescription());
 
 			ideTest.initializeXtFile(xtFileData);
-			for (MethodData testMethodData : xtFileData.testMethodData) {
+			for (MethodData testMethodData : xtFileData.getTestMethodData()) {
 				Description testDescription = testMethodData.getDescription(xtFileData);
 				try {
 					notifier.fireTestStarted(testDescription);
@@ -83,14 +83,14 @@ public class XtFileRunner extends Runner {
 			return description;
 		}
 
-		if (xtFileData.testMethodData.isEmpty()) {
+		if (xtFileData.noTests()) {
 			String msg = "No tests found in " + getName();
 			description = Description.createSuiteDescription(msg);
 			return description;
 		}
 
 		description = Description.createSuiteDescription(getName(), file);
-		for (MethodData testMethodData : xtFileData.testMethodData) {
+		for (MethodData testMethodData : xtFileData.getTestMethodData()) {
 			description.addChild(testMethodData.getDescription(xtFileData));
 		}
 		return description;

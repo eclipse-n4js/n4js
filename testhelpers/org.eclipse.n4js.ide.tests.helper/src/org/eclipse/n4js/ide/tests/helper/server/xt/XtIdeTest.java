@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +37,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	static final String CURSOR = AbstractStructuredIdeTest.CURSOR_SYMBOL;
 
 	XtFileData xtData;
+	XtIssueHelper issueHelper;
 
 	/**
 	 */
@@ -55,6 +57,23 @@ public class XtIdeTest extends AbstractIdeTest {
 				throw new IllegalArgumentException("Unknown method: " + startupMethod.name);
 			}
 		}
+
+		ArrayList<MethodData> issueTests = new ArrayList<>();
+		LOOP: for (MethodData testMethod : xtData.getTestMethodData()) {
+			switch (testMethod.name) {
+			case "nowarnings":
+			case "noerrors":
+			case "warnings":
+			case "errors":
+				issueTests.add(testMethod);
+				break;
+			default:
+				// test method data is sorted: issue related tests methods come first
+				break LOOP;
+			}
+		}
+
+		this.issueHelper = new XtIssueHelper(getIssuesInFile(xtData.xtFileURI), issueTests);
 	}
 
 	/**
@@ -64,16 +83,25 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "definition":
 			definition(testMethodData);
 			break;
-		case "errors":
-			errors(testMethodData);
+		case "nowarnings": {
+			nowarnings(testMethodData);
 			break;
-		case "noerrors":
+		}
+		case "noerrors": {
 			noerrors(testMethodData);
 			break;
+		}
+		case "warnings": {
+			warnings(testMethodData);
+			break;
+		}
+		case "errors": {
+			errors(testMethodData);
+			break;
+		}
 		default:
 			throw new IllegalArgumentException("Unknown method: " + testMethodData.name);
 		}
-
 	}
 
 	/** 	 */
@@ -84,24 +112,25 @@ public class XtIdeTest extends AbstractIdeTest {
 	/** Validates that there are no errors at the given location. */
 	@Xpect
 	public void noerrors(MethodData data) {
+		issueHelper.noerrors(data);
 	}
 
 	/** Validates that there are no warnings at the given location. */
 	@Xpect
 	public void nowarnings(MethodData data) {
-
+		issueHelper.nowarnings(data);
 	}
 
 	/** Compares expected errors at a given location to actual errors at that location. */
 	@Xpect
 	public void errors(MethodData data) {
-
+		issueHelper.errors(data);
 	}
 
 	/** Compares expected warnings at a given location to actual warnings at that location. */
 	@Xpect
 	public void warnings(MethodData data) {
-
+		issueHelper.warnings(data);
 	}
 
 	/** Calls LSP endpoint 'definition'. Converts {@link MethodData} to inputs and compares outputs to expectations. */
