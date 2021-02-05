@@ -1232,11 +1232,21 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * included in the returned list.
 	 */
 	protected List<String> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
-		Stream<Diagnostic> issuesInFile = languageClient.getIssues().get(fileURI).stream();
+		Stream<Diagnostic> issuesInFile = getDiagnosticsInFile(fileURI, withIgnoredIssues).stream();
+		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns the diagnostics in the file denoted by the given URI. If <code>withIgnoredIssues</code> is set to
+	 * <code>true</code>, even diagnostics with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
+	 * included in the returned list.
+	 */
+	protected List<Diagnostic> getDiagnosticsInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = getIssuesInFile(fileURI).stream();
 		if (!withIgnoredIssues) {
 			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
 		}
-		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
+		return issuesInFile.collect(Collectors.toList());
 	}
 
 	/**
@@ -1353,7 +1363,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** @see IdeTestLanguageClient#getIssues(FileURI) */
-	protected Collection<Diagnostic> getIssues(FileURI uri) {
+	protected Collection<Diagnostic> getIssuesInFile(FileURI uri) {
 		return languageClient.getIssues(uri);
 	}
 

@@ -84,12 +84,23 @@ public class XtIdeTest extends AbstractIdeTest {
 	/** Validates that there are no errors at the given location. */
 	@Xpect
 	public void noerrors(MethodData data) {
+	}
+
+	/** Validates that there are no warnings at the given location. */
+	@Xpect
+	public void nowarnings(MethodData data) {
 
 	}
 
 	/** Compares expected errors at a given location to actual errors at that location. */
 	@Xpect
 	public void errors(MethodData data) {
+
+	}
+
+	/** Compares expected warnings at a given location to actual warnings at that location. */
+	@Xpect
+	public void warnings(MethodData data) {
 
 	}
 

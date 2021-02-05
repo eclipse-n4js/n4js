@@ -20,10 +20,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,7 +118,7 @@ public class XtFileDataParser {
 		Workspace workspace = getProject(xtFile, setupWorkspace, xtFileContent);
 		List<MethodData> startupMethodData = getDefaultStartupMethodData();
 		List<MethodData> teardownMethodData = getDefaultTeardownMethodData();
-		List<MethodData> testMethodData = getTestMethodData(xtFileContent);
+		Collection<MethodData> testMethodData = getTestMethodData(xtFileContent);
 		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData,
 				teardownMethodData);
 	}
@@ -158,8 +160,8 @@ public class XtFileDataParser {
 		return Collections.emptyList();
 	}
 
-	static List<XtFileData.MethodData> getTestMethodData(String xtFileContent) {
-		List<XtFileData.MethodData> methodData = new ArrayList<>();
+	static Collection<XtFileData.MethodData> getTestMethodData(String xtFileContent) {
+		Collection<XtFileData.MethodData> methodData = new TreeSet<>();
 		Map<String, Integer> methodNameCounters = new HashMap<>();
 
 		for (Matcher matcher = XT_SINGLE_LINE.matcher(xtFileContent); matcher.find();) {

@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
@@ -28,7 +29,7 @@ import com.google.common.base.Preconditions;
  */
 public class XtFileData {
 
-	static public class MethodData implements Serializable {
+	static public class MethodData implements Serializable, Comparable<MethodData> {
 		static final public char OPEN_BRACKET = '\u3014';
 		static final public char CLOSE_BRACKET = '\u3015';
 
@@ -68,6 +69,25 @@ public class XtFileData {
 		public String getArgs() {
 			return Strings.join(" ", (Object[]) args);
 		}
+
+		@Override
+		public int compareTo(MethodData md) {
+			return offset - md.offset;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof MethodData) {
+				MethodData md = (MethodData) obj;
+				return md.offset == offset;
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return offset;
+		}
 	}
 
 	static public class Position {
@@ -87,11 +107,12 @@ public class XtFileData {
 	final public int[] lineLengths;
 	final public Workspace workspace;
 	final public List<MethodData> startupMethodData;
-	final public List<MethodData> testMethodData;
+	final public Collection<MethodData> testMethodData;
 	final public List<MethodData> teardownMethodData;
 
 	public XtFileData(File xtFile, String content, String setupRunnerName, Workspace workspace,
-			List<MethodData> startupMethodData, List<MethodData> testMethodData, List<MethodData> teardownMethodData) {
+			List<MethodData> startupMethodData, Collection<MethodData> testMethodData,
+			List<MethodData> teardownMethodData) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
 
