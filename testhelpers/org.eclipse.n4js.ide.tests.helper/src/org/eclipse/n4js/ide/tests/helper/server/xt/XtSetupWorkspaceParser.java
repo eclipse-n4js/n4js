@@ -176,10 +176,12 @@ public class XtSetupWorkspaceParser {
 		}
 
 		Preconditions.checkNotNull(content, ERROR + "Missing 'from' property of file " + name);
-		String extension = name.substring(name.lastIndexOf(".") + 1);
+		int idx = name.lastIndexOf(".");
+		String nameWithoutExtension = name.substring(0, idx);
+		String extension = name.substring(idx + 1);
 		boolean isModule = N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
 		if (isModule) {
-			folderBuilder.addModule(name, content);
+			folderBuilder.addModule(nameWithoutExtension, extension, content);
 			folderBuilder.isSourceFolder = true;
 		} else {
 			folderBuilder.addFile(name, content);

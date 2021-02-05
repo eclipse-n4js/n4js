@@ -59,17 +59,27 @@ public class WorkspaceBuilder {
 		public boolean isSourceFolder;
 
 		/**  */
-		public OtherFileBuilder addFile(String name, String content) {
+		public OtherFileBuilder addFile(String nameWithExtension, String content) {
+			int idx = nameWithExtension.lastIndexOf(".");
+			String name = nameWithExtension.substring(0, idx);
+			String extension = nameWithExtension.substring(idx + 1);
+			return addFile(name, extension, content);
+		}
+
+		/**  */
+		public OtherFileBuilder addFile(String name, String fExtension, String content) {
 			OtherFileBuilder fileBuilder = new OtherFileBuilder();
 			fileBuilder.name = name;
+			fileBuilder.fExtension = fExtension;
 			fileBuilder.content = content;
 			files.put(name, fileBuilder);
 			return fileBuilder;
 		}
 
-		public ModuleBuilder addModule(String name, String content) {
+		public ModuleBuilder addModule(String name, String fExtension, String content) {
 			ModuleBuilder moduleBuilder = new ModuleBuilder();
 			moduleBuilder.name = name;
+			moduleBuilder.fExtension = fExtension;
 			moduleBuilder.content = content;
 			modules.put(name, moduleBuilder);
 			return moduleBuilder;
@@ -89,12 +99,14 @@ public class WorkspaceBuilder {
 	}
 
 	public class OtherFileBuilder extends NamedEntityBuilder {
+		String fExtension;
 		String content;
 
 		/**  */
 		public OtherFile build() {
-			OtherFile module = new OtherFile(name, content);
-			return module;
+			OtherFile file = new OtherFile(name, fExtension);
+			file.content = content;
+			return file;
 		}
 	}
 
@@ -103,7 +115,8 @@ public class WorkspaceBuilder {
 		/**  */
 		@Override
 		public Module build() {
-			Module module = new Module(name, content);
+			Module module = new Module(name, fExtension);
+			module.content = content;
 			return module;
 		}
 	}

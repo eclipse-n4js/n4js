@@ -101,7 +101,7 @@ class Module extends OtherFile {
 			«generateImports()»
 		«ENDIF»	
 		«IF hasContents»
-			«contents»
+			«content»
 		«ELSEIF hasClassifiers»
 			«generateClassifiers()»
 		«ENDIF»
@@ -128,6 +128,6 @@ class Module extends OtherFile {
 	}
 
 	private def boolean hasContents() {
-		return contents !== null && !contents.empty
+		return content !== null && !content.empty
 	}
 }

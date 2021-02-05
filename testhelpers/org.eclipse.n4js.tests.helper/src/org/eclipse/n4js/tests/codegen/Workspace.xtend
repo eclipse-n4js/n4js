@@ -14,6 +14,9 @@ import java.util.List
 import java.nio.file.Path
 import java.io.File
 import org.eclipse.xpect.setup.XpectSetupComponent
+import java.util.Objects
+import java.io.IOException
+import org.eclipse.n4js.utils.io.FileDeleter
 
 /**
  * Generates code for a workspace.
@@ -31,6 +34,20 @@ class Workspace {
 	}
 	
 	public def File create(Path parentDirectoryPath) {
+		var File wsDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
+		if (!wsDirectory.exists)
+			throw new IOException("'" + wsDirectory + "' does not exist")
+		if (!wsDirectory.directory)
+			throw new IOException("'" + wsDirectory + "' is not a directory");
+			
+		if (wsDirectory.exists)
+			FileDeleter.delete(wsDirectory);
+		wsDirectory.mkdirs();
 		
+		
+		for (project : projects)
+			project.create(wsDirectory.toPath());
+		
+		return wsDirectory;
 	}
 }

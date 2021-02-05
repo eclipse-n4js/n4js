@@ -22,7 +22,7 @@ import org.eclipse.n4js.N4JSGlobals
 class OtherFile {
 	final protected String name;
 	final protected String fExtension;
-	protected String contents;
+	protected String content;
 
 	/**
 	 * Creates a new instance with the given parameters.
@@ -68,7 +68,7 @@ class OtherFile {
 	 * @param contents the contents to add
 	 */
 	public def OtherFile setContents(String contents) {
-		this.contents = contents;
+		this.content = contents;
 		return this;
 	}
 
@@ -101,6 +101,6 @@ class OtherFile {
 	 * Generates the N4JS code for this module.
 	 */
 	public def generate() {
-		return contents;
+		return content;
 	}
 }
