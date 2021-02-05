@@ -73,7 +73,7 @@ public class XtIdeTest extends AbstractIdeTest {
 			}
 		}
 
-		this.issueHelper = new XtIssueHelper(getIssuesInFile(xtData.xtFileURI), issueTests);
+		this.issueHelper = new XtIssueHelper(xtData, getIssuesInFile(xtData.xtFileURI), issueTests);
 	}
 
 	/**

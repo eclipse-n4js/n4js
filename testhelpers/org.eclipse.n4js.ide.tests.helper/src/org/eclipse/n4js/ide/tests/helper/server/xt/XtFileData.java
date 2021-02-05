@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Workspace;
@@ -180,5 +181,18 @@ public class XtFileData {
 
 	public boolean noTests() {
 		return !getTestMethodData().iterator().hasNext();
+	}
+
+	/**  */
+	public String getText(Range range) {
+		int offsetStart = range.getStart().getLine() + range.getStart().getCharacter();
+		int offsetEnd = range.getEnd().getLine() + range.getEnd().getCharacter();
+
+		return getText(offsetStart, offsetEnd - offsetStart);
+	}
+
+	/**  */
+	public String getText(int offset, int length) {
+		return content.substring(offset, offset + length);
 	}
 }

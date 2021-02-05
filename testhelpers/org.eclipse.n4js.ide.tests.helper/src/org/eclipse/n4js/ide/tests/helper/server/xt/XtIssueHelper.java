@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
@@ -30,10 +32,14 @@ import com.google.common.collect.Multimap;
  *
  */
 public class XtIssueHelper {
+	static final String MESSAGE = "MESSAGE";
+	static final String AT = "AT";
+	static final Pattern PATTERN_MESSAGE_AT = Pattern
+			.compile("\\\"(?<" + MESSAGE + ">[^\\\"]*)\\\"\\s*at\\s*\\\"(?<" + AT + ">[^\\\"]+)\\\"");
+
+	final XtFileData xtData; // sorted by position
 	final TreeSet<Diagnostic> errors; // sorted by position
 	final TreeSet<Diagnostic> warnings; // sorted by position
-	final List<MethodData> errorTests; // sorted by position
-	final List<MethodData> warningTests; // sorted by position
 	final Multimap<MethodData, Diagnostic> testToErrors;
 	final Multimap<MethodData, Diagnostic> testToWarnings;
 
@@ -42,7 +48,8 @@ public class XtIssueHelper {
 				- (i2.getRange().getStart().getLine() + i2.getRange().getStart().getCharacter());
 	}
 
-	XtIssueHelper(Collection<Diagnostic> unsortedIssues, List<MethodData> issueTests) {
+	XtIssueHelper(XtFileData xtData, Collection<Diagnostic> unsortedIssues, List<MethodData> issueTests) {
+		this.xtData = xtData;
 		this.errors = new TreeSet<>(XtIssueHelper::compareDiagnosticByOffset);
 		this.warnings = new TreeSet<>(XtIssueHelper::compareDiagnosticByOffset);
 		for (Diagnostic issue : unsortedIssues) {
@@ -121,38 +128,61 @@ public class XtIssueHelper {
 	}
 
 	void errors(MethodData data) {
-		Collection<Diagnostic> relatedErrors = testToErrors.get(data);
-		Multimap<String, String> atToExpectedMessages = getAtToMessage(data);
-		Multimap<String, String> atToActualDiagnostics = getAtToMessage(relatedErrors);
+		Multimap<String, String> atToExpectedMessages = getAtToExpectedMessage(data);
+		Multimap<String, String> atToActualMessages = getAtToAcutalMessage(data);
 
-		Set<String> intersection = atToExpectedMessages.keySet();
-		intersection.retainAll(atToActualDiagnostics.keySet());
-		Set<String> onlyExpected = new HashSet<>(atToExpectedMessages.keySet());
-		onlyExpected.removeAll(intersection);
-		Set<String> onlyActual = new HashSet<>(atToActualDiagnostics.keySet());
-		onlyActual.removeAll(intersection);
+		Set<String> onlyExpectedAts = new HashSet<>(atToExpectedMessages.keySet());
+		onlyExpectedAts.removeAll(atToActualMessages.keySet());
+		Set<String> onlyActualAts = new HashSet<>(atToActualMessages.keySet());
+		onlyActualAts.removeAll(atToExpectedMessages.keySet());
 
-		Preconditions.checkState(onlyExpected.isEmpty(),
-				"Expected error not found: " + getStringLSP4J().toString(onlyExpected));
+		Preconditions.checkState(onlyExpectedAts.isEmpty(),
+				"Expected error not found: " + getStringLSP4J().toString(onlyExpectedAts)); // TODO
 
-		Preconditions.checkState(onlyActual.isEmpty(),
-				"Unexpected error found: " + getStringLSP4J().toString(onlyActual));
+		Preconditions.checkState(onlyActualAts.isEmpty(),
+				"Unexpected error found: " + getStringLSP4J().toString(onlyActualAts)); // TODO
 
-		Set<String> issueMessages = getIssueMessages(data);
-		Preconditions.checkState(relatedErrors.size() == issueMessages.size());
-		for (Diagnostic actualIssue : relatedErrors) {
-			Preconditions.checkState(issueMessages.contains(actualIssue.getMessage()));
+		for (String atString : atToExpectedMessages.keySet()) {
+			Set<String> onlyExpectMessages = new HashSet<>(atToExpectedMessages.get(atString));
+			Set<String> onlyActualMessages = new HashSet<>(atToActualMessages.get(atString));
+
+			onlyExpectMessages.removeAll(atToActualMessages.keySet());
+			onlyActualMessages.removeAll(atToExpectedMessages.keySet());
+
+			Preconditions.checkState(onlyExpectMessages.isEmpty(),
+					"Expected error not found: " + getStringLSP4J().toString(onlyExpectMessages)); // TODO
+
+			Preconditions.checkState(onlyActualMessages.isEmpty(),
+					"Unexpected error found: " + getStringLSP4J().toString(onlyActualMessages)); // TODO
 		}
 	}
 
 	void warnings(MethodData data) {
-		Collection<Diagnostic> relatedIssues = findActualIssues(data);
 
 	}
 
 	/**  */
-	private Collection<Diagnostic> findActualIssues(MethodData testMethodData) {
+	private Multimap<String, String> getAtToExpectedMessage(MethodData data) {
+		Multimap<String, String> atToExpectedMessages = HashMultimap.create();
 
-		return null;
+		Matcher matcher = PATTERN_MESSAGE_AT.matcher(data.expectation);
+		while (matcher.find()) {
+			String message = matcher.group(MESSAGE);
+			String atString = matcher.group(AT);
+			atToExpectedMessages.put(atString, message);
+		}
+
+		return atToExpectedMessages;
+	}
+
+	/**  */
+	private Multimap<String, String> getAtToAcutalMessage(MethodData data) {
+		Multimap<String, String> atToActualMessages = HashMultimap.create();
+		Collection<Diagnostic> relatedErrors = testToErrors.get(data);
+		for (Diagnostic error : relatedErrors) {
+			String atString = xtData.getText(error.getRange());
+			atToActualMessages.put(atString, error.getMessage());
+		}
+		return atToActualMessages;
 	}
 }
