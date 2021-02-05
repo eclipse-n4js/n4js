@@ -40,14 +40,15 @@ import com.google.common.base.Preconditions;
  *
  */
 public class XtFileDataParser {
-	/** Identifier of test cases {@code XPECT} */
-	static final String XT_XPECT = "XPECT";
+	/** Identifier of test cases {@code X_PECT} (without '_') */
+	// Note that there must not be any string like X_PECT (without '_') due to the X_PECT Eclipse plugin
+	static final String XT_X_PECT = "X_PECT".replace("_", "");
 
-	/** Pattern group name to reference the comment stated before {@value #XT_XPECT} */
+	/** Pattern group name to reference the comment stated before {@value #XT_X_PECT} */
 	static final String XT_COMMENT = "COMMENT";
 
 	/**
-	 * Pattern group name to reference the method name and its arguments stated after {@value #XT_XPECT} but before
+	 * Pattern group name to reference the method name and its arguments stated after {@value #XT_X_PECT} but before
 	 * {@code --->}/{@code ---}
 	 */
 	static final String XT_METHOD = "METHOD";
@@ -78,7 +79,7 @@ public class XtFileDataParser {
 	 * expectation.
 	 */
 	static final Pattern XT_SINGLE_LINE = Pattern.compile(
-			"[^\\n]*\\/\\/+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_XPECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)-->(?<"
+			"[^\\n]*\\/\\/+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)-->(?<"
 					+ XT_EXPECTATION + ">[^\\n]*)");
 
 	/**
@@ -86,14 +87,14 @@ public class XtFileDataParser {
 	 * to start and end the expectation.
 	 */
 	static final Pattern XT_MULTI_LINE1 = Pattern.compile(
-			"[^\\n]*\\/\\/+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_XPECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)---(?<"
+			"[^\\n]*\\/\\/+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)---(?<"
 					+ XT_EXPECTATION + ">[\\s\\S]*)---");
 	/**
 	 * Pattern for multi-line comments using {@code /*  *\/} to start/end the comment. The XT method uses {@code ---} to
 	 * start and end the expectation.
 	 */
 	static final Pattern XT_MULTI_LINE2 = Pattern.compile(
-			"[^\\n]*\\/\\*+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_XPECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)---(?<"
+			"[^\\n]*\\/\\*+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)---(?<"
 					+ XT_EXPECTATION + ">[\\s\\S]*?)---[\\s\\S]*?\\*\\/");
 
 	/**

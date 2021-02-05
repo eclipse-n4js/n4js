@@ -64,6 +64,12 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "definition":
 			definition(testMethodData);
 			break;
+		case "errors":
+			errors(testMethodData);
+			break;
+		case "noerrors":
+			noerrors(testMethodData);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown method: " + testMethodData.name);
 		}
@@ -73,6 +79,18 @@ public class XtIdeTest extends AbstractIdeTest {
 	/** 	 */
 	public void teardown() throws IOException {
 		deleteTestProject();
+	}
+
+	/** Validates that there are no errors at the given location. */
+	@Xpect
+	public void noerrors(MethodData data) {
+
+	}
+
+	/** Compares expected errors at a given location to actual errors at that location. */
+	@Xpect
+	public void errors(MethodData data) {
+
 	}
 
 	/** Calls LSP endpoint 'definition'. Converts {@link MethodData} to inputs and compares outputs to expectations. */

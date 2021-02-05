@@ -21,7 +21,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- * Runs all tests defined by {@value XtFileDataParser#XT_XPECT} of a single .xt file
+ * Runs all tests defined by {@value XtFileDataParser#XT_X_PECT} of a single .xt file
  */
 public class XtFileRunner extends Runner {
 	final XtIdeTest ideTest;

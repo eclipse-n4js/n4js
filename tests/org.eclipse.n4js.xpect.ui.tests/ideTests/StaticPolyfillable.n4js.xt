@@ -48,10 +48,10 @@ class A extends StaticPolyfillClass {
 		// Invoke abstract super method in StaticPolyfill (1 level) XPECT errors --> "Cannot call super method since it is abstract." at "abstractMethod"
 		super.abstractMethod();
 
-		// Invoke consumed method from interface I with implementation in polyfillable XPECT noerrors
+		// Invoke consumed method from interface I with implementation in polyfillable XPECT noerrors -->
 		super.consumedMethod();
 
-		// Invoke abstract method that is implemented in filler XPECT noerrors
+		// Invoke abstract method that is implemented in filler XPECT noerrors -->
 		super.abstractBaseMethod();
 	}
 }
@@ -62,7 +62,7 @@ class B extends Subclass {
 		// Invoke abstract super method in StaticPolyfill (2 levels) XPECT errors --> "Cannot call super method since it is abstract." at "abstractMethod"
 		super.abstractMethod();
 
-		// Invoke consumed method from interface I with implementation in polyfillable (3 levels) XPECT noerrors
+		// Invoke consumed method from interface I with implementation in polyfillable (3 levels) XPECT noerrors -->
 		super.consumedMethod();
 	}
 }
