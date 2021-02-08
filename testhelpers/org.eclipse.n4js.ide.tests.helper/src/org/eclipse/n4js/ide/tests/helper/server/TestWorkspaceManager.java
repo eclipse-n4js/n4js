@@ -144,11 +144,14 @@ public class TestWorkspaceManager {
 	public NameAndExtension getN4JSNameAndExtension(String fileName) {
 		String name = fileName;
 		String extension = null;
-		if (fileName != null && fileName.contains(".")) {
-			String[] split = fileName.split("\\.");
-			extension = split[split.length - 1];
-			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
-				name = fileName.substring(0, fileName.length() - extension.length() - 1);
+		if (fileName != null) {
+			int idxSlash = fileName.lastIndexOf("/");
+			int idxDot = fileName.indexOf(".", idxSlash);
+			if (idxDot > 0) {
+				extension = fileName.substring(idxDot + 1);
+				if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
+					name = fileName.substring(0, idxDot);
+				}
 			}
 		}
 		return new NameAndExtension(name, extension);
@@ -241,6 +244,7 @@ public class TestWorkspaceManager {
 		if (Strings.isNullOrEmpty(moduleName)) {
 			return DEFAULT_MODULE_NAME;
 		}
+		moduleName = moduleName.startsWith("./") ? moduleName.substring(2) : moduleName;
 		return moduleName;
 	}
 
@@ -272,6 +276,7 @@ public class TestWorkspaceManager {
 		// standard case for modules ('moduleName' seems to denote the name of a module):
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
+
 		try {
 			List<Path> allMatches = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))

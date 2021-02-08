@@ -29,12 +29,10 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.n4js.tests.codegen.Workspace;
 
 import com.google.common.base.Preconditions;
 
@@ -115,7 +113,7 @@ public class XtFileDataParser {
 		Preconditions.checkNotNull(setupRunner);
 		String setupWorkspace = matcher.group(XT_WORKSPACE);
 
-		Workspace workspace = getProject(xtFile, setupWorkspace, xtFileContent);
+		XtWorkspace workspace = getWorkspace(xtFile, setupWorkspace, xtFileContent);
 		List<MethodData> startupMethodData = getDefaultStartupMethodData();
 		List<MethodData> teardownMethodData = getDefaultTeardownMethodData();
 
@@ -127,19 +125,16 @@ public class XtFileDataParser {
 				testMethodData2, teardownMethodData);
 	}
 
-	static Workspace getProject(File xtFile, String setupWorkspace, String xtFileContent) {
+	static XtWorkspace getWorkspace(File xtFile, String setupWorkspace, String xtFileContent) {
+		File xtFileStripped = XtFileData.stripXtExtension(xtFile);
 		if (setupWorkspace == null) {
-			return createDefaultProject(xtFile, xtFileContent);
+			return createDefaultWorkspace(xtFileStripped.getName(), xtFileContent);
 		} else {
-			return XtSetupWorkspaceParser.parse(xtFile, setupWorkspace, xtFileContent);
+			return XtSetupWorkspaceParser.parse(xtFileStripped, setupWorkspace, xtFileContent);
 		}
 	}
 
-	static Workspace createDefaultProject(File xtFile, String xtFileContent) {
-		String xtFileName = xtFile.getName();
-		Preconditions.checkArgument(xtFileName.endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
-
-		String fileName = xtFileName.substring(0, xtFileName.length() - 1 - N4JSGlobals.XT_FILE_EXTENSION.length());
+	static XtWorkspace createDefaultWorkspace(String fileName, String xtFileContent) {
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 		String moduleName = fileName.substring(0, fileName.length() - 1 - extension.length());
 
@@ -149,8 +144,9 @@ public class XtFileDataParser {
 		srcFolder.addModule(xtFileModule);
 		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR_NAME);
 		project.addSourceFolder(srcFolder);
-		Workspace workspace = new Workspace();
+		XtWorkspace workspace = new XtWorkspace();
 		workspace.addProject(project);
+		workspace.moduleNameOfXtFile = fileName;
 		return workspace;
 	}
 
@@ -188,6 +184,7 @@ public class XtFileDataParser {
 	private static MethodData createMethodData(Matcher matcher, String findAndRemove,
 			Map<String, Integer> methodNameCounters) {
 
+		int offset1 = matcher.start();
 		int offset = matcher.end();
 		String comment = matcher.group(XT_COMMENT);
 		String methodAndArgs = matcher.group(XT_METHOD);

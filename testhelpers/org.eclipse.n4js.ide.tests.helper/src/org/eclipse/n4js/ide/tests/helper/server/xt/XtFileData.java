@@ -20,7 +20,6 @@ import java.util.List;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.utils.Strings;
 import org.junit.runner.Description;
 
@@ -91,6 +90,11 @@ public class XtFileData {
 		public int hashCode() {
 			return offset;
 		}
+
+		@Override
+		public String toString() {
+			return name + " --> " + expectation;
+		}
 	}
 
 	static public class Position {
@@ -109,13 +113,13 @@ public class XtFileData {
 	final public String content;
 	final public String setupRunnerName;
 	final public int[] lineLengths;
-	final public Workspace workspace;
+	final public XtWorkspace workspace;
 	final public List<MethodData> startupMethodData;
 	final public Collection<MethodData> testMethodData1;
 	final public Collection<MethodData> testMethodData2;
 	final public List<MethodData> teardownMethodData;
 
-	public XtFileData(File xtFile, String content, String setupRunnerName, Workspace workspace,
+	public XtFileData(File xtFile, String content, String setupRunnerName, XtWorkspace workspace,
 			List<MethodData> startupMethodData, Collection<MethodData> testMethodData1,
 			Collection<MethodData> testMethodData2, List<MethodData> teardownMethodData) {
 
@@ -156,6 +160,13 @@ public class XtFileData {
 		return lineLengths;
 	}
 
+	static public File stripXtExtension(File xtFile) {
+		String nameWithXt = xtFile.getName();
+		Preconditions.checkArgument(nameWithXt.endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
+		String name = nameWithXt.substring(0, nameWithXt.length() - 1 - N4JSGlobals.XT_FILE_EXTENSION.length());
+		return new File(xtFile.getParentFile(), name);
+	}
+
 	public String getModuleName() {
 		String moduleName = xtFile.getName();
 		moduleName = moduleName.substring(0, moduleName.length() - 1 - N4JSGlobals.XT_FILE_EXTENSION.length());
@@ -175,6 +186,19 @@ public class XtFileData {
 		return new Position(lineLengths.length - 1, lineLengths[lineLengths.length - 1]);
 	}
 
+	public int getOffset(org.eclipse.lsp4j.Position pos) {
+		// 1-based character
+		return getOffset(pos.getLine(), pos.getCharacter() + 1);
+	}
+
+	public int getOffset(int line, int character) {
+		int offset = 0;
+		for (int i = 0; i < line; i++) {
+			offset += lineLengths[i];
+		}
+		return offset + character;
+	}
+
 	public Iterable<MethodData> getTestMethodData() {
 		return Iterables.concat(testMethodData1, testMethodData2);
 	}
@@ -185,8 +209,8 @@ public class XtFileData {
 
 	/**  */
 	public String getText(Range range) {
-		int offsetStart = range.getStart().getLine() + range.getStart().getCharacter();
-		int offsetEnd = range.getEnd().getLine() + range.getEnd().getCharacter();
+		int offsetStart = getOffset(range.getStart());
+		int offsetEnd = getOffset(range.getEnd());
 
 		return getText(offsetStart, offsetEnd - offsetStart);
 	}
@@ -195,4 +219,5 @@ public class XtFileData {
 	public String getText(int offset, int length) {
 		return content.substring(offset, offset + length);
 	}
+
 }

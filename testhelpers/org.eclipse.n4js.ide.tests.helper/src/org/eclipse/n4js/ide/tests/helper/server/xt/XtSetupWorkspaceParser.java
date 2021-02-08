@@ -17,9 +17,9 @@ import java.nio.file.Path;
 import java.util.Iterator;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.FolderBuilder;
+import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.FolderBuilder.ModuleBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder;
 
 import com.google.common.base.Objects;
@@ -70,6 +70,14 @@ public class XtSetupWorkspaceParser {
 					ERROR + "Found: " + current() + ", but expected: " + expectation);
 		}
 
+		public boolean hasNameInQuotes() {
+			if (!hasNext()) {
+				return false;
+			}
+			String name = current();
+			return name.startsWith("\"") && name.endsWith("\"");
+		}
+
 		public String expectNameInQuotes() {
 			String name = next();
 			Preconditions.checkState(name.startsWith("\""));
@@ -79,11 +87,17 @@ public class XtSetupWorkspaceParser {
 		}
 	}
 
+	static class BuilderInfo {
+		String moduleNameOfXtFile;
+	}
+
 	/**
+	 * @param xtFile
+	 *            without {@code xt} extension
 	 */
-	static public Workspace parse(File xtFile, String setupWorkspace, String xtFileContent) {
+	static public XtWorkspace parse(File xtFile, String setupWorkspace, String xtFileContent) {
 		TokenStream tokens = new TokenStream(setupWorkspace);
-		WorkspaceBuilder builder = new WorkspaceBuilder();
+		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
 
 		while (tokens.hasNext()) {
 			switch (tokens.next()) {
@@ -96,7 +110,9 @@ public class XtSetupWorkspaceParser {
 			}
 		}
 
-		return builder.build();
+		XtWorkspace xtWorkspace = builder.build(new XtWorkspace());
+		xtWorkspace.moduleNameOfXtFile = ((BuilderInfo) builder.builderInfo).moduleNameOfXtFile;
+		return xtWorkspace;
 	}
 
 	/**
@@ -150,21 +166,24 @@ public class XtSetupWorkspaceParser {
 	private static void parseFile(TokenStream tokens, File xtFile, String xtFileContent, boolean isThis,
 			FolderBuilder folderBuilder) {
 
-		String name = isThis ? stripXtExtension(xtFile) : tokens.expectNameInQuotes();
+		String nameInQuotes = tokens.hasNameInQuotes() ? tokens.expectNameInQuotes() : null; // optional
 		String content = isThis ? xtFileContent : null;
+		Path fromFile = null;
 
 		if (Objects.equal(tokens.current(), "{")) { // optional block
 			tokens.expect("{");
 			LOOP: while (tokens.hasNext()) {
 				switch (tokens.next()) {
 				case "from":
+					Preconditions.checkState(!isThis, ERROR + "'This' file's content cannot be loaded using 'from'");
+
 					String copyContentFrom = tokens.expectNameInQuotes();
 					Path xtFileFolder = xtFile.toPath().getParent();
-					Path contentFile = xtFileFolder.resolve(copyContentFrom);
+					fromFile = xtFileFolder.resolve(copyContentFrom);
 					try {
-						content = Files.readString(contentFile);
+						content = Files.readString(fromFile);
 					} catch (IOException e) {
-						Preconditions.checkState(false, ERROR + "Could not read: " + contentFile.toString());
+						Preconditions.checkState(false, ERROR + "Could not read: " + fromFile.toString());
 					}
 					break;
 				case "}":
@@ -175,24 +194,26 @@ public class XtSetupWorkspaceParser {
 			}
 		}
 
-		Preconditions.checkNotNull(content, ERROR + "Missing 'from' property of file " + name);
+		String name = nameInQuotes != null ? nameInQuotes : //
+				(isThis ? xtFile.getName() : //
+						(fromFile != null ? fromFile.toFile().getName() : null));
+
+		Preconditions.checkState(content != null && name != null, ERROR + "Missing 'from' property of file " + name);
+
 		int idx = name.lastIndexOf(".");
 		String nameWithoutExtension = name.substring(0, idx);
 		String extension = name.substring(idx + 1);
 		boolean isModule = N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
 		if (isModule) {
-			folderBuilder.addModule(nameWithoutExtension, extension, content);
+			ModuleBuilder moduleBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
 			folderBuilder.isSourceFolder = true;
+			if (isThis) {
+				BuilderInfo bi = moduleBuilder.getBuilderInfo();
+				bi.moduleNameOfXtFile = moduleBuilder.getFolderBuilder().name + "/" + moduleBuilder.name;
+			}
 		} else {
 			folderBuilder.addFile(name, content);
 		}
-	}
-
-	private static String stripXtExtension(File xtFile) {
-		String nameWithXt = xtFile.getName();
-		Preconditions.checkArgument(nameWithXt.endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
-		String name = nameWithXt.substring(0, nameWithXt.length() - 1 - N4JSGlobals.XT_FILE_EXTENSION.length());
-		return name;
 	}
 
 }

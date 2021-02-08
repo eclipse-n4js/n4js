@@ -19,7 +19,11 @@ import java.util.Map;
 public class WorkspaceBuilder {
 
 	abstract public class NamedEntityBuilder {
-		String name;
+		public String name;
+
+		public <T> T getBuilderInfo() {
+			return (T) builderInfo;
+		}
 	}
 
 	public class ProjectBuilder extends NamedEntityBuilder {
@@ -96,32 +100,45 @@ public class WorkspaceBuilder {
 			}
 			return folder;
 		}
-	}
 
-	public class OtherFileBuilder extends NamedEntityBuilder {
-		String fExtension;
-		String content;
+		public class OtherFileBuilder extends NamedEntityBuilder {
+			public String fExtension;
+			public String content;
 
-		/**  */
-		public OtherFile build() {
-			OtherFile file = new OtherFile(name, fExtension);
-			file.content = content;
-			return file;
+			/**  */
+			public OtherFile build() {
+				OtherFile file = new OtherFile(name, fExtension);
+				file.content = content;
+				return file;
+			}
+
+			public FolderBuilder getFolderBuilder() {
+				return FolderBuilder.this;
+			}
 		}
-	}
 
-	public class ModuleBuilder extends OtherFileBuilder {
+		public class ModuleBuilder extends OtherFileBuilder {
 
-		/**  */
-		@Override
-		public Module build() {
-			Module module = new Module(name, fExtension);
-			module.content = content;
-			return module;
+			/**  */
+			@Override
+			public Module build() {
+				Module module = new Module(name, fExtension);
+				module.content = content;
+				return module;
+			}
 		}
 	}
 
 	Map<String, ProjectBuilder> projectBuilders = new LinkedHashMap<>();
+	public Object builderInfo;
+
+	public WorkspaceBuilder() {
+		this(null);
+	}
+
+	public WorkspaceBuilder(Object builderInfo) {
+		this.builderInfo = builderInfo;
+	}
 
 	/**
 	 */
@@ -134,7 +151,11 @@ public class WorkspaceBuilder {
 
 	/**  */
 	public Workspace build() {
-		Workspace workspace = new Workspace();
+		return build(new Workspace());
+	}
+
+	/**  */
+	public <W extends Workspace> W build(W workspace) {
 		for (ProjectBuilder projectBuilder : projectBuilders.values()) {
 			workspace.addProject(projectBuilder.build());
 		}
