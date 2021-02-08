@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutionException;
 
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
+import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.Position;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xpect.runner.Xpect;
 
@@ -147,10 +147,10 @@ public class XtIdeTest extends AbstractIdeTest {
 		locationStr = locationStr.replace(CURSOR, "");
 		int locationIdx = xtData.content.indexOf(locationStr, data.offset) + relLocationIdx;
 		Position position = xtData.getPosition(locationIdx);
-		FileURI uri = getFileURIFromModuleName(xtData.getModuleName());
+		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
 
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = callDefinition(
-				uri.toString(), position.line, position.column);
+				uri.toString(), position.getLine(), position.getCharacter());
 
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = future.get();
 

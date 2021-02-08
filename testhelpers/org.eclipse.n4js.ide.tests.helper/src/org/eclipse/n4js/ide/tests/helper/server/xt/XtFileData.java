@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -27,25 +28,38 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 
 /**
- *
+ * Meta data to describe a test file
  */
 public class XtFileData {
 
+	/**
+	 * Meta data to describe a test method
+	 */
 	static public class MethodData implements Serializable, Comparable<MethodData> {
+		/** Opening bracket used for the Xpect Eclipse Plugin to enable 'Open Xpect Method' in context menu */
 		static final public char OPEN_BRACKET = '\u3014';
+		/** Closing bracket used for the Xpect Eclipse Plugin to enable 'Open Xpect Method' in context menu */
 		static final public char CLOSE_BRACKET = '\u3015';
 
+		/** Test comment. Stated before the test keyword. */
 		final public String comment;
+		/** Test name. Stated after the test keyword. */
 		final public String name;
+		/** Test arguments. Stated after the test name. */
 		final public String[] args;
+		/** Test number. Tests with same names are grouped. */
 		final public int count;
+		/** Test expectation. Stated after the test divider ({@code -->} or {@code ---}). */
 		final public String expectation;
+		/** Test location */
 		final public int offset;
 
+		/** Constructor */
 		public MethodData(String name) {
 			this("", name, new String[0], 0, "", 0);
 		}
 
+		/** Constructor */
 		public MethodData(String comment, String name, String[] args, int count, String expectation, int offset) {
 			this.comment = comment.trim();
 			this.name = name;
@@ -55,10 +69,11 @@ public class XtFileData {
 			this.offset = offset;
 		}
 
+		/** @return Description for JUnit */
 		public Description getDescription(XtFileData xtFileData) {
 			String descrName = name + "~" + count;
 			descrName += ": " + (comment.isBlank() ? getArgs() : comment);
-			descrName += " " + OPEN_BRACKET + xtFileData.workspacePath + CLOSE_BRACKET;
+			descrName += " " + OPEN_BRACKET + xtFileData.relativePath + CLOSE_BRACKET;
 			return Description.createTestDescription(getMethodNameWithArgs(), descrName, this);
 		}
 
@@ -97,28 +112,30 @@ public class XtFileData {
 		}
 	}
 
-	static public class Position {
-		final public int line;
-		final public int column;
-
-		public Position(int line, int column) {
-			this.line = line;
-			this.column = column;
-		}
-	}
-
+	/** Test file */
 	final public File xtFile;
+	/** Test file as {@link #xtFileURI} */
 	final public FileURI xtFileURI;
-	final public String workspacePath;
+	/** Relative path of the test file inside the test bundle */
+	final public String relativePath;
+	/** Content of test file */
 	final public String content;
+	/** Name of the JUnit runner */
 	final public String setupRunnerName;
+	/** Array of lengths per line */
 	final public int[] lineLengths;
+	/** Workspace, either default or according to description in SETUP section */
 	final public XtWorkspace workspace;
+	/** Methods to execute to start the LSP server */
 	final public List<MethodData> startupMethodData;
+	/** Test methods, first run */
 	final public Collection<MethodData> testMethodData1;
+	/** Test methods, second run */
 	final public Collection<MethodData> testMethodData2;
+	/** Methods to execute to terminate the LSP server */
 	final public List<MethodData> teardownMethodData;
 
+	/** Constructor */
 	public XtFileData(File xtFile, String content, String setupRunnerName, XtWorkspace workspace,
 			List<MethodData> startupMethodData, Collection<MethodData> testMethodData1,
 			Collection<MethodData> testMethodData2, List<MethodData> teardownMethodData) {
@@ -127,7 +144,7 @@ public class XtFileData {
 
 		this.xtFile = xtFile;
 		this.xtFileURI = new FileURI(xtFile);
-		this.workspacePath = computeWorkspacePath(xtFile);
+		this.relativePath = computeRelativePath(xtFile);
 		this.content = content;
 		this.setupRunnerName = setupRunnerName;
 		this.lineLengths = calculateLineLengths(content);
@@ -138,7 +155,7 @@ public class XtFileData {
 		this.teardownMethodData = teardownMethodData;
 	}
 
-	static private String computeWorkspacePath(File xtFile) {
+	static private String computeRelativePath(File xtFile) {
 		Path currentDir = new File("").getAbsoluteFile().toPath();
 		Path relXtFile = currentDir.relativize(xtFile.toPath());
 
@@ -160,6 +177,7 @@ public class XtFileData {
 		return lineLengths;
 	}
 
+	/** @returns a file without the {@code .xt} extension */
 	static public File stripXtExtension(File xtFile) {
 		String nameWithXt = xtFile.getName();
 		Preconditions.checkArgument(nameWithXt.endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
@@ -167,30 +185,27 @@ public class XtFileData {
 		return new File(xtFile.getParentFile(), name);
 	}
 
-	public String getModuleName() {
-		String moduleName = xtFile.getName();
-		moduleName = moduleName.substring(0, moduleName.length() - 1 - N4JSGlobals.XT_FILE_EXTENSION.length());
-		return moduleName;
-	}
-
+	/** @return the position computed from the given offset */
 	public Position getPosition(int offset) {
 		for (int curOffset = 0, line = 0; line < lineLengths.length && curOffset < offset; //
 				curOffset += lineLengths[line], line++) {
 
 			if (curOffset + lineLengths[line] > offset) {
-				int column = curOffset + lineLengths[line] - offset;
-				return new Position(line, column);
+				int character = curOffset + lineLengths[line] - offset;
+				return new Position(line, character);
 			}
 		}
 
 		return new Position(lineLengths.length - 1, lineLengths[lineLengths.length - 1]);
 	}
 
+	/** @return the offset computed from the given #{@link Position} */
 	public int getOffset(org.eclipse.lsp4j.Position pos) {
 		// 1-based character
 		return getOffset(pos.getLine(), pos.getCharacter() + 1);
 	}
 
+	/** @return the offset computed from the given line and character */
 	public int getOffset(int line, int character) {
 		int offset = 0;
 		for (int i = 0; i < line; i++) {
@@ -199,15 +214,17 @@ public class XtFileData {
 		return offset + character;
 	}
 
+	/** @return all tests */
 	public Iterable<MethodData> getTestMethodData() {
 		return Iterables.concat(testMethodData1, testMethodData2);
 	}
 
+	/** @return true iff the file defines no tests */
 	public boolean noTests() {
 		return !getTestMethodData().iterator().hasNext();
 	}
 
-	/**  */
+	/** @return substring of this file's content in the given range */
 	public String getText(Range range) {
 		int offsetStart = getOffset(range.getStart());
 		int offsetEnd = getOffset(range.getEnd());
@@ -215,7 +232,7 @@ public class XtFileData {
 		return getText(offsetStart, offsetEnd - offsetStart);
 	}
 
-	/**  */
+	/** @return substring of this file's content at the given offset and with the given length */
 	public String getText(int offset, int length) {
 		return content.substring(offset, offset + length);
 	}
