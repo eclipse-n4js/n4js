@@ -154,10 +154,27 @@ public class TestWorkspaceManager {
 		return new NameAndExtension(name, extension);
 	}
 
+	/** Tells whether the test workspace manager has created a {@link #YARN_TEST_PROJECT}. */
+	public boolean isYarnWorkspace() {
+		File yarnProject = new File(getRoot(), YARN_TEST_PROJECT);
+		return yarnProject.isDirectory();
+	}
+
 	/** @return the workspace root folder as a {@link File}. */
 	public File getRoot() {
 		File root = new File(new File("").getAbsoluteFile(), TEST_DATA_FOLDER);
 		return root;
+	}
+
+	/**
+	 * @return the folder where workspace projects are located (this is either the {@link #getRoot() workspace root} or,
+	 *         in case of a yarn workspace, the packages folder).
+	 */
+	public File getProjectLocation() {
+		if (isYarnWorkspace()) {
+			return new File(new File(getRoot(), YARN_TEST_PROJECT), YarnWorkspaceProject.PACKAGES);
+		}
+		return getRoot();
 	}
 
 	/** Same as {@link #getProjectRoot(String)}, but for the {@link #DEFAULT_PROJECT_NAME default project}. */

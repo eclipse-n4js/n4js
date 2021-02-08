@@ -10,20 +10,17 @@
  */
 package org.eclipse.n4js.dirtystate
 
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.resource.ModuleToModuleProxyPluginTest
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
 import org.junit.Test
-import org.eclipse.n4js.N4JSGlobals
-
-import static org.junit.Assert.*
-import org.eclipse.n4js.tests.util.EclipseUIUtils
 
 /**
  * Tests a corner case of dependencies between resources. See also {@link ModuleToModuleProxyPluginTest}.
  */
-class ResourceLoadingCornerCasesPluginUITest extends AbstractBuilderParticipantTest {
+// converted from ResourceLoadingCornerCasesPluginUITest
+class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
 
 	/**
 	 * This tests the bug fix of IDE-2243 / IDE-2299.
@@ -50,48 +47,38 @@ class ResourceLoadingCornerCasesPluginUITest extends AbstractBuilderParticipantT
 	 */
 	@Test
 	def void testModule2ModuleReferencesBug() {
-		val project = createJSProject("NastyBug")
-		val srcFolder = configureProjectWithXtext(project)
-		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON)
-		assertMarkers("project description file (package.json) should have no errors", projectDescriptionFile, 0)
+		testWorkspaceManager.createTestProjectOnDisk(
+			"C" -> '''
+				export public class C {
+					constructor() {}
+				}
+			''',
+			"B" -> '''
+				import { C } from "C"
 
-		val fileC = createTestFile(srcFolder, "C", '''
-			export public class C {
-				constructor() {}
-			}
-		''')
-		val fileB = createTestFile(srcFolder, "B", '''
-			import { C } from "C"
+				export public class B extends C {
+				}
+			''',
+			"A" -> '''
+				import { B } from "B"
 
-			export public class B extends C {
-			}
-		''')
-		val fileA = createTestFile(srcFolder, "A", '''
-			import { B } from "B"
+				var ctor: constructor{B};
+				ctor = B; // <-- before bug fix, error appeared here: "constructor{B} is not a subtype of constructor{B}." at "B"
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoErrors();
 
-			var ctor: constructor{B};
-			ctor = B; // <-- before bug fix, error appeared here: "constructor{B} is not a subtype of constructor{B}." at "B"
-		''')
-
-		cleanBuild
-		waitForAutoBuild
-
-		assertMarkers("file A should have no errors", fileA, 0)
-		assertMarkers("file B should have no errors", fileB, 0)
-		assertMarkers("file C should have no errors", fileC, 0)
-
-		val page = EclipseUIUtils.getActivePage()
-		val editorA = openAndGetXtextEditor(fileA, page)
-		val errorsA = getEditorValidationErrors(editorA)
+		openFile("A");
 		// bug fix, part 1:
 		// when commenting out the creation of m2m URIs in UserDataMapper#getDeserializedModuleFromDescription(),
-		// next line should fail with "constructor{B} is not a subtype of constructor{B}."
-		assertEquals("editor for file A should not have any errors", #[], errorsA)
+		// next line should fail with an error in "A.n4js": "constructor{B} is not a subtype of constructor{B}."
+		assertNoIssues();
 
 		// we now open file C.n4js in a new, separate editor and change its contents (without saving!);
 		// this will cause the resource of C.n4js to be unloaded in the ResourceSet of editorA (via dirty-state index)
-		val editorC = openAndGetXtextEditor(fileC, page)
-		setDocumentContent("file C", fileC, editorC, '''
+		openFile("C");
+		changeOpenedFile("C", '''
 			export public class C {
 				constructor() {}
 			}
@@ -99,12 +86,11 @@ class ResourceLoadingCornerCasesPluginUITest extends AbstractBuilderParticipantT
 		''');
 		// note: we do *not* save editorC
 
-		assertMarkers("file A should have no errors", fileA, 0) // no errors on disk (also before bug fix)
+		/* NOTE: after transition to LSP, can no longer check issues on disk for an opened file! */ // no errors on disk (also before bug fix)
 
-		val errorsA_part2 = getEditorValidationErrors(editorA)
 		// bug fix, part 2:
 		// when commenting out the creation of m2m URIs in N4JSResource#doUnload(),
 		// next line should fail with "constructor{B} is not a subtype of constructor{B}."
-		assertEquals("editor for file A should *still* not have any errors", #[], errorsA_part2)
+		assertIssuesInModules("A" -> #[]); // editor for file A should *still* not have any errors
 	}
 }

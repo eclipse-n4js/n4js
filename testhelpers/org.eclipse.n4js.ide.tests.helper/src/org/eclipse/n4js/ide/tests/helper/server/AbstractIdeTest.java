@@ -258,9 +258,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** @see TestWorkspaceManager#isYarnWorkspace() */
+	public boolean isYarnWorkspace() {
+		return testWorkspaceManager.isYarnWorkspace();
+	}
+
 	/** @return the workspace root folder as a {@link File}. */
 	public File getRoot() {
 		return testWorkspaceManager.getRoot();
+	}
+
+	/** @see TestWorkspaceManager#getProjectLocation() */
+	public File getProjectLocation() {
+		return testWorkspaceManager.getProjectLocation();
 	}
 
 	/**
