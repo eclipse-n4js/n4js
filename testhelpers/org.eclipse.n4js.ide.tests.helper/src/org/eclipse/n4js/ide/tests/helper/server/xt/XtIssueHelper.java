@@ -48,9 +48,8 @@ public class XtIssueHelper {
 	final Multimap<MethodData, Diagnostic> testToErrors;
 	final Multimap<MethodData, Diagnostic> testToWarnings;
 
-	static int compareDiagnosticByOffset(Diagnostic i1, Diagnostic i2) {
-		return (i1.getRange().getStart().getLine() + i1.getRange().getStart().getCharacter())
-				- (i2.getRange().getStart().getLine() + i2.getRange().getStart().getCharacter());
+	int compareDiagnosticByOffset(Diagnostic i1, Diagnostic i2) {
+		return xtData.getOffset(i1.getRange().getStart()) - xtData.getOffset(i2.getRange().getStart());
 	}
 
 	XtIssueHelper(StringLSP4J strLsp4j, XtFileData xtData, Collection<Diagnostic> unsortedIssues,
@@ -58,8 +57,8 @@ public class XtIssueHelper {
 
 		this.strLsp4j = strLsp4j;
 		this.xtData = xtData;
-		this.errors = new TreeSet<>(XtIssueHelper::compareDiagnosticByOffset);
-		this.warnings = new TreeSet<>(XtIssueHelper::compareDiagnosticByOffset);
+		this.errors = new TreeSet<>(this::compareDiagnosticByOffset);
+		this.warnings = new TreeSet<>(this::compareDiagnosticByOffset);
 		for (Diagnostic issue : unsortedIssues) {
 			switch (issue.getSeverity()) {
 			case Error:
@@ -107,13 +106,15 @@ public class XtIssueHelper {
 		Diagnostic firstDiagnostic = issues.first();
 
 		Iterator<Map.Entry<Integer, MethodData>> posTestIter = positionToTest.entrySet().iterator();
-		Preconditions.checkState(posTestIter.hasNext() || issues.isEmpty(),
-				"Unexpected issue found: " + strLsp4j.toString(firstDiagnostic));
+		Assert.assertTrue(
+				"Unexpected issue found: " + strLsp4j.toString(firstDiagnostic),
+				posTestIter.hasNext() || issues.isEmpty());
 
 		if (posTestIter.hasNext()) {
 			Map.Entry<Integer, MethodData> currPosTest = posTestIter.next();
-			Preconditions.checkState(getOffset(xtData, firstDiagnostic) > currPosTest.getKey(),
-					"Unexpected issue found: " + strLsp4j.toString(firstDiagnostic));
+			Assert.assertTrue(
+					"Unexpected issue found: " + strLsp4j.toString(firstDiagnostic),
+					getOffset(xtData, firstDiagnostic) > currPosTest.getKey());
 
 			Map.Entry<Integer, MethodData> nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
 			for (Diagnostic diag : issues) {
@@ -162,10 +163,10 @@ public class XtIssueHelper {
 		Set<String> onlyActualAts = new HashSet<>(atToActualMessages.keySet());
 		onlyActualAts.removeAll(atToExpectedMessages.keySet());
 
-		Assert.assertTrue("Expected " + msgIssue + " not found: " + Strings.toString(onlyExpectedAts),
+		Assert.assertTrue("No " + msgIssue + " found at: " + Strings.join(", ", onlyExpectedAts),
 				onlyExpectedAts.isEmpty());
 
-		Assert.assertTrue("Unexpected " + msgIssue + " found: " + Strings.toString(onlyActualAts),
+		Assert.assertTrue("Unexpected " + msgIssue + " found at: " + Strings.join(", ", onlyActualAts),
 				onlyActualAts.isEmpty());
 
 		for (String atString : atToExpectedMessages.keySet()) {

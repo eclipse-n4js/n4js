@@ -184,7 +184,6 @@ public class XtFileDataParser {
 	private static MethodData createMethodData(Matcher matcher, String findAndRemove,
 			Map<String, Integer> methodNameCounters) {
 
-		int offset1 = matcher.start();
 		int offset = matcher.end();
 		String comment = matcher.group(XT_COMMENT);
 		String methodAndArgs = matcher.group(XT_METHOD);
