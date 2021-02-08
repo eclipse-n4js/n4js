@@ -187,15 +187,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	}
 
 	protected String runMangelhaft(String projectName, Optional<String> moduleName, boolean quiet) {
-		Path workingDir;
-		if (isYarnWorkspace()) {
-			workingDir = getRoot().toPath()
-					.resolve(TestWorkspaceManager.YARN_TEST_PROJECT)
-					.resolve(YarnWorkspaceProject.PACKAGES)
-					.resolve(projectName);
-		} else {
-			workingDir = getRoot().toPath().resolve(projectName);
-		}
+		File workingDir = getProjectRootForImportedProject(projectName);
 
 		List<String> args = new ArrayList<>();
 		if (quiet) {
@@ -206,12 +198,23 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 			args.add("/" + moduleName.get() + "/");
 		}
 
-		ProcessResult result = new CliTools().runNodejs(workingDir,
+		ProcessResult result = new CliTools().runNodejs(workingDir.toPath(),
 				Path.of("../../node_modules/n4js-mangelhaft-cli/bin/n4js-mangelhaft-cli.js"),
 				args.toArray(String[]::new));
 
 		String output = result.getStdOut();
 		output = output.replaceAll("\\e\\[\\d+m", "");
 		return output;
+	}
+
+	// TODO align this with TestWorkspaceManager#getProjectRoot()
+	protected File getProjectRootForImportedProject(String projectName) {
+		if (isYarnWorkspace()) {
+			return getRoot().toPath()
+					.resolve(TestWorkspaceManager.YARN_TEST_PROJECT)
+					.resolve(YarnWorkspaceProject.PACKAGES)
+					.resolve(projectName).toFile();
+		}
+		return new File(getRoot(), projectName);
 	}
 }
