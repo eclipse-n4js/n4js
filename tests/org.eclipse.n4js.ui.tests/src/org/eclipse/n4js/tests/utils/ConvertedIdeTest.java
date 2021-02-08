@@ -16,20 +16,27 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.UserDataMapper;
+import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -39,7 +46,9 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.junit.Assert;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
@@ -70,9 +79,40 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		}
 	}
 
+	/** Same as {@link #importProband(File, Collection)}, but without importing any n4js-libs. */
+	protected void importProband(File probandFolder) {
+		importProband(probandFolder, Collections.emptyList());
+	}
+
+	protected List<N4JSProjectName> importProband(File probandFolder, Collection<N4JSProjectName> n4jsLibs) {
+		testWorkspaceManager.createTestOnDisk();
+		startAndWaitForLspServer();
+		// import the projects
+		final List<N4JSProjectName> importedProjects = new ArrayList<>();
+		boolean needToCopyLibs = true;
+		for (final File child : probandFolder.listFiles()) {
+			if (child.isDirectory()) {
+				final N4JSProjectName name = new N4JSProjectName(child.getName());
+				importProject(probandFolder, name,
+						needToCopyLibs ? n4jsLibs : Collections.emptyList());
+				importedProjects.add(name);
+				needToCopyLibs = false;
+			}
+		}
+		joinServerRequests();
+		// ensure that all projects have been imported properly
+		final Set<String> expectedProjects = importedProjects.stream()
+				.map(N4JSProjectName::getRawName).collect(Collectors.toSet());
+		final Set<String> actualProjects = concurrentIndex.entries().stream()
+				.map(Entry::getKey).collect(Collectors.toSet());
+		final Set<String> missingProjects = new HashSet<>(Sets.difference(expectedProjects, actualProjects));
+		Assert.assertTrue("some projects were not correctly imported: " + missingProjects, missingProjects.isEmpty());
+		return importedProjects;
+	}
+
 	/** Same as {@link #importProject(File, N4JSProjectName, Collection)}, but without installing any n4js libraries. */
-	protected File importProject(File probandsFolder, N4JSProjectName projectName) {
-		return importProject(probandsFolder, projectName, Collections.emptyList());
+	protected File importProject(File probandFolder, N4JSProjectName projectName) {
+		return importProject(probandFolder, projectName, Collections.emptyList());
 	}
 
 	/**
@@ -82,7 +122,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;, n4jsLibs);
 	 * </pre>
 	 *
-	 * @param probandsFolder
+	 * @param probandFolder
 	 *            the parent folder in which the test project is found
 	 * @param projectName
 	 *            the name of the test project, must be folder contained in probandsFolder
@@ -94,10 +134,10 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	protected File importProject(File probandsFolder, N4JSProjectName projectName,
+	protected File importProject(File probandFolder, N4JSProjectName projectName,
 			Collection<N4JSProjectName> n4jsLibs) {
 
-		File projectSourceFolder = new File(probandsFolder, projectName.getRawName());
+		File projectSourceFolder = new File(probandFolder, projectName.getRawName());
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
 		}
@@ -144,5 +184,34 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		// String projectNameFromDotProjectFile = JsonUtils.getDeepAsString(root, PackageJsonProperties.NAME.name);
 
 		return projectFolder;
+	}
+
+	protected String runMangelhaft(String projectName, Optional<String> moduleName, boolean quiet) {
+		Path workingDir;
+		if (isYarnWorkspace()) {
+			workingDir = getRoot().toPath()
+					.resolve(TestWorkspaceManager.YARN_TEST_PROJECT)
+					.resolve(YarnWorkspaceProject.PACKAGES)
+					.resolve(projectName);
+		} else {
+			workingDir = getRoot().toPath().resolve(projectName);
+		}
+
+		List<String> args = new ArrayList<>();
+		if (quiet) {
+			args.add("-q");
+		}
+		if (moduleName.isPresent()) {
+			args.add("-f");
+			args.add("/" + moduleName.get() + "/");
+		}
+
+		ProcessResult result = new CliTools().runNodejs(workingDir,
+				Path.of("../../node_modules/n4js-mangelhaft-cli/bin/n4js-mangelhaft-cli.js"),
+				args.toArray(String[]::new));
+
+		String output = result.getStdOut();
+		output = output.replaceAll("\\e\\[\\d+m", "");
+		return output;
 	}
 }
