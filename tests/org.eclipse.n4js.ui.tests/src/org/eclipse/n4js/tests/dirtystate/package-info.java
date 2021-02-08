@@ -20,4 +20,4 @@
  * the test and own listener is added to the dirty state manager to block until such an event is fired) and then for the
  * ending of this job, before verifying the new state
  */
-package org.eclipse.n4js.dirtystate;
+package org.eclipse.n4js.tests.dirtystate;

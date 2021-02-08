@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dirtystate;
+package org.eclipse.n4js.tests.dirtystate;
 
 import com.google.inject.Inject
 import java.util.Collections
@@ -27,7 +27,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 /**
- * For more builder corner cases, see {@link ReproduceInvalidIndexPluginTest}.
+ * For more builder corner cases, see {@link ReproduceInvalidIndexIdeTest}.
  */
 // converted from IncrementalBuilderCornerCasesPluginTest
 public class IncrementalBuilderCornerCasesIdeTest extends ConvertedIdeTest {

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dirtystate.testdata
+package org.eclipse.n4js.tests.dirtystate.testdata
 
 class TestFiles {
 

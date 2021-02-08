@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dirtystate
+package org.eclipse.n4js.tests.dirtystate
 
 import com.google.inject.Inject
 import java.util.Set

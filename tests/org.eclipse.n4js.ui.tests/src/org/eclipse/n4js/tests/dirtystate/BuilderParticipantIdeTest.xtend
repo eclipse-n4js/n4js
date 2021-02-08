@@ -8,17 +8,17 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dirtystate
+package org.eclipse.n4js.tests.dirtystate
 
-import org.eclipse.n4js.dirtystate.testdata.CaseSensitiveTestFiles
-import org.eclipse.n4js.dirtystate.testdata.EnumTestFiles
-import org.eclipse.n4js.dirtystate.testdata.InheritanceTestFiles
-import org.eclipse.n4js.dirtystate.testdata.InterfaceTestFiles
-import org.eclipse.n4js.dirtystate.testdata.MemberTestFiles
-import org.eclipse.n4js.dirtystate.testdata.RoleTestFiles
-import org.eclipse.n4js.dirtystate.testdata.StaticTestFiles
-import org.eclipse.n4js.dirtystate.testdata.TestFiles
-import org.eclipse.n4js.dirtystate.testdata.TransitiveInheritMemberTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.CaseSensitiveTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.EnumTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.InheritanceTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.InterfaceTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.MemberTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.RoleTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.StaticTestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.TestFiles
+import org.eclipse.n4js.tests.dirtystate.testdata.TransitiveInheritMemberTestFiles
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
 
