@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.xtext.xbase.lib.Pair;
+
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -101,6 +103,51 @@ public class JsonUtils {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			gson.toJson(jsonElement, out);
 		}
+	}
+
+	public static void addDependenciesToPackageJsonFile(Path path,
+			Pair<String, String>... namesAndVersionConstraints) throws FileNotFoundException, IOException {
+		JsonElement root = loadJson(path);
+		JsonElement depsValue = getDeep(root, UtilN4.PACKAGE_JSON__DEPENDENCIES);
+		if (depsValue == null) {
+			if (root instanceof JsonObject) {
+				depsValue = new JsonObject();
+				((JsonObject) root).add(UtilN4.PACKAGE_JSON__DEPENDENCIES, depsValue);
+			} else {
+				throw new IOException("root element in file is not an object");
+			}
+		} else if (!(depsValue instanceof JsonObject)) {
+			throw new IOException("value of property \"" + UtilN4.PACKAGE_JSON__DEPENDENCIES + "\" is not an object");
+		}
+		JsonObject depsValueCasted = (JsonObject) depsValue;
+		for (Pair<String, String> navc : namesAndVersionConstraints) {
+			String name = navc.getKey();
+			String versionConstraint = navc.getValue();
+			if (depsValueCasted.keySet().contains(name)) {
+				throw new IOException("package.json file already contains a dependency to \"" + name + "\"");
+			}
+			depsValueCasted.add(name, new JsonPrimitive(versionConstraint));
+		}
+		saveJson(path, root);
+	}
+
+	public static void removeDependenciesFromPackageJsonFile(Path path, String... namesToRemove)
+			throws FileNotFoundException, IOException {
+		JsonElement root = loadJson(path);
+		JsonElement depsValue = getDeep(root, UtilN4.PACKAGE_JSON__DEPENDENCIES);
+		if (depsValue == null) {
+			throw new IOException("package.json does not contain any dependencies");
+		} else if (!(depsValue instanceof JsonObject)) {
+			throw new IOException("value of property \"" + UtilN4.PACKAGE_JSON__DEPENDENCIES + "\" is not an object");
+		}
+		JsonObject depsValueCasted = (JsonObject) depsValue;
+		for (String name : namesToRemove) {
+			if (!depsValueCasted.keySet().contains(name)) {
+				throw new IOException("package.json file does not contain a dependency to \"" + name + "\"");
+			}
+			depsValueCasted.remove(name);
+		}
+		saveJson(path, root);
 	}
 
 	/**

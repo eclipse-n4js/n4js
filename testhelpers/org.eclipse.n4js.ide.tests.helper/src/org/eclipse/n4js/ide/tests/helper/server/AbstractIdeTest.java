@@ -462,11 +462,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * {@link FileChangeType#Changed Changed} for all given URIs.
 	 */
 	protected void sendDidChangeWatchedFiles(FileURI... changedFileURIs) {
+		sendDidChangeWatchedFiles(FileChangeType.Changed, changedFileURIs);
+	}
+
+	/**
+	 * Send a 'didChangeWatchedFiles' notification to the server. The file change type will be {@code changeType} for
+	 * all given URIs.
+	 */
+	protected void sendDidChangeWatchedFiles(FileChangeType changeType, FileURI... changedFileURIs) {
 		if (changedFileURIs == null || changedFileURIs.length == 0) {
 			Assert.fail("no URIs of changed files given");
 		}
 		List<FileEvent> fileEvents = Stream.of(changedFileURIs)
-				.map(fileURI -> new FileEvent(fileURI.toString(), FileChangeType.Changed))
+				.map(fileURI -> new FileEvent(fileURI.toString(), changeType))
 				.collect(Collectors.toList());
 		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
 		languageServer.didChangeWatchedFiles(params);
@@ -673,7 +681,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            denoted by <code>fileURI</code> will be replaced by P's value.
 	 */
 	@SafeVarargs
-	protected final void changeNonOpenedFile(String moduleName, Pair<String, String>... replacements) {
+	protected final void changeNonOpenedFile(String moduleName, Pair<String, ? extends CharSequence>... replacements) {
 		changeNonOpenedFile(moduleName, content -> applyReplacements(content, replacements));
 	}
 
@@ -689,6 +697,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected void changeNonOpenedFile(String moduleName, Function<String, ? extends CharSequence> modification) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeNonOpenedFile(fileURI, modification);
+	}
+
+	/** Same as {@link #changeNonOpenedFile(FileURI, Function)}, accepting changes as pairs from old to new strings. */
+	@SafeVarargs
+	protected final void changeNonOpenedFile(FileURI fileURI, Pair<String, ? extends CharSequence>... replacements) {
+		changeNonOpenedFile(fileURI, content -> applyReplacements(content, replacements));
 	}
 
 	/**
@@ -856,6 +870,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		} catch (IOException e) {
 			throw new RuntimeException("exception while creating file on disk", e);
 		}
+	}
+
+	protected void deleteFile(String moduleName) {
+		deleteFile(getFileURIFromModuleName(moduleName));
+	}
+
+	protected void deleteFile(FileURI fileURI) {
+		// 1) delete the file
+		deleteFileOnDiskWithoutNotification(fileURI);
+		// 2) notify server
+		FileEvent fileEvent = new FileEvent(fileURI.toString(), FileChangeType.Deleted);
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(Collections.singletonList(fileEvent));
+		languageServer.didChangeWatchedFiles(params);
 	}
 
 	/** Same as {@link #deleteFileOnDiskWithoutNotification(FileURI)}, accepting a module name. */
@@ -1275,6 +1302,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			Assert.fail("issues in several files do not meet the expectation:\n"
 					+ Joiner.on("\n").join(failureMessages));
 		}
+	}
+
+	/** Same as {@link #getIssuesInFile(FileURI, boolean)}, but never includes ignored issues. */
+	protected List<String> getIssuesInFile(FileURI fileURI) {
+		return getIssuesInFile(fileURI, false);
 	}
 
 	/**

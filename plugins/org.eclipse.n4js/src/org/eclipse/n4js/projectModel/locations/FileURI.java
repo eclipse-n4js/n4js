@@ -39,6 +39,10 @@ public final class FileURI extends SafeURI<FileURI> {
 		super(location);
 	}
 
+	public FileURI(Path path) {
+		this(path.toFile());
+	}
+
 	public FileURI(File file) {
 		super(toFileURI(file));
 		this.cachedFile = file;
