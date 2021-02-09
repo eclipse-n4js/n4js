@@ -10,17 +10,19 @@
  */
 package org.eclipse.n4js.tests.contentAssist
 
+import org.eclipse.n4js.tests.utils.ConvertedCompletionIdeTest
 import org.junit.Test
 
 /**
  *
  */
-class Issue1756PluginUITest extends AbstractN4JSContentAssistPluginUITest {
+// converted from Issue1756PluginUITest
+class Issue1756IdeTest extends ConvertedCompletionIdeTest {
 
 	@Test def void test_01() throws Exception {
-		newBuilder().append('''
+		testAtCursor('''
 			let value;
-			
+
 			export function foo(): any {
 			    return (arg) => {
 			        let x = async () => {
@@ -31,14 +33,15 @@ class Issue1756PluginUITest extends AbstractN4JSContentAssistPluginUITest {
 			        };
 				}
 			}
-			
+
 			class C {
 				constructor(f: Function) {}
 			}
-			
+
 			function someFunctionWithAnExtremelyLooooongName() {}
-		'''
-		).assertProposalAtCursor('someFunctionWithAnExtremelyLooooongName');
+		''', '''
+			(someFunctionWithAnExtremelyLooooongName, Function, someFunctionWithAnExtremelyLooooongName, , , 00000, , , , ([6:13 - 6:20], someFunctionWithAnExtremelyLooooongName), [], [], , )
+		''');
 	}
-	
+
 }
