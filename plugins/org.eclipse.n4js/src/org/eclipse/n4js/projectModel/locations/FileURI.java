@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -70,6 +71,10 @@ public final class FileURI extends SafeURI<FileURI> {
 
 	public File toFile() {
 		return URIUtils.toFile(toURI());
+	}
+
+	public Path toPath() {
+		return toFile().toPath();
 	}
 
 	@Override

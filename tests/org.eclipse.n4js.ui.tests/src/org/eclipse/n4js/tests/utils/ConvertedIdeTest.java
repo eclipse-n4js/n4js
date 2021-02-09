@@ -12,6 +12,7 @@ package org.eclipse.n4js.tests.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,7 +86,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	}
 
 	protected List<N4JSProjectName> importProband(File probandFolder, Collection<N4JSProjectName> n4jsLibs) {
-		testWorkspaceManager.createTestOnDisk();
+		testWorkspaceManager.createTestOnDisk(); // this will create an empty yarn workspace
 		startAndWaitForLspServer();
 		// import the projects
 		final List<N4JSProjectName> importedProjects = new ArrayList<>();
@@ -137,19 +138,23 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	protected File importProject(File probandFolder, N4JSProjectName projectName,
 			Collection<N4JSProjectName> n4jsLibs) {
 
+		if (projectName.getScopeName() != null) {
+			throw new IllegalArgumentException("importing of scoped projects is not supported yet");
+		}
+
 		File projectSourceFolder = new File(probandFolder, projectName.getRawName());
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
 		}
 
-		File projectLocation = getProjectLocation();
+		final File projectLocation = getProjectLocation();
 		final File projectFolder = new File(projectLocation, projectName.getRawName());
+		final File nodeModulesFolder = isYarnWorkspace()
+				? new File(new File(getRoot(), TestWorkspaceManager.YARN_TEST_PROJECT), N4JSGlobals.NODE_MODULES)
+				: new File(projectFolder, N4JSGlobals.NODE_MODULES);
 
 		// install n4js-libs (if desired)
 		if (!n4jsLibs.isEmpty()) {
-			final File nodeModulesFolder = isYarnWorkspace()
-					? new File(new File(getRoot(), TestWorkspaceManager.YARN_TEST_PROJECT), N4JSGlobals.NODE_MODULES)
-					: new File(projectFolder, N4JSGlobals.NODE_MODULES);
 			nodeModulesFolder.mkdirs();
 			try {
 				N4jsLibsAccess.installN4jsLibs(nodeModulesFolder.toPath(), true, false, false,
@@ -169,6 +174,17 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 					path -> filesCopied.add(path));
 		} catch (IOException e) {
 			throw new WrappedException("exception while copying project into workspace", e);
+		}
+
+		// create symbolic link in node_modules folder of root project (if necessary)
+		if (isYarnWorkspace()) {
+			try {
+				Files.createSymbolicLink(nodeModulesFolder.toPath().resolve(projectName.getRawName()),
+						projectFolder.toPath());
+			} catch (IOException e) {
+				throw new WrappedException(
+						"exception while creating symbolic link from node_modules folder to project folder", e);
+			}
 		}
 
 		// notify LSP server

@@ -10,14 +10,11 @@
 package org.eclipse.n4js.tests.naming
 
 import com.google.common.collect.Lists
-import com.google.inject.Inject
 import java.io.File
-import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.external.LibraryManager
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.tests.util.ProjectTestsUtils
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -25,29 +22,24 @@ import static org.junit.Assert.*
 /**
  * Testing module and folder names containing dots.
  */
-class ModuleAndFolderNamesWithDotsPluginTest extends AbstractBuilderParticipantTest {
+// converted from ModuleAndFolderNamesWithDotsPluginTest
+class ModuleAndFolderNamesWithDotsIdeTest extends ConvertedIdeTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "ModuleAndFolderNamesWithDots";
 	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("ModuleAndFolderNamesWithDots");
 
-	@Inject
-	private LibraryManager libraryManager;
-
 	@Test
 	def void testModuleAndFolderNamesWithDots() {
-		val root = new File(getResourceUri(PROBANDS, SUBFOLDER));
-		val project = ProjectTestsUtils.importProject(root, PROJECT_NAME, Lists.newArrayList(
+		importProband(new File(PROBANDS, SUBFOLDER), Lists.newArrayList(
 			N4JSGlobals.N4JS_RUNTIME));
-
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
-		testedWorkspace.fullBuild;
 		assertNoIssues();
 
-		val mainModule = project.getFolder("src").getFile("Main.n4js");
-		assertTrue("file Main.n4js not found", mainModule.exists);
+		val mainModule = new FileURI(getProjectRootForImportedProject(PROJECT_NAME.rawName).toPath
+			.resolve("src-gen").resolve("Main.js").toFile);
+		assertTrue("file Main.js not found", mainModule.exists);
 
-		assertCorrectOutput(mainModule, '''
+		assertOutput(mainModule, '''
 			hello from C#m() located in module: sub/module.with.dots
 			hello from D#m() located in module: folder.with.many.dots/another.module.with.dots
 			hello from D#m() located in module: folder/with/many/dots/another.module.with.dots

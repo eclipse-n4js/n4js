@@ -14,6 +14,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,8 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
+import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
@@ -1453,5 +1456,29 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).lastModifiedTime();
 		assertEquals(millis, fileTime.toMillis());
+	}
+
+	/** Runs the given file (with its parent folder as working directory) in node.js and asserts the output. */
+	protected void assertOutput(FileURI fileToRun, CharSequence expectedOutput) {
+		ProcessResult result = runInNodejs(fileToRun);
+		assertNull("exception while running: " + fileToRun, result.getException());
+		assertEquals("unexpected exit code from running: " + fileToRun, 0, result.getExitCode());
+		assertEquals("unexpected output from running: " + fileToRun,
+				expectedOutput.toString().trim(), result.getStdOut().trim());
+		assertEquals("stderr was non-empty after running: " + fileToRun,
+				"", result.getErrOut().trim());
+	}
+
+	/**
+	 * Same as {@link #runInNodejs(File, FileURI, String...)}, using the given file's grand-parent folder as working
+	 * directory (assuming the file is located in the root of a project's output folder).
+	 */
+	protected ProcessResult runInNodejs(FileURI fileToRun, String... options) {
+		return runInNodejs(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
+	}
+
+	/** Delegates to {@link CliTools#runNodejs(Path, Path, String...)}. */
+	protected ProcessResult runInNodejs(File workingDir, FileURI fileToRun, String... options) {
+		return new CliTools().runNodejs(workingDir.toPath(), fileToRun.toPath(), options);
 	}
 }
