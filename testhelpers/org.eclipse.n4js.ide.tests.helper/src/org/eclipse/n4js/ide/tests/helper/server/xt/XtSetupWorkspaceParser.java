@@ -48,7 +48,6 @@ public class XtSetupWorkspaceParser {
 		/** @return current and moves cursor to next */
 		@Override
 		public String next() {
-			System.out.println(current());
 			return tokens[cursor++];
 		}
 
