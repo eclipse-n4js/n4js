@@ -75,12 +75,12 @@ public class XtFileDataParser {
 	static final String XT_COMMENT_ARTIFACT_2 = "[\\n][\\t ]*\\*";
 
 	/**
-	 * Pattern for single-line comments using {@code //} at the beginning. The XT method uses {@code -->} to start the
-	 * expectation.
+	 * Pattern for single-line comments using {@code //} or {@code /*} at the beginning. The XT method uses {@code -->}
+	 * to start the expectation. This expectation ends in the same line.
 	 */
 	static final Pattern XT_SINGLE_LINE = Pattern.compile(
-			"[^\\n]*\\/\\/+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)-->(?<"
-					+ XT_EXPECTATION + ">[^\\n]*)");
+			"[^\\n]*\\/[\\/|\\*]+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD
+					+ ">[^\\n]*)-->(?<" + XT_EXPECTATION + ">[^\\n]*)");
 
 	/**
 	 * Pattern for multi-line comments using {@code //} at the beginning of every line. The XT method uses {@code ---}
@@ -185,11 +185,11 @@ public class XtFileDataParser {
 			Map<String, Integer> methodNameCounters) {
 
 		int offset = matcher.end();
-		String comment = matcher.group(XT_COMMENT);
-		String methodAndArgs = matcher.group(XT_METHOD);
-		String expectation = matcher.group(XT_EXPECTATION);
+		String comment = matcher.group(XT_COMMENT).trim();
+		String methodAndArgs = matcher.group(XT_METHOD).trim();
+		String expectation = matcher.group(XT_EXPECTATION).trim();
 		if (findAndRemove != null) {
-			expectation = expectation.replaceAll(findAndRemove, expectation);
+			expectation = expectation.replaceAll(findAndRemove, "");
 		}
 		String[] nameAndArgsArray = methodAndArgs.split("\\s+");
 		Preconditions.checkArgument(nameAndArgsArray.length > 0);

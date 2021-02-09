@@ -71,15 +71,21 @@ public class XtFileData {
 
 		/** @return Description for JUnit */
 		public Description getDescription(XtFileData xtFileData) {
+			String className = (comment.isBlank() ? getArgs() : comment);
 			String descrName = name + "~" + count;
 			descrName += ": " + (comment.isBlank() ? getArgs() : comment);
 			descrName += " " + OPEN_BRACKET + xtFileData.relativePath + CLOSE_BRACKET;
-			return Description.createTestDescription(getMethodNameWithArgs(), descrName, this);
+			return Description.createTestDescription(className, descrName, this);
 		}
 
 		/** @return all elements separated by space */
 		public String getMethodNameWithArgs() {
-			return name + " " + getArgs();
+			return name + (hasArgs() ? " " + getArgs() : "");
+		}
+
+		/** @return true iff {@link #getArgs()} returns a non-blank string */
+		public boolean hasArgs() {
+			return !getArgs().isBlank();
 		}
 
 		/** @return all args separated by space */

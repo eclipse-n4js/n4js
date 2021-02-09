@@ -29,6 +29,9 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
 /**
  *
  */
@@ -57,6 +60,7 @@ public abstract class AbstractXtParentRunnerTest {
 	Description parentDescription;
 	List<XtFileRunner> children;
 	List<Pair<String, Object>> events = new ArrayList<>();
+	Multimap<String, String> results = LinkedHashMultimap.create();
 
 	class TestRunSimulator extends RunListener {
 
@@ -92,21 +96,41 @@ public abstract class AbstractXtParentRunnerTest {
 		@Override
 		public void testFinished(Description description) throws Exception {
 			events.add(Pair.of("testFinished", description));
+			String methodName = description.getMethodName();
+			String displayName = description.getDisplayName();
+			String commentOrArgs = displayName.substring(methodName.length());
+			results.put(commentOrArgs, "Passed: " + methodName);
 		}
 
 		@Override
 		public void testFailure(Failure failure) throws Exception {
 			events.add(Pair.of("testFailure", failure));
+			Description description = failure.getDescription();
+			String methodName = description.getMethodName();
+			String displayName = description.getDisplayName();
+			String commentOrArgs = displayName.substring(methodName.length());
+			results.put(commentOrArgs,
+					"Failed: " + methodName + ". " + failure.getMessage());
 		}
 
 		@Override
 		public void testAssumptionFailure(Failure failure) {
 			events.add(Pair.of("testAssumptionFailure", failure));
+			Description description = failure.getDescription();
+			String methodName = description.getMethodName();
+			String displayName = description.getDisplayName();
+			String commentOrArgs = displayName.substring(methodName.length());
+			results.put(commentOrArgs,
+					"Failed Assumption: " + methodName + ". " + failure.getMessage());
 		}
 
 		@Override
 		public void testIgnored(Description description) throws Exception {
 			events.add(Pair.of("testIgnored", description));
+			String methodName = description.getMethodName();
+			String displayName = description.getDisplayName();
+			String commentOrArgs = displayName.substring(methodName.length());
+			results.put(commentOrArgs, "Ignored: " + methodName);
 		}
 	}
 
@@ -117,6 +141,14 @@ public abstract class AbstractXtParentRunnerTest {
 
 	void assertEventNames(String eventNames) {
 		Assert.assertEquals(eventNames, Strings.toString(p -> p.getKey(), events));
+	}
+
+	void assertResults(String expectedResults) {
+		Assert.assertEquals(expectedResults, Strings.join(", ", results.values()));
+	}
+
+	void assertSingleTestResult(String methodName, String expectedResults) {
+		Assert.assertEquals(expectedResults, Strings.join(", ", results.get(methodName)));
 	}
 
 	static <A extends Annotation, A_NEW extends A> void alterAnnotationOn(Class<?> clazzToLookFor,

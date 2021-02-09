@@ -20,8 +20,11 @@ public class DefinitionTest extends AbstractXtParentRunnerTest {
 	/***/
 	@Test
 	public void test() throws Exception {
-		run("probands/Definitions");
-		assertEventNames("[testRunStarted, testStarted, testFailure, testRunFinished]");
+		run("probands/Definition");
+		assertEventNames("[testRunStarted, testStarted, testFailure, testStarted, testFailure, testRunFinished]");
+		assertResults(
+				"[definition~0: test 1 〔probands/Definition/Definition.n4js.xt〕(definition at 'met<|>hodB'), "
+						+ "definition~1: test 2 〔probands/Definition/Definition.n4js.xt〕(definition at 'met<|>hodB')]");
 	}
 
 }

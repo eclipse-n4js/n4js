@@ -25,5 +25,7 @@ var b0 : B = new B();
 b0.methodB();
 
 
-// some comment XPECT definition at 'met<|>hodB2' --> (test-project/src/Simple1_.n4js, [18:1 - 18:9])
+/* some comment XPECT definition at 'met<|>hodB2' --> (test-project/src/Simple1_.n4js, [18:1 - 18:9])
+   
+ */
 b0.methodB2();
