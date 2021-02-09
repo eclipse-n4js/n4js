@@ -25,6 +25,7 @@ import org.junit.runner.notification.RunNotifier;
  */
 public class XtFileRunner extends Runner {
 	final XtIdeTest ideTest;
+	final String testClassName;
 	final String folderName;
 	final File file;
 	final XtFileData xtFileData;
@@ -32,8 +33,9 @@ public class XtFileRunner extends Runner {
 	Description description;
 
 	/** Constructor */
-	public XtFileRunner(XtIdeTest ideTest, String folderName, File file) throws IOException {
+	public XtFileRunner(XtIdeTest ideTest, String testClassName, String folderName, File file) throws IOException {
 		this.ideTest = ideTest;
+		this.testClassName = testClassName;
 		this.folderName = folderName;
 		this.file = file;
 		this.xtFileData = XtFileDataParser.parse(file);
@@ -51,6 +53,12 @@ public class XtFileRunner extends Runner {
 
 	@Override
 	public void run(RunNotifier notifier) {
+		if (!testClassName.equals(getSetupRunnerName())) {
+			notifier.fireTestIgnored(Description.createSuiteDescription(
+					"Specified runner does not match current runner", file));
+			return;
+		}
+
 		try {
 			notifier.fireTestRunStarted(getDescription());
 

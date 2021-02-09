@@ -50,17 +50,17 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	}
 
 	@Override
-	protected List<XtFileRunner> getChildren() {
+	public List<XtFileRunner> getChildren() {
 		return getOrFindFileRunners();
 	}
 
 	@Override
-	protected Description describeChild(XtFileRunner child) {
+	public Description describeChild(XtFileRunner child) {
 		return child.getDescription();
 	}
 
 	@Override
-	protected void runChild(XtFileRunner child, RunNotifier notifier) {
+	public void runChild(XtFileRunner child, RunNotifier notifier) {
 		child.run(notifier);
 	}
 
@@ -78,10 +78,8 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(ideTest, xtFilesFolder, file);
-							if (testClassName.equals(fileRunner.getSetupRunnerName())) {
-								fileRunners.add(fileRunner);
-							}
+							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, xtFilesFolder, file);
+							fileRunners.add(fileRunner);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
