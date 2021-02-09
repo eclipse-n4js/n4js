@@ -12,79 +12,56 @@ package org.eclipse.n4js.tests.project
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.io.File
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IProject
-import org.eclipse.core.resources.IProjectDescription
-import org.eclipse.core.resources.IWorkspace
-import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.IPath
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.Path
-import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.tests.util.ProjectTestsHelper
-import org.eclipse.n4js.tests.util.ProjectTestsUtils
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
-import org.eclipse.n4js.utils.URIUtils
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.junit.Before
 import org.junit.Test
 
-import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 
 /**
  * Testing the use of npm scopes as part of N4JS project names, i.e. project names of
  * the form "@myScope/myProject".
  */
-class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
+// converted from NpmScopesPluginTest
+class NpmScopesIdeTest extends ConvertedIdeTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String YARN_WORKSPACE_BASE = "npmScopes";
 	private static final N4JSProjectName YARN_WORKSPACE_PROJECT = new N4JSProjectName("YarnWorkspaceProject");
 
-	private IProject yarnProject;
-	private IProject scopedProject;
-	private IProject nonScopedProject;
-	private IProject clientProject;
-	private URI clientModuleURI;
-	private IFile clientModule;
+	private FileURI yarnProject;
+	private FileURI scopedProject;
+	private FileURI nonScopedProject;
+	private FileURI clientProject;
+	private FileURI clientModule;
+	private FileURI clientModuleOutputFile;
 
 	@Inject private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 	@Inject private ProjectTestsHelper projectTestsHelper;
 
 	@Before
 	def void before() {
-		val workspace = ResourcesPlugin.workspace;
-		val parentFolder = new File(getResourceUri(PROBANDS, YARN_WORKSPACE_BASE));
-		yarnProject = ProjectTestsUtils.importYarnWorkspace(libraryManager, parentFolder, YARN_WORKSPACE_PROJECT,
-			Lists.newArrayList(N4JSGlobals.N4JS_RUNTIME));
-		testedWorkspace.fullBuild
+		importProband(new File(PROBANDS, YARN_WORKSPACE_BASE), Lists.newArrayList(N4JSGlobals.N4JS_RUNTIME));
+		assertNoIssues();
 
-		scopedProject = workspace.root.getProject("@myScope:Lib");
-		nonScopedProject = workspace.root.getProject("Lib");
-		clientProject = workspace.root.getProject("XClient");
+		scopedProject = getProjectLocation().toFileURI.appendSegments("@myScope", "Lib");
+		nonScopedProject = getProjectLocation().toFileURI.appendSegments("Lib");
+		clientProject = getProjectLocation().toFileURI.appendSegments("XClient");
 
 		assertTrue(scopedProject.exists);
 		assertTrue(nonScopedProject.exists);
 		assertTrue(clientProject.exists);
-		clientModule = clientProject.getFolder("src").getFile("ClientModule.n4js");
-		assertNotNull(clientModule);
+
+		clientModule = clientProject.appendSegments("src", "ClientModule.n4js");
+		clientModuleOutputFile = clientProject.appendSegments("src-gen", "ClientModule.js");
 		assertTrue(clientModule.exists);
-		clientModuleURI = createPlatformResourceURI(clientProject.name + "/src/" + clientModule.name, true);
-	}
-
-	def static void importProject(IWorkspace workspace, File rootFolder, IProgressMonitor progressMonitor)
-			throws CoreException {
-
-		val IPath path = new Path(new File(rootFolder, "_project").getAbsolutePath());
-		val IProjectDescription desc = workspace.loadProjectDescription(path);
-		val IProject project = workspace.getRoot().getProject(desc.getName());
-		project.create(desc, progressMonitor);
-		project.open(progressMonitor);
+		assertTrue(clientModuleOutputFile.exists);
 	}
 
 	@Test
@@ -111,7 +88,9 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 			import {A} from "Lib/A"              // <-- must *not* work (because module A not contained in non-scoped project "Lib")
 		''');
 		assertIssues(
-			"line 1: Cannot resolve complete module specifier (with project name as first segment): no matching module found."
+			"ClientModule" -> #[
+				"(Error, [0:16 - 0:23], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)"
+			]
 		);
 	}
 
@@ -130,7 +109,9 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 			import {B} from "@myScope/Lib/B"     // <-- must *not* work (because module B not contained in scoped project "@myScope/Lib")
 		''')
 		assertIssues(
-			"line 1: Cannot resolve complete module specifier (with project name as first segment): no matching module found."
+			"ClientModule" -> #[
+				"(Error, [0:16 - 0:32], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)"
+			]
 		);
 
 		setContentsOfClientModule('''
@@ -206,31 +187,13 @@ class NpmScopesPluginTest extends AbstractBuilderParticipantTest {
 		''')
 	}
 
-	/**
-	 * This test of method {@link URIUtils#convert(String)} is included here to avoid having to create
-	 * a new bundle for this test alone (no bundle for UI tests of 'org.eclipse.n4js.utils' yet).
-	 */
-	@Test
-	def void testURIUtils_convert() {
-		val f = scopedProject.getFile(N4JSGlobals.PACKAGE_JSON);
-		assertTrue(f.exists);
-		val uri = URIUtils.convert(f);
-		assertTrue(uri.isPlatformResource);
-		val expectedSegments = #[
-			"resource",
-			"@myScope" + ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE + "Lib",
-			N4JSGlobals.PACKAGE_JSON
-		];
-		assertArrayEquals(expectedSegments, uri.segments);
-	}
-
 	def private void setContentsOfClientModule(CharSequence source) {
-		changeTestFile(clientModule, source);
-		waitForAutoBuild();
+		changeNonOpenedFile(clientModule, source.toString);
+		joinServerRequests();
 	}
 
 	def private void assertCorrectOutput(CharSequence expectedOutput) {
-		val result = projectTestsHelper.runWithNodeRunnerUI(clientModuleURI);
+		val result = runInNodejs(clientProject.toFile, clientModuleOutputFile);
 		val actualOutput = result.stdOut.trim;
 		val expectedOutputTrimmed = expectedOutput.toString.trim;
 		assertEquals("incorrect output when running " + clientModule.name, expectedOutputTrimmed, actualOutput);

@@ -39,6 +39,7 @@ import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -85,22 +86,32 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		importProband(probandFolder, Collections.emptyList());
 	}
 
-	protected List<N4JSProjectName> importProband(File probandFolder, Collection<N4JSProjectName> n4jsLibs) {
+	protected List<N4JSProjectName> importProband(File probandsFolder, Collection<N4JSProjectName> n4jsLibs) {
 		testWorkspaceManager.createTestOnDisk(); // this will create an empty yarn workspace
 		startAndWaitForLspServer();
 		// import the projects
 		final List<N4JSProjectName> importedProjects = new ArrayList<>();
 		boolean needToCopyLibs = true;
-		for (final File child : probandFolder.listFiles()) {
+		for (final File child : probandsFolder.listFiles()) {
 			if (child.isDirectory()) {
-				final N4JSProjectName name = new N4JSProjectName(child.getName());
-				importProject(probandFolder, name,
-						needToCopyLibs ? n4jsLibs : Collections.emptyList());
-				importedProjects.add(name);
-				needToCopyLibs = false;
+				if (child.getName().startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX)) {
+					for (final File grandChild : child.listFiles()) {
+						if (grandChild.isDirectory()) {
+							final N4JSProjectName name = new N4JSProjectName(child.getName(), grandChild.getName());
+							importProject(probandsFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
+							importedProjects.add(name);
+							needToCopyLibs = false;
+						}
+					}
+				} else {
+					final N4JSProjectName name = new N4JSProjectName(child.getName());
+					importProject(probandsFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
+					importedProjects.add(name);
+					needToCopyLibs = false;
+				}
 			}
 		}
-		joinServerRequests();
+		cleanBuildAndWait();
 		// ensure that all projects have been imported properly
 		final Set<String> expectedProjects = importedProjects.stream()
 				.map(N4JSProjectName::getRawName).collect(Collectors.toSet());
@@ -112,8 +123,8 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	}
 
 	/** Same as {@link #importProject(File, N4JSProjectName, Collection)}, but without installing any n4js libraries. */
-	protected File importProject(File probandFolder, N4JSProjectName projectName) {
-		return importProject(probandFolder, projectName, Collections.emptyList());
+	protected File importProject(File probandsFolder, N4JSProjectName projectName) {
+		return importProject(probandsFolder, projectName, Collections.emptyList());
 	}
 
 	/**
@@ -123,7 +134,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	 * IProject project = ProjectTestsUtils.importProject(new File(&quot;probands&quot;), &quot;TestProject&quot;, n4jsLibs);
 	 * </pre>
 	 *
-	 * @param probandFolder
+	 * @param probandsFolder
 	 *            the parent folder in which the test project is found
 	 * @param projectName
 	 *            the name of the test project, must be folder contained in probandsFolder
@@ -135,20 +146,19 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	protected File importProject(File probandFolder, N4JSProjectName projectName,
+	protected File importProject(File probandsFolder, N4JSProjectName projectName,
 			Collection<N4JSProjectName> n4jsLibs) {
 
-		if (projectName.getScopeName() != null) {
-			throw new IllegalArgumentException("importing of scoped projects is not supported yet");
-		}
-
-		File projectSourceFolder = new File(probandFolder, projectName.getRawName());
+		Path projectNameAsRelativePath = projectName.getScopeName() != null
+				? Path.of(projectName.getScopeName(), projectName.getPlainName())
+				: Path.of(projectName.getRawName());
+		File projectSourceFolder = probandsFolder.toPath().resolve(projectNameAsRelativePath).toFile();
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
 		}
 
 		final File projectLocation = getProjectLocation();
-		final File projectFolder = new File(projectLocation, projectName.getRawName());
+		final File projectFolder = projectLocation.toPath().resolve(projectNameAsRelativePath).toFile();
 		final File nodeModulesFolder = isYarnWorkspace()
 				? new File(new File(getRoot(), TestWorkspaceManager.YARN_TEST_PROJECT), N4JSGlobals.NODE_MODULES)
 				: new File(projectFolder, N4JSGlobals.NODE_MODULES);
@@ -179,8 +189,9 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		// create symbolic link in node_modules folder of root project (if necessary)
 		if (isYarnWorkspace()) {
 			try {
-				Files.createSymbolicLink(nodeModulesFolder.toPath().resolve(projectName.getRawName()),
-						projectFolder.toPath());
+				Path from = nodeModulesFolder.toPath().resolve(projectNameAsRelativePath);
+				Files.createDirectories(from.getParent());
+				Files.createSymbolicLink(from, projectFolder.toPath());
 			} catch (IOException e) {
 				throw new WrappedException(
 						"exception while creating symbolic link from node_modules folder to project folder", e);

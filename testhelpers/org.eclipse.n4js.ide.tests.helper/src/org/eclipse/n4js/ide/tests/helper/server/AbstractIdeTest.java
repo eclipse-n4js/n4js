@@ -699,6 +699,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		changeNonOpenedFile(fileURI, modification);
 	}
 
+	/** Same as {@link #changeNonOpenedFile(FileURI, Function)}, but replaces old content entirely. */
+	protected void changeNonOpenedFile(FileURI fileURI, CharSequence newContent) {
+		changeNonOpenedFile(fileURI, oldContent -> newContent);
+	}
+
 	/** Same as {@link #changeNonOpenedFile(FileURI, Function)}, accepting changes as pairs from old to new strings. */
 	@SafeVarargs
 	protected final void changeNonOpenedFile(FileURI fileURI, Pair<String, ? extends CharSequence>... replacements) {
