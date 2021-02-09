@@ -96,9 +96,8 @@ public abstract class AbstractXtParentRunnerTest {
 		@Override
 		public void testFinished(Description description) throws Exception {
 			events.add(Pair.of("testFinished", description));
-			String methodName = description.getMethodName();
-			String displayName = description.getDisplayName();
-			String commentOrArgs = displayName.substring(methodName.length());
+			String methodName = getMethodOrDisplayName(description);
+			String commentOrArgs = getCommentOrArgs(description);
 			results.put(commentOrArgs, "Passed: " + methodName);
 		}
 
@@ -106,31 +105,40 @@ public abstract class AbstractXtParentRunnerTest {
 		public void testFailure(Failure failure) throws Exception {
 			events.add(Pair.of("testFailure", failure));
 			Description description = failure.getDescription();
-			String methodName = description.getMethodName();
-			String displayName = description.getDisplayName();
-			String commentOrArgs = displayName.substring(methodName.length());
-			results.put(commentOrArgs,
-					"Failed: " + methodName + ". " + failure.getMessage());
+			String methodName = getMethodOrDisplayName(description);
+			String commentOrArgs = getCommentOrArgs(description);
+			results.put(commentOrArgs, "Failed: " + methodName + ". " + failure.getMessage());
 		}
 
 		@Override
 		public void testAssumptionFailure(Failure failure) {
 			events.add(Pair.of("testAssumptionFailure", failure));
 			Description description = failure.getDescription();
-			String methodName = description.getMethodName();
-			String displayName = description.getDisplayName();
-			String commentOrArgs = displayName.substring(methodName.length());
-			results.put(commentOrArgs,
-					"Failed Assumption: " + methodName + ". " + failure.getMessage());
+			String methodName = getMethodOrDisplayName(description);
+			String commentOrArgs = getCommentOrArgs(description);
+			results.put(commentOrArgs, "Failed Assumption: " + methodName + ". " + failure.getMessage());
 		}
 
 		@Override
 		public void testIgnored(Description description) throws Exception {
 			events.add(Pair.of("testIgnored", description));
+			String methodName = getMethodOrDisplayName(description);
+			String commentOrArgs = getCommentOrArgs(description);
+			results.put(commentOrArgs, "Ignored: " + methodName);
+		}
+
+		String getCommentOrArgs(Description description) {
 			String methodName = description.getMethodName();
 			String displayName = description.getDisplayName();
-			String commentOrArgs = displayName.substring(methodName.length());
-			results.put(commentOrArgs, "Ignored: " + methodName);
+			String commentOrArgs = methodName == null ? displayName : displayName.substring(methodName.length());
+			return commentOrArgs;
+		}
+
+		String getMethodOrDisplayName(Description description) {
+			String methodName = description.getMethodName();
+			String displayName = description.getDisplayName();
+			String methodOrDisplayName = methodName == null ? displayName : methodName;
+			return methodOrDisplayName;
 		}
 	}
 
