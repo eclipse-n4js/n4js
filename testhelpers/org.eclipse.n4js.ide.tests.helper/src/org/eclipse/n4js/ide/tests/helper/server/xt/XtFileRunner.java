@@ -54,8 +54,7 @@ public class XtFileRunner extends Runner {
 	@Override
 	public void run(RunNotifier notifier) {
 		if (!testClassName.equals(getSetupRunnerName())) {
-			notifier.fireTestIgnored(Description.createSuiteDescription(
-					"Specified runner does not match current runner", file));
+			notifier.fireTestIgnored(getDescription());
 			return;
 		}
 
@@ -92,8 +91,13 @@ public class XtFileRunner extends Runner {
 		}
 
 		if (xtFileData.noTests()) {
-			String msg = "No tests found in " + getName();
-			description = Description.createSuiteDescription(msg);
+			String msg = getName() + ": No tests found.";
+			description = Description.createSuiteDescription(msg, file);
+			return description;
+		}
+		if (!testClassName.equals(getSetupRunnerName())) {
+			String msg = getName() + ": Specified runner does not match current runner";
+			description = Description.createSuiteDescription(msg, file);
 			return description;
 		}
 
