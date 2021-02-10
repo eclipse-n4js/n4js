@@ -23,31 +23,47 @@ class B {
 // test-0 XPECT nowarnings -->
 var b0 : B = new B();
 
-// test-1 XPECT warnings --> "Couldn't resolve reference to IdentifiableElement 'b01'." at "null as B"
+// test-1 XPECT warnings --> "Unnecessary cast from null to B" at "null as B"
 b0 = null as B;
 
-// test-2 XPECT warnings --> "" at ""
+// test-2 XPECT warnings --> "" at "null as B"
 b0 = null as B;
 
 
 
 /* test-3 XPECT warnings ---
- *  "Couldn't resolve reference to IdentifiableElement 'b01'." at "b01"
- *  "int is not a subtype of B." at "42"
+ *  "Unnecessary cast from null to B" at "null as B"
+ *  "Unnecessary cast from null to B" at "undefined as B"
  * ---
  */
 b0 = null as B;
+b0 = undefined as B;
 
 /* test-4 XPECT warnings ---
- *  "Couldn't resolve reference to IdentifiableElement 'b01'." at "b01"
- *  "" at "42"
+ *  "Unnecessary cast from null to B" at "null as B"
+ *  "" at "undefined as B"
  * ---
  */
 b0 = null as B;
+b0 = undefined as B;
 
 /* test-5 XPECT warnings ---
  *  "" at "b01"
- *  "int is not a subtype of B." at "42"
+ *  "Unnecessary cast from null to B" at "undefined as B"
  * ---
  */
 b0 = null as B;
+b0 = undefined as B;
+
+
+// test-6 XPECT nowarnings -->
+b0 = null as B;
+
+
+// test-7 XPECT warnings --> "" at ""
+b0 = null as B;
+
+
+// test-8 XPECT warnings --> "" at "B"
+b0 = null as B;
+
