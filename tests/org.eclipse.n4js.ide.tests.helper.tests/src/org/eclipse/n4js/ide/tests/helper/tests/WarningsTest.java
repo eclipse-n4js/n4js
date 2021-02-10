@@ -35,21 +35,21 @@ public class WarningsTest extends AbstractXtParentRunnerTest {
 				+ " ++ warnings~5: test-7 〔probands/Warnings/Warnings.n4js.xt〕(test-7)\n"
 				+ " ++ warnings~6: test-8 〔probands/Warnings/Warnings.n4js.xt〕(test-8)");
 
-		assertSingleTestResult("(test-00)", "Passed: noerrors~0: test-00 〔probands/Warnings/Warnings.n4js.xt〕");
-		assertSingleTestResult("(test-0)", "Passed: nowarnings~0: test-0 〔probands/Warnings/Warnings.n4js.xt〕");
-		assertSingleTestResult("(test-1)", "Passed: warnings~0: test-1 〔probands/Warnings/Warnings.n4js.xt〕");
-		assertSingleTestResult("(test-2)",
+		assertResult("(test-00)", "Passed: noerrors~0: test-00 〔probands/Warnings/Warnings.n4js.xt〕");
+		assertResult("(test-0)", "Passed: nowarnings~0: test-0 〔probands/Warnings/Warnings.n4js.xt〕");
+		assertResult("(test-1)", "Passed: warnings~0: test-1 〔probands/Warnings/Warnings.n4js.xt〕");
+		assertResult("(test-2)",
 				"Failed: warnings~1: test-2 〔probands/Warnings/Warnings.n4js.xt〕. expected:<[]> but was:<[Unnecessary cast from null to B]>");
-		assertSingleTestResult("(test-3)", "Passed: warnings~2: test-3 〔probands/Warnings/Warnings.n4js.xt〕");
-		assertSingleTestResult("(test-4)",
+		assertResult("(test-3)", "Passed: warnings~2: test-3 〔probands/Warnings/Warnings.n4js.xt〕");
+		assertResult("(test-4)",
 				"Failed: warnings~3: test-4 〔probands/Warnings/Warnings.n4js.xt〕. expected:<[]> but was:<[Unnecessary cast from undefined to B]>");
-		assertSingleTestResult("(test-5)",
+		assertResult("(test-5)",
 				"Failed: warnings~4: test-5 〔probands/Warnings/Warnings.n4js.xt〕. No warning found at: b01");
-		assertSingleTestResult("(test-6)",
+		assertResult("(test-6)",
 				"Failed: nowarnings~1: test-6 〔probands/Warnings/Warnings.n4js.xt〕. Expected no warnings, but found: ['Unnecessary cast from null to B' at 'null as B']");
-		assertSingleTestResult("(test-7)",
+		assertResult("(test-7)",
 				"Failed: warnings~5: test-7 〔probands/Warnings/Warnings.n4js.xt〕. Unexpected warning found at: 'Unnecessary cast from null to B' at 'null as B'");
-		assertSingleTestResult("(test-8)",
+		assertResult("(test-8)",
 				"Failed: warnings~6: test-8 〔probands/Warnings/Warnings.n4js.xt〕. No warning found at: B");
 	}
 

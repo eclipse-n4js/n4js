@@ -74,7 +74,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		}
 
 		FileURI xtModule = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
-		this.issueHelper = new XtIssueHelper(getStringLSP4J(), xtData, getIssuesInFile(xtModule), issueTests);
+		this.issueHelper = new XtIssueHelper(xtData, getIssuesInFile(xtModule), issueTests);
 	}
 
 	/**

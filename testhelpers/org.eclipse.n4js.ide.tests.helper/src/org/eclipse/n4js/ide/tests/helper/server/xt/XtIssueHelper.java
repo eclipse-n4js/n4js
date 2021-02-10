@@ -23,7 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.n4js.ide.tests.helper.server.StringLSP4J;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.utils.Strings;
 import org.junit.Assert;
@@ -41,7 +40,6 @@ public class XtIssueHelper {
 	static final Pattern PATTERN_MESSAGE_AT = Pattern
 			.compile("\\\"(?<" + MESSAGE + ">[^\\\"]*)\\\"\\s*at\\s*\\\"(?<" + AT + ">[^\\\"]+)\\\"");
 
-	final StringLSP4J strLsp4j;
 	final XtFileData xtData; // sorted by position
 	final TreeSet<Diagnostic> errors; // sorted by position
 	final TreeSet<Diagnostic> warnings; // sorted by position
@@ -52,10 +50,8 @@ public class XtIssueHelper {
 		return xtData.getOffset(i1.getRange().getStart()) - xtData.getOffset(i2.getRange().getStart());
 	}
 
-	XtIssueHelper(StringLSP4J strLsp4j, XtFileData xtData, Collection<Diagnostic> unsortedIssues,
-			List<MethodData> issueTests) {
+	XtIssueHelper(XtFileData xtData, Collection<Diagnostic> unsortedIssues, List<MethodData> issueTests) {
 
-		this.strLsp4j = strLsp4j;
 		this.xtData = xtData;
 		this.errors = new TreeSet<>(this::compareDiagnosticByOffset);
 		this.warnings = new TreeSet<>(this::compareDiagnosticByOffset);
@@ -91,11 +87,11 @@ public class XtIssueHelper {
 			}
 		}
 
-		testToErrors = getTestToIssues(strLsp4j, xtData, errors, positionToErrors);
-		testToWarnings = getTestToIssues(strLsp4j, xtData, warnings, positionToWarnings);
+		testToErrors = getTestToIssues(xtData, errors, positionToErrors);
+		testToWarnings = getTestToIssues(xtData, warnings, positionToWarnings);
 	}
 
-	static private Multimap<MethodData, Diagnostic> getTestToIssues(StringLSP4J strLsp4j, XtFileData xtData,
+	static private Multimap<MethodData, Diagnostic> getTestToIssues(XtFileData xtData,
 			TreeSet<Diagnostic> issues, LinkedHashMap<Integer, MethodData> positionToTest) {
 
 		Multimap<MethodData, Diagnostic> testToIssues = LinkedHashMultimap.create();
@@ -107,13 +103,13 @@ public class XtIssueHelper {
 
 		Iterator<Map.Entry<Integer, MethodData>> posTestIter = positionToTest.entrySet().iterator();
 		Assert.assertTrue(
-				"Unexpected issue found: " + strLsp4j.toString(firstDiagnostic),
+				"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
 				posTestIter.hasNext() || issues.isEmpty());
 
 		if (posTestIter.hasNext()) {
 			Map.Entry<Integer, MethodData> currPosTest = posTestIter.next();
 			Assert.assertTrue(
-					"Unexpected issue found: " + strLsp4j.toString(firstDiagnostic),
+					"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
 					getOffset(xtData, firstDiagnostic) > currPosTest.getKey());
 
 			Map.Entry<Integer, MethodData> nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
@@ -209,7 +205,13 @@ public class XtIssueHelper {
 		return atToActualMessages;
 	}
 
-	private String issueToString(String message, String atLocation) {
+	static private String issueToString(XtFileData xtData, Diagnostic diag) {
+		String msg = diag.getMessage();
+		String atLocation = xtData.getText(diag.getRange());
+		return issueToString(msg, atLocation);
+	}
+
+	static private String issueToString(String message, String atLocation) {
 		return "'" + message + "' at '" + atLocation + "'";
 	}
 }

@@ -90,13 +90,13 @@ public class XtFileRunner extends Runner {
 			return description;
 		}
 
-		if (xtFileData.noTests()) {
-			String msg = getName() + ": No tests found.";
+		if (!testClassName.equals(getSetupRunnerName())) {
+			String msg = getName() + ": Specified runner does not match current runner";
 			description = Description.createSuiteDescription(msg, file);
 			return description;
 		}
-		if (!testClassName.equals(getSetupRunnerName())) {
-			String msg = getName() + ": Specified runner does not match current runner";
+		if (xtFileData.noTests()) {
+			String msg = getName() + ": No tests found.";
 			description = Description.createSuiteDescription(msg, file);
 			return description;
 		}
