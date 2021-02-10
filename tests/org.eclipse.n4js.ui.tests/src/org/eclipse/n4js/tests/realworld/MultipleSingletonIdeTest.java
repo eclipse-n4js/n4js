@@ -21,18 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.n4js.json.ui.internal.JsonActivator;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.regex.ui.internal.RegularExpressionActivator;
-import org.eclipse.n4js.tester.internal.TesterActivator;
-import org.eclipse.n4js.tester.ui.TesterUiActivator;
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.ts.ui.internal.TypesActivator;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
 import org.eclipse.n4js.utils.InjectorCollector;
-import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.HashMultimap;
@@ -47,7 +40,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.spi.DefaultBindingScopingVisitor;
 
 /**
- * This test detects multiple instances of injected classes marked with @Singleton.
+ * This test detects multiple instances of injected classes marked with <code>@Singleton</code>.
  * <p>
  * Note that instances are created lazily. Consequently, this test cannot guarantee completeness. In case a case of
  * multiple singleton instances is missing, this test should be adjusted to provoke the lazy creation of this missing
@@ -56,10 +49,11 @@ import com.google.inject.spi.DefaultBindingScopingVisitor;
  * Note also that singleton classes that are never bound explicitly (meaning in none of the modules), are not checked in
  * this test.
  */
-public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTest {
+// converted from MultipleSingletonPluginUITest
+public class MultipleSingletonIdeTest extends ConvertedIdeTest {
 
 	@Inject
-	ISharedStateContributionRegistry sharedRegistry;
+	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	/**
 	 * The tests first collects all injectors. The shared injector is identified using the class
@@ -69,11 +63,7 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 	 */
 	@Test
 	public void identifyMultipleSingletons() throws Exception {
-		ProjectTestsUtils.importProject(new File("probands"), new N4JSProjectName("ListBase"));
-		IResourcesSetupUtil.waitForBuild();
-
-		@SuppressWarnings("unused")
-		TesterUiActivator testerUiActivator = new TesterUiActivator(); // force the TesterUI and Tester bundles to start
+		importProband(new File("probands", "ListBase"));
 
 		Multimap<Class<?>, Injector> singletonInstances = HashMultimap.create();
 
@@ -94,23 +84,21 @@ public class MultipleSingletonPluginUITest extends AbstractBuilderParticipantTes
 		Map<Injector, String> injectors = new HashMap<>();
 
 		injectors.putAll(InjectorCollector.getSharedInjectors());
-		injectors.put(N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS),
-				"N4JS-Injector");
-		injectors.put(JsonActivator.getInstance().getInjector(JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON),
-				"JSON-Injector");
-		injectors.put(RegularExpressionActivator.getInstance()
-				.getInjector(RegularExpressionActivator.ORG_ECLIPSE_N4JS_REGEX_REGULAREXPRESSION),
-				"Regex-Injector");
-		injectors.put(TypesActivator.getInstance().getInjector(TypesActivator.ORG_ECLIPSE_N4JS_TS_TYPES),
-				"Types-Injector");
-		injectors.put(JsonActivator.getInstance().getInjector(JsonActivator.ORG_ECLIPSE_N4JS_JSON_JSON),
-				"JSON-Injector");
-		injectors.put(TesterUiActivator.getInjector(),
-				"Tester-UI-Injector");
-		injectors.put(TesterActivator.getInjector(),
-				"Tester-Injector");
+
+		Assert.assertNull(injectors.put(getInjectorFor("n4js"), "N4JS-Injector"));
+		Assert.assertNull(injectors.put(getInjectorFor("json"), "JSON-Injector"));
+		Assert.assertNull(injectors.put(getInjectorFor("n4ts"), "Types-Injector"));
+		Assert.assertNull(injectors.put(getInjectorFor("regex"), "Regex-Injector"));
 
 		return injectors;
+	}
+
+	private Injector getInjectorFor(String fileExtension) {
+		IResourceServiceProvider rsp = resourceServiceProviderRegistry
+				.getResourceServiceProvider(URI.createFileURI("dummy." + fileExtension));
+		Injector injector = rsp.get(Injector.class);
+		Assert.assertNotNull(injector);
+		return injector;
 	}
 
 	private void getN4JSSingletonsOfInjector(Injector injector, Multimap<Class<?>, Injector> singletonInstances) {
