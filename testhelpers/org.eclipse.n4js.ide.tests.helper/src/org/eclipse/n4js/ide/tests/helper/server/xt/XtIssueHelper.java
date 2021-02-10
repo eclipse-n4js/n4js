@@ -92,7 +92,7 @@ public class XtIssueHelper {
 		}
 
 		testToErrors = getTestToIssues(strLsp4j, xtData, errors, positionToErrors);
-		testToWarnings = getTestToIssues(strLsp4j, xtData, warnings, positionToErrors);
+		testToWarnings = getTestToIssues(strLsp4j, xtData, warnings, positionToWarnings);
 	}
 
 	static private Multimap<MethodData, Diagnostic> getTestToIssues(StringLSP4J strLsp4j, XtFileData xtData,
