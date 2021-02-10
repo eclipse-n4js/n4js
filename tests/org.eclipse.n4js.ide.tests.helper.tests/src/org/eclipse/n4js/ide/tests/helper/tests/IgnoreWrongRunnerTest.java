@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.tests;
 import org.junit.Test;
 
 /**
- *
+ * Test for .xt files that specify another Runner than the one that picked up the .xt file.
  */
 public class IgnoreWrongRunnerTest extends AbstractXtParentRunnerTest {
 

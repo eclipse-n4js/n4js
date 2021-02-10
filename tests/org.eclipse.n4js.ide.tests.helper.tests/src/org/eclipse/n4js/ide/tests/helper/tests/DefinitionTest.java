@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.tests;
 import org.junit.Test;
 
 /**
- *
+ * Tests for test method 'definition'
  */
 public class DefinitionTest extends AbstractXtParentRunnerTest {
 

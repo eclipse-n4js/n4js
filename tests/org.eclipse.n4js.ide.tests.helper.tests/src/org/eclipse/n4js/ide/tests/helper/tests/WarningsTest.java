@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.tests;
 import org.junit.Test;
 
 /**
- *
+ * Test for test methods 'nowarnings' and 'warnings'
  */
 public class WarningsTest extends AbstractXtParentRunnerTest {
 

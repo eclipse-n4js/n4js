@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.tests;
 import org.junit.Test;
 
 /**
- *
+ * Test for test methods 'noerrors' and 'errors'
  */
 public class ErrorsTest extends AbstractXtParentRunnerTest {
 
