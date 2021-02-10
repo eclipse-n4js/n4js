@@ -877,10 +877,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** Same as {@link #deleteFileOnDiskWithoutNotification(String)}, but also notifies the server. */
 	protected void deleteFile(String moduleName) {
 		deleteFile(getFileURIFromModuleName(moduleName));
 	}
 
+	/** Same as {@link #deleteFileOnDiskWithoutNotification(FileURI)}, but also notifies the server. */
 	protected void deleteFile(FileURI fileURI) {
 		// 1) delete the file
 		deleteFileOnDiskWithoutNotification(fileURI);
@@ -906,6 +908,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** Same as {@link #renameFileOnDiskWithoutNotification(FileURI, String)}, but also notifies the server. */
+	protected void renameFile(FileURI fileURI, String newFileNameIncludingExtension) {
+		FileURI fileURIRenamed = fileURI.getParent().appendSegment(newFileNameIncludingExtension);
+		internalMoveFile(fileURI, fileURIRenamed, true);
+	}
+
 	/** Same as {@link #renameFileOnDiskWithoutNotification(FileURI, String)}, accepting a module name. */
 	protected void renameFileOnDiskWithoutNotification(String moduleName, String newFileNameIncludingExtension) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
@@ -914,12 +922,57 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Rename an existing file on disk without notifying the LSP server about it. */
 	protected void renameFileOnDiskWithoutNotification(FileURI fileURI, String newFileNameIncludingExtension) {
-		Path filePath = fileURI.toJavaIoFile().toPath();
-		Path filePathRenamed = filePath.getParent().resolve(newFileNameIncludingExtension);
+		FileURI fileURIRenamed = fileURI.getParent().appendSegment(newFileNameIncludingExtension);
+		internalMoveFile(fileURI, fileURIRenamed, false);
+	}
+
+	/**
+	 * Moves the given file or folder to the new location and notifies the server.
+	 */
+	protected void moveFile(FileURI fileURI, File newLocation) {
+		FileURI newFileURI = toFileURI(newLocation).appendSegment(fileURI.getName());
+		internalMoveFile(fileURI, newFileURI, true);
+	}
+
+	private void internalMoveFile(FileURI oldFileURI, FileURI newFileURI, boolean notifyServer) {
+		Path oldFilePath = oldFileURI.toJavaIoFile().toPath();
+		Path newFilePath = newFileURI.toJavaIoFile().toPath();
+		Assert.assertTrue("file/folder to move does not exist", Files.exists(oldFilePath));
+		Assert.assertFalse("old and new path are equal", oldFilePath.equals(newFilePath));
+		boolean isFolder = Files.isDirectory(oldFilePath);
+
+		// 0) remember old files (if necessary)
+		List<FileEvent> fileEvents = new ArrayList<>();
+		if (notifyServer) {
+			if (isFolder) {
+				List<Path> allFiles = FileUtils.getAllRegularFilesIn(oldFilePath);
+				for (Path file : allFiles) {
+					fileEvents.add(new FileEvent(toFileURI(file).toString(), FileChangeType.Deleted));
+				}
+			} else {
+				fileEvents.add(new FileEvent(oldFileURI.toString(), FileChangeType.Deleted));
+			}
+		}
+
+		// 1) actually move the file or folder
 		try {
-			Files.move(filePath, filePathRenamed);
+			Files.move(oldFilePath, newFilePath);
 		} catch (IOException e) {
 			throw new RuntimeException("exception while renaming file on disk", e);
+		}
+
+		// 2) notify the server
+		if (notifyServer) {
+			if (isFolder) {
+				List<Path> allFiles = FileUtils.getAllRegularFilesIn(newFilePath);
+				for (Path file : allFiles) {
+					fileEvents.add(new FileEvent(toFileURI(file).toString(), FileChangeType.Created));
+				}
+			} else {
+				fileEvents.add(new FileEvent(newFileURI.toString(), FileChangeType.Created));
+			}
+			DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
+			languageServer.didChangeWatchedFiles(params);
 		}
 	}
 

@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
@@ -50,6 +51,7 @@ import org.junit.Assert;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -79,6 +81,21 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 				Assert.assertNotNull(description.getURI().toString(), moduleAsString);
 			}
 		}
+	}
+
+	protected void assertDuplicateModuleIssue(FileURI fileURI, String duplicateProjectName,
+			String duplicateModulePathAndNameWithExt) {
+		Multimap<FileURI, Diagnostic> issues = getIssues();
+		Collection<Diagnostic> issuesInFile = issues.get(fileURI);
+		for (Diagnostic d : issuesInFile) {
+			String msg = d.getMessage();
+			boolean isDuplicateModuleIssue = msg.startsWith("A duplicate module C is also defined in ")
+					&& msg.endsWith("/" + duplicateProjectName + "/" + duplicateModulePathAndNameWithExt + ".");
+			if (isDuplicateModuleIssue) {
+				return; // success!
+			}
+		}
+		Assert.fail("expected duplicate module issue not found in module: " + fileURI);
 	}
 
 	/** Same as {@link #importProband(File, Collection)}, but without importing any n4js-libs. */

@@ -231,7 +231,8 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		assertNoIssues();
 
 		addSecondProjectToDependencies();
-		assertDuplicateModuleIssue(PROJECT1_NAME, "C.n4js", PROJECT2_NAME, "C.n4js");
+		Assert.assertEquals("unexpected number of issues", 1, getIssues().size);
+		assertDuplicateModuleIssue(getProjectRoot(PROJECT1_NAME).toFileURI.appendSegments("src", "C.n4js"), PROJECT2_NAME, "src/C.n4js");
 
 		removeDependency();
 		assertNoIssues();
@@ -255,7 +256,8 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		assertNoIssues();
 
 		addSecondProjectToDependencies();
-		assertDuplicateModuleIssue(PROJECT1_NAME, "C.n4js", PROJECT2_NAME, "C.n4jsd");
+		Assert.assertEquals("unexpected number of issues", 1, getIssues().size);
+		assertDuplicateModuleIssue(getProjectRoot(PROJECT1_NAME).toFileURI.appendSegments("src", "C.n4js"), PROJECT2_NAME, "src/C.n4jsd");
 
 		removeDependency();
 		assertNoIssues();
@@ -362,14 +364,5 @@ cleanBuildAndWait();
 		JsonUtils.removeDependenciesFromPackageJsonFile(fileURI.toPath, PROJECT2_NAME);
 		sendDidChangeWatchedFiles(fileURI);
 		joinServerRequests();
-	}
-
-	def private void assertDuplicateModuleIssue(String projectName, String moduleNameWithExt, String duplicateProjectName, String duplicateModuleNameWithExt) {
-		val issues = getIssues();
-		Assert.assertEquals("exactly 1 issue expected", 1, issues.size);
-		Assert.assertTrue("issue located in unexpected file", issues.keys.head.toString.endsWith("/" + projectName + "/src/" + moduleNameWithExt));
-		val msg = issues.values.head.message;
-		Assert.assertTrue("unexpected issue message: " + msg, msg.startsWith("A duplicate module C is also defined in ")
-			&& msg.endsWith("/" + duplicateProjectName + "/src/" + duplicateModuleNameWithExt + "."));
 	}
 }
