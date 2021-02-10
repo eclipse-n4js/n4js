@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -160,44 +161,69 @@ public class XtFileDataParser {
 		return Collections.emptyList();
 	}
 
+	static class MethodMatchResult implements Comparable<MethodMatchResult> {
+		final int offset;
+		final String comment;
+		final String methodAndArgs;
+		final String expectation;
+		final String artifacts;
+
+		MethodMatchResult(int offset, String comment, String methodAndArgs, String expectation, String artifacts) {
+			this.offset = offset;
+			this.comment = comment;
+			this.methodAndArgs = methodAndArgs;
+			this.expectation = expectation;
+			this.artifacts = artifacts;
+		}
+
+		@Override
+		public int compareTo(MethodMatchResult mmr) {
+			return offset - mmr.offset;
+		}
+	}
+
 	static void fillTestMethodData(String xtFileContent,
 			TreeSet<XtFileData.MethodData> testMethodData1, TreeSet<XtFileData.MethodData> testMethodData2) {
 
-		Map<String, Integer> methodNameCounters = new HashMap<>();
-
+		Set<MethodMatchResult> results = new TreeSet<>();
 		for (Matcher matcher = XT_SINGLE_LINE.matcher(xtFileContent); matcher.find();) {
-			MethodData testMethodData = createMethodData(matcher, null, methodNameCounters);
-			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
+			addResult(results, matcher, null);
 		}
-
 		for (Matcher matcher = XT_MULTI_LINE1.matcher(xtFileContent); matcher.find();) {
-			MethodData testMethodData = createMethodData(matcher, XT_COMMENT_ARTIFACT_1, methodNameCounters);
-			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
+			addResult(results, matcher, XT_COMMENT_ARTIFACT_1);
+		}
+		for (Matcher matcher = XT_MULTI_LINE2.matcher(xtFileContent); matcher.find();) {
+			addResult(results, matcher, XT_COMMENT_ARTIFACT_2);
 		}
 
-		for (Matcher matcher = XT_MULTI_LINE2.matcher(xtFileContent); matcher.find();) {
-			MethodData testMethodData = createMethodData(matcher, XT_COMMENT_ARTIFACT_2, methodNameCounters);
+		Map<String, Integer> methodNameCounters = new HashMap<>();
+		for (MethodMatchResult result : results) {
+			MethodData testMethodData = createMethodData(result, methodNameCounters);
 			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
 		}
 	}
 
-	private static MethodData createMethodData(Matcher matcher, String findAndRemove,
-			Map<String, Integer> methodNameCounters) {
-
+	private static void addResult(Set<MethodMatchResult> results, Matcher matcher, String artifacts) {
 		int offset = matcher.end();
 		String comment = matcher.group(XT_COMMENT).trim();
 		String methodAndArgs = matcher.group(XT_METHOD).trim();
 		String expectation = matcher.group(XT_EXPECTATION).trim();
-		if (findAndRemove != null) {
-			expectation = expectation.replaceAll(findAndRemove, "");
+		MethodMatchResult mmr = new MethodMatchResult(offset, comment, methodAndArgs, expectation, artifacts);
+		results.add(mmr);
+	}
+
+	private static MethodData createMethodData(MethodMatchResult result, Map<String, Integer> methodNameCounters) {
+		String expectation = result.expectation;
+		if (result.artifacts != null) {
+			expectation = expectation.replaceAll(result.artifacts, "");
 		}
-		String[] nameAndArgsArray = methodAndArgs.split("\\s+");
+		String[] nameAndArgsArray = result.methodAndArgs.split("\\s+");
 		Preconditions.checkArgument(nameAndArgsArray.length > 0);
 		String name = nameAndArgsArray[0];
 		String[] args = Arrays.copyOfRange(nameAndArgsArray, 1, nameAndArgsArray.length);
 		int counter = methodNameCounters.getOrDefault(name, 0);
 		methodNameCounters.put(name, counter + 1);
-		return new MethodData(comment, name, args, counter, expectation, offset);
+		return new MethodData(result.comment, name, args, counter, expectation, result.offset);
 	}
 
 	private static void addTestMethodData(Collection<XtFileData.MethodData> testMethodData1,
