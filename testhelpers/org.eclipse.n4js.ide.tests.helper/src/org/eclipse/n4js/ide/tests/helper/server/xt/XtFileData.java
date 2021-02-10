@@ -51,7 +51,7 @@ public class XtFileData {
 		final public int count;
 		/** Test expectation. Stated after the test divider ({@code -->} or {@code ---}). */
 		final public String expectation;
-		/** Test location */
+		/** End offset of test location in file */
 		final public int offset;
 
 		/** Constructor */

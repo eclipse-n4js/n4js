@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
@@ -26,9 +27,12 @@ import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 
 /**
  *
@@ -36,8 +40,12 @@ import com.google.common.base.Preconditions;
 public class XtIdeTest extends AbstractIdeTest {
 	static final String CURSOR = AbstractStructuredIdeTest.CURSOR_SYMBOL;
 
+	@Inject
+	private XtMethodHelper mh;
+
 	XtFileData xtData;
 	XtIssueHelper issueHelper;
+	XtextResource resource;
 
 	/**
 	 */
@@ -57,6 +65,18 @@ public class XtIdeTest extends AbstractIdeTest {
 				throw new IllegalArgumentException("Unknown method: " + startupMethod.name);
 			}
 		}
+		FileURI xtModule = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
+
+		languageServer.getResourceTaskManager().runInTemporaryContext(xtModule.toURI(), "test", false,
+				(context, ci) -> {
+					resource = context.getResource();
+					Preconditions.checkNotNull(resource);
+					if (resource instanceof N4JSResource) {
+						N4JSResource n4Res = ((N4JSResource) resource);
+						n4Res.resolveLazyCrossReferences(ci);
+					}
+					return null;
+				}).join();
 
 		ArrayList<MethodData> issueTests = new ArrayList<>();
 		LOOP: for (MethodData testMethod : xtData.getTestMethodData()) {
@@ -73,7 +93,6 @@ public class XtIdeTest extends AbstractIdeTest {
 			}
 		}
 
-		FileURI xtModule = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
 		this.issueHelper = new XtIssueHelper(xtData, getIssuesInFile(xtModule), issueTests);
 	}
 
@@ -83,6 +102,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		switch (testMethodData.name) {
 		case "definition":
 			definition(testMethodData);
+			break;
+		case "type":
+			type(testMethodData);
 			break;
 		case "nowarnings": {
 			nowarnings(testMethodData);
@@ -134,19 +156,16 @@ public class XtIdeTest extends AbstractIdeTest {
 		issueHelper.warnings(data);
 	}
 
-	/** Calls LSP endpoint 'definition'. Converts {@link MethodData} to inputs and compares outputs to expectations. */
+	/**
+	 * Calls LSP endpoint 'definition'.
+	 *
+	 * <pre>
+	 * // Xpect definition --&gt; file and range
+	 * </pre>
+	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void definition(MethodData data) throws InterruptedException, ExecutionException {
-		Preconditions.checkArgument(data.name.equals("definition"));
-		Preconditions.checkArgument(data.args.length > 1);
-		Preconditions.checkArgument(data.args[0].equals("at"));
-		Preconditions.checkArgument(data.args[1].startsWith("'"));
-		Preconditions.checkArgument(data.args[1].endsWith("'"));
-		String locationStr = data.args[1].substring(1, data.args[1].length() - 2);
-		int relLocationIdx = locationStr.contains(CURSOR) ? locationStr.indexOf(CURSOR) : 0;
-		locationStr = locationStr.replace(CURSOR, "");
-		int locationIdx = xtData.content.indexOf(locationStr, data.offset) + relLocationIdx;
-		Position position = xtData.getPosition(locationIdx);
+		Position position = getPosition(data, "definition", "at");
 		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
 
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = callDefinition(
@@ -157,4 +176,49 @@ public class XtIdeTest extends AbstractIdeTest {
 		String actualSignatureHelp = getStringLSP4J().toString4(definitions);
 		assertEquals(data.expectation, actualSignatureHelp.trim());
 	}
+
+	/**
+	 * Checks that an element/expression has a certain type. Usage:
+	 *
+	 * <pre>
+	 * // Xpect type of 'location' --&gt; Type
+	 * </pre>
+	 *
+	 * The location (of) is optional.
+	 *
+	 * The location is identified by the offset. Note that there are different implementations of IEObjectOwner, and we
+	 * need IEStructuralFeatureAndEObject, while ICrossEReferenceAndEObject or IEAttributeAndEObject would not work in
+	 * all cases (as not all eobjects we test have cross references or attributes, but feature is the join of both).
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void type(MethodData data) {
+		int offset = getOffset(data, "type", "of");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		String typeStr = mh.getTypeString(eObject, false);
+		assertEquals(data.expectation, typeStr);
+	}
+
+	private Position getPosition(MethodData data, String checkArg1, String optionalDelimiter) {
+		int offset = getOffset(data, checkArg1, optionalDelimiter);
+		Position position = xtData.getPosition(offset);
+		return position;
+	}
+
+	private int getOffset(MethodData data, String checkArg1, String optionalLocation) {
+		Preconditions.checkArgument(data.name.equals(checkArg1));
+		int offset;
+		if (data.args.length > 1) {
+			Preconditions.checkArgument(data.args[0].equals(optionalLocation));
+			Preconditions.checkArgument(data.args[1].startsWith("'"));
+			Preconditions.checkArgument(data.args[1].endsWith("'"));
+			String locationStr = data.args[1].substring(1, data.args[1].length() - 2);
+			int relLocationIdx = locationStr.contains(CURSOR) ? locationStr.indexOf(CURSOR) : 0;
+			locationStr = locationStr.replace(CURSOR, "");
+			offset = xtData.content.indexOf(locationStr, data.offset) + relLocationIdx;
+		} else {
+			offset = data.offset;
+		}
+		return offset;
+	}
+
 }

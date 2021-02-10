@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xpect.common;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodHelper;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegionProvider;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.XpectInvocation;
@@ -20,8 +21,6 @@ import org.eclipse.xpect.state.Creates;
 import org.eclipse.xpect.text.IRegion;
 import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
 
 /**
@@ -109,33 +108,10 @@ public class N4JSOffsetAdapter {
 		@Creates
 		public IEObjectCoveringRegion IEObjectCoveringRegion() {
 			final boolean haveRegion = region != null;
+			final int offset = haveRegion ? region.getOffset() : this.matchedOffset;
+			final int length = haveRegion ? region.getLength() : 0;
 
-			int offset = haveRegion ? region.getOffset() : this.matchedOffset;
-			int length = haveRegion ? region.getLength() : 0;
-			int endOffset = offset + length;
-			EObject semanticObject = null;
-
-			INode node = NodeModelUtils.findLeafNodeAtOffset(resource.getParseResult().getRootNode(), offset);
-			while (node != null) {
-				EObject actualObject = NodeModelUtils.findActualSemanticObjectFor(node);
-				if (actualObject != null) {
-					if (haveRegion) {
-						int nodeEndOffset = node.getEndOffset();
-						if (nodeEndOffset <= endOffset || semanticObject == null) {
-							semanticObject = actualObject;
-						}
-						if (nodeEndOffset >= endOffset) {
-							break;
-						}
-					} else { // no region given, just a matched offset
-						if (semanticObject == null) {
-							semanticObject = actualObject;
-							break;
-						}
-					}
-				}
-				node = node.getParent();
-			}
+			EObject semanticObject = XtMethodHelper.getEObject(resource, offset, length);
 			return new EObjectCoveringRegion(semanticObject, offset);
 		}
 	}
