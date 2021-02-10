@@ -134,16 +134,16 @@ public class XtIssueHelper {
 
 	void noerrors(MethodData data) {
 		Multimap<String, String> atToActualMessages = getAtToAcutalMessage(testToErrors, data);
-		Assert.assertTrue(
-				"Expected no errors, but found: " + Strings.toString(strLsp4j::toString, testToErrors.values()),
-				atToActualMessages.isEmpty());
+		String msg = "Expected no errors, but found: "
+				+ Strings.toString(e -> issueToString(e.getValue(), e.getKey()), atToActualMessages.entries());
+		Assert.assertTrue(msg, atToActualMessages.isEmpty());
 	}
 
 	void nowarnings(MethodData data) {
 		Multimap<String, String> atToActualMessages = getAtToAcutalMessage(testToWarnings, data);
-		Assert.assertTrue(
-				"Expected no warnings, but found: " + Strings.toString(strLsp4j::toString, testToErrors.values()),
-				atToActualMessages.isEmpty());
+		String msg = "Expected no warnings, but found: "
+				+ Strings.toString(e -> issueToString(e.getValue(), e.getKey()), atToActualMessages.entries());
+		Assert.assertTrue(msg, atToActualMessages.isEmpty());
 	}
 
 	void errors(MethodData data) {
@@ -166,7 +166,9 @@ public class XtIssueHelper {
 		Assert.assertTrue("No " + msgIssue + " found at: " + Strings.join(", ", onlyExpectedAts),
 				onlyExpectedAts.isEmpty());
 
-		Assert.assertTrue("Unexpected " + msgIssue + " found at: " + Strings.join(", ", onlyActualAts),
+		Assert.assertTrue("Unexpected " + msgIssue + " found at: " + Strings.join(", ",
+				at -> Strings.join(", ", msg -> issueToString(msg, at), atToActualMessages.get(at)),
+				onlyActualAts),
 				onlyActualAts.isEmpty());
 
 		for (String atString : atToExpectedMessages.keySet()) {
@@ -205,5 +207,9 @@ public class XtIssueHelper {
 			atToActualMessages.put(atString, error.getMessage());
 		}
 		return atToActualMessages;
+	}
+
+	private String issueToString(String message, String atLocation) {
+		return "'" + message + "' at '" + atLocation + "'";
 	}
 }

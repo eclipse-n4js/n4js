@@ -39,14 +39,18 @@ public class WarningsTest extends AbstractXtParentRunnerTest {
 		assertSingleTestResult("(test-0)", "Passed: nowarnings~0: test-0 〔probands/Warnings/Warnings.n4js.xt〕");
 		assertSingleTestResult("(test-1)", "Passed: warnings~0: test-1 〔probands/Warnings/Warnings.n4js.xt〕");
 		assertSingleTestResult("(test-2)",
-				"Failed: errors~1: test-2 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[Couldn't resolve reference to IdentifiableElement 'b01'.]>");
-		assertSingleTestResult("(test-3)", "Passed: errors~2: test-3 〔probands/Errors/Errors.n4js.xt〕");
+				"Failed: warnings~1: test-2 〔probands/Warnings/Warnings.n4js.xt〕. expected:<[]> but was:<[Unnecessary cast from null to B]>");
+		assertSingleTestResult("(test-3)", "Passed: warnings~2: test-3 〔probands/Warnings/Warnings.n4js.xt〕");
 		assertSingleTestResult("(test-4)",
-				"Failed: errors~3: test-4 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[int is not a subtype of B.]>");
-		assertSingleTestResult("(test-5)", "");
-		assertSingleTestResult("(test-6)", "");
-		assertSingleTestResult("(test-7)", "");
-		assertSingleTestResult("(test-8)", "");
+				"Failed: warnings~3: test-4 〔probands/Warnings/Warnings.n4js.xt〕. expected:<[]> but was:<[Unnecessary cast from undefined to B]>");
+		assertSingleTestResult("(test-5)",
+				"Failed: warnings~4: test-5 〔probands/Warnings/Warnings.n4js.xt〕. No warning found at: b01");
+		assertSingleTestResult("(test-6)",
+				"Failed: nowarnings~1: test-6 〔probands/Warnings/Warnings.n4js.xt〕. Expected no warnings, but found: ['Unnecessary cast from null to B' at 'null as B']");
+		assertSingleTestResult("(test-7)",
+				"Failed: warnings~5: test-7 〔probands/Warnings/Warnings.n4js.xt〕. Unexpected warning found at: 'Unnecessary cast from null to B' at 'null as B'");
+		assertSingleTestResult("(test-8)",
+				"Failed: warnings~6: test-8 〔probands/Warnings/Warnings.n4js.xt〕. No warning found at: B");
 	}
 
 }
