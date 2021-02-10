@@ -79,7 +79,7 @@ class SingleProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertNoIssues();
 		addSrc2ToSources();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertIssues(
 			"C" -> #[
@@ -142,7 +142,7 @@ cleanBuildAndWait();
 			]
 		);
 		addSrc2ToSources();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertNoIssues();
 	}
@@ -154,14 +154,14 @@ cleanBuildAndWait();
 		joinServerRequests();
 		assertNoIssues();
 		addSrc2ToSources();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertEquals("unexpected number of issues in workspace", 2, getIssues().size);
 		assertDuplicateModuleIssue(src.appendSegments("C.n4js"), DEFAULT_PROJECT_NAME, "src2/C.n4js");
 		assertDuplicateModuleIssue(src2.appendSegments("C.n4js"), DEFAULT_PROJECT_NAME, "src/C.n4js");
 
 		removeSrc2FromSource();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertNoIssues();
 		// note: in Eclipse the issue in file src2/C.n4js remained after removing the source folder,
@@ -171,7 +171,7 @@ cleanBuildAndWait();
 	@Test
 	def void testDuplicateN4JSDInOtherFolder() throws Exception {
 		addSrc2ToSources();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		createFile("C", "class C {}")
 		createFile(src2.appendSegment("C.n4jsd"), "export external public class C {}");
@@ -218,7 +218,7 @@ cleanBuildAndWait();
 	@Test
 	def void testTwoFilesSourceFolderRemovedFromProjectDescription() throws Exception {
 		addSrc2ToSources();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		createFile("C", '''
 			import { D } from "D"
@@ -229,7 +229,7 @@ cleanBuildAndWait();
 		assertNoIssues();
 
 		removeSrc2FromSource();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertIssues(
 			"C" -> #[
@@ -242,7 +242,7 @@ cleanBuildAndWait();
 	@Test
 	def void testTwoFilesSourceFolderRenamed() throws Exception {
 		addSrc3ToSources();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		createFile("C", '''
 			import { D } from "D"
@@ -262,7 +262,7 @@ cleanBuildAndWait();
 		);
 		renameFile(src2, "src3");
 		joinServerRequests();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertNoIssues();
 	}
@@ -285,7 +285,7 @@ cleanBuildAndWait();
 		assertNoIssues();
 
 		addMainSrcToSources();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertIssues(
 			"D" -> #[
@@ -320,7 +320,7 @@ cleanBuildAndWait();
 		assertNoIssues();
 
 		addMainSrcToSources(); // note: using main/src as source folder, not main/src/x
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertIssues(
 			"D" -> #[
@@ -341,7 +341,7 @@ cleanBuildAndWait();
 
 		deleteFile(projectDescriptionFile);
 		joinServerRequests();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 languageClient.clearIssues();
 cleanBuildAndWait();
 		// file should have no errors because it is no longer validated
@@ -355,14 +355,14 @@ cleanBuildAndWait();
 		createFile("C", "class C extends Unknown {}");
 		deleteFile(projectDescriptionFile);
 		joinServerRequests();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 languageClient.clearIssues();
 cleanBuildAndWait();
 		assertNoIssues();
 
 		createFile(projectDescriptionFile, packageJsonContent);
 		joinServerRequests();
-// TODO GH-2060
+// TODO GH-2060 next line should not be necessary
 cleanBuildAndWait();
 		assertIssues(
 			"C" -> #[
