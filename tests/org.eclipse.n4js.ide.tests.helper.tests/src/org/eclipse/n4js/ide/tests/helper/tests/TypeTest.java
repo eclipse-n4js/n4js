@@ -24,7 +24,8 @@ public class TypeTest extends AbstractXtParentRunnerTest {
 
 		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
 				+ " + Type.n4js.xt: probands/Type\n"
-				+ " ++ type~0: test-1 〔probands/Type/Type.n4js.xt〕(test-1)");
+				+ " ++ type~0: test-1 〔probands/Type/Type.n4js.xt〕(test-1)\n"
+				+ " ++ typeArgs~0: test-2 〔probands/Type/Type.n4js.xt〕(test-2)");
 
 		assertResult("(test-1)", "Passed: type~0: test-1 〔probands/Type/Type.n4js.xt〕");
 	}

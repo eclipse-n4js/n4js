@@ -22,3 +22,12 @@ class B {
 var b0 : B = new B();
 // test-1 XPECT type of 'b<|>0' --> B
 b0.methodB();
+
+
+class C {
+    <S,T> m(p1: S, p2: T) {}
+}
+var c: C;
+
+// test-2 XPECT typeArgs of 'm' --> number, string
+c.m(42,"hello");

@@ -106,6 +106,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "type":
 			type(testMethodData);
 			break;
+		case "typeArgs":
+			typeArgs(testMethodData);
+			break;
 		case "nowarnings": {
 			nowarnings(testMethodData);
 			break;
@@ -186,7 +189,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Calls LSP endpoint 'definition'.
 	 *
 	 * <pre>
-	 * // Xpect definition --&gt; file and range
+	 * // Xpect definition --&gt; &ltFILE AND RANGE&gt
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
@@ -222,6 +225,31 @@ public class XtIdeTest extends AbstractIdeTest {
 		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
 		String typeStr = mh.getTypeString(eObject, false);
 		assertEquals(data.expectation, typeStr);
+	}
+
+	/**
+	 * Checks that a call expression to a generic function/method has the correct type arguments. Mostly intended for
+	 * checking the automatically inferred type arguments in case of a non-parameterized call expression.
+	 *
+	 * <pre>
+	 * class C {
+	 *     &lt;S,T> m(p1: S, p2: T) {}
+	 * }
+	 * var c: C;
+	 *
+	 * // Xpect typeArgs of 'm' --> number, string
+	 * c.m(42,"hello");
+	 * </pre>
+	 *
+	 * Note that the offset denotes the target(!) of the call expression, not the call expression itself. Usually it is
+	 * enough to provide the last IdentifierRef before the call expression's parentheses.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void typeArgs(MethodData data) {
+		int offset = getOffset(data, "type", "of");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		String typeArgStr = mh.getTypeArgumentsString(eObject);
+		assertEquals(data.expectation, typeArgStr);
 	}
 
 	private Position getPosition(MethodData data, String checkArg1, String optionalDelimiter) {
