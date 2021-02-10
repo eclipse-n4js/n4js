@@ -132,26 +132,52 @@ public class XtIdeTest extends AbstractIdeTest {
 		deleteTestProject();
 	}
 
-	/** Validates that there are no errors at the given location. */
-	@Xpect
+	/**
+	 * Validates that there are no errors at the given location.
+	 *
+	 * <pre>
+	 * // Xpect noerrors --&gt;
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void noerrors(MethodData data) {
 		issueHelper.noerrors(data);
 	}
 
-	/** Validates that there are no warnings at the given location. */
-	@Xpect
+	/**
+	 * Validates that there are no warnings at the given location.
+	 *
+	 * <pre>
+	 * // Xpect nowarnings --&gt;
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void nowarnings(MethodData data) {
 		issueHelper.nowarnings(data);
 	}
 
-	/** Compares expected errors at a given location to actual errors at that location. */
-	@Xpect
+	/**
+	 * Compares expected errors at a given location to actual errors at that location. Multiple errors are separated by
+	 * space.
+	 *
+	 * <pre>
+	 * // Xpect errors --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void errors(MethodData data) {
 		issueHelper.errors(data);
 	}
 
-	/** Compares expected warnings at a given location to actual warnings at that location. */
-	@Xpect
+	/**
+	 * Compares expected warnings at a given location to actual warnings at that location. Multiple warnings are
+	 * separated by space.
+	 *
+	 * <pre>
+	 * // Xpect warnings --&gt; "&ltMESSAGE&gt" at "&ltLOCATION&gt"
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void warnings(MethodData data) {
 		issueHelper.warnings(data);
 	}
