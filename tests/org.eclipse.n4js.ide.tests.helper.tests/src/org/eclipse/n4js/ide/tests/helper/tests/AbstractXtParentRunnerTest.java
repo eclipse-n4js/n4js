@@ -170,7 +170,7 @@ public abstract class AbstractXtParentRunnerTest {
 		Assert.assertEquals(expectedResults, Strings.join("\n", results.values()));
 	}
 
-	void assertSingleTestResult(String methodName, String expectedResults) {
+	void assertResult(String methodName, String expectedResults) {
 		Assert.assertEquals(expectedResults, Strings.join("\n", results.get(methodName)));
 	}
 
