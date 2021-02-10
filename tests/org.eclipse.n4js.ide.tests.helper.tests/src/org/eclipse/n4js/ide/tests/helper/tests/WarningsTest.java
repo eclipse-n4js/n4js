@@ -22,14 +22,31 @@ public class WarningsTest extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/Warnings");
 
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+				+ " + Warnings.n4js.xt: probands/Warnings\n"
+				+ " ++ noerrors~0: test-00 〔probands/Warnings/Warnings.n4js.xt〕(test-00)\n"
+				+ " ++ nowarnings~0: test-0 〔probands/Warnings/Warnings.n4js.xt〕(test-0)\n"
+				+ " ++ warnings~0: test-1 〔probands/Warnings/Warnings.n4js.xt〕(test-1)\n"
+				+ " ++ warnings~1: test-2 〔probands/Warnings/Warnings.n4js.xt〕(test-2)\n"
+				+ " ++ warnings~2: test-3 〔probands/Warnings/Warnings.n4js.xt〕(test-3)\n"
+				+ " ++ warnings~3: test-4 〔probands/Warnings/Warnings.n4js.xt〕(test-4)\n"
+				+ " ++ warnings~4: test-5 〔probands/Warnings/Warnings.n4js.xt〕(test-5)\n"
+				+ " ++ nowarnings~1: test-6 〔probands/Warnings/Warnings.n4js.xt〕(test-6)\n"
+				+ " ++ warnings~5: test-7 〔probands/Warnings/Warnings.n4js.xt〕(test-7)\n"
+				+ " ++ warnings~6: test-8 〔probands/Warnings/Warnings.n4js.xt〕(test-8)");
+
 		assertSingleTestResult("(test-00)", "Passed: noerrors~0: test-00 〔probands/Warnings/Warnings.n4js.xt〕");
 		assertSingleTestResult("(test-0)", "Passed: nowarnings~0: test-0 〔probands/Warnings/Warnings.n4js.xt〕");
-		assertSingleTestResult("(test-1)", "Passed: errors~0: test-1 〔probands/Errors/Errors.n4js.xt〕");
+		assertSingleTestResult("(test-1)", "Passed: warnings~0: test-1 〔probands/Warnings/Warnings.n4js.xt〕");
 		assertSingleTestResult("(test-2)",
 				"Failed: errors~1: test-2 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[Couldn't resolve reference to IdentifiableElement 'b01'.]>");
 		assertSingleTestResult("(test-3)", "Passed: errors~2: test-3 〔probands/Errors/Errors.n4js.xt〕");
 		assertSingleTestResult("(test-4)",
 				"Failed: errors~3: test-4 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[int is not a subtype of B.]>");
+		assertSingleTestResult("(test-5)", "");
+		assertSingleTestResult("(test-6)", "");
+		assertSingleTestResult("(test-7)", "");
+		assertSingleTestResult("(test-8)", "");
 	}
 
 }

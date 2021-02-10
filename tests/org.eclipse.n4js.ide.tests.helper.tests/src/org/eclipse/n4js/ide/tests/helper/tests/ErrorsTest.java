@@ -22,6 +22,15 @@ public class ErrorsTest extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/Errors");
 
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+				+ " + Errors.n4js.xt: probands/Errors\n"
+				+ " ++ noerrors~0: test-0 〔probands/Errors/Errors.n4js.xt〕(test-0)\n"
+				+ " ++ errors~0: test-1 〔probands/Errors/Errors.n4js.xt〕(test-1)\n"
+				+ " ++ errors~1: test-2 〔probands/Errors/Errors.n4js.xt〕(test-2)\n"
+				+ " ++ errors~2: test-3 〔probands/Errors/Errors.n4js.xt〕(test-3)\n"
+				+ " ++ errors~3: test-4 〔probands/Errors/Errors.n4js.xt〕(test-4)\n"
+				+ " ++ errors~4: test-5 〔probands/Errors/Errors.n4js.xt〕(test-5)");
+
 		assertSingleTestResult("(test-0)", "Passed: noerrors~0: test-0 〔probands/Errors/Errors.n4js.xt〕");
 		assertSingleTestResult("(test-1)", "Passed: errors~0: test-1 〔probands/Errors/Errors.n4js.xt〕");
 		assertSingleTestResult("(test-2)",

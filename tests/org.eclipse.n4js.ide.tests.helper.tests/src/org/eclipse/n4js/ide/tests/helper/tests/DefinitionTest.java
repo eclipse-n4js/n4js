@@ -23,8 +23,8 @@ public class DefinitionTest extends AbstractXtParentRunnerTest {
 		run("probands/Definition");
 		assertEventNames("[testRunStarted, testStarted, testFailure, testStarted, testFailure, testRunFinished]");
 		assertResults(
-				"[definition~0: test 1 〔probands/Definition/Definition.n4js.xt〕(definition at 'met<|>hodB'), "
-						+ "definition~1: test 2 〔probands/Definition/Definition.n4js.xt〕(definition at 'met<|>hodB')]");
+				"Failed: definition~0: test 1 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [17:1 - 17:8])]>\n"
+						+ "Failed: definition~1: test 2 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [17:1 - 17:8])]>");
 	}
 
 }

@@ -147,16 +147,31 @@ public abstract class AbstractXtParentRunnerTest {
 		runListener.run(folderName);
 	}
 
+	void assertTestStructure(String string) {
+		String structure = getChild(parentDescription, 1);
+		Assert.assertEquals(string, structure);
+	}
+
+	private String getChild(Description descr, int depth) {
+		String structure = descr.getDisplayName();
+
+		for (Description child : descr.getChildren()) {
+			structure += "\n " + "+++++++++".substring(0, depth) + " " + getChild(child, depth + 1);
+		}
+
+		return structure;
+	}
+
 	void assertEventNames(String eventNames) {
 		Assert.assertEquals(eventNames, Strings.toString(p -> p.getKey(), events));
 	}
 
 	void assertResults(String expectedResults) {
-		Assert.assertEquals(expectedResults, Strings.join(", ", results.values()));
+		Assert.assertEquals(expectedResults, Strings.join("\n", results.values()));
 	}
 
 	void assertSingleTestResult(String methodName, String expectedResults) {
-		Assert.assertEquals(expectedResults, Strings.join(", ", results.get(methodName)));
+		Assert.assertEquals(expectedResults, Strings.join("\n", results.get(methodName)));
 	}
 
 	static <A extends Annotation, A_NEW extends A> void alterAnnotationOn(Class<?> clazzToLookFor,
