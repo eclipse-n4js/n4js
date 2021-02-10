@@ -33,7 +33,7 @@ b0 = null as B;
 
 /* test-3 XPECT warnings ---
  *  "Unnecessary cast from null to B" at "null as B"
- *  "Unnecessary cast from null to B" at "undefined as B"
+ *  "Unnecessary cast from undefined to B" at "undefined as B"
  * ---
  */
 b0 = null as B;
@@ -49,7 +49,7 @@ b0 = undefined as B;
 
 /* test-5 XPECT warnings ---
  *  "" at "b01"
- *  "Unnecessary cast from null to B" at "undefined as B"
+ *  "Unnecessary cast from undefined to B" at "undefined as B"
  * ---
  */
 b0 = null as B;
