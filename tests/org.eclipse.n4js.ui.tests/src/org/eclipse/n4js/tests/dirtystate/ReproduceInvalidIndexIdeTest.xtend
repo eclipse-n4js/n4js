@@ -35,7 +35,6 @@ import org.junit.runner.RunWith
  * Yet another test that ensures a valid index after the build was run in consequence of certain simulated user
  * interaction.
  */
-@SuppressWarnings("javadoc")
 @RunWith(XtextParametrizedRunner)
 @RepeatedTest(times = ReproduceInvalidIndexIdeTest.REPETITIONS)
 public class ReproduceInvalidIndexIdeTest extends ConvertedIdeTest {
