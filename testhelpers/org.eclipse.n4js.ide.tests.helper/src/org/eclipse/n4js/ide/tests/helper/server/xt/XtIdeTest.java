@@ -276,7 +276,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		int offset = getOffset(data, "findReferences", "at");
 		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
 		List<String> findReferencesArray = mh.getFindReferences(eObject, offset);
-		String expectation = data.expectation.replaceAll("\s+", " ").replaceAll(",\s*", ",\n");
+		String expectation = data.expectation.replaceAll("\\s+", " ").replaceAll(",\\s*", ",\n");
 		assertEquals(expectation, Strings.join(",\n", findReferencesArray));
 	}
 
