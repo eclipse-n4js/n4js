@@ -108,6 +108,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "definition":
 			definition(testMethodData);
 			break;
+		case "elementKeyword":
+			elementKeyword(testMethodData);
+			break;
 		case "type":
 			type(testMethodData);
 			break;
@@ -212,10 +215,27 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Test the element keyword of an element. Examples of element keywords are getter, setter, field etc.
+	 *
+	 * <pre>
+	 * // Xpect elementKeyword at '&ltLOCATION&gt' --&gt; &ltKEYWORD&gt
+	 * </pre>
+	 *
+	 * The location (at) is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void elementKeyword(MethodData data) {
+		int offset = getOffset(data, "elementKeyword", "at");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		String elementKeywordStr = mh.getElementKeywordString(eObject, offset);
+		assertEquals(data.expectation, elementKeywordStr);
+	}
+
+	/**
 	 * Checks that an element/expression has a certain type. Usage:
 	 *
 	 * <pre>
-	 * // Xpect type of 'location' --&gt; &ltTYPE&gt
+	 * // Xpect type of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
 	 * </pre>
 	 *
 	 * The location (of) is optional.
@@ -251,7 +271,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void typeArgs(MethodData data) {
-		int offset = getOffset(data, "type", "of");
+		int offset = getOffset(data, "typeArgs", "of");
 		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
 		String typeArgStr = mh.getTypeArgumentsString(eObject);
 		assertEquals(data.expectation, typeArgStr);
@@ -263,7 +283,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * accessibility such as {@code public} or {@code private}.
 	 *
 	 * <pre>
-	 * // Xpect accessModifier at 'location' --&gt; &ltACCESS MODIFIER&gt
+	 * // Xpect accessModifier at '&ltLOCATION&gt' --&gt; &ltACCESS MODIFIER&gt
 	 * </pre>
 	 *
 	 * The location (at) is optional.

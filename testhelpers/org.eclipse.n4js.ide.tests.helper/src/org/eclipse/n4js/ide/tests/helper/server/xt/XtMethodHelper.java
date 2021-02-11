@@ -40,10 +40,12 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.inject.Inject;
@@ -54,6 +56,12 @@ import com.google.inject.Inject;
 public class XtMethodHelper {
 	@Inject
 	private N4JSTypeSystem ts;
+
+	@Inject
+	private N4JSElementKeywordProvider keywordProvider;
+
+	@Inject
+	private EObjectAtOffsetHelper offsetHelper;
 
 	public String getTypeString(EObject eobject, boolean expectedType) {
 		final String calculatedString;
@@ -135,6 +143,14 @@ public class XtMethodHelper {
 				sb.append("*missing*");
 		}
 		return sb.toString();
+	}
+
+	public String getElementKeywordString(EObject eObject, int offset) {
+		// Get the cross-referenced element at the offset.
+		EObject crossRef = offsetHelper.resolveCrossReferencedElementAt((XtextResource) eObject.eResource(), offset);
+
+		String elementKeywordStr = keywordProvider.keyword(crossRef == null ? eObject : crossRef);
+		return elementKeywordStr;
 	}
 
 	static public String getAccessModifierString(EObject context) {
