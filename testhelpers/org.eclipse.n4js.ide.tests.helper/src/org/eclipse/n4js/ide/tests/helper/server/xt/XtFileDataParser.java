@@ -70,10 +70,10 @@ public class XtFileDataParser {
 	static final String XT_EXPECTATION = "EXPECTATION";
 
 	/** Artifacts of multi-line comments using {@code //} at the beginning of every line */
-	static final String XT_COMMENT_ARTIFACT_1 = "[\\n][\\t ]*\\/\\/+";
+	static final String XT_COMMENT_ARTIFACT_1 = "(?:^|\\n)[\\t ]*\\/\\/+";
 
 	/** Artifacts of multi-line comments using {@code /*  *\/} to start/end the comment */
-	static final String XT_COMMENT_ARTIFACT_2 = "[\\n][\\t ]*\\*";
+	static final String XT_COMMENT_ARTIFACT_2 = "(?:^|\\n)[\\t ]*\\*";
 
 	/**
 	 * Pattern for single-line comments using {@code //} or {@code /*} at the beginning. The XT method uses {@code -->}
