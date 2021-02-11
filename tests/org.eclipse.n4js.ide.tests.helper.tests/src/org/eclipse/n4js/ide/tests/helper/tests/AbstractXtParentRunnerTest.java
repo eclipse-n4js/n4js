@@ -141,8 +141,9 @@ public abstract class AbstractXtParentRunnerTest {
 		}
 	}
 
+	/** After every test run check for test assumption failures */
 	@After
-	public void checkErrors() {
+	public void endWithoutTestAssumptionFailures() {
 		assertNoTestAssumptionFailures();
 	}
 

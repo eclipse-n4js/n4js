@@ -12,11 +12,18 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -27,6 +34,7 @@ import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
+import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
@@ -46,14 +54,20 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
+import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.common.types.access.TypeResource;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
+import org.junit.Assert;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -205,6 +219,100 @@ public class XtMethodHelper {
 		}
 
 		return result;
+	}
+
+	/**  */
+	@Xpect
+	public QualifiedName linkedName(EObject eObject, int offset) {
+		// Get the cross-referenced element at the offset.
+		XtextResource eResource = (XtextResource) eObject.eResource();
+		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
+		if (targetObject == null) {
+			Assert.fail("Reference is null");
+			return null; // to avoid warnings in the following
+		}
+		if (targetObject.eIsProxy()) {
+			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
+		}
+		Resource targetResource = targetObject.eResource();
+		if (targetResource instanceof TypeResource) {
+			targetResource = eObject.eResource();
+		}
+		if (!(targetResource instanceof XtextResource)) {
+			Assert.fail("Referenced EObject is not in an XtextResource.");
+		}
+		IQualifiedNameProvider provider = ((XtextResource) targetResource)
+				.getResourceServiceProvider().get(IQualifiedNameProvider.class);
+		QualifiedName name = provider.getFullyQualifiedName(targetObject);
+		return name;
+	}
+
+	/**  */
+	public String linkedPathname(EObject eObject, int offset) {
+		// Get the cross-referenced element at the offset.
+		XtextResource eResource = (XtextResource) eObject.eResource();
+		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
+		// EObject targetObject = (EObject) eObject.eGet(arg1.getCrossEReference());
+		if (targetObject == null) {
+			Assert.fail("Reference is null");
+			return null; // to avoid warnings in the following
+		}
+		if (targetObject.eIsProxy())
+			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
+		Resource targetResource = targetObject.eResource();
+		if (targetResource instanceof TypeResource)
+			targetResource = eObject.eResource();
+		if (!(targetResource instanceof XtextResource))
+			Assert.fail("Referenced EObject is not in an XtextResource.");
+
+		Deque<String> segments = new ArrayDeque<>();
+		do {
+			EStructuralFeature nameFeature = targetObject.eClass().getEStructuralFeature("name");
+			if (nameFeature != null) {
+				Object obj = targetObject.eGet(nameFeature);
+				if (obj instanceof String) {
+					segments.push((String) obj);
+				}
+			} else {
+				if (targetObject instanceof NamedElement) {
+					segments.push(((NamedElement) targetObject).getName());
+				}
+			}
+			targetObject = targetObject.eContainer();
+		} while (targetObject != null);
+		String pathname = Joiner.on('/').join(segments);
+		return pathname;
+	}
+
+	public String linkedFragment(EObject eObject, int offset) {
+		XtextResource eResource = (XtextResource) eObject.eResource();
+		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
+		if (targetObject == null) {
+			Assert.fail("Reference is null");
+		} else if (targetObject instanceof EObject) {
+			URI baseUri = eObject.eResource().getURI();
+			String fragmentName = getLinkedFragment(targetObject, baseUri);
+			return fragmentName;
+		} else if (targetObject instanceof EList<?>) {
+			Assert.fail("use 'XPECT linkedFragment' (plural)");
+		}
+		return null;
+	}
+
+	private String getLinkedFragment(EObject targetObject, URI baseUri) {
+		if (targetObject.eIsProxy())
+			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
+		Resource targetResource = targetObject.eResource();
+		if (targetResource == null)
+			Assert.fail("Referenced EObject is not in a resource.");
+		URI target = EcoreUtil.getURI(targetObject);
+		return deresolve(baseUri, target);
+	}
+
+	private String deresolve(URI base, URI uri) {
+		if (base.equals(uri.trimFragment()))
+			return uri.fragment();
+		return uri.deresolve(base).toString();
 	}
 
 	static public String getAccessModifierString(EObject context) {

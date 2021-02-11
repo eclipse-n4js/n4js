@@ -32,6 +32,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
@@ -114,6 +115,12 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		case "findReferences":
 			findReferences(testMethodData);
+			break;
+		case "linkedName":
+			linkedName(testMethodData);
+			break;
+		case "linkedFragment":
+			linkedFragment(testMethodData);
 			break;
 		case "type":
 			type(testMethodData);
@@ -274,6 +281,51 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 *
+	 */
+	@Xpect
+	public void formattedLines(MethodData data) {
+		// TODO
+	}
+
+	/**
+	 *
+	 */
+	@Xpect
+	public void linkedName(MethodData data) {
+		int offset = getOffset(data, "linkedName", "at");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		QualifiedName linkedName = mh.linkedName(eObject, offset);
+		assertEquals(data.expectation, linkedName.toString());
+	}
+
+	/**
+	 *
+	 */
+	@Xpect
+	public void linkedFragment(MethodData data) {
+		int offset = getOffset(data, "linkedFragment", "at");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		String fragmentName = mh.linkedFragment(eObject, offset);
+		assertEquals(data.expectation, fragmentName);
+	}
+
+	/**
+	 * Similar to {@link #linkedName(MethodData)} but concatenating the fully qualified name again instead of using the
+	 * qualified name provider, as the latter may not create a valid name for non-globally available elements.
+	 * <p>
+	 * The qualified name created by retrieving all "name" properties of the target and its containers, using '/' as
+	 * separator.
+	 */
+	@Xpect
+	public void linkedPathname(MethodData data) {
+		int offset = getOffset(data, "linkedPathname", "at");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		String pathName = mh.linkedPathname(eObject, offset);
+		assertEquals(data.expectation, pathName);
+	}
+
+	/**
 	 * Checks that an element/expression has a certain type. Usage:
 	 *
 	 * <pre>
@@ -332,14 +384,64 @@ public class XtIdeTest extends AbstractIdeTest {
 			Preconditions.checkArgument(data.args[0].equals(optionalLocation));
 			Preconditions.checkArgument(data.args[1].startsWith("'"));
 			Preconditions.checkArgument(data.args[1].endsWith("'"));
-			String locationStr = data.args[1].substring(1, data.args[1].length() - 2);
-			int relLocationIdx = locationStr.contains(CURSOR) ? locationStr.indexOf(CURSOR) : 0;
+			String locationStr = data.args[1].substring(1, data.args[1].length() - 1);
+			int relOffset = locationStr.contains(CURSOR) ? locationStr.indexOf(CURSOR) : 0;
 			locationStr = locationStr.replace(CURSOR, "");
-			offset = xtData.content.indexOf(locationStr, data.offset) + relLocationIdx;
+			int absOffset = skipCommentsAndWhitespace(xtData.content, locationStr, data.offset);
+			offset = absOffset + relOffset;
 		} else {
-			offset = data.offset;
+			offset = skipCommentsAndWhitespace(xtData.content, null, data.offset);
 		}
 		return offset;
+	}
+
+	private int skipCommentsAndWhitespace(String content, String str, int startOffset) {
+		int offset = skipWhitespace(content, startOffset);
+
+		while (offset < content.length()) {
+
+			if (content.startsWith("//", offset)) {
+				offset = minusToMax(content.indexOf("\n", offset));
+				offset = skipWhitespace(content, offset);
+			} else if (content.startsWith("/*", offset)) {
+				offset = minusToMax(content.indexOf("*/", offset));
+				offset = skipWhitespace(content, offset);
+			} else if (str != null) {
+				int oMatch = content.indexOf(str, offset);
+				int oSLComment = minusToMax(content.indexOf("//", offset));
+				int oMLComment = minusToMax(content.indexOf("/*", offset));
+				if (oMatch < oSLComment && oMatch < oMLComment) {
+					return oMatch;
+				}
+				offset = oSLComment < oMLComment ? oSLComment : oMLComment;
+
+			} else {
+				return offset;
+			}
+		}
+
+		return -1;
+	}
+
+	private int skipWhitespace(String content, int startOffset) {
+		int offset = startOffset - 1;
+
+		while (++offset < content.length()) {
+			boolean startsWithWhiteSpace = false;
+			startsWithWhiteSpace |= content.startsWith(" ", offset);
+			startsWithWhiteSpace |= content.startsWith("\t", offset);
+			startsWithWhiteSpace |= content.startsWith("\r", offset);
+			startsWithWhiteSpace |= content.startsWith("\n", offset);
+			if (!startsWithWhiteSpace) {
+				break;
+			}
+		}
+
+		return minusToMax(offset);
+	}
+
+	private int minusToMax(int offset) {
+		return offset < 0 ? Integer.MAX_VALUE : offset;
 	}
 
 }
