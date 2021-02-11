@@ -20,6 +20,10 @@ class B {
 
 
 var b0 : B = new B();
-// test-1 XPECT accessModifier at 'methodB' --> B
+// test-1 XPECT accessModifier at 'methodB' --> project
+b0.methodB();
+
+
+// test-2 XPECT accessModifier at 'methodB' --> wrong expectation
 b0.methodB();
 

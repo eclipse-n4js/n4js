@@ -24,9 +24,10 @@ public class AccessModifier extends AbstractXtParentRunnerTest {
 
 		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
 				+ " + AccessModifier.n4js.xt: probands/AccessModifier\n"
-				+ " ++ accessModifier~0: test-1 〔probands/AccessModifier/AccessModifier.n4js.xt〕(test-1)");
+				+ " ++ accessModifier~0: test-1 〔probands/AccessModifier/AccessModifier.n4js.xt〕(test-1)\n"
+				+ " ++ accessModifier~1: test-2 〔probands/AccessModifier/AccessModifier.n4js.xt〕(test-2)");
 
-		assertResult("(test-1)", "Passed: type~0: test-1 〔probands/Type/Type.n4js.xt〕");
+		assertResult("(test-1)", "Passed: accessModifier~0: test-1 〔probands/AccessModifier/AccessModifier.n4js.xt〕");
 	}
 
 }

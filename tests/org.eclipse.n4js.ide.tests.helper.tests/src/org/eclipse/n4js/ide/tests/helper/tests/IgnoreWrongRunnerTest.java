@@ -23,7 +23,7 @@ public class IgnoreWrongRunnerTest extends AbstractXtParentRunnerTest {
 		run("probands/IgnoreWrongRunner");
 		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
 				+ " + IgnoreWrongRunner.n4js.xt: probands/IgnoreWrongRunner: Specified runner does not match current runner");
-		assertEventNames("[testIgnored]");
+		assertEventNames("testIgnored");
 	}
 
 }

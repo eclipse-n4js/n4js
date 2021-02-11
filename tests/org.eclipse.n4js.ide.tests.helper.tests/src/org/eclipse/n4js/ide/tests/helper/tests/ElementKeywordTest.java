@@ -21,10 +21,15 @@ public class ElementKeywordTest extends AbstractXtParentRunnerTest {
 	@Test
 	public void test() throws Exception {
 		run("probands/ElementKeyword");
-		assertEventNames("[testRunStarted, testStarted, testFinished, testStarted, testFailure, testRunFinished]");
+		assertEventNames("testRunStarted\n"
+				+ "testStarted\n"
+				+ "testFinished\n"
+				+ "testStarted\n"
+				+ "testFailure\n"
+				+ "testRunFinished");
 		assertResults(
-				"Passed: elementKeyword~0: test 1 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕\n"
-						+ "Failed: elementKeyword~1: test 2 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕. expected:<[wrong expectation]> but was:<[method]>");
+				"Passed: elementKeyword~0: test-1 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕\n"
+						+ "Failed: elementKeyword~1: test-2 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕. expected:<[wrong expectation]> but was:<[method]>");
 	}
 
 }

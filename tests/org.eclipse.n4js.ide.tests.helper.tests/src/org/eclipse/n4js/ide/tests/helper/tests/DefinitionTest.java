@@ -21,10 +21,15 @@ public class DefinitionTest extends AbstractXtParentRunnerTest {
 	@Test
 	public void test() throws Exception {
 		run("probands/Definition");
-		assertEventNames("[testRunStarted, testStarted, testFinished, testStarted, testFailure, testRunFinished]");
+		assertEventNames("testRunStarted\n"
+				+ "testStarted\n"
+				+ "testFinished\n"
+				+ "testStarted\n"
+				+ "testFailure\n"
+				+ "testRunFinished");
 		assertResults(
-				"Passed: definition~0: test 1 〔probands/Definition/Definition.n4js.xt〕\n"
-						+ "Failed: definition~1: test 2 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [17:1 - 17:8])]>");
+				"Passed: definition~0: test-1 〔probands/Definition/Definition.n4js.xt〕\n"
+						+ "Failed: definition~1: test-2 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [28:0 - 28:13])]>");
 	}
 
 }

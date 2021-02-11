@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.tests.helper.tests;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileRunner;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
 import org.eclipse.n4js.utils.Strings;
-import org.eclipse.xtext.xbase.lib.Pair;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -59,7 +58,7 @@ public abstract class AbstractXtParentRunnerTest {
 	TestRunSimulator runListener;
 	Description parentDescription;
 	List<XtFileRunner> children;
-	List<Pair<String, Object>> events = new ArrayList<>();
+	LinkedHashMultimap<String, Object> events = LinkedHashMultimap.create();
 	Multimap<String, String> results = LinkedHashMultimap.create();
 
 	class TestRunSimulator extends RunListener {
@@ -80,22 +79,22 @@ public abstract class AbstractXtParentRunnerTest {
 
 		@Override
 		public void testRunStarted(Description description) throws Exception {
-			events.add(Pair.of("testRunStarted", description));
+			events.put("testRunStarted", description);
 		}
 
 		@Override
 		public void testRunFinished(Result result) throws Exception {
-			events.add(Pair.of("testRunFinished", result));
+			events.put("testRunFinished", result);
 		}
 
 		@Override
 		public void testStarted(Description description) throws Exception {
-			events.add(Pair.of("testStarted", description));
+			events.put("testStarted", description);
 		}
 
 		@Override
 		public void testFinished(Description description) throws Exception {
-			events.add(Pair.of("testFinished", description));
+			events.put("testFinished", description);
 			String methodName = getMethodOrDisplayName(description);
 			String commentOrArgs = getCommentOrArgs(description);
 			results.put(commentOrArgs, "Passed: " + methodName);
@@ -103,7 +102,7 @@ public abstract class AbstractXtParentRunnerTest {
 
 		@Override
 		public void testFailure(Failure failure) throws Exception {
-			events.add(Pair.of("testFailure", failure));
+			events.put("testFailure", failure);
 			Description description = failure.getDescription();
 			String methodName = getMethodOrDisplayName(description);
 			String commentOrArgs = getCommentOrArgs(description);
@@ -112,7 +111,7 @@ public abstract class AbstractXtParentRunnerTest {
 
 		@Override
 		public void testAssumptionFailure(Failure failure) {
-			events.add(Pair.of("testAssumptionFailure", failure));
+			events.put("testAssumptionFailure", failure);
 			Description description = failure.getDescription();
 			String methodName = getMethodOrDisplayName(description);
 			String commentOrArgs = getCommentOrArgs(description);
@@ -121,7 +120,7 @@ public abstract class AbstractXtParentRunnerTest {
 
 		@Override
 		public void testIgnored(Description description) throws Exception {
-			events.add(Pair.of("testIgnored", description));
+			events.put("testIgnored", description);
 			String methodName = getMethodOrDisplayName(description);
 			String commentOrArgs = getCommentOrArgs(description);
 			results.put(commentOrArgs, "Ignored: " + methodName);
@@ -140,6 +139,11 @@ public abstract class AbstractXtParentRunnerTest {
 			String methodOrDisplayName = methodName == null ? displayName : methodName;
 			return methodOrDisplayName;
 		}
+	}
+
+	@After
+	public void checkErrors() {
+		assertNoTestAssumptionFailures();
 	}
 
 	void run(String folderName) throws Exception {
@@ -163,7 +167,7 @@ public abstract class AbstractXtParentRunnerTest {
 	}
 
 	void assertEventNames(String eventNames) {
-		Assert.assertEquals(eventNames, Strings.toString(p -> p.getKey(), events));
+		Assert.assertEquals(eventNames, Strings.join("\n", events.keys()));
 	}
 
 	void assertResults(String expectedResults) {
@@ -171,7 +175,17 @@ public abstract class AbstractXtParentRunnerTest {
 	}
 
 	void assertResult(String methodName, String expectedResults) {
-		Assert.assertEquals(expectedResults, Strings.join("\n", results.get(methodName)));
+		if (results.containsKey(methodName)) {
+			Assert.assertEquals(expectedResults, Strings.join("\n", results.get(methodName)));
+		} else {
+			String resultStr = Strings.join("\n", e -> e.getKey() + " => " + e.getValue(), results.entries());
+			Assert.fail("'" + methodName + "' not found. Results are:\n" + resultStr);
+		}
+	}
+
+	void assertNoTestAssumptionFailures() {
+		Assert.assertFalse("Test Assumption Failure: " + Strings.join("\n", events.get("testAssumptionFailure")),
+				events.containsKey("testAssumptionFailure"));
 	}
 
 	static <A extends Annotation, A_NEW extends A> void alterAnnotationOn(Class<?> clazzToLookFor,
