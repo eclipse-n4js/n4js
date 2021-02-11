@@ -13,18 +13,18 @@ package org.eclipse.n4js.ide.tests.helper.tests;
 import org.junit.Test;
 
 /**
- * Tests for test method 'definition'
+ * Tests for test method 'elementKeyword'
  */
-public class DefinitionTest extends AbstractXtParentRunnerTest {
+public class ElementKeywordTest extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test
 	public void test() throws Exception {
-		run("probands/Definition");
+		run("probands/ElementKeyword");
 		assertEventNames("[testRunStarted, testStarted, testFinished, testStarted, testFailure, testRunFinished]");
 		assertResults(
-				"Passed: definition~0: test 1 〔probands/Definition/Definition.n4js.xt〕\n"
-						+ "Failed: definition~1: test 2 〔probands/Definition/Definition.n4js.xt〕. expected:<[wrong expectation]> but was:<[(test-project/src/Definition.n4js, [17:1 - 17:8])]>");
+				"Passed: elementKeyword~0: test 1 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕\n"
+						+ "Failed: elementKeyword~1: test 2 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕. expected:<[wrong expectation]> but was:<[method]>");
 	}
 
 }
