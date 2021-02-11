@@ -30,6 +30,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.resource.XtextResource;
 
@@ -110,6 +111,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		case "elementKeyword":
 			elementKeyword(testMethodData);
+			break;
+		case "findReferences":
+			findReferences(testMethodData);
 			break;
 		case "type":
 			type(testMethodData);
@@ -229,6 +233,25 @@ public class XtIdeTest extends AbstractIdeTest {
 		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
 		String elementKeywordStr = mh.getElementKeywordString(eObject, offset);
 		assertEquals(data.expectation, elementKeywordStr);
+	}
+
+	/**
+	 * Compares all computed references at a given EObject to the expected references. The expected references include
+	 * the line number.
+	 *
+	 * <pre>
+	 * // Xpect findReferences at '&ltLOCATION&gt' --&gt; &ltCOMMA SEPARATED REFERENCES&gt
+	 * </pre>
+	 *
+	 * The location (at) is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void findReferences(MethodData data) {
+		int offset = getOffset(data, "findReferences", "at");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		List<String> findReferencesArray = mh.getFindReferences(eObject, offset);
+		String expectation = data.expectation.replaceAll("\s+", " ").replaceAll(",\s*", ",\n");
+		assertEquals(expectation, Strings.join(",\n", findReferencesArray));
 	}
 
 	/**

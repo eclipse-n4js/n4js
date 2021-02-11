@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRuleEnvironment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,16 +23,19 @@ import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
@@ -40,14 +44,17 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -58,10 +65,13 @@ public class XtMethodHelper {
 	private N4JSTypeSystem ts;
 
 	@Inject
+	private EObjectAtOffsetHelper offsetHelper;
+
+	@Inject
 	private N4JSElementKeywordProvider keywordProvider;
 
 	@Inject
-	private EObjectAtOffsetHelper offsetHelper;
+	private FindReferenceHelper findReferenceHelper;
 
 	public String getTypeString(EObject eobject, boolean expectedType) {
 		final String calculatedString;
@@ -151,6 +161,50 @@ public class XtMethodHelper {
 
 		String elementKeywordStr = keywordProvider.keyword(crossRef == null ? eObject : crossRef);
 		return elementKeywordStr;
+	}
+
+	public List<String> getFindReferences(EObject context, int offset) {
+		EObject argEObj = offsetHelper.resolveElementAt((XtextResource) context.eResource(), offset);
+		// If not a cross-reference element, use context instead
+		if (argEObj == null) {
+			argEObj = context;
+		}
+
+		EObject eObj = argEObj;
+
+		if (argEObj instanceof ParameterizedTypeRef) {
+			eObj = ((ParameterizedTypeRef) argEObj).getDeclaredType();
+		}
+
+		List<EObject> refs = findReferenceHelper.findReferences(eObj, context.eResource().getResourceSet());
+		ArrayList<String> result = Lists.newArrayList();
+		for (EObject ref : refs) {
+			if (ref instanceof PropertyNameOwner) {
+				ref = ((PropertyNameOwner) ref).getDeclaredName();
+			}
+
+			ICompositeNode srcNode = NodeModelUtils.getNode(ref);
+			int line = srcNode.getStartLine();
+
+			String moduleName;
+			if (ref.eResource() instanceof N4JSResource) {
+				N4JSResource n4jsResource = (N4JSResource) ref.eResource();
+				moduleName = n4jsResource.getModule().getQualifiedName();
+			} else {
+				moduleName = "(unknown resource)";
+			}
+
+			String text = NodeModelUtils.getTokenText(srcNode);
+			if (ref instanceof GenericDeclaration) {
+				text = ((GenericDeclaration) ref).getDefinedType().getName();
+			}
+
+			String resultText = moduleName + " - " + text + " - " + line;
+
+			result.add(resultText);
+		}
+
+		return result;
 	}
 
 	static public String getAccessModifierString(EObject context) {

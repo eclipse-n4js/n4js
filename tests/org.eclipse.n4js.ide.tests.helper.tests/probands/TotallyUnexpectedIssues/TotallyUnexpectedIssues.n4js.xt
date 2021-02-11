@@ -21,4 +21,5 @@ class B {
 
 B1
 
+// We need at least one xpect test. Otherwise this file is ignored.
 // XPECT nothing -->

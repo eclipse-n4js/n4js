@@ -20,10 +20,18 @@ class B {
 
 
 var b0 : B = new B();
-// test-1 XPECT elementKeyword at 'met<|>hodB' --> method
+// test-1 XPECT findReferences at 'b0' --> FindReferences - b0 - 24, FindReferences - b0 - 25
+b0.methodB();
 b0.methodB();
 
 
+var b1 : B = new B();
+// test-2 XPECT findReferences at 'b1' ---
+// FindReferences - b1 - 33,
+// FindReferences - b1 - 34
+// ---
+b1.methodB();
+b1.methodB();
 
-// test-2 XPECT elementKeyword at 'met<|>hodB' --> wrong expectation
-b0.methodB();
+
+
