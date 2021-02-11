@@ -270,7 +270,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void accessModifier(MethodData data) {
-		int offset = getOffset(data, "type", "at");
+		int offset = getOffset(data, "accessModifier", "at");
 		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
 		String accessModifierStr = XtMethodHelper.getAccessModifierString(eObject);
 		assertEquals(data.expectation, accessModifierStr);
