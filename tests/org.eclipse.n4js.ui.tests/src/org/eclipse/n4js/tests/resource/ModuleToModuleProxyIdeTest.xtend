@@ -10,15 +10,14 @@
  */
 package org.eclipse.n4js.tests.resource
 
-import com.google.common.base.Optional
 import com.google.inject.Inject
+import com.google.inject.Provider
 import java.util.List
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IProject
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -26,14 +25,14 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.impl.TypeImpl
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseProject
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
-import org.eclipse.xtext.builder.builderState.AbstractBuilderState
 import org.eclipse.xtext.resource.IResourceDescriptions
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+import org.eclipse.xtext.resource.impl.ResourceSetBasedResourceDescriptions
 import org.junit.Before
 import org.junit.Test
-import org.eclipse.n4js.N4JSGlobals
 
 import static org.junit.Assert.*
 
@@ -41,20 +40,19 @@ import static org.junit.Assert.*
  * Tests resolution of module-to-module proxies, see {@link ProxyResolvingResource} and the special handling in
  * {@link N4JSResource#doResolveProxy(InternalEObject, EObject)}.
  */
-class ModuleToModuleProxyPluginTest extends AbstractBuilderParticipantTest {
+// converted from ModuleToModuleProxyPluginTest
+class ModuleToModuleProxyIdeTest extends ConvertedIdeTest {
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private Provider<XtextResourceSet> resourceSetProvider;
+	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+	@Inject
+	private ConcurrentIndex concurrentIndex;
 
-	private IProject project;
-	private IN4JSEclipseProject projectN4JS;
-	private IFile fileA;
-	private IFile fileB;
-	private IFile fileB2;
-	private URI uriA;
-	private URI uriB;
-	private URI uriB2;
-
+	private FileURI uriA;
+	private FileURI uriB;
+	private FileURI uriB2;
 
 	/**
 	 * All tests are based on having type information for two files A.n4js and B.n4js in the Xtext index.
@@ -62,40 +60,27 @@ class ModuleToModuleProxyPluginTest extends AbstractBuilderParticipantTest {
 	 */
 	@Before
 	def void prepareIndex() {
-		if(project!==null) {
-			return; // can't make this method static (need instance methods from super class), so can't use @BeforeClass
-		}
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A" -> '''
+				export public class A {
+					constructor() {}
+				}
+			''',
+			"B" -> '''
+				import { A } from "A"
+				export public class B extends A {}
+			''',
+			"B2" -> '''
+				import { A } from "A"
+				export public class B2 extends A {}
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
 
-		project = createJSProject("M2MUriTestProject")
-		val srcFolder = configureProjectWithXtext(project)
-		val projectDescriptionFile = project.getFile(N4JSGlobals.PACKAGE_JSON)
-		assertMarkers("project description file (package.json) should have no errors", projectDescriptionFile, 0)
-
-		projectN4JS = n4jsCore.findAllProjects.head as IN4JSEclipseProject;
-		assertSame(projectN4JS.getProject, project)
-
-		// create two test files and run builder
-
-		fileA = createTestFile(srcFolder, "A", '''
-			export public class A {
-				constructor() {}
-			}
-		''')
-		fileB = createTestFile(srcFolder, "B", '''
-			import { A } from "A"
-			export public class B extends A {}
-		''')
-		fileB = createTestFile(srcFolder, "B2", '''
-			import { A } from "A"
-			export public class B2 extends A {}
-		''')
-
-		cleanBuild
-		waitForAutoBuild
-
-		uriA = projectN4JS.location.appendSegments(#["src", "A.n4js"]).toURI;
-		uriB = projectN4JS.location.appendSegments(#["src", "B.n4js"]).toURI;
-		uriB2 = projectN4JS.location.appendSegments(#["src", "B2.n4js"]).toURI;
+		uriA = getFileURIFromModuleName("A");
+		uriB = getFileURIFromModuleName("B");
+		uriB2 = getFileURIFromModuleName("B2");
 
 		// we now have type information for files A, B, and B2 in the Xtext index
 	}
@@ -194,10 +179,10 @@ class ModuleToModuleProxyPluginTest extends AbstractBuilderParticipantTest {
 
 		// (2) we want to test proxy resolution in case the target resource is *not* in the index
 		// -> temporarily remove info for file A from index
-		val index = n4jsCore.getXtextIndex(resourceSet)
+		val index = resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
 		val data = index.resourceDescriptionsData;
-		val backupDesc = data.getResourceDescription(uriA)
-		data.removeDescription(uriA)
+		val backupDesc = data.getResourceDescription(uriA.toURI)
+		data.removeDescription(uriA.toURI)
 
 		try {
 			// (3) resolve the reference to A (this should load A.n4js from the file on disk)
@@ -219,22 +204,22 @@ class ModuleToModuleProxyPluginTest extends AbstractBuilderParticipantTest {
 			assertTrue(classA.ctor.returnTypeRef instanceof BoundThisTypeRef)
 		} finally {
 			// revert index to its original state
-			data.addDescription(uriA, backupDesc);
+			data.addDescription(uriA.toURI, backupDesc);
 		}
 	}
 
-
-	def private N4JSResource createNewResourceSetAndLoadFileFromIndex(URI uri) {
+	def private N4JSResource createNewResourceSetAndLoadFileFromIndex(FileURI uri) {
 		createNewResourceSetAndLoadFilesFromIndex(uri).get(0)
 	}
-	def private List<N4JSResource> createNewResourceSetAndLoadFilesFromIndex(URI... uris) {
-		val resourceSet = n4jsCore.createResourceSet(Optional.of(projectN4JS))
-		val index = n4jsCore.getXtextIndex(resourceSet)
+	def private List<N4JSResource> createNewResourceSetAndLoadFilesFromIndex(FileURI... uris) {
+		val resourceSet = createAndConfigureEmptyResourceSet();
+		val index = resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
 
 		val result = newArrayList
 		for(uri : uris) {
-			val resource = resourceSet.createResource(uri) as N4JSResource
-			val resDesc = index.getResourceDescription(uri)
+			val uriEMF = uri.toURI;
+			val resource = resourceSet.createResource(uriEMF) as N4JSResource
+			val resDesc = index.getResourceDescription(uriEMF)
 			assertNotNull(resDesc)
 			assertTrue(resource.loadFromDescription(resDesc))
 			val module = resource.module
@@ -255,8 +240,17 @@ class ModuleToModuleProxyPluginTest extends AbstractBuilderParticipantTest {
 	}
 
 	def private ResourceDescriptionsData getResourceDescriptionsData(IResourceDescriptions resDescs) {
-		val field = AbstractBuilderState.declaredFields.findFirst[name=="resourceDescriptionData"]
+		assertTrue(resDescs instanceof ResourceSetBasedResourceDescriptions);
+		val field = ResourceSetBasedResourceDescriptions.declaredFields.findFirst[name=="data"]
 		field.accessible = true // allow access to private field
 		return field.get(resDescs) as ResourceDescriptionsData
+	}
+
+	def ResourceSet createAndConfigureEmptyResourceSet() {
+		val resourceSet = resourceSetProvider.get();
+		val allResDescs = concurrentIndex.entries.flatMap[value.allResourceDescriptions];
+		val index = new ResourceDescriptionsData(allResDescs);
+		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(resourceSet, index);
+		return resourceSet;
 	}
 }

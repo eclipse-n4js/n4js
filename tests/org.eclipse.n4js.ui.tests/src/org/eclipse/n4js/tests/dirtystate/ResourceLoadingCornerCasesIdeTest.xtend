@@ -12,12 +12,12 @@ package org.eclipse.n4js.tests.dirtystate
 
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.tests.resource.ModuleToModuleProxyPluginTest
+import org.eclipse.n4js.tests.resource.ModuleToModuleProxyIdeTest
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
 import org.junit.Test
 
 /**
- * Tests a corner case of dependencies between resources. See also {@link ModuleToModuleProxyPluginTest}.
+ * Tests a corner case of dependencies between resources. See also {@link ModuleToModuleProxyIdeTest}.
  */
 // converted from ResourceLoadingCornerCasesPluginUITest
 class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
@@ -43,7 +43,7 @@ class ResourceLoadingCornerCasesIdeTest extends AbstractIdeTest {
 	 * val rightCtorRef = TypeUtils.createTypeRef(rightCtor);
 	 * </pre>
 	 * <p>
-	 * For further details, see {@link ProxyResolvingResource} and {@link ModuleToModuleProxyPluginTest}.
+	 * For further details, see {@link ProxyResolvingResource} and {@link ModuleToModuleProxyIdeTest}.
 	 */
 	@Test
 	def void testModule2ModuleReferencesBug() {
