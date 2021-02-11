@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.CoreException
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.locations.FileURI
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.junit.Before
 import org.junit.Test
@@ -32,7 +31,6 @@ class NpmScopesIdeTest extends ConvertedIdeTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String YARN_WORKSPACE_BASE = "npmScopes";
-	private static final N4JSProjectName YARN_WORKSPACE_PROJECT = new N4JSProjectName("YarnWorkspaceProject");
 
 	private FileURI yarnProject;
 	private FileURI scopedProject;
