@@ -10,35 +10,34 @@
  */
 package org.eclipse.n4js.tests.scoping;
 
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.N4JSUiInjectorProvider;
-import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import com.google.inject.Provider;
 
 /**
  */
-@InjectWith(N4JSUiInjectorProvider.class)
-@RunWith(XtextRunner.class)
-public class BuiltInTypeScopePluginTest {
+// converted from BuiltInTypeScopePluginTest
+public class BuiltInTypeScopeIdeTest extends ConvertedIdeTest {
+
 	@Inject
-	IResourceSetProvider resourceSetProvider;
+	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testLoadingBuiltInTypes() {
-		XtextResourceSet resourceSet = (XtextResourceSet) resourceSetProvider.get(null);
-		resourceSet.setClasspathURIContext(N4JSResource.class.getClassLoader());
+		// we only create an empty project and start the server to ensure that we test with a "realistic" setup
+		testWorkspaceManager.createTestProjectOnDisk();
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		XtextResourceSet resourceSet = resourceSetProvider.get();
 		BuiltInTypeScope scope = BuiltInTypeScope.get(resourceSet);
 		IEObjectDescription anyType = scope.getSingleElement(QualifiedName.create("any"));
 		Assert.assertNotNull(anyType);
