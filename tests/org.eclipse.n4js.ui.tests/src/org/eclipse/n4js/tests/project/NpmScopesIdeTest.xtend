@@ -17,7 +17,6 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
-import org.eclipse.n4js.tests.util.ProjectTestsHelper
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.junit.Before
 import org.junit.Test
@@ -43,7 +42,6 @@ class NpmScopesIdeTest extends ConvertedIdeTest {
 	private FileURI clientModuleOutputFile;
 
 	@Inject private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
-	@Inject private ProjectTestsHelper projectTestsHelper;
 
 	@Before
 	def void before() {

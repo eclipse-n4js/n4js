@@ -68,7 +68,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	 * results.
 	 */
 	protected void testAtCursor(String codeWithCursor, String expectedProposals) {
-		testAtCursor(codeWithCursor, expectedProposals, null);
+		doTestWithCursor(codeWithCursor, expectedProposals, null, null);
 	}
 
 	/**
@@ -76,22 +76,19 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	 * results.
 	 */
 	protected void testAtCursorPartially(String codeWithCursor, String partialExpectedProposals) {
-		testAtCursor(codeWithCursor, null, partialExpectedProposals);
-	}
-
-	/** Executes the given module contents using the default workspace. */
-	protected void testAtCursor(String codeWithCursor, String expectedProposals, String partialExpectedProposals) {
-		ContentAndPosition contentAndPosition = getContentAndPosition(codeWithCursor);
-		N4JSTestCompletionConfiguration tcc = createTestCompletionConfiguration(contentAndPosition, expectedProposals,
-				partialExpectedProposals, null);
-		super.testInDefaultWorkspace(contentAndPosition.content, tcc);
+		doTestWithCursor(codeWithCursor, null, partialExpectedProposals, null);
 	}
 
 	protected void testAtCursorWithApply(String codeWithCursor, String expectedProposals,
 			String expectedCodeAfterApply) {
+		doTestWithCursor(codeWithCursor, expectedProposals, null, expectedCodeAfterApply);
+	}
+
+	private void doTestWithCursor(String codeWithCursor, String expectedProposals, String partialExpectedProposals,
+			String expectedCodeAfterApply) {
 		ContentAndPosition contentAndPosition = getContentAndPosition(codeWithCursor);
 		N4JSTestCompletionConfiguration tcc = createTestCompletionConfiguration(contentAndPosition, expectedProposals,
-				null, expectedCodeAfterApply);
+				partialExpectedProposals, expectedCodeAfterApply);
 		super.testInDefaultWorkspace(contentAndPosition.content, tcc);
 	}
 
