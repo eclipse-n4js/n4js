@@ -43,6 +43,7 @@ import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -52,16 +53,16 @@ import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import com.google.inject.Inject;
 
 /**
  * Base class for all tests converted from old Eclipse {@code *PluginTest}s or {@code *PluginUITest}s.
  */
 public abstract class ConvertedIdeTest extends AbstractIdeTest {
 
-	@Inject
-	private ConcurrentIndex concurrentIndex;
-
+	/**
+	 * Asserts that all {@link IResourceDescription}s currently contained in the {@link ConcurrentIndex} have a correct
+	 * TModule user data entry.
+	 */
 	protected void assertAllDescriptionsHaveModuleData() throws IOException {
 		Iterable<IResourceDescription> descriptions = IterableExtensions.flatMap(concurrentIndex.entries(),
 				e -> e.getValue().getAllResourceDescriptions());
@@ -77,6 +78,10 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		}
 	}
 
+	/**
+	 * Asserts that the file denoted by the given {@link FileURI} contains an issue of code
+	 * {@link IssueCodes#CLF_DUP_MODULE CLF_DUP_MODULE}.
+	 */
 	protected void assertDuplicateModuleIssue(FileURI fileURI, String duplicateProjectName,
 			String duplicateModulePathAndNameWithExt) {
 		Multimap<FileURI, Diagnostic> issues = getIssues();
@@ -97,26 +102,36 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		importProband(probandFolder, Collections.emptyList());
 	}
 
-	protected List<N4JSProjectName> importProband(File probandsFolder, Collection<N4JSProjectName> n4jsLibs) {
+	/**
+	 * Creates an empty yarn workspace project with
+	 * {@link TestWorkspaceManager#createTestOnDisk(org.eclipse.xtext.xbase.lib.Pair...) the test workspace manager},
+	 * starts the LSP server, and then imports all projects in the given proband folder. Each sub-folder of the given
+	 * proband folder is assumed to be a project and will be imported.
+	 */
+	protected List<N4JSProjectName> importProband(File probandFolder, Collection<N4JSProjectName> n4jsLibs) {
+		if (testWorkspaceManager.isCreated()) {
+			throw new IllegalStateException("the test workspace has already been created");
+		}
+
 		testWorkspaceManager.createTestOnDisk(); // this will create an empty yarn workspace
 		startAndWaitForLspServer();
 		// import the projects
 		final List<N4JSProjectName> importedProjects = new ArrayList<>();
 		boolean needToCopyLibs = true;
-		for (final File child : probandsFolder.listFiles()) {
+		for (final File child : probandFolder.listFiles()) {
 			if (child.isDirectory()) {
 				if (child.getName().startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX)) {
 					for (final File grandChild : child.listFiles()) {
 						if (grandChild.isDirectory()) {
 							final N4JSProjectName name = new N4JSProjectName(child.getName(), grandChild.getName());
-							importProject(probandsFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
+							importProject(probandFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
 							importedProjects.add(name);
 							needToCopyLibs = false;
 						}
 					}
 				} else {
 					final N4JSProjectName name = new N4JSProjectName(child.getName());
-					importProject(probandsFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
+					importProject(probandFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
 					importedProjects.add(name);
 					needToCopyLibs = false;
 				}
@@ -159,6 +174,10 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	 */
 	protected File importProject(File probandsFolder, N4JSProjectName projectName,
 			Collection<N4JSProjectName> n4jsLibs) {
+
+		if (!testWorkspaceManager.isCreated()) {
+			throw new IllegalStateException("the test workspace is not yet created");
+		}
 
 		Path projectNameAsRelativePath = projectName.getScopeName() != null
 				? Path.of(projectName.getScopeName(), projectName.getPlainName())
@@ -215,25 +234,25 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 				.transform(fileURI -> new FileEvent(fileURI.toString(), FileChangeType.Created))
 				.toList());
 		languageServer.didChangeWatchedFiles(params);
-
-		// load actual project name from "package.json" file (might be different in case of NPM scopes)
-		// File packageJsonFile = new File(projectTargetFolder, N4JSGlobals.PACKAGE_JSON);
-		// JsonElement root = JsonUtils.loadJson(packageJsonFile.toPath());
-		// String projectNameFromDotProjectFile = JsonUtils.getDeepAsString(root, PackageJsonProperties.NAME.name);
+		joinServerRequests();
 
 		return projectFolder;
 	}
 
-	protected String runMangelhaft(String projectName, Optional<String> moduleName, boolean quiet) {
+	/**
+	 * Executes mangelhaft for the given output file. The {@code outputFilePath} should be a relative path from the
+	 * project's root folder.
+	 */
+	protected String runMangelhaft(String projectName, Optional<String> outputFilePath, boolean quiet) {
 		File workingDir = getProjectRootForImportedProject(projectName);
 
 		List<String> args = new ArrayList<>();
 		if (quiet) {
 			args.add("-q");
 		}
-		if (moduleName.isPresent()) {
+		if (outputFilePath.isPresent()) {
 			args.add("-f");
-			args.add("/" + moduleName.get() + "/");
+			args.add("/" + outputFilePath.get() + "/");
 		}
 
 		ProcessResult result = new CliTools().runNodejs(workingDir.toPath(),
@@ -245,6 +264,10 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		return output;
 	}
 
+	/**
+	 * Same as {@link #getProjectRoot(String)}, but works for projects imported into the test workspace after its
+	 * creation.
+	 */
 	// TODO align this with TestWorkspaceManager#getProjectRoot()
 	protected File getProjectRootForImportedProject(String projectName) {
 		if (isYarnWorkspace()) {
@@ -256,6 +279,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		return new File(getRoot(), projectName);
 	}
 
+	/** Resets the last modified time of the given file to the epoch. */
 	protected long resetFileModificationTimeStamp(FileURI fileURI) {
 		FileTime epoch = FileTime.fromMillis(0);
 		try {
@@ -266,6 +290,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		return epoch.toMillis();
 	}
 
+	/** Returns the last modified time of the given file. */
 	protected long getFileModificationTimeStamp(FileURI fileURI) {
 		try {
 			return Files.getLastModifiedTime(fileURI.toPath()).toMillis();

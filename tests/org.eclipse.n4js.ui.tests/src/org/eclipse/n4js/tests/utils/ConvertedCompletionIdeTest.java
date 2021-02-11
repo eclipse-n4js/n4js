@@ -12,21 +12,10 @@ package org.eclipse.n4js.tests.utils;
 
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest;
 
+/**
+ * Base class for all content assist tests that were converted from old, Eclipse-based <code>*PluginUI</code> tests.
+ */
 public abstract class ConvertedCompletionIdeTest extends AbstractCompletionTest {
 
-	protected void performTest(String sourceCode, CharSequence[] expectedProposals) {
-	}
-
-	private class LegacyBuilder {
-		private String sourceCode;
-
-		public LegacyBuilder append(CharSequence sourceCode) {
-			this.sourceCode = sourceCode + "<|>";
-			return this;
-		}
-
-		public void assertText(CharSequence... expectedProposals) {
-			performTest(sourceCode, expectedProposals);
-		}
-	}
+	// no members yet
 }

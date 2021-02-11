@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tests.project
 
 import java.nio.file.Files
+import org.eclipse.n4js.packagejson.PackageJsonUtils
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.junit.Test
 
@@ -43,7 +45,8 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 
 		// create a second source folder with a file p2/A.n4js
 		val packageJsonFileURI = getPackageJsonFile(DEFAULT_PROJECT_NAME).toFileURI;
-		changeNonOpenedFile(packageJsonFileURI, '''"src"''' -> '''"src", "src2"''');
+		PackageJsonUtils.addSourceFoldersToPackageJsonFile(packageJsonFileURI.toPath, SourceContainerType.SOURCE, "src2");
+		sendDidChangeWatchedFiles(packageJsonFileURI);
 		val fileAValidatedInSrc2 = fileAValidated.parent.parent.appendSegments("src2", "p2", "A.n4js");
 		createFile(fileAValidatedInSrc2, fileA);
 		cleanBuildAndWait();
@@ -87,12 +90,12 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 	@Test
 	def void testTypeDefinitionsShadowing() throws Exception {
 		// setup test workspace
-		testWorkspaceManager.createTestProjectOnDisk(
-		);
+		testWorkspaceManager.createTestProjectOnDisk();
 
 		// create a second source folder
 		val packageJsonFileURI = getPackageJsonFile(DEFAULT_PROJECT_NAME).toFileURI;
-		changeFileOnDiskWithoutNotification(packageJsonFileURI, '''"sources": {''' -> '''"sources": { "external" : [ "src-ext" ],''');
+		PackageJsonUtils.addSourceFoldersToPackageJsonFile(packageJsonFileURI.toPath, SourceContainerType.EXTERNAL, "src-ext");
+		// (do not send a notification, because server is not started yet)
 
 		// create files
 		val fileImpl = getProjectRoot().toFileURI.appendSegments("src-ext", "Shadowed.js");
@@ -125,7 +128,7 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 
 		assertIssues(
 			DEFAULT_PROJECT_NAME+ "/package.json" -> #[
-				"(Error, [6:63 - 6:73], Module filters of type noValidate must not match N4JS modules/files.)"
+				"(Error, [6:65 - 6:75], Module filters of type noValidate must not match N4JS modules/files.)"
 			]
 		);
 		assertEquals("file package.json should have 1 marker since the module filter is invalid", 1, getIssuesInFile(packageJsonFileURI).size);

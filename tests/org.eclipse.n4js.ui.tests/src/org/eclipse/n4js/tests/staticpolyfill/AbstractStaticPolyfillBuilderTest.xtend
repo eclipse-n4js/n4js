@@ -15,7 +15,6 @@ import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.utils.JsonUtils
 import org.junit.Before
 
 /**
@@ -43,9 +42,7 @@ public abstract class AbstractStaticPolyfillBuilderTest extends ConvertedIdeTest
 	 * in addition to the existing container 'src'.
 	 */
 	def void addSrc2ToSources() {
-		JsonUtils.addSourceFoldersToPackageJsonFile(projectDescriptionFile.toPath,
-			PackageJsonUtils.getSourceContainerTypeStringRepresentation(SourceContainerType.SOURCE),
-			src2.name);
+		PackageJsonUtils.addSourceFoldersToPackageJsonFile(projectDescriptionFile.toPath, SourceContainerType.SOURCE, src2.name);
 		sendDidChangeWatchedFiles(projectDescriptionFile);
 		joinServerRequests();
 	}

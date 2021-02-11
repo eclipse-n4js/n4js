@@ -50,14 +50,17 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	 */
 	public static final String APPLY = "==>";
 
+	/** N4JS-specific extension of {@link TestCompletionConfiguration}. */
 	public static class N4JSTestCompletionConfiguration extends TestCompletionConfiguration {
 
 		private String expectedCodeAfterApply = null;
 
+		/** Expected code after applying the proposal marked with {@link AbstractCompletionTest#APPLY}. */
 		public String getExpectedCodeAfterApply() {
 			return this.expectedCodeAfterApply;
 		}
 
+		/** @see #getExpectedCodeAfterApply() */
 		public void setExpectedCodeAfterApply(String codeAfterApply) {
 			this.expectedCodeAfterApply = codeAfterApply;
 		}
@@ -79,6 +82,11 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 		doTestWithCursor(codeWithCursor, null, partialExpectedProposals, null);
 	}
 
+	/**
+	 * Same as {@link #testAtCursor(String, String)}, but expects exactly one proposal in {@code expectedProposals} to
+	 * be prefixed with {@value #APPLY} and then applies this proposal and asserts that the resulting source code is
+	 * equal to {@code expectedCodeAfterApply}.
+	 */
 	protected void testAtCursorWithApply(String codeWithCursor, String expectedProposals,
 			String expectedCodeAfterApply) {
 		doTestWithCursor(codeWithCursor, expectedProposals, null, expectedCodeAfterApply);

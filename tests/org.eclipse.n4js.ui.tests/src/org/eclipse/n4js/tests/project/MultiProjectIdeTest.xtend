@@ -19,8 +19,8 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.lsp4j.FileChangeType
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager
+import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.utils.JsonUtils
 import org.junit.Assert
 import org.junit.Test
 
@@ -354,14 +354,14 @@ cleanBuildAndWait();
 
 	def private void addProjectToDependencies(String projectName) {
 		val fileURI = getPackageJsonFile(PROJECT1_NAME).toFileURI;
-		JsonUtils.addDependenciesToPackageJsonFile(fileURI.toPath, projectName -> "*");
+		PackageJsonUtils.addDependenciesToPackageJsonFile(fileURI.toPath, projectName -> "*");
 		sendDidChangeWatchedFiles(fileURI);
 		joinServerRequests();
 	}
 
 	def private void removeDependency() {
 		val fileURI = getPackageJsonFile(PROJECT1_NAME).toFileURI;
-		JsonUtils.removeDependenciesFromPackageJsonFile(fileURI.toPath, PROJECT2_NAME);
+		PackageJsonUtils.removeDependenciesFromPackageJsonFile(fileURI.toPath, PROJECT2_NAME);
 		sendDidChangeWatchedFiles(fileURI);
 		joinServerRequests();
 	}

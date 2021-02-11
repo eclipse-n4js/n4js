@@ -11,9 +11,9 @@
 package org.eclipse.n4js.tests.project
 
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.utils.JsonUtils
 import org.junit.Before
 import org.junit.Test
 
@@ -57,7 +57,7 @@ class TransitiveDependencyIdeTest extends ConvertedIdeTest {
 	}
 
 	def void setDependsOn(FileURI dependendProject, FileURI dependsOn) {
-		JsonUtils.addDependenciesToPackageJsonFile(
+		PackageJsonUtils.addDependenciesToPackageJsonFile(
 			dependendProject.appendSegment(N4JSGlobals.PACKAGE_JSON).toPath,
 			dependsOn.name -> "*"
 		);

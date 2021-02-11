@@ -11,9 +11,10 @@
 package org.eclipse.n4js.tests.project
 
 import java.nio.file.Files
+import org.eclipse.n4js.packagejson.PackageJsonUtils
+import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.utils.JsonUtils
 import org.junit.Before
 import org.junit.Test
 
@@ -40,22 +41,22 @@ class SingleProjectIdeTest extends ConvertedIdeTest {
 	}
 
 	private def void addSrc2ToSources() {
-		JsonUtils.addSourceFoldersToPackageJsonFile(getPackageJsonFile().toPath, "source", "src2");
+		PackageJsonUtils.addSourceFoldersToPackageJsonFile(getPackageJsonFile().toPath, SourceContainerType.SOURCE, "src2");
 		joinServerRequests();
 	}
 
 	private def void removeSrc2FromSource() {
-		JsonUtils.removeSourceFoldersFromPackageJsonFile(getPackageJsonFile().toPath, "src2");
+		PackageJsonUtils.removeSourceFoldersFromPackageJsonFile(getPackageJsonFile().toPath, "src2");
 		joinServerRequests();
 	}
 
 	private def void addSrc3ToSources() {
-		JsonUtils.addSourceFoldersToPackageJsonFile(getPackageJsonFile().toPath, "source", "src3");
+		PackageJsonUtils.addSourceFoldersToPackageJsonFile(getPackageJsonFile().toPath, SourceContainerType.SOURCE, "src3");
 		joinServerRequests();
 	}
 
 	private def void addMainSrcToSources() {
-		JsonUtils.addSourceFoldersToPackageJsonFile(getPackageJsonFile().toPath, "source", "main/src");
+		PackageJsonUtils.addSourceFoldersToPackageJsonFile(getPackageJsonFile().toPath, SourceContainerType.SOURCE, "main/src");
 		joinServerRequests();
 	}
 

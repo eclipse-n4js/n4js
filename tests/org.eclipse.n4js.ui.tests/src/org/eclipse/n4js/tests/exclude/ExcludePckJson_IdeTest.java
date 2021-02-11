@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -29,7 +28,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
-import com.google.inject.Inject;
 
 /**
  *
@@ -38,9 +36,6 @@ import com.google.inject.Inject;
 public class ExcludePckJson_IdeTest extends ConvertedIdeTest {
 
 	private static final String PROJECT_NAME = "ExcludePckJson";
-
-	@Inject
-	private ConcurrentIndex concurrentIndex;
 
 	/***/
 	@Before

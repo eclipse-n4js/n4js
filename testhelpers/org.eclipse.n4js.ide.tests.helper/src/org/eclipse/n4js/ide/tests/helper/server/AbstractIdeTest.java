@@ -828,10 +828,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		joinServerRequests();
 	}
 
+	/** Same as {@link #createFile(String, String, CharSequence)}, using the {@link #DEFAULT_PROJECT_NAME}. */
 	protected void createFile(String modulePathAndName, CharSequence content) {
 		createFile(DEFAULT_PROJECT_NAME, modulePathAndName, content);
 	}
 
+	/** Same as {@link #createFile(FileURI, CharSequence)}, using the {@link #DEFAULT_SOURCE_FOLDER}. */
 	protected void createFile(String projectName, String modulePathAndName, CharSequence content) {
 		FileURI projectRoot = toFileURI(getProjectRoot(projectName));
 		NameAndExtension nameAndExt = testWorkspaceManager.getN4JSNameAndExtension(modulePathAndName);
