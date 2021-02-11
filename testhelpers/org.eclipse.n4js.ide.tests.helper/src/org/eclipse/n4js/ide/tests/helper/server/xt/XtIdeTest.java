@@ -198,6 +198,25 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * This xpect method can evaluate the accessibility of {@link TMember}s. For example, given a field of a class or a
+	 * {@link ParameterizedPropertyAccessExpression}, the xpect methods returns their explicit or implicit declared
+	 * accessibility such as {@code public} or {@code private}.
+	 *
+	 * <pre>
+	 * // Xpect accessModifier at '&ltLOCATION&gt' --&gt; &ltACCESS MODIFIER&gt
+	 * </pre>
+	 *
+	 * The location (at) is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void accessModifier(MethodData data) {
+		int offset = getOffset(data, "accessModifier", "at");
+		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
+		String accessModifierStr = XtMethodHelper.getAccessModifierString(eObject);
+		assertEquals(data.expectation, accessModifierStr);
+	}
+
+	/**
 	 * Calls LSP endpoint 'definition'.
 	 *
 	 * <pre>
@@ -298,25 +317,6 @@ public class XtIdeTest extends AbstractIdeTest {
 		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
 		String typeArgStr = mh.getTypeArgumentsString(eObject);
 		assertEquals(data.expectation, typeArgStr);
-	}
-
-	/**
-	 * This xpect method can evaluate the accessibility of {@link TMember}s. For example, given a field of a class or a
-	 * {@link ParameterizedPropertyAccessExpression}, the xpect methods returns their explicit or implicit declared
-	 * accessibility such as {@code public} or {@code private}.
-	 *
-	 * <pre>
-	 * // Xpect accessModifier at '&ltLOCATION&gt' --&gt; &ltACCESS MODIFIER&gt
-	 * </pre>
-	 *
-	 * The location (at) is optional.
-	 */
-	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void accessModifier(MethodData data) {
-		int offset = getOffset(data, "accessModifier", "at");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		String accessModifierStr = XtMethodHelper.getAccessModifierString(eObject);
-		assertEquals(data.expectation, accessModifierStr);
 	}
 
 	private Position getPosition(MethodData data, String checkArg1, String optionalDelimiter) {
