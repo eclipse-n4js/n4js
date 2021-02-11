@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.tests.dirtystate
 
-import java.nio.file.Files
-import java.nio.file.attribute.FileTime
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.junit.Assert
@@ -214,14 +212,14 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 		val outputY = getOutputFileForTestFile("Y")
 		val outputA = getOutputFileForTestFile("A")
 
-		val stampY = outputY.modificationStamp
-		val stampA = outputA.modificationStamp
+		val stampY = outputY.fileModificationTimeStamp
+		val stampA = outputA.fileModificationTimeStamp
 
 		changeNonOpenedFile("X", sourceX_modify_x3)
 		joinServerRequests();
 
-		val changedY = outputY.modificationStamp !== stampY;
-		val unchangedA = outputA.modificationStamp === stampA;
+		val changedY = outputY.fileModificationTimeStamp !== stampY;
+		val unchangedA = outputA.fileModificationTimeStamp === stampA;
 		assertTrue("output file of file Y should have been rebuilt", changedY);
 		assertTrue("output file of file A should NOT have been rebuilt", unchangedA);
 	}
@@ -236,20 +234,20 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 		val outputC = getOutputFileForTestFile("C")
 		val outputD = getOutputFileForTestFile("D")
 
-		val stampY = outputY.modificationStamp
-		val stampA = outputA.modificationStamp
-		val stampB = outputB.modificationStamp
-		val stampC = outputC.modificationStamp
-		val stampD = outputD.modificationStamp
+		val stampY = outputY.fileModificationTimeStamp
+		val stampA = outputA.fileModificationTimeStamp
+		val stampB = outputB.fileModificationTimeStamp
+		val stampC = outputC.fileModificationTimeStamp
+		val stampD = outputD.fileModificationTimeStamp
 
 		changeNonOpenedFile("X", sourceX_modify_x2)
 		joinServerRequests();
 
-		val changedY = outputY.modificationStamp !== stampY;
-		val changedA = outputA.modificationStamp !== stampA;
-		val unchangedB = outputB.modificationStamp === stampB;
-		val unchangedC = outputC.modificationStamp === stampC;
-		val unchangedD = outputD.modificationStamp === stampD;
+		val changedY = outputY.fileModificationTimeStamp !== stampY;
+		val changedA = outputA.fileModificationTimeStamp !== stampA;
+		val unchangedB = outputB.fileModificationTimeStamp === stampB;
+		val unchangedC = outputC.fileModificationTimeStamp === stampC;
+		val unchangedD = outputD.fileModificationTimeStamp === stampD;
 		assertTrue("output file of file Y should have been rebuilt", changedY);
 		assertTrue("output file of file A should have been rebuilt", changedA);
 		assertTrue("output file of file B should NOT have been rebuilt", unchangedB);
@@ -300,12 +298,7 @@ class CanLoadFromDescriptionCyclicIdeTest extends AbstractCanLoadFromDescription
 		val outFileURI = srcFileURI.parent.parent.parent.resolve("src-gen/m/" + moduleName + ".js");
 		Assert.assertTrue("output file not found for module " + moduleName + ": " + outFileURI,
 			outFileURI.toFile.exists);
-		val epoch = FileTime.fromMillis(0);
-		Files.setLastModifiedTime(outFileURI.toFile.toPath, epoch);
+		resetFileModificationTimeStamp(outFileURI);
 		return outFileURI;
-	}
-
-	def private long getModificationStamp(FileURI fileURI) {
-		return Files.getLastModifiedTime(fileURI.toFile.toPath).toMillis;
 	}
 }

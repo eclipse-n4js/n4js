@@ -14,11 +14,11 @@ import com.google.inject.Inject
 import java.util.Set
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
-import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
@@ -28,7 +28,7 @@ import static org.junit.Assert.*
 /**
  * Base class for testing logic in {@link CanLoadFromDescriptionHelper}.
  */
-abstract class AbstractCanLoadFromDescriptionTest extends AbstractIdeTest {
+abstract class AbstractCanLoadFromDescriptionTest extends ConvertedIdeTest {
 
 	@Inject
 	protected ResourceTaskManager resourceTaskManager;

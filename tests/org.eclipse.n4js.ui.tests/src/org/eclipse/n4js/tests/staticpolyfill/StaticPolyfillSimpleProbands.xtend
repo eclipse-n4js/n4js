@@ -15,7 +15,7 @@ import java.util.regex.Pattern
 /**
  * Provides constants holding n4js code
  */
-public class SingleProject_Probands {
+public class StaticPolyfillSimpleProbands {
 
 	public static val validContent_Filled = '''
 					@@StaticPolyfillAware

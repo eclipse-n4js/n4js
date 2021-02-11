@@ -11,36 +11,31 @@
 package org.eclipse.n4js.tests.staticpolyfill
 
 import java.util.regex.Pattern
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IFolder
-import org.eclipse.core.resources.IProject
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.json.JSON.JSONDocument
-import org.eclipse.n4js.json.JSON.JSONObject
+import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectDescription.SourceContainerType
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.tests.util.PackageJSONTestUtils
+import org.eclipse.n4js.projectModel.locations.FileURI
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest
+import org.eclipse.n4js.utils.JsonUtils
 import org.junit.Before
-import org.eclipse.xtext.resource.SaveOptions
 
 /**
  */
-public abstract class AbstractStaticPolyfillBuilderTest extends AbstractBuilderParticipantTest {
+public abstract class AbstractStaticPolyfillBuilderTest extends ConvertedIdeTest {
 
-	protected IProject projectUnderTest
-	protected IFolder src
-	protected IFolder src2
-	protected IFile projectDescriptionFile
+	protected FileURI src
+	protected FileURI src2
+	protected FileURI projectDescriptionFile
 
 	@Before
 	def void setUp2() {
-		projectUnderTest = createJSProject("singleProjectTest")
-		src = configureProjectWithXtext(projectUnderTest)
-		projectDescriptionFile = projectUnderTest.project.getFile(N4JSGlobals.PACKAGE_JSON)
-		src2 = projectUnderTest.project.getFolder("src2");
-		src2.create(false, true, null)
-		waitForAutoBuild
+		testWorkspaceManager.createTestProjectOnDisk();
+		startAndWaitForLspServer();
+		assertNoIssues();
+		
+		projectDescriptionFile = getPackageJsonFile().toFileURI;
+		src = getProjectRoot().toFileURI.appendSegment(DEFAULT_SOURCE_FOLDER);
+		src2 = getProjectRoot().toFileURI.appendSegment("src2");
+		src2.toFile.mkdirs();
 	}
 
 	/** 
@@ -48,20 +43,11 @@ public abstract class AbstractStaticPolyfillBuilderTest extends AbstractBuilderP
 	 * in addition to the existing container 'src'.
 	 */
 	def void addSrc2ToSources() {
-		val uri = URI.createPlatformResourceURI(projectDescriptionFile.fullPath.toString, true);
-		val rs = getResourceSet(projectUnderTest.project);
-		val resource = rs.getResource(uri, true);
-		val JSONDocument projectDescDocument = resource.contents.head as JSONDocument
-		val packageJSONRoot = projectDescDocument.content as JSONObject;
-
-		PackageJSONTestUtils.setSourceContainerSpecifiers(
-			packageJSONRoot,
-			SourceContainerType.SOURCE,
-			#["src", "src2"]
-		)
-		// save formatted modified package.json
-		resource.save(SaveOptions.newBuilder.format.options.toOptionsMap);
-		waitForAutoBuild();
+		JsonUtils.addSourceFoldersToPackageJsonFile(projectDescriptionFile.toPath,
+			PackageJsonUtils.getSourceContainerTypeStringRepresentation(SourceContainerType.SOURCE),
+			src2.name);
+		sendDidChangeWatchedFiles(projectDescriptionFile);
+		joinServerRequests();
 	}
 
 	static def int matchCount(Pattern pattern, CharSequence s) {

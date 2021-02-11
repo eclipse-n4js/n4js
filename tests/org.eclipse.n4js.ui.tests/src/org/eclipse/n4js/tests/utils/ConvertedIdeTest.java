@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,8 +45,6 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.junit.Assert;
 
@@ -62,11 +61,6 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 
 	@Inject
 	private ConcurrentIndex concurrentIndex;
-
-	protected IResourceDescriptions getXtextIndex() {
-		return new ResourceDescriptionsData(FluentIterable.from(concurrentIndex.entries())
-				.transformAndConcat(e -> e.getValue().getAllResourceDescriptions()));
-	}
 
 	protected void assertAllDescriptionsHaveModuleData() throws IOException {
 		Iterable<IResourceDescription> descriptions = IterableExtensions.flatMap(concurrentIndex.entries(),
@@ -260,5 +254,23 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 					.resolve(projectName).toFile();
 		}
 		return new File(getRoot(), projectName);
+	}
+
+	protected long resetFileModificationTimeStamp(FileURI fileURI) {
+		FileTime epoch = FileTime.fromMillis(0);
+		try {
+			Files.setLastModifiedTime(fileURI.toPath(), epoch);
+		} catch (IOException e) {
+			throw new RuntimeException("exception while resetting last modified time of: " + fileURI, e);
+		}
+		return epoch.toMillis();
+	}
+
+	protected long getFileModificationTimeStamp(FileURI fileURI) {
+		try {
+			return Files.getLastModifiedTime(fileURI.toPath()).toMillis();
+		} catch (IOException e) {
+			throw new RuntimeException("exception while reading last modified time of: " + fileURI, e);
+		}
 	}
 }
