@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.tests.XtTestSetupTestMockup END_SETUP */
+
+
+class S { x : string = "S.x"; }
+
+interface R { x : string = "R.x"; }
+
+class C0  { x : string = "C.x"; }
+// LP-1 XPECT linkedPathname at 'x' --> C0/x
+console.log(new C0().x);
+
+class C1 extends S {}
+// LP-2 XPECT linkedPathname at 'x' --> Wrong Expectation
+console.log(new C1().x);

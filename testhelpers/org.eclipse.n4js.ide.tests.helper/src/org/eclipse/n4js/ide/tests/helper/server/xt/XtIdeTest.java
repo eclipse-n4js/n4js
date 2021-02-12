@@ -122,6 +122,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "linkedFragment":
 			linkedFragment(testMethodData);
 			break;
+		case "linkedPathname":
+			linkedPathname(testMethodData);
+			break;
 		case "type":
 			type(testMethodData);
 			break;
