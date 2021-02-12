@@ -24,11 +24,11 @@ import org.junit.runner.notification.RunNotifier;
  * Runs all tests defined by {@value XtFileDataParser#XT_X_PECT} of a single .xt file
  */
 public class XtFileRunner extends Runner {
-	final XtIdeTest ideTest;
-	final String testClassName;
-	final String folderName;
-	final File file;
-	final XtFileData xtFileData;
+	final public XtIdeTest ideTest;
+	final public String testClassName;
+	final public String folderName;
+	final public File file;
+	final public XtFileData xtFileData;
 
 	Description description;
 

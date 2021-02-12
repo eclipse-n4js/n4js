@@ -152,6 +152,10 @@ public abstract class AbstractXtParentRunnerTest {
 		runListener.run(folderName);
 	}
 
+	void assertFiles(String files) {
+		Assert.assertEquals(files, Strings.join("\n", c -> c.file.getName(), children));
+	}
+
 	void assertTestStructure(String string) {
 		String structure = getChild(parentDescription, 1);
 		Assert.assertEquals(string, structure);
