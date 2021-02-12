@@ -14,14 +14,21 @@
  */
 
 
-class B {
-	methodB() {	}
+interface B {
+	methodB() : String;
+	methodC() : int;
 }
 
 
-var b0 : B = new B();
+var b0 : B = null;
 // test-1 XPECT accessModifier at 'methodB' --> project
 // test-2 XPECT definition at 'methodB' --> (test-project/src/ExpectationsSkipComments.n4js, [17:1 - 17:8])
-// test-3 XPECT type of 'methodB' --> {function():void}
+/* test-3 XPECT type of 'methodC' --> {function():int}
+   some commet
+ */
+ 
+// another comment
 b0.methodB();
-b0.methodB();
+/* yet another comment */
+// and don't forget this comment
+b0.methodC();
