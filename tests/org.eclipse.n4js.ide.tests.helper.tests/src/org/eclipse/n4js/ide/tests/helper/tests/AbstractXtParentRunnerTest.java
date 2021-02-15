@@ -96,8 +96,8 @@ public abstract class AbstractXtParentRunnerTest {
 		public void testFinished(Description description) throws Exception {
 			events.put("testFinished", description);
 			String methodName = getMethodOrDisplayName(description);
-			String commentOrArgs = getCommentOrArgs(description);
-			results.put(commentOrArgs, "Passed: " + methodName);
+			String commentOrMethodName = getCommentOrMethodName(description);
+			results.put(commentOrMethodName, "Passed: " + methodName);
 		}
 
 		@Override
@@ -105,8 +105,8 @@ public abstract class AbstractXtParentRunnerTest {
 			events.put("testFailure", failure);
 			Description description = failure.getDescription();
 			String methodName = getMethodOrDisplayName(description);
-			String commentOrArgs = getCommentOrArgs(description);
-			results.put(commentOrArgs, "Failed: " + methodName + ". " + failure.getMessage());
+			String commentOrMethodName = getCommentOrMethodName(description);
+			results.put(commentOrMethodName, "Failed: " + methodName + ". " + failure.getMessage());
 		}
 
 		@Override
@@ -114,23 +114,23 @@ public abstract class AbstractXtParentRunnerTest {
 			events.put("testAssumptionFailure", failure);
 			Description description = failure.getDescription();
 			String methodName = getMethodOrDisplayName(description);
-			String commentOrArgs = getCommentOrArgs(description);
-			results.put(commentOrArgs, "Failed Assumption: " + methodName + ". " + failure.getMessage());
+			String commentOrMethodName = getCommentOrMethodName(description);
+			results.put(commentOrMethodName, "Failed Assumption: " + methodName + ". " + failure.getMessage());
 		}
 
 		@Override
 		public void testIgnored(Description description) throws Exception {
 			events.put("testIgnored", description);
 			String methodName = getMethodOrDisplayName(description);
-			String commentOrArgs = getCommentOrArgs(description);
-			results.put(commentOrArgs, "Ignored: " + methodName);
+			String commentOrMethodName = getCommentOrMethodName(description);
+			results.put(commentOrMethodName, "Ignored: " + methodName);
 		}
 
-		String getCommentOrArgs(Description description) {
+		String getCommentOrMethodName(Description description) {
 			String methodName = description.getMethodName();
 			String displayName = description.getDisplayName();
-			String commentOrArgs = methodName == null ? displayName : displayName.substring(methodName.length());
-			return commentOrArgs;
+			String commentOrMethodName = methodName == null ? displayName : displayName.substring(methodName.length());
+			return commentOrMethodName;
 		}
 
 		String getMethodOrDisplayName(Description description) {

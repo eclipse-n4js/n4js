@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+
+
+
+// XPECT succs at '"a"' --> "b"
+// XPECT succs at '"a"' --> wrong expectation
+"a"
+
+// XPECT succs at '"b"' --> "c", "d"
+if ("b") {
+// XPECT succs at '"c"' --> "d"
+	"c"
+}
+
+// XPECT succs at '"d"' -->
+"d"

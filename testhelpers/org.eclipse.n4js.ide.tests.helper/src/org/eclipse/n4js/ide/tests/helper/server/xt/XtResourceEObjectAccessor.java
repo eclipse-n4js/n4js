@@ -45,6 +45,9 @@ public class XtResourceEObjectAccessor {
 
 	public IEObjectCoveringRegion getObjectCoveringRegion(int searchFromOffset, String optionalLocationStr) {
 		int offset = getOffset(searchFromOffset, optionalLocationStr);
+		if (offset < 0) {
+			return null;
+		}
 		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
 		return new EObjectCoveringRegion(eObject, offset);
 	}

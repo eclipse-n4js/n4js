@@ -71,10 +71,18 @@ public class XtFileData {
 
 		/** @return Description for JUnit */
 		public Description getDescription(XtFileData xtFileData) {
-			String className = (comment.isBlank() ? getArgs() : comment);
-			String descrName = name + "~" + count;
-			descrName += ": " + (comment.isBlank() ? getArgs() : comment);
-			descrName += " " + OPEN_BRACKET + xtFileData.relativePath + CLOSE_BRACKET;
+			String xpectMethodName = name + "~" + count;
+			String commentOrArgs = (comment.isBlank() ? getArgs() : comment);
+			String xtFileLocation = OPEN_BRACKET + xtFileData.relativePath + CLOSE_BRACKET;
+
+			String className = (comment.isBlank() ? xpectMethodName : comment);
+
+			// for compatibility with the Xpect ui plug-in
+			// the description name needs to start with the method name, the '~', the count
+			// followed by the file location in special brackets
+			// see:
+			// https://github.com/eclipse/Xpect/blob/0e5186a5fd96d4c82536fcff9acfa6ffada9fff8/org.eclipse.xpect.ui.junit/src/org/eclipse/xpect/ui/junit/TestDataUIUtil.java#L82
+			String descrName = xpectMethodName + ": " + commentOrArgs + " " + xtFileLocation;
 			return Description.createTestDescription(className, descrName, this);
 		}
 

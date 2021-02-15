@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.runner.Description;
@@ -87,11 +88,11 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					return FileVisitResult.CONTINUE;
 				}
 			});
-		} catch (
-
-		IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		fileRunners.sort(Comparator.comparing(XtFileRunner::getName));
 		return fileRunners;
 	}
 

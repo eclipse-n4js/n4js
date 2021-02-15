@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+
+class B {
+	methodB() {	}
+}
+
+
+var b0 : B = new B();
+/* XPECT allBranches from 'b0' ---
+    B0: B -> new B() -> b0 : B = new B() -> var b0 : B = new B(); -> b0 -> b0.methodB -> b0.methodB() -> b0 -> b0.methodB -> b0.methodB()
+   
+--- */
+b0.methodB();
+
+
+
+// XPECT allBranches from 'b0' --> wrong expectation
+b0.methodB();

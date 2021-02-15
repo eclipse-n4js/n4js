@@ -110,7 +110,7 @@ public class XtFileRunner extends Runner {
 		return description;
 	}
 
-	private String getName() {
+	public String getName() {
 		return file.getName() + ": " + folderName;
 	}
 }

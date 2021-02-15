@@ -13,9 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,16 +23,19 @@ import org.eclipse.n4js.utils.Strings;
 /**
  *
  */
-public class XtPattern {
+public class XtMethodPattern {
 
 	static public class PatternBuilder {
 		final static String WHITESPACE = "\\s+";
-		String regex = WHITESPACE;
-		Set<String> availableTextNames = new HashSet<>();
-		Set<String> availableObjectNames = new HashSet<>();
+		String regex = "";
+		Map<String, Boolean> availableTextNames = new HashMap<>();
+		Map<String, Boolean> availableObjectNames = new HashMap<>();
 
 		PatternBuilder keyword(String keywordName) {
-			regex += keywordName + WHITESPACE;
+			if (!regex.isBlank()) {
+				regex += WHITESPACE;
+			}
+			regex += keywordName;
 			return this;
 		}
 
@@ -61,24 +62,27 @@ public class XtPattern {
 		PatternBuilder arg(String argName, boolean isObject, boolean isOptional, Object... validValues) {
 			String values = "[^']+";
 			if (validValues != null && validValues.length > 0) {
-				values = "[" + Strings.join("|", validValues) + "]";
+				values = Strings.join("|", validValues);
 			}
+
 			regex += isOptional ? "(?:" : "";
+			if (!regex.isBlank()) {
+				regex += WHITESPACE;
+			}
 			regex += argName + WHITESPACE;
 			regex += "'(?<" + argName + ">" + values + ")'";
-			regex += WHITESPACE;
 			regex += isOptional ? ")?" : "";
 			if (isObject) {
-				availableObjectNames.add(argName);
+				availableObjectNames.put(argName, isOptional);
 			} else {
-				availableTextNames.add(argName);
+				availableTextNames.put(argName, isOptional);
 			}
 			return this;
 		}
 
-		XtPattern build() {
+		XtMethodPattern build() {
 			Pattern pattern = Pattern.compile(regex);
-			return new XtPattern(pattern, this);
+			return new XtMethodPattern(pattern, this);
 		}
 
 		@Override
@@ -119,7 +123,7 @@ public class XtPattern {
 	final PatternBuilder builder;
 	Matcher matcher;
 
-	public XtPattern(Pattern pattern, PatternBuilder builder) {
+	public XtMethodPattern(Pattern pattern, PatternBuilder builder) {
 		this.pattern = pattern;
 		this.builder = builder;
 	}
@@ -135,13 +139,27 @@ public class XtPattern {
 
 		Map<String, String> texts = new HashMap<>();
 		Map<String, IEObjectCoveringRegion> objectsWithOffset = new HashMap<>();
-		for (String name : builder.availableTextNames) {
-			texts.put(name, matcher.group(name));
+		for (String name : builder.availableTextNames.keySet()) {
+			boolean isOptional = builder.availableTextNames.get(name);
+			String input = matcher.group(name);
+			assertTrue("Mandatory argument missing: " + name, isOptional || input != null);
+			texts.put(name, input);
 		}
 
-		for (String name : builder.availableObjectNames) {
+		for (String name : builder.availableObjectNames.keySet()) {
+			boolean isOptional = builder.availableObjectNames.get(name);
 			String input = matcher.group(name);
-			IEObjectCoveringRegion ocr = resourceHandler.getObjectCoveringRegion(searchFromOffset, input);
+			IEObjectCoveringRegion ocr = null;
+			if (isOptional) {
+				if (input != null) {
+					ocr = resourceHandler.getObjectCoveringRegion(searchFromOffset, input);
+					assertTrue("Element not found: " + name, ocr != null);
+				}
+			} else {
+				assertTrue("Mandatory argument missing: " + name, input != null);
+				ocr = resourceHandler.getObjectCoveringRegion(searchFromOffset, input);
+				assertTrue("Element not found: " + name, ocr != null);
+			}
 			objectsWithOffset.put(name, ocr);
 		}
 		IEObjectCoveringRegion ocrReference = resourceHandler.getObjectCoveringRegion(searchFromOffset, null);

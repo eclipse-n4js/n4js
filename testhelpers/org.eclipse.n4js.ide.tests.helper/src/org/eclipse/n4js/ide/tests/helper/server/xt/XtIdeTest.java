@@ -11,9 +11,11 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +29,7 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtPattern.Match;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodPattern.Match;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -41,6 +43,7 @@ import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -48,30 +51,30 @@ import com.google.inject.Inject;
  */
 public class XtIdeTest extends AbstractIdeTest {
 
-	static final XtPattern PATTERN_PREDS = XtPattern.builder().keyword("preds")
+	static final XtMethodPattern PATTERN_PREDS = XtMethodPattern.builder().keyword("preds")
 			.textOpt("type", (Object[]) ControlFlowType.values())
 			.objMan("at").build();
 
-	static final XtPattern PATTERN_SUCCS = XtPattern.builder().keyword("succs")
+	static final XtMethodPattern PATTERN_SUCCS = XtMethodPattern.builder().keyword("succs")
 			.textOpt("type", (Object[]) ControlFlowType.values())
 			.objMan("at").build();
 
-	static final XtPattern PATTERN_PATH = XtPattern.builder().keyword("path")
+	static final XtMethodPattern PATTERN_PATH = XtMethodPattern.builder().keyword("path")
 			.objMan("from")
 			.objOpt("to")
 			.objOpt("notTo")
 			.objOpt("via")
 			.objOpt("notVia").build();
 
-	static final XtPattern PATTERN_ALLBRANCHES = XtPattern.builder().keyword("allBranches")
+	static final XtMethodPattern PATTERN_ALLBRANCHES = XtMethodPattern.builder().keyword("allBranches")
 			.objMan("from")
 			.textOpt("direction", (Object[]) TraverseDirection.values()).build();
 
-	static final XtPattern PATTERN_ALLPATHS = XtPattern.builder().keyword("allPaths")
+	static final XtMethodPattern PATTERN_ALLPATHS = XtMethodPattern.builder().keyword("allPaths")
 			.objMan("from")
 			.textOpt("direction", (Object[]) TraverseDirection.values()).build();
 
-	static final XtPattern PATTERN_COMMONPREDS = XtPattern.builder().keyword("commonPreds")
+	static final XtMethodPattern PATTERN_COMMONPREDS = XtMethodPattern.builder().keyword("commonPreds")
 			.objMan("of")
 			.objMan("and").build();
 
@@ -498,7 +501,10 @@ public class XtIdeTest extends AbstractIdeTest {
 		assertEqualIterables(data.expectation, succTexts);
 	}
 
-	/** This xpect method can evaluate if the tested element is a transitive predecessor of the given element. */
+	/**
+	 * This xpect method can evaluate if the tested element is a transitive predecessor of the given element. either
+	 * 'to' or 'notTo' is mandatory
+	 */
 	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('via' arg3=OFFSET)? ('notVia' arg4=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg5=OFFSET)?")
 	@Xpect
 	public void path(MethodData data) {
@@ -509,6 +515,8 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocrNotTo = match.getEObjectWithOffset("notTo");
 		IEObjectCoveringRegion ocrVia = match.getEObjectWithOffset("via");
 		IEObjectCoveringRegion ocrNotVia = match.getEObjectWithOffset("notVia");
+
+		assertTrue("Either 'to' or 'notTo' must be defined.", ocrTo != null || ocrNotTo != null);
 
 		// No test assertions here: fails internally iff test fails
 		xtFlowgraphs.path(ocrFrom, ocrTo, ocrNotTo, ocrVia, ocrNotVia, ocrReference);
@@ -608,7 +616,13 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	private void assertEqualIterables(String s1, Iterable<String> i2s) {
-		String s2 = Strings.join(", ", i2s);
-		assertEquals(s1, s2);
+		String[] elems1 = s1.split("\\s*,\\s*");
+		List<String> sorted1 = Lists.newArrayList(elems1);
+		Collections.sort(sorted1);
+		List<String> sorted2 = Lists.newArrayList(i2s);
+		Collections.sort(sorted2);
+		String s1sorted = Strings.join(", ", sorted1);
+		String s2sorted = Strings.join(", ", sorted2);
+		assertEquals(s1sorted, s2sorted);
 	}
 }
