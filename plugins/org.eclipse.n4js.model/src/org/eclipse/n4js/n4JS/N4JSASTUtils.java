@@ -13,7 +13,9 @@ package org.eclipse.n4js.n4JS;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
@@ -35,9 +37,15 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.ListMultimap;
 import com.google.common.hash.Hashing;
 
 /**
@@ -51,6 +59,24 @@ public abstract class N4JSASTUtils {
 
 	/** The reserved {@value} keyword. */
 	public static final String CONSTRUCTOR = "constructor";
+
+	public static final ListMultimap<Object, EReference> containersOfTypeReferenceNodes;
+
+	static {
+		ListMultimap<EClass, EReference> eClassToOwnedRefs = ArrayListMultimap.create();
+		for (EClass eClass : IterableExtensions.filter(N4JSPackage.eINSTANCE.getEClassifiers(), EClass.class)) {
+			eClassToOwnedRefs.putAll(eClass, IterableExtensions.filter(eClass.getEReferences(),
+					eRef -> eRef.isContainment()
+							&& N4JSPackage.Literals.TYPE_REFERENCE_NODE.isSuperTypeOf(eRef.getEReferenceType())));
+		}
+		ListMultimap<EClass, EReference> map2 = ArrayListMultimap.create();
+		for (EClass eClass : IterableExtensions.filter(N4JSPackage.eINSTANCE.getEClassifiers(), EClass.class)) {
+			map2.putAll(eClass, Iterables.concat(
+					eClassToOwnedRefs.get(eClass),
+					IterableExtensions.flatMap(eClass.getEAllSuperTypes(), eClassToOwnedRefs::get)));
+		}
+		containersOfTypeReferenceNodes = ImmutableListMultimap.copyOf(map2);
+	}
 
 	/**
 	 * Tells if the given {@link EObject} represents a write access, e.g. left-hand side of an assignment.
@@ -163,6 +189,22 @@ public abstract class N4JSASTUtils {
 			}
 		}
 		return false;
+	}
+
+	public static Iterable<TypeReferenceNode<?>> getContainedTypeReferenceNodes(EObject astNode) {
+		List<EReference> eRefs = containersOfTypeReferenceNodes.get(astNode.eClass());
+		return FluentIterable.from(eRefs)
+				.transformAndConcat(eRef -> {
+					Object value = astNode.eGet(eRef);
+					if (value != null) {
+						@SuppressWarnings("unchecked")
+						Iterable<TypeReferenceNode<?>> valueAsIterable = eRef.isMany()
+								? (Iterable<TypeReferenceNode<?>>) value
+								: Collections.singleton((TypeReferenceNode<?>) value);
+						return valueAsIterable;
+					}
+					return Collections.emptyList();
+				});
 	}
 
 	/**

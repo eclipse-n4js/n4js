@@ -56,7 +56,6 @@ import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
-import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -462,7 +461,7 @@ public class N4JSLanguageUtils {
 		val tClassifier = EcoreUtil2.getContainerOfType(rootTypeRefInAST, N4ClassifierDeclaration)?.definedType as TClassifier;
 		if(tClassifier===null)
 			return null; // not contained in a class/interface declaration with a properly defined type in TModule
-		val parent = rootTypeRefInAST.eContainer;
+		val parent = rootTypeRefInAST.eContainer?.eContainer; // note: skipping the TypeReferenceNode<?> here!
 		val grandParent = parent?.eContainer;
 		return switch(parent) {
 			FormalParameter case parent.declaredTypeRefInAST===rootTypeRefInAST && grandParent.isNonPrivateMemberOf(tClassifier):
@@ -479,8 +478,7 @@ public class N4JSLanguageUtils {
 					Variance.INV
 				}
 			}
-			TypeReferenceNode<?> case grandParent instanceof N4ClassifierDeclaration
-				&& (grandParent as N4ClassifierDeclaration).superClassifierRefs.exists[it?.typeRef===rootTypeRefInAST]: {
+			N4ClassifierDeclaration case parent.superClassifierRefs.exists[it?.typeRef===rootTypeRefInAST]: {
 				// typeRef is used in the "extends" or "implements" clause of the declaration of tClassifier
 				// -> this mainly depends on the variance of the classifier being extended
 				Variance.CO

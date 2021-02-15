@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList
 import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
@@ -41,6 +42,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -227,12 +229,18 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private boolean isUsedStructurallyAsFormalParametersInTheConstructor(ThisTypeRef thisTypeRef) {
-		if (thisTypeRef.useSiteStructuralTyping) {
-			val methodOrConstructor = thisTypeRef?.eContainer?.eContainer;
-			if (methodOrConstructor instanceof N4MethodDeclaration) {
-				if (methodOrConstructor !== null && methodOrConstructor.isConstructor) {
-					return true
+	def private boolean isUsedStructurallyAsFormalParametersInTheConstructor(ThisTypeRef thisTypeRefInAST) {
+		if (thisTypeRefInAST.useSiteStructuralTyping) {
+			val node = thisTypeRefInAST.eContainer;
+			if (node instanceof TypeReferenceNode<?>) {
+				val fpar = node.eContainer;
+				if (fpar instanceof FormalParameter) {
+					val ctor = fpar.eContainer;
+					if (ctor instanceof N4MethodDeclaration) {
+						if (ctor.isConstructor) {
+							return true
+						}
+					}
 				}
 			}
 		}
@@ -257,12 +265,15 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		return false;
 	}
 
-	private def boolean isUsedInVariableWithSyntaxError(ThisTypeRef ref) {
-		val container = ref.eContainer
-		if (container instanceof VariableDeclaration) {
-			return container.name === null
+	private def boolean isUsedInVariableWithSyntaxError(ThisTypeRef thisTypeRefInAST) {
+		val parent = thisTypeRefInAST.eContainer
+		if (parent instanceof TypeReferenceNode<?>) {
+			val grandParent = parent.eContainer;
+			if (grandParent instanceof VariableDeclaration) {
+				return grandParent.name === null;
+			}
 		}
-		return false
+		return false;
 	}
 
 	@Check

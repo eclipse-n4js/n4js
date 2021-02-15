@@ -12,6 +12,7 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -35,13 +36,13 @@ package class TypeRefProcessor extends AbstractProcessor {
 	private TypeSystemHelper tsh;
 
 	def void handleTypeRefs(RuleEnvironment G, EObject node, ASTMetaInfoCache cache) {
-		if (node instanceof TypeReferenceNode<?>) {
-			val typeRefProcessed = doHandleTypeRef(G, node.typeRefInAST);
+		for (TypeReferenceNode<?> typeRefNode : N4JSASTUtils.getContainedTypeReferenceNodes(node)) {
+			val typeRefProcessed = doHandleTypeRef(G, typeRefNode.typeRefInAST);
 			if (typeRefProcessed !== null) {
 				EcoreUtilN4.doWithDeliver(false, [
 // FIXME type safety violation in next line!!!!
-					(node as TypeReferenceNode<TypeRef>).typeRef = typeRefProcessed;
-				], node);
+					(typeRefNode as TypeReferenceNode<TypeRef>).typeRef = typeRefProcessed;
+				], typeRefNode);
 			}
 		}
 	}

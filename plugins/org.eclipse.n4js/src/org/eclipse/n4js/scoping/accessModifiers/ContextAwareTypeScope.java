@@ -39,7 +39,7 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 	public ContextAwareTypeScope(IScope parent, EObject context) {
 		super(parent);
 
-		if (context instanceof TypeReferenceNode<?>) {
+		if (context.eContainer() instanceof TypeReferenceNode<?>) {
 			context = context.eContainer();
 		}
 		final EObject container = context.eContainer();
