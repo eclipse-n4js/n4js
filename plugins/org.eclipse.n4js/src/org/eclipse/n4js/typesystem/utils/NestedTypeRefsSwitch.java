@@ -272,6 +272,21 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 		// collect type variables in 'F.typeVars' that do not have a type mapping in 'G' and perform substitution on
 		// their upper bounds
+		/*
+		 * IMPLEMENTATION NOTE
+		 *
+		 * Performing substitution on the upper bound of an unbound(!) type variable is non-trivial, because we aren't
+		 * allowed to copy the type variable and change its upper bound (short version: a type variable is a type and
+		 * therefore needs to be contained in a Resource; but our new FunctionTypeExpression 'result' is a TypeRef which
+		 * may not be contained in any Resource).
+		 *
+		 * If type variable substitution on <code>currTV</code>'s upper bound leads to a change of that upper bound (and
+		 * only then!), the modified upper bound will be stored in property 'unboundTypeVarsUpperBounds' of
+		 * <code>result</code>.
+		 *
+		 * This has to be carefully aligned with {@link FunctionTypeExpression#getUnboundTypeVarsUpperBounds()} and
+		 * {@link FunctionTypeExpression#getTypeVarUpperBound(TypeVariable)}.
+		 */
 		final List<TypeVariable> resultUnboundTypeVars = new ArrayList<>();
 		final List<TypeRef> resultUnboundTypeVarsUpperBounds = new ArrayList<>();
 		for (TypeVariable currTV : F.getTypeVars()) {

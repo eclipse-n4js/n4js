@@ -125,7 +125,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			if (!typeRef.typeArgs.empty) {
 				val declType = typeRef.declaredType
 				if (declType instanceof GenericType) {
-					if (!(declType instanceof TFunction)) { // FIXME legacy behavior; is this correct???
+					if (!(declType instanceof TFunction)) { // FIXME legacy behavior; maybe this exception for TFunction can be removed
 						val varIter = declType.typeVars.iterator
 						for (typeArg : typeRef.typeArgs) {
 							if (varIter.hasNext) {
