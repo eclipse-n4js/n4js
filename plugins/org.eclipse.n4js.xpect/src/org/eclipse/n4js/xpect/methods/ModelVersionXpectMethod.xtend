@@ -18,12 +18,12 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion
 import org.eclipse.xpect.XpectImport
 import org.eclipse.xpect.expectation.IStringExpectation
 import org.eclipse.xpect.expectation.StringExpectation
 import org.eclipse.xpect.parameter.ParameterParser
 import org.eclipse.xpect.runner.Xpect
+import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion
 
 /**
  * Provides X!PECT methods for testing versions
@@ -32,7 +32,7 @@ import org.eclipse.xpect.runner.Xpect
 class ModelVersionXpectMethod {
 	@Inject
 	N4JSTypeSystem ts;
-
+ 
 	/**
 	 * Tests the version of a classifier declaration or type reference
 	 */

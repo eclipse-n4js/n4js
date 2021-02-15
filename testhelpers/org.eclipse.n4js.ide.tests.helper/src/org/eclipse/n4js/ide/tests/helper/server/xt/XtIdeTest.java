@@ -17,25 +17,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
+import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -44,11 +50,41 @@ import com.google.inject.Inject;
 public class XtIdeTest extends AbstractIdeTest {
 	static final String CURSOR = AbstractStructuredIdeTest.CURSOR_SYMBOL;
 
+	static final XtPattern PATTERN_PREDS = XtPattern.builder().keyword("preds")
+			.argOpt("type", (Object[]) ControlFlowType.values())
+			.argMan("at").build();
+
+	static final XtPattern PATTERN_SUCCS = XtPattern.builder().keyword("succs")
+			.argOpt("type", (Object[]) ControlFlowType.values())
+			.argMan("at").build();
+
+	static final XtPattern PATTERN_PATH = XtPattern.builder().keyword("path")
+			.argMan("from")
+			.argOpt("to")
+			.argOpt("notTo")
+			.argOpt("via")
+			.argOpt("notVia").build();
+
+	static final XtPattern PATTERN_ALLBRANCHES = XtPattern.builder().keyword("allBranches")
+			.argMan("from")
+			.argOpt("direction", (Object[]) TraverseDirection.values()).build();
+
+	static final XtPattern PATTERN_ALLPATHS = XtPattern.builder().keyword("allPaths")
+			.argMan("from")
+			.argOpt("direction", (Object[]) TraverseDirection.values()).build();
+
+	static final XtPattern PATTERN_COMMONPREDS = XtPattern.builder().keyword("commonPreds")
+			.argMan("of")
+			.argMan("and").build();
+
 	@Inject
-	private XtMethodHelper mh;
+	private XtMethods xtMethods;
+
+	@Inject
+	private XtMethodsFlowgraphs xtFlowgraphs;
 
 	XtFileData xtData;
-	XtIssueHelper issueHelper;
+	XtMethodsIssues issueHelper;
 	XtextResource resource;
 
 	/**
@@ -97,13 +133,31 @@ public class XtIdeTest extends AbstractIdeTest {
 			}
 		}
 
-		this.issueHelper = new XtIssueHelper(xtData, getIssuesInFile(xtModule), issueTests);
+		this.issueHelper = new XtMethodsIssues(xtData, getIssuesInFile(xtModule), issueTests);
 	}
 
 	/**
 	 */
 	public void invokeTestMethod(MethodData testMethodData) throws InterruptedException, ExecutionException {
 		switch (testMethodData.name) {
+		// 1st pass test methods
+		case "nowarnings": {
+			nowarnings(testMethodData);
+			break;
+		}
+		case "noerrors": {
+			noerrors(testMethodData);
+			break;
+		}
+		case "warnings": {
+			warnings(testMethodData);
+			break;
+		}
+		case "errors": {
+			errors(testMethodData);
+			break;
+		}
+		// 2nd pass test methods
 		case "accessModifier":
 			accessModifier(testMethodData);
 			break;
@@ -131,22 +185,46 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "typeArgs":
 			typeArgs(testMethodData);
 			break;
-		case "nowarnings": {
-			nowarnings(testMethodData);
+		// flow graph test methods
+		case "astOrder":
+			astOrder(testMethodData);
 			break;
-		}
-		case "noerrors": {
-			noerrors(testMethodData);
+		case "preds":
+			preds(testMethodData);
 			break;
-		}
-		case "warnings": {
-			warnings(testMethodData);
+		case "succs":
+			succs(testMethodData);
 			break;
-		}
-		case "errors": {
-			errors(testMethodData);
+		case "path":
+			path(testMethodData);
 			break;
-		}
+		case "allMergeBranches":
+			allMergeBranches(testMethodData);
+			break;
+		case "allBranches":
+			allBranches(testMethodData);
+			break;
+		case "allPaths":
+			allPaths(testMethodData);
+			break;
+		case "allEdges":
+			allEdges(testMethodData);
+			break;
+		case "commonPreds":
+			commonPreds(testMethodData);
+			break;
+		case "cfContainer":
+			cfContainer(testMethodData);
+			break;
+		case "instanceofguard":
+			instanceofguard(testMethodData);
+			break;
+		// unsupported test methods
+		case "migration":
+		case "typeSwitch":
+		case "typeSwitchTypeRef":
+		case "version":
+			throw new IllegalArgumentException("Unsupported legacy method " + testMethodData.name);
 		default:
 			throw new IllegalArgumentException("Unknown method: " + testMethodData.name);
 		}
@@ -221,8 +299,8 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void accessModifier(MethodData data) {
 		int offset = getOffset(data, "accessModifier", "at");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		String accessModifierStr = XtMethodHelper.getAccessModifierString(eObject);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		String accessModifierStr = XtMethods.getAccessModifierString(eObject);
 		assertEquals(data.expectation, accessModifierStr);
 	}
 
@@ -259,8 +337,8 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void elementKeyword(MethodData data) {
 		int offset = getOffset(data, "elementKeyword", "at");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		String elementKeywordStr = mh.getElementKeywordString(eObject, offset);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		String elementKeywordStr = xtMethods.getElementKeywordString(eObject, offset);
 		assertEquals(data.expectation, elementKeywordStr);
 	}
 
@@ -277,8 +355,8 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void findReferences(MethodData data) {
 		int offset = getOffset(data, "findReferences", "at");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		List<String> findReferencesArray = mh.getFindReferences(eObject, offset);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		List<String> findReferencesArray = xtMethods.getFindReferences(eObject, offset);
 		String expectation = data.expectation.replaceAll("\\s+", " ").replaceAll(",\\s*", ",\n");
 		assertEquals(expectation, Strings.join(",\n", findReferencesArray));
 	}
@@ -292,24 +370,28 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
-	 *
+	 * <pre>
+	 * // Xpect linkedName at '&ltLOCATION&gt' --&gt; &ltTYPE NAME&gt
+	 * </pre>
 	 */
 	@Xpect
 	public void linkedName(MethodData data) {
 		int offset = getOffset(data, "linkedName", "at");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		QualifiedName linkedName = mh.linkedName(eObject, offset);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		QualifiedName linkedName = xtMethods.linkedName(eObject, offset);
 		assertEquals(data.expectation, linkedName.toString());
 	}
 
 	/**
-	 *
+	 * <pre>
+	 * // Xpect linkedFragment at '&ltLOCATION&gt' --&gt; &ltFRAGMENT NAME&gt
+	 * </pre>
 	 */
 	@Xpect
 	public void linkedFragment(MethodData data) {
 		int offset = getOffset(data, "linkedFragment", "at");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		String fragmentName = mh.linkedFragment(eObject, offset);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		String fragmentName = xtMethods.linkedFragment(eObject, offset);
 		assertEquals(data.expectation, fragmentName);
 	}
 
@@ -319,12 +401,16 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * <p>
 	 * The qualified name created by retrieving all "name" properties of the target and its containers, using '/' as
 	 * separator.
+	 *
+	 * <pre>
+	 * // Xpect linkedPathname at '&ltLOCATION&gt' --&gt; &ltPATH NAME&gt
+	 * </pre>
 	 */
 	@Xpect
 	public void linkedPathname(MethodData data) {
 		int offset = getOffset(data, "linkedPathname", "at");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		String pathName = mh.linkedPathname(eObject, offset);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		String pathName = xtMethods.linkedPathname(eObject, offset);
 		assertEquals(data.expectation, pathName);
 	}
 
@@ -344,8 +430,8 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void type(MethodData data) {
 		int offset = getOffset(data, "type", "of");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		String typeStr = mh.getTypeString(eObject, false);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		String typeStr = xtMethods.getTypeString(eObject, false);
 		assertEquals(data.expectation, typeStr);
 	}
 
@@ -369,9 +455,161 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void typeArgs(MethodData data) {
 		int offset = getOffset(data, "typeArgs", "of");
-		EObject eObject = XtMethodHelper.getEObject(resource, offset, 0);
-		String typeArgStr = mh.getTypeArgumentsString(eObject);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		String typeArgStr = xtMethods.getTypeArgumentsString(eObject);
 		assertEquals(data.expectation, typeArgStr);
+	}
+
+	/**
+	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
+	 * specifying the edge type.
+	 * <p>
+	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 */
+	@ParameterParser(syntax = "('of' arg2=OFFSET)?")
+	@Xpect
+	public void astOrder(MethodData data) {
+		IEObjectCoveringRegion ocr = getObjectCoveringRegion(data, "astOrder", "of");
+		List<String> astElements = xtFlowgraphs.astOrder(ocr);
+		assertEqualIterables(data.expectation, astElements);
+	}
+
+	/**
+	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
+	 * specifying the edge type.
+	 * <p>
+	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 */
+	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
+	@Xpect
+	public void preds(MethodData data) {
+		PATTERN_PREDS.match(data.getMethodNameWithArgs());
+		String type = PATTERN_PREDS.get("type");
+		String at = PATTERN_PREDS.get("at");
+		IEObjectCoveringRegion ocrAt = getObjectCoveringRegion(data, at);
+		List<String> predTexts = xtFlowgraphs.preds(type, ocrAt);
+		assertEqualIterables(data.expectation, predTexts);
+	}
+
+	/**
+	 * This xpect method can evaluate the direct successors of a code element. The successors can be limited when
+	 * specifying the edge type.
+	 * <p>
+	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 */
+	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
+	@Xpect
+	public void succs(MethodData data) {
+		PATTERN_SUCCS.match(data.getMethodNameWithArgs());
+		String type = PATTERN_SUCCS.get("type");
+		String at = PATTERN_SUCCS.get("at");
+		IEObjectCoveringRegion ocrAt = getObjectCoveringRegion(data, at);
+		List<String> succTexts = xtFlowgraphs.succs(type, ocrAt);
+		assertEqualIterables(data.expectation, succTexts);
+	}
+
+	/** This xpect method can evaluate if the tested element is a transitive predecessor of the given element. */
+	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('via' arg3=OFFSET)? ('notVia' arg4=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg5=OFFSET)?")
+	@Xpect
+	public void path(MethodData data) {
+		PATTERN_PATH.match(data.getMethodNameWithArgs());
+		String from = PATTERN_PATH.get("from");
+		String to = PATTERN_PATH.get("to");
+		String notTo = PATTERN_PATH.get("notTo");
+		String via = PATTERN_PATH.get("via");
+		String notVia = PATTERN_PATH.get("notVia");
+		IEObjectCoveringRegion ocrReference = getObjectCoveringRegion(data, null);
+		IEObjectCoveringRegion ocrFrom = getObjectCoveringRegion(data, from);
+		IEObjectCoveringRegion ocrTo = getObjectCoveringRegion(data, to);
+		IEObjectCoveringRegion ocrNotTo = getObjectCoveringRegion(data, notTo);
+		IEObjectCoveringRegion ocrVia = getObjectCoveringRegion(data, via);
+		IEObjectCoveringRegion ocrNotVia = getObjectCoveringRegion(data, notVia);
+
+		// No test assertions here: fails internally iff test fails
+		xtFlowgraphs.path(ocrFrom, ocrTo, ocrNotTo, ocrVia, ocrNotVia, ocrReference);
+	}
+
+	/**
+	 * This xpect method can evaluate all branches that are merged at the given node name.
+	 */
+	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
+	@Xpect
+	public void allMergeBranches(MethodData data) {
+		IEObjectCoveringRegion ocr = getObjectCoveringRegion(data, "allMergeBranches", null);
+		List<String> edgeStrings = xtFlowgraphs.allMergeBranches(ocr);
+		assertEqualIterables(data.expectation, edgeStrings);
+	}
+
+	/**
+	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
+	 * specified, the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@Xpect
+	public void allBranches(MethodData data) {
+		PATTERN_ALLBRANCHES.match(data.getMethodNameWithArgs());
+		String from = PATTERN_ALLBRANCHES.get("from");
+		String direction = PATTERN_ALLBRANCHES.get("direction");
+		IEObjectCoveringRegion ocrReference = getObjectCoveringRegion(data, null);
+		IEObjectCoveringRegion ocrFrom = getObjectCoveringRegion(data, from);
+		List<String> branchStrings = xtFlowgraphs.allBranches(ocrFrom, direction, ocrReference);
+		assertEqualIterables(data.expectation, branchStrings);
+	}
+
+	/**
+	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
+	 * the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@Xpect
+	public void allPaths(MethodData data) {
+		PATTERN_ALLPATHS.match(data.getMethodNameWithArgs());
+		String from = PATTERN_ALLPATHS.get("from");
+		String direction = PATTERN_ALLPATHS.get("direction");
+		IEObjectCoveringRegion ocrReference = getObjectCoveringRegion(data, null);
+		IEObjectCoveringRegion ocrFrom = getObjectCoveringRegion(data, from);
+		List<String> pathStrings = xtFlowgraphs.allPaths(ocrFrom, direction, ocrReference);
+		assertEqualIterables(data.expectation, pathStrings);
+	}
+
+	/** This xpect method can evaluate all edges of the containing function. */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
+	@Xpect
+	public void allEdges(MethodData data) {
+		IEObjectCoveringRegion ocr = getObjectCoveringRegion(data, "allEdges", "from");
+		List<String> pathStrings = xtFlowgraphs.allEdges(ocr);
+		assertEqualIterables(data.expectation, pathStrings);
+	}
+
+	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
+	@ParameterParser(syntax = "'of' arg1=OFFSET 'and' arg2=OFFSET")
+	@Xpect
+	public void commonPreds(MethodData data) {
+		PATTERN_COMMONPREDS.match(data.getMethodNameWithArgs());
+		String of = PATTERN_COMMONPREDS.get("of");
+		String and = PATTERN_COMMONPREDS.get("and");
+		IEObjectCoveringRegion ocrA = getObjectCoveringRegion(data, of);
+		IEObjectCoveringRegion ocrB = getObjectCoveringRegion(data, and);
+		List<String> commonPredStrs = xtFlowgraphs.commonPreds(ocrA, ocrB);
+		assertEqualIterables(data.expectation, commonPredStrs);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void cfContainer(MethodData data) {
+		IEObjectCoveringRegion ocr = getObjectCoveringRegion(data, "cfContainer", "of");
+		String containerStr = xtFlowgraphs.cfContainer(ocr);
+		assertEquals(data.expectation, containerStr);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void instanceofguard(MethodData data) {
+		IEObjectCoveringRegion ocr = getObjectCoveringRegion(data, "instanceofguard", "of");
+		List<String> guardStrs = xtFlowgraphs.instanceofguard(ocr);
+		assertEqualIterables(data.expectation, guardStrs);
 	}
 
 	private Position getPosition(MethodData data, String checkArg1, String optionalDelimiter) {
@@ -380,16 +618,40 @@ public class XtIdeTest extends AbstractIdeTest {
 		return position;
 	}
 
+	private IEObjectCoveringRegion getObjectCoveringRegion(int offset) {
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		return new EObjectCoveringRegion(eObject, offset);
+	}
+
+	private IEObjectCoveringRegion getObjectCoveringRegion(MethodData data, String optionalLocationStr) {
+		int offset = getOffset(data, optionalLocationStr);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		return new EObjectCoveringRegion(eObject, offset);
+	}
+
+	private IEObjectCoveringRegion getObjectCoveringRegion(MethodData data, String checkArg1, String optionalLocation) {
+		int offset = getOffset(data, checkArg1, optionalLocation);
+		EObject eObject = XtMethods.getEObject(resource, offset, 0);
+		return new EObjectCoveringRegion(eObject, offset);
+	}
+
 	private int getOffset(MethodData data, String checkArg1, String optionalLocation) {
 		Preconditions.checkArgument(data.name.equals(checkArg1));
-		int offset;
+		String optionalLocationStr = null;
 		if (data.args.length > 1) {
 			Preconditions.checkArgument(data.args[0].equals(optionalLocation));
 			Preconditions.checkArgument(data.args[1].startsWith("'"));
 			Preconditions.checkArgument(data.args[1].endsWith("'"));
-			String locationStr = data.args[1].substring(1, data.args[1].length() - 1);
-			int relOffset = locationStr.contains(CURSOR) ? locationStr.indexOf(CURSOR) : 0;
-			locationStr = locationStr.replace(CURSOR, "");
+			optionalLocationStr = data.args[1].substring(1, data.args[1].length() - 1);
+		}
+		return getOffset(data, optionalLocationStr);
+	}
+
+	private int getOffset(MethodData data, String optionalLocationStr) {
+		int offset;
+		if (optionalLocationStr != null) {
+			int relOffset = optionalLocationStr.contains(CURSOR) ? optionalLocationStr.indexOf(CURSOR) : 0;
+			String locationStr = optionalLocationStr.replace(CURSOR, "");
 			int absOffset = skipCommentsAndWhitespace(xtData.content, locationStr, data.offset);
 			offset = absOffset + relOffset;
 		} else {
@@ -447,4 +709,22 @@ public class XtIdeTest extends AbstractIdeTest {
 		return offset < 0 ? Integer.MAX_VALUE : offset;
 	}
 
+	private void assertEqualIterables(Iterable<?> i1, Iterable<?> i2) {
+		assertEquals(Strings.join(", ", i1), Strings.join(", ", i2));
+	}
+
+	private <F> void assertEqualIterables(Iterable<String> i1, Iterable<F> i2, Function<F, String> toString) {
+		Iterable<String> s2 = Iterables.transform(i2, toString::apply);
+		assertEqualIterables(i1, s2);
+	}
+
+	private <F> void assertEqualIterables(String s1, Iterable<F> i2, Function<F, String> toString) {
+		Iterable<String> i2s = Iterables.transform(i2, toString::apply);
+		assertEqualIterables(s1, i2s);
+	}
+
+	private void assertEqualIterables(String s1, Iterable<String> i2s) {
+		String s2 = Strings.join(", ", i2s);
+		assertEquals(s1, s2);
+	}
 }

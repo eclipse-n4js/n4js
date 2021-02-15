@@ -74,7 +74,7 @@ import com.google.inject.Inject;
 /**
  *
  */
-public class XtMethodHelper {
+public class XtMethods {
 	@Inject
 	private N4JSTypeSystem ts;
 

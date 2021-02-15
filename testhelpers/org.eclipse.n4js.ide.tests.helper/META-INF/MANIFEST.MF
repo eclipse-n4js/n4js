@@ -22,7 +22,9 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.lsp4j.jsonrpc,
  org.eclipse.n4js.cli,
  org.eclipse.n4js.ts,
- org.eclipse.xpect
+ org.eclipse.xpect,
+ org.eclipse.xpect.xtext.lib,
+ org.eclipse.n4js.flowgraphs
 Export-Package: org.eclipse.n4js.ide.tests.helper.client,
  org.eclipse.n4js.ide.tests.helper.server,
  org.eclipse.n4js.ide.tests.helper.server.xt

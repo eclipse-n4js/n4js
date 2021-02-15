@@ -11,7 +11,9 @@
 package org.eclipse.n4js.xpect.common;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodHelper;
+import org.eclipse.n4js.ide.tests.helper.server.xt.EObjectCoveringRegion;
+import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethods;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegionProvider;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.XpectInvocation;
@@ -20,7 +22,6 @@ import org.eclipse.xpect.setup.XpectSetupFactory;
 import org.eclipse.xpect.state.Creates;
 import org.eclipse.xpect.text.IRegion;
 import org.eclipse.xpect.xtext.lib.setup.ThisResource;
-import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
 import org.eclipse.xtext.resource.XtextResource;
 
 /**
@@ -33,47 +34,6 @@ import org.eclipse.xtext.resource.XtextResource;
 @XpectSetupFactory
 @XpectImport(EObjectCoveringRegionProvider.class)
 public class N4JSOffsetAdapter {
-
-	/**
-	 * Provides an AST element of type {@link EObject}, previously found in the AST via
-	 * {@link EObjectCoveringRegionProvider}. The AST related node covers the complete region defined by the offset of
-	 * the specified location and the length of the specified location. That is, for a given test class with a parameter
-	 * 'of' as OFFSET (via {@code @ParameterParser(syntax = "('of' arg1=OFFSET)?")}), the following two tests <br/>
-	 * {@code // XpECT ... of 'a as B'} <br/>
-	 * and <br/>
-	 * {@code // XpECT ... of 'a'} <br/>
-	 * will return different objects (CastExpression vs. IdentifierRef). If no region is defined, this test will return
-	 * the next element after the test line.
-	 */
-	public static interface IEObjectCoveringRegion extends IEObjectOwner {
-		// no new fields
-		/**
-		 * Return the offset of the region
-		 */
-		public int getOffset();
-	}
-
-	/***/
-	public static class EObjectCoveringRegion implements IEObjectCoveringRegion {
-		final EObject eObj;
-		int offset;
-
-		/***/
-		public EObjectCoveringRegion(EObject eObj, int offset) {
-			this.eObj = eObj;
-			this.offset = offset;
-		}
-
-		@Override
-		public EObject getEObject() {
-			return eObj;
-		}
-
-		@Override
-		public int getOffset() {
-			return offset;
-		}
-	}
 
 	/**
 	 * Provides an {@link IEObjectCoveringRegion} parameter, activated by {@link N4JSOffsetAdapter}.
@@ -111,7 +71,7 @@ public class N4JSOffsetAdapter {
 			final int offset = haveRegion ? region.getOffset() : this.matchedOffset;
 			final int length = haveRegion ? region.getLength() : 0;
 
-			EObject semanticObject = XtMethodHelper.getEObject(resource, offset, length);
+			EObject semanticObject = XtMethods.getEObject(resource, offset, length);
 			return new EObjectCoveringRegion(semanticObject, offset);
 		}
 	}

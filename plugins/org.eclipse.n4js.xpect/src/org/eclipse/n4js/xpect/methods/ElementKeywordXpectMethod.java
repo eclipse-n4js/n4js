@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.xpect.methods;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodHelper;
+import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethods;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
@@ -29,7 +29,7 @@ import com.google.inject.Inject;
 @XpectImport(N4JSOffsetAdapter.class)
 public class ElementKeywordXpectMethod {
 	@Inject
-	XtMethodHelper mh;
+	XtMethods mh;
 
 	/**
 	 * Test the element keyword of an element. Examples of element keyword are getter, setter, field etc.

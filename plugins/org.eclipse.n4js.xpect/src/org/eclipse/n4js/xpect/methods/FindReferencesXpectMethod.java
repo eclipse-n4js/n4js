@@ -12,8 +12,8 @@ package org.eclipse.n4js.xpect.methods;
 
 import java.util.List;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodHelper;
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
+import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethods;
 import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
@@ -35,7 +35,7 @@ import com.google.inject.Inject;
 @XpectImport({ XtextStandaloneSetup.class, XtextWorkspaceSetup.class })
 public class FindReferencesXpectMethod {
 	@Inject
-	XtMethodHelper mh;
+	XtMethods mh;
 
 	/**
 	 * This Xpect methods compares all computed references at a given EObject to the expected references. The expected

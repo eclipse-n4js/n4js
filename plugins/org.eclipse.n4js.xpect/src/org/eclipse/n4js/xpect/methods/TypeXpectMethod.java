@@ -11,9 +11,9 @@
 package org.eclipse.n4js.xpect.methods;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodHelper;
+import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethods;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 @XpectImport(N4JSOffsetAdapter.class)
 public class TypeXpectMethod {
 	@Inject
-	private XtMethodHelper mh;
+	private XtMethods mh;
 
 	/**
 	 * Checks that an element/expression has a certain type. Usage:

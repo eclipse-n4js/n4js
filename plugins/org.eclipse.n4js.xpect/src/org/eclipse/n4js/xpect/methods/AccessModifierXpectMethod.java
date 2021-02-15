@@ -11,11 +11,11 @@
 package org.eclipse.n4js.xpect.methods;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodHelper;
+import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethods;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
@@ -39,7 +39,7 @@ public class AccessModifierXpectMethod {
 			IEObjectCoveringRegion offset) {
 
 		EObject context = offset.getEObject();
-		String actual = XtMethodHelper.getAccessModifierString(context);
+		String actual = XtMethods.getAccessModifierString(context);
 		expectation.assertEquals(actual);
 	}
 

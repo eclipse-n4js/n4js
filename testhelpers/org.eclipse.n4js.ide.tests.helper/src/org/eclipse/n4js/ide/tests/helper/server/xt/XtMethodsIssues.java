@@ -34,7 +34,7 @@ import com.google.common.collect.Multimap;
 /**
  *
  */
-public class XtIssueHelper {
+public class XtMethodsIssues {
 	static final String MESSAGE = "MESSAGE";
 	static final String AT = "AT";
 	static final Pattern PATTERN_MESSAGE_AT = Pattern
@@ -50,7 +50,7 @@ public class XtIssueHelper {
 		return xtData.getOffset(i1.getRange().getStart()) - xtData.getOffset(i2.getRange().getStart());
 	}
 
-	XtIssueHelper(XtFileData xtData, Collection<Diagnostic> unsortedIssues, List<MethodData> issueTests) {
+	XtMethodsIssues(XtFileData xtData, Collection<Diagnostic> unsortedIssues, List<MethodData> issueTests) {
 
 		this.xtData = xtData;
 		this.errors = new TreeSet<>(this::compareDiagnosticByOffset);
