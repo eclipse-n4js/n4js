@@ -37,7 +37,7 @@ public class ElementKeywordXpectMethod {
 	@ParameterParser(syntax = "('at' arg1=OFFSET)?")
 	@Xpect
 	public void elementKeyword(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
-		String actual = mh.getElementKeywordString(offset.getEObject(), offset.getOffset());
+		String actual = mh.getElementKeywordString(offset);
 		expectation.assertEquals(actual);
 	}
 

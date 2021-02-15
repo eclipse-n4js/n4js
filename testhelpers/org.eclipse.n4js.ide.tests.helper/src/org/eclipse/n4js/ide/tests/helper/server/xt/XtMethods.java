@@ -60,9 +60,7 @@ import org.eclipse.xtext.common.types.access.TypeResource;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.junit.Assert;
@@ -169,7 +167,9 @@ public class XtMethods {
 		return sb.toString();
 	}
 
-	public String getElementKeywordString(EObject eObject, int offset) {
+	public String getElementKeywordString(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
 		// Get the cross-referenced element at the offset.
 		EObject crossRef = offsetHelper.resolveCrossReferencedElementAt((XtextResource) eObject.eResource(), offset);
 
@@ -177,11 +177,13 @@ public class XtMethods {
 		return elementKeywordStr;
 	}
 
-	public List<String> getFindReferences(EObject context, int offset) {
-		EObject argEObj = offsetHelper.resolveElementAt((XtextResource) context.eResource(), offset);
+	public List<String> getFindReferences(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
+		EObject argEObj = offsetHelper.resolveElementAt((XtextResource) eObject.eResource(), offset);
 		// If not a cross-reference element, use context instead
 		if (argEObj == null) {
-			argEObj = context;
+			argEObj = eObject;
 		}
 
 		EObject eObj = argEObj;
@@ -190,7 +192,7 @@ public class XtMethods {
 			eObj = ((ParameterizedTypeRef) argEObj).getDeclaredType();
 		}
 
-		List<EObject> refs = findReferenceHelper.findReferences(eObj, context.eResource().getResourceSet());
+		List<EObject> refs = findReferenceHelper.findReferences(eObj, eObject.eResource().getResourceSet());
 		ArrayList<String> result = Lists.newArrayList();
 		for (EObject ref : refs) {
 			if (ref instanceof PropertyNameOwner) {
@@ -223,7 +225,9 @@ public class XtMethods {
 
 	/**  */
 	@Xpect
-	public QualifiedName linkedName(EObject eObject, int offset) {
+	public QualifiedName linkedName(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
 		// Get the cross-referenced element at the offset.
 		XtextResource eResource = (XtextResource) eObject.eResource();
 		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
@@ -248,7 +252,9 @@ public class XtMethods {
 	}
 
 	/**  */
-	public String linkedPathname(EObject eObject, int offset) {
+	public String linkedPathname(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
 		// Get the cross-referenced element at the offset.
 		XtextResource eResource = (XtextResource) eObject.eResource();
 		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
@@ -284,7 +290,9 @@ public class XtMethods {
 		return pathname;
 	}
 
-	public String linkedFragment(EObject eObject, int offset) {
+	public String linkedFragment(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
 		XtextResource eResource = (XtextResource) eObject.eResource();
 		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
 		if (targetObject == null) {
@@ -359,36 +367,6 @@ public class XtMethods {
 			}
 		}
 		return actual;
-	}
-
-	static public EObject getEObject(XtextResource resource, int offset, int length) {
-		boolean haveRegion = length > 0;
-		int endOffset = offset + length;
-		EObject semanticObject = null;
-
-		IParseResult parseResult = resource.getParseResult();
-		INode node = NodeModelUtils.findLeafNodeAtOffset(parseResult.getRootNode(), offset);
-		while (node != null) {
-			EObject actualObject = NodeModelUtils.findActualSemanticObjectFor(node);
-			if (actualObject != null) {
-				if (haveRegion) {
-					int nodeEndOffset = node.getEndOffset();
-					if (nodeEndOffset <= endOffset || semanticObject == null) {
-						semanticObject = actualObject;
-					}
-					if (nodeEndOffset >= endOffset) {
-						break;
-					}
-				} else { // no region given, just a matched offset
-					if (semanticObject == null) {
-						semanticObject = actualObject;
-						break;
-					}
-				}
-			}
-			node = node.getParent();
-		}
-		return semanticObject;
 	}
 
 }

@@ -47,7 +47,7 @@ public class FindReferencesXpectMethod {
 			@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset) {
 
-		List<String> result = mh.getFindReferences(offset.getEObject(), offset.getOffset());
+		List<String> result = mh.getFindReferences(offset);
 		expectation.assertEquals(result);
 	}
 }

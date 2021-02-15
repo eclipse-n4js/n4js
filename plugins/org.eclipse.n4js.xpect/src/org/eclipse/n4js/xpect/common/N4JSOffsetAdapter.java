@@ -13,7 +13,7 @@ package org.eclipse.n4js.xpect.common;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ide.tests.helper.server.xt.EObjectCoveringRegion;
 import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethods;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtResourceUtil;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegionProvider;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.XpectInvocation;
@@ -71,7 +71,7 @@ public class N4JSOffsetAdapter {
 			final int offset = haveRegion ? region.getOffset() : this.matchedOffset;
 			final int length = haveRegion ? region.getLength() : 0;
 
-			EObject semanticObject = XtMethods.getEObject(resource, offset, length);
+			EObject semanticObject = XtResourceUtil.getEObject(resource, offset, length);
 			return new EObjectCoveringRegion(semanticObject, offset);
 		}
 	}
