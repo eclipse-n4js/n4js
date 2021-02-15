@@ -87,8 +87,6 @@ Contributors:
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
 		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
 
-		<excludeJRE>false</excludeJRE>
-		
 		<!-- some memory -->
 		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
