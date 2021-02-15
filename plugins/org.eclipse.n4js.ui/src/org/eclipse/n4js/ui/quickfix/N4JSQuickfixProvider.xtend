@@ -39,7 +39,7 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
-import org.eclipse.n4js.n4JS.TypeReferenceInAST
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
@@ -331,7 +331,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 				if (element instanceof ParameterizedPropertyAccessExpression) {
 					typeDeclaration = element.property;
-				} else if (element instanceof TypeReferenceInAST<?>) {
+				} else if (element instanceof TypeReferenceNode<?>) {
 					typeDeclaration = element.typeRefInAST?.declaredType;
 				} else if (element instanceof TypeRef) {
 					typeDeclaration = element.declaredType;
@@ -544,7 +544,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			override computeChanges(IModificationContext context, IMarker marker, int offset, int length,
 				EObject elementRaw) throws Exception {
 
-				val element = if (elementRaw instanceof TypeReferenceInAST<?>) {
+				val element = if (elementRaw instanceof TypeReferenceNode<?>) {
 					elementRaw.typeRefInAST;
 				} else {
 					elementRaw

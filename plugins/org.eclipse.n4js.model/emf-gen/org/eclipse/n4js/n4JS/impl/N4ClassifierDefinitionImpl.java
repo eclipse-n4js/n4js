@@ -36,7 +36,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
@@ -207,8 +207,8 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	@Override
-	public Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getSuperClassifierRefs() {
-		return Collections.<TypeReferenceInAST<ParameterizedTypeRef>>emptyList();
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs() {
+		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList();
 	}
 
 	/**
@@ -217,8 +217,8 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	@Override
-	public Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs() {
-		return Collections.<TypeReferenceInAST<ParameterizedTypeRef>>emptyList();
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs() {
+		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList();
 	}
 
 	/**

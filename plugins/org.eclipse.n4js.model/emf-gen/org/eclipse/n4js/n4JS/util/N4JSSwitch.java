@@ -168,9 +168,9 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.TYPE_REFERENCE_IN_AST: {
-				TypeReferenceInAST<?> typeReferenceInAST = (TypeReferenceInAST<?>)theEObject;
-				T1 result = caseTypeReferenceInAST(typeReferenceInAST);
+			case N4JSPackage.TYPE_REFERENCE_NODE: {
+				TypeReferenceNode<?> typeReferenceNode = (TypeReferenceNode<?>)theEObject;
+				T1 result = caseTypeReferenceNode(typeReferenceNode);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2147,17 +2147,17 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Type Reference In AST</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Type Reference Node</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Type Reference In AST</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Type Reference Node</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public <T extends TypeRef> T1 caseTypeReferenceInAST(TypeReferenceInAST<T> object) {
+	public <T extends TypeRef> T1 caseTypeReferenceNode(TypeReferenceNode<T> object) {
 		return null;
 	}
 

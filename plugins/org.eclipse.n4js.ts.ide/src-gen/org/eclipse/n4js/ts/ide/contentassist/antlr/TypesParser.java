@@ -193,9 +193,7 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTStructMethodAccess().getGroup_0_0(), "rule__TStructMethod__Group_0_0__0");
 			builder.put(grammarAccess.getTypeVariablesAccess().getGroup(), "rule__TypeVariables__Group__0");
 			builder.put(grammarAccess.getTypeVariablesAccess().getGroup_2(), "rule__TypeVariables__Group_2__0");
-			builder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getGroup(), "rule__ColonSepDeclaredTypeRef__Group__0");
 			builder.put(grammarAccess.getColonSepTypeRefAccess().getGroup(), "rule__ColonSepTypeRef__Group__0");
-			builder.put(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getGroup(), "rule__ColonSepDeclaredReturnTypeRef__Group__0");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getGroup(), "rule__ColonSepReturnTypeRef__Group__0");
 			builder.put(grammarAccess.getTStructFieldAccess().getGroup(), "rule__TStructField__Group__0");
 			builder.put(grammarAccess.getTStructGetterAccess().getGroup(), "rule__TStructGetter__Group__0");
@@ -347,9 +345,7 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTStructMethodAccess().getNameAssignment_0_0_2(), "rule__TStructMethod__NameAssignment_0_0_2");
 			builder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_1(), "rule__TypeVariables__TypeVarsAssignment_1");
 			builder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_2_1(), "rule__TypeVariables__TypeVarsAssignment_2_1");
-			builder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefInASTAssignment_1(), "rule__ColonSepDeclaredTypeRef__DeclaredTypeRefInASTAssignment_1");
 			builder.put(grammarAccess.getColonSepTypeRefAccess().getTypeRefAssignment_1(), "rule__ColonSepTypeRef__TypeRefAssignment_1");
-			builder.put(grammarAccess.getColonSepDeclaredReturnTypeRefAccess().getDeclaredReturnTypeRefInASTAssignment_1(), "rule__ColonSepDeclaredReturnTypeRef__DeclaredReturnTypeRefInASTAssignment_1");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getReturnTypeRefAssignment_1(), "rule__ColonSepReturnTypeRef__ReturnTypeRefAssignment_1");
 			builder.put(grammarAccess.getTStructFieldAccess().getNameAssignment_0(), "rule__TStructField__NameAssignment_0");
 			builder.put(grammarAccess.getTStructFieldAccess().getOptionalAssignment_1(), "rule__TStructField__OptionalAssignment_1");

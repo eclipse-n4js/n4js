@@ -79,7 +79,7 @@ import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.ThrowStatement
-import org.eclipse.n4js.n4JS.TypeReferenceInAST
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -669,7 +669,9 @@ public class TranspilerBuilderBlocks
 		val result = N4JSFactory.eINSTANCE.createFormalParameter;
 		result.name = name;
 		result.variadic = variadic;
-		result.declaredTypeRef = TypeUtils.copy(typeRef); // ok if typeRef===null
+		if (typeRef !== null) {
+			result.declaredTypeRefNode = _TypeReferenceNode(typeRef);
+		}
 		if(isSpecFpar) {
 			result.annotations += _Annotation(AnnotationDefinition.SPEC);
 		}
@@ -821,8 +823,8 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def <T extends TypeRef> TypeReferenceInAST<T> _TypeReferenceInAST(T typeRef) {
-		val result = N4JSFactory.eINSTANCE.createTypeReferenceInAST();
+	public static def <T extends TypeRef> TypeReferenceNode<T> _TypeReferenceNode(T typeRef) {
+		val result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
 		result.typeRefInAST = TypeUtils.copyIfContained(typeRef);
 		result.typeRef = result.typeRefInAST;
 		return result;

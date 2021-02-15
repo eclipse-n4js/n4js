@@ -50,7 +50,7 @@ package class N4JSTypeVariableTypesBuilder {
 		typeVar.declaredCovariant = n4TypeVar.declaredCovariant;
 		typeVar.declaredContravariant = n4TypeVar.declaredContravariant;
 		if (!preLinkingPhase) {
-			typeVar.declaredUpperBound = TypeUtils.copyWithProxies(n4TypeVar.declaredUpperBoundInAST);
+			typeVar.declaredUpperBound = TypeUtils.copyWithProxies(n4TypeVar.declaredUpperBoundNode?.typeRefInAST);
 		}
 
 		n4TypeVar.definedTypeVariable = typeVar;

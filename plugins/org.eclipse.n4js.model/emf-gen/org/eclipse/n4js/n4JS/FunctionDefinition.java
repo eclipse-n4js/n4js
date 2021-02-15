@@ -31,8 +31,7 @@ import org.eclipse.n4js.ts.types.TFunction;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getFpars <em>Fpars</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRef <em>Declared Return Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefInAST <em>Declared Return Type Ref In AST</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#isDeclaredAsync <em>Declared Async</em>}</li>
  * </ul>
@@ -55,34 +54,7 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	EList<FormalParameter> getFpars();
 
 	/**
-	 * Returns the value of the '<em><b>Declared Return Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Same as {@link #getDeclaredReturnTypeRefInAST()}, but with type aliases being resolved (if any).
-	 * The returned type reference may or may not be contained in the AST.
-	 * This is set during post-processing by {@code TypeRefProcessor}.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Declared Return Type Ref</em>' reference.
-	 * @see #setDeclaredReturnTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDefinition_DeclaredReturnTypeRef()
-	 * @model transient="true"
-	 * @generated
-	 */
-	TypeRef getDeclaredReturnTypeRef();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRef <em>Declared Return Type Ref</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Return Type Ref</em>' reference.
-	 * @see #getDeclaredReturnTypeRef()
-	 * @generated
-	 */
-	void setDeclaredReturnTypeRef(TypeRef value);
-
-	/**
-	 * Returns the value of the '<em><b>Declared Return Type Ref In AST</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Declared Return Type Ref Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -90,23 +62,23 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 * In case it's not provided, this reference remains null.
 	 * In contrast, reference definedType contains a TFunction whose returnTypeRef is always non-null irrespective of whether the hint was provided or not.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Declared Return Type Ref In AST</em>' containment reference.
-	 * @see #setDeclaredReturnTypeRefInAST(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDefinition_DeclaredReturnTypeRefInAST()
+	 * @return the value of the '<em>Declared Return Type Ref Node</em>' containment reference.
+	 * @see #setDeclaredReturnTypeRefNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDefinition_DeclaredReturnTypeRefNode()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TypeRef getDeclaredReturnTypeRefInAST();
+	TypeReferenceNode<TypeRef> getDeclaredReturnTypeRefNode();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefInAST <em>Declared Return Type Ref In AST</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Return Type Ref In AST</em>' containment reference.
-	 * @see #getDeclaredReturnTypeRefInAST()
+	 * @param value the new value of the '<em>Declared Return Type Ref Node</em>' containment reference.
+	 * @see #getDeclaredReturnTypeRefNode()
 	 * @generated
 	 */
-	void setDeclaredReturnTypeRefInAST(TypeRef value);
+	void setDeclaredReturnTypeRefNode(TypeReferenceNode<TypeRef> value);
 
 	/**
 	 * Returns the value of the '<em><b>Generator</b></em>' attribute.
@@ -170,6 +142,22 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 * @generated
 	 */
 	boolean isReturnValueOptional();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getDeclaredReturnTypeRef();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getDeclaredReturnTypeRefInAST();
 
 	/**
 	 * <!-- begin-user-doc -->

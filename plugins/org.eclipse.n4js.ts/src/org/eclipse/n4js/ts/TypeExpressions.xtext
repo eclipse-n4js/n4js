@@ -212,18 +212,8 @@ fragment TypeVariables*:
 	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
 ;
 
-// used in N4JS.xtext
-fragment ColonSepDeclaredTypeRef*:
-	':' declaredTypeRefInAST=TypeRef
-;
-
 fragment ColonSepTypeRef*:
 	':' typeRef=TypeRef
-;
-
-// used in N4JS.xtext
-fragment ColonSepDeclaredReturnTypeRef*:
-	':' declaredReturnTypeRefInAST=TypeRef
 ;
 
 fragment ColonSepReturnTypeRef*:

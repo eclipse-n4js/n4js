@@ -33,7 +33,7 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VersionedElement;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -86,7 +86,7 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeReferenceInAST<ParameterizedTypeRef>> superInterfaceRefs;
+	protected EList<TypeReferenceNode<ParameterizedTypeRef>> superInterfaceRefs;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -136,9 +136,9 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * @generated
 	 */
 	@Override
-	public EList<TypeReferenceInAST<ParameterizedTypeRef>> getSuperInterfaceRefs() {
+	public EList<TypeReferenceNode<ParameterizedTypeRef>> getSuperInterfaceRefs() {
 		if (superInterfaceRefs == null) {
-			superInterfaceRefs = new EObjectContainmentEList<TypeReferenceInAST<ParameterizedTypeRef>>(TypeReferenceInAST.class, this, N4JSPackage.N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS);
+			superInterfaceRefs = new EObjectContainmentEList<TypeReferenceNode<ParameterizedTypeRef>>(TypeReferenceNode.class, this, N4JSPackage.N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS);
 		}
 		return superInterfaceRefs;
 	}
@@ -160,7 +160,7 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * @generated
 	 */
 	@Override
-	public Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getSuperClassifierRefs() {
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs() {
 		return this.getSuperInterfaceRefs();
 	}
 
@@ -170,7 +170,7 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * @generated
 	 */
 	@Override
-	public Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs() {
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs() {
 		return this.getSuperInterfaceRefs();
 	}
 
@@ -257,7 +257,7 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 				return;
 			case N4JSPackage.N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS:
 				getSuperInterfaceRefs().clear();
-				getSuperInterfaceRefs().addAll((Collection<? extends TypeReferenceInAST<ParameterizedTypeRef>>)newValue);
+				getSuperInterfaceRefs().addAll((Collection<? extends TypeReferenceNode<ParameterizedTypeRef>>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

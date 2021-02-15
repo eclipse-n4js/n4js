@@ -83,7 +83,7 @@ import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -1188,12 +1188,12 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			MemberCollector memberCollector = containerTypesHelper.fromContext(getCurrentClassifierDefinition());
 			ContainerType<?> bequestingType = memberCollector.directSuperTypeBequestingMember(currentClassifier,
 					implemented);
-			Optional<TypeReferenceInAST<ParameterizedTypeRef>> optRef = StreamSupport
+			Optional<TypeReferenceNode<ParameterizedTypeRef>> optRef = StreamSupport
 					.stream(getCurrentClassifierDefinition().getImplementedOrExtendedInterfaceRefs().spliterator(),
 							false)
 					.filter(ref -> ref.getTypeRef() != null && ref.getTypeRef().getDeclaredType() == bequestingType)
 					.findAny();
-			TypeReferenceInAST<ParameterizedTypeRef> refInAST = optRef.get();
+			TypeReferenceNode<ParameterizedTypeRef> refInAST = optRef.get();
 			EStructuralFeature feature = refInAST.eContainingFeature();
 			List<?> list = (List<?>) getCurrentClassifierDefinition().eGet(feature);
 			int index = list.indexOf(refInAST);

@@ -599,7 +599,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 	def dispatch void format(CastExpression expr, extension IFormattableDocument document) {
 		expr.regionFor.keyword("as").prepend[newLines = 0; oneSpace].append[newLines = 0; oneSpace];
 		expr.expression.format;
-		expr.targetTypeRefInAST.format;
+		expr.targetTypeRefNode.format;
 	}
 
 	def dispatch void format(Block block, extension IFormattableDocument document) {
@@ -904,12 +904,12 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		// "in"
 		if( tv.declaredContravariant ) {tv.regionFor.feature(N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT).append[oneSpace];}
 
-		if( tv.declaredUpperBoundInAST!==null ) {
+		val upperBoundNode = tv.declaredUpperBoundNode;
+		if( upperBoundNode!==null ) {
 			// "extends"
 			tv.regionFor.keyword("extends").surround[oneSpace];
-			val upperBound = tv.declaredUpperBoundInAST;
-			upperBound.immediatelyFollowing.keyword("&").surround[oneSpace];
-			upperBound.format(document);
+			upperBoundNode.immediatelyFollowing.keyword("&").surround[oneSpace];
+			upperBoundNode.format(document);
 		}
 
 	}

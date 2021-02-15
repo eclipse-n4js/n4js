@@ -32,7 +32,7 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.ParameterizedAccess;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -61,7 +61,7 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeReferenceInAST<TypeRef>> typeArgs;
+	protected EList<TypeReferenceNode<TypeRef>> typeArgs;
 
 	/**
 	 * The cached value of the '{@link #getCallee() <em>Callee</em>}' containment reference.
@@ -128,9 +128,9 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 	 * @generated
 	 */
 	@Override
-	public EList<TypeReferenceInAST<TypeRef>> getTypeArgs() {
+	public EList<TypeReferenceNode<TypeRef>> getTypeArgs() {
 		if (typeArgs == null) {
-			typeArgs = new EObjectContainmentEList<TypeReferenceInAST<TypeRef>>(TypeReferenceInAST.class, this, N4JSPackage.NEW_EXPRESSION__TYPE_ARGS);
+			typeArgs = new EObjectContainmentEList<TypeReferenceNode<TypeRef>>(TypeReferenceNode.class, this, N4JSPackage.NEW_EXPRESSION__TYPE_ARGS);
 		}
 		return typeArgs;
 	}
@@ -276,7 +276,7 @@ public class NewExpressionImpl extends ExpressionImpl implements NewExpression {
 		switch (featureID) {
 			case N4JSPackage.NEW_EXPRESSION__TYPE_ARGS:
 				getTypeArgs().clear();
-				getTypeArgs().addAll((Collection<? extends TypeReferenceInAST<TypeRef>>)newValue);
+				getTypeArgs().addAll((Collection<? extends TypeReferenceNode<TypeRef>>)newValue);
 				return;
 			case N4JSPackage.NEW_EXPRESSION__CALLEE:
 				setCallee((Expression)newValue);

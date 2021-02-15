@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -27,19 +27,19 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Type Reference In AST</b></em>'.
+ * An implementation of the model object '<em><b>Type Reference Node</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeReferenceInASTImpl#getTypeRef <em>Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeReferenceInASTImpl#getTypeRefInAST <em>Type Ref In AST</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeReferenceNodeImpl#getTypeRef <em>Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeReferenceNodeImpl#getTypeRefInAST <em>Type Ref In AST</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEObjectImpl implements TypeReferenceInAST<T> {
+public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObjectImpl implements TypeReferenceNode<T> {
 	/**
 	 * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -65,7 +65,7 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TypeReferenceInASTImpl() {
+	protected TypeReferenceNodeImpl() {
 		super();
 	}
 
@@ -76,7 +76,7 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return N4JSPackage.Literals.TYPE_REFERENCE_IN_AST;
+		return N4JSPackage.Literals.TYPE_REFERENCE_NODE;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 			typeRef = (T)eResolveProxy(oldTypeRef);
 			if (typeRef != oldTypeRef) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF, oldTypeRef, typeRef));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF, oldTypeRef, typeRef));
 			}
 		}
 		return typeRef;
@@ -117,7 +117,7 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 		T oldTypeRef = typeRef;
 		typeRef = newTypeRef;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF, oldTypeRef, typeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF, oldTypeRef, typeRef));
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 		T oldTypeRefInAST = typeRefInAST;
 		typeRefInAST = newTypeRefInAST;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST, oldTypeRefInAST, newTypeRefInAST);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST, oldTypeRefInAST, newTypeRefInAST);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -155,14 +155,14 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 		if (newTypeRefInAST != typeRefInAST) {
 			NotificationChain msgs = null;
 			if (typeRefInAST != null)
-				msgs = ((InternalEObject)typeRefInAST).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST, null, msgs);
+				msgs = ((InternalEObject)typeRefInAST).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST, null, msgs);
 			if (newTypeRefInAST != null)
-				msgs = ((InternalEObject)newTypeRefInAST).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST, null, msgs);
+				msgs = ((InternalEObject)newTypeRefInAST).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST, null, msgs);
 			msgs = basicSetTypeRefInAST(newTypeRefInAST, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST, newTypeRefInAST, newTypeRefInAST));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST, newTypeRefInAST, newTypeRefInAST));
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				return basicSetTypeRefInAST(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -187,10 +187,10 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
 				if (resolve) return getTypeRef();
 				return basicGetTypeRef();
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				return getTypeRefInAST();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -205,10 +205,10 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
 				setTypeRef((T)newValue);
 				return;
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				setTypeRefInAST((T)newValue);
 				return;
 		}
@@ -223,10 +223,10 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
 				setTypeRef((T)null);
 				return;
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				setTypeRefInAST((T)null);
 				return;
 		}
@@ -241,12 +241,12 @@ public class TypeReferenceInASTImpl<T extends TypeRef> extends ProxyResolvingEOb
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
 				return typeRef != null;
-			case N4JSPackage.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST:
+			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				return typeRefInAST != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //TypeReferenceInASTImpl
+} //TypeReferenceNodeImpl

@@ -33,7 +33,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4JS.TypeReferenceInAST
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -438,7 +438,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private validateConsumptionOfNonAnnotatedInterfaces(
-		Iterable<TypeReferenceInAST<ParameterizedTypeRef>> superInterfaces,
+		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces,
 		ExportDeclaration eo, String classifiers) {
 
 		for (TInterface tinterface : superInterfaces.map[typeRef].map[hasExpectedTypes(TInterface)].filter[it !== null]) {
@@ -458,7 +458,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private validateConsumptionOfNonExternalInterfaces(
-		Iterable<TypeReferenceInAST<ParameterizedTypeRef>> superInterfaces,
+		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces,
 		ExportDeclaration eo, String classifiers) {
 
 		for (tinterface : superInterfaces.map[typeRef].map[hasExpectedTypes(TInterface)].filter[it !== null]) {

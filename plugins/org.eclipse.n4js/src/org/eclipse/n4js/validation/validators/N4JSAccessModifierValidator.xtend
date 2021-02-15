@@ -30,7 +30,7 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
-import org.eclipse.n4js.n4JS.TypeReferenceInAST
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
@@ -148,7 +148,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	def checkTypeRefOptionalFlag(TypeRef typeRefInAST) {
 		if (typeRefInAST.isFollowedByQuestionMark) {
 			var parent = typeRefInAST.eContainer;
-			if (parent instanceof TypeReferenceInAST) {
+			if (parent instanceof TypeReferenceNode<?>) {
 				parent = parent.eContainer;
 			}
 

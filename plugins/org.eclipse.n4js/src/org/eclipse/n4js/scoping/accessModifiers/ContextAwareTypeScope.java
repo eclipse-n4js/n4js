@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -38,18 +39,21 @@ public class ContextAwareTypeScope extends FilterWithErrorMarkerScope {
 	public ContextAwareTypeScope(IScope parent, EObject context) {
 		super(parent);
 
+		if (context instanceof TypeReferenceNode<?>) {
+			context = context.eContainer();
+		}
 		final EObject container = context.eContainer();
 		final EReference eRef = context.eContainmentFeature();
 
 		this.isValidLocationForNull = false; // in the source code, 'null' is never a valid type
 
-		this.isValidLocationForVoid = eRef == N4JSPackage.eINSTANCE.getFunctionDefinition_DeclaredReturnTypeRefInAST()
+		this.isValidLocationForVoid = eRef == N4JSPackage.eINSTANCE.getFunctionDefinition_DeclaredReturnTypeRefNode()
 				|| eRef == TypeRefsPackage.eINSTANCE.getFunctionTypeExpression_ReturnTypeRef()
 				|| eRef == TypesPackage.eINSTANCE.getTFunction_ReturnTypeRef()
 				// void is not truly allowed as the return type of a getter, but there's a separate validation for
 				// that; so treat this case as legal here:
 				|| container instanceof GetterDeclaration
-						&& eRef == N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRefInAST();
+						&& eRef == N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRefNode();
 
 		this.isValidLocationForFunctionType = false
 				// the following is only required for content assist in JSXElements (main scoping works without this)

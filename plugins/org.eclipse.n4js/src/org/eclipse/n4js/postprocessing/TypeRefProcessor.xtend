@@ -12,14 +12,7 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
-import org.eclipse.n4js.n4JS.CastExpression
-import org.eclipse.n4js.n4JS.FunctionDefinition
-import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.N4TypeVariable
-import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
-import org.eclipse.n4js.n4JS.TypeReferenceInAST
-import org.eclipse.n4js.n4JS.TypedElement
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
@@ -42,42 +35,12 @@ package class TypeRefProcessor extends AbstractProcessor {
 	private TypeSystemHelper tsh;
 
 	def void handleTypeRefs(RuleEnvironment G, EObject node, ASTMetaInfoCache cache) {
-		var EReference from = null;
-		var EReference to = null;
-		switch (node) {
-			TypedElement: {
-				from = N4JSPackage.Literals.TYPED_ELEMENT__DECLARED_TYPE_REF_IN_AST;
-				to = N4JSPackage.Literals.TYPED_ELEMENT__DECLARED_TYPE_REF;
-			}
-			FunctionDefinition: {
-				from = N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST;
-				to = N4JSPackage.Literals.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF;
-			}
-			N4TypeVariable: {
-				from = N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST;
-				to = N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND;
-			}
-			CastExpression: {
-				from = N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF_IN_AST;
-				to = N4JSPackage.Literals.CAST_EXPRESSION__TARGET_TYPE_REF;
-			}
-			TypeRefAnnotationArgument: {
-				from = N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST;
-				to = N4JSPackage.Literals.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF;
-			}
-			TypeReferenceInAST<?>: {
-				from = N4JSPackage.Literals.TYPE_REFERENCE_IN_AST__TYPE_REF_IN_AST;
-				to = N4JSPackage.Literals.TYPE_REFERENCE_IN_AST__TYPE_REF;
-			}
-		}
-
-		if (from !== null && to !== null) {
-			val typeRefInAST = node.eGet(from) as TypeRef;
-			val resultTypeRef = if (typeRefInAST !== null) doHandleTypeRef(G, typeRefInAST) else null;
-			if (resultTypeRef !== null) {
-				val toAsVal = to;
+		if (node instanceof TypeReferenceNode<?>) {
+			val typeRefProcessed = doHandleTypeRef(G, node.typeRefInAST);
+			if (typeRefProcessed !== null) {
 				EcoreUtilN4.doWithDeliver(false, [
-					node.eSet(toAsVal, resultTypeRef);
+// FIXME type safety violation in next line!!!!
+					(node as TypeReferenceNode<TypeRef>).typeRef = typeRefProcessed;
 				], node);
 			}
 		}

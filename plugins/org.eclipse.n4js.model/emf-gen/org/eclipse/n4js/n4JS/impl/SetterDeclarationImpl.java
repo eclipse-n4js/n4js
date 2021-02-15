@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.SetterDeclaration;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -189,11 +190,15 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	@Override
 	public TypeRef getDeclaredTypeRef() {
 		FormalParameter _fpar = this.getFpar();
-		TypeRef _declaredTypeRef = null;
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = null;
 		if (_fpar!=null) {
-			_declaredTypeRef=_fpar.getDeclaredTypeRef();
+			_declaredTypeRefNode=_fpar.getDeclaredTypeRefNode();
 		}
-		return _declaredTypeRef;
+		TypeRef _typeRef = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRef=_declaredTypeRefNode.getTypeRef();
+		}
+		return _typeRef;
 	}
 
 	/**
@@ -204,11 +209,15 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	@Override
 	public TypeRef getDeclaredTypeRefInAST() {
 		FormalParameter _fpar = this.getFpar();
-		TypeRef _declaredTypeRefInAST = null;
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = null;
 		if (_fpar!=null) {
-			_declaredTypeRefInAST=_fpar.getDeclaredTypeRefInAST();
+			_declaredTypeRefNode=_fpar.getDeclaredTypeRefNode();
 		}
-		return _declaredTypeRefInAST;
+		TypeRef _typeRefInAST = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRefInAST=_declaredTypeRefNode.getTypeRefInAST();
+		}
+		return _typeRefInAST;
 	}
 
 	/**

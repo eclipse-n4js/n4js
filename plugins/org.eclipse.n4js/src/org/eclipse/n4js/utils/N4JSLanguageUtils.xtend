@@ -56,7 +56,7 @@ import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
-import org.eclipse.n4js.n4JS.TypeReferenceInAST
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -479,7 +479,7 @@ public class N4JSLanguageUtils {
 					Variance.INV
 				}
 			}
-			TypeReferenceInAST<?> case grandParent instanceof N4ClassifierDeclaration
+			TypeReferenceNode<?> case grandParent instanceof N4ClassifierDeclaration
 				&& (grandParent as N4ClassifierDeclaration).superClassifierRefs.exists[it?.typeRef===rootTypeRefInAST]: {
 				// typeRef is used in the "extends" or "implements" clause of the declaration of tClassifier
 				// -> this mainly depends on the variance of the classifier being extended

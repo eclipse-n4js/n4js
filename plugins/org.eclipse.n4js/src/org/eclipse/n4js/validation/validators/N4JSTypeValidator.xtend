@@ -149,7 +149,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						// class C<T extends Function> {} makes sense even though Function is final
 						return;
 					}
-					val ubInAST = typeVar.declaredUpperBoundInAST;
+					val ubInAST = typeVar.declaredUpperBoundNode.typeRefInAST;
 					val message = getMessageForCLF_UPPER_BOUND_FINAL(declType.name, typeVar.name);
 					addIssue(message, ubInAST, PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_UPPER_BOUND_FINAL);
 				}

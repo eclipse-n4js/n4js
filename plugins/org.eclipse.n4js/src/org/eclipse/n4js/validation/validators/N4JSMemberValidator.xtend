@@ -308,7 +308,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		val constructorDecl = constructor.astElement as N4MethodDeclaration;
 		if (constructorDecl.declaredReturnTypeRefInAST !== null) {
 			addIssue(getMessageForCLF_CTOR_RETURN_TYPE, constructorDecl,
-				FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_IN_AST, CLF_CTOR_RETURN_TYPE);
+				FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE, CLF_CTOR_RETURN_TYPE);
 			return false;
 		}
 		return true;

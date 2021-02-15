@@ -16,22 +16,22 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Type Reference In AST</b></em>'.
+ * A representation of the model object '<em><b>Type Reference Node</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.TypeReferenceInAST#getTypeRef <em>Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.TypeReferenceInAST#getTypeRefInAST <em>Type Ref In AST</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef <em>Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRefInAST <em>Type Ref In AST</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceInAST()
+ * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceNode()
  * @model
  * @generated
  */
-public interface TypeReferenceInAST<T extends TypeRef> extends EObject {
+public interface TypeReferenceNode<T extends TypeRef> extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -43,14 +43,14 @@ public interface TypeReferenceInAST<T extends TypeRef> extends EObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Type Ref</em>' reference.
 	 * @see #setTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceInAST_TypeRef()
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceNode_TypeRef()
 	 * @model transient="true"
 	 * @generated
 	 */
 	T getTypeRef();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceInAST#getTypeRef <em>Type Ref</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef <em>Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type Ref</em>' reference.
@@ -65,14 +65,14 @@ public interface TypeReferenceInAST<T extends TypeRef> extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type Ref In AST</em>' containment reference.
 	 * @see #setTypeRefInAST(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceInAST_TypeRefInAST()
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceNode_TypeRefInAST()
 	 * @model containment="true"
 	 * @generated
 	 */
 	T getTypeRefInAST();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceInAST#getTypeRefInAST <em>Type Ref In AST</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRefInAST <em>Type Ref In AST</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type Ref In AST</em>' containment reference.
@@ -81,4 +81,4 @@ public interface TypeReferenceInAST<T extends TypeRef> extends EObject {
 	 */
 	void setTypeRefInAST(T value);
 
-} // TypeReferenceInAST
+} // TypeReferenceNode

@@ -30,8 +30,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRefInAST <em>Declared Type Ref In AST</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement()
@@ -40,52 +39,41 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  */
 public interface TypedElement extends TypeProvidingElement {
 	/**
-	 * Returns the value of the '<em><b>Declared Type Ref</b></em>' reference.
+	 * Returns the value of the '<em><b>Declared Type Ref Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
-	 * The returned type reference may or may not be contained in the AST.
-	 * This is set during post-processing by {@code TypeRefProcessor}.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Declared Type Ref</em>' reference.
-	 * @see #setDeclaredTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement_DeclaredTypeRef()
-	 * @model transient="true"
+	 * @return the value of the '<em>Declared Type Ref Node</em>' containment reference.
+	 * @see #setDeclaredTypeRefNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement_DeclaredTypeRefNode()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypeReferenceNode<TypeRef> getDeclaredTypeRefNode();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Type Ref Node</em>' containment reference.
+	 * @see #getDeclaredTypeRefNode()
+	 * @generated
+	 */
+	void setDeclaredTypeRefNode(TypeReferenceNode<TypeRef> value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	TypeRef getDeclaredTypeRef();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRef <em>Declared Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Type Ref</em>' reference.
-	 * @see #getDeclaredTypeRef()
-	 * @generated
-	 */
-	void setDeclaredTypeRef(TypeRef value);
-
-	/**
-	 * Returns the value of the '<em><b>Declared Type Ref In AST</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Type Ref In AST</em>' containment reference.
-	 * @see #setDeclaredTypeRefInAST(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement_DeclaredTypeRefInAST()
-	 * @model containment="true"
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	TypeRef getDeclaredTypeRefInAST();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRefInAST <em>Declared Type Ref In AST</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Type Ref In AST</em>' containment reference.
-	 * @see #getDeclaredTypeRefInAST()
-	 * @generated
-	 */
-	void setDeclaredTypeRefInAST(TypeRef value);
 
 } // TypedElement

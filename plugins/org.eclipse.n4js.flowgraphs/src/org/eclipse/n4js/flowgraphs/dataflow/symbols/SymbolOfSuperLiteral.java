@@ -13,7 +13,7 @@ package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.SuperLiteral;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -41,7 +41,7 @@ public class SymbolOfSuperLiteral extends Symbol {
 	public EObject getDeclaration() {
 		N4ClassDeclaration classDef = EcoreUtil2.getContainerOfType(sl, N4ClassDeclaration.class);
 		if (classDef != null) { // can be null in broken AST
-			TypeReferenceInAST<ParameterizedTypeRef> superTypeRefInAST = classDef.getSuperClassRef();
+			TypeReferenceNode<ParameterizedTypeRef> superTypeRefInAST = classDef.getSuperClassRef();
 			if (superTypeRefInAST != null) {
 				ParameterizedTypeRef superTypeRef = superTypeRefInAST.getTypeRef();
 				return superTypeRef;

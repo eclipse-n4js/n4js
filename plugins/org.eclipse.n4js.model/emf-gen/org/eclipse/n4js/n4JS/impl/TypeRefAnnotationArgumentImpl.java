@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -35,32 +36,21 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeRefAnnotationArgumentImpl#getTypeRef <em>Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeRefAnnotationArgumentImpl#getTypeRefInAST <em>Type Ref In AST</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeRefAnnotationArgumentImpl#getTypeRefNode <em>Type Ref Node</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implements TypeRefAnnotationArgument {
 	/**
-	 * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' reference.
+	 * The cached value of the '{@link #getTypeRefNode() <em>Type Ref Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTypeRef()
+	 * @see #getTypeRefNode()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef typeRef;
-
-	/**
-	 * The cached value of the '{@link #getTypeRefInAST() <em>Type Ref In AST</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTypeRefInAST()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypeRef typeRefInAST;
+	protected TypeReferenceNode<TypeRef> typeRefNode;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -87,16 +77,8 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * @generated
 	 */
 	@Override
-	public TypeRef getTypeRef() {
-		if (typeRef != null && typeRef.eIsProxy()) {
-			InternalEObject oldTypeRef = (InternalEObject)typeRef;
-			typeRef = (TypeRef)eResolveProxy(oldTypeRef);
-			if (typeRef != oldTypeRef) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF, oldTypeRef, typeRef));
-			}
-		}
-		return typeRef;
+	public TypeReferenceNode<TypeRef> getTypeRefNode() {
+		return typeRefNode;
 	}
 
 	/**
@@ -104,43 +86,11 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TypeRef basicGetTypeRef() {
-		return typeRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTypeRef(TypeRef newTypeRef) {
-		TypeRef oldTypeRef = typeRef;
-		typeRef = newTypeRef;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF, oldTypeRef, typeRef));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeRef getTypeRefInAST() {
-		return typeRefInAST;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetTypeRefInAST(TypeRef newTypeRefInAST, NotificationChain msgs) {
-		TypeRef oldTypeRefInAST = typeRefInAST;
-		typeRefInAST = newTypeRefInAST;
+	public NotificationChain basicSetTypeRefNode(TypeReferenceNode<TypeRef> newTypeRefNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldTypeRefNode = typeRefNode;
+		typeRefNode = newTypeRefNode;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST, oldTypeRefInAST, newTypeRefInAST);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE, oldTypeRefNode, newTypeRefNode);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -152,18 +102,33 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * @generated
 	 */
 	@Override
-	public void setTypeRefInAST(TypeRef newTypeRefInAST) {
-		if (newTypeRefInAST != typeRefInAST) {
+	public void setTypeRefNode(TypeReferenceNode<TypeRef> newTypeRefNode) {
+		if (newTypeRefNode != typeRefNode) {
 			NotificationChain msgs = null;
-			if (typeRefInAST != null)
-				msgs = ((InternalEObject)typeRefInAST).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST, null, msgs);
-			if (newTypeRefInAST != null)
-				msgs = ((InternalEObject)newTypeRefInAST).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST, null, msgs);
-			msgs = basicSetTypeRefInAST(newTypeRefInAST, msgs);
+			if (typeRefNode != null)
+				msgs = ((InternalEObject)typeRefNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE, null, msgs);
+			if (newTypeRefNode != null)
+				msgs = ((InternalEObject)newTypeRefNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE, null, msgs);
+			msgs = basicSetTypeRefNode(newTypeRefNode, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST, newTypeRefInAST, newTypeRefInAST));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE, newTypeRefNode, newTypeRefNode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getTypeRef() {
+		TypeReferenceNode<TypeRef> _typeRefNode = this.getTypeRefNode();
+		TypeRef _typeRef = null;
+		if (_typeRefNode!=null) {
+			_typeRef=_typeRefNode.getTypeRef();
+		}
+		return _typeRef;
 	}
 
 	/**
@@ -184,8 +149,8 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST:
-				return basicSetTypeRefInAST(null, msgs);
+			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE:
+				return basicSetTypeRefNode(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -198,11 +163,8 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF:
-				if (resolve) return getTypeRef();
-				return basicGetTypeRef();
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST:
-				return getTypeRefInAST();
+			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE:
+				return getTypeRefNode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -212,14 +174,12 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF:
-				setTypeRef((TypeRef)newValue);
-				return;
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST:
-				setTypeRefInAST((TypeRef)newValue);
+			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE:
+				setTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -233,11 +193,8 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF:
-				setTypeRef((TypeRef)null);
-				return;
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST:
-				setTypeRefInAST((TypeRef)null);
+			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE:
+				setTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -251,10 +208,8 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF:
-				return typeRef != null;
-			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_IN_AST:
-				return typeRefInAST != null;
+			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT__TYPE_REF_NODE:
+				return typeRefNode != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -267,6 +222,8 @@ public class TypeRefAnnotationArgumentImpl extends AnnotationArgumentImpl implem
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT___GET_TYPE_REF:
+				return getTypeRef();
 			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT___VALUE:
 				return value();
 		}

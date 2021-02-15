@@ -149,7 +149,7 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
 	 * @generated
 	 */
-	Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getSuperClassifierRefs();
+	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -161,6 +161,6 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
 	 * @generated
 	 */
-	Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();
+	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();
 
 } // N4ClassifierDefinition

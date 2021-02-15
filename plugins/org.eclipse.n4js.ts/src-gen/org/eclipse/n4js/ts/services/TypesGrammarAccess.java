@@ -2989,17 +2989,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeVariablesAccess().getRule();
 	}
 	
-	//// used in N4JS.xtext
-	//fragment ColonSepDeclaredTypeRef *:
-	//	':' declaredTypeRefInAST=super::TypeRef;
-	public TypeExpressionsGrammarAccess.ColonSepDeclaredTypeRefElements getColonSepDeclaredTypeRefAccess() {
-		return gaTypeExpressions.getColonSepDeclaredTypeRefAccess();
-	}
-	
-	public ParserRule getColonSepDeclaredTypeRefRule() {
-		return getColonSepDeclaredTypeRefAccess().getRule();
-	}
-	
 	//fragment ColonSepTypeRef *:
 	//	':' typeRef=super::TypeRef;
 	public TypeExpressionsGrammarAccess.ColonSepTypeRefElements getColonSepTypeRefAccess() {
@@ -3008,17 +2997,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getColonSepTypeRefRule() {
 		return getColonSepTypeRefAccess().getRule();
-	}
-	
-	//// used in N4JS.xtext
-	//fragment ColonSepDeclaredReturnTypeRef *:
-	//	':' declaredReturnTypeRefInAST=super::TypeRef;
-	public TypeExpressionsGrammarAccess.ColonSepDeclaredReturnTypeRefElements getColonSepDeclaredReturnTypeRefAccess() {
-		return gaTypeExpressions.getColonSepDeclaredReturnTypeRefAccess();
-	}
-	
-	public ParserRule getColonSepDeclaredReturnTypeRefRule() {
-		return getColonSepDeclaredReturnTypeRefAccess().getRule();
 	}
 	
 	//fragment ColonSepReturnTypeRef *:

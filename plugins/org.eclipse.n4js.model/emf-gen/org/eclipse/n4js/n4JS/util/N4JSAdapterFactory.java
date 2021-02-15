@@ -131,8 +131,8 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createNamespaceImportSpecifierAdapter();
 			}
 			@Override
-			public <T extends TypeRef> Adapter caseTypeReferenceInAST(TypeReferenceInAST<T> object) {
-				return createTypeReferenceInASTAdapter();
+			public <T extends TypeRef> Adapter caseTypeReferenceNode(TypeReferenceNode<T> object) {
+				return createTypeReferenceNodeAdapter();
 			}
 			@Override
 			public Adapter caseTypeProvidingElement(TypeProvidingElement object) {
@@ -1011,16 +1011,16 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.TypeReferenceInAST <em>Type Reference In AST</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.TypeReferenceNode <em>Type Reference Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.TypeReferenceInAST
+	 * @see org.eclipse.n4js.n4JS.TypeReferenceNode
 	 * @generated
 	 */
-	public Adapter createTypeReferenceInASTAdapter() {
+	public Adapter createTypeReferenceNodeAdapter() {
 		return null;
 	}
 

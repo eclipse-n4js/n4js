@@ -108,8 +108,8 @@ AnnotatedScriptElement returns ScriptElement:
 		(declaredModifiers+=N4ModifierWithoutConst)*
 		'type' name=BindingIdentifier<Yield=false>
 		TypeParameters?
-		'='	
-		declaredTypeRefInAST=TypeRef
+		'='
+		declaredTypeRefNode=TypeReferenceNode
 	)
 ;
 
@@ -194,7 +194,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		'type' name=BindingIdentifier<Yield=false>
 		TypeParameters?
 		'='	
-		declaredTypeRefInAST=TypeRef
+		declaredTypeRefNode=TypeReferenceNode
 	)
 ;
 
@@ -344,7 +344,7 @@ AnnotatedExpression <Yield> returns Expression:
 
 N4TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
-	name=IdentifierOrThis ('extends' declaredUpperBoundInAST=TypeRef)?
+	name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 ;
 
 FormalParameter <Yield>:
@@ -669,7 +669,7 @@ PropertyAssignment <Yield>:
 AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 	PropertyAssignmentAnnotationList (
 	// TODO extract property header into an own instance to defer the object instantiation
-	=>(	{PropertyNameValuePair.annotationList=current} declaredTypeRefInAST=TypeRefWithModifiers?
+	=>(	{PropertyNameValuePair.annotationList=current} declaredTypeRefNode=TypeReferenceWithModifiersNode?
 			declaredName=LiteralOrComputedPropertyName<Yield> ':'
 		) expression=AssignmentExpression<In=true,Yield>
 	| =>({PropertyGetterDeclaration.annotationList=current}
@@ -679,19 +679,19 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 			'set' ->declaredName=LiteralOrComputedPropertyName <Yield>
 		) (declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' body=Block<Yield=false>
 	| =>({PropertyMethodDeclaration.annotationList=current}
-			TypeParameters? declaredReturnTypeRefInAST=TypeRefWithModifiers?
+			TypeParameters? declaredReturnTypeRefNode=TypeReferenceWithModifiersNode?
 			(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
 			)
 		) ';'?
-	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRefInAST=TypeRef? expression=PropertyNameValuePairSingleNamePart<Yield>
+	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRefNode=TypeReferenceWithModifiersNode? expression=PropertyNameValuePairSingleNamePart<Yield>
 	| {PropertySpread.annotationList=current} '...' expression=AssignmentExpression<In=true,Yield>
 	)
 ;
 
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
-		TypeParameters? declaredReturnTypeRefInAST=TypeRefWithModifiers?
+		TypeParameters? declaredReturnTypeRefNode=TypeReferenceWithModifiersNode?
 		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
@@ -704,7 +704,7 @@ PropertyMethodDeclaration <Yield>:
 PropertyNameValuePair <Yield>:
 	=> (
 		{PropertyNameValuePair}
-		declaredTypeRefInAST=TypeRefWithModifiers?
+		declaredTypeRefNode=TypeReferenceWithModifiersNode?
 		declaredName=LiteralOrComputedPropertyName<Yield>
 		(declaredOptional?='?')?
 		':'
@@ -713,7 +713,7 @@ PropertyNameValuePair <Yield>:
 ;
 
 PropertyNameValuePairSingleName <Yield>:
-	declaredTypeRefInAST=TypeRef?
+	declaredTypeRefNode=TypeReferenceNode?
 	expression=PropertyNameValuePairSingleNamePart<Yield>
 ;
 
@@ -756,15 +756,31 @@ ParameterizedCallExpression <Yield>:
 ;
 
 fragment ConcreteTypeArguments*:
-	'<' typeArgs+=TypeReferenceInAST (',' typeArgs+=TypeReferenceInAST)* '>'
+	'<' typeArgs+=TypeReferenceNode (',' typeArgs+=TypeReferenceNode)* '>'
 ;
 
-TypeReferenceInAST:
+fragment ColonSepDeclaredTypeRef*:
+	':' declaredTypeRefNode=TypeReferenceNode
+;
+
+fragment ColonSepDeclaredReturnTypeRef*:
+	':' declaredReturnTypeRefNode=TypeReferenceNode
+;
+
+TypeReferenceNode returns TypeReferenceNode:
 	typeRefInAST=TypeRef
 ;
 
-ParameterizedTypeRefNominalInAST returns TypeReferenceInAST:
+TypeReferenceWithModifiersNode returns TypeReferenceNode:
+	typeRefInAST=TypeRefWithModifiers
+;
+
+ParameterizedTypeRefNominalNode returns TypeReferenceNode:
 	typeRefInAST=ParameterizedTypeRefNominal
+;
+
+ArrayTypeExpressionNode returns TypeReferenceNode:
+	typeRefInAST=ArrayTypeExpression
 ;
 
 ImportCallExpression<Yield>:
@@ -840,7 +856,7 @@ enum PostfixOperator: inc='++' | dec='--';
 
 /* Cast expression (N4JS 6.2.3) */
 CastExpression <Yield> returns Expression: PostfixExpression<Yield>
-	(=>({CastExpression.expression=current} 'as') targetTypeRefInAST=ArrayTypeExpression)?;
+	(=>({CastExpression.expression=current} 'as') targetTypeRefNode=ArrayTypeExpressionNode)?;
 
 /* Unary operators ([ECM11] 11.4) */
 UnaryExpression <Yield> returns Expression:
@@ -1240,7 +1256,7 @@ LiteralAnnotationArgument:
 ;
 
 TypeRefAnnotationArgument:
-	typeRefInAST=TypeRef
+	typeRefNode=TypeReferenceNode
 ;
 
 AnnotationList:
@@ -1318,14 +1334,14 @@ fragment ClassExtendsImplements <Yield>*:
 
 fragment ClassExtendsClause <Yield>*:
 	'extends' (
-		  =>superClassRef=ParameterizedTypeRefNominalInAST
+		  =>superClassRef=ParameterizedTypeRefNominalNode
 		| superClassExpression=LeftHandSideExpression<Yield>
 	)
 ;
 
 fragment ClassImplementsList*:
-	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST
-	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
+	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalNode
+	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominalNode)*
 ;
 
 N4ClassExpression <Yield>:
@@ -1349,8 +1365,8 @@ N4InterfaceDeclaration <Yield>:
 
 // we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
 fragment InterfaceExtendsList*:
-	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalInAST
-	(',' superInterfaceRefs+=ParameterizedTypeRefNominalInAST)*
+	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	(',' superInterfaceRefs+=ParameterizedTypeRefNominalNode)*
 ;
 
 // cf. N4JSSpec §13
@@ -1377,7 +1393,7 @@ N4TypeAliasDeclaration <Yield>:
 	)
 	TypeParameters?
 	'='	
-	declaredTypeRefInAST=TypeRef
+	declaredTypeRefNode=TypeReferenceNode
 ;
 
 

@@ -20,7 +20,7 @@ import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
@@ -213,7 +213,7 @@ public class TypeXpectMethod {
 		} else {
 			// call expression is parameterized -> use the explicitly given type arguments
 			// (just provided for completeness)
-			typeArgs = FluentIterable.from(callExpr.getTypeArgs()).transform(TypeReferenceInAST::getTypeRef).toList();
+			typeArgs = FluentIterable.from(callExpr.getTypeArgs()).transform(TypeReferenceNode::getTypeRef).toList();
 		}
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < expectedNumOfTypeArgs; i++) {

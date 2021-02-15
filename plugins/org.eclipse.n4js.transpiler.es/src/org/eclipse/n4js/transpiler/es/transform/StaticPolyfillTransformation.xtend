@@ -102,7 +102,7 @@ class StaticPolyfillTransformation extends Transformation {
 		if(ifcType instanceof TInterface) {
 			if(!currentIfcs.contains(ifcType)) { // avoid duplicates!
 				val ifcSTE = getSymbolTableEntryOriginal(ifcType, true);
-				classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceInAST(_ParameterizedTypeRef(ifcSTE));
+				classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceNode(_ParameterizedTypeRef(ifcSTE));
 			}
 		}
 	}

@@ -1450,30 +1450,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//'>'
 		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
 	}
-	public class ColonSepDeclaredTypeRefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepDeclaredTypeRef");
-		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cColonKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cDeclaredTypeRefInASTAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cDeclaredTypeRefInASTTypeRefParserRuleCall_1_0 = (RuleCall)cDeclaredTypeRefInASTAssignment_1.eContents().get(0);
-		
-		//// used in N4JS.xtext
-		//fragment ColonSepDeclaredTypeRef *:
-		//	':' declaredTypeRefInAST=TypeRef;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//':' declaredTypeRefInAST=TypeRef
-		public Group getGroup() { return cGroup; }
-		
-		//':'
-		public Keyword getColonKeyword_0() { return cColonKeyword_0; }
-		
-		//declaredTypeRefInAST=TypeRef
-		public Assignment getDeclaredTypeRefInASTAssignment_1() { return cDeclaredTypeRefInASTAssignment_1; }
-		
-		//TypeRef
-		public RuleCall getDeclaredTypeRefInASTTypeRefParserRuleCall_1_0() { return cDeclaredTypeRefInASTTypeRefParserRuleCall_1_0; }
-	}
 	public class ColonSepTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepTypeRef");
 		private final Group cGroup = (Group)rule.eContents().get(0);
@@ -1496,30 +1472,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//TypeRef
 		public RuleCall getTypeRefTypeRefParserRuleCall_1_0() { return cTypeRefTypeRefParserRuleCall_1_0; }
-	}
-	public class ColonSepDeclaredReturnTypeRefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepDeclaredReturnTypeRef");
-		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cColonKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cDeclaredReturnTypeRefInASTAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cDeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0 = (RuleCall)cDeclaredReturnTypeRefInASTAssignment_1.eContents().get(0);
-		
-		//// used in N4JS.xtext
-		//fragment ColonSepDeclaredReturnTypeRef *:
-		//	':' declaredReturnTypeRefInAST=TypeRef;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//':' declaredReturnTypeRefInAST=TypeRef
-		public Group getGroup() { return cGroup; }
-		
-		//':'
-		public Keyword getColonKeyword_0() { return cColonKeyword_0; }
-		
-		//declaredReturnTypeRefInAST=TypeRef
-		public Assignment getDeclaredReturnTypeRefInASTAssignment_1() { return cDeclaredReturnTypeRefInASTAssignment_1; }
-		
-		//TypeRef
-		public RuleCall getDeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0() { return cDeclaredReturnTypeRefInASTTypeRefParserRuleCall_1_0; }
 	}
 	public class ColonSepReturnTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepReturnTypeRef");
@@ -2433,9 +2385,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final TStructMemberElements pTStructMember;
 	private final TStructMethodElements pTStructMethod;
 	private final TypeVariablesElements pTypeVariables;
-	private final ColonSepDeclaredTypeRefElements pColonSepDeclaredTypeRef;
 	private final ColonSepTypeRefElements pColonSepTypeRef;
-	private final ColonSepDeclaredReturnTypeRefElements pColonSepDeclaredReturnTypeRef;
 	private final ColonSepReturnTypeRefElements pColonSepReturnTypeRef;
 	private final TStructFieldElements pTStructField;
 	private final TStructGetterElements pTStructGetter;
@@ -2507,9 +2457,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pTStructMember = new TStructMemberElements();
 		this.pTStructMethod = new TStructMethodElements();
 		this.pTypeVariables = new TypeVariablesElements();
-		this.pColonSepDeclaredTypeRef = new ColonSepDeclaredTypeRefElements();
 		this.pColonSepTypeRef = new ColonSepTypeRefElements();
-		this.pColonSepDeclaredReturnTypeRef = new ColonSepDeclaredReturnTypeRefElements();
 		this.pColonSepReturnTypeRef = new ColonSepReturnTypeRefElements();
 		this.pTStructField = new TStructFieldElements();
 		this.pTStructGetter = new TStructGetterElements();
@@ -2951,17 +2899,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeVariablesAccess().getRule();
 	}
 	
-	//// used in N4JS.xtext
-	//fragment ColonSepDeclaredTypeRef *:
-	//	':' declaredTypeRefInAST=TypeRef;
-	public ColonSepDeclaredTypeRefElements getColonSepDeclaredTypeRefAccess() {
-		return pColonSepDeclaredTypeRef;
-	}
-	
-	public ParserRule getColonSepDeclaredTypeRefRule() {
-		return getColonSepDeclaredTypeRefAccess().getRule();
-	}
-	
 	//fragment ColonSepTypeRef *:
 	//	':' typeRef=TypeRef;
 	public ColonSepTypeRefElements getColonSepTypeRefAccess() {
@@ -2970,17 +2907,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getColonSepTypeRefRule() {
 		return getColonSepTypeRefAccess().getRule();
-	}
-	
-	//// used in N4JS.xtext
-	//fragment ColonSepDeclaredReturnTypeRef *:
-	//	':' declaredReturnTypeRefInAST=TypeRef;
-	public ColonSepDeclaredReturnTypeRefElements getColonSepDeclaredReturnTypeRefAccess() {
-		return pColonSepDeclaredReturnTypeRef;
-	}
-	
-	public ParserRule getColonSepDeclaredReturnTypeRefRule() {
-		return getColonSepDeclaredReturnTypeRefAccess().getRule();
 	}
 	
 	//fragment ColonSepReturnTypeRef *:

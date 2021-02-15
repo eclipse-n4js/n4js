@@ -77,7 +77,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER: return createNamedImportSpecifier();
 			case N4JSPackage.DEFAULT_IMPORT_SPECIFIER: return createDefaultImportSpecifier();
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER: return createNamespaceImportSpecifier();
-			case N4JSPackage.TYPE_REFERENCE_IN_AST: return createTypeReferenceInAST();
+			case N4JSPackage.TYPE_REFERENCE_NODE: return createTypeReferenceNode();
 			case N4JSPackage.ANNOTATION_LIST: return createAnnotationList();
 			case N4JSPackage.EXPRESSION_ANNOTATION_LIST: return createExpressionAnnotationList();
 			case N4JSPackage.ANNOTATION: return createAnnotation();
@@ -390,9 +390,9 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
-	public <T extends TypeRef> TypeReferenceInAST<T> createTypeReferenceInAST() {
-		TypeReferenceInASTImpl<T> typeReferenceInAST = new TypeReferenceInASTImpl<T>();
-		return typeReferenceInAST;
+	public <T extends TypeRef> TypeReferenceNode<T> createTypeReferenceNode() {
+		TypeReferenceNodeImpl<T> typeReferenceNode = new TypeReferenceNodeImpl<T>();
+		return typeReferenceNode;
 	}
 
 	/**
@@ -2099,8 +2099,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	public Iterable<TypeReferenceInAST<ParameterizedTypeRef>> createParameterizedTypeRefInASTIterableFromString(EDataType eDataType, String initialValue) {
-		return (Iterable<TypeReferenceInAST<ParameterizedTypeRef>>)super.createFromString(initialValue);
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> createParameterizedTypeRefInASTIterableFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<TypeReferenceNode<ParameterizedTypeRef>>)super.createFromString(initialValue);
 	}
 
 	/**

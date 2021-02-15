@@ -45,12 +45,12 @@ public interface N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Super Class Ref</em>' containment reference.
-	 * @see #setSuperClassRef(TypeReferenceInAST)
+	 * @see #setSuperClassRef(TypeReferenceNode)
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4ClassDefinition_SuperClassRef()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TypeReferenceInAST<ParameterizedTypeRef> getSuperClassRef();
+	TypeReferenceNode<ParameterizedTypeRef> getSuperClassRef();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4ClassDefinition#getSuperClassRef <em>Super Class Ref</em>}' containment reference.
@@ -60,7 +60,7 @@ public interface N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	 * @see #getSuperClassRef()
 	 * @generated
 	 */
-	void setSuperClassRef(TypeReferenceInAST<ParameterizedTypeRef> value);
+	void setSuperClassRef(TypeReferenceNode<ParameterizedTypeRef> value);
 
 	/**
 	 * Returns the value of the '<em><b>Super Class Expression</b></em>' containment reference.
@@ -86,7 +86,7 @@ public interface N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 
 	/**
 	 * Returns the value of the '<em><b>Implemented Interface Refs</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4JS.TypeReferenceInAST}<code>&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;</code>.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.TypeReferenceNode}<code>&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Implemented Interface Refs</em>' containment reference list.
@@ -94,7 +94,7 @@ public interface N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TypeReferenceInAST<ParameterizedTypeRef>> getImplementedInterfaceRefs();
+	EList<TypeReferenceNode<ParameterizedTypeRef>> getImplementedInterfaceRefs();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -113,7 +113,7 @@ public interface N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
 	 * @generated
 	 */
-	Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getSuperClassifierRefs();
+	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -121,6 +121,6 @@ public interface N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
 	 * @generated
 	 */
-	Iterable<TypeReferenceInAST<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();
+	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();
 
 } // N4ClassDefinition

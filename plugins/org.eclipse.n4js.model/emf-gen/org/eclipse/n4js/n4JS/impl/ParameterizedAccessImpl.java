@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedAccess;
-import org.eclipse.n4js.n4JS.TypeReferenceInAST;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -54,7 +54,7 @@ public abstract class ParameterizedAccessImpl extends ProxyResolvingEObjectImpl 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeReferenceInAST<TypeRef>> typeArgs;
+	protected EList<TypeReferenceNode<TypeRef>> typeArgs;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -81,9 +81,9 @@ public abstract class ParameterizedAccessImpl extends ProxyResolvingEObjectImpl 
 	 * @generated
 	 */
 	@Override
-	public EList<TypeReferenceInAST<TypeRef>> getTypeArgs() {
+	public EList<TypeReferenceNode<TypeRef>> getTypeArgs() {
 		if (typeArgs == null) {
-			typeArgs = new EObjectContainmentEList<TypeReferenceInAST<TypeRef>>(TypeReferenceInAST.class, this, N4JSPackage.PARAMETERIZED_ACCESS__TYPE_ARGS);
+			typeArgs = new EObjectContainmentEList<TypeReferenceNode<TypeRef>>(TypeReferenceNode.class, this, N4JSPackage.PARAMETERIZED_ACCESS__TYPE_ARGS);
 		}
 		return typeArgs;
 	}
@@ -138,7 +138,7 @@ public abstract class ParameterizedAccessImpl extends ProxyResolvingEObjectImpl 
 		switch (featureID) {
 			case N4JSPackage.PARAMETERIZED_ACCESS__TYPE_ARGS:
 				getTypeArgs().clear();
-				getTypeArgs().addAll((Collection<? extends TypeReferenceInAST<TypeRef>>)newValue);
+				getTypeArgs().addAll((Collection<? extends TypeReferenceNode<TypeRef>>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

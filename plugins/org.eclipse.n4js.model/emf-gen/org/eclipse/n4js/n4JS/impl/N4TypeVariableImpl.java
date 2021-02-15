@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -20,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -38,8 +43,7 @@ import org.eclipse.n4js.ts.types.impl.IdentifiableElementImpl;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDeclaredUpperBoundInAST <em>Declared Upper Bound In AST</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}</li>
  * </ul>
  *
  * @generated
@@ -96,24 +100,14 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	protected boolean declaredContravariant = DECLARED_CONTRAVARIANT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getDeclaredUpperBound() <em>Declared Upper Bound</em>}' reference.
+	 * The cached value of the '{@link #getDeclaredUpperBoundNode() <em>Declared Upper Bound Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredUpperBound()
+	 * @see #getDeclaredUpperBoundNode()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef declaredUpperBound;
-
-	/**
-	 * The cached value of the '{@link #getDeclaredUpperBoundInAST() <em>Declared Upper Bound In AST</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredUpperBoundInAST()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypeRef declaredUpperBoundInAST;
+	protected TypeReferenceNode<TypeRef> declaredUpperBoundNode;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -226,16 +220,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredUpperBound() {
-		if (declaredUpperBound != null && declaredUpperBound.eIsProxy()) {
-			InternalEObject oldDeclaredUpperBound = (InternalEObject)declaredUpperBound;
-			declaredUpperBound = (TypeRef)eResolveProxy(oldDeclaredUpperBound);
-			if (declaredUpperBound != oldDeclaredUpperBound) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND, oldDeclaredUpperBound, declaredUpperBound));
-			}
-		}
-		return declaredUpperBound;
+	public TypeReferenceNode<TypeRef> getDeclaredUpperBoundNode() {
+		return declaredUpperBoundNode;
 	}
 
 	/**
@@ -243,43 +229,11 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TypeRef basicGetDeclaredUpperBound() {
-		return declaredUpperBound;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDeclaredUpperBound(TypeRef newDeclaredUpperBound) {
-		TypeRef oldDeclaredUpperBound = declaredUpperBound;
-		declaredUpperBound = newDeclaredUpperBound;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND, oldDeclaredUpperBound, declaredUpperBound));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeRef getDeclaredUpperBoundInAST() {
-		return declaredUpperBoundInAST;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetDeclaredUpperBoundInAST(TypeRef newDeclaredUpperBoundInAST, NotificationChain msgs) {
-		TypeRef oldDeclaredUpperBoundInAST = declaredUpperBoundInAST;
-		declaredUpperBoundInAST = newDeclaredUpperBoundInAST;
+	public NotificationChain basicSetDeclaredUpperBoundNode(TypeReferenceNode<TypeRef> newDeclaredUpperBoundNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldDeclaredUpperBoundNode = declaredUpperBoundNode;
+		declaredUpperBoundNode = newDeclaredUpperBoundNode;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST, oldDeclaredUpperBoundInAST, newDeclaredUpperBoundInAST);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE, oldDeclaredUpperBoundNode, newDeclaredUpperBoundNode);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -291,18 +245,33 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredUpperBoundInAST(TypeRef newDeclaredUpperBoundInAST) {
-		if (newDeclaredUpperBoundInAST != declaredUpperBoundInAST) {
+	public void setDeclaredUpperBoundNode(TypeReferenceNode<TypeRef> newDeclaredUpperBoundNode) {
+		if (newDeclaredUpperBoundNode != declaredUpperBoundNode) {
 			NotificationChain msgs = null;
-			if (declaredUpperBoundInAST != null)
-				msgs = ((InternalEObject)declaredUpperBoundInAST).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST, null, msgs);
-			if (newDeclaredUpperBoundInAST != null)
-				msgs = ((InternalEObject)newDeclaredUpperBoundInAST).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST, null, msgs);
-			msgs = basicSetDeclaredUpperBoundInAST(newDeclaredUpperBoundInAST, msgs);
+			if (declaredUpperBoundNode != null)
+				msgs = ((InternalEObject)declaredUpperBoundNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE, null, msgs);
+			if (newDeclaredUpperBoundNode != null)
+				msgs = ((InternalEObject)newDeclaredUpperBoundNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE, null, msgs);
+			msgs = basicSetDeclaredUpperBoundNode(newDeclaredUpperBoundNode, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST, newDeclaredUpperBoundInAST, newDeclaredUpperBoundInAST));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE, newDeclaredUpperBoundNode, newDeclaredUpperBoundNode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredUpperBound() {
+		TypeReferenceNode<TypeRef> _declaredUpperBoundNode = this.getDeclaredUpperBoundNode();
+		TypeRef _typeRef = null;
+		if (_declaredUpperBoundNode!=null) {
+			_typeRef=_declaredUpperBoundNode.getTypeRef();
+		}
+		return _typeRef;
 	}
 
 	/**
@@ -313,8 +282,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST:
-				return basicSetDeclaredUpperBoundInAST(null, msgs);
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
+				return basicSetDeclaredUpperBoundNode(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -334,11 +303,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 				return isDeclaredCovariant();
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				return isDeclaredContravariant();
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND:
-				if (resolve) return getDeclaredUpperBound();
-				return basicGetDeclaredUpperBound();
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST:
-				return getDeclaredUpperBoundInAST();
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
+				return getDeclaredUpperBoundNode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -348,6 +314,7 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -360,11 +327,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				setDeclaredContravariant((Boolean)newValue);
 				return;
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND:
-				setDeclaredUpperBound((TypeRef)newValue);
-				return;
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST:
-				setDeclaredUpperBoundInAST((TypeRef)newValue);
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
+				setDeclaredUpperBoundNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -387,11 +351,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				setDeclaredContravariant(DECLARED_CONTRAVARIANT_EDEFAULT);
 				return;
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND:
-				setDeclaredUpperBound((TypeRef)null);
-				return;
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST:
-				setDeclaredUpperBoundInAST((TypeRef)null);
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
+				setDeclaredUpperBoundNode((TypeReferenceNode<TypeRef>)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -411,12 +372,24 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 				return declaredCovariant != DECLARED_COVARIANT_EDEFAULT;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				return declaredContravariant != DECLARED_CONTRAVARIANT_EDEFAULT;
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND:
-				return declaredUpperBound != null;
-			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_IN_AST:
-				return declaredUpperBoundInAST != null;
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
+				return declaredUpperBoundNode != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.N4_TYPE_VARIABLE___GET_DECLARED_UPPER_BOUND:
+				return getDeclaredUpperBound();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

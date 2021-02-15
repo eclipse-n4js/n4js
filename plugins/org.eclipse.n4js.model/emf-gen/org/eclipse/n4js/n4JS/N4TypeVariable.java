@@ -27,8 +27,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundInAST <em>Declared Upper Bound In AST</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable()
@@ -103,47 +102,33 @@ public interface N4TypeVariable extends IdentifiableElement, NamedElement {
 	void setDeclaredContravariant(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Declared Upper Bound</b></em>' reference.
+	 * Returns the value of the '<em><b>Declared Upper Bound Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Upper Bound</em>' reference.
-	 * @see #setDeclaredUpperBound(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DeclaredUpperBound()
-	 * @model transient="true"
-	 * @generated
-	 */
-	TypeRef getDeclaredUpperBound();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBound <em>Declared Upper Bound</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Upper Bound</em>' reference.
-	 * @see #getDeclaredUpperBound()
-	 * @generated
-	 */
-	void setDeclaredUpperBound(TypeRef value);
-
-	/**
-	 * Returns the value of the '<em><b>Declared Upper Bound In AST</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Upper Bound In AST</em>' containment reference.
-	 * @see #setDeclaredUpperBoundInAST(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DeclaredUpperBoundInAST()
+	 * @return the value of the '<em>Declared Upper Bound Node</em>' containment reference.
+	 * @see #setDeclaredUpperBoundNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DeclaredUpperBoundNode()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TypeRef getDeclaredUpperBoundInAST();
+	TypeReferenceNode<TypeRef> getDeclaredUpperBoundNode();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundInAST <em>Declared Upper Bound In AST</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Upper Bound In AST</em>' containment reference.
-	 * @see #getDeclaredUpperBoundInAST()
+	 * @param value the new value of the '<em>Declared Upper Bound Node</em>' containment reference.
+	 * @see #getDeclaredUpperBoundNode()
 	 * @generated
 	 */
-	void setDeclaredUpperBoundInAST(TypeRef value);
+	void setDeclaredUpperBoundNode(TypeReferenceNode<TypeRef> value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getDeclaredUpperBound();
 
 } // N4TypeVariable
