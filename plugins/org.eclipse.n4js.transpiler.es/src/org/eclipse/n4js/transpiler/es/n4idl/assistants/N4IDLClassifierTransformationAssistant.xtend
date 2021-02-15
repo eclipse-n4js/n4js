@@ -17,13 +17,13 @@ import org.eclipse.n4js.n4idl.N4IDLGlobals
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.n4js.ts.types.TypingStrategy
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.types.TypeDefs
 
 /**
  * Transformation assistant for transforming N4IDL class and interface declarations.
@@ -57,6 +57,7 @@ class N4IDLClassifierTransformationAssistant extends TransformationAssistant {
 	private def Iterable<ParameterizedTypeRef> getNonStructuralSuperClassifiers(N4ClassifierDeclaration declaration) {
 		declaration.implementedOrExtendedInterfaceRefs
 			.map[typeRef]
+			.filter(ParameterizedTypeRef)
 			.filter[ref | includeInImplementedInterfaces(ref as ParameterizedTypeRef_IM)];
 	}
 	

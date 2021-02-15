@@ -271,7 +271,10 @@ class ASTStructureAssertionExtension {
 
 	def assertSuperClass(String phase, N4ClassDeclaration n4Class, Resource resource, String expectedSuperClassName) {
 		assertNotNull(phase + ": Should have a super type", n4Class.getSuperClassRef)
-		val superType = assertTypeRef(phase, n4Class.getSuperClassRef.typeRef, resource)
+		val superClassTypeRef = n4Class.getSuperClassRef?.typeRef;
+		assertNotNull("expected superClassTypeRef to be non-null", superClassTypeRef);
+		assertTrue("expected superClassTypeRef to be a ParameterizedTypeRef", superClassTypeRef instanceof ParameterizedTypeRef);
+		val superType = assertTypeRef(phase, superClassTypeRef as ParameterizedTypeRef, resource)
 		assertTrue(phase + ": Should have a TClass as super type", superType instanceof TClass)
 		assertEquals(phase + ": Should have the expected super class name", expectedSuperClassName, superType.name)
 	}
@@ -293,7 +296,10 @@ class ASTStructureAssertionExtension {
 	def assertConsumedRole(String phase, N4ClassDeclaration n4Class, Resource resource, int index,
 		String expectedConsumedRoleName) {
 		assertTrue(phase + ": Should have an interface at the index", n4Class.implementedInterfaceRefs.size > index)
-		val consumedType = assertTypeRef(phase, n4Class.implementedInterfaceRefs.get(index).typeRef, resource)
+		val implIfcRef = n4Class.implementedInterfaceRefs.get(index).typeRef;
+		assertNotNull("expected implementedInterfaceRefs[index] to be non-null", implIfcRef);
+		assertTrue("expected implementedInterfaceRefs[index] to be a ParameterizedTypeRef", implIfcRef instanceof ParameterizedTypeRef);
+		val consumedType = assertTypeRef(phase, implIfcRef as ParameterizedTypeRef, resource)
 		assertTrue(phase + ": Should have a TInterface as consumed type", consumedType instanceof TInterface)
 		assertEquals(phase + ": Should have the expected super class name", expectedConsumedRoleName, consumedType.name)
 	}
@@ -301,7 +307,10 @@ class ASTStructureAssertionExtension {
 	def assertConsumedRole(String phase, N4InterfaceDeclaration n4Role, Resource resource, int index,
 		String expectedConsumedRoleName) {
 		assertTrue(phase + ": Should have an interface at the index", n4Role.superInterfaceRefs.size > index)
-		val consumedType = assertTypeRef(phase, n4Role.superInterfaceRefs.get(index).typeRef, resource)
+		val superIfcRef = n4Role.superInterfaceRefs.get(index).typeRef;
+		assertNotNull("expected superInterfaceRefs[index] to be non-null", superIfcRef);
+		assertTrue("expected superInterfaceRefs[index] to be a ParameterizedTypeRef", superIfcRef instanceof ParameterizedTypeRef);
+		val consumedType = assertTypeRef(phase, superIfcRef as ParameterizedTypeRef, resource)
 		assertTrue(phase + ": Should have a TInterface as consumed type", consumedType instanceof TInterface)
 		assertEquals(phase + ": Should have the expected super class name", expectedConsumedRoleName, consumedType.name)
 	}

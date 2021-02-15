@@ -15,6 +15,7 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -43,7 +44,7 @@ public class SymbolOfSuperLiteral extends Symbol {
 		if (classDef != null) { // can be null in broken AST
 			TypeReferenceNode<ParameterizedTypeRef> superTypeRefInAST = classDef.getSuperClassRef();
 			if (superTypeRefInAST != null) {
-				ParameterizedTypeRef superTypeRef = superTypeRefInAST.getTypeRef();
+				TypeRef superTypeRef = superTypeRefInAST.getTypeRef();
 				return superTypeRef;
 			}
 		}

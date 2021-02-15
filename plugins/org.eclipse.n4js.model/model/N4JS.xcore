@@ -279,8 +279,12 @@ class TypeReferenceNode<T extends TypeRef> {
 	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
 	 * The returned type reference may or may not be contained in the AST.
 	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 * <p>
+	 * Since a type reference can change from {@code ParameterizedTypeRef} to something else
+	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the aliased
+	 * type, the type of this property must be {@link TypeRef} instead of {@code T}.
 	 */
-	refers transient T typeRef
+	refers transient TypeRef typeRef
 	contains T typeRefInAST
 }
 

@@ -8874,8 +8874,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getNamespaceImportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, NamespaceImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typeReferenceNodeEClass, TypeReferenceNode.class, "TypeReferenceNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		g1 = createEGenericType(typeReferenceNodeEClass_T);
-		initEReference(getTypeReferenceNode_TypeRef(), g1, null, "typeRef", null, 0, 1, TypeReferenceNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypeReferenceNode_TypeRef(), theTypeRefsPackage.getTypeRef(), null, "typeRef", null, 0, 1, TypeReferenceNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(typeReferenceNodeEClass_T);
 		initEReference(getTypeReferenceNode_TypeRefInAST(), g1, null, "typeRefInAST", null, 0, 1, TypeReferenceNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

@@ -40,6 +40,10 @@ public interface TypeReferenceNode<T extends TypeRef> extends EObject {
 	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
 	 * The returned type reference may or may not be contained in the AST.
 	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 * <p>
+	 * Since a type reference can change from {@code ParameterizedTypeRef} to something else
+	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the aliased
+	 * type, the type of this property must be {@link TypeRef} instead of {@code T}.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Type Ref</em>' reference.
 	 * @see #setTypeRef(TypeRef)
@@ -47,7 +51,7 @@ public interface TypeReferenceNode<T extends TypeRef> extends EObject {
 	 * @model transient="true"
 	 * @generated
 	 */
-	T getTypeRef();
+	TypeRef getTypeRef();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef <em>Type Ref</em>}' reference.
@@ -57,7 +61,7 @@ public interface TypeReferenceNode<T extends TypeRef> extends EObject {
 	 * @see #getTypeRef()
 	 * @generated
 	 */
-	void setTypeRef(T value);
+	void setTypeRef(TypeRef value);
 
 	/**
 	 * Returns the value of the '<em><b>Type Ref In AST</b></em>' containment reference.

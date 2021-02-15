@@ -26,6 +26,7 @@ import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TInterface
@@ -96,7 +97,7 @@ class StaticPolyfillTransformation extends Transformation {
 		classFiller.ownedMembers.forEach[classFilled.insertMember(it)];
 	}
 
-	def private void insertImplementedInterface(N4ClassDefinition classFilled, ParameterizedTypeRef ifcRefToBeInserted,
+	def private void insertImplementedInterface(N4ClassDefinition classFilled, TypeRef ifcRefToBeInserted,
 		Set<TInterface> currentIfcs) {
 		val ifcType = ifcRefToBeInserted.declaredType;
 		if(ifcType instanceof TInterface) {

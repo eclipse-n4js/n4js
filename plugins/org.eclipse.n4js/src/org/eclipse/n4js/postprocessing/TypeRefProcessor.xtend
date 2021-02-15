@@ -40,8 +40,7 @@ package class TypeRefProcessor extends AbstractProcessor {
 			val typeRefProcessed = doHandleTypeRef(G, typeRefNode.typeRefInAST);
 			if (typeRefProcessed !== null) {
 				EcoreUtilN4.doWithDeliver(false, [
-// FIXME type safety violation in next line!!!!
-					(typeRefNode as TypeReferenceNode<TypeRef>).typeRef = typeRefProcessed;
+					typeRefNode.typeRef = typeRefProcessed;
 				], typeRefNode);
 			}
 		}

@@ -59,6 +59,7 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
@@ -338,7 +339,7 @@ public class PolyfillValidatorFragment {
 		}
 
 		final TypeReferenceNode<ParameterizedTypeRef> superClassRefInAST = state.n4Class.getSuperClassRef();
-		final ParameterizedTypeRef superClassRef = superClassRefInAST != null ? superClassRefInAST.getTypeRef() : null;
+		final TypeRef superClassRef = superClassRefInAST != null ? superClassRefInAST.getTypeRef() : null;
 		List<TypeArgument> args = superClassRef != null ? superClassRef.getTypeArgs() : Collections.emptyList();
 		if (args.size() != state.polyType.getTypeVars().size()) {
 			return true; // consequential error

@@ -38,6 +38,7 @@ import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TObjectPrototype
@@ -489,7 +490,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Returns converted declared type of type reference if it matches the expected type. Otherwise, null is returned.
 	 */
-	def private <T extends Type> T hasExpectedTypes(ParameterizedTypeRef typeRef, Class<T> typeClazz) {
+	def private <T extends Type> T hasExpectedTypes(TypeRef typeRef, Class<T> typeClazz) {
 		val type = typeRef?.declaredType
 		if (type !== null && typeClazz.isAssignableFrom(type.class)) {
 			return type as T;

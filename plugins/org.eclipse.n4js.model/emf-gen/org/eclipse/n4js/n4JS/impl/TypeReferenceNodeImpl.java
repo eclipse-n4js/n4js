@@ -48,7 +48,7 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * @generated
 	 * @ordered
 	 */
-	protected T typeRef;
+	protected TypeRef typeRef;
 
 	/**
 	 * The cached value of the '{@link #getTypeRefInAST() <em>Type Ref In AST</em>}' containment reference.
@@ -84,12 +84,11 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public T getTypeRef() {
+	public TypeRef getTypeRef() {
 		if (typeRef != null && typeRef.eIsProxy()) {
 			InternalEObject oldTypeRef = (InternalEObject)typeRef;
-			typeRef = (T)eResolveProxy(oldTypeRef);
+			typeRef = (TypeRef)eResolveProxy(oldTypeRef);
 			if (typeRef != oldTypeRef) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF, oldTypeRef, typeRef));
@@ -103,7 +102,7 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public T basicGetTypeRef() {
+	public TypeRef basicGetTypeRef() {
 		return typeRef;
 	}
 
@@ -113,8 +112,8 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * @generated
 	 */
 	@Override
-	public void setTypeRef(T newTypeRef) {
-		T oldTypeRef = typeRef;
+	public void setTypeRef(TypeRef newTypeRef) {
+		TypeRef oldTypeRef = typeRef;
 		typeRef = newTypeRef;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF, oldTypeRef, typeRef));
@@ -206,7 +205,7 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
-				setTypeRef((T)newValue);
+				setTypeRef((TypeRef)newValue);
 				return;
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				setTypeRefInAST((T)newValue);
@@ -224,7 +223,7 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
-				setTypeRef((T)null);
+				setTypeRef((TypeRef)null);
 				return;
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				setTypeRefInAST((T)null);
