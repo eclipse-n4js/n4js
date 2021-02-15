@@ -20,8 +20,8 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ui.selection.AstSelectionProvider2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -197,7 +197,7 @@ class AstSelectionProvider2PluginUITest extends AbstractEditorTest {
 							'constructor(t: T) { }' +
 							'}', selectedText='T', occurrenceIndex = 1)
 	public def void testSelectionParameterizedTypeRef() {
-		script.astElement(selection).assertThat(instanceOf(ParameterizedTypeRef))
+		script.astElement(selection).assertThat(instanceOf(TypeReferenceNode))
 	}
 
 	def private astElement(String script, ITextRegion selection) {
