@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.ecore.EFactory;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 /**
  * <!-- begin-user-doc -->
  * The <b>Factory</b> for the model.
@@ -91,6 +93,15 @@ public interface N4JSFactory extends EFactory {
 	 * @generated
 	 */
 	NamespaceImportSpecifier createNamespaceImportSpecifier();
+
+	/**
+	 * Returns a new object of class '<em>Type Reference Node</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Type Reference Node</em>'.
+	 * @generated
+	 */
+	<T extends TypeRef> TypeReferenceNode<T> createTypeReferenceNode();
 
 	/**
 	 * Returns a new object of class '<em>Annotation List</em>'.
@@ -964,6 +975,15 @@ public interface N4JSFactory extends EFactory {
 	 * @generated
 	 */
 	CommaExpression createCommaExpression();
+
+	/**
+	 * Returns a new object of class '<em>N4 Type Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>N4 Type Variable</em>'.
+	 * @generated
+	 */
+	N4TypeVariable createN4TypeVariable();
 
 	/**
 	 * Returns a new object of class '<em>N4 Class Declaration</em>'.

@@ -20,6 +20,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
@@ -34,6 +35,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.xtext.naming.QualifiedName
@@ -75,12 +77,16 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
 			VariableDeclaration:
 				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
+			N4TypeVariable:
+				null
 			TClass:
 				if (name !== null) fqnTClassifier(it)
 			TInterface:
 				if (name !== null) fqnTClassifier(it)
 			TEnum:
 				if (name !== null) rootContainer.fullyQualifiedName?.append(exportedName ?: name)
+			TypeAlias:
+				if (name !== null && it.exported) rootContainer.fullyQualifiedName?.append(exportedName ?: name)
 			TFunction:
 				if (name !== null && it.exported) rootContainer.fullyQualifiedName?.append(exportedName)
 			TVariable:

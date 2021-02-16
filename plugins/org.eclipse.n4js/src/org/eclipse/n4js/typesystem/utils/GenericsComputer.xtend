@@ -35,7 +35,6 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.GenericType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
@@ -97,7 +96,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		}
 		else if(declType instanceof TypeAlias) {
 			primAddSubstitutions(G, typeRef);
-			val actualTypeRef = declType.actualTypeRef;
+			val actualTypeRef = declType.typeRef;
 			if (actualTypeRef !== null) {
 				addSubstitutions(G, actualTypeRef);
 			}
@@ -125,13 +124,11 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			if (!typeRef.typeArgs.empty) {
 				val declType = typeRef.declaredType
 				if (declType instanceof GenericType) {
-					if (!(declType instanceof TFunction)) { // FIXME legacy behavior; is this correct???
-						val varIter = declType.typeVars.iterator
-						for (typeArg : typeRef.typeArgs) {
-							if (varIter.hasNext) {
-								val typeVar = varIter.next;
-								addSubstitution(G, typeVar, typeArg);
-							}
+					val varIter = declType.typeVars.iterator
+					for (typeArg : typeRef.typeArgs) {
+						if (varIter.hasNext) {
+							val typeVar = varIter.next;
+							addSubstitution(G, typeVar, typeArg);
 						}
 					}
 				}
@@ -233,8 +230,10 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression paExpr) {
 		if (paExpr.parameterized) {
 			val prop = paExpr.property;
-			if(prop instanceof Type)
-				G.addTypeMappings(prop.typeVars, paExpr.typeArgs);
+			if(prop instanceof Type) {
+				val typeArgs = paExpr.typeArgs.map[typeRef].toList;
+				G.addTypeMappings(prop.typeVars, typeArgs);
+			}
 		}
 	}
 
@@ -276,7 +275,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 
 		if(F.generic) {
 			val typeArgs = if(callExpr.parameterized) {
-				callExpr.typeArgs
+				callExpr.typeArgs.map[typeRef].toList
 			} else {
 				ASTMetaInfoUtils.getInferredTypeArgs(callExpr) ?: #[]
 			};

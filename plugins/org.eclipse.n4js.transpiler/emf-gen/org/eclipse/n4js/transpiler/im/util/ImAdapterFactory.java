@@ -303,10 +303,6 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 				return createModifiableElementAdapter();
 			}
 			@Override
-			public Adapter caseTypeProvidingElement(TypeProvidingElement object) {
-				return createTypeProvidingElementAdapter();
-			}
-			@Override
 			public Adapter caseNamedElement(NamedElement object) {
 				return createNamedElementAdapter();
 			}
@@ -321,6 +317,10 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseFunctionOrFieldAccessor(FunctionOrFieldAccessor object) {
 				return createFunctionOrFieldAccessorAdapter();
+			}
+			@Override
+			public Adapter caseTypeProvidingElement(TypeProvidingElement object) {
+				return createTypeProvidingElementAdapter();
 			}
 			@Override
 			public Adapter casePropertyNameOwner(PropertyNameOwner object) {

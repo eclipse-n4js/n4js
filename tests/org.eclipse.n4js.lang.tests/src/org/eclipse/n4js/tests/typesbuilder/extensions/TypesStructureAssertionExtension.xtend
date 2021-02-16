@@ -42,8 +42,8 @@ import static org.junit.Assert.*
 public class TypesStructureAssertionExtension {
 
 	def assertTypeRef(String phase, TypedElement typedElement, Resource resource) {
-		assertTrue(phase + ": Should have parameterized type ref", typedElement.declaredTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = typedElement.declaredTypeRef as ParameterizedTypeRef
+		assertTrue(phase + ": Should have parameterized type ref", typedElement.declaredTypeRefInAST instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = typedElement.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, resource.contents.size)
 		// test whether reference can be resolved
 		assertTypeRef(phase, parameterizedTypeRef, resource)

@@ -367,7 +367,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkOptionalModifier(FormalParameter fpar) {
-		if(fpar.declaredTypeRef!==null && fpar.declaredTypeRef.followedByQuestionMark) {
+		if(fpar.declaredTypeRefInAST!==null && fpar.declaredTypeRefInAST.followedByQuestionMark) {
 			val String msg = getMessageForFUN_PARAM_OPTIONAL_WRONG_SYNTAX(fpar.name)
 			addIssue(msg, fpar, FUN_PARAM_OPTIONAL_WRONG_SYNTAX)
 		}
@@ -484,7 +484,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkNoThisAsyncMethod(FunctionDefinition funDef) {
 		if (funDef.isAsync) {
-			if (TypeUtils.isOrContainsThisType(funDef.returnTypeRef)) {
+			if (TypeUtils.isOrContainsThisType(funDef.declaredReturnTypeRef)) {
 				val message = messageForTYS_NON_THIS_ASYNC
 				addIssue(message, funDef, TYS_NON_THIS_ASYNC)
 			}
@@ -496,22 +496,22 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		if (!funDef.generator) {
 			return;
 		}
-		val returnTypeRefRaw = funDef.returnTypeRef;
-		if (returnTypeRefRaw === null) {
+		val returnTypeRefInAST = funDef.declaredReturnTypeRefInAST;
+		val returnTypeRef = funDef.declaredReturnTypeRef;
+		if (returnTypeRef === null) {
 			return;
 		}
 		val G = funDef.newRuleEnvironment;
-		val returnTypeRefRaw2 = tsh.resolveTypeAliases(G, returnTypeRefRaw); // returnTypeRefRaw was taken directly from AST -> must resolve aliases
-		val returnTypeRef = ts.upperBoundWithReopenAndResolve(G, returnTypeRefRaw2);
+		val returnTypeRefUB = ts.upperBoundWithReopenAndResolve(G, returnTypeRef);
 		val async = funDef.async;
-		val isGeneratorType = TypeUtils.isGenerator(returnTypeRef, G.builtInTypeScope);
-		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRef, G.builtInTypeScope);
+		val isGeneratorType = TypeUtils.isGenerator(returnTypeRefUB, G.builtInTypeScope);
+		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRefUB, G.builtInTypeScope);
 		if (async && isGeneratorType) {
 			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.generatorType.name, "synchronous", G.asyncGeneratorType.name),
-				returnTypeRefRaw, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+				returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
 		} else if (!async && isAsyncGeneratorType) {
 			addIssue(getMessageForFUN_GENERATOR_RETURN_TYPE_MISMATCH(G.asyncGeneratorType.name, "asynchronous", G.generatorType.name),
-				returnTypeRefRaw, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
+				returnTypeRefInAST, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, FUN_GENERATOR_RETURN_TYPE_MISMATCH);
 		}
 	}
 

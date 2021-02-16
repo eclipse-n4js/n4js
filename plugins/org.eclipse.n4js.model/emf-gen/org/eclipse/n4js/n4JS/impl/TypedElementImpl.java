@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -19,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -33,21 +38,21 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.TypedElementImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.TypedElementImpl#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}</li>
  * </ul>
  *
  * @generated
  */
 public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl implements TypedElement {
 	/**
-	 * The cached value of the '{@link #getDeclaredTypeRef() <em>Declared Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getDeclaredTypeRefNode() <em>Declared Type Ref Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredTypeRef()
+	 * @see #getDeclaredTypeRefNode()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef declaredTypeRef;
+	protected TypeReferenceNode<TypeRef> declaredTypeRefNode;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -74,8 +79,8 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredTypeRef() {
-		return declaredTypeRef;
+	public TypeReferenceNode<TypeRef> getDeclaredTypeRefNode() {
+		return declaredTypeRefNode;
 	}
 
 	/**
@@ -83,11 +88,11 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDeclaredTypeRef(TypeRef newDeclaredTypeRef, NotificationChain msgs) {
-		TypeRef oldDeclaredTypeRef = declaredTypeRef;
-		declaredTypeRef = newDeclaredTypeRef;
+	public NotificationChain basicSetDeclaredTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredTypeRefNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldDeclaredTypeRefNode = declaredTypeRefNode;
+		declaredTypeRefNode = newDeclaredTypeRefNode;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF, oldDeclaredTypeRef, newDeclaredTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE, oldDeclaredTypeRefNode, newDeclaredTypeRefNode);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -99,18 +104,48 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
-		if (newDeclaredTypeRef != declaredTypeRef) {
+	public void setDeclaredTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredTypeRefNode) {
+		if (newDeclaredTypeRefNode != declaredTypeRefNode) {
 			NotificationChain msgs = null;
-			if (declaredTypeRef != null)
-				msgs = ((InternalEObject)declaredTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF, null, msgs);
-			if (newDeclaredTypeRef != null)
-				msgs = ((InternalEObject)newDeclaredTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF, null, msgs);
-			msgs = basicSetDeclaredTypeRef(newDeclaredTypeRef, msgs);
+			if (declaredTypeRefNode != null)
+				msgs = ((InternalEObject)declaredTypeRefNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE, null, msgs);
+			if (newDeclaredTypeRefNode != null)
+				msgs = ((InternalEObject)newDeclaredTypeRefNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE, null, msgs);
+			msgs = basicSetDeclaredTypeRefNode(newDeclaredTypeRefNode, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF, newDeclaredTypeRef, newDeclaredTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE, newDeclaredTypeRefNode, newDeclaredTypeRefNode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredTypeRef() {
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = this.getDeclaredTypeRefNode();
+		TypeRef _typeRef = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRef=_declaredTypeRefNode.getTypeRef();
+		}
+		return _typeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = this.getDeclaredTypeRefNode();
+		TypeRef _typeRefInAST = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRefInAST=_declaredTypeRefNode.getTypeRefInAST();
+		}
+		return _typeRefInAST;
 	}
 
 	/**
@@ -121,8 +156,8 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF:
-				return basicSetDeclaredTypeRef(null, msgs);
+			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE:
+				return basicSetDeclaredTypeRefNode(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -135,8 +170,8 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
+			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE:
+				return getDeclaredTypeRefNode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -146,11 +181,12 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF:
-				setDeclaredTypeRef((TypeRef)newValue);
+			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE:
+				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -164,8 +200,8 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF:
-				setDeclaredTypeRef((TypeRef)null);
+			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE:
+				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -179,10 +215,26 @@ public abstract class TypedElementImpl extends ProxyResolvingEObjectImpl impleme
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF:
-				return declaredTypeRef != null;
+			case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE:
+				return declaredTypeRefNode != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.TYPED_ELEMENT___GET_DECLARED_TYPE_REF:
+				return getDeclaredTypeRef();
+			case N4JSPackage.TYPED_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //TypedElementImpl

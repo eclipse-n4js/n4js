@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.SetterDeclaration;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -189,11 +190,34 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 	@Override
 	public TypeRef getDeclaredTypeRef() {
 		FormalParameter _fpar = this.getFpar();
-		TypeRef _declaredTypeRef = null;
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = null;
 		if (_fpar!=null) {
-			_declaredTypeRef=_fpar.getDeclaredTypeRef();
+			_declaredTypeRefNode=_fpar.getDeclaredTypeRefNode();
 		}
-		return _declaredTypeRef;
+		TypeRef _typeRef = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRef=_declaredTypeRefNode.getTypeRef();
+		}
+		return _typeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		FormalParameter _fpar = this.getFpar();
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = null;
+		if (_fpar!=null) {
+			_declaredTypeRefNode=_fpar.getDeclaredTypeRefNode();
+		}
+		TypeRef _typeRefInAST = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRefInAST=_declaredTypeRefNode.getTypeRefInAST();
+		}
+		return _typeRefInAST;
 	}
 
 	/**
@@ -289,12 +313,14 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 		if (baseClass == TypeProvidingElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == FieldAccessor.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 				case N4JSPackage.FIELD_ACCESSOR___GET_DEFINED_ACCESSOR: return N4JSPackage.SETTER_DECLARATION___GET_DEFINED_ACCESSOR;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -314,6 +340,8 @@ public abstract class SetterDeclarationImpl extends FieldAccessorImpl implements
 				return getDefinedAccessor();
 			case N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
+			case N4JSPackage.SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

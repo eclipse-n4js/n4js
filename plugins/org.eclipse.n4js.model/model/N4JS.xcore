@@ -37,7 +37,6 @@ import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
-import org.eclipse.n4js.ts.types.ParameterizedTypeRefIterable
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
@@ -67,6 +66,7 @@ type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
 type IteratorOfStatement wraps Iterator<Statement>
 type IteratorOfReturnStatement wraps Iterator<ReturnStatement>
+type ParameterizedTypeRefInASTIterable wraps Iterable<TypeReferenceNode<ParameterizedTypeRef>>
 
 /**
  * Common interface for all AST elements providing a name.
@@ -273,12 +273,28 @@ class NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
 // ****************************************************************************************************
 // Abstract Base Elements
 // ****************************************************************************************************
+
+class TypeReferenceNode<T extends TypeRef> {
+	/*
+	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
+	 * The returned type reference may or may not be contained in the AST.
+	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 * <p>
+	 * Since a type reference can change from {@code ParameterizedTypeRef} to something else
+	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the aliased
+	 * type, the type of this property must be {@link TypeRef} instead of {@code T}.
+	 */
+	refers transient TypeRef typeRef
+	contains T typeRefInAST
+}
+
 /*
  * Element which may contain a declared type, typically a typed element.
  * Some rare elements have a declared type contained in some child element, e.g. getters.
  */
 interface TypeProvidingElement {
 	op TypeRef getDeclaredTypeRef()
+	op TypeRef getDeclaredTypeRefInAST()
 }
 
 /* A typed element, such as Variable, a Member or a NameValuePair, may provide a declared type.
@@ -289,7 +305,13 @@ interface TypeProvidingElement {
  * This is indicated by possibly unbound type parameters!
  */
 abstract class TypedElement extends TypeProvidingElement {
-	contains TypeRef declaredTypeRef
+	op TypeRef getDeclaredTypeRef() {
+		return declaredTypeRefNode?.typeRef;
+	}
+	op TypeRef getDeclaredTypeRefInAST() {
+		return declaredTypeRefNode?.typeRefInAST;
+	}
+	contains TypeReferenceNode<TypeRef> declaredTypeRefNode
 }
 
 // TODO jvp: check ECMAScript spec and probably update this environment things with function and classes
@@ -475,7 +497,11 @@ class LiteralAnnotationArgument extends AnnotationArgument {
  * to access this information.
  */
 class TypeRefAnnotationArgument extends AnnotationArgument {
-	contains TypeRef typeRef
+	op TypeRef getTypeRef() {
+		return typeRefNode?.typeRef;
+	}
+	contains TypeReferenceNode<TypeRef> typeRefNode
+
 	op TypeRef value() {
 		return typeRef;
 	}
@@ -537,17 +563,23 @@ abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningE
 	 */
 	op boolean isReturnValueOptional() {
 		return (definedFunction!==null && definedFunction.returnValueOptional) // see (*) below
-			|| (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
+			|| (declaredReturnTypeRefNode?.typeRefInAST!==null && declaredReturnTypeRefNode.typeRefInAST.followedByQuestionMark);
 		// regarding (*) above: in case of arrow functions, the optionality of the return value can be "inferred" from a
 		// type expectation and in this case the 'returnValueOptional' flag will be true only in the defined function in
 		// the TModule; hence, it is important to check for an existing defined function here.
+	}
+	op TypeRef getDeclaredReturnTypeRef() {
+		return declaredReturnTypeRefNode?.typeRef;
+	}
+	op TypeRef getDeclaredReturnTypeRefInAST() {
+		return declaredReturnTypeRefNode?.typeRefInAST;
 	}
 	/*
 	 * Developer-provided hint for the return type of this FunctionDefinition.
 	 * In case it's not provided, this reference remains null.
 	 * In contrast, reference definedType contains a TFunction whose returnTypeRef is always non-null irrespective of whether the hint was provided or not.
 	 */
-	contains TypeRef returnTypeRef
+	contains TypeReferenceNode<TypeRef> declaredReturnTypeRefNode
 
 	/*
 	 * Whether the function is a generator
@@ -581,10 +613,13 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
 
 	boolean declaredOptional
 
+	op TypeRef getDeclaredTypeRef() {
+		return null;
+	}
 	/*
      * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
      */
-	op TypeRef getDeclaredTypeRef() {
+	op TypeRef getDeclaredTypeRefInAST() {
 		return null;
 	}
 	/*
@@ -1314,7 +1349,7 @@ class PropertyNameValuePairSingleName extends PropertyNameValuePair {
 	}
 }
 
-class PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDeclaration, TypeProvidingElement  {
+class PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDeclaration  {
 	// IMPORTANT: don't introduce a property 'definedMethod' here, because PropertyMethodDeclaration inherits from
 	// TypeDefiningElement (via FunctionDefinition) and that class already has a property 'definedType' for this
 	// purpose; if we were using a separate property, it would break code that handles instances of
@@ -1345,11 +1380,14 @@ abstract class SetterDeclaration extends FieldAccessor {
 	op TSetter getDefinedAccessor() {
 		return definedSetter;
 	}
+	op TypeRef getDeclaredTypeRef() {
+		return fpar?.declaredTypeRefNode?.typeRef;
+	}
 	/*
 	 * Returns the declared type of the formal parameter
 	 */
-	op TypeRef getDeclaredTypeRef() {
-		return fpar?.declaredTypeRef;
+	op TypeRef getDeclaredTypeRefInAST() {
+		return fpar?.declaredTypeRefNode?.typeRefInAST;
 	}
 }
 
@@ -1479,7 +1517,7 @@ class NewExpression extends Expression, ParameterizedAccess {
 }
 
 abstract class ParameterizedAccess {
-	contains TypeRef[] typeArgs
+	contains TypeReferenceNode<TypeRef>[] typeArgs
 	/**
 	 * Returns <code>true<code> if the expression has type arguments.
 	 */
@@ -1811,7 +1849,10 @@ class UnaryExpression extends Expression {
  */
 class CastExpression extends Expression {
 	contains Expression expression
-	contains TypeRef targetTypeRef
+	op TypeRef getTargetTypeRef() {
+		return targetTypeRefNode?.typeRef;
+	}
+	contains TypeReferenceNode<TypeRef> targetTypeRefNode
 }
 
 class MultiplicativeExpression extends Expression {
@@ -1919,7 +1960,19 @@ abstract class GenericDeclaration extends TypeDefiningElement {
 	 * Type variables as declared by the declaration of the AST. These type variables are copied to the type model,
 	 * so in most cases, the type model type variables are to be used.
 	 */
-	contains TypeVariable[] typeVars
+	contains N4TypeVariable[] typeVars
+}
+
+class N4TypeVariable extends IdentifiableElement, NamedElement {
+
+	refers transient TypeVariable definedTypeVariable
+
+	boolean declaredCovariant
+	boolean declaredContravariant
+	op TypeRef getDeclaredUpperBound() {
+		return declaredUpperBoundNode?.typeRef;
+	}
+	contains TypeReferenceNode<TypeRef> declaredUpperBoundNode
 }
 
 /*
@@ -2014,14 +2067,14 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	/**
 	 * Derived, returns extended class (if any) and implemented or extended interfaces.
 	 */
-	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
-		return Collections.<ParameterizedTypeRef>emptyList;
+	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
+		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList;
 	}
 	/**
 	 * Derived, returns implemented or extended interfaces.
 	 */
-	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
-		return Collections.<ParameterizedTypeRef>emptyList;
+	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
+		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList;
 	}
 }
 
@@ -2029,19 +2082,19 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
  * Base class for {@link N4ClassDeclaration} and {@link N4ClassExpression}
  */
 abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
-	contains ParameterizedTypeRef superClassRef
+	contains TypeReferenceNode<ParameterizedTypeRef> superClassRef
 	contains Expression superClassExpression
-	contains ParameterizedTypeRef[] implementedInterfaceRefs
+	contains TypeReferenceNode<ParameterizedTypeRef>[] implementedInterfaceRefs
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TClass}.
 	 */
 	op TClass getDefinedTypeAsClass() {
 		return definedType as TClass;
 	}
-	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
 		return #[superClassRef] + implementedInterfaceRefs;
 	}
-	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
 		return implementedInterfaceRefs;
 	}
 }
@@ -2069,17 +2122,17 @@ class N4ClassExpression extends N4ClassDefinition, PrimaryExpression, AnnotableE
 }
 
 class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, VersionedElement {
-	contains ParameterizedTypeRef[] superInterfaceRefs
+	contains TypeReferenceNode<ParameterizedTypeRef>[] superInterfaceRefs
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
 	 */
 	op TInterface getDefinedTypeAsInterface() {
 		return definedType as TInterface;
 	}
-	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
 		return superInterfaceRefs;
 	}
-	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
 	/*
@@ -2114,8 +2167,7 @@ class N4EnumLiteral extends NamedElement, TypableElement {
 }
 
 
-class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration {
-	contains TypeRef actualTypeRef
+class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, TypedElement {
 
 	op TypeAlias getDefinedTypeAsTypeAlias() {
 		return definedType as TypeAlias;
@@ -2157,7 +2209,7 @@ abstract class ModifiableElement {
 	N4Modifier[] declaredModifiers
 }
 
-abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypeProvidingElement, TypableElement, NamedElement {
+abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypableElement, NamedElement {
 	/**
 	 * The classifier owning this member.
 	 */
@@ -2217,17 +2269,9 @@ class N4MemberAnnotationList extends AbstractAnnotationList, N4MemberDeclaration
 		}
 		return null
 	}
-	op TypeRef getDeclaredTypeRef() {
-		val c = eContainer
-		if (c instanceof N4MemberDeclaration) {
-			return c.getDeclaredTypeRef();
-		}
-		return null
-	}
 	op String getName() {
 		return null
 	}
-
 }
 
 class N4FieldDeclaration extends AnnotableN4MemberDeclaration, TypedElement, ThisArgProvider, PropertyNameOwner {
@@ -2264,7 +2308,7 @@ class N4FieldDeclaration extends AnnotableN4MemberDeclaration, TypedElement, Thi
 	}
 }
 
-abstract class MethodDeclaration extends FunctionDefinition, GenericDeclaration, TypedElement, PropertyNameOwner {
+abstract class MethodDeclaration extends FunctionDefinition, GenericDeclaration, PropertyNameOwner {
 	/**
 	 * Convenience method, returns true if an explicit call to the super constructor is found.
 	 * Of course, this is only allowed in constructors. Note that this method searches for ALL

@@ -82,7 +82,6 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
-import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
@@ -198,7 +197,7 @@ import com.google.inject.Inject;
 					// --> for this, create a ParameterizedTypeRef taking the staticType from
 					// the CtorTypeRef and the type arguments from the NewExpression
 					final TypeRef typeRefOfInstanceToCreate = typeSystemHelper.createTypeRefFromStaticType(
-							G, ctorTypeRef, expr.getTypeArgs().toArray(new TypeArgument[0]));
+							G, ctorTypeRef, expr);
 					final Type typeOfInstanceToCreatePlain = typeRefOfInstanceToCreate.getDeclaredType();
 					if (!(typeOfInstanceToCreatePlain instanceof ContainerType<?>)) {
 						return unknown();

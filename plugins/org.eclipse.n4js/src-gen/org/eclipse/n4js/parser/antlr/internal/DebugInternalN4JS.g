@@ -137,7 +137,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleVersionDeclaration?
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
@@ -147,7 +147,7 @@ ruleAnnotatedScriptElement:
 			?
 			ruleBindingIdentifier
 			ruleVersionDeclaration?
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleInterfaceExtendsList?
 		)
 		ruleMembers
@@ -169,9 +169,9 @@ ruleAnnotatedScriptElement:
 		*
 		'type'
 		ruleBindingIdentifier
-		ruleTypeVariables?
+		ruleTypeParameters?
 		'='
-		ruleTypeRef
+		ruleTypeReferenceNode
 	)
 ;
 
@@ -352,7 +352,7 @@ ruleAnnotatedExportableElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleClassExtendsImplements?
 			    |
 			ruleN4Modifier
@@ -361,7 +361,7 @@ ruleAnnotatedExportableElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleInterfaceExtendsList?
 		)
 		ruleMembers
@@ -382,9 +382,9 @@ ruleAnnotatedExportableElement:
 		*
 		'type'
 		ruleBindingIdentifier
-		ruleTypeVariables?
+		ruleTypeParameters?
 		'='
-		ruleTypeRef
+		ruleTypeReferenceNode
 	)
 ;
 
@@ -633,53 +633,53 @@ norm7_FunctionImplWithoutKeyword:
 
 // Rule FunctionHeader
 ruleFunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
 	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
 // Rule FunctionHeader
 norm1_FunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
 	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
 // Rule FunctionHeader
 norm2_FunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
 	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
 // Rule FunctionHeader
 norm3_FunctionHeader:
-	ruleTypeVariables?
+	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
 	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepReturnTypeRef
+		ruleColonSepDeclaredReturnTypeRef
 	)?
 ;
 
@@ -783,7 +783,7 @@ ruleArrowExpression:
 	(
 		((
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -797,7 +797,7 @@ ruleArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -805,7 +805,7 @@ ruleArrowExpression:
 		)=>
 		(
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -819,7 +819,7 @@ ruleArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -842,7 +842,7 @@ norm1_ArrowExpression:
 	(
 		((
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -856,7 +856,7 @@ norm1_ArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -864,7 +864,7 @@ norm1_ArrowExpression:
 		)=>
 		(
 			ruleStrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -878,7 +878,7 @@ norm1_ArrowExpression:
 					ruleStrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
@@ -901,7 +901,7 @@ norm2_ArrowExpression:
 	(
 		((
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -915,7 +915,7 @@ norm2_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -923,7 +923,7 @@ norm2_ArrowExpression:
 		)=>
 		(
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -937,7 +937,7 @@ norm2_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -960,7 +960,7 @@ norm3_ArrowExpression:
 	(
 		((
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -974,7 +974,7 @@ norm3_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -982,7 +982,7 @@ norm3_ArrowExpression:
 		)=>
 		(
 			norm1_StrictFormalParameters
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -996,7 +996,7 @@ norm3_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepReturnTypeRef?
+			ruleColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -1112,8 +1112,8 @@ norm1_AnnotatedExpression:
 	)
 ;
 
-// Rule TypeVariable
-ruleTypeVariable:
+// Rule N4TypeVariable
+ruleN4TypeVariable:
 	(
 		'out'
 		    |
@@ -1122,7 +1122,7 @@ ruleTypeVariable:
 	ruleIdentifierOrThis
 	(
 		'extends'
-		ruleTypeRef
+		ruleTypeReferenceNode
 	)?
 ;
 
@@ -2909,7 +2909,7 @@ rulePropertyAssignment:
 		ruleAnnotatedPropertyAssignment
 		    |
 		(
-			(ruleTypeRefWithModifiers
+			(ruleTypeReferenceWithModifiersNode
 			?
 			ruleLiteralOrComputedPropertyName
 			'?'
@@ -3075,8 +3075,8 @@ rulePropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
-			ruleTypeRefWithModifiers
+			(ruleTypeParameters?
+			ruleTypeReferenceWithModifiersNode
 			?
 			ruleAsyncNoTrailingLineBreak
 			(
@@ -3103,7 +3103,7 @@ norm1_PropertyAssignment:
 		norm1_AnnotatedPropertyAssignment
 		    |
 		(
-			(ruleTypeRefWithModifiers
+			(ruleTypeReferenceWithModifiersNode
 			?
 			norm1_LiteralOrComputedPropertyName
 			'?'
@@ -3269,8 +3269,8 @@ norm1_PropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
-			ruleTypeRefWithModifiers
+			(ruleTypeParameters?
+			ruleTypeReferenceWithModifiersNode
 			?
 			ruleAsyncNoTrailingLineBreak
 			(
@@ -3296,12 +3296,12 @@ ruleAnnotatedPropertyAssignment:
 	rulePropertyAssignmentAnnotationList
 	(
 		(
-			(ruleTypeRefWithModifiers
+			(ruleTypeReferenceWithModifiersNode
 			?
 			ruleLiteralOrComputedPropertyName
 			':'
 			)=>
-			ruleTypeRefWithModifiers
+			ruleTypeReferenceWithModifiersNode
 			?
 			ruleLiteralOrComputedPropertyName
 			':'
@@ -3483,8 +3483,8 @@ ruleAnnotatedPropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
-			ruleTypeRefWithModifiers
+			(ruleTypeParameters?
+			ruleTypeReferenceWithModifiersNode
 			?
 			(
 				'*'
@@ -3495,8 +3495,8 @@ ruleAnnotatedPropertyAssignment:
 				'('
 			)
 			)=>
-			ruleTypeVariables?
-			ruleTypeRefWithModifiers
+			ruleTypeParameters?
+			ruleTypeReferenceWithModifiersNode
 			?
 			(
 				'*'
@@ -3515,7 +3515,7 @@ ruleAnnotatedPropertyAssignment:
 		)
 		';'?
 		    |
-		ruleTypeRef
+		ruleTypeReferenceWithModifiersNode
 		?
 		rulePropertyNameValuePairSingleNamePart
 		    |
@@ -3529,12 +3529,12 @@ norm1_AnnotatedPropertyAssignment:
 	rulePropertyAssignmentAnnotationList
 	(
 		(
-			(ruleTypeRefWithModifiers
+			(ruleTypeReferenceWithModifiersNode
 			?
 			norm1_LiteralOrComputedPropertyName
 			':'
 			)=>
-			ruleTypeRefWithModifiers
+			ruleTypeReferenceWithModifiersNode
 			?
 			norm1_LiteralOrComputedPropertyName
 			':'
@@ -3716,8 +3716,8 @@ norm1_AnnotatedPropertyAssignment:
 		)
 		    |
 		(
-			(ruleTypeVariables?
-			ruleTypeRefWithModifiers
+			(ruleTypeParameters?
+			ruleTypeReferenceWithModifiersNode
 			?
 			(
 				'*'
@@ -3728,8 +3728,8 @@ norm1_AnnotatedPropertyAssignment:
 				'('
 			)
 			)=>
-			ruleTypeVariables?
-			ruleTypeRefWithModifiers
+			ruleTypeParameters?
+			ruleTypeReferenceWithModifiersNode
 			?
 			(
 				'*'
@@ -3748,7 +3748,7 @@ norm1_AnnotatedPropertyAssignment:
 		)
 		';'?
 		    |
-		ruleTypeRef
+		ruleTypeReferenceWithModifiersNode
 		?
 		norm1_PropertyNameValuePairSingleNamePart
 		    |
@@ -3760,8 +3760,8 @@ norm1_AnnotatedPropertyAssignment:
 // Rule PropertyMethodDeclaration
 rulePropertyMethodDeclaration:
 	(
-		(ruleTypeVariables?
-		ruleTypeRefWithModifiers
+		(ruleTypeParameters?
+		ruleTypeReferenceWithModifiersNode
 		?
 		ruleAsyncNoTrailingLineBreak
 		(
@@ -3773,8 +3773,8 @@ rulePropertyMethodDeclaration:
 			'('
 		)
 		)=>
-		ruleTypeVariables?
-		ruleTypeRefWithModifiers
+		ruleTypeParameters?
+		ruleTypeReferenceWithModifiersNode
 		?
 		ruleAsyncNoTrailingLineBreak
 		(
@@ -3798,8 +3798,8 @@ rulePropertyMethodDeclaration:
 // Rule PropertyMethodDeclaration
 norm1_PropertyMethodDeclaration:
 	(
-		(ruleTypeVariables?
-		ruleTypeRefWithModifiers
+		(ruleTypeParameters?
+		ruleTypeReferenceWithModifiersNode
 		?
 		ruleAsyncNoTrailingLineBreak
 		(
@@ -3811,8 +3811,8 @@ norm1_PropertyMethodDeclaration:
 			'('
 		)
 		)=>
-		ruleTypeVariables?
-		ruleTypeRefWithModifiers
+		ruleTypeParameters?
+		ruleTypeReferenceWithModifiersNode
 		?
 		ruleAsyncNoTrailingLineBreak
 		(
@@ -3836,14 +3836,14 @@ norm1_PropertyMethodDeclaration:
 // Rule PropertyNameValuePair
 rulePropertyNameValuePair:
 	(
-		(ruleTypeRefWithModifiers
+		(ruleTypeReferenceWithModifiersNode
 		?
 		ruleLiteralOrComputedPropertyName
 		'?'
 		?
 		':'
 		)=>
-		ruleTypeRefWithModifiers
+		ruleTypeReferenceWithModifiersNode
 		?
 		ruleLiteralOrComputedPropertyName
 		'?'
@@ -3856,14 +3856,14 @@ rulePropertyNameValuePair:
 // Rule PropertyNameValuePair
 norm1_PropertyNameValuePair:
 	(
-		(ruleTypeRefWithModifiers
+		(ruleTypeReferenceWithModifiersNode
 		?
 		norm1_LiteralOrComputedPropertyName
 		'?'
 		?
 		':'
 		)=>
-		ruleTypeRefWithModifiers
+		ruleTypeReferenceWithModifiersNode
 		?
 		norm1_LiteralOrComputedPropertyName
 		'?'
@@ -3875,14 +3875,14 @@ norm1_PropertyNameValuePair:
 
 // Rule PropertyNameValuePairSingleName
 rulePropertyNameValuePairSingleName:
-	ruleTypeRef
+	ruleTypeReferenceNode
 	?
 	rulePropertyNameValuePairSingleNamePart
 ;
 
 // Rule PropertyNameValuePairSingleName
 norm1_PropertyNameValuePairSingleName:
-	ruleTypeRef
+	ruleTypeReferenceNode
 	?
 	norm1_PropertyNameValuePairSingleNamePart
 ;
@@ -4298,12 +4298,44 @@ norm1_ParameterizedCallExpression:
 // Rule ConcreteTypeArguments
 ruleConcreteTypeArguments:
 	'<'
-	ruleTypeRef
+	ruleTypeReferenceNode
 	(
 		','
-		ruleTypeRef
+		ruleTypeReferenceNode
 	)*
 	'>'
+;
+
+// Rule ColonSepDeclaredTypeRef
+ruleColonSepDeclaredTypeRef:
+	':'
+	ruleTypeReferenceNode
+;
+
+// Rule ColonSepDeclaredReturnTypeRef
+ruleColonSepDeclaredReturnTypeRef:
+	':'
+	ruleTypeReferenceNode
+;
+
+// Rule TypeReferenceNode
+ruleTypeReferenceNode:
+	ruleTypeRef
+;
+
+// Rule TypeReferenceWithModifiersNode
+ruleTypeReferenceWithModifiersNode:
+	ruleTypeRefWithModifiers
+;
+
+// Rule ParameterizedTypeRefNominalNode
+ruleParameterizedTypeRefNominalNode:
+	ruleParameterizedTypeRefNominal
+;
+
+// Rule ArrayTypeExpressionNode
+ruleArrayTypeExpressionNode:
+	ruleArrayTypeExpression
 ;
 
 // Rule ImportCallExpression
@@ -4593,7 +4625,7 @@ ruleCastExpression:
 			)=>
 			'as'
 		)
-		ruleArrayTypeExpression
+		ruleArrayTypeExpressionNode
 	)?
 ;
 
@@ -4606,7 +4638,7 @@ norm1_CastExpression:
 			)=>
 			'as'
 		)
-		ruleArrayTypeExpression
+		ruleArrayTypeExpressionNode
 	)?
 ;
 
@@ -6019,7 +6051,7 @@ ruleAssignmentExpression:
 		(
 			((
 				ruleStrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6033,7 +6065,7 @@ ruleAssignmentExpression:
 						ruleStrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
@@ -6073,7 +6105,7 @@ norm1_AssignmentExpression:
 		(
 			((
 				ruleStrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6087,7 +6119,7 @@ norm1_AssignmentExpression:
 						ruleStrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
@@ -6127,7 +6159,7 @@ norm2_AssignmentExpression:
 		(
 			((
 				norm1_StrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6141,7 +6173,7 @@ norm2_AssignmentExpression:
 						norm1_StrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
@@ -6183,7 +6215,7 @@ norm3_AssignmentExpression:
 		(
 			((
 				norm1_StrictFormalParameters
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6197,7 +6229,7 @@ norm3_AssignmentExpression:
 						norm1_StrictFormalParameters
 					)
 				)
-				ruleColonSepReturnTypeRef?
+				ruleColonSepDeclaredReturnTypeRef?
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
@@ -6698,7 +6730,7 @@ ruleLiteralAnnotationArgument:
 
 // Rule TypeRefAnnotationArgument
 ruleTypeRefAnnotationArgument:
-	ruleTypeRef
+	ruleTypeReferenceNode
 ;
 
 // Rule AnnotationList
@@ -6790,9 +6822,20 @@ ruleN4ClassDeclaration:
 		?
 		ruleVersionDeclaration?
 	)
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleClassExtendsImplements?
 	ruleMembers
+;
+
+// Rule TypeParameters
+ruleTypeParameters:
+	'<'
+	ruleN4TypeVariable
+	(
+		','
+		ruleN4TypeVariable
+	)*
+	'>'
 ;
 
 // Rule Members
@@ -6838,9 +6881,9 @@ ruleClassExtendsClause:
 	'extends'
 	(
 		(
-			(ruleParameterizedTypeRefNominal
+			(ruleParameterizedTypeRefNominalNode
 			)=>
-			ruleParameterizedTypeRefNominal
+			ruleParameterizedTypeRefNominalNode
 		)
 		    |
 		ruleLeftHandSideExpression
@@ -6852,9 +6895,9 @@ norm1_ClassExtendsClause:
 	'extends'
 	(
 		(
-			(ruleParameterizedTypeRefNominal
+			(ruleParameterizedTypeRefNominalNode
 			)=>
-			ruleParameterizedTypeRefNominal
+			ruleParameterizedTypeRefNominalNode
 		)
 		    |
 		norm1_LeftHandSideExpression
@@ -6864,10 +6907,10 @@ norm1_ClassExtendsClause:
 // Rule ClassImplementsList
 ruleClassImplementsList:
 	'implements'
-	ruleParameterizedTypeRefNominal
+	ruleParameterizedTypeRefNominalNode
 	(
 		','
-		ruleParameterizedTypeRefNominal
+		ruleParameterizedTypeRefNominalNode
 	)*
 ;
 
@@ -6910,7 +6953,7 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleVersionDeclaration?
 	)
-	ruleTypeVariables?
+	ruleTypeParameters?
 	ruleInterfaceExtendsList?
 	ruleMembers
 ;
@@ -6922,10 +6965,10 @@ ruleInterfaceExtendsList:
 		    |
 		'implements'
 	)
-	ruleParameterizedTypeRefNominal
+	ruleParameterizedTypeRefNominalNode
 	(
 		','
-		ruleParameterizedTypeRefNominal
+		ruleParameterizedTypeRefNominalNode
 	)*
 ;
 
@@ -6981,9 +7024,9 @@ ruleN4TypeAliasDeclaration:
 		ruleBindingIdentifier
 		?
 	)
-	ruleTypeVariables?
+	ruleTypeParameters?
 	'='
-	ruleTypeRef
+	ruleTypeReferenceNode
 ;
 
 // Rule N4MemberDeclaration
@@ -7153,7 +7196,7 @@ ruleN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
@@ -7340,7 +7383,7 @@ norm1_N4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
@@ -7551,7 +7594,7 @@ ruleAnnotatedN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7564,7 +7607,7 @@ ruleAnnotatedN4MemberDeclaration:
 			)=>
 			ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
@@ -7778,7 +7821,7 @@ norm1_AnnotatedN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7791,7 +7834,7 @@ norm1_AnnotatedN4MemberDeclaration:
 			)=>
 			ruleN4Modifier
 			*
-			ruleTypeVariables?
+			ruleTypeParameters?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
@@ -7859,7 +7902,7 @@ ruleN4MethodDeclaration:
 	(
 		(ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -7872,7 +7915,7 @@ ruleN4MethodDeclaration:
 		)=>
 		ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -7897,7 +7940,7 @@ norm1_N4MethodDeclaration:
 	(
 		(ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -7910,7 +7953,7 @@ norm1_N4MethodDeclaration:
 		)=>
 		ruleN4Modifier
 		*
-		ruleTypeVariables?
+		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
@@ -7965,7 +8008,7 @@ norm1_MethodParamsAndBody:
 // Rule MethodParamsReturnAndBody
 ruleMethodParamsReturnAndBody:
 	ruleStrictFormalParameters
-	ruleColonSepReturnTypeRef?
+	ruleColonSepDeclaredReturnTypeRef?
 	(
 		('{'
 		)=>
@@ -7976,7 +8019,7 @@ ruleMethodParamsReturnAndBody:
 // Rule MethodParamsReturnAndBody
 norm1_MethodParamsReturnAndBody:
 	norm1_StrictFormalParameters
-	ruleColonSepReturnTypeRef?
+	ruleColonSepDeclaredReturnTypeRef?
 	(
 		('{'
 		)=>
@@ -9185,12 +9228,6 @@ ruleTypeVariables:
 	'>'
 ;
 
-// Rule ColonSepDeclaredTypeRef
-ruleColonSepDeclaredTypeRef:
-	':'
-	ruleTypeRef
-;
-
 // Rule ColonSepTypeRef
 ruleColonSepTypeRef:
 	':'
@@ -9224,7 +9261,7 @@ ruleTStructGetter:
 	?
 	'('
 	')'
-	ruleColonSepDeclaredTypeRef?
+	ruleColonSepTypeRef?
 ;
 
 // Rule TStructSetter
@@ -9322,6 +9359,20 @@ ruleWildcardNewNotation:
 		'in'
 		ruleTypeRef
 	)
+;
+
+// Rule TypeVariable
+ruleTypeVariable:
+	(
+		'out'
+		    |
+		'in'
+	)?
+	RULE_IDENTIFIER
+	(
+		'extends'
+		ruleTypeRef
+	)?
 ;
 
 // Rule BindingIdentifier

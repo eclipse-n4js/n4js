@@ -80,7 +80,7 @@ class N4_04_12_2_ClassDeclarationsTest extends AbstractParserTest{
 		assertEquals("foo", methodDecl.name);
 		val fpar = methodDecl.fpars.get(0)
 		assertEquals("p", fpar.name)
-		val fparType = fpar.declaredTypeRef as UnionTypeExpression
+		val fparType = fpar.declaredTypeRefInAST as UnionTypeExpression
 		val unionElement0 = fparType.typeRefs.get(0) as ParameterizedTypeRef
 		assertEquals("A", unionElement0.declaredType.name)
 		val unionElement1 = fparType.typeRefs.get(1) as ParameterizedTypeRef

@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
@@ -177,21 +176,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
 			return substTypeVariables(G, fparTypeRef, false);
 		}
-
-		// FIXME move to super class
-		/**
-		 * Performing substitution on the upper bound of an unbound(!) type variable is non-trivial, because we aren't
-		 * allowed to copy the type variable and change its upper bound (short version: a type variable is a type and
-		 * therefore needs to be contained in a Resource; but our new FunctionTypeExpression 'result' is a TypeRef which
-		 * may not be contained in any Resource).
-		 * <p>
-		 * If type variable substitution on <code>currTV</code>'s upper bound leads to a change of that upper bound (and
-		 * only then!), the modified upper bound will be stored in property 'unboundTypeVarsUpperBounds' of
-		 * <code>result</code>.
-		 * <p>
-		 * This has to be carefully aligned with {@link FunctionTypeExpression#getUnboundTypeVarsUpperBounds()} and
-		 * {@link FunctionTypeExpression#getTypeVarUpperBound(TypeVariable)}.
-		 */
 
 		@Override
 		protected TypeRef caseComposedTypeRef_processMemberType(TypeRef memberTypeRef) {

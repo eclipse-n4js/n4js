@@ -45,7 +45,7 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 
 		interfaceType.setProvidedByRuntime(n4Interface, preLinkingPhase)
 		interfaceType.declaredCovariantConstructor = n4Interface.isDeclaredCovariantConstructor;
-		interfaceType.addCopyOfTypeParameters(n4Interface, preLinkingPhase)
+		interfaceType.addTypeParameters(n4Interface, preLinkingPhase)
 		interfaceType.addExtendedInterfaces(n4Interface, preLinkingPhase)
 
 		interfaceType.addFields(n4Interface, preLinkingPhase)
@@ -77,6 +77,6 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 
 	def private void addExtendedInterfaces(TInterface interfaceType, N4InterfaceDeclaration c, boolean preLinkingPhase) {
 		if (!preLinkingPhase)
-			addCopyOfReferences(interfaceType.superInterfaceRefs, c.superInterfaceRefs)
+			addCopyOfReferences(interfaceType.superInterfaceRefs, c.superInterfaceRefs.map[typeRefInAST])
 	}
 }

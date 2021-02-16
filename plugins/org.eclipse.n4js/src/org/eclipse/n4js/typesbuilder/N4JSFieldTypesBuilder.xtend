@@ -63,9 +63,9 @@ package class N4JSFieldTypesBuilder {
 
 	def private void setFieldType(TField field, N4FieldDeclaration n4Field, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
-			if(n4Field.declaredTypeRef!==null) {
+			if(n4Field.declaredTypeRefInAST!==null) {
 				// type of field was declared explicitly
-				field.typeRef = TypeUtils.copyWithProxies(n4Field.declaredTypeRef)
+				field.typeRef = TypeUtils.copyWithProxies(n4Field.declaredTypeRefInAST)
 			}
 			else {
 				// in all other cases:

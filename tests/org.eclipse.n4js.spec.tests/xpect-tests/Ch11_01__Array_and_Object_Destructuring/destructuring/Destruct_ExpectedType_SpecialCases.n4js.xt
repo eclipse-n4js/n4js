@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	IssueConfiguration {
+		IssueCode "CFG_USED_BEFORE_DECLARED" { enabled = false }
+	}
+
+END_SETUP */
+
+
+//
+// some challenging special cases for method DestructureHelper#createTypeFromLeafDestructNode()
+//
+
+
+function case1() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+	for (var [x:int] of [[undefined], [1]]) {}
+}
+
+export var xGlobalDeclared: int;
+function case2a() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+	for ([xGlobalDeclared] of [[undefined], [1]]) {}
+}
+
+export var xGlobalInferred = 42;
+function case2b() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+	for ([xGlobalInferred] of [[undefined], [1]]) {}
+}
+
+// in the next two cases, 'x' is used before its declaration
+// (weird corner-case, but it has to be supported by the type system):
+
+function case3() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+	for ([x] of [[undefined], [1]]) {}
+	var x: int; // type of x is declared explicitly
+}
+
+function case4() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+	for ([x] of [[undefined], [1]]) {}
+	var x = 42; // type of x is inferred
+}

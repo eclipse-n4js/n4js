@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeAlias;
@@ -44,8 +45,8 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#getAstElement <em>Ast Element</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#getActualTypeRef <em>Actual Type Ref</em>}</li>
  * </ul>
  *
  * @generated
@@ -92,6 +93,16 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	protected boolean declaredProvidedByRuntime = DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypeRef()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef typeRef;
+
+	/**
 	 * The cached value of the '{@link #getAstElement() <em>Ast Element</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -100,16 +111,6 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 * @ordered
 	 */
 	protected EObject astElement;
-
-	/**
-	 * The cached value of the '{@link #getActualTypeRef() <em>Actual Type Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getActualTypeRef()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypeRef actualTypeRef;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -182,6 +183,51 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 * @generated
 	 */
 	@Override
+	public TypeRef getTypeRef() {
+		return typeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetTypeRef(TypeRef newTypeRef, NotificationChain msgs) {
+		TypeRef oldTypeRef = typeRef;
+		typeRef = newTypeRef;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_ALIAS__TYPE_REF, oldTypeRef, newTypeRef);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setTypeRef(TypeRef newTypeRef) {
+		if (newTypeRef != typeRef) {
+			NotificationChain msgs = null;
+			if (typeRef != null)
+				msgs = ((InternalEObject)typeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TYPE_ALIAS__TYPE_REF, null, msgs);
+			if (newTypeRef != null)
+				msgs = ((InternalEObject)newTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TYPE_ALIAS__TYPE_REF, null, msgs);
+			msgs = basicSetTypeRef(newTypeRef, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_ALIAS__TYPE_REF, newTypeRef, newTypeRef));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EObject getAstElement() {
 		if (astElement != null && astElement.eIsProxy()) {
 			InternalEObject oldAstElement = (InternalEObject)astElement;
@@ -214,51 +260,6 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 		astElement = newAstElement;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_ALIAS__AST_ELEMENT, oldAstElement, astElement));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeRef getActualTypeRef() {
-		return actualTypeRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetActualTypeRef(TypeRef newActualTypeRef, NotificationChain msgs) {
-		TypeRef oldActualTypeRef = actualTypeRef;
-		actualTypeRef = newActualTypeRef;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF, oldActualTypeRef, newActualTypeRef);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setActualTypeRef(TypeRef newActualTypeRef) {
-		if (newActualTypeRef != actualTypeRef) {
-			NotificationChain msgs = null;
-			if (actualTypeRef != null)
-				msgs = ((InternalEObject)actualTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF, null, msgs);
-			if (newActualTypeRef != null)
-				msgs = ((InternalEObject)newActualTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF, null, msgs);
-			msgs = basicSetActualTypeRef(newActualTypeRef, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF, newActualTypeRef, newActualTypeRef));
 	}
 
 	/**
@@ -310,8 +311,8 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF:
-				return basicSetActualTypeRef(null, msgs);
+			case TypesPackage.TYPE_ALIAS__TYPE_REF:
+				return basicSetTypeRef(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -328,11 +329,11 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 				return getDeclaredTypeAccessModifier();
 			case TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME:
 				return isDeclaredProvidedByRuntime();
+			case TypesPackage.TYPE_ALIAS__TYPE_REF:
+				return getTypeRef();
 			case TypesPackage.TYPE_ALIAS__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
-			case TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF:
-				return getActualTypeRef();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -351,11 +352,11 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 			case TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME:
 				setDeclaredProvidedByRuntime((Boolean)newValue);
 				return;
+			case TypesPackage.TYPE_ALIAS__TYPE_REF:
+				setTypeRef((TypeRef)newValue);
+				return;
 			case TypesPackage.TYPE_ALIAS__AST_ELEMENT:
 				setAstElement((EObject)newValue);
-				return;
-			case TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF:
-				setActualTypeRef((TypeRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -375,11 +376,11 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 			case TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME:
 				setDeclaredProvidedByRuntime(DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT);
 				return;
+			case TypesPackage.TYPE_ALIAS__TYPE_REF:
+				setTypeRef((TypeRef)null);
+				return;
 			case TypesPackage.TYPE_ALIAS__AST_ELEMENT:
 				setAstElement((EObject)null);
-				return;
-			case TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF:
-				setActualTypeRef((TypeRef)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -397,10 +398,10 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 				return declaredTypeAccessModifier != DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT;
 			case TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME:
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
+			case TypesPackage.TYPE_ALIAS__TYPE_REF:
+				return typeRef != null;
 			case TypesPackage.TYPE_ALIAS__AST_ELEMENT:
 				return astElement != null;
-			case TypesPackage.TYPE_ALIAS__ACTUAL_TYPE_REF:
-				return actualTypeRef != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -416,6 +417,12 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 			switch (derivedFeatureID) {
 				case TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME: return TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME;
+				default: return -1;
+			}
+		}
+		if (baseClass == TTypedElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TYPE_ALIAS__TYPE_REF: return TypesPackage.TTYPED_ELEMENT__TYPE_REF;
 				default: return -1;
 			}
 		}
@@ -439,6 +446,12 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 			switch (baseFeatureID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME: return TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME;
+				default: return -1;
+			}
+		}
+		if (baseClass == TTypedElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.TTYPED_ELEMENT__TYPE_REF: return TypesPackage.TYPE_ALIAS__TYPE_REF;
 				default: return -1;
 			}
 		}
@@ -471,6 +484,11 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TYPE_ALIAS___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TYPE_ALIAS___IS_EXPORTED;
+				default: return -1;
+			}
+		}
+		if (baseClass == TTypedElement.class) {
+			switch (baseOperationID) {
 				default: return -1;
 			}
 		}

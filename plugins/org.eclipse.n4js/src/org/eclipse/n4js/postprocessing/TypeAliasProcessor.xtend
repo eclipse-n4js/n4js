@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.EcoreUtilN4
 
 /**
  * Handles resolution of type aliases during post-processing.
@@ -33,7 +34,7 @@ class TypeAliasProcessor extends AbstractProcessor {
 	private TypeSystemHelper tsh;
 
 	def void handleTypeAlias(RuleEnvironment G, EObject obj, ASTMetaInfoCache cache) {
-		// Note: it would be great if we could resolve the declaredTypeRef of TypedElement's
+		// Note: it would be great if we could resolve the declaredTypeRef of TypedElements
 		// here (i.e. if 'obj' is a TypedElement); however, those type references are AST nodes,
 		// so this would mean changing the AST, which isn't allowed.
 
@@ -54,19 +55,21 @@ class TypeAliasProcessor extends AbstractProcessor {
 		if (type instanceof TypeAlias) {
 			return; // do not resolve the 'actualTypeRef' property in type alias itself
 		}
-		val l = newArrayList; // create list up-front to not confuse tree iterator when replacing nodes!
+		val allNestedTypeArgs = newArrayList; // create list up-front to not confuse tree iterator when replacing nodes!
 		val iter = type.eAllContents;
 		while (iter.hasNext) {
 			val obj = iter.next;
 			if (obj instanceof TypeArgument) {
-				l.add(obj);
+				allNestedTypeArgs.add(obj);
 				iter.prune();
 			}
 		}
-		for (typeArg : l) {
+		for (typeArg : allNestedTypeArgs) {
 			val typeArgResolved = tsh.resolveTypeAliases(G, typeArg);
 			if (typeArgResolved !== typeArg) {
-				EcoreUtil.replace(typeArg, typeArgResolved);
+				EcoreUtilN4.doWithDeliver(false, [
+					EcoreUtil.replace(typeArg, typeArgResolved);
+				], typeArg.eContainer);
 			}
 		}
 	}

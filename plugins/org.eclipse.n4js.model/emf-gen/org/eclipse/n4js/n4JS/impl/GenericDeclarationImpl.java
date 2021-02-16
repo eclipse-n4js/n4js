@@ -24,8 +24,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-
-import org.eclipse.n4js.ts.types.TypeVariable;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 
 /**
  * <!-- begin-user-doc -->
@@ -49,7 +48,7 @@ public abstract class GenericDeclarationImpl extends TypeDefiningElementImpl imp
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeVariable> typeVars;
+	protected EList<N4TypeVariable> typeVars;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -76,9 +75,9 @@ public abstract class GenericDeclarationImpl extends TypeDefiningElementImpl imp
 	 * @generated
 	 */
 	@Override
-	public EList<TypeVariable> getTypeVars() {
+	public EList<N4TypeVariable> getTypeVars() {
 		if (typeVars == null) {
-			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.GENERIC_DECLARATION__TYPE_VARS);
+			typeVars = new EObjectContainmentEList<N4TypeVariable>(N4TypeVariable.class, this, N4JSPackage.GENERIC_DECLARATION__TYPE_VARS);
 		}
 		return typeVars;
 	}
@@ -122,7 +121,7 @@ public abstract class GenericDeclarationImpl extends TypeDefiningElementImpl imp
 		switch (featureID) {
 			case N4JSPackage.GENERIC_DECLARATION__TYPE_VARS:
 				getTypeVars().clear();
-				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				getTypeVars().addAll((Collection<? extends N4TypeVariable>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

@@ -30,6 +30,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedAccess;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -56,7 +57,7 @@ public class ParameterizedCallExpressionImpl extends ExpressionWithTargetImpl im
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeRef> typeArgs;
+	protected EList<TypeReferenceNode<TypeRef>> typeArgs;
 
 	/**
 	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' containment reference list.
@@ -93,9 +94,9 @@ public class ParameterizedCallExpressionImpl extends ExpressionWithTargetImpl im
 	 * @generated
 	 */
 	@Override
-	public EList<TypeRef> getTypeArgs() {
+	public EList<TypeReferenceNode<TypeRef>> getTypeArgs() {
 		if (typeArgs == null) {
-			typeArgs = new EObjectContainmentEList<TypeRef>(TypeRef.class, this, N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS);
+			typeArgs = new EObjectContainmentEList<TypeReferenceNode<TypeRef>>(TypeReferenceNode.class, this, N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS);
 		}
 		return typeArgs;
 	}
@@ -186,7 +187,7 @@ public class ParameterizedCallExpressionImpl extends ExpressionWithTargetImpl im
 		switch (featureID) {
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__TYPE_ARGS:
 				getTypeArgs().clear();
-				getTypeArgs().addAll((Collection<? extends TypeRef>)newValue);
+				getTypeArgs().addAll((Collection<? extends TypeReferenceNode<TypeRef>>)newValue);
 				return;
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION__ARGUMENTS:
 				getArguments().clear();

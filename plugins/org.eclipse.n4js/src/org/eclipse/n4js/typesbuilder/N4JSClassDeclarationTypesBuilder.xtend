@@ -48,7 +48,7 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		tclass.declaredStaticPolyfill = n4Class.isStaticPolyfill;
 		tclass.declaredPolyfill = n4Class.isPolyfill || tclass.declaredStaticPolyfill;
 		tclass.declaredCovariantConstructor = n4Class.isDeclaredCovariantConstructor;
-		tclass.addCopyOfTypeParameters(n4Class, preLinkingPhase);
+		tclass.addTypeParameters(n4Class, preLinkingPhase);
 
 		// super types etc
 		tclass.setSuperType(n4Class, preLinkingPhase);
@@ -129,11 +129,11 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 	def private setSuperType(TClass tclass, N4ClassDefinition classDecl, boolean preLinkingPhase) {
 		if (!preLinkingPhase)
-			tclass.superClassRef = TypeUtils.copyWithProxies(classDecl.superClassRef);
+			tclass.superClassRef = TypeUtils.copyWithProxies(classDecl.superClassRef?.typeRefInAST);
 	}
 
 	def private addImplementedInterfaces(TClass tclass, N4ClassDefinition classDecl, boolean preLinkingPhase) {
 		if (!preLinkingPhase)
-			addCopyOfReferences(tclass.implementedInterfaceRefs, classDecl.implementedInterfaceRefs);
+			addCopyOfReferences(tclass.implementedInterfaceRefs, classDecl.implementedInterfaceRefs.map[typeRefInAST]);
 	}
 }

@@ -442,7 +442,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ColonSepReturnTypeRef_TFormalParameters_TFunction_TypeVariables(context, (TFunction) semanticObject); 
 				return; 
 			case TypesPackage.TGETTER:
-				sequence_ColonSepDeclaredTypeRef_TGetter(context, (TGetter) semanticObject); 
+				sequence_ColonSepTypeRef_TGetter(context, (TGetter) semanticObject); 
 				return; 
 			case TypesPackage.TINTERFACE:
 				sequence_TClassOrInterfaceHeader_TInterface(context, (TInterface) semanticObject); 
@@ -468,7 +468,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ColonSepTypeRef_TStructField(context, (TStructField) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_GETTER:
-				sequence_ColonSepDeclaredTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
+				sequence_ColonSepTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
 				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod_TypeVariables(context, (TStructMethod) semanticObject); 
@@ -615,25 +615,6 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TMember returns TGetter
-	 *     TGetter returns TGetter
-	 *
-	 * Constraint:
-	 *     (
-	 *         declaredMemberAccessModifier=MemberAccessModifier 
-	 *         (declaredAbstract?='abstract' | declaredStatic?='static')? 
-	 *         (name=TypesIdentifier | name=TypesComputedPropertyName) 
-	 *         optional?='?'? 
-	 *         declaredTypeRef=TypeRef
-	 *     )
-	 */
-	protected void sequence_ColonSepDeclaredTypeRef_TGetter(ISerializationContext context, TGetter semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     TypeRef returns FunctionTypeExpression
 	 *     TypeArgument returns FunctionTypeExpression
 	 *
@@ -707,6 +688,25 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_ColonSepTypeRef_TField(ISerializationContext context, TField semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TMember returns TGetter
+	 *     TGetter returns TGetter
+	 *
+	 * Constraint:
+	 *     (
+	 *         declaredMemberAccessModifier=MemberAccessModifier 
+	 *         (declaredAbstract?='abstract' | declaredStatic?='static')? 
+	 *         (name=TypesIdentifier | name=TypesComputedPropertyName) 
+	 *         optional?='?'? 
+	 *         typeRef=TypeRef
+	 *     )
+	 */
+	protected void sequence_ColonSepTypeRef_TGetter(ISerializationContext context, TGetter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

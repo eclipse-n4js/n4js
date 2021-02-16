@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -21,6 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -33,7 +38,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.CastExpressionImpl#getExpression <em>Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.CastExpressionImpl#getTargetTypeRef <em>Target Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.CastExpressionImpl#getTargetTypeRefNode <em>Target Type Ref Node</em>}</li>
  * </ul>
  *
  * @generated
@@ -50,14 +55,14 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	protected Expression expression;
 
 	/**
-	 * The cached value of the '{@link #getTargetTypeRef() <em>Target Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getTargetTypeRefNode() <em>Target Type Ref Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTargetTypeRef()
+	 * @see #getTargetTypeRefNode()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef targetTypeRef;
+	protected TypeReferenceNode<TypeRef> targetTypeRefNode;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -129,8 +134,8 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * @generated
 	 */
 	@Override
-	public TypeRef getTargetTypeRef() {
-		return targetTypeRef;
+	public TypeReferenceNode<TypeRef> getTargetTypeRefNode() {
+		return targetTypeRefNode;
 	}
 
 	/**
@@ -138,11 +143,11 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetTargetTypeRef(TypeRef newTargetTypeRef, NotificationChain msgs) {
-		TypeRef oldTargetTypeRef = targetTypeRef;
-		targetTypeRef = newTargetTypeRef;
+	public NotificationChain basicSetTargetTypeRefNode(TypeReferenceNode<TypeRef> newTargetTypeRefNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldTargetTypeRefNode = targetTypeRefNode;
+		targetTypeRefNode = newTargetTypeRefNode;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF, oldTargetTypeRef, newTargetTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE, oldTargetTypeRefNode, newTargetTypeRefNode);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -154,18 +159,33 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * @generated
 	 */
 	@Override
-	public void setTargetTypeRef(TypeRef newTargetTypeRef) {
-		if (newTargetTypeRef != targetTypeRef) {
+	public void setTargetTypeRefNode(TypeReferenceNode<TypeRef> newTargetTypeRefNode) {
+		if (newTargetTypeRefNode != targetTypeRefNode) {
 			NotificationChain msgs = null;
-			if (targetTypeRef != null)
-				msgs = ((InternalEObject)targetTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF, null, msgs);
-			if (newTargetTypeRef != null)
-				msgs = ((InternalEObject)newTargetTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF, null, msgs);
-			msgs = basicSetTargetTypeRef(newTargetTypeRef, msgs);
+			if (targetTypeRefNode != null)
+				msgs = ((InternalEObject)targetTypeRefNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE, null, msgs);
+			if (newTargetTypeRefNode != null)
+				msgs = ((InternalEObject)newTargetTypeRefNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE, null, msgs);
+			msgs = basicSetTargetTypeRefNode(newTargetTypeRefNode, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF, newTargetTypeRef, newTargetTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE, newTargetTypeRefNode, newTargetTypeRefNode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getTargetTypeRef() {
+		TypeReferenceNode<TypeRef> _targetTypeRefNode = this.getTargetTypeRefNode();
+		TypeRef _typeRef = null;
+		if (_targetTypeRefNode!=null) {
+			_typeRef=_targetTypeRefNode.getTypeRef();
+		}
+		return _typeRef;
 	}
 
 	/**
@@ -178,8 +198,8 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 		switch (featureID) {
 			case N4JSPackage.CAST_EXPRESSION__EXPRESSION:
 				return basicSetExpression(null, msgs);
-			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF:
-				return basicSetTargetTypeRef(null, msgs);
+			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE:
+				return basicSetTargetTypeRefNode(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -194,8 +214,8 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 		switch (featureID) {
 			case N4JSPackage.CAST_EXPRESSION__EXPRESSION:
 				return getExpression();
-			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF:
-				return getTargetTypeRef();
+			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE:
+				return getTargetTypeRefNode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -205,14 +225,15 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4JSPackage.CAST_EXPRESSION__EXPRESSION:
 				setExpression((Expression)newValue);
 				return;
-			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF:
-				setTargetTypeRef((TypeRef)newValue);
+			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE:
+				setTargetTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -229,8 +250,8 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 			case N4JSPackage.CAST_EXPRESSION__EXPRESSION:
 				setExpression((Expression)null);
 				return;
-			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF:
-				setTargetTypeRef((TypeRef)null);
+			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE:
+				setTargetTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -246,10 +267,24 @@ public class CastExpressionImpl extends ExpressionImpl implements CastExpression
 		switch (featureID) {
 			case N4JSPackage.CAST_EXPRESSION__EXPRESSION:
 				return expression != null;
-			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF:
-				return targetTypeRef != null;
+			case N4JSPackage.CAST_EXPRESSION__TARGET_TYPE_REF_NODE:
+				return targetTypeRefNode != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.CAST_EXPRESSION___GET_TARGET_TYPE_REF:
+				return getTargetTypeRef();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //CastExpressionImpl

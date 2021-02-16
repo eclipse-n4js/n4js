@@ -71,18 +71,23 @@ public class TranspilerUtils {
 	 * Search entire containment tree below 'root' for objects of type 'cls'. If last argument is <code>false</code>,
 	 * then sub trees below a matching node won't be searched.
 	 */
-	public static final <T extends EObject> List<T> collectNodes(EObject root, Class<T> cls,
-			boolean searchForNestedNodes) {
+	@SafeVarargs
+	public static final <T extends EObject> List<T> collectNodes(EObject root, boolean searchForNestedNodes,
+			Class<? extends T>... classes) {
 		final List<T> result = new ArrayList<>();
 		final TreeIterator<EObject> iter = root.eAllContents();
 		while (iter.hasNext()) {
 			final EObject obj = iter.next();
-			if (cls.isAssignableFrom(obj.getClass())) {
-				@SuppressWarnings("unchecked")
-				final T objCasted = (T) obj;
-				result.add(objCasted);
-				if (!searchForNestedNodes)
-					iter.prune();
+			for (int i = 0; i < classes.length; i++) {
+				Class<? extends T> cls = classes[i];
+				if (cls.isAssignableFrom(obj.getClass())) {
+					@SuppressWarnings("unchecked")
+					final T objCasted = (T) obj;
+					result.add(objCasted);
+					if (!searchForNestedNodes)
+						iter.prune();
+					break;
+				}
 			}
 		}
 		return result;

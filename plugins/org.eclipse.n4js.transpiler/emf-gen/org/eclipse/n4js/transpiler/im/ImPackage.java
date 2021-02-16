@@ -1946,15 +1946,6 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___GET_ALL_ANNOTATIONS = N4JSPackage.N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_MEMBER___GET_DECLARED_TYPE_REF = N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2100,13 +2091,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION__DECLARED_OPTIONAL = N4JSPackage.N4_GETTER_DECLARATION__DECLARED_OPTIONAL;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Type Ref Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_GETTER_DECLARATION__DECLARED_TYPE_REF = N4JSPackage.N4_GETTER_DECLARATION__DECLARED_TYPE_REF;
+	int DELEGATING_GETTER_DECLARATION__DECLARED_TYPE_REF_NODE = N4JSPackage.N4_GETTER_DECLARATION__DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The feature id for the '<em><b>Defined Getter</b></em>' reference.
@@ -2262,6 +2253,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = N4JSPackage.N4_GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME;
 
 	/**
+	 * The operation id for the '<em>Is Optional</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___IS_OPTIONAL = N4JSPackage.N4_GETTER_DECLARATION___IS_OPTIONAL;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2271,13 +2271,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_GETTER_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
-	 * The operation id for the '<em>Is Optional</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_GETTER_DECLARATION___IS_OPTIONAL = N4JSPackage.N4_GETTER_DECLARATION___IS_OPTIONAL;
+	int DELEGATING_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = N4JSPackage.N4_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 
 	/**
 	 * The operation id for the '<em>Get Defined Accessor</em>' operation.
@@ -2632,6 +2632,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
+
+	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2822,13 +2831,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__FPARS = N4JSPackage.N4_METHOD_DECLARATION__FPARS;
 
 	/**
-	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Return Type Ref Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_METHOD_DECLARATION__RETURN_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__RETURN_TYPE_REF;
+	int DELEGATING_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -2856,15 +2865,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION__TYPE_VARS = N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION__DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -2928,15 +2928,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___GET_ALL_ANNOTATIONS = N4JSPackage.N4_METHOD_DECLARATION___GET_ALL_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
@@ -3036,6 +3027,24 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___IS_RETURN_VALUE_OPTIONAL = N4JSPackage.N4_METHOD_DECLARATION___IS_RETURN_VALUE_OPTIONAL;
+
+	/**
+	 * The operation id for the '<em>Get Declared Return Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_RETURN_TYPE_REF = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_RETURN_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Get Declared Return Type Ref In AST</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___GET_DECLARED_RETURN_TYPE_REF_IN_AST = N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_RETURN_TYPE_REF_IN_AST;
 
 	/**
 	 * The operation id for the '<em>Is Async</em>' operation.

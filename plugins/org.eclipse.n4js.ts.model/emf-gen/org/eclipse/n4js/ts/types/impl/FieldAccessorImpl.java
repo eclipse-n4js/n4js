@@ -211,7 +211,7 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredTypeRef() {
+	public TypeRef getTypeRef() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -343,8 +343,8 @@ public abstract class FieldAccessorImpl extends TMemberWithAccessModifierImpl im
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
+			case TypesPackage.FIELD_ACCESSOR___GET_TYPE_REF:
+				return getTypeRef();
 			case TypesPackage.FIELD_ACCESSOR___IS_ABSTRACT:
 				return isAbstract();
 		}

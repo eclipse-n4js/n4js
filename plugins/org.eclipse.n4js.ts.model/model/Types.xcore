@@ -399,13 +399,6 @@ class TypeVariable extends Type {
 	contains TypeRef declaredUpperBound
 
 	/*
-	 * If and only if this TypeVariable is an AST node (note: instances of TypeVariable are used for both the AST
-	 * and in the TModule), then this property will point to the corresponding TypeVariable instance created in the
-	 * TModule, similar to {@code TypeDefiningElement#definedType}.
-	 */
-	refers transient TypeVariable definedTypeVariable
-
-	/*
 	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns
 	 * invariant, unless the type variable was explicitly declared on definition site to be co- or contravariant.
 	 */
@@ -1594,7 +1587,7 @@ abstract class FieldAccessor extends TMemberWithAccessModifier {
 	boolean declaredAbstract
 	contains TypeRef declaredThisType
 
-	op TypeRef getDeclaredTypeRef()
+	op TypeRef getTypeRef()
 
 	/**
 	 * Returns true if the method is either declared abstract or it is implicitly abstract, i.e. it is declared in a role and has no body.
@@ -1608,7 +1601,7 @@ abstract class FieldAccessor extends TMemberWithAccessModifier {
  * Getter of a field, declaration (type, name) is derived from field (and its type).
  */
 class TGetter extends FieldAccessor, TMemberWithAccessModifier {
-	contains TypeRef declaredTypeRef
+	contains TypeRef typeRef
 
 	/** Always returns GETTER */
 	op MemberType getMemberType() {
@@ -1624,7 +1617,7 @@ class TGetter extends FieldAccessor, TMemberWithAccessModifier {
 		strb.append(name);
 		if (optional) strb.append("?");
 		strb.append("()");
-		if (declaredTypeRef!==null) strb.append(": ").append(declaredTypeRef.typeRefAsString);
+		if (typeRef!==null) strb.append(": ").append(typeRef.typeRefAsString);
 		return strb.toString();
 	}
 
@@ -1644,7 +1637,7 @@ class TStructGetter extends TGetter, TStructMember {
  */
 class TSetter extends FieldAccessor, TMemberWithAccessModifier {
 	contains TFormalParameter fpar
-	op TypeRef getDeclaredTypeRef() {
+	op TypeRef getTypeRef() {
 		return fpar?.typeRef;
 	}
 	op boolean isReadable() {
@@ -1713,9 +1706,7 @@ class TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement {
 /*
  * A type alias.
  */
-class TypeAlias extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement {
-
-	contains TypeRef actualTypeRef
+class TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
 
 	op boolean isAlias() {
 		return true;

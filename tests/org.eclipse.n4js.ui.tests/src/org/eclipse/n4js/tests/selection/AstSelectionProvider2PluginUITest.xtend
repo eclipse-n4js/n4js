@@ -19,14 +19,14 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ui.selection.AstSelectionProvider2
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.ui.testing.AbstractEditorTest
 import org.eclipse.xtext.ui.XtextProjectHelper
+import org.eclipse.xtext.ui.testing.AbstractEditorTest
 import org.eclipse.xtext.util.ITextRegion
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -188,7 +188,7 @@ class AstSelectionProvider2PluginUITest extends AbstractEditorTest {
 							'constructor(t: T) { }' +
 							'}', selectedText='T')
 	public def void testSelectionTypeVariable() {
-		script.astElement(selection).assertThat(instanceOf(TypeVariable))
+		script.astElement(selection).assertThat(instanceOf(N4TypeVariable))
 	}
 
 	@Test
@@ -197,7 +197,7 @@ class AstSelectionProvider2PluginUITest extends AbstractEditorTest {
 							'constructor(t: T) { }' +
 							'}', selectedText='T', occurrenceIndex = 1)
 	public def void testSelectionParameterizedTypeRef() {
-		script.astElement(selection).assertThat(instanceOf(ParameterizedTypeRef))
+		script.astElement(selection).assertThat(instanceOf(TypeReferenceNode))
 	}
 
 	def private astElement(String script, ITextRegion selection) {

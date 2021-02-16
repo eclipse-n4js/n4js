@@ -1419,7 +1419,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeVarsTypeVariableParserRuleCall_2_1_0 = (RuleCall)cTypeVarsAssignment_2_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
-		//// TODO extract TypeVariableContainer to be used here
 		//fragment TypeVariables *:
 		//	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>';
 		@Override public ParserRule getRule() { return rule; }
@@ -1450,29 +1449,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//'>'
 		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
-	}
-	public class ColonSepDeclaredTypeRefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepDeclaredTypeRef");
-		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cColonKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cDeclaredTypeRefAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cDeclaredTypeRefTypeRefParserRuleCall_1_0 = (RuleCall)cDeclaredTypeRefAssignment_1.eContents().get(0);
-		
-		//fragment ColonSepDeclaredTypeRef *:
-		//	':' declaredTypeRef=TypeRef;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//':' declaredTypeRef=TypeRef
-		public Group getGroup() { return cGroup; }
-		
-		//':'
-		public Keyword getColonKeyword_0() { return cColonKeyword_0; }
-		
-		//declaredTypeRef=TypeRef
-		public Assignment getDeclaredTypeRefAssignment_1() { return cDeclaredTypeRefAssignment_1; }
-		
-		//TypeRef
-		public RuleCall getDeclaredTypeRefTypeRefParserRuleCall_1_0() { return cDeclaredTypeRefTypeRefParserRuleCall_1_0; }
 	}
 	public class ColonSepTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ColonSepTypeRef");
@@ -1564,16 +1540,16 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cOptionalQuestionMarkKeyword_1_0 = (Keyword)cOptionalAssignment_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final RuleCall cColonSepDeclaredTypeRefParserRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
+		private final RuleCall cColonSepTypeRefParserRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
 		
 		//TStructGetter:
 		//	=> ({TStructGetter}
 		//	'get'
 		//	name=IdentifierName) optional?='?'?
-		//	'(' ')' ColonSepDeclaredTypeRef?;
+		//	'(' ')' ColonSepTypeRef?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=> ({TStructGetter} 'get' name=IdentifierName) optional?='?'? '(' ')' ColonSepDeclaredTypeRef?
+		//=> ({TStructGetter} 'get' name=IdentifierName) optional?='?'? '(' ')' ColonSepTypeRef?
 		public Group getGroup() { return cGroup; }
 		
 		//=> ({TStructGetter} 'get' name=IdentifierName)
@@ -1606,8 +1582,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//')'
 		public Keyword getRightParenthesisKeyword_3() { return cRightParenthesisKeyword_3; }
 		
-		//ColonSepDeclaredTypeRef?
-		public RuleCall getColonSepDeclaredTypeRefParserRuleCall_4() { return cColonSepDeclaredTypeRefParserRuleCall_4; }
+		//ColonSepTypeRef?
+		public RuleCall getColonSepTypeRefParserRuleCall_4() { return cColonSepTypeRefParserRuleCall_4; }
 	}
 	public class TStructSetterElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TStructSetter");
@@ -2409,7 +2385,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final TStructMemberElements pTStructMember;
 	private final TStructMethodElements pTStructMethod;
 	private final TypeVariablesElements pTypeVariables;
-	private final ColonSepDeclaredTypeRefElements pColonSepDeclaredTypeRef;
 	private final ColonSepTypeRefElements pColonSepTypeRef;
 	private final ColonSepReturnTypeRefElements pColonSepReturnTypeRef;
 	private final TStructFieldElements pTStructField;
@@ -2482,7 +2457,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pTStructMember = new TStructMemberElements();
 		this.pTStructMethod = new TStructMethodElements();
 		this.pTypeVariables = new TypeVariablesElements();
-		this.pColonSepDeclaredTypeRef = new ColonSepDeclaredTypeRefElements();
 		this.pColonSepTypeRef = new ColonSepTypeRefElements();
 		this.pColonSepReturnTypeRef = new ColonSepReturnTypeRefElements();
 		this.pTStructField = new TStructFieldElements();
@@ -2915,7 +2889,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMethodAccess().getRule();
 	}
 	
-	//// TODO extract TypeVariableContainer to be used here
 	//fragment TypeVariables *:
 	//	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>';
 	public TypeVariablesElements getTypeVariablesAccess() {
@@ -2924,16 +2897,6 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getTypeVariablesRule() {
 		return getTypeVariablesAccess().getRule();
-	}
-	
-	//fragment ColonSepDeclaredTypeRef *:
-	//	':' declaredTypeRef=TypeRef;
-	public ColonSepDeclaredTypeRefElements getColonSepDeclaredTypeRefAccess() {
-		return pColonSepDeclaredTypeRef;
-	}
-	
-	public ParserRule getColonSepDeclaredTypeRefRule() {
-		return getColonSepDeclaredTypeRefAccess().getRule();
 	}
 	
 	//fragment ColonSepTypeRef *:
@@ -2970,7 +2933,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	//	=> ({TStructGetter}
 	//	'get'
 	//	name=IdentifierName) optional?='?'?
-	//	'(' ')' ColonSepDeclaredTypeRef?;
+	//	'(' ')' ColonSepTypeRef?;
 	public TStructGetterElements getTStructGetterAccess() {
 		return pTStructGetter;
 	}

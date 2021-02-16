@@ -1165,22 +1165,13 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Defined Type Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = TYPE_FEATURE_COUNT + 3;
-
-	/**
 	 * The number of structural features of the '<em>Type Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 4;
+	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -1425,15 +1416,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int INFERENCE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_VARIABLE__DECLARED_UPPER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Defined Type Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INFERENCE_VARIABLE__DEFINED_TYPE_VARIABLE = TYPE_VARIABLE__DEFINED_TYPE_VARIABLE;
 
 	/**
 	 * The number of structural features of the '<em>Inference Variable</em>' class.
@@ -10882,13 +10864,13 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR___GET_MEMBER_ACCESS_MODIFIER = TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF = TMEMBER_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 0;
+	int FIELD_ACCESSOR___GET_TYPE_REF = TMEMBER_WITH_ACCESS_MODIFIER_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -11045,13 +11027,13 @@ public interface TypesPackage extends EPackage {
 	int TGETTER__DECLARED_THIS_TYPE = FIELD_ACCESSOR__DECLARED_THIS_TYPE;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TGETTER__DECLARED_TYPE_REF = FIELD_ACCESSOR_FEATURE_COUNT + 0;
+	int TGETTER__TYPE_REF = FIELD_ACCESSOR_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>TGetter</em>' class.
@@ -11207,13 +11189,13 @@ public interface TypesPackage extends EPackage {
 	int TGETTER___GET_MEMBER_ACCESS_MODIFIER = FIELD_ACCESSOR___GET_MEMBER_ACCESS_MODIFIER;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TGETTER___GET_DECLARED_TYPE_REF = FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
+	int TGETTER___GET_TYPE_REF = FIELD_ACCESSOR___GET_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -11388,13 +11370,13 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER__DECLARED_THIS_TYPE = TGETTER__DECLARED_THIS_TYPE;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_GETTER__DECLARED_TYPE_REF = TGETTER__DECLARED_TYPE_REF;
+	int TSTRUCT_GETTER__TYPE_REF = TGETTER__TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Defined Member</b></em>' reference.
@@ -11541,13 +11523,13 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER___IS_POLYFILLED = TGETTER___IS_POLYFILLED;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_GETTER___GET_DECLARED_TYPE_REF = TGETTER___GET_DECLARED_TYPE_REF;
+	int TSTRUCT_GETTER___GET_TYPE_REF = TGETTER___GET_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -11902,13 +11884,13 @@ public interface TypesPackage extends EPackage {
 	int TSETTER___IS_ABSTRACT = FIELD_ACCESSOR___IS_ABSTRACT;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSETTER___GET_DECLARED_TYPE_REF = FIELD_ACCESSOR_OPERATION_COUNT + 0;
+	int TSETTER___GET_TYPE_REF = FIELD_ACCESSOR_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Readable</em>' operation.
@@ -12236,13 +12218,13 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER___IS_ABSTRACT = TSETTER___IS_ABSTRACT;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_SETTER___GET_DECLARED_TYPE_REF = TSETTER___GET_DECLARED_TYPE_REF;
+	int TSTRUCT_SETTER___GET_TYPE_REF = TSETTER___GET_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Readable</em>' operation.
@@ -12725,22 +12707,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME = GENERIC_TYPE_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS__TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Actual Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_ALIAS__ACTUAL_TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int TYPE_ALIAS__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Type Alias</em>' class.
@@ -13857,17 +13839,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTypeVariable_DeclaredUpperBound();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Defined Type Variable</em>'.
-	 * @see org.eclipse.n4js.ts.types.TypeVariable#getDefinedTypeVariable()
-	 * @see #getTypeVariable()
-	 * @generated
-	 */
-	EReference getTypeVariable_DefinedTypeVariable();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeVariable#getVariance() <em>Get Variance</em>}' operation.
@@ -15843,14 +15814,14 @@ public interface TypesPackage extends EPackage {
 	EReference getFieldAccessor_DeclaredThisType();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.FieldAccessor#getDeclaredTypeRef() <em>Get Declared Type Ref</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.FieldAccessor#getTypeRef() <em>Get Type Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type Ref</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.FieldAccessor#getDeclaredTypeRef()
+	 * @return the meta object for the '<em>Get Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.FieldAccessor#getTypeRef()
 	 * @generated
 	 */
-	EOperation getFieldAccessor__GetDeclaredTypeRef();
+	EOperation getFieldAccessor__GetTypeRef();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.FieldAccessor#isAbstract() <em>Is Abstract</em>}' operation.
@@ -15873,15 +15844,15 @@ public interface TypesPackage extends EPackage {
 	EClass getTGetter();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TGetter#getDeclaredTypeRef <em>Declared Type Ref</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TGetter#getTypeRef <em>Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Declared Type Ref</em>'.
-	 * @see org.eclipse.n4js.ts.types.TGetter#getDeclaredTypeRef()
+	 * @return the meta object for the containment reference '<em>Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.TGetter#getTypeRef()
 	 * @see #getTGetter()
 	 * @generated
 	 */
-	EReference getTGetter_DeclaredTypeRef();
+	EReference getTGetter_TypeRef();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TGetter#getMemberType() <em>Get Member Type</em>}' operation.
@@ -15935,14 +15906,14 @@ public interface TypesPackage extends EPackage {
 	EReference getTSetter_Fpar();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TSetter#getDeclaredTypeRef() <em>Get Declared Type Ref</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TSetter#getTypeRef() <em>Get Type Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type Ref</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TSetter#getDeclaredTypeRef()
+	 * @return the meta object for the '<em>Get Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TSetter#getTypeRef()
 	 * @generated
 	 */
-	EOperation getTSetter__GetDeclaredTypeRef();
+	EOperation getTSetter__GetTypeRef();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TSetter#isReadable() <em>Is Readable</em>}' operation.
@@ -16087,17 +16058,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTypeAlias();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TypeAlias#getActualTypeRef <em>Actual Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Actual Type Ref</em>'.
-	 * @see org.eclipse.n4js.ts.types.TypeAlias#getActualTypeRef()
-	 * @see #getTypeAlias()
-	 * @generated
-	 */
-	EReference getTypeAlias_ActualTypeRef();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeAlias#isAlias() <em>Is Alias</em>}' operation.
@@ -16835,14 +16795,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPE_VARIABLE__DECLARED_UPPER_BOUND = eINSTANCE.getTypeVariable_DeclaredUpperBound();
-
-		/**
-		 * The meta object literal for the '<em><b>Defined Type Variable</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TYPE_VARIABLE__DEFINED_TYPE_VARIABLE = eINSTANCE.getTypeVariable_DefinedTypeVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Variance</b></em>' operation.
@@ -18441,12 +18393,12 @@ public interface TypesPackage extends EPackage {
 		EReference FIELD_ACCESSOR__DECLARED_THIS_TYPE = eINSTANCE.getFieldAccessor_DeclaredThisType();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Declared Type Ref</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation FIELD_ACCESSOR___GET_DECLARED_TYPE_REF = eINSTANCE.getFieldAccessor__GetDeclaredTypeRef();
+		EOperation FIELD_ACCESSOR___GET_TYPE_REF = eINSTANCE.getFieldAccessor__GetTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Abstract</b></em>' operation.
@@ -18467,12 +18419,12 @@ public interface TypesPackage extends EPackage {
 		EClass TGETTER = eINSTANCE.getTGetter();
 
 		/**
-		 * The meta object literal for the '<em><b>Declared Type Ref</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Type Ref</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TGETTER__DECLARED_TYPE_REF = eINSTANCE.getTGetter_DeclaredTypeRef();
+		EReference TGETTER__TYPE_REF = eINSTANCE.getTGetter_TypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Member Type</b></em>' operation.
@@ -18519,12 +18471,12 @@ public interface TypesPackage extends EPackage {
 		EReference TSETTER__FPAR = eINSTANCE.getTSetter_Fpar();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Declared Type Ref</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TSETTER___GET_DECLARED_TYPE_REF = eINSTANCE.getTSetter__GetDeclaredTypeRef();
+		EOperation TSETTER___GET_TYPE_REF = eINSTANCE.getTSetter__GetTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Readable</b></em>' operation.
@@ -18645,14 +18597,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TYPE_ALIAS = eINSTANCE.getTypeAlias();
-
-		/**
-		 * The meta object literal for the '<em><b>Actual Type Ref</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TYPE_ALIAS__ACTUAL_TYPE_REF = eINSTANCE.getTypeAlias_ActualTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Alias</b></em>' operation.

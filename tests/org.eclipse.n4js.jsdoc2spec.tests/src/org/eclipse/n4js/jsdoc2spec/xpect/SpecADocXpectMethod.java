@@ -14,6 +14,19 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.jsdoc2spec.adoc.ADocFactory;
+import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
+import org.eclipse.n4js.jsdoc2spec.adoc.SpecIdentifiableElementSection;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
@@ -22,19 +35,6 @@ import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xpect.xtext.lib.setup.XtextStandaloneSetup;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.jsdoc2spec.adoc.ADocFactory;
-import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
-import org.eclipse.n4js.jsdoc2spec.adoc.SpecIdentifiableElementSection;
-import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 
 /**
  */
@@ -100,6 +100,9 @@ public class SpecADocXpectMethod {
 		}
 		if (eobj instanceof TypeDefiningElement) {
 			return ((TypeDefiningElement) eobj).getDefinedType();
+		}
+		if (eobj instanceof N4TypeVariable) {
+			return ((N4TypeVariable) eobj).getDefinedTypeVariable();
 		}
 		throw new IllegalStateException("No type defining element found at location.");
 	}

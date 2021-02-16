@@ -34,6 +34,7 @@ import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ThisTarget;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
@@ -64,7 +65,7 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * @generated
 	 * @ordered
 	 */
-	protected ParameterizedTypeRef superClassRef;
+	protected TypeReferenceNode<ParameterizedTypeRef> superClassRef;
 
 	/**
 	 * The cached value of the '{@link #getSuperClassExpression() <em>Super Class Expression</em>}' containment reference.
@@ -84,7 +85,7 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ParameterizedTypeRef> implementedInterfaceRefs;
+	protected EList<TypeReferenceNode<ParameterizedTypeRef>> implementedInterfaceRefs;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -111,7 +112,7 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * @generated
 	 */
 	@Override
-	public ParameterizedTypeRef getSuperClassRef() {
+	public TypeReferenceNode<ParameterizedTypeRef> getSuperClassRef() {
 		return superClassRef;
 	}
 
@@ -120,8 +121,8 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetSuperClassRef(ParameterizedTypeRef newSuperClassRef, NotificationChain msgs) {
-		ParameterizedTypeRef oldSuperClassRef = superClassRef;
+	public NotificationChain basicSetSuperClassRef(TypeReferenceNode<ParameterizedTypeRef> newSuperClassRef, NotificationChain msgs) {
+		TypeReferenceNode<ParameterizedTypeRef> oldSuperClassRef = superClassRef;
 		superClassRef = newSuperClassRef;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_CLASS_DEFINITION__SUPER_CLASS_REF, oldSuperClassRef, newSuperClassRef);
@@ -136,7 +137,7 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * @generated
 	 */
 	@Override
-	public void setSuperClassRef(ParameterizedTypeRef newSuperClassRef) {
+	public void setSuperClassRef(TypeReferenceNode<ParameterizedTypeRef> newSuperClassRef) {
 		if (newSuperClassRef != superClassRef) {
 			NotificationChain msgs = null;
 			if (superClassRef != null)
@@ -201,9 +202,9 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * @generated
 	 */
 	@Override
-	public EList<ParameterizedTypeRef> getImplementedInterfaceRefs() {
+	public EList<TypeReferenceNode<ParameterizedTypeRef>> getImplementedInterfaceRefs() {
 		if (implementedInterfaceRefs == null) {
-			implementedInterfaceRefs = new EObjectContainmentEList<ParameterizedTypeRef>(ParameterizedTypeRef.class, this, N4JSPackage.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS);
+			implementedInterfaceRefs = new EObjectContainmentEList<TypeReferenceNode<ParameterizedTypeRef>>(TypeReferenceNode.class, this, N4JSPackage.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS);
 		}
 		return implementedInterfaceRefs;
 	}
@@ -225,10 +226,10 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * @generated
 	 */
 	@Override
-	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
-		ParameterizedTypeRef _superClassRef = this.getSuperClassRef();
-		EList<ParameterizedTypeRef> _implementedInterfaceRefs = this.getImplementedInterfaceRefs();
-		return Iterables.<ParameterizedTypeRef>concat(java.util.Collections.<ParameterizedTypeRef>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<ParameterizedTypeRef>newArrayList(_superClassRef)), _implementedInterfaceRefs);
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs() {
+		TypeReferenceNode<ParameterizedTypeRef> _superClassRef = this.getSuperClassRef();
+		EList<TypeReferenceNode<ParameterizedTypeRef>> _implementedInterfaceRefs = this.getImplementedInterfaceRefs();
+		return Iterables.<TypeReferenceNode<ParameterizedTypeRef>>concat(java.util.Collections.<TypeReferenceNode<ParameterizedTypeRef>>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<TypeReferenceNode<ParameterizedTypeRef>>newArrayList(_superClassRef)), _implementedInterfaceRefs);
 	}
 
 	/**
@@ -237,7 +238,7 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 * @generated
 	 */
 	@Override
-	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs() {
 		return this.getImplementedInterfaceRefs();
 	}
 
@@ -287,14 +288,14 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4JSPackage.N4_CLASS_DEFINITION__SUPER_CLASS_REF:
-				setSuperClassRef((ParameterizedTypeRef)newValue);
+				setSuperClassRef((TypeReferenceNode<ParameterizedTypeRef>)newValue);
 				return;
 			case N4JSPackage.N4_CLASS_DEFINITION__SUPER_CLASS_EXPRESSION:
 				setSuperClassExpression((Expression)newValue);
 				return;
 			case N4JSPackage.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS:
 				getImplementedInterfaceRefs().clear();
-				getImplementedInterfaceRefs().addAll((Collection<? extends ParameterizedTypeRef>)newValue);
+				getImplementedInterfaceRefs().addAll((Collection<? extends TypeReferenceNode<ParameterizedTypeRef>>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -309,7 +310,7 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case N4JSPackage.N4_CLASS_DEFINITION__SUPER_CLASS_REF:
-				setSuperClassRef((ParameterizedTypeRef)null);
+				setSuperClassRef((TypeReferenceNode<ParameterizedTypeRef>)null);
 				return;
 			case N4JSPackage.N4_CLASS_DEFINITION__SUPER_CLASS_EXPRESSION:
 				setSuperClassExpression((Expression)null);

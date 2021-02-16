@@ -46,7 +46,7 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
-				if (getterDef.declaredTypeRef === null) {
+				if (getterDef.declaredTypeRefInAST === null) {
 					if (!preLinkingPhase) {
 						if(getterType.isAbstract) {
 							builtInTypeScope.anyTypeRef
@@ -55,9 +55,9 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 						}
 					}
 				} else {
-					getterDef.declaredTypeRef
+					getterDef.declaredTypeRefInAST
 				};
-			getterType.declaredTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
+			getterType.typeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
 		}
 	}
 
@@ -65,12 +65,12 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
-				if (functionDef.returnTypeRef === null) {
+				if (functionDef.declaredReturnTypeRefInAST === null) {
 					if (!preLinkingPhase) {
 						inferReturnTypeFromReturnStatements(functionDef, builtInTypeScope)
 					}
 				} else {
-					functionDef.returnTypeRef
+					functionDef.declaredReturnTypeRefInAST
 				};
 			functionType.returnTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
 			// note: handling of the return type of async functions not done here, see TypeProcessor#handleAsyncFunctionDeclaration()

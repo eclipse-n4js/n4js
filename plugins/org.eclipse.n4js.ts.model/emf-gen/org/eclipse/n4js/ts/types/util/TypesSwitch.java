@@ -725,6 +725,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseTypeAlias(typeAlias);
 				if (result == null) result = caseGenericType(typeAlias);
 				if (result == null) result = caseAccessibleTypeElement(typeAlias);
+				if (result == null) result = caseTTypedElement(typeAlias);
 				if (result == null) result = caseSyntaxRelatedTElement(typeAlias);
 				if (result == null) result = caseType(typeAlias);
 				if (result == null) result = caseTExportableElement(typeAlias);

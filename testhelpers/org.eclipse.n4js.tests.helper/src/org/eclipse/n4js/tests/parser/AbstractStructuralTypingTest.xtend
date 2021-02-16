@@ -10,16 +10,16 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import java.util.List
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TypingStrategy
-import java.util.List
-import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 
 /**
  * Base class for structural typing test, providing some assert methods.
@@ -42,13 +42,13 @@ public abstract class AbstractStructuralTypingTest extends AbstractParserTest {
 
 	def assertGetter(String expectedType, String expectedName, TMember member) {
 		val getter = assertType(TGetter, member);
-		assertEquals(expectedType, getter.declaredTypeRef?.typeRefAsString)
+		assertEquals(expectedType, getter.typeRef?.typeRefAsString)
 		assertEquals(expectedName, getter.name);
 	}
 
 	def assertSetter(String expectedType, String expectedName, TMember member) {
 		val setter = assertType(TSetter, member);
-		assertEquals(expectedType, setter.declaredTypeRef?.typeRefAsString)
+		assertEquals(expectedType, setter.typeRef?.typeRefAsString)
 		assertEquals(expectedName, setter.name);
 	}
 

@@ -64,11 +64,11 @@ class RuntimeDependencyProcessor {
 			if (N4JSLanguageUtils.hasRuntimeRepresentation(node, variantHelper)) {
 				val targetTypeRefs = node.superClassifierRefs;
 				for (targetTypeRef : targetTypeRefs) {
-					val targetDeclType = targetTypeRef?.declaredType;
+					val targetDeclType = targetTypeRef?.typeRef?.declaredType;
 					if (N4JSLanguageUtils.hasRuntimeRepresentation(targetDeclType, variantHelper)) {
 						cache.elementsReferencedAtRuntime += targetDeclType;
 						// in case of namespace imports, we also want to remember that the namespace was referenced at run time:
-						val namespace = targetTypeRef.astNamespace;
+						val namespace = targetTypeRef.typeRefInAST.astNamespace;
 						if (namespace !== null) {
 							cache.elementsReferencedAtRuntime += namespace;
 						}

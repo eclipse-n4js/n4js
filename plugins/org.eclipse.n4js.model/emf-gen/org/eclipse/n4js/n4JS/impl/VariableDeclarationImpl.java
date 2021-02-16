@@ -41,6 +41,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -64,7 +65,7 @@ import org.eclipse.xtext.EcoreUtil2;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl#getExpression <em>Expression</em>}</li>
@@ -74,14 +75,14 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl implements VariableDeclaration {
 	/**
-	 * The cached value of the '{@link #getDeclaredTypeRef() <em>Declared Type Ref</em>}' containment reference.
+	 * The cached value of the '{@link #getDeclaredTypeRefNode() <em>Declared Type Ref Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredTypeRef()
+	 * @see #getDeclaredTypeRefNode()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef declaredTypeRef;
+	protected TypeReferenceNode<TypeRef> declaredTypeRefNode;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -148,8 +149,8 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredTypeRef() {
-		return declaredTypeRef;
+	public TypeReferenceNode<TypeRef> getDeclaredTypeRefNode() {
+		return declaredTypeRefNode;
 	}
 
 	/**
@@ -157,11 +158,11 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDeclaredTypeRef(TypeRef newDeclaredTypeRef, NotificationChain msgs) {
-		TypeRef oldDeclaredTypeRef = declaredTypeRef;
-		declaredTypeRef = newDeclaredTypeRef;
+	public NotificationChain basicSetDeclaredTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredTypeRefNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldDeclaredTypeRefNode = declaredTypeRefNode;
+		declaredTypeRefNode = newDeclaredTypeRefNode;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF, oldDeclaredTypeRef, newDeclaredTypeRef);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE, oldDeclaredTypeRefNode, newDeclaredTypeRefNode);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -173,18 +174,18 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredTypeRef(TypeRef newDeclaredTypeRef) {
-		if (newDeclaredTypeRef != declaredTypeRef) {
+	public void setDeclaredTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredTypeRefNode) {
+		if (newDeclaredTypeRefNode != declaredTypeRefNode) {
 			NotificationChain msgs = null;
-			if (declaredTypeRef != null)
-				msgs = ((InternalEObject)declaredTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF, null, msgs);
-			if (newDeclaredTypeRef != null)
-				msgs = ((InternalEObject)newDeclaredTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF, null, msgs);
-			msgs = basicSetDeclaredTypeRef(newDeclaredTypeRef, msgs);
+			if (declaredTypeRefNode != null)
+				msgs = ((InternalEObject)declaredTypeRefNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE, null, msgs);
+			if (newDeclaredTypeRefNode != null)
+				msgs = ((InternalEObject)newDeclaredTypeRefNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE, null, msgs);
+			msgs = basicSetDeclaredTypeRefNode(newDeclaredTypeRefNode, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF, newDeclaredTypeRef, newDeclaredTypeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE, newDeclaredTypeRefNode, newDeclaredTypeRefNode));
 	}
 
 	/**
@@ -299,6 +300,36 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDeclaredTypeRef() {
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = this.getDeclaredTypeRefNode();
+		TypeRef _typeRef = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRef=_declaredTypeRefNode.getTypeRef();
+		}
+		return _typeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeRef getDeclaredTypeRefInAST() {
+		TypeReferenceNode<TypeRef> _declaredTypeRefNode = this.getDeclaredTypeRefNode();
+		TypeRef _typeRefInAST = null;
+		if (_declaredTypeRefNode!=null) {
+			_typeRefInAST=_declaredTypeRefNode.getTypeRefInAST();
+		}
+		return _typeRefInAST;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();
@@ -319,8 +350,8 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF:
-				return basicSetDeclaredTypeRef(null, msgs);
+			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE:
+				return basicSetDeclaredTypeRefNode(null, msgs);
 			case N4JSPackage.VARIABLE_DECLARATION__ANNOTATIONS:
 				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.VARIABLE_DECLARATION__EXPRESSION:
@@ -337,8 +368,8 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
+			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE:
+				return getDeclaredTypeRefNode();
 			case N4JSPackage.VARIABLE_DECLARATION__NAME:
 				return getName();
 			case N4JSPackage.VARIABLE_DECLARATION__ANNOTATIONS:
@@ -358,8 +389,8 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF:
-				setDeclaredTypeRef((TypeRef)newValue);
+			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE:
+				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 			case N4JSPackage.VARIABLE_DECLARATION__NAME:
 				setName((String)newValue);
@@ -383,8 +414,8 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF:
-				setDeclaredTypeRef((TypeRef)null);
+			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE:
+				setDeclaredTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
 			case N4JSPackage.VARIABLE_DECLARATION__NAME:
 				setName(NAME_EDEFAULT);
@@ -407,8 +438,8 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF:
-				return declaredTypeRef != null;
+			case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE:
+				return declaredTypeRefNode != null;
 			case N4JSPackage.VARIABLE_DECLARATION__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case N4JSPackage.VARIABLE_DECLARATION__ANNOTATIONS:
@@ -438,7 +469,7 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 		}
 		if (baseClass == TypedElement.class) {
 			switch (derivedFeatureID) {
-				case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF;
+				case N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE: return N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}
@@ -485,7 +516,7 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 		}
 		if (baseClass == TypedElement.class) {
 			switch (baseFeatureID) {
-				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF: return N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF;
+				case N4JSPackage.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE: return N4JSPackage.VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}
@@ -530,11 +561,14 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 		if (baseClass == TypeProvidingElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}
 		if (baseClass == TypedElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.TYPED_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF;
+				case N4JSPackage.TYPED_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 				default: return -1;
 			}
 		}
@@ -576,6 +610,10 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 				return isConst();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_CONTAINING_MODULE:
 				return getContainingModule();
+			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF:
+				return getDeclaredTypeRef();
+			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST:
+				return getDeclaredTypeRefInAST();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS:
 				return getAllAnnotations();
 		}

@@ -23,6 +23,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -162,12 +163,20 @@ public final class StaticPolyfillHelper {
 			if (fillingResource == null)
 				return null;
 
+			// TODO GH-2055 avoid use of AST
 			final Script scriptFiller = fillingResource.getScriptResolved();
 			if (null != scriptFiller) {
 				final N4ClassDeclaration staticPolyfiller = EcoreUtil2
 						.getAllContentsOfType(scriptFiller, N4ClassDeclaration.class).stream().filter(it -> {
+							final TypeRef superClassRef = it.getSuperClassRef() != null
+									// next line: using #getTypeRef() would be more appropriate, but we do not need
+									// support for type aliases, here, and since we might be working on a reconciled AST
+									// here (see GH-2055), only #getTypeRefInAST() is available:
+									? it.getSuperClassRef().getTypeRefInAST()
+									: null;
 							return it.getDefinedTypeAsClass().isDeclaredStaticPolyfill() // is a static-polyfill
-									&& it.getSuperClassRef().getDeclaredType() == type; // extends this class explicitly
+									&& superClassRef != null
+									&& superClassRef.getDeclaredType() == type; // extends this class explicitly
 						}).findFirst().orElseGet(() -> {
 							return null;
 						});

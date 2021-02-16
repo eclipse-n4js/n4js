@@ -557,7 +557,7 @@ ruleTGetter:
 	?
 	'('
 	')'
-	ruleColonSepDeclaredTypeRef
+	ruleColonSepTypeRef
 ;
 
 // Rule TSetter
@@ -1048,12 +1048,6 @@ ruleTypeVariables:
 	'>'
 ;
 
-// Rule ColonSepDeclaredTypeRef
-ruleColonSepDeclaredTypeRef:
-	':'
-	ruleTypeRef
-;
-
 // Rule ColonSepTypeRef
 ruleColonSepTypeRef:
 	':'
@@ -1087,7 +1081,7 @@ ruleTStructGetter:
 	?
 	'('
 	')'
-	ruleColonSepDeclaredTypeRef?
+	ruleColonSepTypeRef?
 ;
 
 // Rule TStructSetter

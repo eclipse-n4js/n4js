@@ -13,7 +13,6 @@ package org.eclipse.n4js.validation
 import com.google.inject.Inject
 import java.lang.reflect.Method
 import java.util.List
-import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.AnnotableElement
@@ -32,12 +31,14 @@ import org.eclipse.n4js.n4JS.N4JSFeatureUtils
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.SwitchStatement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.TryStatement
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.WhileStatement
 import org.eclipse.n4js.n4JS.WithStatement
@@ -47,6 +48,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberType
@@ -149,6 +151,14 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	/* **************************************************************
 	 * Internal Validations:
 	 */
+	/** Same as {@code #internalCheckTypeArguments()}, but accepts type arguments from AST. */
+	def protected void internalCheckTypeArgumentsInAST(List<? extends TypeVariable> typeVars,
+		List<? extends TypeReferenceNode<TypeRef>> typeArgsInAST, boolean allowAutoInference, IdentifiableElement parameterizedElement,
+		EObject source, EStructuralFeature feature) {
+
+		val typeArgs = typeArgsInAST.map[typeRef].toList;
+		internalCheckTypeArguments(typeVars, typeArgs, allowAutoInference, parameterizedElement, source, feature);
+	}
 	/**
 	 * Checks for (1) correct number of type arguments, (2) correct type of each type argument, and (3) consistency of
 	 * use-site and definition-site variance (in case of wildcards).
@@ -292,12 +302,12 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 *
 	 * @param functionTypeExp the generic function type to check.
 	 */
-	protected def internalCheckNoUnusedTypeParameters(FunctionTypeExpression functionTypeExp) {
-		if (functionTypeExp.declaredType === null)
+	protected def internalCheckNoUnusedTypeParameters(FunctionTypeExpression functionTypeExpInAST) {
+		if (functionTypeExpInAST.declaredType === null)
 			return;
 
-		val TFunction declaredType = functionTypeExp.declaredType;
-		internalCheckNoUnusedTypeParameters(functionTypeExp, functionTypeExp.ownedTypeVars, declaredType.typeVars);
+		val TFunction declaredType = functionTypeExpInAST.declaredType;
+		internalCheckNoUnusedTypeParameters(functionTypeExpInAST, functionTypeExpInAST.ownedTypeVars, declaredType.typeVars);
 	}
 
 	/**
@@ -316,29 +326,33 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 * Finally we add an issue for each type variable that is found to be unreferenced.
 	 *
 	 * @param root the root of the subtree to search for references to the given type variables
-	 * @param actualTypeVars the actual type variables from the AST
+	 * @param actualTypeVarsInAST the actual type variables from the AST; must be either an instance of
+	 *     {@link N4TypeVariable} (standard case) or of {@link TypeVariable} (when validating type parameter
+	 *     declarations in the AST that are nested inside a TypeRef).
 	 * @param declaredTypeVars the declared type variables from the type model
 	 */
-	private def internalCheckNoUnusedTypeParameters(EObject root, EList<TypeVariable> actualTypeVars, EList<TypeVariable> declaredTypeVars) {
-		val int typeVarCount = Math.min(actualTypeVars.size, declaredTypeVars.size)
+	private def internalCheckNoUnusedTypeParameters(EObject root, List<? extends IdentifiableElement> actualTypeVarsInAST, List<TypeVariable> declaredTypeVars) {
+		val int typeVarCount = Math.min(actualTypeVarsInAST.size, declaredTypeVars.size)
 		if (typeVarCount == 1) {
 			// Since this is a very common case, we want it to be as fast as possible. Therefore we don't
 			// build a set of all reference type variables and do the check once directly.
-			val TypeVariable actualTypeVar = actualTypeVars.get(0)
+			val IdentifiableElement actualTypeVarInAST = actualTypeVarsInAST.get(0)
 			val TypeVariable declaredTypeVar = declaredTypeVars.get(0)
 			if (!TypeUtils.isOrContainsRefToTypeVar(root, declaredTypeVar)) {
-				addIssue(IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(actualTypeVar.name), actualTypeVar, TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME, IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
+				addIssue(IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(actualTypeVarInAST.name), actualTypeVarInAST,
+					TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME, IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
 			}
 		} else if (typeVarCount > 1) {
 			// In this case, we avoid repeatedly traversing the tree with the given root by getting a set of
 			// all type variables it references up front and using that to perform our check.
 			val referencedTypeVars = TypeUtils.getReferencedTypeVars(root);
 			for (var int i = 0; i < typeVarCount; i++) {
-				val TypeVariable actualTypeVar = actualTypeVars.get(i)
+				val IdentifiableElement actualTypeVarInAST = actualTypeVarsInAST.get(i)
 				val TypeVariable declaredTypeVar = declaredTypeVars.get(i)
 
 				if (!referencedTypeVars.contains(declaredTypeVar)) {
-					addIssue(IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(actualTypeVar.name), actualTypeVar, TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME, IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
+					addIssue(IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(actualTypeVarInAST.name), actualTypeVarInAST,
+						TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME, IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
 				}
 			}
 		}

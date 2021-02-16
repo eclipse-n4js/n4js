@@ -10,14 +10,13 @@
  */
 package org.eclipse.n4js.xsemantics
 
-import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -29,13 +28,10 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 @InjectWith(N4JSInjectorProvider)
 class N4_21_1_DefinitionSiteStructuralTypingInterfacesTest extends AbstractTypesystemTest {
 
-	@Inject
-	extension ParseHelper<Script>
-
 	@Test
 	def void testSubtype() {
 
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			interface Nominal{
 				public s: string;
 				public foo(): void
@@ -55,7 +51,7 @@ class N4_21_1_DefinitionSiteStructuralTypingInterfacesTest extends AbstractTypes
 			var structural: Structural;
 			var a: A;
 			var b: B;
-		'''.parse()
+		''')
 
 		val G = newRuleEnvironment(script);
 
@@ -74,13 +70,13 @@ class N4_21_1_DefinitionSiteStructuralTypingInterfacesTest extends AbstractTypes
 
 	@Test
 	def void testSubtypeSameTypeDeclared() {
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			interface ~Structural{
 				public s: string;
 				public foo(): void
 			}
 			var structural: Structural;
-		'''.parse()
+		''')
 		val G = newRuleEnvironment(script);
 		val structural = script.varDeclTypeByName("structural")
 		assertSubtype(G, structural, structural, true)
@@ -90,8 +86,8 @@ class N4_21_1_DefinitionSiteStructuralTypingInterfacesTest extends AbstractTypes
 	def void testSubtypeSubclassWithExternalClass() {
 
 		// class A{}
-		val script = '''
-			interface Nominal{
+		val script = createAndValidateScript(JavaScriptVariant.external, '''
+			external interface Nominal{
 				public s: string;
 				public foo(): void
 			}
@@ -110,7 +106,7 @@ class N4_21_1_DefinitionSiteStructuralTypingInterfacesTest extends AbstractTypes
 			var structural: Structural;
 			var a: A;
 			var b: B;
-		'''.parse()
+		''')
 
 		val G = newRuleEnvironment(script);
 

@@ -22,7 +22,7 @@ import org.eclipse.n4js.ts.types.TStructMethod;
  * @model
  * @generated
  */
-public interface PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDeclaration, TypeProvidingElement {
+public interface PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDeclaration {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -21,7 +21,7 @@ import org.eclipse.n4js.ts.types.TMember
 class FindClassifierInHierarchyUtils {
 
 	def static Iterable<ParameterizedTypeRef> findSuperTypesWithMember(N4ClassifierDefinition classifier, TMember member) {
-		return classifier.superClassifierRefs.filter[typeRef|
+		return classifier.superClassifierRefs.map[it?.typeRef].filter(ParameterizedTypeRef).filter[typeRef|
 			val declType = typeRef?.declaredType;
 			return if (declType instanceof ContainerType<?>) declType.ownedMembers.contains(member) else false;
 		];

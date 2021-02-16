@@ -30,8 +30,8 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -47,6 +47,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -144,11 +145,14 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkTypeRefOptionalFlag(TypeRef typeRef) {
-		if (typeRef.isFollowedByQuestionMark) {
-			val parent = typeRef.eContainer;
+	def checkTypeRefOptionalFlag(TypeRef typeRefInAST) {
+		if (typeRefInAST.isFollowedByQuestionMark) {
+			var parent = typeRefInAST.eContainer;
+			if (parent instanceof TypeReferenceNode<?>) {
+				parent = parent.eContainer;
+			}
 
-			val isLegalUseOfOptional = isReturnTypeButNotOfAGetter(typeRef, parent);
+			val isLegalUseOfOptional = isReturnTypeButNotOfAGetter(typeRefInAST, parent);
 
 			if(!isLegalUseOfOptional) {
 
@@ -156,27 +160,27 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 					return; // avoid duplicate error messages
 				} else if(parent instanceof N4FieldDeclaration || parent instanceof TField) {
 					val message = messageForCLF_FIELD_OPTIONAL_OLD_SYNTAX;
-					val node = NodeModelUtils.findActualNodeFor(typeRef)
+					val node = NodeModelUtils.findActualNodeFor(typeRefInAST)
 					if (node !== null) {
-						addIssue(message, typeRef, node.offset, node.length, CLF_FIELD_OPTIONAL_OLD_SYNTAX)
+						addIssue(message, typeRefInAST, node.offset, node.length, CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 					}
 				} else {
 					val message = messageForEXP_OPTIONAL_INVALID_PLACE;
-					val node = NodeModelUtils.findActualNodeFor(typeRef)
+					val node = NodeModelUtils.findActualNodeFor(typeRefInAST)
 					if (node !== null) {
-						addIssue(message, typeRef, node.offset, node.length, EXP_OPTIONAL_INVALID_PLACE)
+						addIssue(message, typeRefInAST, node.offset, node.length, EXP_OPTIONAL_INVALID_PLACE)
 					}
 				}
 			}
 		}
 	}
 
-	def private isReturnTypeButNotOfAGetter(TypeRef typeRef, EObject parent) {
-		(parent instanceof FunctionDefinition && (parent as FunctionDefinition).returnTypeRef === typeRef &&
+	def private isReturnTypeButNotOfAGetter(TypeRef typeRefInAST, EObject parent) {
+		(parent instanceof FunctionDefinition && (parent as FunctionDefinition).declaredReturnTypeRefInAST === typeRefInAST &&
 			!(parent instanceof N4GetterDeclaration)) ||
-			(parent instanceof TFunction && (parent as TFunction).returnTypeRef === typeRef &&
+			(parent instanceof TFunction && (parent as TFunction).returnTypeRef === typeRefInAST &&
 				!(parent instanceof TGetter)) ||
-			(parent instanceof FunctionTypeExpression && (parent as FunctionTypeExpression).returnTypeRef === typeRef)
+			(parent instanceof FunctionTypeExpression && (parent as FunctionTypeExpression).returnTypeRef === typeRefInAST)
 	}
 
 	@Check

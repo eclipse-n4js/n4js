@@ -26,6 +26,7 @@ import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TInterface
@@ -91,18 +92,18 @@ class StaticPolyfillTransformation extends Transformation {
 	def private void doStaticPolyfilling(N4ClassDeclaration classFilled, N4ClassDeclaration classFiller) {
 		// fill additionally implemented interfaces
 		val currentIfcs = classFilled.implementedInterfaceRefs.filter(ParameterizedTypeRef_IM).map[declaredType_IM].filter(TInterface).toSet;
-		classFiller.implementedInterfaceRefs.forEach[classFilled.insertImplementedInterface(it, currentIfcs)];
+		classFiller.implementedInterfaceRefs.map[typeRef].forEach[classFilled.insertImplementedInterface(it, currentIfcs)];
 		// fill members
 		classFiller.ownedMembers.forEach[classFilled.insertMember(it)];
 	}
 
-	def private void insertImplementedInterface(N4ClassDefinition classFilled, ParameterizedTypeRef ifcRefToBeInserted,
+	def private void insertImplementedInterface(N4ClassDefinition classFilled, TypeRef ifcRefToBeInserted,
 		Set<TInterface> currentIfcs) {
 		val ifcType = ifcRefToBeInserted.declaredType;
 		if(ifcType instanceof TInterface) {
 			if(!currentIfcs.contains(ifcType)) { // avoid duplicates!
 				val ifcSTE = getSymbolTableEntryOriginal(ifcType, true);
-				classFilled.implementedInterfaceRefs += _ParameterizedTypeRef(ifcSTE);
+				classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceNode(_ParameterizedTypeRef(ifcSTE));
 			}
 		}
 	}

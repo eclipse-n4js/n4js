@@ -61,7 +61,7 @@ public interface TSetter extends FieldAccessor, TMemberWithAccessModifier {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeRef getDeclaredTypeRef();
+	TypeRef getTypeRef();
 
 	/**
 	 * <!-- begin-user-doc -->

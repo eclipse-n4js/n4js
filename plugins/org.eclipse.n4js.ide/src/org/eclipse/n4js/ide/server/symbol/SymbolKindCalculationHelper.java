@@ -17,6 +17,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NullLiteral;
@@ -69,6 +70,9 @@ public class SymbolKindCalculationHelper {
 		}
 		if (obj instanceof N4SetterDeclaration) {
 			return SymbolKind.Property;
+		}
+		if (obj instanceof N4TypeVariable) {
+			return SymbolKind.TypeParameter;
 		}
 		if (obj instanceof ExportedVariableStatement) {
 			return SymbolKind.Variable;

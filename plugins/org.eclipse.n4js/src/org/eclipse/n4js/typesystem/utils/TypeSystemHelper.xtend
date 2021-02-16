@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
@@ -441,6 +442,10 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			ts.upperBoundWithReopen(G, typeArg)
 		};
 		return typeArgUB;
+	}
+
+	def public TypeRef createTypeRefFromStaticType(RuleEnvironment G, TypeTypeRef ctr, ParameterizedAccess paramAccess) {
+		return createTypeRefFromStaticType(G, ctr, paramAccess.typeArgs.map[typeRef]);
 	}
 
 	/**

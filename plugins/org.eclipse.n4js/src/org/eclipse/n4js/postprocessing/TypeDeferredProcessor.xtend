@@ -56,7 +56,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 		// DeferredTypeRefs related to poly expressions should not be handled here (poly computer responsible for this!)
 		switch (obj) {
 			N4MethodDeclaration: {
-				val returnTypeRef = obj.returnTypeRef;
+				val returnTypeRef = obj.declaredReturnTypeRef;
 				if (obj.isConstructor) {
 					val tCtor = obj.definedType as TMethod;
 					if (null !== tCtor) {
@@ -87,10 +87,10 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 				if (returnTypeRef instanceof ThisTypeRef) {
 					val tGetter = obj.definedGetter;
 					assertTrueIfRigid(cache, "return type of TGetter in TModule should be a DeferredTypeRef",
-						tGetter.declaredTypeRef instanceof DeferredTypeRef);
+						tGetter.typeRef instanceof DeferredTypeRef);
 					val boundThisTypeRef = tsh.getThisTypeAtLocation(G, returnTypeRef); // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
 					EcoreUtilN4.doWithDeliver(false, [
-						tGetter.declaredTypeRef = TypeUtils.copy(boundThisTypeRef);
+						tGetter.typeRef = TypeUtils.copy(boundThisTypeRef);
 					], tGetter);
 				}
 			}

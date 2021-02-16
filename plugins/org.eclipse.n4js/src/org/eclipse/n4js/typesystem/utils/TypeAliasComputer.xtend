@@ -39,7 +39,7 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 		var currTypeRef = typeRef;
 		while (true) {
 			val typeAlias = currTypeRef.declaredType as TypeAlias; // this is non-null and of type TypeAlias, because #isAliasUnresolved() returned true
-			val actualTypeRef = typeAlias.actualTypeRef;
+			val actualTypeRef = typeAlias.typeRef;
 			if (actualTypeRef === null) {
 				return currTypeRef;
 			}

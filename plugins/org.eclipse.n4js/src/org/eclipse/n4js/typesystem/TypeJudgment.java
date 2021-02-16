@@ -98,6 +98,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
 import org.eclipse.n4js.n4JS.NullLiteral;
@@ -263,13 +264,13 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseTGetter(TGetter tGetter) {
-			final TypeRef declTypeRef = tGetter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = tGetter.getTypeRef();
 			return declTypeRef != null ? declTypeRef : anyTypeRef(G);
 		}
 
 		@Override
 		public TypeRef caseTSetter(TSetter tSetter) {
-			final TypeRef declTypeRef = tSetter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = tSetter.getTypeRef();
 			return declTypeRef != null ? declTypeRef : anyTypeRef(G);
 		}
 
@@ -352,9 +353,7 @@ import com.google.inject.Inject;
 			// note: keep this rule aligned with rules caseN4FieldDeclaration and casePropertyNameValuePair
 			final TypeRef T;
 			if (vdecl.getDeclaredTypeRef() != null) {
-				final TypeRef declaredTypeRef = vdecl.getDeclaredTypeRef();
-				// since we take this type reference directly from the AST, we still need to resolve aliases:
-				T = tsh.resolveTypeAliases(G, declaredTypeRef);
+				T = vdecl.getDeclaredTypeRef();
 			} else if (vdecl.eContainer() instanceof BindingElement) {
 				// guard against infinite recursion, e.g. for vars like this:
 				// var [a,b] = b; / var {a,b} = b;
@@ -441,7 +440,7 @@ import com.google.inject.Inject;
 				return declTypeRef;
 			} else {
 				final TGetter defGetter = getter.getDefinedGetter();
-				final TypeRef defDeclTypeRef = defGetter != null ? defGetter.getDeclaredTypeRef() : null;
+				final TypeRef defDeclTypeRef = defGetter != null ? defGetter.getTypeRef() : null;
 				if (defDeclTypeRef != null) {
 					return defDeclTypeRef;
 				} else {
@@ -457,7 +456,7 @@ import com.google.inject.Inject;
 				return declTypeRef;
 			} else {
 				final TSetter defSetter = setter.getDefinedSetter();
-				final TypeRef defDeclTypeRef = defSetter != null ? defSetter.getDeclaredTypeRef() : null;
+				final TypeRef defDeclTypeRef = defSetter != null ? defSetter.getTypeRef() : null;
 				if (defDeclTypeRef != null) {
 					return defDeclTypeRef;
 				} else {
@@ -468,6 +467,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseFormalParameter(FormalParameter fpar) {
+			final TypeRef fparTypeRefInAST = fpar.getDeclaredTypeRefInAST();
 			final TypeRef fparTypeRef = fpar.getDeclaredTypeRef();
 			final TypeRef T;
 			if (fparTypeRef != null) {
@@ -482,7 +482,7 @@ import com.google.inject.Inject;
 						&& hasFormalParameterWithThisType((FunctionTypeExpression) fparTypeRef);
 
 				if (case1 || case2) {
-					T = typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRef, fparTypeRef);
+					T = typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRefInAST, fparTypeRef);
 				} else {
 					// note: it's a bit cleaner to return the type from the TModule, if one was already determined
 					final TFormalParameter definedElem = fpar.getDefinedTypeElement();
@@ -1128,8 +1128,7 @@ import com.google.inject.Inject;
 		public TypeRef caseNewExpression(NewExpression e) {
 			TypeRef T = ts.type(G, e.getCallee());
 			if (T instanceof TypeTypeRef) {
-				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T,
-						e.getTypeArgs().toArray(new TypeArgument[0]));
+				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T, e);
 			}
 			return T;
 		}
@@ -1329,6 +1328,12 @@ import com.google.inject.Inject;
 		// ----------------------------------------------------------------------
 		// AST nodes: miscellaneous
 		// ----------------------------------------------------------------------
+
+		@Override
+		public TypeRef caseN4TypeVariable(N4TypeVariable n4TypeVar) {
+			final TypeRef typeRef = TypeUtils.wrapTypeInTypeRef(n4TypeVar.getDefinedTypeVariable());
+			return typeRef != null ? typeRef : unknown();
+		}
 
 		@Override
 		public TypeRef caseCatchVariable(CatchVariable catchVariable) {

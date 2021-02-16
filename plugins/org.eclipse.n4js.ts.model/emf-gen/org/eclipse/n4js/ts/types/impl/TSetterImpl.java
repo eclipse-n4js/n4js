@@ -125,7 +125,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredTypeRef() {
+	public TypeRef getTypeRef() {
 		TFormalParameter _fpar = this.getFpar();
 		TypeRef _typeRef = null;
 		if (_fpar!=null) {
@@ -282,7 +282,7 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 		}
 		if (baseClass == FieldAccessor.class) {
 			switch (baseOperationID) {
-				case TypesPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF: return TypesPackage.TSETTER___GET_DECLARED_TYPE_REF;
+				case TypesPackage.FIELD_ACCESSOR___GET_TYPE_REF: return TypesPackage.TSETTER___GET_TYPE_REF;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -297,8 +297,8 @@ public class TSetterImpl extends FieldAccessorImpl implements TSetter {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TSETTER___GET_DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
+			case TypesPackage.TSETTER___GET_TYPE_REF:
+				return getTypeRef();
 			case TypesPackage.TSETTER___IS_READABLE:
 				return isReadable();
 			case TypesPackage.TSETTER___IS_WRITEABLE:

@@ -112,8 +112,8 @@ public class N4JSTypesFromTypeRefBuilder {
 		}
 	}
 	def private dispatch void applyDefaults(BuiltInTypeScope builtInTypeScope, TStructGetter getter) {
-		if(getter.declaredTypeRef===null) {
-			getter.declaredTypeRef = builtInTypeScope.getAnyTypeRef();
+		if(getter.typeRef===null) {
+			getter.typeRef = builtInTypeScope.getAnyTypeRef();
 		}
 	}
 	def private dispatch void applyDefaults(BuiltInTypeScope builtInTypeScope, TStructSetter setter) {

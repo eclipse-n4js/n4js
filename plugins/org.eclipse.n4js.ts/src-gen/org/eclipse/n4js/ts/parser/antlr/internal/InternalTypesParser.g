@@ -2986,11 +2986,11 @@ ruleTGetter returns [EObject current=null]
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getTGetterRule());
 			}
-			newCompositeNode(grammarAccess.getTGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4());
+			newCompositeNode(grammarAccess.getTGetterAccess().getColonSepTypeRefParserRuleCall_4());
 		}
-		this_ColonSepDeclaredTypeRef_9=ruleColonSepDeclaredTypeRef[$current]
+		this_ColonSepTypeRef_9=ruleColonSepTypeRef[$current]
 		{
-			$current = $this_ColonSepDeclaredTypeRef_9.current;
+			$current = $this_ColonSepTypeRef_9.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -5691,42 +5691,6 @@ ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
 ;
 
 
-// Rule ColonSepDeclaredTypeRef
-ruleColonSepDeclaredTypeRef[EObject in_current]  returns [EObject current=in_current]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		otherlv_0=Colon
-		{
-			newLeafNode(otherlv_0, grammarAccess.getColonSepDeclaredTypeRefAccess().getColonKeyword_0());
-		}
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefTypeRefParserRuleCall_1_0());
-				}
-				lv_declaredTypeRef_1_0=ruleTypeRef
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getColonSepDeclaredTypeRefRule());
-					}
-					set(
-						$current,
-						"declaredTypeRef",
-						lv_declaredTypeRef_1_0,
-						"org.eclipse.n4js.ts.Types.TypeRef");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-	)
-;
-
-
 // Rule ColonSepTypeRef
 ruleColonSepTypeRef[EObject in_current]  returns [EObject current=in_current]
 @init {
@@ -5951,11 +5915,11 @@ ruleTStructGetter returns [EObject current=null]
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getTStructGetterRule());
 				}
-				newCompositeNode(grammarAccess.getTStructGetterAccess().getColonSepDeclaredTypeRefParserRuleCall_4());
+				newCompositeNode(grammarAccess.getTStructGetterAccess().getColonSepTypeRefParserRuleCall_4());
 			}
-			this_ColonSepDeclaredTypeRef_6=ruleColonSepDeclaredTypeRef[$current]
+			this_ColonSepTypeRef_6=ruleColonSepTypeRef[$current]
 			{
-				$current = $this_ColonSepDeclaredTypeRef_6.current;
+				$current = $this_ColonSepTypeRef_6.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?

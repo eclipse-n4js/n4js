@@ -97,7 +97,7 @@ class HeadlessReferenceFinderTest extends Assert {
 		val set = references.map[ resourceSet.getEObject(sourceEObjectUri, false) ].toSet
 		val varStmt = (scriptB.scriptElements.last as ExportDeclaration).exportedElement as ExportedVariableStatement
 		val varDecl = varStmt.varDecl.head as ExportedVariableDeclaration
-		val typeRef = varDecl.declaredTypeRef
+		val typeRef = varDecl.declaredTypeRefInAST
 		assertTrue(set.contains(typeRef))
 	}
 

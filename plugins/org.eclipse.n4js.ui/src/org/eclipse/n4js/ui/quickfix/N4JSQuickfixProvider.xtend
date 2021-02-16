@@ -39,6 +39,7 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.projectModel.locations.PlatformResourceURI
@@ -116,14 +117,18 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Fix(IssueCodes.CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 	def fixOldSyntaxForOptionalFields(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, 'Change to new syntax', 'The syntax for optional fields has changed. This quick fix will change the code to the new syntax.', ImageNames.REORDER) [ context, marker, offset, length, element |
-			val offsetNameEnd = getOffsetOfNameEnd(element.eContainer);
+			val offsetNameEnd = getOffsetOfNameEnd(element);
 			return #[
 				replace(context.xtextDocument, offset + length - 1, 1, ""), // removes the ? at the old location
 				replace(context.xtextDocument, offsetNameEnd, 0, "?") // inserts a ? at the new location (behind the field or accessor name)
 			];
 		]
 	}
-	def private int getOffsetOfNameEnd(EObject parent) {
+	def private int getOffsetOfNameEnd(EObject element) {
+		var parent = element.eContainer;
+		if (parent instanceof TypeReferenceNode) {
+			parent = parent.eContainer;
+		}
 		val nodeOfName = switch(parent) {
 			N4FieldDeclaration:
 				NodeModelUtils.findActualNodeFor((parent as PropertyNameOwner).declaredName)
@@ -330,14 +335,17 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 				if (element instanceof ParameterizedPropertyAccessExpression) {
 					typeDeclaration = element.property;
+				} else if (element instanceof TypeReferenceNode<?>) {
+					typeDeclaration = element.typeRefInAST?.declaredType;
 				} else if (element instanceof TypeRef) {
-					typeDeclaration = element.declaredType
+					typeDeclaration = element.declaredType;
 				} else if (element instanceof NamedImportSpecifier) {
 					typeDeclaration = element.importedElement;
 				} else if (element instanceof IdentifierRef) {
 					typeDeclaration = element.id;
 				}
-					if (typeDeclaration === null) {
+
+				if (typeDeclaration === null) {
 					return #[];
 				} else if (typeDeclaration instanceof Type &&
 					typeDeclaration instanceof SyntaxRelatedTElement &&
@@ -538,7 +546,13 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		acceptor.accept(issue, "Remove @Final annotation from super type", "", null, new N4Modification() {
 
 			override computeChanges(IModificationContext context, IMarker marker, int offset, int length,
-				EObject element) throws Exception {
+				EObject elementRaw) throws Exception {
+
+				val element = if (elementRaw instanceof TypeReferenceNode<?>) {
+					elementRaw.typeRefInAST;
+				} else {
+					elementRaw
+				};
 
 				if (element instanceof ParameterizedTypeRef) {
 					val superClassDeclaration = element.declaredType;

@@ -38,9 +38,8 @@ import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
-
-import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
  * <!-- begin-user-doc -->
@@ -76,7 +75,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeVariable> typeVars;
+	protected EList<N4TypeVariable> typeVars;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -168,9 +167,9 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 * @generated
 	 */
 	@Override
-	public EList<TypeVariable> getTypeVars() {
+	public EList<N4TypeVariable> getTypeVars() {
 		if (typeVars == null) {
-			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.FUNCTION_EXPRESSION__TYPE_VARS);
+			typeVars = new EObjectContainmentEList<N4TypeVariable>(N4TypeVariable.class, this, N4JSPackage.FUNCTION_EXPRESSION__TYPE_VARS);
 		}
 		return typeVars;
 	}
@@ -288,7 +287,7 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 				return;
 			case N4JSPackage.FUNCTION_EXPRESSION__TYPE_VARS:
 				getTypeVars().clear();
-				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				getTypeVars().addAll((Collection<? extends N4TypeVariable>)newValue);
 				return;
 			case N4JSPackage.FUNCTION_EXPRESSION__NAME:
 				setName((String)newValue);

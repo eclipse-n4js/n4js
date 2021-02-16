@@ -208,13 +208,8 @@ TStructMethod:
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 ;
 
-// TODO extract TypeVariableContainer to be used here
 fragment TypeVariables*:
 	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
-;
-
-fragment ColonSepDeclaredTypeRef*:
-	':' declaredTypeRef=TypeRef
 ;
 
 fragment ColonSepTypeRef*:
@@ -234,7 +229,7 @@ TStructGetter:
 	'get'
 	name=IdentifierName)
 	(optional?='?')?
-	'(' ')' ColonSepDeclaredTypeRef?
+	'(' ')' ColonSepTypeRef?
 ;
 
 TStructSetter:

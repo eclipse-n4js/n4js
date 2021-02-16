@@ -253,7 +253,7 @@ class ES_12_06_IterationStatementsEsprimaTest extends AbstractParserTest {
 		val script = 'for(var x: any = 0; ;) {}'.parseESSuccessfully
 		val statement = script.scriptElements.head as ForStatement
 		val x = statement.varDecl.head
-		assertNotNull(x.declaredTypeRef)
+		assertNotNull(x.declaredTypeRefInAST)
 	}
 
 

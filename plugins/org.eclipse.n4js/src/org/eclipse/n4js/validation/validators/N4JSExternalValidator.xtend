@@ -33,10 +33,12 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TObjectPrototype
@@ -241,7 +243,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			validateExtensionOfNotAnnotatedClass(exported, eo)
 			validateConsumptionOfNonAnnotatedInterfaces(exported.implementedInterfaceRefs, eo, "classes")
 		} else {
-			val superClass = exported.superClassRef?.hasExpectedTypes(TClass)
+			val superClass = exported.superClassRef?.typeRef?.hasExpectedTypes(TClass)
 			validateNonAnnotatedClassDoesntExtendN4Object(exported, superClass, eo)
 			validateConsumptionOfNonExternalInterfaces(exported.implementedInterfaceRefs, eo, "classes")
 		}
@@ -394,7 +396,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 				validateSuperClassAnnotatedWithN4JS(superClass, eo)
 			}
 		} else {
-			val superType = exportedWithN4JSAnnotation.superClassRef?.declaredType
+			val superType = exportedWithN4JSAnnotation.superClassRef?.typeRef?.declaredType
 			if (superType !== null && !"N4Object".equals(superType.name) && !isSubtypeOfError(superType)) {
 				handleSuperClassNotAnnotatedWithN4JS(eo)
 			}
@@ -433,12 +435,14 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private getSuperClassType(N4ClassDeclaration exported) {
-		exported.superClassRef?.hasExpectedTypes(TClass)
+		exported.superClassRef?.typeRef?.hasExpectedTypes(TClass)
 	}
 
-	def private validateConsumptionOfNonAnnotatedInterfaces(Iterable<ParameterizedTypeRef> superInterfaces,
+	def private validateConsumptionOfNonAnnotatedInterfaces(
+		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces,
 		ExportDeclaration eo, String classifiers) {
-		for (TInterface tinterface : superInterfaces.map[hasExpectedTypes(TInterface)].filter[it !== null]) {
+
+		for (TInterface tinterface : superInterfaces.map[typeRef].map[hasExpectedTypes(TInterface)].filter[it !== null]) {
 			validateConsumptionOfNonExternalInterface(tinterface, classifiers, eo)
 			validateConsumptionOfNonAnnotatedRole(tinterface, classifiers, eo)
 		}
@@ -454,9 +458,11 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private validateConsumptionOfNonExternalInterfaces(Iterable<ParameterizedTypeRef> superInterfaces,
+	def private validateConsumptionOfNonExternalInterfaces(
+		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces,
 		ExportDeclaration eo, String classifiers) {
-		for (tinterface : superInterfaces.map[hasExpectedTypes(TInterface)].filter[it !== null]) {
+
+		for (tinterface : superInterfaces.map[typeRef].map[hasExpectedTypes(TInterface)].filter[it !== null]) {
 			validateConsumptionOfNonExternalInterface(tinterface, classifiers, eo)
 		}
 	}
@@ -484,7 +490,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Returns converted declared type of type reference if it matches the expected type. Otherwise, null is returned.
 	 */
-	def private <T extends Type> T hasExpectedTypes(ParameterizedTypeRef typeRef, Class<T> typeClazz) {
+	def private <T extends Type> T hasExpectedTypes(TypeRef typeRef, Class<T> typeClazz) {
 		val type = typeRef?.declaredType
 		if (type !== null && typeClazz.isAssignableFrom(type.class)) {
 			return type as T;
