@@ -35,7 +35,6 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.GenericType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
@@ -125,13 +124,11 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			if (!typeRef.typeArgs.empty) {
 				val declType = typeRef.declaredType
 				if (declType instanceof GenericType) {
-					if (!(declType instanceof TFunction)) { // FIXME legacy behavior; maybe this exception for TFunction can be removed
-						val varIter = declType.typeVars.iterator
-						for (typeArg : typeRef.typeArgs) {
-							if (varIter.hasNext) {
-								val typeVar = varIter.next;
-								addSubstitution(G, typeVar, typeArg);
-							}
+					val varIter = declType.typeVars.iterator
+					for (typeArg : typeRef.typeArgs) {
+						if (varIter.hasNext) {
+							val typeVar = varIter.next;
+							addSubstitution(G, typeVar, typeArg);
 						}
 					}
 				}
