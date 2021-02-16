@@ -245,7 +245,7 @@ abstract public class Node implements ControlFlowable {
 	public String getExtendedString() {
 		String s = "";
 		s += "[" + FGUtils.getSourceText(getControlFlowElement()) + "]";
-		s += "(" + getName() + ") ";
+		s += "(" + getName() + ")";
 		return s;
 	}
 
