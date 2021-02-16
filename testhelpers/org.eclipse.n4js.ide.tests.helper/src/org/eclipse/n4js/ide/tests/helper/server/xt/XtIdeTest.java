@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
@@ -36,13 +35,11 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
-import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -297,7 +294,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // Xpect accessModifier at '&ltLOCATION&gt' --&gt; &ltACCESS MODIFIER&gt
 	 * </pre>
 	 *
-	 * The location (at) is optional.
+	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void accessModifier(MethodData data) {
@@ -334,7 +331,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // Xpect elementKeyword at '&ltLOCATION&gt' --&gt; &ltKEYWORD&gt
 	 * </pre>
 	 *
-	 * The location (at) is optional.
+	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void elementKeyword(MethodData data) {
@@ -351,7 +348,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // Xpect findReferences at '&ltLOCATION&gt' --&gt; &ltCOMMA SEPARATED REFERENCES&gt
 	 * </pre>
 	 *
-	 * The location (at) is optional.
+	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void findReferences(MethodData data) {
@@ -362,10 +359,10 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
-	 *
+	 * TODO
 	 */
 	@Xpect
-	public void formattedLines(MethodData data) {
+	public void formattedLines(@SuppressWarnings("unused") MethodData data) {
 		// TODO
 	}
 
@@ -418,11 +415,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * // Xpect type of '&ltLOCATION&gt' --&gt; &ltTYPE&gt
 	 * </pre>
 	 *
-	 * The location (of) is optional.
-	 *
-	 * The location is identified by the offset. Note that there are different implementations of IEObjectOwner, and we
-	 * need IEStructuralFeatureAndEObject, while ICrossEReferenceAndEObject or IEAttributeAndEObject would not work in
-	 * all cases (as not all eobjects we test have cross references or attributes, but feature is the join of both).
+	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void type(MethodData data) {
@@ -458,9 +451,17 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
 	 * specified, the first code element of the containing function.
+	 *
+	 * <pre>
+	 * // Xpect allBranches from '&ltLOCATION&gt' direction '&lt{@link TraverseDirection#values()}&gt' --&gt;
+	 * // &ltBRANCHES&gt
+	 * </pre>
+	 *
+	 * The direction is optional.
+	 *
+	 * BRANCHES is a comma separated list.
 	 */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
-	@Xpect
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allBranches(MethodData data) {
 		Match match = PATTERN_ALLBRANCHES.match(data, eobjProvider);
 		String direction = match.getText("direction");
@@ -470,9 +471,16 @@ public class XtIdeTest extends AbstractIdeTest {
 		assertEqualIterables(data.expectation, branchStrings);
 	}
 
-	/** This xpect method can evaluate all edges of the containing function. */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
-	@Xpect
+	/**
+	 * This xpect method can evaluate all edges of the containing function.
+	 *
+	 * <pre>
+	 * // Xpect allEdges from '&ltLOCATION&gt' --&gt; &ltEDGES&gt
+	 * </pre>
+	 *
+	 * EDGES is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allEdges(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allEdges", "from");
 		List<String> pathStrings = xtFlowgraphs.allEdges(ocr);
@@ -482,10 +490,15 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * This xpect method can evaluate all branches that are merged at the given node name.
 	 *
+	 * <pre>
+	 * // Xpect allMergeBranches --&gt; &ltMERGE BRANCHES&gt
+	 * </pre>
+	 *
 	 * Note: Each 'allMergeBranch' test needs to have its own xt file.
+	 *
+	 * MERGE BRANCHES is a comma separated list.
 	 */
-	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
-	@Xpect
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allMergeBranches(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allMergeBranches", null);
 		List<String> edgeStrings = xtFlowgraphs.allMergeBranches(ocr);
@@ -495,9 +508,16 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
 	 * the first code element of the containing function.
+	 *
+	 * <pre>
+	 * // Xpect allPaths from '&ltLOCATION&gt' direction '&lt{@link TraverseDirection#values()}&gt' --&gt; &ltPATHS&gt
+	 * </pre>
+	 *
+	 * The direction is optional.
+	 *
+	 * PATHS is a comma separated list.
 	 */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
-	@Xpect
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allPaths(MethodData data) {
 		Match match = PATTERN_ALLPATHS.match(data, eobjProvider);
 		String direction = match.getText("direction");
@@ -508,31 +528,47 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
-	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
-	 * specifying the edge type.
-	 * <p>
-	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 * This xpect method can evaluate the control flow order of ast elements.
+	 *
+	 * <pre>
+	 * // Xpect astOrder of '&ltLOCATION&gt' --&gt; &ltAST ORDER&gt
+	 * </pre>
+	 *
+	 * AST ORDER is a comma separated list of ast elements.
 	 */
-	@ParameterParser(syntax = "('of' arg2=OFFSET)?")
-	@Xpect
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void astOrder(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "astOrder", "of");
 		List<String> astElements = xtFlowgraphs.astOrder(ocr);
 		assertEqualIterables(data.expectation, astElements);
 	}
 
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
+	/**
+	 * This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}.
+	 *
+	 * <pre>
+	 * // Xpect cfContainer of '&ltLOCATION&gt' --&gt; &ltCONTROL FLOW CONTAINER&gt
+	 * </pre>
+	 *
+	 * CONTROL FLOW CONTAINER is the name of an ast element.
+	 **/
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void cfContainer(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "cfContainer", "of");
 		String containerStr = xtFlowgraphs.cfContainer(ocr);
 		assertEquals(data.expectation, containerStr);
 	}
 
-	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
-	@ParameterParser(syntax = "'of' arg1=OFFSET 'and' arg2=OFFSET")
-	@Xpect
+	/**
+	 * This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s.
+	 *
+	 * <pre>
+	 * // Xpect cfContainer of '&ltLOCATION A&gt' and '&ltLOCATION B&gt' --&gt; &ltCOMMON PREDECESSORS&gt
+	 * </pre>
+	 *
+	 * COMMON PREDECESSORS is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void commonPreds(MethodData data) {
 		Match match = PATTERN_COMMONPREDS.match(data, eobjProvider);
 		IEObjectCoveringRegion ocrA = match.getEObjectWithOffset("of");
@@ -541,9 +577,16 @@ public class XtIdeTest extends AbstractIdeTest {
 		assertEqualIterables(data.expectation, commonPredStrs);
 	}
 
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
+	/**
+	 * This xpect method can evaluate the guards that do (not) hold on an expression.
+	 *
+	 * <pre>
+	 * // Xpect instanceofguard of '&ltLOCATION&gt' --&gt; &ltGUARDS&gt
+	 * </pre>
+	 *
+	 * GUARDS is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void instanceofguard(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "instanceofguard", "of");
 		List<String> guardStrs = xtFlowgraphs.instanceofguard(ocr);
@@ -551,11 +594,16 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
-	 * This xpect method can evaluate if the tested element is a transitive predecessor of the given element. either
-	 * 'to' or 'notTo' is mandatory
+	 * This xpect method can evaluate if the specified path exists or not.
+	 *
+	 * <pre>
+	 * // Xpect path from '&ltLOCATION A&gt' to|notTo '&ltLOCATION Z&gt' via '&ltLOCATION M&gt' notVia '&ltLOCATION
+	 * // N&gt' --&gt;
+	 * </pre>
+	 *
+	 * Arguments 'to', 'notTo', 'via', 'notVia' are optional. Either 'to' or 'notTo' must be defined.
 	 */
-	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('via' arg3=OFFSET)? ('notVia' arg4=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg5=OFFSET)?")
-	@Xpect
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void path(MethodData data) {
 		Match match = PATTERN_PATH.match(data, eobjProvider);
 		IEObjectCoveringRegion ocrReference = match.ocrReference;
@@ -574,11 +622,18 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
 	 * specifying the edge type.
-	 * <p>
-	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 *
+	 * <pre>
+	 * // Xpect preds type '{@link ControlFlowType#values()}' at '&ltLOCATION&gt' --&gt; &ltPREDECESSORS&gt
+	 * </pre>
+	 *
+	 * The type is optional. If given, the result is filtered accordingly. The type parameter does not work on self
+	 * loops.
+	 *
+	 * PREDECESSORS is a comma separated list.
+	 *
 	 */
-	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
-	@Xpect
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void preds(MethodData data) {
 		Match match = PATTERN_PREDS.match(data, eobjProvider);
 		String type = match.getText("type");
@@ -590,31 +645,23 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * This xpect method can evaluate the direct successors of a code element. The successors can be limited when
 	 * specifying the edge type.
-	 * <p>
-	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 *
+	 * <pre>
+	 * // Xpect succs type '{@link ControlFlowType#values()}' at '&ltLOCATION&gt' --&gt; &ltSUCCESSORS&gt
+	 * </pre>
+	 *
+	 * The type is optional. If given, the result is filtered accordingly. The type parameter does not work on self
+	 * loops.
+	 *
+	 * SUCCESSORS is a comma separated list.
 	 */
-	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
-	@Xpect
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void succs(MethodData data) {
 		Match match = PATTERN_SUCCS.match(data, eobjProvider);
 		String type = match.getText("type");
 		IEObjectCoveringRegion ocrAt = match.getEObjectWithOffset("at");
 		List<String> succTexts = xtFlowgraphs.succs(type, ocrAt);
 		assertEqualIterables(data.expectation, succTexts);
-	}
-
-	private void assertEqualIterables(Iterable<?> i1, Iterable<?> i2) {
-		assertEquals(Strings.join(", ", i1), Strings.join(", ", i2));
-	}
-
-	private <F> void assertEqualIterables(Iterable<String> i1, Iterable<F> i2, Function<F, String> toString) {
-		Iterable<String> s2 = Iterables.transform(i2, toString::apply);
-		assertEqualIterables(i1, s2);
-	}
-
-	private <F> void assertEqualIterables(String s1, Iterable<F> i2, Function<F, String> toString) {
-		Iterable<String> i2s = Iterables.transform(i2, toString::apply);
-		assertEqualIterables(s1, i2s);
 	}
 
 	private void assertEqualIterables(String s1, Iterable<String> i2s) {
