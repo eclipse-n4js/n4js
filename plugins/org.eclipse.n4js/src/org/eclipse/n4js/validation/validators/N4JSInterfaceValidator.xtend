@@ -88,7 +88,8 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private internalCheckExtendedInterfaces(N4InterfaceDeclaration n4Interface) {
 		n4Interface.superInterfaceRefs.forEach[
-			val extendedType = it.typeRef?.declaredType
+			val extendedTypeRef = it.typeRef;
+			val extendedType = extendedTypeRef?.declaredType
 			// note: in case extendedType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 			if(extendedType !== null && extendedType.name !== null) {
 
@@ -103,6 +104,10 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 						addIssue(message, it, null, IssueCodes.CLF_WRONG_META_TYPE)
 					}
 				}
+			} else if (extendedTypeRef !== null && extendedTypeRef.isAliasResolved) {
+				// not all aliases are illegal after "extends", but if we get to this point we have an illegal case:
+				val message = getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend", extendedTypeRef.internalGetTypeRefAsString);
+				addIssue(message, it, null, CLF_WRONG_META_TYPE);
 			}
 		]
 	}

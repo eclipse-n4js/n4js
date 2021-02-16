@@ -25,7 +25,9 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 
 /**
- * Handles resolution of type aliases during post-processing.
+ * Handles resolution of type aliases during post-processing, <b>but only in the <code>TModule</code></b>.
+ * Handling of type alias resolution of type references contained in the AST is part of the responsibility
+ * of {@link TypeRefProcessor}.
  */
 @Singleton
 class TypeAliasProcessor extends AbstractProcessor {
@@ -67,9 +69,14 @@ class TypeAliasProcessor extends AbstractProcessor {
 		for (typeArg : allNestedTypeArgs) {
 			val typeArgResolved = tsh.resolveTypeAliases(G, typeArg);
 			if (typeArgResolved !== typeArg) {
-				EcoreUtilN4.doWithDeliver(false, [
-					EcoreUtil.replace(typeArg, typeArgResolved);
-				], typeArg.eContainer);
+				val containmentFeature = typeArg.eContainmentFeature;
+				val isValidType = containmentFeature !== null
+					&& containmentFeature.getEReferenceType().isSuperTypeOf(typeArgResolved.eClass);
+				if (isValidType) {
+					EcoreUtilN4.doWithDeliver(false, [
+						EcoreUtil.replace(typeArg, typeArgResolved);
+					], typeArg.eContainer);
+				}
 			}
 		}
 	}
