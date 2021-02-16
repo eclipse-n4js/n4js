@@ -43,6 +43,7 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				+ "AstOrder.n4js.xt\n"
 				+ "CfContainer.n4js.xt\n"
 				+ "CommonPreds.n4js.xt\n"
+				+ "Instanceofguards.n4js.xt\n"
 				+ "Path.n4js.xt\n"
 				+ "Preds.n4js.xt\n"
 				+ "Succs.n4js.xt");
@@ -70,6 +71,8 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				+ " + CommonPreds.n4js.xt: probands/FlowgraphMethods\n"
 				+ " ++ commonPreds~0: of '\"c\"' and '\"d\"' 〔probands/FlowgraphMethods/CommonPreds.n4js.xt〕(commonPreds~0)\n"
 				+ " ++ commonPreds~1: of '\"d\"' and '\"d\"' 〔probands/FlowgraphMethods/CommonPreds.n4js.xt〕(commonPreds~1)\n"
+				+ " + Instanceofguards.n4js.xt: probands/FlowgraphMethods\n"
+				+ " ++ instanceofguard~0: of 'a' 〔probands/FlowgraphMethods/Instanceofguards.n4js.xt〕(instanceofguard~0)\n"
 				+ " + Path.n4js.xt: probands/FlowgraphMethods\n"
 				+ " ++ path~0: from '\"a\"' 〔probands/FlowgraphMethods/Path.n4js.xt〕(path~0)\n"
 				+ " ++ path~1: from '\"a\"' to '\"d\"' 〔probands/FlowgraphMethods/Path.n4js.xt〕(path~1)\n"
@@ -120,6 +123,8 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				"Passed: commonPreds~0: of '\"c\"' and '\"d\"' 〔probands/FlowgraphMethods/CommonPreds.n4js.xt〕");
 		assertResult("(commonPreds~1)",
 				"Failed: commonPreds~1: of '\"d\"' and '\"d\"' 〔probands/FlowgraphMethods/CommonPreds.n4js.xt〕. expected:<[wrong expectation]> but was:<[\"d\"]>");
+		assertResult("(instanceofguard~0)",
+				"Passed: instanceofguard~0: of 'a' 〔probands/FlowgraphMethods/Instanceofguards.n4js.xt〕");
 		assertResult("(path~0)",
 				"Failed: path~0: from '\"a\"' 〔probands/FlowgraphMethods/Path.n4js.xt〕. Either 'to' or 'notTo' must be defined.");
 		assertResult("(path~1)",
