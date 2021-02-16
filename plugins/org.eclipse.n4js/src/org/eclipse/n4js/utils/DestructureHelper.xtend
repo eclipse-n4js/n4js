@@ -35,6 +35,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TStructMember
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -339,7 +340,7 @@ class DestructureHelper {
 				val field = TypesFactory.eINSTANCE.createTStructField
 				field.name = nestedNode.propName;
 				field.typeRef = if (elemExpectedType !== null) {
-					elemExpectedType
+					TypeUtils.copyIfContained(elemExpectedType)
 				} else {
 					// If the expected type is not specified, the expected type is arbitrary hence return a new inference variable.
 					val iv = infCtx.newInferenceVariable;
@@ -392,13 +393,10 @@ class DestructureHelper {
 				return declTypeRef;
 			}
 		} else if (varRef !== null) {
-			// It is a variable reference, retrieve the declared type of the variable
+			// It is a variable reference, retrieve the (declared or inferred) type of the variable
 			val id = varRef.id;
-			if (id instanceof VariableDeclaration) {
-				val declTypeRef = getDeclaredTypeRefOfVarDecl(G, id);
-				if (declTypeRef !== null) {
-					return declTypeRef;
-				}
+			if (id instanceof VariableDeclaration || id instanceof TVariable) {
+				return ts.type(G, id);
 			}
 		}
 		// In case the expected type does not exist, simply return null

@@ -195,7 +195,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 				// variable declared within pattern _with_ an explicitly declared type OR
 				// existing variable referenced from within a pattern
 				// -> check if it can hold the corresponding value
-				var variableTypeRef = if(node.varDecl!==null) {
+				val variableTypeRef = if(node.varDecl!==null) {
 					ts.type(G,node.varDecl)
 				} else if(node.varRef!==null) {
 					ts.type(G,node.varRef)

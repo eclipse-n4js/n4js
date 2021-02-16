@@ -28,17 +28,29 @@ function case1() {
 	for (var [x:int] of [[undefined], [1]]) {}
 }
 
+export var xGlobalDeclared: int;
+function case2a() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+	for ([xGlobalDeclared] of [[undefined], [1]]) {}
+}
+
+export var xGlobalInferred = 42;
+function case2b() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+	for ([xGlobalInferred] of [[undefined], [1]]) {}
+}
+
 // in the next two cases, 'x' is used before its declaration
 // (weird corner-case, but it has to be supported by the type system):
 
-function case2() {
+function case3() {
 	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
 	for ([x] of [[undefined], [1]]) {}
 	var x: int; // type of x is declared explicitly
 }
 
-function case3() {
-	// XPECT FIXME noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
+function case4() {
+	// XPECT noerrors --> "Variable x cannot hold destructured value at index 0: any is not a subtype of int." at "x"
 	for ([x] of [[undefined], [1]]) {}
 	var x = 42; // type of x is inferred
 }
