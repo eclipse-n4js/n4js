@@ -249,8 +249,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 				return createIteratorOfStatementFromString(eDataType, initialValue);
 			case N4JSPackage.ITERATOR_OF_RETURN_STATEMENT:
 				return createIteratorOfReturnStatementFromString(eDataType, initialValue);
-			case N4JSPackage.PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE:
-				return createParameterizedTypeRefInASTIterableFromString(eDataType, initialValue);
+			case N4JSPackage.PARAMETERIZED_TYPE_REF_NODE_ITERABLE:
+				return createParameterizedTypeRefNodeIterableFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -300,8 +300,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 				return convertIteratorOfStatementToString(eDataType, instanceValue);
 			case N4JSPackage.ITERATOR_OF_RETURN_STATEMENT:
 				return convertIteratorOfReturnStatementToString(eDataType, instanceValue);
-			case N4JSPackage.PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE:
-				return convertParameterizedTypeRefInASTIterableToString(eDataType, instanceValue);
+			case N4JSPackage.PARAMETERIZED_TYPE_REF_NODE_ITERABLE:
+				return convertParameterizedTypeRefNodeIterableToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -2099,7 +2099,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> createParameterizedTypeRefInASTIterableFromString(EDataType eDataType, String initialValue) {
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> createParameterizedTypeRefNodeIterableFromString(EDataType eDataType, String initialValue) {
 		return (Iterable<TypeReferenceNode<ParameterizedTypeRef>>)super.createFromString(initialValue);
 	}
 
@@ -2108,7 +2108,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertParameterizedTypeRefInASTIterableToString(EDataType eDataType, Object instanceValue) {
+	public String convertParameterizedTypeRefNodeIterableToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
 	}
 

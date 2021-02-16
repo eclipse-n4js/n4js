@@ -19,6 +19,11 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * A representation of the model object '<em><b>Type Reference Node</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * All type references contained in the AST are represented by this class, so this provides
+ * a common bridge from the AST model to the Type/TypeRefs models.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>
@@ -37,13 +42,16 @@ public interface TypeReferenceNode<T extends TypeRef> extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
-	 * The returned type reference may or may not be contained in the AST.
-	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 * Same as {@link #getTypeRefInAST()}, but processed by the {@code TypeRefProcessor} during
+	 * post-processing. Currently, this processing only includes resolution of type aliases but
+	 * more may be added in the future.
+	 * <p>
+	 * The returned type reference may or may not be identical with the one returned from
+	 * {@link #getTypeRefInAST()}, and thus it may or may not be contained in the AST.
 	 * <p>
 	 * Since a type reference can change from {@code ParameterizedTypeRef} to something else
-	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the aliased
-	 * type, the type of this property must be {@link TypeRef} instead of {@code T}.
+	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the
+	 * aliased type, the type of this property must be {@link TypeRef} instead of {@code T}.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Type Ref</em>' reference.
 	 * @see #setTypeRef(TypeRef)

@@ -16776,14 +16776,14 @@ public interface N4JSPackage extends EPackage {
 	int ITERATOR_OF_RETURN_STATEMENT = 198;
 
 	/**
-	 * The meta object id for the '<em>Parameterized Type Ref In AST Iterable</em>' data type.
+	 * The meta object id for the '<em>Parameterized Type Ref Node Iterable</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see java.lang.Iterable
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefInASTIterable()
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefNodeIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE = 199;
+	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 199;
 
 
 	/**
@@ -22989,15 +22989,15 @@ public interface N4JSPackage extends EPackage {
 	EDataType getIteratorOfReturnStatement();
 
 	/**
-	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref In AST Iterable</em>}'.
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Node Iterable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Parameterized Type Ref In AST Iterable</em>'.
+	 * @return the meta object for data type '<em>Parameterized Type Ref Node Iterable</em>'.
 	 * @see java.lang.Iterable
 	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.n4JS.TypeReferenceNode&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;&gt;"
 	 * @generated
 	 */
-	EDataType getParameterizedTypeRefInASTIterable();
+	EDataType getParameterizedTypeRefNodeIterable();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -28205,14 +28205,14 @@ public interface N4JSPackage extends EPackage {
 		EDataType ITERATOR_OF_RETURN_STATEMENT = eINSTANCE.getIteratorOfReturnStatement();
 
 		/**
-		 * The meta object literal for the '<em>Parameterized Type Ref In AST Iterable</em>' data type.
+		 * The meta object literal for the '<em>Parameterized Type Ref Node Iterable</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @see java.lang.Iterable
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefInASTIterable()
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefNodeIterable()
 		 * @generated
 		 */
-		EDataType PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE = eINSTANCE.getParameterizedTypeRefInASTIterable();
+		EDataType PARAMETERIZED_TYPE_REF_NODE_ITERABLE = eINSTANCE.getParameterizedTypeRefNodeIterable();
 
 	}
 

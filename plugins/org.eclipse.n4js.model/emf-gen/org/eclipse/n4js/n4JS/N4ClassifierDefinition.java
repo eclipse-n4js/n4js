@@ -146,7 +146,7 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * *
 	 * Derived, returns extended class (if any) and implemented or extended interfaces.
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefNodeIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs();
@@ -158,7 +158,7 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * *
 	 * Derived, returns implemented or extended interfaces.
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefNodeIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();

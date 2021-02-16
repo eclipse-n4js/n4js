@@ -66,7 +66,7 @@ type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
 type IteratorOfStatement wraps Iterator<Statement>
 type IteratorOfReturnStatement wraps Iterator<ReturnStatement>
-type ParameterizedTypeRefInASTIterable wraps Iterable<TypeReferenceNode<ParameterizedTypeRef>>
+type ParameterizedTypeRefNodeIterable wraps Iterable<TypeReferenceNode<ParameterizedTypeRef>>
 
 /**
  * Common interface for all AST elements providing a name.
@@ -274,15 +274,22 @@ class NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
 // Abstract Base Elements
 // ****************************************************************************************************
 
+/*
+ * All type references contained in the AST are represented by this class, so this provides
+ * a common bridge from the AST model to the Type/TypeRefs models.
+ */
 class TypeReferenceNode<T extends TypeRef> {
 	/*
-	 * Same as {@link #getDeclaredTypeRefInAST()}, but with type aliases being resolved (if any).
-	 * The returned type reference may or may not be contained in the AST.
-	 * This is set during post-processing by {@code TypeRefProcessor}.
+	 * Same as {@link #getTypeRefInAST()}, but processed by the {@code TypeRefProcessor} during
+	 * post-processing. Currently, this processing only includes resolution of type aliases but
+	 * more may be added in the future.
+	 * <p>
+	 * The returned type reference may or may not be identical with the one returned from
+	 * {@link #getTypeRefInAST()}, and thus it may or may not be contained in the AST.
 	 * <p>
 	 * Since a type reference can change from {@code ParameterizedTypeRef} to something else
-	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the aliased
-	 * type, the type of this property must be {@link TypeRef} instead of {@code T}.
+	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the
+	 * aliased type, the type of this property must be {@link TypeRef} instead of {@code T}.
 	 */
 	refers transient TypeRef typeRef
 	contains T typeRefInAST
@@ -2067,13 +2074,13 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	/**
 	 * Derived, returns extended class (if any) and implemented or extended interfaces.
 	 */
-	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
+	op ParameterizedTypeRefNodeIterable getSuperClassifierRefs() {
 		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList;
 	}
 	/**
 	 * Derived, returns implemented or extended interfaces.
 	 */
-	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
+	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList;
 	}
 }
@@ -2091,10 +2098,10 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	op TClass getDefinedTypeAsClass() {
 		return definedType as TClass;
 	}
-	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
+	op ParameterizedTypeRefNodeIterable getSuperClassifierRefs() {
 		return #[superClassRef] + implementedInterfaceRefs;
 	}
-	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
+	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return implementedInterfaceRefs;
 	}
 }
@@ -2129,10 +2136,10 @@ class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, Versi
 	op TInterface getDefinedTypeAsInterface() {
 		return definedType as TInterface;
 	}
-	op ParameterizedTypeRefInASTIterable getSuperClassifierRefs() {
+	op ParameterizedTypeRefNodeIterable getSuperClassifierRefs() {
 		return superInterfaceRefs;
 	}
-	op ParameterizedTypeRefInASTIterable getImplementedOrExtendedInterfaceRefs() {
+	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
 	/*

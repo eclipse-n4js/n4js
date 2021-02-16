@@ -60,7 +60,7 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefNodeIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs();
@@ -68,7 +68,7 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefInASTIterable" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.ParameterizedTypeRefNodeIterable" unique="false"
 	 * @generated
 	 */
 	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();

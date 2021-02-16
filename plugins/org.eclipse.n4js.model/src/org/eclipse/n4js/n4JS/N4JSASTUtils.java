@@ -60,7 +60,14 @@ public abstract class N4JSASTUtils {
 	/** The reserved {@value} keyword. */
 	public static final String CONSTRUCTOR = "constructor";
 
-	public static final ListMultimap<Object, EReference> containersOfTypeReferenceNodes;
+	/**
+	 * Maps {@link EClass}es of {@link N4JSPackage} to their containment {@link EReference}s of type
+	 * {@link TypeReferenceNode}, including both owned and inherited references. The references may be single- or
+	 * many-valued.
+	 * <p>
+	 * Most clients will want to use utility method {@link #getContainedTypeReferenceNodes(EObject)} instead.
+	 */
+	public static final ListMultimap<EClass, EReference> containersOfTypeReferenceNodes;
 
 	static {
 		ListMultimap<EClass, EReference> eClassToOwnedRefs = ArrayListMultimap.create();
@@ -191,6 +198,12 @@ public abstract class N4JSASTUtils {
 		return false;
 	}
 
+	/**
+	 * Returns all {@link TypeReferenceNode}s contained in the given AST node. The returned nodes might belong to
+	 * several {@link EReference}s (for example: when given a class declaration, nodes for the super class reference and
+	 * all implemented interface references will be returned at the same time). Only direct contents will be returned.
+	 * For AST nodes that cannot contain {@code TypeReferenceNode}s an empty iterable will be returned.
+	 */
 	public static Iterable<TypeReferenceNode<?>> getContainedTypeReferenceNodes(EObject astNode) {
 		List<EReference> eRefs = containersOfTypeReferenceNodes.get(astNode.eClass());
 		return FluentIterable.from(eRefs)

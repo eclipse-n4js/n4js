@@ -1632,7 +1632,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EDataType parameterizedTypeRefInASTIterableEDataType = null;
+	private EDataType parameterizedTypeRefNodeIterableEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -7686,8 +7686,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EDataType getParameterizedTypeRefInASTIterable() {
-		return parameterizedTypeRefInASTIterableEDataType;
+	public EDataType getParameterizedTypeRefNodeIterable() {
+		return parameterizedTypeRefNodeIterableEDataType;
 	}
 
 	/**
@@ -8501,7 +8501,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		iteratorOfYieldExpressionEDataType = createEDataType(ITERATOR_OF_YIELD_EXPRESSION);
 		iteratorOfStatementEDataType = createEDataType(ITERATOR_OF_STATEMENT);
 		iteratorOfReturnStatementEDataType = createEDataType(ITERATOR_OF_RETURN_STATEMENT);
-		parameterizedTypeRefInASTIterableEDataType = createEDataType(PARAMETERIZED_TYPE_REF_IN_AST_ITERABLE);
+		parameterizedTypeRefNodeIterableEDataType = createEDataType(PARAMETERIZED_TYPE_REF_NODE_ITERABLE);
 	}
 
 	/**
@@ -9562,9 +9562,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassifierDefinition__GetOwnedSetters(), this.getN4SetterDeclaration(), "getOwnedSetters", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassifierDefinition__GetSuperClassifierRefs(), this.getParameterizedTypeRefInASTIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassifierDefinition__GetSuperClassifierRefs(), this.getParameterizedTypeRefNodeIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefInASTIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefNodeIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4ClassDefinitionEClass, N4ClassDefinition.class, "N4ClassDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		g1 = createEGenericType(this.getTypeReferenceNode());
@@ -9579,9 +9579,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassDefinition__GetDefinedTypeAsClass(), theTypesPackage.getTClass(), "getDefinedTypeAsClass", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassDefinition__GetSuperClassifierRefs(), this.getParameterizedTypeRefInASTIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassDefinition__GetSuperClassifierRefs(), this.getParameterizedTypeRefNodeIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefInASTIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefNodeIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4ClassDeclarationEClass, N4ClassDeclaration.class, "N4ClassDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9600,9 +9600,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4InterfaceDeclaration__GetDefinedTypeAsInterface(), theTypesPackage.getTInterface(), "getDefinedTypeAsInterface", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4InterfaceDeclaration__GetSuperClassifierRefs(), this.getParameterizedTypeRefInASTIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4InterfaceDeclaration__GetSuperClassifierRefs(), this.getParameterizedTypeRefNodeIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefInASTIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefNodeIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4InterfaceDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9875,7 +9875,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEDataType(iteratorOfYieldExpressionEDataType, Iterator.class, "IteratorOfYieldExpression", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.Iterator<org.eclipse.n4js.n4JS.YieldExpression>");
 		initEDataType(iteratorOfStatementEDataType, Iterator.class, "IteratorOfStatement", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.Iterator<org.eclipse.n4js.n4JS.Statement>");
 		initEDataType(iteratorOfReturnStatementEDataType, Iterator.class, "IteratorOfReturnStatement", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.Iterator<org.eclipse.n4js.n4JS.ReturnStatement>");
-		initEDataType(parameterizedTypeRefInASTIterableEDataType, Iterable.class, "ParameterizedTypeRefInASTIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<org.eclipse.n4js.n4JS.TypeReferenceNode<org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef>>");
+		initEDataType(parameterizedTypeRefNodeIterableEDataType, Iterable.class, "ParameterizedTypeRefNodeIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<org.eclipse.n4js.n4JS.TypeReferenceNode<org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef>>");
 
 		// Create resource
 		createResource(eNS_URI);
