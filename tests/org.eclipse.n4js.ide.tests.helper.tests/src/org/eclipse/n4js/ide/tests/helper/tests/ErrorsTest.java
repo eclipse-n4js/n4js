@@ -10,10 +10,16 @@
  */
 package org.eclipse.n4js.ide.tests.helper.tests;
 
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Test for test methods 'noerrors' and 'errors'
+ * Test for test methods:
+ * <ul>
+ * <li/>{@link XtIdeTest#noerrors(MethodData)}
+ * <li/>{@link XtIdeTest#errors(MethodData)}
+ * </ul>
  */
 public class ErrorsTest extends AbstractXtParentRunnerTest {
 

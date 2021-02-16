@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.ide.tests.helper.tests;
 
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Test for test method 'accessModifier'
+ * Tests for test method {@link XtIdeTest#accessModifier(MethodData)}
  */
 public class AccessModifier extends AbstractXtParentRunnerTest {
 

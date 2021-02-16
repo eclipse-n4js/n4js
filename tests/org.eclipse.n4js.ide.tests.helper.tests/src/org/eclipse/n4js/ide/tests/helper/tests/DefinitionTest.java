@@ -10,10 +10,12 @@
  */
 package org.eclipse.n4js.ide.tests.helper.tests;
 
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Tests for test method 'definition'
+ * Tests for test method {@link XtIdeTest#definition(MethodData)}
  */
 public class DefinitionTest extends AbstractXtParentRunnerTest {
 

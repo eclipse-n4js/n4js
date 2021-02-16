@@ -10,10 +10,16 @@
  */
 package org.eclipse.n4js.ide.tests.helper.tests;
 
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Test for test methods 'nowarnings' and 'warnings'
+ * Test for test methods:
+ * <ul>
+ * <li/>{@link XtIdeTest#nowarnings(MethodData)}
+ * <li/>{@link XtIdeTest#warnings(MethodData)}
+ * </ul>
  */
 public class WarningsTest extends AbstractXtParentRunnerTest {
 

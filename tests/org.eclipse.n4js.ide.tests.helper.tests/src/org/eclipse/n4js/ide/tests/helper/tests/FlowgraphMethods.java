@@ -17,9 +17,16 @@ import org.junit.Test;
 /**
  * Test for test methods:
  * <ul>
- * <li/>{@link XtIdeTest#linkedName(MethodData)}
- * <li/>{@link XtIdeTest#linkedPathname(MethodData)}
- * <li/>{@link XtIdeTest#linkedFragment(MethodData)}
+ * <li/>{@link XtIdeTest#allBranches(MethodData)}
+ * <li/>{@link XtIdeTest#allEdges(MethodData)}
+ * <li/>{@link XtIdeTest#allMergeBranches(MethodData)}
+ * <li/>{@link XtIdeTest#allPaths(MethodData)}
+ * <li/>{@link XtIdeTest#astOrder(MethodData)}
+ * <li/>{@link XtIdeTest#cfContainer(MethodData)}
+ * <li/>{@link XtIdeTest#instanceofguard(MethodData)}
+ * <li/>{@link XtIdeTest#commonPreds(MethodData)}
+ * <li/>{@link XtIdeTest#preds(MethodData)}
+ * <li/>{@link XtIdeTest#succs(MethodData)}
  * </ul>
  */
 public class FlowgraphMethods extends AbstractXtParentRunnerTest {
@@ -31,7 +38,9 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 
 		assertFiles("AllBranches.n4js.xt\n"
 				+ "AllEdges.n4js.xt\n"
+				+ "AllMergeBranches.n4js.xt\n"
 				+ "AllPaths.n4js.xt\n"
+				+ "AstOrder.n4js.xt\n"
 				+ "CfContainer.n4js.xt\n"
 				+ "CommonPreds.n4js.xt\n"
 				+ "Path.n4js.xt\n"
@@ -44,6 +53,8 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				+ " + AllEdges.n4js.xt: probands/FlowgraphMethods\n"
 				+ " ++ allEdges~0: from 'b0' 〔probands/FlowgraphMethods/AllEdges.n4js.xt〕(allEdges~0)\n"
 				+ " ++ allEdges~1: from 'b0' 〔probands/FlowgraphMethods/AllEdges.n4js.xt〕(allEdges~1)\n"
+				+ " + AllMergeBranches.n4js.xt: probands/FlowgraphMethods\n"
+				+ " ++ allMergeBranches~0:  〔probands/FlowgraphMethods/AllMergeBranches.n4js.xt〕(allMergeBranches~0)\n"
 				+ " + AllPaths.n4js.xt: probands/FlowgraphMethods\n"
 				+ " ++ allPaths~0: from '\"a\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~0)\n"
 				+ " ++ allPaths~1: from '\"c\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~1)\n"
@@ -51,6 +62,8 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				+ " ++ allPaths~3: from '\"c\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~3)\n"
 				+ " ++ allPaths~4: from '\"d\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~4)\n"
 				+ " ++ allPaths~5: from '\"d\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~5)\n"
+				+ " + AstOrder.n4js.xt: probands/FlowgraphMethods\n"
+				+ " ++ astOrder~0: of '+' 〔probands/FlowgraphMethods/AstOrder.n4js.xt〕(astOrder~0)\n"
 				+ " + CfContainer.n4js.xt: probands/FlowgraphMethods\n"
 				+ " ++ cfContainer~0: of 'b0' 〔probands/FlowgraphMethods/CfContainer.n4js.xt〕(cfContainer~0)\n"
 				+ " ++ cfContainer~1: of 'b0' 〔probands/FlowgraphMethods/CfContainer.n4js.xt〕(cfContainer~1)\n"
@@ -86,6 +99,8 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				"Passed: allEdges~0: from 'b0' 〔probands/FlowgraphMethods/AllEdges.n4js.xt〕");
 		assertResult("(allEdges~1)",
 				"Failed: allEdges~1: from 'b0' 〔probands/FlowgraphMethods/AllEdges.n4js.xt〕. expected:<[wrong expectation]> but was:<[B --> new B(), b0 --> b0.methodB, b0 --> b0.methodB, b0 : B = new B() --> var b0 : B = new B();, b0.methodB --> b0.methodB(), b0.methodB --> b0.methodB(), b0.methodB() --> b0, new B() --> b0 : B = new B(), var b0 : B = new B(); --> b0]>");
+		assertResult("(allMergeBranches~0)",
+				"Passed: allMergeBranches~0:  〔probands/FlowgraphMethods/AllMergeBranches.n4js.xt〕");
 		assertResult("(allPaths~0)", "Passed: allPaths~0: from '\"a\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
 		assertResult("(allPaths~1)", "Passed: allPaths~1: from '\"c\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
 		assertResult("(allPaths~2)",
@@ -96,6 +111,7 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				"Passed: allPaths~4: from '\"d\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
 		assertResult("(allPaths~5)",
 				"Failed: allPaths~5: from '\"d\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕. expected:<[wrong expectation]> but was:<[\"a\" -> \"b\" -> \"c\" -> \"d\", \"a\" -> \"b\" -> \"d\"]>");
+		assertResult("(astOrder~0)", "Passed: astOrder~0: of '+' 〔probands/FlowgraphMethods/AstOrder.n4js.xt〕");
 		assertResult("(cfContainer~0)",
 				"Passed: cfContainer~0: of 'b0' 〔probands/FlowgraphMethods/CfContainer.n4js.xt〕");
 		assertResult("(cfContainer~1)",

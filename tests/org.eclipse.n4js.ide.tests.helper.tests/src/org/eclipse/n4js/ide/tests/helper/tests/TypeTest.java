@@ -10,10 +10,16 @@
  */
 package org.eclipse.n4js.ide.tests.helper.tests;
 
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Test for test method 'type'
+ * Test for test methods:
+ * <ul>
+ * <li/>{@link XtIdeTest#type(MethodData)}
+ * <li/>{@link XtIdeTest#typeArgs(MethodData)}
+ * </ul>
  */
 public class TypeTest extends AbstractXtParentRunnerTest {
 

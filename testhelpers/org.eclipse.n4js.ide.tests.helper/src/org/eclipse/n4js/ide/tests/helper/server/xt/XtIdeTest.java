@@ -189,38 +189,38 @@ public class XtIdeTest extends AbstractIdeTest {
 			typeArgs(testMethodData);
 			break;
 		// flow graph test methods
+		case "allBranches":
+			allBranches(testMethodData);
+			break;
+		case "allEdges":
+			allEdges(testMethodData);
+			break;
+		case "allMergeBranches":
+			allMergeBranches(testMethodData);
+			break;
+		case "allPaths":
+			allPaths(testMethodData);
+			break;
 		case "astOrder":
 			astOrder(testMethodData);
+			break;
+		case "cfContainer":
+			cfContainer(testMethodData);
+			break;
+		case "commonPreds":
+			commonPreds(testMethodData);
+			break;
+		case "instanceofguard":
+			instanceofguard(testMethodData);
+			break;
+		case "path":
+			path(testMethodData);
 			break;
 		case "preds":
 			preds(testMethodData);
 			break;
 		case "succs":
 			succs(testMethodData);
-			break;
-		case "path":
-			path(testMethodData);
-			break;
-		case "allMergeBranches":
-			allMergeBranches(testMethodData);
-			break;
-		case "allBranches":
-			allBranches(testMethodData);
-			break;
-		case "allPaths":
-			allPaths(testMethodData);
-			break;
-		case "allEdges":
-			allEdges(testMethodData);
-			break;
-		case "commonPreds":
-			commonPreds(testMethodData);
-			break;
-		case "cfContainer":
-			cfContainer(testMethodData);
-			break;
-		case "instanceofguard":
-			instanceofguard(testMethodData);
 			break;
 		// unsupported test methods
 		case "migration":
@@ -456,6 +456,58 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
+	 * specified, the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@Xpect
+	public void allBranches(MethodData data) {
+		Match match = PATTERN_ALLBRANCHES.match(data, eobjProvider);
+		String direction = match.getText("direction");
+		IEObjectCoveringRegion ocrReference = match.ocrReference;
+		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
+		List<String> branchStrings = xtFlowgraphs.allBranches(ocrFrom, direction, ocrReference);
+		assertEqualIterables(data.expectation, branchStrings);
+	}
+
+	/** This xpect method can evaluate all edges of the containing function. */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
+	@Xpect
+	public void allEdges(MethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allEdges", "from");
+		List<String> pathStrings = xtFlowgraphs.allEdges(ocr);
+		assertEqualIterables(data.expectation, pathStrings);
+	}
+
+	/**
+	 * This xpect method can evaluate all branches that are merged at the given node name.
+	 *
+	 * Note: Each 'allMergeBranch' test needs to have its own xt file.
+	 */
+	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
+	@Xpect
+	public void allMergeBranches(MethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allMergeBranches", null);
+		List<String> edgeStrings = xtFlowgraphs.allMergeBranches(ocr);
+		assertEqualIterables(data.expectation, edgeStrings);
+	}
+
+	/**
+	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
+	 * the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@Xpect
+	public void allPaths(MethodData data) {
+		Match match = PATTERN_ALLPATHS.match(data, eobjProvider);
+		String direction = match.getText("direction");
+		IEObjectCoveringRegion ocrReference = match.ocrReference;
+		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
+		List<String> pathStrings = xtFlowgraphs.allPaths(ocrFrom, direction, ocrReference);
+		assertEqualIterables(data.expectation, pathStrings);
+	}
+
+	/**
 	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
 	 * specifying the edge type.
 	 * <p>
@@ -467,6 +519,56 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "astOrder", "of");
 		List<String> astElements = xtFlowgraphs.astOrder(ocr);
 		assertEqualIterables(data.expectation, astElements);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void cfContainer(MethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "cfContainer", "of");
+		String containerStr = xtFlowgraphs.cfContainer(ocr);
+		assertEquals(data.expectation, containerStr);
+	}
+
+	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
+	@ParameterParser(syntax = "'of' arg1=OFFSET 'and' arg2=OFFSET")
+	@Xpect
+	public void commonPreds(MethodData data) {
+		Match match = PATTERN_COMMONPREDS.match(data, eobjProvider);
+		IEObjectCoveringRegion ocrA = match.getEObjectWithOffset("of");
+		IEObjectCoveringRegion ocrB = match.getEObjectWithOffset("and");
+		List<String> commonPredStrs = xtFlowgraphs.commonPreds(ocrA, ocrB);
+		assertEqualIterables(data.expectation, commonPredStrs);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void instanceofguard(MethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "instanceofguard", "of");
+		List<String> guardStrs = xtFlowgraphs.instanceofguard(ocr);
+		assertEqualIterables(data.expectation, guardStrs);
+	}
+
+	/**
+	 * This xpect method can evaluate if the tested element is a transitive predecessor of the given element. either
+	 * 'to' or 'notTo' is mandatory
+	 */
+	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('via' arg3=OFFSET)? ('notVia' arg4=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg5=OFFSET)?")
+	@Xpect
+	public void path(MethodData data) {
+		Match match = PATTERN_PATH.match(data, eobjProvider);
+		IEObjectCoveringRegion ocrReference = match.ocrReference;
+		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
+		IEObjectCoveringRegion ocrTo = match.getEObjectWithOffset("to");
+		IEObjectCoveringRegion ocrNotTo = match.getEObjectWithOffset("notTo");
+		IEObjectCoveringRegion ocrVia = match.getEObjectWithOffset("via");
+		IEObjectCoveringRegion ocrNotVia = match.getEObjectWithOffset("notVia");
+
+		assertTrue("Either 'to' or 'notTo' must be defined.", ocrTo != null || ocrNotTo != null);
+
+		// No test assertions here: fails internally iff test fails
+		xtFlowgraphs.path(ocrFrom, ocrTo, ocrNotTo, ocrVia, ocrNotVia, ocrReference);
 	}
 
 	/**
@@ -499,106 +601,6 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocrAt = match.getEObjectWithOffset("at");
 		List<String> succTexts = xtFlowgraphs.succs(type, ocrAt);
 		assertEqualIterables(data.expectation, succTexts);
-	}
-
-	/**
-	 * This xpect method can evaluate if the tested element is a transitive predecessor of the given element. either
-	 * 'to' or 'notTo' is mandatory
-	 */
-	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('via' arg3=OFFSET)? ('notVia' arg4=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg5=OFFSET)?")
-	@Xpect
-	public void path(MethodData data) {
-		Match match = PATTERN_PATH.match(data, eobjProvider);
-		IEObjectCoveringRegion ocrReference = match.ocrReference;
-		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
-		IEObjectCoveringRegion ocrTo = match.getEObjectWithOffset("to");
-		IEObjectCoveringRegion ocrNotTo = match.getEObjectWithOffset("notTo");
-		IEObjectCoveringRegion ocrVia = match.getEObjectWithOffset("via");
-		IEObjectCoveringRegion ocrNotVia = match.getEObjectWithOffset("notVia");
-
-		assertTrue("Either 'to' or 'notTo' must be defined.", ocrTo != null || ocrNotTo != null);
-
-		// No test assertions here: fails internally iff test fails
-		xtFlowgraphs.path(ocrFrom, ocrTo, ocrNotTo, ocrVia, ocrNotVia, ocrReference);
-	}
-
-	/**
-	 * This xpect method can evaluate all branches that are merged at the given node name.
-	 */
-	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
-	@Xpect
-	public void allMergeBranches(MethodData data) {
-		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allMergeBranches", null);
-		List<String> edgeStrings = xtFlowgraphs.allMergeBranches(ocr);
-		assertEqualIterables(data.expectation, edgeStrings);
-	}
-
-	/**
-	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
-	 * specified, the first code element of the containing function.
-	 */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
-	@Xpect
-	public void allBranches(MethodData data) {
-		Match match = PATTERN_ALLBRANCHES.match(data, eobjProvider);
-		String direction = match.getText("direction");
-		IEObjectCoveringRegion ocrReference = match.ocrReference;
-		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
-		List<String> branchStrings = xtFlowgraphs.allBranches(ocrFrom, direction, ocrReference);
-		assertEqualIterables(data.expectation, branchStrings);
-	}
-
-	/**
-	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
-	 * the first code element of the containing function.
-	 */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
-	@Xpect
-	public void allPaths(MethodData data) {
-		Match match = PATTERN_ALLPATHS.match(data, eobjProvider);
-		String direction = match.getText("direction");
-		IEObjectCoveringRegion ocrReference = match.ocrReference;
-		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
-		List<String> pathStrings = xtFlowgraphs.allPaths(ocrFrom, direction, ocrReference);
-		assertEqualIterables(data.expectation, pathStrings);
-	}
-
-	/** This xpect method can evaluate all edges of the containing function. */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
-	@Xpect
-	public void allEdges(MethodData data) {
-		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allEdges", "from");
-		List<String> pathStrings = xtFlowgraphs.allEdges(ocr);
-		assertEqualIterables(data.expectation, pathStrings);
-	}
-
-	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
-	@ParameterParser(syntax = "'of' arg1=OFFSET 'and' arg2=OFFSET")
-	@Xpect
-	public void commonPreds(MethodData data) {
-		Match match = PATTERN_COMMONPREDS.match(data, eobjProvider);
-		IEObjectCoveringRegion ocrA = match.getEObjectWithOffset("of");
-		IEObjectCoveringRegion ocrB = match.getEObjectWithOffset("and");
-		List<String> commonPredStrs = xtFlowgraphs.commonPreds(ocrA, ocrB);
-		assertEqualIterables(data.expectation, commonPredStrs);
-	}
-
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
-	public void cfContainer(MethodData data) {
-		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "cfContainer", "of");
-		String containerStr = xtFlowgraphs.cfContainer(ocr);
-		assertEquals(data.expectation, containerStr);
-	}
-
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
-	public void instanceofguard(MethodData data) {
-		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "instanceofguard", "of");
-		List<String> guardStrs = xtFlowgraphs.instanceofguard(ocr);
-		assertEqualIterables(data.expectation, guardStrs);
 	}
 
 	private void assertEqualIterables(Iterable<?> i1, Iterable<?> i2) {

@@ -210,7 +210,6 @@ public class XtMethodsFlowgraphs {
 	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
 	@Xpect
 	public List<String> allMergeBranches(IEObjectCoveringRegion referenceOffset) {
-
 		N4JSFlowAnalyserDataRecorder.setEnabled(true);
 		GraphVisitor dfv = new DummyForwardVisitor();
 		GraphVisitor dbv = new DummyBackwardVisitor();

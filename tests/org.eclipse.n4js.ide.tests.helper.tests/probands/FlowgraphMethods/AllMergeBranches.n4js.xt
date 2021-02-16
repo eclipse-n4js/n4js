@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+
+
+
+/**
+ * Note: Tests of kind 'allMergeBranches' need to have single files for each test.
+ */
+
+
+
+
+/* XPECT allMergeBranches ---
+	B0: [if (1) 2; else 3;](conditionFork) -IfFalse-> [if (1) 2; else 3;](else), 
+	B0: [if (1) 2; else 3;](conditionFork) -IfTrue-> [if (1) 2; else 3;](then),
+	F1: [2](entryExit) -> [if (1) 2; else 3;](exit),
+	F1: [3](entryExit) -> [if (1) 2; else 3;](exit) 
+--- */
+function IfStatement() {
+	if (1)
+		2;
+	else
+		3;
+}
