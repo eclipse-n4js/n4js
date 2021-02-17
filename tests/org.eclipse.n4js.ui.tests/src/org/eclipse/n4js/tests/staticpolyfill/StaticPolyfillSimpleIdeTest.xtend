@@ -19,7 +19,7 @@ import static org.junit.Assert.*
 /**
  */
 // converted from org.eclipse.n4js.tests.staticpolyfill.SingleProjectPluginUITest
-class StaticPolyfillSimpleIdeTest extends AbstractStaticPolyfillBuilderTest {
+class StaticPolyfillSimpleIdeTest extends AbstractStaticPolyfillBuilderIdeTest {
 
 	@Test
 	def void testStaticPolyfill_filling_updates_filled_module() throws Exception {

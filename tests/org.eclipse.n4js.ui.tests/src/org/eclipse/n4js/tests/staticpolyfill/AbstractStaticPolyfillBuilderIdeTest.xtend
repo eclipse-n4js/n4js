@@ -19,7 +19,7 @@ import org.junit.Before
 
 /**
  */
-public abstract class AbstractStaticPolyfillBuilderTest extends ConvertedIdeTest {
+public abstract class AbstractStaticPolyfillBuilderIdeTest extends ConvertedIdeTest {
 
 	protected FileURI src
 	protected FileURI src2

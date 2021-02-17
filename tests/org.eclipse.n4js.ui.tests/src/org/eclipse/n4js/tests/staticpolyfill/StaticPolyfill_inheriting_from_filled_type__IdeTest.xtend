@@ -20,7 +20,7 @@ import static org.junit.Assert.*
  * Testing more complex static polyfill situations, which are not reproducible with xpect.
  */
 // converted from StaticPolyfill_inheriting_from_filled_type__PluginTest
-class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStaticPolyfillBuilderTest {
+class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStaticPolyfillBuilderIdeTest {
 
 	@Test
 	def void testStaticPolyfill_filling_inherits() throws Exception {
