@@ -36,7 +36,7 @@ import com.google.common.collect.Multimap;
  */
 public abstract class AbstractXtParentRunnerTest {
 
-	// TODO: Reconsider this implementation due to runtime warnings regarding forbidden access
+	// FIXME: GH-2064: Reconsider this implementation due to runtime warnings regarding forbidden access
 	static class DynamicXtFolder implements XtFolder {
 		final String value;
 
