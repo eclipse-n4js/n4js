@@ -14,7 +14,10 @@ import com.google.common.base.StandardSystemProperty
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.N4JSParseHelper
+import org.eclipse.n4js.N4JSTestHelper
+import org.eclipse.n4js.N4JSValidationTestHelper
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
@@ -39,12 +42,15 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.Severity
-import org.eclipse.xtext.testing.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.validation.Issue
+import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
@@ -53,14 +59,16 @@ import static org.junit.Assert.*
  * Base class for type system tests (with xsemantics)
  */
 @Log
+@RunWith(XtextRunner)
+@InjectWith(N4JSInjectorProvider)
 abstract class AbstractTypesystemTest {
 
-	@Inject extension ValidationTestHelper
+	@Inject protected extension N4JSTestHelper
+	@Inject protected extension N4JSParseHelper
+	@Inject protected extension N4JSValidationTestHelper
 
 	@Inject protected N4JSTypeSystem ts;
-
-	@Inject
-	extension N4JSParseHelper
+	@Inject protected TypeSystemHelper tsh;
 
 	def Script createScript(JavaScriptVariant variant, String src) {
 		return src.parse(variant)

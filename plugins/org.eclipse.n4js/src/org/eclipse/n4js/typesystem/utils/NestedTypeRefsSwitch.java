@@ -381,6 +381,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 			result.getFpars().addAll(resultFpars); // no need to copy; all fpars were newly created above!
 
 			TypeUtils.copyTypeModifiers(result, F);
+			result.setOriginalAliasTypeRef(TypeUtils.copy(F.getOriginalAliasTypeRef()));
 
 			return result;
 		}

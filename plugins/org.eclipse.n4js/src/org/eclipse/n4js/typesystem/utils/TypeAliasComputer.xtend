@@ -20,6 +20,8 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.RecursionGuard
 
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+
 /**
  * Type system helper strategy for dealing with {@link TypeAlias type aliases}.
  */
@@ -105,7 +107,23 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 		}
 
 		override protected caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
-			return tac.resolveTypeAliasFlat(G, typeRef);
+			var TypeRef result = typeRef;
+			if (result.isAliasUnresolved) {
+				val tAlias = typeRef.declaredType as TypeAlias; // we know it's a TypeAlias, because #isAliasUnresolved() returned true
+				result = tac.resolveTypeAliasFlat(G, result);
+				if (result !== typeRef
+					&& !(result instanceof ParameterizedTypeRef)) {
+					// the aliased type of 'tAlias' is a union, function type expression, etc.
+					// --> need to further process any nested type references (as this is not done by #resolveTypeAliasFlat())
+					val guardKey = GUARD_RESOLVE_TYPE_ALIASES_SWITCH -> tAlias;
+					if (G.get(guardKey) === null) {
+						val G2 = G.wrap;
+						G2.put(guardKey, Boolean.TRUE);
+						result = processNested(G2, result);
+					}
+				}
+			}
+			return result;
 		}
 	}
 }

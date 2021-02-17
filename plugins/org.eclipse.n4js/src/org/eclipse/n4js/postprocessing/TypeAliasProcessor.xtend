@@ -14,11 +14,12 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
-import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
@@ -30,35 +31,37 @@ import org.eclipse.n4js.utils.EcoreUtilN4
  * of {@link TypeRefProcessor}.
  */
 @Singleton
-class TypeAliasProcessor extends AbstractProcessor {
+package class TypeAliasProcessor extends AbstractProcessor {
 
 	@Inject
 	private TypeSystemHelper tsh;
 
-	def void handleTypeAlias(RuleEnvironment G, EObject obj, ASTMetaInfoCache cache) {
+	def void handleTypeAlias(RuleEnvironment G, EObject astNode, ASTMetaInfoCache cache) {
 		// Note: it would be great if we could resolve the declaredTypeRef of TypedElements
 		// here (i.e. if 'obj' is a TypedElement); however, those type references are AST nodes,
 		// so this would mean changing the AST, which isn't allowed.
 
-		val defType = switch(obj) {
+		val defType = switch(astNode) {
 			TypeDefiningElement:
-				obj.definedType
+				astNode.definedType
 			StructuralTypeRef:
-				obj.structuralType
+				astNode.structuralType
 			FunctionTypeExpression:
-				obj.declaredType
+				astNode.declaredType
+			ExportedVariableDeclaration:
+				astNode.definedVariable
 		};
 		if (defType !== null) {
-			resolveAliasInType(G, defType);
+			resolveAliasInTypeModelElement(G, defType);
 		}
 	}
 
-	def private void resolveAliasInType(RuleEnvironment G, Type type) {
-		if (type instanceof TypeAlias) {
+	def private void resolveAliasInTypeModelElement(RuleEnvironment G, IdentifiableElement elem) {
+		if (elem instanceof TypeAlias) {
 			return; // do not resolve the 'actualTypeRef' property in type alias itself
 		}
 		val allNestedTypeArgs = newArrayList; // create list up-front to not confuse tree iterator when replacing nodes!
-		val iter = type.eAllContents;
+		val iter = elem.eAllContents;
 		while (iter.hasNext) {
 			val obj = iter.next;
 			if (obj instanceof TypeArgument) {

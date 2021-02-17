@@ -27,7 +27,8 @@ import org.eclipse.n4js.utils.EcoreUtilN4
  * are:
  * <ul>
  * <li>{@link TypeRef#isAliasUnresolved() unresolved type aliases} must be converted to
- * {@link TypeRef#isAliasResolved() resolved type aliases}.
+ * {@link TypeRef#isAliasResolved() resolved type aliases} (note: type aliases in the TModule are not handled
+ * here but in {@link TypeAliasProcessor}).
  * </ul>
  */
 package class TypeRefProcessor extends AbstractProcessor {
