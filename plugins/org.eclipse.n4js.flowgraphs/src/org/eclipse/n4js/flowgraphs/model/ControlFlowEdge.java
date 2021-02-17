@@ -66,7 +66,7 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	@Override
 	public String toString() {
 		String s = "";
-		s += start.getExtendedString();
+		s += start.getExtendedString() + " ";
 		if (cfType != ControlFlowType.Successor) {
 			s += "-" + cfType.name();
 		}

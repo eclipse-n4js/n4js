@@ -26,9 +26,10 @@ import java.util.stream.Collectors;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
+import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -55,6 +56,8 @@ public class TestWorkspaceManager {
 	static final public String TEST_DATA_FOLDER = "/test-workspace";
 	/** Vendor of the created test project */
 	static final public String VENDOR = "VENDOR";
+	/** Vendor of the created test project */
+	static final public String VENDOR_NAME = VENDOR + "_name";
 	/** Default name of the source folder */
 	static final public String DEFAULT_SOURCE_FOLDER = "src";
 	/** Default extension of test modules */
@@ -101,7 +104,7 @@ public class TestWorkspaceManager {
 	/** Name of n4js library 'n4js-runtime' */
 	static final public String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
 	/** Default project object for 'n4js-runtime' */
-	static final public Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME, VENDOR, VENDOR + "_name",
+	static final public Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME, VENDOR, VENDOR_NAME,
 			ProjectType.RUNTIME_ENVIRONMENT);
 
 	/**
@@ -141,11 +144,14 @@ public class TestWorkspaceManager {
 	public NameAndExtension getN4JSNameAndExtension(String fileName) {
 		String name = fileName;
 		String extension = null;
-		if (fileName != null && fileName.contains(".")) {
-			String[] split = fileName.split("\\.");
-			extension = split[split.length - 1];
-			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
-				name = fileName.substring(0, fileName.length() - extension.length() - 1);
+		if (fileName != null) {
+			int idxSlash = fileName.lastIndexOf("/");
+			int idxDot = fileName.indexOf(".", idxSlash);
+			if (idxDot > 0) {
+				extension = fileName.substring(idxDot + 1);
+				if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
+					name = fileName.substring(0, idxDot);
+				}
 			}
 		}
 		return new NameAndExtension(name, extension);
@@ -238,6 +244,7 @@ public class TestWorkspaceManager {
 		if (Strings.isNullOrEmpty(moduleName)) {
 			return DEFAULT_MODULE_NAME;
 		}
+		moduleName = moduleName.startsWith("./") ? moduleName.substring(2) : moduleName;
 		return moduleName;
 	}
 
@@ -269,6 +276,7 @@ public class TestWorkspaceManager {
 		// standard case for modules ('moduleName' seems to denote the name of a module):
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
+
 		try {
 			List<Path> allMatches = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
@@ -352,21 +360,35 @@ public class TestWorkspaceManager {
 	}
 
 	private Project createTestOnDisk(Path destination, Map<String, Map<String, String>> projectsModulesContents) {
-
-		if (createdProject != null) {
-			throw new IllegalStateException("test was already created on disk");
-		}
-
+		final Project project;
 		if (projectsModulesContents.size() == 1) {
 			Entry<String, Map<String, String>> singleProject = projectsModulesContents.entrySet().iterator().next();
 			String projectName = singleProject.getKey();
 			Map<String, String> modulesContents = singleProject.getValue();
-			createdProject = createSimpleProject(projectName, modulesContents, HashMultimap.create(),
-					ProjectKind.TopLevel);
+			project = createSimpleProject(projectName, modulesContents, HashMultimap.create(), ProjectKind.TopLevel);
 		} else {
-			createdProject = createYarnProject(projectsModulesContents);
+			project = createYarnProject(projectsModulesContents);
 		}
 
+		Workspace workspace = new Workspace();
+		workspace.addProject(project);
+		createTestOnDisk(destination, workspace);
+
+		return project;
+	}
+
+	/** Creates the given project in the default root folder */
+	public Project createTestOnDisk(Workspace workspace) {
+		return createTestOnDisk(getRoot().toPath(), workspace);
+	}
+
+	/** Creates the given project in the given root folder */
+	public Project createTestOnDisk(Path destination, Workspace workspace) {
+		if (createdProject != null) {
+			throw new IllegalStateException("test was already created on disk");
+		}
+
+		createdProject = workspace.getProjects().get(0); // TODO
 		destination.toFile().mkdirs();
 		createdProject.create(destination);
 
@@ -393,9 +415,9 @@ public class TestWorkspaceManager {
 				? ProjectType.RUNTIME_ENVIRONMENT
 				: projectType;
 
-		Project project = new Project(projectName, VENDOR, VENDOR + "_name", prjType);
+		Project project = new Project(projectName, VENDOR, VENDOR_NAME, prjType);
 		String customSourceFolderName = modulesContents.get(CFG_SOURCE_FOLDER);
-		SourceFolder sourceFolder = project
+		Folder sourceFolder = project
 				.createSourceFolder(customSourceFolderName != null ? customSourceFolderName : DEFAULT_SOURCE_FOLDER);
 
 		for (String moduleName : modulesContents.keySet()) {
@@ -436,7 +458,7 @@ public class TestWorkspaceManager {
 						project.addNodeModuleProject(nmProject);
 						project.addProjectDependency(nmProject.getName());
 					}
-					SourceFolder nmSourceFolder = nmProject.getSourceFolders().iterator().next();
+					Folder nmSourceFolder = nmProject.getSourceFolders().iterator().next();
 					createAndAddModule(contents, nmModuleName, nmSourceFolder);
 				}
 
@@ -445,7 +467,7 @@ public class TestWorkspaceManager {
 					throw new IllegalArgumentException("unknown reserved string: " + moduleName);
 				}
 
-				SourceFolder moduleSpecificSourceFolder = sourceFolder;
+				Folder moduleSpecificSourceFolder = sourceFolder;
 				if (moduleName.startsWith("/")) {
 					// use first segment as source folder
 					int endOfFirstSegment = moduleName.indexOf("/", 1);
@@ -473,7 +495,7 @@ public class TestWorkspaceManager {
 		return project;
 	}
 
-	private void createAndAddModule(String contents, String moduleName, SourceFolder nmSourceFolder) {
+	private void createAndAddModule(String contents, String moduleName, Folder nmSourceFolder) {
 		NameAndExtension nae = getN4JSNameAndExtension(moduleName);
 		Module module = nae.extension == null ? new Module(moduleName) : new Module(nae.name, nae.extension);
 		module.setContents(contents);
@@ -481,7 +503,7 @@ public class TestWorkspaceManager {
 	}
 
 	private Project createYarnProject(Map<String, Map<String, String>> projectsModulesContents) {
-		YarnWorkspaceProject yarnProject = new YarnWorkspaceProject(YARN_TEST_PROJECT, VENDOR, VENDOR + "_name");
+		YarnWorkspaceProject yarnProject = new YarnWorkspaceProject(YARN_TEST_PROJECT, VENDOR, VENDOR_NAME);
 		Multimap<String, String> dependencies = HashMultimap.create();
 		for (String projectNameWithSelector : projectsModulesContents.keySet()) {
 			Map<String, String> moduleContents = projectsModulesContents.get(projectNameWithSelector);

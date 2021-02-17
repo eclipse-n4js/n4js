@@ -17,13 +17,13 @@ import org.eclipse.n4js.n4idl.migrations.SwitchCondition
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion
 import org.eclipse.xpect.XpectImport
 import org.eclipse.xpect.expectation.IStringExpectation
 import org.eclipse.xpect.expectation.StringExpectation
 import org.eclipse.xpect.parameter.ParameterParser
 import org.eclipse.xpect.runner.Xpect
 import org.eclipse.n4js.n4idl.migrations.MigrationSwitchComputer.UnhandledTypeRefException
+import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion
 
 /**
  * Provides X!PECT methods for testing the computation of {@link SwitchCondition}s 

@@ -58,8 +58,11 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.ResourceChange;
@@ -69,6 +72,7 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
+import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
@@ -1151,7 +1155,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		if (!uncheckedModulesWithIssues.isEmpty()) {
 			Multimap<FileURI, String> issuesPerUncheckedModule = LinkedHashMultimap.create();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
-				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
+				List<String> currModuleIssuesAsList = getIssueStringsInFile(currModuleURI, withIgnoredIssues);
 				issuesPerUncheckedModule.putAll(currModuleURI, currModuleIssuesAsList);
 			}
 			if (!issuesPerUncheckedModule.isEmpty()) { // empty if all remaining issues are ignored
@@ -1197,7 +1201,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			FileURI fileURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
 
-			List<String> actualIssues = getIssuesInFile(fileURI, withIgnoredIssues);
+			List<String> actualIssues = getIssueStringsInFile(fileURI, withIgnoredIssues);
 			Set<String> actualIssuesAsSet = IterableExtensions.toSet(
 					Iterables.transform(actualIssues, String::trim));
 			Set<String> expectedIssuesAsSet = IterableExtensions.toSet(
@@ -1227,12 +1231,22 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * <code>true</code>, even issues with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
 	 * included in the returned list.
 	 */
-	protected List<String> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
-		Stream<Diagnostic> issuesInFile = languageClient.getIssues().get(fileURI).stream();
+	protected List<String> getIssueStringsInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = getIssuesInFile(fileURI, withIgnoredIssues).stream();
+		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns the diagnostics in the file denoted by the given URI. If <code>withIgnoredIssues</code> is set to
+	 * <code>true</code>, even diagnostics with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
+	 * included in the returned list.
+	 */
+	protected List<Diagnostic> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = languageClient.getIssues(fileURI).stream();
 		if (!withIgnoredIssues) {
 			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
 		}
-		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
+		return issuesInFile.collect(Collectors.toList());
 	}
 
 	/**
@@ -1349,8 +1363,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** @see IdeTestLanguageClient#getIssues(FileURI) */
-	protected Collection<Diagnostic> getIssues(FileURI uri) {
-		return languageClient.getIssues(uri);
+	protected Collection<Diagnostic> getIssuesInFile(FileURI uri) {
+		return getIssuesInFile(uri, false);
 	}
 
 	/** */
@@ -1399,5 +1413,18 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).lastModifiedTime();
 		assertEquals(millis, fileTime.toMillis());
+	}
+
+	/** Calls endpoint {@code textDocument/definitions} of LSP server */
+	protected CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> callDefinition(
+			String completeFileUri, int line, int column) {
+
+		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
+		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
+		textDocumentPositionParams.setPosition(new Position(line, column));
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
+				.definition(textDocumentPositionParams);
+
+		return definitionsFuture;
 	}
 }
