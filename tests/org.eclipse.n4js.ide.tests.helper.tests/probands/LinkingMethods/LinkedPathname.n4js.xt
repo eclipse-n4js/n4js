@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.tests.XtTestSetupTestMockup END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup END_SETUP */
 
 
 class S { x : string = "S.x"; }
