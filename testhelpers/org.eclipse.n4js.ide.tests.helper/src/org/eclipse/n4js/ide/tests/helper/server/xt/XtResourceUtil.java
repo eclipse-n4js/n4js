@@ -17,10 +17,11 @@ import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.XtextResource;
 
 /**
- *
+ * Utility for finding EObjects
  */
 public class XtResourceUtil {
 
+	/** @return an {@link EObject} of the given resource at the given offset */
 	static public EObject getEObject(XtextResource resource, int offset, int length) {
 		boolean haveRegion = length > 0;
 		int endOffset = offset + length;

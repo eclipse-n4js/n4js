@@ -178,7 +178,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Catch outputs on console to an internal buffer */
 	@BeforeClass
 	static final public void redirectPrintStreams() {
-		// SYSTEM_OUT_REDIRECTER.set(false);
+		SYSTEM_OUT_REDIRECTER.set(false);
 	}
 
 	/** Reset redirection */

@@ -21,17 +21,21 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.utils.Strings;
 
 /**
- *
+ * This class is used to define xpect method grammars
  */
 public class XtMethodPattern {
 
+	/**
+	 * Use the {@link PatternBuilder} to create an xpect method grammar
+	 */
 	static public class PatternBuilder {
 		final static String WHITESPACE = "\\s+";
 		String regex = "";
 		Map<String, Boolean> availableTextNames = new HashMap<>();
 		Map<String, Boolean> availableObjectNames = new HashMap<>();
 
-		PatternBuilder keyword(String keywordName) {
+		/** Adds a keyword to the pattern */
+		public PatternBuilder keyword(String keywordName) {
 			if (!regex.isBlank()) {
 				regex += WHITESPACE;
 			}
@@ -39,27 +43,31 @@ public class XtMethodPattern {
 			return this;
 		}
 
-		PatternBuilder textOpt(String argName, Object... validValues) {
+		/** Adds an optional text argument to the pattern */
+		public PatternBuilder textOpt(String argName, Object... validValues) {
 			arg(argName, false, true, validValues);
 			return this;
 		}
 
-		PatternBuilder textMan(String argName, Object... validValues) {
+		/** Adds a mandatory text argument to the pattern */
+		public PatternBuilder textMan(String argName, Object... validValues) {
 			arg(argName, false, false, validValues);
 			return this;
 		}
 
-		PatternBuilder objOpt(String argName, Object... validValues) {
+		/** Adds an optional object argument to the pattern */
+		public PatternBuilder objOpt(String argName, Object... validValues) {
 			arg(argName, true, true, validValues);
 			return this;
 		}
 
-		PatternBuilder objMan(String argName, Object... validValues) {
+		/** Adds a mandatory object argument to the pattern */
+		public PatternBuilder objMan(String argName, Object... validValues) {
 			arg(argName, true, false, validValues);
 			return this;
 		}
 
-		PatternBuilder arg(String argName, boolean isObject, boolean isOptional, Object... validValues) {
+		private PatternBuilder arg(String argName, boolean isObject, boolean isOptional, Object... validValues) {
 			String values = "[^']+";
 			if (validValues != null && validValues.length > 0) {
 				values = Strings.join("|", validValues);
@@ -80,7 +88,8 @@ public class XtMethodPattern {
 			return this;
 		}
 
-		XtMethodPattern build() {
+		/** @return a {@link XtMethodPattern} defined by this builder */
+		public XtMethodPattern build() {
 			Pattern pattern = Pattern.compile(regex);
 			return new XtMethodPattern(pattern, this);
 		}
@@ -91,12 +100,15 @@ public class XtMethodPattern {
 		}
 	}
 
-	static class Match {
+	/**
+	 * Data class that represents a match of a {@link XtMethodPattern} on a given input string
+	 */
+	static public class Match {
 		final Map<String, String> texts;
 		final Map<String, IEObjectCoveringRegion> objectsWithOffset;
 		final IEObjectCoveringRegion ocrReference;
 
-		Match(Map<String, String> texts, Map<String, IEObjectCoveringRegion> objectsWithOffset,
+		private Match(Map<String, String> texts, Map<String, IEObjectCoveringRegion> objectsWithOffset,
 				IEObjectCoveringRegion ocrReference) {
 
 			this.texts = texts;
@@ -104,17 +116,20 @@ public class XtMethodPattern {
 			this.ocrReference = ocrReference;
 		}
 
+		/** @return the value of an text argument */
 		public String getText(String name) {
 			assertTrue("Unknown name: " + name, texts.containsKey(name));
 			return texts.get(name);
 		}
 
+		/** @return a {@link IEObjectCoveringRegion} of an object argument */
 		public IEObjectCoveringRegion getEObjectWithOffset(String name) {
 			assertTrue("Unknown name: " + name, objectsWithOffset.containsKey(name));
 			return objectsWithOffset.get(name);
 		}
 	}
 
+	/** @return a new {@link PatternBuilder} */
 	static public PatternBuilder builder() {
 		return new PatternBuilder();
 	}
@@ -123,11 +138,13 @@ public class XtMethodPattern {
 	final PatternBuilder builder;
 	Matcher matcher;
 
+	/** Constructor */
 	public XtMethodPattern(Pattern pattern, PatternBuilder builder) {
 		this.pattern = pattern;
 		this.builder = builder;
 	}
 
+	/** @return the expected match of this method pattern */
 	public Match match(MethodData methodData, XtResourceEObjectAccessor resourceHandler) {
 		String testMethod = methodData.getMethodNameWithArgs();
 		int searchFromOffset = methodData.offset;

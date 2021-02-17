@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -70,8 +71,9 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
- *
+ * Class that holds implementations for xt test methods
  */
+@SuppressWarnings("restriction")
 public class XtMethods {
 	@Inject
 	private N4JSTypeSystem ts;
@@ -85,6 +87,197 @@ public class XtMethods {
 	@Inject
 	private FindReferenceHelper findReferenceHelper;
 
+	/** Implementation for {@link XtIdeTest#accessModifier(MethodData)} */
+	static public String getAccessModifierString(EObject context) {
+		String actual = null;
+		if (context instanceof TMember) {
+			TMember tMember = (TMember) context;
+			actual = tMember.getMemberAccessModifier().getName();
+		} else {
+			FunctionDeclaration functionDeclaration = EcoreUtil2.getContainerOfType(context, FunctionDeclaration.class);
+			if (functionDeclaration != null) {
+				actual = functionDeclaration.getDefinedType().getTypeAccessModifier().getName();
+			} else {
+				VariableStatement variableStatement = EcoreUtil2.getContainerOfType(context, VariableStatement.class);
+				if (variableStatement != null) {
+					context = variableStatement.getVarDecl().get(0);
+					if (context instanceof ExportedVariableDeclaration) {
+						actual = ((ExportedVariableDeclaration) context).getDefinedVariable().getTypeAccessModifier()
+								.getName();
+					} else if (context instanceof VariableDeclaration) {
+						actual = "private";
+					}
+				} else if (context instanceof ExportDeclaration) {
+					context = ((ExportDeclaration) context).getExportedElement();
+					actual = getAccessModifierString(context);
+				} else if (context instanceof ParameterizedPropertyAccessExpression) {
+					ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) context;
+					IdentifiableElement ie = ppae.getProperty();
+					actual = getAccessModifierString(ie);
+				} else if (context instanceof ParameterizedCallExpression) {
+					ParameterizedCallExpression pce = (ParameterizedCallExpression) context;
+					Expression targetExpr = pce.getTarget();
+					actual = getAccessModifierString(targetExpr);
+				} else {
+					N4MemberDeclaration member = EcoreUtil2.getContainerOfType(context, N4MemberDeclaration.class);
+					N4TypeDeclaration type = EcoreUtil2.getContainerOfType(context, N4TypeDeclaration.class);
+					if (type == null && member == null) {
+						actual = "no element with access modifier found";
+					} else if (type != null && (member == null || EcoreUtil.isAncestor(member, type))) {
+						actual = type.getDefinedType().getTypeAccessModifier().getName();
+					} else {
+						actual = member.getDefinedTypeElement().getMemberAccessModifier().getName();
+					}
+				}
+			}
+		}
+		return actual;
+	}
+
+	/** Implementation for {@link XtIdeTest#elementKeyword(MethodData)} */
+	public String getElementKeywordString(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
+		// Get the cross-referenced element at the offset.
+		EObject crossRef = offsetHelper.resolveCrossReferencedElementAt((XtextResource) eObject.eResource(), offset);
+
+		String elementKeywordStr = keywordProvider.keyword(crossRef == null ? eObject : crossRef);
+		return elementKeywordStr;
+	}
+
+	/** Implementation for {@link XtIdeTest#findReferences(MethodData)} */
+	public List<String> getFindReferences(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
+		EObject argEObj = offsetHelper.resolveElementAt((XtextResource) eObject.eResource(), offset);
+		// If not a cross-reference element, use context instead
+		if (argEObj == null) {
+			argEObj = eObject;
+		}
+
+		EObject eObj = argEObj;
+
+		if (argEObj instanceof ParameterizedTypeRef) {
+			eObj = ((ParameterizedTypeRef) argEObj).getDeclaredType();
+		}
+
+		List<EObject> refs = findReferenceHelper.findReferences(eObj, eObject.eResource().getResourceSet());
+		ArrayList<String> result = Lists.newArrayList();
+		for (EObject ref : refs) {
+			if (ref instanceof PropertyNameOwner) {
+				ref = ((PropertyNameOwner) ref).getDeclaredName();
+			}
+
+			ICompositeNode srcNode = NodeModelUtils.getNode(ref);
+			int line = srcNode.getStartLine();
+
+			String moduleName;
+			if (ref.eResource() instanceof N4JSResource) {
+				N4JSResource n4jsResource = (N4JSResource) ref.eResource();
+				moduleName = n4jsResource.getModule().getQualifiedName();
+			} else {
+				moduleName = "(unknown resource)";
+			}
+
+			String text = NodeModelUtils.getTokenText(srcNode);
+			if (ref instanceof GenericDeclaration) {
+				text = ((GenericDeclaration) ref).getDefinedType().getName();
+			}
+
+			String resultText = moduleName + " - " + text + " - " + line;
+
+			result.add(resultText);
+		}
+
+		return result;
+	}
+
+	/** Implementation for {@link XtIdeTest#linkedFragment(MethodData)} */
+	public String getLinkedFragment(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
+		XtextResource eResource = (XtextResource) eObject.eResource();
+		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
+		if (targetObject == null) {
+			Assert.fail("Reference is null");
+		} else if (targetObject instanceof EObject) { // FIXME: GH-2064
+			URI baseUri = eObject.eResource().getURI();
+			String fragmentName = getLinkedFragment(targetObject, baseUri);
+			return fragmentName;
+		} else if (targetObject instanceof EList<?>) {
+			Assert.fail("use 'XPECT linkedFragment' (plural)");
+		}
+		return null;
+	}
+
+	/** Implementation for {@link XtIdeTest#linkedName(MethodData)} */
+	@Xpect
+	public QualifiedName getLinkedName(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
+		// Get the cross-referenced element at the offset.
+		XtextResource eResource = (XtextResource) eObject.eResource();
+		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
+		if (targetObject == null) {
+			Assert.fail("Reference is null");
+			return null; // to avoid warnings in the following
+		}
+		if (targetObject.eIsProxy()) {
+			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
+		}
+		Resource targetResource = targetObject.eResource();
+		if (targetResource instanceof TypeResource) {
+			targetResource = eObject.eResource();
+		}
+		if (!(targetResource instanceof XtextResource)) {
+			Assert.fail("Referenced EObject is not in an XtextResource.");
+		}
+		IQualifiedNameProvider provider = ((XtextResource) targetResource)
+				.getResourceServiceProvider().get(IQualifiedNameProvider.class);
+		QualifiedName name = provider.getFullyQualifiedName(targetObject);
+		return name;
+	}
+
+	/** Implementation for {@link XtIdeTest#linkedPathname(MethodData)} */
+	public String getLinkedPathname(IEObjectCoveringRegion ocr) {
+		int offset = ocr.getOffset();
+		EObject eObject = ocr.getEObject();
+		// Get the cross-referenced element at the offset.
+		XtextResource eResource = (XtextResource) eObject.eResource();
+		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
+		// EObject targetObject = (EObject) eObject.eGet(arg1.getCrossEReference());
+		if (targetObject == null) {
+			Assert.fail("Reference is null");
+			return null; // to avoid warnings in the following
+		}
+		if (targetObject.eIsProxy())
+			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
+		Resource targetResource = targetObject.eResource();
+		if (targetResource instanceof TypeResource)
+			targetResource = eObject.eResource();
+		if (!(targetResource instanceof XtextResource))
+			Assert.fail("Referenced EObject is not in an XtextResource.");
+
+		Deque<String> segments = new ArrayDeque<>();
+		do {
+			EStructuralFeature nameFeature = targetObject.eClass().getEStructuralFeature("name");
+			if (nameFeature != null) {
+				Object obj = targetObject.eGet(nameFeature);
+				if (obj instanceof String) {
+					segments.push((String) obj);
+				}
+			} else {
+				if (targetObject instanceof NamedElement) {
+					segments.push(((NamedElement) targetObject).getName());
+				}
+			}
+			targetObject = targetObject.eContainer();
+		} while (targetObject != null);
+		String pathname = Joiner.on('/').join(segments);
+		return pathname;
+	}
+
+	/** Implementation for {@link XtIdeTest#type(MethodData)} */
 	public String getTypeString(EObject eobject, boolean expectedType) {
 		final String calculatedString;
 		if (eobject instanceof LiteralOrComputedPropertyName) {
@@ -120,6 +313,7 @@ public class XtMethods {
 		return calculatedString;
 	}
 
+	/** Implementation for {@link XtIdeTest#typeArgs(MethodData)} */
 	public String getTypeArgumentsString(EObject eobject) {
 		final EObject container = eobject != null ? eobject.eContainer() : null;
 		if (eobject == null || !(container instanceof ParameterizedCallExpression
@@ -167,146 +361,6 @@ public class XtMethods {
 		return sb.toString();
 	}
 
-	public String getElementKeywordString(IEObjectCoveringRegion ocr) {
-		int offset = ocr.getOffset();
-		EObject eObject = ocr.getEObject();
-		// Get the cross-referenced element at the offset.
-		EObject crossRef = offsetHelper.resolveCrossReferencedElementAt((XtextResource) eObject.eResource(), offset);
-
-		String elementKeywordStr = keywordProvider.keyword(crossRef == null ? eObject : crossRef);
-		return elementKeywordStr;
-	}
-
-	public List<String> getFindReferences(IEObjectCoveringRegion ocr) {
-		int offset = ocr.getOffset();
-		EObject eObject = ocr.getEObject();
-		EObject argEObj = offsetHelper.resolveElementAt((XtextResource) eObject.eResource(), offset);
-		// If not a cross-reference element, use context instead
-		if (argEObj == null) {
-			argEObj = eObject;
-		}
-
-		EObject eObj = argEObj;
-
-		if (argEObj instanceof ParameterizedTypeRef) {
-			eObj = ((ParameterizedTypeRef) argEObj).getDeclaredType();
-		}
-
-		List<EObject> refs = findReferenceHelper.findReferences(eObj, eObject.eResource().getResourceSet());
-		ArrayList<String> result = Lists.newArrayList();
-		for (EObject ref : refs) {
-			if (ref instanceof PropertyNameOwner) {
-				ref = ((PropertyNameOwner) ref).getDeclaredName();
-			}
-
-			ICompositeNode srcNode = NodeModelUtils.getNode(ref);
-			int line = srcNode.getStartLine();
-
-			String moduleName;
-			if (ref.eResource() instanceof N4JSResource) {
-				N4JSResource n4jsResource = (N4JSResource) ref.eResource();
-				moduleName = n4jsResource.getModule().getQualifiedName();
-			} else {
-				moduleName = "(unknown resource)";
-			}
-
-			String text = NodeModelUtils.getTokenText(srcNode);
-			if (ref instanceof GenericDeclaration) {
-				text = ((GenericDeclaration) ref).getDefinedType().getName();
-			}
-
-			String resultText = moduleName + " - " + text + " - " + line;
-
-			result.add(resultText);
-		}
-
-		return result;
-	}
-
-	/**  */
-	@Xpect
-	public QualifiedName linkedName(IEObjectCoveringRegion ocr) {
-		int offset = ocr.getOffset();
-		EObject eObject = ocr.getEObject();
-		// Get the cross-referenced element at the offset.
-		XtextResource eResource = (XtextResource) eObject.eResource();
-		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
-		if (targetObject == null) {
-			Assert.fail("Reference is null");
-			return null; // to avoid warnings in the following
-		}
-		if (targetObject.eIsProxy()) {
-			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
-		}
-		Resource targetResource = targetObject.eResource();
-		if (targetResource instanceof TypeResource) {
-			targetResource = eObject.eResource();
-		}
-		if (!(targetResource instanceof XtextResource)) {
-			Assert.fail("Referenced EObject is not in an XtextResource.");
-		}
-		IQualifiedNameProvider provider = ((XtextResource) targetResource)
-				.getResourceServiceProvider().get(IQualifiedNameProvider.class);
-		QualifiedName name = provider.getFullyQualifiedName(targetObject);
-		return name;
-	}
-
-	/**  */
-	public String linkedPathname(IEObjectCoveringRegion ocr) {
-		int offset = ocr.getOffset();
-		EObject eObject = ocr.getEObject();
-		// Get the cross-referenced element at the offset.
-		XtextResource eResource = (XtextResource) eObject.eResource();
-		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
-		// EObject targetObject = (EObject) eObject.eGet(arg1.getCrossEReference());
-		if (targetObject == null) {
-			Assert.fail("Reference is null");
-			return null; // to avoid warnings in the following
-		}
-		if (targetObject.eIsProxy())
-			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
-		Resource targetResource = targetObject.eResource();
-		if (targetResource instanceof TypeResource)
-			targetResource = eObject.eResource();
-		if (!(targetResource instanceof XtextResource))
-			Assert.fail("Referenced EObject is not in an XtextResource.");
-
-		Deque<String> segments = new ArrayDeque<>();
-		do {
-			EStructuralFeature nameFeature = targetObject.eClass().getEStructuralFeature("name");
-			if (nameFeature != null) {
-				Object obj = targetObject.eGet(nameFeature);
-				if (obj instanceof String) {
-					segments.push((String) obj);
-				}
-			} else {
-				if (targetObject instanceof NamedElement) {
-					segments.push(((NamedElement) targetObject).getName());
-				}
-			}
-			targetObject = targetObject.eContainer();
-		} while (targetObject != null);
-		String pathname = Joiner.on('/').join(segments);
-		return pathname;
-	}
-
-	public String linkedFragment(IEObjectCoveringRegion ocr) {
-		int offset = ocr.getOffset();
-		EObject eObject = ocr.getEObject();
-		XtextResource eResource = (XtextResource) eObject.eResource();
-		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
-		if (targetObject == null) {
-			Assert.fail("Reference is null");
-		} else if (targetObject instanceof EObject) {
-			URI baseUri = eObject.eResource().getURI();
-			String fragmentName = getLinkedFragment(targetObject, baseUri);
-			return fragmentName;
-		} else if (targetObject instanceof EList<?>) {
-			Assert.fail("use 'XPECT linkedFragment' (plural)");
-		}
-		return null;
-	}
-
 	private String getLinkedFragment(EObject targetObject, URI baseUri) {
 		if (targetObject.eIsProxy())
 			Assert.fail("Reference is a Proxy: " + ((InternalEObject) targetObject).eProxyURI());
@@ -321,52 +375,6 @@ public class XtMethods {
 		if (base.equals(uri.trimFragment()))
 			return uri.fragment();
 		return uri.deresolve(base).toString();
-	}
-
-	static public String getAccessModifierString(EObject context) {
-		String actual = null;
-		if (context instanceof TMember) {
-			TMember tMember = (TMember) context;
-			actual = tMember.getMemberAccessModifier().getName();
-		} else {
-			FunctionDeclaration functionDeclaration = EcoreUtil2.getContainerOfType(context, FunctionDeclaration.class);
-			if (functionDeclaration != null) {
-				actual = functionDeclaration.getDefinedType().getTypeAccessModifier().getName();
-			} else {
-				VariableStatement variableStatement = EcoreUtil2.getContainerOfType(context, VariableStatement.class);
-				if (variableStatement != null) {
-					context = variableStatement.getVarDecl().get(0);
-					if (context instanceof ExportedVariableDeclaration) {
-						actual = ((ExportedVariableDeclaration) context).getDefinedVariable().getTypeAccessModifier()
-								.getName();
-					} else if (context instanceof VariableDeclaration) {
-						actual = "private";
-					}
-				} else if (context instanceof ExportDeclaration) {
-					context = ((ExportDeclaration) context).getExportedElement();
-					actual = getAccessModifierString(context);
-				} else if (context instanceof ParameterizedPropertyAccessExpression) {
-					ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) context;
-					IdentifiableElement ie = ppae.getProperty();
-					actual = getAccessModifierString(ie);
-				} else if (context instanceof ParameterizedCallExpression) {
-					ParameterizedCallExpression pce = (ParameterizedCallExpression) context;
-					Expression targetExpr = pce.getTarget();
-					actual = getAccessModifierString(targetExpr);
-				} else {
-					N4MemberDeclaration member = EcoreUtil2.getContainerOfType(context, N4MemberDeclaration.class);
-					N4TypeDeclaration type = EcoreUtil2.getContainerOfType(context, N4TypeDeclaration.class);
-					if (type == null && member == null) {
-						actual = "no element with access modifier found";
-					} else if (type != null && (member == null || EcoreUtil.isAncestor(member, type))) {
-						actual = type.getDefinedType().getTypeAccessModifier().getName();
-					} else {
-						actual = member.getDefinedTypeElement().getMemberAccessModifier().getName();
-					}
-				}
-			}
-		}
-		return actual;
 	}
 
 }

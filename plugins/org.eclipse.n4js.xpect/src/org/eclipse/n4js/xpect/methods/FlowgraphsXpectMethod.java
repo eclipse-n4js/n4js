@@ -44,7 +44,7 @@ public class FlowgraphsXpectMethod {
 	public void astOrder(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset) {
 
-		List<String> astElements = mh.astOrder(offset);
+		List<String> astElements = mh.getAstOrder(offset);
 		expectation.assertEquals(astElements);
 	}
 
@@ -59,7 +59,7 @@ public class FlowgraphsXpectMethod {
 	public void preds(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			String type, IEObjectCoveringRegion offset) {
 
-		List<String> predTexts = mh.preds(type, offset);
+		List<String> predTexts = mh.getPreds(type, offset);
 		expectation.assertEquals(predTexts);
 	}
 
@@ -74,7 +74,7 @@ public class FlowgraphsXpectMethod {
 	public void succs(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			String type, IEObjectCoveringRegion offset) {
 
-		List<String> succTexts = mh.succs(type, offset);
+		List<String> succTexts = mh.getSuccs(type, offset);
 		expectation.assertEquals(succTexts);
 	}
 
@@ -85,7 +85,7 @@ public class FlowgraphsXpectMethod {
 			IEObjectCoveringRegion notToOffset, IEObjectCoveringRegion viaOffset,
 			IEObjectCoveringRegion notViaOffset, IEObjectCoveringRegion referenceOffset) {
 
-		mh.path(fromOffset, toOffset, notToOffset, viaOffset, notViaOffset, referenceOffset);
+		mh.getPath(fromOffset, toOffset, notToOffset, viaOffset, notViaOffset, referenceOffset);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class FlowgraphsXpectMethod {
 	public void allMergeBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion referenceOffset) {
 
-		List<String> edgeStrings = mh.allMergeBranches(referenceOffset);
+		List<String> edgeStrings = mh.getAllMergeBranches(referenceOffset);
 		expectation.assertEquals(edgeStrings);
 	}
 
@@ -109,7 +109,7 @@ public class FlowgraphsXpectMethod {
 	public void allBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
 
-		List<String> branchStrings = mh.allBranches(offset, directionName, referenceOffset);
+		List<String> branchStrings = mh.getAllBranches(offset, directionName, referenceOffset);
 		expectation.assertEquals(branchStrings);
 	}
 
@@ -122,7 +122,7 @@ public class FlowgraphsXpectMethod {
 	public void allPaths(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
 
-		List<String> pathStrings = mh.allPaths(offset, directionName, referenceOffset);
+		List<String> pathStrings = mh.getAllPaths(offset, directionName, referenceOffset);
 		expectation.assertEquals(pathStrings);
 	}
 
@@ -132,7 +132,7 @@ public class FlowgraphsXpectMethod {
 	public void allEdges(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset) {
 
-		List<String> pathStrings = mh.allEdges(offset);
+		List<String> pathStrings = mh.getAllEdges(offset);
 		expectation.assertEquals(pathStrings);
 	}
 
@@ -142,7 +142,7 @@ public class FlowgraphsXpectMethod {
 	public void commonPreds(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion a, IEObjectCoveringRegion b) {
 
-		List<String> commonPredStrs = mh.commonPreds(a, b);
+		List<String> commonPredStrs = mh.getCommonPreds(a, b);
 		expectation.assertEquals(commonPredStrs);
 	}
 
@@ -150,7 +150,7 @@ public class FlowgraphsXpectMethod {
 	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
 	@Xpect
 	public void cfContainer(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
-		String containerStr = mh.cfContainer(offset);
+		String containerStr = mh.getCfContainer(offset);
 		expectation.assertEquals(containerStr);
 	}
 
@@ -160,7 +160,7 @@ public class FlowgraphsXpectMethod {
 	public void instanceofguard(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset) {
 
-		List<String> commonPredStrs = mh.instanceofguard(offset);
+		List<String> commonPredStrs = mh.getInstanceofguard(offset);
 		expectation.assertEquals(commonPredStrs);
 	}
 

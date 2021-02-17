@@ -46,12 +46,7 @@ public class XtMethodsIssues {
 	final Multimap<MethodData, Diagnostic> testToErrors;
 	final Multimap<MethodData, Diagnostic> testToWarnings;
 
-	int compareDiagnosticByOffset(Diagnostic i1, Diagnostic i2) {
-		return xtData.getOffset(i1.getRange().getStart()) - xtData.getOffset(i2.getRange().getStart());
-	}
-
 	XtMethodsIssues(XtFileData xtData, Collection<Diagnostic> unsortedIssues, List<MethodData> issueTests) {
-
 		this.xtData = xtData;
 		this.errors = new TreeSet<>(this::compareDiagnosticByOffset);
 		this.warnings = new TreeSet<>(this::compareDiagnosticByOffset);
@@ -91,63 +86,34 @@ public class XtMethodsIssues {
 		testToWarnings = getTestToIssues(xtData, warnings, positionToWarnings);
 	}
 
-	static private Multimap<MethodData, Diagnostic> getTestToIssues(XtFileData xtData,
-			TreeSet<Diagnostic> issues, LinkedHashMap<Integer, MethodData> positionToTest) {
-
-		Multimap<MethodData, Diagnostic> testToIssues = LinkedHashMultimap.create();
-		if (issues.isEmpty()) {
-			return testToIssues;
-		}
-
-		Diagnostic firstDiagnostic = issues.first();
-
-		Iterator<Map.Entry<Integer, MethodData>> posTestIter = positionToTest.entrySet().iterator();
-		Assert.assertTrue(
-				"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
-				posTestIter.hasNext() || issues.isEmpty());
-
-		if (posTestIter.hasNext()) {
-			Map.Entry<Integer, MethodData> currPosTest = posTestIter.next();
-			Assert.assertTrue(
-					"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
-					getOffset(xtData, firstDiagnostic) > currPosTest.getKey());
-
-			Map.Entry<Integer, MethodData> nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
-			for (Diagnostic diag : issues) {
-				while (nextPosTest != null && getOffset(xtData, diag) > nextPosTest.getKey()) {
-					currPosTest = nextPosTest;
-					nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
-				}
-				testToIssues.put(currPosTest.getValue(), diag);
-			}
-		}
-		return testToIssues;
-	}
-
-	private static int getOffset(XtFileData xtData, Diagnostic diag) {
-		return xtData.getOffset(diag.getRange().getStart());
-	}
-
-	void noerrors(MethodData data) {
+	/** Implementation for {@link XtIdeTest#noerrors(MethodData)} */
+	public void getNoerrors(MethodData data) {
 		Multimap<String, String> atToActualMessages = getAtToAcutalMessage(testToErrors, data);
 		String msg = "Expected no errors, but found: "
 				+ Strings.toString(e -> issueToString(e.getValue(), e.getKey()), atToActualMessages.entries());
 		Assert.assertTrue(msg, atToActualMessages.isEmpty());
 	}
 
-	void nowarnings(MethodData data) {
+	/** Implementation for {@link XtIdeTest#nowarnings(MethodData)} */
+	public void getNowarnings(MethodData data) {
 		Multimap<String, String> atToActualMessages = getAtToAcutalMessage(testToWarnings, data);
 		String msg = "Expected no warnings, but found: "
 				+ Strings.toString(e -> issueToString(e.getValue(), e.getKey()), atToActualMessages.entries());
 		Assert.assertTrue(msg, atToActualMessages.isEmpty());
 	}
 
-	void errors(MethodData data) {
+	/** Implementation for {@link XtIdeTest#errors(MethodData)} */
+	public void getErrors(MethodData data) {
 		issues(testToErrors, data, "error");
 	}
 
-	void warnings(MethodData data) {
+	/** Implementation for {@link XtIdeTest#warnings(MethodData)} */
+	public void getWarnings(MethodData data) {
 		issues(testToWarnings, data, "warning");
+	}
+
+	private int compareDiagnosticByOffset(Diagnostic i1, Diagnostic i2) {
+		return xtData.getOffset(i1.getRange().getStart()) - xtData.getOffset(i2.getRange().getStart());
 	}
 
 	private void issues(Multimap<MethodData, Diagnostic> testToIssues, MethodData data, String msgIssue) {
@@ -203,6 +169,43 @@ public class XtMethodsIssues {
 			atToActualMessages.put(atString, error.getMessage());
 		}
 		return atToActualMessages;
+	}
+
+	static private Multimap<MethodData, Diagnostic> getTestToIssues(XtFileData xtData,
+			TreeSet<Diagnostic> issues, LinkedHashMap<Integer, MethodData> positionToTest) {
+
+		Multimap<MethodData, Diagnostic> testToIssues = LinkedHashMultimap.create();
+		if (issues.isEmpty()) {
+			return testToIssues;
+		}
+
+		Diagnostic firstDiagnostic = issues.first();
+
+		Iterator<Map.Entry<Integer, MethodData>> posTestIter = positionToTest.entrySet().iterator();
+		Assert.assertTrue(
+				"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
+				posTestIter.hasNext() || issues.isEmpty());
+
+		if (posTestIter.hasNext()) {
+			Map.Entry<Integer, MethodData> currPosTest = posTestIter.next();
+			Assert.assertTrue(
+					"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
+					getOffset(xtData, firstDiagnostic) > currPosTest.getKey());
+
+			Map.Entry<Integer, MethodData> nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
+			for (Diagnostic diag : issues) {
+				while (nextPosTest != null && getOffset(xtData, diag) > nextPosTest.getKey()) {
+					currPosTest = nextPosTest;
+					nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
+				}
+				testToIssues.put(currPosTest.getValue(), diag);
+			}
+		}
+		return testToIssues;
+	}
+
+	private static int getOffset(XtFileData xtData, Diagnostic diag) {
+		return xtData.getOffset(diag.getRange().getStart());
 	}
 
 	static private String issueToString(XtFileData xtData, Diagnostic diag) {

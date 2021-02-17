@@ -250,7 +250,7 @@ public class Project {
 					«IF !folders.nullOrEmpty
 				»,"sources": {
 								"source": [
-									«FOR sourceFolder : folders SEPARATOR ','»
+									«FOR sourceFolder : folders.filter[isSourceFolder] SEPARATOR ','»
 										"«sourceFolder.name»"
 									«ENDFOR»
 								]

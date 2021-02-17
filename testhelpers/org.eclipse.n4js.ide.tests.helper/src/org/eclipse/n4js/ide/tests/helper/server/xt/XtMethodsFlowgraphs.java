@@ -36,10 +36,9 @@ import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.xpect.parameter.ParameterParser;
-import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -54,15 +53,71 @@ public class XtMethodsFlowgraphs {
 		return flowAnalyzer;
 	}
 
-	/**
-	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
-	 * specifying the edge type.
-	 * <p>
-	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
-	 */
-	@ParameterParser(syntax = "('of' arg2=OFFSET)?")
-	@Xpect
-	public List<String> astOrder(IEObjectCoveringRegion offset) {
+	/** Implementation for {@link XtIdeTest#allMergeBranches(MethodData)} */
+	public List<String> getAllMergeBranches(IEObjectCoveringRegion referenceOffset) {
+		N4JSFlowAnalyserDataRecorder.setEnabled(true);
+		GraphVisitor dfv = new DummyForwardVisitor();
+		GraphVisitor dbv = new DummyBackwardVisitor();
+		ControlFlowElement referenceCFE = getCFE(referenceOffset);
+		createFlowAnalyzer(referenceCFE).accept(dfv, dbv);
+		N4JSFlowAnalyserDataRecorder.setEnabled(false);
+		performBranchAnalysis(referenceOffset, null, referenceOffset);
+		List<String> edgeStrings = new LinkedList<>();
+
+		int groupIdx = 0;
+		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyserDataRecorder.getMergedEdges();
+
+		for (Pair<Node, List<ControlFlowEdge>> pair : mergedEdges) {
+			Node startNode = pair.getKey();
+			List<ControlFlowEdge> edges = pair.getValue();
+			for (ControlFlowEdge edge : edges) {
+				String c = edge.start == startNode ? "B" : "F";
+				edgeStrings.add(c + groupIdx + ": " + edge.toString());
+			}
+			groupIdx++;
+		}
+
+		Collections.sort(edgeStrings);
+		return edgeStrings;
+	}
+
+	/** Implementation for {@link XtIdeTest#allBranches(MethodData)} */
+	public List<String> getAllBranches(IEObjectCoveringRegion offset, String directionName,
+			IEObjectCoveringRegion referenceOffset) {
+
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> branchStrings = appw.getBranchStrings();
+
+		return branchStrings;
+	}
+
+	/** Implementation for {@link XtIdeTest#allEdges(MethodData)} */
+	public List<String> getAllEdges(IEObjectCoveringRegion offset) {
+		ControlFlowElement cfe = null;
+		if (offset != null) {
+			cfe = getCFE(offset);
+		}
+		cfe = FGUtils.getCFContainer(cfe);
+
+		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(cfe);
+		createFlowAnalyzer(cfe).accept(anaepw);
+		List<String> pathStrings = anaepw.getAllEdgeStrings();
+
+		return pathStrings;
+	}
+
+	/** Implementation for {@link XtIdeTest#allPaths(MethodData)} */
+	public List<String> getAllPaths(IEObjectCoveringRegion offset, String directionName,
+			IEObjectCoveringRegion referenceOffset) {
+
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> pathStrings = appw.getPathStrings();
+
+		return pathStrings;
+	}
+
+	/** Implementation for {@link XtIdeTest#astOrder(MethodData)} */
+	public List<String> getAstOrder(IEObjectCoveringRegion offset) {
 		EObject context = offset.getEObject();
 		Iterator<ControlFlowElement> astIter = new ASTIterator(context);
 
@@ -78,83 +133,60 @@ public class XtMethodsFlowgraphs {
 		return astElements;
 	}
 
-	/**
-	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
-	 * specifying the edge type.
-	 * <p>
-	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
-	 */
-	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
-	@Xpect
-	public List<String> preds(String type, IEObjectCoveringRegion offset) {
-		ControlFlowType cfType = getControlFlowType(type);
+	/** Implementation for {@link XtIdeTest#cfContainer(MethodData)} */
+	public String getCfContainer(IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = getCFE(offset);
-		Set<ControlFlowElement> preds = createFlowAnalyzer(cfe).getPredecessorsSkipInternal(cfe);
-		filterByControlFlowType(cfe, preds, cfType);
+		ControlFlowElement container = createFlowAnalyzer(cfe).getContainer(cfe);
+		EObject containerContainer = container.eContainer();
 
-		List<String> predTexts = new LinkedList<>();
-		for (ControlFlowElement succ : preds) {
-			String predText = FGUtils.getSourceText(succ);
-			predTexts.add(predText);
-		}
-
-		return predTexts;
+		String ccString = (containerContainer != null) ? FGUtils.getClassName(containerContainer) + "::" : "";
+		String containerStr = ccString + FGUtils.getClassName(container);
+		return containerStr;
 	}
 
-	/**
-	 * This xpect method can evaluate the direct successors of a code element. The successors can be limited when
-	 * specifying the edge type.
-	 * <p>
-	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
-	 */
-	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
-	@Xpect
-	public List<String> succs(String type, IEObjectCoveringRegion offset) {
-		ControlFlowType cfType = getControlFlowType(type);
-		ControlFlowElement cfe = getCFE(offset);
-		Set<ControlFlowElement> succs = createFlowAnalyzer(cfe).getSuccessorsSkipInternal(cfe);
-		filterByControlFlowType(cfe, succs, cfType);
+	/** Implementation for {@link XtIdeTest#commonPreds(MethodData)} */
+	public List<String> getCommonPreds(IEObjectCoveringRegion a, IEObjectCoveringRegion b) {
+		ControlFlowElement aCFE = getCFE(a);
+		ControlFlowElement bCFE = getCFE(b);
 
-		List<String> succTexts = new LinkedList<>();
-		for (ControlFlowElement succ : succs) {
-			String succText = FGUtils.getSourceText(succ);
-			succTexts.add(succText);
+		Set<ControlFlowElement> commonPreds = createFlowAnalyzer(aCFE).getCommonPredecessors(aCFE, bCFE);
+		List<String> commonPredStrs = new LinkedList<>();
+		for (ControlFlowElement commonPred : commonPreds) {
+			String commonPredStr = FGUtils.getSourceText(commonPred);
+			commonPredStrs.add(commonPredStr);
 		}
 
-		return succTexts;
+		return commonPredStrs;
 	}
 
-	private ControlFlowType getControlFlowType(String type) {
-		ControlFlowType cfType = null;
-		if (type != null && !type.isEmpty()) {
-			cfType = ControlFlowType.valueOf(type);
-			if (cfType == null) {
-				fail("Type '" + type + "' is not a control flow type");
-				return null;
+	/** Implementation for {@link XtIdeTest#instanceofguard(MethodData)} */
+	public List<String> getInstanceofguard(IEObjectCoveringRegion offset) {
+		ControlFlowElement cfe = getCFE(offset);
+
+		InstanceofGuardAnalyser iga = new InstanceofGuardAnalyser();
+		N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(cfe);
+		flowAnalyzer.accept(iga);
+
+		Collection<InstanceofGuard> ioGuards = iga.getDefinitiveGuards(cfe);
+
+		List<String> commonPredStrs = new LinkedList<>();
+		for (InstanceofGuard ioGuard : ioGuards) {
+			if (ioGuard.asserts == GuardAssertion.AlwaysHolds) {
+				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
+				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+				commonPredStrs.add(symbolText + "<:" + typeText);
+			} else if (ioGuard.asserts == GuardAssertion.NeverHolds) {
+				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
+				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+				commonPredStrs.add(symbolText + "!<:" + typeText);
 			}
 		}
-		return cfType;
+
+		return commonPredStrs;
 	}
 
-	private void filterByControlFlowType(ControlFlowElement start, Collection<ControlFlowElement> succList,
-			ControlFlowType cfType) {
-
-		if (cfType == null)
-			return;
-
-		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
-			N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(start);
-			Set<ControlFlowType> currCFTypes = flowAnalyzer.getControlFlowTypeToSuccessors(start, succIt.next());
-			if (!currCFTypes.contains(cfType)) {
-				succIt.remove();
-			}
-		}
-	}
-
-	/** This xpect method can evaluate if the tested element is a transitive predecessor of the given element. */
-	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('via' arg3=OFFSET)? ('notVia' arg4=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg5=OFFSET)?")
-	@Xpect
-	public void path(IEObjectCoveringRegion fromOffset, IEObjectCoveringRegion toOffset,
+	/** Implementation for {@link XtIdeTest#path(MethodData)} */
+	public void getPath(IEObjectCoveringRegion fromOffset, IEObjectCoveringRegion toOffset,
 			IEObjectCoveringRegion notToOffset, IEObjectCoveringRegion viaOffset,
 			IEObjectCoveringRegion notViaOffset, IEObjectCoveringRegion referenceOffset) {
 
@@ -196,74 +228,71 @@ public class XtMethodsFlowgraphs {
 		}
 	}
 
+	/** Implementation for {@link XtIdeTest#preds(MethodData)} */
+	public List<String> getPreds(String type, IEObjectCoveringRegion offset) {
+		ControlFlowType cfType = getControlFlowType(type);
+		ControlFlowElement cfe = getCFE(offset);
+		Set<ControlFlowElement> preds = createFlowAnalyzer(cfe).getPredecessorsSkipInternal(cfe);
+		filterByControlFlowType(cfe, preds, cfType);
+
+		List<String> predTexts = new LinkedList<>();
+		for (ControlFlowElement succ : preds) {
+			String predText = FGUtils.getSourceText(succ);
+			predTexts.add(predText);
+		}
+
+		return predTexts;
+	}
+
+	/** Implementation for {@link XtIdeTest#succs(MethodData)} */
+	public List<String> getSuccs(String type, IEObjectCoveringRegion offset) {
+		ControlFlowType cfType = getControlFlowType(type);
+		ControlFlowElement cfe = getCFE(offset);
+		Set<ControlFlowElement> succs = createFlowAnalyzer(cfe).getSuccessorsSkipInternal(cfe);
+		filterByControlFlowType(cfe, succs, cfType);
+
+		List<String> succTexts = new LinkedList<>();
+		for (ControlFlowElement succ : succs) {
+			String succText = FGUtils.getSourceText(succ);
+			succTexts.add(succText);
+		}
+
+		return succTexts;
+	}
+
+	private ControlFlowType getControlFlowType(String type) {
+		ControlFlowType cfType = null;
+		if (type != null && !type.isEmpty()) {
+			cfType = ControlFlowType.valueOf(type);
+			if (cfType == null) {
+				fail("Type '" + type + "' is not a control flow type");
+				return null;
+			}
+		}
+		return cfType;
+	}
+
+	private void filterByControlFlowType(ControlFlowElement start, Collection<ControlFlowElement> succList,
+			ControlFlowType cfType) {
+
+		if (cfType == null)
+			return;
+
+		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
+			N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(start);
+			Set<ControlFlowType> currCFTypes = flowAnalyzer.getControlFlowTypeToSuccessors(start, succIt.next());
+			if (!currCFTypes.contains(cfType)) {
+				succIt.remove();
+			}
+		}
+	}
+
 	private ControlFlowElement getCFEWithReference(EObjectCoveringRegion offset, EObjectCoveringRegion reference) {
 		ControlFlowElement cfe = null;
 		if (offset != null && reference.getOffset() < offset.getOffset()) {
 			cfe = getCFE(offset);
 		}
 		return cfe;
-	}
-
-	/**
-	 * This xpect method can evaluate all branches that are merged at the given node name.
-	 */
-	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
-	@Xpect
-	public List<String> allMergeBranches(IEObjectCoveringRegion referenceOffset) {
-		N4JSFlowAnalyserDataRecorder.setEnabled(true);
-		GraphVisitor dfv = new DummyForwardVisitor();
-		GraphVisitor dbv = new DummyBackwardVisitor();
-		ControlFlowElement referenceCFE = getCFE(referenceOffset);
-		createFlowAnalyzer(referenceCFE).accept(dfv, dbv);
-		N4JSFlowAnalyserDataRecorder.setEnabled(false);
-		performBranchAnalysis(referenceOffset, null, referenceOffset);
-		List<String> edgeStrings = new LinkedList<>();
-
-		int groupIdx = 0;
-		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyserDataRecorder.getMergedEdges();
-
-		for (Pair<Node, List<ControlFlowEdge>> pair : mergedEdges) {
-			Node startNode = pair.getKey();
-			List<ControlFlowEdge> edges = pair.getValue();
-			for (ControlFlowEdge edge : edges) {
-				String c = edge.start == startNode ? "B" : "F";
-				edgeStrings.add(c + groupIdx + ": " + edge.toString());
-			}
-			groupIdx++;
-		}
-
-		Collections.sort(edgeStrings);
-		return edgeStrings;
-	}
-
-	/**
-	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
-	 * specified, the first code element of the containing function.
-	 */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
-	@Xpect
-	public List<String> allBranches(IEObjectCoveringRegion offset, String directionName,
-			IEObjectCoveringRegion referenceOffset) {
-
-		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
-		List<String> branchStrings = appw.getBranchStrings();
-
-		return branchStrings;
-	}
-
-	/**
-	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
-	 * the first code element of the containing function.
-	 */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
-	@Xpect
-	public List<String> allPaths(IEObjectCoveringRegion offset, String directionName,
-			IEObjectCoveringRegion referenceOffset) {
-
-		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
-		List<String> pathStrings = appw.getPathStrings();
-
-		return pathStrings;
 	}
 
 	private AllBranchPrintVisitor performBranchAnalysis(IEObjectCoveringRegion offset, String directionName,
@@ -292,40 +321,6 @@ public class XtMethodsFlowgraphs {
 		return direction;
 	}
 
-	/** This xpect method can evaluate all edges of the containing function. */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
-	@Xpect
-	public List<String> allEdges(IEObjectCoveringRegion offset) {
-		ControlFlowElement cfe = null;
-		if (offset != null) {
-			cfe = getCFE(offset);
-		}
-		cfe = FGUtils.getCFContainer(cfe);
-
-		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(cfe);
-		createFlowAnalyzer(cfe).accept(anaepw);
-		List<String> pathStrings = anaepw.getAllEdgeStrings();
-
-		return pathStrings;
-	}
-
-	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
-	@ParameterParser(syntax = "'of' arg1=OFFSET 'and' arg2=OFFSET")
-	@Xpect
-	public List<String> commonPreds(IEObjectCoveringRegion a, IEObjectCoveringRegion b) {
-		ControlFlowElement aCFE = getCFE(a);
-		ControlFlowElement bCFE = getCFE(b);
-
-		Set<ControlFlowElement> commonPreds = createFlowAnalyzer(aCFE).getCommonPredecessors(aCFE, bCFE);
-		List<String> commonPredStrs = new LinkedList<>();
-		for (ControlFlowElement commonPred : commonPreds) {
-			String commonPredStr = FGUtils.getSourceText(commonPred);
-			commonPredStrs.add(commonPredStr);
-		}
-
-		return commonPredStrs;
-	}
-
 	private ControlFlowElement getCFE(IEObjectCoveringRegion offset) {
 		EObject context = offset.getEObject();
 		if (!(context instanceof ControlFlowElement)) {
@@ -333,47 +328,6 @@ public class XtMethodsFlowgraphs {
 		}
 		ControlFlowElement cfe = (ControlFlowElement) context;
 		return cfe;
-	}
-
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
-	public String cfContainer(IEObjectCoveringRegion offset) {
-		ControlFlowElement cfe = getCFE(offset);
-		ControlFlowElement container = createFlowAnalyzer(cfe).getContainer(cfe);
-		EObject containerContainer = container.eContainer();
-
-		String ccString = (containerContainer != null) ? FGUtils.getClassName(containerContainer) + "::" : "";
-		String containerStr = ccString + FGUtils.getClassName(container);
-		return containerStr;
-	}
-
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
-	public List<String> instanceofguard(IEObjectCoveringRegion offset) {
-		ControlFlowElement cfe = getCFE(offset);
-
-		InstanceofGuardAnalyser iga = new InstanceofGuardAnalyser();
-		N4JSFlowAnalyser flowAnalyzer = createFlowAnalyzer(cfe);
-		flowAnalyzer.accept(iga);
-
-		Collection<InstanceofGuard> ioGuards = iga.getDefinitiveGuards(cfe);
-
-		List<String> commonPredStrs = new LinkedList<>();
-		for (InstanceofGuard ioGuard : ioGuards) {
-			if (ioGuard.asserts == GuardAssertion.AlwaysHolds) {
-				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
-				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
-				commonPredStrs.add(symbolText + "<:" + typeText);
-			} else if (ioGuard.asserts == GuardAssertion.NeverHolds) {
-				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
-				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
-				commonPredStrs.add(symbolText + "!<:" + typeText);
-			}
-		}
-
-		return commonPredStrs;
 	}
 
 }

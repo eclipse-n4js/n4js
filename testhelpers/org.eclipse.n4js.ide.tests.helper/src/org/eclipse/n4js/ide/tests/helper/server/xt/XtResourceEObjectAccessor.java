@@ -19,7 +19,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import com.google.common.base.Preconditions;
 
 /**
- *
+ * Utility to retrieve offset, position, or {@link IEObjectCoveringRegion} from a resource
  */
 public class XtResourceEObjectAccessor {
 	static final String CURSOR = AbstractStructuredIdeTest.CURSOR_SYMBOL;
@@ -27,22 +27,26 @@ public class XtResourceEObjectAccessor {
 	final XtFileData xtData;
 	final XtextResource resource;
 
+	/** Constructor */
 	public XtResourceEObjectAccessor(XtFileData xtData, XtextResource resource) {
 		this.xtData = xtData;
 		this.resource = resource;
 	}
 
-	public Position checkAndGetPosition(MethodData data, String checkArg1, String optionalDelimiter) {
-		int offset = checkAndGetOffset(data, checkArg1, optionalDelimiter);
-		Position position = xtData.getPosition(offset);
-		return position;
-	}
-
+	/** @return {@link EObject} with offset for a given offset in this resource */
 	public IEObjectCoveringRegion getObjectCoveringRegion(int offset) {
 		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
 		return new EObjectCoveringRegion(eObject, offset);
 	}
 
+	/**
+	 * Searches for an {@link EObject} starting from the given offset. Skips white spaces. Iff not null, the search
+	 * starts behind the optional location string.
+	 *
+	 * @param optionalLocationStr
+	 *            can be null
+	 * @return {@link EObject} with offset for a given offset in this resource.
+	 */
 	public IEObjectCoveringRegion getObjectCoveringRegion(int searchFromOffset, String optionalLocationStr) {
 		int offset = getOffset(searchFromOffset, optionalLocationStr);
 		if (offset < 0) {
@@ -52,15 +56,37 @@ public class XtResourceEObjectAccessor {
 		return new EObjectCoveringRegion(eObject, offset);
 	}
 
-	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(MethodData data, String checkArg1,
-			String optionalLocation) {
+	/**
+	 * Searches for a {@link Position} starting behind the given {@link MethodData}. In case the method expects an
+	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
+	 *
+	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
+	 *
+	 * @return {@link EObject} with offset for the given {@link MethodData}
+	 */
+	public Position checkAndGetPosition(MethodData data, String methodName, String arg1) {
+		int offset = checkAndGetOffset(data, methodName, arg1);
+		Position position = xtData.getPosition(offset);
+		return position;
+	}
 
-		int offset = checkAndGetOffset(data, checkArg1, optionalLocation);
+	/**
+	 * Searches for an {@link EObject} starting behind the given {@link MethodData}. In case the method expects an
+	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
+	 *
+	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
+	 *
+	 * @return {@link EObject} with offset for the given {@link MethodData}
+	 */
+	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(MethodData data, String methodName,
+			String arg1) {
+
+		int offset = checkAndGetOffset(data, methodName, arg1);
 		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
 		return new EObjectCoveringRegion(eObject, offset);
 	}
 
-	public int checkAndGetOffset(MethodData data, String checkArg1, String optionalLocation) {
+	private int checkAndGetOffset(MethodData data, String checkArg1, String optionalLocation) {
 		Preconditions.checkArgument(data.name.equals(checkArg1));
 		String optionalLocationStr = null;
 		if (data.args.length > 1) {
@@ -72,7 +98,7 @@ public class XtResourceEObjectAccessor {
 		return getOffset(data.offset, optionalLocationStr);
 	}
 
-	public int getOffset(int searchFromOffset, String optionalLocationStr) {
+	private int getOffset(int searchFromOffset, String optionalLocationStr) {
 		int offset;
 		if (optionalLocationStr != null) {
 			int relOffset = optionalLocationStr.contains(CURSOR) ? optionalLocationStr.indexOf(CURSOR) : 0;
@@ -85,7 +111,7 @@ public class XtResourceEObjectAccessor {
 		return offset;
 	}
 
-	public int skipCommentsAndWhitespace(String content, String str, int startOffset) {
+	private int skipCommentsAndWhitespace(String content, String str, int startOffset) {
 		int offset = skipWhitespace(content, startOffset);
 
 		while (offset < content.length()) {
@@ -113,7 +139,7 @@ public class XtResourceEObjectAccessor {
 		return -1;
 	}
 
-	public int skipWhitespace(String content, int startOffset) {
+	private int skipWhitespace(String content, int startOffset) {
 		int offset = startOffset - 1;
 
 		while (++offset < content.length()) {
@@ -130,7 +156,7 @@ public class XtResourceEObjectAccessor {
 		return minusToMax(offset);
 	}
 
-	public int minusToMax(int offset) {
+	private int minusToMax(int offset) {
 		return offset < 0 ? Integer.MAX_VALUE : offset;
 	}
 

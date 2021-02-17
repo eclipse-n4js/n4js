@@ -205,10 +205,10 @@ public class XtSetupWorkspaceParser {
 		boolean isModule = N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
 		if (isModule) {
 			ModuleBuilder moduleBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
-			folderBuilder.isSourceFolder = true;
+			folderBuilder.setSourceFolder();
 			if (isThis) {
 				BuilderInfo bi = moduleBuilder.getBuilderInfo();
-				bi.moduleNameOfXtFile = moduleBuilder.getFolderBuilder().name + "/" + moduleBuilder.name;
+				bi.moduleNameOfXtFile = moduleBuilder.getFolderBuilder().getName() + "/" + moduleBuilder.getName();
 			}
 		} else {
 			folderBuilder.addFile(name, content);

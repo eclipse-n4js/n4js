@@ -24,10 +24,15 @@ import org.junit.runner.notification.RunNotifier;
  * Runs all tests defined by {@value XtFileDataParser#XT_X_PECT} of a single .xt file
  */
 public class XtFileRunner extends Runner {
+	/** Reference to the XtIdeTest (and language server) */
 	final public XtIdeTest ideTest;
+	/** Name of the JUnit test class runner */
 	final public String testClassName;
+	/** Root folder of the corresponding test suite */
 	final public String folderName;
+	/** xt file */
 	final public File file;
+	/** Meta data of xt file */
 	final public XtFileData xtFileData;
 
 	Description description;
@@ -39,6 +44,11 @@ public class XtFileRunner extends Runner {
 		this.folderName = folderName;
 		this.file = file;
 		this.xtFileData = XtFileDataParser.parse(file);
+	}
+
+	/** @return a file and folder name */
+	public String getName() {
+		return file.getName() + ": " + folderName;
 	}
 
 	/** @return {@link XtFileData#setupRunnerName} */
@@ -108,9 +118,5 @@ public class XtFileRunner extends Runner {
 			description.addChild(testMethodData.getDescription(xtFileData));
 		}
 		return description;
-	}
-
-	public String getName() {
-		return file.getName() + ": " + folderName;
 	}
 }

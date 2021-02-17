@@ -32,10 +32,11 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- *
+ * Base class for tests testing the xt test framework
  */
 public abstract class AbstractXtParentRunnerTest {
 
+	// TODO: Reconsider this implementation due to runtime warnings regarding forbidden access
 	static class DynamicXtFolder implements XtFolder {
 		final String value;
 

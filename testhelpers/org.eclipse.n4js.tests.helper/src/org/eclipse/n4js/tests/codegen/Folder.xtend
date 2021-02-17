@@ -22,7 +22,7 @@ public class Folder {
 	final public String name;
 	final public List<Module> modules = newLinkedList();
 	final public List<OtherFile> files = newLinkedList();
-	boolean isSourceFolder;
+	final public boolean isSourceFolder = true;
 
 	/**
 	 * Creates a new instance with the given parameters.

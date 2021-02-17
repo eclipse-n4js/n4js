@@ -244,7 +244,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void noerrors(MethodData data) {
-		issueHelper.noerrors(data);
+		issueHelper.getNoerrors(data);
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void nowarnings(MethodData data) {
-		issueHelper.nowarnings(data);
+		issueHelper.getNowarnings(data);
 	}
 
 	/**
@@ -269,7 +269,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void errors(MethodData data) {
-		issueHelper.errors(data);
+		issueHelper.getErrors(data);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void warnings(MethodData data) {
-		issueHelper.warnings(data);
+		issueHelper.getWarnings(data);
 	}
 
 	/**
@@ -374,7 +374,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect
 	public void linkedName(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedName", "at");
-		QualifiedName linkedName = xtMethods.linkedName(ocr);
+		QualifiedName linkedName = xtMethods.getLinkedName(ocr);
 		assertEquals(data.expectation, linkedName.toString());
 	}
 
@@ -386,7 +386,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect
 	public void linkedFragment(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedFragment", "at");
-		String fragmentName = xtMethods.linkedFragment(ocr);
+		String fragmentName = xtMethods.getLinkedFragment(ocr);
 		assertEquals(data.expectation, fragmentName);
 	}
 
@@ -404,7 +404,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect
 	public void linkedPathname(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedPathname", "at");
-		String pathName = xtMethods.linkedPathname(ocr);
+		String pathName = xtMethods.getLinkedPathname(ocr);
 		assertEquals(data.expectation, pathName);
 	}
 
@@ -467,7 +467,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		String direction = match.getText("direction");
 		IEObjectCoveringRegion ocrReference = match.ocrReference;
 		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
-		List<String> branchStrings = xtFlowgraphs.allBranches(ocrFrom, direction, ocrReference);
+		List<String> branchStrings = xtFlowgraphs.getAllBranches(ocrFrom, direction, ocrReference);
 		assertEqualIterables(data.expectation, branchStrings);
 	}
 
@@ -483,7 +483,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allEdges(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allEdges", "from");
-		List<String> pathStrings = xtFlowgraphs.allEdges(ocr);
+		List<String> pathStrings = xtFlowgraphs.getAllEdges(ocr);
 		assertEqualIterables(data.expectation, pathStrings);
 	}
 
@@ -501,7 +501,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void allMergeBranches(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allMergeBranches", null);
-		List<String> edgeStrings = xtFlowgraphs.allMergeBranches(ocr);
+		List<String> edgeStrings = xtFlowgraphs.getAllMergeBranches(ocr);
 		assertEqualIterables(data.expectation, edgeStrings);
 	}
 
@@ -523,7 +523,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		String direction = match.getText("direction");
 		IEObjectCoveringRegion ocrReference = match.ocrReference;
 		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
-		List<String> pathStrings = xtFlowgraphs.allPaths(ocrFrom, direction, ocrReference);
+		List<String> pathStrings = xtFlowgraphs.getAllPaths(ocrFrom, direction, ocrReference);
 		assertEqualIterables(data.expectation, pathStrings);
 	}
 
@@ -539,7 +539,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void astOrder(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "astOrder", "of");
-		List<String> astElements = xtFlowgraphs.astOrder(ocr);
+		List<String> astElements = xtFlowgraphs.getAstOrder(ocr);
 		assertEqualIterables(data.expectation, astElements);
 	}
 
@@ -555,7 +555,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void cfContainer(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "cfContainer", "of");
-		String containerStr = xtFlowgraphs.cfContainer(ocr);
+		String containerStr = xtFlowgraphs.getCfContainer(ocr);
 		assertEquals(data.expectation, containerStr);
 	}
 
@@ -573,7 +573,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		Match match = PATTERN_COMMONPREDS.match(data, eobjProvider);
 		IEObjectCoveringRegion ocrA = match.getEObjectWithOffset("of");
 		IEObjectCoveringRegion ocrB = match.getEObjectWithOffset("and");
-		List<String> commonPredStrs = xtFlowgraphs.commonPreds(ocrA, ocrB);
+		List<String> commonPredStrs = xtFlowgraphs.getCommonPreds(ocrA, ocrB);
 		assertEqualIterables(data.expectation, commonPredStrs);
 	}
 
@@ -589,7 +589,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void instanceofguard(MethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "instanceofguard", "of");
-		List<String> guardStrs = xtFlowgraphs.instanceofguard(ocr);
+		List<String> guardStrs = xtFlowgraphs.getInstanceofguard(ocr);
 		assertEqualIterables(data.expectation, guardStrs);
 	}
 
@@ -616,7 +616,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		assertTrue("Either 'to' or 'notTo' must be defined.", ocrTo != null || ocrNotTo != null);
 
 		// No test assertions here: fails internally iff test fails
-		xtFlowgraphs.path(ocrFrom, ocrTo, ocrNotTo, ocrVia, ocrNotVia, ocrReference);
+		xtFlowgraphs.getPath(ocrFrom, ocrTo, ocrNotTo, ocrVia, ocrNotVia, ocrReference);
 	}
 
 	/**
@@ -638,7 +638,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		Match match = PATTERN_PREDS.match(data, eobjProvider);
 		String type = match.getText("type");
 		IEObjectCoveringRegion ocrAt = match.getEObjectWithOffset("at");
-		List<String> predTexts = xtFlowgraphs.preds(type, ocrAt);
+		List<String> predTexts = xtFlowgraphs.getPreds(type, ocrAt);
 		assertEqualIterables(data.expectation, predTexts);
 	}
 
@@ -660,7 +660,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		Match match = PATTERN_SUCCS.match(data, eobjProvider);
 		String type = match.getText("type");
 		IEObjectCoveringRegion ocrAt = match.getEObjectWithOffset("at");
-		List<String> succTexts = xtFlowgraphs.succs(type, ocrAt);
+		List<String> succTexts = xtFlowgraphs.getSuccs(type, ocrAt);
 		assertEqualIterables(data.expectation, succTexts);
 	}
 
