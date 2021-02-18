@@ -18,7 +18,7 @@
 				ThisFile {}
 			}
 			Folder "src-gen" {}
-			File "package.json" { from="../../../package.json" }
+			File "package.json" { from="../../package.json" }
 		}
 	}
 

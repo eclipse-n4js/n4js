@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+
+class B {
+	methodB() : B { return null; }
+}
+
+
+// test-00 XPECT noerrors -->
+// test-0 XPECT nowarnings -->
+var b0 : B = new B();
+
+// test-1 XPECT warnings --> "Unnecessary cast from null to B" at "null as B"
+b0 = null as B;
+
+// test-2 XPECT warnings --> "" at "null as B"
+b0 = null as B;
+
+
+
+/* test-3 XPECT warnings ---
+ *  "Unnecessary cast from null to B" at "null as B"
+ *  "Unnecessary cast from undefined to B" at "undefined as B"
+ * ---
+ */
+b0 = null as B;
+b0 = undefined as B;
+
+/* test-4 XPECT warnings ---
+ *  "Unnecessary cast from null to B" at "null as B"
+ *  "" at "undefined as B"
+ * ---
+ */
+b0 = null as B;
+b0 = undefined as B;
+
+/* test-5 XPECT warnings ---
+ *  "" at "b01"
+ *  "Unnecessary cast from undefined to B" at "undefined as B"
+ * ---
+ */
+b0 = null as B;
+b0 = undefined as B;
+
+
+// test-6 XPECT nowarnings -->
+b0 = null as B;
+
+
+// test-7 XPECT warnings --> "" at ""
+b0 = null as B;
+
+
+// test-8 XPECT warnings --> "" at "B"
+b0 = null as B;
+

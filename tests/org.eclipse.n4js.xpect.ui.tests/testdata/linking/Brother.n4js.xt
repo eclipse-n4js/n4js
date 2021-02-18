@@ -28,7 +28,7 @@
 					File "Child.n4js" {}
 				}
 			}
-			File "package.json" { from="../../package.json" }
+			File "package.json" { from="../package.json" }
 		}
 	}
 

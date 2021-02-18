@@ -63,7 +63,7 @@ abstract public class AbstractCodeActionTest extends AbstractStructuredIdeTest<N
 
 		CodeActionContext context = new CodeActionContext();
 		FileURI uri = getFileURIFromModuleName(moduleName);
-		context.setDiagnostics(Lists.newArrayList(getIssues(uri)));
+		context.setDiagnostics(Lists.newArrayList(getIssuesInFile(uri)));
 		codeActionParams.setContext(context);
 
 		TextDocumentIdentifier textDocument = new TextDocumentIdentifier();

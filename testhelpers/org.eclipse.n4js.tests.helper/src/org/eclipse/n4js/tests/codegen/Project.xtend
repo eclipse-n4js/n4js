@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -14,7 +14,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.nio.file.Path
-import java.util.List
+import java.util.LinkedHashSet
 import java.util.Map
 import java.util.Objects
 import java.util.Set
@@ -22,90 +22,17 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.io.FileDeleter
-import java.util.LinkedHashSet
+import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * Generates the code for a project.
  */
+@XpectSetupComponent
 public class Project {
-
-	/**
-	 * Represents a source folder that has a name and contains modules.
-	 */
-	public static class SourceFolder {
-		final String name;
-		final List<Module> modules = newLinkedList();
-
-		/**
-		 * Creates a new instance with the given parameters.
-		 *
-		 * @param name the name of this source folder
-		 */
-		public new(String name) {
-			this.name = Objects.requireNonNull(name);
-		}
-
-
-		/**
-		 * Adds the given module to the source folder to created.
-		 *
-		 * @param module the module to add
-		 *
-		 * @return this source folder
-		 */
-		public def addModule(Module module) {
-			modules.add(Objects.requireNonNull(module));
-			return this;
-		}
-
-		/**
-		 * Returns a list of all modules of this source folder.
-		 *
-		 * @return list of all modules of this source folder
-		 */
-		public def List<Module> getModules() {
-			return modules;
-		}
-
-		/**
-		 * Creates this source folder within the given parent directory, which must exist.
-		 *
-		 * This method first creates a new folder within the given parent directory, and then
-		 * it creates all of its modules within that folder by calling their {@link Module#create(File)}
-		 * function with the newly created folder as the parameter.
-		 *
-		 * @param parentDirectory a file representing the parent directory of this source folder
-		 */
-		public def create(File parentDirectory) {
-			Objects.requireNonNull(parentDirectory);
-			if (!parentDirectory.exists)
-				throw new IOException("Directory '" + parentDirectory + "' does not exist");
-			if (!parentDirectory.directory)
-				throw new IOException("'" + parentDirectory + "' is not a directory");
-
-			var File sourceFolder = new File(parentDirectory, name);
-			sourceFolder.mkdir();
-
-			for (module: modules)
-				module.create(sourceFolder)
-		}
-		
-		override equals(Object o) {
-			if (o instanceof SourceFolder) {
-				Objects.equals(name, o.name);
-			}
-			return false;
-		}
-		
-		override hashCode() {
-			return name.hashCode();
-		}
-	}
-
 	final String projectName;
 	final String vendorId;
 	final String vendorName;
-	final LinkedHashSet<SourceFolder> sourceFolders = newLinkedHashSet();
+	final LinkedHashSet<Folder> folders = newLinkedHashSet();
 	final Set<String> projectDependencies = newLinkedHashSet();
 	final Map<String, Project> nodeModuleProjects = newHashMap();
 	ProjectType projectType;
@@ -124,7 +51,7 @@ public class Project {
 
 	/**
 	 * Creates a new instance with the given parameters.
-	 *
+	 * 
 	 * @param projectName the project ID
 	 * @param vendorId the vendor ID
 	 * @param vendorName the vendor name
@@ -139,7 +66,7 @@ public class Project {
 
 	/**
 	 * Returns the project name.
-	 *
+	 * 
 	 * @return the project name.
 	 */
 	public def String getName() {
@@ -148,7 +75,7 @@ public class Project {
 
 	/**
 	 * Returns the project type.
-	 *
+	 * 
 	 * @return the project type.
 	 */
 	public def ProjectType getType() {
@@ -157,7 +84,7 @@ public class Project {
 
 	/**
 	 * Sets the project type.
-	 *
+	 * 
 	 * @param projectType the project type to set
 	 */
 	public def Project setType(ProjectType projectType) {
@@ -167,7 +94,7 @@ public class Project {
 
 	/**
 	 * Gets the project version.
-	 *
+	 * 
 	 * @return projectVersion the project
 	 */
 	public def String getVersion() {
@@ -176,7 +103,7 @@ public class Project {
 
 	/**
 	 * Sets the project version.
-	 *
+	 * 
 	 * @param projectVersion the project version
 	 */
 	public def Project setVersion(String projectVersion) {
@@ -186,7 +113,7 @@ public class Project {
 
 	/**
 	 * Gets the project's main module.
-	 *
+	 * 
 	 * @return main module of the project.
 	 */
 	public def String getMainModule() {
@@ -195,7 +122,7 @@ public class Project {
 
 	/**
 	 * Sets the project's main module.
-	 *
+	 * 
 	 * @param mainModule the main module.
 	 */
 	public def Project setMainModule(String mainModule) {
@@ -214,7 +141,7 @@ public class Project {
 
 	/**
 	 * Sets the output folder.
-	 *
+	 * 
 	 * @param outputFolder the output folder to set
 	 */
 	public def Project setOutputFolder(String outputFolder) {
@@ -243,41 +170,39 @@ public class Project {
 
 	/**
 	 * Creates a source folder with the given name to this project.
-	 *
+	 * 
 	 * @param name the name of the source folder to add
-	 *
+	 * 
 	 * @return the added source folder
 	 */
-	public def SourceFolder createSourceFolder(String name) {
-		val SourceFolder result = new SourceFolder(name);
+	public def Folder createSourceFolder(String name) {
+		val Folder result = new Folder(name);
 		addSourceFolder(result);
 		return result;
 	}
 
-
 	/**
 	 * Adds a source folder to this project.
-	 *
+	 * 
 	 * @param sourceFolder the source folder to add
 	 */
-	public def Project addSourceFolder(SourceFolder sourceFolder) {
-		sourceFolders.add(Objects.requireNonNull(sourceFolder));
+	public def Project addSourceFolder(Folder sourceFolder) {
+		folders.add(Objects.requireNonNull(sourceFolder));
 		return this;
 	}
 
-
 	/**
 	 * Returns a list of all source folders of this project.
-	 *
+	 * 
 	 * @return list of all source folders of this project.
 	 */
-	public def LinkedHashSet<SourceFolder> getSourceFolders() {
-		return sourceFolders;
+	public def LinkedHashSet<Folder> getSourceFolders() {
+		return folders;
 	}
 
 	/**
 	 * Adds a project dependency to this project.
-	 *
+	 * 
 	 * @param projectDependency the name of the project to add to the list of dependencies.
 	 */
 	public def Project addProjectDependency(String projectDependency) {
@@ -287,21 +212,21 @@ public class Project {
 
 	/**
 	 * Returns a list of project dependencies of this project.
-	 *
+	 * 
 	 * @return projectDependencies the project
 	 */
 	public def Set<String> getProjectDependencies() {
 		return this.projectDependencies;
 	}
-	
+
 	public def void addNodeModuleProject(Project project) {
 		this.nodeModuleProjects.put(project.projectName, project);
 	}
-	
+
 	public def Project getNodeModuleProject(String projectName) {
 		return this.nodeModuleProjects.get(projectName);
 	}
-	
+
 	/**
 	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
@@ -309,37 +234,37 @@ public class Project {
 		«IF !projectDescriptionContent.nullOrEmpty»«
 			projectDescriptionContent»
 		«ELSE»
-		{
-			"name": "«projectName»",
-			"version": "«projectVersion»",
-			"n4js": {
-				"vendorId": "«vendorId»",
-				"vendorName": "«vendorName»",
-				"projectType": "«projectType.projectTypeToString»"
-				«IF mainModule !== null
+			{
+				"name": "«projectName»",
+				"version": "«projectVersion»",
+				"n4js": {
+					"vendorId": "«vendorId»",
+					"vendorName": "«vendorName»",
+					"projectType": "«projectType.projectTypeToString»"
+					«IF mainModule !== null
 					»,"mainModule": "«mainModule»"
-				«ENDIF»
-				«IF !outputFolder.nullOrEmpty
-					»,"output": "«outputFolder»"
-				«ENDIF»
-				«IF !sourceFolders.nullOrEmpty
-				»,"sources": {
-						"source": [
-							«FOR sourceFolder : sourceFolders SEPARATOR ','»
-								"«sourceFolder.name»"
-							«ENDFOR»
-						]
-					}
-				«ENDIF»
-			},
-			"dependencies": {
-					«IF !projectDependencies.nullOrEmpty»
-					«FOR dep : projectDependencies SEPARATOR ','»
-						"«dep»": "*"
-					«ENDFOR»
 					«ENDIF»
+					«IF !outputFolder.nullOrEmpty
+					»,"output": "«outputFolder»"
+					«ENDIF»
+					«IF !folders.nullOrEmpty
+				»,"sources": {
+								"source": [
+									«FOR sourceFolder : folders.filter[isSourceFolder] SEPARATOR ','»
+										"«sourceFolder.name»"
+									«ENDFOR»
+								]
+						}
+					«ENDIF»
+				},
+				"dependencies": {
+						«IF !projectDependencies.nullOrEmpty»
+							«FOR dep : projectDependencies SEPARATOR ','»
+								"«dep»": "*"
+							«ENDFOR»
+						«ENDIF»
+				}
 			}
-		}
 		«ENDIF»
 	'''
 
@@ -360,16 +285,16 @@ public class Project {
 
 	/**
 	 * Creates this project in the given parent directory, which must exist.
-	 *
+	 * 
 	 * This method first creates a directory with the same name as the {@link #projectName} within
 	 * the given parent directory. If there already exists a file or directory with that name
 	 * within the given parent directory, that file or directory will be (recursively) deleted.
-	 *
+	 * 
 	 * Afterward, the package.json file and the source folders are created within the newly created
 	 * project directory.
-	 *
+	 * 
 	 * @param parentDirectoryPath the path to the parent directory
-	 *
+	 * 
 	 * @return the project directory
 	 */
 	public def File create(Path parentDirectoryPath) {
@@ -386,7 +311,7 @@ public class Project {
 
 		createProjectDescriptionFile(projectDirectory);
 		createModules(projectDirectory);
-		
+
 		if (!nodeModuleProjects.isEmpty()) {
 			val File nodeModulesDirectory = new File(projectDirectory, N4JSGlobals.NODE_MODULES);
 			if (nodeModulesDirectory.exists)
@@ -411,12 +336,12 @@ public class Project {
 	}
 
 	private def void createModules(File parentDirectory) {
-		for (sourceFolder: sourceFolders)
+		for (sourceFolder : folders)
 			sourceFolder.create(parentDirectory);
 	}
 
 	private def void createNodeModuleProjects(File parentDirectory) {
-		for (nodeModuleProject: nodeModuleProjects.values)
+		for (nodeModuleProject : nodeModuleProjects.values)
 			nodeModuleProject.create(parentDirectory.toPath());
 	}
 }
