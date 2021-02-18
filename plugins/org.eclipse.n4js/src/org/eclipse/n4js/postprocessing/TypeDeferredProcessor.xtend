@@ -56,7 +56,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 		// DeferredTypeRefs related to poly expressions should not be handled here (poly computer responsible for this!)
 		switch (obj) {
 			N4MethodDeclaration: {
-				val returnTypeRef = obj.declaredReturnTypeRef;
+				val declReturnTypeRefInAST = obj.declaredReturnTypeRefNode?.typeRefInAST;
 				if (obj.isConstructor) {
 					val tCtor = obj.definedType as TMethod;
 					if (null !== tCtor) {
@@ -70,12 +70,12 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 							tCtor.returnTypeRef = TypeUtils.copy(boundThisTypeRef);
 						], tCtor);
 					}
-				} else if (returnTypeRef instanceof ThisTypeRef) {
+				} else if (declReturnTypeRefInAST instanceof ThisTypeRef) {
 					val tMethod = obj.definedType as TMethod;
 					if (null !== tMethod) {
 						assertTrueIfRigid(cache, "return type of TMethod in TModule should be a DeferredTypeRef",
 							tMethod.returnTypeRef instanceof DeferredTypeRef);
-						val boundThisTypeRef = tsh.bindAndSubstituteThisTypeRef(G, returnTypeRef, returnTypeRef);
+						val boundThisTypeRef = tsh.bindAndSubstituteThisTypeRef(G, declReturnTypeRefInAST, declReturnTypeRefInAST);
 						EcoreUtilN4.doWithDeliver(false, [
 							tMethod.returnTypeRef = TypeUtils.copy(boundThisTypeRef);
 						], tMethod);
@@ -83,12 +83,12 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 				}
 			}
 			N4GetterDeclaration: {
-				val returnTypeRef = obj.declaredTypeRef;
-				if (returnTypeRef instanceof ThisTypeRef) {
+				val declReturnTypeRefInAST = obj.declaredTypeRefNode?.typeRefInAST;
+				if (declReturnTypeRefInAST instanceof ThisTypeRef) {
 					val tGetter = obj.definedGetter;
 					assertTrueIfRigid(cache, "return type of TGetter in TModule should be a DeferredTypeRef",
 						tGetter.typeRef instanceof DeferredTypeRef);
-					val boundThisTypeRef = tsh.getThisTypeAtLocation(G, returnTypeRef); // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
+					val boundThisTypeRef = tsh.getThisTypeAtLocation(G, declReturnTypeRefInAST); // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
 					EcoreUtilN4.doWithDeliver(false, [
 						tGetter.typeRef = TypeUtils.copy(boundThisTypeRef);
 					], tGetter);

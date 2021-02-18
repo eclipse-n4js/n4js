@@ -271,7 +271,9 @@ public class PreparationStep {
 						super.copyContainment(N4JSPackage.Literals.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF,
 								eObject, copyEObject);
 					} else {
-						eObjectCasted.setCachedProcessedTypeRef(cachedValue);
+						TypeReferenceNode<?> copyEObjectCasted = (TypeReferenceNode<?>) copyEObject;
+						TypeRef typeRefInIM = copyEObjectCasted.getTypeRefInAST();
+						copyEObjectCasted.setCachedProcessedTypeRef(typeRefInIM);
 					}
 				}
 			}
