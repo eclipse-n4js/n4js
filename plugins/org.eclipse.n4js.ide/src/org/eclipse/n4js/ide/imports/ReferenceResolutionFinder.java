@@ -141,9 +141,10 @@ public class ReferenceResolutionFinder {
 			IResolutionAcceptor acceptor) {
 
 		IScope scope = getScopeForContentAssist(reference);
+
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		Iterable<IEObjectDescription> candidates = getAllElements(scope);
+		List<IEObjectDescription> candidates = getAllElements(scope);
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
@@ -165,17 +166,16 @@ public class ReferenceResolutionFinder {
 		}
 	}
 
-	private Iterable<IEObjectDescription> getAllElements(IScope scope) {
+	private List<IEObjectDescription> getAllElements(IScope scope) {
 		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
-			return scope.getAllElements();
+			return Lists.newArrayList(scope.getAllElements());
 		}
 	}
 
 	private IScope getScopeForContentAssist(ReferenceDescriptor reference) {
 		try (Measurement m = contentAssistDataCollectors.dcGetScope().getMeasurement()) {
 			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			return contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
-					reference.eReference);
+			return contentAssistScopeProvider.getScopeForContentAssist(reference.astNode, reference.eReference);
 		}
 	}
 
