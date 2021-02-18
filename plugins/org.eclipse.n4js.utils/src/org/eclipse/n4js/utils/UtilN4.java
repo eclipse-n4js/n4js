@@ -55,6 +55,10 @@ public class UtilN4 {
 	public static final String PACKAGE_JSON__DEPENDENCIES = "dependencies";
 	/** Name of package.json property "devDependencies". */
 	public static final String PACKAGE_JSON__DEV_DEPENDENCIES = "devDependencies";
+	/** Name of the N4JS section in package.json files. */
+	public static final String PACKAGE_JSON__N4JS = "n4js";
+	/** Name of package.json property "sources". */
+	public static final String PACKAGE_JSON__SOURCES = "sources";
 
 	private static Logger logger = Logger.getLogger(UtilN4.class);
 

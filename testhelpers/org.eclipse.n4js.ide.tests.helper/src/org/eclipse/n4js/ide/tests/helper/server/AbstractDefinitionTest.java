@@ -19,9 +19,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
-import org.eclipse.lsp4j.Position;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.testing.DefinitionTestConfiguration;
@@ -48,12 +45,11 @@ abstract public class AbstractDefinitionTest extends AbstractStructuredIdeTest<D
 	protected void performTest(Project project, String moduleName, DefinitionTestConfiguration dtc)
 			throws InterruptedException, ExecutionException, URISyntaxException {
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		String completeFileUri = getFileURIFromModuleName(dtc.getFilePath()).toString();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
-		textDocumentPositionParams.setPosition(new Position(dtc.getLine(), dtc.getColumn()));
-		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
-				.definition(textDocumentPositionParams);
+		int line = dtc.getLine();
+		int column = dtc.getColumn();
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = callDefinition(
+				completeFileUri, line, column);
 
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 		if (dtc.getAssertDefinitions() != null) {

@@ -21,7 +21,7 @@
 					}
 				}
 			}
-			File "package.json" { from="../../../package.json" }
+			File "package.json" { from="../../package.json" }
 		}
 	}
 

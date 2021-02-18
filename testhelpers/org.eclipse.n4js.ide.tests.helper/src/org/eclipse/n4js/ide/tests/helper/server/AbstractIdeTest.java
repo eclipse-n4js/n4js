@@ -14,6 +14,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,8 +59,11 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.ResourceChange;
@@ -69,6 +73,7 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
+import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
@@ -78,10 +83,13 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
+import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
+import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.NameAndExtension;
 import org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.ide.xtext.server.XDocument;
 import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
@@ -257,9 +265,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** @see TestWorkspaceManager#isYarnWorkspace() */
+	public boolean isYarnWorkspace() {
+		return testWorkspaceManager.isYarnWorkspace();
+	}
+
 	/** @return the workspace root folder as a {@link File}. */
 	public File getRoot() {
 		return testWorkspaceManager.getRoot();
+	}
+
+	/** @see TestWorkspaceManager#getProjectLocation() */
+	public File getProjectLocation() {
+		return testWorkspaceManager.getProjectLocation();
 	}
 
 	/**
@@ -448,11 +466,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * {@link FileChangeType#Changed Changed} for all given URIs.
 	 */
 	protected void sendDidChangeWatchedFiles(FileURI... changedFileURIs) {
+		sendDidChangeWatchedFiles(FileChangeType.Changed, changedFileURIs);
+	}
+
+	/**
+	 * Send a 'didChangeWatchedFiles' notification to the server. The file change type will be {@code changeType} for
+	 * all given URIs.
+	 */
+	protected void sendDidChangeWatchedFiles(FileChangeType changeType, FileURI... changedFileURIs) {
 		if (changedFileURIs == null || changedFileURIs.length == 0) {
 			Assert.fail("no URIs of changed files given");
 		}
 		List<FileEvent> fileEvents = Stream.of(changedFileURIs)
-				.map(fileURI -> new FileEvent(fileURI.toString(), FileChangeType.Changed))
+				.map(fileURI -> new FileEvent(fileURI.toString(), changeType))
 				.collect(Collectors.toList());
 		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
 		languageServer.didChangeWatchedFiles(params);
@@ -624,6 +650,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.didChangeWatchedFiles(params);
 	}
 
+	/** Same as {@link #deleteNonOpenedFile(FileURI)}, accepting a module name. */
+	protected void deleteNonOpenedFile(String moduleName) {
+		deleteNonOpenedFile(getFileURIFromModuleName(moduleName));
+	}
+
 	/** Delete a non-opened file <u>from disk</u> and notify the LSP server. */
 	protected void deleteNonOpenedFile(FileURI fileURI) {
 		if (isOpen(fileURI)) {
@@ -638,6 +669,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.didChangeWatchedFiles(params);
 	}
 
+	/** Same as {@link #changeNonOpenedFile(String, Function)}, but replaces old content entirely. */
+	protected void changeNonOpenedFile(String moduleName, CharSequence newContent) {
+		changeNonOpenedFile(moduleName, oldContent -> newContent);
+	}
+
 	/**
 	 * Change a non-opened file <em>on disk</em> and notify the LSP server.
 	 * <p>
@@ -649,7 +685,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            denoted by <code>fileURI</code> will be replaced by P's value.
 	 */
 	@SafeVarargs
-	protected final void changeNonOpenedFile(String moduleName, Pair<String, String>... replacements) {
+	protected final void changeNonOpenedFile(String moduleName, Pair<String, ? extends CharSequence>... replacements) {
 		changeNonOpenedFile(moduleName, content -> applyReplacements(content, replacements));
 	}
 
@@ -662,9 +698,20 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * @param modification
 	 *            a function returning the desired new content when given the file's current content on disk.
 	 */
-	protected void changeNonOpenedFile(String moduleName, Function<String, String> modification) {
+	protected void changeNonOpenedFile(String moduleName, Function<String, ? extends CharSequence> modification) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeNonOpenedFile(fileURI, modification);
+	}
+
+	/** Same as {@link #changeNonOpenedFile(FileURI, Function)}, but replaces old content entirely. */
+	protected void changeNonOpenedFile(FileURI fileURI, CharSequence newContent) {
+		changeNonOpenedFile(fileURI, oldContent -> newContent);
+	}
+
+	/** Same as {@link #changeNonOpenedFile(FileURI, Function)}, accepting changes as pairs from old to new strings. */
+	@SafeVarargs
+	protected final void changeNonOpenedFile(FileURI fileURI, Pair<String, ? extends CharSequence>... replacements) {
+		changeNonOpenedFile(fileURI, content -> applyReplacements(content, replacements));
 	}
 
 	/**
@@ -676,7 +723,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * @param modification
 	 *            a function returning the desired new content when given the file's current content on disk.
 	 */
-	protected void changeNonOpenedFile(FileURI fileURI, Function<String, String> modification) {
+	protected void changeNonOpenedFile(FileURI fileURI, Function<String, ? extends CharSequence> modification) {
 		if (isOpen(fileURI)) {
 			Assert.fail("file is open: " + fileURI);
 		}
@@ -686,8 +733,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		sendDidChangeWatchedFiles(fileURI);
 	}
 
-	/** Same as {@link #changeOpenedFile(FileURI, String)}, but accepts a module name. */
-	protected void changeOpenedFile(String moduleName, String newContent) {
+	/** Same as {@link #changeOpenedFile(FileURI, CharSequence)}, but accepts a module name. */
+	protected void changeOpenedFile(String moduleName, CharSequence newContent) {
 		changeOpenedFile(getFileURIFromModuleName(moduleName), newContent);
 	}
 
@@ -695,12 +742,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Same as {@link #changeOpenedFile(FileURI, Function)}, but the desired new content is given as argument instead of
 	 * a modification function.
 	 */
-	protected void changeOpenedFile(FileURI fileURI, String newContent) {
+	protected void changeOpenedFile(FileURI fileURI, CharSequence newContent) {
 		changeOpenedFile(fileURI, oldContent -> newContent);
 	}
 
 	/** Same as {@link #changeFileOnDiskWithoutNotification(FileURI, Function)}, but accepts a module name. */
-	protected void changeOpenedFile(String moduleName, Function<String, String> modification) {
+	protected void changeOpenedFile(String moduleName, Function<String, ? extends CharSequence> modification) {
 		changeOpenedFile(getFileURIFromModuleName(moduleName), modification);
 	}
 
@@ -715,7 +762,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            will be invoked with the file's old content as argument and is expected to return the desired new
 	 *            content.
 	 */
-	protected void changeOpenedFile(FileURI fileURI, Function<String, String> modification) {
+	protected void changeOpenedFile(FileURI fileURI, Function<String, ? extends CharSequence> modification) {
 		changeOpenedFile(fileURI,
 				modification,
 				(oldContent, newContent) -> singletonList(new TextDocumentContentChangeEvent(newContent)));
@@ -723,7 +770,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Same as {@link #changeOpenedFile(FileURI, Pair...)}, but accepts a module name. */
 	@SafeVarargs
-	protected final void changeOpenedFile(String moduleName, Pair<String, String>... replacements) {
+	protected final void changeOpenedFile(String moduleName, Pair<String, ? extends CharSequence>... replacements) {
 		changeOpenedFile(getFileURIFromModuleName(moduleName), replacements);
 	}
 
@@ -734,13 +781,13 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * of the {@link #openFile(FileURI) #openFile()} methods.
 	 */
 	@SafeVarargs
-	protected final void changeOpenedFile(FileURI fileURI, Pair<String, String>... replacements) {
+	protected final void changeOpenedFile(FileURI fileURI, Pair<String, ? extends CharSequence>... replacements) {
 		changeOpenedFile(fileURI,
 				oldContent -> applyReplacements(oldContent, replacements),
 				(oldContent, newContent) -> replacementsToChangeEvents(oldContent, replacements));
 	}
 
-	private void changeOpenedFile(FileURI fileURI, Function<String, String> modification,
+	private void changeOpenedFile(FileURI fileURI, Function<String, ? extends CharSequence> modification,
 			BiFunction<String, String, List<TextDocumentContentChangeEvent>> changeComputer) {
 		if (!isOpen(fileURI)) {
 			Assert.fail("file is not open: " + fileURI);
@@ -750,8 +797,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		int oldVersion = info.version;
 		String oldContent = info.content;
 		int newVersion = oldVersion + 1;
-		String newContent = modification.apply(oldContent);
-		Assert.assertNotNull(newContent);
+		CharSequence newContentRaw = modification.apply(oldContent);
+		Assert.assertNotNull(newContentRaw);
+		String newContent = newContentRaw.toString();
 		info.version = newVersion;
 		info.content = newContent;
 		// 2) notify LSP server
@@ -784,6 +832,32 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		joinServerRequests();
 	}
 
+	/** Same as {@link #createFile(String, String, CharSequence)}, using the {@link #DEFAULT_PROJECT_NAME}. */
+	protected void createFile(String modulePathAndName, CharSequence content) {
+		createFile(DEFAULT_PROJECT_NAME, modulePathAndName, content);
+	}
+
+	/** Same as {@link #createFile(FileURI, CharSequence)}, using the {@link #DEFAULT_SOURCE_FOLDER}. */
+	protected void createFile(String projectName, String modulePathAndName, CharSequence content) {
+		FileURI projectRoot = toFileURI(getProjectRoot(projectName));
+		NameAndExtension nameAndExt = testWorkspaceManager.getN4JSNameAndExtension(modulePathAndName);
+		String filePathAndName = nameAndExt.extension == null
+				? modulePathAndName + "." + TestWorkspaceManager.DEFAULT_EXTENSION
+				: modulePathAndName;
+		FileURI fileURI = projectRoot.resolve(DEFAULT_SOURCE_FOLDER).resolve(filePathAndName);
+		createFile(fileURI, content);
+	}
+
+	/** Create a new file on disk and notify the LSP server. */
+	protected void createFile(FileURI fileURI, CharSequence content) {
+		// 1) create the file
+		createFileOnDiskWithoutNotification(fileURI, content);
+		// 2) notify server
+		FileEvent fileEvent = new FileEvent(fileURI.toString(), FileChangeType.Created);
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(Collections.singletonList(fileEvent));
+		languageServer.didChangeWatchedFiles(params);
+	}
+
 	/**
 	 * Same as {@link #createFileOnDiskWithoutNotification(FileURI, CharSequence)}, placing the new file next to an
 	 * existing module.
@@ -798,11 +872,30 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Create a new file on disk without notifying the LSP server about it. */
 	protected void createFileOnDiskWithoutNotification(FileURI fileURI, CharSequence content) {
 		Path filePath = fileURI.toJavaIoFile().toPath();
+		Path parentPath = filePath.normalize().getParent();
 		try {
+			if (parentPath != null && parentPath.getNameCount() > 0) {
+				Files.createDirectories(parentPath);
+			}
 			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);
 		} catch (IOException e) {
 			throw new RuntimeException("exception while creating file on disk", e);
 		}
+	}
+
+	/** Same as {@link #deleteFileOnDiskWithoutNotification(String)}, but also notifies the server. */
+	protected void deleteFile(String moduleName) {
+		deleteFile(getFileURIFromModuleName(moduleName));
+	}
+
+	/** Same as {@link #deleteFileOnDiskWithoutNotification(FileURI)}, but also notifies the server. */
+	protected void deleteFile(FileURI fileURI) {
+		// 1) delete the file
+		deleteFileOnDiskWithoutNotification(fileURI);
+		// 2) notify server
+		FileEvent fileEvent = new FileEvent(fileURI.toString(), FileChangeType.Deleted);
+		DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(Collections.singletonList(fileEvent));
+		languageServer.didChangeWatchedFiles(params);
 	}
 
 	/** Same as {@link #deleteFileOnDiskWithoutNotification(FileURI)}, accepting a module name. */
@@ -821,6 +914,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** Same as {@link #renameFileOnDiskWithoutNotification(FileURI, String)}, but also notifies the server. */
+	protected void renameFile(FileURI fileURI, String newFileNameIncludingExtension) {
+		FileURI fileURIRenamed = fileURI.getParent().appendSegment(newFileNameIncludingExtension);
+		internalMoveFile(fileURI, fileURIRenamed, true);
+	}
+
 	/** Same as {@link #renameFileOnDiskWithoutNotification(FileURI, String)}, accepting a module name. */
 	protected void renameFileOnDiskWithoutNotification(String moduleName, String newFileNameIncludingExtension) {
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
@@ -829,12 +928,57 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Rename an existing file on disk without notifying the LSP server about it. */
 	protected void renameFileOnDiskWithoutNotification(FileURI fileURI, String newFileNameIncludingExtension) {
-		Path filePath = fileURI.toJavaIoFile().toPath();
-		Path filePathRenamed = filePath.getParent().resolve(newFileNameIncludingExtension);
+		FileURI fileURIRenamed = fileURI.getParent().appendSegment(newFileNameIncludingExtension);
+		internalMoveFile(fileURI, fileURIRenamed, false);
+	}
+
+	/**
+	 * Moves the given file or folder to the new location and notifies the server.
+	 */
+	protected void moveFile(FileURI fileURI, File newLocation) {
+		FileURI newFileURI = toFileURI(newLocation).appendSegment(fileURI.getName());
+		internalMoveFile(fileURI, newFileURI, true);
+	}
+
+	private void internalMoveFile(FileURI oldFileURI, FileURI newFileURI, boolean notifyServer) {
+		Path oldFilePath = oldFileURI.toJavaIoFile().toPath();
+		Path newFilePath = newFileURI.toJavaIoFile().toPath();
+		Assert.assertTrue("file/folder to move does not exist", Files.exists(oldFilePath));
+		Assert.assertFalse("old and new path are equal", oldFilePath.equals(newFilePath));
+		boolean isFolder = Files.isDirectory(oldFilePath);
+
+		// 0) remember old files (if necessary)
+		List<FileEvent> fileEvents = new ArrayList<>();
+		if (notifyServer) {
+			if (isFolder) {
+				List<Path> allFiles = FileUtils.getAllRegularFilesIn(oldFilePath);
+				for (Path file : allFiles) {
+					fileEvents.add(new FileEvent(toFileURI(file).toString(), FileChangeType.Deleted));
+				}
+			} else {
+				fileEvents.add(new FileEvent(oldFileURI.toString(), FileChangeType.Deleted));
+			}
+		}
+
+		// 1) actually move the file or folder
 		try {
-			Files.move(filePath, filePathRenamed);
+			Files.move(oldFilePath, newFilePath);
 		} catch (IOException e) {
 			throw new RuntimeException("exception while renaming file on disk", e);
+		}
+
+		// 2) notify the server
+		if (notifyServer) {
+			if (isFolder) {
+				List<Path> allFiles = FileUtils.getAllRegularFilesIn(newFilePath);
+				for (Path file : allFiles) {
+					fileEvents.add(new FileEvent(toFileURI(file).toString(), FileChangeType.Created));
+				}
+			} else {
+				fileEvents.add(new FileEvent(newFileURI.toString(), FileChangeType.Created));
+			}
+			DidChangeWatchedFilesParams params = new DidChangeWatchedFilesParams(fileEvents);
+			languageServer.didChangeWatchedFiles(params);
 		}
 	}
 
@@ -892,7 +1036,9 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * URI.
 	 */
 	@SafeVarargs
-	protected final void changeFileOnDiskWithoutNotification(String moduleName, Pair<String, String>... replacements) {
+	protected final void changeFileOnDiskWithoutNotification(String moduleName,
+			Pair<String, ? extends CharSequence>... replacements) {
+
 		FileURI fileURI = getFileURIFromModuleName(moduleName);
 		changeFileOnDiskWithoutNotification(fileURI, replacements);
 	}
@@ -910,7 +1056,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	@SafeVarargs
 	protected final Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
-			Pair<String, String>... replacements) {
+			Pair<String, ? extends CharSequence>... replacements) {
 		return changeFileOnDiskWithoutNotification(fileURI, content -> applyReplacements(content, replacements));
 	}
 
@@ -937,12 +1083,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * @return a pair with the file's old content as key and its new content as value.
 	 */
 	protected Pair<String, String> changeFileOnDiskWithoutNotification(FileURI fileURI,
-			Function<String, String> modification) {
+			Function<String, ? extends CharSequence> modification) {
 
 		try {
 			Path filePath = fileURI.toJavaIoFile().toPath();
 			String oldContent = Files.readString(filePath);
-			String newContent = modification.apply(oldContent);
+			String newContent = modification.apply(oldContent).toString();
 			Files.writeString(filePath, newContent, StandardOpenOption.TRUNCATE_EXISTING);
 			return new Pair<>(oldContent, newContent);
 		} catch (IOException e) {
@@ -1151,7 +1297,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		if (!uncheckedModulesWithIssues.isEmpty()) {
 			Multimap<FileURI, String> issuesPerUncheckedModule = LinkedHashMultimap.create();
 			for (FileURI currModuleURI : uncheckedModulesWithIssues) {
-				List<String> currModuleIssuesAsList = getIssuesInFile(currModuleURI, withIgnoredIssues);
+				List<String> currModuleIssuesAsList = getIssueStringsInFile(currModuleURI, withIgnoredIssues);
 				issuesPerUncheckedModule.putAll(currModuleURI, currModuleIssuesAsList);
 			}
 			if (!issuesPerUncheckedModule.isEmpty()) { // empty if all remaining issues are ignored
@@ -1197,7 +1343,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			FileURI fileURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
 
-			List<String> actualIssues = getIssuesInFile(fileURI, withIgnoredIssues);
+			List<String> actualIssues = getIssueStringsInFile(fileURI, withIgnoredIssues);
 			Set<String> actualIssuesAsSet = IterableExtensions.toSet(
 					Iterables.transform(actualIssues, String::trim));
 			Set<String> expectedIssuesAsSet = IterableExtensions.toSet(
@@ -1222,17 +1368,42 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/** Same as {@link #getIssueStringsInFile(FileURI, boolean)}, but never includes ignored issues. */
+	protected List<String> getIssueStringsInFile(FileURI fileURI) {
+		return getIssueStringsInFile(fileURI, false);
+	}
+
 	/**
 	 * Returns the issues in the file denoted by the given URI. If <code>withIgnoredIssues</code> is set to
 	 * <code>true</code>, even issues with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
 	 * included in the returned list.
 	 */
-	protected List<String> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
-		Stream<Diagnostic> issuesInFile = languageClient.getIssues().get(fileURI).stream();
+	protected List<String> getIssueStringsInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = getIssuesInFile(fileURI, withIgnoredIssues).stream();
+		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
+	}
+
+	/** @see IdeTestLanguageClient#getIssues(FileURI) */
+	protected Collection<Diagnostic> getIssuesInFile(FileURI uri) {
+		return getIssuesInFile(uri, false);
+	}
+
+	/**
+	 * Returns the diagnostics in the file denoted by the given URI. If <code>withIgnoredIssues</code> is set to
+	 * <code>true</code>, even diagnostics with an issue code returned by method {@link #getIgnoredIssueCodes()} will be
+	 * included in the returned list.
+	 */
+	protected List<Diagnostic> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
+		Stream<Diagnostic> issuesInFile = languageClient.getIssues(fileURI).stream();
 		if (!withIgnoredIssues) {
 			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
 		}
-		return issuesInFile.map(issue -> languageClient.getIssueString(issue)).collect(Collectors.toList());
+		return issuesInFile.collect(Collectors.toList());
+	}
+
+	/** @see IdeTestLanguageClient#getIssues() */
+	protected Multimap<FileURI, Diagnostic> getIssues() {
+		return languageClient.getIssues();
 	}
 
 	/**
@@ -1276,17 +1447,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	@SafeVarargs
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(String content,
-			Pair<String, String>... replacements) {
+			Pair<String, ? extends CharSequence>... replacements) {
 
 		return replacementsToChangeEvents(new XDocument(0, content), replacements);
 	}
 
 	@SafeVarargs
 	private List<TextDocumentContentChangeEvent> replacementsToChangeEvents(XDocument document,
-			Pair<String, String>... replacements) {
+			Pair<String, ? extends CharSequence>... replacements) {
 
 		List<TextDocumentContentChangeEvent> result = new ArrayList<>(replacements.length);
-		for (Pair<String, String> replacement : replacements) {
+		for (Pair<String, ? extends CharSequence> replacement : replacements) {
 			int offset = document.getContents().indexOf(replacement.getKey());
 			if (offset < 0) {
 				throw new IllegalArgumentException(
@@ -1294,7 +1465,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			}
 			int len = replacement.getKey().length();
 			Range range = new Range(document.getPosition(offset), document.getPosition(offset + len));
-			result.add(new TextDocumentContentChangeEvent(range, len, replacement.getValue()));
+			result.add(new TextDocumentContentChangeEvent(range, len, replacement.getValue().toString()));
 		}
 		return result;
 	}
@@ -1343,16 +1514,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageServer.joinServerRequests();
 	}
 
-	/** @see IdeTestLanguageClient#getIssues() */
-	protected Multimap<FileURI, Diagnostic> getIssues() {
-		return languageClient.getIssues();
-	}
-
-	/** @see IdeTestLanguageClient#getIssues(FileURI) */
-	protected Collection<Diagnostic> getIssues(FileURI uri) {
-		return languageClient.getIssues(uri);
-	}
-
 	/** */
 	protected static String toUnixLineSeparator(CharSequence cs) {
 		return cs.toString().replaceAll("\r?\n", "\n");
@@ -1370,16 +1531,18 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Applies the given replacements to the given character sequence and returns the resulting string. */
 	@SafeVarargs
-	protected static String applyReplacements(CharSequence oldContent, Pair<String, String>... replacements) {
+	protected static String applyReplacements(CharSequence oldContent,
+			Pair<String, ? extends CharSequence>... replacements) {
+
 		StringBuilder newContent = new StringBuilder(oldContent);
-		for (Pair<String, String> replacement : replacements) {
+		for (Pair<String, ? extends CharSequence> replacement : replacements) {
 			int offset = newContent.indexOf(replacement.getKey());
 			if (offset < 0) {
 				throw new IllegalArgumentException(
 						"string \"" + replacement.getKey() + "\" not found in content of document");
 			}
 			int len = replacement.getKey().length();
-			newContent.replace(offset, offset + len, replacement.getValue());
+			newContent.replace(offset, offset + len, replacement.getValue().toString());
 		}
 		return newContent.toString();
 	}
@@ -1399,5 +1562,42 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 		FileTime fileTime = Files.readAttributes(filePath, BasicFileAttributes.class).lastModifiedTime();
 		assertEquals(millis, fileTime.toMillis());
+	}
+
+	/** Calls endpoint {@code textDocument/definitions} of LSP server */
+	protected CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> callDefinition(
+			String completeFileUri, int line, int column) {
+
+		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
+		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
+		textDocumentPositionParams.setPosition(new Position(line, column));
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
+				.definition(textDocumentPositionParams);
+
+		return definitionsFuture;
+	}
+
+	/** Runs the given file (with its parent folder as working directory) in node.js and asserts the output. */
+	protected void assertOutput(FileURI fileToRun, CharSequence expectedOutput) {
+		ProcessResult result = runInNodejs(fileToRun);
+		assertNull("exception while running: " + fileToRun, result.getException());
+		assertEquals("unexpected exit code from running: " + fileToRun, 0, result.getExitCode());
+		assertEquals("unexpected output from running: " + fileToRun,
+				expectedOutput.toString().trim(), result.getStdOut().trim());
+		assertEquals("stderr was non-empty after running: " + fileToRun,
+				"", result.getErrOut().trim());
+	}
+
+	/**
+	 * Same as {@link #runInNodejs(File, FileURI, String...)}, using the given file's grand-parent folder as working
+	 * directory (assuming the file is located in the root of a project's output folder).
+	 */
+	protected ProcessResult runInNodejs(FileURI fileToRun, String... options) {
+		return runInNodejs(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
+	}
+
+	/** Delegates to {@link CliTools#runNodejs(Path, Path, String...)}. */
+	protected ProcessResult runInNodejs(File workingDir, FileURI fileToRun, String... options) {
+		return new CliTools().runNodejs(workingDir.toPath(), fileToRun.toPath(), options);
 	}
 }

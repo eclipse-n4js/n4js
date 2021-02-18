@@ -249,14 +249,6 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
-      label="SWTBot">
-    <requirement
-        name="org.eclipse.swtbot.ide.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/technology/swtbot/releases/2.8.0"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
       label="Jenkins Editor">
     <requirement
         name="de.jcup.jenkinseditor.feature.feature.group"/>
@@ -399,8 +391,6 @@
             url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201605260315"/>
         <repository
             url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.19.0"/>
-        <repository
-            url="http://download.eclipse.org/technology/swtbot/releases/2.8.0"/>
         <repository
             url="https://download.eclipse.org/tools/orbit/downloads/drops/R20190827152740/repository"/>
         <repository

@@ -75,13 +75,6 @@ Contributors:
 		<!-- ************************************** JUnit Plugin Tests -->
 
 		<!-- JS tests -->
-		<!--
-			This ...n4js.ui.tests execution intentionally happens after the SWTBot one.
-			Jenkins jobs on Windows cannot run git checkout shell scripts, so git repositories are managed and checked out from Java code.
-			The low memory plug-in UI tests run with lower memory settings, so those cannot check out git repositories via Java (test) code.
-			SWTBot tests can run with the common heap size settings and can check out the required git repositories that is why they 
-			should run earlier than plug-in UI tests.
-		 -->
 		<module>org.eclipse.n4js.ui.tests</module>
 		<module>org.eclipse.n4js.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
@@ -109,6 +102,7 @@ Contributors:
 
 		<!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.cli.tests</module>
+		<module>org.eclipse.n4js.ide.tests.helper.tests</module>
 		<module>org.eclipse.n4js.ide.tests</module>
 		<module>org.eclipse.n4js.ide.tests.jar</module>
 
@@ -116,7 +110,6 @@ Contributors:
 		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
 		<module>org.eclipse.n4js.n4jsx.spec.ui.tests</module>
 		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
-		<module>org.eclipse.n4js.n4jsx.ui.tests</module>
 
 		<!-- *************************************** flow graph tests -->
 		<module>org.eclipse.n4js.flowgraphs.tests</module>
@@ -415,8 +408,6 @@ Contributors:
 							<exclude>**/*PluginUITest.java</exclude>
 							<exclude>**/*PerformanceTest.java</exclude>
 							<exclude>**/*SmokeTest.java</exclude>
-							<exclude>**/*SwtBotTest.java</exclude>
-							<exclude>**/*SwtBotPerfTest.java</exclude>
 							<exclude>**/*JarTest.java</exclude>
 						</excludes>
 					</configuration>

@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+
+
+
+// XPECT allPaths from '"a"' --> "a" -> "b" -> "c" -> "d", "a" -> "b" -> "d"
+// XPECT allPaths from '"c"' --> "c" -> "d"
+// XPECT allPaths from '"a"' direction 'Forward' --> "a" -> "b" -> "c" -> "d", "a" -> "b" -> "d"
+// XPECT allPaths from '"c"' directoin 'Forward' -> "b" -> "c" -> "d", "a" -> "b" -> "d"
+// XPECT allPaths from '"c"' direction 'Backward' --> "c" -> "b" -> "a"
+// XPECT allPaths from '"d"' direction 'Backward'--> "d" -> "b" -> "a", "d" -> "c" -> "b" -> "a"
+"a"
+
+if ("b") {
+	"c"
+}
+
+// XPECT allPaths from '"d"' --> wrong expectation
+"d"

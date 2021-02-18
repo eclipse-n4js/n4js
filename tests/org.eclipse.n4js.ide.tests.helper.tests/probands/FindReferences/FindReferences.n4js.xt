@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+
+class B {
+	methodB() {	}
+}
+
+
+var b0 : B = new B();
+// test-1 XPECT findReferences at 'b0' --> FindReferences - b0 - 24, FindReferences - b0 - 25
+b0.methodB();
+b0.methodB();
+
+
+var b1 : B = new B();
+// test-2 XPECT findReferences at 'b1' ---
+// FindReferences - b1 - 33,
+// FindReferences - b1 - 34
+// ---
+b1.methodB();
+b1.methodB();
+
+
+

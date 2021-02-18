@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+/* pos 0 */
+primitive any{}
+
+/* pos 1 */
+primitive number{}
+
+/* pos 2 */
+primitive string{}
+
+/* pos 3 */
+public class MySuperDuperClass {
+
+}
+
+/* pos 4 */
+public interface MyRole {
+
+}
+
+/* pos 5 */
+public interface Comparable {
+
+}
+
+/* pos 6 */
+public interface MyInterface {
+
+}
+
+/* pos 7 */
+public function MyFunction() : any
+
+/* pos 8 */
+// LN-1 XPECT linkedName at 'MyInterface' --> MyInterface
+// LN-2 XPECT linkedName at 'Comparable' --> Wrong Expectation
+
+public class MySuperClass<T extends MyInterface> extends MySuperDuperClass implements Comparable {
+}
