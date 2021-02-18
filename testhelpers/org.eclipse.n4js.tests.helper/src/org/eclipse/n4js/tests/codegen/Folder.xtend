@@ -22,7 +22,7 @@ public class Folder {
 	final public String name;
 	final public List<Module> modules = newLinkedList();
 	final public List<OtherFile> files = newLinkedList();
-	final public boolean isSourceFolder = true;
+	final public boolean isSourceFolder;
 
 	/**
 	 * Creates a new instance with the given parameters.
@@ -30,7 +30,18 @@ public class Folder {
 	 * @param name the name of this source folder
 	 */
 	public new(String name) {
+		this(name, true);
+	}
+
+	/**
+	 * Creates a new instance with the given parameters.
+	 * 
+	 * @param name the name of this source folder
+	 * @param isSourceFolder iff true it will be listed as a source folder in the package.json
+	 */
+	public new(String name, boolean isSourceFolder) {
 		this.name = Objects.requireNonNull(name);
+		this.isSourceFolder = isSourceFolder;
 	}
 
 	/**
@@ -75,6 +86,8 @@ public class Folder {
 
 		for (module : modules)
 			module.create(folder)
+		for (file : files)
+			file.create(folder)
 	}
 
 	override equals(Object o) {

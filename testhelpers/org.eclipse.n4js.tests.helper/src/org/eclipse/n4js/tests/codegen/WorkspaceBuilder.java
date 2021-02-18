@@ -73,11 +73,40 @@ public class WorkspaceBuilder {
 		}
 	}
 
+	/** Builder for {@link YarnWorkspaceProject} */
+	public class YarnProjectBuilder extends ProjectBuilder {
+		Map<String, ProjectBuilder> yarnProjectBuilders = new LinkedHashMap<>();
+
+		YarnProjectBuilder(String name) {
+			super(name);
+		}
+
+		/** Adds a project to the yarn workspace */
+		public ProjectBuilder addProject(String projectName) {
+			ProjectBuilder prjBuilder = new ProjectBuilder(projectName);
+			yarnProjectBuilders.put(projectName, prjBuilder);
+			return prjBuilder;
+		}
+
+		/** Builds the {@link YarnWorkspaceProject} */
+		@Override
+		public Project build() {
+			YarnWorkspaceProject project = new YarnWorkspaceProject(name, vendor, vendorName);
+			for (FolderBuilder folderBuilder : folders.values()) {
+				project.addSourceFolder(folderBuilder.build());
+			}
+			for (ProjectBuilder prjBuilder : yarnProjectBuilders.values()) {
+				project.addMemberProject(prjBuilder.build());
+			}
+			return project;
+		}
+	}
+
 	/** Builder for {@link Folder} */
 	public class FolderBuilder extends NamedEntityBuilder {
 		Map<String, ModuleBuilder> modules = new LinkedHashMap<>();
 		Map<String, OtherFileBuilder> files = new LinkedHashMap<>();
-		boolean isSourceFolder;
+		boolean isSourceFolder = false;
 
 		FolderBuilder(String name) {
 			super(name);
@@ -117,7 +146,7 @@ public class WorkspaceBuilder {
 
 		/** Builds the {@link Folder} */
 		public Folder build() {
-			Folder folder = new Folder(name);
+			Folder folder = new Folder(name, isSourceFolder);
 			for (ModuleBuilder moduleBuilder : modules.values()) {
 				folder.modules.add(moduleBuilder.build());
 			}
@@ -187,6 +216,13 @@ public class WorkspaceBuilder {
 		ProjectBuilder prjBuilder = new ProjectBuilder(projectName);
 		projectBuilders.put(projectName, prjBuilder);
 		return prjBuilder;
+	}
+
+	/** Adds a yarn project to the workspace */
+	public YarnProjectBuilder addYarnProject(String projectName) {
+		YarnProjectBuilder yarnPrjBuilder = new YarnProjectBuilder(projectName);
+		projectBuilders.put(projectName, yarnPrjBuilder);
+		return yarnPrjBuilder;
 	}
 
 	/** Builds this workspace */

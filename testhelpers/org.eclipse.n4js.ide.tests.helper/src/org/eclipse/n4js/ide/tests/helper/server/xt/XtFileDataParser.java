@@ -127,11 +127,11 @@ public class XtFileDataParser {
 	}
 
 	static XtWorkspace getWorkspace(File xtFile, String setupWorkspace, String xtFileContent) {
-		File xtFileStripped = XtFileData.stripXtExtension(xtFile);
 		if (setupWorkspace == null) {
+			File xtFileStripped = XtFileData.stripXtExtension(xtFile);
 			return createDefaultWorkspace(xtFileStripped.getName(), xtFileContent);
 		} else {
-			return XtSetupWorkspaceParser.parse(xtFileStripped, setupWorkspace, xtFileContent);
+			return XtSetupWorkspaceParser.parse(xtFile, setupWorkspace, xtFileContent);
 		}
 	}
 
