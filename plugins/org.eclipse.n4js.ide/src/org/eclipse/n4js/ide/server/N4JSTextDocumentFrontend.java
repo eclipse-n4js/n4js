@@ -89,11 +89,11 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			if (!data.isEmpty()) {
 				DataPoint dataPoint = data.get(0);
 				int elapsedSeconds = (int) (dataPoint.nanos / 1000000000);
-				if (elapsedSeconds > 3) {
+				if (elapsedSeconds > 2) {
 					DataSeries dataSeries = CollectedDataAccess.getDataSeries(dCollector);
-
+					String collectorString = DataCollectorUtils.dataToString(dataSeries, " ");
 					String msg = "Slow content assist\nPARAMS:\n" + params.toString();
-					msg += "\nTime measurements:\n" + DataCollectorUtils.dataToString(dataSeries, " ");
+					msg += "\nTime measurements:\n" + collectorString;
 					serverIncidentLogger.reportWithFileBaseName("slow-ca", msg, true);
 				}
 			}
