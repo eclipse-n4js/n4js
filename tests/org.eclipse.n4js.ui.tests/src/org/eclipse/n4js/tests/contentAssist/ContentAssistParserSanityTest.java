@@ -22,7 +22,6 @@ import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.ide.contentassist.antlr.N4JSParser;
 import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
@@ -72,10 +71,6 @@ public class ContentAssistParserSanityTest {
 	 */
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> methodNames() {
-		// N4JSInjectorProvider uses N4JSStandaloneTestsModule, by default, and use of this module has the side effect
-		// of setting N4JSLanguageHelper#OPAQUE_JS_MODULES to false. To avoid side effects of this test class on other
-		// test classes, we need to preserve this configuration.
-		final boolean oldOpaqueJsModules = N4JSLanguageHelper.OPAQUE_JS_MODULES;
 		try {
 			N4JSInjectorProvider injectorProvider = new N4JSInjectorProvider();
 			Injector injector = injectorProvider.getInjector();
@@ -99,8 +94,6 @@ public class ContentAssistParserSanityTest {
 			return Lists.transform(methodNames, (s) -> new Object[] { s, flattenedRuleNames });
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			N4JSLanguageHelper.OPAQUE_JS_MODULES = oldOpaqueJsModules;
 		}
 	}
 
