@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,10 +27,8 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
-import com.google.common.base.Preconditions;
-
 /**
- *
+ * TODO
  */
 public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	final Class<?> testClass;
@@ -40,13 +39,12 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 
 	List<XtFileRunner> fileRunners;
 
-	/**
-	 */
+	/** Constructor */
 	public XtParentRunner(Class<?> testClass) throws InitializationError {
-		super(XtIdeTest.class); // This will run methods annotated with @BeforeAll/@AfterAll
+		super(testClass); // This will run methods annotated with @BeforeAll/@AfterAll
 		this.testClass = testClass;
 		this.currentProject = new File("").getAbsoluteFile().toPath();
-		this.xtFilesFolder = getFolder();
+		this.xtFilesFolder = getFolder(testClass);
 		this.startLocation = currentProject.resolve(xtFilesFolder);
 	}
 
@@ -96,11 +94,20 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		return fileRunners;
 	}
 
-	private String getFolder() {
-		XtFolder[] xtFolders = testClass.getAnnotationsByType(XtFolder.class);
-		Preconditions.checkState(xtFolders != null && xtFolders.length == 1);
-		String folder = xtFolders[0].value();
-		return folder;
+	static private String getFolder(Class<?> testClass) throws InitializationError {
+		try {
+			for (Method m : testClass.getDeclaredMethods()) {
+				XtFolder[] annFolder = m.getDeclaredAnnotationsByType(XtFolder.class);
+				if (annFolder != null && annFolder.length > 0) {
+					m.setAccessible(true);
+					String folderName = (String) m.invoke(null);
+					return folderName;
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			throw new InitializationError(e);
+		}
 	}
 
 }

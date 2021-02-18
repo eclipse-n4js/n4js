@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.xpect.ui.tests;
 
+import java.util.Set;
+
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
@@ -23,11 +26,19 @@ import org.junit.runner.RunWith;
  */
 // This annotation is used only to enable UI features of JUnit and .xt files.
 @XpectSuiteClasses({
-		XtIdeTest.class, // This class defines test methods (using @Xpect) used in .xt files after keyword 'XPECT'
+		XtIdeTest.class, // This class defines test methods (using @Xpect) used in .xt files after keyword 'X-PECT'
 		WorkspaceDefaultsSetup.class // This class links keywords used in setup sections of .xt files
 })
 @RunWith(XtParentRunner.class)
-@XtFolder("ideTests")
-public class XtTestSetupTest { // needs to be called test to get picked up by maven
-	// NOOP
+// class name needs to end with 'Test' to get picket up by maven
+public class XtTestSetupTest {
+
+	@XtFolder
+	static String getFolder() {
+		return "ideTests";
+	}
+
+	static Set<String> getSuppressedIssueCodes() {
+		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
+	}
 }
