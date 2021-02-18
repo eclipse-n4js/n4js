@@ -19,8 +19,10 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
@@ -46,6 +48,7 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		this.currentProject = new File("").getAbsoluteFile().toPath();
 		this.xtFilesFolder = getFolder(testClass);
 		this.startLocation = currentProject.resolve(xtFilesFolder);
+		ideTest.setSuppressedIssues(getSuppressedIssues(testClass));
 	}
 
 	@Override
@@ -108,6 +111,23 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		} catch (Exception e) {
 			throw new InitializationError(e);
 		}
+	}
+
+	static private Set<String> getSuppressedIssues(Class<?> testClass) {
+		try {
+			for (Method m : testClass.getDeclaredMethods()) {
+				XtSuppressedIssues[] annFolder = m.getDeclaredAnnotationsByType(XtSuppressedIssues.class);
+				if (annFolder != null && annFolder.length > 0) {
+					m.setAccessible(true);
+					@SuppressWarnings("unchecked")
+					Set<String> folderName = (Set<String>) m.invoke(null);
+					return folderName;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Collections.emptySet();
 	}
 
 }

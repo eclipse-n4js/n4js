@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -85,8 +86,10 @@ public class XtIdeTest extends AbstractIdeTest {
 	XtMethodsIssues issueHelper;
 	XtextResource resource;
 	XtResourceEObjectAccessor eobjProvider;
+	Set<String> suppressedIssues;
 
 	/**
+	 * Call this before calling any other methods of {@link XtIdeTest}.
 	 */
 	public void initializeXtFile(XtFileData newXtData) throws IOException {
 		Preconditions.checkNotNull(newXtData);
@@ -136,7 +139,18 @@ public class XtIdeTest extends AbstractIdeTest {
 		this.issueHelper = new XtMethodsIssues(xtData, getIssuesInFile(xtModule), issueTests);
 	}
 
+	/** Sets the issues that are suppressed regarding issue related xt methods */
+	public void setSuppressedIssues(Set<String> suppressedIssues) {
+		this.suppressedIssues = suppressedIssues;
+	}
+
+	@Override
+	protected Set<String> getIgnoredIssueCodes() {
+		return suppressedIssues;
+	}
+
 	/**
+	 * Delegates xt methods found in xt files to their implementations
 	 */
 	public void invokeTestMethod(MethodData testMethodData) throws InterruptedException, ExecutionException {
 		switch (testMethodData.name) {
@@ -674,4 +688,5 @@ public class XtIdeTest extends AbstractIdeTest {
 		String s2sorted = Strings.join(", ", sorted2);
 		assertEquals(s1sorted, s2sorted);
 	}
+
 }

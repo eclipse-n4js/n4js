@@ -32,11 +32,11 @@ import org.junit.runner.RunWith;
 })
 @RunWith(XtParentRunner.class)
 // class name needs to end with 'Test' to get picket up by maven
-public class XtTestSetupTest {
+public class XtTestSetup_Testdata_Test {
 
 	@XtFolder
 	static String getFolder() {
-		return "ideTests";
+		return "testdata";
 	}
 
 	@XtSuppressedIssues

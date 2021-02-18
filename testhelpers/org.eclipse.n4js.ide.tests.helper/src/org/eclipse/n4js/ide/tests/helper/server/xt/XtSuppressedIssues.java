@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2016 NumberFour AG.
+/**
+ * Copyright (c) 2021 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,15 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+package org.eclipse.n4js.ide.tests.helper.server.xt;
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.XtTestSetupTest
-   END_SETUP
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ *
  */
-
-
-
-
-// XPECT nowarnings -->
-let i : int = 3;
+@Retention(RetentionPolicy.RUNTIME)
+public @interface XtSuppressedIssues {
+	// NOOP
+}

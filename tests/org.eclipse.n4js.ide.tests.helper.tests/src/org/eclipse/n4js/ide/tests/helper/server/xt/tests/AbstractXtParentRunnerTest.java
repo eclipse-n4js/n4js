@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileRunner;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
@@ -38,8 +40,9 @@ public abstract class AbstractXtParentRunnerTest {
 
 	class TestRunSimulator extends RunListener {
 
-		void run(String folderName) throws Exception {
+		void run(String folderName, Set<String> suppressedIssues) throws Exception {
 			XtTestSetupTestMockup.folder = folderName;
+			XtTestSetupTestMockup.suppressedIssues = suppressedIssues;
 			XtParentRunner xtParentRunner = new XtParentRunner(XtTestSetupTestMockup.class);
 			RunNotifier rn = new RunNotifier();
 			rn.addListener(this);
@@ -120,8 +123,12 @@ public abstract class AbstractXtParentRunnerTest {
 	}
 
 	void run(String folderName) throws Exception {
+		run(folderName, Collections.emptySet());
+	}
+
+	void run(String folderName, Set<String> suppressedIssues) throws Exception {
 		runListener = new TestRunSimulator();
-		runListener.run(folderName);
+		runListener.run(folderName, suppressedIssues);
 	}
 
 	void assertFiles(String files) {

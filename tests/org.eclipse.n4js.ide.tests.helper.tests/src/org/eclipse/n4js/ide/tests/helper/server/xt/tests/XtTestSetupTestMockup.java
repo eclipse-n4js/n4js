@@ -10,16 +10,25 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
+import java.util.Set;
+
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtSuppressedIssues;
 
 /**
- * JUnit runner specified in the tests inside folder 'probands'.
+ * JUnit runner for testing the xt framework.
  */
 public class XtTestSetupTestMockup {
 	static String folder;
+	static Set<String> suppressedIssues;
 
 	@XtFolder
 	static String getFolder() {
 		return folder;
+	}
+
+	@XtSuppressedIssues
+	static Set<String> getSuppressedIssues() {
+		return suppressedIssues;
 	}
 }
