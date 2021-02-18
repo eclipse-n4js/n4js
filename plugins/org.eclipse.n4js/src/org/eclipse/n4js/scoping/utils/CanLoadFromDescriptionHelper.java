@@ -47,7 +47,7 @@ public class CanLoadFromDescriptionHelper {
 	/**
 	 * Tells whether the load-from-source behavior is entirely deactivated.
 	 */
-	public boolean isLoadFromSourceDeactivated() {
+	public static boolean isLoadFromSourceDeactivated() {
 		return true; // deactivated as of IDE-3180
 	}
 

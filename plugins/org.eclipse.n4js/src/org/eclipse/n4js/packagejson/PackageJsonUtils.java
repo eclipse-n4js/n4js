@@ -17,8 +17,12 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStrings
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.NV_SOURCE_CONTAINER;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
@@ -44,8 +48,10 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Strings;
+import com.google.gson.JsonElement;
 
 /**
  * A utility methods for extracting N4JS-specific information from generic {@link JSONPackage} model instances
@@ -359,5 +365,48 @@ public class PackageJsonUtils {
 				searchNameValuePair(child, pathElems, i + 1, clazz, result);
 			}
 		}
+	}
+
+	/**
+	 * See {@link PackageJsonModificationUtils#addSourceFoldersToPackageJsonFile(Path, SourceContainerType, String...)}.
+	 */
+	public static void addSourceFoldersToPackageJsonFile(Path path, SourceContainerType type, String... srcFolders)
+			throws FileNotFoundException, IOException {
+		PackageJsonModificationUtils.addSourceFoldersToPackageJsonFile(path, type, srcFolders);
+	}
+
+	/** See {@link PackageJsonModificationUtils#removeSourceFoldersFromPackageJsonFile(Path, String...)}. */
+	public static void removeSourceFoldersFromPackageJsonFile(Path path, String... srcFolders)
+			throws FileNotFoundException, IOException {
+		PackageJsonModificationUtils.removeSourceFoldersFromPackageJsonFile(path, srcFolders);
+	}
+
+	/** See {@link PackageJsonModificationUtils#addDependenciesToPackageJsonFile(Path, Pair...)}. */
+	@SafeVarargs
+	public static void addDependenciesToPackageJsonFile(Path path, Pair<String, String>... namesAndVersionConstraints)
+			throws FileNotFoundException, IOException {
+		PackageJsonModificationUtils.addDependenciesToPackageJsonFile(path, namesAndVersionConstraints);
+	}
+
+	/** See {@link PackageJsonModificationUtils#removeDependenciesFromPackageJsonFile(Path, String...)}. */
+	public static void removeDependenciesFromPackageJsonFile(Path path, String... projectNamesToRemove)
+			throws FileNotFoundException, IOException {
+		PackageJsonModificationUtils.removeDependenciesFromPackageJsonFile(path, projectNamesToRemove);
+	}
+
+	/**
+	 * See {@link PackageJsonModificationUtils#setVersionOfDependenciesInAllPackageJsonFiles(Path, Set, JsonElement)}.
+	 */
+	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path rootFolder,
+			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
+		PackageJsonModificationUtils.setVersionOfDependenciesInAllPackageJsonFiles(rootFolder, namesOfDependencies,
+				versionToSet);
+	}
+
+	/** See {@link PackageJsonModificationUtils#setVersionOfDependenciesInPackageJsonFile(Path, Set, JsonElement)}. */
+	public static void setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
+			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
+		PackageJsonModificationUtils.setVersionOfDependenciesInPackageJsonFile(packageJsonFile, namesOfDependencies,
+				versionToSet);
 	}
 }

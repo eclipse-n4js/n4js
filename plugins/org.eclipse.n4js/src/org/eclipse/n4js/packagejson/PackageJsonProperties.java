@@ -69,7 +69,7 @@ public enum PackageJsonProperties {
 
 	// N4JS properties
 	/** Key of package.json property "n4js". */
-	N4JS("n4js", "N4JS section", JSONObject.class),
+	N4JS(UtilN4.PACKAGE_JSON__N4JS, "N4JS section", JSONObject.class),
 	/** Key of package.json property "projectType". */
 	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), N4JS),
 	/** Key of package.json property "vendorId". */
@@ -79,7 +79,7 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "output". */
 	OUTPUT("output", "Output folder. Default is '.'", ".", N4JS),
 	/** Key of package.json property "sources". */
-	SOURCES("sources", "Source folders", JSONObject.class, N4JS),
+	SOURCES(UtilN4.PACKAGE_JSON__SOURCES, "Source folders", JSONObject.class, N4JS),
 	/** Key of package.json property "moduleFilters". */
 	MODULE_FILTERS("moduleFilters", "", JSONObject.class, N4JS),
 	/** Key of package.json property "mainModule". */

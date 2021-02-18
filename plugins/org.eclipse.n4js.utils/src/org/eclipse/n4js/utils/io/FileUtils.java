@@ -17,12 +17,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +42,27 @@ public abstract class FileUtils {
 
 	private FileUtils() {
 		// private.
+	}
+
+	/**
+	 * Returns all regular files below the given root.
+	 */
+	public static List<Path> getAllRegularFilesIn(Path root) {
+		List<Path> result = new ArrayList<>();
+		try {
+			Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+					if (attrs.isRegularFile()) {
+						result.add(path);
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (IOException e) {
+			throw new RuntimeException("exception while collecting regular files in: " + root, e);
+		}
+		return result;
 	}
 
 	/** Same as {@link FileDeleter#delete(File)}. For more options see class {@link FileDeleter}. */

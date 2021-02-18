@@ -365,7 +365,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		// re-enable the runtime dependency X -> C
 		changeNonOpenedFile("X", '// import "C";' -> 'import "C";');
 		joinServerRequests();
-		
+
 		assertIssues(expectedIssuesWithIllegalLoadtimeReferences);
 	}
 
@@ -386,7 +386,7 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 		// re-enable the runtime dependency X -> C
 		changeNonOpenedFile("X", '// import "C";' -> 'import "C";');
 		joinServerRequests();
-		
+
 		assertIssues(defaultExpectedIssues);
 	}
 

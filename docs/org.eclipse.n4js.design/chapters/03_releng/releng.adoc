@@ -273,7 +273,6 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
 ... plain JUnit tests (e.g. `org.eclipse.n4js.lang.tests`).
 ... Plugin tests.
 ... Plugin UI tests.
-... SWTBot tests.
 ... Xpect tests (individual files and entire bundles; e.g. `org.eclipse.n4js.spec.tests`).
 ... Xpect UI tests.
 .. Ensure an N4JS IDE product can be launched from within the newly installed Eclipse using the launch configuration
