@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef <em>Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getCachedProcessedTypeRef <em>Cached Processed Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRefInAST <em>Type Ref In AST</em>}</li>
  * </ul>
  *
@@ -38,38 +38,26 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  */
 public interface TypeReferenceNode<T extends TypeRef> extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Type Ref</b></em>' reference.
+	 * Returns the value of the '<em><b>Cached Processed Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Same as {@link #getTypeRefInAST()}, but processed by the {@code TypeRefProcessor} during
-	 * post-processing. Currently, this processing only includes resolution of type aliases but
-	 * more may be added in the future.
-	 * <p>
-	 * The returned type reference may or may not be identical with the one returned from
-	 * {@link #getTypeRefInAST()}, and thus it may or may not be contained in the AST.
-	 * <p>
-	 * Since a type reference can change from {@code ParameterizedTypeRef} to something else
-	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the
-	 * aliased type, the type of this property must be {@link TypeRef} instead of {@code T}.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Type Ref</em>' reference.
-	 * @see #setTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceNode_TypeRef()
+	 * @return the value of the '<em>Cached Processed Type Ref</em>' reference.
+	 * @see #setCachedProcessedTypeRef(TypeRef)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypeReferenceNode_CachedProcessedTypeRef()
 	 * @model transient="true"
 	 * @generated
 	 */
-	TypeRef getTypeRef();
+	TypeRef getCachedProcessedTypeRef();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef <em>Type Ref</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getCachedProcessedTypeRef <em>Cached Processed Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type Ref</em>' reference.
-	 * @see #getTypeRef()
+	 * @param value the new value of the '<em>Cached Processed Type Ref</em>' reference.
+	 * @see #getCachedProcessedTypeRef()
 	 * @generated
 	 */
-	void setTypeRef(TypeRef value);
+	void setCachedProcessedTypeRef(TypeRef value);
 
 	/**
 	 * Returns the value of the '<em><b>Type Ref In AST</b></em>' containment reference.
@@ -92,5 +80,25 @@ public interface TypeReferenceNode<T extends TypeRef> extends EObject {
 	 * @generated
 	 */
 	void setTypeRefInAST(T value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Same as {@link #getTypeRefInAST()}, but processed by the {@code TypeRefProcessor} during
+	 * post-processing. Currently, this processing only includes resolution of type aliases but
+	 * more may be added in the future.
+	 * <p>
+	 * The returned type reference may or may not be identical with the one returned from
+	 * {@link #getTypeRefInAST()}, and thus it may or may not be contained in the AST.
+	 * <p>
+	 * Since a type reference can change from {@code ParameterizedTypeRef} to something else
+	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the
+	 * aliased type, the type of this property must be {@link TypeRef} instead of {@code T}.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getTypeRef();
 
 } // TypeReferenceNode

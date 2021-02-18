@@ -184,7 +184,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		if(specFpar!==null) {
 			// we have a spec-parameter -> we are in a spec-style constructor
 			val result = <Statement>newArrayList;
-			val structFields = specFpar.declaredTypeRef.structuralMembers;
+			val structFields = specFpar.declaredTypeRefNode.typeRefInAST.structuralMembers;
 
 			// step #1: initialize all fields either with data from the specFpar OR or their initializer expression
 			val currFields = <N4FieldDeclaration>newArrayList;

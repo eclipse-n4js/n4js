@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -33,7 +37,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeReferenceNodeImpl#getTypeRef <em>Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeReferenceNodeImpl#getCachedProcessedTypeRef <em>Cached Processed Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.TypeReferenceNodeImpl#getTypeRefInAST <em>Type Ref In AST</em>}</li>
  * </ul>
  *
@@ -41,14 +45,14 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  */
 public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObjectImpl implements TypeReferenceNode<T> {
 	/**
-	 * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' reference.
+	 * The cached value of the '{@link #getCachedProcessedTypeRef() <em>Cached Processed Type Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTypeRef()
+	 * @see #getCachedProcessedTypeRef()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeRef typeRef;
+	protected TypeRef cachedProcessedTypeRef;
 
 	/**
 	 * The cached value of the '{@link #getTypeRefInAST() <em>Type Ref In AST</em>}' containment reference.
@@ -85,16 +89,16 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * @generated
 	 */
 	@Override
-	public TypeRef getTypeRef() {
-		if (typeRef != null && typeRef.eIsProxy()) {
-			InternalEObject oldTypeRef = (InternalEObject)typeRef;
-			typeRef = (TypeRef)eResolveProxy(oldTypeRef);
-			if (typeRef != oldTypeRef) {
+	public TypeRef getCachedProcessedTypeRef() {
+		if (cachedProcessedTypeRef != null && cachedProcessedTypeRef.eIsProxy()) {
+			InternalEObject oldCachedProcessedTypeRef = (InternalEObject)cachedProcessedTypeRef;
+			cachedProcessedTypeRef = (TypeRef)eResolveProxy(oldCachedProcessedTypeRef);
+			if (cachedProcessedTypeRef != oldCachedProcessedTypeRef) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF, oldTypeRef, typeRef));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF, oldCachedProcessedTypeRef, cachedProcessedTypeRef));
 			}
 		}
-		return typeRef;
+		return cachedProcessedTypeRef;
 	}
 
 	/**
@@ -102,8 +106,8 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TypeRef basicGetTypeRef() {
-		return typeRef;
+	public TypeRef basicGetCachedProcessedTypeRef() {
+		return cachedProcessedTypeRef;
 	}
 
 	/**
@@ -112,11 +116,11 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * @generated
 	 */
 	@Override
-	public void setTypeRef(TypeRef newTypeRef) {
-		TypeRef oldTypeRef = typeRef;
-		typeRef = newTypeRef;
+	public void setCachedProcessedTypeRef(TypeRef newCachedProcessedTypeRef) {
+		TypeRef oldCachedProcessedTypeRef = cachedProcessedTypeRef;
+		cachedProcessedTypeRef = newCachedProcessedTypeRef;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF, oldTypeRef, typeRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF, oldCachedProcessedTypeRef, cachedProcessedTypeRef));
 	}
 
 	/**
@@ -170,6 +174,20 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	 * @generated
 	 */
 	@Override
+	public TypeRef getTypeRef() {
+		final TypeRef result = this.getCachedProcessedTypeRef();
+		if (((result == null) && (this.getTypeRefInAST() != null))) {
+			throw new IllegalStateException("attempt to access resolution of a typeRefInAST before it was computed by TypeRefProcessor");
+		}
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
@@ -186,9 +204,9 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
-				if (resolve) return getTypeRef();
-				return basicGetTypeRef();
+			case N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF:
+				if (resolve) return getCachedProcessedTypeRef();
+				return basicGetCachedProcessedTypeRef();
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				return getTypeRefInAST();
 		}
@@ -204,8 +222,8 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
-				setTypeRef((TypeRef)newValue);
+			case N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF:
+				setCachedProcessedTypeRef((TypeRef)newValue);
 				return;
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				setTypeRefInAST((T)newValue);
@@ -222,8 +240,8 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
-				setTypeRef((TypeRef)null);
+			case N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF:
+				setCachedProcessedTypeRef((TypeRef)null);
 				return;
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				setTypeRefInAST((T)null);
@@ -240,12 +258,26 @@ public class TypeReferenceNodeImpl<T extends TypeRef> extends ProxyResolvingEObj
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF:
-				return typeRef != null;
+			case N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF:
+				return cachedProcessedTypeRef != null;
 			case N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST:
 				return typeRefInAST != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.TYPE_REFERENCE_NODE___GET_TYPE_REF:
+				return getTypeRef();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //TypeReferenceNodeImpl

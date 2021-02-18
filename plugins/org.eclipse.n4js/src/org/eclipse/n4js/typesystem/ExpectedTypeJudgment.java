@@ -688,7 +688,7 @@ import com.google.inject.Inject;
 									&& ((IdentifierRef) forStmnt.getInitExpr()).getId() instanceof VariableDeclaration
 											? (VariableDeclaration) ((IdentifierRef) forStmnt.getInitExpr()).getId()
 											: null;
-					if ((varDeclInFor != null && varDeclInFor.getDeclaredTypeRef() != null)
+					if ((varDeclInFor != null && varDeclInFor.getDeclaredTypeRefNode() != null)
 							|| varDeclOutside != null) {
 						final VariableDeclaration varDecl = varDeclOutside != null ? varDeclOutside : varDeclInFor;
 						final TypeRef varTypeRef = ts.type(G, varDecl);

@@ -226,7 +226,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		// check type arguments
 		val prop = propAccessExpression.property;
 		val typeVars = if (prop instanceof Type) prop.typeVars else #[]; // else-case required for TField, TGetter, TSetter
-		internalCheckTypeArgumentsInAST(typeVars, propAccessExpression.typeArgs, true, prop, propAccessExpression,
+		internalCheckTypeArgumentsNodes(typeVars, propAccessExpression.typeArgs, true, prop, propAccessExpression,
 			N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property);
 
 		internalCheckTargetSubtypeOfDeclaredThisType(propAccessExpression);
@@ -394,7 +394,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (typeRef instanceof FunctionTypeExprOrRef) {
 			// check type arguments
-			internalCheckTypeArgumentsInAST(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
+			internalCheckTypeArgumentsNodes(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
 				callExpression, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 
 			// check Calling async functions with missing await
@@ -601,7 +601,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// success case; but perform some further checks
-		internalCheckTypeArgumentsInAST(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
+		internalCheckTypeArgumentsNodes(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
 			
 		

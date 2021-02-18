@@ -2186,7 +2186,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTypeReferenceNode_TypeRef() {
+	public EReference getTypeReferenceNode_CachedProcessedTypeRef() {
 		return (EReference)typeReferenceNodeEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2198,6 +2198,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EReference getTypeReferenceNode_TypeRefInAST() {
 		return (EReference)typeReferenceNodeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypeReferenceNode__GetTypeRef() {
+		return typeReferenceNodeEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -7779,8 +7789,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(namespaceImportSpecifierEClass, NAMESPACE_IMPORT_SPECIFIER__ALIAS);
 
 		typeReferenceNodeEClass = createEClass(TYPE_REFERENCE_NODE);
-		createEReference(typeReferenceNodeEClass, TYPE_REFERENCE_NODE__TYPE_REF);
+		createEReference(typeReferenceNodeEClass, TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF);
 		createEReference(typeReferenceNodeEClass, TYPE_REFERENCE_NODE__TYPE_REF_IN_AST);
+		createEOperation(typeReferenceNodeEClass, TYPE_REFERENCE_NODE___GET_TYPE_REF);
 
 		typeProvidingElementEClass = createEClass(TYPE_PROVIDING_ELEMENT);
 		createEOperation(typeProvidingElementEClass, TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF);
@@ -8874,9 +8885,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getNamespaceImportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, NamespaceImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typeReferenceNodeEClass, TypeReferenceNode.class, "TypeReferenceNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypeReferenceNode_TypeRef(), theTypeRefsPackage.getTypeRef(), null, "typeRef", null, 0, 1, TypeReferenceNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypeReferenceNode_CachedProcessedTypeRef(), theTypeRefsPackage.getTypeRef(), null, "cachedProcessedTypeRef", null, 0, 1, TypeReferenceNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(typeReferenceNodeEClass_T);
 		initEReference(getTypeReferenceNode_TypeRefInAST(), g1, null, "typeRefInAST", null, 0, 1, TypeReferenceNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTypeReferenceNode__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(typeProvidingElementEClass, TypeProvidingElement.class, "TypeProvidingElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

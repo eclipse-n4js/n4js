@@ -826,7 +826,7 @@ public class TranspilerBuilderBlocks
 	public static def <T extends TypeRef> TypeReferenceNode<T> _TypeReferenceNode(T typeRef) {
 		val result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
 		result.typeRefInAST = TypeUtils.copyIfContained(typeRef);
-		result.typeRef = result.typeRefInAST;
+		result.cachedProcessedTypeRef = result.typeRefInAST;
 		return result;
 	}
 

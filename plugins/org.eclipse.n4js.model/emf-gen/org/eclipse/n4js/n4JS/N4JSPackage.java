@@ -1050,13 +1050,13 @@ public interface N4JSPackage extends EPackage {
 	int TYPE_REFERENCE_NODE = 12;
 
 	/**
-	 * The feature id for the '<em><b>Type Ref</b></em>' reference.
+	 * The feature id for the '<em><b>Cached Processed Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REFERENCE_NODE__TYPE_REF = 0;
+	int TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF = 0;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref In AST</b></em>' containment reference.
@@ -1077,13 +1077,22 @@ public interface N4JSPackage extends EPackage {
 	int TYPE_REFERENCE_NODE_FEATURE_COUNT = 2;
 
 	/**
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE___GET_TYPE_REF = 0;
+
+	/**
 	 * The number of operations of the '<em>Type Reference Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REFERENCE_NODE_OPERATION_COUNT = 0;
+	int TYPE_REFERENCE_NODE_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.TypeProvidingElement <em>Type Providing Element</em>}' class.
@@ -17292,15 +17301,15 @@ public interface N4JSPackage extends EPackage {
 	EClass getTypeReferenceNode();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef <em>Type Ref</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getCachedProcessedTypeRef <em>Cached Processed Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Type Ref</em>'.
-	 * @see org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef()
+	 * @return the meta object for the reference '<em>Cached Processed Type Ref</em>'.
+	 * @see org.eclipse.n4js.n4JS.TypeReferenceNode#getCachedProcessedTypeRef()
 	 * @see #getTypeReferenceNode()
 	 * @generated
 	 */
-	EReference getTypeReferenceNode_TypeRef();
+	EReference getTypeReferenceNode_CachedProcessedTypeRef();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRefInAST <em>Type Ref In AST</em>}'.
@@ -17312,6 +17321,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTypeReferenceNode_TypeRefInAST();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef() <em>Get Type Ref</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.TypeReferenceNode#getTypeRef()
+	 * @generated
+	 */
+	EOperation getTypeReferenceNode__GetTypeRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.TypeProvidingElement <em>Type Providing Element</em>}'.
@@ -23433,12 +23452,12 @@ public interface N4JSPackage extends EPackage {
 		EClass TYPE_REFERENCE_NODE = eINSTANCE.getTypeReferenceNode();
 
 		/**
-		 * The meta object literal for the '<em><b>Type Ref</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Cached Processed Type Ref</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TYPE_REFERENCE_NODE__TYPE_REF = eINSTANCE.getTypeReferenceNode_TypeRef();
+		EReference TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF = eINSTANCE.getTypeReferenceNode_CachedProcessedTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Type Ref In AST</b></em>' containment reference feature.
@@ -23447,6 +23466,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPE_REFERENCE_NODE__TYPE_REF_IN_AST = eINSTANCE.getTypeReferenceNode_TypeRefInAST();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REFERENCE_NODE___GET_TYPE_REF = eINSTANCE.getTypeReferenceNode__GetTypeRef();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.TypeProvidingElement <em>Type Providing Element</em>}' class.

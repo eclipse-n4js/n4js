@@ -291,7 +291,14 @@ class TypeReferenceNode<T extends TypeRef> {
 	 * (e.g. {@code FunctionTypeExpression}) during type alias resolution, depending on the
 	 * aliased type, the type of this property must be {@link TypeRef} instead of {@code T}.
 	 */
-	refers transient TypeRef typeRef
+	op TypeRef getTypeRef() {
+		val result = this.cachedProcessedTypeRef;
+		if (result === null && typeRefInAST !== null) {
+			throw new IllegalStateException("attempt to access resolution of a typeRefInAST before it was computed by TypeRefProcessor");
+		}
+		return result;
+	}
+	refers transient TypeRef cachedProcessedTypeRef
 	contains T typeRefInAST
 }
 

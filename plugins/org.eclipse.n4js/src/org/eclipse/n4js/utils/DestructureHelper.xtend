@@ -411,9 +411,16 @@ class DestructureHelper {
 	 * on {@link TypedElement#getDeclaredTypeRef()} here.
 	 */
 	private def TypeRef getDeclaredTypeRefOfVarDecl(RuleEnvironment G, VariableDeclaration varDecl) {
-		val declaredTypeRefInAST = varDecl.declaredTypeRefInAST;
-		if (declaredTypeRefInAST !== null) {
-			return varDecl.declaredTypeRef ?: tsh.resolveTypeAliases(G, declaredTypeRefInAST);
+		val typeRefNode = varDecl.declaredTypeRefNode;
+		if (typeRefNode !== null) {
+			val cached = typeRefNode.cachedProcessedTypeRef;
+			if (cached !== null) {
+				return cached;
+			}
+			val inAST = typeRefNode.typeRefInAST;
+			if (inAST !== null) {
+				return tsh.resolveTypeAliases(G, inAST);
+			}
 		}
 		return null;
 	}

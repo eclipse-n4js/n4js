@@ -478,7 +478,7 @@ public class N4JSLanguageUtils {
 					Variance.INV
 				}
 			}
-			N4ClassifierDeclaration case parent.superClassifierRefs.exists[it?.typeRef===rootTypeRefInAST]: {
+			N4ClassifierDeclaration case parent.superClassifierRefs.exists[it?.typeRefInAST===rootTypeRefInAST]: {
 				// typeRef is used in the "extends" or "implements" clause of the declaration of tClassifier
 				// -> this mainly depends on the variance of the classifier being extended
 				Variance.CO

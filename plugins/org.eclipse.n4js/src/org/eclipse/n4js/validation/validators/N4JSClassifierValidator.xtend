@@ -74,11 +74,11 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 		val superTypeRefs = switch(n4ClassifierDef) {
 			N4ClassDefinition: #[ n4ClassifierDef.superClassRef ] + n4ClassifierDef.implementedInterfaceRefs
 			N4InterfaceDeclaration: n4ClassifierDef.superInterfaceRefs
-		}.filterNull.map[typeRef].filterNull;
-		for(typeRef : superTypeRefs) {
-			for(typeArg : typeRef.typeArgs) {
-				if(typeArg instanceof Wildcard) {
-					addIssue(getMessageForCLF_IMPLEMENT_EXTEND_WITH_WILDCARD, typeArg, CLF_IMPLEMENT_EXTEND_WITH_WILDCARD);
+		}.filterNull.map[typeRefInAST].filterNull;
+		for(typeRefInAST : superTypeRefs) {
+			for(typeArgInAST : typeRefInAST.typeArgs) {
+				if(typeArgInAST instanceof Wildcard) {
+					addIssue(getMessageForCLF_IMPLEMENT_EXTEND_WITH_WILDCARD, typeArgInAST, CLF_IMPLEMENT_EXTEND_WITH_WILDCARD);
 				}
 			}
 		}

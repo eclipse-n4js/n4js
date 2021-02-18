@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
+import com.google.common.collect.Lists
 import com.google.inject.Inject
 import com.google.inject.Provider
 import java.util.regex.Pattern
@@ -25,9 +26,11 @@ import org.eclipse.n4js.N4JSTestHelper
 import org.eclipse.n4js.generator.GeneratorOption
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.resource.N4JSResource
@@ -202,8 +205,21 @@ abstract class AbstractTranspilerTest {
 			return this;
 		}
 		def SymbolTableEntryAsserter referencingElements(ReferencingElement_IM... expectedReferencingElements) {
+			val expectedAndImplicitReferencingElements = Lists.<ReferencingElement_IM>newArrayList();
+			for (elem : expectedReferencingElements) {
+				expectedAndImplicitReferencingElements.add(elem);
+				if (elem.eContainmentFeature === N4JSPackage.Literals.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST) {
+					val container = elem.eContainer as TypeReferenceNode<?>;
+					val cachedTypeRef = container.cachedProcessedTypeRef;
+					if (cachedTypeRef !== null && cachedTypeRef !== elem) {
+						// if TypeReferenceNode#typeRefInAST references a SymbolTableEntry, then also
+						// TypeReferenceNode#cachedProcessedTypeRef will reference that SymbolTableEntry:
+						expectedAndImplicitReferencingElements.add(cachedTypeRef as ReferencingElement_IM);
+					}
+				}
+			}
 			assertEquals("symbol table entries have different referencingElements",
-				expectedReferencingElements.toList, actual.referencingElements);
+				expectedAndImplicitReferencingElements.toList, actual.referencingElements);
 			return this;
 		}
 		def SymbolTableEntryAsserter originalTarget(IdentifiableElement expectedOriginalTarget) {

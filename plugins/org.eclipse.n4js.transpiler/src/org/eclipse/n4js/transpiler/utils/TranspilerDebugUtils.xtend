@@ -10,14 +10,17 @@
  */
 package org.eclipse.n4js.transpiler.utils
 
+import com.google.common.collect.Lists
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.io.Writer
+import java.util.Set
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TranspilerState
@@ -45,13 +48,20 @@ class TranspilerDebugUtils {
 			N4JSPackage.eINSTANCE.identifierRef,
 			TypeRefsPackage.eINSTANCE.parameterizedTypeRef
 		];
+		// collect some elements that are an exception to the rule that everything needs to be contained in the IM
+		val legalExceptions = state.im.eAllContents
+			.filter(TypeReferenceNode)
+			.map[typeRefNode|
+				val cachedTypeRef = typeRefNode.cachedProcessedTypeRef;
+				return if (cachedTypeRef !== null && cachedTypeRef !== typeRefNode.typeRefInAST) cachedTypeRef;
+			].filterNull.toSet;
 		val badObject = state.im.eAllContents.findFirst[replacedEClasses.contains(it.eClass)];
 		assertNull("intermediate model should not contain objects of type " + badObject?.eClass?.name, badObject);
 		// no cross reference in the IM to an element outside the IM (except in SymbolTableEntry)
 		assertFalse(
 			"intermediate model should not have a cross-reference to an element outside the intermediate model"
-			+ " (except for SymbolTableEntry)",
-			state.im.eAllContents.filter[!(allowedCrossRefToOutside(state.info))].exists[hasCrossRefToOutsideOf(state)]);
+			+ " (except for SymbolTableEntry, etc.)",
+			state.im.eAllContents.filter[!(allowedCrossRefToOutside(state.info))].exists[hasCrossRefToOutsideOf(state, legalExceptions)]);
 		// symbol table should exist
 		val st = state.im.symbolTable;
 		assertNotNull("intermediate model should have a symbol table", st);
@@ -60,7 +70,7 @@ class TranspilerDebugUtils {
 			if(ste instanceof SymbolTableEntryOriginal) {
 				assertNotNull("originalTarget should not be null", ste.originalTarget);
 				assertFalse("originalTarget should not be an element in the intermediate model",
-					ste.originalTarget.isElementInIntermediateModelOf(state));
+					ste.originalTarget.isElementInIntermediateModelOf(state, legalExceptions));
 			}
 			if(allowDanglingSecondaryReferencesInSTEs) {
 				// we allow dangling references in this case for the time being to make replacements in IM faster
@@ -68,13 +78,13 @@ class TranspilerDebugUtils {
 				// TODO consider disallowing dangling secondary references in symbol table entries
 			} else {
 				assertTrue("all elementsOfThisName should be elements in the intermediate model",
-					ste.elementsOfThisName.forall[isElementInIntermediateModelOf(state)]);
+					ste.elementsOfThisName.forall[isElementInIntermediateModelOf(state, legalExceptions)]);
 				assertTrue("all referencingElements should be elements in the intermediate model",
-					ste.referencingElements.forall[isElementInIntermediateModelOf(state)]);
+					ste.referencingElements.forall[isElementInIntermediateModelOf(state, legalExceptions)]);
 				if(ste instanceof SymbolTableEntryOriginal) {
 					if(ste.importSpecifier!==null) {
 						assertTrue("importSpecifier should be an element in the intermediate model",
-							ste.importSpecifier.isElementInIntermediateModelOf(state));
+							ste.importSpecifier.isElementInIntermediateModelOf(state, legalExceptions));
 					}
 				}
 			}
@@ -82,22 +92,34 @@ class TranspilerDebugUtils {
 	}
 
 	def private allowedCrossRefToOutside(EObject eobj, InformationRegistry info) {
+		// note: another exception case is implemented in method #hasCrossRefToOutsideOf()
 		switch eobj {
 			SymbolTableEntry: true
 			default: false
 		}
 	}
 
-	def private static boolean hasCrossRefToOutsideOf(EObject elementInIntermediateModel, TranspilerState state) {
-		return elementInIntermediateModel.eCrossReferences.exists[
-			if(!isElementInIntermediateModelOf(state)) {
+	def private static boolean hasCrossRefToOutsideOf(EObject elementInIntermediateModel, TranspilerState state, Set<? extends EObject> legalExceptions) {
+		val crossReferencedEObjectsToCheck = Lists.newArrayList(elementInIntermediateModel.eCrossReferences);
+		if (elementInIntermediateModel instanceof TypeReferenceNode) {
+			val cachedTypeRef = elementInIntermediateModel.cachedProcessedTypeRef;
+			if (cachedTypeRef !== null && cachedTypeRef !== elementInIntermediateModel.typeRefInAST) {
+				// it is legal for the #cachedProcessedTypeRef of a TypeReferenceNode not not be contained in the intermediate model
+				crossReferencedEObjectsToCheck.remove(cachedTypeRef);
+			}
+		}
+		return crossReferencedEObjectsToCheck.exists[
+			if(!isElementInIntermediateModelOf(state, legalExceptions)) {
 				return true;
 			}
 			return false;
 		];
 	}
 
-	def private static boolean isElementInIntermediateModelOf(EObject eobj, TranspilerState state) {
+	def private static boolean isElementInIntermediateModelOf(EObject eobj, TranspilerState state, Set<? extends EObject> legalExceptions) {
+		if (legalExceptions.contains(eobj)) {
+			return true;
+		}
 		return EcoreUtil2.getContainerOfType(eobj,Script_IM)===state.im
 	}
 

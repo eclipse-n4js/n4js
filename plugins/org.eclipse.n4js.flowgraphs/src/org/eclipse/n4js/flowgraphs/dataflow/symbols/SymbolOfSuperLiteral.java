@@ -42,9 +42,11 @@ public class SymbolOfSuperLiteral extends Symbol {
 	public EObject getDeclaration() {
 		N4ClassDeclaration classDef = EcoreUtil2.getContainerOfType(sl, N4ClassDeclaration.class);
 		if (classDef != null) { // can be null in broken AST
-			TypeReferenceNode<ParameterizedTypeRef> superTypeRefInAST = classDef.getSuperClassRef();
-			if (superTypeRefInAST != null) {
-				TypeRef superTypeRef = superTypeRefInAST.getTypeRef();
+			TypeReferenceNode<ParameterizedTypeRef> superTypeRefNode = classDef.getSuperClassRef();
+			if (superTypeRefNode != null) {
+				TypeRef superTypeRef = superTypeRefNode.getCachedProcessedTypeRef() != null
+						? superTypeRefNode.getTypeRef()
+						: superTypeRefNode.getTypeRefInAST();
 				return superTypeRef;
 			}
 		}

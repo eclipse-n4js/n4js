@@ -48,7 +48,6 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberType
@@ -152,11 +151,11 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 * Internal Validations:
 	 */
 	/** Same as {@code #internalCheckTypeArguments()}, but accepts type arguments from AST. */
-	def protected void internalCheckTypeArgumentsInAST(List<? extends TypeVariable> typeVars,
-		List<? extends TypeReferenceNode<TypeRef>> typeArgsInAST, boolean allowAutoInference, IdentifiableElement parameterizedElement,
+	def protected void internalCheckTypeArgumentsNodes(List<? extends TypeVariable> typeVars,
+		List<? extends TypeReferenceNode<?>> typeArgsNodes, boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
 
-		val typeArgs = typeArgsInAST.map[typeRef].toList;
+		val typeArgs = typeArgsNodes.map[typeRefInAST].toList;
 		internalCheckTypeArguments(typeVars, typeArgs, allowAutoInference, parameterizedElement, source, feature);
 	}
 	/**
@@ -170,7 +169,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 * type variables given in 'typeVars' (e.g. in case of a function type expression).
 	 *
 	 * @param typeVars  the type variables the provided type arguments are intended for.
-	 * @param typeArgs  the type arguments to check.
+	 * @param typeArgsInAST  the type arguments to check (expected to be contained in the AST).
 	 * @param allowAutoInference  if true, it will be legal to provide no arguments, even if there are several
 	 *                            type variables. Intended for cases where inference of type arguments is supported.
 	 * @param parameterizedElement  the element defining the type variables in 'typeVars' or <code>null</code>
@@ -182,11 +181,11 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 *                 used to derive the region of the error.
 	 */
 	def protected void internalCheckTypeArguments(List<? extends TypeVariable> typeVars,
-		List<? extends TypeArgument> typeArgs, boolean allowAutoInference, IdentifiableElement parameterizedElement,
+		List<? extends TypeArgument> typeArgsInAST, boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
 
 		val typeParameterCount = typeVars.size
-		val typeArgumentCount = typeArgs.size
+		val typeArgumentCount = typeArgsInAST.size
 
 		// if the AST location supports auto-inference of type arguments, allow for
 		// not providing any type arguments, even if paramType is actually parameterized
@@ -223,13 +222,13 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 				val targetTypeRef = ts.type(G, source.target); // note: not using G_subst here
 				tsh.addSubstitutions(G_subst, targetTypeRef);
 			}
-			for (int i : 0 ..< typeArgs.size) {
-				G_subst.addTypeMapping(typeVars.get(i), typeArgs.get(i));
+			for (int i : 0 ..< typeArgsInAST.size) {
+				G_subst.addTypeMapping(typeVars.get(i), typeArgsInAST.get(i));
 			}
 			// actually check provided type arguments
 			for (int i : 0 ..< minTypeVariables) {
 				val TypeVariable typeParameter = typeVars.get(i)
-				val TypeArgument typeArgument = typeArgs.get(i);
+				val TypeArgument typeArgument = typeArgsInAST.get(i);
 
 				// check consistency of use-site and definition-site variance
 				if(typeArgument instanceof Wildcard) {
