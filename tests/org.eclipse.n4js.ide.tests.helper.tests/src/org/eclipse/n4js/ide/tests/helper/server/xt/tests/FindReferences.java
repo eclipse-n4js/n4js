@@ -24,7 +24,7 @@ public class FindReferences extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/FindReferences");
 
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + FindReferences.n4js.xt: probands/FindReferences\n"
 				+ " ++ findReferences~0: test-1 〔probands/FindReferences/FindReferences.n4js.xt〕(test-1)\n"
 				+ " ++ findReferences~1: test-2 〔probands/FindReferences/FindReferences.n4js.xt〕(test-2)");

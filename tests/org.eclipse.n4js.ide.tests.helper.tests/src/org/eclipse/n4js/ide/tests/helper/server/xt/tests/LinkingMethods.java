@@ -32,7 +32,7 @@ public class LinkingMethods extends AbstractXtParentRunnerTest {
 		assertFiles("LinkedFragment.n4ts.xt\n"
 				+ "LinkedName.n4ts.xt\n"
 				+ "LinkedPathname.n4js.xt");
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + LinkedFragment.n4ts.xt: probands/LinkingMethods\n"
 				+ " ++ linkedFragment~0: LF-1 〔probands/LinkingMethods/LinkedFragment.n4ts.xt〕(LF-1)\n"
 				+ " ++ linkedFragment~1: LF-2 〔probands/LinkingMethods/LinkedFragment.n4ts.xt〕(LF-2)\n"

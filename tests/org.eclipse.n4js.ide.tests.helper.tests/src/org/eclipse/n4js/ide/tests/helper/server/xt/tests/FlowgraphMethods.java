@@ -47,7 +47,7 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				+ "Path.n4js.xt\n"
 				+ "Preds.n4js.xt\n"
 				+ "Succs.n4js.xt");
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + AllBranches.n4js.xt: probands/FlowgraphMethods\n"
 				+ " ++ allBranches~0: from 'b0' 〔probands/FlowgraphMethods/AllBranches.n4js.xt〕(allBranches~0)\n"
 				+ " ++ allBranches~1: from 'b0' 〔probands/FlowgraphMethods/AllBranches.n4js.xt〕(allBranches~1)\n"

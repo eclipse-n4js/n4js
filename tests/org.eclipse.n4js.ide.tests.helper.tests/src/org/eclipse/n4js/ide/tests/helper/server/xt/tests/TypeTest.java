@@ -28,7 +28,7 @@ public class TypeTest extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/Type");
 
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + Type.n4js.xt: probands/Type\n"
 				+ " ++ type~0: test-1 〔probands/Type/Type.n4js.xt〕(test-1)\n"
 				+ " ++ typeArgs~0: test-2 〔probands/Type/Type.n4js.xt〕(test-2)");

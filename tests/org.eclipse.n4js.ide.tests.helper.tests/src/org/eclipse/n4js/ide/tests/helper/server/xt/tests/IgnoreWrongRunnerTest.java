@@ -21,7 +21,7 @@ public class IgnoreWrongRunnerTest extends AbstractXtParentRunnerTest {
 	@Test
 	public void test() throws Exception {
 		run("probands/IgnoreWrongRunner");
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + IgnoreWrongRunner.n4js.xt: probands/IgnoreWrongRunner: Specified runner does not match current runner");
 		assertEventNames("testIgnored");
 	}

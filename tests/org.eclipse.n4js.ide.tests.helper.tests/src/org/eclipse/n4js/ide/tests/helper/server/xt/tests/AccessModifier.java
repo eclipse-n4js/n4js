@@ -24,7 +24,7 @@ public class AccessModifier extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/AccessModifier");
 
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + AccessModifier.n4js.xt: probands/AccessModifier\n"
 				+ " ++ accessModifier~0: test-1 〔probands/AccessModifier/AccessModifier.n4js.xt〕(test-1)\n"
 				+ " ++ accessModifier~1: test-2 〔probands/AccessModifier/AccessModifier.n4js.xt〕(test-2)");

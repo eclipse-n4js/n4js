@@ -29,7 +29,7 @@ public class WarningsTest extends AbstractXtParentRunnerTest {
 		run("probands/Warnings");
 
 		assertFiles("Warnings.n4js.xt");
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + Warnings.n4js.xt: probands/Warnings\n"
 				+ " ++ noerrors~0: test-00 〔probands/Warnings/Warnings.n4js.xt〕(test-00)\n"
 				+ " ++ nowarnings~0: test-0 〔probands/Warnings/Warnings.n4js.xt〕(test-0)\n"

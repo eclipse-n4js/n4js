@@ -15,7 +15,11 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 /**
  * JUnit runner specified in the tests inside folder 'probands'.
  */
-@XtFolder("dummy") // the value of "dummy" is changed during execution
 public class XtTestSetupTestMockup {
-	// NOOP
+	static String folder;
+
+	@XtFolder
+	static String getFolder() {
+		return folder;
+	}
 }
