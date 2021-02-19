@@ -9,6 +9,7 @@ Require-Bundle: org.eclipse.xtend.lib,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.n4js.tests.helper,
+ org.eclipse.n4js.model,
  com.google.inject,
  org.eclipse.xtext.testing,
  org.junit
