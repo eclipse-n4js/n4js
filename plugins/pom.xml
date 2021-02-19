@@ -26,41 +26,32 @@ Contributors:
 	<modules>
 		<!-- utilities -->
 		<module>org.eclipse.n4js.utils</module>
-		<module>org.eclipse.n4js.utils.ui</module>
 		<module>org.eclipse.n4js.utils.logging</module>
 		<module>org.eclipse.n4js.common.unicode</module>
 		<!-- types -->
 		<module>org.eclipse.n4js.ts.model</module>
 		<module>org.eclipse.n4js.ts</module>
 		<module>org.eclipse.n4js.ts.ide</module>
-		<module>org.eclipse.n4js.ts.ui</module>
 		<!-- regex -->
 		<module>org.eclipse.n4js.regex</module>
 		<module>org.eclipse.n4js.regex.ide</module>
-		<module>org.eclipse.n4js.regex.ui</module>
 		<!-- n4js -->
 		<module>org.eclipse.n4js.model</module>
 		<module>org.eclipse.n4js</module>
 		<module>org.eclipse.n4js.ide</module>
-		<module>org.eclipse.n4js.ui</module>
 		<module>org.eclipse.n4js.cli</module>
 		<!-- runners -->
 		<module>org.eclipse.n4js.runner</module>
-		<module>org.eclipse.n4js.runner.ui</module>
 		<module>org.eclipse.n4js.runner.nodejs</module>
-		<module>org.eclipse.n4js.runner.nodejs.ui</module>
 		<module>org.eclipse.n4js.runner.chrome</module>
-		<module>org.eclipse.n4js.runner.chrome.ui</module>
 		<!-- json -->
 		<module>org.eclipse.n4js.json</module>
 		<module>org.eclipse.n4js.json.model</module>
 		<module>org.eclipse.n4js.json.ide</module>
-		<module>org.eclipse.n4js.json.ui</module>
 		<!-- semver -->
 		<module>org.eclipse.n4js.semver</module>
 		<module>org.eclipse.n4js.semver.model</module>
 		<module>org.eclipse.n4js.semver.ide</module>
-		<module>org.eclipse.n4js.semver.ui</module>
 		<!-- transpiler -->
 		<module>org.eclipse.n4js.transpiler</module>
 		<module>org.eclipse.n4js.transpiler.es</module>
@@ -68,21 +59,15 @@ Contributors:
 		<module>org.eclipse.n4js.jsdoc</module>
 		<!-- jsdoc to adoc exporter -->
 		<module>org.eclipse.n4js.jsdoc2spec</module>
-		<module>org.eclipse.n4js.jsdoc2spec.ui</module>
 		<!-- AST graph viewer -->
 		<module>org.eclipse.n4js.smith</module>
-		<module>org.eclipse.n4js.smith.ui</module>
 		<!-- Flow Graphs -->
 		<module>org.eclipse.n4js.flowgraphs</module>
 		<!-- xpect -->
 		<module>org.eclipse.n4js.xpect</module>
-		<module>org.eclipse.n4js.xpect.ui</module>
-		<module>org.eclipse.n4js.product</module>
 		<!-- tester -->
 		<module>org.eclipse.n4js.tester</module>
-		<module>org.eclipse.n4js.tester.ui</module>
 		<module>org.eclipse.n4js.tester.nodejs</module>
-		<module>org.eclipse.n4js.tester.nodejs.ui</module>
 	</modules>
 
 	<properties>

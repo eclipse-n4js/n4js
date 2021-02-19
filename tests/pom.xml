@@ -59,7 +59,6 @@ Contributors:
 
 		<!-- Package.json tests -->
 		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
-		<module>org.eclipse.n4js.packagejson.xpect.ui.tests</module>
 
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
@@ -67,21 +66,9 @@ Contributors:
 		<!-- JSON tests -->
 		<module>org.eclipse.n4js.json.tests</module>
 		<module>org.eclipse.n4js.json.xpect.tests</module>
-		<module>org.eclipse.n4js.json.xpect.ui.tests</module>
 
 		<!-- SEMVER tests -->
 		<module>org.eclipse.n4js.semver.tests</module>
-
-		<!-- ************************************** JUnit Plugin Tests -->
-
-		<!-- JS tests -->
-		<module>org.eclipse.n4js.ui.tests</module>
-		<module>org.eclipse.n4js.xpect.ui.tests</module>
-		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
-		<module>org.eclipse.n4js.smith.ui.tests</module>
-
-				<!-- Runner tests -->
-		<module>org.eclipse.n4js.runner.ui.tests</module>
 
 		<!--  **************************************Other tests -->
 
@@ -97,8 +84,6 @@ Contributors:
 		<!-- Spec Examples test -->
 		<module>org.eclipse.n4js.spec.examples.xpect.tests</module>
 
-		<!-- *************************************** Tests testing the test helpers -->
-		<module>org.eclipse.n4js.test.helpers.tests</module>
 
 		<!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.cli.tests</module>
@@ -108,12 +93,9 @@ Contributors:
 
 		<!-- *************************************** n4jsx Tests -->
 		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
-		<module>org.eclipse.n4js.n4jsx.spec.ui.tests</module>
-		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
 
 		<!-- *************************************** flow graph tests -->
 		<module>org.eclipse.n4js.flowgraphs.tests</module>
-		<module>org.eclipse.n4js.flowgraphs.ui.tests</module>
 
 		<!-- *************************************** N4IDL Tests -->
 		<module>org.eclipse.n4js.n4idl.lang.tests</module>

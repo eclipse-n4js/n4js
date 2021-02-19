@@ -27,11 +27,8 @@ Contributors:
 		<!-- Test helpers bundled for sdk. -->
 		<module>org.eclipse.n4js.tests.helper</module>
 		<module>org.eclipse.n4js.ide.tests.helper</module>
-		<module>org.eclipse.n4js.ui.tests.helper</module>
 		<module>org.eclipse.n4js.regex.tests.helper</module>
-		<module>org.eclipse.n4js.regex.ui.tests.helper</module>
 		<module>org.eclipse.n4js.ts.tests.helper</module>
-		<module>org.eclipse.n4js.ts.ui.tests.helper</module>
 		<module>org.eclipse.n4js.tester.tests.helper</module>
 		<module>org.eclipse.n4js.json.tests.helper</module>
 		<module>org.eclipse.n4js.semver.tests.helper</module>
