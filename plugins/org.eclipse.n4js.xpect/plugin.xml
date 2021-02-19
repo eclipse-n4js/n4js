@@ -11,6 +11,16 @@ Contributors:
 -->
 <?eclipse version="3.0"?>
 
+
+<!--
+
+    NOTE:
+          This file exists only for Xpect to work.
+          When Xpect will have been replaced this file is obsolete.
+    
+-->
+
+
 <plugin>
    <extension-point id="resourceDescriptionsPersisterContribution" name="Resource Descriptions Persister Contribution" schema="schema/resourceDescriptionsPersisterContribution.exsd"/>
    <extension-point id="workingSetManager" name="N4JS Working Set Manager" schema="schema/workingSetManager.exsd"/>
