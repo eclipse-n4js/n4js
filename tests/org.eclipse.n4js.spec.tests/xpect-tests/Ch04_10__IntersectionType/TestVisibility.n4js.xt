@@ -9,6 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
 class A {
 	private s;
 	private m() {}
