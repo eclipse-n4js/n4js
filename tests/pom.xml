@@ -194,28 +194,6 @@ Contributors:
 					</dependency>
 				</dependencies>
 			</plugin>
-			<!-- IDE-1392, upgrade to tycho 0.22: A reactor-built feature named 'org.eclipse.n4js.sdk' was not resolved in tycho-surefire-test,
-				comment on http://eclipse.org/tycho/sitedocs/tycho-surefire/tycho-surefire-plugin/test-mojo.html#dependencies
-				suggests to modify the target-platform instead (quote about tycho-surefire dependency-configuration:
-				 "This parameter has only limited support for dependencies to artifacts within the reactor. 
-				  Therefore it is recommended to specify extraRequirements on the target-platform-configuration plugin instead."):
-			-->
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<dependency-resolution>
-						<extraRequirements>
-							<requirement>
-								<type>eclipse-feature</type>
-								<id>org.eclipse.n4js.sdk</id>
-								<versionRange>0.0.0</versionRange>
-							</requirement>
-						</extraRequirements>
-					</dependency-resolution>
-				</configuration>
-			</plugin>  
 		</plugins>
 
 		<!-- Management of plugins which can be activated by children. -->
@@ -254,112 +232,6 @@ Contributors:
 								<goal>test</goal>
 							</goals>
 						</execution>
-						<execution>
-							<!--
-							This configures the execution of
-							Tycho surefire tests, that should run headless with no UI (but
-							in OSGi context), only test classes that matches the name
-							pattern "*PluginTest.java" will be run by this execution. Note
-							also the ui.test.vmargs property that is set by the macos
-							resp. the other-os profile. 
-
-							If the ${tycho.surefire.skipPluginTest}
-							property will be set to true then the test are not carried out but 
-							the expensive startup of the eclipse-test-environemnt ist still carried out.
-							-->
-							<id>TychoSurefirePluginTest</id>
-							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
-							<phase />
-							<configuration>
-                                <runOrder>alphabetical</runOrder>
-								<!-- 30 Minutes timeout (plus 1sec to simplify search for this timeout in log) -->
-								<forkedProcessTimeoutInSeconds>1801</forkedProcessTimeoutInSeconds>
-								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
-								<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
-								<!-- different for mac/not mac -->
-								<skip>${tycho.surefire.skipPluginTest}</skip>
-								<useUIHarness>false</useUIHarness>
-								<useUIThread>false</useUIThread>
-								<includes>
-									<include>**/*PluginTest.java</include>
-								</includes>
-								<excludes>
-									<exclude>**/*PluginUITest.java</exclude>
-								</excludes>
-								<systemProperties>
-									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-								</systemProperties>
-							</configuration>
-							<goals>
-								<goal>test</goal>
-							</goals>
-						</execution>
-						<execution>
-							<!--
-							This configures the execution
-							of Tycho surefire tests, that should run UI, only test classes
-							that matches the name pattern "*PluginUITest.java" will be run
-							by this execution. Note also the ui.test.vmargs property that
-							is set by the macos resp. the other-os profile. 
-							-->
-							<id>TychoSurefirePluginUITest</id>
-							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
-							<phase />
-							<configuration>
-                                <runOrder>alphabetical</runOrder>
-								<systemProperties>
-									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-								</systemProperties>
-								<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
-								<!-- 30 Minutes timeout (plus 2sec to simplify search for this timeout in log) -->
-								<forkedProcessTimeoutInSeconds>1802</forkedProcessTimeoutInSeconds>
-								<!-- useUIHarness=true ensures the workbench is started before the
-									tests are run. -->
-								<useUIHarness>true</useUIHarness>
-								<useUIThread>true</useUIThread>
-								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
-								<!-- -Dosgi.debug requires a .options file, looks in the module-root for it -->
-								<!-- Debug options to halt on each (!) call to PluginUI test and wait for "telnet localhost 1975" 
-									 where you can enter "exit" to continue: 
-									 -Dosgi.noShutdown=true -Dosgi.console=1975 -->
-								<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
-								<!-- Debugging the instance under test with remote eclipse
-								<debugPort>9000</debugPort>
-								<product>org.eclipse.e4.ide.application.product</product>
-								<application>org.eclipse.ui.ide.workbench</application>
-								-->
-								<product>org.eclipse.n4js.product.product</product>
-								<!-- <application>org.eclipse.n4js.product.application</application> -->
-								<showEclipseLog>true</showEclipseLog>
-								<dependencies>
-									<!-- since Eclipse 4.4 and Tycho 0.20.0 PluginUI tests were not starting,
-									platform dependency was workaround advised for tycho issue with optional dependencies,
-									see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=419147#c8 -->
-									<dependency>
-										<type>eclipse-feature</type>
-										<artifactId>org.eclipse.platform</artifactId>
-										<version>0.0.0</version>
-									</dependency>
-									<dependency>
-										<type>eclipse-feature</type>
-										<artifactId>org.eclipse.n4js.sdk</artifactId>
-										<version>0.0.0</version>
-									</dependency>
-									</dependencies>
-								<includes>
-									<include>**/*PluginUITest.java</include>
-								</includes>
-								<excludes>
-									<exclude>**/*IntegrationPluginUITest.java</exclude>
-								</excludes>
-							</configuration>
-							<goals>
-								<goal>test</goal>
-							</goals>
-						</execution>
-
 					</executions>
 				</plugin>
 				<plugin>
@@ -529,49 +401,6 @@ Contributors:
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 								</systemProperties>
 							</configuration>
-							<executions>
-								<execution>
-									<!--
-									This configures the
-									execution of Tycho surefire tests, that should run tests
-									marked as performance tests, only test classes that matches
-									the name pattern "*SmokeTest.java" will be run by this
-									execution. The configuration of this execution is is the same
-									as for plug-in tests as these tests can be executed headlessly
-									as well. Only difference is that here the project plug-ins
-									have to specified as dependency.
-									-->
-									<id>TychoSurefireSmokeTest</id>
-									<!-- for submodules providing smoke-tests bing to phase integration-test -->
-									<phase />
-									<configuration>
-										<!-- 100 Minutes timeout (plus 5sec to simplify search for this timeout in log) -->
-										<forkedProcessTimeoutInSeconds>6005</forkedProcessTimeoutInSeconds>
-										<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
-										<!-- different for mac/not mac -->
-										<useUIHarness>false</useUIHarness>
-										<useUIThread>false</useUIThread>
-										<dependencies>
-											<dependency>
-												<type>eclipse-feature</type>
-												<artifactId>org.eclipse.platform</artifactId>
-												<version>0.0.0</version>
-											</dependency>
-											<dependency>
-												<type>eclipse-feature</type>
-												<artifactId>org.eclipse.n4js.sdk</artifactId>
-												<version>0.0.0</version>
-											</dependency>
-										</dependencies>
-										<includes>
-											<include>**/*SmokeTest.java</include>
-										</includes>
-									</configuration>
-									<goals>
-										<goal>test</goal>
-									</goals>
-								</execution>
-							</executions>
 						</plugin>
 					</plugins>
 				</pluginManagement>
