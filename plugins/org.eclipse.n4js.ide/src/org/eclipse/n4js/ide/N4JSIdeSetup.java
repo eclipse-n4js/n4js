@@ -18,7 +18,6 @@ import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.json.ide.JSONIdeSetup;
 import org.eclipse.n4js.regex.ide.RegularExpressionIdeSetup;
 import org.eclipse.n4js.semver.ide.SemverIdeSetup;
-import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.ts.ide.TypeExpressionsIdeSetup;
 import org.eclipse.n4js.ts.ide.TypesIdeSetup;
 import org.eclipse.xtext.ide.server.ServerModule;
@@ -38,7 +37,7 @@ public class N4JSIdeSetup extends N4JSStandaloneSetup {
 	@Override
 	public Injector createInjector() {
 		Module[] modules = {
-				new ServerModule(), new N4JSRuntimeModule(), new N4JSIdeModule(), new TesterModule()
+				new ServerModule(), new N4JSRuntimeModule(), new N4JSIdeModule()
 		};
 
 		Optional<Class<? extends Module>> overridingModuleCls = getOverridingModule();
