@@ -427,18 +427,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="N4JS Features">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/features/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="N4JS Tests">
       <predicate
           xsi:type="predicates:AndPredicate">
@@ -472,18 +460,6 @@
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/docs/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="N4JS Builds">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/builds/.*"/>
       </predicate>
     </workingSet>
     <workingSet
