@@ -1,0 +1,1508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<?eclipse version="3.0"?>
+
+<plugin>
+   <extension-point id="resourceDescriptionsPersisterContribution" name="Resource Descriptions Persister Contribution" schema="schema/resourceDescriptionsPersisterContribution.exsd"/>
+   <extension-point id="workingSetManager" name="N4JS Working Set Manager" schema="schema/workingSetManager.exsd"/>
+
+<!-- CUSTOM CODE -->
+<!--
+  A specialized Types representation is registered for n4ts files that are loaded
+  with the built-in scheme, e.g. 'n4scheme:/global.n4ts'
+-->
+   <extension
+         point="org.eclipse.n4js.generator.subgenerator">
+      <subgenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator"
+            fileExtensions="n4js,js,n4jsx,jsx">
+      </subgenerator>
+      <subgenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator"
+            fileExtensions="n4idl">
+      </subgenerator>
+   </extension>
+
+    <extension
+         point="org.eclipse.ui.newWizards">
+     <category
+       id="org.eclipse.wizards"
+       name="N4JS">
+     </category>
+     <wizard
+           category="org.eclipse.wizards"
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.project.N4JSNewProjectWizard"
+           icon="platform:/plugin/org.eclipse.n4js.ui/icons/newprj_wiz.png"
+           id="org.eclipse.n4js.ui.wizard.N4JSNewProjectWizard"
+           name="N4JS Project"
+           project="true">
+           <description>
+               Create a new N4JS Project.
+           </description>
+     </wizard>
+     <wizard
+           category="org.eclipse.wizards"
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.classes.N4JSNewClassWizard"
+           icon="icons/newclass_wiz.png"
+           id="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard"
+           name="N4JS Class"
+           project="false">
+           <description>
+               Create a new N4JS Class file or create a new class inside an existing module.
+           </description>
+      </wizard>
+      <wizard
+           category="org.eclipse.wizards"
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.wizard.interfaces.N4JSNewInterfaceWizard"
+           icon="icons/newint_wiz.png"
+           id="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard"
+           name="N4JS Interface"
+           project="false">
+           <description>
+               Create a new N4JS Interface file or create a new interface inside an existing module.
+           </description>
+      </wizard>
+
+    </extension>
+
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.eclipse.n4js.fileDef">
+             <adapt type="org.eclipse.core.resources.IResource">
+               <or>
+                <test property="org.eclipse.core.resources.extension"  value="n4js"/>
+                <test property="org.eclipse.core.resources.extension"  value="n4jsx"/>
+                <test property="org.eclipse.core.resources.extension"  value="n4jsd"/>
+                <test property="org.eclipse.core.resources.extension"  value="js"/>
+                <test property="org.eclipse.core.resources.extension"  value="jsx"/>
+                <test property="org.eclipse.core.resources.extension"  value="n4idl"/>
+               </or>
+          </adapt>
+      </definition>
+   </extension>
+<!-- /CUSTOM CODE -->
+
+    <extension
+            point="org.eclipse.ui.editors">
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="js,jsx"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4jsx"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsx.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4jsd"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsd.png"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4js,n4idl"
+            id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4js.png"
+            name="N4JS Editor">
+        </editor>
+    </extension>
+    <extension
+        point="org.eclipse.ui.handlers">
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+            commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
+            <activeWhen>
+                <reference
+                    definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+            commandId="org.eclipse.n4js.N4JS.validate">
+         <activeWhen>
+            <reference
+                    definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+            </reference>
+         </activeWhen>
+        </handler>
+        <!-- copy qualified name -->
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+            commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
+            <activeWhen>
+                <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened" />
+            </activeWhen>
+        </handler>
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+            commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
+            <activeWhen>
+               <and>
+                  <reference definitionId="org.eclipse.n4js.N4JS.XtextEditor.opened" />
+                    <iterate>
+                       <adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+                    </iterate>
+                </and>
+            </activeWhen>
+        </handler>
+        <handler
+              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.ShowTypeInformationHandler"
+              commandId="org.eclipse.n4js.ui.showTypeInformation">
+           <enabledWhen>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.eclipse.n4js.N4JS">
+                 </equals>
+              </with>
+           </enabledWhen>
+        </handler>
+        <handler
+              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.OpenGeneratedSourceInEditorHandler"
+              commandId="org.eclipse.n4js.ui.openGeneratedSourceInEditor">
+        </handler>
+        <handler
+              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.ResetWorkingSetManagersHandler"
+              commandId="org.eclipse.n4js.ui.workingsets.ResetWorkingSetManagersHandler">
+        </handler>
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.SelectAllProjectExplorerHandler"
+            commandId="org.eclipse.ui.edit.selectAll">
+            <activeWhen>
+    <with variable="activePartId">
+        <equals value="org.eclipse.ui.navigator.ProjectExplorer"/>
+    </with>
+</activeWhen>
+        </handler>
+    </extension>
+    <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="org.eclipse.n4js.N4JS.Editor.opened">
+            <and>
+                <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
+                <with variable="activeEditor">
+                    <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+                        value="org.eclipse.n4js.N4JS"
+                        forcePluginActivation="true"/>
+                </with>
+            </and>
+        </definition>
+        <definition id="org.eclipse.n4js.N4JS.XtextEditor.opened">
+            <and>
+                <reference definitionId="isXtextEditorActive"/>
+                <with variable="activeEditor">
+                    <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+                        value="org.eclipse.n4js.N4JS"
+                        forcePluginActivation="true"/>
+                </with>
+            </and>
+        </definition>
+    </extension>
+    <extension
+            point="org.eclipse.ui.preferencePages">
+        <page
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.eclipse.n4js.N4JS"
+            name="N4JS">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+        </page>
+        <page
+            category="org.eclipse.n4js.N4JS"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            id="org.eclipse.n4js.N4JS.coloring"
+            name="Syntax Coloring">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+        </page>
+        <page
+            category="org.eclipse.n4js.N4JS"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+            id="org.eclipse.n4js.N4JS.templates"
+            name="Templates">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+        </page>
+    </extension>
+    <extension
+            point="org.eclipse.ui.propertyPages">
+        <page
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.eclipse.n4js.N4JS"
+            name="N4JS">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+            <enabledWhen>
+                <adapt type="org.eclipse.core.resources.IProject"/>
+            </enabledWhen>
+            <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+        </page>
+    </extension>
+    <extension
+        point="org.eclipse.ui.keywords">
+        <keyword
+            id="org.eclipse.n4js.ui.keyword_N4JS"
+            label="N4JS"/>
+    </extension>
+    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Trigger expensive validation"
+            id="org.eclipse.n4js.N4JS.validate"
+            name="Validate">
+      </command>
+      <!-- copy qualified name -->
+      <command
+            id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+            categoryId="org.eclipse.ui.category.edit"
+            description="Copy the qualified name for the selected element"
+            name="Copy Qualified Name">
+      </command>
+      <command
+            id="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+            categoryId="org.eclipse.ui.category.edit"
+            description="Copy the qualified name for the selected element"
+            name="Copy Qualified Name">
+      </command>
+      <command
+            id="org.eclipse.n4js.ui.search.openTypeSelectionDialog"
+            name="Open N4JS Type">
+      </command>
+      <command
+            id="org.eclipse.n4js.ui.showTypeInformation"
+            name="Show Type Information">
+      </command>
+      <command
+            id="org.eclipse.n4js.ui.handler.LibrariesFix"
+            name="Fix Libraries Setup">
+      </command>
+      <command
+            id="org.eclipse.n4js.ui.openGeneratedSourceInEditor"
+            name="Open Generated Source In Editor">
+      </command>
+      <command
+            id="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences"
+            name="Open N4JS External Libraries Preferences">
+      </command>
+      <command
+            id="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
+            name="Create a new N4JS Element">
+            <!-- The id of a newWizard to launch -->
+            <commandParameter
+              id="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.wizardId"
+              name="wizardId">
+            </commandParameter>
+            <!-- True if the wizard should try to create the element inside of the currently selected module-->
+            <commandParameter
+              id="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.nested"
+              name="nested">
+            </commandParameter>
+      </command>
+      <command
+            description="Resets the current and persisten state of all working set managers and their working sets to the default state"
+            id="org.eclipse.n4js.ui.workingsets.ResetWorkingSetManagersHandler"
+            name="Reset Working Sets">
+      </command>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution
+            locationURI="popup:#TextEditorContext?after=group.edit">
+             <command
+                 commandId="org.eclipse.n4js.N4JS.validate"
+                 style="push"
+                 tooltip="Trigger expensive validation">
+            <visibleWhen checkEnabled="false">
+                <reference
+                    definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+                </reference>
+            </visibleWhen>
+         </command>
+         </menuContribution>
+         <!-- copy qualified name -->
+         <menuContribution locationURI="popup:#TextEditorContext?after=copy">
+            <command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+               style="push" tooltip="Copy Qualified Name">
+                <visibleWhen checkEnabled="false">
+                    <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened" />
+                </visibleWhen>
+             </command>
+         </menuContribution>
+         <menuContribution locationURI="menu:edit?after=copy">
+            <command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+               style="push" tooltip="Copy Qualified Name">
+                <visibleWhen checkEnabled="false">
+                    <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened" />
+                </visibleWhen>
+             </command>
+         </menuContribution>
+         <menuContribution locationURI="popup:org.eclipse.xtext.ui.outline?after=additions">
+         <command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+            style="push" tooltip="Copy Qualified Name">
+            <visibleWhen checkEnabled="false">
+                    <and>
+                        <reference definitionId="org.eclipse.n4js.N4JS.XtextEditor.opened" />
+                        <iterate>
+                            <adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+                        </iterate>
+                    </and>
+                </visibleWhen>
+            </command>
+         </menuContribution>
+         <menuContribution
+               allPopups="false"
+               locationURI="toolbar:org.eclipse.ui.main.toolbar">
+            <toolbar
+                  id="org.eclipse.n4js.ui.toolbar">
+               <command
+                     commandId="org.eclipse.n4js.ui.search.openTypeSelectionDialog"
+                     icon="icons/opentype.png"
+                     label="Open N4JS Type"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences"
+                     icon="icons/native_lib_path_attrib.png"
+                     label="Open Built-in Libraries Preferences"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.n4js.ui.handler.LibrariesFix"
+                     icon="icons/debugt_obj.png"
+                     label="Fix Libraries setup"
+                     tooltip="Install missing dependencies"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
+                     icon="icons/newclass_wiz.png"
+                     label="New N4JS Class"
+                     id="org.eclipse.toolbar.newN4JSElement"
+                     tooltip="Creates a new N4JS Class"
+                     style="pulldown">
+                     <parameter
+                         name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.wizardId"
+                         value="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard">
+                     </parameter>
+                     <parameter
+                         name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.nested"
+                         value="true">
+                     </parameter>
+               </command>
+            </toolbar>
+         </menuContribution>
+         <menuContribution locationURI="menu:org.eclipse.toolbar.newN4JSElement">
+            <command
+                     commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
+                     icon="icons/newclass_wiz.png"
+                     label="New N4JS Class"
+                     id="org.eclipse.toolbar.newN4JSElement.newClassInModule"
+                     style="push">
+                     <parameter
+                        name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.wizardId"
+                        value="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard">
+                     </parameter>
+            </command>
+            <command
+                     commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
+                     icon="icons/newclass_wiz.png"
+                     label="New N4JS Class in this module"
+                     id="org.eclipse.toolbar.newN4JSElement.newClassInModule"
+                     style="push">
+                     <parameter
+                        name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.wizardId"
+                        value="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard">
+                     </parameter>
+                     <parameter
+                        name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.nested"
+                        value="true">
+                     </parameter>
+                     <visibleWhen checkEnabled="true">
+                        <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened" />
+                     </visibleWhen>
+            </command>
+            <command
+                     commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
+                     icon="icons/newint_wiz.png"
+                     label="New N4JS Interface"
+                     id="org.eclipse.toolbar.newN4JSElement.newInterfaceInModule"
+                     style="push">
+                     <parameter
+                        name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.wizardId"
+                        value="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard">
+                     </parameter>
+            </command>
+            <command
+                     commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule"
+                     icon="icons/newint_wiz.png"
+                     label="New N4JS Interface in this module"
+                     id="org.eclipse.toolbar.newN4JSElement.newInterfaceInModule"
+                     style="push">
+                     <parameter
+                        name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.wizardId"
+                        value="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard">
+                     </parameter>
+                     <parameter
+                        name="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule.nested"
+                        value="true">
+                     </parameter>
+                     <visibleWhen checkEnabled="true">
+                        <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened" />
+                     </visibleWhen>
+            </command>
+         </menuContribution>
+         <menuContribution
+               allPopups="false"
+               locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+            <command
+                  commandId="org.eclipse.n4js.ui.openGeneratedSourceInEditor"
+                  icon="icons/macrodef_obj.gif"
+                  label="Open Generated Source In Editor"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        property="org.eclipse.n4js.ui.fileExtension"
+                        value="n4js, js, n4jsx, jsx, n4idl">
+                  </test>
+               </visibleWhen>
+            </command>
+         </menuContribution>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
+            <command commandId="org.eclipse.xtext.ui.editor.FindReferences">
+                <visibleWhen checkEnabled="false">
+                    <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+                    </reference>
+                </visibleWhen>
+            </command>
+        </menuContribution>
+    </extension>
+    <extension point="org.eclipse.ui.handlers">
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+            commandId="org.eclipse.xtext.ui.editor.FindReferences">
+            <activeWhen>
+                <reference
+                    definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+     <handler
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.typesearch.OpenTypeSelectionDialogHandler"
+           commandId="org.eclipse.n4js.ui.search.openTypeSelectionDialog">
+     </handler>
+     <handler
+           class="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferencePageHandler"
+           commandId="org.eclipse.n4js.ui.handler.OpenExternalLibraryPreferences">
+     </handler>
+     <handler
+           class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.LibrariesFixHandler"
+           commandId="org.eclipse.n4js.ui.handler.LibrariesFix">
+     </handler>
+     <handler
+             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.CreateNewN4JSElementInModuleHandler"
+             commandId="org.eclipse.n4js.ui.wizard.CreateNewN4JSElementInModule">
+     </handler>
+    </extension>
+
+<!-- adding resource factories -->
+
+    <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="n4js">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="n4js">
+        </resourceServiceProvider>
+    </extension>
+
+    <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="n4jsx">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="n4jsx">
+        </resourceServiceProvider>
+    </extension>
+
+    <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="js">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="js">
+        </resourceServiceProvider>
+    </extension>
+
+    <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="jsx">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="jsx">
+        </resourceServiceProvider>
+    </extension>
+
+    <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="n4jsd">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="n4jsd">
+        </resourceServiceProvider>
+    </extension>
+
+    <extension
+        point="org.eclipse.emf.ecore.extension_parser">
+        <parser
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+            type="n4idl">
+        </parser>
+    </extension>
+    <extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="n4idl">
+        </resourceServiceProvider>
+    </extension>
+
+    <!-- marker definitions for org.eclipse.n4js.N4JS -->
+    <extension
+            id="n4js.check.fast"
+            name="N4JS Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="n4js.check.normal"
+            name="N4JS Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="n4js.check.expensive"
+            name="N4JS Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
+
+  <!-- Customized Error-Marker for Generator Errors -->
+  <extension
+          id="compiler.error"
+          name="N4JS Generator Problem"
+          point="org.eclipse.core.resources.markers">
+      <persistent value="true"/>
+     <super
+           type="org.eclipse.core.resources.problemmarker">
+     </super>
+     <super
+           type="org.eclipse.xtext.ui.check.fast">
+     </super>
+  </extension>
+  <extension
+    point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+       annotationType="org.eclipse.n4js.ui.compiler.error"
+       contributesToHeader="true"
+       label="N4JS Compile Error"
+       colorPreferenceKey="org.eclipse.n4js.compiler.error.color"
+       colorPreferenceValue="255,0,128"
+       highlightPreferenceKey="org.eclipse.n4js.compiler.error.highlight"
+       highlightPreferenceValue="true"
+       includeOnPreferencePage="true"
+       overviewRulerPreferenceKey="org.eclipse.n4js.compiler.error.overview"
+       overviewRulerPreferenceValue="true"
+       presentationLayer="0"
+       textPreferenceKey="org.eclipse.n4js.compiler.error.text"
+       textPreferenceValue="true"
+       textStylePreferenceValue="BOX"
+       verticalRulerPreferenceKey="org.eclipse.n4js.compiler.error.ruler"
+       verticalRulerPreferenceValue="true">
+      </specification>
+    </extension>
+    <extension
+          point="org.eclipse.ui.editors.annotationTypes">
+       <type
+            super="org.eclipse.xtext.ui.editor.error"
+            markerType="org.eclipse.n4js.ui.compiler.error"
+            name="org.eclipse.n4js.ui.compiler.error">
+       </type>
+    </extension>
+  <!-- Customized Error-Marker for Generator Errors -->
+
+  <!-- Customized Error-Marker for Workspace Errors -->
+  <extension
+          id="workspace.error"
+          name="N4JS Workspace Problem"
+          point="org.eclipse.core.resources.markers">
+      <persistent value="true"/>
+     <super
+           type="org.eclipse.xtext.ui.check.fast">
+     </super>
+  </extension>
+  <extension
+    point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+       annotationType="org.eclipse.n4js.ui.workspace.error"
+       contributesToHeader="true"
+       label="N4JS Workspace Error"
+       colorPreferenceKey="org.eclipse.n4js.workspace.error.color"
+       colorPreferenceValue="255,0,128"
+       highlightPreferenceKey="org.eclipse.n4js.workspace.error.highlight"
+       highlightPreferenceValue="true"
+       includeOnPreferencePage="true"
+       overviewRulerPreferenceKey="org.eclipse.n4js.workspace.error.overview"
+       overviewRulerPreferenceValue="true"
+       presentationLayer="0"
+       textPreferenceKey="org.eclipse.n4js.workspace.error.text"
+       textPreferenceValue="true"
+       textStylePreferenceValue="BOX"
+       verticalRulerPreferenceKey="org.eclipse.n4js.workspace.error.ruler"
+       verticalRulerPreferenceValue="true">
+      </specification>
+    </extension>
+    <extension
+          point="org.eclipse.ui.editors.annotationTypes">
+       <type
+            super="org.eclipse.xtext.ui.editor.error"
+            markerType="org.eclipse.n4js.ui.workspace.error"
+            name="org.eclipse.n4js.ui.workspace.error">
+       </type>
+    </extension>
+  <!-- Customized Error-Marker for Workspace Errors -->
+
+
+   <extension
+         point="org.eclipse.xtext.builder.participant">
+      <participant
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+            fileExtensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
+      </participant>
+   </extension>
+   <extension
+            point="org.eclipse.ui.preferencePages">
+        <page
+            category="org.eclipse.n4js.N4JS"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
+            id="org.eclipse.n4js.N4JS.compiler.preferencePage"
+            name="Compiler">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+        </page>
+        <page
+              category="org.eclipse.n4js.N4JS"
+              class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.external.ExternalLibraryPreferencePage"
+              id="org.eclipse.n4js.ui.preferences.external.ExternalLibraryPreferencePage"
+              name="N4JS External Libraries">
+           <keywordReference
+                 id="org.eclipse.n4js.ui.keyword_N4JS">
+           </keywordReference>
+        </page>
+          <page
+            category="org.eclipse.n4js.N4JS"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.binaries.BinariesPreferencePage"
+            id="org.eclipse.n4js.ui.binaries.BinariesPreferencePage"
+            name="Binaries">
+             <keywordReference
+                   id="org.eclipse.n4js.ui.keyword.nodejs">
+             </keywordReference>
+             <keywordReference
+                   id="org.eclipse.n4js.ui.keyword.npm">
+             </keywordReference>
+          </page>
+    </extension>
+    <extension
+            point="org.eclipse.ui.propertyPages">
+        <page
+            category="org.eclipse.n4js.N4JS"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
+            id="org.eclipse.n4js.N4JS.compiler.propertyPage"
+            name="Compiler">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+            <enabledWhen>
+                <adapt type="org.eclipse.core.resources.IProject"/>
+            </enabledWhen>
+            <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+        </page>
+    </extension>
+    <extension
+            point="org.eclipse.ui.propertyPages">
+        <page
+            category="org.eclipse.n4js.N4JS"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.preferences.N4JSBuilderPreferencePage"
+            id="org.eclipse.n4js.N4JS.compiler.propertyPage"
+            name="Compiler">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+            <enabledWhen>
+                <adapt type="org.eclipse.core.resources.IProject"/>
+            </enabledWhen>
+            <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+        </page>
+    </extension>
+
+    <!-- Quick Outline -->
+    <extension
+        point="org.eclipse.ui.handlers">
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+            commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
+            <activeWhen>
+                <reference
+                    definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+    </extension>
+    <extension
+        point="org.eclipse.ui.commands">
+        <command
+            description="Open the quick outline."
+            id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+            name="Quick Outline">
+        </command>
+        <command
+            defaultHandler="org.eclipse.n4js.ui.search.ConsiderOverridenMembersHandler"
+            id="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
+            name="Consider Overriden Members">
+            <!-- By default, do NOT consider overriden members when finding references. Also, Do NOT persist the state.-->
+            <state id="org.eclipse.ui.commands.toggleState">
+                <class class="org.eclipse.ui.handlers.RegistryToggleState">
+                    <parameter
+                        name="default"
+                        value="false">
+                    </parameter>
+                    <parameter
+                        name="persisted"
+                        value="false">
+                    </parameter>
+                </class>
+            </state>
+        </command>
+        <command
+            defaultHandler="org.eclipse.n4js.ui.search.IgnoreNamedImportSpecifierHandler"
+            id="org.eclipse.n4js.ui.IgnoreNamedImportSpecifiersCmd"
+            name="Ignore named import specifier">
+            <!-- By default, do ignore named import specifier. Do NOT persist the state.-->
+            <state id="org.eclipse.ui.commands.toggleState">
+                <class class="org.eclipse.ui.handlers.RegistryToggleState">
+                    <parameter
+                        name="default"
+                        value="true">
+                    </parameter>
+                    <parameter
+                        name="persisted"
+                        value="false">
+                    </parameter>
+                </class>
+            </state>
+        </command>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution
+            locationURI="popup:#TextEditorContext?after=group.open">
+            <command commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+                style="push"
+                tooltip="Open Quick Outline">
+                <visibleWhen checkEnabled="false">
+                    <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened"/>
+                </visibleWhen>
+            </command>
+        </menuContribution>
+    </extension>
+    
+  <!-- Rename refactoring menu item -->
+  <extension
+    point="org.eclipse.ui.handlers">
+    <handler
+      class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+      commandId="org.eclipse.n4js.ui.refactoring.rename">
+    </handler>
+  </extension>
+  <extension
+    point="org.eclipse.ui.commands">
+    <command
+      description="Rename element"
+      id="org.eclipse.n4js.ui.refactoring.rename"
+      
+      name="Rename">
+    </command>
+  </extension>
+  
+  <!-- Organize Imports -->
+  <extension
+    point="org.eclipse.ui.handlers">
+    <handler
+      class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.organize.imports.N4JSOrganizeImportsHandler"
+      commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports">
+    </handler>
+  </extension>
+  <extension
+    point="org.eclipse.ui.commands">
+    <command
+      description="Organize imports in file."
+      id="org.eclipse.n4js.ui.organize.imports.OrganizeImports"
+      name="Organize Imports">
+    </command>
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution
+      locationURI="popup:#TextEditorContext?after=group.edit">
+      <command commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports"
+        style="push"
+        tooltip="Organize Imports">
+        <visibleWhen checkEnabled="false">
+          <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened"/>
+        </visibleWhen>
+      </command>
+    </menuContribution>
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution
+      locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <command commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports"
+        style="push"
+        tooltip="Organize All Imports">
+        <visibleWhen>
+          <with variable="selection">
+              <iterate ifEmpty="false" operator="or">
+                <or>
+                  <adapt type="org.eclipse.ui.IWorkingSet"/>
+                  <adapt type="org.eclipse.core.resources.IFolder"/>
+                  <adapt type="org.eclipse.core.resources.IProject"/>
+                   <reference definitionId="org.eclipse.n4js.fileDef"/>
+                 </or>
+              </iterate>
+          </with>
+        </visibleWhen>
+      </command>
+    </menuContribution>
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution
+      locationURI="popup:#TextEditorContext?after=group.edit">
+      <command commandId="org.eclipse.n4js.ui.refactoring.rename"
+        style="push"
+        tooltip="Rename">
+        <visibleWhen checkEnabled="false">
+          <reference definitionId="org.eclipse.n4js.N4JS.Editor.opened"/>
+        </visibleWhen>
+      </command>
+    </menuContribution>
+  </extension>
+
+  <extension
+        point="org.eclipse.ui.bindings">
+        <key
+             commandId="org.eclipse.n4js.ui.organize.imports.OrganizeImports"
+             contextId="org.eclipse.xtext.ui.XtextEditorScope"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="M1+M2+O">
+        </key>
+       <key
+             commandId="org.eclipse.n4js.ui.search.openTypeSelectionDialog"
+             contextId="org.eclipse.n4js.ui.context"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="M1+M2+T">
+       </key>
+       <key
+             commandId="org.eclipse.n4js.ui.showTypeInformation"
+             contextId="org.eclipse.xtext.ui.XtextEditorScope"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="M1+M3+I">
+       </key>
+  </extension>
+    <!-- quickfix marker resolution generator for org.eclipse.n4js.N4JS -->
+    <extension
+            point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.ui.n4js.check.fast">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.ui.n4js.check.normal">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.ui.n4js.check.expensive">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.eclipse.n4js.ui.workspace.error">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+    </extension>
+       <!-- Rename Refactoring -->
+    <extension point="org.eclipse.ui.handlers">
+        <handler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+            commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
+            <activeWhen>
+                <reference
+                    definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+         <menuContribution
+            locationURI="popup:#TextEditorContext?after=group.edit">
+         <command commandId="org.eclipse.xtext.ui.refactoring.RenameElement"
+               style="push">
+            <visibleWhen checkEnabled="false">
+               <reference
+                     definitionId="org.eclipse.n4js.N4JS.Editor.opened">
+               </reference>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension point="org.eclipse.ui.preferencePages">
+        <page
+            category="org.eclipse.n4js.N4JS"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+            id="org.eclipse.n4js.N4JS.refactoring"
+            name="Refactoring">
+            <keywordReference id="org.eclipse.n4js.ui.keyword_N4JS"/>
+        </page>
+    </extension>
+
+  <extension point="org.eclipse.compare.contentViewers">
+    <viewer id="org.eclipse.n4js.N4JS.compare.contentViewers"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
+    </viewer>
+  </extension>
+  <extension point="org.eclipse.compare.contentMergeViewers">
+    <viewer id="org.eclipse.n4js.N4JS.compare.contentMergeViewers"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl" label="N4JS Compare">
+     </viewer>
+  </extension>
+  <extension point="org.eclipse.ui.editors.documentProviders">
+    <provider id="org.eclipse.n4js.N4JS.editors.documentProviders"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            extensions="n4js,n4jsx,js,jsx,n4jsd,n4idl">
+    </provider>
+  </extension>
+  <extension point="org.eclipse.team.core.fileTypes">
+    <fileTypes
+            extension="n4js"
+            type="text">
+    </fileTypes>
+    <fileTypes
+            extension="n4jsx"
+            type="text">
+    </fileTypes>
+    <fileTypes
+            extension="js"
+            type="text">
+    </fileTypes>
+    <fileTypes
+            extension="js"
+            type="text">
+    </fileTypes>
+    <fileTypes
+            extension="n4jsd"
+            type="text">
+    </fileTypes>
+  </extension>
+
+  <extension
+        point="org.eclipse.xtext.ui.shared.overridingGuiceModule">
+     <module
+           class="org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration">
+     </module>
+  </extension>
+  <extension
+        point="org.eclipse.xtext.ui.shared.sharedStateContributingModule">
+     <module
+           class="org.eclipse.n4js.ui.internal.ContributingModule">
+     </module>
+  </extension>
+  <extension
+        point="org.eclipse.ui.contexts">
+     <context
+           id="org.eclipse.n4js.ui.context"
+           name="N4JS-IDE context"
+           parentId="org.eclipse.ui.contexts.window">
+     </context>
+  </extension>
+
+ <!-- Open generated source in editor -->
+      <extension point="org.eclipse.ui.menus">
+         <menuContribution
+               allPopups="false"
+               locationURI="popup:#TextEditorContext?after=additions">
+            <command
+                  commandId="org.eclipse.n4js.ui.openGeneratedSourceInEditor"
+                  icon="icons/macrodef_obj.gif"
+                  label="Open Generated Source In Editor"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        property="org.eclipse.n4js.ui.fileExtension"
+                        value="n4js,n4jsx,js,n4js,n4idl">  <!-- No code generation for N4JSD -->
+                  </test>
+               </visibleWhen>
+            </command>
+         </menuContribution>
+      </extension>
+      <extension
+            point="org.eclipse.core.expressions.propertyTesters">
+         <propertyTester
+               class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.handler.FileExtensionBasedPropertTester"
+               id="org.eclipse.n4js.ui.handler.FileExtensionBasedPropertTester"
+               namespace="org.eclipse.n4js.ui"
+               properties="fileExtension"
+               type="java.lang.Object">
+         </propertyTester>
+         <propertyTester
+               class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSSourceContainerPropertyTester"
+               id="org.eclipse.n4js.ui.navigator.internal.N4JSSourceContainerPropertyTester"
+               namespace="org.eclipse.n4js.ui"
+               properties="sourceContainer"
+               type="java.lang.Object">
+         </propertyTester>
+      </extension>
+            <extension
+            point="org.eclipse.ui.views">
+         <view
+               category="org.eclipse.n4js.category"
+               class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.compare.ApiCompareView"
+               icon="icons/api_compare.png"
+               id="org.eclipse.n4js.ui.apicompareview"
+               name="API Compare"
+               restorable="true">
+         </view>
+         <category
+               id="org.eclipse.n4js.category"
+               name="N4JS">
+         </category>
+      </extension>
+        <extension
+        point="org.eclipse.ui.decorators">
+       <decorator
+             adaptable="true"
+             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
+             id="org.eclipse.n4js.ui.decorator.ProjectTypeLabelDecorator"
+             label="Project Type Label Decorator"
+             lightweight="true"
+             location="TOP_RIGHT"
+             state="true">
+       </decorator>
+    </extension>
+        <extension
+              point="org.eclipse.ui.startup">
+           <startup
+                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.N4JSExternalLibraryStartup">
+           </startup>
+           <startup
+                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.WorkingSetManagerStartup">
+           </startup>
+        </extension>
+        <extension
+                point="org.eclipse.ui.navigator.viewer">
+            <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+                <includes>
+                    <contentExtension pattern="org.eclipse.n4js.ui.navigatorContent"/>
+                    <contentExtension pattern="org.eclipse.n4js.ui.linkHelper"/>
+                </includes>
+            </viewerContentBinding>
+            <viewerActionBinding
+               viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+      <includes>
+         <actionExtension
+               pattern="org.eclipse.n4js.ui.navigator.internal.N4JSOpenActions.open">
+         </actionExtension>
+         <actionExtension
+               pattern="org.eclipse.n4js.ui.navigator.internal.N4JSActionBarContributionProvider">
+         </actionExtension>
+         <actionExtension
+               pattern="org.eclipse.n4js.ui.navigator.internal.N4JSNavigatorActionProvider">
+         </actionExtension>
+      </includes>
+   </viewerActionBinding>
+        </extension>
+
+        <extension
+              point="org.eclipse.ui.navigator.navigatorContent">
+           <navigatorContent
+           activeByDefault="true"
+           appearsBefore="org.eclipse.jdt.java.ui.javaContent"
+           contentProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerContentProvider"
+           icon="icons/n4_logo.png"
+           id="org.eclipse.n4js.ui.navigatorContent"
+           labelProvider="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider"
+           name="N4JS"
+           priority="highest">
+
+              <triggerPoints>
+                <or>
+                    <instanceof value="org.eclipse.core.resources.IResource"/>
+                    <instanceof value="org.eclipse.n4js.ui.navigator.internal.Node"/>
+                    <instanceof value="org.eclipse.n4js.ui.workingsets.WorkingSet"/>
+                </or>
+              </triggerPoints>
+              <possibleChildren>
+                  <instanceof value="java.lang.Object"/>
+              </possibleChildren>
+
+            <commonSorter
+                  class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSResourceExtensionSorter"
+                  id="org.eclipse.ui.navigator.resources.sorters.defaultSorter">
+               <parentExpression>
+                         <or>
+                        <instanceof value="org.eclipse.core.resources.IResource"/>
+                        <instanceof value="org.eclipse.n4js.ui.navigator.internal.Node"/>
+                        <instanceof value="org.eclipse.n4js.ui.workingsets.WorkingSet"/>
+                     </or>
+               </parentExpression>
+            </commonSorter>
+
+            <override
+                    policy="InvokeAlwaysRegardlessOfSuppressedExt"
+                    suppressedExtensionId="org.eclipse.jdt.java.ui.javaContent"/>
+   <dropAssistant
+         class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.workingsets.internal.N4JSProjectInWorkingSetDropAdapterAssistant"
+         id="org.eclipse.n4js.ui.workingsets.internal.N4JSProjectInWorkingSetDropAdapterAssistant">
+         <possibleDropTargets>
+             <adapt type="org.eclipse.n4js.ui.workingsets.WorkingSet"/>
+           </possibleDropTargets>
+   </dropAssistant>
+
+           </navigatorContent>
+
+     <actionProvider
+           class="org.eclipse.n4js.ui.navigator.internal.N4JSOpenActions"
+           id="org.eclipse.n4js.ui.navigator.internal.N4JSOpenActions.open"
+           overrides="org.eclipse.ui.navigator.resources.OpenActions"
+           priority="highest">
+        <enablement>
+           <or>
+              <instanceof
+                    value="org.eclipse.core.resources.IFile">
+              </instanceof>
+              <instanceof
+                    value="org.eclipse.n4js.ui.navigator.internal.Node">
+              </instanceof>
+           </or>
+        </enablement>
+     </actionProvider>
+       <!-- Override for the WorkingSetActions to enable the custom N4JS Working Sets implementation. -->
+       <actionProvider
+             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSActionBarContributionProvider"
+             id="org.eclipse.n4js.ui.navigator.internal.N4JSActionBarContributionProvider"
+             overrides="org.eclipse.ui.navigator.resources.WorkingSetActions"
+             priority="highest">
+           <enablement>
+                <or>
+                    <adapt type="org.eclipse.core.resources.IResource" />
+                    <adapt type="java.util.Collection">
+                        <count value="0" />
+                    </adapt>
+                </or>
+           </enablement>
+       </actionProvider>
+
+        <actionProvider
+                class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSNavigatorActionProvider"
+                id="org.eclipse.n4js.ui.navigator.internal.N4JSNavigatorActionProvider">
+            <enablement>
+                <or>
+                    <adapt type="org.eclipse.core.resources.IResource" />
+                    <adapt type="java.util.Collection">
+                        <count value="0" />
+                    </adapt>
+                    <instanceof value="org.eclipse.n4js.ui.workingsets.WorkingSet" />
+                </or>
+            </enablement>
+        </actionProvider>
+
+       <commonWizard
+             type="new"
+             wizardId="org.eclipse.n4js.ui.wizard.N4JSNewClassWizard">
+          <enablement>
+             <and>
+                <instanceof
+                      value="org.eclipse.core.resources.IResource">
+                </instanceof>
+                <test
+                      property="org.eclipse.n4js.ui.sourceContainer">
+                </test>
+             </and>
+          </enablement>
+       </commonWizard>
+       <commonWizard
+             type="new"
+             wizardId="org.eclipse.n4js.ui.wizard.N4JSNewInterfaceWizard">
+          <enablement>
+             <and>
+                <instanceof
+                      value="org.eclipse.core.resources.IResource">
+                </instanceof>
+                <test
+                      property="org.eclipse.n4js.ui.sourceContainer">
+                </test>
+             </and>
+          </enablement>
+       </commonWizard>
+       <commonWizard
+             type="new"
+             wizardId="org.eclipse.n4js.ui.wizard.N4JSNewProjectWizard">
+          <enablement></enablement>
+       </commonWizard>
+        </extension>
+
+        <extension
+              point="org.eclipse.ui.navigator.linkHelper">
+               <linkHelper
+                 class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.navigator.internal.N4JSResourceLinkHelper"
+                 id="org.eclipse.n4js.ui.linkHelper">
+              <selectionEnablement>
+                  <or>
+                     <instanceof value="org.eclipse.core.resources.IFile"/>
+                     <instanceof value="org.eclipse.n4js.ui.navigator.internal.Node"/>
+                  </or>
+              </selectionEnablement>
+              <editorInputEnablement>
+                  <or>
+                     <instanceof value="org.eclipse.ui.IFileEditorInput"/>
+                     <instanceof value="org.eclipse.xtext.ui.editor.XtextReadonlyEditorInput"/>
+                 </or>
+              </editorInputEnablement>
+           </linkHelper>
+        </extension>
+
+    <extension
+        point="org.eclipse.ui.keywords">
+         <keyword
+            id="org.eclipse.n4js.ui.keyword.nodejs"
+               label="Node.js">
+         </keyword>
+         <keyword
+               id="org.eclipse.n4js.ui.keyword.npm"
+               label="npm">
+         </keyword>
+      </extension>
+      <extension
+        point="org.eclipse.ui.statusHandlers">
+         <statusHandler
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.binaries.N4StatusHandler"
+            id="org.eclipse.n4js.ui.binaries.N4StatusHandler">
+         </statusHandler>
+         <statusHandlerProductBinding
+            handlerId="org.eclipse.n4js.ui.binaries.N4StatusHandler"
+            productId="org.eclipse.n4js.product.product">
+         </statusHandlerProductBinding>
+    </extension>
+   <extension
+         point="org.eclipse.emf.common.ui.examples">
+      <example
+            pageImage="icons/newprj_wiz.png"
+            wizardID="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard">
+         <projectDescriptor
+               contentURI="examples/tasksExample/n4js-tasks-example.zip"
+               description="N4JS project for demonstrating the main capabilities of the language through a simple example. After creating the project third-party npm dependencies used by this example should be installed automatically."
+               name="n4js-tasks-example">
+         </projectDescriptor>
+      </example>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="org.eclipse.wizards"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
+            finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
+            icon="icons/newprj_wiz.png"
+            id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
+            name="N4JS Tasks Example"
+            project="true">
+         <description>
+            N4JS Tasks Example. Creates projects to demonstrate the main capabilities of the N4JS language.
+         </description>
+      </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.eclipse.ui.Examples"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
+            finalPerspective="org.eclipse.n4js.product.N4JSPerspective"
+            icon="icons/newprj_wiz.png"
+            id="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard"
+            name="N4JS Tasks Example">
+         <description>
+            N4JS Tasks Example. Creates projects to demonstrate the main capabilities of the N4JS language.
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.n4js.ui.workingsets.WorkingSet"
+            class="org.eclipse.n4js.ui.workingsets.WorkingSetAdapterFactory">
+         <adapter
+               type="org.eclipse.n4js.ui.workingsets.WorkingSet">
+         </adapter>
+         <adapter
+               type="org.eclipse.ui.IWorkingSet">
+         </adapter>
+         <adapter
+               type="org.eclipse.core.resources.mapping.ResourceMapping">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.building.BuilderStateLogger$Factory"
+            label="Builder State">
+      </consoleFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.search.ui.views.SearchView?after=additions">
+         <command
+               commandId="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
+               icon="icons/inher_co.png"
+               label="Consider Overriden Members"
+               style="toggle"
+               tooltip="If checked, references to the overriden members in superclasses and implemented interfaces are also considered when finding references.">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.search.ui.views.SearchView?after=additions">
+         <command
+               commandId="org.eclipse.n4js.ui.IgnoreNamedImportSpecifiersCmd"
+               icon="icons/import.gif"
+               label="Ignore Named Import Specifier"
+               style="toggle"
+               tooltip="If checked, references to named import specifier are not shown in the find references result.">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.n4js.json.validation">
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension"
+      />
+      <validator
+      	class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension"
+      />
+   </extension>
+   <extension
+         point="org.eclipse.n4js.json.resourceDescription">
+      <resourceDescriptionStrategy
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension">
+      </resourceDescriptionStrategy>
+   </extension>
+   <!--N4JS Stack Trace Console-->
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            label="N4JS Stack Trace Console"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.console.N4JSStackTraceConsoleFactory">
+      </consoleFactory>
+   </extension>
+   <!--N4JS Stack Trace Pattern Matchers
+   
+   Sample Exception: 
+   at C.foo___n4 (/Users/jpilgrim/Documents/workspaces/runtime-EclipseApplication/Sample/src-gen/C.js:17:14)
+   
+   \w[^\(\s]+Exception[\s|:]
+   -->
+   <extension
+         point="org.eclipse.ui.console.consolePatternMatchListeners">
+      <consolePatternMatchListener
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.console.N4JSExceptionConsoleTracker"
+            regex="\(.*\.js:[0-9]+:[0-9]+\)"
+            qualifier="at"
+            id="org.eclipse.n4js.ui.console.N4JSExceptionConsoleTracker">
+         <enablement>
+            <or>
+               <test property="org.eclipse.ui.console.consoleTypeTest" value="n4jsStackTraceConsole"/>
+               <test property="org.eclipse.debug.ui.processTypeTest" value="n4js"/>
+            </or>
+         </enablement>
+      </consolePatternMatchListener>
+   </extension>
+   <!--IO Console participant -->
+   <extension
+         point="org.eclipse.ui.console.consolePageParticipants">
+      <consolePageParticipant
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.console.N4JSStackTracePageParticipant"
+            id="org.eclipse.n4js.ui.console.N4JS.stackTraceConsoleParticipant">
+         <enablement>
+            <test property="org.eclipse.ui.console.consoleTypeTest" value="n4jsStackTraceConsole"/>
+         </enablement>
+      </consolePageParticipant>
+   </extension>
+</plugin>
