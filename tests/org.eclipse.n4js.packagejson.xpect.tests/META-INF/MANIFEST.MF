@@ -8,10 +8,9 @@ Automatic-Module-Name: org.eclipse.n4js.packagejson.xpect.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.xpect,
  org.eclipse.xpect.xtext.lib,
- org.eclipse.n4js.ui,
- org.eclipse.n4js.json.ui,
  org.eclipse.n4js.json.tests.helper,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.json,
  org.eclipse.n4js.json.model,
- org.eclipse.n4js.xpect
+ org.eclipse.n4js.xpect,
+ org.eclipse.n4js

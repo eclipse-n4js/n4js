@@ -5,15 +5,12 @@ Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.test.helpers.tests;singleton:=true
 Fragment-Host: org.eclipse.n4js
-Require-Bundle: org.eclipse.n4js.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
  org.eclipse.ui.workbench;resolution:=optional,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.regex.tests.helper,
- org.eclipse.n4js.ui.tests.helper,
  org.eclipse.xtext.ui,
- org.junit,
- org.eclipse.n4js.xpect.ui
+ org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.test.helpers.tests
