@@ -1,3 +1,0 @@
-
-export public const a = 'a in Other in project Main';
-export public const b = 'b in Other in project Main';

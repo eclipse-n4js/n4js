@@ -1,7 +1,0 @@
-// import typed 'A' from type definitions
-import {A} from "A";
-// dynamic namespace import from module 'B' for which no type definitions exists
-import * as B+ from "B";
-
-const a = new A();
-B;a;
