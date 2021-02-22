@@ -38,7 +38,7 @@ public class XtMethodsIssues {
 	static final String MESSAGE = "MESSAGE";
 	static final String AT = "AT";
 	static final Pattern PATTERN_MESSAGE_AT = Pattern
-			.compile("\\\"(?<" + MESSAGE + ">[^\\\"]*)\\\"\\s*at\\s*\\\"(?<" + AT + ">[^\\\"]+)\\\"");
+			.compile("\\\"(?<" + MESSAGE + ">[^\\\"]*)\\\"\\s*at\\s*\\\"(?<" + AT + ">(?:[^\"]|\\\")+)\\\"");
 
 	final XtFileData xtData; // sorted by position
 	final TreeSet<Diagnostic> errors; // sorted by position
@@ -151,7 +151,7 @@ public class XtMethodsIssues {
 		Matcher matcher = PATTERN_MESSAGE_AT.matcher(data.expectation);
 		while (matcher.find()) {
 			String message = matcher.group(MESSAGE);
-			String atString = matcher.group(AT);
+			String atString = matcher.group(AT).replace("\\\"", "\"");
 			atToExpectedMessages.put(atString, message);
 		}
 
