@@ -65,13 +65,20 @@ public class CollectedDataAccess {
 		return rootSeries;
 	}
 
+	/** @return {@link DataSeries} for all data captured by the given collector and its children */
+	public static DataSeries getDataSeries(DataCollector rootCollector) {
+		DataSeries rootSeries = new DataSeries(rootCollector.getId(), rootCollector.getData());
+		collectSeries(rootCollector, rootSeries);
+		return rootSeries;
+	}
+
 	private static void collectSeries(DataCollector parentCollector, DataSeries parentSeries) {
-		parentCollector.childrenKeys().forEach(name -> {
+		for (String name : parentCollector.childrenKeys()) {
 			DataCollector collector = parentCollector.getChild(name);
 			DataSeries series = new DataSeries(name, collector.getData());
 			parentSeries.addChild(series);
 			collectSeries(collector, series);
-		});
+		}
 	}
 
 	/** wrap static access */
