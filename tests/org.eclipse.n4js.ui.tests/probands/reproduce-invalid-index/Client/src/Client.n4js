@@ -1,5 +1,0 @@
-import {A} from "A";
-import * as B+ from "B";
-
-export const a = new A();
-B;a;

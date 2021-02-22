@@ -141,9 +141,10 @@ public class ReferenceResolutionFinder {
 			IResolutionAcceptor acceptor) {
 
 		IScope scope = getScopeForContentAssist(reference);
+
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		Iterable<IEObjectDescription> candidates = getAllElements(scope);
+		List<IEObjectDescription> candidates = getAllElements(scope);
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
@@ -165,17 +166,16 @@ public class ReferenceResolutionFinder {
 		}
 	}
 
-	private Iterable<IEObjectDescription> getAllElements(IScope scope) {
+	private List<IEObjectDescription> getAllElements(IScope scope) {
 		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
-			return scope.getAllElements();
+			return Lists.newArrayList(scope.getAllElements());
 		}
 	}
 
 	private IScope getScopeForContentAssist(ReferenceDescriptor reference) {
 		try (Measurement m = contentAssistDataCollectors.dcGetScope().getMeasurement()) {
 			IContentAssistScopeProvider contentAssistScopeProvider = (IContentAssistScopeProvider) scopeProvider;
-			return contentAssistScopeProvider.getScopeForContentAssist(reference.astNode,
-					reference.eReference);
+			return contentAssistScopeProvider.getScopeForContentAssist(reference.astNode, reference.eReference);
 		}
 	}
 
@@ -194,7 +194,7 @@ public class ReferenceResolutionFinder {
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
 			IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
 
-		try (Measurement m = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
+		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, text,
 					requireFullMatch, parseTreeNode, conflictChecker);
 
@@ -202,7 +202,7 @@ public class ReferenceResolutionFinder {
 				return null;
 			}
 
-			try {
+			try (Measurement m2 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 				int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
 
 				String proposal = getProposal(rrc);
@@ -324,24 +324,32 @@ public class ReferenceResolutionFinder {
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck,
 				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
-			if (!requireFullMatch && !scopeForCollisionCheck.isPresent()) {
-				throw new IllegalArgumentException(
-						"collision check should only be omitted if a full match is required");
+
+			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
+				if (!requireFullMatch && !scopeForCollisionCheck.isPresent()) {
+					throw new IllegalArgumentException(
+							"collision check should only be omitted if a full match is required");
+				}
+
+				this.candidate = candidate;
+				this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+				this.shortName = getShortName();
+				this.qualifiedName = getQualifiedName();
+				this.parentImportElement = getParentImportElement(parseTreeNode);
+				this.parentImportModuleName = getParentImportModuleName();
 			}
-			this.candidate = candidate;
-			this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-			this.shortName = getShortName();
-			this.qualifiedName = getQualifiedName();
-			this.parentImportElement = getParentImportElement(parseTreeNode);
-			this.parentImportModuleName = getParentImportModuleName();
-			this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
-			this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
-			this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
-			this.accessType = getAccessType();
-			this.aliasName = getAliasName();
-			this.namespaceName = getNamespaceName();
-			this.addedImportNameAndAlias = getImportChanges();
-			this.isValid = isValid(text, requireFullMatch, conflictChecker);
+			try (Measurement m = contentAssistDataCollectors.dcDetectProposalConflicts().getMeasurement()) {
+				this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
+			}
+			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate2().getMeasurement()) {
+				this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
+				this.isScopedCandidateCollisioning = isScopedCandidateCollisioning();
+				this.accessType = getAccessType();
+				this.aliasName = getAliasName();
+				this.namespaceName = getNamespaceName();
+				this.addedImportNameAndAlias = getImportChanges();
+				this.isValid = isValid(text, requireFullMatch, conflictChecker);
+			}
 		}
 
 		private String getShortName() {
@@ -386,15 +394,13 @@ public class ReferenceResolutionFinder {
 		}
 
 		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
-			try (Measurement m = contentAssistDataCollectors.dcDetectProposalConflicts().getMeasurement()) {
-				if (scopeForCollisionCheck.isPresent()) {
-					IScope scope = scopeForCollisionCheck.get();
-					IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
-					candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
-					return candidateViaScope;
-				}
-				return null;
+			if (scopeForCollisionCheck.isPresent()) {
+				IScope scope = scopeForCollisionCheck.get();
+				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
+				return candidateViaScope;
 			}
+			return null;
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope) {

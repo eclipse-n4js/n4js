@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js;
 
+import static org.eclipse.n4js.N4JSModuleDefaults.HTTP_SERVER_PORT_KEY;
+import static org.eclipse.n4js.N4JSModuleDefaults.HTTP_SERVER_PORT_VALUE;
+
+import java.util.Properties;
+
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.n4js.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.conversion.ValueConverters;
@@ -313,6 +318,17 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		binder.bind(String.class)
 				.annotatedWith(Names.named(AbstractMultiLineCommentProvider.START_TAG))
 				.toInstance("/\\*\\*(?=[^*])");
+
+		Names.bindProperties(binder, new DefaultModuleProperties());
+	}
+
+	/**
+	 * Default properties.
+	 */
+	private static final class DefaultModuleProperties extends Properties {
+		private DefaultModuleProperties() {
+			setProperty(HTTP_SERVER_PORT_KEY, String.valueOf(HTTP_SERVER_PORT_VALUE));
+		}
 	}
 
 	/**

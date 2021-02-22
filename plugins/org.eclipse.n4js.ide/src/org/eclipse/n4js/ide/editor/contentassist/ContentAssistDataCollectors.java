@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.editor.contentassist;
 
 import static org.eclipse.n4js.smith.DataCollectors.INSTANCE;
 
+import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
@@ -33,7 +34,10 @@ public final class ContentAssistDataCollectors {
 	private final DataCollector getAllElements;
 	private final DataCollector forEachElement;
 	private final DataCollector getResolution;
+	private final DataCollector createReferenceResolutionCandidate1;
 	private final DataCollector checkConflict;
+	private final DataCollector createReferenceResolutionCandidate2;
+	private final DataCollector createReferenceResolution;
 
 	/**
 	 * Constructor
@@ -49,7 +53,10 @@ public final class ContentAssistDataCollectors {
 		this.getAllElements = create(dcCreateProposalsInner(), "scope.getAllElements");
 		this.forEachElement = create(dcCreateProposalsInner(), "for(description in scope.allElements)");
 		this.getResolution = create(forEachElement, "getResolution");
+		this.createReferenceResolutionCandidate1 = create(getResolution, "createReferenceResolutionCandidate1");
 		this.checkConflict = create(getResolution, "checkConflict");
+		this.createReferenceResolutionCandidate2 = create(getResolution, "createReferenceResolutionCandidate2");
+		this.createReferenceResolution = create(getResolution, "createReferenceResolution");
 	}
 
 	/**
@@ -123,10 +130,31 @@ public final class ContentAssistDataCollectors {
 	}
 
 	/**
+	 * The data collector for the first computations when creating a ReferenceResolutionCandidate.
+	 */
+	public DataCollector dcCreateReferenceResolutionCandidate1() {
+		return createReferenceResolutionCandidate1;
+	}
+
+	/**
 	 * The data collector for the detection of conflicting proposals.
 	 */
 	public DataCollector dcDetectProposalConflicts() {
 		return checkConflict;
+	}
+
+	/**
+	 * The data collector for the last computations when creating a ReferenceResolutionCandidate.
+	 */
+	public DataCollector dcCreateReferenceResolutionCandidate2() {
+		return createReferenceResolutionCandidate2;
+	}
+
+	/**
+	 * The data collector for the creation of {@link ReferenceResolution}.
+	 */
+	public DataCollector dcCreateReferenceResolution() {
+		return createReferenceResolution;
 	}
 
 	private static DataCollector create(DataCollector parent, String key) {

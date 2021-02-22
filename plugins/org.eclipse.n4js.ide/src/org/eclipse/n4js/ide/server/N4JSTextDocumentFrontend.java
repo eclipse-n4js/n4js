@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -30,6 +29,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
 import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
@@ -37,13 +37,18 @@ import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.smith.CollectedDataAccess;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectorUtils;
+import org.eclipse.n4js.smith.DataPoint;
+import org.eclipse.n4js.smith.DataSeries;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.xtext.util.CancelIndicator;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 
@@ -65,18 +70,32 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	@Inject
 	private ServerIncidentLogger serverIncidentLogger;
 
+	@Inject
+	private ContentAssistDataCollectors contentAssistDataCollectors;
+
 	@Override
 	protected Either<List<CompletionItem>, CompletionList> completion(ResourceTaskContext rtc, CompletionParams params,
 			CancelIndicator originalCancelIndicator) {
 
-		Stopwatch sw = Stopwatch.createStarted();
-		try {
+		DataCollector dCollector = contentAssistDataCollectors.dcCreateCompletionsRoot();
+
+		try (Measurement m = dCollector.getMeasurement()) {
+			dCollector.resetData();
+			dCollector.setPaused(false);
 			return super.completion(rtc, params, originalCancelIndicator);
 		} finally {
-			long elapsedSeconds = sw.stop().elapsed(TimeUnit.SECONDS);
-			if (elapsedSeconds > 3) {
-				String msg = "Slow content assist\nPARAMS:\n" + params.toString();
-				serverIncidentLogger.reportWithFileBaseName("slow-ca", msg, true);
+			dCollector.setPaused(true);
+			List<DataPoint> data = dCollector.getData();
+			if (!data.isEmpty()) {
+				DataPoint dataPoint = data.get(0);
+				int elapsedSeconds = (int) (dataPoint.nanos / 1000000000);
+				if (elapsedSeconds > 2) {
+					DataSeries dataSeries = CollectedDataAccess.getDataSeries(dCollector);
+					String collectorString = DataCollectorUtils.dataToString(dataSeries, " ");
+					String msg = "Slow content assist\nPARAMS:\n" + params.toString();
+					msg += "\nTime measurements:\n" + collectorString;
+					serverIncidentLogger.reportWithFileBaseName("slow-ca", msg, true);
+				}
 			}
 		}
 	}
