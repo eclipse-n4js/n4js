@@ -123,7 +123,8 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  Returns true iff this is an <em>unresolved</em> reference to a type alias.
+	 * Returns true iff this is an <em>unresolved</em> reference to a type alias. For the difference
+	 * between resolved and unresolved references to type aliases, see {@link #isAliasResolved()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -134,7 +135,28 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  Returns true iff this is a <em>resolved</em> reference to a type alias.
+	 * Returns true iff this is a <em>resolved</em> reference to a type alias.
+	 * <p>
+	 * For comparison:
+	 * <ul>
+	 * <li>An <em>unresolved</em> reference to a type alias is always a {@link ParameterizedTypeRef} with
+	 * a {@link ParameterizedTypeRef#getDeclaredType() declared type} that is an instance of {@link TypeAlias}.
+	 * <li>A <em>resolved</em> reference to a type alias can be any kind of type reference (i.e. an instance of
+	 * any subclass of {@link TypeRef}), depending on the aliased (or "actual") type of the type alias. It always
+	 * contains a copy of the original, unresolved reference it was derived from (returned by {@link #getOriginalAliasTypeRef()}).
+	 * </ul>
+	 * For example, given the declaration
+	 * <pre>
+	 * type MyAlias = (string)=>number;
+	 * </pre>
+	 * in the N4JS source code, an unresolved reference to this type alias would be a {@code ParameterizedTypeRef}
+	 * with 'MyAlias' as {@link ParameterizedTypeRef#getDeclaredType() declared type}. A resolved reference to this
+	 * type alias would be a {@link FunctionTypeExpression} with a {@code string} parameter and a return type of
+	 * {@code number}.
+	 * <p>
+	 * The reason for having type alias resolution is that we do not yet properly hide all characteristics of
+	 * a type reference behind a single, common interface and that our code base is heavily using instanceof checks
+	 * to find out the nature of a type reference, which would fail in case of unresolved type references.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

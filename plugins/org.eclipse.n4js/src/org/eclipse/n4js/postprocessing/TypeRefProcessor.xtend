@@ -27,9 +27,9 @@ import org.eclipse.n4js.utils.EcoreUtilN4
  * Most type references created by the parser are already valid and can be used directly; the only exceptions
  * are:
  * <ul>
- * <li>{@link TypeRef#isAliasUnresolved() unresolved type aliases} must be converted to
- * {@link TypeRef#isAliasResolved() resolved type aliases} (note: type aliases in the TModule are not handled
- * here but in {@link TypeAliasProcessor}).
+ * <li>{@link TypeRef#isAliasUnresolved() unresolved} references to type aliases must be converted to
+ * {@link TypeRef#isAliasResolved() resolved} references to type aliases (note: type aliases in the TModule
+ * are not handled here but in {@link TypeAliasProcessor}).
  * </ul>
  */
 package class TypeRefProcessor extends AbstractProcessor {

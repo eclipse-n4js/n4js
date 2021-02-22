@@ -1705,6 +1705,8 @@ class TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement {
 
 /*
  * A type alias.
+ * <p>
+ * Note that references to type aliases are tricky, see {@link TypeRef#isAliasResolved()}.
  */
 class TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
 

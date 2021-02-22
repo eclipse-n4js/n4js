@@ -30,7 +30,13 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 	@Inject
 	private N4JSTypeSystem ts;
 
-	// FIXME API doc
+	/**
+	 * If the given 'typeRef' is an unresolved reference to a type alias, this method computes and returns
+	 * a corresponding resolved reference to this type alias. Nested type references a <b>not</b> considered.
+	 * <p>
+	 * For details on the difference between resolved and unresolved references to type aliases,
+	 * see {@link TypeRef#isAliasResolved()}.
+	 */
 	def package TypeRef resolveTypeAliasFlat(RuleEnvironment G, TypeRef typeRef) {
 		if (!typeRef.isAliasUnresolved) {
 			return typeRef;
@@ -81,12 +87,18 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 		}
 	}
 
-	// FIXME API doc
+	/**
+	 * Same as {@link #resolveTypeAliasFlat(RuleEnvironment, TypeRef)}, but also considers nested
+	 * type references.
+	 */
 	def package TypeRef resolveTypeAliases(RuleEnvironment G, TypeRef typeRef) {
 		return resolveTypeAliases(G, typeRef as TypeArgument) as TypeRef;
 	}
 
-	// FIXME API doc
+	/**
+	 * Same as {@link #resolveTypeAliasFlat(RuleEnvironment, TypeRef)}, but also considers nested
+	 * type references.
+	 */
 	def package TypeArgument resolveTypeAliases(RuleEnvironment G, TypeArgument typeArg) {
 		val theSwitch = new ResolveTypeAliasesSwitch(G, this);
 		val result = theSwitch.doSwitch(typeArg);

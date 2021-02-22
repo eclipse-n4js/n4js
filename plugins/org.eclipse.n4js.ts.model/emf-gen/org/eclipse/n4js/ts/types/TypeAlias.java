@@ -18,6 +18,8 @@ package org.eclipse.n4js.ts.types;
  *
  * <!-- begin-model-doc -->
  * A type alias.
+ * <p>
+ * Note that references to type aliases are tricky, see {@link TypeRef#isAliasResolved()}.
  * <!-- end-model-doc -->
  *
  *

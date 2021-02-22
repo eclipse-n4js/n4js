@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -29,6 +30,8 @@ import org.eclipse.n4js.utils.EcoreUtilN4
  * Handles resolution of type aliases during post-processing, <b>but only in the <code>TModule</code></b>.
  * Handling of type alias resolution of type references contained in the AST is part of the responsibility
  * of {@link TypeRefProcessor}.
+ * <p>
+ * For details on type alias resolution, see {@link TypeRef#isAliasResolved()}.
  */
 @Singleton
 package class TypeAliasProcessor extends AbstractProcessor {
