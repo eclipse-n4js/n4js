@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.base.Optional
 import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
 import java.util.Collection
@@ -182,8 +183,8 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRefInAST);
 		} else {
-			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.typeArgs, false, declaredType, paramTypeRefInAST,
-				TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
+			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.typeArgs, Optional.absent, false,
+				declaredType, paramTypeRefInAST, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
 		}
 		internalCheckDynamic(paramTypeRefInAST);
 

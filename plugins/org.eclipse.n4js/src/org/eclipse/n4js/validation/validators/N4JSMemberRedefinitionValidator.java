@@ -188,7 +188,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		MemberCube memberCube = createMemberValidationList();
 
 		final boolean isClass = tClassifier instanceof TClass;
-		final Map<ParameterizedTypeRef, MemberList<TMember>> nonAccessibleAbstractMembersBySuperTypeRef = new HashMap<>();
+		final Map<TypeReferenceNode<ParameterizedTypeRef>, MemberList<TMember>> nonAccessibleAbstractMembersBySuperTypeRefNode = new HashMap<>();
 
 		for (Entry<NameStaticPair, MemberMatrix> entry : memberCube.entrySet()) {
 			MemberMatrix mm = entry.getValue();
@@ -208,7 +208,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			}
 			constraints_60_InheritedConsumedCovariantSpecConstructor(tClassifier, mm);
 			constraints_66_NonOverride(mm);
-			constraints_42_45_46_AbstractMember(mm, nonAccessibleAbstractMembersBySuperTypeRef);
+			constraints_42_45_46_AbstractMember(mm, nonAccessibleAbstractMembersBySuperTypeRefNode);
 			unusedGenericTypeVariable(mm);
 
 			checkUnpairedAccessorConsumption(mm, n4ClassifierDefinition);
@@ -217,9 +217,9 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			messageMissingOverrideAnnotation(mm, membersMissingOverrideAnnotation);
 		}
 
-		final boolean foundImpossibleExtendsImplements = !nonAccessibleAbstractMembersBySuperTypeRef.isEmpty();
+		final boolean foundImpossibleExtendsImplements = !nonAccessibleAbstractMembersBySuperTypeRefNode.isEmpty();
 		if (foundImpossibleExtendsImplements) {
-			messageImpossibleExtendsImplements(n4ClassifierDefinition, nonAccessibleAbstractMembersBySuperTypeRef);
+			messageImpossibleExtendsImplements(n4ClassifierDefinition, nonAccessibleAbstractMembersBySuperTypeRefNode);
 		}
 
 		if (!foundImpossibleExtendsImplements) { // avoid consequential errors
@@ -786,7 +786,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	 * given collection.
 	 */
 	private void constraints_42_45_46_AbstractMember(MemberMatrix mm,
-			Map<ParameterizedTypeRef, MemberList<TMember>> nonAccessibleAbstractMembersBySuperTypeRef) {
+			Map<TypeReferenceNode<ParameterizedTypeRef>, MemberList<TMember>> nonAccessibleAbstractMembersBySuperTypeRefNode) {
 
 		N4ClassifierDefinition classifierDefinition = getCurrentClassifierDefinition();
 		TClassifier classifier = getCurrentClassifier();
@@ -796,14 +796,14 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			TMember m = iter.next();
 			if (!iter.isOwnedMember() && m.isAbstract()) {
 				if (!memberVisibilityChecker.isVisibleWhenOverriding(contextModule, classifier, classifier, m)) {
-					Iterable<ParameterizedTypeRef> superTypeRefs = FindClassifierInHierarchyUtils
+					Iterable<TypeReferenceNode<ParameterizedTypeRef>> superTypeRefNodes = FindClassifierInHierarchyUtils
 							.findSuperTypesWithMember(classifierDefinition, m);
-					for (ParameterizedTypeRef superTypeRef : superTypeRefs) {
-						MemberList<TMember> nonAccessible = nonAccessibleAbstractMembersBySuperTypeRef
-								.get(superTypeRef);
+					for (TypeReferenceNode<ParameterizedTypeRef> superTypeRefNode : superTypeRefNodes) {
+						MemberList<TMember> nonAccessible = nonAccessibleAbstractMembersBySuperTypeRefNode
+								.get(superTypeRefNode);
 						if (nonAccessible == null) {
 							nonAccessible = new MemberList<>();
-							nonAccessibleAbstractMembersBySuperTypeRef.put(superTypeRef, nonAccessible);
+							nonAccessibleAbstractMembersBySuperTypeRefNode.put(superTypeRefNode, nonAccessible);
 						}
 						nonAccessible.add(m);
 					}
@@ -883,17 +883,17 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	}
 
 	private void messageImpossibleExtendsImplements(N4ClassifierDefinition n4ClassifierDefinition,
-			Map<ParameterizedTypeRef, MemberList<TMember>> nonAccessibleAbstractMembersBySuperTypeRef) {
-		for (Entry<ParameterizedTypeRef, MemberList<TMember>> entry : nonAccessibleAbstractMembersBySuperTypeRef
+			Map<TypeReferenceNode<ParameterizedTypeRef>, MemberList<TMember>> nonAccessibleAbstractMembersBySuperTypeRefNode) {
+		for (Entry<TypeReferenceNode<ParameterizedTypeRef>, MemberList<TMember>> entry : nonAccessibleAbstractMembersBySuperTypeRefNode
 				.entrySet()) {
-			final ParameterizedTypeRef superTypeRef = entry.getKey();
-			final Type type = superTypeRef.getDeclaredType();
+			final TypeReferenceNode<ParameterizedTypeRef> superTypeRefNode = entry.getKey();
+			final Type type = superTypeRefNode.getTypeRef().getDeclaredType();
 			final String mode = type instanceof TInterface
 					&& !(n4ClassifierDefinition instanceof N4InterfaceDeclaration) ? "implement" : "extend";
 			final String message = getMessageForCLF_NON_ACCESSIBLE_ABSTRACT_MEMBERS(mode,
 					validatorMessageHelper.description(type),
 					validatorMessageHelper.descriptions(entry.getValue()));
-			addIssue(message, superTypeRef.eContainer(), superTypeRef.eContainingFeature(),
+			addIssue(message, superTypeRefNode.eContainer(), superTypeRefNode.eContainingFeature(),
 					CLF_NON_ACCESSIBLE_ABSTRACT_MEMBERS);
 		}
 	}

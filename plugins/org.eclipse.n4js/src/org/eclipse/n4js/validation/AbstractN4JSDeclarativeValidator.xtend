@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.validation
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
 import java.lang.reflect.Method
+import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
@@ -155,8 +157,10 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		List<? extends TypeReferenceNode<?>> typeArgsNodes, boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
 
-		val typeArgs = typeArgsNodes.map[typeRefInAST].toList;
-		internalCheckTypeArguments(typeVars, typeArgs, allowAutoInference, parameterizedElement, source, feature);
+		val typeArgsInAST = typeArgsNodes.map[typeRefInAST].toList;
+		val typeArgsProcessed = typeArgsNodes.map[typeRef].toList;
+		internalCheckTypeArguments(typeVars, typeArgsInAST, Optional.of(typeArgsProcessed),
+			allowAutoInference, parameterizedElement, source, feature);
 	}
 	/**
 	 * Checks for (1) correct number of type arguments, (2) correct type of each type argument, and (3) consistency of
@@ -170,6 +174,9 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 *
 	 * @param typeVars  the type variables the provided type arguments are intended for.
 	 * @param typeArgsInAST  the type arguments to check (expected to be contained in the AST).
+	 * @param typeArgsResolvedOpt  if resolved versions of the 'typeArgsInAST' are available (e.g. as returned by
+	 *                             {@link TypeReferenceNode#getTypeRef()}), they should be passed in here; if absent,
+	 *                             resolution will be done on demand in this method.
 	 * @param allowAutoInference  if true, it will be legal to provide no arguments, even if there are several
 	 *                            type variables. Intended for cases where inference of type arguments is supported.
 	 * @param parameterizedElement  the element defining the type variables in 'typeVars' or <code>null</code>
@@ -181,7 +188,8 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 *                 used to derive the region of the error.
 	 */
 	def protected void internalCheckTypeArguments(List<? extends TypeVariable> typeVars,
-		List<? extends TypeArgument> typeArgsInAST, boolean allowAutoInference, IdentifiableElement parameterizedElement,
+		List<? extends TypeArgument> typeArgsInAST, Optional<List<? extends TypeArgument>> typeArgsResolvedOpt,
+		boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
 
 		val typeParameterCount = typeVars.size
@@ -215,56 +223,61 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		// check if type arguments adhere to type variables' bounds and variance (if any)
 		val minTypeVariables = Math.min(typeParameterCount, typeArgumentCount);
 		if (minTypeVariables !== 0) {
+			val G = source.newRuleEnvironment;
+			// preparation: create resolved type arguments, if not provided by caller
+			val typeArgsResolved = new ArrayList(if (typeArgsResolvedOpt.present) typeArgsResolvedOpt.get else #[]);
+			for (var i = typeArgsResolved.size; i < typeArgumentCount; i++) {
+				typeArgsResolved.add(tsh.resolveTypeAliases(G, typeArgsInAST.get(i)));
+			}
 			// preparation: create rule environment for type variable substitution in upper bounds
 			val G_subst = source.newRuleEnvironment;
 			if(source instanceof ParameterizedPropertyAccessExpression) {
-				val G = source.newRuleEnvironment;
 				val targetTypeRef = ts.type(G, source.target); // note: not using G_subst here
 				tsh.addSubstitutions(G_subst, targetTypeRef);
 			}
-			for (int i : 0 ..< typeArgsInAST.size) {
-				G_subst.addTypeMapping(typeVars.get(i), typeArgsInAST.get(i));
+			for (int i : 0 ..< typeArgumentCount) {
+				G_subst.addTypeMapping(typeVars.get(i), typeArgsResolved.get(i));
 			}
 			// actually check provided type arguments
 			for (int i : 0 ..< minTypeVariables) {
 				val TypeVariable typeParameter = typeVars.get(i)
-				val TypeArgument typeArgument = typeArgsInAST.get(i);
+				val TypeArgument typeArgumentInAST = typeArgsInAST.get(i);
+				val TypeArgument typeArgumentResolved = typeArgsResolved.get(i);
 
 				// check consistency of use-site and definition-site variance
-				if(typeArgument instanceof Wildcard) {
+				if(typeArgumentInAST instanceof Wildcard) {
 					val defSiteVariance = typeParameter.variance;
-					val useSiteVariance = if(typeArgument.declaredUpperBound!==null) {
+					val useSiteVariance = if(typeArgumentInAST.declaredUpperBound!==null) {
 						Variance.CO
-					} else if(typeArgument.declaredLowerBound!==null) {
+					} else if(typeArgumentInAST.declaredLowerBound!==null) {
 						Variance.CONTRA
 					};
 					if(defSiteVariance!==Variance.INV && useSiteVariance!==null
 						&& useSiteVariance!==defSiteVariance) {
 						// we've got an inconsistency!
-						if(typeArgument.usingInOutNotation) {
+						if(typeArgumentInAST.usingInOutNotation) {
 							val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT(
 								useSiteVariance.getDescriptiveStringNoun(true),
 								defSiteVariance.getDescriptiveStringNoun(true));
-							addIssue(message, typeArgument, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT);
+							addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT);
 						} else {
 							val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG(
 								if(useSiteVariance===Variance.CO) "upper" else "lower",
 								defSiteVariance.getDescriptiveString(true));
-							addIssue(message, typeArgument, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG);
+							addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG);
 						}
 					}
 				}
 
 				// check bounds
-				val isExceptionCase = TypeUtils.isVoid(typeArgument); // in this case another validation will show an error (avoid duplicate messages)
+				val isExceptionCase = TypeUtils.isVoid(typeArgumentInAST); // in this case another validation will show an error (avoid duplicate messages)
 				if(!isExceptionCase) {
 					val typeParamUB = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
 					val typeParamUBSubst = ts.substTypeVariables(G_subst, typeParamUB);
-					val typeArgResolved = tsh.resolveTypeAliases(G_subst, typeArgument); // typeArgument was taken directly from AST -> must resolve aliases
-					val typeArgSubst = ts.substTypeVariables(G_subst, typeArgResolved);
+					val typeArgSubst = ts.substTypeVariables(G_subst, typeArgumentResolved);
 					val result = ts.subtype(G_subst, typeArgSubst, typeParamUBSubst);
 					if (result.failure) {
-						createTypeError(result, typeArgument);
+						createTypeError(result, typeArgumentInAST);
 					}
 				}
 			}
