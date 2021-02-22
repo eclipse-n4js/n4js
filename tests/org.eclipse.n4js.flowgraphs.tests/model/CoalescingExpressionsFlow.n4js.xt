@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.XtTestSetupTest END_SETUP */
 
 function CoalescingExpression() {
 	// CoalescingExpression XPECT cfContainer --> FunctionDeclaration::Block
