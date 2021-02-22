@@ -471,6 +471,61 @@ public interface ImPackage extends EPackage {
 	int SYMBOL_TABLE_ENTRY_INTERNAL_OPERATION_COUNT = SYMBOL_TABLE_ENTRY_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl <em>Type Reference Node IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getTypeReferenceNode_IM()
+	 * @generated
+	 */
+	int TYPE_REFERENCE_NODE_IM = 6;
+
+	/**
+	 * The feature id for the '<em><b>Cached Processed Type Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM__CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM__TYPE_REF_IN_AST = N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST;
+
+	/**
+	 * The number of structural features of the '<em>Type Reference Node IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM_FEATURE_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Type Reference Node IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM_OPERATION_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElement_IMImpl <em>Referencing Element IM</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -478,7 +533,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getReferencingElement_IM()
 	 * @generated
 	 */
-	int REFERENCING_ELEMENT_IM = 6;
+	int REFERENCING_ELEMENT_IM = 7;
 
 	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
@@ -524,7 +579,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getReferencingElementExpression_IM()
 	 * @generated
 	 */
-	int REFERENCING_ELEMENT_EXPRESSION_IM = 7;
+	int REFERENCING_ELEMENT_EXPRESSION_IM = 8;
 
 	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
@@ -579,7 +634,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getIdentifierRef_IM()
 	 * @generated
 	 */
-	int IDENTIFIER_REF_IM = 8;
+	int IDENTIFIER_REF_IM = 9;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -724,7 +779,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedPropertyAccessExpression_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 9;
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 10;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' containment reference.
@@ -914,7 +969,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRef_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_IM = 10;
+	int PARAMETERIZED_TYPE_REF_IM = 11;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1338,7 +1393,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRefStructural_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 11;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 12;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1816,7 +1871,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getSnippet()
 	 * @generated
 	 */
-	int SNIPPET = 12;
+	int SNIPPET = 13;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -1862,7 +1917,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingMember()
 	 * @generated
 	 */
-	int DELEGATING_MEMBER = 13;
+	int DELEGATING_MEMBER = 14;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -2052,7 +2107,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingGetterDeclaration()
 	 * @generated
 	 */
-	int DELEGATING_GETTER_DECLARATION = 14;
+	int DELEGATING_GETTER_DECLARATION = 15;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -2404,7 +2459,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingSetterDeclaration()
 	 * @generated
 	 */
-	int DELEGATING_SETTER_DECLARATION = 15;
+	int DELEGATING_SETTER_DECLARATION = 16;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -2756,7 +2811,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingMethodDeclaration()
 	 * @generated
 	 */
-	int DELEGATING_METHOD_DECLARATION = 16;
+	int DELEGATING_METHOD_DECLARATION = 17;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -3162,7 +3217,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getStringLiteralForSTE()
 	 * @generated
 	 */
-	int STRING_LITERAL_FOR_STE = 17;
+	int STRING_LITERAL_FOR_STE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -3244,7 +3299,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRef_IM()
 	 * @generated
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM = 18;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM = 19;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3695,7 +3750,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRefStructural_IM()
 	 * @generated
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 19;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 20;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -4200,7 +4255,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedIdentifierRef_IM()
 	 * @generated
 	 */
-	int VERSIONED_IDENTIFIER_REF_IM = 20;
+	int VERSIONED_IDENTIFIER_REF_IM = 21;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -4372,7 +4427,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedNamedImportSpecifier_IM()
 	 * @generated
 	 */
-	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM = 21;
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM = 22;
 
 	/**
 	 * The feature id for the '<em><b>Flagged Used In Code</b></em>' attribute.
@@ -4611,6 +4666,26 @@ public interface ImPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getSymbolTableEntryInternal();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM <em>Type Reference Node IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Type Reference Node IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
+	 * @generated
+	 */
+	EClass getTypeReferenceNode_IM();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef() <em>Get Type Ref</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef()
+	 * @generated
+	 */
+	EOperation getTypeReferenceNode_IM__GetTypeRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ReferencingElement_IM <em>Referencing Element IM</em>}'.
@@ -5240,6 +5315,24 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EClass SYMBOL_TABLE_ENTRY_INTERNAL = eINSTANCE.getSymbolTableEntryInternal();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl <em>Type Reference Node IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getTypeReferenceNode_IM()
+		 * @generated
+		 */
+		EClass TYPE_REFERENCE_NODE_IM = eINSTANCE.getTypeReferenceNode_IM();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = eINSTANCE.getTypeReferenceNode_IM__GetTypeRef();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElement_IMImpl <em>Referencing Element IM</em>}' class.

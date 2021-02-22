@@ -51,6 +51,7 @@ import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.VersionedElement;
@@ -151,6 +152,10 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 				return createSymbolTableEntryInternalAdapter();
 			}
 			@Override
+			public <T extends TypeRef> Adapter caseTypeReferenceNode_IM(TypeReferenceNode_IM<T> object) {
+				return createTypeReferenceNode_IMAdapter();
+			}
+			@Override
 			public Adapter caseReferencingElement_IM(ReferencingElement_IM object) {
 				return createReferencingElement_IMAdapter();
 			}
@@ -229,6 +234,10 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseScript(Script object) {
 				return createScriptAdapter();
+			}
+			@Override
+			public <T extends TypeRef> Adapter caseTypeReferenceNode(TypeReferenceNode<T> object) {
+				return createTypeReferenceNodeAdapter();
 			}
 			@Override
 			public Adapter caseTypableElement(TypableElement object) {
@@ -519,6 +528,20 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM <em>Type Reference Node IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
+	 * @generated
+	 */
+	public Adapter createTypeReferenceNode_IMAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.ReferencingElement_IM <em>Referencing Element IM</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -795,6 +818,20 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createScriptAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.TypeReferenceNode <em>Type Reference Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.TypeReferenceNode
+	 * @generated
+	 */
+	public Adapter createTypeReferenceNodeAdapter() {
 		return null;
 	}
 

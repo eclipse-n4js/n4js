@@ -55,7 +55,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -83,6 +82,8 @@ public class PreparationStep {
 	private static final ImmutableMap<EClass, EClass> ECLASS_REPLACEMENT = ImmutableMap.<EClass, EClass> builder()
 			.put(N4JSPackage.eINSTANCE.getScript(),
 					ImPackage.eINSTANCE.getScript_IM())
+			.put(N4JSPackage.eINSTANCE.getTypeReferenceNode(),
+					ImPackage.eINSTANCE.getTypeReferenceNode_IM())
 			.put(N4JSPackage.eINSTANCE.getIdentifierRef(),
 					ImPackage.eINSTANCE.getIdentifierRef_IM())
 			.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
@@ -236,6 +237,11 @@ public class PreparationStep {
 			} else if (copy instanceof N4MemberDeclaration) {
 				info.setOriginalDefinedMember_internal((N4MemberDeclaration) copy,
 						((N4MemberDeclaration) eObject).getDefinedTypeElement());
+			} else if (copy instanceof TypeReferenceNode<?>) {
+				if (((TypeReferenceNode<?>) eObject).getTypeRefInAST() != null) {
+					info.setOriginalProcessedTypeRef_internal((TypeReferenceNode<?>) copy,
+							((TypeReferenceNode<?>) eObject).getTypeRef());
+				}
 			}
 			return copy;
 		}
@@ -257,29 +263,6 @@ public class PreparationStep {
 		}
 
 		@Override
-		protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
-			super.copyContainment(eReference, eObject, copyEObject);
-			if (eReference == N4JSPackage.Literals.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST) {
-				// reference TypeReferenceNode#cachedProcessedTypeRef is a transient cross-reference (i.e.
-				// non-containment) but in order to make processed type reference (esp. resolved type aliases) available
-				// to the transformations, we want to treat this reference in exactly the same way as containment
-				// references
-				TypeReferenceNode<?> eObjectCasted = (TypeReferenceNode<?>) eObject;
-				TypeRef cachedValue = eObjectCasted.getCachedProcessedTypeRef();
-				if (cachedValue != null) {
-					if (cachedValue != eObjectCasted.getTypeRefInAST()) {
-						super.copyContainment(N4JSPackage.Literals.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF,
-								eObject, copyEObject);
-					} else {
-						TypeReferenceNode<?> copyEObjectCasted = (TypeReferenceNode<?>) copyEObject;
-						TypeRef typeRefInIM = copyEObjectCasted.getTypeRefInAST();
-						copyEObjectCasted.setCachedProcessedTypeRef(typeRefInIM);
-					}
-				}
-			}
-		}
-
-		@Override
 		protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
 			final boolean needsRewiring = Arrays.contains(REWIRED_REFERENCES, eReference);
 			if (needsRewiring) {
@@ -292,8 +275,7 @@ public class PreparationStep {
 				rewire(eObject, (ReferencingElement_IM) copyEObject);
 				// note: suppress default behavior (references "id", "property", "declaredType" should stay at 'null')
 			} else if (eReference == N4JSPackage.Literals.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF) {
-				// suppress default behavior for this reference, because it was treated as a containment reference in
-				// override of #copyContainment() above
+				// should always be 'null' in the intermediate model
 			} else {
 				super.copyReference(eReference, eObject, copyEObject);
 			}

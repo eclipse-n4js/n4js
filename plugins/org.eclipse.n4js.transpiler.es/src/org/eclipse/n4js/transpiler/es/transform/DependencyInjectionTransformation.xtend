@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
-import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -19,8 +18,6 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument
@@ -44,9 +41,6 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  */
 class DependencyInjectionTransformation extends Transformation {
 
-	@Inject private TypeAssistant typeAssistant;
-
-
 	override assertPreConditions() {
 		// true
 	}
@@ -63,8 +57,7 @@ class DependencyInjectionTransformation extends Transformation {
 		collectNodes(state.im, N4ClassDeclaration, false).forEach[classDecl|
 			val tClass = state.info.getOriginalDefinedType(classDecl);
 			if( tClass !== null ) {
-				val superClassSTE = typeAssistant.getSuperClassSTE(classDecl);
-				val codeForDI = generateCodeForDI(tClass, classDecl, superClassSTE);
+				val codeForDI = generateCodeForDI(tClass, classDecl);
 				if(codeForDI!==null) {
 					insertAfter(classDecl.orContainingExportDeclaration, codeForDI);
 				}
@@ -83,8 +76,8 @@ class DependencyInjectionTransformation extends Transformation {
 	 * Also, note second parameter passed is name or alias of the super type.
 	 * passing it from caller, even if we don't use it, is a shortcut to avoid computing it again here.
 	 */
-	def private Statement generateCodeForDI(TClass it, N4ClassDeclaration classDecl, SymbolTableEntry superClassSTE) {
-		val propertiesForDI = createPropertiesForDI(classDecl, superClassSTE);
+	def private Statement generateCodeForDI(TClass tClass, N4ClassDeclaration classDecl) {
+		val propertiesForDI = createPropertiesForDI(tClass, classDecl);
 		if(propertiesForDI.empty) {
 			return null;
 		}
@@ -106,21 +99,21 @@ class DependencyInjectionTransformation extends Transformation {
 		));
 	}
 
-	def private Pair<String,Expression>[] createPropertiesForDI(TClass it, N4ClassDeclaration classDecl, SymbolTableEntry superClassSTE) {
+	def private Pair<String,Expression>[] createPropertiesForDI(TClass tClass, N4ClassDeclaration classDecl) {
 		val result = <Pair<String,Expression>>newArrayList;
-		if(isBinder) {
-			result += "bindings" -> generateBindingPairs as Expression;
-			result += "methodBindings" -> generateMethodBindings as Expression;
-			result += injectionPointsMetaInfo(superClassSTE);
-		} else if(isDIComponent) {
-			if(hasParentInjector) {
-				val parentDIC_STE = getSymbolTableEntryOriginal(findParentDIC, true);
+		if(isBinder(tClass)) {
+			result += "bindings" -> generateBindingPairs(tClass) as Expression;
+			result += "methodBindings" -> generateMethodBindings(tClass) as Expression;
+			result += injectionPointsMetaInfo(tClass);
+		} else if(isDIComponent(tClass)) {
+			if(hasParentInjector(tClass)) {
+				val parentDIC_STE = getSymbolTableEntryOriginal(findParentDIC(tClass), true);
 				result += "parent" -> __NSSafe_IdentRef(parentDIC_STE) as Expression;
 			}
-			result += "binders" -> generateBinders as Expression;
-			result += injectionPointsMetaInfo(superClassSTE);
-		} else if(isInjectedClass) {
-			result += injectionPointsMetaInfo(superClassSTE);
+			result += "binders" -> generateBinders(tClass) as Expression;
+			result += injectionPointsMetaInfo(tClass);
+		} else if(isInjectedClass(tClass)) {
+			result += injectionPointsMetaInfo(tClass);
 		}
 		return result;
 	}
@@ -128,17 +121,18 @@ class DependencyInjectionTransformation extends Transformation {
 	/**
 	 * Generate DI hooks for scopes, super type, injected ctor, injected fields
 	 */
-	def private Pair<String,Expression>[] injectionPointsMetaInfo(TClass it, SymbolTableEntry superClassSTE) {
-		val fieldInjectionValue = it.fieldInjection;
+	def private Pair<String,Expression>[] injectionPointsMetaInfo(TClass tClass) {
+		val fieldInjectionValue = fieldInjection(tClass);
 		val result = <Pair<String,Expression>>newArrayList;
-		if(isSingleton) {
+		if(isSingleton(tClass)) {
 			result += "scope" -> _StringLiteral("Singleton") as Expression;
 		}
+		val ownedCtor = tClass.ownedCtor;
 		if(ownedCtor!==null && AnnotationDefinition.INJECT.hasAnnotation(ownedCtor)) {
 			result += "injectCtorParams" -> ownedCtor.methodInjectedParams as Expression;
 		}
 		if(!fieldInjectionValue.elements.empty) {
-			result += "fieldsInjectedTypes" -> fieldInjection as Expression;
+			result += "fieldsInjectedTypes" -> fieldInjection(tClass) as Expression;
 		}
 		return result;
 	}
@@ -148,9 +142,9 @@ class DependencyInjectionTransformation extends Transformation {
 	 * If method has no method parameters returned value is empty string,
 	 * otherwise description of parameters is returned.
 	 */
-	def private ArrayLiteral methodInjectedParams(TMethod it) {
+	def private ArrayLiteral methodInjectedParams(TMethod tMethod) {
 		val result = _ArrLit();
-		for(fpar : fpars) {
+		for(fpar : tMethod.fpars) {
 			val fparSTE = getSymbolTableEntryOriginal(fpar, true);
 			result.elements += _ArrayElement(_ObjLit(
 				#[ _PropertyNameValuePair("name", _StringLiteralForSTE(fparSTE)) ]
@@ -163,9 +157,9 @@ class DependencyInjectionTransformation extends Transformation {
 	/**
 	 * Generate injection info for fields annotated with {@link AnnotationDefinition#INJECT}.
 	 */
-	def private ArrayLiteral fieldInjection(TClass it) {
+	def private ArrayLiteral fieldInjection(TClass tClass) {
 		val result = _ArrLit();
-		for(field : ownedInejctedFields) {
+		for(field : getOwnedInejctedFields(tClass)) {
 			val fieldSTE = getSymbolTableEntryOriginal(field, true);
 			result.elements += _ArrayElement(_ObjLit(
 				#[ _PropertyNameValuePair("name", _StringLiteralForSTE(fieldSTE)) ]
@@ -178,9 +172,9 @@ class DependencyInjectionTransformation extends Transformation {
 	/**
 	 * Generate injection info from {@link AnnotationDefinition#BIND} annotations on the provided class.
 	 */
-	private def ArrayLiteral generateBindingPairs(TClass it) {
+	private def ArrayLiteral generateBindingPairs(TClass tClass) {
 		val result = _ArrLit();
-		for(binding : getBindingPairs) {
+		for(binding : getBindingPairs(tClass)) {
 			val keySTE = getSymbolTableEntryOriginal(binding.key, true);
 			val valueSTE = getSymbolTableEntryOriginal(binding.value, true);
 			result.elements += _ArrayElement(_ObjLit(
@@ -195,9 +189,9 @@ class DependencyInjectionTransformation extends Transformation {
 	 * Generate injection info for methods annotated with {@link AnnotationDefinition#PROVIDES}.
 	 * Returned information contains returned type, name and formal parameters of the method.
 	 */
-	def private ArrayLiteral generateMethodBindings(TClass it) {
+	def private ArrayLiteral generateMethodBindings(TClass tClass) {
 		val result = _ArrLit();
-		for(method : ownedProviderMethods) {
+		for(method : getOwnedProviderMethods(tClass)) {
 			result.elements += _ArrayElement(_ObjLit(
 				method.returnTypeRef.generateTypeInfo("to").head,
 				_PropertyNameValuePair("name", _StringLiteral(method.name)),
@@ -207,9 +201,9 @@ class DependencyInjectionTransformation extends Transformation {
 		return result;
 	}
 
-	def private ArrayLiteral generateBinders(TClass it) {
+	def private ArrayLiteral generateBinders(TClass tClass) {
 		val result = _ArrLit();
-		for(binderType : resolveBinders) {
+		for(binderType : resolveBinders(tClass)) {
 			val binderTypeSTE = getSymbolTableEntryOriginal(binderType, true);
 			result.elements += _ArrayElement(
 				__NSSafe_IdentRef(binderTypeSTE)

@@ -12,9 +12,11 @@ package org.eclipse.n4js.transpiler.im.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -38,6 +40,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
 import org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM;
@@ -85,6 +88,13 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	private EClass symbolTableEntryInternalEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass typeReferenceNode_IMEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -370,6 +380,26 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	@Override
 	public EClass getSymbolTableEntryInternal() {
 		return symbolTableEntryInternalEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTypeReferenceNode_IM() {
+		return typeReferenceNode_IMEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypeReferenceNode_IM__GetTypeRef() {
+		return typeReferenceNode_IMEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -845,6 +875,9 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 
 		symbolTableEntryInternalEClass = createEClass(SYMBOL_TABLE_ENTRY_INTERNAL);
 
+		typeReferenceNode_IMEClass = createEClass(TYPE_REFERENCE_NODE_IM);
+		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_TYPE_REF);
+
 		referencingElement_IMEClass = createEClass(REFERENCING_ELEMENT_IM);
 		createEReference(referencingElement_IMEClass, REFERENCING_ELEMENT_IM__REWIRED_TARGET);
 		createEOperation(referencingElement_IMEClass, REFERENCING_ELEMENT_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET);
@@ -937,14 +970,21 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		TypeRefsPackage theTypeRefsPackage = (TypeRefsPackage)EPackage.Registry.INSTANCE.getEPackage(TypeRefsPackage.eNS_URI);
 
 		// Create type parameters
+		ETypeParameter typeReferenceNode_IMEClass_T = addETypeParameter(typeReferenceNode_IMEClass, "T");
 
 		// Set bounds for type parameters
+		EGenericType g1 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		typeReferenceNode_IMEClass_T.getEBounds().add(g1);
 
 		// Add supertypes to classes
 		script_IMEClass.getESuperTypes().add(theN4JSPackage.getScript());
 		symbolTableEntryOriginalEClass.getESuperTypes().add(this.getSymbolTableEntry());
 		symbolTableEntryIMOnlyEClass.getESuperTypes().add(this.getSymbolTableEntry());
 		symbolTableEntryInternalEClass.getESuperTypes().add(this.getSymbolTableEntry());
+		g1 = createEGenericType(theN4JSPackage.getTypeReferenceNode());
+		EGenericType g2 = createEGenericType(typeReferenceNode_IMEClass_T);
+		g1.getETypeArguments().add(g2);
+		typeReferenceNode_IMEClass.getEGenericSuperTypes().add(g1);
 		referencingElementExpression_IMEClass.getESuperTypes().add(this.getReferencingElement_IM());
 		referencingElementExpression_IMEClass.getESuperTypes().add(theN4JSPackage.getExpression());
 		identifierRef_IMEClass.getESuperTypes().add(theN4JSPackage.getIdentifierRef());
@@ -994,6 +1034,10 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		initEClass(symbolTableEntryIMOnlyEClass, SymbolTableEntryIMOnly.class, "SymbolTableEntryIMOnly", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(symbolTableEntryInternalEClass, SymbolTableEntryInternal.class, "SymbolTableEntryInternal", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(typeReferenceNode_IMEClass, TypeReferenceNode_IM.class, "TypeReferenceNode_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getTypeReferenceNode_IM__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(referencingElement_IMEClass, ReferencingElement_IM.class, "ReferencingElement_IM", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getReferencingElement_IM_RewiredTarget(), this.getSymbolTableEntry(), this.getSymbolTableEntry_ReferencingElements(), "rewiredTarget", null, 0, 1, ReferencingElement_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

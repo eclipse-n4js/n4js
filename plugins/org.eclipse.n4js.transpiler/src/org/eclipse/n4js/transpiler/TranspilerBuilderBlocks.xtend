@@ -79,7 +79,6 @@ import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.ThrowStatement
-import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -94,6 +93,7 @@ import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.Snippet
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
@@ -823,15 +823,14 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def <T extends TypeRef> TypeReferenceNode<T> _TypeReferenceNode(T typeRef) {
-		val result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
-		result.typeRefInAST = TypeUtils.copyIfContained(typeRef);
-		result.cachedProcessedTypeRef = result.typeRefInAST;
-		return result;
-	}
-
 	// ############################################################################################
 	// IM.xcore
+
+	public static def <T extends TypeRef> TypeReferenceNode_IM<T> _TypeReferenceNode(T typeRef) {
+		val result = ImFactory.eINSTANCE.createTypeReferenceNode_IM();
+		result.typeRefInAST = TypeUtils.copyIfContained(typeRef);
+		return result;
+	}
 
 	public static def IdentifierRef_IM _IdentRef(SymbolTableEntry symbolTableEntry) {
 		if(symbolTableEntry===null) {
