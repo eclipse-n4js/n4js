@@ -679,7 +679,11 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	private void assertEqualIterables(String s1, Iterable<String> i2s) {
-		String[] elems1 = s1.split("\\s*,\\s*");
+		String[] elems1 = s1.split("(?:\\s+|(?<=[^\\\\])),\\s*");
+		for (int i = 0; i < elems1.length; i++) {
+			elems1[i] = elems1[i].replace("\\,", ",");
+			elems1[i] = elems1[i].replace("\\n", "\n");
+		}
 		List<String> sorted1 = Lists.newArrayList(elems1);
 		Collections.sort(sorted1);
 		List<String> sorted2 = Lists.newArrayList(i2s);
