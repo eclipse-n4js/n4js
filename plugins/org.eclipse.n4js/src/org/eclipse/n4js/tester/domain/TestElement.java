@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,19 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+package org.eclipse.n4js.tester.domain;
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
-
-class T {
-	public n : number;
-	public foo() {}
+/**
+ * Super type of all test model elements.
+ */
+public interface TestElement extends Cloneable {
+	// nothing
 }
-
-var t : T;
-var st : ~T;
-
-// XPECT noerrors --> "T <: ~T" at "t"
-st = t;
-
-// XPECT errors --> "Structural type ~T is not a subtype of non-structural type T." at "st"
-t = st;

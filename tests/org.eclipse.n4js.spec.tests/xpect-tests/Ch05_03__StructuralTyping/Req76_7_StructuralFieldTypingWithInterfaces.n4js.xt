@@ -9,6 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
 // also see GHOLD-332
 
 class X {

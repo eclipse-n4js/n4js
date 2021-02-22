@@ -1,7 +1,0 @@
-
-
-export public class C {
-	m() {
-		console.log('hello from C#m() located in module: sub/module.with.dots');
-	}
-}

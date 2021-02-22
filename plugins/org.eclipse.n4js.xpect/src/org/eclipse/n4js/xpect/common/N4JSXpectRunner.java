@@ -10,12 +10,14 @@
  */
 package org.eclipse.n4js.xpect.common;
 
+import org.eclipse.n4js.ide.N4JSIdeSetup;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xpect.runner.IXpectURIProvider;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.runner.XpectTestFiles.Builder;
 import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
+import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.util.Strings;
 import org.junit.runners.model.InitializationError;
 
@@ -24,6 +26,10 @@ import org.junit.runners.model.InitializationError;
  * {@link XpectRunner} because the {@link IXpectURIProvider} needs to create {@link SafeURI}s.
  */
 public class N4JSXpectRunner extends XpectRunner {
+	static {
+		GlobalRegistries.clearGlobalRegistries();
+		new N4JSIdeSetup().createInjectorAndDoEMFRegistration();
+	}
 
 	/** Constructor */
 	public N4JSXpectRunner(Class<?> testClass) throws InitializationError {

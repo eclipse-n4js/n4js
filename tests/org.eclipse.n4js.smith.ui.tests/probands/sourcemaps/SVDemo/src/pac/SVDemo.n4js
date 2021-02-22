@@ -1,5 +1,0 @@
-export public class SVDemo {
-	foo() {
-		console.log("Hello World")
-	}
-}
