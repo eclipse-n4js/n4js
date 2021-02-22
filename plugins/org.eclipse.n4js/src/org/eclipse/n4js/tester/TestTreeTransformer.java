@@ -12,13 +12,15 @@ package org.eclipse.n4js.tester;
 
 import java.util.Map;
 
-import com.google.common.base.Function;
-
 import org.eclipse.n4js.tester.domain.TestTree;
+
+import com.google.common.base.Function;
+import com.google.inject.ImplementedBy;
 
 /**
  * Representation of a transformer converting a {@link TestTree test tree} instance into any arbitrary model instance.
  */
+@ImplementedBy(DefaultTestTreeTransformer.class)
 public interface TestTreeTransformer extends Function<TestTree, Object> {
 
 	/**
