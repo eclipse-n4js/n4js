@@ -249,14 +249,6 @@
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
-      label="SWTBot">
-    <requirement
-        name="org.eclipse.swtbot.ide.feature.group"/>
-    <repository
-        url="http://download.eclipse.org/technology/swtbot/releases/2.8.0"/>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.p2:P2Task"
       label="Jenkins Editor">
     <requirement
         name="de.jcup.jenkinseditor.feature.feature.group"/>
@@ -400,8 +392,6 @@
         <repository
             url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.19.0"/>
         <repository
-            url="http://download.eclipse.org/technology/swtbot/releases/2.8.0"/>
-        <repository
             url="https://download.eclipse.org/tools/orbit/downloads/drops/R20190827152740/repository"/>
         <repository
             url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/22/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
@@ -434,18 +424,6 @@
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/plugins/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="N4JS Features">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/features/.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -482,18 +460,6 @@
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/docs/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="N4JS Builds">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/builds/.*"/>
       </predicate>
     </workingSet>
     <workingSet
