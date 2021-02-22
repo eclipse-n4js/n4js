@@ -43,7 +43,6 @@ Contributors:
 		<!-- runners -->
 		<module>org.eclipse.n4js.runner</module>
 		<module>org.eclipse.n4js.runner.nodejs</module>
-		<module>org.eclipse.n4js.runner.chrome</module>
 		<!-- json -->
 		<module>org.eclipse.n4js.json</module>
 		<module>org.eclipse.n4js.json.model</module>
@@ -65,9 +64,6 @@ Contributors:
 		<module>org.eclipse.n4js.flowgraphs</module>
 		<!-- xpect -->
 		<module>org.eclipse.n4js.xpect</module>
-		<!-- tester -->
-		<module>org.eclipse.n4js.tester</module>
-		<module>org.eclipse.n4js.tester.nodejs</module>
 	</modules>
 
 	<properties>

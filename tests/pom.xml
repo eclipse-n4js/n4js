@@ -37,9 +37,6 @@ Contributors:
 		<module>org.eclipse.n4js.ts.tests</module>
 		<module>org.eclipse.n4js.ts.xpect.tests</module>
 
-		<!-- Tester tests -->
-		<module>org.eclipse.n4js.tester.tests</module>
-
 		<!-- Regex tests -->
 		<module>org.eclipse.n4js.regex.tests</module>
 
