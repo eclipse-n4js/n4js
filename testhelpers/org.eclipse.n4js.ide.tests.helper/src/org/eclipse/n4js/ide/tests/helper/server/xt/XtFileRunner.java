@@ -78,12 +78,27 @@ public class XtFileRunner extends Runner {
 			ideTest.initializeXtFile(xtFileData);
 			for (MethodData testMethodData : xtFileData.getTestMethodData()) {
 				Description testDescription = testMethodData.getDescription(xtFileData);
-				try {
-					notifier.fireTestStarted(testDescription);
-					ideTest.invokeTestMethod(testMethodData);
-					notifier.fireTestFinished(testDescription);
-				} catch (Throwable t) {
-					notifier.fireTestFailure(new Failure(testDescription, t));
+				if (testMethodData.isIgnore) {
+					notifier.fireTestIgnored(testDescription);
+				} else {
+					try {
+						notifier.fireTestStarted(testDescription);
+						ideTest.invokeTestMethod(testMethodData);
+
+						if (testMethodData.isFixme) {
+							notifier.fireTestFailure(
+									new Failure(testDescription, new IllegalStateException("Test fixed!")));
+						} else {
+							notifier.fireTestFinished(testDescription);
+						}
+					} catch (Throwable t) {
+
+						if (testMethodData.isFixme) {
+							notifier.fireTestFinished(testDescription);
+						} else {
+							notifier.fireTestFailure(new Failure(testDescription, t));
+						}
+					}
 				}
 			}
 		} catch (AssertionError testFailure) {

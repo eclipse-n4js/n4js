@@ -53,26 +53,36 @@ public class XtFileData {
 		final public String expectation;
 		/** End offset of test location in file */
 		final public int offset;
+		/** True iff this test is expected to fail */
+		final public boolean isFixme;
+		/** True if this test should be ignored */
+		final public boolean isIgnore;
 
 		/** Constructor */
 		public MethodData(String name) {
-			this("", name, new String[0], 0, "", 0);
+			this("", name, new String[0], 0, "", 0, false, false);
 		}
 
 		/** Constructor */
-		public MethodData(String comment, String name, String[] args, int count, String expectation, int offset) {
+		public MethodData(String comment, String name, String[] args, int count, String expectation, int offset,
+				boolean isFixme, boolean isIgnore) {
+
 			this.comment = comment.trim();
 			this.name = name;
 			this.args = args;
 			this.count = count;
 			this.expectation = expectation.trim();
 			this.offset = offset;
+			this.isFixme = isFixme;
+			this.isIgnore = isIgnore;
 		}
 
 		/** @return Description for JUnit */
 		public Description getDescription(XtFileData xtFileData) {
 			String xpectMethodName = name + "~" + count;
 			String commentOrArgs = (comment.isBlank() ? getArgs() : comment);
+			String delimiter = !getModifier().isBlank() && !commentOrArgs.isBlank() ? " " : "";
+			String modifierWithCommentOrArgs = getModifier() + delimiter + commentOrArgs;
 			String xtFileLocation = OPEN_BRACKET + xtFileData.relativePath + CLOSE_BRACKET;
 
 			String className = (comment.isBlank() ? xpectMethodName : comment);
@@ -82,7 +92,7 @@ public class XtFileData {
 			// followed by the file location in special brackets
 			// see:
 			// https://github.com/eclipse/Xpect/blob/0e5186a5fd96d4c82536fcff9acfa6ffada9fff8/org.eclipse.xpect.ui.junit/src/org/eclipse/xpect/ui/junit/TestDataUIUtil.java#L82
-			String descrName = xpectMethodName + ": " + commentOrArgs + " " + xtFileLocation;
+			String descrName = xpectMethodName + ": " + modifierWithCommentOrArgs + " " + xtFileLocation;
 			return Description.createTestDescription(className, descrName, this);
 		}
 
@@ -99,6 +109,17 @@ public class XtFileData {
 		/** @return all args separated by space */
 		public String getArgs() {
 			return Strings.join(" ", (Object[]) args);
+		}
+
+		/** @return the modifier's keyword or null if not existing */
+		public String getModifier() {
+			if (isFixme) {
+				return XtFileDataParser.XT_MODIFIER_FIXME;
+			}
+			if (isIgnore) {
+				return XtFileDataParser.XT_MODIFIER_IGNORE;
+			}
+			return "";
 		}
 
 		@Override

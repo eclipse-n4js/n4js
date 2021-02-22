@@ -48,6 +48,15 @@ public class XtFileDataParser {
 	/** Pattern group name to reference the comment stated before {@value #XT_X_PECT} */
 	static final String XT_COMMENT = "COMMENT";
 
+	/** Pattern group name to reference the modifier */
+	static final String XT_MODIFIER = "MODIFIER";
+
+	/** Modifier FIXMe */
+	static final String XT_MODIFIER_FIXME = "FIXME";
+
+	/** Modifier IGNORE */
+	static final String XT_MODIFIER_IGNORE = "!";
+
 	/**
 	 * Pattern group name to reference the method name and its arguments stated after {@value #XT_X_PECT} but before
 	 * {@code --->}/{@code ---}
@@ -79,26 +88,33 @@ public class XtFileDataParser {
 	 * Pattern for single-line comments using {@code //} or {@code /*} at the beginning. The XT method uses {@code -->}
 	 * to start the expectation. This expectation ends in the same line.
 	 */
+	static final String XT_BASE_METHOD_PATTERN = "(?<" + XT_COMMENT + ">[^\\n]*)\\s+" + XT_X_PECT
+			+ "(?:\\s+(?<" + XT_MODIFIER + ">" + XT_MODIFIER_FIXME + "|" + XT_MODIFIER_IGNORE + "))?"
+			+ "\\s+(?<" + XT_METHOD + ">[^\\n]*)";
+
+	/**
+	 * Pattern for single-line comments using {@code //} or {@code /*} at the beginning. The XT method uses {@code -->}
+	 * to start the expectation. This expectation ends in the same line.
+	 */
 	static final Pattern XT_SINGLE_LINE = Pattern.compile(
-			"[^\\n]*\\/[\\/|\\*]+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD
-					+ ">[^\\n]*)-->(?<" + XT_EXPECTATION + ">[^\\n]*)");
+			"[^\\n]*\\/[\\/|\\*]+" + XT_BASE_METHOD_PATTERN + "-->\\s+(?<" + XT_EXPECTATION + ">[^\\n]*)");
 
 	/**
 	 * Pattern for multi-line comments using {@code //} at the beginning of every line. The XT method uses {@code ---}
 	 * to start and end the expectation.
 	 */
 	static final Pattern XT_MULTI_LINE1 = Pattern.compile(
-			"[^\\n]*\\/\\/+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)---(?<"
-					+ XT_EXPECTATION + ">[\\s\\S]*)---");
+			"[^\\n]*\\/\\/+" + XT_BASE_METHOD_PATTERN + "---\\s+(?<" + XT_EXPECTATION + ">[\\s\\S]*)---");
 	/**
 	 * Pattern for multi-line comments using {@code /*  *\/} to start/end the comment. The XT method uses {@code ---} to
 	 * start and end the expectation.
 	 */
 	static final Pattern XT_MULTI_LINE2 = Pattern.compile(
-			"[^\\n]*\\/\\*+(?<" + XT_COMMENT + ">[^\\n]*)\\s" + XT_X_PECT + "\\s(?<" + XT_METHOD + ">[^\\n]*)---(?<"
-					+ XT_EXPECTATION + ">[\\s\\S]*?)---[\\s\\S]*?\\*\\/");
+			"[^\\n]*\\/\\*+" + XT_BASE_METHOD_PATTERN + "---\\s+(?<" + XT_EXPECTATION
+					+ ">[\\s\\S]*?)---[\\s\\S]*?\\*\\/");
 
 	/**
+	 * Pattern for Setup section of xt files
 	 */
 	static final Pattern XT_SETUP = Pattern.compile(
 			"XPECT_SETUP\\s+(?<" + XT_RUNNER + ">[\\w\\d\\.]+)[\\s\\S]*?(Workspace\\s*\\{(?<" + XT_WORKSPACE
@@ -164,16 +180,28 @@ public class XtFileDataParser {
 	static class MethodMatchResult implements Comparable<MethodMatchResult> {
 		final int offset;
 		final String comment;
+		final String modifier;
 		final String methodAndArgs;
 		final String expectation;
 		final String artifacts;
 
-		MethodMatchResult(int offset, String comment, String methodAndArgs, String expectation, String artifacts) {
+		MethodMatchResult(int offset, String comment, String modifier, String methodAndArgs, String expectation,
+				String artifacts) {
+
 			this.offset = offset;
 			this.comment = comment;
+			this.modifier = modifier;
 			this.methodAndArgs = methodAndArgs;
 			this.expectation = expectation;
 			this.artifacts = artifacts;
+		}
+
+		public boolean isFixme() {
+			return XT_MODIFIER_FIXME.equals(modifier);
+		}
+
+		public boolean isIgnore() {
+			return XT_MODIFIER_IGNORE.equals(modifier);
 		}
 
 		@Override
@@ -206,9 +234,10 @@ public class XtFileDataParser {
 	private static void addResult(Set<MethodMatchResult> results, Matcher matcher, String artifacts) {
 		int offset = matcher.end();
 		String comment = matcher.group(XT_COMMENT).trim();
+		String modifier = matcher.group(XT_MODIFIER);
 		String methodAndArgs = matcher.group(XT_METHOD).trim();
 		String expectation = matcher.group(XT_EXPECTATION).trim();
-		MethodMatchResult mmr = new MethodMatchResult(offset, comment, methodAndArgs, expectation, artifacts);
+		MethodMatchResult mmr = new MethodMatchResult(offset, comment, modifier, methodAndArgs, expectation, artifacts);
 		results.add(mmr);
 	}
 
@@ -223,7 +252,8 @@ public class XtFileDataParser {
 		String[] args = Arrays.copyOfRange(nameAndArgsArray, 1, nameAndArgsArray.length);
 		int counter = methodNameCounters.getOrDefault(name, 0);
 		methodNameCounters.put(name, counter + 1);
-		return new MethodData(result.comment, name, args, counter, expectation, result.offset);
+		return new MethodData(result.comment, name, args, counter, expectation, result.offset, result.isFixme(),
+				result.isIgnore());
 	}
 
 	private static void addTestMethodData(Collection<XtFileData.MethodData> testMethodData1,
