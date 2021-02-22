@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
@@ -29,8 +30,6 @@ public class XtFileRunner extends Runner {
 	final public XtIdeTest ideTest;
 	/** Name of the JUnit test class runner */
 	final public String testClassName;
-	/** Root folder of the corresponding test suite */
-	final public String folderName;
 	/** xt file */
 	final public File file;
 	/** Meta data of xt file */
@@ -40,17 +39,20 @@ public class XtFileRunner extends Runner {
 	Description description;
 
 	/** Constructor */
-	public XtFileRunner(XtIdeTest ideTest, String testClassName, String folderName, File file) throws IOException {
+	public XtFileRunner(XtIdeTest ideTest, String testClassName, File file) throws IOException {
 		this.ideTest = ideTest;
 		this.testClassName = testClassName;
-		this.folderName = folderName;
 		this.file = file;
 		this.xtFileData = XtFileDataParser.parse(file);
 	}
 
 	/** @return a file and folder name */
 	public String getName() {
-		return file.getName() + ": " + folderName;
+		Path parentFolder = file.getParentFile().toPath();
+		Path bundleRoot = new File("").getAbsoluteFile().toPath();
+		Path folder = bundleRoot.relativize(parentFolder);
+		String fName = folder.toString();
+		return file.getName() + ": " + fName;
 	}
 
 	/** @return {@link XtFileData#setupRunnerName} */

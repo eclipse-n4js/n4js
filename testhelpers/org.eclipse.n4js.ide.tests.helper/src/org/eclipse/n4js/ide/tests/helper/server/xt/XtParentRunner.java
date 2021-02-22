@@ -80,7 +80,7 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, xtFilesFolder, file);
+							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, file);
 							fileRunners.add(fileRunner);
 						} catch (IOException e) {
 							e.printStackTrace();
