@@ -310,6 +310,14 @@ public interface TypeRef extends TypeArgument, Versionable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns this type reference as a string, usually according to N4JS syntax.
+	 * <p>
+	 * Regarding unresolved/resolved references to a type alias, this behaves as
+	 * {@link TypeArgument#getTypeRefAsString() #getTypeRefAsString()}, except that
+	 * in case of resolved references to a type alias the aliased/actual type is also
+	 * shown, appended with {@code <=>} as separator.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */

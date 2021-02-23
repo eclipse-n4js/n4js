@@ -344,14 +344,13 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 */
 	@Override
 	public String getTypeRefAsStringWithAliasResolution() {
-		final ParameterizedTypeRef oatr = this.getOriginalAliasTypeRef();
-		if ((oatr != null)) {
-			String _typeRefAsString = oatr.getTypeRefAsString();
-			String _plus = (_typeRefAsString + " <=> ");
+		final String result = this.getTypeRefAsString();
+		boolean _isAliasResolved = this.isAliasResolved();
+		if (_isAliasResolved) {
 			String _internalGetTypeRefAsString = this.internalGetTypeRefAsString();
-			return (_plus + _internalGetTypeRefAsString);
+			return ((result + " <=> ") + _internalGetTypeRefAsString);
 		}
-		return this.internalGetTypeRefAsString();
+		return result;
 	}
 
 	/**
@@ -361,7 +360,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 */
 	@Override
 	public String toString() {
-		return this.getTypeRefAsString();
+		return this.getTypeRefAsStringWithAliasResolution();
 	}
 
 	/**

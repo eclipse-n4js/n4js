@@ -103,16 +103,23 @@ abstract class TypeArgument {
 	op Type getDeclaredType() {
 		return null;
 	}
-	/* Returns the type argument/reference as a string, usually according to N4JS syntax. */
+	/*
+	 * Returns this type argument/reference as a string, usually according to N4JS syntax.
+	 * <p>
+	 * Both unresolved and resolved references to a type alias will be represented as a
+	 * reference to a type alias (i.e. only the name of the type alias is included; the
+	 * aliased/actual type is ignored).
+	 */
 	op String getTypeRefAsString() {
 		return internalGetTypeRefAsString();
 	}
 	/*
 	 * Actual computation of the string representation of this type argument/reference.
-	 * Returns the same value as {@link #getTypeRefAsString()}, except for resolved
-	 * aliases: if the receiving instance is a resolved alias, this method will
-	 * return the string representation of the actual type whereas {@code #getTypeRefAsString()}
-	 * will return the string representation of the reference to the alias.
+	 * <p>
+	 * Unresolved references to a type alias will be represented as such (i.e. only the
+	 * name of the type alias is included; the aliased/actual type is ignored), whereas
+	 * resolved references to a type alias will only include the aliased/actual type
+	 * (the fact that a type alias is involved is not shown at all).
 	 */
 	op String internalGetTypeRefAsString()
 }
@@ -282,17 +289,25 @@ abstract class TypeRef extends TypeArgument, Versionable {
 		}
 		return this.internalGetTypeRefAsString();
 	}
+	/*
+	 * Returns this type reference as a string, usually according to N4JS syntax.
+	 * <p>
+	 * Regarding unresolved/resolved references to a type alias, this behaves as
+	 * {@link TypeArgument#getTypeRefAsString() #getTypeRefAsString()}, except that
+	 * in case of resolved references to a type alias the aliased/actual type is also
+	 * shown, appended with {@code <=>} as separator.
+	 */
 	op String getTypeRefAsStringWithAliasResolution() {
-		val oatr = originalAliasTypeRef;
-		if (oatr !== null) {
-			return oatr.getTypeRefAsString() + " <=> " + this.internalGetTypeRefAsString();
+		val result = getTypeRefAsString();
+		if (isAliasResolved()) {
+			return result + " <=> " + this.internalGetTypeRefAsString();
 		}
-		return this.internalGetTypeRefAsString();
+		return result;
 	}
 	/* See {@link TypeArgument#internalGetTypeRefAsString()}. */
 	op String internalGetTypeRefAsString()
 	op String toString() {
-		return getTypeRefAsString();
+		return getTypeRefAsStringWithAliasResolution();
 	}
 	/* Convenience method, returns only true for parameterized type refs if the declared type is any */
 	op boolean isTopType() {
