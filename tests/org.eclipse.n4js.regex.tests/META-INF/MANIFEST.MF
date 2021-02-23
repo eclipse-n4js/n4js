@@ -8,7 +8,6 @@ Fragment-Host: org.eclipse.n4js.regex
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.regex.tests.helper,
- org.eclipse.n4js.regex.ui,
  org.junit,
  org.eclipse.ui.workbench;resolution:=optional,
  org.objectweb.asm;resolution:=optional

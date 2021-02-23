@@ -12,8 +12,6 @@ Require-Bundle: org.junit,
  com.google.inject,
  org.eclipse.n4js,
  org.eclipse.n4js.tests.helper,
- org.apache.log4j,
- org.eclipse.n4js.ui.tests.helper,
- org.eclipse.n4js.ui
+ org.apache.log4j
 Export-Package: org.eclipse.n4js.tests.ecmatestsuite
 Automatic-Module-Name: org.eclipse.n4js.tests.ecmatestsuite
