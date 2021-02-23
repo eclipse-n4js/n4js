@@ -56,7 +56,11 @@ public interface TypeArgument extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  Returns the type argument/reference as a string, usually according to N4JS syntax.
+	 * Returns this type argument/reference as a string, usually according to N4JS syntax.
+	 * <p>
+	 * Both unresolved and resolved references to a type alias will be represented as a
+	 * reference to a type alias (i.e. only the name of the type alias is included; the
+	 * aliased/actual type is ignored).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -68,10 +72,11 @@ public interface TypeArgument extends EObject {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Actual computation of the string representation of this type argument/reference.
-	 * Returns the same value as {@link #getTypeRefAsString()}, except for resolved
-	 * aliases: if the receiving instance is a resolved alias, this method will
-	 * return the string representation of the actual type whereas {@code #getTypeRefAsString()}
-	 * will return the string representation of the reference to the alias.
+	 * <p>
+	 * Unresolved references to a type alias will be represented as such (i.e. only the
+	 * name of the type alias is included; the aliased/actual type is ignored), whereas
+	 * resolved references to a type alias will only include the aliased/actual type
+	 * (the fact that a type alias is involved is not shown at all).
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
 	 * @generated
