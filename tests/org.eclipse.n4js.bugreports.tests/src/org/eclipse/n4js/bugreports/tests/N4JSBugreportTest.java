@@ -13,7 +13,7 @@ package org.eclipse.n4js.bugreports.tests;
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.xpect.common.N4JSXpectRunner;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
-import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
+import org.eclipse.n4js.xpect.methods.output.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
