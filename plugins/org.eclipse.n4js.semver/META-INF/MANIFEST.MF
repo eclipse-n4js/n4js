@@ -6,7 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.semver; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.xbase,
- org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.eclipse.emf.mwe2.launch,
  org.eclipse.n4js.semver.model,
  org.eclipse.osgi,
  org.eclipse.n4js.common.unicode,

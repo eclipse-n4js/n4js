@@ -32,10 +32,6 @@ public interface VersionPart extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Wildcard</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Wildcard</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Wildcard</em>' attribute.
 	 * @see #setWildcard(boolean)
@@ -58,10 +54,6 @@ public interface VersionPart extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Number Raw</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Number Raw</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Number Raw</em>' attribute.
 	 * @see #setNumberRaw(Integer)
