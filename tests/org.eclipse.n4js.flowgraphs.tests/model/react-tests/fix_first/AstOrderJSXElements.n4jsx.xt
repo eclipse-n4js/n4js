@@ -1,0 +1,202 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.XtTestSetupTest
+
+   Workspace {
+		Project "N4JSXFlowgraphTest" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../react/index.n4jsd" }
+			File "package.json" { from = "../react/package.json" }
+		}
+	}
+
+	END_SETUP
+*/
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To verify these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+
+
+/* JSXElement1 XPECT astOrder ---
+	0: function JSXElement1() { <div> </div>; },
+	1: { <div> </div>; },
+	2: <div> </div>;,
+	3: <div> </div>,
+	4: div,
+	5: div
+--- */
+function JSXElement1() {
+	<div> </div>;
+}
+
+
+/* JSXElement2 XPECT astOrder ---
+	0: function JSXElement2(x) { <div/>; },
+	1: { <div/>; },
+	2: <div/>;,
+	3: <div/>,
+	4: div
+--- */
+function JSXElement2(x) {
+	<div/>;
+}
+
+
+
+/* JSXElement3 XPECT astOrder ---
+	0: function JSXElement3() { <div><li></li></div>; },
+	1: { <div><li></li></div>; },
+	2: <div><li></li></div>;,
+	3: <div><li></li></div>,
+	4: div,
+	5: <li></li>,
+	6: li,
+	7: li, 8: div
+--- */
+function JSXElement3() {
+	<div><li></li></div>;
+}
+
+
+/* JSXExpression1 XPECT astOrder ---
+	0: function JSXExpression1(x) { <div>{x}</div>; },
+	1: { <div>{x}</div>; },
+	2: <div>{x}</div>;,
+	3: <div>{x}</div>,
+	4: div,
+	5: x,
+	6: div
+--- */
+function JSXExpression1(x) {
+	<div>{x}</div>;
+}
+
+
+/* JSXPropertyAttribute1 XPECT astOrder ---
+	0: function JSXPropertyAttribute1() { <div a=""> </div>; },
+	1: { <div a=""> </div>; },
+	2: <div a=""> </div>;,
+	3: <div a=""> </div>,
+	4: div,
+	5: a="",
+	6: "",
+	7: div
+--- */
+function JSXPropertyAttribute1() {
+	<div a=""> </div>;
+}
+
+
+/* JSXPropertyAttribute2 XPECT astOrder ---
+	0: function JSXPropertyAttribute2(x) { <div a={x}/>; },
+	1: { <div a={x}/>; },
+	2: <div a={x}/>;,
+	3: <div a={x}/>,
+	4: div, 5: a={x},
+	6: x
+--- */
+function JSXPropertyAttribute2(x) {
+	<div a={x}/>;
+}
+
+
+/* JSXPropertyAttributeAndChild XPECT astOrder ---
+	0: function JSXPropertyAttributeAndChild() { <div a=""><li></li></div>; },
+	10: div,
+	1: { <div a=""><li></li></div>; },
+	2: <div a=""><li></li></div>;,
+	3: <div a=""><li></li></div>,
+	4: div,
+	5: a="",
+	6: "",
+	7: <li></li>,
+	8: li,
+	9: li
+--- */
+function JSXPropertyAttributeAndChild() {
+	<div a=""><li></li></div>;
+}
+
+
+/* JSXPropertyAttributeAndChildAndExpression XPECT astOrder ---
+	0: function JSXPropertyAttributeAndChildAndExpression(x) { <div a=""><li></li>{x}</div>; },
+	10: x, 11: div,
+	1: { <div a=""><li></li>{x}</div>; },
+	2: <div a=""><li></li>{x}</div>;,
+	3: <div a=""><li></li>{x}</div>,
+	4: div,
+	5: a="",
+	6: "",
+	7: <li></li>,
+	8: li,
+	9: li
+--- */
+function JSXPropertyAttributeAndChildAndExpression(x) {
+	<div a=""><li></li>{x}</div>;
+}
+
+
+/* JSXPropertyAttribute3 XPECT astOrder ---
+	0: function JSXPropertyAttribute3(x) { <div a={x}> </div>; },
+	1: { <div a={x}> </div>; },
+	2: <div a={x}> </div>;,
+	3: <div a={x}> </div>,
+	4: div,
+	5: a={x},
+	6: x,
+	7: div
+--- */
+function JSXPropertyAttribute3(x) {
+	<div a={x}> </div>;
+}
+
+
+/* JSXSpreadAttribute1 XPECT astOrder ---
+	0: function JSXSpreadAttribute1(x) { <div {...x}> </div>; },
+	1: { <div {...x}> </div>; },
+	2: <div {...x}> </div>;,
+	3: <div {...x}> </div>,
+	4: div,
+	5: {...x},
+	6: x,
+	7: div
+--- */
+function JSXSpreadAttribute1(x) {
+	<div {...x}> </div>;
+}
+
+
+/* JSXSpreadAttribute2 XPECT astOrder ---
+	0: function JSXSpreadAttribute2(x) { <div {...x}/>; }\n,
+	1: { <div {...x}/>; },
+	2: <div {...x}/>;,
+	3: <div {...x}/>,
+	4: div,
+	5: {...x},
+	6: x
+--- */
+function JSXSpreadAttribute2(x) {
+	<div {...x}/>;
+}

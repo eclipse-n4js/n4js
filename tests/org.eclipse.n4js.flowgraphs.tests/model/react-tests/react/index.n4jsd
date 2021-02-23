@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+export external public abstract class Element {
+    private constructor();
+};
+
+export external public interface ~ComponentProps {
+    public children?: Array<Element>;
+    public ref?: {function(Object /* node */): void};
+    public key?: string;
+}
+
+export external public abstract class Component<PropsT extends ComponentProps, StateT extends Object> {
+    public get props(): PropsT;
+    public state: StateT;
+    public context: Object+;
+    public get refs(): Object+;
+    public static name: Object+;
+    public abstract render(): Element;
+    @CovariantConstructor
+    public constructor(props: PropsT);
+    protected static defaultProps: Object;
+    protected static propTypes: Object;
+    @Final protected forceUpdate(callback: Function =): void;
+    public setState(partialState: union{Object /* subset of StateT */, {function(state: Object /* subset of StateT */, props: PropsT, context: Object): void}}, callback: Function =): void;
+    public isMounted(): boolean;
+    protected componentWillMount(): void;
+    protected componentDidMount(): void;
+    protected componentWillReceiveProps(nextProps: Object): void;
+    protected shouldComponentUpdate(nextProps: PropsT, nextState: StateT): boolean;
+    protected componentWillUpdate(nextProps: PropsT, nextState: StateT): void;
+    protected componentDidUpdate(prevProps: PropsT, prevState: StateT): void;
+    protected componentWillUnmount(): void;
+}
+
+export external public abstract class PureComponent<PropsT extends ComponentProps, StateT extends Object>
+        extends Component<PropsT, StateT> {
+}
+
+// mor TODO IDE-2323
+//    public static <PropsT extends ComponentProps> createElement(
+//        type: union{string, {function(PropsT?): Element}, constructor{Component<PropsT, ?>}},
+//        props: PropsT?, ...children: union{string, Element, Array<Element>}): Element;
+export external public function createElement(
+    type: union{string, {function(Object =): Element}, constructor{Component}},
+    props: Object =,
+    ...children: union{string, Element, Array<Element>}): Element;
+
+export external public function cloneElement(
+    Element: Element,
+    props: Object =,
+    ...children: union{string, Element, Array<Element>}): Element;
+
+export external public function isValidElement(object: Object): boolean;
+export external public function renderToString(Element: Element): string;
+export external public function renderToStaticMarkup(Element: Element): string;
+
+export external public interface ~PropConstraint {
+    public get isRequired(): PropConstraint;
+}
+export external public interface ~PropType extends PropConstraint {}
+
+export external public class ~PropTypes {
+    public const array: PropType;
+    public const bool: PropType;
+    public const func: PropType;
+    public const number: PropType;
+    public const object: PropType;
+    public const string: PropType;
+    public const node: PropType;
+    public const Element: PropType;
+    public static instanceOf(comp: Object): PropConstraint;
+    public static oneOf(...values: any): PropConstraint;
+    public static oneOfType(...constraints: PropConstraint): PropConstraint;
+    public static arrayOf(elemType: PropType): PropConstraint;
+    public static objectOf(valueType: PropType): PropConstraint;
+    public static shape(Object): PropConstraint;
+}
+
+@Final
+export external public class Fragment extends Component<ComponentProps, Object> {
+    @Override
+    public render(): Element;
+}

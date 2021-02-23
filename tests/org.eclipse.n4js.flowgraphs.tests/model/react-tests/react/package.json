@@ -1,0 +1,19 @@
+{
+	"name": "react",
+	"version": "16.0.0",
+	"n4js": {
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"projectType": "library",
+		"output": ".",
+		"sources": {
+			"external": [
+				"."
+			]
+		},
+		"mainModule": "index"
+	},
+	"dependencies": {
+		"react": "^16.4.0"
+	}
+}
