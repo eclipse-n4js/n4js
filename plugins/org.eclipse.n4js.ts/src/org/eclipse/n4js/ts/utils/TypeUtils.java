@@ -61,6 +61,7 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.AnyType;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -1129,24 +1130,29 @@ public class TypeUtils {
 	 * Returns all type variables referenced by the given object or its contents.
 	 */
 	public static Set<TypeVariable> getReferencedTypeVars(EObject obj) {
-		return collectReferencedTypeVars(obj, true, new LinkedHashSet<>());
+		return collectReferencedTypeVars(obj, true, new LinkedHashSet<>(), null);
 	}
 
 	private static Set<TypeVariable> collectReferencedTypeVars(EObject obj, boolean includeChildren,
-			Set<TypeVariable> addHere) {
+			Set<TypeVariable> addHere, RecursionGuard<IdentifiableElement> guard) {
 		final Type declType = obj instanceof TypeRef ? ((TypeRef) obj).getDeclaredType() : null;
 		if (declType instanceof TypeVariable) {
 			addHere.add((TypeVariable) declType);
 		}
 		if (obj instanceof StructuralTypeRef) {
 			for (TStructMember m : ((StructuralTypeRef) obj).getStructuralMembers()) {
-				collectReferencedTypeVars(m, true, addHere);
+				if (guard == null) {
+					guard = new RecursionGuard<>();
+				}
+				if (guard.tryNext(m)) {
+					collectReferencedTypeVars(m, true, addHere, guard);
+				}
 			}
 		}
 		if (includeChildren) {
 			final Iterator<EObject> iter = obj.eAllContents();
 			while (iter.hasNext()) {
-				collectReferencedTypeVars(iter.next(), false, addHere);
+				collectReferencedTypeVars(iter.next(), false, addHere, guard);
 			}
 		}
 		return addHere;
