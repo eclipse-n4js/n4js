@@ -420,7 +420,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/plugins/.*"/>
@@ -432,7 +432,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/tests/.*"/>
@@ -444,7 +444,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/testhelpers/.*"/>
@@ -456,7 +456,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/docs/.*"/>
@@ -468,7 +468,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/releng/.*"/>
@@ -480,7 +480,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/n4js-libs/.*"/>
