@@ -99,10 +99,6 @@ public enum VersionComparator implements Enumerator {
 	/**
 	 * The '<em><b>Equals</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Equals</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #EQUALS
 	 * @model name="Equals"
@@ -114,10 +110,6 @@ public enum VersionComparator implements Enumerator {
 	/**
 	 * The '<em><b>Tilde</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Tilde</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #TILDE
 	 * @model name="Tilde"
@@ -129,10 +121,6 @@ public enum VersionComparator implements Enumerator {
 	/**
 	 * The '<em><b>Caret</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Caret</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #CARET
 	 * @model name="Caret"
@@ -144,10 +132,6 @@ public enum VersionComparator implements Enumerator {
 	/**
 	 * The '<em><b>Smaller</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Smaller</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SMALLER
 	 * @model name="Smaller"
@@ -159,10 +143,6 @@ public enum VersionComparator implements Enumerator {
 	/**
 	 * The '<em><b>Smaller Equals</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Smaller Equals</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #SMALLER_EQUALS
 	 * @model name="SmallerEquals"
@@ -174,10 +154,6 @@ public enum VersionComparator implements Enumerator {
 	/**
 	 * The '<em><b>Greater</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Greater</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #GREATER
 	 * @model name="Greater"
@@ -189,10 +165,6 @@ public enum VersionComparator implements Enumerator {
 	/**
 	 * The '<em><b>Greater Equals</b></em>' literal value.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Greater Equals</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #GREATER_EQUALS
 	 * @model name="GreaterEquals"
