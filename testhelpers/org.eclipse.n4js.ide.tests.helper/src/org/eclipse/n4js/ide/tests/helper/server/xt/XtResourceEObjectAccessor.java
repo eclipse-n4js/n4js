@@ -52,7 +52,8 @@ public class XtResourceEObjectAccessor {
 		if (offset < 0) {
 			return null;
 		}
-		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
+		int length = optionalLocationStr == null ? 0 : optionalLocationStr.length();
+		EObject eObject = XtResourceUtil.getEObject(resource, offset, length);
 		return new EObjectCoveringRegion(eObject, offset);
 	}
 
@@ -129,7 +130,11 @@ public class XtResourceEObjectAccessor {
 				if (oMatch < oSLComment && oMatch < oMLComment) {
 					return oMatch;
 				}
-				offset = oSLComment < oMLComment ? oSLComment : oMLComment;
+				if (oSLComment < oMLComment) {
+					offset = oSLComment;
+				} else {
+					offset = content.indexOf("*/", oMLComment);
+				}
 
 			} else {
 				return offset;

@@ -41,6 +41,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -65,11 +66,11 @@ public class XtIdeTest extends AbstractIdeTest {
 			.objOpt("notVia").build();
 
 	static final XtMethodPattern PATTERN_ALLBRANCHES = XtMethodPattern.builder().keyword("allBranches")
-			.objMan("from")
+			.objOpt("from")
 			.textOpt("direction", (Object[]) TraverseDirection.values()).build();
 
 	static final XtMethodPattern PATTERN_ALLPATHS = XtMethodPattern.builder().keyword("allPaths")
-			.objMan("from")
+			.objOpt("from")
 			.textOpt("direction", (Object[]) TraverseDirection.values()).build();
 
 	static final XtMethodPattern PATTERN_COMMONPREDS = XtMethodPattern.builder().keyword("commonPreds")
@@ -679,13 +680,23 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	private void assertEqualIterables(String s1, Iterable<String> i2s) {
+		assertEqualIterables(s1, i2s, true);
+	}
+
+	private void assertEqualIterables(String s1, Iterable<String> i2s, boolean replaceEmptySpace) {
 		String[] elems1 = s1.split("(?:\\s+|(?<=[^\\\\])),\\s*");
 		for (int i = 0; i < elems1.length; i++) {
 			elems1[i] = elems1[i].replace("\\,", ",");
 			elems1[i] = elems1[i].replace("\\n", "\n");
+			elems1[i] = elems1[i].replaceAll("\\s+", " ");
+			elems1[i] = elems1[i].trim();
 		}
 		List<String> sorted1 = Lists.newArrayList(elems1);
 		Collections.sort(sorted1);
+
+		if (replaceEmptySpace) {
+			i2s = Iterables.transform(i2s, s -> s.replaceAll("\\s+", " ").trim());
+		}
 		List<String> sorted2 = Lists.newArrayList(i2s);
 		Collections.sort(sorted2);
 		String s1sorted = Strings.join(", ", sorted1);

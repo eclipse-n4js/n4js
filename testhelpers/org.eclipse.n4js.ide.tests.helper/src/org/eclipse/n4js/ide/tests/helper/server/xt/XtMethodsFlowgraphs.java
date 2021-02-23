@@ -289,7 +289,7 @@ public class XtMethodsFlowgraphs {
 
 	private ControlFlowElement getCFEWithReference(EObjectCoveringRegion offset, EObjectCoveringRegion reference) {
 		ControlFlowElement cfe = null;
-		if (offset != null && reference.getOffset() < offset.getOffset()) {
+		if (offset != null && reference.getOffset() <= offset.getOffset()) {
 			cfe = getCFE(offset);
 		}
 		return cfe;

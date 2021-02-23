@@ -38,7 +38,7 @@ import org.eclipse.n4js.tests.codegen.Project;
 import com.google.common.base.Preconditions;
 
 /**
- *
+ * Class to parse xt files
  */
 public class XtFileDataParser {
 	/** Identifier of test cases {@code X_PECT} (without '_') */
@@ -63,12 +63,10 @@ public class XtFileDataParser {
 	 */
 	static final String XT_METHOD = "METHOD";
 
-	/**
-	 */
+	/** Pattern group name for the qualified name of the xt test runner */
 	static final String XT_RUNNER = "RUNNER";
 
-	/**
-	 */
+	/** Pattern group name for the workspace configuration */
 	static final String XT_WORKSPACE = "WORKSPACE";
 
 	/**
@@ -97,21 +95,21 @@ public class XtFileDataParser {
 	 * to start the expectation. This expectation ends in the same line.
 	 */
 	static final Pattern XT_SINGLE_LINE = Pattern.compile(
-			"[^\\n]*\\/[\\/|\\*]+" + XT_BASE_METHOD_PATTERN + "-->\\s+(?<" + XT_EXPECTATION + ">[^\\n]*)");
+			"[^\\n]*\\/[\\/|\\*]+" + XT_BASE_METHOD_PATTERN + "-->(?<" + XT_EXPECTATION + ">[^\\n]*)");
 
 	/**
 	 * Pattern for multi-line comments using {@code //} at the beginning of every line. The XT method uses {@code ---}
 	 * to start and end the expectation.
 	 */
 	static final Pattern XT_MULTI_LINE1 = Pattern.compile(
-			"[^\\n]*\\/\\/+" + XT_BASE_METHOD_PATTERN + "---\\s+(?<" + XT_EXPECTATION + ">[\\s\\S]*)---");
+			"[^\\n]*\\/\\/+" + XT_BASE_METHOD_PATTERN + "---(?<" + XT_EXPECTATION + ">(?!---)[\\s\\S]*?)---");
 	/**
 	 * Pattern for multi-line comments using {@code /*  *\/} to start/end the comment. The XT method uses {@code ---} to
 	 * start and end the expectation.
 	 */
 	static final Pattern XT_MULTI_LINE2 = Pattern.compile(
-			"[^\\n]*\\/\\*+" + XT_BASE_METHOD_PATTERN + "---\\s+(?<" + XT_EXPECTATION
-					+ ">[\\s\\S]*?)---[\\s\\S]*?\\*\\/");
+			"[^\\n]*\\/\\*+" + XT_BASE_METHOD_PATTERN + "---(?<" + XT_EXPECTATION
+					+ ">(?!---)[\\s\\S]*?)---");
 
 	/**
 	 * Pattern for Setup section of xt files

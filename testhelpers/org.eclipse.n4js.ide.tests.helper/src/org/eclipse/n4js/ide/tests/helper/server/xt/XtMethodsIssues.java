@@ -32,13 +32,13 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- *
+ * Class to relate expected issues to actual issues
  */
 public class XtMethodsIssues {
 	static final String MESSAGE = "MESSAGE";
 	static final String AT = "AT";
 	static final Pattern PATTERN_MESSAGE_AT = Pattern
-			.compile("\\\"(?<" + MESSAGE + ">[^\\\"]*)\\\"\\s*at\\s*\\\"(?<" + AT + ">(?:[^\"]|\\\")+)\\\"");
+			.compile("\\\"(?<" + MESSAGE + ">[^\\\"]*)\\\"\\s*at\\s*\\\"(?<" + AT + ">(?:\\\"|[^\\\"])+)\\\"");
 
 	final XtFileData xtData; // sorted by position
 	final TreeSet<Diagnostic> errors; // sorted by position
@@ -144,28 +144,26 @@ public class XtMethodsIssues {
 		}
 	}
 
-	/**  */
 	private Multimap<String, String> getAtToExpectedMessage(MethodData data) {
 		Multimap<String, String> atToExpectedMessages = LinkedHashMultimap.create();
 
 		Matcher matcher = PATTERN_MESSAGE_AT.matcher(data.expectation);
 		while (matcher.find()) {
 			String message = matcher.group(MESSAGE);
-			String atString = matcher.group(AT).replace("\\\"", "\"");
+			String atString = matcher.group(AT).replace("\\\"", "\"").replaceAll("\\s+", " ");
 			atToExpectedMessages.put(atString, message);
 		}
 
 		return atToExpectedMessages;
 	}
 
-	/**  */
 	private Multimap<String, String> getAtToAcutalMessage(Multimap<MethodData, Diagnostic> testToIssues,
 			MethodData data) {
 
 		Multimap<String, String> atToActualMessages = LinkedHashMultimap.create();
 		Collection<Diagnostic> relatedErrors = testToIssues.get(data);
 		for (Diagnostic error : relatedErrors) {
-			String atString = xtData.getText(error.getRange());
+			String atString = xtData.getText(error.getRange()).replaceAll("\\s+", " ");
 			atToActualMessages.put(atString, error.getMessage());
 		}
 		return atToActualMessages;
