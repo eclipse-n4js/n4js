@@ -178,6 +178,11 @@ public class WorkspaceBuilder {
 			public FolderBuilder getFolderBuilder() {
 				return FolderBuilder.this;
 			}
+
+			/** @return filename with extension */
+			public String getNameWithExtension() {
+				return name + "." + fExtension;
+			}
 		}
 
 		/** Builder for {@link Module} */

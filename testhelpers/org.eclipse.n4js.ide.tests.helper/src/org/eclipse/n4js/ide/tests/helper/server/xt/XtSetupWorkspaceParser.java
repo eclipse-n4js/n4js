@@ -28,7 +28,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
- * TODO
+ * Parses the workspace configuration in the setup section of an .xt file
  */
 public class XtSetupWorkspaceParser {
 	static final String ERROR = "Workspace parse error: ";
@@ -38,7 +38,7 @@ public class XtSetupWorkspaceParser {
 		int cursor;
 
 		TokenStream(String setupWorkspace) {
-			this.tokens = setupWorkspace.trim().split("(?<=\\S)(?=\\{|\\})|=|\\s+");
+			this.tokens = setupWorkspace.trim().split("(?<=\\S)(?=\\{|\\})|[=\\s]+");
 			this.cursor = 0;
 		}
 
@@ -225,7 +225,8 @@ public class XtSetupWorkspaceParser {
 			folderBuilder.setSourceFolder();
 			if (isThis) {
 				BuilderInfo bi = moduleBuilder.getBuilderInfo();
-				bi.moduleNameOfXtFile = moduleBuilder.getFolderBuilder().getName() + "/" + moduleBuilder.getName();
+				bi.moduleNameOfXtFile = moduleBuilder.getFolderBuilder().getName() + "/"
+						+ moduleBuilder.getNameWithExtension();
 			}
 		} else {
 			folderBuilder.addFile(name, content);

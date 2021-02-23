@@ -101,10 +101,8 @@ public class XtFileRunner extends Runner {
 					}
 				}
 			}
-		} catch (AssertionError testFailure) {
+		} catch (Throwable testFailure) {
 			notifier.fireTestFailure(new Failure(getDescription(), testFailure));
-		} catch (Throwable t) {
-			notifier.fireTestAssumptionFailed(new Failure(getDescription(), t));
 		} finally {
 			try {
 				ideTest.teardown();

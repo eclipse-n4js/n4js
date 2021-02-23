@@ -46,7 +46,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
- *
+ * Class that provides / delegates of xt methods
  */
 public class XtIdeTest extends AbstractIdeTest {
 
