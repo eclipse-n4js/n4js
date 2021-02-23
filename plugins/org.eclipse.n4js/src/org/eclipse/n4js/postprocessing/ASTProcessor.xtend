@@ -395,6 +395,7 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 
 		typeRefProcessor.handleTypeRefs(G, node, cache);
+		typeAliasProcessor.handleTypeAlias(G, node, cache);
 
 		if (node instanceof FunctionDefinition) {
 			handleAsyncOrGeneratorFunctionDefinition(G, node, cache);
@@ -409,7 +410,6 @@ public class ASTProcessor extends AbstractProcessor {
 	def private void processNode_postChildren(RuleEnvironment G, EObject node, ASTMetaInfoCache cache, int indentLevel) {
 
 		typeDeferredProcessor.handleDeferredTypeRefs_postChildren(G, node, cache);
-		typeAliasProcessor.handleTypeAlias(G, node, cache);
 
 		typeProcessor.typeNode(G, node, cache, indentLevel);
 

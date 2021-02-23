@@ -152,7 +152,8 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 				if (useContext) {
 					fieldTypeRef = ts.substTypeVariables(G2, fieldTypeRef);
 				}
-				val fieldTypeRefSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, fieldTypeRef);
+				val fieldTypeRefResolved = tsh.resolveTypeAliases(G, fieldTypeRef); // this runs after TypeAliasProcessor, so we need to resolve here
+				val fieldTypeRefSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, fieldTypeRefResolved);
 				EcoreUtilN4.doWithDeliver(false, [
 					tte.typeRef = TypeUtils.copy(fieldTypeRefSane);
 				], tte);
