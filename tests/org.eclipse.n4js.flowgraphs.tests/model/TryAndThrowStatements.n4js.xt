@@ -49,7 +49,7 @@ function ThrowStatement1() {
 	// ThrowStatement1 XPECT succs at 'throw 1;' -->
 	"start";
 	throw 1;
-	// ThrowStatement1 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+	// ThrowStatement1 XPECT warnings --> "Dead code. No execution possible after throw." at "\"end\";"
 	"end";
 }
 
@@ -120,7 +120,7 @@ let ThrowStatement3 = function() {
 	// ThrowStatement3 XPECT succs at 'throw 1;' -->
 	"start";
 	throw 1;
-	// ThrowStatement3 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+	// ThrowStatement3 XPECT warnings --> "Dead code. No execution possible after throw." at "\"end\";"
 	"end";
 };
 
@@ -154,7 +154,7 @@ class ThrowStatement4 {
 		// ThrowStatement4 XPECT succs at 'throw 1;' -->
 		"start";
         throw 1;
-		// ThrowStatement4 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+		// ThrowStatement4 XPECT warnings --> "Dead code. No execution possible after throw." at "\"end\";"
 		"end";
     }
 }
@@ -518,7 +518,7 @@ function ThrowTryFinallyStatement1() {
 	} finally {
 		3;
 	}
-	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code." at ""end";"
+	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 
@@ -558,7 +558,7 @@ function ThrowTryFinallyStatement2() {
 		2;
 		throw 3;
 	}
-	// ThrowTryFinallyStatement2 XPECT warnings --> "Dead code." at ""end";"
+	// ThrowTryFinallyStatement2 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 
@@ -824,7 +824,7 @@ function ThrowTryThrowReturnFinally() : any {
     } finally {
     	4
     }
-	// ThrowTryThrowReturnFinally XPECT warnings --> "Dead code." at ""end";     return 5;"
+	// ThrowTryThrowReturnFinally XPECT warnings --> "Dead code." at "\"end\";     return 5;"
 	"end";
     return 5;
 }

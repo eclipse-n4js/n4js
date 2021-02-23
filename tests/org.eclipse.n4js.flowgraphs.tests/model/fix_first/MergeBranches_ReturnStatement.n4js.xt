@@ -29,6 +29,6 @@
 function ReturnStatement() {
 	"start";
 	 return;
-	// ReturnStatement1 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	// ReturnStatement1 XPECT warnings --> "Dead code. No execution possible after return." at "\"end\";"
 	"end";
 }

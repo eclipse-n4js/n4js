@@ -109,7 +109,7 @@ class AnnotationConfigurable1 {
 // AnnotationExpressionList XPECT cfContainer of '@This("param")' --> Script
 // AnnotationExpressionList XPECT cfContainer of '"param"' --> LiteralAnnotationArgument::StringLiteral
 // AnnotationExpressionList XPECT warnings --> "Variable names should start with lower case letter." at "AnnotationExpressionList"
-// AnnotationExpressionList XPECT errors --> "The annotation @This expects a TypeRef here." at ""param""
+// AnnotationExpressionList XPECT errors --> "The annotation @This expects a TypeRef here." at "\"param\""
 var AnnotationExpressionList = @This("param") function() {}
 
 
@@ -117,7 +117,7 @@ class ComputedPropertyName1 {
 	// ComputedPropertyName1 XPECT cfContainer of '"CPN1"' --> LiteralOrComputedPropertyName::AdditiveExpression
 	// ComputedPropertyName1 XPECT succs at '"CPN1"' --> "CPN2"
 	// ComputedPropertyName1 XPECT succs at '"CPN2"' --> "CPN1" + "CPN2"
-	// ComputedPropertyName1 XPECT warnings --> "Field names should start with lower case letter." at "["CPN1" + "CPN2"]"
+	// ComputedPropertyName1 XPECT warnings --> "Field names should start with lower case letter." at "[\"CPN1\" + \"CPN2\"]"
 	public ["CPN1" + "CPN2"];
 }
 

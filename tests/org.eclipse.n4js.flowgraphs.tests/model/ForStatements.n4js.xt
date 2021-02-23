@@ -50,7 +50,7 @@ function ForStatement1() {
 	// ForStatement1 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;) ;
-	// ForStatement1 XPECT warnings --> "Dead code." at ""end";"
+	// ForStatement1 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 
@@ -80,7 +80,7 @@ function ForStatement2() {
 	// ForStatement2 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;) 5;
-	// ForStatement2 XPECT warnings --> "Dead code." at ""end";"
+	// ForStatement2 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 
@@ -157,7 +157,7 @@ function ForStatement4() {
 	// ForStatement4 XPECT succs at 'for' --> "end"
 	"start";
 	for (1;;3) 5;
-	// ForStatement4 XPECT warnings --> "Dead code." at ""end";"
+	// ForStatement4 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 
@@ -274,7 +274,7 @@ function ForStatement7() {
 	// ForStatement7 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;3) 5;
-	// ForStatement7 XPECT warnings --> "Dead code." at ""end";"
+	// ForStatement7 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 
@@ -346,7 +346,7 @@ function ForStatement9() {
 	// ForStatement9 XPECT succs at 'for' --> "end"
 	"start";
 	for (1;;) 5;
-	// ForStatement9 XPECT warnings --> "Dead code." at ""end";"
+	// ForStatement9 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 
@@ -924,7 +924,7 @@ function ForStatementContinue4() {
 	// ForStatementContinue4 XPECT succs at 'for' --> "end"
 	"start";
 	for (;;) continue;
-	// ForStatementContinue4 XPECT warnings --> "Dead code." at ""end";"
+	// ForStatementContinue4 XPECT warnings --> "Dead code." at "\"end\";"
 	"end";
 }
 

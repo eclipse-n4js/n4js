@@ -36,7 +36,7 @@ public class XtTestSetupTest {
 
 	@XtFolder
 	static String getFolder() {
-		return "model/fix_first";
+		return "model";
 	}
 
 	@XtSuppressedIssues

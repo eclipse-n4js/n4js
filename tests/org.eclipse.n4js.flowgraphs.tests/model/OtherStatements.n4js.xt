@@ -253,7 +253,7 @@ function ReturnStatement1() {
 	// ReturnStatement1 XPECT succs at 'return;' -->
 	"start";
 	 return;
-	// ReturnStatement1 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	// ReturnStatement1 XPECT warnings --> "Dead code. No execution possible after return." at "\"end\";"
 	"end";
 }
 
@@ -284,7 +284,7 @@ function ReturnStatement2() : int {
 	// ReturnStatement2 XPECT succs at 'return 1;' -->
 	"start";
 	 return 1;
-	// ReturnStatement2 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	// ReturnStatement2 XPECT warnings --> "Dead code. No execution possible after return." at "\"end\";"
 	"end";
 }
 
@@ -351,7 +351,7 @@ let ReturnStatement4 = function() {
 	// ReturnStatement4 XPECT succs at 'return;' -->
 	"start";
 	return;
-	// ReturnStatement4 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	// ReturnStatement4 XPECT warnings --> "Dead code. No execution possible after return." at "\"end\";"
 	"end";
 };
 
@@ -383,7 +383,7 @@ class ReturnStatement5 {
 		"start";
 		// ReturnStatement5 XPECT errors --> "Return statement must have an expression of type void" at "return;"
         return;
-		// ReturnStatement5 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+		// ReturnStatement5 XPECT warnings --> "Dead code. No execution possible after return." at "\"end\";"
 		"end";
     }
 }

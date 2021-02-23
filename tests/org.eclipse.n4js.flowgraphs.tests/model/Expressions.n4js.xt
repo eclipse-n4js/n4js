@@ -425,7 +425,7 @@ function ObjectLiteral() {
 		{ a : 1 \, b : "string" \, fn : function(){} \, m() {} } --> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }),
 		({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }) --> "end"
 	--- */
-	/* ObjectLiteral XPECT allBranches ---
+	/* ObjectLiteral   allBranches ---
 		B0: "start" -> 1 -> "string"
 		-> function(){}
 		-> { a : 1 \, b : "string" \, fn : function(){} \, m() {} }
