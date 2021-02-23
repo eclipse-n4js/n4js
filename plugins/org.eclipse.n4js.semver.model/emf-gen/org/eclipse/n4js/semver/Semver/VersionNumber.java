@@ -36,10 +36,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Major</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Major</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Major</em>' containment reference.
 	 * @see #setMajor(VersionPart)
@@ -62,10 +58,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Minor</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Minor</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Minor</em>' containment reference.
 	 * @see #setMinor(VersionPart)
@@ -88,10 +80,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Patch</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Patch</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Patch</em>' containment reference.
 	 * @see #setPatch(VersionPart)
@@ -115,10 +103,6 @@ public interface VersionNumber extends SemverToStringable {
 	 * Returns the value of the '<em><b>Extended</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.semver.Semver.VersionPart}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Extended</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Extended</em>' containment reference list.
 	 * @see org.eclipse.n4js.semver.Semver.SemverPackage#getVersionNumber_Extended()
@@ -130,10 +114,6 @@ public interface VersionNumber extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Qualifier</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Qualifier</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Qualifier</em>' containment reference.
 	 * @see #setQualifier(Qualifier)

@@ -214,7 +214,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSCommandService.class;
 	}
 
-	@Override
 	public Class<? extends IRenameService2> bindIRenameService2() {
 		return N4JSRenameService.class;
 	}

@@ -20,9 +20,6 @@ Workflow {
 				genericIde = {
 					enabled = true
 				}
-				eclipsePlugin = {
-					enabled = true
-				}
 				createEclipseMetaData = false
 			}
 			code = {

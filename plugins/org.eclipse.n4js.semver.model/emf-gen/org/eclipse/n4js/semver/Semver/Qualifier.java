@@ -32,10 +32,6 @@ public interface Qualifier extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Pre Release</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Pre Release</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Pre Release</em>' containment reference.
 	 * @see #setPreRelease(QualifierTag)
@@ -58,10 +54,6 @@ public interface Qualifier extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Build Metadata</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Build Metadata</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Build Metadata</em>' containment reference.
 	 * @see #setBuildMetadata(QualifierTag)

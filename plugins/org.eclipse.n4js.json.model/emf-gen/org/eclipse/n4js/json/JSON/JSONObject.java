@@ -11,6 +11,7 @@
 package org.eclipse.n4js.json.JSON;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
