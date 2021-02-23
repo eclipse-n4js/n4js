@@ -78,7 +78,9 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 			}
 			if (!guard.tryNext(typeAlias)) {
 				// cyclic type alias declaration
-				// NOTE: we could set 'originalAliasTypeRef' in the UnknownTypeRef, but we do not want
+				// NOTE #1: validation N4JSTypeAliasValidator#checkCyclicAliasDeclaration() relies on
+				// UnknownTypeRef being returned here!
+				// NOTE #2: we could set 'originalAliasTypeRef' in the UnknownTypeRef, but we do not want
 				// to hide the fact that an error occurred!
 				return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 			}
@@ -132,6 +134,10 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 						val G2 = G.wrap;
 						G2.put(guardKey, Boolean.TRUE);
 						result = processNested(G2, result);
+					} else {
+						// NOTE: validation N4JSTypeAliasValidator#checkCyclicAliasDeclaration() relies on
+						// UnknownTypeRef being returned here!
+						result = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 					}
 				}
 			}

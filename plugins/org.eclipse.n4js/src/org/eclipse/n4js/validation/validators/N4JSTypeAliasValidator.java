@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAlias;
@@ -34,6 +35,7 @@ import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.inject.Inject;
 
@@ -59,6 +61,18 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 	/** Disallow cyclic alias declarations. */
 	@Check
 	public void checkCyclicAliasDeclaration(N4TypeAliasDeclaration n4TypeAliasDecl) {
+		TypeRef declTypeRef = n4TypeAliasDecl.getDeclaredTypeRef();
+		if (declTypeRef == null) {
+			return; // broken AST
+		}
+		boolean isOrContainsUnknownTypeRef = declTypeRef instanceof UnknownTypeRef
+				|| IteratorExtensions.exists(declTypeRef.eAllContents(), eobj -> eobj instanceof UnknownTypeRef);
+		if (!isOrContainsUnknownTypeRef) {
+			// the TypeAliasComputer returns UnknownTypeRef when running into a cycle,
+			// so if we do not have an UnknownTypeRef in the aliased/actual type of the type alias,
+			// we know the type alias isn't cyclic
+			return; // no cycle
+		}
 		Stack<TypeAlias> cycle = collectTypeAliasCycle(n4TypeAliasDecl.getDefinedTypeAsTypeAlias(), null);
 		if (cycle == null) {
 			return; // no cycle
