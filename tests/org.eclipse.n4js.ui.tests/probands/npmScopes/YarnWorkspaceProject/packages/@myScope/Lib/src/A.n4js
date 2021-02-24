@@ -1,6 +1,0 @@
-
-export public class A {
-	public foo() {
-		console.log("Hello from A in @myScope/Lib!");
-	}
-}

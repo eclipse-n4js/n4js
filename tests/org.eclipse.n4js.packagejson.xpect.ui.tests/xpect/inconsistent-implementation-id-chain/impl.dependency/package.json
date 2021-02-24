@@ -1,9 +1,0 @@
-{
-	"name": "impl.dependency",
-	"n4js": {
-		"implementationId": "impl2",
-		"implementedProjects": [
-			"project.api"
-		]
-	}
-}

@@ -1,7 +1,0 @@
-
-
-export public class D {
-	m() {
-		console.log('hello from D#m() located in module: folder.with.many.dots/another.module.with.dots');
-	}
-}

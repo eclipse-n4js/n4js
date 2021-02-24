@@ -1,4 +1,0 @@
-**/src-gen
-
-#ignore .project files for IDE-1977
-IDE_1977_ExternalLibs/**/.project

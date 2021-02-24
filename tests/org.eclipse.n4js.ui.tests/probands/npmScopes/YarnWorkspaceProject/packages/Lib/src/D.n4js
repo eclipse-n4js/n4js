@@ -1,6 +1,0 @@
-
-export public class D {
-	public foo() {
-		console.log("Hello from D in Lib!");
-	}
-}
