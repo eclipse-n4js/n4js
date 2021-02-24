@@ -56,6 +56,8 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
+import org.eclipse.n4js.xtext.scoping.FilteringScope;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.common.types.access.TypeResource;
@@ -66,12 +68,14 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -97,6 +101,9 @@ public class XtMethods {
 
 	@Inject
 	private IScopeProvider scopeProvider;
+
+	@Inject
+	private IResourceDescription.Manager manager;
 
 	/** Implementation for {@link XtIdeTest#accessModifier(MethodData)} */
 	static public String getAccessModifierString(EObject context) {
@@ -154,6 +161,20 @@ public class XtMethods {
 
 		String elementKeywordStr = keywordProvider.keyword(crossRef == null ? eObject : crossRef);
 		return elementKeywordStr;
+	}
+
+	/** Implementation for {@link XtIdeTest#exportedObjects(MethodData)} */
+	public List<String> getExportedObjectsString(IEObjectCoveringRegion ocr) {
+		IResourceDescription resourceDescription = manager.getResourceDescription(ocr.getXtextResource());
+		Iterable<IEObjectDescription> exportedObjects = resourceDescription.getExportedObjects();
+		List<String> exportedObjectStrings = new ArrayList<>();
+		for (IEObjectDescription desc : exportedObjects) {
+			String str = desc.getEClass().getEPackage().getNsPrefix()
+					+ "::" + desc.getEClass().getName()
+					+ ": " + desc.getName().toString();
+			exportedObjectStrings.add(str);
+		}
+		return exportedObjectStrings;
 	}
 
 	/** Implementation for {@link XtIdeTest#findReferences(MethodData)} */
@@ -374,6 +395,31 @@ public class XtMethods {
 
 	/** Implementation for {@link XtIdeTest#scope(MethodData)} */
 	public List<String> getScopeString(IEObjectCoveringRegion ocr) {
+		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
+
+		IScope scopeWithoutErrors = new FilteringScope(scope,
+				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
+		List<IEObjectDescription> allElements = Lists.newArrayList(scopeWithoutErrors.getAllElements());
+
+		URI uri = ocr.getXtextResource().getURI();
+		Predicate<String> filter = new IsInScopeWithOptionalPositionPredicate(converter, uri, false, scope);
+		List<String> scopeNames = new ArrayList<>();
+		for (IEObjectDescription desc : allElements) {
+			String name = desc.getName().toString();
+			QualifiedName qualifiedName = converter.toQualifiedName(name);
+			IEObjectDescription singleElement = scope.getSingleElement(qualifiedName);
+			if (singleElement != null) {
+				scopeNames.add(name);
+			} else {
+				System.out.println("not: " + name);
+			}
+		}
+
+		return scopeNames;
+	}
+
+	/** Implementation for {@link XtIdeTest#scope(MethodData)} */
+	public List<String> getScopeString2(IEObjectCoveringRegion ocr) {
 		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
 		List<String> scopeNames = new ArrayList<>();
 		List<IEObjectDescription> allElements = Lists.newArrayList(scope.getAllElements());

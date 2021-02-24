@@ -88,6 +88,7 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 							// precondition failed. Problem should show up in the JUnit view.
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
+							e.printStackTrace();
 						}
 					}
 					return FileVisitResult.CONTINUE;

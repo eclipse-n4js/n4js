@@ -38,7 +38,7 @@ public class XtResourceEObjectAccessor {
 	public IEObjectCoveringRegion getObjectCoveringRegion(int offset) {
 		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
-		return new EObjectCoveringRegion(eObject, offset, structuralFeature);
+		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class XtResourceEObjectAccessor {
 		int length = optionalLocationStr == null ? 0 : optionalLocationStr.length();
 		EObject eObject = XtResourceUtil.findEObject(resource, offset, length);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
-		return new EObjectCoveringRegion(eObject, offset, structuralFeature);
+		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class XtResourceEObjectAccessor {
 		int offset = checkAndGetOffset(data, methodName, arg1);
 		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
 		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
-		return new EObjectCoveringRegion(eObject, offset, structuralFeature);
+		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
 	private int checkAndGetOffset(MethodData data, String checkArg1, String optionalLocation) {

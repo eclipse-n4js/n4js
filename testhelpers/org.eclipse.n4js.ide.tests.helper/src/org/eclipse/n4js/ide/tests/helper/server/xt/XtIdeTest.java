@@ -15,13 +15,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
@@ -39,12 +39,12 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
@@ -183,6 +183,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		case "elementKeyword":
 			elementKeyword(testMethodData);
+			break;
+		case "exportedObjects":
+			exportedObjects(testMethodData);
 			break;
 		case "findReferences":
 			findReferences(testMethodData);
@@ -358,6 +361,24 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "elementKeyword", "at");
 		String elementKeywordStr = xtMethods.getElementKeywordString(ocr);
 		assertEquals(data.expectation, elementKeywordStr);
+	}
+
+	/**
+	 * Test all exported objects of a resource description
+	 *
+	 * <pre>
+	 * // Xpect exportedObjects at '&ltLOCATION&gt' --&gt; &ltEXPORTED OBJECTS&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 *
+	 * EXPORTED OBJECTS is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void exportedObjects(MethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "exportedObjects", null);
+		List<String> exportedObjectsArray = xtMethods.getExportedObjectsString(ocr);
+		assertEqualIterables(data.expectation, exportedObjectsArray);
 	}
 
 	/**
@@ -712,17 +733,30 @@ public class XtIdeTest extends AbstractIdeTest {
 			elems1[i] = elems1[i].replaceAll("\\s+", " ");
 			elems1[i] = elems1[i].trim();
 		}
-		List<String> sorted1 = Lists.newArrayList(elems1);
-		Collections.sort(sorted1);
 
 		if (replaceEmptySpace) {
 			i2s = Iterables.transform(i2s, s -> s.replaceAll("\\s+", " ").trim());
 		}
-		List<String> sorted2 = Lists.newArrayList(i2s);
-		Collections.sort(sorted2);
-		String s1sorted = Strings.join(", ", sorted1);
-		String s2sorted = Strings.join(", ", sorted2);
-		assertEquals(s1sorted, s2sorted);
+
+		boolean partialExpectation = elems1.length > 0
+				&& ("...".equals(elems1[0]) || "...".equals(elems1[elems1.length - 1]));
+
+		if (partialExpectation) {
+			Set<String> elems1Set = Sets.newHashSet(Arrays.copyOfRange(elems1, 1, elems1.length));
+			elems1Set.removeAll(Lists.newArrayList(i2s));
+			elems1Set.remove("...");
+			assertTrue("Not found: " + Strings.join(", ", elems1Set), elems1Set.isEmpty());
+
+		} else {
+			List<String> sorted1 = Lists.newArrayList(elems1);
+			Collections.sort(sorted1);
+
+			List<String> sorted2 = Lists.newArrayList(i2s);
+			Collections.sort(sorted2);
+			String s1sorted = Strings.join(", ", sorted1);
+			String s2sorted = Strings.join(", ", sorted2);
+			assertEquals(s1sorted, s2sorted);
+		}
 	}
 
 }
