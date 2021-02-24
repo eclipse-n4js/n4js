@@ -74,7 +74,7 @@ public class N4JSOffsetAdapter {
 
 			EObject semanticObject = XtResourceUtil.findEObject(resource, offset, length);
 			EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
-			return new EObjectCoveringRegion(semanticObject, offset, structuralFeature);
+			return new EObjectCoveringRegion(resource, semanticObject, offset, structuralFeature);
 		}
 	}
 
