@@ -11,21 +11,29 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
-/***/
+/** Default implementation for {@link IEObjectCoveringRegion} */
 public class EObjectCoveringRegion implements IEObjectCoveringRegion {
 	final EObject eObj;
+	final EStructuralFeature structuralFeature;
 	int offset;
 
-	/***/
-	public EObjectCoveringRegion(EObject eObj, int offset) {
+	/** Constructor */
+	public EObjectCoveringRegion(EObject eObj, int offset, EStructuralFeature structuralFeature) {
 		this.eObj = eObj;
+		this.structuralFeature = structuralFeature;
 		this.offset = offset;
 	}
 
 	@Override
 	public EObject getEObject() {
 		return eObj;
+	}
+
+	@Override
+	public EStructuralFeature getEStructuralFeature() {
+		return structuralFeature;
 	}
 
 	@Override

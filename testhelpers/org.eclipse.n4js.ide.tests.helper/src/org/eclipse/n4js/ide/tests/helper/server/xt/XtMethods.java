@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -58,12 +59,16 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.common.types.access.TypeResource;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.IScopeProvider;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
@@ -86,6 +91,12 @@ public class XtMethods {
 
 	@Inject
 	private FindReferenceHelper findReferenceHelper;
+
+	@Inject
+	private IQualifiedNameConverter converter;
+
+	@Inject
+	private IScopeProvider scopeProvider;
 
 	/** Implementation for {@link XtIdeTest#accessModifier(MethodData)} */
 	static public String getAccessModifierString(EObject context) {
@@ -359,6 +370,24 @@ public class XtMethods {
 				sb.append("*missing*");
 		}
 		return sb.toString();
+	}
+
+	/** Implementation for {@link XtIdeTest#scope(MethodData)} */
+	public List<String> getScopeString(IEObjectCoveringRegion ocr) {
+		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
+		List<String> scopeNames = new ArrayList<>();
+		List<IEObjectDescription> allElements = Lists.newArrayList(scope.getAllElements());
+		for (IEObjectDescription elem : allElements) {
+			String name = elem.getName().toString();
+
+			QualifiedName qualifiedName = converter.toQualifiedName(name);
+			IEObjectDescription singleElement = scope.getSingleElement(qualifiedName);
+			if (singleElement != null) {
+				scopeNames.add(name);
+			}
+		}
+
+		return scopeNames;
 	}
 
 	private String getLinkedFragment(EObject targetObject, URI baseUri) {

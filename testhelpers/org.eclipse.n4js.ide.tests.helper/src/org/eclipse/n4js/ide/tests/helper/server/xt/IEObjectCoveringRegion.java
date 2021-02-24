@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
 
 /**
@@ -26,8 +27,9 @@ import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
  */
 public interface IEObjectCoveringRegion extends IEObjectOwner {
 	// no new fields
-	/**
-	 * Return the offset of the region
-	 */
-	public int getOffset();
+	/** @return the offset of the region */
+	int getOffset();
+
+	/** @return {@link EStructuralFeature} of the {@link EObject}. Can be null. */
+	EStructuralFeature getEStructuralFeature();
 }

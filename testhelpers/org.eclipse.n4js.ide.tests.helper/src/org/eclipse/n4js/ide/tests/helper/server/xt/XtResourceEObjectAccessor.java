@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
@@ -35,8 +36,9 @@ public class XtResourceEObjectAccessor {
 
 	/** @return {@link EObject} with offset for a given offset in this resource */
 	public IEObjectCoveringRegion getObjectCoveringRegion(int offset) {
-		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
-		return new EObjectCoveringRegion(eObject, offset);
+		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
+		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
+		return new EObjectCoveringRegion(eObject, offset, structuralFeature);
 	}
 
 	/**
@@ -53,8 +55,9 @@ public class XtResourceEObjectAccessor {
 			return null;
 		}
 		int length = optionalLocationStr == null ? 0 : optionalLocationStr.length();
-		EObject eObject = XtResourceUtil.getEObject(resource, offset, length);
-		return new EObjectCoveringRegion(eObject, offset);
+		EObject eObject = XtResourceUtil.findEObject(resource, offset, length);
+		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
+		return new EObjectCoveringRegion(eObject, offset, structuralFeature);
 	}
 
 	/**
@@ -83,8 +86,9 @@ public class XtResourceEObjectAccessor {
 			String arg1) {
 
 		int offset = checkAndGetOffset(data, methodName, arg1);
-		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
-		return new EObjectCoveringRegion(eObject, offset);
+		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
+		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
+		return new EObjectCoveringRegion(eObject, offset, structuralFeature);
 	}
 
 	private int checkAndGetOffset(MethodData data, String checkArg1, String optionalLocation) {

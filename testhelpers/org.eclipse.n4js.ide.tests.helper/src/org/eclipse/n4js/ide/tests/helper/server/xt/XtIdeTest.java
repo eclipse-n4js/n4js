@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
@@ -193,6 +195,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		case "linkedPathname":
 			linkedPathname(testMethodData);
+			break;
+		case "scope":
+			scope(testMethodData);
 			break;
 		case "type":
 			type(testMethodData);
@@ -421,6 +426,22 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedPathname", "at");
 		String pathName = xtMethods.getLinkedPathname(ocr);
 		assertEquals(data.expectation, pathName);
+	}
+
+	/**
+	 * Checks that an element/expression has a certain type. Usage:
+	 *
+	 * <pre>
+	 * // Xpect scope at '&ltLOCATION&gt' --&gt; &ltSCOPE&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void scope(MethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scope", "at");
+		List<String> scopeStr = xtMethods.getScopeString(ocr);
+		assertEqualIterables(data.expectation, scopeStr);
 	}
 
 	/**
