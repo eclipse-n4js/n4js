@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.projectdiscovery.tests.CreateProjectStructureUtils.ProjectDiscoveryTestData;
@@ -81,7 +81,7 @@ public class ProjectDiscoveryTest {
 	}
 
 	private ArrayList<String> getActualFolders(Path tmpDir, Path workspaceRoot) {
-		LinkedHashSet<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
+		List<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
 		ArrayList<String> actualFolders = new ArrayList<>();
 		for (Path projectDir : projectDirs) {
 			String relativeFolder = tmpDir.relativize(projectDir).toString();

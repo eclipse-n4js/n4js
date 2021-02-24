@@ -80,6 +80,10 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createVersionableAdapter();
 			}
 			@Override
+			public Adapter caseTypeArgument(TypeArgument object) {
+				return createTypeArgumentAdapter();
+			}
+			@Override
 			public Adapter caseTypeRef(TypeRef object) {
 				return createTypeRefAdapter();
 			}
@@ -142,10 +146,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseTypeTypeRef(TypeTypeRef object) {
 				return createTypeTypeRefAdapter();
-			}
-			@Override
-			public Adapter caseTypeArgument(TypeArgument object) {
-				return createTypeArgumentAdapter();
 			}
 			@Override
 			public Adapter caseWildcard(Wildcard object) {
@@ -218,6 +218,20 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVersionableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument
+	 * @generated
+	 */
+	public Adapter createTypeArgumentAdapter() {
 		return null;
 	}
 
@@ -442,20 +456,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTypeTypeRefAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeArgument
-	 * @generated
-	 */
-	public Adapter createTypeArgumentAdapter() {
 		return null;
 	}
 

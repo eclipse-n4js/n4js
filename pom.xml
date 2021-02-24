@@ -37,9 +37,7 @@ Contributors:
 		<module>releng</module>
 		<module>plugins</module>
 		<module>testhelpers</module>
-		<module>features</module>
 		<module>docs</module>
-		<module>builds</module>
 	</modules>
 
 	<profiles>

@@ -14,7 +14,7 @@ import * as lib_fs from "fs";
 import * as lib_minimatch+ from "minimatch";
 import {Glob} from "glob";
 
-const minimatch = (lib_minimatch as any) as {function(proband: string, pattern: string): boolean};
+const minimatch : {function(proband: string, pattern: string): boolean} = lib_minimatch as any+;
 
 
 /**
@@ -90,5 +90,5 @@ function readPackageJSON(dir: string) : Object {
 
 function extractWorkspaces(manifest : any+) : string[] {
     const workspaces = manifest?.workspaces;
-    return (workspaces?.packages as string[]) || ((Array.isArray(workspaces) ? workspaces : null) as string[]);
+    return (workspaces?.packages) || ((Array.isArray(workspaces) ? workspaces : null));
 }

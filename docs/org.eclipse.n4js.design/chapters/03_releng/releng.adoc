@@ -172,7 +172,6 @@ You may have to increase the memory for maven via `export MAVEN_OPTS="-Xmx2048m"
 Available optional maven profiles are:
 
 [horizontal]
-buildProduct::                  create IDE products (Windows, macOS, Linux) and a jar for headless compilation
 execute-plugin-tests::          run OSGi tests (without UI)
 execute-plugin-ui-tests::       run UI-based OSGi tests
 execute-ecmas-tests::           run ECMA test suite
@@ -186,8 +185,6 @@ Available system properties:
 noTests::               if defined (i.e. "-DnoTests"), suppress execution of all tests
 languageVersion::       an optional version string to show in the Eclipse About dialog of IDE products (should be defined by publishing builds)
 startAndKeepVerdaccio:: if defined (i.e. "-DstartAndKeepVerdaccio"), enforce starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
-fatUpdateSite::         if set to true (i.e. "-DfatUpdateSite=true"), the generated update site will include all third-party dependencies
-excludeJRE::            if defined (i.e. "-DexcludeJRE"), the Java runtime environment will not be bundled with the IDE products
 
 
 
@@ -276,7 +273,6 @@ For updating the N4JS IDE to a new version of Eclipse, EMF, Xtext, etc. follow t
 ... plain JUnit tests (e.g. `org.eclipse.n4js.lang.tests`).
 ... Plugin tests.
 ... Plugin UI tests.
-... SWTBot tests.
 ... Xpect tests (individual files and entire bundles; e.g. `org.eclipse.n4js.spec.tests`).
 ... Xpect UI tests.
 .. Ensure an N4JS IDE product can be launched from within the newly installed Eclipse using the launch configuration

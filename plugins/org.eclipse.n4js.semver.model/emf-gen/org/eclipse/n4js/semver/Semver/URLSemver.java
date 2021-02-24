@@ -32,10 +32,6 @@ public interface URLSemver extends URLVersionSpecifier {
 	/**
 	 * Returns the value of the '<em><b>Simple Version</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Simple Version</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Simple Version</em>' containment reference.
 	 * @see #setSimpleVersion(SimpleVersion)
@@ -58,10 +54,6 @@ public interface URLSemver extends URLVersionSpecifier {
 	/**
 	 * Returns the value of the '<em><b>With Semver Tag</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>With Semver Tag</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>With Semver Tag</em>' attribute.
 	 * @see #setWithSemverTag(boolean)

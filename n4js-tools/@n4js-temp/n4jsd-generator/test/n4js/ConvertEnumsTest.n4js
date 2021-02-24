@@ -24,7 +24,7 @@ export public class ConvertEnumsTest extends AbstractN4jsdGeneratorTest {
 					}
 				`,
 				n4jsd: `
-					export external enum EnumOrdinary {
+					export external public enum EnumOrdinary {
 						RED,
 						GREEN,
 						BLUE
@@ -52,19 +52,19 @@ export public class ConvertEnumsTest extends AbstractN4jsdGeneratorTest {
 				`,
 				n4jsd: `
 					@StringBased
-					export external enum EnumStringBased {
+					export external public enum EnumStringBased {
 						LIT1: 'lit1',
 						LIT2: 'lit2'
 					}
 
 					@NumberBased
-					export external enum EnumNumberBased {
+					export external public enum EnumNumberBased {
 						LIT1: -1,
 						LIT2: 0
 					}
 
 					@NumberBased
-					export external enum EnumNumberBasedViaDefault {
+					export external public enum EnumNumberBasedViaDefault {
 						LIT1: 0,
 						LIT2: 1
 					}

@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -100,23 +102,36 @@ public class ProjectDiscoveryHelper {
 	/**
 	 * Collects all projects and uses the approach described above with each of the given workspace root folders.
 	 * <p>
+	 * Note that projects and dependencies are sorted to avoid indeterminism from file system.
+	 * <p>
 	 * Note that the dependencies (i.e. projects in {@code node_modules} folders) are listed after all workspace
 	 * projects.
 	 */
-	public LinkedHashSet<Path> collectAllProjectDirs(Path... workspaceRoots) {
+	public List<Path> collectAllProjectDirs(Path... workspaceRoots) {
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 
-		Map<String, Path> allProjectDirs = collectAllProjects(workspaceRoots, pdCache);
+		Map<String, Path> projects = collectAllProjects(workspaceRoots, pdCache);
+		Map<String, Path> dependencies = collectNecessaryDependencies(projects, pdCache);
 
-		Map<String, Path> dependencies = collectNecessaryDependencies(allProjectDirs, pdCache);
-		dependencies.forEach(allProjectDirs::putIfAbsent);
+		List<Path> sortedProjects = new ArrayList<>(projects.values());
+		Collections.sort(sortedProjects);
 
-		return new LinkedHashSet<>(allProjectDirs.values());
+		List<Path> sortedDependecies = new ArrayList<>();
+		for (Map.Entry<String, Path> dependency : dependencies.entrySet()) {
+			if (!projects.containsKey(dependency.getKey())) {
+				sortedDependecies.add(dependency.getValue());
+			}
+		}
+		Collections.sort(sortedDependecies);
+
+		sortedProjects.addAll(sortedDependecies);
+
+		return sortedProjects;
 	}
 
 	/** Searches all projects in the given array of workspace directories */
 	private Map<String, Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
-		Map<String, Path> allProjectDirs = new LinkedHashMap<>();
+		Map<String, Path> allProjectDirs = new HashMap<>();
 		for (Path wsRoot : workspaceRoots) {
 
 			Path projectRoot = getProjectRootOrUnchanged(wsRoot);

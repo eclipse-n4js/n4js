@@ -34,11 +34,14 @@ public class N4jscMain {
 
 		final N4jscOptions options = getOptions(args);
 
-		if (!options.isVerbose()) {
+		if (options.isVerbose()) {
+			Logger.getRootLogger().setLevel(Level.DEBUG);
+		} else {
 			Logger.getRootLogger().setLevel(Level.ERROR);
 		}
 		LOG.info("Starting n4jsc (language version " + N4JSLanguageUtils.getLanguageVersion()
 				+ ", commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
+		LOG.info("Log level: " + Logger.getRootLogger().getLevel());
 
 		// inform user about data collection
 		if (options.isDefinedPerformanceOption()) {

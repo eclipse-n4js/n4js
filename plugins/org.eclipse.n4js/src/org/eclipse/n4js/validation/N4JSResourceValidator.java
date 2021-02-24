@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -26,6 +27,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
@@ -109,7 +111,21 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 				return Collections.singletonList(issue);
 			}
 		}
-		return super.validate(resource, mode, cancelIndicator);
+
+		List<Issue> issues = super.validate(resource, mode, cancelIndicator);
+
+		if (resource instanceof N4JSResource) {
+			final N4JSResource resourceCasted = (N4JSResource) resource;
+			ASTMetaInfoCache cache = resourceCasted.getASTMetaInfoCache();
+			if (cache.hasUnknownTypeRef()) {
+				boolean hasErrors = issues.stream().anyMatch(issue -> issue.getSeverity() == Severity.ERROR);
+				if (!hasErrors) {
+					final String msg = IssueCodes.getMessageForTYS_UNKNOWN_TYPE_REF();
+					createFileIssue(resource, msg, IssueCodes.TYS_UNKNOWN_TYPE_REF);
+				}
+			}
+		}
+		return issues;
 	}
 
 	@Override

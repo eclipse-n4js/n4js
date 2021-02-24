@@ -50,14 +50,16 @@ public class SystemOutRedirecter {
 
 	/** Restores everything. */
 	final public void unset() {
-		System.out.flush();
-		System.err.flush();
-		System.out.close();
-		System.err.close();
-		System.setOut(oldSystemOut);
-		System.setErr(oldSystemErr);
-		redirectOut = null;
-		redirectErr = null;
+		if (oldSystemOut != null && oldSystemErr != null) {
+			System.out.flush();
+			System.err.flush();
+			System.out.close();
+			System.err.close();
+			System.setOut(oldSystemOut);
+			System.setErr(oldSystemErr);
+			redirectOut = null;
+			redirectErr = null;
+		}
 	}
 
 	/** Clear output from {@link System#out} that was recorded so far. */

@@ -1,5 +1,0 @@
-{
-  "private": true,
-  "name": "YarnWorkspaceProject",
-  "workspaces": ["packages/*"]
-}

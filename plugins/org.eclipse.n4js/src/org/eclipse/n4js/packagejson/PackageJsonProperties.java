@@ -22,6 +22,7 @@ import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
+import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.UtilN4;
@@ -34,6 +35,7 @@ import com.google.common.collect.Lists;
  */
 public enum PackageJsonProperties {
 
+	// NPM properties
 	/** Key of package.json property "name". */
 	NAME("name", "Npm name"),
 	/** Key of package.json property "version". */
@@ -46,14 +48,28 @@ public enum PackageJsonProperties {
 	DEV_DEPENDENCIES(UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES, "Development dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "main". */
 	MAIN("main", "Main module. Path is relative to package root"),
-	/** Key of package.json property "n4js". */
-	N4JS("n4js", "N4JS section", JSONObject.class),
 
-	// properties of other tools:
+	// Yarn properties
+	/**
+	 * Short version of {@link #WORKSPACES_OBJECT}. @see {@link #PACKAGES}.
+	 */
+	WORKSPACES_ARRAY("workspaces", "Array of projects names or glob that are members of the yarn workspace",
+			JSONArray.class, "[packages/*]"),
+	/** Key of package.json property used by yarn workspace concept to define the workspace. */
+	WORKSPACES_OBJECT("workspaces", "Projects definition of the yarn workspace", JSONObject.class),
+	/**
+	 * Key of package.json property used by yarn workspace concept denoting projects Array of projects names or glob
+	 * contained in the workspace.
+	 */
+	PACKAGES("packages", "Array of projects names or glob that are members of the yarn workspace", JSONArray.class,
+			"[packages/*]", WORKSPACES_OBJECT),
 	/** Key of package.json property used by yarn workspace concept denoting projects contained in the workspace. */
-	WORKSPACES("workspaces", "Projects that are members of the yarn workspace", JSONArray.class),
+	NOHOIST("nohoist", "Array of project names or glob that will not be hoisted by yarn", JSONArray.class,
+			"[packages/*]", WORKSPACES_OBJECT),
 
-	// properties in section "n4js":
+	// N4JS properties
+	/** Key of package.json property "n4js". */
+	N4JS(UtilN4.PACKAGE_JSON__N4JS, "N4JS section", JSONObject.class),
 	/** Key of package.json property "projectType". */
 	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), N4JS),
 	/** Key of package.json property "vendorId". */
@@ -63,7 +79,7 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "output". */
 	OUTPUT("output", "Output folder. Default is '.'", ".", N4JS),
 	/** Key of package.json property "sources". */
-	SOURCES("sources", "Source folders", JSONObject.class, N4JS),
+	SOURCES(UtilN4.PACKAGE_JSON__SOURCES, "Source folders", JSONObject.class, N4JS),
 	/** Key of package.json property "moduleFilters". */
 	MODULE_FILTERS("moduleFilters", "", JSONObject.class, N4JS),
 	/** Key of package.json property "mainModule". */
@@ -95,7 +111,7 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "test" inside "sources". */
 	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES);
 
-	/** section of the property within the package.json */
+	/** section of the property within the package.json as a path of parents starting at the top level */
 	final public PackageJsonProperties[] parents;
 	/** name of the property */
 	final public String name;
@@ -132,20 +148,36 @@ public enum PackageJsonProperties {
 		this.valueType = valueType;
 	}
 
-	static private Map<String, PackageJsonProperties> nameToEnum = new HashMap<>();
+	static private Map<String, Map<Class<? extends JSONValue>, PackageJsonProperties>> nameToEnum = new HashMap<>();
+
 	static {
 		for (PackageJsonProperties prop : PackageJsonProperties.values()) {
-			if (nameToEnum.containsKey(prop.name)) {
-				nameToEnum.put(prop.name, null); // ensure that props with the same name return null here
-			} else {
-				nameToEnum.put(prop.name, prop);
+			if (!nameToEnum.containsKey(prop.name)) {
+				nameToEnum.put(prop.name, new HashMap<>());
 			}
+			Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(prop.name);
+			if (typeMap.containsKey(prop.valueType)) {
+				throw new IllegalStateException("");
+			}
+			typeMap.put(prop.valueType, prop);
 		}
 	}
 
 	/** @return the result of {@link Enum#valueOf(Class, String)} or null. Does not throw an {@link Exception}. */
-	static public PackageJsonProperties valueOfNameOrNull(String name) {
-		return nameToEnum.get(name);
+	static public PackageJsonProperties valueOfNameValuePairOrNull(NameValuePair nvPair) {
+		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(nvPair.getName());
+		if (typeMap != null) {
+			Class<? extends JSONValue> valueClass = nvPair.getValue().getClass();
+			if (valueClass != null) {
+				if (valueClass.isInterface()) {
+					return typeMap.get(valueClass);
+				} else if (valueClass.getInterfaces().length > 0) {
+					Class<?>[] valueInterfaces = valueClass.getInterfaces();
+					return typeMap.get(valueInterfaces[0]);
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

@@ -12,7 +12,6 @@ module org.eclipse.n4js.semver.model.GenerateSemverModel
 
 import org.eclipse.emf.mwe.utils.*
 import org.eclipse.xtext.generator.*
-import org.eclipse.xtext.ui.generator.*
 
 var projectName = "org.eclipse.n4js.semver.model"
 var projectPath = "../${projectName}"

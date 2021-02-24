@@ -80,6 +80,12 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypeRefsPackage.TYPE_ARGUMENT: {
+				TypeArgument typeArgument = (TypeArgument)theEObject;
+				T result = caseTypeArgument(typeArgument);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypeRefsPackage.TYPE_REF: {
 				TypeRef typeRef = (TypeRef)theEObject;
 				T result = caseTypeRef(typeRef);
@@ -247,12 +253,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypeRefsPackage.TYPE_ARGUMENT: {
-				TypeArgument typeArgument = (TypeArgument)theEObject;
-				T result = caseTypeArgument(typeArgument);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypeRefsPackage.WILDCARD: {
 				Wildcard wildcard = (Wildcard)theEObject;
 				T result = caseWildcard(wildcard);
@@ -376,6 +376,21 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseVersionable(Versionable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Type Argument</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Type Argument</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTypeArgument(TypeArgument object) {
 		return null;
 	}
 
@@ -616,21 +631,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTypeTypeRef(TypeTypeRef object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Type Argument</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Type Argument</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTypeArgument(TypeArgument object) {
 		return null;
 	}
 

@@ -1,9 +1,0 @@
-import {C} from "sub/module.with.dots";
-import {D} from "folder.with.many.dots/another.module.with.dots";
-import {D as D2} from "folder/with/many/dots/another.module.with.dots";
-import {D as D3} from "folder/with/many/dots/another/module/with/dots";
-
-new C().m();
-new D().m();
-new D2().m();
-new D3().m();

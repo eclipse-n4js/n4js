@@ -33,10 +33,6 @@ public interface URLVersionRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Version Specifier</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Version Specifier</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Version Specifier</em>' containment reference.
 	 * @see #setVersionSpecifier(URLVersionSpecifier)
@@ -59,10 +55,6 @@ public interface URLVersionRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Protocol</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Protocol</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Protocol</em>' attribute.
 	 * @see #setProtocol(String)
@@ -85,10 +77,6 @@ public interface URLVersionRequirement extends NPMVersionRequirement {
 	/**
 	 * Returns the value of the '<em><b>Url</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Url</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Url</em>' attribute.
 	 * @see #setUrl(String)

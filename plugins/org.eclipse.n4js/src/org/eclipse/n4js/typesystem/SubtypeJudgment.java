@@ -15,6 +15,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
@@ -48,6 +49,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
@@ -80,24 +82,40 @@ import com.google.common.collect.Iterables;
 /* package */ final class SubtypeJudgment extends AbstractJudgment {
 
 	/** See {@link N4JSTypeSystem#subtype(RuleEnvironment, TypeArgument, TypeArgument)}. */
-	public Result apply(RuleEnvironment G, TypeArgument left, TypeArgument right) {
-		Result result = doApply(G, left, right);
+	public Result apply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+		// get rid of wildcards by taking their upper/lower bound
+		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
+		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+		Result result = getResult(G, left, right);
+
 		if (result.isFailure()) {
 			// set default failure message
-			final String leftMsg = left != null ? left.getTypeRefAsString() : "<null>";
-			final String rightMsg = right != null ? right.getTypeRefAsString() : "<null>";
+			final String leftMsg = leftArg != null ? leftArg.getTypeRefAsString() : "<null>";
+			final String rightMsg = rightArg != null ? rightArg.getTypeRefAsString() : "<null>";
 			return result.setDefaultFailureMessage(leftMsg + " is not a subtype of " + rightMsg);
 		}
 		return result;
 	}
 
-	private Result doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+	private Result getResult(RuleEnvironment G, TypeRef left, TypeRef right) {
+		final Result firstResult = doApply(G, left, right);
+		if (firstResult.isFailure() && left.isDynamic()) {
+			// right<:left => left+<:right
+			final TypeRef nonDynamicCopy = TypeUtils.copy(left);
+			nonDynamicCopy.eSet(TypeRefsPackage.eINSTANCE.getBaseTypeRef_Dynamic(), false);
+			return doApply(G, right, nonDynamicCopy);
+		}
+		return firstResult;
+	}
 
-		// get rid of wildcards by taking their upper/lower bound
-		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
-		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+	private Result doApply(RuleEnvironment G, TypeRef left, TypeRef right) {
 		if (left == null || right == null) {
 			return failure();
+		}
+
+		if (left == right) {
+			// TODO: GH-2051: Comment out to see failing tests (search for 'GH-2051')
+			return success();
 		}
 
 		// ComposedTypeRef
@@ -179,6 +197,12 @@ import com.google.common.collect.Iterables;
 				final FunctionTypeRef rightFixed = (FunctionTypeRef) TypeUtils.createTypeRef(right.getDeclaredType());
 				TypeUtils.copyTypeModifiers(rightFixed, right);
 				return applyFunctionTypeExprOrRef(G, (FunctionTypeExprOrRef) left, rightFixed);
+			} else if (right instanceof ParameterizedTypeRef
+					&& (right.isUseSiteStructuralTyping() || right.isDefSiteStructuralTyping())) {
+				// special case: (string)=>number <: ~Object with { prop: string }
+				// Here, the actual function signature of 'left' is irrelevant and we can thus simply perform
+				// a structural subtype check with the built-in 'Function' on the left-hand side:
+				return applyParameterizedTypeRef(G, functionTypeRef(G), (ParameterizedTypeRef) right);
 			} else {
 				return resultFromBoolean(
 						isObject(G, right)

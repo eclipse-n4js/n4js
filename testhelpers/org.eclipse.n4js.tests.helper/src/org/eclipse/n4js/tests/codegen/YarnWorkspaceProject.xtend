@@ -17,6 +17,7 @@ import java.util.Map
 import java.util.Objects
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.utils.Strings
 import org.eclipse.n4js.utils.io.FileDeleter
 
 /**
@@ -27,8 +28,7 @@ public class YarnWorkspaceProject extends Project {
 	/** Name of the 'packages' folder, i.e. the folder containing the actual projects. */
 	public static final String PACKAGES = "packages";
 
-	final Map<String, Project> memberProjects = newHashMap();
-	final String workspacesFolderName;
+	final Map<String, Map<String, Project>> memberProjects = newLinkedHashMap();
 
 	/**
 	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
@@ -44,19 +44,35 @@ public class YarnWorkspaceProject extends Project {
 	 */
 	public new(String projectName, String vendorId, String vendorName, String workspacesFolderName) {
 		super(projectName, vendorId, vendorName, ProjectType.PLAINJS);
-		this.workspacesFolderName = workspacesFolderName;
+		this.memberProjects.put(workspacesFolderName, newHashMap());
+	}
+
+	public def void addWorkspaceName(String workspacesFolderName) {
+		this.memberProjects.put(workspacesFolderName, newHashMap());
 	}
 
 	public def void addMemberProject(Project project) {
-		this.memberProjects.put(project.name, project);
+		addMemberProject(memberProjects.keySet.iterator.next, project);
+	}
+
+	public def void addMemberProject(String workspaceFolderName, Project project) {
+		this.memberProjects.putIfAbsent(workspaceFolderName, newHashMap());
+		this.memberProjects.get(workspaceFolderName).put(project.name, project);
 	}
 
 	public def Collection<Project> getMemberProjects() {
-		return this.memberProjects.values();
+		val projects = newArrayList();
+		for (name2prj : memberProjects.values)
+			projects.addAll(name2prj.values);
+		return projects;
 	}
 
 	public def Project getMemberProject(String projectName) {
-		return this.memberProjects.get(projectName);
+		getMemberProject(memberProjects.keySet.iterator.next, projectName);
+	}
+
+	public def Project getMemberProject(String workspaceFolderName, String projectName) {
+		return this.memberProjects.get(workspaceFolderName).get(projectName);
 	}
 
 
@@ -64,12 +80,15 @@ public class YarnWorkspaceProject extends Project {
 	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
 	 */
 	public override String generate() '''
+		«IF !projectDescriptionContent.nullOrEmpty»«
+			projectDescriptionContent»
+		«ELSE»
 		{
 			"name": "«name»",
 			"version": "«version»",
 			"private": true,
 			"workspaces": [
-			    "«workspacesFolderName»/*"
+			    «Strings.join(", ", [wsName | '''"«wsName»/*"'''], memberProjects.keySet())»
 		    ],
 			"dependencies": {
 					«IF !projectDependencies.nullOrEmpty»
@@ -79,6 +98,7 @@ public class YarnWorkspaceProject extends Project {
 					«ENDIF»
 			}
 		}
+		«ENDIF»
 	'''
 
 
@@ -101,18 +121,21 @@ public class YarnWorkspaceProject extends Project {
 
 		var File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
 		val File projectDirectory = new File(parentDirectory, name);
-		val File workspacesDirectory = new File(new File(parentDirectory, name), workspacesFolderName);
-		if (workspacesDirectory.exists)
-			FileDeleter.delete(workspacesDirectory);
-		workspacesDirectory.mkdirs();
-
-		createWorkspaceProjects(workspacesDirectory);
+		
+		for (workspacesFolderName : memberProjects.keySet()) {
+			val File workspacesDirectory = new File(new File(parentDirectory, name), workspacesFolderName);
+			if (workspacesDirectory.exists)
+				FileDeleter.delete(workspacesDirectory);
+			workspacesDirectory.mkdirs();
+	
+			createWorkspaceProjects(memberProjects.get(workspacesFolderName), workspacesDirectory);
+		}
 
 		return projectDirectory;
 	}
 
-	private def void createWorkspaceProjects(File parentDirectory) {
-		for (project: memberProjects.values())
+	private def void createWorkspaceProjects(Map<String, Project> name2projects, File parentDirectory) {
+		for (project: name2projects.values())
 			project.create(parentDirectory.toPath);
 	}
 }

@@ -26,9 +26,10 @@ import java.util.stream.Collectors;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.n4js.tests.codegen.Project.SourceFolder;
+import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -55,6 +56,8 @@ public class TestWorkspaceManager {
 	static final public String TEST_DATA_FOLDER = "/test-workspace";
 	/** Vendor of the created test project */
 	static final public String VENDOR = "VENDOR";
+	/** Vendor of the created test project */
+	static final public String VENDOR_NAME = VENDOR + "_name";
 	/** Default name of the source folder */
 	static final public String DEFAULT_SOURCE_FOLDER = "src";
 	/** Default extension of test modules */
@@ -72,29 +75,36 @@ public class TestWorkspaceManager {
 	 */
 	static final public String CFG_DEPENDENCIES = "#DEPENDENCY";
 	/**
-	 * Reserved string to define the main module property "main" in the package.json.<br>
+	 * Reserved string to define the main module property "main" of a project, usually done in the package.json.<br>
 	 * see {@link Documentation#CFG_MAIN_MODULE}
 	 */
 	static final public String CFG_MAIN_MODULE = "#MAIN_MODULE";
 	/**
-	 * Reserved string to defined the source folder in the package.json.<br>
+	 * Reserved string to define the source folder of a project, usually done in the package.json.<br>
 	 * Usage is similar to {@link #CFG_MAIN_MODULE}, see {@link Documentation#CFG_MAIN_MODULE}.
 	 */
 	static final public String CFG_SOURCE_FOLDER = "#SOURCE_FOLDER";
 	/**
-	 * Reserved string to identify the directory 'node_modules'<br>
+	 * Reserved string placeholder for the directory 'node_modules'<br>
 	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
 	 */
 	static final public String CFG_NODE_MODULES = "#NODE_MODULES:";
 	/**
-	 * Reserved string to identify the src folder of a project<br>
+	 * Reserved string to define the workspaces folder name, usually done in the package.json of a yarn project.<br>
+	 * see {@link Documentation#CFG_WORKSPACES_FOLDER}
+	 */
+	static final public String CFG_WORKSPACES_FOLDER = "#CFG_WORKSPACES_FOLDER:";
+	/**
+	 * Reserved string placeholder for the src folder of a project<br>
 	 * see {@link #CFG_NODE_MODULES}
 	 */
 	static final public String CFG_SRC = "#SRC:";
+	/** Reserved string placeholder for the name of the yarn project */
+	static final public String CFG_YARN_PROJECT = "#CFG_YARN_PROJECT:";
 	/** Name of n4js library 'n4js-runtime' */
 	static final public String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
 	/** Default project object for 'n4js-runtime' */
-	static final public Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME, VENDOR, VENDOR + "_name",
+	static final public Project N4JS_RUNTIME_FAKE = new Project(N4JS_RUNTIME, VENDOR, VENDOR_NAME,
 			ProjectType.RUNTIME_ENVIRONMENT);
 
 	/**
@@ -128,26 +138,45 @@ public class TestWorkspaceManager {
 
 	/**
 	 * Returns file name and extension for a given file name. In case the given file name contains a known extension
-	 * (c.f. {@link N4JSGlobals#ALL_N4_FILE_EXTENSIONS}), this is recognized. Otherwise, the extension 'n4js' is added
-	 * as default.
+	 * (c.f. {@link N4JSGlobals#ALL_N4_FILE_EXTENSIONS}), this is recognized.
 	 */
 	public NameAndExtension getN4JSNameAndExtension(String fileName) {
 		String name = fileName;
 		String extension = null;
-		if (fileName != null && fileName.contains(".")) {
-			String[] split = fileName.split("\\.");
-			extension = split[split.length - 1];
-			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
-				name = fileName.substring(0, fileName.length() - extension.length() - 1);
+		if (fileName != null) {
+			int idxSlash = fileName.lastIndexOf('/');
+			int idxDot = fileName.indexOf('.', idxSlash);
+			if (idxDot >= 0) {
+				extension = fileName.substring(idxDot + 1);
+				if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
+					name = fileName.substring(0, idxDot);
+				}
 			}
 		}
 		return new NameAndExtension(name, extension);
+	}
+
+	/** Tells whether the test workspace manager has created a {@link #YARN_TEST_PROJECT}. */
+	public boolean isYarnWorkspace() {
+		File yarnProject = new File(getRoot(), YARN_TEST_PROJECT);
+		return yarnProject.isDirectory();
 	}
 
 	/** @return the workspace root folder as a {@link File}. */
 	public File getRoot() {
 		File root = new File(new File("").getAbsoluteFile(), TEST_DATA_FOLDER);
 		return root;
+	}
+
+	/**
+	 * @return the folder where workspace projects are located (this is either the {@link #getRoot() workspace root} or,
+	 *         in case of a yarn workspace, the packages folder).
+	 */
+	public File getProjectLocation() {
+		if (isYarnWorkspace()) {
+			return new File(new File(getRoot(), YARN_TEST_PROJECT), YarnWorkspaceProject.PACKAGES);
+		}
+		return getRoot();
 	}
 
 	/** Same as {@link #getProjectRoot(String)}, but for the {@link #DEFAULT_PROJECT_NAME default project}. */
@@ -231,6 +260,7 @@ public class TestWorkspaceManager {
 		if (Strings.isNullOrEmpty(moduleName)) {
 			return DEFAULT_MODULE_NAME;
 		}
+		moduleName = moduleName.startsWith("./") ? moduleName.substring(2) : moduleName;
 		return moduleName;
 	}
 
@@ -262,6 +292,7 @@ public class TestWorkspaceManager {
 		// standard case for modules ('moduleName' seems to denote the name of a module):
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
+
 		try {
 			List<Path> allMatches = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
@@ -305,7 +336,7 @@ public class TestWorkspaceManager {
 	 * {@link Pair}s.
 	 */
 	@SafeVarargs
-	public final Project createTestProjectOnDisk(Pair<String, String>... modulesContents) {
+	public final Project createTestProjectOnDisk(Pair<String, ? extends CharSequence>... modulesContents) {
 		return createTestProjectOnDisk(Arrays.asList(modulesContents));
 	}
 
@@ -313,21 +344,22 @@ public class TestWorkspaceManager {
 	 * Same as {@link #createTestProjectOnDisk(Map)}, but name and content of the modules can be provided as an iterable
 	 * of {@link Pair}s.
 	 */
-	public Project createTestProjectOnDisk(Iterable<? extends Pair<String, String>> modulesContents) {
-		Map<String, String> modulesContentsAsMap = Streams.stream(modulesContents)
+	public Project createTestProjectOnDisk(Iterable<? extends Pair<String, ? extends CharSequence>> modulesContents) {
+		Map<String, ? extends CharSequence> modulesContentsAsMap = Streams.stream(modulesContents)
 				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
 		return createTestProjectOnDisk(modulesContentsAsMap);
 	}
 
 	/** Creates the default project on file system. Adds dependency to n4js-runtime. */
-	public Project createTestProjectOnDisk(Map<String, String> modulesContents) {
+	public Project createTestProjectOnDisk(Map<String, ? extends CharSequence> modulesContents) {
 		return createTestOnDisk(getRoot().toPath(), ImmutableMap.of(DEFAULT_PROJECT_NAME, modulesContents));
 	}
 
 	/** Same as {@link #createTestOnDisk(Map)}, but accepts pairs instead of a map. */
 	@SafeVarargs
-	public final Project createTestOnDisk(Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
+	public final Project createTestOnDisk(
+			Pair<String, ? extends List<? extends Pair<String, ? extends CharSequence>>>... projectsModulesContents) {
 		Map<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
 		convertProjectsModulesContentsToMap(Arrays.asList(projectsModulesContents), projectsModulesContentsAsMap,
 				false);
@@ -340,26 +372,44 @@ public class TestWorkspaceManager {
 	 *
 	 * @return the single project created or, if several projects are created, the containing yarn workspace project.
 	 */
-	public Project createTestOnDisk(Map<String, Map<String, String>> projectsModulesContents) {
+	public Project createTestOnDisk(
+			Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
 		return createTestOnDisk(getRoot().toPath(), projectsModulesContents);
 	}
 
-	private Project createTestOnDisk(Path destination, Map<String, Map<String, String>> projectsModulesContents) {
+	private Project createTestOnDisk(Path destination,
+			Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
 
+		final Project project;
+		if (projectsModulesContents.size() == 1) {
+			Entry<String, ? extends Map<String, ? extends CharSequence>> singleProject = projectsModulesContents
+					.entrySet().iterator().next();
+			String projectName = singleProject.getKey();
+			Map<String, ? extends CharSequence> modulesContents = singleProject.getValue();
+			project = createSimpleProject(projectName, modulesContents, HashMultimap.create(), ProjectKind.TopLevel);
+		} else {
+			project = createYarnProject(projectsModulesContents);
+		}
+
+		Workspace workspace = new Workspace();
+		workspace.addProject(project);
+		createTestOnDisk(destination, workspace);
+
+		return project;
+	}
+
+	/** Creates the given project in the default root folder */
+	public Project createTestOnDisk(Workspace workspace) {
+		return createTestOnDisk(getRoot().toPath(), workspace);
+	}
+
+	/** Creates the given project in the given root folder */
+	public Project createTestOnDisk(Path destination, Workspace workspace) {
 		if (createdProject != null) {
 			throw new IllegalStateException("test was already created on disk");
 		}
 
-		if (projectsModulesContents.size() == 1) {
-			Entry<String, Map<String, String>> singleProject = projectsModulesContents.entrySet().iterator().next();
-			String projectName = singleProject.getKey();
-			Map<String, String> modulesContents = singleProject.getValue();
-			createdProject = createSimpleProject(projectName, modulesContents, HashMultimap.create(),
-					ProjectKind.TopLevel);
-		} else {
-			createdProject = createYarnProject(projectsModulesContents);
-		}
-
+		createdProject = workspace.getProjects().get(0); // TODO
 		destination.toFile().mkdirs();
 		createdProject.create(destination);
 
@@ -375,7 +425,7 @@ public class TestWorkspaceManager {
 		NodeModule
 	}
 
-	private Project createSimpleProject(String projectName, Map<String, String> modulesContents,
+	private Project createSimpleProject(String projectName, Map<String, ? extends CharSequence> modulesContents,
 			Multimap<String, String> dependencies, ProjectKind projectKind) {
 
 		if (projectName.equals(N4JS_RUNTIME) && (modulesContents == null || modulesContents.isEmpty())) {
@@ -386,13 +436,13 @@ public class TestWorkspaceManager {
 				? ProjectType.RUNTIME_ENVIRONMENT
 				: projectType;
 
-		Project project = new Project(projectName, VENDOR, VENDOR + "_name", prjType);
-		String customSourceFolderName = modulesContents.get(CFG_SOURCE_FOLDER);
-		SourceFolder sourceFolder = project
-				.createSourceFolder(customSourceFolderName != null ? customSourceFolderName : DEFAULT_SOURCE_FOLDER);
+		Project project = new Project(projectName, VENDOR, VENDOR_NAME, prjType);
+		CharSequence customSourceFolderName = modulesContents.get(CFG_SOURCE_FOLDER);
+		Folder sourceFolder = project.createSourceFolder(
+				customSourceFolderName != null ? customSourceFolderName.toString() : DEFAULT_SOURCE_FOLDER);
 
 		for (String moduleName : modulesContents.keySet()) {
-			String contents = modulesContents.get(moduleName);
+			String contents = modulesContents.get(moduleName).toString();
 			if (moduleName.equals(CFG_DEPENDENCIES)) {
 				String[] allDeps = contents.split(",");
 				for (String dependency : allDeps) {
@@ -429,7 +479,7 @@ public class TestWorkspaceManager {
 						project.addNodeModuleProject(nmProject);
 						project.addProjectDependency(nmProject.getName());
 					}
-					SourceFolder nmSourceFolder = nmProject.getSourceFolders().get(0);
+					Folder nmSourceFolder = nmProject.getSourceFolders().iterator().next();
 					createAndAddModule(contents, nmModuleName, nmSourceFolder);
 				}
 
@@ -438,7 +488,16 @@ public class TestWorkspaceManager {
 					throw new IllegalArgumentException("unknown reserved string: " + moduleName);
 				}
 
-				createAndAddModule(contents, moduleName, sourceFolder);
+				Folder moduleSpecificSourceFolder = sourceFolder;
+				if (moduleName.startsWith("/")) {
+					// use first segment as source folder
+					int endOfFirstSegment = moduleName.indexOf("/", 1);
+					String sourceFolderName = moduleName.subSequence(1, endOfFirstSegment).toString();
+					moduleName = moduleName.substring(endOfFirstSegment + 1);
+					moduleSpecificSourceFolder = project.createSourceFolder(sourceFolderName);
+				}
+
+				createAndAddModule(contents, moduleName, moduleSpecificSourceFolder);
 			}
 		}
 
@@ -457,18 +516,20 @@ public class TestWorkspaceManager {
 		return project;
 	}
 
-	private void createAndAddModule(String contents, String moduleName, SourceFolder nmSourceFolder) {
+	private void createAndAddModule(String contents, String moduleName, Folder nmSourceFolder) {
 		NameAndExtension nae = getN4JSNameAndExtension(moduleName);
 		Module module = nae.extension == null ? new Module(moduleName) : new Module(nae.name, nae.extension);
 		module.setContents(contents);
 		nmSourceFolder.addModule(module);
 	}
 
-	private Project createYarnProject(Map<String, Map<String, String>> projectsModulesContents) {
-		YarnWorkspaceProject yarnProject = new YarnWorkspaceProject(YARN_TEST_PROJECT, VENDOR, VENDOR + "_name");
+	private Project createYarnProject(
+			Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
+
+		YarnWorkspaceProject yarnProject = new YarnWorkspaceProject(YARN_TEST_PROJECT, VENDOR, VENDOR_NAME);
 		Multimap<String, String> dependencies = HashMultimap.create();
 		for (String projectNameWithSelector : projectsModulesContents.keySet()) {
-			Map<String, String> moduleContents = projectsModulesContents.get(projectNameWithSelector);
+			Map<String, ? extends CharSequence> moduleContents = projectsModulesContents.get(projectNameWithSelector);
 
 			String prjName = projectNameWithSelector;
 
@@ -476,6 +537,19 @@ public class TestWorkspaceManager {
 				prjName = prjName.substring(CFG_NODE_MODULES.length());
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.NodeModule);
 				yarnProject.addNodeModuleProject(project);
+
+			} else if (prjName.startsWith(CFG_WORKSPACES_FOLDER)) {
+				int idxCFG = CFG_WORKSPACES_FOLDER.length();
+				int idxSlash = prjName.indexOf("/");
+				String wsFolder = prjName.substring(idxCFG, idxSlash);
+				prjName = prjName.substring(idxSlash + 1);
+				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
+				yarnProject.addMemberProject(wsFolder, project);
+
+			} else if (prjName.equals(CFG_YARN_PROJECT)) {
+				if (moduleContents.containsKey(N4JSGlobals.PACKAGE_JSON)) {
+					yarnProject.setProjectDescriptionContent(moduleContents.get(N4JSGlobals.PACKAGE_JSON).toString());
+				}
 			} else {
 				Project project = createSimpleProject(prjName, moduleContents, dependencies, ProjectKind.Member);
 				yarnProject.addMemberProject(project);
@@ -548,27 +622,27 @@ public class TestWorkspaceManager {
 	 * </ol>
 	 */
 	/* package */ static Pair<String, String> convertProjectsModulesContentsToMap(
-			Iterable<? extends Pair<String, ? extends Iterable<Pair<String, String>>>> projectsModulesContentsAsPairs,
+			Iterable<? extends Pair<String, ? extends Iterable<? extends Pair<String, ? extends CharSequence>>>> projectsModulesContentsAsPairs,
 			Map<String, Map<String, String>> addHere,
 			boolean requireSelectedModule) {
 
 		String selectedProjectPath = null;
 		String selectedModule = null;
 		addHere.clear();
-		for (Pair<String, ? extends Iterable<Pair<String, String>>> project : projectsModulesContentsAsPairs) {
+		for (Pair<String, ? extends Iterable<? extends Pair<String, ? extends CharSequence>>> project : projectsModulesContentsAsPairs) {
 			String projectPath = project.getKey();
-			Iterable<? extends Pair<String, String>> modules = project.getValue();
+			Iterable<? extends Pair<String, ? extends CharSequence>> modules = project.getValue();
 			Map<String, String> modulesMap = null;
 			if (modules != null) {
 				modulesMap = new HashMap<>();
-				for (Pair<String, String> moduleContent : modules) {
+				for (Pair<String, ? extends CharSequence> moduleContent : modules) {
 					String moduleName = moduleContent.getKey();
 					if (moduleName.endsWith(MODULE_SELECTOR)) {
 						moduleName = moduleName.substring(0, moduleName.length() - 1);
 						selectedProjectPath = projectPath;
 						selectedModule = moduleName;
 					}
-					modulesMap.put(moduleName, moduleContent.getValue());
+					modulesMap.put(moduleName, moduleContent.getValue().toString());
 				}
 			}
 			addHere.put(projectPath, modulesMap);

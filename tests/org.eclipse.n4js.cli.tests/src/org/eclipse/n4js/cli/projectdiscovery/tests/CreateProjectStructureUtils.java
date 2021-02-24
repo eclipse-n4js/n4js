@@ -38,6 +38,7 @@ public class CreateProjectStructureUtils {
 		final boolean isPlainJS;
 		final String yarnWorkspacesFolder;
 		final String dependencies;
+		final String packagejson;
 		/**
 		 * If non-<code>null</code> this instance represents not a folder itself but a symbolic link to the folder at
 		 * the given path. The path is relative to the root folder of the project structure being created.
@@ -45,7 +46,7 @@ public class CreateProjectStructureUtils {
 		final Path symLinkTarget;
 
 		Folder(Folder parent, String folderName, boolean isWorkingDir, boolean isProject, boolean isPlainJS,
-				String yarnWorkspacesFolder, String dependencies, Path symLinkTarget) {
+				String yarnWorkspacesFolder, String dependencies, Path symLinkTarget, String packagejson) {
 
 			this.parent = parent;
 			this.folderName = folderName;
@@ -55,6 +56,7 @@ public class CreateProjectStructureUtils {
 			this.yarnWorkspacesFolder = yarnWorkspacesFolder;
 			this.dependencies = dependencies;
 			this.symLinkTarget = symLinkTarget;
+			this.packagejson = packagejson;
 		}
 
 		int getDepth() {
@@ -74,6 +76,7 @@ public class CreateProjectStructureUtils {
 				str += "[PROJECT";
 				str += (yarnWorkspacesFolder == null) ? "" : " workspaces= " + yarnWorkspacesFolder + " ";
 				str += (dependencies == null) ? "" : " dependencies= " + dependencies + " ";
+				str += (packagejson == null) ? "" : " package.json= " + packagejson + " ";
 				str += "]";
 			}
 			return str;
@@ -202,6 +205,7 @@ public class CreateProjectStructureUtils {
 		String yarnWorkspacesFolder = null;
 		String dependencies = null;
 		Path symLinkTarget = null;
+		String packagejson = null;
 
 		if (restLine.startsWith("[") && restLine.endsWith("]")) {
 			restLine = restLine.substring(1, restLine.length() - 1).trim();
@@ -210,32 +214,42 @@ public class CreateProjectStructureUtils {
 
 				restLine = restLine.substring("PROJECT".length()).trim();
 
-				if (restLine.startsWith("plainJS")) {
-					isPlainJS = true;
-					restLine = restLine.substring("plainJS".length()).trim();
-				}
-
-				if (restLine.startsWith("workspaces")) {
-					restLine = restLine.substring("workspaces".length()).trim();
+				if (restLine.startsWith("package.json")) {
+					restLine = restLine.substring("package.json".length()).trim();
 					if (restLine.startsWith("=")) {
 						restLine = restLine.substring(1).trim();
-						int startIndex = restLine.indexOf("[");
-						int endIndex = restLine.indexOf("]");
-						yarnWorkspacesFolder = restLine.substring(startIndex, endIndex + 1);
 
-						restLine = restLine.substring(endIndex + 1).trim();
+						packagejson = restLine;
 					}
-				}
+				} else {
 
-				if (restLine.startsWith("dependencies")) {
-					restLine = restLine.substring("dependencies".length()).trim();
-					if (restLine.startsWith("=")) {
-						restLine = restLine.substring(1).trim();
-						int startIndex = restLine.indexOf("{");
-						int endIndex = restLine.indexOf("}");
-						dependencies = restLine.substring(startIndex, endIndex + 1);
+					if (restLine.startsWith("plainJS")) {
+						isPlainJS = true;
+						restLine = restLine.substring("plainJS".length()).trim();
+					}
 
-						restLine = restLine.substring(endIndex + 1).trim();
+					if (restLine.startsWith("workspaces")) {
+						restLine = restLine.substring("workspaces".length()).trim();
+						if (restLine.startsWith("=")) {
+							restLine = restLine.substring(1).trim();
+							int startIndex = restLine.indexOf("[");
+							int endIndex = restLine.indexOf("]");
+							yarnWorkspacesFolder = restLine.substring(startIndex, endIndex + 1);
+
+							restLine = restLine.substring(endIndex + 1).trim();
+						}
+					}
+
+					if (restLine.startsWith("dependencies")) {
+						restLine = restLine.substring("dependencies".length()).trim();
+						if (restLine.startsWith("=")) {
+							restLine = restLine.substring(1).trim();
+							int startIndex = restLine.indexOf("{");
+							int endIndex = restLine.indexOf("}");
+							dependencies = restLine.substring(startIndex, endIndex + 1);
+
+							restLine = restLine.substring(endIndex + 1).trim();
+						}
 					}
 				}
 			} else if (restLine.startsWith("SYMLINK_TO_PATH")) {
@@ -251,7 +265,7 @@ public class CreateProjectStructureUtils {
 		}
 
 		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, yarnWorkspacesFolder, dependencies,
-				symLinkTarget);
+				symLinkTarget, packagejson);
 	}
 
 	/** Creates the folder structure specified by {@link ProjectDiscoveryTestData} in the given dir */
@@ -283,21 +297,26 @@ public class CreateProjectStructureUtils {
 	}
 
 	private static void createPackageJson(File folderFile, Folder folder) {
-		String contents = "{";
-		if (folder.yarnWorkspacesFolder == null) {
-			String projectName = folder.folderName;
-			if (folder.parent != null && folder.parent.folderName.startsWith("@")) {
-				projectName = folder.parent.folderName + "/" + projectName;
-			}
-			contents += "\"name\": \"" + folder.folderName + "\", ";
-			if (!folder.isPlainJS) {
-				contents += "\"n4js\": {\"projectType\": \"library\"}";
-			}
+		String contents = null;
+		if (folder.packagejson != null) {
+			contents = folder.packagejson;
 		} else {
-			contents += "\"private\": true, \"workspaces\": " + folder.yarnWorkspacesFolder + "";
+			contents = "{";
+			if (folder.yarnWorkspacesFolder == null) {
+				String projectName = folder.folderName;
+				if (folder.parent != null && folder.parent.folderName.startsWith("@")) {
+					projectName = folder.parent.folderName + "/" + projectName;
+				}
+				contents += "\"name\": \"" + folder.folderName + "\", ";
+				if (!folder.isPlainJS) {
+					contents += "\"n4js\": {\"projectType\": \"library\"}";
+				}
+			} else {
+				contents += "\"private\": true, \"workspaces\": " + folder.yarnWorkspacesFolder + "";
+			}
+			contents += (folder.dependencies == null) ? "" : ", \"dependencies\":" + folder.dependencies;
+			contents += "}";
 		}
-		contents += (folder.dependencies == null) ? "" : ", \"dependencies\":" + folder.dependencies;
-		contents += "}";
 
 		File packageJson = new File(folderFile, N4JSGlobals.PACKAGE_JSON);
 

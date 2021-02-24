@@ -10,78 +10,19 @@
  */
 package org.eclipse.n4js.ide.tests.buildorder
 
-import com.google.inject.Injector
-import java.util.Collection
-import java.util.List
-import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.eclipse.n4js.utils.Strings
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 import org.junit.Test
-
-import static org.junit.Assert.*
-import org.eclipse.n4js.xtext.workspace.BuildOrderFactory
 
 /**
  * Test for build order
  */
-class BuildOrderTest extends AbstractIdeTest {
+class BuildOrderTest extends AbstractBuildOrderTest {
 
-	private XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
-	private BuildOrderFactory projectBuildOrderFactory;
-
-	override Injector createInjector() {
-		val Injector injector = super.createInjector();
-		workspaceConfigProvider = injector.getInstance(XWorkspaceConfigSnapshotProvider);
-		projectBuildOrderFactory = injector.getInstance(BuildOrderFactory);
-		return injector;
-	}
-
-	/**
-	 * @param expectation
-	 *            string of project names ordered in build order
-	 * @param projectsModulesContents
-	 *            test workspace
-	 */
-	@SafeVarargs
-	def final void test(String buildOrder, Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
-		test(buildOrder, emptyList, projectsModulesContents);
-	}
-
-	/**
-	 * @param expectation
-	 *            string of project names ordered in build order
-	 * @param projectsModulesContents
-	 *            test workspace
-	 */
-	@SafeVarargs
-	def final void test(String buildOrder, Collection<Collection<String>> cycles, Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
-		testWorkspaceManager.createTestOnDisk(projectsModulesContents);
-		startAndWaitForLspServer();
-
-		val workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
-		val projectBuildOrderInfo = projectBuildOrderFactory.createBuildOrderInfo(workspaceConfig);
-		val boIterator = projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig).visitAll();
-		try {
-			val String names = IteratorExtensions.join(boIterator, ", ", [it.name]);
-			assertEquals(buildOrder, names);
-		} catch (Exception exc) {
-			throw new RuntimeException("Never happens since toString never throws an exception. Bogus xtext warning", exc)
-		};
-		assertEquals(cycles.size, projectBuildOrderInfo.getProjectCycles.size);
-		val expectedCycles = cycles.map[Strings.join(", ", it)].toSet;
-		for (cycle : projectBuildOrderInfo.getProjectCycles) {
-			val detectedCycle = Strings.join(", ", cycle);
-			assertTrue(expectedCycles.contains(detectedCycle));
-		}
-	}
-	
-	
 	@Test
 	def void testSingleDependency1() {
 		test("yarn-test-project, n4js-runtime, P1", 
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime
 				'''
 			]
@@ -91,14 +32,14 @@ class BuildOrderTest extends AbstractIdeTest {
 	@Test
 	def void testTwoDependencies1() {
 		test("yarn-test-project, n4js-runtime, P1, P2", 
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime
 				'''
 			]
@@ -108,14 +49,14 @@ class BuildOrderTest extends AbstractIdeTest {
 	@Test
 	def void testTwoDependencies2() {
 		test("yarn-test-project, n4js-runtime, P1, P2", 
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P1
 				'''
@@ -126,15 +67,15 @@ class BuildOrderTest extends AbstractIdeTest {
 	@Test
 	def void testTwoDependencies3() {
 		test("yarn-test-project, n4js-runtime, P2, P1", 
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P2
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime
 				'''
 			]
@@ -145,15 +86,15 @@ class BuildOrderTest extends AbstractIdeTest {
 	def void testCycle1() {
 		test("yarn-test-project, n4js-runtime, P2, P1",
 			#[#["P1", "P2"]],
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P2
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P1
 				'''
@@ -165,21 +106,21 @@ class BuildOrderTest extends AbstractIdeTest {
 	def void testCycle2() {
 		test("yarn-test-project, n4js-runtime, P2, P1, P3",
 			#[#["P1", "P2"]],
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P2
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P1
 				'''
 			],
 			"P3" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P1
 				'''
@@ -191,21 +132,21 @@ class BuildOrderTest extends AbstractIdeTest {
 	def void testCycle3() {
 		test("yarn-test-project, n4js-runtime, P3, P2, P1",
 			#[#["P1", "P2", "P3"]],
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P2
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P3
 				'''
 			],
 			"P3" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P1
 				'''
@@ -217,27 +158,27 @@ class BuildOrderTest extends AbstractIdeTest {
 	def void testCycles1() {
 		test("yarn-test-project, n4js-runtime, P2, P1, P4, P3",
 			#[#["P1", "P2"], #["P3", "P4"]],
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P2
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P1
 				'''
 			],
 			"P3" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P4
 				'''
 			],
 			"P4" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P3
 				'''
@@ -249,28 +190,28 @@ class BuildOrderTest extends AbstractIdeTest {
 	def void testCycles4000() {
 		test("yarn-test-project, n4js-runtime, P4, P3, P2, P1",
 			#[#["P1", "P2", "P3", "P4"], #["P2", "P3"]],
-			"#NODE_MODULES:n4js-runtime" -> null,
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P2
 				'''
 			],
 			"P2" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P3
 				'''
 			],
 			"P3" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P2,
 					P4
 				'''
 			],
 			"P4" -> #[
-				"#DEPENDENCY" -> '''
+				CFG_DEPENDENCIES -> '''
 					n4js-runtime,
 					P1
 				'''

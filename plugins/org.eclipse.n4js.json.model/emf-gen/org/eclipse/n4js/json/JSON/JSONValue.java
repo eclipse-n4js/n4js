@@ -11,6 +11,7 @@
 package org.eclipse.n4js.json.JSON;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -29,7 +30,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface JSONValue extends EObject {
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -56,4 +56,5 @@ public interface JSONValue extends EObject {
 	 * @generated
 	 */
 	EList<EObject> getChildren();
+
 } // JSONValue

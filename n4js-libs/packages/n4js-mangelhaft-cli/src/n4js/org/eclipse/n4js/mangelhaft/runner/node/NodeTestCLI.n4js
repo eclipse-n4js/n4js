@@ -100,6 +100,6 @@ export public class NodeTestCLI {
         return lib_nomnom.script("n4js-mangelhaft")
                          .help(nomnomHelp)
                          .options(nomnomOptions)
-                         .parse() as NodeTestOptions;
+                         .parse();
     }
 }

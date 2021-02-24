@@ -1,3 +1,0 @@
-0=${languageVersion}
-1=${buildTime}
-2=${gitSha1}

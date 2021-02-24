@@ -10,8 +10,11 @@
  */
 package org.eclipse.n4js.projectModel.names;
 
+import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_PREFIX;
+import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR;
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -31,6 +34,16 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	public N4JSProjectName(String name) {
 		this.name = Preconditions.checkNotNull(name);
 		Preconditions.checkArgument(name.indexOf(NPM_SCOPE_SEPARATOR_ECLIPSE) < 0, name);
+		if (name.indexOf(NPM_SCOPE_SEPARATOR) >= 0) {
+			Preconditions.checkArgument(name.startsWith(NPM_SCOPE_PREFIX), name);
+		}
+	}
+
+	/**
+	 * Constructor
+	 */
+	public N4JSProjectName(String scopeName, String plainName) {
+		this(Preconditions.checkNotNull(scopeName) + NPM_SCOPE_SEPARATOR + Preconditions.checkNotNull(plainName));
 	}
 
 	/**
@@ -79,6 +92,13 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	 */
 	public boolean isEmpty() {
 		return name.isEmpty();
+	}
+
+	/**
+	 * Return true, if this name starts with {@link N4JSGlobals#N4JSD_SCOPE} followed by a slash.
+	 */
+	public boolean isScopeN4jsd() {
+		return name.startsWith(N4JSGlobals.N4JSD_SCOPE + "/");
 	}
 
 	@Override

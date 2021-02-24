@@ -87,8 +87,6 @@ Contributors:
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
 		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
 
-		<excludeJRE>false</excludeJRE>
-		
 		<!-- some memory -->
 		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
@@ -418,16 +416,6 @@ Contributors:
 				<enabled>false</enabled>
 				<updatePolicy>daily</updatePolicy>
 				<checksumPolicy>fail</checksumPolicy>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>fornax</id>
-			<url>http://www.fornax-platform.org/m2/repository</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>

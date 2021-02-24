@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
@@ -37,6 +38,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.SuperTypesList
@@ -684,4 +686,13 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 		return null;
 	}
 
+	private def boolean containsUnboundTypeVariables(TypeArgument typeArg) {
+		if (typeArg instanceof ParameterizedTypeRef) {
+			val declType = typeArg.declaredType;
+			return declType instanceof TypeVariable // ok, that's simple
+			|| (!typeArg.parameterized && declType.generic) // no type args, type variable is indirectly referenced from raw type
+			|| typeArg.typeArgs.exists[containsUnboundTypeVariables(it)] // transitively
+		}
+		return false;
+	}
 }

@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP */
+
+
+let fn: (string)=>boolean;
+
+
+// 1) from bug report:
+
+let obj: ~Object with { prop: string };
+// XPECT errors --> "Function is not a structural subtype of ~Object with { prop: string }: missing structural field prop." at "fn"
+obj = fn;
+
+
+// 2) but this should work, because function objects have a getter called "length":
+
+let objWithLength: ~Object with { get length(): number }
+// XPECT noerrors -->
+objWithLength = fn;

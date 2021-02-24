@@ -56,7 +56,7 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 		val projectFolder2 = new File(getRoot(), DEFAULT_PROJECT_NAME+"2");
 		FileCopier.copy(projectFolder, projectFolder2);
 		val packagejson2 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"2/package.json"));
-		changeFileOnDiskWithoutNotification(packagejson2, "test-project" -> "test-project2");
+		changeFileOnDiskWithoutNotification(packagejson2, DEFAULT_PROJECT_NAME -> DEFAULT_PROJECT_NAME+"2");
 
 
 		startAndWaitForLspServer();

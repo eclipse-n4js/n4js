@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -77,7 +76,7 @@ public class FileBasedWorkspaceInitializer implements XIWorkspaceConfigFactory {
 
 		File workspaceRoot = URIUtils.toFile(workspaceBaseURI);
 
-		Set<Path> allProjectLocations = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot.toPath());
+		List<Path> allProjectLocations = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot.toPath());
 
 		List<FileURI> allProjectURIs = new ArrayList<>();
 		for (Path path : allProjectLocations) {

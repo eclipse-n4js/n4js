@@ -18,10 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.external.LibraryManager;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
@@ -42,8 +40,6 @@ public abstract class AbstractProjectModelTest<Loc extends SafeURI<Loc>> {
 	private ValidationTestHelper validationTestHelper;
 	@Inject
 	private Provider<ResourceSet> resourceSetProvider;
-	@Inject
-	private LibraryManager libraryManager;
 
 	/***/
 	protected abstract AbstractProjectModelSetup<Loc> createSetup();
@@ -81,7 +77,6 @@ public abstract class AbstractProjectModelTest<Loc extends SafeURI<Loc>> {
 	public void setUp() {
 		setup = createSetup();
 		createTempProjects();
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 		assertNotNull(myProjectURI);
 		assertNotNull(libProjectURI);
 	}
@@ -119,7 +114,6 @@ public abstract class AbstractProjectModelTest<Loc extends SafeURI<Loc>> {
 
 	private void deleteTempProjects() {
 		setup.deleteTempProjects();
-		libraryManager.registerAllExternalProjects(new NullProgressMonitor());
 	}
 
 	private void createTempProjects() {

@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TClass
@@ -44,7 +45,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 
 /**
  * @see N4JSScopeProvider
@@ -55,7 +55,6 @@ class CircularReferencesScopingTest implements N4Scheme {
 
 	@Inject ResourceDescriptionsProvider resourceDescriptionsProvider
 	@Inject Provider<XtextResourceSet> resourceSetProvider
-	@Inject CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 
 	XtextResourceSet rs
 	IResourceDescriptions resourceDescriptions
@@ -123,7 +122,7 @@ class CircularReferencesScopingTest implements N4Scheme {
 		val child = rs.getResource(childURI, false) as N4JSResource
 		assertNotNull(sister)
 		assertNotNull(child)
-		if (!canLoadFromDescriptionHelper.loadFromSourceDeactivated) {
+		if (!CanLoadFromDescriptionHelper.isLoadFromSourceDeactivated()) {
 			// due to cyclic dependency, sister must be loaded from disk (not index)
 			assertTrue(sister.loaded)
 			assertFalse(sister.script.eIsProxy)

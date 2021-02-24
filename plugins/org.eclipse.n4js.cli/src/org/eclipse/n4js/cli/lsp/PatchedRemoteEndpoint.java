@@ -167,9 +167,9 @@ public class PatchedRemoteEndpoint extends RemoteEndpoint {
 							t);
 				}
 				responseMessage = createErrorResponseMessage(requestMessage, errorObject);
-				LOG.debug("Server errors: " + messageId + " / " + requestMessage.getMethod());
+				LOG.error("Server errors: " + messageId + " / " + requestMessage.getMethod());
+				out.consume(responseMessage);
 			}
-			out.consume(responseMessage);
 			return null;
 		}).thenApply((obj) -> {
 			synchronized (receivedRequestMap) {

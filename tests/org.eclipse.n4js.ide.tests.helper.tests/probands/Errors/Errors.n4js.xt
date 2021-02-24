@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup
+   END_SETUP
+ */
+
+
+class B {
+	methodB() {	}
+}
+
+
+// test-0 XPECT noerrors -->
+var b0 : B = new B();
+
+// test-1 XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'b01'." at "b01"
+b01.methodB();
+
+// test-2 XPECT errors --> "" at "b01"
+b01.methodB();
+
+
+
+/* test-3 XPECT errors ---
+ *  "Couldn't resolve reference to IdentifiableElement 'b01'." at "b01"
+ *  "int is not a subtype of B." at "42"
+ * ---
+ */
+b01.methodB();
+b0 = 42;
+
+/* test-4 XPECT errors ---
+ *  "Couldn't resolve reference to IdentifiableElement 'b01'." at "b01"
+ *  "" at "42"
+ * ---
+ */
+b01.methodB();
+b0 = 42;
+
+/* test-5 XPECT errors ---
+ *  "" at "b01"
+ *  "int is not a subtype of B." at "42"
+ * ---
+ */
+b01.methodB();
+b0 = 42;
+
+
+
+// test-6 XPECT noerrors -->
+b0 = 42;
+
+
+// test-7 XPECT errors --> "" at ""
+b0 = 42;
+
+
+// test-8 XPECT errors --> "" at "B"
+b0 = 42;
