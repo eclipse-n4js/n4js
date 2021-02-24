@@ -133,7 +133,7 @@ public class XtFileDataParser {
 
 		TreeSet<XtFileData.MethodData> testMethodData1 = new TreeSet<>();
 		TreeSet<XtFileData.MethodData> testMethodData2 = new TreeSet<>();
-		fillTestMethodData(xtFileContent, testMethodData1, testMethodData2);
+		fillTestMethodData(xtFile.toString(), xtFileContent, testMethodData1, testMethodData2);
 
 		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData1,
 				testMethodData2, teardownMethodData);
@@ -207,7 +207,7 @@ public class XtFileDataParser {
 		}
 	}
 
-	static void fillTestMethodData(String xtFileContent,
+	static void fillTestMethodData(String fileName, String xtFileContent,
 			TreeSet<XtFileData.MethodData> testMethodData1, TreeSet<XtFileData.MethodData> testMethodData2) {
 
 		Set<MethodMatchResult> results = new TreeSet<>();
@@ -223,7 +223,7 @@ public class XtFileDataParser {
 
 		Map<String, Integer> methodNameCounters = new HashMap<>();
 		for (MethodMatchResult result : results) {
-			MethodData testMethodData = createMethodData(result, methodNameCounters);
+			MethodData testMethodData = createMethodData(fileName, result, methodNameCounters);
 			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
 		}
 	}
@@ -238,7 +238,8 @@ public class XtFileDataParser {
 		results.add(mmr);
 	}
 
-	private static MethodData createMethodData(MethodMatchResult result, Map<String, Integer> methodNameCounters) {
+	private static MethodData createMethodData(String fileName, MethodMatchResult result,
+			Map<String, Integer> methodNameCounters) {
 		String expectation = result.expectation;
 		if (result.artifacts != null) {
 			expectation = expectation.replaceAll(result.artifacts, "");
@@ -250,8 +251,8 @@ public class XtFileDataParser {
 		String args = result.methodAndArgs.substring(nameEndIdx).trim();
 		int counter = methodNameCounters.getOrDefault(name, 0);
 		methodNameCounters.put(name, counter + 1);
-		return new MethodData(result.comment, name, args, counter, expectation, result.offset, result.isFixme(),
-				result.isIgnore());
+		return new MethodData(fileName, result.comment, name, args, counter, expectation, result.offset,
+				result.isFixme(), result.isIgnore());
 	}
 
 	private static void addTestMethodData(Collection<XtFileData.MethodData> testMethodData1,

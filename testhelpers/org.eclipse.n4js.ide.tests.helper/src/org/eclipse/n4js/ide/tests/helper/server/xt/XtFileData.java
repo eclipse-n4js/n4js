@@ -23,6 +23,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.junit.runner.Description;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 
@@ -40,6 +41,8 @@ public class XtFileData {
 		/** Closing bracket used for the Xpect Eclipse Plugin to enable 'Open Xpect Method' in context menu */
 		static final public char CLOSE_BRACKET = '\u3015';
 
+		/** Name of the xt file this method is contained in. */
+		final public String fileName;
 		/** Test comment. Stated before the test keyword. */
 		final public String comment;
 		/** Test name. Stated after the test keyword. */
@@ -59,13 +62,15 @@ public class XtFileData {
 
 		/** Constructor */
 		public MethodData(String name) {
-			this("", name, "", 0, "", 0, false, false);
+			this("", "", name, "", 0, "", 0, false, false);
 		}
 
 		/** Constructor */
-		public MethodData(String comment, String name, String args, int count, String expectation, int offset,
+		public MethodData(String fileName, String comment, String name, String args, int count, String expectation,
+				int offset,
 				boolean isFixme, boolean isIgnore) {
 
+			this.fileName = fileName;
 			this.comment = comment.trim();
 			this.name = name;
 			this.args = args;
@@ -118,6 +123,10 @@ public class XtFileData {
 
 		@Override
 		public int compareTo(MethodData md) {
+			int nameCompareResult = fileName.compareTo(md.fileName);
+			if (nameCompareResult != 0) {
+				return nameCompareResult;
+			}
 			return offset - md.offset;
 		}
 
@@ -125,14 +134,14 @@ public class XtFileData {
 		public boolean equals(Object obj) {
 			if (obj instanceof MethodData) {
 				MethodData md = (MethodData) obj;
-				return md.offset == offset;
+				return Objects.equal(md.fileName, fileName) && md.offset == offset;
 			}
 			return false;
 		}
 
 		@Override
 		public int hashCode() {
-			return offset;
+			return fileName.hashCode() + offset;
 		}
 
 		@Override
