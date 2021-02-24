@@ -81,8 +81,8 @@ public class Folder {
 		if (!parentDirectory.directory)
 			throw new IOException("'" + parentDirectory + "' is not a directory");
 
-		var File folder = new File(parentDirectory, name);
-		folder.mkdir();
+		val File folder = new File(parentDirectory, name);
+		folder.mkdirs();
 
 		for (module : modules)
 			module.create(folder)
