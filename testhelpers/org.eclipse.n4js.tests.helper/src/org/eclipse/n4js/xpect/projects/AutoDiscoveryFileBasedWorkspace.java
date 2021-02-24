@@ -47,7 +47,7 @@ public class AutoDiscoveryFileBasedWorkspace extends FileBasedWorkspace {
 	}
 
 	@Override
-	public FileURI findProjectWith(FileURI nestedLocation) {
+	public synchronized FileURI findProjectWith(FileURI nestedLocation) {
 		final FileURI closestProjectLocation = findClosestProjectLocation(nestedLocation);
 		final FileURI knownProjectLocation = super.findProjectWith(nestedLocation);
 

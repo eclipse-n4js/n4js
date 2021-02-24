@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.eclipse.emf.common.util.URI;
 
@@ -44,11 +45,11 @@ public class HashedFileContent {
 				|| "json".equals(ext) && !"package.json".equals(uri.lastSegment())) {
 			this.hash = file.length();
 		} else {
-			try (InputStream s = new FileInputStream(file)) {
-				Hasher hasher = hashFunction.newHasher();
-				s.transferTo(Funnels.asOutputStream(hasher));
-				this.hash = hasher.hash().asLong();
+			Hasher hasher = hashFunction.newHasher();
+			try (InputStream s = new FileInputStream(file); OutputStream os = Funnels.asOutputStream(hasher);) {
+				s.transferTo(os);
 			}
+			this.hash = hasher.hash().asLong();
 		}
 	}
 

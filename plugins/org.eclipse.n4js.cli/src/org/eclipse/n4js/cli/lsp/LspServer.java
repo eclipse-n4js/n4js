@@ -143,7 +143,8 @@ public class LspServer {
 
 		InetSocketAddress address = new InetSocketAddress("localhost", options.getPort());
 
-		try (AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(address);) {
+		try (AsynchronousServerSocketChannel asc = AsynchronousServerSocketChannel.open();
+				AsynchronousServerSocketChannel serverSocket = asc.bind(address);) {
 
 			// Attention: the VSCode LSP extension is waiting for this line 'Listening for LSP clients'.
 			N4jscConsole.println(LSP_SYNC_MESSAGE + " on port " + options.getPort() + "...");
