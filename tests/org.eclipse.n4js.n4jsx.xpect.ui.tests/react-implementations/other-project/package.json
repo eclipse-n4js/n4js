@@ -1,0 +1,16 @@
+{
+	"name": "other-project",
+	"version": "16.0.0",
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "npm",
+		"vendorName": "npm",
+		"output": ".",
+		"mainModule": "react",
+		"sources": {
+			"external": [
+				"."
+			]
+		}
+	}
+}
