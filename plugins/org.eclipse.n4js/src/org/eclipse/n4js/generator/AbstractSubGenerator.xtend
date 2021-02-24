@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
-import org.eclipse.n4js.internal.RaceDetectionHelper
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
@@ -165,9 +164,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 			))
 			&& (!input.isStaticPolyfillingModule) // compile driven by filled type
 			&& hasNoPolyfillErrors(input,monitor)
-		if (!result) {
-			RaceDetectionHelper.log("Skip generation of artifacts from %s", input.URI)
-		}
 		return result
 	}
 

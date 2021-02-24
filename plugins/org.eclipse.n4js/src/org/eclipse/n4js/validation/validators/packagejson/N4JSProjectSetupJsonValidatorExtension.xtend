@@ -59,7 +59,6 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription
 import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.names.EclipseProjectName
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
@@ -1403,7 +1402,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 						val projectPath = iPath.toFile.toPath;
 						val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
 						if (nmFolder !== null) {
-							val projectName = new EclipseProjectName(project.name).toN4JSProjectName
+							val projectName = new N4JSProjectName(project.name);
 							res.put(projectName, nmFolder);
 						}
 					}

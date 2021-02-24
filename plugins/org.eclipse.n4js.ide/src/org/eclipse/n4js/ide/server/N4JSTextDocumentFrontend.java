@@ -65,9 +65,6 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
-	private SourceMapFileLocator sourceMapFileLocator;
-
-	@Inject
 	private ServerIncidentLogger serverIncidentLogger;
 
 	@Inject
@@ -124,7 +121,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	private Range findRange(TextDocumentPositionParams positionParams, Path genFilePath) {
 		try {
-			File sourceMapFile = sourceMapFileLocator.resolveSourceMapFromGen(genFilePath);
+			File sourceMapFile = SourceMapFileLocator.resolveSourceMapFromGen(genFilePath);
 			if (sourceMapFile != null) {
 				SourceMap sourceMap = SourceMap.loadAndResolve(sourceMapFile.toPath());
 				Position position = positionParams.getPosition();
