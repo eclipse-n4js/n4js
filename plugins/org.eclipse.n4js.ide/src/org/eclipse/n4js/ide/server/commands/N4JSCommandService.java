@@ -42,19 +42,17 @@ import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
-import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
-import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.ide.xtext.server.util.ParamHelper;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorUtils;
+import org.eclipse.n4js.xtext.server.ExecuteCommandParamsDescriber;
+import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.server.util.ParamHelper;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
@@ -330,6 +328,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 * @param cancelIndicator
 	 *            not required.
 	 */
+	@SuppressWarnings("unused")
 	@ExecutableCommandHandler(JSONCodeActionService.INSTALL_NPM)
 	public Void installNpm(
 			String packageName,
@@ -345,11 +344,12 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 				if (versionRequirement == null) {
 					versionRequirement = SemverUtils.createEmptyVersionRequirement();
 				}
-				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
-
-				N4JSProjectName projectName = new N4JSProjectName(packageName);
 // @formatter:off
+// FIXME GH-2073
 access.getLanguageClient().showMessage(new MessageParams(MessageType.Warning, "Installation of npm packages is disabled."));
+//				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
+//
+//				N4JSProjectName projectName = new N4JSProjectName(packageName);
 //				LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName,
 //						normalizedVersion);
 //				MultiStatus multiStatus = new MultiStatus("json", 1, null, null);

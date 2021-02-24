@@ -12,8 +12,8 @@ package org.eclipse.n4js.cli;
 
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.N4JSIdeSetup;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
+import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
 import org.eclipse.xtext.testing.GlobalRegistries;
 
 import com.google.common.base.Optional;

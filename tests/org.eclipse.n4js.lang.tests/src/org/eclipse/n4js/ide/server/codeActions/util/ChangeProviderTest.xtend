@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.server.codeActions.util
 
 import org.eclipse.lsp4j.TextEdit
 import org.eclipse.n4js.AbstractN4JSTest
-import org.eclipse.n4js.ide.xtext.server.XDocument
+import org.eclipse.n4js.xtext.server.XDocument
 import org.eclipse.xtext.ide.server.Document
 import org.junit.Test
 

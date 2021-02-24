@@ -12,8 +12,13 @@ package org.eclipse.n4js.ide.server;
 
 import java.util.function.Supplier;
 
-import org.eclipse.n4js.ide.xtext.server.DebugService.DebugServiceDefaultImpl;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.xtext.server.DebugService.DebugServiceDefaultImpl;
 
 import com.google.inject.Singleton;
 
@@ -30,6 +35,23 @@ public class N4JSDebugService extends DebugServiceDefaultImpl {
 		sb.append("Language commit : " + getFailSafe(N4JSLanguageUtils::getLanguageCommit));
 		sb.append(separator);
 		super.compileDebugInfo(sb, separator);
+	}
+
+	@Override
+	protected void appendResourceInfo(StringBuilder sb, Resource res) {
+		URI uri = res.getURI();
+		sb.append(uri != null ? uri.lastSegment() : "<null>");
+		if (res instanceof N4JSResource) {
+			N4JSResource resCasted = (N4JSResource) res;
+			Script script = resCasted.getScript();
+			TModule module = resCasted.getModule();
+			sb.append(" script: ");
+			sb.append(script != null ? (script.eIsProxy() ? "<proxy>" : "<no proxy>") : "<null>");
+			sb.append(" module: ");
+			sb.append(module != null ? (module.eIsProxy() ? "<proxy>" : "<no proxy>") : "<null>");
+		}
+		sb.append(" uri: ");
+		sb.append(uri);
 	}
 
 	private String getFailSafe(Supplier<String> supplier) {

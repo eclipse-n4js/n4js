@@ -15,14 +15,14 @@ import com.google.common.util.concurrent.Uninterruptibles
 import com.google.inject.Inject
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
+import org.eclipse.n4js.ide.server.N4JSStatefulIncrementalBuilder
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder
-import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService
-import org.eclipse.n4js.ide.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult
-import org.eclipse.n4js.ide.xtext.server.build.XIndexer.XIndexResult
-import org.eclipse.n4js.ide.xtext.server.build.XSource2GeneratedMapping
-import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder
-import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceBuilder
+import org.eclipse.n4js.xtext.server.QueuedExecutorService
+import org.eclipse.n4js.xtext.server.build.XClusteringStorageAwareResourceLoader.LoadResult
+import org.eclipse.n4js.xtext.server.build.XIndexer.XIndexResult
+import org.eclipse.n4js.xtext.server.build.XSource2GeneratedMapping
+import org.eclipse.n4js.xtext.server.build.XStatefulIncrementalBuilder
+import org.eclipse.n4js.xtext.server.build.XWorkspaceBuilder
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.service.AbstractGenericModule
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -57,7 +57,7 @@ class InitialBuildNotCancelableTest extends AbstractIdeTest {
 		}
 	}
 
-	private static final class TestStatefulIncrementalBuilder extends BuiltInAwareIncrementalBuilder {
+	private static final class TestStatefulIncrementalBuilder extends N4JSStatefulIncrementalBuilder {
 
 		@Inject
 		private OperationCanceledManager operationCanceledManager;

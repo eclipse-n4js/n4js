@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.eclipse.n4js.ide.xtext.server.build.WorkspaceAwareResourceSet
+import org.eclipse.n4js.xtext.server.build.WorkspaceAwareResourceSet
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeResourceLocator
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInSchemeProvider
