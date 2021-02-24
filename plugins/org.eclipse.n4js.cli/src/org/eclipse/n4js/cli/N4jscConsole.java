@@ -31,11 +31,13 @@ public class N4jscConsole {
 	}
 
 	/** Prints a message on the console */
+	@SuppressWarnings("resource")
 	static public void println(String msg) {
 		println(getPrintStream(), msg);
 	}
 
 	/** Prints a message on the console */
+	@SuppressWarnings("resource")
 	static public void print(String msg) {
 		print(getPrintStream(), msg);
 	}

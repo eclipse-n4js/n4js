@@ -251,6 +251,7 @@ public class ProjectDiscoveryHelper {
 
 		int depth = glob.contains("**") ? Integer.MAX_VALUE : glob.split("/").length + 1;
 
+		@SuppressWarnings("resource")
 		PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + location.resolve(glob));
 		try {
 			EnumSet<FileVisitOption> none = EnumSet.noneOf(FileVisitOption.class);

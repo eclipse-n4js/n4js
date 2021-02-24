@@ -28,6 +28,7 @@ public class LoggingPrintStream extends PrintStream {
 	protected final LspLogger lspLogger;
 
 	/** Creates a new {@link LoggingPrintStream}. */
+	@SuppressWarnings("resource")
 	public LoggingPrintStream(LspLogger lspLogger) {
 		super(OutputStream.nullOutputStream());
 		this.lspLogger = lspLogger;
