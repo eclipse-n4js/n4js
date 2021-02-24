@@ -224,8 +224,8 @@ public class XtSetupWorkspaceParser {
 			ModuleBuilder moduleBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
 			folderBuilder.setSourceFolder();
 			if (isThis) {
-				BuilderInfo bi = moduleBuilder.getBuilderInfo();
-				bi.moduleNameOfXtFile = moduleBuilder.getFolderBuilder().getName() + "/"
+				BuilderInfo bi = folderBuilder.getBuilderInfo();
+				bi.moduleNameOfXtFile = folderBuilder.getName() + "/"
 						+ moduleBuilder.getNameWithExtension();
 			}
 		} else {

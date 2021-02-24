@@ -27,6 +27,9 @@ public class XtResourceUtil {
 
 	/** @return an {@link EObject} of the given resource at the given offset */
 	static public EObject findEObject(XtextResource resource, int offset, int length) {
+		if (offset < 0) {
+			return null;
+		}
 		boolean haveRegion = length > 0;
 		int endOffset = offset + length;
 		EObject semanticObject = null;
@@ -58,6 +61,9 @@ public class XtResourceUtil {
 
 	/** @return {@link EStructuralFeature} of the given resource at the given offset */
 	static public EStructuralFeature findStructuralFeature(XtextResource resource, int offset) {
+		if (offset < 0) {
+			return null;
+		}
 		INode leaf = NodeModelUtils.findLeafNodeAtOffset(resource.getParseResult().getRootNode(), offset);
 		NodeIterator ni = null;
 		while (ni == null || ni.hasNext()) {

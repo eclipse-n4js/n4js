@@ -94,11 +94,12 @@ public class XtResourceEObjectAccessor {
 	private int checkAndGetOffset(MethodData data, String checkArg1, String optionalLocation) {
 		Preconditions.checkArgument(data.name.equals(checkArg1));
 		String optionalLocationStr = null;
-		if (data.args.length > 1) {
-			Preconditions.checkArgument(data.args[0].equals(optionalLocation));
-			Preconditions.checkArgument(data.args[1].startsWith("'"));
-			Preconditions.checkArgument(data.args[1].endsWith("'"));
-			optionalLocationStr = data.args[1].substring(1, data.args[1].length() - 1);
+		if (data.args.length() > 1) {
+			Preconditions.checkArgument(data.args.startsWith(optionalLocation + " "));
+			String rest = data.args.substring(optionalLocation.length()).trim();
+			Preconditions.checkArgument(rest.startsWith("'"));
+			Preconditions.checkArgument(rest.endsWith("'"));
+			optionalLocationStr = rest.substring(1, rest.length() - 1);
 		}
 		return getOffset(data.offset, optionalLocationStr);
 	}

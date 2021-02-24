@@ -21,7 +21,6 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.utils.Strings;
 import org.junit.runner.Description;
 
 import com.google.common.base.Preconditions;
@@ -46,7 +45,7 @@ public class XtFileData {
 		/** Test name. Stated after the test keyword. */
 		final public String name;
 		/** Test arguments. Stated after the test name. */
-		final public String[] args;
+		final public String args;
 		/** Test number. Tests with same names are grouped. */
 		final public int count;
 		/** Test expectation. Stated after the test divider ({@code -->} or {@code ---}). */
@@ -60,11 +59,11 @@ public class XtFileData {
 
 		/** Constructor */
 		public MethodData(String name) {
-			this("", name, new String[0], 0, "", 0, false, false);
+			this("", name, "", 0, "", 0, false, false);
 		}
 
 		/** Constructor */
-		public MethodData(String comment, String name, String[] args, int count, String expectation, int offset,
+		public MethodData(String comment, String name, String args, int count, String expectation, int offset,
 				boolean isFixme, boolean isIgnore) {
 
 			this.comment = comment.trim();
@@ -80,7 +79,7 @@ public class XtFileData {
 		/** @return Description for JUnit */
 		public Description getDescription(XtFileData xtFileData) {
 			String xpectMethodName = name + "~" + count;
-			String commentOrArgs = (comment.isBlank() ? getArgs() : comment);
+			String commentOrArgs = (comment.isBlank() ? args : comment);
 			String delimiter = !getModifier().isBlank() && !commentOrArgs.isBlank() ? " " : "";
 			String modifierWithCommentOrArgs = getModifier() + delimiter + commentOrArgs;
 			String xtFileLocation = OPEN_BRACKET + xtFileData.relativePath + CLOSE_BRACKET;
@@ -98,17 +97,12 @@ public class XtFileData {
 
 		/** @return all elements separated by space */
 		public String getMethodNameWithArgs() {
-			return name + (hasArgs() ? " " + getArgs() : "");
+			return name + (hasArgs() ? " " + args : "");
 		}
 
-		/** @return true iff {@link #getArgs()} returns a non-blank string */
+		/** @return true iff {@link #args} returns a non-blank string */
 		public boolean hasArgs() {
-			return !getArgs().isBlank();
-		}
-
-		/** @return all args separated by space */
-		public String getArgs() {
-			return Strings.join(" ", (Object[]) args);
+			return !args.isBlank();
 		}
 
 		/** @return the modifier's keyword or null if not existing */

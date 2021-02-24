@@ -131,7 +131,7 @@ public class WorkspaceBuilder {
 			OtherFileBuilder fileBuilder = new OtherFileBuilder(fName);
 			fileBuilder.fExtension = fExtension;
 			fileBuilder.content = content;
-			files.put(fName, fileBuilder);
+			files.put(fName + "." + fExtension, fileBuilder);
 			return fileBuilder;
 		}
 
@@ -140,7 +140,7 @@ public class WorkspaceBuilder {
 			ModuleBuilder moduleBuilder = new ModuleBuilder(fName);
 			moduleBuilder.fExtension = fExtension;
 			moduleBuilder.content = content;
-			modules.put(fName, moduleBuilder);
+			modules.put(fName + "." + fExtension, moduleBuilder);
 			return moduleBuilder;
 		}
 

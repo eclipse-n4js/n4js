@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -244,10 +243,11 @@ public class XtFileDataParser {
 		if (result.artifacts != null) {
 			expectation = expectation.replaceAll(result.artifacts, "");
 		}
-		String[] nameAndArgsArray = result.methodAndArgs.split("\\s+");
-		Preconditions.checkArgument(nameAndArgsArray.length > 0);
-		String name = nameAndArgsArray[0];
-		String[] args = Arrays.copyOfRange(nameAndArgsArray, 1, nameAndArgsArray.length);
+		int nameEndIdx = result.methodAndArgs.indexOf(" ");
+		nameEndIdx = nameEndIdx < 0 ? result.methodAndArgs.length() : nameEndIdx;
+		String name = result.methodAndArgs.substring(0, nameEndIdx);
+		Preconditions.checkArgument(!name.isBlank());
+		String args = result.methodAndArgs.substring(nameEndIdx + 1).trim();
 		int counter = methodNameCounters.getOrDefault(name, 0);
 		methodNameCounters.put(name, counter + 1);
 		return new MethodData(result.comment, name, args, counter, expectation, result.offset, result.isFixme(),
