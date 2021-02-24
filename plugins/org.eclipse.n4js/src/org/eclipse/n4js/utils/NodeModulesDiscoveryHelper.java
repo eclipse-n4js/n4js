@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 
@@ -126,9 +125,7 @@ public class NodeModulesDiscoveryHelper {
 	/**
 	 * For the given N4JS projects, this method will search and return all <code>node_modules</code> folders. The
 	 * returned list is ordered by priority, such that elements with a higher index have higher priority than those with
-	 * a lower index. This is in line with shadowing between <code>node_modules</code> locations in the library manager
-	 * (as configured in {@link ExternalLibraryPreferenceStore}), where the contents of locations with a higher index
-	 * shadow those of locations with a lower index.
+	 * a lower index.
 	 *
 	 * NOTE: this method is accessing the file system, so it should be deemed expensive!
 	 *

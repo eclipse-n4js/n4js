@@ -29,7 +29,6 @@ import java.util.Set;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
@@ -60,9 +59,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	private final InternalN4JSWorkspace<Loc> workspace;
 
 	@Inject
-	protected ExternalLibraryWorkspace externalLibraryWorkspace;
-
-	@Inject
 	private MultiCleartriggerCache cache;
 
 	@Inject
@@ -72,18 +68,10 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 	public N4JSProject getN4JSProject(URI location) {
 		checkArgument(location.isFile(), "Expecting file URI. Was: " + location);
-		boolean external = isExternal(location);
-		if (external) {
-			return getN4JSProject(externalLibraryWorkspace.fromURI(location), external);
-		}
-		return getN4JSProject(workspace.fromURI(location), external);
+		return getN4JSProject(workspace.fromURI(location), false);
 	}
 
 	public SafeURI<?> toProjectLocation(URI location) {
-		boolean external = isExternal(location);
-		if (external) {
-			return externalLibraryWorkspace.fromURI(location);
-		}
 		return workspace.fromURI(location);
 	}
 
@@ -91,14 +79,12 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		return getN4JSProject(location, isExternal(location.toURI()));
 	}
 
+	// FIXME GH-2073 remove!
 	/**
 	 * @param location
 	 * @return
 	 */
 	protected boolean isExternal(URI location) {
-		if (externalLibraryWorkspace != null && location.isFile()) {
-			return externalLibraryWorkspace.getProject(new FileURI(location)) != null;
-		}
 		return false;
 	}
 
@@ -127,10 +113,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		SafeURI<?> location = fromURI(workspace, nestedLocation);
 		if (location != null) {
 			return getN4JSProject(location, false);
-		}
-		SafeURI<?> externalLocation = fromURI(externalLibraryWorkspace, nestedLocation);
-		if (null != externalLocation) {
-			return getN4JSProject(externalLocation, true);
 		}
 		return null;
 	}
@@ -196,12 +178,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 	 * This delegates to {@link InternalN4JSWorkspace#getProjectDescription(URI)} to allow caching.
 	 */
 	public ProjectDescription getProjectDescription(SafeURI<?> location) {
-		if (location instanceof FileURI) {
-			ProjectDescription result = externalLibraryWorkspace.getProjectDescription((FileURI) location);
-			if (result != null) {
-				return result;
-			}
-		}
 		@SuppressWarnings("unchecked")
 		Loc casted = (Loc) location;
 		return workspace.getProjectDescription(casted);
@@ -221,7 +197,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 					return potentialResult;
 				}
 			}
-			return externalLibraryWorkspace.getProjectDescription((FileURI) location);
 		}
 		@SuppressWarnings("unchecked")
 		Loc casted = (Loc) location;
@@ -323,11 +298,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			Loc location = workspace.getLocation(runtimeLibrary);
 			if (location != null) {
 				providedRuntimes.add(getN4JSProject(location, false));
-			} else {
-				SafeURI<?> external = externalLibraryWorkspace.getLocation(runtimeLibrary);
-				if (external != null) {
-					providedRuntimes.add(getN4JSProject(external, true));
-				}
 			}
 		}
 
@@ -357,10 +327,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 
 		SafeURI<?> artifactLocation = findArtifactInFolder(workspace, sourceContainer.getLocation().toURI(),
 				pathStr);
-		if (null == artifactLocation) {
-			artifactLocation = findArtifactInFolder(externalLibraryWorkspace, sourceContainer.getLocation().toURI(),
-					pathStr);
-		}
 		return artifactLocation;
 	}
 
@@ -403,11 +369,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 				IN4JSProject tested = null;
 				if (hostLocation != null) {
 					tested = getN4JSProject(hostLocation, false);
-				} else {
-					hostLocation = externalLibraryWorkspace.getLocation(testedProject);
-					if (hostLocation != null) {
-						tested = getN4JSProject(hostLocation, true);
-					}
 				}
 				if (null != tested && tested.exists()) {
 					builder.add(tested);
@@ -439,10 +400,6 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 			return fromNullable(getN4JSProject(dependencyLocation));
 		}
 
-		dependencyLocation = externalLibraryWorkspace.getLocation(reference);
-		if (null != dependencyLocation) {
-			return fromNullable(getN4JSProject(dependencyLocation));
-		}
 		if (includeAbsentProjects) {
 			return fromNullable(newAbsentProject(reference.getProjectName()));
 		}
