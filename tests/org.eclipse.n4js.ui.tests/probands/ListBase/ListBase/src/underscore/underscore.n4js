@@ -1,0 +1,168 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+var undef;
+class WrappedObject{} class Map<T>{}
+export public class _ {
+    public static _(obj) : Object { return null; }
+    public static clean(str : string) : string { return null; }
+    public static capitalize(str : string) : string { return null; }
+    public static chop(string : string, step) : Array<string > { return null; }
+    public static count(string : string, substring : string) : number { return null; }
+    public static escapeHTML(string : string) : string { return null; }
+    public static unescapeHTML(string : string) : string { return null; }
+    public static insert(string : string, index : number, substring : string) : string { return null; }
+    public static isBlank(string : string) : boolean { return null; }
+    public static join(separator : string, ... strings : string) : string { return null; }
+    public static lines(string : string) : Array<string> { return null; }
+    public static splice(string : string, index : number, howmany : string, substring : string) : string { return null; }
+    public static startsWith(string : string, starts : string) : boolean { return null; }
+    public static endsWith(string : string, ends : string) : boolean { return null; }
+    public static succ(string : string) : string { return null; }
+    public static titleize(string : string) : string { return null; }
+    public static camelize(string : string) : string { return null; }
+    public static underscored(string : string) : string { return null; }
+    public static dasherize(string : string) : string { return null; }
+    public static humanize(string : string) : string { return null; }
+    public static words(string : string, delimiter : union{string,RegExp}=undefined) : Array<string> { return null; }
+    public static pad(string : string, length : number, padStr : string=undefined, type : string=undefined) : string { return null; }
+    public static lpad(string : string, length : number, padStr : string=undefined) : string { return null; }
+    public static rpad(string : string, length : number, padStr : string=undefined) : string { return null; }
+    public static lrpad(string : string, length : number, padStr : string=undefined) : string { return null; }
+    public static toNumber(string : string, decimals : number) : number { return null; }
+    public static strRight(string : string, pattern : string) : string { return null; }
+    public static strRightBack(string : string, pattern : string) : string { return null; }
+    public static strLeft(string : string, pattern : string) : string { return null; }
+    public static strLeftBack(string : string, pattern : string) : string { return null; }
+    public static stripTags(string : string) : string { return null; }
+    public static toSentence(array : Array<string>, delimiter : string=undefined, lastDelimiter : string=undefined) : string { return null; }
+    public static slugify(string : string) : string { return null; }
+    public static chain(obj : Object) : WrappedObject { return null; }
+    @Override
+    public static keys(object : Object) : Array<string> { return null; }
+    public static pairs(object : Object) : Array<Array<union{string,Object}>> { return null; }
+    public static every(list : Object, iterator : {function()}, context : Object=undefined) : boolean { return null; }
+    public static all(list : Object, iterator : {function()}, context : Object=undefined) : boolean { return null; }
+    public static some(list : Object, iterator : {function()}, context : Object=undefined) : boolean { return null; }
+    public static <T> any(list : Object, iterator : {function(T)}, context : Object=undefined) : boolean { return null; }
+    public static bind(func : {function()}, object : Object) : {function()} { return null; }
+    public static mem_fn(fn : union{string,{function()}}) : {function(o: Object)} { return null; }
+    public static bindAll(object : Object, ... methodNames : string) : Object { return null; }
+    public static <T> clone(object : T) : T { return null; }
+    public static <T> compact(array : Object) : Array<T> { return null; }
+    public static compose(... functions : {function()}) : {function()} { return null; }
+    public static debounce(func : {function()}, wait : number, immediate : boolean=undefined) : {function()} { return null; }
+    public static once(func : {function()}) : {function()} { return null; }
+    public static pick(object : Object, ... keys : Array<union{string,Object}>) : Object { return null; }
+    public static defaults(object : Object, ... defaults : Object) : Object { return null; }
+    public static defaults_(object : Object, ... defaults : Object) : Object { return null; }
+    public static visit(any : any, visitorFn : {function(a: any, u: union{number,string}):any}) {}
+    public static execAsync(func : Object, ... args : any) {}
+    public static defer(func : Object, ... args : any) {}
+    public static delay(func : {function()}, wait : number, ... args : any) : Object { return null; }
+    public static find(list : Object, iterator : {function()}, context : Object=undefined) : Object { return null; }
+    public static <T> detect(list : union{T,Array<T>}, iterator : {function(t: T): boolean}, context : Object=undefined) : T { return null; }
+    public static <T> each(list : Array<T>, iterator : {function(T, number=undefined)}, context : Object=undefined) : T { return null; }
+    public static forEach(list : Object, iterator : {function()}, context : Object=undefined) {}
+    public static extend(destination : Object, ... sources : Object) : Object { return null; }
+    public static <T> where(list : Object, criteria : Object) : Array<T> { return null; }
+    public static <T> filter(list : Object, iterator, ... context : Object) : Array<T> { return null; }
+    public static <T> select(list : Object, iterator : {function(T)}, ... context : Object) : Array<T> { return null; }
+    public static <T> flatten(array : Object, shallow : boolean=undefined) : Array<T> { return null; }
+    public static <T> first(array : Array<T>, n : number=undefined, guard : boolean=undefined) : T { return null; }
+    public static head(array : Object, n : number=undefined, guard : boolean=undefined) : Object { return null; }
+    public static take(array : Object, n : number=undefined, guard : boolean=undefined) : Object { return null; }
+    public static initial(array : Object, n : number=undefined, guard : boolean=undefined) : Object { return null; }
+    public static <T> identity(value : T) : T { return null; }
+    public static indexOf(array : Object, item : any, isSorted) : number { return null; }
+    public static include(list : Object, target : Object) : boolean { return null; }
+    public static contains(list : Object, target : Object) : boolean { return null; }
+    public static <T> intersection(... arrays : Object) : Array<T> { return null; }
+    public static <T> difference(array : Object, ... others : Object) : Array<T> { return null; }
+    public static reduce(list : Object, iterator : {function()}, memo : Object, context : Object=undefined) : Object { return null; }
+    public static foldl(list : Object, iterator : {function()}, memo : Object, context : Object=undefined) : Object { return null; }
+    public static inject(list : Object, iterator : {function()}, memo : Object, context : Object=undefined) : Object { return null; }
+    public static reduceRight(list : Object, iterator : {function()}, memo : Object, context : Object=undefined) : Object { return null; }
+    public static foldr(list : Object, iterator : {function()}, memo : Object, context : Object=undefined) : Object { return null; }
+    public static <T> intersect(... array : Array<T>) : Array<T> { return null; }
+    public static invoke(list : Object, methodName : string, ... args : any) {}
+    public static isArguments(object : Object) : boolean { return null; }
+    public static isArray(object : Object) : boolean { return null; }
+    public static isObject(object : Object) : boolean { return null; }
+    public static isBoolean(object : Object) : boolean { return null; }
+  	public static isDate(object : Object) : boolean { return null; }
+    public static isElement(object : Object) : boolean { return null; }
+    public static isEmpty(object : Object) : boolean { return null; }
+    public static isEqual(a : Object, b : Object) : boolean { return null; }
+    public static isFunction(object : Object) : boolean { return null; }
+    public static isNaN(object : Object) : boolean { return null; }
+    public static isNull(object : Object) : boolean { return null; }
+    public static isNumber(object : Object) : boolean { return null; }
+    public static isFinite(object : Object) : boolean { return null; }
+    public static isRegExp(object : Object) : boolean { return null; }
+    public static isString(object : Object) : boolean { return null; }
+    public static isUndefined(object : Object) : boolean { return null; }
+    public static isUndefOrNull(val : any) : boolean { return null; }
+    public static has(object : Object, key : string) : boolean { return null; }
+    public static <T> last(array : union{Array<T>,Map<T>,string}, n : number=undefined, guard : boolean=undefined) : union{T,string} { return null; }
+    public static <T> lastIndexOf(array : union{Array<T>,Map<T>}, item : T) : number { return null; }
+    public static <T> map(list : Object, iterator : {function()}, context : Object=undefined) : Array<T> { return null; }
+    public static <T> object(list : Array<string>, list1 : Array<T>) : Object { return null; }
+    public static <T> collect(list : Object, iterator : {function()}, context : Object=undefined) : Array<T> { return null; }
+    public static mapObject(obj : Object, fn : {function(a1: any, a2: any):any}, context : Object=undefined) : Object { return null; }
+    public static createArray(n : number, fn : {function(num: number):any}, context : Object=undefined) : Array<?> { return null; }
+    public static max(list : Object, iterator : {function()}=undefined, context : Object=undefined) : Object { return null; }
+    public static <T> shuffle(list : Object) : Array<T> { return null; }
+    public static memoize(func : {function()}, hashFunction : {function()}=undefined) : {function()} { return null; }
+    public static min(list : Object, iterator : {function()}=undefined, context : Object=undefined) : Object { return null; }
+    public static mixin(object : Object) { return null; }
+    public static noConflict() : Object { return null; }
+    public static <T> pluck(list : union{Object,Array<?>}, propertyName : union{string,number}) : Array<T> { return null; }
+    public static range(start : number=undefined, stop : number=undefined, step : number=undefined) : Array<number> { return null; }
+    public static <T> reject(list : Object, iterator : {function()}, context : Object=undefined) : Array<T> { return null; }
+    public static repeat(str : string, times : number, separator : string=undefined) : string { return null; }
+    public static size(list : Object) : number { return null; }
+    public static sortBy(list : Object, iterator : union{{function()},string}, context : Object=undefined) : Object { return null; }
+    public static groupBy(list : Object, iterator : union{{function()},string}) : Object { return null; }
+    public static sortedIndex(list : Object, item : Object, iterator : {function()}) : number { return null; }
+    public static sprintf(format : string, ... args : Object) : string { return null; }
+    public static tail(array : Object, index : number=undefined, guard : boolean=undefined) : Object { return null; }
+    public static rest(array : Object, index : number=undefined, guard : boolean=undefined) : Object { return null; }
+    public static tap(object : Object, interceptor : Object) : Object { return null; }
+    public static template(templateString : string, data : Object=undefined, settings : Object=undefined) : {function()} { return null; }
+    public static throttle(func : {function()}, wait : number) : {function()} { return null; }
+    public static times(n : number, iterator : {function()}, context : Object=undefined) {}
+    public static escape(string : string) : string { return null; }
+    public static result(object : Object, property : union{{function()},Object}) : union{{function()},Object} { return null; }
+    public static <T> toArray(iterable : Object) : Array<T> { return null; }
+    public static trim(string : string, characters : string=undefined) : string { return null; }
+    public static ltrim(string : string, characters : string=undefined) : string { return null; }
+    public static rtrim(string : string, characters : string=undefined) : string { return null; }
+    public static truncate(str, len : number, suffix : string=undefined, fullWords : boolean=undefined) : string { return null; }
+    public static uniq(array : Object, isSorted : boolean=undefined, iterator : {function()}=undefined) : Array<?> {
+        return null; 
+    }
+     public static unique(array : Object, isSorted : boolean=undefined) : Array<?> {
+        return null; 
+    }
+     public static union(... array : Array<?>) : Array<?> {
+        return null; 
+    }
+    public static uniqueId(prefix : string=undefined) : union{number,string} { return null; }
+    public static <T> values(object : Object) : Array<T> { return null; }
+    public static functions(object : Object) : Array<string> { return null; }
+    public static methods(object : Object) {}
+    public static <T> without(array : Object, ... items : Object) : Array<T> { return null; }
+    public static wrap(func : {function()}, wrapper : {function()}) : {function()} { return null; }
+    public static after(count : number, func : {function()}) : {function()} { return null; }
+    public static <T> zip(... arrays : Object) : Array<T> { return null; }
+}

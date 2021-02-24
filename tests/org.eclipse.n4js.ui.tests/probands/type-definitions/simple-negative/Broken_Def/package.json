@@ -1,0 +1,14 @@
+{
+	"name": "Broken_Def",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "definition",
+		"definesPackage": "Impl",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"src"
+			] 
+		}
+	}
+}

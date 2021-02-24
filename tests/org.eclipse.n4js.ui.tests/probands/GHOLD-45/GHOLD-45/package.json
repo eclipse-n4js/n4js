@@ -1,0 +1,23 @@
+{
+  "name": "GHOLD-45",
+  "version": "0.0.1",
+  "dependencies": {
+    "n4js-runtime": "0.1.0",
+    "org.eclipse.n4js.mangelhaft": "0.1.0",
+    "org.eclipse.n4js.mangelhaft.assert": "0.1.0"
+  },
+  "devDependencies": {
+    "n4js-mangelhaft-cli": "0.1.0"
+  },
+  "n4js": {
+    "projectType": "test",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "test": [
+        "test"
+      ]
+    }
+  }
+}
