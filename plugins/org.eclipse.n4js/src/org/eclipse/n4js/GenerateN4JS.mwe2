@@ -35,9 +35,6 @@ Workflow {
 				genericIde = {
 					enabled = true
 				}
-				eclipsePlugin = {
-					enabled = true
-				}
 				createEclipseMetaData = false
 			}
 			code = {
@@ -99,48 +96,9 @@ Workflow {
 				generateXtendStub = true
 			}
 
-			// labeling API
-			fragment = ui.labeling.LabelProviderFragment2 {
-				generateXtendStub = true
-			}
-
-			// outline API
-			fragment = ui.outline.OutlineTreeProviderFragment2 {
-				generateXtendStub = true
-			}
-
-			fragment = ui.outline.QuickOutlineFragment2 {}
-
-			// quickfix API
-			fragment = ui.quickfix.QuickfixProviderFragment2 {
-				inheritImplementation = false
-				generateXtendStub = true
-			}
-
-			// content assist API
-			fragment = ui.contentAssist.ContentAssistFragment2 {
-				generateXtendStub = true
-			}
-
-			// rename refactoring
-			fragment = ui.refactoring.RefactorElementNameFragment2 {}
-
-			// provides a preference page for template proposals
-			fragment = ui.templates.CodetemplatesGeneratorFragment2 {}
-
-			// provides a compare view
-			fragment = ui.compare.CompareFragment2 {}
-
-			// create a parser that will perform token id rewrites to treat keywords as ids in some situations
-			fragment = org.eclipse.n4js.antlr.syntaxcoloring.N4JSHighlightingParserGeneratorFragment2 auto-inject {
-				antlrParam = "-Xconversiontimeout"
-				antlrParam = "30000"
-			}
-
 			fragment = org.eclipse.n4js.antlr.compressor.ParserCompressorFragment2 auto-inject {
 				// Enabled to produce shorter Java code and ease debugging at the expense of a little uglier (because more dense) code
 				joinLinesEagerly = true
-				grammarFile = "${runtimeProjectPath}.ui/src-gen/org/eclipse/n4js/ui/editor/syntaxcoloring/InternalN4JSParser.java"
 				grammarFile = "${runtimeProjectPath}.ide/src-gen/org/eclipse/n4js/ide/contentassist/antlr/internal/InternalN4JSParser.java"
 				grammarFile = "${runtimeProjectPath}/src-gen/org/eclipse/n4js/parser/antlr/internal/InternalN4JSParser.java"
 			}

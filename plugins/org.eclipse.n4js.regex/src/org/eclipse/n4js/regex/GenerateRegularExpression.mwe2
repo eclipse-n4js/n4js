@@ -31,9 +31,6 @@ Workflow {
 				genericIde = {
 					enabled = true
 				}
-				eclipsePlugin = {
-					enabled = true
-				}
 				createEclipseMetaData = false
 			}
 			code = {
@@ -99,39 +96,8 @@ Workflow {
 			//  -- deactivated as currently not required
 			// fragment = formatting.Formatter2Fragment2 {}
 
-			// labeling API
-			fragment = ui.labeling.LabelProviderFragment2 {}
-
-			// outline API
-			fragment = ui.outline.OutlineTreeProviderFragment2 {}
-			fragment = ui.outline.QuickOutlineFragment2 {}
-
-			// quickfix API
-			fragment = ui.quickfix.QuickfixProviderFragment2 {
-				inheritImplementation = false
-			}
-
-			// content assist API
-			fragment = ui.contentAssist.ContentAssistFragment2 {
-				inheritImplementation = false
-			}
-
 			// generates junit test support classes into Generator#pathTestProject
 			//fragment = junit.Junit4Fragment2 {}
-
-			// project wizard (optional)
-			// fragment = ui.projectWizard.SimpleProjectWizardFragment2 {
-			//      generatorProjectName = "${runtimeProject}"
-			// }
-
-			// rename refactoring
-			fragment = ui.refactoring.RefactorElementNameFragment2 {}
-
-			// provides a preference page for template proposals
-			fragment = ui.templates.CodetemplatesGeneratorFragment2 {}
-
-			// provides a compare view
-			fragment = ui.compare.CompareFragment2 {}
 		}
 	}
 }

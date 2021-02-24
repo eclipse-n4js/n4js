@@ -11,6 +11,7 @@
 package org.eclipse.n4js.json.JSON;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -39,10 +40,6 @@ public interface JSONArray extends JSONValue {
 	 * Returns the value of the '<em><b>Elements</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.json.JSON.JSONValue}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Elements</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Elements</em>' containment reference list.
 	 * @see org.eclipse.n4js.json.JSON.JSONPackage#getJSONArray_Elements()
