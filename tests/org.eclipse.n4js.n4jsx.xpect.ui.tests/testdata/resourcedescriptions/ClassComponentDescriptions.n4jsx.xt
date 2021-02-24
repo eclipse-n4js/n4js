@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				Folder "resourcedescriptions" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../../package_default.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../react-implementations/valid/index.n4jsd" }
+			File "index.js" { from = "../../react-implementations/valid/index.js" }
+			File "package.json" { from = "../../react-implementations/valid/package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+
+
+/* these names are stored in the Xtext Index XPECT exportedObjects ---
+types::TClass: resourcedescriptions.ClassComponentDescriptions.LowerComponent,
+types::TClass: resourcedescriptions.ClassComponentDescriptions.MyComponent,
+types::TModule: resourcedescriptions.ClassComponentDescriptions
+--- */
+
+
+import * as React from "react"
+
+
+export public class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
+	@Override
+	public render() : React.Element{
+		return (<div>{this.props.whatTextShouldIShow}</div>);
+	}
+}
+
+export public class MyComponent extends
+	React.Component<~React.ComponentProps with {aProp: string}, String> {
+
+	@Override
+	public render() : React.Element{
+		const constText = "some text";
+		return (<LowerComponent whatTextShouldIShow="Hallo">{constText}</LowerComponent>
+		);
+	}
+}

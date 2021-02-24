@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				Folder "imports" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../../package_default.json" }
+		}
+		Project "react" {
+			File "react.js" { from = "../../react-implementations/empty/react.js" }
+			File "package.json" { from = "../../react-implementations/empty/package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+// Importing the invalid react module does not pose any issues XPECT noerrors
+import * as React+ from "react";
+
+/* The available react implementation is not used since it is invalid (no type definitions) XPECT errors ---
+"Cannot resolve JSX implementation." at "<div></div>"
+--- */
+let elem = <div></div>;
+elem;
+React;

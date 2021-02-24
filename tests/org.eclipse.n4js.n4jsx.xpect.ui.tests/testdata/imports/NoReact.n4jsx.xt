@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				Folder "crossvariant" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../../package_no_react.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+
+
+/*
+JSX files need to import react. Even if user does not do it, import is added by the transpiler.
+Transpiler will throw exception if react will not be reachable from JSX file. 
+Validation prevents react file from being compiled if react is not reachable.*/
+/* XPECT errors ---
+"Cannot resolve JSX implementation." at "<div></div>"
+--- */
+let elem = <div></div>;
+elem;
