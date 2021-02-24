@@ -1,0 +1,19 @@
+{
+	"name": "ComponentSuperB",
+	"version": "0.0.1",
+	"dependencies": {
+		"ComponentSuperA": "*",
+		"react": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

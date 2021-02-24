@@ -9,6 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+// FIXME: Output tests
 /* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
 
 	Workspace {
