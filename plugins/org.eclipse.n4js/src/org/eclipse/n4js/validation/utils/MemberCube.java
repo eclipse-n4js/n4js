@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation.validators.utils;
+package org.eclipse.n4js.validation.utils;
 
 import java.util.HashMap;
 import java.util.List;

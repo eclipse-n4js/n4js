@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation.validators.utils;
+package org.eclipse.n4js.validation.utils;
 
 import static org.eclipse.n4js.ts.types.MemberType.FIELD;
 import static org.eclipse.n4js.ts.types.MemberType.GETTER;
