@@ -397,7 +397,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "findReferences", "at");
 		List<String> findReferencesArray = xtMethods.getFindReferences(ocr);
 		String expectation = data.expectation.replaceAll("\\s+", " ").replaceAll(",\\s*", ",\n");
-		assertEquals(expectation, Strings.join(",\n", findReferencesArray));
+		assertEqualIterables(expectation, findReferencesArray);
 	}
 
 	/**
