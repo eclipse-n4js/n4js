@@ -15,8 +15,8 @@ import static com.google.common.collect.DiscreteDomain.integers;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Range.closed;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.utils.collections.Arrays2.transform;
 import static java.lang.String.valueOf;
+import static org.eclipse.n4js.utils.collections.Arrays2.transform;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,8 +28,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
-
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Class for testing the {@link Arrays2} utility class.

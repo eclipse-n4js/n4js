@@ -17,6 +17,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -281,7 +282,9 @@ public class N4CliHelper {
 		Process p = pb.start();
 		assert pb.redirectInput() == Redirect.PIPE;
 		assert pb.redirectOutput().file() == log;
-		assert p.getInputStream().read() == -1;
+		try (InputStream is = p.getInputStream();) {
+			assert is.read() == -1;
+		}
 		return p;
 	}
 

@@ -15,14 +15,12 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.jsdoc.dom.Doclet;
+import org.eclipse.n4js.jsdoc.dom.DomFactory;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProviderExtension;
 import org.eclipse.xtext.nodemodel.INode;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.jsdoc.DocletParser;
-import org.eclipse.n4js.jsdoc.dom.Doclet;
-import org.eclipse.n4js.jsdoc.dom.DomFactory;
 
 /**
  * Main front-end for parsing N4JSDoc comments.

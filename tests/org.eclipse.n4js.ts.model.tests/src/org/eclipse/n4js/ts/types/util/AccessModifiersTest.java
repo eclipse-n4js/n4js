@@ -20,10 +20,8 @@ import static org.eclipse.n4js.ts.types.util.AccessModifiers.less;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
-import org.eclipse.n4js.ts.types.util.AccessModifiers;
+import org.junit.Test;
 
 /**
  * Test for {@link AccessModifiers}.
