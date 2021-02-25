@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+
+	 Workspace {
+		Project "N4JSXSpecTest" {
+			Folder "src" {
+				ThisFile {}
+				File "replacer.n4js" { from = "replacer.n4js" }
+			}
+			File "package.json" { from="../../package_default.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../react/index.n4jsd" }
+			File "index.js" { from = "../react/index.js" }
+			File "package.json" { from = "../react/package.json" }
+		}
+	}
+
+
+	END_SETUP
+*/
+
+/* XPECT output ---
+r1.props[foo] == 1
+r2.props[foo] == 2
+i2[foo] == 0
+o3.props[foo] == 3
+d3[foo] == 0
+--- */
+
+import * as React from "react"
+
+var zzzz: React.Element; // Avoid unused import warnings
+zzzz;
+
+let r1 : ~Object+ = <div { ...{foo: 0}} foo={1}/>;
+// output --> 1
+console.log("r1.props[foo] == " + r1.props["foo"]);
+
+
+
+let i2 = {foo: 0, bar : 0};
+let r2 : ~Object+ = <div { ...i2} foo={2} />;
+// output --> 2
+console.log("r2.props[foo] == " + r2.props["foo"]);
+
+// output --> 0
+console.log("i2[foo] == " + i2["foo"]);
+
+
+
+class D {
+	foo : int = 0;
+}
+let d3 : D+ = new D();
+let o3 : ~Object+ = <div { ...d3} foo={3} />;
+
+// output --> 3
+console.log("o3.props[foo] == " + o3.props["foo"]);
+
+// output --> 0
+console.log("d3[foo] == " + d3["foo"]);

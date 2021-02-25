@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+
+   Workspace {
+		Project "N4JSXSpecTest" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="../package_default.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "react/index.n4jsd" }
+			File "package.json" { from = "react/package.json" }
+		}
+	}
+
+	END_SETUP
+*/
+
+import * as React from "react/index";
+
+class ~Props  {
+	public myProp: string;
+}
+
+function PureFnComponent(props: Props): React.Element {
+	return (<div>{props.myProp}</div>);
+}
+
+// XPECT noerrors
+var a = <PureFnComponent myProp="This is my prop"/>
+
+class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
+	public constructor(props: ~React.ComponentProps with {whatTextShouldIShow : string}) {
+	    super(props);
+	    this.state = {
+	      // XPECT noerrors
+	      squares: new Array<string>(9)
+	    };
+	    // XPECT noerrors
+	    if (this.state.squares.length == 1) {
+
+	    }
+  	}
+
+	@Override
+	public render(): React.Element {
+		// XPECT noerrors
+		return (<div>{this.props.whatTextShouldIShow}</div>);
+	}
+}
+
+class MyComponent extends
+	React.Component<~React.ComponentProps with {aProp: string}, String> {
+
+	@Override
+	public render(): React.Element {
+		const constText = "some text";
+		// XPECT noerrors
+		return (<LowerComponent whatTextShouldIShow="Hallo">{constText}</LowerComponent>
+		);
+	}
+}
+
+class MyHigherComponent extends
+	React.Component<~React.ComponentProps with {someCondition: Number}, ~Object with {aStateProp: Boolean}> {
+
+	@Override
+	public render(): React.Element {
+		let d = this.state.aStateProp;
+		// XPECT warnings --> "Attribute simplePropForMyComponent is not a declared property in the props of MyComponent." at "simplePropForMyComponent"
+		return (<MyComponent aProp="A text" simplePropForMyComponent={
+         (() => {
+         	// XPECT noerrors
+           if (this.props.someCondition) {
+             return "ein Text";
+           }
+           return "";
+         })()
+       }>{d}</MyComponent>);
+	}
+}
