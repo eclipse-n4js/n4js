@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,80 +36,19 @@ import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Sets;
 
 /**
  * Class to parse xt files
  */
 public class XtFileDataParser {
-	/** Identifier of test cases {@code X_PECT} (without '_') */
-	// Note that there must not be any string like X_PECT (without '_') due to the X_PECT Eclipse plugin
-	static final String XT_X_PECT = "X_PECT".replace("_", "");
-
-	/** Pattern group name to reference the comment stated before {@value #XT_X_PECT} */
-	static final String XT_COMMENT = "COMMENT";
-
-	/** Pattern group name to reference the modifier */
-	static final String XT_MODIFIER = "MODIFIER";
-
-	/** Modifier FIXMe */
-	static final String XT_MODIFIER_FIXME = "FIXME";
-
-	/** Modifier IGNORE */
-	static final String XT_MODIFIER_IGNORE = "!";
-
-	/**
-	 * Pattern group name to reference the method name and its arguments stated after {@value #XT_X_PECT} but before
-	 * {@code --->}/{@code ---}
-	 */
-	static final String XT_METHOD = "METHOD";
 
 	/** Pattern group name for the qualified name of the xt test runner */
 	static final String XT_RUNNER = "RUNNER";
 
 	/** Pattern group name for the workspace configuration */
 	static final String XT_WORKSPACE = "WORKSPACE";
-
-	/**
-	 * Pattern group name to reference the expectation stated after {@code --->}/{@code ---}. <br/>
-	 * <b>Note:</b> The expectation might still contain line breaks and comment artifacts like {@code //} (see
-	 * {@link #XT_COMMENT_ARTIFACT_1}) or {@code *} (see {@link #XT_COMMENT_ARTIFACT_2}).
-	 */
-	static final String XT_EXPECTATION = "EXPECTATION";
-
-	/** Artifacts of multi-line comments using {@code //} at the beginning of every line */
-	static final String XT_COMMENT_ARTIFACT_1 = "(?:^|\\n)[\\t ]*\\/\\/+";
-
-	/** Artifacts of multi-line comments using {@code /*  *\/} to start/end the comment */
-	static final String XT_COMMENT_ARTIFACT_2 = "(?:^|\\n)[\\t ]*\\*";
-
-	/**
-	 * Pattern for single-line comments using {@code //} or {@code /*} at the beginning. The XT method uses {@code -->}
-	 * to start the expectation. This expectation ends in the same line.
-	 */
-	static final String XT_BASE_METHOD_PATTERN = "(?<" + XT_COMMENT + ">[^\\n]*)\\s+" + XT_X_PECT
-			+ "(?:\\s+(?<" + XT_MODIFIER + ">" + XT_MODIFIER_FIXME + "|" + XT_MODIFIER_IGNORE + "))?"
-			+ "\\s+(?<" + XT_METHOD + ">[^\\n]*)";
-
-	/**
-	 * Pattern for single-line comments using {@code //} or {@code /*} at the beginning. The XT method uses {@code -->}
-	 * to start the expectation. This expectation ends in the same line.
-	 */
-	static final Pattern XT_SINGLE_LINE = Pattern.compile(
-			"[^\\n]*\\/[\\/|\\*]+" + XT_BASE_METHOD_PATTERN + "-->(?<" + XT_EXPECTATION + ">[^\\n]*)");
-
-	/**
-	 * Pattern for multi-line comments using {@code //} at the beginning of every line. The XT method uses {@code ---}
-	 * to start and end the expectation.
-	 */
-	static final Pattern XT_MULTI_LINE1 = Pattern.compile(
-			"[^\\n]*\\/\\/+" + XT_BASE_METHOD_PATTERN + "---(?<" + XT_EXPECTATION + ">(?!---)[\\s\\S]*?)---");
-	/**
-	 * Pattern for multi-line comments using {@code /*  *\/} to start/end the comment. The XT method uses {@code ---} to
-	 * start and end the expectation.
-	 */
-	static final Pattern XT_MULTI_LINE2 = Pattern.compile(
-			"[^\\n]*\\/\\*+" + XT_BASE_METHOD_PATTERN + "---(?<" + XT_EXPECTATION
-					+ ">(?!---)[\\s\\S]*?)---");
 
 	/**
 	 * Pattern for Setup section of xt files
@@ -174,85 +114,13 @@ public class XtFileDataParser {
 		return Collections.emptyList();
 	}
 
-	static class MethodMatchResult implements Comparable<MethodMatchResult> {
-		final int offset;
-		final String comment;
-		final String modifier;
-		final String methodAndArgs;
-		final String expectation;
-		final String artifacts;
-
-		MethodMatchResult(int offset, String comment, String modifier, String methodAndArgs, String expectation,
-				String artifacts) {
-
-			this.offset = offset;
-			this.comment = comment;
-			this.modifier = modifier;
-			this.methodAndArgs = methodAndArgs;
-			this.expectation = expectation;
-			this.artifacts = artifacts;
-		}
-
-		public boolean isFixme() {
-			return XT_MODIFIER_FIXME.equals(modifier);
-		}
-
-		public boolean isIgnore() {
-			return XT_MODIFIER_IGNORE.equals(modifier);
-		}
-
-		@Override
-		public int compareTo(MethodMatchResult mmr) {
-			return offset - mmr.offset;
-		}
-	}
-
 	static void fillTestMethodData(String fileName, String xtFileContent,
 			TreeSet<XtFileData.MethodData> testMethodData1, TreeSet<XtFileData.MethodData> testMethodData2) {
 
-		Set<MethodMatchResult> results = new TreeSet<>();
-		for (Matcher matcher = XT_SINGLE_LINE.matcher(xtFileContent); matcher.find();) {
-			addResult(results, matcher, null);
+		for (XtMethodIterator iter = new XtMethodIterator(fileName, xtFileContent); iter.hasNext();) {
+			MethodData methodData = iter.next();
+			addTestMethodData(testMethodData1, testMethodData2, methodData);
 		}
-		for (Matcher matcher = XT_MULTI_LINE1.matcher(xtFileContent); matcher.find();) {
-			addResult(results, matcher, XT_COMMENT_ARTIFACT_1);
-		}
-		for (Matcher matcher = XT_MULTI_LINE2.matcher(xtFileContent); matcher.find();) {
-			addResult(results, matcher, XT_COMMENT_ARTIFACT_2);
-		}
-
-		Map<String, Integer> methodNameCounters = new HashMap<>();
-		for (MethodMatchResult result : results) {
-			MethodData testMethodData = createMethodData(fileName, result, methodNameCounters);
-			addTestMethodData(testMethodData1, testMethodData2, testMethodData);
-		}
-	}
-
-	private static void addResult(Set<MethodMatchResult> results, Matcher matcher, String artifacts) {
-		int offset = matcher.end();
-		String comment = matcher.group(XT_COMMENT).trim();
-		String modifier = matcher.group(XT_MODIFIER);
-		String methodAndArgs = matcher.group(XT_METHOD).trim();
-		String expectation = matcher.group(XT_EXPECTATION).trim();
-		MethodMatchResult mmr = new MethodMatchResult(offset, comment, modifier, methodAndArgs, expectation, artifacts);
-		results.add(mmr);
-	}
-
-	private static MethodData createMethodData(String fileName, MethodMatchResult result,
-			Map<String, Integer> methodNameCounters) {
-		String expectation = result.expectation;
-		if (result.artifacts != null) {
-			expectation = expectation.replaceAll(result.artifacts, "");
-		}
-		int nameEndIdx = result.methodAndArgs.indexOf(" ");
-		nameEndIdx = nameEndIdx < 0 ? result.methodAndArgs.length() : nameEndIdx;
-		String name = result.methodAndArgs.substring(0, nameEndIdx);
-		Preconditions.checkArgument(!name.isBlank());
-		String args = result.methodAndArgs.substring(nameEndIdx).trim();
-		int counter = methodNameCounters.getOrDefault(name, 0);
-		methodNameCounters.put(name, counter + 1);
-		return new MethodData(fileName, result.comment, name, args, counter, expectation, result.offset,
-				result.isFixme(), result.isIgnore());
 	}
 
 	private static void addTestMethodData(Collection<XtFileData.MethodData> testMethodData1,
@@ -269,6 +137,252 @@ public class XtFileDataParser {
 			testMethodData2.add(testMethodData);
 			break;
 		}
+	}
+
+	static class XtMethodIterator extends AbstractIterator<MethodData> {
+		static final String NL = "\n";
+		static final String XT_KEYWORD = " XPECT ";
+		static final String XT_FIXME = " FIXME ";
+		static final String XT_IGNORE = "!";
+		static final String XT_EXPECT_SL = "-->";
+		static final String XT_EXPECT_ML = "---";
+		static final String XT_EXPECT_ML_LIT = "===";
+
+		final Map<String, Integer> methodNameCounters = new HashMap<>();
+		final String fileName;
+		final CommentIterator commentIter;
+
+		Token commentToken = null;
+		int cursorInComment = 0;
+
+		XtMethodIterator(String fileName, String fullString) {
+			this.fileName = fileName;
+			this.commentIter = new CommentIterator(fullString);
+		}
+
+		@Override
+		protected MethodData computeNext() {
+			if (commentToken == null) {
+				commentToken = commentIter.next();
+				cursorInComment = 0;
+			}
+			String comment = commentToken.text;
+
+			Token locKeyword = skipUntil(NL, comment, cursorInComment, XT_KEYWORD);
+			while (locKeyword.isEOF && commentIter.hasNext()) {
+				commentToken = commentIter.next();
+				comment = commentToken.text;
+				cursorInComment = 0;
+				locKeyword = skipUntil(NL, comment, cursorInComment, XT_KEYWORD);
+			}
+
+			if (locKeyword.isEOF) {
+				endOfData();
+				return null;
+			}
+
+			Token locStart = locKeyword.pred == null ? new Token("", cursorInComment, null) : locKeyword.pred;
+			Token locModifier = indexOf(comment, locKeyword.end,
+					XT_FIXME, XT_IGNORE, XT_EXPECT_SL, XT_EXPECT_ML, XT_EXPECT_ML_LIT, NL);
+			Token locExpectation = locModifier;
+
+			switch (locModifier.text) {
+			case XT_FIXME:
+			case XT_IGNORE:
+				locExpectation = indexOf(comment, locModifier.end,
+						XT_EXPECT_SL, XT_EXPECT_ML, XT_EXPECT_ML_LIT, NL);
+				break;
+			default:
+				locModifier = null;
+			}
+
+			Token locEnd = null;
+			switch (locExpectation.text) {
+			case "EOF":
+			case NL:
+				locEnd = new Token(NL, locExpectation.end, null);
+				break;
+			case XT_EXPECT_SL:
+				locEnd = indexOf(comment, locExpectation.end, NL);
+				break;
+			case XT_EXPECT_ML:
+				locEnd = indexOf(comment, locExpectation.end, XT_EXPECT_ML);
+				break;
+			case XT_EXPECT_ML_LIT:
+				locEnd = indexOf(comment, locExpectation.end, XT_EXPECT_ML_LIT);
+				break;
+			default:
+				endOfData();
+				return null;
+			}
+
+			cursorInComment = locEnd.end;
+
+			int offset = commentToken.start + locEnd.end;
+			String mdComment = comment.substring(locStart.end, locKeyword.start).trim();
+			String mdMethodAndArgs = comment.substring(locKeyword.end, locExpectation.start).trim();
+			String mdExpectation = comment.substring(locExpectation.end, locEnd.start).trim();
+			boolean isFixme = locModifier != null && XT_FIXME.equals(locModifier.text);
+			boolean isIgnore = locModifier != null && XT_IGNORE.equals(locModifier.text);
+			int idxEndOfName = mdMethodAndArgs.indexOf(" ");
+			String name = idxEndOfName < 0 ? mdMethodAndArgs : mdMethodAndArgs.substring(0, idxEndOfName).trim();
+			String args = idxEndOfName < 0 ? "" : mdMethodAndArgs.substring(idxEndOfName).trim();
+			int counter = methodNameCounters.getOrDefault(name, 0);
+			methodNameCounters.put(name, counter + 1);
+
+			return new MethodData(fileName, mdComment, name, args, counter, mdExpectation, offset, isFixme, isIgnore);
+		}
+	}
+
+	static class CommentIterator extends AbstractIterator<Token> {
+		static final String ERROR = "File parse error: ";
+		static final String COMMENT_SL_OPEN = "//";
+		static final String NL = "\n";
+		static final String COMMENT_ML_OPEN = "/*";
+		static final String COMMENT_ML_CLOSE = "*/";
+		static final String[] WHITESPACE = { " ", "\t", "\r", "\n" };
+
+		final String fullString;
+
+		int cursor;
+
+		CommentIterator(String fullString) {
+			this.fullString = fullString;
+			this.cursor = 0;
+		}
+
+		@Override
+		protected Token computeNext() {
+			Token commentOpensAT = indexOf(fullString, cursor, COMMENT_SL_OPEN, COMMENT_ML_OPEN);
+			if (commentOpensAT.isEOF) {
+				endOfData();
+				return null;
+			}
+
+			String comment = null;
+			Token commentClosesAT;
+			switch (commentOpensAT.text) {
+			case COMMENT_SL_OPEN:
+				Token tmpCommentOpensAT = commentOpensAT;
+				commentClosesAT = indexOf(fullString, tmpCommentOpensAT.end, NL);
+				comment = fullString.substring(commentOpensAT.end, commentClosesAT.start);
+
+				tmpCommentOpensAT = indexOfOtherThan(fullString, commentClosesAT.end, WHITESPACE);
+				while (!tmpCommentOpensAT.isEOF && tmpCommentOpensAT.text.startsWith(COMMENT_SL_OPEN)) {
+					commentClosesAT = indexOf(fullString, tmpCommentOpensAT.start, NL);
+					comment += NL + fullString.substring(tmpCommentOpensAT.start + COMMENT_SL_OPEN.length(),
+							commentClosesAT.start);
+					tmpCommentOpensAT = indexOfOtherThan(fullString, commentClosesAT.end, WHITESPACE);
+				}
+
+				break;
+			case COMMENT_ML_OPEN:
+				commentClosesAT = indexOf(fullString, commentOpensAT.end, COMMENT_ML_CLOSE);
+				comment = fullString.substring(commentOpensAT.end, commentClosesAT.start);
+				break;
+			default:
+				endOfData();
+				return null;
+			}
+
+			cursor = commentClosesAT.end;
+			return new Token(comment, commentOpensAT.end);
+		}
+	}
+
+	static class Token {
+		final String text;
+		final int start;
+		final int end;
+		final Token pred;
+		final boolean isEOF;
+
+		Token(String name, int start) {
+			this(name, start, null);
+		}
+
+		Token(String name, int start, Token pred) {
+			this.text = name;
+			this.start = start;
+			this.end = start + name.length();
+			this.pred = pred;
+			this.isEOF = false;
+		}
+
+		Token(int end, Token pred) {
+			this.text = "EOF";
+			this.start = end;
+			this.end = end;
+			this.pred = pred;
+			this.isEOF = true;
+		}
+
+		Token(int end) {
+			this(end, null);
+		}
+	}
+
+	static Token skipUntil(String skip, String content, int cursorStart, String... find) {
+		return skipUntil(new String[] { skip }, content, cursorStart, find);
+	}
+
+	static Token skipUntil(String[] skip, String content, int cursorStart, String... find) {
+		String[] search = concat(skip, find);
+		Set<String> findSet = Sets.newHashSet(find);
+
+		Token lastLoc = null;
+		int currIdx = cursorStart;
+		Token loc = null;
+		while (!(loc = indexOf(content, currIdx, search)).isEOF) {
+			if (findSet.contains(loc.text)) {
+				return new Token(loc.text, loc.start, lastLoc);
+			}
+			lastLoc = loc;
+			currIdx = loc.end;
+		}
+		return loc;
+	}
+
+	static <T> T[] concat(T[] first, T[] second) {
+		T[] result = Arrays.copyOf(first, first.length + second.length);
+		System.arraycopy(second, 0, result, first.length, second.length);
+		return result;
+	}
+
+	static Token indexOf(String content, int cursorStart, String... strings) {
+		int cursor = cursorStart;
+		int minLength = Integer.MAX_VALUE;
+		for (int i = 0; i < strings.length; i++) {
+			minLength = Math.min(minLength, strings[i].length());
+		}
+		while (content.length() > cursor + minLength - 1) {
+			for (int i = 0; i < strings.length; i++) {
+				if (content.regionMatches(cursor, strings[i], 0, strings[i].length())) {
+					return new Token(strings[i], cursor);
+				}
+			}
+			cursor++;
+		}
+		return new Token(content.length());
+	}
+
+	static Token indexOfOtherThan(String content, int cursorStart, String... strings) {
+		int cursor = cursorStart;
+		int minLength = Integer.MAX_VALUE;
+		for (int i = 0; i < strings.length; i++) {
+			minLength = Math.min(minLength, strings[i].length());
+		}
+		while (content.length() > cursor + minLength) {
+			boolean isOtherThan = true;
+			for (int i = 0; i < strings.length; i++) {
+				isOtherThan &= !content.regionMatches(cursor, strings[i], 0, strings[i].length());
+			}
+			if (isOtherThan) {
+				return new Token(content.substring(cursor), cursor);
+			}
+			cursor++;
+		}
+		return new Token(content.length());
 	}
 
 }

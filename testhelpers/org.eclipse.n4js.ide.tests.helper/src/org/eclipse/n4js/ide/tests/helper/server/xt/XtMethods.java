@@ -75,7 +75,6 @@ import org.eclipse.xtext.scoping.IScopeProvider;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -401,8 +400,10 @@ public class XtMethods {
 				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
 		List<IEObjectDescription> allElements = Lists.newArrayList(scopeWithoutErrors.getAllElements());
 
-		URI uri = ocr.getXtextResource().getURI();
-		Predicate<String> filter = new IsInScopeWithOptionalPositionPredicate(converter, uri, false, scope);
+		// following filter maybe not necessary
+		// URI uri = ocr.getXtextResource().getURI();
+		// Predicate<String> filter = new IsInScopeWithOptionalPositionPredicate(converter, uri, false, scope);
+
 		List<String> scopeNames = new ArrayList<>();
 		for (IEObjectDescription desc : allElements) {
 			String name = desc.getName().toString();
@@ -410,8 +411,6 @@ public class XtMethods {
 			IEObjectDescription singleElement = scope.getSingleElement(qualifiedName);
 			if (singleElement != null) {
 				scopeNames.add(name);
-			} else {
-				System.out.println("not: " + name);
 			}
 		}
 

@@ -11,9 +11,9 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +40,8 @@ public class XtMethodsIssues {
 	static final Pattern PATTERN_MESSAGE_AT = Pattern
 			.compile("\\\"(?<" + MESSAGE + ">[^\\\"]*)\\\"\\s*at\\s*\\\"(?<" + AT + ">(?:\\\\\\\"|[^\\\"])+?)\\\"");
 
+	final Comparator<Diagnostic> issueComparator;
+
 	final XtFileData xtData; // sorted by position
 	final TreeSet<Diagnostic> errors; // sorted by position
 	final TreeSet<Diagnostic> warnings; // sorted by position
@@ -48,8 +50,12 @@ public class XtMethodsIssues {
 
 	XtMethodsIssues(XtFileData xtData, Collection<Diagnostic> unsortedIssues, List<MethodData> issueTests) {
 		this.xtData = xtData;
-		this.errors = new TreeSet<>(this::compareDiagnosticByOffset);
-		this.warnings = new TreeSet<>(this::compareDiagnosticByOffset);
+		this.issueComparator = Comparator
+				.comparing((Diagnostic d) -> xtData.getOffset(d.getRange().getStart()))
+				.thenComparing(Diagnostic::getMessage);
+		this.errors = new TreeSet<>(issueComparator);
+		this.warnings = new TreeSet<>(issueComparator);
+
 		for (Diagnostic issue : unsortedIssues) {
 			switch (issue.getSeverity()) {
 			case Error:
@@ -64,8 +70,8 @@ public class XtMethodsIssues {
 			}
 		}
 
-		LinkedHashMap<Integer, MethodData> positionToErrors = new LinkedHashMap<>();
-		LinkedHashMap<Integer, MethodData> positionToWarnings = new LinkedHashMap<>();
+		Multimap<Integer, MethodData> positionToErrors = LinkedHashMultimap.create();
+		Multimap<Integer, MethodData> positionToWarnings = LinkedHashMultimap.create();
 		for (MethodData test : issueTests) {
 			switch (test.name) {
 			case "errors":
@@ -110,10 +116,6 @@ public class XtMethodsIssues {
 	/** Implementation for {@link XtIdeTest#warnings(MethodData)} */
 	public void getWarnings(MethodData data) {
 		issues(testToWarnings, data, "warning");
-	}
-
-	private int compareDiagnosticByOffset(Diagnostic i1, Diagnostic i2) {
-		return xtData.getOffset(i1.getRange().getStart()) - xtData.getOffset(i2.getRange().getStart());
 	}
 
 	private void issues(Multimap<MethodData, Diagnostic> testToIssues, MethodData data, String msgIssue) {
@@ -170,7 +172,7 @@ public class XtMethodsIssues {
 	}
 
 	static private Multimap<MethodData, Diagnostic> getTestToIssues(XtFileData xtData,
-			TreeSet<Diagnostic> issues, LinkedHashMap<Integer, MethodData> positionToTest) {
+			TreeSet<Diagnostic> issues, Multimap<Integer, MethodData> positionToTest) {
 
 		Multimap<MethodData, Diagnostic> testToIssues = LinkedHashMultimap.create();
 		if (issues.isEmpty()) {
@@ -179,7 +181,7 @@ public class XtMethodsIssues {
 
 		Diagnostic firstDiagnostic = issues.first();
 
-		Iterator<Map.Entry<Integer, MethodData>> posTestIter = positionToTest.entrySet().iterator();
+		Iterator<Map.Entry<Integer, MethodData>> posTestIter = positionToTest.entries().iterator();
 		Assert.assertTrue(
 				"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
 				posTestIter.hasNext() || issues.isEmpty());

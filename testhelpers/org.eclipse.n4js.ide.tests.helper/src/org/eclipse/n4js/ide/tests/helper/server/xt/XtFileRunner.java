@@ -23,7 +23,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- * Runs all tests defined by {@value XtFileDataParser#XT_X_PECT} of a single .xt file
+ * Runs all tests defined by {@value XtFileDataParser.XtMethodIterator#XT_KEYWORD} of a single .xt file
  */
 public class XtFileRunner extends Runner {
 	/** Reference to the XtIdeTest (and language server) */

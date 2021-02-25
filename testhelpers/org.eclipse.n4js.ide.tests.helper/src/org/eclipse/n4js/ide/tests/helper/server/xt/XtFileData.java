@@ -113,10 +113,10 @@ public class XtFileData {
 		/** @return the modifier's keyword or null if not existing */
 		public String getModifier() {
 			if (isFixme) {
-				return XtFileDataParser.XT_MODIFIER_FIXME;
+				return XtFileDataParser.XtMethodIterator.XT_FIXME;
 			}
 			if (isIgnore) {
-				return XtFileDataParser.XT_MODIFIER_IGNORE;
+				return XtFileDataParser.XtMethodIterator.XT_IGNORE;
 			}
 			return "";
 		}

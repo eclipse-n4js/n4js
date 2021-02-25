@@ -199,6 +199,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "linkedPathname":
 			linkedPathname(testMethodData);
 			break;
+		case "output":
+			output(testMethodData);
+			break;
 		case "scope":
 			scope(testMethodData);
 			break;
@@ -367,10 +370,8 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Test all exported objects of a resource description
 	 *
 	 * <pre>
-	 * // Xpect exportedObjects at '&ltLOCATION&gt' --&gt; &ltEXPORTED OBJECTS&gt
+	 * // Xpect exportedObjects --&gt; &ltEXPORTED OBJECTS&gt
 	 * </pre>
-	 *
-	 * The location is optional.
 	 *
 	 * EXPORTED OBJECTS is a comma separated list.
 	 */
@@ -400,7 +401,11 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
-	 * TODO
+	 * Checks the given input against the result of the auto code formatter running on this file
+	 *
+	 * <pre>
+	 * // Xpect formattedLines --&gt; &ltFORMATTED LINES&gt
+	 * </pre>
 	 */
 	@Xpect
 	public void formattedLines(@SuppressWarnings("unused") MethodData data) {
@@ -447,6 +452,18 @@ public class XtIdeTest extends AbstractIdeTest {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedPathname", "at");
 		String pathName = xtMethods.getLinkedPathname(ocr);
 		assertEquals(data.expectation, pathName);
+	}
+
+	/**
+	 * Compiles and executes the current xt file and compares the output to the expected output
+	 *
+	 * <pre>
+	 * // Xpect output --&gt; &ltOUTPUT&gt
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void output(@SuppressWarnings("unused") MethodData data) {
+		// TODO
 	}
 
 	/**
