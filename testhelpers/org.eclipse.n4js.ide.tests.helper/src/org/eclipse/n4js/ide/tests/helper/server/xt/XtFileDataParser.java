@@ -141,8 +141,8 @@ public class XtFileDataParser {
 
 	static class XtMethodIterator extends AbstractIterator<MethodData> {
 		static final String NL = "\n";
-		static final String XT_KEYWORD = " XPECT ";
-		static final String XT_FIXME = " FIXME ";
+		static final String XT_KEYWORD = "XPECT ";
+		static final String XT_FIXME = "FIXME ";
 		static final String XT_IGNORE = "!";
 		static final String XT_EXPECT_SL = "-->";
 		static final String XT_EXPECT_ML = "---";
@@ -193,10 +193,11 @@ public class XtFileDataParser {
 						XT_EXPECT_SL, XT_EXPECT_ML, XT_EXPECT_ML_LIT, NL);
 				break;
 			default:
-				locModifier = null;
+				locModifier = new Token("", locKeyword.end);
 			}
 
 			Token locEnd = null;
+			boolean isLiteral = false;
 			switch (locExpectation.text) {
 			case "EOF":
 			case NL:
@@ -210,26 +211,30 @@ public class XtFileDataParser {
 				break;
 			case XT_EXPECT_ML_LIT:
 				locEnd = indexOf(comment, locExpectation.end, XT_EXPECT_ML_LIT);
+				isLiteral = true;
 				break;
 			default:
 				endOfData();
 				return null;
 			}
 
-			cursorInComment = locEnd.end;
-
 			int offset = commentToken.start + locEnd.end;
 			String mdComment = comment.substring(locStart.end, locKeyword.start).trim();
-			String mdMethodAndArgs = comment.substring(locKeyword.end, locExpectation.start).trim();
+			String mdMethodAndArgs = comment.substring(locModifier.end, locExpectation.start).trim();
 			String mdExpectation = comment.substring(locExpectation.end, locEnd.start).trim();
-			boolean isFixme = locModifier != null && XT_FIXME.equals(locModifier.text);
-			boolean isIgnore = locModifier != null && XT_IGNORE.equals(locModifier.text);
+			boolean isFixme = XT_FIXME.equals(locModifier.text);
+			boolean isIgnore = XT_IGNORE.equals(locModifier.text);
 			int idxEndOfName = mdMethodAndArgs.indexOf(" ");
 			String name = idxEndOfName < 0 ? mdMethodAndArgs : mdMethodAndArgs.substring(0, idxEndOfName).trim();
 			String args = idxEndOfName < 0 ? "" : mdMethodAndArgs.substring(idxEndOfName).trim();
 			int counter = methodNameCounters.getOrDefault(name, 0);
 			methodNameCounters.put(name, counter + 1);
 
+			if (!isLiteral) {
+				mdExpectation.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", " ");
+			}
+
+			cursorInComment = locEnd.end;
 			return new MethodData(fileName, mdComment, name, args, counter, mdExpectation, offset, isFixme, isIgnore);
 		}
 	}
@@ -265,13 +270,10 @@ public class XtFileDataParser {
 			case COMMENT_SL_OPEN:
 				Token tmpCommentOpensAT = commentOpensAT;
 				commentClosesAT = indexOf(fullString, tmpCommentOpensAT.end, NL);
-				comment = fullString.substring(commentOpensAT.end, commentClosesAT.start);
 
 				tmpCommentOpensAT = indexOfOtherThan(fullString, commentClosesAT.end, WHITESPACE);
 				while (!tmpCommentOpensAT.isEOF && tmpCommentOpensAT.text.startsWith(COMMENT_SL_OPEN)) {
 					commentClosesAT = indexOf(fullString, tmpCommentOpensAT.start, NL);
-					comment += NL + fullString.substring(tmpCommentOpensAT.start + COMMENT_SL_OPEN.length(),
-							commentClosesAT.start);
 					tmpCommentOpensAT = indexOfOtherThan(fullString, commentClosesAT.end, WHITESPACE);
 				}
 
@@ -285,6 +287,7 @@ public class XtFileDataParser {
 				return null;
 			}
 
+			comment = fullString.substring(commentOpensAT.end, commentClosesAT.start);
 			cursor = commentClosesAT.end;
 			return new Token(comment, commentOpensAT.end);
 		}

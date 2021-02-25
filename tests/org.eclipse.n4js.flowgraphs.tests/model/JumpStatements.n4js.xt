@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.XtTestSetupTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.FlowgraphsXtTest END_SETUP */
 
 
 

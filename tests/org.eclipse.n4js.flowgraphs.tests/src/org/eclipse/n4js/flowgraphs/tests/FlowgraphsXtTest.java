@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
 })
 @RunWith(XtParentRunner.class)
 // class name needs to end with 'Test' to get picket up by maven
-public class XtFlowgraphsTest {
+public class FlowgraphsXtTest {
 
 	@XtFolder
 	static String getFolder() {
