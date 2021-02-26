@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
  * Test for test methods:
  * <ul>
- * <li/>{@link XtIdeTest#type(MethodData)}
- * <li/>{@link XtIdeTest#typeArgs(MethodData)}
+ * <li/>{@link XtIdeTest#type(XtMethodData)}
+ * <li/>{@link XtIdeTest#typeArgs(XtMethodData)}
  * </ul>
  */
 public class TypeTest extends AbstractXtParentRunnerTest {

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.Runner;
@@ -76,7 +75,7 @@ public class XtFileRunner extends Runner {
 			notifier.fireTestRunStarted(getDescription());
 
 			ideTest.initializeXtFile(xtFileData);
-			for (MethodData testMethodData : xtFileData.getTestMethodData()) {
+			for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
 				Description testDescription = testMethodData.getDescription(xtFileData);
 				if (testMethodData.isIgnore) {
 					notifier.fireTestIgnored(testDescription);
@@ -131,7 +130,7 @@ public class XtFileRunner extends Runner {
 		}
 
 		description = Description.createSuiteDescription(getName(), file);
-		for (MethodData testMethodData : xtFileData.getTestMethodData()) {
+		for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
 			description.addChild(testMethodData.getDescription(xtFileData));
 		}
 		return description;

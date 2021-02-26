@@ -36,7 +36,6 @@ import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.InstanceofGuard;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.xtext.EcoreUtil2;
@@ -53,7 +52,7 @@ public class XtMethodsFlowgraphs {
 		return flowAnalyzer;
 	}
 
-	/** Implementation for {@link XtIdeTest#allMergeBranches(MethodData)} */
+	/** Implementation for {@link XtIdeTest#allMergeBranches(XtMethodData)} */
 	public List<String> getAllMergeBranches(IEObjectCoveringRegion referenceOffset) {
 		N4JSFlowAnalyserDataRecorder.setEnabled(true);
 		GraphVisitor dfv = new DummyForwardVisitor();
@@ -81,7 +80,7 @@ public class XtMethodsFlowgraphs {
 		return edgeStrings;
 	}
 
-	/** Implementation for {@link XtIdeTest#allBranches(MethodData)} */
+	/** Implementation for {@link XtIdeTest#allBranches(XtMethodData)} */
 	public List<String> getAllBranches(IEObjectCoveringRegion offset, String directionName,
 			IEObjectCoveringRegion referenceOffset) {
 
@@ -91,7 +90,7 @@ public class XtMethodsFlowgraphs {
 		return branchStrings;
 	}
 
-	/** Implementation for {@link XtIdeTest#allEdges(MethodData)} */
+	/** Implementation for {@link XtIdeTest#allEdges(XtMethodData)} */
 	public List<String> getAllEdges(IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = null;
 		if (offset != null) {
@@ -106,7 +105,7 @@ public class XtMethodsFlowgraphs {
 		return pathStrings;
 	}
 
-	/** Implementation for {@link XtIdeTest#allPaths(MethodData)} */
+	/** Implementation for {@link XtIdeTest#allPaths(XtMethodData)} */
 	public List<String> getAllPaths(IEObjectCoveringRegion offset, String directionName,
 			IEObjectCoveringRegion referenceOffset) {
 
@@ -116,7 +115,7 @@ public class XtMethodsFlowgraphs {
 		return pathStrings;
 	}
 
-	/** Implementation for {@link XtIdeTest#astOrder(MethodData)} */
+	/** Implementation for {@link XtIdeTest#astOrder(XtMethodData)} */
 	public List<String> getAstOrder(IEObjectCoveringRegion offset) {
 		EObject context = offset.getEObject();
 		Iterator<ControlFlowElement> astIter = new ASTIterator(context);
@@ -133,7 +132,7 @@ public class XtMethodsFlowgraphs {
 		return astElements;
 	}
 
-	/** Implementation for {@link XtIdeTest#cfContainer(MethodData)} */
+	/** Implementation for {@link XtIdeTest#cfContainer(XtMethodData)} */
 	public String getCfContainer(IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = getCFE(offset);
 		ControlFlowElement container = createFlowAnalyzer(cfe).getContainer(cfe);
@@ -144,7 +143,7 @@ public class XtMethodsFlowgraphs {
 		return containerStr;
 	}
 
-	/** Implementation for {@link XtIdeTest#commonPreds(MethodData)} */
+	/** Implementation for {@link XtIdeTest#commonPreds(XtMethodData)} */
 	public List<String> getCommonPreds(IEObjectCoveringRegion a, IEObjectCoveringRegion b) {
 		ControlFlowElement aCFE = getCFE(a);
 		ControlFlowElement bCFE = getCFE(b);
@@ -159,7 +158,7 @@ public class XtMethodsFlowgraphs {
 		return commonPredStrs;
 	}
 
-	/** Implementation for {@link XtIdeTest#instanceofguard(MethodData)} */
+	/** Implementation for {@link XtIdeTest#instanceofguard(XtMethodData)} */
 	public List<String> getInstanceofguard(IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = getCFE(offset);
 
@@ -185,7 +184,7 @@ public class XtMethodsFlowgraphs {
 		return commonPredStrs;
 	}
 
-	/** Implementation for {@link XtIdeTest#path(MethodData)} */
+	/** Implementation for {@link XtIdeTest#path(XtMethodData)} */
 	public void getPath(IEObjectCoveringRegion fromOffset, IEObjectCoveringRegion toOffset,
 			IEObjectCoveringRegion notToOffset, IEObjectCoveringRegion viaOffset,
 			IEObjectCoveringRegion notViaOffset, IEObjectCoveringRegion referenceOffset) {
@@ -228,7 +227,7 @@ public class XtMethodsFlowgraphs {
 		}
 	}
 
-	/** Implementation for {@link XtIdeTest#preds(MethodData)} */
+	/** Implementation for {@link XtIdeTest#preds(XtMethodData)} */
 	public List<String> getPreds(String type, IEObjectCoveringRegion offset) {
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getCFE(offset);
@@ -244,7 +243,7 @@ public class XtMethodsFlowgraphs {
 		return predTexts;
 	}
 
-	/** Implementation for {@link XtIdeTest#succs(MethodData)} */
+	/** Implementation for {@link XtIdeTest#succs(XtMethodData)} */
 	public List<String> getSuccs(String type, IEObjectCoveringRegion offset) {
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getCFE(offset);

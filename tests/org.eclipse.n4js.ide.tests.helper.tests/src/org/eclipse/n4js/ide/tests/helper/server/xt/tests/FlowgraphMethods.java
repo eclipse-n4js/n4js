@@ -10,23 +10,23 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
  * Test for test methods:
  * <ul>
- * <li/>{@link XtIdeTest#allBranches(MethodData)}
- * <li/>{@link XtIdeTest#allEdges(MethodData)}
- * <li/>{@link XtIdeTest#allMergeBranches(MethodData)}
- * <li/>{@link XtIdeTest#allPaths(MethodData)}
- * <li/>{@link XtIdeTest#astOrder(MethodData)}
- * <li/>{@link XtIdeTest#cfContainer(MethodData)}
- * <li/>{@link XtIdeTest#instanceofguard(MethodData)}
- * <li/>{@link XtIdeTest#commonPreds(MethodData)}
- * <li/>{@link XtIdeTest#preds(MethodData)}
- * <li/>{@link XtIdeTest#succs(MethodData)}
+ * <li/>{@link XtIdeTest#allBranches(XtMethodData)}
+ * <li/>{@link XtIdeTest#allEdges(XtMethodData)}
+ * <li/>{@link XtIdeTest#allMergeBranches(XtMethodData)}
+ * <li/>{@link XtIdeTest#allPaths(XtMethodData)}
+ * <li/>{@link XtIdeTest#astOrder(XtMethodData)}
+ * <li/>{@link XtIdeTest#cfContainer(XtMethodData)}
+ * <li/>{@link XtIdeTest#instanceofguard(XtMethodData)}
+ * <li/>{@link XtIdeTest#commonPreds(XtMethodData)}
+ * <li/>{@link XtIdeTest#preds(XtMethodData)}
+ * <li/>{@link XtIdeTest#succs(XtMethodData)}
  * </ul>
  */
 public class FlowgraphMethods extends AbstractXtParentRunnerTest {

@@ -30,7 +30,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
@@ -68,11 +67,11 @@ public class XtFileDataParser {
 		String setupWorkspace = matcher.group(XT_WORKSPACE);
 
 		XtWorkspace workspace = getWorkspace(xtFile, setupWorkspace, xtFileContent);
-		List<MethodData> startupMethodData = getDefaultStartupMethodData();
-		List<MethodData> teardownMethodData = getDefaultTeardownMethodData();
+		List<XtMethodData> startupMethodData = getDefaultStartupMethodData();
+		List<XtMethodData> teardownMethodData = getDefaultTeardownMethodData();
 
-		TreeSet<XtFileData.MethodData> testMethodData1 = new TreeSet<>();
-		TreeSet<XtFileData.MethodData> testMethodData2 = new TreeSet<>();
+		TreeSet<XtMethodData> testMethodData1 = new TreeSet<>();
+		TreeSet<XtMethodData> testMethodData2 = new TreeSet<>();
 		fillTestMethodData(xtFile.toString(), xtFileContent, testMethodData1, testMethodData2);
 
 		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData1,
@@ -104,27 +103,27 @@ public class XtFileDataParser {
 		return workspace;
 	}
 
-	static List<XtFileData.MethodData> getDefaultStartupMethodData() {
-		List<MethodData> startupMethodData = new ArrayList<>();
-		startupMethodData.add(new MethodData("startAndWaitForLspServer"));
+	static List<XtMethodData> getDefaultStartupMethodData() {
+		List<XtMethodData> startupMethodData = new ArrayList<>();
+		startupMethodData.add(new XtMethodData("startAndWaitForLspServer"));
 		return startupMethodData;
 	}
 
-	static List<XtFileData.MethodData> getDefaultTeardownMethodData() {
+	static List<XtMethodData> getDefaultTeardownMethodData() {
 		return Collections.emptyList();
 	}
 
 	static void fillTestMethodData(String fileName, String xtFileContent,
-			TreeSet<XtFileData.MethodData> testMethodData1, TreeSet<XtFileData.MethodData> testMethodData2) {
+			TreeSet<XtMethodData> testMethodData1, TreeSet<XtMethodData> testMethodData2) {
 
 		for (XtMethodIterator iter = new XtMethodIterator(fileName, xtFileContent); iter.hasNext();) {
-			MethodData methodData = iter.next();
+			XtMethodData methodData = iter.next();
 			addTestMethodData(testMethodData1, testMethodData2, methodData);
 		}
 	}
 
-	private static void addTestMethodData(Collection<XtFileData.MethodData> testMethodData1,
-			Collection<XtFileData.MethodData> testMethodData2, MethodData testMethodData) {
+	private static void addTestMethodData(Collection<XtMethodData> testMethodData1,
+			Collection<XtMethodData> testMethodData2, XtMethodData testMethodData) {
 
 		switch (testMethodData.name) {
 		case "nowarnings":
@@ -139,14 +138,15 @@ public class XtFileDataParser {
 		}
 	}
 
-	static class XtMethodIterator extends AbstractIterator<MethodData> {
-		static final String NL = "\n";
+	static class XtMethodIterator extends AbstractIterator<XtMethodData> {
+		static final String NL = CommentIterator.NL;
 		static final String XT_KEYWORD = "XPECT ";
 		static final String XT_FIXME = "FIXME ";
 		static final String XT_IGNORE = "!";
 		static final String XT_EXPECT_SL = "-->";
 		static final String XT_EXPECT_ML = "---";
 		static final String XT_EXPECT_ML_LIT = "===";
+		static final String[] XT_COMMENT_STARTS = { NL, CommentIterator.COMMENT_SL_OPEN, "\n *" };
 
 		final Map<String, Integer> methodNameCounters = new HashMap<>();
 		final String fileName;
@@ -161,19 +161,19 @@ public class XtFileDataParser {
 		}
 
 		@Override
-		protected MethodData computeNext() {
+		protected XtMethodData computeNext() {
 			if (commentToken == null) {
 				commentToken = commentIter.next();
 				cursorInComment = 0;
 			}
 			String comment = commentToken.text;
 
-			Token locKeyword = skipUntil(NL, comment, cursorInComment, XT_KEYWORD);
+			Token locKeyword = skipUntil(XT_COMMENT_STARTS, comment, cursorInComment, XT_KEYWORD);
 			while (locKeyword.isEOF && commentIter.hasNext()) {
 				commentToken = commentIter.next();
 				comment = commentToken.text;
 				cursorInComment = 0;
-				locKeyword = skipUntil(NL, comment, cursorInComment, XT_KEYWORD);
+				locKeyword = skipUntil(XT_COMMENT_STARTS, comment, cursorInComment, XT_KEYWORD);
 			}
 
 			if (locKeyword.isEOF) {
@@ -221,7 +221,7 @@ public class XtFileDataParser {
 			int offset = commentToken.start + locEnd.end;
 			String mdComment = comment.substring(locStart.end, locKeyword.start).trim();
 			String mdMethodAndArgs = comment.substring(locModifier.end, locExpectation.start).trim();
-			String mdExpectation = comment.substring(locExpectation.end, locEnd.start).trim();
+			String mdExpectation = comment.substring(locExpectation.end, locEnd.start);
 			boolean isFixme = XT_FIXME.equals(locModifier.text);
 			boolean isIgnore = XT_IGNORE.equals(locModifier.text);
 			int idxEndOfName = mdMethodAndArgs.indexOf(" ");
@@ -231,11 +231,12 @@ public class XtFileDataParser {
 			methodNameCounters.put(name, counter + 1);
 
 			if (!isLiteral) {
-				mdExpectation.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", " ");
+				mdExpectation = mdExpectation.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", " ");
 			}
+			mdExpectation = mdExpectation.trim();
 
 			cursorInComment = locEnd.end;
-			return new MethodData(fileName, mdComment, name, args, counter, mdExpectation, offset, isFixme, isIgnore);
+			return new XtMethodData(fileName, mdComment, name, args, counter, mdExpectation, offset, isFixme, isIgnore);
 		}
 	}
 

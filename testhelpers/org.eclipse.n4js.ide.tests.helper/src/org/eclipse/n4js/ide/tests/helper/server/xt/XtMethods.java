@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -104,7 +103,7 @@ public class XtMethods {
 	@Inject
 	private IResourceDescription.Manager manager;
 
-	/** Implementation for {@link XtIdeTest#accessModifier(MethodData)} */
+	/** Implementation for {@link XtIdeTest#accessModifier(XtMethodData)} */
 	static public String getAccessModifierString(EObject context) {
 		String actual = null;
 		if (context instanceof TMember) {
@@ -151,7 +150,7 @@ public class XtMethods {
 		return actual;
 	}
 
-	/** Implementation for {@link XtIdeTest#elementKeyword(MethodData)} */
+	/** Implementation for {@link XtIdeTest#elementKeyword(XtMethodData)} */
 	public String getElementKeywordString(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -162,7 +161,7 @@ public class XtMethods {
 		return elementKeywordStr;
 	}
 
-	/** Implementation for {@link XtIdeTest#exportedObjects(MethodData)} */
+	/** Implementation for {@link XtIdeTest#exportedObjects(XtMethodData)} */
 	public List<String> getExportedObjectsString(IEObjectCoveringRegion ocr) {
 		IResourceDescription resourceDescription = manager.getResourceDescription(ocr.getXtextResource());
 		Iterable<IEObjectDescription> exportedObjects = resourceDescription.getExportedObjects();
@@ -176,7 +175,7 @@ public class XtMethods {
 		return exportedObjectStrings;
 	}
 
-	/** Implementation for {@link XtIdeTest#findReferences(MethodData)} */
+	/** Implementation for {@link XtIdeTest#findReferences(XtMethodData)} */
 	public List<String> getFindReferences(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -223,7 +222,7 @@ public class XtMethods {
 		return result;
 	}
 
-	/** Implementation for {@link XtIdeTest#linkedFragment(MethodData)} */
+	/** Implementation for {@link XtIdeTest#linkedFragment(XtMethodData)} */
 	public String getLinkedFragment(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -241,7 +240,7 @@ public class XtMethods {
 		return null;
 	}
 
-	/** Implementation for {@link XtIdeTest#linkedName(MethodData)} */
+	/** Implementation for {@link XtIdeTest#linkedName(XtMethodData)} */
 	@Xpect
 	public QualifiedName getLinkedName(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
@@ -269,7 +268,7 @@ public class XtMethods {
 		return name;
 	}
 
-	/** Implementation for {@link XtIdeTest#linkedPathname(MethodData)} */
+	/** Implementation for {@link XtIdeTest#linkedPathname(XtMethodData)} */
 	public String getLinkedPathname(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -308,7 +307,7 @@ public class XtMethods {
 		return pathname;
 	}
 
-	/** Implementation for {@link XtIdeTest#type(MethodData)} */
+	/** Implementation for {@link XtIdeTest#type(XtMethodData)} */
 	public String getTypeString(EObject eobject, boolean expectedType) {
 		final String calculatedString;
 		if (eobject instanceof LiteralOrComputedPropertyName) {
@@ -344,7 +343,7 @@ public class XtMethods {
 		return calculatedString;
 	}
 
-	/** Implementation for {@link XtIdeTest#typeArgs(MethodData)} */
+	/** Implementation for {@link XtIdeTest#typeArgs(XtMethodData)} */
 	public String getTypeArgumentsString(EObject eobject) {
 		final EObject container = eobject != null ? eobject.eContainer() : null;
 		if (eobject == null || !(container instanceof ParameterizedCallExpression
@@ -392,7 +391,7 @@ public class XtMethods {
 		return sb.toString();
 	}
 
-	/** Implementation for {@link XtIdeTest#scope(MethodData)} */
+	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
 	public List<String> getScopeString(IEObjectCoveringRegion ocr) {
 		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
 
@@ -417,7 +416,7 @@ public class XtMethods {
 		return scopeNames;
 	}
 
-	/** Implementation for {@link XtIdeTest#scope(MethodData)} */
+	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
 	public List<String> getScopeString2(IEObjectCoveringRegion ocr) {
 		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
 		List<String> scopeNames = new ArrayList<>();

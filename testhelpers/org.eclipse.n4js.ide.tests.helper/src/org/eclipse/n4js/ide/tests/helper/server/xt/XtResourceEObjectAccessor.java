@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
@@ -61,28 +60,28 @@ public class XtResourceEObjectAccessor {
 	}
 
 	/**
-	 * Searches for a {@link Position} starting behind the given {@link MethodData}. In case the method expects an
+	 * Searches for a {@link Position} starting behind the given {@link XtMethodData}. In case the method expects an
 	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
 	 *
 	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
 	 *
-	 * @return {@link EObject} with offset for the given {@link MethodData}
+	 * @return {@link EObject} with offset for the given {@link XtMethodData}
 	 */
-	public Position checkAndGetPosition(MethodData data, String methodName, String arg1) {
+	public Position checkAndGetPosition(XtMethodData data, String methodName, String arg1) {
 		int offset = checkAndGetOffset(data, methodName, arg1);
 		Position position = xtData.getPosition(offset);
 		return position;
 	}
 
 	/**
-	 * Searches for an {@link EObject} starting behind the given {@link MethodData}. In case the method expects an
+	 * Searches for an {@link EObject} starting behind the given {@link XtMethodData}. In case the method expects an
 	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
 	 *
 	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
 	 *
-	 * @return {@link EObject} with offset for the given {@link MethodData}
+	 * @return {@link EObject} with offset for the given {@link XtMethodData}
 	 */
-	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(MethodData data, String methodName,
+	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(XtMethodData data, String methodName,
 			String arg1) {
 
 		int offset = checkAndGetOffset(data, methodName, arg1);
@@ -91,7 +90,7 @@ public class XtResourceEObjectAccessor {
 		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
-	private int checkAndGetOffset(MethodData data, String checkArg1, String optionalLocation) {
+	private int checkAndGetOffset(XtMethodData data, String checkArg1, String optionalLocation) {
 		Preconditions.checkArgument(data.name.equals(checkArg1));
 		String optionalLocationStr = null;
 		if (data.args.length() > 1) {

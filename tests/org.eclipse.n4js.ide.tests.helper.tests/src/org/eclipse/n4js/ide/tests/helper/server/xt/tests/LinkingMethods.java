@@ -10,16 +10,16 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
  * Test for test methods:
  * <ul>
- * <li/>{@link XtIdeTest#linkedName(MethodData)}
- * <li/>{@link XtIdeTest#linkedPathname(MethodData)}
- * <li/>{@link XtIdeTest#linkedFragment(MethodData)}
+ * <li/>{@link XtIdeTest#linkedName(XtMethodData)}
+ * <li/>{@link XtIdeTest#linkedPathname(XtMethodData)}
+ * <li/>{@link XtIdeTest#linkedFragment(XtMethodData)}
  * </ul>
  */
 public class LinkingMethods extends AbstractXtParentRunnerTest {

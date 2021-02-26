@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
-import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,9 +20,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.junit.runner.Description;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 
@@ -31,124 +28,6 @@ import com.google.common.collect.Iterables;
  * Meta data to describe a test file
  */
 public class XtFileData {
-
-	/**
-	 * Meta data to describe a test method
-	 */
-	static public class MethodData implements Serializable, Comparable<MethodData> {
-		/** Opening bracket used for the Xpect Eclipse Plugin to enable 'Open Xpect Method' in context menu */
-		static final public char OPEN_BRACKET = '\u3014';
-		/** Closing bracket used for the Xpect Eclipse Plugin to enable 'Open Xpect Method' in context menu */
-		static final public char CLOSE_BRACKET = '\u3015';
-
-		/** Name of the xt file this method is contained in. */
-		final public String fileName;
-		/** Test comment. Stated before the test keyword. */
-		final public String comment;
-		/** Test name. Stated after the test keyword. */
-		final public String name;
-		/** Test arguments. Stated after the test name. */
-		final public String args;
-		/** Test number. Tests with same names are grouped. */
-		final public int count;
-		/** Test expectation. Stated after the test divider ({@code -->} or {@code ---}). */
-		final public String expectation;
-		/** End offset of test location in file */
-		final public int offset;
-		/** True iff this test is expected to fail */
-		final public boolean isFixme;
-		/** True if this test should be ignored */
-		final public boolean isIgnore;
-
-		/** Constructor */
-		public MethodData(String name) {
-			this("", "", name, "", 0, "", 0, false, false);
-		}
-
-		/** Constructor */
-		public MethodData(String fileName, String comment, String name, String args, int count, String expectation,
-				int offset,
-				boolean isFixme, boolean isIgnore) {
-
-			this.fileName = fileName;
-			this.comment = comment.trim();
-			this.name = name;
-			this.args = args;
-			this.count = count;
-			this.expectation = expectation.trim();
-			this.offset = offset;
-			this.isFixme = isFixme;
-			this.isIgnore = isIgnore;
-		}
-
-		/** @return Description for JUnit */
-		public Description getDescription(XtFileData xtFileData) {
-			String xpectMethodName = name + "~" + count;
-			String commentOrArgs = (comment.isBlank() ? args : comment);
-			String delimiter = !getModifier().isBlank() && !commentOrArgs.isBlank() ? " " : "";
-			String modifierWithCommentOrArgs = getModifier() + delimiter + commentOrArgs;
-			String xtFileLocation = OPEN_BRACKET + xtFileData.relativePath + CLOSE_BRACKET;
-
-			String className = (comment.isBlank() ? xpectMethodName : comment);
-
-			// for compatibility with the Xpect ui plug-in
-			// the description name needs to start with the method name, the '~', the count
-			// followed by the file location in special brackets
-			// see:
-			// https://github.com/eclipse/Xpect/blob/0e5186a5fd96d4c82536fcff9acfa6ffada9fff8/org.eclipse.xpect.ui.junit/src/org/eclipse/xpect/ui/junit/TestDataUIUtil.java#L82
-			String descrName = xpectMethodName + ": " + modifierWithCommentOrArgs + " " + xtFileLocation;
-			return Description.createTestDescription(className, descrName, this);
-		}
-
-		/** @return all elements separated by space */
-		public String getMethodNameWithArgs() {
-			return name + (hasArgs() ? " " + args : "");
-		}
-
-		/** @return true iff {@link #args} returns a non-blank string */
-		public boolean hasArgs() {
-			return !args.isBlank();
-		}
-
-		/** @return the modifier's keyword or null if not existing */
-		public String getModifier() {
-			if (isFixme) {
-				return XtFileDataParser.XtMethodIterator.XT_FIXME;
-			}
-			if (isIgnore) {
-				return XtFileDataParser.XtMethodIterator.XT_IGNORE;
-			}
-			return "";
-		}
-
-		@Override
-		public int compareTo(MethodData md) {
-			int nameCompareResult = fileName.compareTo(md.fileName);
-			if (nameCompareResult != 0) {
-				return nameCompareResult;
-			}
-			return offset - md.offset;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof MethodData) {
-				MethodData md = (MethodData) obj;
-				return Objects.equal(md.fileName, fileName) && md.offset == offset;
-			}
-			return false;
-		}
-
-		@Override
-		public int hashCode() {
-			return fileName.hashCode() + offset;
-		}
-
-		@Override
-		public String toString() {
-			return name + " --> " + expectation;
-		}
-	}
 
 	/** Test file */
 	final public File xtFile;
@@ -165,18 +44,18 @@ public class XtFileData {
 	/** Workspace, either default or according to description in SETUP section */
 	final public XtWorkspace workspace;
 	/** Methods to execute to start the LSP server */
-	final public List<MethodData> startupMethodData;
+	final public List<XtMethodData> startupMethodData;
 	/** Test methods, first run */
-	final public Collection<MethodData> testMethodData1;
+	final public Collection<XtMethodData> testMethodData1;
 	/** Test methods, second run */
-	final public Collection<MethodData> testMethodData2;
+	final public Collection<XtMethodData> testMethodData2;
 	/** Methods to execute to terminate the LSP server */
-	final public List<MethodData> teardownMethodData;
+	final public List<XtMethodData> teardownMethodData;
 
 	/** Constructor */
 	public XtFileData(File xtFile, String content, String setupRunnerName, XtWorkspace workspace,
-			List<MethodData> startupMethodData, Collection<MethodData> testMethodData1,
-			Collection<MethodData> testMethodData2, List<MethodData> teardownMethodData) {
+			List<XtMethodData> startupMethodData, Collection<XtMethodData> testMethodData1,
+			Collection<XtMethodData> testMethodData2, List<XtMethodData> teardownMethodData) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
 
@@ -253,7 +132,7 @@ public class XtFileData {
 	}
 
 	/** @return all tests */
-	public Iterable<MethodData> getTestMethodData() {
+	public Iterable<XtMethodData> getTestMethodData() {
 		return Iterables.concat(testMethodData1, testMethodData2);
 	}
 

@@ -19,9 +19,9 @@ import java.util.Iterator;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
-import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.FolderBuilder;
-import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.FolderBuilder.ModuleBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder;
+import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder;
+import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder.OtherFileBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.YarnProjectBuilder;
 
 import com.google.common.base.Objects;
@@ -162,6 +162,7 @@ public class XtSetupWorkspaceParser {
 			ProjectBuilder prjBuilder, String path) {
 
 		String newPath = path + File.separator + tokens.expectNameInQuotes();
+		prjBuilder.getOrAddFolder(newPath);
 		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, newPath, "Folder");
 	}
 
@@ -220,16 +221,16 @@ public class XtSetupWorkspaceParser {
 		String nameWithoutExtension = name.substring(0, idx);
 		String extension = name.substring(idx + 1);
 		boolean isModule = N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
+		OtherFileBuilder fileBuilder = null;
 		if (isModule) {
-			ModuleBuilder moduleBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
+			fileBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
 			folderBuilder.setSourceFolder();
-			if (isThis) {
-				BuilderInfo bi = folderBuilder.getBuilderInfo();
-				bi.moduleNameOfXtFile = folderBuilder.getName() + "/"
-						+ moduleBuilder.getNameWithExtension();
-			}
 		} else {
-			folderBuilder.addFile(name, content);
+			fileBuilder = folderBuilder.addFile(name, content);
+		}
+		if (isThis) {
+			BuilderInfo bi = folderBuilder.getBuilderInfo();
+			bi.moduleNameOfXtFile = fileBuilder.getPath();
 		}
 	}
 
