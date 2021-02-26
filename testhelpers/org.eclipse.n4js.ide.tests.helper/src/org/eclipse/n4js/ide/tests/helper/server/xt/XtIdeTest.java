@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
@@ -177,6 +179,9 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "accessModifier":
 			accessModifier(testMethodData);
 			break;
+		case "completion":
+			completion(testMethodData);
+			break;
 		case "definition":
 			definition(testMethodData);
 			break;
@@ -329,6 +334,30 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Calls LSP endpoint 'completion'.
+	 *
+	 * <pre>
+	 * // Xpect completion --&gt; &ltCOMPLETIONS&gt
+	 * </pre>
+	 *
+	 * COMPLETIONS is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void completion(XtMethodData data) throws InterruptedException, ExecutionException {
+		Position position = eobjProvider.checkAndGetPosition(data, "completion", "at");
+		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
+
+		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = callCompletion(
+				uri.toString(), position.getLine(), position.getCharacter());
+
+		Either<List<CompletionItem>, CompletionList> result = future.get();
+		List<CompletionItem> items = result.isLeft() ? result.getLeft() : result.getRight().getItems();
+
+		List<String> ciItems = Lists.transform(items, ci -> getStringLSP4J().toString(ci));
+		assertEqualIterables(data.expectation, ciItems);
+	}
+
+	/**
 	 * Calls LSP endpoint 'definition'.
 	 *
 	 * <pre>
@@ -436,8 +465,8 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
-	 * Similar to {@link #linkedName(XtMethodData)} but concatenating the fully qualified name again instead of using the
-	 * qualified name provider, as the latter may not create a valid name for non-globally available elements.
+	 * Similar to {@link #linkedName(XtMethodData)} but concatenating the fully qualified name again instead of using
+	 * the qualified name provider, as the latter may not create a valid name for non-globally available elements.
 	 * <p>
 	 * The qualified name created by retrieving all "name" properties of the target and its containers, using '/' as
 	 * separator.
