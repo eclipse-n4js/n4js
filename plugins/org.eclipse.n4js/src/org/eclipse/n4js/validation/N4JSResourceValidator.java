@@ -173,13 +173,13 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		return true;
 	}
 
-	private Issue createInvalidFileTypeError(Resource res, IN4JSProject project) {
+	private static Issue createInvalidFileTypeError(Resource res, IN4JSProject project) {
 		final String projectTypeStr = PackageJsonUtils.getProjectTypeStringRepresentation(project.getProjectType());
 		final String msg = IssueCodes.getMessageForINVALID_FILE_TYPE_FOR_PROJECT_TYPE(projectTypeStr);
 		return createFileIssue(res, msg, IssueCodes.INVALID_FILE_TYPE_FOR_PROJECT_TYPE);
 	}
 
-	private Issue createPostProcessingFailedError(Resource res, Throwable th) {
+	private static Issue createPostProcessingFailedError(Resource res, Throwable th) {
 		final String thKind = th instanceof Error ? "error" : (th instanceof Exception ? "exception" : "throwable");
 		final String thName = th.getClass().getSimpleName();
 		final String trace = "\n" + Stream.of(th.getStackTrace())
@@ -189,7 +189,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		return createFileIssue(res, msg, IssueCodes.POST_PROCESSING_FAILED);
 	}
 
-	private Issue createFileIssue(Resource res, String message, String issueCode) {
+	private static Issue createFileIssue(Resource res, String message, String issueCode) {
 		final Issue.IssueImpl issue = new LSPIssue();
 		issue.setCode(issueCode);
 		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
