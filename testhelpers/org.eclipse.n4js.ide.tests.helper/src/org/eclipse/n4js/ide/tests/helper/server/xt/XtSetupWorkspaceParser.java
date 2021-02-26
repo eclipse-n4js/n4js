@@ -38,7 +38,7 @@ public class XtSetupWorkspaceParser {
 		int cursor;
 
 		TokenStream(String setupWorkspace) {
-			this.tokens = setupWorkspace.trim().split("(?<=\\S)(?=\\{|\\})|[=\\s]+");
+			this.tokens = setupWorkspace.trim().split("(?<=\\S)(?=\\{|\\})|(?<=\\{|\\})(?=\\S)|[=\\s]+");
 			this.cursor = 0;
 		}
 
@@ -132,7 +132,8 @@ public class XtSetupWorkspaceParser {
 		if (Objects.equal(tokens.current(), "{")) { // optional block
 			tokens.expect("{");
 			LOOP: while (tokens.hasNext()) {
-				switch (tokens.next()) {
+				String currToken = tokens.next();
+				switch (currToken) {
 				case "Folder": {
 					parseFolder(tokens, xtFile, xtFileContent, prjBuilder, path);
 					break;
@@ -151,8 +152,8 @@ public class XtSetupWorkspaceParser {
 					break LOOP;
 				default:
 					Preconditions.checkState(false,
-							ERROR + "Unexpected token in " + metaName + ": " + tokens.current() + " in file "
-									+ xtFile.getPath());
+							ERROR + "Unexpected token in " + metaName + ": " + tokens.current()
+									+ " in file " + xtFile.getPath());
 				}
 			}
 		}
@@ -169,9 +170,9 @@ public class XtSetupWorkspaceParser {
 	private static void parseFile(TokenStream tokens, File xtFile, String xtFileContent, boolean isThis,
 			FolderBuilder folderBuilder) {
 
+		File strippedXtFile = XtFileData.stripXtExtension(xtFile);
 		Path xtFileFolder = xtFile.toPath().getParent();
 		String nameInQuotes = tokens.hasNameInQuotes() ? tokens.expectNameInQuotes() : null; // optional
-		String content = isThis ? xtFileContent : null;
 		Path fromFile = nameInQuotes == null ? null : xtFileFolder.resolve(nameInQuotes);
 
 		if (Objects.equal(tokens.current(), "{")) { // optional block
@@ -184,7 +185,7 @@ public class XtSetupWorkspaceParser {
 									+ xtFile.getPath());
 
 					String copyContentFrom = tokens.expectNameInQuotes();
-					fromFile = xtFileFolder.resolve(copyContentFrom);
+					fromFile = xtFileFolder.resolve(copyContentFrom).normalize();
 					break;
 				case "}":
 					break LOOP;
@@ -195,14 +196,19 @@ public class XtSetupWorkspaceParser {
 			}
 		}
 
+		boolean implicitIsThis = fromFile != null && fromFile.equals(xtFile.toPath());
+		isThis |= implicitIsThis;
 		String name = nameInQuotes != null ? nameInQuotes : //
-				(isThis ? XtFileData.stripXtExtension(xtFile).getName() : //
+				(isThis ? strippedXtFile.getName() : //
 						(fromFile != null ? fromFile.toFile().getName() : null));
 
 		Preconditions.checkState(name != null,
 				ERROR + "Missing new file name in file " + xtFile.getPath());
 
-		if (!isThis) {
+		String content = null;
+		if (isThis) {
+			content = xtFileContent;
+		} else {
 			Preconditions.checkState(fromFile != null,
 					ERROR + "Missing file name to load content from " + name + " in file " + xtFile.getPath());
 

@@ -82,12 +82,9 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 						try {
 							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, file);
 							fileRunners.add(fileRunner);
-						} catch (IOException e) {
-							e.printStackTrace();
-						} catch (IllegalStateException e) {
-							// precondition failed. Problem should show up in the JUnit view.
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
+							// precondition failed. Problem should show up in the JUnit view.
 							e.printStackTrace();
 						}
 					}

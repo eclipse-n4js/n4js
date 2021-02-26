@@ -231,7 +231,7 @@ public class XtFileDataParser {
 			methodNameCounters.put(name, counter + 1);
 
 			if (!isLiteral) {
-				mdExpectation = mdExpectation.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", " ");
+				mdExpectation = mdExpectation.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", "\n");
 			}
 			mdExpectation = mdExpectation.trim();
 
