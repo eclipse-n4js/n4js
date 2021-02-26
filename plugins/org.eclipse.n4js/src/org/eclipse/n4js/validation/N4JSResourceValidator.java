@@ -27,6 +27,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -47,6 +48,7 @@ import com.google.inject.Inject;
  * It will not create issues for resources which are contained in folders that are filtered by module filters in the
  * manifest.
  */
+@SuppressWarnings("deprecation")
 public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Inject
@@ -171,13 +173,13 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		return true;
 	}
 
-	private static Issue createInvalidFileTypeError(Resource res, IN4JSProject project) {
+	private Issue createInvalidFileTypeError(Resource res, IN4JSProject project) {
 		final String projectTypeStr = PackageJsonUtils.getProjectTypeStringRepresentation(project.getProjectType());
 		final String msg = IssueCodes.getMessageForINVALID_FILE_TYPE_FOR_PROJECT_TYPE(projectTypeStr);
 		return createFileIssue(res, msg, IssueCodes.INVALID_FILE_TYPE_FOR_PROJECT_TYPE);
 	}
 
-	private static Issue createPostProcessingFailedError(Resource res, Throwable th) {
+	private Issue createPostProcessingFailedError(Resource res, Throwable th) {
 		final String thKind = th instanceof Error ? "error" : (th instanceof Exception ? "exception" : "throwable");
 		final String thName = th.getClass().getSimpleName();
 		final String trace = "\n" + Stream.of(th.getStackTrace())
@@ -187,8 +189,8 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		return createFileIssue(res, msg, IssueCodes.POST_PROCESSING_FAILED);
 	}
 
-	private static Issue createFileIssue(Resource res, String message, String issueCode) {
-		final Issue.IssueImpl issue = new Issue.IssueImpl();
+	private Issue createFileIssue(Resource res, String message, String issueCode) {
+		final Issue.IssueImpl issue = new LSPIssue();
 		issue.setCode(issueCode);
 		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
 		issue.setMessage(message);
