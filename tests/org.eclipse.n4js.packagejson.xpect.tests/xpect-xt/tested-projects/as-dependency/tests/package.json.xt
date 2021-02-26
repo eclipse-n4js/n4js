@@ -37,7 +37,7 @@
 		"testedProjects": [
 			// XPECT noerrors 
 			"lib1", 
-			// XPECT errors --> "The project reference lib2 in tested projects must also be declared as explicit project dependency in dependencies or devDependencies. " at ""lib2""
+			// XPECT errors --> "The project reference lib2 in tested projects must also be declared as explicit project dependency in dependencies or devDependencies." at ""lib2""
 			"lib2",
 			// XPECT errors --> "Project does not exist with project ID: does-not-exist." at ""does-not-exist""
 			"does-not-exist"

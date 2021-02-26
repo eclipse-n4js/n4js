@@ -45,19 +45,19 @@
 	"name": "ranges",
 	"version": "0.0.1",
 	"dependencies": {
-		// XPECT noIssues --> "10.0.0 < 11.0.0"
+		// XPECT nowarnings --> "10.0.0 < 11.0.0"
 		"one": ">10.0.0 <100.0.0",
-		// XPECT noIssues --> "12.0.0 <= 12.0.0"
+		// XPECT nowarnings --> "12.0.0 <= 12.0.0"
 		"two": ">=12.0.0 <100.0.0",
-		// XPECT issues --> "Project three is required in version >13.0.0 <100.0.0, but only version 13.0.0 is present." at ""three": ">13.0.0 <100.0.0""
+		// XPECT warnings --> "Project three is required in version >13.0.0 <100.0.0, but only version 13.0.0 is present." at ""three": ">13.0.0 <100.0.0""
 		"three": ">13.0.0 <100.0.0",
-		// XPECT issues --> "Project four is required in version >15.0.0 <13.0.0, but only version 14.0.0 is present." at ""four": ">15.0.0 <13.0.0""
+		// XPECT warnings --> "Project four is required in version >15.0.0 <13.0.0, but only version 14.0.0 is present." at ""four": ">15.0.0 <13.0.0""
 		"four": ">15.0.0 <13.0.0",
-		// XPECT issues --> "Project five is required in version >1.0.0 <15.0.0, but only version 15.0.0 is present." at ""five": ">1.0.0 <15.0.0""
+		// XPECT warnings --> "Project five is required in version >1.0.0 <15.0.0, but only version 15.0.0 is present." at ""five": ">1.0.0 <15.0.0""
 		"five": ">1.0.0 <15.0.0",
-		// XPECT noIssues --> "16.0.0 >= 16.0.0"
+		// XPECT nowarnings --> "16.0.0 >= 16.0.0"
 		"six": ">1.0.0 <=16.0.0",
-		// XPECT noIssues --> "18.0.0 > 17.0.0"
+		// XPECT nowarnings --> "18.0.0 > 17.0.0"
 		"seven": ">1.0.0 <18.0.0"
 	},
 	"n4js": {

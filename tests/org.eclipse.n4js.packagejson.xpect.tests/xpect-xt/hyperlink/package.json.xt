@@ -32,13 +32,13 @@
 
 {
 	"name": "P",
-	// XPECT hyperlinks at '"ma<|>in"' --> platform:/resource/P/src/main.n4js
+	// XPECT FIXME definition at '"ma<|>in"' --> platform:/resource/P/src/main.n4js
 	"main": "src/main.n4js",
 	"n4js": {
 		"projectType": "definition",
-		// XPECT hyperlinks at 'li<|>b1' --> platform:/resource/lib1/package.json
+		// XPECT FIXME definition at 'li<|>b1' --> platform:/resource/lib1/package.json
 		"definesPackage": "lib1",
-		// XPECT hyperlinks at '"ma<|>inModule"' --> platform:/resource/P/src/main.n4js
+		// XPECT FIXME definition at '"ma<|>inModule"' --> platform:/resource/P/src/main.n4js
 		"mainModule": "main",
 		"sources": {
 			"source": [
@@ -46,16 +46,16 @@
 			]
 		},
 		"requiredRuntimeLibraries": [
-			// XPECT hyperlinks at 'li<|>b1' --> platform:/resource/lib1/package.json
+			// XPECT FIXME definition at 'li<|>b1' --> platform:/resource/lib1/package.json
 			"lib1"
 		]
 	},
 	"dependencies": {
-		// XPECT hyperlinks at 'li<|>b1' --> platform:/resource/lib1/package.json
+		// XPECT FIXME definition at 'li<|>b1' --> platform:/resource/lib1/package.json
 		"lib1": ""
 	},
 	"devDependencies": {
-		// XPECT hyperlinks at 'li<|>b1' --> platform:/resource/lib1/package.json
+		// XPECT FIXME definition at 'li<|>b1' --> platform:/resource/lib1/package.json
 		// XPECT errors -->"Duplicate project reference lib1." at ""lib1": """
 		"lib1": ""
 	}

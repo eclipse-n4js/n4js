@@ -23,7 +23,6 @@
 {
 	/** XPECT errors ---
 	   "The package name "MyProjectName" does not match the name of the project folder "OtherProjectName" on the file system." at ""MyProjectName""
-	   "The package name "MyProjectName" does not match project name "OtherProjectName" used in the Eclipse workspace." at ""MyProjectName""
 	   ---
 	 */
 	"name": "MyProjectName",

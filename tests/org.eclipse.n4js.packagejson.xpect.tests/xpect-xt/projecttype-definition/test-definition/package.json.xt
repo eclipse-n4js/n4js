@@ -32,9 +32,9 @@
 	"name": "test-definition",
 	"version": "0.0.1",
 	"dependencies": {
-		// Non-definition projects may be referenced XPECT noIssues 
+		// Non-definition projects may be referenced XPECT noerrors
 		"unrelated-lib": "*",
-		// Other definition projects may be referenced XPECT noIssues
+		// Other definition projects may be referenced XPECT noerrors
 		"definition": "*"
 	},
 	"n4js": {

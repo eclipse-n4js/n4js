@@ -43,7 +43,7 @@
 		"requiredRuntimeLibraries": [
 			// XPECT noerrors 
 			"rl1",
-			// XPECT errors --> "The project reference rl2 in required runtime libraries must also be declared as explicit project dependency in dependencies or devDependencies. " at ""rl2""
+			// XPECT errors --> "The project reference rl2 in required runtime libraries must also be declared as explicit project dependency in dependencies or devDependencies." at ""rl2""
 			"rl2",
 			// XPECT noerrors
 			"rl3"

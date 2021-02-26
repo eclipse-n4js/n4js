@@ -40,7 +40,7 @@
 				"src"
 			]
 		},
-		// XPECT warnings --> "Tested projects should have the same project type." at "["project.api", "project.library"]"
+		// XPECT warnings --> "Tested projects should have the same project type." at "[ "project.api", "project.library" ]"
 		"testedProjects": [
 			"project.api",
 			"project.library"

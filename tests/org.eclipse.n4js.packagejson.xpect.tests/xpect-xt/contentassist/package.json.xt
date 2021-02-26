@@ -23,7 +23,7 @@
 
 
 {
-	/* XPECT contentAssistList at '<|>"name": "P",' proposals ---
+	/* XPECT FIXME completion at '<|>"name": "P",' ---
 	   	<array> - Generic name array pair,
 	   	<object> - Generic name object pair,
 	   	<value> - Generic name value pair,
@@ -35,7 +35,7 @@
 		workspaces - Projects definition of the yarn workspace
 	--- */
 	"name": "P",
-	/* XPECT contentAssistList at '"n4js": {<|>' proposals ---
+	/* XPECT FIXME completion at '"n4js": {<|>' ---
 	   	<array> - Generic name array pair,
 	   	<object> - Generic name object pair,
 	   	<value> - Generic name value pair,

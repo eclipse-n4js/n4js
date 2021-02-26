@@ -49,15 +49,15 @@
 		"one": "11.0.0",
 		// XPECT noerrors --> "12 is short form of 12.0.0 hence 12.0.0 = 12.0.0"
 		"two": "12.0.0",
-		// XPECT issues --> "Project three is required in version 0.0.0, but only version 13.0.0 is present." at ""three": "0.0.0""
+		// XPECT warnings --> "Project three is required in version 0.0.0, but only version 13.0.0 is present." at ""three": "0.0.0""
 		"three": "0.0.0",
-		// XPECT issues --> "Project four is required in version 0, but only version 14.0.0 is present." at ""four": "0""
+		// XPECT warnings --> "Project four is required in version 0, but only version 14.0.0 is present." at ""four": "0""
 		"four": "0",
 		// XPECT noerrors --> ""*" is short form of 0.0.0 hence 0.0.0 = 15.0.0"
 		"five": "*",
-		// XPECT issues --> "Project six is required in version 1.0.0, but only version 16.0.0 is present." at ""six": "1.0.0""
+		// XPECT warnings --> "Project six is required in version 1.0.0, but only version 16.0.0 is present." at ""six": "1.0.0""
 		"six": "1.0.0",
-		// XPECT issues --> "Project seven is required in version 10.0.0, but only version 17.0.0 is present." at ""seven": "10.0.0""
+		// XPECT warnings --> "Project seven is required in version 10.0.0, but only version 17.0.0 is present." at ""seven": "10.0.0""
 		"seven": "10.0.0"
 	},
 	"n4js": {
