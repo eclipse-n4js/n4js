@@ -44,7 +44,7 @@
 				"src"
 			]
 		},
-		// XPECT warnings -->"Tested projects should have the same project type." at "["test.data.re.project", "test.data.rl.project.one"]"
+		// XPECT warnings -->"Tested projects should have the same project type." at "[ "test.data.re.project", "test.data.rl.project.one" ]"
 		"testedProjects": [
 			"test.data.re.project",
 			"test.data.rl.project.one"

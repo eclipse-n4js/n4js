@@ -52,7 +52,10 @@
 		"test.data.test.project.one": "*",
 		
 		"test.data.rl.project.two": "*",
-		// XPECT errors --> "Project cannot reference itself." at ""test.03": "*""
+		// XPECT errors ---
+		// "Project cannot reference itself." at ""test.03": "*""
+		// "Dependency cycle of the projects: test.03." at ""test.03""
+		// ---
 		"test.03": "*"
 	},
 	"n4js": {
@@ -68,9 +71,12 @@
 		// XPECT warnings --> "Provided runtime libraries cannot be specified for runtime library projects." at ""providedRuntimeLibraries": [""]"
 		"providedRuntimeLibraries": [""],
 		"requiredRuntimeLibraries": [
-			/* XPECT issues ---
-			"Project test.data.system.project.one of type library cannot be declared among the required runtime libraries." at ""test.data.system.project.one""
+			/* XPECT errors ---
 			"The project reference test.data.system.project.one in required runtime libraries must also be declared as explicit project dependency in dependencies or devDependencies." at ""test.data.system.project.one""
+			---
+			*/
+			/* XPECT warnings ---
+			"Project test.data.system.project.one of type library cannot be declared among the required runtime libraries." at ""test.data.system.project.one""
 			---
 			*/
 			"test.data.system.project.one",

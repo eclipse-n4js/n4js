@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
 	Workspace {
 		Project "IDE2101_missingDep" {
-			ThisFile "package.json" {from="../../IDE_2101/IDE2101_missingDep/package.json.xt"}
+			ThisFile "package.json" {}
 			Folder "tst" { }
 		}
 

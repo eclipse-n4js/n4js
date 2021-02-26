@@ -31,7 +31,7 @@
 	"name": "test.11",
 	"version": "0.0.1",
 	"dependencies": {
-		 // XPECT warnings --> "Implementation ID mismatch. Current project belongs to 'api_1' implementation while test.data.lib.project.two project belongs to 'api_2' implementation." at ""test.data.lib.project.two" : "*""
+		 // XPECT warnings --> "Implementation ID mismatch. Current project belongs to 'api_1' implementation while test.data.lib.project.two project belongs to 'api_2' implementation." at ""test.data.lib.project.two": "*""
 		"test.data.lib.project.two": "*"
 	},
 	"n4js": {

@@ -14,7 +14,7 @@
 	Workspace {
 		JavaProject "test-definition" {
 			Folder "src" {}
-			ThisFile "package.json" {from="../test-definition/package.json.xt"}
+			ThisFile "package.json" {}
 		}
 		JavaProject "definition" {
 			Folder "src" {}

@@ -14,7 +14,7 @@
 	Workspace {
 		JavaProject "OtherProjectName" {
 			Folder "src" {}
-			ThisFile "package.json" {from="../projectName/package.json.xt"}
+			ThisFile "package.json" {}
 		}
 	}
 

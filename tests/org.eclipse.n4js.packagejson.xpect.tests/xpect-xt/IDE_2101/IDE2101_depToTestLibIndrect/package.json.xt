@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
 	Workspace {
 		Project "IDE2101_depToTestLibIndrect" {
-			ThisFile "package.json" {from="../../IDE_2101/IDE2101_depToTestLibIndrect/package.json.xt"}
+			ThisFile "package.json" {}
 			Folder "tst" { }
 		}
 		Project "pDepToTestLib" {

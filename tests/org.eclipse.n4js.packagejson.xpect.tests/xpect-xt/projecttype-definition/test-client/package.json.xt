@@ -14,7 +14,7 @@
 	Workspace {
 		JavaProject "test-client" {
 			Folder "src" {}
-			ThisFile "package.json" {from="../test-client/package.json.xt"}
+			ThisFile "package.json" {}
 		}
 		JavaProject "impl" {
 			Folder "src" {}

@@ -13,7 +13,7 @@
 
 	Workspace {
 		Project "P" {
-			ThisFile { from = "package.json.xt" }
+			ThisFile {}
 			Folder "src" {}
 		}
 	}

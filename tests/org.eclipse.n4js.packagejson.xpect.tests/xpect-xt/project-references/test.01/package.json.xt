@@ -52,8 +52,11 @@
 		// XPECT noerrors --> "error is reported on subsequent occurances"
 		"test.data.system.project.two": "*",
 		/* XPECT warnings --- 
+		  "Property test.data.system.project.two duplicates property test.data.system.project.two (line 53)." at "\"test.data.system.project.two\""
+		 ---
+		 */
+		/* XPECT errors --- 
 		  "Duplicate project reference test.data.system.project.two." at "\"test.data.system.project.two\": \"*\""
-		  "Property test.data.system.project.two duplicates property test.data.system.project.two (line 57)." at "\"test.data.system.project.two\""
 		 ---
 		 */
 		"test.data.system.project.two": "*",
@@ -61,7 +64,8 @@
 		"test.data.re.project": "*",
 		// XPECT errors -->	"Project does not exist with project ID: xxx.yyy.zzz." at "\"xxx.yyy.zzz\": \"*\""
 		"xxx.yyy.zzz": "*",
-		// XPECT errors -->	"Project cannot reference itself." at "\"test.01\": \"*\""
+		// XPECT errors ---	"Project cannot reference itself." at "\"test.01\": \"*\""
+		//                  "Dependency cycle of the projects: test.01." at "\"test.01\"" ---
 		"test.01": "*",
 		// XPECT noerrors
 		"test.data.test.project.one": "*",

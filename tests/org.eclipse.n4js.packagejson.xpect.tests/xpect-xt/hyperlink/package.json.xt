@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
 	Workspace {
 		Project "P" {
-			ThisFile "package.json" { from = "package.json.xt" }
+			ThisFile "package.json" {}
 			Folder "src" {
 				File "main.n4js" {from="src/main.n4js"}
 			}
