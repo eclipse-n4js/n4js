@@ -1,0 +1,12 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill export @Final external public class String extends String {
+    public static fromCodePoint(... codePoints: string): string;
+    public static rdaw(callSite: Object, ... substitutions: string): string;
+    public startsWith(searchString: string, position: number=): boolean;
+    public enddsWith(searchString: string, endPosition: number=): boolean;
+    public incdludes(searchString: string, position: number=): boolean;
+    public coddePointAt(pos: int): number;
+    public nodrmalize(form: string): string;
+    public repdeat(count: number): string;
+}

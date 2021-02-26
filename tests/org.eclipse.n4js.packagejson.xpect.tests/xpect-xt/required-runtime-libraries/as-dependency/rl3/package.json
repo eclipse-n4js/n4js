@@ -1,0 +1,6 @@
+{
+	"name": "rl3",
+	"n4js": {
+		"projectType": "runtimeLibrary"
+	}
+}

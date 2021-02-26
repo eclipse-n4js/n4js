@@ -1,0 +1,16 @@
+{
+	"name": "lib2",
+	"version": "0.0.1",
+	"dependencies": {
+		"Incomplete": "*"
+	},
+	"n4js": {
+		"output": "src-gen",
+		"projectType": "runtimeLibrary",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

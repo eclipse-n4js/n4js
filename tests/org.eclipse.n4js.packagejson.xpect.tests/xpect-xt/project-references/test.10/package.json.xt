@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+			Project "test.10" {
+				File "package.json" { from="../test.10/package.json.xt" }
+				Folder "src" { }
+			}
+			Project "test.data.re.project" {
+				File "package.json" { from="../test.data.re.project/package.json" }
+			}
+			Project "test.data.rl.project.one" {
+				File "package.json" { from="../test.data.rl.project.one/package.json" }
+			}
+	}
+
+   END_SETUP
+ */
+
+{
+	"name": "test.10",
+	"version": "0.0.1",
+	"dependencies": {
+		"test.data.re.project": "*",
+		"test.data.rl.project.one": "*"
+	},
+	"n4js": {
+		"projectType": "test",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		// XPECT warnings -->"Tested projects should have the same project type." at "["test.data.re.project", "test.data.rl.project.one"]"
+		"testedProjects": [
+			"test.data.re.project",
+			"test.data.rl.project.one"
+		]
+	}
+}

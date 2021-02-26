@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		JavaProject "test-definition" {
+			Folder "src" {}
+			ThisFile "package.json" {from="../test-definition/package.json.xt"}
+		}
+		JavaProject "definition" {
+			Folder "src" {}
+			File "package.json" {from="../definition/package.json"}
+		}
+		JavaProject "unrelated-lib" {
+			Folder "src" {}
+			File "package.json" {from="../unrelated-lib/package.json"}
+		}
+	}
+
+	END_SETUP
+ */
+{
+	"name": "test-definition",
+	"version": "0.0.1",
+	"dependencies": {
+		// Non-definition projects may be referenced XPECT noIssues 
+		"unrelated-lib": "*",
+		// Other definition projects may be referenced XPECT noIssues
+		"definition": "*"
+	},
+	"n4js": {
+		"projectType": "definition",
+		"definesPackage": "does-not-exist",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
