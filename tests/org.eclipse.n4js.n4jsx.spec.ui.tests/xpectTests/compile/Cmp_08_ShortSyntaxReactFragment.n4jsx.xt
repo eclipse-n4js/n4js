@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
 
 	 Workspace {
 		Project "N4JSXSpecTest" {
@@ -17,7 +17,7 @@
 				ThisFile {}
 				File "replacer.n4js" { from = "replacer.n4js" }
 			}
-			File "package.json" { from="../../package.json" }
+			File "package.json" { from="../../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "../react/index.n4jsd" }
@@ -69,9 +69,10 @@ zzzz;
 export public function logElements(): void {
 	//console.log('Hi');
 
-	let ss = </>;
-	console.log('empty React fragment');
-	console.log(JSON.stringify(ss, replacer, 4));
+	// following 3 lines have always been wrong. showed up during GH-2064
+	//let ss = </>;
+	//console.log('empty React fragment');
+	//console.log(JSON.stringify(ss, replacer, 4));
     
 	let sh = <></>
 	console.log('simple open close');

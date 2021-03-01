@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
 			}
-			File "package.json" { from="../package.json" }
+			File "package.json" { from="../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "react/index.n4jsd" }
@@ -29,14 +29,14 @@
 
 import * as React from "react";
 
-/* XPECT findReferences at MyComponent ---
+/* XPECT findReferences at 'MyComponent' ---
 findRefJSX - MyComponent - 52,
-findRefJSX - MyComponent - 52,
+findRefJSX - MyComponent - 52
 ---
 */
 class MyComponent extends
 
-	/* XPECT findReferences at aProp ---
+	/* XPECT findReferences at 'aProp' ---
 	findRefJSX - aProp="Blah" - 52
 	---
 	*/
@@ -45,7 +45,7 @@ class MyComponent extends
 	@Override
 	public render(): React.Element {
 		const constText = "some text";
-		/* XPECT findReferences at aProp ---
+		/* XPECT findReferences at 'aProp' ---
 		findRefJSX - aProp="Blah" - 52
 		---
 		*/
@@ -54,10 +54,10 @@ class MyComponent extends
 }
 
 
-// XPECT findReferences at MyReactFuncComponent --> findRefJSX - MyReactFuncComponent - 63
+// XPECT findReferences at 'MyReactFuncComponent' --> findRefJSX - MyReactFuncComponent - 63
 function MyReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
 	return (<div>{props.myProp}</div>);
 }
 
-// XPECT findReferences at myProp --> findRefJSX - myProp="My prop" - 63, findRefJSX - props.myProp - 59
+// XPECT findReferences at 'myProp' --> findRefJSX - myProp="My prop" - 63, findRefJSX - props.myProp - 59
 <MyReactFuncComponent myProp="My prop"/>

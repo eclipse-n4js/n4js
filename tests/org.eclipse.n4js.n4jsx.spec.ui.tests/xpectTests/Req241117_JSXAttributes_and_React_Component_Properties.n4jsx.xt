@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
 			}
-			File "package.json" { from="../package.json" }
+			File "package.json" { from="../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "react/index.n4jsd" }
@@ -43,10 +43,10 @@ function MyReactFuncComponent(props: ~MyProps): React.Element {
 	);
 }
 
-//XPECT errors --> "Non-optional property a,x should be specified." at "MyReactFuncComponent"
+// XPECT errors --> "Non-optional property a,x should be specified." at "MyReactFuncComponent"
 <MyReactFuncComponent y="Hi"/>;
 
-//XPECT errors --> "field z is not available for structurally referenced type ~MyProps." at "z"
+// XPECT errors --> "field z is not available for structurally referenced type ~MyProps." at "z"
 <MyReactFuncComponent a={2} x={1} y="Hello" z="I am private property"/>
 
 function MyOtherReactFuncComponent(props: ~React.ComponentProps with {a: int, b?: string}): React.Element {
@@ -57,7 +57,7 @@ function MyOtherReactFuncComponent(props: ~React.ComponentProps with {a: int, b?
 }
 
 //b is an optional property and needs not be specified
-//XPECT noerrors
+// XPECT noerrors
 <MyOtherReactFuncComponent a={5}/>;
 
 
@@ -67,5 +67,5 @@ const MyThirdrReactFuncComponent = (props: ~MyProps): React.Element =>  {
 		<div>{props.y}</div>
 	);
 }
-//XPECT errors --> "boolean is not a subtype of int." at "true"
+// XPECT errors --> "boolean is not a subtype of int." at "true"
 <MyThirdrReactFuncComponent a={1} x={true} y="Some text" />

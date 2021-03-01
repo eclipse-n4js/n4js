@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
 			}
-			File "package.json" { from="../package.json" }
+			File "package.json" { from="../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "react/index.n4jsd" }
@@ -37,17 +37,17 @@ function PureFnComponent(props: Props): React.Element {
 	return (<div>{props.myProp}</div>);
 }
 
-//XPECT noerrors
+// XPECT noerrors
 var a = <PureFnComponent myProp="This is my prop"/>
 
 class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
 	public constructor(props: ~React.ComponentProps with {whatTextShouldIShow : string}) {
 	    super(props);
 	    this.state = {
-	      //XPECT noerrors
+	      // XPECT noerrors
 	      squares: new Array<string>(9)
 	    };
-	    //XPECT noerrors
+	    // XPECT noerrors
 	    if (this.state.squares.length == 1) {
 
 	    }
@@ -55,7 +55,7 @@ class LowerComponent extends React.Component<~React.ComponentProps with {whatTex
 
 	@Override
 	public render(): React.Element {
-		//XPECT noerrors
+		// XPECT noerrors
 		return (<div>{this.props.whatTextShouldIShow}</div>);
 	}
 }
@@ -66,7 +66,7 @@ class MyComponent extends
 	@Override
 	public render(): React.Element {
 		const constText = "some text";
-		//XPECT noerrors
+		// XPECT noerrors
 		return (<LowerComponent whatTextShouldIShow="Hallo">{constText}</LowerComponent>
 		);
 	}
@@ -78,10 +78,10 @@ class MyHigherComponent extends
 	@Override
 	public render(): React.Element {
 		let d = this.state.aStateProp;
-		//XPECT warnings --> "Attribute simplePropForMyComponent is not a declared property in the props of MyComponent." at "simplePropForMyComponent"
+		// XPECT warnings --> "Attribute simplePropForMyComponent is not a declared property in the props of MyComponent." at "simplePropForMyComponent"
 		return (<MyComponent aProp="A text" simplePropForMyComponent={
          (() => {
-         	//XPECT noerrors
+		// XPECT noerrors
            if (this.props.someCondition) {
              return "ein Text";
            }

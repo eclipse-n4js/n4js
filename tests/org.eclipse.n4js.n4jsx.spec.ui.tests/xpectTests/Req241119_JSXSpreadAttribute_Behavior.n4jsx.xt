@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
 			}
-			File "package.json" { from="../package.json" }
+			File "package.json" { from="../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "react/index.n4jsd" }
@@ -52,7 +52,7 @@ class Box extends React.Component<BoxProps, Object> {
 	};
     @Override public render(): React.Element {
         return <div>
-        	//XPECT errors --> "Attribute p1 has wrong type because int not subtype of string." at "this.obj"
+		// XPECT errors --> "Attribute p1 has wrong type because int not subtype of string." at "this.obj"
             <BigLabel {...this.obj} />
         </div>
     }
@@ -64,7 +64,7 @@ class Box2 extends React.Component<BoxProps, Object> {
 	};
     @Override public render(): React.Element {
         return <div>
-        	//XPECT errors --> "Non-optional property p2 should be specified." at "BigLabel"
+		// XPECT errors --> "Non-optional property p2 should be specified." at "BigLabel"
             <BigLabel {...this.obj} />
         </div>
     }
@@ -76,7 +76,7 @@ class Box3 extends React.Component<BoxProps, Object> {
 	};
     @Override public render(): React.Element {
         return <div>
-        	//XPECT noerrors
+		// XPECT noerrors -->
             <BigLabel {...this.obj} p2="Some text" />
         </div>
     }
@@ -93,7 +93,7 @@ class Box4 extends React.Component<Box4Props, Object> {
 	};
     @Override public render(): React.Element {
         return <div>
-        		//XPECT noerrors
+			// XPECT noerrors -->
             <BigLabel {...this.props} />
         </div>
     }
@@ -106,7 +106,7 @@ class Box5 extends React.Component<BoxProps, Object> {
 	};
     @Override public render(): React.Element {
         return <div>
-        	//XPECT noerrors
+		// XPECT noerrors -->
             <BigLabel {...this.obj} />
         </div>
     }
@@ -129,7 +129,7 @@ class Box6 extends React.Component<Box6Props, Object> {
 	*/
     @Override public render(): React.Element {
         return <div>
-        	//It is OK to provide more properties than needed in spread operator XPECT noerrors
+		//It is OK to provide more properties than needed in spread operator XPECT noerrors -->
             <BigLabel {...this.props} />
         </div>
     }
@@ -146,7 +146,7 @@ class C extends React.PureComponent<P<int>, undefined> {
     }
 }
 
-// XPECT noerrors
+// XPECT noerrors -->
 <C t={5} />
 
 function D(props: P<int>): React.Element {
@@ -157,5 +157,5 @@ var obj = {
 	t: 5
 };
 
-// XPECT noerrors
+// XPECT noerrors -->
 <D {...obj} />;

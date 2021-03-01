@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
 			}
-			File "package.json" { from="../package.json" }
+			File "package.json" { from="../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "react/index.n4jsd" }
@@ -32,11 +32,11 @@ import * as React from "react"
 function myReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
 	return (<div>{props.myProp}</div>);
 }
-//XPECT errors --> "React functional component myReactFuncComponent cannot start with lower case." at "myReactFuncComponent"
+// XPECT errors --> "React functional component myReactFuncComponent cannot start with lower case." at "myReactFuncComponent"
 <myReactFuncComponent myProp="My prop"/>
 
 
-//XPECT warnings --> "Class names should start with upper case letter." at "c"
+// XPECT warnings --> "Class names should start with upper case letter." at "c"
 class c extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override
 	public render(): React.Element {
@@ -44,5 +44,5 @@ class c extends React.Component<~React.ComponentProps with {prop: int}, Object> 
 	}
 }
 
-//XPECT errors --> "React class component c cannot start with lower case." at "c"
+// XPECT errors --> "React class component c cannot start with lower case." at "c"
 var a = <c prop={5}/>;

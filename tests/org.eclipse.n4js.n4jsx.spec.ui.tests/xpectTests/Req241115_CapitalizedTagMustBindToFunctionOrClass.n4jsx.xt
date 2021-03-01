@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
 			Folder "src" {
 				ThisFile {}
 			}
-			File "package.json" { from="../package.json" }
+			File "package.json" { from="../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "react/index.n4jsd" }
@@ -36,9 +36,9 @@ class C extends React.Component<~React.ComponentProps with {prop: int}, Object> 
 	}
 }
 
-//XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type [unknown] instead." at "MyProp"
+// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type [unknown] instead." at "MyProp"
 <MyProp/>
 
 const D = 10;
-//XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type int instead." at "D"
+// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type int instead." at "D"
 <D/>
