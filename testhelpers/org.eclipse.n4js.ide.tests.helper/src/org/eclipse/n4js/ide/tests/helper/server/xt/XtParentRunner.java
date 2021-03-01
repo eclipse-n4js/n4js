@@ -12,24 +12,25 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
-import com.google.common.base.Preconditions;
-
 /**
- *
+ * TODO
  */
 public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	final Class<?> testClass;
@@ -40,14 +41,14 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 
 	List<XtFileRunner> fileRunners;
 
-	/**
-	 */
+	/** Constructor */
 	public XtParentRunner(Class<?> testClass) throws InitializationError {
-		super(XtIdeTest.class); // This will run methods annotated with @BeforeAll/@AfterAll
+		super(testClass); // This will run methods annotated with @BeforeAll/@AfterAll
 		this.testClass = testClass;
 		this.currentProject = new File("").getAbsoluteFile().toPath();
-		this.xtFilesFolder = getFolder();
+		this.xtFilesFolder = getFolder(testClass);
 		this.startLocation = currentProject.resolve(xtFilesFolder);
+		ideTest.setSuppressedIssues(getSuppressedIssues(testClass));
 	}
 
 	@Override
@@ -79,9 +80,11 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, xtFilesFolder, file);
+							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, file);
 							fileRunners.add(fileRunner);
-						} catch (IOException e) {
+						} catch (Exception e) {
+							System.err.println("Error on file: " + file.getAbsolutePath().toString());
+							// precondition failed. Problem should show up in the JUnit view.
 							e.printStackTrace();
 						}
 					}
@@ -96,11 +99,37 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		return fileRunners;
 	}
 
-	private String getFolder() {
-		XtFolder[] xtFolders = testClass.getAnnotationsByType(XtFolder.class);
-		Preconditions.checkState(xtFolders != null && xtFolders.length == 1);
-		String folder = xtFolders[0].value();
-		return folder;
+	static private String getFolder(Class<?> testClass) throws InitializationError {
+		try {
+			for (Method m : testClass.getDeclaredMethods()) {
+				XtFolder[] annFolder = m.getDeclaredAnnotationsByType(XtFolder.class);
+				if (annFolder != null && annFolder.length > 0) {
+					m.setAccessible(true);
+					String folderName = (String) m.invoke(null);
+					return folderName;
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			throw new InitializationError(e);
+		}
+	}
+
+	static private Set<String> getSuppressedIssues(Class<?> testClass) {
+		try {
+			for (Method m : testClass.getDeclaredMethods()) {
+				XtSuppressedIssues[] annFolder = m.getDeclaredAnnotationsByType(XtSuppressedIssues.class);
+				if (annFolder != null && annFolder.length > 0) {
+					m.setAccessible(true);
+					@SuppressWarnings("unchecked")
+					Set<String> folderName = (Set<String>) m.invoke(null);
+					return folderName;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Collections.emptySet();
 	}
 
 }

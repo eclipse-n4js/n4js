@@ -11,9 +11,9 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractStructuredIdeTest;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
@@ -35,8 +35,9 @@ public class XtResourceEObjectAccessor {
 
 	/** @return {@link EObject} with offset for a given offset in this resource */
 	public IEObjectCoveringRegion getObjectCoveringRegion(int offset) {
-		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
-		return new EObjectCoveringRegion(eObject, offset);
+		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
+		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
+		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
 	/**
@@ -52,48 +53,52 @@ public class XtResourceEObjectAccessor {
 		if (offset < 0) {
 			return null;
 		}
-		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
-		return new EObjectCoveringRegion(eObject, offset);
+		int length = optionalLocationStr == null ? 0 : optionalLocationStr.length();
+		EObject eObject = XtResourceUtil.findEObject(resource, offset, length);
+		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
+		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
 	/**
-	 * Searches for a {@link Position} starting behind the given {@link MethodData}. In case the method expects an
+	 * Searches for a {@link Position} starting behind the given {@link XtMethodData}. In case the method expects an
 	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
 	 *
 	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
 	 *
-	 * @return {@link EObject} with offset for the given {@link MethodData}
+	 * @return {@link EObject} with offset for the given {@link XtMethodData}
 	 */
-	public Position checkAndGetPosition(MethodData data, String methodName, String arg1) {
+	public Position checkAndGetPosition(XtMethodData data, String methodName, String arg1) {
 		int offset = checkAndGetOffset(data, methodName, arg1);
 		Position position = xtData.getPosition(offset);
 		return position;
 	}
 
 	/**
-	 * Searches for an {@link EObject} starting behind the given {@link MethodData}. In case the method expects an
+	 * Searches for an {@link EObject} starting behind the given {@link XtMethodData}. In case the method expects an
 	 * location argument (such as 'at' or 'of), the search starts behind the given location string.
 	 *
 	 * Checks that the grammar of the given method conforms to: {@code <METHOD NAME> '<arg1>' <VALUE>}.
 	 *
-	 * @return {@link EObject} with offset for the given {@link MethodData}
+	 * @return {@link EObject} with offset for the given {@link XtMethodData}
 	 */
-	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(MethodData data, String methodName,
+	public IEObjectCoveringRegion checkAndGetObjectCoveringRegion(XtMethodData data, String methodName,
 			String arg1) {
 
 		int offset = checkAndGetOffset(data, methodName, arg1);
-		EObject eObject = XtResourceUtil.getEObject(resource, offset, 0);
-		return new EObjectCoveringRegion(eObject, offset);
+		EObject eObject = XtResourceUtil.findEObject(resource, offset, 0);
+		EStructuralFeature structuralFeature = XtResourceUtil.findStructuralFeature(resource, offset);
+		return new EObjectCoveringRegion(resource, eObject, offset, structuralFeature);
 	}
 
-	private int checkAndGetOffset(MethodData data, String checkArg1, String optionalLocation) {
+	private int checkAndGetOffset(XtMethodData data, String checkArg1, String optionalLocation) {
 		Preconditions.checkArgument(data.name.equals(checkArg1));
 		String optionalLocationStr = null;
-		if (data.args.length > 1) {
-			Preconditions.checkArgument(data.args[0].equals(optionalLocation));
-			Preconditions.checkArgument(data.args[1].startsWith("'"));
-			Preconditions.checkArgument(data.args[1].endsWith("'"));
-			optionalLocationStr = data.args[1].substring(1, data.args[1].length() - 1);
+		if (data.args.length() > 1) {
+			Preconditions.checkArgument(data.args.startsWith(optionalLocation + " "));
+			String rest = data.args.substring(optionalLocation.length()).trim();
+			Preconditions.checkArgument(rest.startsWith("'"));
+			Preconditions.checkArgument(rest.endsWith("'"));
+			optionalLocationStr = rest.substring(1, rest.length() - 1);
 		}
 		return getOffset(data.offset, optionalLocationStr);
 	}
@@ -129,7 +134,11 @@ public class XtResourceEObjectAccessor {
 				if (oMatch < oSLComment && oMatch < oMLComment) {
 					return oMatch;
 				}
-				offset = oSLComment < oMLComment ? oSLComment : oMLComment;
+				if (oSLComment < oMLComment) {
+					offset = oSLComment;
+				} else {
+					offset = content.indexOf("*/", oMLComment);
+				}
 
 			} else {
 				return offset;

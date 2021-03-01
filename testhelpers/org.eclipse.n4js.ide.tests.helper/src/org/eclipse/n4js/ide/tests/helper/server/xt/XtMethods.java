@@ -21,11 +21,11 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -55,15 +55,22 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
+import org.eclipse.n4js.xtext.scoping.FilteringScope;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.common.types.access.TypeResource;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.IScopeProvider;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
@@ -87,7 +94,16 @@ public class XtMethods {
 	@Inject
 	private FindReferenceHelper findReferenceHelper;
 
-	/** Implementation for {@link XtIdeTest#accessModifier(MethodData)} */
+	@Inject
+	private IQualifiedNameConverter converter;
+
+	@Inject
+	private IScopeProvider scopeProvider;
+
+	@Inject
+	private IResourceDescription.Manager manager;
+
+	/** Implementation for {@link XtIdeTest#accessModifier(XtMethodData)} */
 	static public String getAccessModifierString(EObject context) {
 		String actual = null;
 		if (context instanceof TMember) {
@@ -134,7 +150,7 @@ public class XtMethods {
 		return actual;
 	}
 
-	/** Implementation for {@link XtIdeTest#elementKeyword(MethodData)} */
+	/** Implementation for {@link XtIdeTest#elementKeyword(XtMethodData)} */
 	public String getElementKeywordString(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -145,7 +161,21 @@ public class XtMethods {
 		return elementKeywordStr;
 	}
 
-	/** Implementation for {@link XtIdeTest#findReferences(MethodData)} */
+	/** Implementation for {@link XtIdeTest#exportedObjects(XtMethodData)} */
+	public List<String> getExportedObjectsString(IEObjectCoveringRegion ocr) {
+		IResourceDescription resourceDescription = manager.getResourceDescription(ocr.getXtextResource());
+		Iterable<IEObjectDescription> exportedObjects = resourceDescription.getExportedObjects();
+		List<String> exportedObjectStrings = new ArrayList<>();
+		for (IEObjectDescription desc : exportedObjects) {
+			String str = desc.getEClass().getEPackage().getNsPrefix()
+					+ "::" + desc.getEClass().getName()
+					+ ": " + desc.getName().toString();
+			exportedObjectStrings.add(str);
+		}
+		return exportedObjectStrings;
+	}
+
+	/** Implementation for {@link XtIdeTest#findReferences(XtMethodData)} */
 	public List<String> getFindReferences(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -192,7 +222,7 @@ public class XtMethods {
 		return result;
 	}
 
-	/** Implementation for {@link XtIdeTest#linkedFragment(MethodData)} */
+	/** Implementation for {@link XtIdeTest#linkedFragment(XtMethodData)} */
 	public String getLinkedFragment(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -210,7 +240,7 @@ public class XtMethods {
 		return null;
 	}
 
-	/** Implementation for {@link XtIdeTest#linkedName(MethodData)} */
+	/** Implementation for {@link XtIdeTest#linkedName(XtMethodData)} */
 	@Xpect
 	public QualifiedName getLinkedName(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
@@ -238,7 +268,7 @@ public class XtMethods {
 		return name;
 	}
 
-	/** Implementation for {@link XtIdeTest#linkedPathname(MethodData)} */
+	/** Implementation for {@link XtIdeTest#linkedPathname(XtMethodData)} */
 	public String getLinkedPathname(IEObjectCoveringRegion ocr) {
 		int offset = ocr.getOffset();
 		EObject eObject = ocr.getEObject();
@@ -277,7 +307,7 @@ public class XtMethods {
 		return pathname;
 	}
 
-	/** Implementation for {@link XtIdeTest#type(MethodData)} */
+	/** Implementation for {@link XtIdeTest#type(XtMethodData)} */
 	public String getTypeString(EObject eobject, boolean expectedType) {
 		final String calculatedString;
 		if (eobject instanceof LiteralOrComputedPropertyName) {
@@ -313,7 +343,7 @@ public class XtMethods {
 		return calculatedString;
 	}
 
-	/** Implementation for {@link XtIdeTest#typeArgs(MethodData)} */
+	/** Implementation for {@link XtIdeTest#typeArgs(XtMethodData)} */
 	public String getTypeArgumentsString(EObject eobject) {
 		final EObject container = eobject != null ? eobject.eContainer() : null;
 		if (eobject == null || !(container instanceof ParameterizedCallExpression
@@ -359,6 +389,49 @@ public class XtMethods {
 				sb.append("*missing*");
 		}
 		return sb.toString();
+	}
+
+	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
+	public List<String> getScopeString(IEObjectCoveringRegion ocr) {
+		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
+
+		IScope scopeWithoutErrors = new FilteringScope(scope,
+				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
+		List<IEObjectDescription> allElements = Lists.newArrayList(scopeWithoutErrors.getAllElements());
+
+		// following filter maybe not necessary
+		// URI uri = ocr.getXtextResource().getURI();
+		// Predicate<String> filter = new IsInScopeWithOptionalPositionPredicate(converter, uri, false, scope);
+
+		List<String> scopeNames = new ArrayList<>();
+		for (IEObjectDescription desc : allElements) {
+			String name = desc.getName().toString();
+			QualifiedName qualifiedName = converter.toQualifiedName(name);
+			IEObjectDescription singleElement = scope.getSingleElement(qualifiedName);
+			if (singleElement != null) {
+				scopeNames.add(name);
+			}
+		}
+
+		return scopeNames;
+	}
+
+	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
+	public List<String> getScopeString2(IEObjectCoveringRegion ocr) {
+		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
+		List<String> scopeNames = new ArrayList<>();
+		List<IEObjectDescription> allElements = Lists.newArrayList(scope.getAllElements());
+		for (IEObjectDescription elem : allElements) {
+			String name = elem.getName().toString();
+
+			QualifiedName qualifiedName = converter.toQualifiedName(name);
+			IEObjectDescription singleElement = scope.getSingleElement(qualifiedName);
+			if (singleElement != null) {
+				scopeNames.add(name);
+			}
+		}
+
+		return scopeNames;
 	}
 
 	private String getLinkedFragment(EObject targetObject, URI baseUri) {

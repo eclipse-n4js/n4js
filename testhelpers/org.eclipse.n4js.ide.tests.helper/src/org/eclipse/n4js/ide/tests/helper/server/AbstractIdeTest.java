@@ -47,6 +47,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ClientCapabilities;
+import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionList;
+import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
@@ -1564,17 +1567,33 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		assertEquals(millis, fileTime.toMillis());
 	}
 
-	/** Calls endpoint {@code textDocument/definitions} of LSP server */
+	/** Calls endpoint {@code textDocument/definition} of LSP server */
 	protected CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> callDefinition(
 			String completeFileUri, int line, int column) {
 
 		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
 		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
 		textDocumentPositionParams.setPosition(new Position(line, column));
-		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
+		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = languageServer
 				.definition(textDocumentPositionParams);
 
-		return definitionsFuture;
+		return future;
+	}
+
+	/** Calls endpoint {@code textDocument/completion} of LSP server */
+	protected CompletableFuture<Either<List<CompletionItem>, CompletionList>> callCompletion(
+			String completeFileUri, int line, int column) {
+
+		CompletionParams completionParams = new CompletionParams();
+		Position pos = new Position(line, column);
+		completionParams.setPosition(pos);
+		TextDocumentIdentifier textDocument = new TextDocumentIdentifier();
+		textDocument.setUri(completeFileUri);
+		completionParams.setTextDocument(textDocument);
+		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = languageServer
+				.completion(completionParams);
+
+		return future;
 	}
 
 	/** Runs the given file (with its parent folder as working directory) in node.js and asserts the output. */

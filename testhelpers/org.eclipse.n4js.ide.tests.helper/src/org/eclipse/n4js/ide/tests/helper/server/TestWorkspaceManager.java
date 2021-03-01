@@ -409,10 +409,10 @@ public class TestWorkspaceManager {
 			throw new IllegalStateException("test was already created on disk");
 		}
 
-		createdProject = workspace.getProjects().get(0); // TODO
 		destination.toFile().mkdirs();
-		createdProject.create(destination);
+		workspace.create(destination);
 
+		createdProject = workspace.getProjects().get(0); // TODO
 		return createdProject;
 	}
 

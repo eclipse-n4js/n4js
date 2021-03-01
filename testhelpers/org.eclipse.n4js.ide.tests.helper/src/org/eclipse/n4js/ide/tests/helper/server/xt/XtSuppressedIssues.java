@@ -17,6 +17,6 @@ import java.lang.annotation.RetentionPolicy;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface XtFolder {
+public @interface XtSuppressedIssues {
 	// NOOP
 }

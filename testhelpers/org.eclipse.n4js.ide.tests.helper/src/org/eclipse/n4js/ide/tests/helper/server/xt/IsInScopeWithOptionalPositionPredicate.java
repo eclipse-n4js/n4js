@@ -8,11 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.xpect.methods.scoping;
+package org.eclipse.n4js.ide.tests.helper.server.xt;
 
-import static org.eclipse.n4js.xpect.methods.scoping.EObjectDescriptionToNameWithPositionMapper.descriptionToNameWithPosition;
-import static org.eclipse.n4js.xpect.methods.scoping.EObjectDescriptionToNameWithPositionMapper.getNameFromNameWithPosition;
-import static org.eclipse.n4js.xpect.methods.scoping.EObjectDescriptionToNameWithPositionMapper.getPositionFromNameWithPosition;
+import static org.eclipse.n4js.ide.tests.helper.server.xt.EObjectDescriptionToNameWithPositionMapper.descriptionToNameWithPosition;
+import static org.eclipse.n4js.ide.tests.helper.server.xt.EObjectDescriptionToNameWithPositionMapper.getNameFromNameWithPosition;
+import static org.eclipse.n4js.ide.tests.helper.server.xt.EObjectDescriptionToNameWithPositionMapper.getPositionFromNameWithPosition;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
@@ -26,14 +26,15 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 
 /**
- * Internally used by {@link ScopeXpectMethod}, replaces internal {@code ScopingTest.IsInScope} class.
+ * Internally used by {@code ScopeXpectMethod}, replaces internal {@code ScopingTest.IsInScope} class.
  */
-class IsInScopeWithOptionalPositionPredicate implements Predicate<String> {
+public class IsInScopeWithOptionalPositionPredicate implements Predicate<String> {
 	private final IQualifiedNameConverter converter;
 	private final IScope scope;
 	private final URI currentURI;
 	private final boolean withLineNumber;
 
+	/** Constructor */
 	public IsInScopeWithOptionalPositionPredicate(IQualifiedNameConverter converter, URI currentURI,
 			boolean withLineNumber, IScope scope) {
 		super();
