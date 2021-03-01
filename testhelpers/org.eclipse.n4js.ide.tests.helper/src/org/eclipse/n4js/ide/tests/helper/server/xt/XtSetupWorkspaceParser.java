@@ -102,15 +102,17 @@ public class XtSetupWorkspaceParser {
 		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
 		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
 
-		while (tokens.hasNext()) {
+		LOOP: while (tokens.hasNext()) {
 			switch (tokens.next()) {
 			case "Project":
 			case "JavaProject":
 				parseProject(tokens, xtFile, xtFileContent, yarnProjectBuilder);
 				break;
+			case "}":
+				break LOOP;
 			default:
 				Preconditions.checkState(false,
-						ERROR + "Unexpected token in Workspace: " + tokens.current() + " in file " + xtFile.getPath());
+						ERROR + "Unexpected token in Workspace: " + tokens.lookLast() + " in file " + xtFile.getPath());
 			}
 		}
 
@@ -153,7 +155,7 @@ public class XtSetupWorkspaceParser {
 					break LOOP;
 				default:
 					Preconditions.checkState(false,
-							ERROR + "Unexpected token in " + metaName + ": " + tokens.current()
+							ERROR + "Unexpected token in " + metaName + ": " + tokens.lookLast()
 									+ " in file " + xtFile.getPath());
 				}
 			}

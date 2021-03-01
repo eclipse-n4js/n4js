@@ -57,10 +57,7 @@ public class XtFileDataParser {
 	 * Pattern for Setup section of xt files
 	 */
 	static final Pattern XT_SETUP = Pattern.compile(
-			"XPECT_SETUP\\s+(?:(?<" + XT_RUNNER
-					+ ">[\\w\\d\\.]+)[\\s]*)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*)(Workspace\\s*\\{(?<" + XT_WORKSPACE
-					+ ">[\\s\\S]*)\\}[\\s]*(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?((?<" + XT_REST
-					+ ">[\\s\\S]*?)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?END_SETUP");
+			"XPECT_SETUP\\s+(?:(?<"+XT_RUNNER+">[\\w\\d\\.]+)[\\s]*)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*)(Workspace\\s*\\{(?<"+XT_WORKSPACE+">[\\s\\S]*)\\}[\\s]*(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?((?<"+XT_REST+">[\\s\\S]*?)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?END_SETUP");
 
 	/** Parses the contents of the given file */
 	static public XtFileData parse(File xtFile) throws IOException {

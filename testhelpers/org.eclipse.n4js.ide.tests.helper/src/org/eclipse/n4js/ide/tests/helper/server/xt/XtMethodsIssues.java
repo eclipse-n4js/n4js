@@ -190,7 +190,7 @@ public class XtMethodsIssues {
 			Map.Entry<Integer, XtMethodData> currPosTest = posTestIter.next();
 			Assert.assertTrue(
 					"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
-					ignoreIssues || (getOffset(xtData, firstDiagnostic) > currPosTest.getKey()));
+					ignoreIssues ||(getOffset(xtData, firstDiagnostic) > currPosTest.getKey()));
 
 			Map.Entry<Integer, XtMethodData> nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
 			for (Diagnostic diag : issues) {
