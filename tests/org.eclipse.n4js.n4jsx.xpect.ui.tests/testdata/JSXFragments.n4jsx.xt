@@ -9,6 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+// FIXME: Output tests
 /* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
 
 	Workspace {
@@ -16,7 +17,7 @@
 			Folder "model" {
 				ThisFile {}
 			}
-			File "package.json" { from="../package.json" }
+			File "package.json" { from="../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "../react-implementations/valid/index.n4jsd" }

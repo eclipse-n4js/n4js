@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
 
 	Workspace {
 		Project "N4JSXXpectTests" {
@@ -30,8 +30,8 @@
 /*
 JSX files need to import react. Even if user does not do it, import is added by the transpiler.
 Transpiler will throw exception if react will not be reachable from JSX file. 
-Validation prevents react file from being compiled if react is not reachable.
-XPECT errors ---
+Validation prevents react file from being compiled if react is not reachable.*/
+/* XPECT errors ---
 "Cannot resolve JSX implementation." at "<div></div>"
 --- */
 let elem = <div></div>;

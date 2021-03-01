@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
 
 	Workspace {
 		Project "N4JSXXpectTests" {
@@ -29,7 +29,7 @@
 
 /*
 Since transpiler is not patching react import if not needed,
-there will be no validation error.
-XPECT noerrors ---
+there will be no validation error.*/
+/* XPECT noerrors ---
 --- */
 console.log(1)

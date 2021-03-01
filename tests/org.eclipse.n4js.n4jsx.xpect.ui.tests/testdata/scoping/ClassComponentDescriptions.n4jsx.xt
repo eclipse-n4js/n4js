@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
 
 	Workspace {
 		Project "N4JSXXpectTests" {
@@ -18,7 +18,7 @@
 					ThisFile {}
 				}
 			}
-			File "package.json" { from="../../package.json" }
+			File "package.json" { from="../../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "../../react-implementations/valid/index.n4jsd" }
@@ -42,7 +42,7 @@ export public class LowerComponent extends React.Component<~React.ComponentProps
 }
 
 
-/* XPECT scope at 'React.|Component'  ---
+/* XPECT scope at 'React.<|>Component'  ---
 Component, ComponentProps, Element, Fragment, PropConstraint, PropType, PropTypes,
 PureComponent, cloneElement, createElement, isValidElement, renderToStaticMarkup,
 renderToString
@@ -52,7 +52,7 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 	@Override
 	public render() : React.Element{
 		const constText = "some text";
-		/* XPECT scope at 'Lower|Component' ---
+		/* XPECT scope at 'Lower<|>Component' ---
 		Array, AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError,
 		Function, Generator, Infinity, Iterable, Iterable2, Iterable3, Iterable4,
 		Iterable5, Iterable6, Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON,

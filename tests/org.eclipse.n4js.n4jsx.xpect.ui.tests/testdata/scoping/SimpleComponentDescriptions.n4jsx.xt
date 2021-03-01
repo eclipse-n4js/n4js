@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
 
 	Workspace {
 		Project "N4JSXXpectTests" {
@@ -18,7 +18,7 @@
 					ThisFile {}
 				}
 			}
-			File "package.json" { from="../../package.json" }
+			File "package.json" { from="../../package_default.json" }
 		}
 		Project "react" {
 			File "index.n4jsd" { from = "../../react-implementations/valid/index.n4jsd" }
@@ -34,19 +34,19 @@
 export public let simpleSelfClosing = <div/>;
 
 
-/* XPECT scope at '<|div'  ---
-index/Component, index/ComponentProps,
-index/Element, index/PropConstraint, index/PropType,
-index/PropTypes, index/PureComponent, index/cloneElement,
-index/createElement, index/isValidElement, index/renderToStaticMarkup,
-index/renderToString, null, Number, parseFloat, parseInt, propertyIsEnumerable, propsA,
+/* XPECT scope at '<<|>div'  ---
+index.Component, index.ComponentProps,
+index.Element, index.PropConstraint, index.PropType,
+index.PropTypes, index.PureComponent, index.cloneElement,
+index.createElement, index.isValidElement, index.renderToStaticMarkup,
+index.renderToString, null, Number, parseFloat, parseInt, propertyIsEnumerable, propsA,
 propsB, ...
 --- */
 export public let simpleOpenClose = <div></div>
 
 let x = 42;
 export public let simpleNested =
-/* XPECT scope at 'pr|op1'  ---
+/* XPECT scope at 'pr<|>op1'  ---
 
 --- */
 		<div prop1 prop2='hello' prop3={x}>
