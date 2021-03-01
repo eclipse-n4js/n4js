@@ -10,16 +10,15 @@
  */
 package org.eclipse.n4js.expectmatrix.tests.utils;
 
-import org.junit.Ignore;
+import org.eclipse.n4js.xpect.methods.output.OutputXpectMethod;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
-
-import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
+import org.junit.Ignore;
 
 /**
  */
 @Ignore("No test in here.")
 @XpectSuiteClasses({
-	OutputXpectMethod.class
+		OutputXpectMethod.class
 })
 public class N4JSRuntimeTest {
 	// nop

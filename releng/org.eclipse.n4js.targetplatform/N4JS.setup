@@ -427,18 +427,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="N4JS Features">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/features/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="N4JS Tests">
       <predicate
           xsi:type="predicates:AndPredicate">
@@ -475,18 +463,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="N4JS Builds">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/builds/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="N4JS Releng">
       <predicate
           xsi:type="predicates:AndPredicate">
@@ -511,12 +487,6 @@
       </predicate>
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
-  </setupTask>
-  <setupTask
-      xsi:type="launching:LaunchTask"
-      id="CreateConfigFileForSettingDefaultProduct"
-      launcher="CreateConfigFileForSettingDefaultProduct">
-    <description>Launch that creates a config.ini</description>
   </setupTask>
   <stream name="master"
       label="master (2019_09)"/>    <!-- label! -->

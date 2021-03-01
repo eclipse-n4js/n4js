@@ -16,7 +16,7 @@ import org.eclipse.n4js.xpect.methods.MigrateScopeXpectMethod;
 import org.eclipse.n4js.xpect.methods.ModelVersionXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeSwitchXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
-import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
+import org.eclipse.n4js.xpect.methods.output.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.N4JSSuppressIssuesSetup;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
