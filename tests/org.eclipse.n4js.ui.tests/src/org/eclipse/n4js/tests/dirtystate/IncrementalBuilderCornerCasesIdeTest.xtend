@@ -16,8 +16,6 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData
-import org.eclipse.xtext.builder.impl.BuildData
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta
@@ -40,10 +38,6 @@ public class IncrementalBuilderCornerCasesIdeTest extends ConvertedIdeTest {
 
 	/**
 	 * This tests the bug fix of IDEBUG-347.
-	 * <p>
-	 * To make this test fail, comment out creation of {@link ResourceDescriptionWithoutModuleUserData}s in
-	 * method {@code N4ClusteringBuilderState#queueAffectedResources()}, including the subsequent invocation
-	 * of {@link BuildData#requestRebuild() requestRebuild()}.
 	 */
 	@Test
 	def void testMissingReloadBug() {
