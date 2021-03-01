@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+	Workspace {
+		Project "IDE2101_depToTestLib" {
+			ThisFile "package.json" {}
+			Folder "tst" { }
+		}
+		Project "org.eclipse.n4js.mangelhaft" {
+			File "package.json" {from="../../IDE_2101/pTestLib/package.json" }
+			Folder "src" { }
+		}
+
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+{
+	"name": "IDE2101_depToTestLib",
+	"version": "0.0.1",
+	"dependencies": {
+		"org.eclipse.n4js.mangelhaft": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"output": "out",
+		"sources": {
+			"test": [
+				"tst"
+			]
+		}
+	}
+}

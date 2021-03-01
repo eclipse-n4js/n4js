@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+			Project "test.05" {
+				File "package.json" { from="../test.05/package.json.xt" }
+				Folder "src" { }
+			}
+			Project "test.data.system.project.one" {
+				File "package.json" { from="../test.data.system.project.one/package.json" }
+			}
+			Project "test.data.system.project.two" {
+				File "package.json" { from="../test.data.system.project.two/package.json" }
+			}
+			Project "test.data.re.project" {
+				File "package.json" { from="../test.data.re.project/package.json" }
+			}
+			Project "test.data.rl.project.one" {
+				File "package.json" { from="../test.data.rl.project.one/package.json" }
+			}
+			Project "test.data.rl.project.two" {
+				File "package.json" { from="../test.data.rl.project.two/package.json" }
+			}
+			Project "test.data.test.project.one" {
+				File "package.json" { from="../test.data.test.project.one/package.json" }
+			}
+			Project "test.data.test.project.two" {
+				File "package.json" { from="../test.data.test.project.two/package.json" }
+			}
+	}
+
+   END_SETUP
+ */
+{
+	"name": "test.05",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "runtimeEnvironment",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		// XPECT noerrors --> "Only RE can extend and another RE project."
+		"extendedRuntimeEnvironment": "test.data.re.project",
+		"providedRuntimeLibraries": [
+			// XPECT warnings --> "Project test.data.system.project.one of type library cannot be declared among the provided runtime libraries." at ""test.data.system.project.one""
+			"test.data.system.project.one",
+			// XPECT noerrors --> "error is reported on subsequent occurances"
+			"test.data.rl.project.one",
+			// XPECT errors --> "Duplicate project reference test.data.rl.project.one." at ""test.data.rl.project.one""
+			"test.data.rl.project.one",
+			// XPECT warnings --> "Project test.data.re.project of type runtime environment cannot be declared among the provided runtime libraries." at ""test.data.re.project""
+			"test.data.re.project",
+			// XPECT errors -->	"Project does not exist with project ID: xxx.yyy.zzz." at ""xxx.yyy.zzz""
+			"xxx.yyy.zzz",
+			// XPECT errors -->	"Project cannot reference itself." at ""test.05""
+			"test.05",
+			// XPECT warnings --> "Project test.data.test.project.one of type test cannot be declared among the provided runtime libraries." at ""test.data.test.project.one""
+			"test.data.test.project.one",
+			// XPECT noerrors -->
+			"test.data.rl.project.two"
+		]
+	}
+}
