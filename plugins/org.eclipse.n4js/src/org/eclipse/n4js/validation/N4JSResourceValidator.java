@@ -27,6 +27,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -47,6 +48,7 @@ import com.google.inject.Inject;
  * It will not create issues for resources which are contained in folders that are filtered by module filters in the
  * manifest.
  */
+@SuppressWarnings("deprecation")
 public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Inject
@@ -188,7 +190,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	}
 
 	private static Issue createFileIssue(Resource res, String message, String issueCode) {
-		final Issue.IssueImpl issue = new Issue.IssueImpl();
+		final Issue.IssueImpl issue = new LSPIssue();
 		issue.setCode(issueCode);
 		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
 		issue.setMessage(message);
