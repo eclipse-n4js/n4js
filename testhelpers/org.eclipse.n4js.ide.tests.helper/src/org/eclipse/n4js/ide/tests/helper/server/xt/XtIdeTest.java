@@ -15,8 +15,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -778,19 +779,30 @@ public class XtIdeTest extends AbstractIdeTest {
 			elems1[i] = elems1[i].replaceAll("\\s+", " ");
 			elems1[i] = elems1[i].trim();
 		}
+		Set<String> expectElems = Sets.newHashSet(elems1);
+		Set<String> expectMissingElems = new HashSet<>();
+		for (Iterator<String> iter = expectElems.iterator(); iter.hasNext();) {
+			String elem = iter.next();
+			if (elem.startsWith("!")) {
+				iter.remove();
+				expectMissingElems.add(elem.substring(1).trim());
+			}
+		}
+		boolean partialExpectation = elems1.length > 0
+				&& (expectElems.contains("...") || !expectMissingElems.isEmpty());
+		expectElems.remove("...");
 
 		if (replaceEmptySpace) {
 			i2s = Iterables.transform(i2s, s -> s.replaceAll("\\s+", " ").trim());
 		}
 
-		boolean partialExpectation = elems1.length > 0
-				&& ("...".equals(elems1[0]) || "...".equals(elems1[elems1.length - 1]));
-
 		if (partialExpectation) {
-			Set<String> elems1Set = Sets.newHashSet(Arrays.copyOfRange(elems1, 1, elems1.length));
-			elems1Set.removeAll(Lists.newArrayList(i2s));
-			elems1Set.remove("...");
-			assertTrue("Not found: " + Strings.join(", ", elems1Set), elems1Set.isEmpty());
+			expectElems.removeAll(Lists.newArrayList(i2s));
+			assertTrue("Not found: " + Strings.join(", ", expectElems), expectElems.isEmpty());
+
+			expectMissingElems.retainAll(Sets.newHashSet(i2s));
+			assertTrue("Expected missing, but found: " + Strings.join(", ", expectMissingElems),
+					expectMissingElems.isEmpty());
 
 		} else {
 			List<String> sorted1 = Lists.newArrayList(elems1);
