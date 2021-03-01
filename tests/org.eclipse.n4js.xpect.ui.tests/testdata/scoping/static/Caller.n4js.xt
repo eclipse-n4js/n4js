@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -36,7 +36,7 @@ import * as N from "scoping/static/SubCallee2"
 class Caller {
 
     call() {
-		/* XPECT scope at 'Callee.|myStaticField' ---
+		/* XPECT scope at 'Callee.<|>myStaticField' ---
 		   myStaticAccessor, !myPrivateStaticField, myStaticField, myStaticMethod,
 		   !myNonStaticField, !myNonStaticMethod, !myRoleNonStaticField, !myRoleNonStaticMethod
 		 --- */
@@ -44,20 +44,20 @@ class Caller {
 
 
 		var callee : Callee= new Callee
-		/* XPECT scope at 'callee.|myNonStaticField' ---
+		/* XPECT scope at 'callee.<|>myNonStaticField' ---
 		   !myStaticField, !myStaticMethod, !myStaticAccessor
 		   myNonStaticField, myNonStaticMethod, myRoleNonStaticField, myRoleNonStaticMethod
 		 --- */
 		callee.myNonStaticField
 
-		/* XPECT ! scope at 'callee.constructor.|myStaticField' ---
+		/* XPECT ! scope at 'callee.constructor.<|>myStaticField' ---
 		   myStaticField, myStaticMethod, myStaticAccessor
 		   !myNonStaticField, !myNonStaticMethod, !myRoleNonStaticField, !myRoleNonStaticMethod
 		 --- */
 		// callee.constructor.myStaticField
 
 		// found during IDE-1852: XPECT FIXME nowarnings
-		/* XPECT scope at 'SubCallee2.|myStaticMethod' ---
+		/* XPECT scope at 'SubCallee2.<|>myStaticMethod' ---
 		   myStaticAccessor, !myPrivateStaticField, myStaticField, myStaticMethod,
 		   !myNonStaticField, !myNonStaticMethod, !myRoleNonStaticField, !myRoleNonStaticMethod
 		 --- */

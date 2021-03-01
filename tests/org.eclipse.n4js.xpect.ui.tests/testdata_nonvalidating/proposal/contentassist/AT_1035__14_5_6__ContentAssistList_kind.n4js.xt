@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSNotValidatingXpectPluginUITest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	// Cycling in content-assist (multiple ctrl+space hits.) changes kinds, to test them we can
 	// specify the kind in the test.

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
     Workspace {
    	 Project "StaticPolyfillGetterSetterTest" {
@@ -17,7 +17,7 @@
    	 		File "TestModule.n4js" { from="TestModule_PolyfillAware.n4js" }
    	 	}
    	 	Folder "src" {
-   	 		ThisFile "TestModule.n4js" { from="TestModule_PolyfillModule.n4js.xt"}
+   	 		ThisFile "TestModule.n4js" { }
    	 	}
    	 	File "package.json" { from="package_getter_setter.json" }
    	 }

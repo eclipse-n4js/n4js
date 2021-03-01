@@ -9,15 +9,15 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	// Suppress all issues related to run-time dependency validation, because this file tests that linking / scoping / etc.
 	// can cope with *all* cycles at compile time, even those cases that are disallowed by RunTimeDependencyValidator:
-	IssueConfiguration {
-		IssueCode "LTD_ILLEGAL_LOADTIME_REFERENCE" { enabled = false }
-		IssueCode "LTD_LOADTIME_DEPENDENCY_CONFLICT" { enabled = false }
-		IssueCode "LTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET" { enabled = false }
-	}
+//	IssueConfiguration {
+//		IssueCode "LTD_ILLEGAL_LOADTIME_REFERENCE" { enabled = false }
+//		IssueCode "LTD_LOADTIME_DEPENDENCY_CONFLICT" { enabled = false }
+//		IssueCode "LTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET" { enabled = false }
+//	}
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -32,15 +32,17 @@
 		}
 	}
 
+	IGNORE_ISSUES
+
    END_SETUP
  */
 
-// XPECT scope at 'from |"scoping/Sister"' --> scoping.Child, scoping.Sister
+// XPECT scope at 'from <|>"scoping/Sister"' --> scoping.Child, scoping.Sister
 import { Sister as SisterObject } from "scoping/Sister"
 import { Child } from "scoping/Child"
 
 export class Brother {
-/* XPECT scope at SisterObject ---
+/* XPECT scope at 'SisterObject' ---
 Array, Boolean, Brother, Child, Date, Error, EvalError, Function, Generator,
 Iterable,
 Iterable2, Iterable3, Iterable4, Iterable5, Iterable6, Iterable7, Iterable8, Iterable9,
@@ -59,17 +61,17 @@ scoping.Sister.Sister, string, symbol, typeName, undefined, void
 }
 
 var brother : Brother = new Brother();
-/* XPECT scope at getSister ---
+/* XPECT scope at 'getSister' ---
 __proto__, constructor, getChild, getSister, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
-/* XPECT scope at getBrother ---
+/* XPECT scope at 'getBrother' ---
 __proto__, constructor, getBrother, getChild, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 brother = brother.getSister().getBrother();
 var sister : SisterObject = new SisterObject();
-/* XPECT scope at getBrother ---
+/* XPECT scope at 'getBrother' ---
 __proto__, constructor, getBrother, getChild, hasOwnProperty, isPrototypeOf,
 propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */

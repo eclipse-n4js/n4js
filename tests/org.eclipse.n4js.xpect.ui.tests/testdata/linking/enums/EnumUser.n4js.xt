@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -29,6 +29,6 @@
  */
 
 import { MyEnum } from "linking/enums/MyEnum"
-// XPECT linkedFragment at 'MyEnum.|ONE' --> MyEnum.n4js#/1/@topLevelTypes.0/@literals.0
-// Literals do not have a fully qualified name XPECT ! linkedName at 'MyEnum.|ONE' --> ONE
+// XPECT linkedFragment at 'MyEnum.<|>ONE' --> MyEnum.n4js#/1/@topLevelTypes.0/@literals.0
+// Literals do not have a fully qualified name XPECT ! linkedName at 'MyEnum.<|>ONE' --> ONE
 var myEnum: MyEnum = MyEnum.ONE;

@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
     Workspace {
    	 Project "P_USERTL_B00" {
    	 	Folder "src" {
 	   	 	Folder "n4js" {
 	   	 		File "B_uses_b01.n4js" { from="B_uses_b01.n4js.xt" }
-	   	 		ThisFile "Generated01.n4js" { from="Check_OtherContentIn_staticPolifillModules.n4js.xt"}
+	   	 		ThisFile "Generated01.n4js" { }
 	   	 	}
 	   	 	Folder "n4js-gen" {
 	   	 		File "Generated01.n4js" { from="Generated01.n4js" }
@@ -44,29 +44,29 @@ export public class K extends K {
 }
 
 
-// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "IFace"
+// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "IFace"
 interface IFace { }
 
-// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "IFace2"
+// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "IFace2"
 export interface IFace2 { }
 
-// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "Class2"
+// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "Class2"
 export public class Class2 { }
 
-// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "XEnum"
+// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "XEnum"
 enum XEnum { A, B }
 
-// XPECT errors -->"Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "b"
+// XPECT errors -->"Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "b"
 function b() {
 	// dont issue in nont-toplevel XPECT noerrors-->
 	var f = null;
 }
 
-// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "var xVariable : K = null;"
+// XPECT errors --> "Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "var xVariable : K = null;"
 var xVariable : K = null;
 
-// XPECT errors -->"Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "while(false) console.log("ü");"
+// XPECT errors -->"Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "while(false) console.log("ü");"
 while(false) console.log("ü");
 
-// XPECT errors -->"Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule. " at "console.log("ö");"
+// XPECT errors -->"Only top-level classes annotated as StaticPolyfill are allowed in a module annotated with StaticPolyfillModule." at "console.log("ö");"
 console.log("ö");

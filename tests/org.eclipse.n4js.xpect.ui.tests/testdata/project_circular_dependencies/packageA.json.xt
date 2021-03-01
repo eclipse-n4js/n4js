@@ -1,9 +1,9 @@
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
     Workspace {
    	 Project "A" {
    	 	Folder "src" { }
-   	 	ThisFile "package.json" { from="packageA.json.xt" }
+   	 	ThisFile "package.json" { }
    	 }
    	 Project "B" {
    	 	Folder "src" { }
@@ -19,11 +19,11 @@
    	 }
    }
    
-   IssueConfiguration {
-   	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
-   	IssueCode "MISSING_YARN_WORKSPACE" { enabled=false }
-    IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled=false }
-   }
+//   IssueConfiguration {
+//   	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
+//   	IssueCode "MISSING_YARN_WORKSPACE" { enabled=false }
+//    IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled=false }
+//   }
 
    END_SETUP
  */

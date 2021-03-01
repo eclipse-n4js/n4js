@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -30,7 +30,7 @@
 
 
 import { MyEnum } from "scoping/enums/MyEnum"
-/* XPECT scope at 'MyEnum.|ONE' ---
+/* XPECT scope at 'MyEnum.<|>ONE' ---
 	ONE,
 	TWO,
 	THREE,

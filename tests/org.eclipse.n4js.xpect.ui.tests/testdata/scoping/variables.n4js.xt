@@ -9,13 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest END_SETUP */
 
 var x=1,b=2;
-/* XPECT scope at x ---
+/* XPECT scope at 'x' ---
 x, b, c, ...
 ---*/
-/* XPECT scope at b ---
+/* XPECT scope at 'b' ---
 x, b, c, ...
 ---*/
 var c=x+b;

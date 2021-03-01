@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -26,7 +26,7 @@
  */
 
 var myObjectLiteral = {
-/* XPECT scope at '|any name' ---
+/* XPECT scope at '<|>any name' ---
 Array, AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError, Function, Generator,
 Iterable,
 Iterable2, Iterable3, Iterable4, Iterable5, Iterable6, Iterable7, Iterable8, Iterable9,
@@ -41,14 +41,14 @@ any, undefined, boolean, console, i18nKey, number, int, pathSelector, string, sy
 ---*/
 	any name: "o",
 	complex: function() {
-/* XPECT scope at 'this.|name' ---
+/* XPECT scope at 'this.<|>name' ---
 complex, __proto__, constructor, hasOwnProperty, isPrototypeOf, name,
 propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 		var name = "complex" + this.name;
 	}
 }
-/* XPECT scope at 'myObjectLiteral.|name' ---
+/* XPECT scope at 'myObjectLiteral.<|>name' ---
 complex, __proto__, constructor, hasOwnProperty, isPrototypeOf, name,
 propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */

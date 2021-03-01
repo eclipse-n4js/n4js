@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
    Workspace {
 		JavaProject "N4JSXpectTests" {
 			Folder "src" {
@@ -27,7 +27,7 @@
 // XPECT warnings --> "The import of XAt is unused." at "XAt"
 import {ArgumentsType,XAt} from "A"
 
-/* XPECT scopeWithResource at |ArgumentsType ---
+/* XPECT scopeWithResource at '<|>ArgumentsType' ---
 !A.A - proxy:A.n4js.xt#/1/@topLevelTypes.1,
 A.ArgumentsType - proxy:A.n4js.xt#/1/@topLevelTypes.4,
 !A.R - proxy:A.n4js.xt#/1/@topLevelTypes.2,

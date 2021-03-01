@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -37,7 +37,7 @@ var p2 = {
 		return null;
 	},
 	set simpleInt(newSimpleInt : number) {
-// TODO: enable scope test for dynamically created elements in scope XPECT ! scope at 'this.|internalSimpleInt' --> internalSimpleInt, internalO, ...
+// TODO: enable scope test for dynamically created elements in scope XPECT ! scope at 'this.<|>internalSimpleInt' --> internalSimpleInt, internalO, ...
 // TODO: enable scope test for dynamically created elements in scope XPECT ! scope at 'newSimpleInt' --> newSimpleInt, !newO, ...
 		// this.internalSimpleInt = newSimpleInt;
 	},
@@ -45,18 +45,18 @@ var p2 = {
 		return null;
 	},
 	set o(newO : ~Object) {
-// TODO: enable scope test for dynamically created elements in scope XPECT ! scope at 'this.|internalO' --> internalSimpleInt, internalO, ...
+// TODO: enable scope test for dynamically created elements in scope XPECT ! scope at 'this.<|>internalO' --> internalSimpleInt, internalO, ...
 // TODO: enable scope for test dynamically created elements in scope XPECT ! scope at 'newO' --> newO
 		// this.internalO = newO
 	}
 };
 // found during IDE-1852: XPECT FIXME noerrors
-// XPECT scope at 'p2.|o' --> simpleInt, o, ...
+// XPECT scope at 'p2.<|>o' --> simpleInt, o, ...
 p2.o(); // must be bound correctly to getter
-/* XPECT scope at 'p2.internalO.|nested' ---
+/* XPECT scope at 'p2.internalO.<|>nested' ---
 __proto__, constructor, hasOwnProperty, isPrototypeOf, nested, propertyIsEnumerable,
 toLocaleString, toString, valueOf
 --- */
 p2.internalO.nested;
-// XPECT scope at 'p2.o.|nested' --> nested, ...
+// XPECT scope at 'p2.o.<|>nested' --> nested, ...
 p2.o.nested;

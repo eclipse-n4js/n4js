@@ -9,13 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
  Workspace {
    	 Project "ReferenceFinderPolyfill" {
    	 	Folder "src" {
 	   	 	Folder "n4js" {
-				ThisFile "Poly.n4js" { from="Polyfill_filled.n4js.xt" }
+				ThisFile "Poly.n4js" {  }
 			}
 	   	 	Folder "n4js-gen" {
 				File "Poly.n4js" { from="Polyfill_filling.n4js.xt" }
@@ -30,16 +30,16 @@
 
 @@StaticPolyfillAware
 
-/* XPECT findReferences at Polyfill ---
+/* XPECT findReferences at 'Polyfill' ---
 	Poly - Polyfill - 33,
 	Poly - Polyfill - 52
 ---
 */
 export public class Polyfill {
-	// XPECT findReferences at x --> Poly - p.x - 54
+	// XPECT findReferences at 'x' --> Poly - p.x - 54
 	x : int;
 
-	/* XPECT findReferences at m ---
+	/* XPECT findReferences at 'm' ---
 	Poly - p.m - 58,
 	Poly - p.m - 60
 	---

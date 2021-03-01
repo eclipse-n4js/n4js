@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		Project "N4JSXpectTests" {
@@ -32,12 +32,12 @@ export class Callee {
 	private data_property_b : string;
 
 	project get b() : string {
-// XPECT linkedFragment at 'this.|data_property_b' --> /1/@topLevelTypes.0/@ownedMembers.1
+// XPECT linkedFragment at 'this.<|>data_property_b' --> /1/@topLevelTypes.0/@ownedMembers.1
 		return this.data_property_b + "_getter";
 	}
 
 	project set b(newB : string) {
-// XPECT linkedFragment at 'this.|data_property_b' --> /1/@topLevelTypes.0/@ownedMembers.1
+// XPECT linkedFragment at 'this.<|>data_property_b' --> /1/@topLevelTypes.0/@ownedMembers.1
 // XPECT linkedFragment at 'newB' --> /0/@scriptElements.0/@exportedElement/@ownedMembersRaw.3/@fpar
 		this.data_property_b = newB + "_setter";
 	}

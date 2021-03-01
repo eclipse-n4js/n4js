@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
     Workspace {
    	 Project "P_USERTL_B00" {
@@ -19,7 +19,7 @@
 	   	 		File "Generated01.n4js" { from="$Poly$Generated01.n4js"  } // first polyfill, conflict with second.
 	   	 	}
 	   	 	Folder "n4js_2" {
-	   	 		ThisFile "Generated01.n4js" { from="Check_Multiple_staticPolifillModules.n4js.xt" } // trigger validations, 2nd polyfill, conflict with first.
+	   	 		ThisFile "Generated01.n4js" {  } // trigger validations, 2nd polyfill, conflict with first.
 	   	 	}
 	   	 	Folder "n4js-gen" {
 	   	 		File "Generated01.n4js" {}
@@ -32,7 +32,7 @@
    END_SETUP
  */
 
-// XPECT errors --> "Only one module annotated with @@StaticPolyfillModule is allowed per project. Conflicting with module in src/n4js. " at "StaticPolyfillModule"
+// XPECT errors --> "Only one module annotated with @@StaticPolyfillModule is allowed per project. Conflicting with module in src/n4js." at "StaticPolyfillModule"
 @@StaticPolyfillModule
 
 

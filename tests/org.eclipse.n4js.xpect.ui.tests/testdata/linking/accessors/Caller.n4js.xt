@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -37,38 +37,38 @@ class Caller {
 	call() {
 		var callee : NC.Callee = null;
 
-// XPECT linkedFragment at 'callee.|a' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
+// XPECT linkedFragment at 'callee.<|>a' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
 		callee.a = "newA"
-// XPECT linkedFragment at 'callee.|a' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
+// XPECT linkedFragment at 'callee.<|>a' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
 		var newA = callee.a
 
-// XPECT linkedFragment at 'callee.|b' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.4
+// XPECT linkedFragment at 'callee.<|>b' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.4
 		var newB = callee.b
 
-// XPECT linkedFragment at 'callee.|c' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.6
+// XPECT linkedFragment at 'callee.<|>c' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.6
 		callee.c = "newC"
 
-// XPECT linkedFragment at 'callee.|d' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.7
+// XPECT linkedFragment at 'callee.<|>d' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.7
 		callee.d = "newD"
-// XPECT linkedFragment at 'callee.|d' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.5
+// XPECT linkedFragment at 'callee.<|>d' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.5
 		var newD = callee.d
 
 
 		var roleCallee : NCR.CalleeRole = null;
-// XPECT linkedFragment at 'roleCallee.|aRole' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
+// XPECT linkedFragment at 'roleCallee.<|>aRole' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
 		roleCallee.aRole = "newA"
-// XPECT linkedFragment at 'roleCallee.|aRole' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
+// XPECT linkedFragment at 'roleCallee.<|>aRole' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
 		var newARole = roleCallee.aRole
 
-// XPECT linkedFragment at 'roleCallee.|b' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.4
+// XPECT linkedFragment at 'roleCallee.<|>b' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.4
 		var newBRole = roleCallee.bRole
 
-// XPECT linkedFragment at 'roleCallee.|c' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.6
+// XPECT linkedFragment at 'roleCallee.<|>c' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.6
 		roleCallee.cRole = "newC"
 
-// XPECT linkedFragment at 'roleCallee.|d' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.7
+// XPECT linkedFragment at 'roleCallee.<|>d' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.7
 		roleCallee.dRole = "newD"
-// XPECT linkedFragment at 'roleCallee.|d' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.5
+// XPECT linkedFragment at 'roleCallee.<|>d' --> RoleCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.5
 		var newDRole = roleCallee.dRole
 	}
 }

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
     Workspace {
    	 Project "A" {
@@ -22,7 +22,7 @@
    	 }
    	 Project "C" {
    	 	Folder "src" { }
-   	 	ThisFile "package.json" { from="packageC.json.xt" }
+   	 	ThisFile "package.json" {  }
    	 }
    	 Project "D" {
    	 	Folder "src" { }
@@ -30,11 +30,11 @@
    	 }
    }
    
-   IssueConfiguration {
-   	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
-   	IssueCode "MISSING_YARN_WORKSPACE" { enabled=false }
-    IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled=false }
-   }
+//   IssueConfiguration {
+//   	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
+//   	IssueCode "MISSING_YARN_WORKSPACE" { enabled=false }
+//    IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled=false }
+//   }
 
    END_SETUP
  */

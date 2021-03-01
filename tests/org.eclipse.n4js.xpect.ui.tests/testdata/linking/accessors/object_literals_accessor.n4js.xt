@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		JavaProject "N4JSXpectTests" {
@@ -37,7 +37,7 @@ var p2 = {
 		return null;
 	},
 	set simpleInt(newSimpleInt : number) {
-// XPECT linkedFragment at 'this.|internalSimpleInt' --> /1/@internalTypes.2/@ownedMembers.0
+// XPECT linkedFragment at 'this.<|>internalSimpleInt' --> /1/@internalTypes.2/@ownedMembers.0
 // XPECT linkedFragment at 'newSimpleInt' --> /0/@scriptElements.0/@varDeclsOrBindings.0/@expression/@propertyAssignments.3/@fpar
 		this.internalSimpleInt = newSimpleInt;
 	},
@@ -48,22 +48,22 @@ var p2 = {
 		this.internalO = newO
 	}
 };
-// XPECT linkedFragment at 'p2.|internalSimpleInt' --> /1/@internalTypes.2/@ownedMembers.0
+// XPECT linkedFragment at 'p2.<|>internalSimpleInt' --> /1/@internalTypes.2/@ownedMembers.0
 p2.internalSimpleInt;
-// XPECT linkedFragment at 'p2.|internalO' --> /1/@internalTypes.2/@ownedMembers.1
+// XPECT linkedFragment at 'p2.<|>internalO' --> /1/@internalTypes.2/@ownedMembers.1
 p2.internalO;
-// XPECT linkedFragment at 'p2.|simpleInt' --> /1/@internalTypes.2/@ownedMembers.2
+// XPECT linkedFragment at 'p2.<|>simpleInt' --> /1/@internalTypes.2/@ownedMembers.2
 p2.simpleInt;
-// XPECT linkedFragment at 'p2.|simpleInt' --> /1/@internalTypes.2/@ownedMembers.3
+// XPECT linkedFragment at 'p2.<|>simpleInt' --> /1/@internalTypes.2/@ownedMembers.3
 p2.simpleInt=1;
-// XPECT linkedFragment at 'p2.|o' --> /1/@internalTypes.2/@ownedMembers.4
+// XPECT linkedFragment at 'p2.<|>o' --> /1/@internalTypes.2/@ownedMembers.4
 p2.o;
-// XPECT linkedFragment at 'p2.|o' --> /1/@internalTypes.2/@ownedMembers.5
+// XPECT linkedFragment at 'p2.<|>o' --> /1/@internalTypes.2/@ownedMembers.5
 p2.o=null;
 
-// XPECT linkedFragment at 'p2.|o' --> /1/@internalTypes.2/@ownedMembers.4
+// XPECT linkedFragment at 'p2.<|>o' --> /1/@internalTypes.2/@ownedMembers.4
 p2.o; // must be bound correctly to getter
-// XPECT linkedFragment at 'p2.internalO.|nested' --> /1/@internalTypes.3/@ownedMembers.0
+// XPECT linkedFragment at 'p2.internalO.<|>nested' --> /1/@internalTypes.3/@ownedMembers.0
 p2.internalO.nested; // must be bound correctly to nested property
-// XPECT linkedFragment at 'p2.o.|nested' --> /1/@internalTypes.1/@ownedMembers.0
+// XPECT linkedFragment at 'p2.o.<|>nested' --> /1/@internalTypes.1/@ownedMembers.0
 p2.o.nested; // must be bound correctly to nested property

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
  // IDEBUG-261 Also look at /org.eclipse.n4js.bugreports.tests/bugreports-tests/IDEBUG_0261_Client.n4js.xt
 

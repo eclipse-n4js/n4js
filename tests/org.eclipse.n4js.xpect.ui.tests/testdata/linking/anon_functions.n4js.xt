@@ -9,19 +9,24 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
+   
+   IGNORE_ISSUES
+   
+   END_SETUP
+ */
 
 // ast:0
 // tested with Node.js and Chrome Dev Tools
 var test1FunVar = function() { console.log("test1FunVar"); }
-// XPECT linkedFragment at '|test1FunVar();' --> /0/@scriptElements.0/@varDeclsOrBindings.0
+// XPECT linkedFragment at '<|>test1FunVar();' --> /0/@scriptElements.0/@varDeclsOrBindings.0
 // ast:1
 test1FunVar();
 
 // ast:2, types:0
 // tested with Node.js and Chrome Dev Tools (without typing test2FunParam)
 function test2Fun(test2FunParam : { function(): string }) {
-// XPECT linkedFragment at '|test2FunParam();' --> /0/@scriptElements.2/@fpars.0
+// XPECT linkedFragment at '<|>test2FunParam();' --> /0/@scriptElements.2/@fpars.0
 	test2FunParam();
 }
 // ast:3
@@ -31,7 +36,7 @@ test2Fun(function () { console.log("test2FunParam"); })
 // tested with Node.js and Chrome Dev Tools (with calling test3Fun())
 function test3Fun() {
   var test3InnerFunVar = function() { console.log("test3InnerFunVar"); };
-// XPECT linkedFragment at '|test3InnerFunVar();' --> /0/@scriptElements.4/@body/@statements.0/@varDeclsOrBindings.0
+// XPECT linkedFragment at '<|>test3InnerFunVar();' --> /0/@scriptElements.4/@body/@statements.0/@varDeclsOrBindings.0
   test3InnerFunVar();
 }
 
@@ -41,9 +46,9 @@ function test4Fun1() { console.log("test4Fun1"); }
 // ast:6, types:3
 function test4Fun2() {
   var test4Fun1 = function() { console.log("test4Fun2.test4Fun1"); };
-// XPECT linkedFragment at '|test4Fun1();' --> /0/@scriptElements.6/@body/@statements.0/@varDeclsOrBindings.0
+// XPECT linkedFragment at '<|>test4Fun1();' --> /0/@scriptElements.6/@body/@statements.0/@varDeclsOrBindings.0
   test4Fun1();
-// XPECT! linkedFragment at 'this.|test4Fun1();' --> /1/@topLevelTypes.2
+// XPECT! linkedFragment at 'this.<|>test4Fun1();' --> /1/@topLevelTypes.2
 // see IDE-496
   this.test4Fun1();
 }
@@ -56,15 +61,15 @@ function test5Fun2() {
   var test5Fun1 = function() { console.log("test5Fun2.test5Fun1"); };
   var test5Fun2 = function () {
      var test5Fun1 = function() { console.log("test5Fun2.test5Fun2.test5Fun1"); };
-// XPECT linkedFragment at '|test5Fun1();' --> /0/@scriptElements.8/@body/@statements.1/@varDeclsOrBindings.0/@expression/@body/@statements.0/@varDeclsOrBindings.0
+// XPECT linkedFragment at '<|>test5Fun1();' --> /0/@scriptElements.8/@body/@statements.1/@varDeclsOrBindings.0/@expression/@body/@statements.0/@varDeclsOrBindings.0
      test5Fun1();
-// XPECT! linkedFragment at 'this.|test5Fun1();' --> /1/@topLevelTypes.4
+// XPECT! linkedFragment at 'this.<|>test5Fun1();' --> /1/@topLevelTypes.4
 // see IDE-496
      this.test5Fun1();
   }
-// XPECT linkedFragment at '|test5Fun1();' --> /0/@scriptElements.8/@body/@statements.0/@varDeclsOrBindings.0
+// XPECT linkedFragment at '<|>test5Fun1();' --> /0/@scriptElements.8/@body/@statements.0/@varDeclsOrBindings.0
   test5Fun1();
-// XPECT! linkedFragment at 'this.|test5Fun1();' --> /1/@topLevelTypes.4
+// XPECT! linkedFragment at 'this.<|>test5Fun1();' --> /1/@topLevelTypes.4
 // see IDE-496
   this.test5Fun1();
 // XPECT linkedFragment at 'test5Fun2();' --> /0/@scriptElements.8/@body/@statements.1/@varDeclsOrBindings.0

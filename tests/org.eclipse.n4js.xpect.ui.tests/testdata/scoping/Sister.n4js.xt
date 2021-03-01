@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	// Suppress all issues related to run-time dependency validation, because this file tests that linking / scoping / etc.
 	// can cope with *all* cycles at compile time, even those cases that are disallowed by RunTimeDependencyValidator:

@@ -9,13 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
     Workspace {
    	 Project "P_USERTL_B00" {
    	 	Folder "src" {
 	   	 	Folder "n4js" {
-	   	 		ThisFile "Poly.n4js" { from="IDEBUG_656_final_field__filling.n4js.xt"}
+	   	 		ThisFile "Poly.n4js" { }
 	   	 	}
 	   	 	Folder "n4js-gen" {
 	   	 		File "Poly.n4js" { from="IDEBUG_656_final_field__filled.n4js"}

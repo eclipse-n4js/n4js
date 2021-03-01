@@ -9,13 +9,13 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		Project "SomeProject1" {
 			Folder "src" {
 				Folder "foo" {
-					ThisFile "bar.n4js" { from="bar.n4js.xt" }
+					ThisFile "bar.n4js" {  }
 				}
 				File "foo.n4js" { from="../foo.n4js" }
 			}

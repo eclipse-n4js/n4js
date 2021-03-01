@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4jsXtTest
 
 	Workspace {
 		Project "Test" {
@@ -18,7 +18,7 @@
 				File "X.n4js" { from="../src/X.n4js" }
 			}
 			Folder "src_filler" {
-				ThisFile "X.n4js" { from="X.n4js.xt" }
+				ThisFile "X.n4js" {  }
 			}
 			File "package.json" { from="../package.json" }
 		}
@@ -38,8 +38,8 @@ import {AnInterface} from "OtherStuff";
 @StaticPolyfill export public class ToBeFilled2<T extends AnInterface<T>> extends ToBeFilled2<T> {}
 
 // XPECT noerrors -->
-// XPECT linkedFragment at 'class ToBeFilled3<T extends |ToBeFilled3<T>> extends ToBeFilled3<T> {}' --> /1/@topLevelTypes.2
-// XPECT linkedFragment at 'class ToBeFilled3<T extends ToBeFilled3<T>> extends |ToBeFilled3<T> {}' --> ../src/X.n4js#/1/@topLevelTypes.2
+// XPECT linkedFragment at 'class ToBeFilled3<T extends <|>ToBeFilled3<T>> extends ToBeFilled3<T> {}' --> /1/@topLevelTypes.2
+// XPECT linkedFragment at 'class ToBeFilled3<T extends ToBeFilled3<T>> extends <|>ToBeFilled3<T> {}' --> ../src/X.n4js#/1/@topLevelTypes.2
 @StaticPolyfill export public class ToBeFilled3<T extends ToBeFilled3<T>> extends ToBeFilled3<T> {}
 
 // NOTE: with the two linkedFragment assertions above, we make sure the 2nd "ToBeFilled3" links to class ToBeFilled3 in
