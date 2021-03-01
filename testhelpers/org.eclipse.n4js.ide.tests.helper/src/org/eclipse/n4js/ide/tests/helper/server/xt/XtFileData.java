@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
@@ -23,6 +24,7 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 /**
  * Meta data to describe a test file
@@ -51,11 +53,14 @@ public class XtFileData {
 	final public Collection<XtMethodData> testMethodData2;
 	/** Methods to execute to terminate the LSP server */
 	final public List<XtMethodData> teardownMethodData;
+	/** Modifiers stated in the setup section */
+	final public Set<String> configModifiers;
 
 	/** Constructor */
 	public XtFileData(File xtFile, String content, String setupRunnerName, XtWorkspace workspace,
 			List<XtMethodData> startupMethodData, Collection<XtMethodData> testMethodData1,
-			Collection<XtMethodData> testMethodData2, List<XtMethodData> teardownMethodData) {
+			Collection<XtMethodData> testMethodData2, List<XtMethodData> teardownMethodData,
+			String[] configModifiers) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
 
@@ -70,6 +75,7 @@ public class XtFileData {
 		this.testMethodData1 = testMethodData1;
 		this.testMethodData2 = testMethodData2;
 		this.teardownMethodData = teardownMethodData;
+		this.configModifiers = Sets.newHashSet(configModifiers);
 	}
 
 	static private String computeRelativePath(File xtFile) {
@@ -154,4 +160,8 @@ public class XtFileData {
 		return content.substring(offset, offset + length);
 	}
 
+	/** @return true iff all issues should be ignored in this xt file */
+	public boolean isModifierIgnoreIssues() {
+		return configModifiers.contains("IGNORE_ISSUES");
+	}
 }

@@ -179,17 +179,18 @@ public class XtMethodsIssues {
 		}
 
 		Diagnostic firstDiagnostic = issues.first();
+		boolean ignoreIssues = xtData.isModifierIgnoreIssues();
 
 		Iterator<Map.Entry<Integer, XtMethodData>> posTestIter = positionToTest.entries().iterator();
 		Assert.assertTrue(
 				"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
-				posTestIter.hasNext() || issues.isEmpty());
+				ignoreIssues || (posTestIter.hasNext() || issues.isEmpty()));
 
 		if (posTestIter.hasNext()) {
 			Map.Entry<Integer, XtMethodData> currPosTest = posTestIter.next();
 			Assert.assertTrue(
 					"Unexpected issue found: " + issueToString(xtData, firstDiagnostic),
-					getOffset(xtData, firstDiagnostic) > currPosTest.getKey());
+					ignoreIssues || (getOffset(xtData, firstDiagnostic) > currPosTest.getKey()));
 
 			Map.Entry<Integer, XtMethodData> nextPosTest = posTestIter.hasNext() ? posTestIter.next() : null;
 			for (Diagnostic diag : issues) {

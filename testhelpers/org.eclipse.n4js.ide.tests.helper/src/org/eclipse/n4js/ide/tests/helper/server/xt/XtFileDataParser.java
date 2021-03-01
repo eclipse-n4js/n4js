@@ -35,6 +35,7 @@ import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Sets;
 
@@ -49,12 +50,17 @@ public class XtFileDataParser {
 	/** Pattern group name for the workspace configuration */
 	static final String XT_WORKSPACE = "WORKSPACE";
 
+	/** Pattern group name for everything behind the workspace configuration */
+	static final String XT_REST = "REST";
+
 	/**
 	 * Pattern for Setup section of xt files
 	 */
 	static final Pattern XT_SETUP = Pattern.compile(
-			"XPECT_SETUP\\s+(?<" + XT_RUNNER + ">[\\w\\d\\.]+)[\\s\\S]*?(Workspace\\s*\\{(?<" + XT_WORKSPACE
-					+ ">[\\s\\S]*)\\}[\\s\\S]*)?END_SETUP");
+			"XPECT_SETUP\\s+(?:(?<" + XT_RUNNER
+					+ ">[\\w\\d\\.]+)[\\s]*)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*)(Workspace\\s*\\{(?<" + XT_WORKSPACE
+					+ ">[\\s\\S]*)\\}[\\s]*(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?((?<" + XT_REST
+					+ ">[\\s\\S]*?)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?END_SETUP");
 
 	/** Parses the contents of the given file */
 	static public XtFileData parse(File xtFile) throws IOException {
@@ -65,6 +71,8 @@ public class XtFileDataParser {
 		String setupRunner = matcher.group(XT_RUNNER);
 		Preconditions.checkNotNull(setupRunner);
 		String setupWorkspace = matcher.group(XT_WORKSPACE);
+		String configModifierString = Strings.nullToEmpty(matcher.group(XT_REST)).trim();
+		String[] configModifiers = configModifierString.split("\\\\s+");
 
 		XtWorkspace workspace = getWorkspace(xtFile, setupWorkspace, xtFileContent);
 		List<XtMethodData> startupMethodData = getDefaultStartupMethodData();
@@ -75,7 +83,7 @@ public class XtFileDataParser {
 		fillTestMethodData(xtFile.toString(), xtFileContent, testMethodData1, testMethodData2);
 
 		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData1,
-				testMethodData2, teardownMethodData);
+				testMethodData2, teardownMethodData, configModifiers);
 	}
 
 	static XtWorkspace getWorkspace(File xtFile, String setupWorkspace, String xtFileContent) {

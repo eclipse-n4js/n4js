@@ -38,7 +38,8 @@ public class XtSetupWorkspaceParser {
 		int cursor;
 
 		TokenStream(String setupWorkspace) {
-			this.tokens = setupWorkspace.trim().split("(?<=\\S)(?=\\{|\\})|(?<=\\{|\\})(?=\\S)|[=\\s]+");
+			String commentsRemoved = setupWorkspace.replaceAll("\\/\\/[^\\n]*", "");
+			this.tokens = commentsRemoved.trim().split("(?<=\\S)(?=\\{|\\})|(?<=\\{|\\})(?=\\S)|[=\\s]+");
 			this.cursor = 0;
 		}
 
