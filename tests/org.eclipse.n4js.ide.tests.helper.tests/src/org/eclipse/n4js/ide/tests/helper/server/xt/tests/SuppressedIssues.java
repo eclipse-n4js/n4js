@@ -10,28 +10,25 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Tests for test method {@link XtIdeTest#elementKeyword(XtMethodData)}
+ * Tests for test method {@link XtIdeTest#definition(XtMethodData)}
  */
-public class ElementKeywordTest extends AbstractXtParentRunnerTest {
+public class SuppressedIssues extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test
 	public void test() throws Exception {
-		run("probands/ElementKeyword");
+		run("probands/SuppressedIssues", N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
 		assertEventNames("testRunStarted\n"
 				+ "testStarted\n"
 				+ "testFinished\n"
-				+ "testStarted\n"
-				+ "testFailure\n"
 				+ "testRunFinished");
-		assertResults(
-				"Passed: elementKeyword~0: test-1 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕\n"
-						+ "Failed: elementKeyword~1: test-2 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕. expected:<[wrong expectation]> but was:<[method]>");
+		assertResults("Passed: nowarnings~0:  〔probands/SuppressedIssues/SuppressedIssues.n4js.xt〕");
 	}
 
 }

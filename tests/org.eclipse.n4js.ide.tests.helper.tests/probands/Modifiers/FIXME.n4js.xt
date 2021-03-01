@@ -15,20 +15,15 @@
 
 
 class B {
-	methodB() : String { return null; }
-	methodC() : int { return 0; }
+	methodB() {	}
 }
 
 
 var b0 : B = new B();
-// test-1 XPECT accessModifier at 'methodB' --> project
-// test-2 XPECT definition at 'methodB' --> (test-project/src/ExpectationsSkipComments.n4js, [17:1 - 17:8])
-/* test-3 XPECT type of 'methodC' --> {function():int}
-   some commet
- */
- 
-// another comment
+// test-1 XPECT FIXME definition at 'b0' --> (test-project/src/FIXME.n4js, [23:0 - 23:13])
 b0.methodB();
-/* yet another comment */
-// and don't forget this comment
-b0.methodC();
+
+
+
+// test-2 XPECT FIXME definition at 'b0' --> wrong expectation
+b0.methodB();

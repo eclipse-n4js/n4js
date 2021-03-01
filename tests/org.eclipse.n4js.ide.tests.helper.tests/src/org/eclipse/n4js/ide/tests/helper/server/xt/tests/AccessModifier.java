@@ -10,12 +10,12 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Tests for test method {@link XtIdeTest#accessModifier(MethodData)}
+ * Tests for test method {@link XtIdeTest#accessModifier(XtMethodData)}
  */
 public class AccessModifier extends AbstractXtParentRunnerTest {
 
@@ -24,7 +24,7 @@ public class AccessModifier extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/AccessModifier");
 
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + AccessModifier.n4js.xt: probands/AccessModifier\n"
 				+ " ++ accessModifier~0: test-1 〔probands/AccessModifier/AccessModifier.n4js.xt〕(test-1)\n"
 				+ " ++ accessModifier~1: test-2 〔probands/AccessModifier/AccessModifier.n4js.xt〕(test-2)");

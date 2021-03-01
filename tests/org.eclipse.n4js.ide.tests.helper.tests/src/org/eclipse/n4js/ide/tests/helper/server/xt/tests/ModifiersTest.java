@@ -15,23 +15,29 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
- * Tests for test method {@link XtIdeTest#elementKeyword(XtMethodData)}
+ * Tests for test method {@link XtIdeTest#definition(XtMethodData)}
  */
-public class ElementKeywordTest extends AbstractXtParentRunnerTest {
+public class ModifiersTest extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test
 	public void test() throws Exception {
-		run("probands/ElementKeyword");
+		run("probands/Modifiers");
 		assertEventNames("testRunStarted\n"
 				+ "testStarted\n"
-				+ "testFinished\n"
-				+ "testStarted\n"
 				+ "testFailure\n"
+				+ "testStarted\n"
+				+ "testFinished\n"
+				+ "testRunFinished\n"
+				+ "testRunStarted\n"
+				+ "testIgnored\n"
+				+ "testIgnored\n"
 				+ "testRunFinished");
 		assertResults(
-				"Passed: elementKeyword~0: test-1 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕\n"
-						+ "Failed: elementKeyword~1: test-2 〔probands/ElementKeyword/ElementKeyword.n4js.xt〕. expected:<[wrong expectation]> but was:<[method]>");
+				"Failed: definition~0: FIXME test-1 〔probands/Modifiers/FIXME.n4js.xt〕. Test fixed!\n"
+						+ "Passed: definition~1: FIXME test-2 〔probands/Modifiers/FIXME.n4js.xt〕\n"
+						+ "Ignored: definition~0: ! test-1 〔probands/Modifiers/IGNORE.n4js.xt〕\n"
+						+ "Ignored: definition~1: ! test-2 〔probands/Modifiers/IGNORE.n4js.xt〕");
 	}
 
 }

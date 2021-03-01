@@ -10,16 +10,16 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.junit.Test;
 
 /**
  * Test for test methods:
  * <ul>
- * <li/>{@link XtIdeTest#linkedName(MethodData)}
- * <li/>{@link XtIdeTest#linkedPathname(MethodData)}
- * <li/>{@link XtIdeTest#linkedFragment(MethodData)}
+ * <li/>{@link XtIdeTest#linkedName(XtMethodData)}
+ * <li/>{@link XtIdeTest#linkedPathname(XtMethodData)}
+ * <li/>{@link XtIdeTest#linkedFragment(XtMethodData)}
  * </ul>
  */
 public class LinkingMethods extends AbstractXtParentRunnerTest {
@@ -32,7 +32,7 @@ public class LinkingMethods extends AbstractXtParentRunnerTest {
 		assertFiles("LinkedFragment.n4ts.xt\n"
 				+ "LinkedName.n4ts.xt\n"
 				+ "LinkedPathname.n4js.xt");
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + LinkedFragment.n4ts.xt: probands/LinkingMethods\n"
 				+ " ++ linkedFragment~0: LF-1 〔probands/LinkingMethods/LinkedFragment.n4ts.xt〕(LF-1)\n"
 				+ " ++ linkedFragment~1: LF-2 〔probands/LinkingMethods/LinkedFragment.n4ts.xt〕(LF-2)\n"

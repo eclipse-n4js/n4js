@@ -22,7 +22,7 @@ public class ExpectationsSkipComments extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/ExpectationsSkipComments");
 
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + ExpectationsSkipComments.n4js.xt: probands/ExpectationsSkipComments\n"
 				+ " ++ accessModifier~0: test-1 〔probands/ExpectationsSkipComments/ExpectationsSkipComments.n4js.xt〕(test-1)\n"
 				+ " ++ definition~0: test-2 〔probands/ExpectationsSkipComments/ExpectationsSkipComments.n4js.xt〕(test-2)\n"

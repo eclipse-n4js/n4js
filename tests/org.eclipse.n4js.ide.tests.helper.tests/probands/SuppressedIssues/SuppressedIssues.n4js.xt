@@ -14,21 +14,6 @@
  */
 
 
-class B {
-	methodB() : String { return null; }
-	methodC() : int { return 0; }
-}
 
-
-var b0 : B = new B();
-// test-1 XPECT accessModifier at 'methodB' --> project
-// test-2 XPECT definition at 'methodB' --> (test-project/src/ExpectationsSkipComments.n4js, [17:1 - 17:8])
-/* test-3 XPECT type of 'methodC' --> {function():int}
-   some commet
- */
- 
-// another comment
-b0.methodB();
-/* yet another comment */
-// and don't forget this comment
-b0.methodC();
+// XPECT nowarnings -->
+let i : int = 3;
