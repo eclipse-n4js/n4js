@@ -137,8 +137,13 @@ public class XtSetupWorkspaceParser {
 			LOOP: while (tokens.hasNext()) {
 				String currToken = tokens.next();
 				switch (currToken) {
+				case "SrcFolder": {
+					parseFolder(tokens, xtFile, xtFileContent, prjBuilder, path, "src");
+					break;
+				}
 				case "Folder": {
-					parseFolder(tokens, xtFile, xtFileContent, prjBuilder, path);
+					String name = tokens.expectNameInQuotes();
+					parseFolder(tokens, xtFile, xtFileContent, prjBuilder, path, name);
 					break;
 				}
 				case "File": {
@@ -163,9 +168,9 @@ public class XtSetupWorkspaceParser {
 	}
 
 	private static void parseFolder(TokenStream tokens, File xtFile, String xtFileContent,
-			ProjectBuilder prjBuilder, String path) {
+			ProjectBuilder prjBuilder, String path, String name) {
 
-		String newPath = path + File.separator + tokens.expectNameInQuotes();
+		String newPath = path + File.separator + name;
 		prjBuilder.getOrAddFolder(newPath);
 		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, newPath, "Folder");
 	}

@@ -14,7 +14,7 @@
 		JavaProject "N4JSXpectTests" {
 			Folder "src" {
 				ThisFile {}
-				File "A.n4js.xt" { from="./A.n4js.xt"}
+				File "A.n4js" { from="./A.n4js.xt"}
 			}
 			File "package.json" { from="../package.json" }
 		}

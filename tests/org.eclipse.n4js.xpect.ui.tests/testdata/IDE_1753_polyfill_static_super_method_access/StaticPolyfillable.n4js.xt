@@ -17,7 +17,7 @@
    	 		ThisFile {  }
    	  	}
    	  	Folder "src-filler" {
-   	  		File "StaticPolyfillable.n4js.xt" { from="StaticPolyfillable-Filler.n4js" }
+   	  		File "StaticPolyfillable.n4js" { from="StaticPolyfillable-Filler.n4js" }
    	  	}
    	 	File "package.json" { from="supermethodaccess-package.json" }
    	 }
