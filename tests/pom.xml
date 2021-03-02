@@ -87,6 +87,7 @@ Contributors:
 		<module>org.eclipse.n4js.ide.tests.helper.tests</module>
 		<module>org.eclipse.n4js.ide.tests</module>
 		<module>org.eclipse.n4js.ide.tests.jar</module>
+		<module>org.eclipse.n4js.ui.tests</module> <!-- note the bad name: these are actually IDE tests -->
 
 		<!-- *************************************** n4jsx Tests -->
 		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
