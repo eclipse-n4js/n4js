@@ -117,14 +117,22 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 			reversedDependencies.put(dependencyName, new N4JSProjectName(pDescription.getProjectName()));
 		}
 
-		addImplicitTypeDefinitionDependencies(pDescription);
+		ProjectDescription pDescriptionChanged = addImplicitTypeDefinitionDependencies(pDescription);
+		if (pDescriptionChanged != pDescription) {
+			projectDescriptions.put(pLocation, pDescriptionChanged);
+			pDescription = pDescriptionChanged;
+		}
 
 		if (!Strings.isNullOrEmpty(definesPackageString)) {
 			N4JSProjectName definesPackageName = new N4JSProjectName(definesPackageString);
 			for (N4JSProjectName dependingProjectName : reversedDependencies.get(definesPackageName)) {
 				FileURI dependingProjectLocation = nameToLocation.get(dependingProjectName);
 				if (dependingProjectLocation != null) {
-					addImplicitTypeDefinitionDependencies(projectDescriptions.get(dependingProjectLocation));
+					ProjectDescription dependingPD = projectDescriptions.get(dependingProjectLocation);
+					pDescriptionChanged = addImplicitTypeDefinitionDependencies(dependingPD);
+					if (pDescriptionChanged != dependingPD) {
+						projectDescriptions.put(dependingProjectLocation, pDescriptionChanged);
+					}
 				}
 			}
 		}
