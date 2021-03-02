@@ -13,13 +13,15 @@ package org.eclipse.n4js.projectDescription;
 import java.util.List;
 import java.util.Objects;
 
+import org.eclipse.n4js.utils.ImmutableDataClass;
+
 import com.google.common.collect.ImmutableList;
 
 /**
  * Lists one or more source folders inside the project with a common intended usage (e.g. main sources, tests).
  */
 @SuppressWarnings("javadoc")
-public class SourceContainerDescription {
+public class SourceContainerDescription extends ImmutableDataClass {
 
 	private final SourceContainerType sourceContainerType;
 	private final ImmutableList<String> paths;
@@ -38,18 +40,14 @@ public class SourceContainerDescription {
 	}
 
 	@Override
-	public int hashCode() {
+	protected int computeHashCode() {
 		return Objects.hash(
 				paths,
 				sourceContainerType);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof SourceContainerDescription))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		SourceContainerDescription other = (SourceContainerDescription) obj;
 		return Objects.equals(paths, other.paths)
 				&& sourceContainerType == other.sourceContainerType;

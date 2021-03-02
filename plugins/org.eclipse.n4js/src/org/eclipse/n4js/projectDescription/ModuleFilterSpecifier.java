@@ -12,8 +12,10 @@ package org.eclipse.n4js.projectDescription;
 
 import java.util.Objects;
 
+import org.eclipse.n4js.utils.ImmutableDataClass;
+
 @SuppressWarnings("javadoc")
-public class ModuleFilterSpecifier {
+public class ModuleFilterSpecifier extends ImmutableDataClass {
 
 	private final String moduleSpecifierWithWildcard;
 	private final String sourcePath;
@@ -32,18 +34,14 @@ public class ModuleFilterSpecifier {
 	}
 
 	@Override
-	public int hashCode() {
+	protected int computeHashCode() {
 		return Objects.hash(
 				moduleSpecifierWithWildcard,
 				sourcePath);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof ModuleFilterSpecifier))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		ModuleFilterSpecifier other = (ModuleFilterSpecifier) obj;
 		return Objects.equals(moduleSpecifierWithWildcard, other.moduleSpecifierWithWildcard)
 				&& Objects.equals(sourcePath, other.sourcePath);

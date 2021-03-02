@@ -16,6 +16,7 @@ import java.util.Objects;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
+import org.eclipse.n4js.utils.ImmutableDataClass;
 
 import com.google.common.collect.ImmutableList;
 
@@ -23,7 +24,7 @@ import com.google.common.collect.ImmutableList;
  * Basic information about a project, as read from the {@code package.json} file in the project's root folder.
  */
 @SuppressWarnings("javadoc")
-public class ProjectDescription {
+public class ProjectDescription extends ImmutableDataClass {
 
 	private final String projectName;
 	private final String vendorId;
@@ -47,8 +48,6 @@ public class ProjectDescription {
 	private final boolean n4jsNature;
 	private final boolean yarnWorkspaceRoot;
 	private final ImmutableList<String> workspaces;
-
-	private Integer cachedHashCode;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(String projectName, String vendorId, String vendorName, VersionNumber projectVersion,
@@ -245,41 +244,34 @@ public class ProjectDescription {
 	}
 
 	@Override
-	public int hashCode() {
-		if (cachedHashCode == null) {
-			cachedHashCode = Objects.hash(
-					projectName,
-					vendorId,
-					vendorName,
-					// projectVersion is covered by internalProjectVersionStr
-					internalProjectVersionStr,
-					projectType,
-					mainModule,
-					extendedRuntimeEnvironment,
-					providedRuntimeLibraries,
-					requiredRuntimeLibraries,
-					projectDependencies,
-					implementationId,
-					implementedProjects,
-					outputPath,
-					sourceContainers,
-					moduleFilters,
-					testedProjects,
-					definesPackage,
-					nestedNodeModulesFolder,
-					n4jsNature,
-					yarnWorkspaceRoot,
-					workspaces);
-		}
-		return cachedHashCode;
+	protected int computeHashCode() {
+		return Objects.hash(
+				projectName,
+				vendorId,
+				vendorName,
+				// projectVersion is covered by internalProjectVersionStr
+				internalProjectVersionStr,
+				projectType,
+				mainModule,
+				extendedRuntimeEnvironment,
+				providedRuntimeLibraries,
+				requiredRuntimeLibraries,
+				projectDependencies,
+				implementationId,
+				implementedProjects,
+				outputPath,
+				sourceContainers,
+				moduleFilters,
+				testedProjects,
+				definesPackage,
+				nestedNodeModulesFolder,
+				n4jsNature,
+				yarnWorkspaceRoot,
+				workspaces);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof ProjectDescription))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		ProjectDescription other = (ProjectDescription) obj;
 		return Objects.equals(projectName, other.projectName)
 				&& Objects.equals(vendorId, other.vendorId)

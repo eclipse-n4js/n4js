@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xtext.workspace;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.utils.URIUtils;
@@ -24,7 +25,7 @@ import com.google.common.collect.ImmutableSet;
  * Immutable equivalent of an {@link IWorkspaceConfig}.
  */
 @SuppressWarnings("restriction")
-public class WorkspaceConfigSnapshot {
+public class WorkspaceConfigSnapshot extends Snapshot {
 
 	/** The root path of the workspace */
 	protected final URI path;
@@ -121,38 +122,21 @@ public class WorkspaceConfigSnapshot {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name2Project == null) ? 0 : name2Project.hashCode());
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
+	protected int computeHashCode() {
 		// note: no need to consider "buildOrderInfo" and the lookup maps "projectPath2Project" and
 		// "sourceFolderPath2Project"
-		return result;
+		return Objects.hash(
+				path,
+				name2Project);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		WorkspaceConfigSnapshot other = (WorkspaceConfigSnapshot) obj;
-		if (name2Project == null) {
-			if (other.name2Project != null)
-				return false;
-		} else if (!name2Project.equals(other.name2Project))
-			return false;
-		if (path == null) {
-			if (other.path != null)
-				return false;
-		} else if (!path.equals(other.path))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		// note: no need to check "buildOrderInfo" and the lookup maps "projectPath2Project" and
 		// "sourceFolderPath2Project"
-		return true;
+		WorkspaceConfigSnapshot other = (WorkspaceConfigSnapshot) obj;
+		return Objects.equals(path, other.path)
+				&& Objects.equals(name2Project, other.name2Project);
 	}
 
 	@Override

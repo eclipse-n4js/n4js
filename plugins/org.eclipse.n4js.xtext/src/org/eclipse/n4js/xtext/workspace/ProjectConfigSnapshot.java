@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xtext.workspace;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IProjectConfig;
@@ -21,7 +22,7 @@ import com.google.common.collect.ImmutableSet;
  * An immutable equivalent to {@link IProjectConfig}.
  */
 @SuppressWarnings("restriction")
-public class ProjectConfigSnapshot {
+public class ProjectConfigSnapshot extends Snapshot {
 
 	private final String name;
 	private final URI path;
@@ -85,52 +86,27 @@ public class ProjectConfigSnapshot {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dependencies == null) ? 0 : dependencies.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + ((sourceFolders == null) ? 0 : sourceFolders.hashCode());
-		result = prime * result + ((projectDescriptionUris == null) ? 0 : projectDescriptionUris.hashCode());
-		return result;
+	protected int computeHashCode() {
+		return Objects.hash(
+				name,
+				path,
+				projectDescriptionUris,
+				indexOnly,
+				generatorEnabled,
+				dependencies,
+				sourceFolders);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+	protected boolean computeEquals(Object obj) {
 		ProjectConfigSnapshot other = (ProjectConfigSnapshot) obj;
-		if (dependencies == null) {
-			if (other.dependencies != null)
-				return false;
-		} else if (!dependencies.equals(other.dependencies))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (path == null) {
-			if (other.path != null)
-				return false;
-		} else if (!path.equals(other.path))
-			return false;
-		if (sourceFolders == null) {
-			if (other.sourceFolders != null)
-				return false;
-		} else if (!sourceFolders.equals(other.sourceFolders))
-			return false;
-		if (projectDescriptionUris == null) {
-			if (other.projectDescriptionUris != null)
-				return false;
-		} else if (!projectDescriptionUris.equals(other.projectDescriptionUris))
-			return false;
-		return true;
+		return Objects.equals(name, other.name)
+				&& Objects.equals(path, other.path)
+				&& Objects.equals(projectDescriptionUris, other.projectDescriptionUris)
+				&& indexOnly == other.indexOnly
+				&& generatorEnabled == other.generatorEnabled
+				&& Objects.equals(dependencies, other.dependencies)
+				&& Objects.equals(sourceFolders, other.sourceFolders);
 	}
 
 	@Override

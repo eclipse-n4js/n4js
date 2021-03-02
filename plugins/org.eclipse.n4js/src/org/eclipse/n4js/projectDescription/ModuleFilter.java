@@ -13,6 +13,8 @@ package org.eclipse.n4js.projectDescription;
 import java.util.List;
 import java.util.Objects;
 
+import org.eclipse.n4js.utils.ImmutableDataClass;
+
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -20,7 +22,7 @@ import com.google.common.collect.ImmutableList;
  * output code.
  */
 @SuppressWarnings("javadoc")
-public class ModuleFilter {
+public class ModuleFilter extends ImmutableDataClass {
 
 	private final ModuleFilterType moduleFilterType;
 	private final ImmutableList<ModuleFilterSpecifier> moduleSpecifiers;
@@ -39,18 +41,14 @@ public class ModuleFilter {
 	}
 
 	@Override
-	public int hashCode() {
+	protected int computeHashCode() {
 		return Objects.hash(
 				moduleFilterType,
 				moduleSpecifiers);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof ModuleFilter))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		ModuleFilter other = (ModuleFilter) obj;
 		return moduleFilterType == other.moduleFilterType
 				&& Objects.equals(moduleSpecifiers, other.moduleSpecifiers);

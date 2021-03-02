@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.Objects;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.workspace.ISourceFolder;
@@ -18,7 +20,7 @@ import org.eclipse.xtext.workspace.ISourceFolder;
  * Immutable equivalent to an {@link ISourceFolder}.
  */
 @SuppressWarnings("restriction")
-public class SourceFolderSnapshot {
+public class SourceFolderSnapshot extends Snapshot {
 
 	private final String name;
 	private final URI path;
@@ -56,39 +58,21 @@ public class SourceFolderSnapshot {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		return result;
+	protected int computeHashCode() {
+		return Objects.hash(
+				name,
+				path);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+	protected boolean computeEquals(Object obj) {
 		SourceFolderSnapshot other = (SourceFolderSnapshot) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (path == null) {
-			if (other.path != null)
-				return false;
-		} else if (!path.equals(other.path))
-			return false;
-		return true;
+		return Objects.equals(name, other.name)
+				&& Objects.equals(path, other.path);
 	}
 
 	@Override
 	public String toString() {
 		return "SourceFolderSnapshot [name=" + name + ", path=" + path + "]";
 	}
-
 }

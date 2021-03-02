@@ -48,7 +48,7 @@ public class ProjectDependency extends ProjectReference {
 	}
 
 	@Override
-	public int hashCode() {
+	protected int computeHashCode() {
 		return Objects.hash(
 				super.hashCode(),
 				type,
@@ -57,15 +57,10 @@ public class ProjectDependency extends ProjectReference {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (!(obj instanceof ProjectDependency))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		ProjectDependency other = (ProjectDependency) obj;
-		return type == other.type
+		return super.equals(obj)
+				&& type == other.type
 				&& Objects.equals(versionRequirementString, other.versionRequirementString)
 				&& Objects.equals(internalVersionRequirementStr, other.internalVersionRequirementStr);
 	}

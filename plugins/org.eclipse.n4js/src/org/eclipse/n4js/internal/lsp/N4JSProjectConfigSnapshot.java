@@ -73,31 +73,20 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	}
 
 	@Override
-	public int hashCode() {
+	protected int computeHashCode() {
 		return Objects.hash(
-				super.hashCode(),
+				super.computeHashCode(),
 				type,
 				definesPackage,
 				sortedDependencies);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		if (!super.equals(obj))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		N4JSProjectConfigSnapshot other = (N4JSProjectConfigSnapshot) obj;
-		if (type != other.type)
-			return false;
-		if (!Objects.equals(definesPackage, other.definesPackage))
-			return false;
-		if (!Objects.equals(sortedDependencies, other.sortedDependencies))
-			return false;
-		return true;
+		return super.computeEquals(other)
+				&& type == other.type
+				&& Objects.equals(definesPackage, other.definesPackage)
+				&& Objects.equals(sortedDependencies, other.sortedDependencies);
 	}
 }

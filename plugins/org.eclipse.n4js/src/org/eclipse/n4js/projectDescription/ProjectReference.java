@@ -12,11 +12,13 @@ package org.eclipse.n4js.projectDescription;
 
 import java.util.Objects;
 
+import org.eclipse.n4js.utils.ImmutableDataClass;
+
 /**
  * Reference to another project without version requirement.
  */
 @SuppressWarnings("javadoc")
-public class ProjectReference {
+public class ProjectReference extends ImmutableDataClass {
 
 	private final String projectName;
 
@@ -29,17 +31,13 @@ public class ProjectReference {
 	}
 
 	@Override
-	public int hashCode() {
+	protected int computeHashCode() {
 		return Objects.hash(
 				projectName);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof ProjectReference))
-			return false;
+	protected boolean computeEquals(Object obj) {
 		ProjectReference other = (ProjectReference) obj;
 		return Objects.equals(projectName, other.projectName);
 	}
