@@ -13,26 +13,18 @@ package org.eclipse.n4js.projectDescription;
 @SuppressWarnings("javadoc")
 public enum ProjectType implements KeywordEnum {
 
-	//
+	// @formatter:off
 	PLAINJS("plainjs"),
-	//
 	VALIDATION("validation"),
-	//
 	DEFINITION("definition"),
-	//
 	APPLICATION("application"),
-	//
 	PROCESSOR("processor"),
-	//
 	LIBRARY("library"),
-	//
 	API("api"),
-	//
 	RUNTIME_ENVIRONMENT("runtimeEnvironment"),
-	//
 	RUNTIME_LIBRARY("runtimeLibrary"),
-	//
 	TEST("test");
+	// @formatter:on
 
 	private final String keyword;
 

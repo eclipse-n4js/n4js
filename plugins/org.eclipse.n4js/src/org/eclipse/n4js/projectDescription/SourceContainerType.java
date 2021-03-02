@@ -13,12 +13,11 @@ package org.eclipse.n4js.projectDescription;
 @SuppressWarnings("javadoc")
 public enum SourceContainerType implements KeywordEnum {
 
-	//
+	// @formatter:off
 	SOURCE("source"),
-	//
 	TEST("test"),
-	//
 	EXTERNAL("external");
+	// @formatter:on
 
 	private final String keyword;
 
