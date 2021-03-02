@@ -19,7 +19,6 @@ import java.util.Deque;
 import java.util.List;
 import java.util.function.Function;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -61,7 +60,6 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.common.types.access.TypeResource;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -94,9 +92,6 @@ public class XtMethods {
 
 	@Inject
 	private FindReferenceHelper findReferenceHelper;
-
-	@Inject
-	private IQualifiedNameConverter converter;
 
 	@Inject
 	private IScopeProvider scopeProvider;
@@ -231,12 +226,10 @@ public class XtMethods {
 		EObject targetObject = offsetHelper.resolveCrossReferencedElementAt(eResource, offset);
 		if (targetObject == null) {
 			Assert.fail("Reference is null");
-		} else if (targetObject instanceof EObject) { // FIXME: GH-2064
+		} else {
 			URI baseUri = eObject.eResource().getURI();
 			String fragmentName = getLinkedFragment(targetObject, baseUri);
 			return fragmentName;
-		} else if (targetObject instanceof EList<?>) {
-			Assert.fail("use 'XPECT linkedFragment' (plural)");
 		}
 		return null;
 	}
@@ -420,24 +413,6 @@ public class XtMethods {
 		List<String> scopeNames = new ArrayList<>();
 		for (IEObjectDescription desc : allElements) {
 			scopeNames.add(toString.apply(desc));
-		}
-
-		return scopeNames;
-	}
-
-	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
-	public List<String> getScopeString2(IEObjectCoveringRegion ocr) {
-		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
-		List<String> scopeNames = new ArrayList<>();
-		List<IEObjectDescription> allElements = Lists.newArrayList(scope.getAllElements());
-		for (IEObjectDescription elem : allElements) {
-			String name = elem.getName().toString();
-
-			QualifiedName qualifiedName = converter.toQualifiedName(name);
-			IEObjectDescription singleElement = scope.getSingleElement(qualifiedName);
-			if (singleElement != null) {
-				scopeNames.add(name);
-			}
 		}
 
 		return scopeNames;
