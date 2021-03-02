@@ -29,18 +29,15 @@
  */
 
 /* XPECT scopeWithPosition at 'import { <|>Class1 } from' ---
-	!Class1 - T42,
 	Class1 - MultipleClasses.n4js:14,
 	Class2 - MultipleClasses.n4js:18,
-	Class3 - MultipleClasses.n4js:22,
-	Class4 - MultipleClasses.n4js:26,
-	MultipleClasses - MultipleClasses.n4js:30
+	Class4 - MultipleClasses.n4js:26
 --- */
 import { Class1 } from "scoping/imports/MultipleClasses"
 
 /* XPECT scopeWithResource at 'class1 : <|>Class1' ---
 Array - builtin_js.n4ts, Boolean - builtin_js.n4ts,
-Class1 - MultipleClasses.n4js, Class2 - T, Date - builtin_js.n4ts, Error - builtin_js.n4ts,
+Class1 - MultipleClasses.n4js, Class2 - Consumer.n4js, Date - builtin_js.n4ts, Error - builtin_js.n4ts,
 EvalError - builtin_js.n4ts, Function - builtin_js.n4ts, Generator - builtin_js.n4ts,
 Iterable - builtin_js.n4ts,
 Iterable2 - builtin_n4.n4ts, Iterable3 - builtin_n4.n4ts, Iterable4 - builtin_n4.n4ts, Iterable5 - builtin_n4.n4ts,
@@ -62,8 +59,8 @@ String - builtin_js.n4ts, Symbol - builtin_js.n4ts, SyntaxError - builtin_js.n4t
 TEMP_ReturnTypeOfMatchExec - builtin_js.n4ts, TypeError - builtin_js.n4ts,
 URIError - builtin_js.n4ts, any - primitives_n4.n4ts, boolean - primitives_js.n4ts, console - console.n4ts,
 i18nKey - primitives_n4.n4ts, number - primitives_js.n4ts, int - primitives_js.n4ts, pathSelector - primitives_n4.n4ts,
-scoping.imports.Consumer.Class2 - T,
-scoping.imports.DifferentClasses.Class2 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.0,
+scoping.imports.Consumer.Class2 - Consumer.n4js,
+scoping.imports.DifferentClasses.Class2 - DifferentClasses.n4js,
 scoping.imports.DifferentClasses.Class4 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.1,
 !scoping.imports.DifferentClasses.Class6 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.2,
 scoping.imports.DifferentClasses.Class8 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.3,

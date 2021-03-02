@@ -35,9 +35,11 @@ class Caller {
 	call() {
 		var callee : N.Callee = null;
 
-// XPECT scope at 'callee.<|>a' --> a, !b, c, d, data_property_b, !data_property_c, !newB, ...
+// b is still in scope to enable content assist. However, a validation will ensure that b is invalid.
+// XPECT scope at 'callee.<|>' --> a, b, c, d, data_property_b, !data_property_c, !newB, ...
 		callee.a = "newA"
-// XPECT scope at 'callee.<|>a' --> a, b, !c, d, data_property_b, !data_property_c, !newB, ...
+// c is still in scope to enable content assist. However, a validation will ensure that c is invalid.
+// XPECT scope at 'callee.<|>' --> a, b, c, d, data_property_b, !data_property_c, !newB, ...
 		var newA = callee.a
 
 		var newB = callee.b
