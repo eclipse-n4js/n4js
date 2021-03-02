@@ -210,6 +210,12 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "scope":
 			scope(testMethodData);
 			break;
+		case "scopeWithResource":
+			scopeWithResource(testMethodData);
+			break;
+		case "scopeWithPosition":
+			scopeWithPosition(testMethodData);
+			break;
 		case "type":
 			type(testMethodData);
 			break;
@@ -496,18 +502,56 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
-	 * Checks that an element/expression has a certain type. Usage:
+	 * Checks the scope at a given location. Usage:
 	 *
 	 * <pre>
-	 * // Xpect scope at '&ltLOCATION&gt' --&gt; &ltSCOPE&gt
+	 * // Xpect scope at '&ltLOCATION&gt' --&gt; &ltSCOPES&gt
 	 * </pre>
 	 *
 	 * The location is optional.
+	 *
+	 * SCOPES is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scope(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scope", "at");
 		List<String> scopeStr = xtMethods.getScopeString(ocr);
+		assertEqualIterables(data.expectation, scopeStr);
+	}
+
+	/**
+	 * Checks the elements and their resources/positions of the scope at a given location. Usage:
+	 *
+	 * <pre>
+	 * // Xpect scopeWithPosition at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE AND POSITION&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 *
+	 * SCOPES WITH RESOURCE AND POSITION is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void scopeWithPosition(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithPosition", "at");
+		List<String> scopeStr = xtMethods.getScopeWithPositionString(ocr);
+		assertEqualIterables(data.expectation, scopeStr);
+	}
+
+	/**
+	 * Checks the elements and their resources of the scope at a given location. Usage:
+	 *
+	 * <pre>
+	 * // Xpect scopeWithResource at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 *
+	 * SCOPES WITH RESOURCE is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void scopeWithResource(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithResource", "at");
+		List<String> scopeStr = xtMethods.getScopeWithResourceString(ocr);
 		assertEqualIterables(data.expectation, scopeStr);
 	}
 
@@ -798,9 +842,10 @@ public class XtIdeTest extends AbstractIdeTest {
 
 		if (partialExpectation) {
 			expectElems.removeAll(Lists.newArrayList(i2s));
+			expectMissingElems.retainAll(Sets.newHashSet(i2s));
+
 			assertTrue("Not found: " + Strings.join(", ", expectElems), expectElems.isEmpty());
 
-			expectMissingElems.retainAll(Sets.newHashSet(i2s));
 			assertTrue("Expected missing, but found: " + Strings.join(", ", expectMissingElems),
 					expectMissingElems.isEmpty());
 

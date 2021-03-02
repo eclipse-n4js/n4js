@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -393,24 +394,32 @@ public class XtMethods {
 
 	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
 	public List<String> getScopeString(IEObjectCoveringRegion ocr) {
-		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
+		return getScopeWithResourceString(ocr, desc -> desc.getName().toString());
+	}
 
+	/** Implementation for {@link XtIdeTest#scopeWithResource(XtMethodData)} */
+	public List<String> getScopeWithResourceString(IEObjectCoveringRegion ocr) {
+		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
+				.descriptionToNameWithPosition(desc.getEObjectURI(), false, desc));
+	}
+
+	/** Implementation for {@link XtIdeTest#scopeWithPosition(XtMethodData)} */
+	public List<String> getScopeWithPositionString(IEObjectCoveringRegion ocr) {
+		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
+				.descriptionToNameWithPosition(desc.getEObjectURI(), true, desc));
+	}
+
+	private List<String> getScopeWithResourceString(IEObjectCoveringRegion ocr,
+			Function<IEObjectDescription, String> toString) {
+
+		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
 		IScope scopeWithoutErrors = new FilteringScope(scope,
 				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
 		List<IEObjectDescription> allElements = Lists.newArrayList(scopeWithoutErrors.getAllElements());
 
-		// following filter maybe not necessary
-		// URI uri = ocr.getXtextResource().getURI();
-		// Predicate<String> filter = new IsInScopeWithOptionalPositionPredicate(converter, uri, false, scope);
-
 		List<String> scopeNames = new ArrayList<>();
 		for (IEObjectDescription desc : allElements) {
-			String name = desc.getName().toString();
-			QualifiedName qualifiedName = converter.toQualifiedName(name);
-			IEObjectDescription singleElement = scope.getSingleElement(qualifiedName);
-			if (singleElement != null) {
-				scopeNames.add(name);
-			}
+			scopeNames.add(toString.apply(desc));
 		}
 
 		return scopeNames;
