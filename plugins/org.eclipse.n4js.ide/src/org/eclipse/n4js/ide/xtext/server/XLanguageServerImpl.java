@@ -213,7 +213,9 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			String ext = extIter.next();
 			if ("n4jsd".equals(ext)) {
 				File f = new File("test-workspace/yarn-test-project/packages").getAbsoluteFile();
-				System.out.println(Strings.join(", ", f.list()));
+				String[] list = f.list();
+				String toString = list == null ? f.toString() + " is empty " : Strings.join(", ", f.list());
+				System.out.println("### " + toString);
 			}
 			sorted.put(ext, languagesRegistry.getResourceServiceProvider(URI.createURI("synth:///file." + ext)));
 		}
