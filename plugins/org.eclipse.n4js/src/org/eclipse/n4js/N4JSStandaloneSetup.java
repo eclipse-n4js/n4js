@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
 import org.eclipse.n4js.semver.SemverStandaloneSetup;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
@@ -55,7 +54,6 @@ public class N4JSStandaloneSetup implements ISetup {
 		TypeRefsPackage.eINSTANCE.getNsURI();
 		TypesPackage.eINSTANCE.getNsURI();
 		N4JSPackage.eINSTANCE.getNsURI();
-		ProjectDescriptionPackage.eINSTANCE.getNsURI();
 		XMLTypePackage.eINSTANCE.getNsURI();
 
 		/*
@@ -68,7 +66,6 @@ public class N4JSStandaloneSetup implements ISetup {
 		EPackage.Registry.INSTANCE.put(TypeRefsPackage.eNS_URI, TypeRefsPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypesPackage.eNS_URI, TypesPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(N4JSPackage.eNS_URI, N4JSPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eNS_URI, ProjectDescriptionPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(XMLTypePackage.eNS_URI, XMLTypePackage.eINSTANCE);
 
 		setupOtherLanguages();
@@ -100,8 +97,6 @@ public class N4JSStandaloneSetup implements ISetup {
 		EPackage.Registry.INSTANCE.put(N4JSPackage.eINSTANCE.getNsURI(), N4JSPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypeRefsPackage.eINSTANCE.getNsURI(), TypeRefsPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(TypesPackage.eINSTANCE.getNsURI(), TypesPackage.eINSTANCE);
-		EPackage.Registry.INSTANCE.put(ProjectDescriptionPackage.eINSTANCE.getNsURI(),
-				ProjectDescriptionPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(XMLTypePackage.eINSTANCE.getNsURI(), XMLTypePackage.eINSTANCE);
 
 		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector

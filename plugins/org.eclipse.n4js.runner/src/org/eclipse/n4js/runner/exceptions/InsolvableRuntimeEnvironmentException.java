@@ -13,6 +13,7 @@ package org.eclipse.n4js.runner.exceptions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.text.MessageFormat.format;
 
+import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
@@ -34,6 +35,7 @@ public class InsolvableRuntimeEnvironmentException extends RuntimeException {
 	}
 
 	private static final String getMessage(final IN4JSProject project) {
-		return format(MSG_TEMPLATE, project.getProjectName(), project.getProjectType().getName());
+		return format(MSG_TEMPLATE, project.getProjectName(),
+				PackageJsonUtils.getProjectTypeStringRepresentation(project.getProjectType()));
 	}
 }

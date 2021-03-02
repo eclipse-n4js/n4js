@@ -28,11 +28,14 @@ import static org.eclipse.n4js.packagejson.PackageJsonUtils.asProjectReferencesI
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.asSourceContainerDescriptionsOrEmpty;
 import static org.eclipse.n4js.packagejson.PackageJsonUtils.parseProjectType;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -40,10 +43,13 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionBuilder;
+import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.semver.SemverHelper;
+import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 
 import com.google.inject.Inject;
@@ -57,11 +63,15 @@ public class PackageJsonHelper {
 	@Inject
 	private SemverHelper semverHelper;
 
+	private VersionNumber cachedDefaultVersionNumber = null;
+
 	/**
-	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescription} instance.
+	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescriptionBuilder} instance. If no
+	 * further adjustments are required, the client can immediately invoke the {@code #build()} method to obtain the
+	 * corresponding {@link ProjectDescription}.
 	 * <p>
-	 * Note: this methods does not implement the package.json feature that a "main" path may point to a folder and then
-	 * a file "index.js" in that folder will be used as main module (for details see
+	 * Note: this method does not implement the package.json feature that a "main" path may point to a folder and then a
+	 * file "index.js" in that folder will be used as main module (for details see
 	 * {@link ProjectDescriptionUtils#convertMainPathToModuleSpecifier(String, List)}).
 	 *
 	 * @param packageJSON
@@ -70,25 +80,28 @@ public class PackageJsonHelper {
 	 *            whether default values should be applied to the project description after conversion.
 	 * @param defaultProjectName
 	 *            the default project ID (will be ignored if {@code applyDefaultValues} is set to <code>false</code>.
-	 * @return the project description converted from the given JSON document.
+	 * @return the project description converted from the given JSON document or <code>null</code> if the root value of
+	 *         the given JSON document is not a {@link JSONObject}.
 	 */
-	public ProjectDescription convertToProjectDescription(JSONDocument packageJSON, boolean applyDefaultValues,
+	public ProjectDescriptionBuilder convertToProjectDescription(JSONDocument packageJSON, boolean applyDefaultValues,
 			String defaultProjectName) {
 		JSONValue rootValue = packageJSON.getContent();
-		if (rootValue instanceof JSONObject) {
-			LazyParsingProjectDescriptionImpl result = new LazyParsingProjectDescriptionImpl();
-			List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
-			convertRootPairs(result, rootPairs);
-
-			JSONValue property = getProperty((JSONObject) rootValue, MAIN.name).orElse(null);
-			String propertyAsString = asNonEmptyStringOrNull(property);
-			adjustProjectDescriptionAfterConversion(result, applyDefaultValues, defaultProjectName, propertyAsString);
-			return result;
+		if (!(rootValue instanceof JSONObject)) {
+			return null;
 		}
-		return null;
+
+		ProjectDescriptionBuilder target = new ProjectDescriptionBuilder();
+		List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
+		convertRootPairs(target, rootPairs);
+
+		JSONValue property = getProperty((JSONObject) rootValue, MAIN.name).orElse(null);
+		String propertyAsString = asNonEmptyStringOrNull(property);
+		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, propertyAsString);
+
+		return target;
 	}
 
-	private void convertRootPairs(LazyParsingProjectDescriptionImpl target, List<NameValuePair> rootPairs) {
+	private void convertRootPairs(ProjectDescriptionBuilder target, List<NameValuePair> rootPairs) {
 		for (NameValuePair pair : rootPairs) {
 			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
 			if (property == null) {
@@ -101,7 +114,7 @@ public class PackageJsonHelper {
 				target.setProjectName(asNonEmptyStringOrNull(value));
 				break;
 			case VERSION:
-				target.setLazyProjectVersion(semverHelper, asNonEmptyStringOrNull(value));
+				target.setProjectVersion(asVersionNumberOrNull(value));
 				break;
 			case DEPENDENCIES:
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.RUNTIME);
@@ -116,7 +129,7 @@ public class PackageJsonHelper {
 				break;
 			case N4JS:
 				// mark project with N4JS nature
-				target.setHasN4JSNature(true);
+				target.setN4JSNature(true);
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
 			case WORKSPACES_ARRAY:
@@ -141,7 +154,7 @@ public class PackageJsonHelper {
 		}
 	}
 
-	private void convertN4jsPairs(ProjectDescription target, List<NameValuePair> n4jsPairs) {
+	private void convertN4jsPairs(ProjectDescriptionBuilder target, List<NameValuePair> n4jsPairs) {
 		for (NameValuePair pair : n4jsPairs) {
 			PackageJsonProperties property = PackageJsonProperties.valueOfNameValuePairOrNull(pair);
 			if (property == null) {
@@ -151,9 +164,10 @@ public class PackageJsonHelper {
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case PROJECT_TYPE:
-				// parseProjectType returns null if value is invalid, this will
-				// cause the setProjectType setter to use the default value of ProjectType.
-				target.setProjectType(parseProjectType(asNonEmptyStringOrNull(value)));
+				ProjectType projectType = parseProjectType(asNonEmptyStringOrNull(value));
+				if (projectType != null) {
+					target.setProjectType(projectType);
+				}
 				break;
 			case VENDOR_ID:
 				target.setVendorId(asNonEmptyStringOrNull(value));
@@ -200,8 +214,11 @@ public class PackageJsonHelper {
 		}
 	}
 
-	private void convertDependencies(ProjectDescription target, List<NameValuePair> depPairs, boolean avoidDuplicates,
-			DependencyType type) {
+	private void convertDependencies(ProjectDescriptionBuilder target, List<NameValuePair> depPairs,
+			boolean avoidDuplicates, DependencyType type) {
+
+		Objects.requireNonNull(type);
+
 		Set<String> existingProjectNames = new HashSet<>();
 		if (avoidDuplicates) {
 			for (ProjectDependency pd : target.getProjectDependencies()) {
@@ -220,19 +237,16 @@ public class PackageJsonHelper {
 			if (addProjectDependency) {
 				JSONValue value = pair.getValue();
 				String valueStr = asStringOrNull(value);
-				LazyParsingProjectDependencyImpl dep = new LazyParsingProjectDependencyImpl();
-				dep.setProjectName(projectName);
-				dep.setLazyVersionRequirement(semverHelper, valueStr);
-				dep.setType(type);
-
-				target.getProjectDependencies().add(dep);
+				NPMVersionRequirement versionRequirement = valueStr != null ? semverHelper.parse(valueStr) : null;
+				ProjectDependency dep = new ProjectDependency(projectName, type, valueStr, versionRequirement);
+				target.addProjectDependency(dep);
 			}
 		}
 	}
 
-	private void adjustProjectDescriptionAfterConversion(LazyParsingProjectDescriptionImpl target,
-			boolean applyDefaultValues,
+	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target, boolean applyDefaultValues,
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
+
 		// store whether target has a declared mainModule *before* applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
@@ -281,15 +295,17 @@ public class PackageJsonHelper {
 	 * Apply default values to the given project description. This should be performed right after loading and
 	 * converting the project description from JSON.
 	 */
-	private void applyDefaults(LazyParsingProjectDescriptionImpl target, String defaultProjectName) {
-		if (!target.isHasN4JSNature()) {
+	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
+		if (!target.hasN4JSNature() || target.getProjectType() == null) {
+			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
+			// project type 'PLAINJS':
 			target.setProjectType(parseProjectType(PROJECT_TYPE.defaultValue));
 		}
 		if (target.getProjectName() == null) {
 			target.setProjectName(defaultProjectName);
 		}
-		if (target.getLazyProjectVersion() == null) {
-			target.setLazyProjectVersion(semverHelper, VERSION.defaultValue);
+		if (target.getProjectVersion() == null) {
+			target.setProjectVersion(createDefaultVersionNumber());
 		}
 		if (target.getVendorId() == null) {
 			target.setVendorId(VENDOR_ID.defaultValue);
@@ -311,22 +327,33 @@ public class PackageJsonHelper {
 			return;
 		}
 		List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
-		SourceContainerDescription sourceContainerTypeSource = null;
+		SourceContainerDescription sourceContainerOfTypeSource = null;
 		for (SourceContainerDescription sourceContainer : sourceContainers) {
 			if (!sourceContainer.getPaths().isEmpty()) {
 				return;
 			}
-			if (sourceContainerTypeSource == null
+			if (sourceContainerOfTypeSource == null
 					&& sourceContainer.getSourceContainerType() == SourceContainerType.SOURCE) {
-				sourceContainerTypeSource = sourceContainer;
+				sourceContainerOfTypeSource = sourceContainer;
 			}
 		}
-		if (sourceContainerTypeSource == null) {
-			sourceContainerTypeSource = ProjectDescriptionFactory.eINSTANCE.createSourceContainerDescription();
-			sourceContainerTypeSource.setSourceContainerType(SourceContainerType.SOURCE);
-			sourceContainers.add(sourceContainerTypeSource);
+		if (sourceContainerOfTypeSource != null) {
+			sourceContainers.remove(sourceContainerOfTypeSource);
 		}
-		sourceContainerTypeSource.getPaths().add(OUTPUT.defaultValue);
+		sourceContainers.add(new SourceContainerDescription(
+				SourceContainerType.SOURCE,
+				Collections.singleton(OUTPUT.defaultValue)));
 	}
 
+	private VersionNumber asVersionNumberOrNull(JSONValue value) {
+		String versionStr = asNonEmptyStringOrNull(value);
+		return versionStr != null ? semverHelper.parseVersionNumber(versionStr) : null;
+	}
+
+	private VersionNumber createDefaultVersionNumber() {
+		if (cachedDefaultVersionNumber == null) {
+			cachedDefaultVersionNumber = semverHelper.parseVersionNumber(VERSION.defaultValue);
+		}
+		return EcoreUtil.copy(cachedDefaultVersionNumber);
+	}
 }

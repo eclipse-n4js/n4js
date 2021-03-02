@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -101,7 +103,7 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 		projectDescriptions.put(pLocation, pDescription);
 		nameToLocation.putIfAbsent(projectName, pLocation);
 
-		if (!pDescription.isHasN4JSNature()) {
+		if (!pDescription.hasN4JSNature()) {
 			return;
 		}
 
@@ -128,14 +130,15 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 		}
 	}
 
-	synchronized private void addImplicitTypeDefinitionDependencies(ProjectDescription pDescr) {
+	synchronized private ProjectDescription addImplicitTypeDefinitionDependencies(ProjectDescription pDescr) {
 		Set<String> implicitDependencies = new LinkedHashSet<>();
 		Set<String> existingDependencies = new LinkedHashSet<>();
 		List<ProjectDependency> moveToTop = new ArrayList<>();
 
 		N4JSProjectName pName = new N4JSProjectName(pDescr.getProjectName());
+		EList<ProjectDependency> pDeps = ECollections.newBasicEList(pDescr.getProjectDependencies());
 		boolean sawDefinitionsOnly = true;
-		for (ProjectDependency dependency : pDescr.getProjectDependencies()) {
+		for (ProjectDependency dependency : pDeps) {
 			N4JSProjectName dependencyName = new N4JSProjectName(dependency.getProjectName());
 			existingDependencies.add(dependency.getProjectName());
 			if (definitionProjects.inverse().containsKey(dependencyName)) {
@@ -149,18 +152,27 @@ public class FileBasedWorkspace extends InternalN4JSWorkspace<FileURI> {
 			}
 		}
 		implicitDependencies.removeAll(existingDependencies);
+
+		if (implicitDependencies.isEmpty() && moveToTop.isEmpty()) {
+			return pDescr;
+		}
+
 		for (String implicitDependencyString : implicitDependencies) {
-			ProjectDependency implicitDependency = ProjectDescriptionFactory.eINSTANCE.createProjectDependency();
-			implicitDependency.setProjectName(implicitDependencyString);
-			implicitDependency.setType(DependencyType.IMPLICIT);
-			implicitDependency.setVersionRequirementString("");
-			implicitDependency.setVersionRequirement(SemverUtils.createEmptyVersionRequirement());
-			pDescr.getProjectDependencies().add(0, implicitDependency);
+			ProjectDependency implicitDependency = new ProjectDependency(
+					implicitDependencyString,
+					DependencyType.IMPLICIT,
+					"",
+					SemverUtils.createEmptyVersionRequirement());
+			pDeps.add(0, implicitDependency);
 			reversedDependencies.put(new N4JSProjectName(implicitDependencyString), pName);
 		}
 		for (ProjectDependency moveToTopDep : moveToTop) {
-			pDescr.getProjectDependencies().move(0, moveToTopDep);
+			pDeps.move(0, moveToTopDep);
 		}
+		ProjectDescriptionBuilder pdb = pDescr.change();
+		pdb.getProjectDependencies().clear();
+		pdb.getProjectDependencies().addAll(pDeps);
+		return pdb.build();
 	}
 
 	@Override

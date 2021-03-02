@@ -365,7 +365,7 @@ public class N4JSProject implements IN4JSProject {
 		if (pd == null) {
 			return false;
 		}
-		return pd.isHasN4JSNature();
+		return pd.hasN4JSNature();
 	}
 
 	@Override

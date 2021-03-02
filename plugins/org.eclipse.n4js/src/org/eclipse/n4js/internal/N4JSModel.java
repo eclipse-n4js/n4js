@@ -20,14 +20,13 @@ import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.projectDescription.ProjectType.TEST;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.ECollections;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
@@ -304,14 +303,14 @@ public class N4JSModel<Loc extends SafeURI<Loc>> {
 		return providedRuntimes.build();
 	}
 
-	private EList<ProjectReference> getAllProvidedRuntimeLibraries(N4JSProject project) {
+	private List<ProjectReference> getAllProvidedRuntimeLibraries(N4JSProject project) {
 		ProjectDescription description = getProjectDescription(project);
 		if (description == null)
-			return ECollections.emptyEList();
+			return Collections.emptyList();
 
-		EList<ProjectReference> runtimeLibraries = description.getProvidedRuntimeLibraries();
+		List<ProjectReference> runtimeLibraries = description.getProvidedRuntimeLibraries();
 		if (runtimeLibraries == null)
-			return ECollections.emptyEList();
+			return Collections.emptyList();
 
 		return runtimeLibraries;
 	}

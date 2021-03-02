@@ -15,9 +15,8 @@ import org.eclipse.n4js.compare.ProjectCompareHelper
 import org.eclipse.n4js.compare.ProjectCompareResult.Status
 import org.eclipse.n4js.compare.ProjectComparison
 import org.eclipse.n4js.compare.ProjectComparisonEntry
-import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory
-import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
+import org.eclipse.n4js.projectDescription.ProjectReference
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.Type
 
@@ -116,8 +115,6 @@ class ApiImplCompareTestHelper {
 	}
 
 	public def ProjectReference createProjectReference(String projectNameOfTargetProject) {
-		val pref = ProjectDescriptionFactory.eINSTANCE.createProjectReference;
-		pref.projectName = projectNameOfTargetProject;
-		return pref;
+		return new ProjectReference(projectNameOfTargetProject);
 	}
 }
