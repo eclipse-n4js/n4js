@@ -76,11 +76,25 @@ public class ConfigSnapshotFactory {
 
 	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
 	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
-			ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
-			ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project,
-			ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project) {
+			ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> projectPath2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> sourceFolderPath2Project) {
 
 		BuildOrderInfo buildOrderInfo = buildOrderFactory.createBuildOrderInfo(name2Project);
+
+		return createWorkspaceConfigSnapshot(path,
+				ImmutableBiMap.copyOf(name2Project),
+				ImmutableMap.copyOf(projectPath2Project),
+				ImmutableMap.copyOf(sourceFolderPath2Project),
+				buildOrderInfo);
+	}
+
+	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
+	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
+			ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> projectPath2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> sourceFolderPath2Project,
+			BuildOrderInfo buildOrderInfo) {
 
 		return new WorkspaceConfigSnapshot(path,
 				ImmutableBiMap.copyOf(name2Project),
@@ -158,6 +172,14 @@ public class ConfigSnapshotFactory {
 
 	/** Creates instances of {@link ProjectConfigSnapshot} */
 	public ProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
+		Iterable<SourceFolderSnapshot> sourceFolders = Iterables.transform(projectConfig.getSourceFolders(),
+				this::createSourceFolderSnapshot);
+		return createProjectConfigSnapshot(projectConfig, sourceFolders);
+	}
+
+	/** Creates instances of {@link ProjectConfigSnapshot} */
+	public ProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig,
+			Iterable<SourceFolderSnapshot> sourceFolders) {
 		return new ProjectConfigSnapshot(
 				projectConfig.getName(),
 				projectConfig.getPath(),
@@ -165,7 +187,7 @@ public class ConfigSnapshotFactory {
 				projectConfig.indexOnly(),
 				projectConfig.isGeneratorEnabled(),
 				projectConfig.getDependencies(),
-				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot));
+				sourceFolders);
 	}
 
 	/** Creates instances of {@link SourceFolderSnapshot} */

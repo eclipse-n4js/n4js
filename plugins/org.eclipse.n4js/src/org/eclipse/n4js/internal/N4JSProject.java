@@ -112,6 +112,11 @@ public class N4JSProject implements IN4JSProject {
 	}
 
 	@Override
+	public ProjectDescription getProjectDescription() {
+		return model.getProjectDescription(this);
+	}
+
+	@Override
 	public SafeURI<?> getProjectDescriptionLocation() {
 		return getProjectDescriptionFile();
 	}

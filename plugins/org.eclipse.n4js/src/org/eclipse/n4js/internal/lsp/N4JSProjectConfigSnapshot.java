@@ -17,6 +17,7 @@ import java.util.Objects;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -32,32 +33,36 @@ import com.google.common.collect.ImmutableList;
  */
 public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
-	private final ProjectType type;
-	private final N4JSProjectName definesPackage;
+	private final ProjectDescription projectDescription;
 	private final ImmutableList<String> sortedDependencies;
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
-	public N4JSProjectConfigSnapshot(String name, URI path,
-			ProjectType type, N4JSProjectName definesPackage, boolean indexOnly, boolean generatorEnabled,
-			Iterable<String> dependencies, Iterable<String> sortedDependencies,
+	public N4JSProjectConfigSnapshot(ProjectDescription projectDescription, URI path, boolean indexOnly,
+			boolean generatorEnabled, Iterable<String> dependencies, Iterable<String> sortedDependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
-		super(name, path, Collections.singleton(path.trimSegments(1).appendSegment(N4JSGlobals.PACKAGE_JSON)),
+		super(projectDescription.getProjectName(), path,
+				Collections.singleton(path.trimSegments(1).appendSegment(N4JSGlobals.PACKAGE_JSON)),
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
 
-		this.type = type;
-		this.definesPackage = definesPackage;
+		this.projectDescription = Objects.requireNonNull(projectDescription);
 		this.sortedDependencies = ImmutableList.copyOf(sortedDependencies);
+	}
+
+	/** Returns the {@link ProjectDescription}. */
+	public ProjectDescription getProjectDescription() {
+		return projectDescription;
 	}
 
 	/** Returns the {@link ProjectType project type}. */
 	public ProjectType getType() {
-		return type;
+		return projectDescription.getProjectType();
 	}
 
 	/** Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property. */
 	public N4JSProjectName getDefinesPackage() {
-		return definesPackage;
+		String definesPackage = projectDescription.getDefinesPackage();
+		return definesPackage != null ? new N4JSProjectName(definesPackage) : null;
 	}
 
 	/**
@@ -76,8 +81,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	protected int computeHashCode() {
 		return Objects.hash(
 				super.computeHashCode(),
-				type,
-				definesPackage,
+				projectDescription,
 				sortedDependencies);
 	}
 
@@ -85,8 +89,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	protected boolean computeEquals(Object obj) {
 		N4JSProjectConfigSnapshot other = (N4JSProjectConfigSnapshot) obj;
 		return super.computeEquals(other)
-				&& type == other.type
-				&& Objects.equals(definesPackage, other.definesPackage)
+				&& Objects.equals(projectDescription, other.projectDescription)
 				&& Objects.equals(sortedDependencies, other.sortedDependencies);
 	}
 }

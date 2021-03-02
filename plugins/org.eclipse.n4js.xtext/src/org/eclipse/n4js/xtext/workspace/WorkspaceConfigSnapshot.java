@@ -30,18 +30,18 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	/** The root path of the workspace */
 	protected final URI path;
 	/** Map from project name to the project's configuration snapshot. */
-	protected final ImmutableBiMap<String, ProjectConfigSnapshot> name2Project;
+	protected final ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project;
 	/** Keys are URIs <em>without</em> trailing path separator. */
-	protected final ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project;
+	protected final ImmutableMap<URI, ? extends ProjectConfigSnapshot> projectPath2Project;
 	/** Keys are URIs <em>without</em> trailing path separator. */
-	protected final ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project;
+	protected final ImmutableMap<URI, ? extends ProjectConfigSnapshot> sourceFolderPath2Project;
 	/** Project build order */
 	protected final BuildOrderInfo buildOrderInfo;
 
 	/** See {@link WorkspaceConfigSnapshot}. */
-	public WorkspaceConfigSnapshot(URI path, ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
-			ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project,
-			ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project,
+	public WorkspaceConfigSnapshot(URI path, ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> projectPath2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> sourceFolderPath2Project,
 			BuildOrderInfo buildOrderInfo) {
 
 		this.path = path;
@@ -92,14 +92,31 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	 * @see IWorkspaceConfig#findProjectContaining(URI)
 	 * @see SourceFolderSnapshot#contains(URI)
 	 */
-	public ProjectConfigSnapshot findProjectContaining(URI sourceLocation) {
-		ProjectConfigSnapshot candidate = URIUtils.findInMapByNestedURI(sourceFolderPath2Project, sourceLocation);
+	public ProjectConfigSnapshot findProjectContaining(URI nestedSourceLocation) {
+		ProjectConfigSnapshot candidate = URIUtils.findInMapByNestedURI(sourceFolderPath2Project, nestedSourceLocation);
 		if (candidate != null) {
 			// in addition to checking the source folder paths, we have to make sure the source folder actually
 			// "contains" the URI as defined by method SourceFolderSnapshot#contains(URI):
 			for (SourceFolderSnapshot sourceFolder : candidate.getSourceFolders()) {
-				if (sourceFolder.contains(sourceLocation)) {
+				if (sourceFolder.contains(nestedSourceLocation)) {
 					return candidate;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Same as {@link #findProjectContaining(URI)}, but returns the containing source folder instead of project.
+	 */
+	public SourceFolderSnapshot findSourceFolderContaining(URI nestedSourceLocation) {
+		ProjectConfigSnapshot candidate = URIUtils.findInMapByNestedURI(sourceFolderPath2Project, nestedSourceLocation);
+		if (candidate != null) {
+			// in addition to checking the source folder paths, we have to make sure the source folder actually
+			// "contains" the URI as defined by method SourceFolderSnapshot#contains(URI):
+			for (SourceFolderSnapshot sourceFolder : candidate.getSourceFolders()) {
+				if (sourceFolder.contains(nestedSourceLocation)) {
+					return sourceFolder;
 				}
 			}
 		}

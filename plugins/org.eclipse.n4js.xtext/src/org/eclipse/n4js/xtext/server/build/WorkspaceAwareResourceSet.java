@@ -25,6 +25,11 @@ public class WorkspaceAwareResourceSet extends SynchronizedXtextResourceSet {
 	/** The workspace manager that represents the workspace that is the context of this resource set. */
 	protected XWorkspaceManager workspaceManager;
 
+	/** Returns the workspace manager that represents the workspace context of this resource set. */
+	public XWorkspaceManager getWorkspaceManager() {
+		return workspaceManager;
+	}
+
 	/** Set the workspace manager that represents the workspace context of this resource set. */
 	public void setWorkspaceManager(XWorkspaceManager workspaceManager) {
 		if (this.workspaceManager != null) {

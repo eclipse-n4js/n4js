@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.server.issues.PublishingIssueAcceptor;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -241,6 +242,7 @@ public class ResourceTaskContext {
 	/** Returns a newly created and fully configured resource set */
 	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
+		WorkspaceConfigAccess.setWorkspaceConfig(result, workspaceConfig);
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 
@@ -412,10 +414,14 @@ public class ResourceTaskContext {
 		WorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 		workspaceConfig = newWorkspaceConfig;
 
+		boolean workspaceConfigChanged = !workspaceConfig.equals(oldWorkspaceConfig);
+		if (workspaceConfigChanged) {
+			WorkspaceConfigAccess.setWorkspaceConfig(mainResourceSet, workspaceConfig);
+		}
+
 		// refresh if I am affected by the changes
 
-		boolean isAffected = !workspaceConfig.equals(oldWorkspaceConfig);
-
+		boolean isAffected = workspaceConfigChanged;
 		if (!isAffected) {
 			IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
 			IResourceDescription candidateDesc = indexSnapshot.getResourceDescription(mainURI);

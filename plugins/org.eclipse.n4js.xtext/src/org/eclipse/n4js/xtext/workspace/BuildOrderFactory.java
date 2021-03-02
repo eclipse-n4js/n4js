@@ -61,7 +61,7 @@ public class BuildOrderFactory {
 	 * Creates a new instance of {@link BuildOrderInfo}. Computes the build order of the given
 	 * {@link WorkspaceConfigSnapshot}
 	 */
-	public BuildOrderInfo createBuildOrderInfo(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project) {
+	public BuildOrderInfo createBuildOrderInfo(ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project) {
 		Multimap<String, ProjectConfigSnapshot> pInversedDependencies = HashMultimap.create();
 		List<ProjectConfigSnapshot> pSortedProjects = new ArrayList<>();
 		Set<ImmutableList<String>> pProjectCycles = new HashSet<>();
@@ -83,7 +83,7 @@ public class BuildOrderFactory {
 	public static class BuildOrderInfoComputer {
 
 		/** Populates {@code #pSortedProjects}, {@code #pInversedDependencies} and {@code pProjectCycles} */
-		protected void init(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
+		protected void init(ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
 				Multimap<String, ProjectConfigSnapshot> pInversedDependencies,
 				List<ProjectConfigSnapshot> pSortedProjects,
 				Collection<ImmutableList<String>> pProjectCycles) {
@@ -105,7 +105,7 @@ public class BuildOrderFactory {
 		}
 
 		/** Computes the build order of all projects in the workspace */
-		protected void computeOrder(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
+		protected void computeOrder(ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
 				Collection<ImmutableList<String>> pProjectCycles, ProjectConfigSnapshot pc,
 				LinkedHashSet<String> orderedProjects, LinkedHashSet<String> projectStack) {
 
@@ -135,13 +135,14 @@ public class BuildOrderFactory {
 
 		/** Returns all projects of the given {@link WorkspaceConfigSnapshot}. */
 		protected Collection<? extends ProjectConfigSnapshot> getAllProjects(
-				ImmutableBiMap<String, ProjectConfigSnapshot> name2Project) {
+				ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project) {
 
 			return name2Project.values();
 		}
 
 		/** Find the project with the given name. */
-		protected ProjectConfigSnapshot findProjectByName(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
+		protected ProjectConfigSnapshot findProjectByName(
+				ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
 				String name) {
 
 			return name2Project.get(name);

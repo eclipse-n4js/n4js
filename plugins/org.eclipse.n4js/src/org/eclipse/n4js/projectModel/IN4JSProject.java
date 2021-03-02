@@ -185,6 +185,8 @@ public interface IN4JSProject {
 	 */
 	ImmutableList<? extends IN4JSProject> getImplementedProjects();
 
+	ProjectDescription getProjectDescription();
+
 	/**
 	 * Returns the location of the file that contains the project description of this project.
 	 *

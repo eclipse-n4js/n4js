@@ -12,17 +12,23 @@ package org.eclipse.n4js.ide.server.build;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceContainerForPackageJson;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceFolderSnapshotForPackageJson;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -33,17 +39,37 @@ import com.google.common.collect.Lists;
 public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 
 	@Override
+	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
+			ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> projectPath2Project,
+			ImmutableMap<URI, ? extends ProjectConfigSnapshot> sourceFolderPath2Project,
+			BuildOrderInfo buildOrderInfo) {
+
+		@SuppressWarnings("unchecked")
+		ImmutableBiMap<String, N4JSProjectConfigSnapshot> name2ProjectCasted = (ImmutableBiMap<String, N4JSProjectConfigSnapshot>) name2Project;
+		@SuppressWarnings("unchecked")
+		ImmutableMap<URI, N4JSProjectConfigSnapshot> projectPath2ProjectCasted = (ImmutableMap<URI, N4JSProjectConfigSnapshot>) projectPath2Project;
+		@SuppressWarnings("unchecked")
+		ImmutableMap<URI, N4JSProjectConfigSnapshot> sourceFolderPath2ProjectCasted = (ImmutableMap<URI, N4JSProjectConfigSnapshot>) sourceFolderPath2Project;
+
+		return new N4JSWorkspaceConfigSnapshot(path,
+				ImmutableBiMap.copyOf(name2ProjectCasted),
+				ImmutableMap.copyOf(projectPath2ProjectCasted),
+				ImmutableMap.copyOf(sourceFolderPath2ProjectCasted),
+				buildOrderInfo);
+	}
+
+	@Override
 	public ProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
-		IN4JSProject project = ((N4JSProjectConfig) projectConfig).toProject();
+		N4JSProjectConfig projectConfigCasted = (N4JSProjectConfig) projectConfig;
+		IN4JSProject project = projectConfigCasted.toProject();
 
 		List<String> sortedDependencies = Lists.transform(project.getSortedDependencies(),
 				p -> p.getProjectName().getRawName());
 
 		return new N4JSProjectConfigSnapshot(
-				projectConfig.getName(),
+				project.getProjectDescription(),
 				projectConfig.getPath(),
-				project.getProjectType(),
-				project.getDefinesPackageName(),
 				projectConfig.indexOnly(),
 				projectConfig.isGeneratorEnabled(),
 				projectConfig.getDependencies(),
