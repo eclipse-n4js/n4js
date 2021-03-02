@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * Tests for test method {@link XtIdeTest#definition(XtMethodData)}
  */
-public class SuppressedIssues extends AbstractXtParentRunnerTest {
+public class SuppressedIssuesTest extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test

@@ -15,7 +15,7 @@ import org.junit.Test;
 /**
  * Test for test method 'accessModifier'
  */
-public class ExpectationsSkipComments extends AbstractXtParentRunnerTest {
+public class ExpectationsSkipCommentsTest extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test

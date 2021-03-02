@@ -17,7 +17,7 @@ import org.junit.Test;
 /**
  * Tests for test method {@link XtIdeTest#accessModifier(XtMethodData)}
  */
-public class AccessModifier extends AbstractXtParentRunnerTest {
+public class AccessModifierTest extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test

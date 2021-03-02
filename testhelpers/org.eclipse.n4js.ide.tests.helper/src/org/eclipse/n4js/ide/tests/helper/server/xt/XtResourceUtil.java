@@ -82,7 +82,7 @@ public class XtResourceUtil {
 				current = current.getParent();
 			} while (current != null && object == NodeModelUtils.findActualSemanticObjectFor(current));
 		}
-		throw new RuntimeException("No EStructuralFeature found at offset " + offset);
+		return null;
 	}
 
 }

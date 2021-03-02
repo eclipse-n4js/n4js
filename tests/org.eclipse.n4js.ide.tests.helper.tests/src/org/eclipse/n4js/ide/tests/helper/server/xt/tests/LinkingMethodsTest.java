@@ -22,7 +22,7 @@ import org.junit.Test;
  * <li/>{@link XtIdeTest#linkedFragment(XtMethodData)}
  * </ul>
  */
-public class LinkingMethods extends AbstractXtParentRunnerTest {
+public class LinkingMethodsTest extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test

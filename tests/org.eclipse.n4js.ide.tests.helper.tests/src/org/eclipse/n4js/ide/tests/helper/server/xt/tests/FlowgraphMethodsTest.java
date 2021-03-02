@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.junit.Test;
 
 /**
@@ -29,7 +29,7 @@ import org.junit.Test;
  * <li/>{@link XtIdeTest#succs(XtMethodData)}
  * </ul>
  */
-public class FlowgraphMethods extends AbstractXtParentRunnerTest {
+public class FlowgraphMethodsTest extends AbstractXtParentRunnerTest {
 
 	/***/
 	@Test
@@ -60,9 +60,10 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 				+ " ++ allPaths~0: from '\"a\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~0)\n"
 				+ " ++ allPaths~1: from '\"c\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~1)\n"
 				+ " ++ allPaths~2: from '\"a\"' direction 'Forward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~2)\n"
-				+ " ++ allPaths~3: from '\"c\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~3)\n"
-				+ " ++ allPaths~4: from '\"d\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~4)\n"
-				+ " ++ allPaths~5: from '\"d\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~5)\n"
+				+ " ++ allPaths~3: from '\"c\"' direction 'Forward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~3)\n"
+				+ " ++ allPaths~4: from '\"c\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~4)\n"
+				+ " ++ allPaths~5: from '\"d\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~5)\n"
+				+ " ++ allPaths~6: from '\"d\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕(allPaths~6)\n"
 				+ " + AstOrder.n4js.xt: probands/FlowgraphMethods\n"
 				+ " ++ astOrder~0: of '+' 〔probands/FlowgraphMethods/AstOrder.n4js.xt〕(astOrder~0)\n"
 				+ " + CfContainer.n4js.xt: probands/FlowgraphMethods\n"
@@ -109,11 +110,11 @@ public class FlowgraphMethods extends AbstractXtParentRunnerTest {
 		assertResult("(allPaths~2)",
 				"Passed: allPaths~2: from '\"a\"' direction 'Forward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
 		assertResult("(allPaths~3)",
-				"Passed: allPaths~3: from '\"c\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
+				"Passed: allPaths~3: from '\"c\"' direction 'Forward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
 		assertResult("(allPaths~4)",
-				"Passed: allPaths~4: from '\"d\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
+				"Passed: allPaths~4: from '\"c\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
 		assertResult("(allPaths~5)",
-				"Failed: allPaths~5: from '\"d\"' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕. expected:<[wrong expectation]> but was:<[\"a\" -> \"b\" -> \"c\" -> \"d\", \"a\" -> \"b\" -> \"d\"]>");
+				"Passed: allPaths~5: from '\"d\"' direction 'Backward' 〔probands/FlowgraphMethods/AllPaths.n4js.xt〕");
 		assertResult("(astOrder~0)", "Passed: astOrder~0: of '+' 〔probands/FlowgraphMethods/AstOrder.n4js.xt〕");
 		assertResult("(cfContainer~0)",
 				"Passed: cfContainer~0: of 'b0' 〔probands/FlowgraphMethods/CfContainer.n4js.xt〕");
