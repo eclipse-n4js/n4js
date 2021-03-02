@@ -49,28 +49,28 @@ var remote : NI.Remote;
 
 // instance fields:
 
-// XPECT type of 'remote.fieldFN_decl' --> {function(string):number}
+// XPECT type of 'fieldFN_decl' --> {function(string):number}
 var x01 = remote.fieldFN_decl;
-// XPECT type of 'remote.fieldFN_inf' --> {function(string):number}
+// XPECT type of 'fieldFN_inf' --> {function(string):number}
 var x02 = remote.fieldFN_inf;
 
-// XPECT type of 'remote.fieldOL_decl' --> ~Object with { s: string; n: number }
+// XPECT type of 'fieldOL_decl' --> ~Object with { s: string; n: number }
 var x03 = remote.fieldOL_decl;
-// XPECT type of 'remote.fieldOL_inf' --> ~Object with { s: string; n: number }
+// XPECT type of 'fieldOL_inf' --> ~Object with { s: string; n: number }
 var x04 = remote.fieldOL_inf;
 
 
 
 // static fields:
 
-// XPECT type of 'Remote.staticFieldFN_decl' --> {function(string):number}
+// XPECT type of 'staticFieldFN_decl' --> {function(string):number}
 var x11 = NI.Remote.staticFieldFN_decl;
-// XPECT type of 'Remote.staticFieldFN_inf' --> {function(string):number}
+// XPECT type of 'staticFieldFN_inf' --> {function(string):number}
 var x12 = NI.Remote.staticFieldFN_inf;
 
-// XPECT type of 'Remote.staticFieldOL_decl' --> ~Object with { s: string; n: number }
+// XPECT type of 'staticFieldOL_decl' --> ~Object with { s: string; n: number }
 var x13 = NI.Remote.staticFieldOL_decl;
-// XPECT type of 'Remote.staticFieldOL_inf' --> ~Object with { s: string; n: number }
+// XPECT type of 'staticFieldOL_inf' --> ~Object with { s: string; n: number }
 var x14 = NI.Remote.staticFieldOL_inf;
 
 
@@ -94,9 +94,9 @@ var x24 = NI.remote_variableOL_inf;
 var remoteGenString : NG1.RemoteGen<string>;
 var remoteGenNumber : NG2.RemoteGenNumber;
 
-// XPECT type of 'remoteGenString.field' --> {function(string):number}
+// XPECT type of 'field' --> {function(string):number}
 var x31 = remoteGenString.field;
-// XPECT type of 'remoteGenNumber.field' --> {function(number):number}
+// XPECT type of 'field' --> {function(number):number}
 var x32 = remoteGenNumber.field;
-// XPECT type of 'remoteGenNumber.fieldIndirect' --> {function(number):number}
+// XPECT type of 'fieldIndirect' --> {function(number):number}
 var x33 = remoteGenNumber.fieldIndirect;

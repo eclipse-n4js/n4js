@@ -40,25 +40,25 @@ import { exportedVar } from "i/NestedMultiLevel";
 
 var p : I.Provider;
 
-// XPECT type of 'p.f1.n' --> X
+// XPECT type of 'p.f1.<|>n' --> X
 p.f1.n;
-// XPECT type of 'p.f2.n' --> X
+// XPECT type of 'p.f2.<|>n' --> X
 p.f2.n;
-// XPECT type of 'p.f3.value.n' --> X
+// XPECT type of 'p.f3.value.<|>n' --> X
 p.f3.value.n;
-// XPECT type of 'p.m1().n' --> X
+// XPECT type of 'p.m1().<|>n' --> X
 p.m1().n;
 
 
-// XPECT hyperlinks at 'n<|>' --> n: "n" (PropertyNameValuePair) in "f1" (N4FieldDeclaration) in "Provider" (N4ClassDeclaration) in file Importee.n4js
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [21:8 - 21:10])
 p.f1.n;
-// XPECT hyperlinks at 'n<|>' --> n: "n" (TStructField) in "f2" (N4FieldDeclaration) in "Provider" (N4ClassDeclaration) in file Importee.n4js
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [26:8 - 26:10])
 p.f2.n;
-// XPECT hyperlinks at 'n<|>' --> n: "n" (TStructField) in "f3" (N4FieldDeclaration) in "Provider" (N4ClassDeclaration) in file Importee.n4js
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [31:8 - 31:10])
 p.f3.value.n;
-// XPECT hyperlinks at 'n<|>' --> n: "n" (TStructField) in "m1" (N4MethodDeclaration) in "Provider" (N4ClassDeclaration) in file Importee.n4js
+// XPECT definition at 'n' --> (yarn-test-project/packages/ProjectImportee/src/i/Importee.n4js, [36:8 - 36:10])
 p.m1().n;
 
 
-// XPECT hyperlinks at 'prop<|>' --> prop: "prop"(PropertyNameValuePair) in "obj3"(PropertyNameValuePair) in "obj2"(PropertyNameValuePair) in "obj1"(PropertyNameValuePair) in "exportedVar"(ExportedVariableDeclaration) in file NestedMultiLevel.n4js
+// XPECT definition at 'prop' --> (yarn-test-project/packages/ProjectImportee/src/i/NestedMultiLevel.n4js, [11:18 - 11:29])
 exportedVar.obj1.obj2.obj3.prop;
