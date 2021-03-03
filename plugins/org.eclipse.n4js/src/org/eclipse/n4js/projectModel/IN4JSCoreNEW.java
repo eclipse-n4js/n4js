@@ -15,15 +15,15 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.projectModel.internal.TempWorkspaceAccess;
+import org.eclipse.n4js.projectModel.internal.N4JSCoreNEW;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.ImplementedBy;
 
-@ImplementedBy(TempWorkspaceAccess.class)
-public interface ITempWorkspaceAccess {
+@ImplementedBy(N4JSCoreNEW.class)
+public interface IN4JSCoreNEW {
 
 	public Optional<N4JSWorkspaceConfigSnapshot> getWorkspaceConfig(Notifier context);
 

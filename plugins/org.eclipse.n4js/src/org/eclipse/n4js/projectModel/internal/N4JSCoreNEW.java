@@ -19,7 +19,7 @@ import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectModel.ITempWorkspaceAccess;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
@@ -30,7 +30,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 
-public class TempWorkspaceAccess implements ITempWorkspaceAccess {
+public class N4JSCoreNEW implements IN4JSCoreNEW {
 
 	@Inject
 	private WildcardPathFilterHelper wildcardHelper;
