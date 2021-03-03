@@ -31,7 +31,7 @@
 
 /* XPECT output ---
 {
-    "type": "function",
+    "type": "MyReactFuncComponent",
     "props": {
         "a": 1,
         "x": 2,

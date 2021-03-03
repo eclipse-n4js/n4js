@@ -32,22 +32,25 @@
 /* XPECT output ---
 empty React fragment
 {
+    "props": null,
     "children": []
 }
 simple open close
 {
+    "props": null,
     "children": []
 }
 nested
 {
-    "props": {
-        "type": "div",
-        "props": {
-            "prop1": "hello"
-        },
-        "children": []
-    },
+    "props": null,
     "children": [
+        {
+            "type": "div",
+            "props": {
+                "prop1": "hello"
+            },
+            "children": []
+        },
         {
             "type": "div",
             "props": {
@@ -69,12 +72,11 @@ zzzz;
 export public function logElements(): void {
 	//console.log('Hi');
 
-	// following 3 lines have always been wrong. showed up during GH-2064
-	//let ss = </>;
-	//console.log('empty React fragment');
-	//console.log(JSON.stringify(ss, replacer, 4));
+	let ss = <></>;
+	console.log('empty React fragment');
+	console.log(JSON.stringify(ss, replacer, 4));
     
-	let sh = <></>
+	let sh = <></>;
 	console.log('simple open close');
 	console.log(JSON.stringify(sh, replacer, 4));
 	let x = 42;

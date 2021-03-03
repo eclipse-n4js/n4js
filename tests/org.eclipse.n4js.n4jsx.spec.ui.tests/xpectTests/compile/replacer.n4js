@@ -13,7 +13,7 @@
 // See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 export public function replacer(key: string, value: any): any {
 	if (value instanceof Function) {
-		return "function";
+		return (value as any+).name;
 	} else {
 		return value;
 	}
