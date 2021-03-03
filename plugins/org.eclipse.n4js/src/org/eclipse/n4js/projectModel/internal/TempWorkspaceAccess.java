@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
@@ -21,7 +22,6 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.ITempWorkspaceAccess;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.WildcardPathFilterHelper;
-import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
@@ -69,7 +69,7 @@ public class TempWorkspaceAccess implements ITempWorkspaceAccess {
 	}
 
 	@Override
-	public Optional<SourceFolderSnapshot> findN4JSSourceContainer(Notifier context, URI nestedLocation) {
+	public Optional<N4JSSourceFolderSnapshot> findN4JSSourceContainer(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent()
 				? Optional.fromNullable(config.get().findSourceFolderContaining(nestedLocation))

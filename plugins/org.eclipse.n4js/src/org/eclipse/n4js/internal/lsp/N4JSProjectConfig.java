@@ -83,7 +83,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	/** Special implementation for package.json files */
 	public class SourceContainerForPackageJson implements IN4JSSourceFolder {
-		private final URI pckjsonURI;
+		final URI pckjsonURI;
 
 		SourceContainerForPackageJson() {
 			pckjsonURI = delegate.getLocation().appendSegment(N4JSGlobals.PACKAGE_JSON).toURI();
@@ -113,29 +113,6 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		public URI getPath() {
 			return delegate.getLocation().toURI();
 		}
-	}
-
-	/** A {@link SourceFolderSnapshot} that only contains a single <code>package.json</code> file. */
-	public static class SourceFolderSnapshotForPackageJson extends SourceFolderSnapshot {
-		private final URI pckjsonURI;
-
-		/** Creates a new {@link SourceFolderSnapshotForPackageJson}. */
-		public SourceFolderSnapshotForPackageJson(SourceContainerForPackageJson sourceFolder) {
-			super(sourceFolder.getName(), sourceFolder.getPath());
-			this.pckjsonURI = sourceFolder.pckjsonURI;
-		}
-
-		/** @return the URI of the <code>package.json</code> file of this source folder. */
-		public URI getPackageJsonURI() {
-			return pckjsonURI;
-		}
-
-		@Override
-		public boolean contains(URI uri) {
-			return pckjsonURI.equals(uri);
-		}
-
-		// note: no need to override #equals() and #hashCode()
 	}
 
 	@Override

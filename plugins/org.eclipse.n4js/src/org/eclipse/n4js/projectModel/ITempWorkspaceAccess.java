@@ -13,10 +13,10 @@ package org.eclipse.n4js.projectModel;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectModel.internal.TempWorkspaceAccess;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -33,7 +33,7 @@ public interface ITempWorkspaceAccess {
 
 	public Optional<N4JSProjectConfigSnapshot> findProject(Notifier context, N4JSProjectName projectName);
 
-	public Optional<SourceFolderSnapshot> findN4JSSourceContainer(Notifier context, URI nestedLocation);
+	public Optional<N4JSSourceFolderSnapshot> findN4JSSourceContainer(Notifier context, URI nestedLocation);
 
 	public boolean isNoValidate(Notifier context, URI nestedLocation);
 

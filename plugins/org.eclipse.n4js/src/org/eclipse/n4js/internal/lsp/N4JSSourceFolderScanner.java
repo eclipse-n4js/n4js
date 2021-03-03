@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceFolderSnapshotForPackageJson;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.util.IFileSystemScanner;
@@ -32,8 +31,8 @@ public class N4JSSourceFolderScanner extends SourceFolderScanner {
 
 	@Override
 	public List<URI> findAllSourceFiles(SourceFolderSnapshot sourceFolder, IFileSystemScanner scanner) {
-		if (sourceFolder instanceof SourceFolderSnapshotForPackageJson) {
-			return Collections.singletonList(((SourceFolderSnapshotForPackageJson) sourceFolder).getPackageJsonURI());
+		if (sourceFolder instanceof N4JSSourceFolderSnapshotForPackageJson) {
+			return Collections.singletonList(((N4JSSourceFolderSnapshotForPackageJson) sourceFolder).getPackageJsonURI());
 		}
 		return findAllSourceFilesInFolder(sourceFolder.getPath(), scanner);
 	}

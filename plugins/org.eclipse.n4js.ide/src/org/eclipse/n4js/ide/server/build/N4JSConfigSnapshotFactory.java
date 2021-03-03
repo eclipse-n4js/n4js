@@ -15,15 +15,14 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceContainerForPackageJson;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceFolderSnapshotForPackageJson;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshotForPackageJson;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -39,7 +38,7 @@ import com.google.common.collect.Lists;
 public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 
 	@Override
-	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
+	public N4JSWorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
 			ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
 			ImmutableMap<URI, ? extends ProjectConfigSnapshot> projectPath2Project,
 			ImmutableMap<URI, ? extends ProjectConfigSnapshot> sourceFolderPath2Project,
@@ -60,7 +59,7 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 	}
 
 	@Override
-	public ProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
+	public N4JSProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
 		N4JSProjectConfig projectConfigCasted = (N4JSProjectConfig) projectConfig;
 		IN4JSProject project = projectConfigCasted.toProject();
 
@@ -78,10 +77,10 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 	}
 
 	@Override
-	public SourceFolderSnapshot createSourceFolderSnapshot(ISourceFolder sourceFolder) {
+	public N4JSSourceFolderSnapshot createSourceFolderSnapshot(ISourceFolder sourceFolder) {
 		if (sourceFolder instanceof SourceContainerForPackageJson) {
-			return new SourceFolderSnapshotForPackageJson((SourceContainerForPackageJson) sourceFolder);
+			return new N4JSSourceFolderSnapshotForPackageJson((SourceContainerForPackageJson) sourceFolder);
 		}
-		return super.createSourceFolderSnapshot(sourceFolder);
+		return new N4JSSourceFolderSnapshot(sourceFolder.getName(), sourceFolder.getPath());
 	}
 }

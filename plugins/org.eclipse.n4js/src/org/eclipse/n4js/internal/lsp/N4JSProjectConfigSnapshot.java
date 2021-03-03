@@ -27,6 +27,7 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Extends Xtext's default {@link ProjectConfigSnapshot} by some additional attributes (e.g. project type).
@@ -52,11 +53,6 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	/** Returns the {@link ProjectDescription}. */
 	public ProjectDescription getProjectDescription() {
 		return projectDescription;
-	}
-
-	/** Returns the {@link ProjectType project type}. */
-	public ProjectType getType() {
-		return projectDescription.getProjectType();
 	}
 
 	/** Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property. */
@@ -91,5 +87,20 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return super.computeEquals(other)
 				&& Objects.equals(projectDescription, other.projectDescription)
 				&& Objects.equals(sortedDependencies, other.sortedDependencies);
+	}
+
+	// ==============================================================================================================
+	// Convenience and utility methods (do not introduce additional data)
+
+	@Override
+	public ImmutableSet<N4JSSourceFolderSnapshot> getSourceFolders() {
+		@SuppressWarnings("unchecked")
+		ImmutableSet<N4JSSourceFolderSnapshot> sourceFolders = (ImmutableSet<N4JSSourceFolderSnapshot>) super.getSourceFolders();
+		return sourceFolders;
+	}
+
+	/** Returns the {@link ProjectType project type}. */
+	public ProjectType getType() {
+		return projectDescription.getProjectType();
 	}
 }

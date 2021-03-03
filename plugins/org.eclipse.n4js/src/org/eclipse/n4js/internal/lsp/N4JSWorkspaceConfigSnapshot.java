@@ -32,6 +32,24 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 	}
 
 	@Override
+	protected int computeHashCode() {
+		return super.computeHashCode(); // no additional data in this class, so simply use super implementation
+	}
+
+	@Override
+	protected boolean computeEquals(Object obj) {
+		return super.computeEquals(obj); // no additional data in this class, so simply use super implementation
+	}
+
+	@Override
+	public String toString() {
+		return "N4JS" + super.toString();
+	}
+
+	// ==============================================================================================================
+	// Convenience and utility methods (do not introduce additional data)
+
+	@Override
 	public ImmutableSet<N4JSProjectConfigSnapshot> getProjects() {
 		@SuppressWarnings("unchecked")
 		ImmutableSet<N4JSProjectConfigSnapshot> result = (ImmutableSet<N4JSProjectConfigSnapshot>) super.getProjects();
@@ -56,18 +74,9 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 		return (N4JSProjectConfigSnapshot) super.findProjectContaining(sourceLocation);
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	protected int computeHashCode() {
-		return super.computeHashCode(); // no additional data in this class, so simply use super implementation
-	}
-
-	@Override
-	protected boolean computeEquals(Object obj) {
-		return super.computeEquals(obj); // no additional data in this class, so simply use super implementation
-	}
-
-	@Override
-	public String toString() {
-		return "N4JS" + super.toString();
+	public N4JSSourceFolderSnapshot findSourceFolderContaining(URI nestedSourceLocation) {
+		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(nestedSourceLocation);
 	}
 }
