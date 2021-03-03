@@ -44,7 +44,7 @@ import * as Other1 from "some/path/Other1"
 import {a as other2_a} from "some/path/Other2"
 import {b as other2_b} from "some/path/Other2"
 
-console.log("******** With ordinary imports:");
+console.log("-******** With ordinary imports:");
 console.log(Other.a);
 console.log(Other.b);
 console.log(Other1.a);
@@ -52,7 +52,7 @@ console.log(Other1.b);
 console.log(other2_a);
 console.log(other2_b);
 
-console.log("******** With import calls:");
+console.log("-******** With import calls:");
 let p: Promise<?,?> = testImportCalls();
 p.then(()=>{},(err)=>{console.log("ERR:", err)})
 
@@ -67,14 +67,14 @@ async function testImportCalls() {
 }
 
 /* XPECT output ---
-******** With ordinary imports:
+-******** With ordinary imports:
 a in Other in project Main
 b in Other in project Main
 a in Other1 in project Other
 b in Other1 in project Other
 a in Other2 in project Other
 b in Other2 in project Other
-******** With import calls:
+-******** With import calls:
 a in Other in project Main
 b in Other in project Main
 a in Other1 in project Other
