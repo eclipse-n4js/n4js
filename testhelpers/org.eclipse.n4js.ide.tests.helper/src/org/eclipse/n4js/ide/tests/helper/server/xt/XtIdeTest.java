@@ -497,8 +497,15 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void output(@SuppressWarnings("unused") XtMethodData data) {
-		// TODO
+	public void output(XtMethodData data) {
+		String moduleName = xtData.workspace.moduleNameOfXtFile;
+		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
+		int idxEnd = moduleName.lastIndexOf(".");
+		String genModuleName = moduleName.substring(idxStart, idxEnd) + ".js";
+		FileURI fileUri = getFileURIFromModuleName(genModuleName);
+
+		installN4JSRuntime();
+		assertOutput(fileUri, data.expectation);
 	}
 
 	/**

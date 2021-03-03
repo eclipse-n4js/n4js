@@ -87,6 +87,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
@@ -100,6 +101,7 @@ import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
@@ -273,6 +275,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.isYarnWorkspace();
 	}
 
+	/** @see TestWorkspaceManager#getNodeModulesFolder(N4JSProjectName) */
+	public File getNodeModulesFolder(N4JSProjectName projectName) {
+		return testWorkspaceManager.getNodeModulesFolder(projectName);
+	}
+
 	/** @return the workspace root folder as a {@link File}. */
 	public File getRoot() {
 		return testWorkspaceManager.getRoot();
@@ -291,7 +298,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.getProjectRoot();
 	}
 
-	/** Returns the root folder of the project with the given name. */
+	/** @return the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
 		return testWorkspaceManager.getProjectRoot(projectName);
 	}
@@ -304,7 +311,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.getPackageJsonFile();
 	}
 
-	/** Returns the package.json file of the project with the given name. */
+	/** @return the package.json file of the project with the given name. */
 	protected File getPackageJsonFile(String projectName) {
 		return testWorkspaceManager.getPackageJsonFile(projectName);
 	}
@@ -375,7 +382,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return false;
 	}
 
-	/** Returns an optional module overriding default injection bindings for testing purposes. */
+	/** @return an optional module overriding default injection bindings for testing purposes. */
 	protected Optional<Class<? extends Module>> getOverridingModule() {
 		return Optional.absent();
 	}
@@ -438,7 +445,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		languageClient.clearLogMessages();
 	}
 
-	/** Returns the log messages received from the server since the last call to {@link #clearLogMessages()}. */
+	/** @return the log messages received from the server since the last call to {@link #clearLogMessages()}. */
 	protected List<MessageParams> getLogMessages() {
 		return languageClient.getLogMessages();
 	}
@@ -498,7 +505,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return openFiles.containsKey(fileURI);
 	}
 
-	/** Returns <code>true</code> iff the file with the given URI is open AND has unsaved changes in memory. */
+	/** @return <code>true</code> iff the file with the given URI is open AND has unsaved changes in memory. */
 	protected boolean isDirty(FileURI fileURI) {
 		OpenFileInfo info = openFiles.get(fileURI);
 		if (info == null) {
@@ -509,7 +516,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return !contentOnDisk.equals(contentInMemory);
 	}
 
-	/** Returns the file URIs of all currently open files. */
+	/** @return the file URIs of all currently open files. */
 	protected Set<FileURI> getOpenFiles() {
 		return ImmutableSet.copyOf(openFiles.keySet());
 	}
@@ -1605,6 +1612,39 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				expectedOutput.toString().trim(), result.getStdOut().trim());
 		assertEquals("stderr was non-empty after running: " + fileToRun,
 				"", result.getErrOut().trim());
+	}
+
+	/**
+	 * Installs the given libsToInstall into the given target project. Respects yarn setups.
+	 *
+	 * @see N4jsLibsAccess#installN4jsLibs
+	 */
+	protected void installN4JSRuntime() {
+		File root = getProjectRoot();
+		N4JSProjectName projectName = new N4JSProjectName(root);
+		installN4jsLibs(projectName, new N4JSProjectName[] { N4JSGlobals.N4JS_RUNTIME });
+	}
+
+	/**
+	 * Installs the given libsToInstall into the given target project. Respects yarn setups.
+	 *
+	 * @see N4jsLibsAccess#installN4jsLibs
+	 */
+	protected void installN4jsLibs(N4JSProjectName targetProject, N4JSProjectName[] libsToInstall) {
+		if (libsToInstall == null || libsToInstall.length == 0) {
+			return;
+		}
+		if (!testWorkspaceManager.isCreated()) {
+			throw new IllegalStateException("the test workspace is not yet created");
+		}
+
+		final File nodeModulesFolder = getNodeModulesFolder(targetProject);
+		try {
+			nodeModulesFolder.mkdirs();
+			N4jsLibsAccess.installN4jsLibs(nodeModulesFolder.toPath(), true, false, false, libsToInstall);
+		} catch (IOException e) {
+			throw new RuntimeException("unable to install n4js-libs from local checkout", e);
+		}
 	}
 
 	/**
