@@ -122,14 +122,12 @@ public class YarnWorkspaceProject extends Project {
 
 		var File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
 		val File projectDirectory = new File(parentDirectory, name);
-		
+		val File nodeModulesDirectory = new File(projectDirectory, N4JSGlobals.NODE_MODULES);
+		nodeModulesDirectory.mkdirs();
 		
 		for (workspacesFolderName : memberProjects.keySet()) {
 			val File workspacesDirectory = new File(new File(parentDirectory, name), workspacesFolderName);
 			rmkdirs(workspacesDirectory);
-			
-			val File nodeModulesDirectory = new File(projectDirectory, N4JSGlobals.NODE_MODULES);
-			rmkdirs(nodeModulesDirectory);
 
 			createWorkspaceProjects(memberProjects.get(workspacesFolderName), nodeModulesDirectory, workspacesDirectory);
 		}
@@ -141,6 +139,7 @@ public class YarnWorkspaceProject extends Project {
 		for (project: name2projects.values()) {
 			val projectDir = project.create(parentDirectory.toPath);
 			val Path symProjectDirectory = new File(nodeModulesDirectory, project.name).toPath();
+			symProjectDirectory.parent.toFile.mkdir;
 			Files.createSymbolicLink(symProjectDirectory, projectDir.toPath());			
 		}
 	}
