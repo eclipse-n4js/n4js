@@ -7,9 +7,7 @@
  */
 package org.eclipse.n4js.ide.xtext.server;
 
-import java.io.File;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +88,6 @@ import org.eclipse.n4js.ide.server.LspLogger;
 import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.ide.xtext.server.util.ParamHelper;
-import org.eclipse.n4js.utils.Strings;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
@@ -120,6 +117,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -207,17 +205,16 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private Set<? extends IResourceServiceProvider> getAllLanguages() {
 		// provide a stable order
 		Map<String, IResourceServiceProvider> sorted = new TreeMap<>();
-		for (Iterator<String> extIter = languagesRegistry.getExtensionToFactoryMap().keySet().iterator(); extIter
-				.hasNext();) {
 
-			String ext = extIter.next();
-			if ("n4jsd".equals(ext)) {
-				File f = new File("test-workspace/yarn-test-project/packages").getAbsoluteFile();
-				String[] list = f.list();
-				String toString = list == null ? f.toString() + " is empty " : Strings.join(", ", f.list());
-				System.out.println("### " + toString);
+		// create copy to avoid ConcurrentModificationException caused by calling getResourceServiceProvider
+		List<String> extensionsCopy = Lists.newArrayList(languagesRegistry.getExtensionToFactoryMap().keySet());
+		for (String ext : extensionsCopy) {
+			URI synthUri = URI.createURI("synth:///file." + ext);
+			IResourceServiceProvider rsp = languagesRegistry.getResourceServiceProvider(synthUri);
+			if (rsp != null) {
+				// rsp can be null for the given extension
+				sorted.put(ext, rsp);
 			}
-			sorted.put(ext, languagesRegistry.getResourceServiceProvider(URI.createURI("synth:///file." + ext)));
 		}
 		return ImmutableSet.copyOf(sorted.values());
 	}
