@@ -42,7 +42,7 @@ public class ECMA6TestSuiteForJSX extends ECMA6TestSuite {
 	}
 
 	/**
-	 * @param config
+	 * Constructor
 	 */
 	public ECMA6TestSuiteForJSX(JSLibSingleTestConfig config) {
 		super(config);

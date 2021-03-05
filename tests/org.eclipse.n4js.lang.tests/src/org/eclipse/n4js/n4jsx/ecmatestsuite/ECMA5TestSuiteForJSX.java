@@ -41,7 +41,7 @@ public class ECMA5TestSuiteForJSX extends ECMA5TestSuite {
 	}
 
 	/**
-	 * @param config
+	 * Constructor
 	 */
 	public ECMA5TestSuiteForJSX(JSLibSingleTestConfig config) {
 		super(config);
