@@ -87,13 +87,7 @@ Contributors:
 		<module>org.eclipse.n4js.ide.tests.helper.tests</module>
 		<module>org.eclipse.n4js.ide.tests</module>
 		<module>org.eclipse.n4js.ui.tests</module>
-		<module>org.eclipse.n4js.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.ide.tests.jar</module>
-
-		<!-- *************************************** n4jsx Tests -->
-		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
-		<module>org.eclipse.n4js.n4jsx.spec.ui.tests</module>
-		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
 
 		<!-- *************************************** flow graph tests -->
 		<module>org.eclipse.n4js.flowgraphs.tests</module>
