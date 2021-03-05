@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				Folder "scoping" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+var myObjectLiteral = {
+/* XPECT scope at '<|>any name' ---
+Array, AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError, Function, Generator,
+Iterable,
+Iterable2, Iterable3, Iterable4, Iterable5, Iterable6, Iterable7, Iterable8, Iterable9,
+Iterator, IteratorEntry,
+JSON, Math, MigrationContext, MigrationController, 
+N4Accessor, N4Annotation, N4Class, N4Classifier, N4DataField, N4Element, N4Enum, N4EnumType,
+N4Interface, N4Member, N4Method, N4NamedElement, N4Object, N4Provider, N4NumberBasedEnum, N4StringBasedEnum,
+N4Type, N4ApiNotImplementedError,
+Number, Object, Promise, RangeError, ReferenceError, RegExp, String, Symbol, SyntaxError,
+TEMP_ReturnTypeOfMatchExec, TypeError, URIError,
+any, undefined, boolean, console, i18nKey, number, int, pathSelector, string, symbol, typeName
+---*/
+	any name: "o",
+	complex: function() {
+/* XPECT scope at 'this.<|>name' ---
+complex, __proto__, constructor, hasOwnProperty, isPrototypeOf, name,
+propertyIsEnumerable, toLocaleString, toString, valueOf
+--- */
+		var name = "complex" + this.name;
+	}
+}
+/* XPECT scope at 'myObjectLiteral.<|>name' ---
+complex, __proto__, constructor, hasOwnProperty, isPrototypeOf, name,
+propertyIsEnumerable, toLocaleString, toString, valueOf
+--- */
+myObjectLiteral.name

@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP  org.eclipse.n4js.xpect.tests.N4jsXtTest
+	Workspace {
+		Project "IDE_1510.incomplete.api.impl.one.x.impl" {
+			Folder "src" {
+				Folder "p" {
+					File "A.n4js" { from = "p/A.n4js" }
+				}
+				ThisFile { }
+			}
+			File "package.json" { from = "../package.json"}
+		}
+		Project "IDE_1510.incomplete.api.impl.one.api" {
+			Folder "src" {
+				Folder "p" {
+					File "A.n4jsd" { from = "../../IDE_1510.incomplete.api.impl.one.api/src/p/A.n4jsd" }
+				}
+			}
+			File "package.json" { from = "../../IDE_1510.incomplete.api.impl.one.api/package.json"}
+		}
+   }
+   END_SETUP
+*/
+
+/* XPECT output ---
+Hello from Implementation one.x.impl::p.A.n4js !
+Step 2
+Step 3
+N4ApiNotImplementedError: API for method A.missing_n not implemented yet.
+N4ApiNotImplementedError: API for method A.missing_someIA not implemented yet.
+--- */
+
+import { A } from "p/A"
+var a : any+ = new A();
+
+try {
+	a.missing_n();
+} catch ( e ) {
+	console.log(""+e);
+}
+
+try {
+	a.missing_someIA();
+} catch ( e ) {
+	console.log(""+e);
+}

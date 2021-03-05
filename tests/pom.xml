@@ -46,9 +46,6 @@ Contributors:
 		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
 		<module>org.eclipse.n4js.xpect.tests</module>
 
-		<!-- Xsemantics tests -->
-		<module>org.eclipse.n4js.xsemantics.tests</module>
-
 		<!-- transpiler tests -->
 		<module>org.eclipse.n4js.transpiler.tests</module>
 		<module>org.eclipse.n4js.transpiler.es5.tests</module>
@@ -86,10 +83,8 @@ Contributors:
 		<module>org.eclipse.n4js.cli.tests</module>
 		<module>org.eclipse.n4js.ide.tests.helper.tests</module>
 		<module>org.eclipse.n4js.ide.tests</module>
+		<module>org.eclipse.n4js.ui.tests</module>
 		<module>org.eclipse.n4js.ide.tests.jar</module>
-
-		<!-- *************************************** n4jsx Tests -->
-		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
 
 		<!-- *************************************** flow graph tests -->
 		<module>org.eclipse.n4js.flowgraphs.tests</module>

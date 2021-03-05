@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.ts.tests.linking.TypesLinkingPluginTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.ts.tests.XtTsTest END_SETUP */
 
 /* pos 0 */
 primitive any{}
@@ -44,14 +44,14 @@ public interface MyInterface {
 public function MyFunction() : any
 
 /* pos 8 */
-// XPECT linkedName at MyInterface --> MyInterface
-// XPECT linkedFragment at MyInterface --> //@types.6
-// XPECT linkedFragment at MySuperDuperClass --> //@types.3
-// XPECT linkedFragment at Comparable --> //@types.5
+// XPECT linkedName at 'MyInterface' --> MyInterface
+// XPECT linkedFragment at 'MyInterface' --> //@types.6
+// XPECT linkedFragment at 'MySuperDuperClass' --> //@types.3
+// XPECT linkedFragment at 'Comparable' --> //@types.5
 public class MySuperClass<T extends MyInterface> extends MySuperDuperClass implements Comparable {
-// XPECT linkedFragment at number --> //@types.1
+// XPECT linkedFragment at 'number' --> //@types.1
 	private counter: number;
-// XPECT linkedFragment at any --> //@types.0
-// XPECT linkedFragment at T --> //@types.8/@typeVars.0
+// XPECT linkedFragment at 'any' --> //@types.0
+// XPECT linkedFragment at 'T' --> //@types.8/@typeVars.0
 	protected doStuff(input: T): any;
 }

@@ -1,0 +1,21 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+- Y1 [PROJECT workspaces=["packages1/*", "packages2/*"]]
+-- packages1
+---*P1D1 [PROJECT]
+--- P1D2 [PROJECT]
+-- packages2
+--- P2D1 [PROJECT]
+-- node_modules
+--- P1D1 [SYMLINK_TO_PATH Y1/packages1/P1D1]
+--- P1D2 [SYMLINK_TO_PATH Y1/packages1/P1D2]
+--- P2D2 [SYMLINK_TO_PATH Y1/packages2/P2D1]
+
+EXPECT
+- Y1
+- Y1/packages1/P1D1
+- Y1/packages1/P1D2
+- Y1/packages2/P2D1

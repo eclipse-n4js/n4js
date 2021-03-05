@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+    Workspace {
+        JavaProject "error" {
+            File "package.json" {from="../../version/error/package.json.xt"}
+            Folder "src" {}
+        }
+        JavaProject "one" {
+            File "package.json" {from="../../version/one/package.json"}
+        }
+        JavaProject "two" {
+            File "package.json" {from="../../version/two/package.json"}
+        }
+        JavaProject "three" {
+            File "package.json" {from="../../version/three/package.json"}
+        }
+        JavaProject "four" {
+            File "package.json" {from="../../version/four/package.json"}
+        }
+    }
+
+    END_SETUP
+ */
+{
+	"name": "error",
+	"version": "0.0.1",
+	"dependencies": {
+		/* XPECT errors ---
+			"Only zero or one comparator allowed." at ">"
+		--- */
+		/* XPECT warnings ---
+			"Project one is required in version ><11.0.0, but only version 11.0.0 is present." at ""one": "> <11.0.0""
+		--- */
+		"one": "> <11.0.0",
+		// XPECT errors --> "Too many version parts. Semantic versions consist only of major, minor and patch." at "7"
+		"two": "<=13.0.0.7",
+		// XPECT errors --> "Invalid version number "^1..3": no viable alternative at input '.'." at ".3"
+		"three": "^1..3",
+		// XPECT errors --> "Invalid version number "^.2.3": no viable alternative at input '.'." at ".2.3"
+		"four": "^.2.3"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"output": "src-gen",
+		"sources": {
+			"source": ["src"]
+		}
+	}
+}
