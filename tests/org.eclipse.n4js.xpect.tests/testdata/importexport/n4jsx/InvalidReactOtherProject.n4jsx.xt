@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 
 	Workspace {
 		Project "N4JSXXpectTests" {
@@ -18,12 +18,12 @@
 					ThisFile {}
 				}
 			}
-			File "package.json" { from="../../package_other-project.json" }
+			File "package.json" { from="../../../package_other-project.json" }
 		}
 		Project "other-project" {
-			File "react.js" { from = "../../react-implementations/other-project/react.js" }
-			File "index.n4jsd" { from = "../../react-implementations/other-project/react.n4jsd" }
-			File "package.json" { from = "../../react-implementations/other-project/package.json" }
+			File "react.js" { from = "../../../react-implementations/other-project/react.js" }
+			File "index.n4jsd" { from = "../../../react-implementations/other-project/react.n4jsd" }
+			File "package.json" { from = "../../../react-implementations/other-project/package.json" }
 		}
 	}
 

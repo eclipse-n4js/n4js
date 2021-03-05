@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4jsxXtTest
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 
 	Workspace {
 		Project "N4JSXXpectTests" {
