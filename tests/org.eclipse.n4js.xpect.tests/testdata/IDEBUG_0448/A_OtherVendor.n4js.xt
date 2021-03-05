@@ -1,0 +1,94 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+ Workspace {
+   	 Project "PjOtherVendor" {
+   	 	Folder "src" {
+			ThisFile {}
+   	 	}
+   	 	File "package.json" { from="package_pjothervendor.json" }
+   	 }
+
+   	 Project "PjDefine" {
+   	 	Folder "src" {
+   	 		 File "A.n4js" { }
+   	 	}
+   	 	File "package.json" { from="package_pjdefine.json" }
+   	 }
+   }
+   END_SETUP
+ */
+
+
+import { P_private , P_project , P_protected , P_protected_intern ,
+P_public_internal , P_public } from "A"
+
+// we are a different vendor:
+
+// XPECT errors --> "The constructor of P_private is not visible." at "P_private"
+var p1 : P_private = new P_private();
+
+// XPECT errors --> "The constructor of P_project is not visible." at "P_project"
+var p2 : P_project = new P_project();
+
+// XPECT errors --> "The constructor of P_protected is not visible." at "P_protected"
+var p3 : P_protected = new P_protected();
+
+// XPECT errors --> "The constructor of P_protected_intern is not visible." at "P_protected_intern"
+var p4 : P_protected_intern = new P_protected_intern();
+
+// XPECT errors --> "The constructor of P_public_internal is not visible." at "P_public_internal"
+var p5 : P_public_internal = new P_public_internal();
+
+// XPECT noerrors --> ""
+var p6 : P_public = new P_public();
+
+
+// XPECT noerrors -->
+class PSv_public extends P_public {
+	public constructor() {
+		// XPECT noerrors -->
+	 	var p : P_public = new P_public();
+	}
+}
+
+// XPECT noerrors -->
+class PSv_protected extends P_protected {
+	public constructor() { // must work
+		// XPECT noerrors -->
+		super();
+		// XPECT errors --> "The constructor of P_protected is not visible." at "P_protected"
+	 	var p : P_protected = new P_protected();
+	}
+}
+
+// XPECT errors --> "Cannot extend class P_protected_intern because its constructor is not accessible." at "P_protected_intern"
+class PSv_protected_intern extends P_protected_intern {
+	public constructor() { // must not work (super not accessible.)
+		// XPECT noerrors -->
+		super(); // actually an error, but we do not show a message because it would duplicate the above message "Cannot extend class ..."
+		// XPECT errors --> "The constructor of P_protected_intern is not visible." at "P_protected_intern"
+	 	var p : P_protected_intern = new P_protected_intern();
+	}
+}
+
+// XPECT errors --> "Cannot extend class P_private because its constructor is not accessible." at "P_private"
+class PSv_private extends P_private {
+	public constructor() {
+		// XPECT noerrors -->
+		super(); // actually an error, but we do not show a message because it would duplicate the above message "Cannot extend class ..."
+		// XPECT errors --> "The constructor of P_private is not visible." at "P_private"
+	 	var p : P_private = new P_private();
+	}
+}

@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+
+
+
+var actual = 36;
+var actualX = 136;
+
+
+
+// Exactly is default case, Order defaults to 'unordered'
+/* XPECT contentAssistList at '--actua<|>lX' proposals exactly ---
+"actual", "actualX"
+---
+*/
+var expected : int = --actualX   ;
+
+
+
+
+// Exactly is default case, Order defaults to 'unordered'
+/* XPECT contentAssistList at 'actua<|>l' proposals exactly ---
+"actual", "actualX"
+---
+*/
+var unexpected : int = actual ;
+
+
+// Exactly is default case, Order defaults to 'unordered'
+/* XPECT contentAssistList at '( act<|> )' proposals exactly ---
+"actual", "actualX"
+---
+*/
+var parenExpression : int = ( act ) ;

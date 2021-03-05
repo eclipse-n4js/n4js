@@ -1,0 +1,52 @@
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+    Workspace {
+   	 Project "A" {
+   	 	Folder "src" { }
+   	 	ThisFile "package.json" {  }
+   	 }
+   	 Project "B" {
+   	 	Folder "src" { }
+   	 	File "package.json" { from="packageB_nodep.json" }
+   	 }
+   	 Project "C" {
+   	 	Folder "src" { }
+   	 	File "package.json" { from="packageC.json.xt" }
+   	 }
+   	 Project "D" {
+   	 	Folder "src" { }
+   	 	File "package.json" { from="packageD.json.xt" }
+   	 }
+   }
+   
+//   IssueConfiguration {
+//   	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
+//   	IssueCode "MISSING_YARN_WORKSPACE" { enabled=false }
+//    IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled=false }
+//   }
+
+   END_SETUP
+ */
+
+// Testing cycle-detection IDEBUG-266
+
+
+{
+	// XPECT noerrors --> "The project configuration contains a dependency cycle of projects [A] -> C -> B -> [A]." at ""A""
+	"name": "A",
+	"version": "0.0.1",
+	"dependencies": {
+		"C": "*"	
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}
