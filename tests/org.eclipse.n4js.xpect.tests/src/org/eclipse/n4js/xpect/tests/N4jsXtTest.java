@@ -40,7 +40,7 @@ public class N4jsXtTest {
 
 	@XtFolder
 	static String getFolder() {
-		return "testdata";
+		return "xt-tests";
 	}
 
 	@XtSuppressedIssues
