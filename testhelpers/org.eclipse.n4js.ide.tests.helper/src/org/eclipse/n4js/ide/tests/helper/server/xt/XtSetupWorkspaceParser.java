@@ -18,6 +18,7 @@ import java.util.Iterator;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
+import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder;
@@ -91,6 +92,15 @@ public class XtSetupWorkspaceParser {
 
 	static class BuilderInfo {
 		String moduleNameOfXtFile;
+	}
+
+	/**
+	 * This class extends {@link Workspace} by some properties that are important for the xt use case.
+	 */
+	static public class XtWorkspace extends Workspace {
+
+		String moduleNameOfXtFile;
+
 	}
 
 	/**

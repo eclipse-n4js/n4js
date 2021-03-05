@@ -42,6 +42,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
+ * Class that holds implementations for xt test methods regarding flow graphs
  */
 public class XtMethodsFlowgraphs {
 

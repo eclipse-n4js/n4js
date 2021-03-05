@@ -30,7 +30,11 @@ import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
 /**
- * TODO
+ * Superclass to be inherited from when defining a xt test directory. Use the annotations
+ * <ul>
+ * <li/>{@link XtFolder} to define the directory that contains all .xt files, and
+ * <li/>{@link XtSuppressedIssues} to define which issues should be suppressed.
+ * </ul>
  */
 public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	final Class<?> testClass;
