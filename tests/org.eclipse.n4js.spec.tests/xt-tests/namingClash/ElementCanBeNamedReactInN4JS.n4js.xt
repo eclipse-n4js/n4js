@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
@@ -26,21 +26,12 @@
 
 	END_SETUP
 */
-
 // XPECT warnings --> "Variable names should start with lower case letter." at "React"
-// XPECT errors --> "Element cannot be named React in N4JSX file." at "React"
 let React = 0;
 
 // XPECT warnings --> "Parameter names should start with lower case letter." at "React"
-// XPECT errors --> "Element cannot be named React in N4JSX file." at "React"
 function f(React: int) {
-	console.log(<div></div>);
+	console.log("Hi");
 }
-
-/* XPECT errors ---
-"Class React duplicates variable React (line 32)." at "React"
-"Element cannot be named React in N4JSX file." at "React"
----
-*/
+// XPECT errors --> "Class React duplicates variable React (line 30)." at "React"
 class React {}
-

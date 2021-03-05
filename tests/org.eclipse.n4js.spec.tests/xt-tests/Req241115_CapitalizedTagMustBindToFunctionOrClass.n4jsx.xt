@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
@@ -27,12 +27,18 @@
 	END_SETUP
 */
 
-//import * as React from "react"
-// XPECT noerrors -->
-var a = <h1></h1>
+import * as React from "react/index"
 
-//there is no closing element XPECT noerrors -->
-var b = <div/>
+class C extends React.Component<~React.ComponentProps with {prop: int}, Object> {
+	@Override
+	public render(): React.Element {
+		return <button/>
+	}
+}
 
-// XPECT errors --> "Opening element h1 does not match with closing element h2." at "h2"
-var c = <h1></h2>
+// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type [unknown] instead." at "MyProp"
+<MyProp/>
+
+const D = 10;
+// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type int instead." at "D"
+<D/>

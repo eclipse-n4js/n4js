@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
@@ -27,26 +27,12 @@
 	END_SETUP
 */
 
-import * as React from "react";
-
-interface ~Props<ValueT> extends React.ComponentProps  {
-    public value?: ValueT;
-}
-
-class Base<ValueT>
-    extends React.PureComponent<Props<ValueT>, Object> {
-
-    @Override
-    public render(): React.Element {
-             return (<div/>);
-
-    }
-}
-
-class Concrete extends Base<Date> {
-
-}
-
+//import * as React from "react"
 // XPECT noerrors -->
-<Concrete
-	value={new Date()}/>
+var a = <h1></h1>
+
+//there is no closing element XPECT noerrors -->
+var b = <div/>
+
+// XPECT errors --> "Opening element h1 does not match with closing element h2." at "h2"
+var c = <h1></h2>

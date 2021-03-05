@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
@@ -24,21 +24,32 @@
 		}
 	}
 
+
 	END_SETUP
 */
 
-import * as React from "react/index"
+import * as React from "react";
 
-class C extends React.Component<~React.ComponentProps with {prop: int}, Object> {
+
+interface ~Props extends React.ComponentProps  {
+	public value: Date;
+}
+
+class Concrete extends React.PureComponent<Props, Object> {
+
 	@Override
 	public render(): React.Element {
-		return <button/>
+		return (<div/>);
 	}
 }
 
-// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type [unknown] instead." at "MyProp"
-<MyProp/>
 
-const D = 10;
-// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type int instead." at "D"
-<D/>
+class Arg<T> {
+	public value: T;
+}
+
+
+let arg: Arg<Date>;
+
+// XPECT noerrors -->
+<Concrete {...arg}/>

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
@@ -27,23 +27,38 @@
 	END_SETUP
 */
 
-
 import * as React from "react/index"
 
 function MyReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
-	return (<div></div>);
+	return (<div>{props.myProp}</div>);
+}
+// XPECT noerrors
+<MyReactFuncComponent myProp="My prop"/>
+
+
+function MyNormalFunction(props: ~React.ComponentProps with {myOtherProp: string}): string {
+	return "My Normal Function";
 }
 
-// XPECT type of '<MyReactFuncComponent myProp="Hello"/>' --> Element
-var a = <MyReactFuncComponent myProp="Hello"/>;
+// XPECT errors --> "Expect a function returning React.Element but the return type is string." at "MyNormalFunction"
+<MyNormalFunction myOtherProp="Hello"/>
 
-
-class C extends React.Component<~React.ComponentProps with {prop: int}, Object> {
+class MyReactClassComponent extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override
 	public render(): React.Element {
 		return <button/>
 	}
 }
 
-// XPECT type of 'b' --> Element
-var b = <C prop={5}/>
+// XPECT noerrors
+<MyReactClassComponent prop={10}/>
+
+
+class MyNormalClass  {
+	public render(): React.Element {
+		return <div/>
+	}
+}
+
+// XPECT errors --> "The referred class is not a subtype of React.Component" at "MyNormalClass"
+<MyNormalClass/>

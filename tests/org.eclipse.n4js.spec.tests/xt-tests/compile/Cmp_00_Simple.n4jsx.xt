@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
 	 Workspace {
 		Project "N4JSXSpecTest" {
@@ -30,67 +30,87 @@
  */
 
 /* XPECT output ---
-empty React fragment
+simple self-closing
 {
+    "type": "div",
     "props": null,
     "children": []
 }
 simple open close
 {
+    "type": "div",
     "props": null,
     "children": []
 }
 nested
 {
-    "props": null,
+    "type": "div",
+    "props": {
+        "prop1": true,
+        "prop2": "hello",
+        "prop3": 42
+    },
     "children": [
+        42,
         {
-            "type": "div",
-            "props": {
-                "prop1": "hello"
-            },
-            "children": []
+            "type": "a",
+            "props": null,
+            "children": [
+                42
+            ]
         },
+        42,
         {
-            "type": "div",
-            "props": {
-                "prop2": "world"
-            },
+            "type": "p",
+            "props": null,
             "children": []
         }
     ]
 }
+spead operator
+{
+    "type": "div",
+    "props": {
+        "prop0": "0",
+        "prop1": "hi",
+        "prop2": 42,
+        "prop3": true,
+        "prop4": "hi",
+        "prop5": 42,
+        "prop6": true
+    },
+    "children": []
+}
 --- */
 
-import * as React from "react";
-import { replacer } from "replacer";
+import * as React from "react"
+import { replacer } from "replacer"
 
 var zzzz: React.Element; // Avoid unused import warnings
 zzzz;
 
-
 export public function logElements(): void {
-	//console.log('Hi');
-
-	let ss = <></>;
-	console.log('empty React fragment');
+	let ss = <div/>
+	console.log('simple self-closing');
 	console.log(JSON.stringify(ss, replacer, 4));
-    
-	let sh = <></>;
+	let sh = <div></div>
 	console.log('simple open close');
 	console.log(JSON.stringify(sh, replacer, 4));
 	let x = 42;
 	console.log('nested');
 	let nested =
-		<>
-			<div prop1='hello'>
-			</div>
-			<div prop2='world'>
-			</div>
-		</>
-	
+		<div prop1 prop2='hello' prop3={x}>
+			{x}<a>
+				{x}
+			  </a>{x}
+			  <p/>
+		</div>
 	console.log(JSON.stringify(nested, replacer, 4));
-
+	let propsA = { prop1: 'hi', prop2: 42 };
+	let propsB = { prop4: 'hi', prop5: 42 };
+	let sx =  <div prop0='0' {...propsA} prop3 {...propsB} prop6 />
+	console.log('spead operator');
+	console.log(JSON.stringify(sx, replacer, 4));
 };
 
 logElements();

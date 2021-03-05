@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4jsx.spec.ui.tests;
+package org.eclipse.n4js.spec.tests;
 
 import java.util.Set;
 
@@ -32,11 +32,11 @@ import org.junit.runner.RunWith;
 })
 @RunWith(XtParentRunner.class)
 // class name needs to end with 'Test' to get picket up by maven
-public class N4jsxSpecXtTest {
+public class SpecXtTest {
 
 	@XtFolder
 	static String getFolder() {
-		return "xpectTests";
+		return "xt-tests";
 	}
 
 	@XtSuppressedIssues

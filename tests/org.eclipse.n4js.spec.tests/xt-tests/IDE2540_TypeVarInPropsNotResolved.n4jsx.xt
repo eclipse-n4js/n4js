@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
@@ -24,32 +24,29 @@
 		}
 	}
 
-
 	END_SETUP
 */
 
 import * as React from "react";
 
-
-interface ~Props extends React.ComponentProps  {
-	public value: Date;
+interface ~Props<ValueT> extends React.ComponentProps  {
+    public value?: ValueT;
 }
 
-class Concrete extends React.PureComponent<Props, Object> {
+class Base<ValueT>
+    extends React.PureComponent<Props<ValueT>, Object> {
 
-	@Override
-	public render(): React.Element {
-		return (<div/>);
-	}
+    @Override
+    public render(): React.Element {
+             return (<div/>);
+
+    }
 }
 
+class Concrete extends Base<Date> {
 
-class Arg<T> {
-	public value: T;
 }
-
-
-let arg: Arg<Date>;
 
 // XPECT noerrors -->
-<Concrete {...arg}/>
+<Concrete
+	value={new Date()}/>

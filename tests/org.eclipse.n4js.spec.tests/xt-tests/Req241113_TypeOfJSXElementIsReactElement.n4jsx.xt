@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4jsxSpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
    Workspace {
 		Project "N4JSXSpecTest" {
@@ -27,22 +27,23 @@
 	END_SETUP
 */
 
-import * as React from "react"
 
-function myReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
-	return (<div>{props.myProp}</div>);
+import * as React from "react/index"
+
+function MyReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
+	return (<div></div>);
 }
-// XPECT errors --> "React functional component myReactFuncComponent cannot start with lower case." at "myReactFuncComponent"
-<myReactFuncComponent myProp="My prop"/>
+
+// XPECT type of '<MyReactFuncComponent myProp="Hello"/>' --> Element
+var a = <MyReactFuncComponent myProp="Hello"/>;
 
 
-// XPECT warnings --> "Class names should start with upper case letter." at "c"
-class c extends React.Component<~React.ComponentProps with {prop: int}, Object> {
+class C extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override
 	public render(): React.Element {
 		return <button/>
 	}
 }
 
-// XPECT errors --> "React class component c cannot start with lower case." at "c"
-var a = <c prop={5}/>;
+// XPECT type of 'b' --> Element
+var b = <C prop={5}/>
