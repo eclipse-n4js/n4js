@@ -46,9 +46,6 @@ Contributors:
 		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
 		<module>org.eclipse.n4js.xpect.tests</module>
 
-		<!-- Xsemantics tests -->
-		<module>org.eclipse.n4js.xsemantics.tests</module>
-
 		<!-- transpiler tests -->
 		<module>org.eclipse.n4js.transpiler.tests</module>
 		<module>org.eclipse.n4js.transpiler.es5.tests</module>
