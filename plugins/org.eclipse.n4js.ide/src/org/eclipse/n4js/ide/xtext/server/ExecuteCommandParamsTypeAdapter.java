@@ -76,6 +76,7 @@ public class ExecuteCommandParamsTypeAdapter extends TypeAdapter<ExecuteCommandP
 		this.gson = gson;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void write(JsonWriter out, ExecuteCommandParams value) throws IOException {
 		out.beginObject();

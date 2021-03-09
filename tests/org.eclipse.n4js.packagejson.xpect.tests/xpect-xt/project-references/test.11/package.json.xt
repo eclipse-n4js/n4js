@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+			Project "test.11" {
+				File "package.json" { from="../test.11/package.json.xt" }
+				Folder "src" { }
+			}
+			Project "test.data.api.project.one" {
+				File "package.json" { from="../test.data.api.project.one/package.json" }
+			}
+			Project "test.data.lib.project.two" {
+				File "package.json" { from="../test.data.lib.project.two/package.json" }
+			}
+	}
+
+   END_SETUP
+ */
+
+{
+	"name": "test.11",
+	"version": "0.0.1",
+	"dependencies": {
+		 // XPECT warnings --> "Implementation ID mismatch. Current project belongs to 'api_1' implementation while test.data.lib.project.two project belongs to 'api_2' implementation." at ""test.data.lib.project.two": "*""
+		"test.data.lib.project.two": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"implementationId": "api_1",
+		"implementedProjects": [
+			"test.data.api.project.one"
+		]
+	}
+}

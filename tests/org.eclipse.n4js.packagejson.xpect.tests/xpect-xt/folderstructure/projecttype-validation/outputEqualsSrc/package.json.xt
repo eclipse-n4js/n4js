@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+    Workspace {
+        JavaProject "outputEqualsSrc" {
+        	Folder "src" {}
+            ThisFile {}
+        }
+    }
+
+    END_SETUP
+ */
+{
+	"name": "outputEqualsSrc",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "validation",
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		// XPECT noerrors -->
+		"output": "src",
+		"sources": {
+			"source": [
+				// XPECT noerrors -->
+				"src"
+			]
+		}
+	}
+}

@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+			Project "test.14.api-to-validation" {
+				File "package.json" { from="../test.14.api-to-validation/package.json.xt"}
+				Folder "src" { }
+			}
+			Project "test.data.system.project.one" {
+				File "package.json" { from="../test.data.system.project.one/package.json" }
+			}
+			Project "test.data.lib.project.one" {
+				File "package.json" { from="../test.data.lib.project.one/package.json" }
+			}
+			Project "test.data.validation.project.one" {
+				File "package.json" { from="../test.data.validation.project.one/package.json" }
+			}
+	}
+
+
+   END_SETUP
+ */
+{
+	"name": "test.14.api-to-validation",
+	"version": "0.0.1",
+	"dependencies": {
+		// library projects w/o implementationId may be listed here XPECT noerrors
+		"test.data.system.project.one": "*",
+		// implementation project with implementation ID cannot be listed here XPECT warnings --> "Library project test.data.lib.project.one with an implementation ID cannot be declared among the dependencies of an API project." at ""test.data.lib.project.one": "*""
+		"test.data.lib.project.one": "*",
+		// validation projects w/o implementationId may be listed here XPECT noerrors
+		"test.data.validation.project.one": "*"
+	},
+	"n4js": {
+		"projectType": "api",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen"
+	}
+}

@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
@@ -137,8 +138,8 @@ public class TestWorkspaceManager {
 	}
 
 	/**
-	 * Returns file name and extension for a given file name. In case the given file name contains a known extension
-	 * (c.f. {@link N4JSGlobals#ALL_N4_FILE_EXTENSIONS}), this is recognized.
+	 * @return file name and extension for a given file name. In case the given file name contains a known extension
+	 *         (c.f. {@link N4JSGlobals#ALL_N4_FILE_EXTENSIONS}), this is recognized.
 	 */
 	public NameAndExtension getN4JSNameAndExtension(String fileName) {
 		String name = fileName;
@@ -156,10 +157,20 @@ public class TestWorkspaceManager {
 		return new NameAndExtension(name, extension);
 	}
 
-	/** Tells whether the test workspace manager has created a {@link #YARN_TEST_PROJECT}. */
+	/** @return true iff the test workspace manager has created a {@link #YARN_TEST_PROJECT}. */
 	public boolean isYarnWorkspace() {
 		File yarnProject = new File(getRoot(), YARN_TEST_PROJECT);
 		return yarnProject.isDirectory();
+	}
+
+	/** @return the node_modules folder of the project with the given name. Respects yarn workspace setups. */
+	public File getNodeModulesFolder(N4JSProjectName projectName) {
+		final File projectLocation = getProjectLocation();
+		final File projectFolder = projectName.getLocation(projectLocation.toPath());
+		final File nodeModulesFolder = isYarnWorkspace()
+				? new File(new File(getRoot(), TestWorkspaceManager.YARN_TEST_PROJECT), N4JSGlobals.NODE_MODULES)
+				: new File(projectFolder, N4JSGlobals.NODE_MODULES);
+		return nodeModulesFolder;
 	}
 
 	/** @return the workspace root folder as a {@link File}. */
@@ -181,10 +192,11 @@ public class TestWorkspaceManager {
 
 	/** Same as {@link #getProjectRoot(String)}, but for the {@link #DEFAULT_PROJECT_NAME default project}. */
 	public File getProjectRoot() {
-		return getProjectRoot(DEFAULT_PROJECT_NAME);
+		String projectRootName = isYarnWorkspace() ? YARN_TEST_PROJECT : DEFAULT_PROJECT_NAME;
+		return getProjectRoot(projectRootName);
 	}
 
-	/** Returns the root folder of the project with the given name. */
+	/** @return the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
 		assertCreated();
 		File projectFolder = getProjectRootFailSafe(projectName);
@@ -409,10 +421,10 @@ public class TestWorkspaceManager {
 			throw new IllegalStateException("test was already created on disk");
 		}
 
-		createdProject = workspace.getProjects().get(0); // TODO
 		destination.toFile().mkdirs();
-		createdProject.create(destination);
+		workspace.create(destination);
 
+		createdProject = workspace.getProjects().get(0); // TODO
 		return createdProject;
 	}
 

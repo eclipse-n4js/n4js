@@ -133,28 +133,46 @@ public class ProjectDiscoveryHelper {
 	private Map<String, Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
 		Map<String, Path> allProjectDirs = new HashMap<>();
 		for (Path wsRoot : workspaceRoots) {
+			collectAllProjects(wsRoot, allProjectDirs, pdCache);
+		}
+		return allProjectDirs;
+	}
 
-			Path projectRoot = getProjectRootOrUnchanged(wsRoot);
+	private void collectAllProjects(Path wsRoot, Map<String, Path> allProjectDirs,
+			Map<Path, ProjectDescription> pdCache) {
 
-			NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectRoot, pdCache);
+		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(wsRoot, pdCache);
 
-			if (nodeModulesFolder == null) {
-				// Is neither NPM nor Yarn project
-				collectProjects(projectRoot, true, pdCache, allProjectDirs);
+		if (nodeModulesFolder == null) {
+			// Assume side-by-side case (neither NPM nor Yarn project)
+			collectProjects(wsRoot, true, pdCache, allProjectDirs);
+
+			if (allProjectDirs.isEmpty()) {
+				// no project found => not side-by-side case: Search in parent directories
+				Path projectRoot = getProjectRootOrUnchanged(wsRoot);
+				nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectRoot, pdCache);
 			} else {
-				if (nodeModulesFolder.isYarnWorkspaceRoot) {
-					// Is Yarn project
-					// use projects referenced in packages
-					Path yarnProjectDir = nodeModulesFolder.workspaceNodeModulesFolder.getParentFile().toPath();
+				// check if the side-by-side case is actually a yarn case
+				Path oneProject = allProjectDirs.values().iterator().next();
+				NodeModulesFolder yarnProject = nodeModulesDiscoveryHelper.getNodeModulesFolder(oneProject, pdCache);
+				if (yarnProject.isYarnWorkspaceMember) {
+					Path yarnProjectDir = yarnProject.workspaceNodeModulesFolder.getParentFile().toPath();
 					collectYarnWorkspaceProjects(yarnProjectDir, pdCache, allProjectDirs);
-				} else {
-					// Is NPM project
-					// given directory is a stand-alone npm project
-					addIfNotPlainjs(allProjectDirs, projectRoot, pdCache);
 				}
 			}
 		}
-		return allProjectDirs;
+
+		if (nodeModulesFolder != null) {
+			if (nodeModulesFolder.isYarnWorkspaceRoot || nodeModulesFolder.isYarnWorkspaceMember) {
+				// Is Yarn project
+				// use projects referenced in packages
+				Path yarnProjectDir = nodeModulesFolder.workspaceNodeModulesFolder.getParentFile().toPath();
+				collectYarnWorkspaceProjects(yarnProjectDir, pdCache, allProjectDirs);
+			} else {
+				// Is a stand-alone npm project
+				addIfNotPlainjs(allProjectDirs, wsRoot, pdCache);
+			}
+		}
 	}
 
 	private Path getProjectRootOrUnchanged(Path dir) {
@@ -193,7 +211,9 @@ public class ProjectDiscoveryHelper {
 			collectGlobMatches(workspaceGlob, yarnProjectRoot, pdCache, memberProjects);
 		}
 		removeUnnecessaryPlainjsProjects(memberProjects, pdCache);
-		memberProjects.forEach(allProjectDirs::putIfAbsent);
+		for (Map.Entry<String, Path> member : memberProjects.entrySet()) {
+			allProjectDirs.putIfAbsent(member.getKey(), member.getValue());
+		}
 	}
 
 	private void collectProjects(Path root, boolean includeSubtree, Map<Path, ProjectDescription> pdCache,
@@ -251,6 +271,7 @@ public class ProjectDiscoveryHelper {
 
 		int depth = glob.contains("**") ? Integer.MAX_VALUE : glob.split("/").length + 1;
 
+		@SuppressWarnings("resource")
 		PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + location.resolve(glob));
 		try {
 			EnumSet<FileVisitOption> none = EnumSet.noneOf(FileVisitOption.class);

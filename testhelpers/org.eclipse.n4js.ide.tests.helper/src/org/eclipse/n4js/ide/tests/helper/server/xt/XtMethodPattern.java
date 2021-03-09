@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.utils.Strings;
 
 /**
@@ -145,7 +144,7 @@ public class XtMethodPattern {
 	}
 
 	/** @return the expected match of this method pattern */
-	public Match match(MethodData methodData, XtResourceEObjectAccessor resourceHandler) {
+	public Match match(XtMethodData methodData, XtResourceEObjectAccessor resourceHandler) {
 		String testMethod = methodData.getMethodNameWithArgs();
 		int searchFromOffset = methodData.offset;
 		matcher = pattern.matcher(testMethod);

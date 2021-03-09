@@ -117,6 +117,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -204,8 +205,16 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	private Set<? extends IResourceServiceProvider> getAllLanguages() {
 		// provide a stable order
 		Map<String, IResourceServiceProvider> sorted = new TreeMap<>();
-		for (String ext : languagesRegistry.getExtensionToFactoryMap().keySet()) {
-			sorted.put(ext, languagesRegistry.getResourceServiceProvider(URI.createURI("synth:///file." + ext)));
+
+		// create copy to avoid ConcurrentModificationException caused by calling getResourceServiceProvider
+		List<String> extensionsCopy = Lists.newArrayList(languagesRegistry.getExtensionToFactoryMap().keySet());
+		for (String ext : extensionsCopy) {
+			URI synthUri = URI.createURI("synth:///file." + ext);
+			IResourceServiceProvider rsp = languagesRegistry.getResourceServiceProvider(synthUri);
+			if (rsp != null) {
+				// rsp can be null for the given extension
+				sorted.put(ext, rsp);
+			}
 		}
 		return ImmutableSet.copyOf(sorted.values());
 	}

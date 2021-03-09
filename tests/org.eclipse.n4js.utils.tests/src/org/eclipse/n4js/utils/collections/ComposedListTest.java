@@ -21,8 +21,6 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import org.eclipse.n4js.utils.collections.ComposedList;
-
 /**
  */
 public class ComposedListTest {

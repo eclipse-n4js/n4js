@@ -20,11 +20,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.testing,
  org.eclipse.n4js.tests.helper,
  org.eclipse.xpect.xtext.lib,
- org.eclipse.n4js.ui,
  org.eclipse.n4js.utils,
- org.eclipse.n4js.ui.tests.helper,
- org.eclipse.n4js.regex.ui,
- org.eclipse.n4js.ts.ui.tests.helper,
  org.eclipse.n4js.xpect,
- org.eclipse.n4js.xpect.ui
+ org.eclipse.n4js.ide.tests.helper
 Automatic-Module-Name: org.eclipse.n4js.bugreports.tests

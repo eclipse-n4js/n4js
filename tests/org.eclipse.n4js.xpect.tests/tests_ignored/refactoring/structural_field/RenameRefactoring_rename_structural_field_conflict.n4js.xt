@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ 
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "RenameRefactoringTestProject" {
+			File "package.json" { from="../RenameRefactoringTest.json" }
+			Folder "src" {
+				ThisFile {}
+			}
+		}
+	}
+
+   END_SETUP
+*/
+/* XPECT renameRefactoring at f1 to 'f2' ---
+Problem in RenameRefactoringTestProject/src/RenameRefactoring_rename_structural_field_conflict.n4js.xt: Another member with name 'f2' already exists
+---   
+*/
+let v: ~Object with {f1: int, f2: string};
+v.f1;

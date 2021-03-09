@@ -41,10 +41,6 @@ public interface SimpleVersion extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>Number</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Number</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Number</em>' containment reference.
 	 * @see #setNumber(VersionNumber)
@@ -67,10 +63,6 @@ public interface SimpleVersion extends SemverToStringable {
 	/**
 	 * Returns the value of the '<em><b>With Letter V</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>With Letter V</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>With Letter V</em>' attribute.
 	 * @see #setWithLetterV(boolean)
@@ -95,10 +87,6 @@ public interface SimpleVersion extends SemverToStringable {
 	 * The list contents are of type {@link org.eclipse.n4js.semver.Semver.VersionComparator}.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.semver.Semver.VersionComparator}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Comparators</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Comparators</em>' attribute list.
 	 * @see org.eclipse.n4js.semver.Semver.VersionComparator

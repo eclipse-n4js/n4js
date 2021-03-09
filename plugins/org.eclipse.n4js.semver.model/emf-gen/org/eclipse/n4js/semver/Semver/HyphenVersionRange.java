@@ -32,10 +32,6 @@ public interface HyphenVersionRange extends VersionRange {
 	/**
 	 * Returns the value of the '<em><b>From</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>From</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>From</em>' containment reference.
 	 * @see #setFrom(VersionNumber)
@@ -58,10 +54,6 @@ public interface HyphenVersionRange extends VersionRange {
 	/**
 	 * Returns the value of the '<em><b>To</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>To</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>To</em>' containment reference.
 	 * @see #setTo(VersionNumber)

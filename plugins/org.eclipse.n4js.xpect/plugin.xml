@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<?eclipse version="3.0"?>
+
+
+<!--
+
+    NOTE:
+          This file exists only for Xpect to work.
+          When Xpect will have been replaced this file is obsolete.
+    
+-->
+
+
+<plugin>
+    <extension
+            point="org.eclipse.ui.editors">
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="js,jsx"
+            id="org.eclipse.n4js.N4JS"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4jsx"
+            id="org.eclipse.n4js.N4JS"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4jsd"
+            id="org.eclipse.n4js.N4JS"
+            name="N4JS Editor">
+        </editor>
+        <editor
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="n4js,n4idl"
+            id="org.eclipse.n4js.N4JS"
+            name="N4JS Editor">
+        </editor>
+		<editor
+			class="org.eclipse.n4js.json.ui.JSONExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+			default="true"
+			extensions="json"
+			id="org.eclipse.n4js.json.JSON"
+			name="JSON Editor">
+		</editor>
+    </extension>
+</plugin>

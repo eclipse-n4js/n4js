@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				ThisFile {}
+			}
+			File "package.json" { from="../package_default.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../react-implementations/valid/index.n4jsd" }
+			File "index.js" { from = "../react-implementations/valid/index.js" }
+			File "package.json" { from = "../react-implementations/valid/package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+
+console.log('====================================');
+
+console.log(
+	<>
+		<div/>
+	</>
+);
+
+console.log('====================================');
+
+console.log(
+	<div>
+		<></>
+	</div>
+);
+
+console.log('====================================');
+
+let elem: any+ =
+	<div>
+		<>
+			<div/>
+		</>
+	</div>;
+console.log(elem);
+console.log(elem.children[0].children);
+
+console.log('====================================');
+
+
+/* XPECT output ---
+====================================
+{
+  type: undefined,
+  props: null,
+  children: [ { type: 'div', props: null, children: [] } ]
+}
+====================================
+{
+  type: 'div',
+  props: null,
+  children: [ { type: undefined, props: null, children: [] } ]
+}
+====================================
+{
+  type: 'div',
+  props: null,
+  children: [ { type: undefined, props: null, children: [Array] } ]
+}
+[ { type: 'div', props: null, children: [] } ]
+====================================
+--- */

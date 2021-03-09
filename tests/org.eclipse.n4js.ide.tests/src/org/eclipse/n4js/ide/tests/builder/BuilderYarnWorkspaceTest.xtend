@@ -108,13 +108,15 @@ class BuilderYarnWorkspaceTest extends AbstractIncrementalBuilderTest {
 	def private void moveProjectToTempDirAndLinkInNodeModules(String projectName) throws IOException {
 		val rootFolder = getRoot().toPath;
 		val tempFolder = FileUtils.createTempDirectory("_" + BuilderYarnWorkspaceTest.simpleName);
+		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(NODE_MODULES);
+		val symLink = nodeModulesFolder.resolve(projectName)
 
 		val otherProjectFolderOld = getProjectRoot(projectName).toPath;
 		val otherProjectFolderNew = tempFolder.resolve(projectName);
+		FileDeleter.delete(symLink);
 		FileCopier.copy(otherProjectFolderOld, otherProjectFolderNew); // warning: java.nio.file.Files#move() will fail if temporary folder is located on a different FileStore!
 		FileDeleter.delete(otherProjectFolderOld);
 
-		val nodeModulesFolder = rootFolder.resolve(TestWorkspaceManager.YARN_TEST_PROJECT).resolve(NODE_MODULES);
-		Files.createSymbolicLink(nodeModulesFolder.resolve(projectName), otherProjectFolderNew);
+		Files.createSymbolicLink(symLink, otherProjectFolderNew);
 	}
 }

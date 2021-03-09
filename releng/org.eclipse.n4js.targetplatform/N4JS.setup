@@ -420,22 +420,10 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/plugins/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="N4JS Features">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/features/.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -444,7 +432,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/tests/.*"/>
@@ -456,7 +444,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/testhelpers/.*"/>
@@ -468,22 +456,10 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/docs/.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="N4JS Builds">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
-        <operand
-            xsi:type="predicates:LocationPredicate"
-            pattern=".*/builds/.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -492,7 +468,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/releng/.*"/>
@@ -504,19 +480,13 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:RepositoryPredicate"
-            project="org.eclipse.n4js.product"/>
+            project="org.eclipse.n4js.targetplatform"/>
         <operand
             xsi:type="predicates:LocationPredicate"
             pattern=".*/n4js-libs/.*"/>
       </predicate>
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
-  </setupTask>
-  <setupTask
-      xsi:type="launching:LaunchTask"
-      id="CreateConfigFileForSettingDefaultProduct"
-      launcher="CreateConfigFileForSettingDefaultProduct">
-    <description>Launch that creates a config.ini</description>
   </setupTask>
   <stream name="master"
       label="master (2019_09)"/>    <!-- label! -->

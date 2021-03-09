@@ -110,6 +110,7 @@ public class WildcardPathFilterHelper {
 	 * Similar to {@link FileSystem#getPathMatcher(String)} for "glob" syntax, but disables certain advance matching
 	 * functionality that we do not want to make available in the N4JS language.
 	 */
+	@SuppressWarnings("resource")
 	public static PathMatcher createPathMatcher(String pattern) {
 		pattern = pattern.replace("\\", "\\\\"); // disable \ as an escape character (by escaping it)
 		pattern = pattern.replace("{", "\\{").replace("}", "\\}"); // disable pattern groups

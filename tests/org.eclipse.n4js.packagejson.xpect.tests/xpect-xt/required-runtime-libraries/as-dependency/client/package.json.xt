@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+    Workspace {
+        JavaProject "client" {
+        	Folder "src" {}
+            File "package.json" {from="../client/package.json.xt"}
+        }
+        JavaProject "rl1" {
+            File "package.json" {from="../rl1/package.json"}
+        }
+        JavaProject "rl2" {
+            File "package.json" {from="../rl2/package.json"}
+        }
+        JavaProject "rl3" {
+            File "package.json" {from="../rl3/package.json"}
+        }
+    }
+
+    END_SETUP
+ */
+{
+	"name": "client",
+	"dependencies": {
+		// XPECT noerrors
+		"rl1": "*"
+	},
+	"devDependencies": {
+		"rl3": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"requiredRuntimeLibraries": [
+			// XPECT noerrors 
+			"rl1",
+			// XPECT errors --> "The project reference rl2 in required runtime libraries must also be declared as explicit project dependency in dependencies or devDependencies." at ""rl2""
+			"rl2",
+			// XPECT noerrors
+			"rl3"
+		],
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

@@ -16,10 +16,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.lsp4j.CompletionItem;
+import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
@@ -27,7 +32,6 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodPattern.Match;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
@@ -40,11 +44,13 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
- *
+ * Class that provides / delegates of xt methods
  */
 public class XtIdeTest extends AbstractIdeTest {
 
@@ -64,11 +70,11 @@ public class XtIdeTest extends AbstractIdeTest {
 			.objOpt("notVia").build();
 
 	static final XtMethodPattern PATTERN_ALLBRANCHES = XtMethodPattern.builder().keyword("allBranches")
-			.objMan("from")
+			.objOpt("from")
 			.textOpt("direction", (Object[]) TraverseDirection.values()).build();
 
 	static final XtMethodPattern PATTERN_ALLPATHS = XtMethodPattern.builder().keyword("allPaths")
-			.objMan("from")
+			.objOpt("from")
 			.textOpt("direction", (Object[]) TraverseDirection.values()).build();
 
 	static final XtMethodPattern PATTERN_COMMONPREDS = XtMethodPattern.builder().keyword("commonPreds")
@@ -85,8 +91,10 @@ public class XtIdeTest extends AbstractIdeTest {
 	XtMethodsIssues issueHelper;
 	XtextResource resource;
 	XtResourceEObjectAccessor eobjProvider;
+	Set<String> suppressedIssues;
 
 	/**
+	 * Call this before calling any other methods of {@link XtIdeTest}.
 	 */
 	public void initializeXtFile(XtFileData newXtData) throws IOException {
 		Preconditions.checkNotNull(newXtData);
@@ -95,7 +103,7 @@ public class XtIdeTest extends AbstractIdeTest {
 		cleanupTestDataFolder();
 		testWorkspaceManager.createTestOnDisk(xtData.workspace);
 
-		for (MethodData startupMethod : xtData.startupMethodData) {
+		for (XtMethodData startupMethod : xtData.startupMethodData) {
 			switch (startupMethod.name) {
 			case "startAndWaitForLspServer":
 				startAndWaitForLspServer();
@@ -118,8 +126,8 @@ public class XtIdeTest extends AbstractIdeTest {
 					return null;
 				}).join();
 
-		ArrayList<MethodData> issueTests = new ArrayList<>();
-		LOOP: for (MethodData testMethod : xtData.getTestMethodData()) {
+		ArrayList<XtMethodData> issueTests = new ArrayList<>();
+		LOOP: for (XtMethodData testMethod : xtData.getTestMethodData()) {
 			switch (testMethod.name) {
 			case "nowarnings":
 			case "noerrors":
@@ -136,9 +144,20 @@ public class XtIdeTest extends AbstractIdeTest {
 		this.issueHelper = new XtMethodsIssues(xtData, getIssuesInFile(xtModule), issueTests);
 	}
 
+	/** Sets the issues that are suppressed regarding issue related xt methods */
+	public void setSuppressedIssues(Set<String> suppressedIssues) {
+		this.suppressedIssues = suppressedIssues;
+	}
+
+	@Override
+	protected Set<String> getIgnoredIssueCodes() {
+		return suppressedIssues;
+	}
+
 	/**
+	 * Delegates xt methods found in xt files to their implementations
 	 */
-	public void invokeTestMethod(MethodData testMethodData) throws InterruptedException, ExecutionException {
+	public void invokeTestMethod(XtMethodData testMethodData) throws InterruptedException, ExecutionException {
 		switch (testMethodData.name) {
 		// 1st pass test methods
 		case "nowarnings": {
@@ -161,11 +180,17 @@ public class XtIdeTest extends AbstractIdeTest {
 		case "accessModifier":
 			accessModifier(testMethodData);
 			break;
+		case "completion":
+			completion(testMethodData);
+			break;
 		case "definition":
 			definition(testMethodData);
 			break;
 		case "elementKeyword":
 			elementKeyword(testMethodData);
+			break;
+		case "exportedObjects":
+			exportedObjects(testMethodData);
 			break;
 		case "findReferences":
 			findReferences(testMethodData);
@@ -178,6 +203,18 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		case "linkedPathname":
 			linkedPathname(testMethodData);
+			break;
+		case "output":
+			output(testMethodData);
+			break;
+		case "scope":
+			scope(testMethodData);
+			break;
+		case "scopeWithResource":
+			scopeWithResource(testMethodData);
+			break;
+		case "scopeWithPosition":
+			scopeWithPosition(testMethodData);
 			break;
 		case "type":
 			type(testMethodData);
@@ -243,7 +280,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void noerrors(MethodData data) {
+	public void noerrors(XtMethodData data) {
 		issueHelper.getNoerrors(data);
 	}
 
@@ -255,7 +292,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void nowarnings(MethodData data) {
+	public void nowarnings(XtMethodData data) {
 		issueHelper.getNowarnings(data);
 	}
 
@@ -268,7 +305,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void errors(MethodData data) {
+	public void errors(XtMethodData data) {
 		issueHelper.getErrors(data);
 	}
 
@@ -281,7 +318,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void warnings(MethodData data) {
+	public void warnings(XtMethodData data) {
 		issueHelper.getWarnings(data);
 	}
 
@@ -297,10 +334,34 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void accessModifier(MethodData data) {
+	public void accessModifier(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "accessModifier", "at");
 		String accessModifierStr = XtMethods.getAccessModifierString(ocr.getEObject());
 		assertEquals(data.expectation, accessModifierStr);
+	}
+
+	/**
+	 * Calls LSP endpoint 'completion'.
+	 *
+	 * <pre>
+	 * // Xpect completion --&gt; &ltCOMPLETIONS&gt
+	 * </pre>
+	 *
+	 * COMPLETIONS is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void completion(XtMethodData data) throws InterruptedException, ExecutionException {
+		Position position = eobjProvider.checkAndGetPosition(data, "completion", "at");
+		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
+
+		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = callCompletion(
+				uri.toString(), position.getLine(), position.getCharacter());
+
+		Either<List<CompletionItem>, CompletionList> result = future.get();
+		List<CompletionItem> items = result.isLeft() ? result.getLeft() : result.getRight().getItems();
+
+		List<String> ciItems = Lists.transform(items, ci -> getStringLSP4J().toString(ci));
+		assertEqualIterables(data.expectation, ciItems);
 	}
 
 	/**
@@ -311,7 +372,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void definition(MethodData data) throws InterruptedException, ExecutionException {
+	public void definition(XtMethodData data) throws InterruptedException, ExecutionException {
 		Position position = eobjProvider.checkAndGetPosition(data, "definition", "at");
 		FileURI uri = getFileURIFromModuleName(xtData.workspace.moduleNameOfXtFile);
 
@@ -334,10 +395,26 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void elementKeyword(MethodData data) {
+	public void elementKeyword(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "elementKeyword", "at");
 		String elementKeywordStr = xtMethods.getElementKeywordString(ocr);
 		assertEquals(data.expectation, elementKeywordStr);
+	}
+
+	/**
+	 * Test all exported objects of a resource description
+	 *
+	 * <pre>
+	 * // Xpect exportedObjects --&gt; &ltEXPORTED OBJECTS&gt
+	 * </pre>
+	 *
+	 * EXPORTED OBJECTS is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void exportedObjects(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "exportedObjects", null);
+		List<String> exportedObjectsArray = xtMethods.getExportedObjectsString(ocr);
+		assertEqualIterables(data.expectation, exportedObjectsArray);
 	}
 
 	/**
@@ -351,18 +428,22 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void findReferences(MethodData data) {
+	public void findReferences(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "findReferences", "at");
 		List<String> findReferencesArray = xtMethods.getFindReferences(ocr);
 		String expectation = data.expectation.replaceAll("\\s+", " ").replaceAll(",\\s*", ",\n");
-		assertEquals(expectation, Strings.join(",\n", findReferencesArray));
+		assertEqualIterables(expectation, findReferencesArray);
 	}
 
 	/**
-	 * TODO
+	 * Checks the given input against the result of the auto code formatter running on this file
+	 *
+	 * <pre>
+	 * // Xpect formattedLines --&gt; &ltFORMATTED LINES&gt
+	 * </pre>
 	 */
 	@Xpect
-	public void formattedLines(@SuppressWarnings("unused") MethodData data) {
+	public void formattedLines(@SuppressWarnings("unused") XtMethodData data) {
 		// TODO
 	}
 
@@ -372,7 +453,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect
-	public void linkedName(MethodData data) {
+	public void linkedName(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedName", "at");
 		QualifiedName linkedName = xtMethods.getLinkedName(ocr);
 		assertEquals(data.expectation, linkedName.toString());
@@ -384,15 +465,15 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect
-	public void linkedFragment(MethodData data) {
+	public void linkedFragment(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedFragment", "at");
 		String fragmentName = xtMethods.getLinkedFragment(ocr);
 		assertEquals(data.expectation, fragmentName);
 	}
 
 	/**
-	 * Similar to {@link #linkedName(MethodData)} but concatenating the fully qualified name again instead of using the
-	 * qualified name provider, as the latter may not create a valid name for non-globally available elements.
+	 * Similar to {@link #linkedName(XtMethodData)} but concatenating the fully qualified name again instead of using
+	 * the qualified name provider, as the latter may not create a valid name for non-globally available elements.
 	 * <p>
 	 * The qualified name created by retrieving all "name" properties of the target and its containers, using '/' as
 	 * separator.
@@ -402,10 +483,83 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * </pre>
 	 */
 	@Xpect
-	public void linkedPathname(MethodData data) {
+	public void linkedPathname(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedPathname", "at");
 		String pathName = xtMethods.getLinkedPathname(ocr);
 		assertEquals(data.expectation, pathName);
+	}
+
+	/**
+	 * Compiles and executes the current xt file and compares the output to the expected output
+	 *
+	 * <pre>
+	 * // Xpect output --&gt; &ltOUTPUT&gt
+	 * </pre>
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void output(XtMethodData data) {
+		String moduleName = xtData.workspace.moduleNameOfXtFile;
+		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
+		int idxEnd = moduleName.lastIndexOf(".");
+		String genModuleName = moduleName.substring(idxStart, idxEnd) + ".js";
+		FileURI fileUri = getFileURIFromModuleName(genModuleName);
+
+		installN4JSRuntime();
+		assertOutput(fileUri, data.expectation);
+	}
+
+	/**
+	 * Checks the scope at a given location. Usage:
+	 *
+	 * <pre>
+	 * // Xpect scope at '&ltLOCATION&gt' --&gt; &ltSCOPES&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 *
+	 * SCOPES is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void scope(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scope", "at");
+		List<String> scopeStr = xtMethods.getScopeString(ocr);
+		assertEqualIterables(data.expectation, scopeStr);
+	}
+
+	/**
+	 * Checks the elements and their resources/positions of the scope at a given location. Usage:
+	 *
+	 * <pre>
+	 * // Xpect scopeWithPosition at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE AND POSITION&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 *
+	 * SCOPES WITH RESOURCE AND POSITION is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void scopeWithPosition(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithPosition", "at");
+		List<String> scopeStr = xtMethods.getScopeWithPositionString(ocr);
+		assertEqualIterables(data.expectation, scopeStr);
+	}
+
+	/**
+	 * Checks the elements and their resources of the scope at a given location. Usage:
+	 *
+	 * <pre>
+	 * // Xpect scopeWithResource at '&ltLOCATION&gt' --&gt; &ltSCOPES WITH RESOURCE&gt
+	 * </pre>
+	 *
+	 * The location is optional.
+	 *
+	 * SCOPES WITH RESOURCE is a comma separated list.
+	 */
+	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
+	public void scopeWithResource(XtMethodData data) {
+		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithResource", "at");
+		List<String> scopeStr = xtMethods.getScopeWithResourceString(ocr);
+		assertEqualIterables(data.expectation, scopeStr);
 	}
 
 	/**
@@ -418,7 +572,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * The location is optional.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void type(MethodData data) {
+	public void type(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "type", "of");
 		String typeStr = xtMethods.getTypeString(ocr.getEObject(), false, false);
 		assertEquals(data.expectation, typeStr);
@@ -442,7 +596,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * enough to provide the last IdentifierRef before the call expression's parentheses.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void typeArgs(MethodData data) {
+	public void typeArgs(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "typeArgs", "of");
 		String typeArgStr = xtMethods.getTypeArgumentsString(ocr.getEObject());
 		assertEquals(data.expectation, typeArgStr);
@@ -462,7 +616,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * BRANCHES is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void allBranches(MethodData data) {
+	public void allBranches(XtMethodData data) {
 		Match match = PATTERN_ALLBRANCHES.match(data, eobjProvider);
 		String direction = match.getText("direction");
 		IEObjectCoveringRegion ocrReference = match.ocrReference;
@@ -481,7 +635,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * EDGES is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void allEdges(MethodData data) {
+	public void allEdges(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allEdges", "from");
 		List<String> pathStrings = xtFlowgraphs.getAllEdges(ocr);
 		assertEqualIterables(data.expectation, pathStrings);
@@ -499,7 +653,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * MERGE BRANCHES is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void allMergeBranches(MethodData data) {
+	public void allMergeBranches(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "allMergeBranches", null);
 		List<String> edgeStrings = xtFlowgraphs.getAllMergeBranches(ocr);
 		assertEqualIterables(data.expectation, edgeStrings);
@@ -518,7 +672,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * PATHS is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void allPaths(MethodData data) {
+	public void allPaths(XtMethodData data) {
 		Match match = PATTERN_ALLPATHS.match(data, eobjProvider);
 		String direction = match.getText("direction");
 		IEObjectCoveringRegion ocrReference = match.ocrReference;
@@ -537,7 +691,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * AST ORDER is a comma separated list of ast elements.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void astOrder(MethodData data) {
+	public void astOrder(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "astOrder", "of");
 		List<String> astElements = xtFlowgraphs.getAstOrder(ocr);
 		assertEqualIterables(data.expectation, astElements);
@@ -553,7 +707,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * CONTROL FLOW CONTAINER is the name of an ast element.
 	 **/
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void cfContainer(MethodData data) {
+	public void cfContainer(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "cfContainer", "of");
 		String containerStr = xtFlowgraphs.getCfContainer(ocr);
 		assertEquals(data.expectation, containerStr);
@@ -569,7 +723,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * COMMON PREDECESSORS is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void commonPreds(MethodData data) {
+	public void commonPreds(XtMethodData data) {
 		Match match = PATTERN_COMMONPREDS.match(data, eobjProvider);
 		IEObjectCoveringRegion ocrA = match.getEObjectWithOffset("of");
 		IEObjectCoveringRegion ocrB = match.getEObjectWithOffset("and");
@@ -587,7 +741,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * GUARDS is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void instanceofguard(MethodData data) {
+	public void instanceofguard(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "instanceofguard", "of");
 		List<String> guardStrs = xtFlowgraphs.getInstanceofguard(ocr);
 		assertEqualIterables(data.expectation, guardStrs);
@@ -604,7 +758,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Arguments 'to', 'notTo', 'via', 'notVia' are optional. Either 'to' or 'notTo' must be defined.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void path(MethodData data) {
+	public void path(XtMethodData data) {
 		Match match = PATTERN_PATH.match(data, eobjProvider);
 		IEObjectCoveringRegion ocrReference = match.ocrReference;
 		IEObjectCoveringRegion ocrFrom = match.getEObjectWithOffset("from");
@@ -634,7 +788,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void preds(MethodData data) {
+	public void preds(XtMethodData data) {
 		Match match = PATTERN_PREDS.match(data, eobjProvider);
 		String type = match.getText("type");
 		IEObjectCoveringRegion ocrAt = match.getEObjectWithOffset("at");
@@ -656,7 +810,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * SUCCESSORS is a comma separated list.
 	 */
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
-	public void succs(MethodData data) {
+	public void succs(XtMethodData data) {
 		Match match = PATTERN_SUCCS.match(data, eobjProvider);
 		String type = match.getText("type");
 		IEObjectCoveringRegion ocrAt = match.getEObjectWithOffset("at");
@@ -665,13 +819,53 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	private void assertEqualIterables(String s1, Iterable<String> i2s) {
-		String[] elems1 = s1.split("\\s*,\\s*");
-		List<String> sorted1 = Lists.newArrayList(elems1);
-		Collections.sort(sorted1);
-		List<String> sorted2 = Lists.newArrayList(i2s);
-		Collections.sort(sorted2);
-		String s1sorted = Strings.join(", ", sorted1);
-		String s2sorted = Strings.join(", ", sorted2);
-		assertEquals(s1sorted, s2sorted);
+		assertEqualIterables(s1, i2s, true);
 	}
+
+	private void assertEqualIterables(String s1, Iterable<String> i2s, boolean replaceEmptySpace) {
+		String[] elems1 = s1.split("(?:\\s+|(?<=[^\\\\])),\\s*");
+		for (int i = 0; i < elems1.length; i++) {
+			elems1[i] = elems1[i].replace("\\,", ",");
+			elems1[i] = elems1[i].replace("\\n", "\n");
+			elems1[i] = elems1[i].replaceAll("\\s+", " ");
+			elems1[i] = elems1[i].trim();
+		}
+		Set<String> expectElems = Sets.newHashSet(elems1);
+		Set<String> expectMissingElems = new HashSet<>();
+		for (Iterator<String> iter = expectElems.iterator(); iter.hasNext();) {
+			String elem = iter.next();
+			if (elem.startsWith("!")) {
+				iter.remove();
+				expectMissingElems.add(elem.substring(1).trim());
+			}
+		}
+		boolean partialExpectation = elems1.length > 0
+				&& (expectElems.contains("...") || !expectMissingElems.isEmpty());
+		expectElems.remove("...");
+
+		if (replaceEmptySpace) {
+			i2s = Iterables.transform(i2s, s -> s.replaceAll("\\s+", " ").trim());
+		}
+
+		if (partialExpectation) {
+			expectElems.removeAll(Lists.newArrayList(i2s));
+			expectMissingElems.retainAll(Sets.newHashSet(i2s));
+
+			assertTrue("Not found: " + Strings.join(", ", expectElems), expectElems.isEmpty());
+
+			assertTrue("Expected missing, but found: " + Strings.join(", ", expectMissingElems),
+					expectMissingElems.isEmpty());
+
+		} else {
+			List<String> sorted1 = Lists.newArrayList(elems1);
+			Collections.sort(sorted1);
+
+			List<String> sorted2 = Lists.newArrayList(i2s);
+			Collections.sort(sorted2);
+			String s1sorted = Strings.join(", ", sorted1);
+			String s2sorted = Strings.join(", ", sorted2);
+			assertEquals(s1sorted, s2sorted);
+		}
+	}
+
 }

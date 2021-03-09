@@ -13,6 +13,7 @@ package org.eclipse.n4js.xpect.methods.scoping;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.ide.tests.helper.server.xt.EObjectDescriptionToNameWithPositionMapper;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;

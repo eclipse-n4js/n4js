@@ -18,9 +18,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @SuiteClasses({
 		ECMA5TestSuite.class,
-		ECMA6TestSuite.class,
-		ECMA5HighlightingTestSuite.class,
-		ECMA6HighlightingTestSuite.class
+		ECMA6TestSuite.class
 })
 @RunWith(Suite.class)
 public class ECMATestSuite {

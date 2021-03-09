@@ -22,7 +22,7 @@ public class TotallyUnexpectedIssuesTest extends AbstractXtParentRunnerTest {
 	public void test() throws Exception {
 		run("probands/TotallyUnexpectedIssues");
 
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + TotallyUnexpectedIssues.n4js.xt: probands/TotallyUnexpectedIssues\n"
 				// the test method 'nothing' is a dummy. Without it this file would be ignored.
 				+ " ++ nothing~0:  〔probands/TotallyUnexpectedIssues/TotallyUnexpectedIssues.n4js.xt〕(nothing~0)");

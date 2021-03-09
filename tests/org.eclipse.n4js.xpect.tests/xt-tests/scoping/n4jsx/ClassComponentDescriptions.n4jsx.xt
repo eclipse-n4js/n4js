@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				Folder "scoping" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../../../package_default.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../../react-implementations/valid/index.n4jsd" }
+			File "index.js" { from = "../../../react-implementations/valid/index.js" }
+			File "package.json" { from = "../../../react-implementations/valid/package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+
+import * as React from "react"
+
+
+export public class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
+	@Override
+	public render() : React.Element{
+		return (<div>{this.props.whatTextShouldIShow}</div>);
+	}
+}
+
+
+/* XPECT scope at 'React.<|>Component'  ---
+Component, ComponentProps, Element, Fragment, PropConstraint, PropType, PropTypes,
+PureComponent, cloneElement, createElement, isValidElement, renderToStaticMarkup,
+renderToString
+--- */
+export public class MyComponent extends React.Component<~React.ComponentProps with {aProp: string}, String> {
+
+	@Override
+	public render() : React.Element{
+		const constText = "some text";
+		/* XPECT scope at 'Lower<|>Component' ---
+		Array, AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError,
+		Function, Generator, Infinity, Iterable, Iterable2, Iterable3, Iterable4,
+		Iterable5, Iterable6, Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON,
+		LowerComponent, Math, MigrationContext, MigrationController, MyComponent, N4Accessor,
+		N4Annotation, N4ApiNotImplementedError, N4Class, N4Classifier, N4DataField, N4Element,
+		N4Enum, N4EnumType, N4Interface, N4Member, N4Method, N4NamedElement, N4Object,
+		N4Provider, N4NumberBasedEnum, N4StringBasedEnum, N4Type, NaN, Number, Object, Promise,
+		RangeError, React, ReferenceError, RegExp,
+		String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError, URIError,
+		__proto__, arguments, console, constText, constructor,
+		decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty,
+		index.Component, index.ComponentProps, index.Element, index.Fragment, index.PropConstraint,
+		index.PropType, index.PropTypes, index.PureComponent, index.cloneElement, index.createElement,
+		index.isValidElement, index.renderToStaticMarkup, index.renderToString, isFinite, isNaN,
+		isPrototypeOf, null, parseFloat, parseInt, propertyIsEnumerable,
+		scoping.ClassComponentDescriptions.LowerComponent,
+		scoping.ClassComponentDescriptions.MyComponent, toLocaleString, toString, undefined, valueOf, void
+		--- */
+		return (<LowerComponent whatTextShouldIShow="Hallo">{constText}</LowerComponent>
+		);
+	}
+}

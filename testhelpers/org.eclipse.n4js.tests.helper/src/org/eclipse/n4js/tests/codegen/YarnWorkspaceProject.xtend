@@ -11,14 +11,15 @@
 package org.eclipse.n4js.tests.codegen
 
 import java.io.File
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Collection
 import java.util.Map
 import java.util.Objects
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.Strings
-import org.eclipse.n4js.utils.io.FileDeleter
 
 /**
  * Generates the code for a yarn workspace project.
@@ -121,21 +122,25 @@ public class YarnWorkspaceProject extends Project {
 
 		var File parentDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
 		val File projectDirectory = new File(parentDirectory, name);
+		val File nodeModulesDirectory = new File(projectDirectory, N4JSGlobals.NODE_MODULES);
+		nodeModulesDirectory.mkdirs();
 		
 		for (workspacesFolderName : memberProjects.keySet()) {
 			val File workspacesDirectory = new File(new File(parentDirectory, name), workspacesFolderName);
-			if (workspacesDirectory.exists)
-				FileDeleter.delete(workspacesDirectory);
-			workspacesDirectory.mkdirs();
-	
-			createWorkspaceProjects(memberProjects.get(workspacesFolderName), workspacesDirectory);
+			rmkdirs(workspacesDirectory);
+
+			createWorkspaceProjects(memberProjects.get(workspacesFolderName), nodeModulesDirectory, workspacesDirectory);
 		}
 
 		return projectDirectory;
 	}
 
-	private def void createWorkspaceProjects(Map<String, Project> name2projects, File parentDirectory) {
-		for (project: name2projects.values())
-			project.create(parentDirectory.toPath);
+	private def void createWorkspaceProjects(Map<String, Project> name2projects, File nodeModulesDirectory, File parentDirectory) {
+		for (project: name2projects.values()) {
+			val projectDir = project.create(parentDirectory.toPath);
+			val Path symProjectDirectory = new File(nodeModulesDirectory, project.name).toPath();
+			symProjectDirectory.parent.toFile.mkdir;
+			Files.createSymbolicLink(symProjectDirectory, projectDir.toPath());			
+		}
 	}
 }

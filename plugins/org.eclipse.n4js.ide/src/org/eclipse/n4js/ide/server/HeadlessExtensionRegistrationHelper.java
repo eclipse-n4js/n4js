@@ -19,7 +19,6 @@ import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
-import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
@@ -45,9 +44,6 @@ public class HeadlessExtensionRegistrationHelper {
 
 	@Inject
 	private N4IDLSubGenerator n4idlSubGenerator;
-
-	@Inject
-	private TesterRegistry testerRegistry;
 
 	@Inject
 	private PackageJsonValidatorExtension packageJsonValidatorExtension;
@@ -88,7 +84,6 @@ public class HeadlessExtensionRegistrationHelper {
 
 	/** Unregister all extensions */
 	public void unregisterExtensions() {
-		testerRegistry.reset();
 		n4jsFileExtensionsRegistry.reset();
 		subGeneratorRegistry.reset();
 	}
