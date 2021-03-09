@@ -78,12 +78,12 @@ Contributors:
 		<!-- Spec Examples test -->
 		<module>org.eclipse.n4js.spec.examples.xpect.tests</module>
 
-
 		<!-- *************************************** Headless Tools Tests -->
 		<module>org.eclipse.n4js.cli.tests</module>
+
+		<!-- *************************************** IDE Tests -->
 		<module>org.eclipse.n4js.ide.tests.helper.tests</module>
 		<module>org.eclipse.n4js.ide.tests</module>
-		<module>org.eclipse.n4js.ui.tests</module>
 		<module>org.eclipse.n4js.ide.tests.jar</module>
 		<module>org.eclipse.n4js.ui.tests</module> <!-- note the bad name: these are actually IDE tests -->
 
