@@ -12,8 +12,9 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Set;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.Runner;
@@ -21,34 +22,36 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- * Runs all tests defined by {@value XtFileDataParser#XT_X_PECT} of a single .xt file
+ * Runs all tests defined by {@value XtFileDataParser.XtMethodIterator#XT_KEYWORD} of a single .xt file
  */
 public class XtFileRunner extends Runner {
 	/** Reference to the XtIdeTest (and language server) */
 	final public XtIdeTest ideTest;
 	/** Name of the JUnit test class runner */
 	final public String testClassName;
-	/** Root folder of the corresponding test suite */
-	final public String folderName;
 	/** xt file */
 	final public File file;
 	/** Meta data of xt file */
 	final public XtFileData xtFileData;
 
+	Set<String> suppressedIssues;
 	Description description;
 
 	/** Constructor */
-	public XtFileRunner(XtIdeTest ideTest, String testClassName, String folderName, File file) throws IOException {
+	public XtFileRunner(XtIdeTest ideTest, String testClassName, File file) throws IOException {
 		this.ideTest = ideTest;
 		this.testClassName = testClassName;
-		this.folderName = folderName;
 		this.file = file;
 		this.xtFileData = XtFileDataParser.parse(file);
 	}
 
 	/** @return a file and folder name */
 	public String getName() {
-		return file.getName() + ": " + folderName;
+		Path parentFolder = file.getParentFile().toPath();
+		Path bundleRoot = new File("").getAbsoluteFile().toPath();
+		Path folder = bundleRoot.relativize(parentFolder);
+		String fName = folder.toString();
+		return file.getName() + ": " + fName;
 	}
 
 	/** @return {@link XtFileData#setupRunnerName} */
@@ -72,20 +75,33 @@ public class XtFileRunner extends Runner {
 			notifier.fireTestRunStarted(getDescription());
 
 			ideTest.initializeXtFile(xtFileData);
-			for (MethodData testMethodData : xtFileData.getTestMethodData()) {
+			for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
 				Description testDescription = testMethodData.getDescription(xtFileData);
-				try {
-					notifier.fireTestStarted(testDescription);
-					ideTest.invokeTestMethod(testMethodData);
-					notifier.fireTestFinished(testDescription);
-				} catch (Throwable t) {
-					notifier.fireTestFailure(new Failure(testDescription, t));
+				if (testMethodData.isIgnore) {
+					notifier.fireTestIgnored(testDescription);
+				} else {
+					try {
+						notifier.fireTestStarted(testDescription);
+						ideTest.invokeTestMethod(testMethodData);
+
+						if (testMethodData.isFixme) {
+							notifier.fireTestFailure(
+									new Failure(testDescription, new IllegalStateException("Test fixed!")));
+						} else {
+							notifier.fireTestFinished(testDescription);
+						}
+					} catch (Throwable t) {
+
+						if (testMethodData.isFixme) {
+							notifier.fireTestFinished(testDescription);
+						} else {
+							notifier.fireTestFailure(new Failure(testDescription, t));
+						}
+					}
 				}
 			}
-		} catch (AssertionError testFailure) {
+		} catch (Throwable testFailure) {
 			notifier.fireTestFailure(new Failure(getDescription(), testFailure));
-		} catch (Throwable t) {
-			notifier.fireTestAssumptionFailed(new Failure(getDescription(), t));
 		} finally {
 			try {
 				ideTest.teardown();
@@ -114,7 +130,7 @@ public class XtFileRunner extends Runner {
 		}
 
 		description = Description.createSuiteDescription(getName(), file);
-		for (MethodData testMethodData : xtFileData.getTestMethodData()) {
+		for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
 			description.addChild(testMethodData.getDescription(xtFileData));
 		}
 		return description;

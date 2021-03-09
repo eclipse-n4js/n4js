@@ -14,12 +14,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- *
+ * Annotate a static method in a subclass of {@link XtParentRunner} with this annotation. The return value must be a
+ * string of the xt tests directory.
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XtFolder {
-
-	/***/
-	String value();
-
+	// NOOP
 }

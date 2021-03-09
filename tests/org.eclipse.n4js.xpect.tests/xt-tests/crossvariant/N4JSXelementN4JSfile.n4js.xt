@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				Folder "crossvariant" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../../package_default.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../react-implementations/valid/index.n4jsd" }
+			File "index.js" { from = "../../react-implementations/valid/index.js" }
+			File "package.json" { from = "../../react-implementations/valid/package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+
+
+/*
+When using JSX elemnents in the N4JS files we get validation error prohibiting that.
+It is possible that other errors will be showed as an side effect, e.g. 
+div not being in scope.*/
+/*  XPECT errors ---
+"JSX element is expected to be placed in JSX like resource, was N4JS." at "<div/>"
+"Couldn't resolve reference to IdentifiableElement 'div'." at "div"
+--- */
+export public let simpleSelfClosing = <div/>;

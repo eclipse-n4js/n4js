@@ -10,7 +10,7 @@
  */
 
 
-/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.FlowgraphsXtTest END_SETUP */
 
 
 /**
@@ -24,7 +24,7 @@
 // Script XPECT succs at '"Script1"' --> "Script2"
 // Script XPECT succs at '"Script2"' --> "Script3"
 // Script XPECT succs at '"Script3"' --> "Script4"
-// Script XPECT path from '"Script2"' notTo "FB1"
+// Script XPECT path from '"Script2"' notTo '"FB1"'
 "Script1";
 "Script2";
 
@@ -74,7 +74,7 @@ function ArrayBindingPattern1([abp1,abp2]) {
 // FunctionExpression XPECT cfContainer of '"FEX1"' --> FunctionExpression::Block
 // FunctionExpression XPECT cfContainer of '"FEX_T1"' --> FunctionDeclaration::Block
 // FunctionExpression XPECT succs at '"FEX1"' --> "FEX2"
-// FunctionExpression XPECT path from '"FEX_T1"' notTo "FEX1"
+// FunctionExpression XPECT path from '"FEX_T1"' notTo '"FEX1"'
 function FunctionExpression() {
 	"FEX_T1"
 	return (function() {
@@ -109,7 +109,7 @@ class AnnotationConfigurable1 {
 // AnnotationExpressionList XPECT cfContainer of '@This("param")' --> Script
 // AnnotationExpressionList XPECT cfContainer of '"param"' --> LiteralAnnotationArgument::StringLiteral
 // AnnotationExpressionList XPECT warnings --> "Variable names should start with lower case letter." at "AnnotationExpressionList"
-// AnnotationExpressionList XPECT errors --> "The annotation @This expects a TypeRef here." at ""param""
+// AnnotationExpressionList XPECT errors --> "The annotation @This expects a TypeRef here." at "\"param\""
 var AnnotationExpressionList = @This("param") function() {}
 
 
@@ -117,7 +117,7 @@ class ComputedPropertyName1 {
 	// ComputedPropertyName1 XPECT cfContainer of '"CPN1"' --> LiteralOrComputedPropertyName::AdditiveExpression
 	// ComputedPropertyName1 XPECT succs at '"CPN1"' --> "CPN2"
 	// ComputedPropertyName1 XPECT succs at '"CPN2"' --> "CPN1" + "CPN2"
-	// ComputedPropertyName1 XPECT warnings --> "Field names should start with lower case letter." at "["CPN1" + "CPN2"]"
+	// ComputedPropertyName1 XPECT warnings --> "Field names should start with lower case letter." at "[\"CPN1\" + \"CPN2\"]"
 	public ["CPN1" + "CPN2"];
 }
 

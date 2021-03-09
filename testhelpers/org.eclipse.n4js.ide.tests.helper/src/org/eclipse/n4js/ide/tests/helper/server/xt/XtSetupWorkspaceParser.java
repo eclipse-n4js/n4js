@@ -17,16 +17,19 @@ import java.nio.file.Path;
 import java.util.Iterator;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
+import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
-import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.FolderBuilder;
-import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.FolderBuilder.ModuleBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder;
+import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder;
+import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder.OtherFileBuilder;
+import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.YarnProjectBuilder;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
- *
+ * Parses the workspace configuration in the setup section of an .xt file
  */
 public class XtSetupWorkspaceParser {
 	static final String ERROR = "Workspace parse error: ";
@@ -36,7 +39,8 @@ public class XtSetupWorkspaceParser {
 		int cursor;
 
 		TokenStream(String setupWorkspace) {
-			this.tokens = setupWorkspace.trim().split("=|\\s+");
+			String commentsRemoved = setupWorkspace.replaceAll("\\/\\/[^\\n]*", "");
+			this.tokens = commentsRemoved.trim().split("(?<=\\S)(?=\\{|\\})|(?<=\\{|\\})(?=\\S)|[=\\s]+");
 			this.cursor = 0;
 		}
 
@@ -91,21 +95,34 @@ public class XtSetupWorkspaceParser {
 	}
 
 	/**
+	 * This class extends {@link Workspace} by some properties that are important for the xt use case.
+	 */
+	static public class XtWorkspace extends Workspace {
+
+		String moduleNameOfXtFile;
+
+	}
+
+	/**
 	 * @param xtFile
 	 *            without {@code xt} extension
 	 */
 	static public XtWorkspace parse(File xtFile, String setupWorkspace, String xtFileContent) {
 		TokenStream tokens = new TokenStream(setupWorkspace);
 		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
+		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
 
-		while (tokens.hasNext()) {
+		LOOP: while (tokens.hasNext()) {
 			switch (tokens.next()) {
 			case "Project":
 			case "JavaProject":
-				parseProject(tokens, xtFile, xtFileContent, builder);
+				parseProject(tokens, xtFile, xtFileContent, yarnProjectBuilder);
 				break;
+			case "}":
+				break LOOP;
 			default:
-				Preconditions.checkState(false, ERROR + "Unexpected token in Workspace: " + tokens.current());
+				Preconditions.checkState(false,
+						ERROR + "Unexpected token in Workspace: " + tokens.lookLast() + " in file " + xtFile.getPath());
 			}
 		}
 
@@ -114,13 +131,11 @@ public class XtSetupWorkspaceParser {
 		return xtWorkspace;
 	}
 
-	/**
-	 */
 	private static void parseProject(TokenStream tokens, File xtFile, String xtFileContent,
-			WorkspaceBuilder wsBuilder) {
+			YarnProjectBuilder yarnProjectBuilder) {
 
 		String projectName = tokens.expectNameInQuotes();
-		ProjectBuilder prjBuilder = wsBuilder.addProject(projectName);
+		ProjectBuilder prjBuilder = yarnProjectBuilder.addProject(projectName);
 		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, ".", "Project");
 	}
 
@@ -130,9 +145,15 @@ public class XtSetupWorkspaceParser {
 		if (Objects.equal(tokens.current(), "{")) { // optional block
 			tokens.expect("{");
 			LOOP: while (tokens.hasNext()) {
-				switch (tokens.next()) {
+				String currToken = tokens.next();
+				switch (currToken) {
+				case "SrcFolder": {
+					parseFolder(tokens, xtFile, xtFileContent, prjBuilder, path, "src");
+					break;
+				}
 				case "Folder": {
-					parseFolder(tokens, xtFile, xtFileContent, prjBuilder, path);
+					String name = tokens.expectNameInQuotes();
+					parseFolder(tokens, xtFile, xtFileContent, prjBuilder, path, name);
 					break;
 				}
 				case "File": {
@@ -149,69 +170,91 @@ public class XtSetupWorkspaceParser {
 					break LOOP;
 				default:
 					Preconditions.checkState(false,
-							ERROR + "Unexpected token in " + metaName + ": " + tokens.current());
+							ERROR + "Unexpected token in " + metaName + ": " + tokens.lookLast()
+									+ " in file " + xtFile.getPath());
 				}
 			}
 		}
 	}
 
 	private static void parseFolder(TokenStream tokens, File xtFile, String xtFileContent,
-			ProjectBuilder prjBuilder, String path) {
+			ProjectBuilder prjBuilder, String path, String name) {
 
-		String newPath = path + File.separator + tokens.expectNameInQuotes();
+		String newPath = path + File.separator + name;
+		prjBuilder.getOrAddFolder(newPath);
 		parseContainerRest(tokens, xtFile, xtFileContent, prjBuilder, newPath, "Folder");
 	}
 
 	private static void parseFile(TokenStream tokens, File xtFile, String xtFileContent, boolean isThis,
 			FolderBuilder folderBuilder) {
 
+		File strippedXtFile = XtFileData.stripXtExtension(xtFile);
+		Path xtFileFolder = xtFile.toPath().getParent();
 		String nameInQuotes = tokens.hasNameInQuotes() ? tokens.expectNameInQuotes() : null; // optional
-		String content = isThis ? xtFileContent : null;
-		Path fromFile = null;
+		Path fromFile = nameInQuotes == null ? null : xtFileFolder.resolve(nameInQuotes);
 
 		if (Objects.equal(tokens.current(), "{")) { // optional block
 			tokens.expect("{");
 			LOOP: while (tokens.hasNext()) {
 				switch (tokens.next()) {
 				case "from":
-					Preconditions.checkState(!isThis, ERROR + "'This' file's content cannot be loaded using 'from'");
+					Preconditions.checkState(!isThis,
+							ERROR + "'This' file's content cannot be loaded using 'from'" + " in file "
+									+ xtFile.getPath());
 
 					String copyContentFrom = tokens.expectNameInQuotes();
-					Path xtFileFolder = xtFile.toPath().getParent();
-					fromFile = xtFileFolder.resolve(copyContentFrom);
-					try {
-						content = Files.readString(fromFile);
-					} catch (IOException e) {
-						Preconditions.checkState(false, ERROR + "Could not read: " + fromFile.toString());
-					}
+					fromFile = xtFileFolder.resolve(copyContentFrom).normalize();
 					break;
 				case "}":
 					break LOOP;
 				default:
-					Preconditions.checkState(false, ERROR + "Unexpected token in File: " + tokens.current());
+					Preconditions.checkState(false,
+							ERROR + "Unexpected token: " + tokens.current() + " in file " + xtFile.getPath());
 				}
 			}
 		}
 
+		boolean implicitIsThis = fromFile != null && fromFile.equals(xtFile.toPath());
+		isThis |= implicitIsThis;
 		String name = nameInQuotes != null ? nameInQuotes : //
-				(isThis ? xtFile.getName() : //
+				(isThis ? strippedXtFile.getName() : //
 						(fromFile != null ? fromFile.toFile().getName() : null));
 
-		Preconditions.checkState(content != null && name != null, ERROR + "Missing 'from' property of file " + name);
+		Preconditions.checkState(name != null,
+				ERROR + "Missing new file name in file " + xtFile.getPath());
+
+		String content = null;
+		if (isThis) {
+			content = xtFileContent;
+		} else {
+			Preconditions.checkState(fromFile != null,
+					ERROR + "Missing file name to load content from " + name + " in file " + xtFile.getPath());
+
+			try {
+				content = Files.readString(fromFile);
+			} catch (IOException e) {
+				Preconditions.checkState(false,
+						ERROR + "Could not read: " + fromFile.toString() + " in file " + xtFile.getPath());
+			}
+		}
+
+		Preconditions.checkState(content != null,
+				ERROR + "Missing content of file " + name + " in file " + xtFile.getPath());
 
 		int idx = name.lastIndexOf(".");
 		String nameWithoutExtension = name.substring(0, idx);
 		String extension = name.substring(idx + 1);
 		boolean isModule = N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
+		OtherFileBuilder fileBuilder = null;
 		if (isModule) {
-			ModuleBuilder moduleBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
+			fileBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
 			folderBuilder.setSourceFolder();
-			if (isThis) {
-				BuilderInfo bi = moduleBuilder.getBuilderInfo();
-				bi.moduleNameOfXtFile = moduleBuilder.getFolderBuilder().getName() + "/" + moduleBuilder.getName();
-			}
 		} else {
-			folderBuilder.addFile(name, content);
+			fileBuilder = folderBuilder.addFile(name, content);
+		}
+		if (isThis) {
+			BuilderInfo bi = folderBuilder.getBuilderInfo();
+			bi.moduleNameOfXtFile = fileBuilder.getPath();
 		}
 	}
 

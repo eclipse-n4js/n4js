@@ -27,7 +27,7 @@ b0.methodB();
 class C {
     <S,T> m(p1: S, p2: T) {}
 }
-var c: C;
+var c: C = new C();
 
 // test-2 XPECT typeArgs of 'm' --> number, string
 c.m(42,"hello");

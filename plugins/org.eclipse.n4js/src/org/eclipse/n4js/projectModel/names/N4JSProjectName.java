@@ -14,6 +14,9 @@ import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_PREFIX;
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR;
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE;
 
+import java.io.File;
+import java.nio.file.Path;
+
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -37,6 +40,20 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 		if (name.indexOf(NPM_SCOPE_SEPARATOR) >= 0) {
 			Preconditions.checkArgument(name.startsWith(NPM_SCOPE_PREFIX), name);
 		}
+	}
+
+	/**
+	 * Constructor
+	 */
+	public N4JSProjectName(Path path) {
+		this(ProjectDescriptionUtils.deriveN4JSProjectNameFromPath(path));
+	}
+
+	/**
+	 * Constructor
+	 */
+	public N4JSProjectName(File file) {
+		this(ProjectDescriptionUtils.deriveN4JSProjectNameFromFile(file));
 	}
 
 	/**
@@ -66,6 +83,18 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	 */
 	public String getRawName() {
 		return name;
+	}
+
+	/** Returns this project name as a relative path */
+	public Path getProjectNameAsRelativePath() {
+		return getScopeName() != null
+				? Path.of(getScopeName(), getPlainName())
+				: Path.of(getRawName());
+	}
+
+	/** Returns the resolved project directory {@link File} against a given base directory */
+	public File getLocation(Path baseDir) {
+		return baseDir.resolve(getProjectNameAsRelativePath()).toFile();
 	}
 
 	/**

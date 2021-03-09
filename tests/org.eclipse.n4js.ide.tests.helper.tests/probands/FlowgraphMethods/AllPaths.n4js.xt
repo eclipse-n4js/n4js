@@ -19,7 +19,7 @@
 // XPECT allPaths from '"a"' --> "a" -> "b" -> "c" -> "d", "a" -> "b" -> "d"
 // XPECT allPaths from '"c"' --> "c" -> "d"
 // XPECT allPaths from '"a"' direction 'Forward' --> "a" -> "b" -> "c" -> "d", "a" -> "b" -> "d"
-// XPECT allPaths from '"c"' directoin 'Forward' -> "b" -> "c" -> "d", "a" -> "b" -> "d"
+// XPECT allPaths from '"c"' direction 'Forward' --> "c" -> "d"
 // XPECT allPaths from '"c"' direction 'Backward' --> "c" -> "b" -> "a"
 // XPECT allPaths from '"d"' direction 'Backward'--> "d" -> "b" -> "a", "d" -> "c" -> "b" -> "a"
 "a"

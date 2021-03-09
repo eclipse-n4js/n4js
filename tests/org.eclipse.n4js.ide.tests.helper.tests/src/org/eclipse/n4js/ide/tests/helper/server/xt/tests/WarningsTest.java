@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileData.MethodData;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodData;
 import org.junit.Test;
 
 /**
  * Test for test methods:
  * <ul>
- * <li/>{@link XtIdeTest#nowarnings(MethodData)}
- * <li/>{@link XtIdeTest#warnings(MethodData)}
+ * <li/>{@link XtIdeTest#nowarnings(XtMethodData)}
+ * <li/>{@link XtIdeTest#warnings(XtMethodData)}
  * </ul>
  */
 public class WarningsTest extends AbstractXtParentRunnerTest {
@@ -29,7 +29,7 @@ public class WarningsTest extends AbstractXtParentRunnerTest {
 		run("probands/Warnings");
 
 		assertFiles("Warnings.n4js.xt");
-		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest\n"
+		assertTestStructure("org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup\n"
 				+ " + Warnings.n4js.xt: probands/Warnings\n"
 				+ " ++ noerrors~0: test-00 〔probands/Warnings/Warnings.n4js.xt〕(test-00)\n"
 				+ " ++ nowarnings~0: test-0 〔probands/Warnings/Warnings.n4js.xt〕(test-0)\n"
@@ -55,7 +55,7 @@ public class WarningsTest extends AbstractXtParentRunnerTest {
 		assertResult("(test-6)",
 				"Failed: nowarnings~1: test-6 〔probands/Warnings/Warnings.n4js.xt〕. Expected no warnings, but found: ['Unnecessary cast from null to B' at 'null as B']");
 		assertResult("(test-7)",
-				"Failed: warnings~5: test-7 〔probands/Warnings/Warnings.n4js.xt〕. Unexpected warning found at: 'Unnecessary cast from null to B' at 'null as B'");
+				"Failed: warnings~5: test-7 〔probands/Warnings/Warnings.n4js.xt〕. No warning found at: ");
 		assertResult("(test-8)",
 				"Failed: warnings~6: test-8 〔probands/Warnings/Warnings.n4js.xt〕. No warning found at: B");
 	}

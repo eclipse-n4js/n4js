@@ -31,8 +31,7 @@ class ModuleAndFolderNamesWithDotsIdeTest extends ConvertedIdeTest {
 
 	@Test
 	def void testModuleAndFolderNamesWithDots() {
-		importProband(new File(PROBANDS, SUBFOLDER), Lists.newArrayList(
-			N4JSGlobals.N4JS_RUNTIME));
+		importProband(new File(PROBANDS, SUBFOLDER), Lists.newArrayList(N4JSGlobals.N4JS_RUNTIME));
 		assertNoIssues();
 
 		val mainModule = new FileURI(getProjectRootForImportedProject(PROJECT_NAME.rawName).toPath

@@ -38,6 +38,35 @@ public class WorkspaceBuilder {
 		}
 	}
 
+	/** Builder for {@link YarnWorkspaceProject} */
+	public class YarnProjectBuilder extends ProjectBuilder {
+		Map<String, ProjectBuilder> yarnProjectBuilders = new LinkedHashMap<>();
+
+		YarnProjectBuilder(String name) {
+			super(name);
+		}
+
+		/** Adds a project to the yarn workspace */
+		public ProjectBuilder addProject(String projectName) {
+			ProjectBuilder prjBuilder = new ProjectBuilder(projectName);
+			yarnProjectBuilders.put(projectName, prjBuilder);
+			return prjBuilder;
+		}
+
+		/** Builds the {@link YarnWorkspaceProject} */
+		@Override
+		public Project build() {
+			YarnWorkspaceProject project = new YarnWorkspaceProject(name, vendor, vendorName);
+			for (FolderBuilder folderBuilder : folders.values()) {
+				project.addSourceFolder(folderBuilder.build());
+			}
+			for (ProjectBuilder prjBuilder : yarnProjectBuilders.values()) {
+				project.addMemberProject(prjBuilder.build());
+			}
+			return project;
+		}
+	}
+
 	/** Builder for {@link Project} */
 	public class ProjectBuilder extends NamedEntityBuilder {
 		String vendor = "VENDOR";
@@ -71,99 +100,117 @@ public class WorkspaceBuilder {
 			}
 			return project;
 		}
-	}
 
-	/** Builder for {@link Folder} */
-	public class FolderBuilder extends NamedEntityBuilder {
-		Map<String, ModuleBuilder> modules = new LinkedHashMap<>();
-		Map<String, OtherFileBuilder> files = new LinkedHashMap<>();
-		boolean isSourceFolder;
+		/** Builder for {@link Folder} */
+		public class FolderBuilder extends NamedEntityBuilder {
+			Map<String, ModuleBuilder> modules = new LinkedHashMap<>();
+			Map<String, OtherFileBuilder> files = new LinkedHashMap<>();
+			boolean isSourceFolder = false;
 
-		FolderBuilder(String name) {
-			super(name);
-		}
-
-		/** Sets this folder to be a source folder */
-		public FolderBuilder setSourceFolder() {
-			isSourceFolder = true;
-			return this;
-		}
-
-		/** Adds a {@link OtherFile} */
-		public OtherFileBuilder addFile(String nameWithExtension, String content) {
-			int idx = nameWithExtension.lastIndexOf(".");
-			String fName = nameWithExtension.substring(0, idx);
-			String extension = nameWithExtension.substring(idx + 1);
-			return addFile(fName, extension, content);
-		}
-
-		/** Adds a {@link OtherFile} */
-		public OtherFileBuilder addFile(String fName, String fExtension, String content) {
-			OtherFileBuilder fileBuilder = new OtherFileBuilder(fName);
-			fileBuilder.fExtension = fExtension;
-			fileBuilder.content = content;
-			files.put(fName, fileBuilder);
-			return fileBuilder;
-		}
-
-		/** Adds a {@link Module} */
-		public ModuleBuilder addModule(String fName, String fExtension, String content) {
-			ModuleBuilder moduleBuilder = new ModuleBuilder(fName);
-			moduleBuilder.fExtension = fExtension;
-			moduleBuilder.content = content;
-			modules.put(fName, moduleBuilder);
-			return moduleBuilder;
-		}
-
-		/** Builds the {@link Folder} */
-		public Folder build() {
-			Folder folder = new Folder(name);
-			for (ModuleBuilder moduleBuilder : modules.values()) {
-				folder.modules.add(moduleBuilder.build());
-			}
-			for (OtherFileBuilder fileBuilder : files.values()) {
-				folder.files.add(fileBuilder.build());
-			}
-			return folder;
-		}
-
-		/** Builder for {@link OtherFile} */
-		public class OtherFileBuilder extends NamedEntityBuilder {
-			/** File extension */
-			public String fExtension;
-			/** File content */
-			public String content;
-
-			OtherFileBuilder(String name) {
+			FolderBuilder(String name) {
 				super(name);
 			}
 
-			/** Builds the {@link OtherFile} */
-			public OtherFile build() {
-				OtherFile file = new OtherFile(name, fExtension);
-				file.content = content;
-				return file;
+			/** Sets this folder to be a source folder */
+			public FolderBuilder setSourceFolder() {
+				isSourceFolder = true;
+				return this;
 			}
 
-			/** @return the parent {@link FolderBuilder} */
-			public FolderBuilder getFolderBuilder() {
-				return FolderBuilder.this;
-			}
-		}
-
-		/** Builder for {@link Module} */
-		public class ModuleBuilder extends OtherFileBuilder {
-
-			ModuleBuilder(String name) {
-				super(name);
+			/** Adds a {@link OtherFile} */
+			public OtherFileBuilder addFile(String nameWithExtension, String content) {
+				int idx = nameWithExtension.lastIndexOf(".");
+				String fName = nameWithExtension.substring(0, idx);
+				String extension = nameWithExtension.substring(idx + 1);
+				return addFile(fName, extension, content);
 			}
 
-			/** Builds the {@link Module} */
-			@Override
-			public Module build() {
-				Module module = new Module(name, fExtension);
-				module.content = content;
-				return module;
+			/** Adds a {@link OtherFile} */
+			public OtherFileBuilder addFile(String fName, String fExtension, String content) {
+				OtherFileBuilder fileBuilder = new OtherFileBuilder(fName);
+				fileBuilder.fExtension = fExtension;
+				fileBuilder.content = content;
+				files.put(fName + "." + fExtension, fileBuilder);
+				return fileBuilder;
+			}
+
+			/** Adds a {@link Module} */
+			public ModuleBuilder addModule(String fName, String fExtension, String content) {
+				ModuleBuilder moduleBuilder = new ModuleBuilder(fName);
+				moduleBuilder.fExtension = fExtension;
+				moduleBuilder.content = content;
+				modules.put(fName + "." + fExtension, moduleBuilder);
+				return moduleBuilder;
+			}
+
+			/** Builds the {@link Folder} */
+			public Folder build() {
+				Folder folder = new Folder(name, isSourceFolder);
+				for (ModuleBuilder moduleBuilder : modules.values()) {
+					folder.modules.add(moduleBuilder.build());
+				}
+				for (OtherFileBuilder fileBuilder : files.values()) {
+					folder.files.add(fileBuilder.build());
+				}
+				return folder;
+			}
+
+			/** @return the parent {@link ProjectBuilder} */
+			public ProjectBuilder getProjectBuilder() {
+				return ProjectBuilder.this;
+			}
+
+			/** Builder for {@link OtherFile} */
+			public class OtherFileBuilder extends NamedEntityBuilder {
+				/** File extension */
+				public String fExtension;
+				/** File content */
+				public String content;
+
+				OtherFileBuilder(String name) {
+					super(name);
+				}
+
+				/** Builds the {@link OtherFile} */
+				public OtherFile build() {
+					OtherFile file = new OtherFile(name, fExtension);
+					file.content = content;
+					return file;
+				}
+
+				/** @return the parent {@link FolderBuilder} */
+				public FolderBuilder getFolderBuilder() {
+					return FolderBuilder.this;
+				}
+
+				/** @return filename with extension */
+				public String getNameWithExtension() {
+					return name + "." + fExtension;
+				}
+
+				/** @return path including file name */
+				public String getPath() {
+					String prjName = getFolderBuilder().getProjectBuilder().getName();
+					String folderName = getFolderBuilder().getName();
+					String path = prjName + "/" + folderName + "/" + getNameWithExtension();
+					return path.replace("./", "");
+				}
+			}
+
+			/** Builder for {@link Module} */
+			public class ModuleBuilder extends OtherFileBuilder {
+
+				ModuleBuilder(String name) {
+					super(name);
+				}
+
+				/** Builds the {@link Module} */
+				@Override
+				public Module build() {
+					Module module = new Module(name, fExtension);
+					module.content = content;
+					return module;
+				}
 			}
 		}
 	}
@@ -187,6 +234,13 @@ public class WorkspaceBuilder {
 		ProjectBuilder prjBuilder = new ProjectBuilder(projectName);
 		projectBuilders.put(projectName, prjBuilder);
 		return prjBuilder;
+	}
+
+	/** Adds a yarn project to the workspace */
+	public YarnProjectBuilder addYarnProject(String projectName) {
+		YarnProjectBuilder yarnPrjBuilder = new YarnProjectBuilder(projectName);
+		projectBuilders.put(projectName, yarnPrjBuilder);
+		return yarnPrjBuilder;
 	}
 
 	/** Builds this workspace */
