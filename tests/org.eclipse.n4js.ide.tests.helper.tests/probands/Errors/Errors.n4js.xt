@@ -66,3 +66,7 @@ b0 = 42;
 
 // test-8 XPECT errors --> "" at "B"
 b0 = 42;
+
+
+// test-9 XPECT errors --> "string is not a subtype of number." at "\"B\""
+b0 = "B";

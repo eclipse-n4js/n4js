@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.editor.contentassist;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.EnumLiteralDeclaration;
@@ -22,8 +23,6 @@ import org.eclipse.xtext.nodemodel.ILeafNode;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ide.contentassist.antlr.internal.InternalN4JSParser;
 
 /**
  * Converts the grammar elements from a leaf node to the CA parsers expected token type.

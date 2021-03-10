@@ -9,6 +9,7 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.json,
  org.eclipse.n4js.jsdoc2spec,
+ org.eclipse.n4js.xtext,
  org.eclipse.xtext,
  org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.lib,
@@ -40,10 +41,6 @@ Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.server.codeActions.util,
  org.eclipse.n4js.ide.server.commands,
  org.eclipse.n4js.ide.server.hover,
- org.eclipse.n4js.ide.server.util,
- org.eclipse.n4js.ide.xtext.server,
- org.eclipse.n4js.ide.xtext.server.build,
- org.eclipse.n4js.ide.xtext.server.issues,
- org.eclipse.n4js.ide.xtext.server.util
+ org.eclipse.n4js.ide.server.util
 Automatic-Module-Name: org.eclipse.n4js.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11

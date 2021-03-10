@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ide.server.commands;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,9 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
@@ -40,9 +35,6 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.n4js.external.LibraryChange;
-import org.eclipse.n4js.external.LibraryChange.LibraryChangeType;
-import org.eclipse.n4js.external.NpmCLI;
 import org.eclipse.n4js.ide.imports.ImportDescriptor;
 import org.eclipse.n4js.ide.imports.ImportHelper;
 import org.eclipse.n4js.ide.imports.ImportOrganizer;
@@ -50,20 +42,17 @@ import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.ide.server.codeActions.ICodeActionAcceptor;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.codeActions.N4JSSourceActionProvider;
-import org.eclipse.n4js.ide.xtext.server.ExecuteCommandParamsDescriber;
-import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.ide.xtext.server.util.ParamHelper;
 import org.eclipse.n4js.json.ide.codeActions.JSONCodeActionService;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
-import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorUtils;
+import org.eclipse.n4js.xtext.server.ExecuteCommandParamsDescriber;
+import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.server.util.ParamHelper;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
@@ -133,9 +122,6 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 
 	@Inject
 	private N4JSCodeActionService codeActionService;
-
-	@Inject
-	private NpmCLI npmCli;
 
 	@Inject
 	private SemverHelper semverHelper;
@@ -342,6 +328,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 	 * @param cancelIndicator
 	 *            not required.
 	 */
+	@SuppressWarnings("unused")
 	@ExecutableCommandHandler(JSONCodeActionService.INSTALL_NPM)
 	public Void installNpm(
 			String packageName,
@@ -357,40 +344,44 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 				if (versionRequirement == null) {
 					versionRequirement = SemverUtils.createEmptyVersionRequirement();
 				}
-				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
-
-				N4JSProjectName projectName = new N4JSProjectName(packageName);
-				LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName,
-						normalizedVersion);
-				MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
-				FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
-				npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
-
-				MessageParams messageParams = new MessageParams();
-				switch (multiStatus.getSeverity()) {
-				case IStatus.INFO:
-					messageParams.setType(MessageType.Info);
-					break;
-				case IStatus.WARNING:
-					messageParams.setType(MessageType.Warning);
-					break;
-				case IStatus.ERROR:
-					messageParams.setType(MessageType.Error);
-					break;
-				default:
-					return null;
-				}
-
-				StringWriter sw = new StringWriter();
-				PrintWriter printWriter = new PrintWriter(sw);
-				for (IStatus child : multiStatus.getChildren()) {
-					if (child.getSeverity() == multiStatus.getSeverity()) {
-						printWriter.println(child.getMessage());
-					}
-				}
-				printWriter.flush();
-				messageParams.setMessage(sw.toString());
-				access.getLanguageClient().showMessage(messageParams);
+// @formatter:off
+// FIXME GH-2073
+access.getLanguageClient().showMessage(new MessageParams(MessageType.Warning, "Installation of npm packages is disabled."));
+//				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
+//
+//				N4JSProjectName projectName = new N4JSProjectName(packageName);
+//				LibraryChange change = new LibraryChange(LibraryChangeType.Install, null, projectName,
+//						normalizedVersion);
+//				MultiStatus multiStatus = new MultiStatus("json", 1, null, null);
+//				FileURI targetProject = new FileURI(URI.createURI(fileUri)).getParent();
+//				npmCli.batchInstall(new NullProgressMonitor(), multiStatus, Arrays.asList(change), targetProject);
+//
+//				MessageParams messageParams = new MessageParams();
+//				switch (multiStatus.getSeverity()) {
+//				case IStatus.INFO:
+//					messageParams.setType(MessageType.Info);
+//					break;
+//				case IStatus.WARNING:
+//					messageParams.setType(MessageType.Warning);
+//					break;
+//				case IStatus.ERROR:
+//					messageParams.setType(MessageType.Error);
+//					break;
+//				default:
+//					return null;
+//				}
+//
+//				StringWriter sw = new StringWriter();
+//				PrintWriter printWriter = new PrintWriter(sw);
+//				for (IStatus child : multiStatus.getChildren()) {
+//					if (child.getSeverity() == multiStatus.getSeverity()) {
+//						printWriter.println(child.getMessage());
+//					}
+//				}
+//				printWriter.flush();
+//				messageParams.setMessage(sw.toString());
+//				access.getLanguageClient().showMessage(messageParams);
+// @formatter:on
 				return new CoarseGrainedChangeEvent();
 			};
 		}).whenComplete((a, b) -> builderFrontend.reinitWorkspace());

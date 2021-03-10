@@ -20,8 +20,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
-import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
@@ -33,6 +31,8 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 
 import com.google.inject.Inject;

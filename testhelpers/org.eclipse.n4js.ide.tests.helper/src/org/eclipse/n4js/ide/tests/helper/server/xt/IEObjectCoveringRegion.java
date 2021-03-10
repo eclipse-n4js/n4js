@@ -11,7 +11,9 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
+import org.eclipse.xtext.resource.XtextResource;
 
 /**
  * Provides an AST element of type {@link EObject}. The AST related node covers the complete region defined by the
@@ -26,8 +28,12 @@ import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.IEObjectOwner;
  */
 public interface IEObjectCoveringRegion extends IEObjectOwner {
 	// no new fields
-	/**
-	 * Return the offset of the region
-	 */
-	public int getOffset();
+	/** @return the offset of the region */
+	int getOffset();
+
+	/** @return {@link EStructuralFeature} of the {@link EObject}. Can be null. */
+	EStructuralFeature getEStructuralFeature();
+
+	/** @return {@link XtextResource} of the {@link EObject}. */
+	XtextResource getXtextResource();
 }

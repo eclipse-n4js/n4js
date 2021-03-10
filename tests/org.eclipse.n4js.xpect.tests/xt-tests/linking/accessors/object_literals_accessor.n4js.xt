@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				Folder "linking" {
+					Folder "accessors" {
+						ThisFile {}
+					}
+				}
+			}
+			File "package.json" { from="../../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+var p2 = {
+	internalSimpleInt : 42,
+	internalO: {
+		nested: "Hello"
+	},
+
+	get simpleInt() {
+		return null;
+	},
+	set simpleInt(newSimpleInt : number) {
+// XPECT linkedFragment at 'this.<|>internalSimpleInt' --> /1/@internalTypes.2/@ownedMembers.0
+// XPECT linkedFragment at 'newSimpleInt' --> /0/@scriptElements.0/@varDeclsOrBindings.0/@expression/@propertyAssignments.3/@fpar
+		this.internalSimpleInt = newSimpleInt;
+	},
+	get o(): ~Object with {  nested: string;  } {
+		return null;
+	},
+	set o(newO : ~Object with {nested: string;}) {
+		this.internalO = newO
+	}
+};
+// XPECT linkedFragment at 'p2.<|>internalSimpleInt' --> /1/@internalTypes.2/@ownedMembers.0
+p2.internalSimpleInt;
+// XPECT linkedFragment at 'p2.<|>internalO' --> /1/@internalTypes.2/@ownedMembers.1
+p2.internalO;
+// XPECT linkedFragment at 'p2.<|>simpleInt' --> /1/@internalTypes.2/@ownedMembers.2
+p2.simpleInt;
+// XPECT linkedFragment at 'p2.<|>simpleInt' --> /1/@internalTypes.2/@ownedMembers.3
+p2.simpleInt=1;
+// XPECT linkedFragment at 'p2.<|>o' --> /1/@internalTypes.2/@ownedMembers.4
+p2.o;
+// XPECT linkedFragment at 'p2.<|>o' --> /1/@internalTypes.2/@ownedMembers.5
+p2.o=null;
+
+// XPECT linkedFragment at 'p2.<|>o' --> /1/@internalTypes.2/@ownedMembers.4
+p2.o; // must be bound correctly to getter
+// XPECT linkedFragment at 'p2.internalO.<|>nested' --> /1/@internalTypes.3/@ownedMembers.0
+p2.internalO.nested; // must be bound correctly to nested property
+// XPECT linkedFragment at 'p2.o.<|>nested' --> /1/@internalTypes.1/@ownedMembers.0
+p2.o.nested; // must be bound correctly to nested property

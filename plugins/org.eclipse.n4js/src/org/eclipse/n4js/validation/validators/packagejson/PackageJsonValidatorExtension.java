@@ -743,7 +743,8 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 						sourceContainerSpecifier.getValue());
 
 				// obtain descriptive name of the current source container type
-				final String srcFrgmtName = sourceContainerType.getKey().getLiteral().toLowerCase();
+				final String srcFrgmtName = PackageJsonUtils.getSourceContainerTypeStringRepresentation(
+						sourceContainerType.getKey());
 
 				// handle case that source container is nested within output directory (or equal)
 				if (isContainedOrEqual(absoluteSourceLocation, absoluteOutputLocation)) {
@@ -1094,7 +1095,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		}
 
 		// otherwise list all other types for which the path of issueTarget has been declared as well
-		return " in " + otherTypes.stream().map(t -> t.getLiteral().toLowerCase())
+		return " in " + otherTypes.stream().map(PackageJsonUtils::getSourceContainerTypeStringRepresentation)
 				.collect(Collectors.joining(", "));
 	}
 
@@ -1193,15 +1194,16 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		for (NameValuePair pair : sourceContainerObject.getNameValuePairs()) {
 			final String sourceContainerType = pair.getName();
 
+			// compute type of source container sub-section
+			final SourceContainerType containerType = PackageJsonUtils.parseSourceContainerType(pair.getName());
+
 			// check that sourceContainerType represents a valid source container type
-			if (!isValidSourceContainerTypeLiteral(sourceContainerType)) {
+			if (containerType == null) {
 				addIssue(IssueCodes.getMessageForPKGJ_INVALID_SOURCE_CONTAINER_TYPE(sourceContainerType),
 						pair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME,
 						IssueCodes.PKGJ_INVALID_SOURCE_CONTAINER_TYPE);
 				continue;
 			}
-			// compute type of source container sub-section
-			final SourceContainerType containerType = SourceContainerType.get(pair.getName().toUpperCase());
 
 			// check type of RHS (list of source paths)
 			if (!checkIsType(pair.getValue(), JSONPackage.Literals.JSON_ARRAY, "as source container list")) {
@@ -1229,28 +1231,17 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	}
 
 	/**
-	 * Returns the {@link SourceContainerType} of the given {@code containerSpecifierLiteral}.
+	 * Returns the {@link SourceContainerType} of the given {@code containerSpecifierLiteral} or <code>null</code> if
+	 * invalid.
 	 */
 	private SourceContainerType getSourceContainerType(JSONStringLiteral containerSpecifierLiteral) {
 		// first check within limits whether the AST structure is valid
-		if (!(containerSpecifierLiteral.eContainer() instanceof JSONArray &&
-				containerSpecifierLiteral.eContainer().eContainer() instanceof NameValuePair &&
-				isValidSourceContainerTypeLiteral(
-						((NameValuePair) containerSpecifierLiteral.eContainer().eContainer()).getName()))) {
+		if (!(containerSpecifierLiteral.eContainer() instanceof JSONArray
+				&& containerSpecifierLiteral.eContainer().eContainer() instanceof NameValuePair)) {
 			return null;
 		}
 		final NameValuePair containerTypeAssignment = (NameValuePair) containerSpecifierLiteral.eContainer()
 				.eContainer();
-		return SourceContainerType.get(containerTypeAssignment.getName().toUpperCase());
-	}
-
-	/**
-	 * Returns {@code true} iff the given {@code typeLiteral} represents a valid SourceContainerType (e.g. source,
-	 * test).
-	 */
-	private boolean isValidSourceContainerTypeLiteral(String typeLiteral) {
-		// check that typeLiteral is all lower-case and a corresponding enum literal exists
-		return typeLiteral.toLowerCase().equals(typeLiteral) &&
-				SourceContainerType.get(typeLiteral.toUpperCase()) != null;
+		return PackageJsonUtils.parseSourceContainerType(containerTypeAssignment.getName());
 	}
 }

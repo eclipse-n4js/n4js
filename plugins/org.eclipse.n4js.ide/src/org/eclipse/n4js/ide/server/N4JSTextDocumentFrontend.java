@@ -30,10 +30,6 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
-import org.eclipse.n4js.ide.server.util.ServerIncidentLogger;
-import org.eclipse.n4js.ide.xtext.server.ResourceTaskContext;
-import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -47,6 +43,10 @@ import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.n4js.xtext.server.ResourceTaskContext;
+import org.eclipse.n4js.xtext.server.TextDocumentFrontend;
+import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.server.util.ServerIncidentLogger;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Strings;
@@ -63,9 +63,6 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
-
-	@Inject
-	private SourceMapFileLocator sourceMapFileLocator;
 
 	@Inject
 	private ServerIncidentLogger serverIncidentLogger;
@@ -124,7 +121,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	private Range findRange(TextDocumentPositionParams positionParams, Path genFilePath) {
 		try {
-			File sourceMapFile = sourceMapFileLocator.resolveSourceMapFromGen(genFilePath);
+			File sourceMapFile = SourceMapFileLocator.resolveSourceMapFromGen(genFilePath);
 			if (sourceMapFile != null) {
 				SourceMap sourceMap = SourceMap.loadAndResolve(sourceMapFile.toPath());
 				Position position = positionParams.getPosition();

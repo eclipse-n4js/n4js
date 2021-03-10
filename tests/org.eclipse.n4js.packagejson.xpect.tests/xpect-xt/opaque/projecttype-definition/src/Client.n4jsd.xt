@@ -1,0 +1,24 @@
+
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+    Workspace {
+        JavaProject "projecttype-definition" {
+	        	Folder "src" {
+		            ThisFile {}
+		        	File "Lib.n4js" {from="Lib.n4js"}
+	        	}
+        	File "package.json" {from="../package.json"}
+        }
+    }
+
+    END_SETUP
+*/
+
+// XPECT errors --> "Import of Lib cannot be resolved." at "Lib"
+import {Lib} from "Lib";
+
+export external public class SomeClass {
+	// XPECT errors --> "Couldn't resolve reference to Type 'Lib'." at "Lib"
+	l : Lib;
+}

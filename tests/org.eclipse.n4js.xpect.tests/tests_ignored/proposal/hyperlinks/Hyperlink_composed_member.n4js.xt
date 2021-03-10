@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+export public class A {
+	protected a : A;
+	i : int;
+	public foo(){};
+}
+
+interface I {
+	a : A;
+	i : int;
+	public foo();
+}
+
+class B {
+	public join(separator: string = undefined): string() {
+		return null
+	}
+}
+
+
+class AI extends A implements I {}
+
+var union : A | I;
+// XPECT hyperlinks at 'foo' ---
+foo: "foo"(N4MethodDeclaration) in "A"(N4ClassDeclaration) in file Hyperlink_composed_member.n4js.xt,
+foo: "foo"(N4MethodDeclaration) in "I"(N4InterfaceDeclaration) in file Hyperlink_composed_member.n4js.xt
+--- 
+union.foo(); 
+let i : I;
+// XPECT hyperlinks at 'foo' ---
+foo: "foo"(N4MethodDeclaration) in "I"(N4InterfaceDeclaration) in file Hyperlink_composed_member.n4js.xt
+---
+i.foo();
+
+var b : Array<any> | B;
+// XPECT hyperlinks at 'join' ---
+n4scheme:/builtin_js.n4ts#//@types.2/@ownedMembers.4,
+join: "join"(N4MethodDeclaration) in "B"(N4ClassDeclaration) in file Hyperlink_composed_member.n4js.xt
+---
+b.join();

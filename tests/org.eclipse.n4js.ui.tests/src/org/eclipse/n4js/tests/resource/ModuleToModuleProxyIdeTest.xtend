@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import com.google.inject.Provider
 import java.util.List
 import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
@@ -26,6 +25,7 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.impl.TypeImpl
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
+import org.eclipse.n4js.xtext.server.build.ConcurrentIndex
 import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData

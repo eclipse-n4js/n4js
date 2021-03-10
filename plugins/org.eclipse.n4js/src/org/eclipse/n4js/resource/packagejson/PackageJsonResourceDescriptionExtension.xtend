@@ -25,9 +25,9 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.^extension.IJSONResourceDescriptionExtension
+import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectReference
-import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.semver.model.SemverSerializer
@@ -237,7 +237,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	 */
 	private def Map<String, String> createProjectDescriptionUserData(ProjectDescription it) {
 		val builder = ImmutableMap.builder;
-		builder.put(PROJECT_TYPE_KEY, '''«projectType»''');
+		builder.put(PROJECT_TYPE_KEY, '''«PackageJsonUtils.getProjectTypeStringRepresentation(projectType)»''');
 		builder.put(PROJECT_NAME_KEY, projectName.nullToEmpty);
 		builder.put(IMPLEMENTATION_ID_KEY, implementationId.nullToEmpty);
 
@@ -287,11 +287,11 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		if (it === null) {
 			return null;
 		}
-		val typeLiteral = it.getUserData(PROJECT_TYPE_KEY);
-		if (typeLiteral === null) {
+		val projectTypeStr = it.getUserData(PROJECT_TYPE_KEY);
+		if (projectTypeStr === null) {
 			return null;
 		}
-		return ProjectType.get(typeLiteral);
+		return PackageJsonUtils.parseProjectType(projectTypeStr);
 	}
 
 	/**

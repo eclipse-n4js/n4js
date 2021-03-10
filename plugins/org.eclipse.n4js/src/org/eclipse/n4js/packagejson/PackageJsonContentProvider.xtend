@@ -120,8 +120,10 @@ package class PackageJsonContentProvider {
 		val JSONObject n4jsRoot = JSONFactory.eINSTANCE.createJSONObject();
 		
 		// project type
-		if (type.present)
-			JSONModelUtils.addProperty(n4jsRoot, PROJECT_TYPE.name, getEnumAsString(type.get()));
+		if (type.present) {
+			val projectTypeStr = PackageJsonUtils.getProjectTypeStringRepresentation(type.get());
+			JSONModelUtils.addProperty(n4jsRoot, PROJECT_TYPE.name, projectTypeStr);
+		}
 
 		// add vendor related properties
 		if (vendorId.present)
@@ -137,13 +139,14 @@ package class PackageJsonContentProvider {
 			// add sources sub-sections
 			sourceContainers.entrySet
 				// sort by container type
-				.sortBy[ e | e.key.literal ]
+				.sortBy[ e | PackageJsonUtils.getSourceContainerTypeStringRepresentation(e.key) ]
 				// group by source container type
 				.groupBy[ e | e.key ]
 				// add source container sub-section for each specified source container type 
 				.forEach[containerType, paths| 
 					val JSONArray typeSectionArray = JSONModelUtils.addProperty(sourcesSection,
-						containerType.getLiteral().toLowerCase(), JSONFactory.eINSTANCE.createJSONArray());
+						PackageJsonUtils.getSourceContainerTypeStringRepresentation(containerType),
+						JSONFactory.eINSTANCE.createJSONArray());
 					val pathLiterals = paths.map[pathEntry | JSONModelUtils.createStringLiteral(pathEntry.value) ];
 					typeSectionArray.getElements().addAll(pathLiterals);
 				];
@@ -203,14 +206,5 @@ package class PackageJsonContentProvider {
 			return pair;
 		]);
 		return dependenciesValue;
-	}
-
-	/** Returns the string representation of the given {@link ProjectType} */
-	private def static String getEnumAsString(ProjectType projectType) {
-		if (projectType == ProjectType.RUNTIME_ENVIRONMENT)
-			return "runtimeEnvironment";
-		if (projectType == ProjectType.RUNTIME_LIBRARY)
-			return "runtimeLibrary";
-		return projectType.getName().toLowerCase();
 	}
 }

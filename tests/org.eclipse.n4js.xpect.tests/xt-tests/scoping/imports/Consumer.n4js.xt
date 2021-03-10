@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				Folder "scoping" {
+					Folder "imports" {
+						ThisFile {}
+						File "MultipleClasses.n4js" {}
+						File "DifferentClasses.n4js" {}
+					}
+				}
+			}
+			File "package.json" { from="../../package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+/* XPECT scopeWithPosition at 'import { <|>Class1 } from' ---
+	Class1 - MultipleClasses.n4js:14,
+	Class2 - MultipleClasses.n4js:18,
+	Class4 - MultipleClasses.n4js:26
+--- */
+import { Class1 } from "scoping/imports/MultipleClasses"
+
+/* XPECT scopeWithResource at 'class1 : <|>Class1' ---
+Array - builtin_js.n4ts, Boolean - builtin_js.n4ts,
+Class1 - MultipleClasses.n4js, Class2 - Consumer.n4js, Date - builtin_js.n4ts, Error - builtin_js.n4ts,
+EvalError - builtin_js.n4ts, Function - builtin_js.n4ts, Generator - builtin_js.n4ts,
+Iterable - builtin_js.n4ts,
+Iterable2 - builtin_n4.n4ts, Iterable3 - builtin_n4.n4ts, Iterable4 - builtin_n4.n4ts, Iterable5 - builtin_n4.n4ts,
+Iterable6 - builtin_n4.n4ts, Iterable7 - builtin_n4.n4ts, Iterable8 - builtin_n4.n4ts, Iterable9 - builtin_n4.n4ts,
+Iterator - builtin_js.n4ts, IteratorEntry - builtin_js.n4ts,
+JSON - builtin_js.n4ts, Math - builtin_js.n4ts,
+MigrationContext - builtin_n4idl.n4ts, MigrationController - builtin_n4idl.n4ts,
+N4Accessor - builtin_n4.n4ts, N4Annotation - builtin_n4.n4ts, N4Class - builtin_n4.n4ts,
+N4Classifier - builtin_n4.n4ts, N4DataField - builtin_n4.n4ts, N4Element - builtin_n4.n4ts,
+N4Enum - builtin_n4.n4ts, N4EnumType - builtin_n4.n4ts,
+N4Interface - builtin_n4.n4ts, N4Member - builtin_n4.n4ts, N4Method - builtin_n4.n4ts,
+N4NamedElement - builtin_n4.n4ts, N4Object - builtin_n4.n4ts, N4Provider - builtin_n4.n4ts,
+N4StringBasedEnum - builtin_n4.n4ts,
+N4Type - builtin_n4.n4ts,
+N4ApiNotImplementedError - builtin_n4.n4ts,
+Number - builtin_js.n4ts, Object - builtin_js.n4ts, Promise - builtin_js.n4ts,
+RangeError - builtin_js.n4ts, ReferenceError - builtin_js.n4ts, RegExp - builtin_js.n4ts,
+String - builtin_js.n4ts, Symbol - builtin_js.n4ts, SyntaxError - builtin_js.n4ts,
+TEMP_ReturnTypeOfMatchExec - builtin_js.n4ts, TypeError - builtin_js.n4ts,
+URIError - builtin_js.n4ts, any - primitives_n4.n4ts, boolean - primitives_js.n4ts, console - console.n4ts,
+i18nKey - primitives_n4.n4ts, number - primitives_js.n4ts, int - primitives_js.n4ts, pathSelector - primitives_n4.n4ts,
+scoping.imports.Consumer.Class2 - Consumer.n4js,
+scoping.imports.DifferentClasses.Class2 - DifferentClasses.n4js,
+scoping.imports.DifferentClasses.Class4 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.1,
+!scoping.imports.DifferentClasses.Class6 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.2,
+scoping.imports.DifferentClasses.Class8 - proxy:DifferentClasses.n4js#/1/@topLevelTypes.3,
+scoping.imports.MultipleClasses.Class1 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.0,
+scoping.imports.MultipleClasses.Class2 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.1,
+!scoping.imports.MultipleClasses.Class3 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.2,
+scoping.imports.MultipleClasses.Class4 - proxy:MultipleClasses.n4js#/1/@topLevelTypes.3,
+!scoping.imports.MultipleClasses.MultipleClasses - proxy:MultipleClasses.n4js#/1/@topLevelTypes.4,
+string - primitives_js.n4ts, symbol - primitives_js.n4ts, typeName - primitives_n4.n4ts,
+undefined - primitives_js.n4ts
+---*/
+var class1 : Class1
+
+class Class2 {
+
+}

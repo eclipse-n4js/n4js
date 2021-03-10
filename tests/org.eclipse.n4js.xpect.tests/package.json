@@ -8,7 +8,7 @@
 		"output": "src-gen",
 		"sources": {
 			"source": [
-				"model"
+				"xpect-tests"
 			]
 		},
 		"moduleFilters": {

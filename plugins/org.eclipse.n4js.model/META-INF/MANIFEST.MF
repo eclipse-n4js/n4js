@@ -10,14 +10,10 @@ Require-Bundle: org.eclipse.n4js.ts.model,
  org.eclipse.core.runtime;resolution:=optional,
  org.eclipse.core.resources;resolution:=optional,
  org.eclipse.text;resolution:=optional,
- org.eclipse.n4js.utils,
- org.eclipse.n4js.semver.model
+ org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.n4JS,
  org.eclipse.n4js.n4JS.impl,
- org.eclipse.n4js.n4JS.util,
- org.eclipse.n4js.projectDescription,
- org.eclipse.n4js.projectDescription.impl,
- org.eclipse.n4js.projectDescription.util
+ org.eclipse.n4js.n4JS.util
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.model

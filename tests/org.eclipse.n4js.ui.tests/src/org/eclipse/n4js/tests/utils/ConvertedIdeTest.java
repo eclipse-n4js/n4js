@@ -35,7 +35,6 @@ import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.UserDataMapper;
@@ -44,6 +43,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -179,30 +179,15 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 			throw new IllegalStateException("the test workspace is not yet created");
 		}
 
-		Path projectNameAsRelativePath = projectName.getScopeName() != null
-				? Path.of(projectName.getScopeName(), projectName.getPlainName())
-				: Path.of(projectName.getRawName());
+		Path projectNameAsRelativePath = projectName.getProjectNameAsRelativePath();
 		File projectSourceFolder = probandsFolder.toPath().resolve(projectNameAsRelativePath).toFile();
 		if (!projectSourceFolder.exists()) {
 			throw new IllegalArgumentException("proband not found in " + projectSourceFolder);
 		}
 
-		final File projectLocation = getProjectLocation();
-		final File projectFolder = projectLocation.toPath().resolve(projectNameAsRelativePath).toFile();
-		final File nodeModulesFolder = isYarnWorkspace()
-				? new File(new File(getRoot(), TestWorkspaceManager.YARN_TEST_PROJECT), N4JSGlobals.NODE_MODULES)
-				: new File(projectFolder, N4JSGlobals.NODE_MODULES);
+		File projectFolder = projectName.getLocation(getProjectLocation().toPath());
 
-		// install n4js-libs (if desired)
-		if (!n4jsLibs.isEmpty()) {
-			nodeModulesFolder.mkdirs();
-			try {
-				N4jsLibsAccess.installN4jsLibs(nodeModulesFolder.toPath(), true, false, false,
-						n4jsLibs.toArray(new N4JSProjectName[0]));
-			} catch (IOException e) {
-				throw new RuntimeException("unable to install n4js-libs from local checkout", e);
-			}
-		}
+		installN4jsLibs(projectName, n4jsLibs.toArray(new N4JSProjectName[0]));
 
 		// copy project into workspace
 		// (need to do that manually to properly handle NPM scopes, because the Eclipse import functionality won't put
@@ -219,6 +204,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		// create symbolic link in node_modules folder of root project (if necessary)
 		if (isYarnWorkspace()) {
 			try {
+				File nodeModulesFolder = getNodeModulesFolder(projectName);
 				Path from = nodeModulesFolder.toPath().resolve(projectNameAsRelativePath);
 				Files.createDirectories(from.getParent());
 				Files.createSymbolicLink(from, projectFolder.toPath());

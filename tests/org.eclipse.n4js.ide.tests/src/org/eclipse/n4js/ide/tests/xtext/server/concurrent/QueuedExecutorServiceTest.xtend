@@ -20,7 +20,7 @@ import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import org.apache.log4j.Level
-import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService
+import org.eclipse.n4js.xtext.server.QueuedExecutorService
 import org.eclipse.xtext.ide.server.ServerModule
 import org.eclipse.xtext.testing.logging.LoggingTester
 import org.junit.After

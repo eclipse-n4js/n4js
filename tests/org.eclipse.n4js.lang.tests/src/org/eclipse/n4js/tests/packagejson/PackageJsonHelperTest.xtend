@@ -291,7 +291,7 @@ class PackageJsonHelperTest {
 	def private ProjectDescription parseAndConvert(CharSequence jsonSource, boolean applyDefaultValues, String defaultProjectName) {
 		val jsonParseHelper = N4LanguageUtils.getServiceForContext(JSONGlobals.FILE_EXTENSION, JSONParseHelper).get();
 		val jsonDocument = jsonParseHelper.parseSuccessfully(jsonSource);
-		val pd = packageJsonHelper.convertToProjectDescription(jsonDocument, applyDefaultValues, defaultProjectName);
+		val pd = packageJsonHelper.convertToProjectDescription(jsonDocument, applyDefaultValues, defaultProjectName)?.build();
 		return pd;
 	}
 }

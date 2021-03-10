@@ -64,24 +64,6 @@ class MultiSingletonExpectation {
 			- N4JS-Injector
 			- Regex-Injector
 			- Types-Injector
-		Singleton 'org.eclipse.n4js.ide.xtext.server.ProjectStatePersisterConfig' has 2 instances that have the following injectors:
-			- JSON-Injector
-			- N4JS-Injector
-		Singleton 'org.eclipse.n4js.ide.xtext.server.QueuedExecutorService' has 2 instances that have the following injectors:
-			- JSON-Injector
-			- N4JS-Injector
-		Singleton 'org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex' has 2 instances that have the following injectors:
-			- JSON-Injector
-			- N4JS-Injector
-		Singleton 'org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister' has 2 instances that have the following injectors:
-			- JSON-Injector
-			- N4JS-Injector
-		Singleton 'org.eclipse.n4js.ide.xtext.server.build.XURIBasedFileSystemAccessFactory' has 2 instances that have the following injectors:
-			- JSON-Injector
-			- N4JS-Injector
-		Singleton 'org.eclipse.n4js.ide.xtext.server.issues.PublishingIssueAcceptor' has 2 instances that have the following injectors:
-			- JSON-Injector
-			- N4JS-Injector
 		Singleton 'org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar' has 2 instances that have the following injectors:
 			- N4JS-Injector
 			- Types-Injector
@@ -113,6 +95,24 @@ class MultiSingletonExpectation {
 			- JSON-Injector
 			- N4JS-Injector
 		Singleton 'org.eclipse.n4js.xtext.serializer.SynchronizedSyntacticSequencerPDAProvider' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+		Singleton 'org.eclipse.n4js.xtext.server.ProjectStatePersisterConfig' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+		Singleton 'org.eclipse.n4js.xtext.server.QueuedExecutorService' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+		Singleton 'org.eclipse.n4js.xtext.server.build.ConcurrentIndex' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+		Singleton 'org.eclipse.n4js.xtext.server.build.ProjectStatePersister' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+		Singleton 'org.eclipse.n4js.xtext.server.build.XURIBasedFileSystemAccessFactory' has 2 instances that have the following injectors:
+			- JSON-Injector
+			- N4JS-Injector
+		Singleton 'org.eclipse.n4js.xtext.server.issues.PublishingIssueAcceptor' has 2 instances that have the following injectors:
 			- JSON-Injector
 			- N4JS-Injector
 	'''

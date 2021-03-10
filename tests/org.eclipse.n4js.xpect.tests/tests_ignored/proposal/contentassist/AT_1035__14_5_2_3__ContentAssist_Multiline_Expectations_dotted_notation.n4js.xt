@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				Folder "proposal" {
+					Folder "contentassist" {
+						ThisFile {}
+						File "A.n4js" {}
+					}
+				}
+			}
+			Folder "src-gen" {}
+			File "package.json" { from="../../package.json" }
+		}
+	}
+   END_SETUP
+ */
+
+
+// N4JSDesin, §14.5.2.3. "Multi Line Expectations in Proposal Tests"
+
+
+/* XPECT contentAssist at 'var a: ClassA<|>' apply 'ClassA - proposal/contentassist/A' ---
+<...>
+import {ClassA} from "proposal/contentassist/A";
+<...>
+var a: ClassA = new ClassA();
+<...>
+--- */
+var a: ClassA = new ClassA();

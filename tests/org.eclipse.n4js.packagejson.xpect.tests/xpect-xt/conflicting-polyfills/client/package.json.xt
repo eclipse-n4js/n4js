@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ 
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+    Workspace {
+        JavaProject "client" {
+        	Folder "src" {}
+            File "package.json" {from="../client/package.json.xt"}
+        }
+        JavaProject "lib1" {
+            File "package.json" {from="../lib1/package.json"}
+            Folder "src" {
+            	File "Fillable.n4jsd" {from="../lib1/src/Filler.n4jsd"}
+            }
+        }
+        JavaProject "lib2" {
+            File "package.json" {from="../lib2/package.json"}
+            Folder "src" {
+            	File "Fillable.n4jsd" {from="../lib2/src/Filler.n4jsd"}
+            }
+        }
+    }
+
+    END_SETUP
+ */
+{
+	"name": "client",
+	"version": "0.0.1",
+	"dependencies": {
+		"lib1": "*",
+		"lib2": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"requiredRuntimeLibraries": [
+			// XPECT errors --> "The libraries lib1, lib2 provide polyfills for the same elements "#.String#fromCodePoint", "#.String#startsWith"  and cannot be used together." at ""lib1""
+			"lib1",
+			// XPECT errors --> "The libraries lib1, lib2 provide polyfills for the same elements "#.String#fromCodePoint", "#.String#startsWith"  and cannot be used together." at ""lib2""
+			"lib2"
+		]
+	}
+}

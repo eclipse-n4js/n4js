@@ -18,8 +18,6 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.cli.tests.helper,
  com.google.guava,
  org.eclipse.n4js.utils,
- org.eclipse.n4js.runner,
- org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.flowgraphs,
  org.eclipse.n4js.ide.tests.helper,
  org.eclipse.n4js.ide

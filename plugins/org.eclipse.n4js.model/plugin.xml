@@ -21,12 +21,4 @@ Contributors:
             genModel="model/N4JS.xcore"/>
    </extension>
 
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated ProjectDescription -->
-      <package
-            uri="http://www.eclipse.org/n4js/projectDescription/projectDescription"
-            class="org.eclipse.n4js.projectDescription.ProjectDescriptionPackage"
-            genModel="model/ProjectDescription.xcore"/>
-   </extension>
-
 </plugin>

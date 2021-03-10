@@ -22,9 +22,6 @@ Contributors:
 
 
 <plugin>
-   <extension-point id="resourceDescriptionsPersisterContribution" name="Resource Descriptions Persister Contribution" schema="schema/resourceDescriptionsPersisterContribution.exsd"/>
-   <extension-point id="workingSetManager" name="N4JS Working Set Manager" schema="schema/workingSetManager.exsd"/>
-
     <extension
             point="org.eclipse.ui.editors">
         <editor
@@ -33,7 +30,6 @@ Contributors:
             default="true"
             extensions="js,jsx"
             id="org.eclipse.n4js.N4JS"
-            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JS Editor">
         </editor>
         <editor
@@ -42,7 +38,6 @@ Contributors:
             default="true"
             extensions="n4jsx"
             id="org.eclipse.n4js.N4JS"
-            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsx.png"
             name="N4JS Editor">
         </editor>
         <editor
@@ -51,7 +46,6 @@ Contributors:
             default="true"
             extensions="n4jsd"
             id="org.eclipse.n4js.N4JS"
-            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4jsd.png"
             name="N4JS Editor">
         </editor>
         <editor
@@ -60,7 +54,6 @@ Contributors:
             default="true"
             extensions="n4js,n4idl"
             id="org.eclipse.n4js.N4JS"
-            icon="platform:/plugin/org.eclipse.n4js.ui/icons/file_n4js.png"
             name="N4JS Editor">
         </editor>
 		<editor
@@ -69,7 +62,6 @@ Contributors:
 			default="true"
 			extensions="json"
 			id="org.eclipse.n4js.json.JSON"
-			icon="platform:/plugin/org.eclipse.n4js.json.ui/icons/generic_editor.png"
 			name="JSON Editor">
 		</editor>
     </extension>
