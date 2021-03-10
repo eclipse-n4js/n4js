@@ -18,7 +18,6 @@ import java.util.Collections;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -41,13 +40,14 @@ public class MockWorkspace extends InternalN4JSWorkspace<MockURIWrapper> {
 
 	/***/
 	public MockWorkspace() {
-		projectDescription = ProjectDescriptionFactory.eINSTANCE.createProjectDescription();
-		projectDescription.setProjectName(TEST_PROJECT__PROJECT_NAME);
-		projectDescription.setVendorName("tester");
-		projectDescription.setVendorId(TEST_PROJECT__VENDOR_ID);
-		projectDescription.setProjectType(ProjectType.APPLICATION);
 		VersionNumber versionNumber = SemverUtils.createVersionNumber(1, 0, 0);
-		projectDescription.setProjectVersion(versionNumber);
+		projectDescription = ProjectDescription.builder()
+				.setProjectName(TEST_PROJECT__PROJECT_NAME)
+				.setVendorName("tester")
+				.setVendorId(TEST_PROJECT__VENDOR_ID)
+				.setProjectType(ProjectType.APPLICATION)
+				.setProjectVersion(versionNumber)
+				.build();
 	}
 
 	@Override

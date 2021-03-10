@@ -20,12 +20,14 @@ import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
+import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.N4JSDebugService;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerFrontend;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
+import org.eclipse.n4js.ide.server.N4JSStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.build.N4JSBuildOrderInfoComputer;
@@ -40,33 +42,35 @@ import org.eclipse.n4js.ide.server.rename.N4JSRenameService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvider;
-import org.eclipse.n4js.ide.xtext.editor.contentassist.XIdeContentProposalAcceptor;
-import org.eclipse.n4js.ide.xtext.server.BuiltInAwareIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.DebugService;
-import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
-import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
-import org.eclipse.n4js.ide.xtext.server.TextDocumentFrontend;
-import org.eclipse.n4js.ide.xtext.server.XExecutableCommandRegistry;
-import org.eclipse.n4js.ide.xtext.server.XIProjectDescriptionFactory;
-import org.eclipse.n4js.ide.xtext.server.XIWorkspaceConfigFactory;
-import org.eclipse.n4js.ide.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.ide.xtext.server.build.ConcurrentIndex;
-import org.eclipse.n4js.ide.xtext.server.build.DefaultBuildRequestFactory;
-import org.eclipse.n4js.ide.xtext.server.build.IBuildRequestFactory;
-import org.eclipse.n4js.ide.xtext.server.build.ProjectBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.ProjectStatePersister;
-import org.eclipse.n4js.ide.xtext.server.build.WorkspaceAwareResourceSet;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterValidateListener;
-import org.eclipse.n4js.ide.xtext.server.build.XStatefulIncrementalBuilder;
-import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
-import org.eclipse.n4js.ide.xtext.server.contentassist.XContentAssistService;
-import org.eclipse.n4js.ide.xtext.server.issues.WorkspaceValidateListener;
-import org.eclipse.n4js.ide.xtext.server.symbol.XDocumentSymbolService;
-import org.eclipse.n4js.ide.xtext.server.util.XOperationCanceledManager;
+import org.eclipse.n4js.ide.server.util.N4JSServerIncidentLogger;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
+import org.eclipse.n4js.xtext.editor.contentassist.XIdeContentProposalAcceptor;
+import org.eclipse.n4js.xtext.server.DebugService;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
+import org.eclipse.n4js.xtext.server.LanguageServerFrontend;
+import org.eclipse.n4js.xtext.server.QueuedExecutorService;
+import org.eclipse.n4js.xtext.server.TextDocumentFrontend;
+import org.eclipse.n4js.xtext.server.XExecutableCommandRegistry;
+import org.eclipse.n4js.xtext.server.XIProjectDescriptionFactory;
+import org.eclipse.n4js.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.xtext.server.build.DefaultBuildRequestFactory;
+import org.eclipse.n4js.xtext.server.build.IBuildRequestFactory;
+import org.eclipse.n4js.xtext.server.build.ProjectBuilder;
+import org.eclipse.n4js.xtext.server.build.ProjectStatePersister;
+import org.eclipse.n4js.xtext.server.build.WorkspaceAwareResourceSet;
+import org.eclipse.n4js.xtext.server.build.XBuildRequest.AfterValidateListener;
+import org.eclipse.n4js.xtext.server.build.XStatefulIncrementalBuilder;
+import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
+import org.eclipse.n4js.xtext.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.xtext.server.issues.WorkspaceValidateListener;
+import org.eclipse.n4js.xtext.server.symbol.XDocumentSymbolService;
+import org.eclipse.n4js.xtext.server.util.IHeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.xtext.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
@@ -178,7 +182,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	}
 
 	public Class<? extends XStatefulIncrementalBuilder> bindStatefulIncrementalBuilder() {
-		return BuiltInAwareIncrementalBuilder.class;
+		return N4JSStatefulIncrementalBuilder.class;
 	}
 
 	public Class<? extends BuildOrderFactory.BuildOrderInfoComputer> bindBuildOrderInfoComputer() {
@@ -263,6 +267,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSDebugService.class;
 	}
 
+	public Class<? extends ServerIncidentLogger> bindServerIncidentLogger() {
+		return N4JSServerIncidentLogger.class;
+	}
+
 	public Class<? extends ProjectStatePersister> bindProjectStatePersister() {
 		return N4JSProjectStatePersister.class;
 	}
@@ -277,5 +285,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XWorkspaceConfigSnapshotProvider> bindXWorkspaceConfigSnapshotProvider() {
 		return ConcurrentIndex.class;
+	}
+
+	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {
+		return HeadlessExtensionRegistrationHelper.class;
 	}
 }

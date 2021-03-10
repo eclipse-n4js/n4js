@@ -15,9 +15,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.xtext.generator.IFileSystemAccess;
@@ -36,9 +37,6 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 
 	@Inject
 	private IN4JSCore n4jsCore;
-
-	@Inject
-	private ExternalLibraryUriHelper externalLibraryUriHelper;
 
 	@Inject
 	private SubGeneratorRegistry subGeneratorRegistry;
@@ -73,7 +71,7 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	@Override
 	public boolean isApplicableTo(Resource input) {
 		// Skip external resource
-		if (externalLibraryUriHelper.isExternalLocation(input.getURI())) {
+		if (isExternalLocation(input.getURI())) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.info("Skipped generation for external resource: " + input.getURI());
 			}
@@ -84,6 +82,14 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 		com.google.common.base.Optional<? extends IN4JSSourceContainer> n4jsContainer = n4jsCore
 				.findN4JSSourceContainer(input.getURI());
 		return (n4jsContainer.isPresent());
+	}
+
+	private boolean isExternalLocation(final URI uri) {
+		if (null != uri && uri.isFile()) {
+			final IN4JSProject project = n4jsCore.findProject(uri).orNull();
+			return null != project && project.exists() && project.isExternal();
+		}
+		return false;
 	}
 
 	@Override

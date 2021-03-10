@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.server.build;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.ide.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 
 /**

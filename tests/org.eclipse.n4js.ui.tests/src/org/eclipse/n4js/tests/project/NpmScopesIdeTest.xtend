@@ -10,11 +10,9 @@
 package org.eclipse.n4js.tests.project
 
 import com.google.common.collect.Lists
-import com.google.inject.Inject
 import java.io.File
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.junit.Before
@@ -38,8 +36,6 @@ class NpmScopesIdeTest extends ConvertedIdeTest {
 	private FileURI clientProject;
 	private FileURI clientModule;
 	private FileURI clientModuleOutputFile;
-
-	@Inject private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
 	@Before
 	def void before() {

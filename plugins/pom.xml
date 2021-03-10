@@ -40,9 +40,6 @@ Contributors:
 		<module>org.eclipse.n4js</module>
 		<module>org.eclipse.n4js.ide</module>
 		<module>org.eclipse.n4js.cli</module>
-		<!-- runners -->
-		<module>org.eclipse.n4js.runner</module>
-		<module>org.eclipse.n4js.runner.nodejs</module>
 		<!-- json -->
 		<module>org.eclipse.n4js.json</module>
 		<module>org.eclipse.n4js.json.model</module>
@@ -64,6 +61,8 @@ Contributors:
 		<module>org.eclipse.n4js.flowgraphs</module>
 		<!-- xpect -->
 		<module>org.eclipse.n4js.xpect</module>
+		<!-- xtext -->
+		<module>org.eclipse.n4js.xtext</module>
 	</modules>
 
 	<properties>

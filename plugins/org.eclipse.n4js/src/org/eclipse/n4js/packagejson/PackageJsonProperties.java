@@ -71,7 +71,8 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "n4js". */
 	N4JS(UtilN4.PACKAGE_JSON__N4JS, "N4JS section", JSONObject.class),
 	/** Key of package.json property "projectType". */
-	PROJECT_TYPE("projectType", ProjectType.PLAINJS.getLiteral().toLowerCase(), N4JS),
+	PROJECT_TYPE("projectType", "project type",
+			PackageJsonUtils.getProjectTypeStringRepresentation(ProjectType.PLAINJS), N4JS),
 	/** Key of package.json property "vendorId". */
 	VENDOR_ID("vendorId", "", "vendor.default", N4JS),
 	/** Key of package.json property "vendorName". */

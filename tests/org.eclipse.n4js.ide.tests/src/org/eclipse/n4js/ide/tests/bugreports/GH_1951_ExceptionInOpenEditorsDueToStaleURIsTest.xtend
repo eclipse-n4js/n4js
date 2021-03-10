@@ -11,7 +11,7 @@
 package org.eclipse.n4js.ide.tests.bugreports
 
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.eclipse.n4js.ide.xtext.server.ResourceTaskManager
+import org.eclipse.n4js.xtext.server.ResourceTaskManager
 import org.junit.Test
 
 /**

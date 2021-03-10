@@ -23,6 +23,7 @@ import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
+import org.eclipse.n4js.xtext.server.util.IHeadlessExtensionRegistrationHelper;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 
 import com.google.inject.Inject;
@@ -31,7 +32,7 @@ import com.google.inject.Inject;
  * This class provides helper methods for registering extensions in headless case. This should become obsolete the
  * extensions are registered by a service loaded in the headless case.
  */
-public class HeadlessExtensionRegistrationHelper {
+public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRegistrationHelper {
 
 	@Inject
 	private FileExtensionsRegistry n4jsFileExtensionsRegistry;
@@ -58,6 +59,7 @@ public class HeadlessExtensionRegistrationHelper {
 	 * Register extensions manually. This method should become obsolete when extension point fully works in headless
 	 * case.
 	 */
+	@Override
 	public void registerExtensions() {
 		// Register file extensions
 		registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
@@ -83,6 +85,7 @@ public class HeadlessExtensionRegistrationHelper {
 	}
 
 	/** Unregister all extensions */
+	@Override
 	public void unregisterExtensions() {
 		n4jsFileExtensionsRegistry.reset();
 		subGeneratorRegistry.reset();

@@ -42,9 +42,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.external.ExternalIndexSynchronizer
-import org.eclipse.n4js.external.ExternalLibraryWorkspace
-import org.eclipse.n4js.external.ShadowingInfoHelper
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
@@ -62,8 +59,6 @@ import org.eclipse.n4js.projectDescription.SourceContainerDescription
 import org.eclipse.n4js.projectDescription.SourceContainerType
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.locations.FileURI
-import org.eclipse.n4js.projectModel.names.EclipseProjectName
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
@@ -78,6 +73,7 @@ import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
+import org.eclipse.n4js.utils.Strings
 import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
@@ -99,7 +95,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.utils.Strings
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -166,15 +161,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 	@Inject
 	protected N4JSElementKeywordProvider keywordProvider;
-
-	@Inject
-	protected ShadowingInfoHelper shadowingInfoHelper;
-
-	@Inject
-	protected ExternalIndexSynchronizer indexSynchronizer;
-
-	@Inject
-	protected ExternalLibraryWorkspace extWS;
 
 	@Inject
 	protected SemverHelper semverHelper;
@@ -1183,12 +1169,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		}
 
 		if (!currentProject.isExternal) {
-			if (project.isExternal && !indexSynchronizer.isInIndex(project.projectDescriptionLocation as FileURI)) {
-				val msg = getMessageForNON_REGISTERED_PROJECT(id);
-				addIssue(msg, ref.astRepresentation, null, NON_REGISTERED_PROJECT, id.rawName);
-				return;
-			}
-
 			// search for the dependency in all node_modules folders (respecting shadowing order)
 			var Path currNPM = null;
 			val nmFolders = allNodeModuleFolders.get(currentProjectName);
@@ -1313,20 +1293,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		// versions do not match
 
-		val curPrjShadows = shadowingInfoHelper.isShadowingProject(curPrj);
-		val dependencyShadows = shadowingInfoHelper.isShadowingProject(depProject);
 		val desiredStr = SemverSerializer.serialize(desiredVersion);
 		val availableStr = SemverSerializer.serialize(availableVersion);
-
-		if (curPrjShadows || dependencyShadows) {
-			val curPrjShadowsStr = if (curPrjShadows) "shadowing " else "";
-			val dependencyShadowsStr = if (dependencyShadows) "shadowed " else "";
-			val msg = getMessageForNO_MATCHING_VERSION_SHADOWING(curPrjShadowsStr, dependencyShadowsStr, id, desiredStr, availableStr);
-			addIssue(msg, ref.astRepresentation, NO_MATCHING_VERSION_SHADOWING);
-		} else {
-			val msg = getMessageForNO_MATCHING_VERSION(id, desiredStr, availableStr);
-			addIssue(msg, ref.astRepresentation, null, NO_MATCHING_VERSION, id.rawName, desiredVersion.toString);
-		}
+		val msg = getMessageForNO_MATCHING_VERSION(id, desiredStr, availableStr);
+		addIssue(msg, ref.astRepresentation, null, NO_MATCHING_VERSION, id.rawName, desiredVersion.toString);
 	}
 
 	/**
@@ -1410,15 +1380,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		return contextMemoize(ALL_EXISTING_PROJECT_CACHE) [
 			val Map<N4JSProjectName, IN4JSProject> res = new HashMap;
 			findAllProjects.forEach[p | res.put(p.projectName, p)];
-
-			// also add those unnecessary projects that are not shadowed
-			for (org.eclipse.xtext.util.Pair<FileURI, ProjectDescription> pair: extWS.projectsIncludingUnnecessary) {
-				val location = pair.first;
-				val project = findProject(location.toURI).orNull;
-				if (project !== null && !shadowingInfoHelper.isShadowedProject(project) && !res.containsKey(project.projectName)) {
-					res.put(project.projectName, project);
-				}
-			}
 			return res;
 		]
 	}
@@ -1441,7 +1402,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 						val projectPath = iPath.toFile.toPath;
 						val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
 						if (nmFolder !== null) {
-							val projectName = new EclipseProjectName(project.name).toN4JSProjectName
+							val projectName = new N4JSProjectName(project.name);
 							res.put(projectName, nmFolder);
 						}
 					}

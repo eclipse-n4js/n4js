@@ -16,8 +16,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterDeleteListener;
-import org.eclipse.n4js.ide.xtext.server.build.XBuildRequest.AfterGenerateListener;
+import org.eclipse.n4js.xtext.server.build.XBuildRequest.AfterDeleteListener;
+import org.eclipse.n4js.xtext.server.build.XBuildRequest.AfterGenerateListener;
 
 /**
  * Abstract base class for N4JS language clients, i.e. implementations of {@link LanguageClient}.

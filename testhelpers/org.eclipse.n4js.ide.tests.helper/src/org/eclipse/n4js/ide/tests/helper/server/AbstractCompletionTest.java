@@ -27,7 +27,7 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest.N4JSTestCompletionConfiguration;
-import org.eclipse.n4js.ide.xtext.server.XDocument;
+import org.eclipse.n4js.xtext.server.XDocument;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.utils.Strings;

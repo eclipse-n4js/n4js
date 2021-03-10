@@ -442,7 +442,7 @@ public class ProjectDiscoveryHelper {
 			dependencies.putIfAbsent(depName, depLocation);
 
 			ProjectDescription depPD = getCachedProjectDescription(depLocation, pdCache);
-			if (depPD != null && depPD.isHasN4JSNature()) {
+			if (depPD != null && depPD.hasN4JSNature()) {
 				workList.add(depLocation);
 			}
 		}
