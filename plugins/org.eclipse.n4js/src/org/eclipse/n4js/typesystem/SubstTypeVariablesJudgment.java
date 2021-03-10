@@ -11,35 +11,25 @@
 package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBST_TYPE_VARS;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addInconsistentSubstitutions;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
-import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
-import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
-import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
-import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
-import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.typesystem.utils.NestedTypeRefsSwitch;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
@@ -68,38 +58,47 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		return result;
 	}
 
-	private final class SubstTypeVariablesSwitch extends TypeRefsSwitch<TypeArgument> {
+	private final class SubstTypeVariablesSwitch extends NestedTypeRefsSwitch {
 
-		private final RuleEnvironment G;
 		private final boolean captureContainedWildcards;
 		private final boolean captureUponSubstitution;
 
 		public SubstTypeVariablesSwitch(RuleEnvironment G, boolean captureContainedWildcards,
 				boolean captureUponSubstitution) {
-			this.G = G;
+			super(G);
 			this.captureContainedWildcards = captureContainedWildcards;
 			this.captureUponSubstitution = captureUponSubstitution;
+		}
+
+		@Override
+		protected SubstTypeVariablesSwitch derive(RuleEnvironment G_NEW) {
+			return new SubstTypeVariablesSwitch(G_NEW, captureContainedWildcards, captureUponSubstitution);
 		}
 
 		// the following 3 methods are provided to increase readability of recursive invocations of #doSwitch()
 
 		@SuppressWarnings("unused")
-		private Wildcard substTypeVariables(RuleEnvironment G2, Wildcard wildcard,
+		private Wildcard substTypeVariables(RuleEnvironment G_NEW, Wildcard wildcard,
 				boolean captureContainedWildcardsNEW) {
-			return (Wildcard) substTypeVariables(G2, (TypeArgument) wildcard, captureContainedWildcardsNEW);
+			return (Wildcard) substTypeVariables(G_NEW, (TypeArgument) wildcard, captureContainedWildcardsNEW);
 		}
 
-		private TypeRef substTypeVariables(RuleEnvironment G2, TypeRef typeRef,
+		private TypeRef substTypeVariables(RuleEnvironment G_NEW, TypeRef typeRef,
 				boolean captureContainedWildcardsNEW) {
-			return (TypeRef) substTypeVariables(G2, (TypeArgument) typeRef, captureContainedWildcardsNEW);
+			return (TypeRef) substTypeVariables(G_NEW, (TypeArgument) typeRef, captureContainedWildcardsNEW);
 		}
 
-		private TypeArgument substTypeVariables(RuleEnvironment G2, TypeArgument typeArg,
+		private TypeArgument substTypeVariables(RuleEnvironment G_NEW, TypeArgument typeArg,
 				boolean captureContainedWildcardsNEW) {
-			if (G2 == this.G && captureContainedWildcardsNEW == this.captureContainedWildcards) {
+			if (typeArg == null) {
+				return null;
+			}
+			if (G_NEW == this.G && captureContainedWildcardsNEW == this.captureContainedWildcards) {
 				return doSwitch(typeArg);
 			} else {
-				return apply(G2, typeArg, captureContainedWildcardsNEW, this.captureUponSubstitution);
+				SubstTypeVariablesSwitch nestedSwitch = new SubstTypeVariablesSwitch(
+						G_NEW, captureContainedWildcardsNEW, this.captureUponSubstitution);
+				return nestedSwitch.doSwitch(typeArg);
 			}
 		}
 
@@ -112,7 +111,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		@Override
 		public TypeArgument caseWildcard(Wildcard wildcard) {
 			// step #1: substitute type variables in upper and lower bound of given wildcard
-			wildcard = internalSubstTypeVariablesInWildcard(wildcard);
+			wildcard = (Wildcard) super.caseWildcard(wildcard);
 			// step #2: capture the wildcard (if requested)
 			if (captureContainedWildcards) {
 				return TypeUtils.captureWildcard(wildcard);
@@ -121,15 +120,19 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 
 		@Override
-		public TypeArgument caseExistentialTypeRef(ExistentialTypeRef existentialTypeRef) {
+		protected TypeRef caseWildcard_processUpperBound(RuleEnvironment G2, TypeRef ub) {
+			return substTypeVariables(G2, ub, false);
+		}
+
+		@Override
+		protected TypeRef caseWildcard_processLowerBound(RuleEnvironment G2, TypeRef lb) {
+			return substTypeVariables(G2, lb, false);
+		}
+
+		@Override
+		public TypeRef caseExistentialTypeRef(ExistentialTypeRef existentialTypeRef) {
 			// step #1: substitute type variables in corresponding wildcard
-			final Wildcard w = existentialTypeRef.getWildcard();
-			final Wildcard wSubst = internalSubstTypeVariablesInWildcard(w);
-			if (wSubst != w) {
-				final ExistentialTypeRef etfCpy = TypeUtils.copy(existentialTypeRef);
-				etfCpy.setWildcard(TypeUtils.copyIfContained(wSubst));
-				existentialTypeRef = etfCpy;
-			}
+			existentialTypeRef = (ExistentialTypeRef) super.caseExistentialTypeRef(existentialTypeRef);
 			// step #2: capture a reopened ExistentialTypeRef (if requested)
 			if (captureContainedWildcards && existentialTypeRef.isReopened()) {
 				existentialTypeRef = TypeUtils.captureWildcard(existentialTypeRef.getWildcard());
@@ -137,241 +140,55 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			return existentialTypeRef;
 		}
 
-		private Wildcard internalSubstTypeVariablesInWildcard(Wildcard wildcard) {
-			final RuleEnvironment G2;
-			final TypeRef ub;
-			if (wildcard.isImplicitUpperBoundInEffect()) {
-				final Pair<String, TypeArgument> guardKey = Pair.of(
-						GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD, wildcard);
-				final boolean isGuarded = G.get(guardKey) != null;
-				if (!isGuarded) {
-					// first time here for 'wildcard'
-					ub = wildcard.getDeclaredOrImplicitUpperBound();
-					G2 = wrap(G);
-					G2.put(guardKey, Boolean.TRUE);
-				} else {
-					// returned here for the same wildcard!
-					ub = null;
-					G2 = G;
-				}
-			} else {
-				ub = wildcard.getDeclaredOrImplicitUpperBound();
-				G2 = G;
-			}
-			final TypeRef lb = wildcard.getDeclaredLowerBound();
-			final TypeRef ubSubst = ub != null ? substTypeVariables(G2, ub, false) : null;
-			final TypeRef lbSubst = lb != null ? substTypeVariables(G2, lb, false) : null;
-			if (ubSubst != ub || lbSubst != lb) {
-				final Wildcard cpy = TypeUtils.copy(wildcard);
-				cpy.setDeclaredUpperBound(TypeUtils.copyIfContained(ubSubst));
-				cpy.setDeclaredLowerBound(TypeUtils.copyIfContained(lbSubst));
-				wildcard = cpy;
-			}
-			return wildcard;
+		@Override
+		protected boolean caseThisTypeRef_shouldBind(ThisTypeRef thisTypeRef) {
+			return true;
 		}
 
 		@Override
-		public TypeArgument caseThisTypeRef(ThisTypeRef thisTypeRef) {
-			final TypeRef boundRefFromEnvUncasted = getThisType(G);
-			if (boundRefFromEnvUncasted instanceof BoundThisTypeRef) {
-				final BoundThisTypeRef boundRefFromEnv = (BoundThisTypeRef) boundRefFromEnvUncasted;
-				final BoundThisTypeRef boundRef = TypeUtils
-						.createBoundThisTypeRef(boundRefFromEnv.getActualThisTypeRef());
-				// must take use-site typing-strategy from 'thisTypeRef', not the one stored in the environment:
-				boundRef.setTypingStrategy(thisTypeRef.getTypingStrategy());
-				// must take use-site type modifiers (e.g. optional):
-				TypeUtils.copyTypeModifiers(boundRef, thisTypeRef);
-				return boundRef;
-			}
-			return thisTypeRef;
+		protected boolean caseBoundThisTypeRef_shouldRebind(BoundThisTypeRef boundThisTypeRef) {
+			return true;
 		}
 
 		@Override
-		public TypeArgument caseThisTypeRefStructural(ThisTypeRefStructural thisTypeRef) {
-			final TypeRef boundRefFromEnvUncasted = getThisType(G);
-			if (boundRefFromEnvUncasted instanceof BoundThisTypeRef) {
-				final BoundThisTypeRef boundRefFromEnv = (BoundThisTypeRef) boundRefFromEnvUncasted;
-				final BoundThisTypeRef boundRef = TypeUtils
-						.createBoundThisTypeRefStructural(boundRefFromEnv.getActualThisTypeRef(), thisTypeRef);
-				// must take use-site type modifiers (e.g. optional):
-				TypeUtils.copyTypeModifiers(boundRef, thisTypeRef);
-				return boundRef;
-			}
-			return thisTypeRef;
-		}
-
-		// required due to multiple inheritance, to ensure FunctionTypeRef is handled like a FunctionTypeExpression,
-		// not as a ParameterizedTypeRef
-		@Override
-		public TypeArgument caseFunctionTypeRef(FunctionTypeRef typeRef) {
-			return caseFunctionTypeExprOrRef(typeRef);
+		protected boolean caseFunctionTypeExprOrRef_isTypeParameterRetained(FunctionTypeExprOrRef F, TypeVariable tv) {
+			// type parameters are retained iff they are unbound,
+			// i.e. if G does not contain a type variable mapping for them:
+			return G.get(tv) == null;
 		}
 
 		@Override
-		public TypeArgument caseFunctionTypeExprOrRef(FunctionTypeExprOrRef F) {
-			boolean haveReplacement = false;
-
-			// collect type variables in 'F.typeVars' that do not have a type mapping in 'G' and perform substitution on
-			// their upper bounds
-			final List<TypeVariable> resultUnboundTypeVars = new ArrayList<>();
-			final List<TypeRef> resultUnboundTypeVarsUpperBounds = new ArrayList<>();
-			for (TypeVariable currTV : F.getTypeVars()) {
-				if (G.get(currTV) == null) {
-					// 'currTV' is an unbound type variable (i.e. does not have type mapping in 'G')
-					// -> add to 'unboundTypeVars'
-					final int idxOfCurrTV = resultUnboundTypeVars.size();
-					resultUnboundTypeVars.add(currTV);
-					// substitution on upper bound of 'currTV' (if required)
-					haveReplacement |= performSubstitutionOnUpperBounds(F, currTV, idxOfCurrTV,
-							resultUnboundTypeVarsUpperBounds);
-				}
-			}
-			// The following is important for cases such as {function <T> foo():void}:
-			// if T is bound, i.e. has a type mapping in 'G', we want to create a new, non-generic
-			// FunctionTypeExpression even though there won't be any actual substitution happening inside F.
-			haveReplacement |= resultUnboundTypeVars.size() < F.getTypeVars().size();
-
-			// substitution on this type
-			final TypeRef declaredThisType = F.getDeclaredThisType();
-			final TypeRef resultDeclaredThisType = declaredThisType != null
-					? substTypeVariables(G, declaredThisType, false)
-					: null;
-			haveReplacement |= resultDeclaredThisType != declaredThisType;
-
-			// substitution on return type
-			final TypeRef returnTypeRef = F.getReturnTypeRef();
-			final TypeRef resultReturnTypeRef = returnTypeRef != null
-					? substTypeVariables(G, returnTypeRef, false)
-					: null;
-			haveReplacement |= resultReturnTypeRef != returnTypeRef;
-
-			// substitution on parameter types
-			final List<TFormalParameter> fpars = F.getFpars();
-			final List<TFormalParameter> resultFpars = new ArrayList<>(fpars.size());
-			for (TFormalParameter oldPar : fpars) {
-				if (oldPar == null) {
-					resultFpars.add(null);
-					continue;
-				}
-				final TFormalParameter newPar = TypesFactory.eINSTANCE.createTFormalParameter();
-				newPar.setName(oldPar.getName());
-				newPar.setVariadic(oldPar.isVariadic());
-				newPar.setHasInitializerAssignment(oldPar.isHasInitializerAssignment());
-				// note: property 'astInitializer' is not copied since it's part of the AST
-
-				final TypeRef oldParTypeRef = oldPar.getTypeRef();
-				if (oldParTypeRef != null) {
-					final TypeRef newParTypeRef = substTypeVariables(G, oldParTypeRef, false);
-					newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
-					haveReplacement |= newParTypeRef != oldParTypeRef;
-				}
-
-				resultFpars.add(newPar);
-			}
-
-			if (haveReplacement) {
-				final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
-
-				// let posterity know that the newly created FunctionTypeExpression
-				// represents the binding of another FunctionTypeExprOrRef
-				result.setBinding(true);
-
-				// if the original 'typeRef' was a FunctionTypeRef, then retain the
-				// pointer to its declared type in the copied FunctionTypeExpression
-				// (see API doc of FunctionTypeExpression#declaredType for more info)
-				result.setDeclaredType(F.getFunctionType());
-
-				result.getUnboundTypeVars().addAll(resultUnboundTypeVars);
-				result.getUnboundTypeVarsUpperBounds().addAll(
-						TypeUtils.copyAllIfContained(resultUnboundTypeVarsUpperBounds));
-
-				result.setDeclaredThisType(TypeUtils.copyIfContained(resultDeclaredThisType));
-
-				result.setReturnTypeRef(TypeUtils.copyIfContained(resultReturnTypeRef));
-				result.setReturnValueMarkedOptional(F.isReturnValueOptional());
-
-				result.getFpars().addAll(resultFpars); // no need to copy; all fpars were newly created above!
-
-				TypeUtils.copyTypeModifiers(result, F);
-
-				return result;
-			}
-			return F;
-		}
-
-		/**
-		 * Performing substitution on the upper bound of an unbound(!) type variable is non-trivial, because we aren't
-		 * allowed to copy the type variable and change its upper bound (short version: a type variable is a type and
-		 * therefore needs to be contained in a Resource; but our new FunctionTypeExpression 'result' is a TypeRef which
-		 * may not be contained in any Resource).
-		 * <p>
-		 * If type variable substitution on <code>currTV</code>'s upper bound leads to a change of that upper bound (and
-		 * only then!), the modified upper bound will be stored in property 'unboundTypeVarsUpperBounds' of
-		 * <code>result</code>.
-		 * <p>
-		 * This has to be carefully aligned with {@link FunctionTypeExpression#getUnboundTypeVarsUpperBounds()} and
-		 * {@link FunctionTypeExpression#getTypeVarUpperBound(TypeVariable)}.
-		 */
-		private boolean performSubstitutionOnUpperBounds(FunctionTypeExprOrRef F, TypeVariable currTV,
-				int idxOfCurrTV, List<TypeRef> resultUnboundTypeVarsUpperBounds) {
-
-			final TypeRef currTV_declUB = currTV.getDeclaredUpperBound();
-			if (currTV_declUB != null) {
-				final TypeRef oldUB = F.getTypeVarUpperBound(currTV);
-				final TypeRef newUB = substTypeVariables(G, oldUB, false);
-				if (newUB != currTV_declUB) { // note: identity compare is what we want
-					while (resultUnboundTypeVarsUpperBounds.size() < idxOfCurrTV) {
-						// add an UnknownTypeRef as padding entry
-						resultUnboundTypeVarsUpperBounds.add(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
-					}
-					resultUnboundTypeVarsUpperBounds.add(newUB);
-					return true;
-				}
-			}
-			// no upper bound OR upper bound after substitution is identical to the one stored in type variable:
-			// --> no need to copy it over to 'resultUnboundTypeVarsUpperBounds' because operation
-			// FunctionTypeExpression#getTypeVarUpperBounds() will use currTV's original upper bound
-			// if 'unboundTypeVarsUpperBounds' doesn't contain an upper bound for currTV
-			return false;
+		protected TypeRef caseFunctionTypeExprOrRef_processTypeParameterUpperBound(TypeRef ub) {
+			return substTypeVariables(G, ub, false);
 		}
 
 		@Override
-		public TypeArgument caseComposedTypeRef(ComposedTypeRef typeRef) {
-			boolean haveReplacement = false;
-			final ArrayList<TypeRef> substTypeRefs = CollectionLiterals.newArrayList();
-			for (TypeRef currTypeRef : typeRef.getTypeRefs()) {
-				TypeRef substTypeRef = substTypeVariables(G, currTypeRef, captureContainedWildcards);
-				substTypeRefs.add(substTypeRef);
-				haveReplacement |= substTypeRef != currTypeRef;
-			}
-			if (haveReplacement) {
-				ComposedTypeRef result = TypeUtils.copy(typeRef);
-				result.getTypeRefs().clear();
-				result.getTypeRefs().addAll(TypeUtils.copyAll(substTypeRefs));
-				return result;
-			}
-			return typeRef;
+		protected TypeRef caseFunctionTypeExprOrRef_processDeclaredThisType(TypeRef declThisType) {
+			return substTypeVariables(G, declThisType, false);
 		}
 
 		@Override
-		public TypeArgument caseTypeTypeRef(TypeTypeRef typeRef) {
-			TypeArgument typeArg = typeRef.getTypeArg();
-			if (typeArg != null) {
-				// substitute in type argument
-				TypeArgument tResult = substTypeVariables(G, typeArg, captureContainedWildcards);
-				if (tResult != typeArg) {
-					// changed
-					TypeTypeRef result = TypeUtils.copy(typeRef);
-					result.setTypeArg(tResult);
-					return result;
-				}
-			}
-			// nothing changed
-			return typeRef;
+		protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
+			return substTypeVariables(G, returnTypeRef, false);
 		}
 
 		@Override
-		public TypeArgument caseParameterizedTypeRef(ParameterizedTypeRef typeRef) {
+		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
+			return substTypeVariables(G, fparTypeRef, false);
+		}
+
+		@Override
+		protected TypeRef caseComposedTypeRef_processMemberType(TypeRef memberTypeRef) {
+			return substTypeVariables(G, memberTypeRef, captureContainedWildcards);
+		}
+
+		@Override
+		protected TypeArgument caseTypeTypeRef_processTypeArg(TypeArgument typeArg) {
+			return substTypeVariables(G, typeArg, captureContainedWildcards);
+		}
+
+		@Override
+		protected TypeRef caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
 			TypeRef result;
 
 			// (1) start with unchanged typeRef as result (will be copied and changed below if needed)
@@ -386,8 +203,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				if (replacementFromEnvUntyped instanceof TypeArgument) {
 					// we have a single substitution!
 					final TypeArgument replacementFromEnv = (TypeArgument) replacementFromEnvUntyped;
-					final TypeArgument replacement = TypeUtils.mergeTypeModifiers(replacementFromEnv, typeRef);
-					final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeVar, replacement);
+					final TypeRef replacementPrepared = prepareTypeVariableReplacement(replacementFromEnv,
+							typeRef, typeVar);
 					result = replacementPrepared;
 				} else if (replacementFromEnvUntyped instanceof List<?>) {
 					// we have multiple substitutions!
@@ -397,8 +214,9 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					final List<TypeArgument> l_raw = (List<TypeArgument>) replacementFromEnvUntyped;
 					final List<TypeRef> l = CollectionLiterals.newArrayList();
 					for (int i = 0; i < l_raw.size(); i++) {
-						final TypeArgument replacement = l_raw.get(i);
-						final TypeRef replacementPrepared = prepareTypeVariableReplacement(typeVar, replacement);
+						final TypeArgument replacementFromEnv = l_raw.get(i);
+						final TypeRef replacementPrepared = prepareTypeVariableReplacement(replacementFromEnv,
+								typeRef, typeVar);
 						l.add(replacementPrepared);
 					}
 					if (typeVar.isDeclaredCovariant()) {
@@ -410,66 +228,36 @@ import org.eclipse.xtext.xbase.lib.Pair;
 						// on by a validation (see method RuleEnvironmentExtensions#recordInconsistentSubstitutions())
 						result = unknown();
 					}
-					TypeUtils.copyTypeModifiers(result, typeRef);
 				} else {
 					// we have no substitutions at all!
 					// -> no need to change anything here
 				}
 			}
 
-			// (3) substitute type variables in type arguments
-			if (typeRefDeclType != null && typeRefDeclType.isGeneric()) {
-				final List<TypeVariable> typeParams = typeRefDeclType.getTypeVars();
-				final List<TypeArgument> typeArgs = typeRef.getTypeArgs();
-
-				final int lenParams = typeParams.size();
-				final int lenArgs = typeArgs.size();
-
-				// (a) without changing 'result', perform substitution on all type arguments and remember if anyone has
-				// changed
-				final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
-				final TypeArgument[] argsChanged = new TypeArgument[lenArgs];
-				boolean haveSubstitution = false;
-				for (int i = 0; i < lenArgs; i++) {
-					final TypeArgument arg = typeArgs.get(i);
-					final boolean captureContainedWildcardsNEW = arg instanceof Wildcard
-							? captureContainedWildcards
-							: false;
-					TypeArgument argSubst = substTypeVariables(G2, arg, captureContainedWildcardsNEW);
-					if (argSubst != arg) {
-						// n.b.: will only add to argsChanged if changed! (otherwise argsChanged[i] will remain null)
-						argsChanged[i] = argSubst;
-						haveSubstitution = true;
-					}
-					if (i < lenParams) {
-						final TypeVariable param = typeParams.get(i);
-						RuleEnvironmentExtensions.addTypeMapping(G2, param, argSubst);
-					}
-				}
-
-				// (b) update 'result' with changed type arguments iff(!) one or more have changed
-				if (haveSubstitution) {
-					if (result == typeRef) {
-						result = TypeUtils.copy(typeRef);
-					}
-					for (int i = 0; i < lenArgs; i++) {
-						final TypeArgument argCh = argsChanged[i];
-						if (argCh != null) {
-							result.getTypeArgs().set(i, argCh);
-						}
-					}
-				}
-			}
-
-			// (4) substitution in structural members
-			if (result instanceof StructuralTypeRef) {
-				result = typeSystemHelper.substTypeVariablesInStructuralMembers(G, (StructuralTypeRef) result);
-			}
-
 			return result;
 		}
 
-		private TypeRef prepareTypeVariableReplacement(TypeVariable typeVar, TypeArgument replacementArg) {
+		private TypeRef prepareTypeVariableReplacement(TypeArgument replacementArg,
+				ParameterizedTypeRef originalTypeRef, TypeVariable typeVar) {
+
+			final TypeArgument replacementArgInitial = replacementArg;
+
+			// merge type modifiers
+			replacementArg = TypeUtils.mergeTypeModifiers(replacementArg, originalTypeRef, false);
+			if (replacementArg instanceof TypeRef) {
+				final TypeRef aliasRef = ((TypeRef) replacementArg).getOriginalAliasTypeRef();
+				if (aliasRef != null) {
+					final TypeRef aliasRefMerged = TypeUtils.mergeTypeModifiers(aliasRef, originalTypeRef, false);
+					if (aliasRefMerged != aliasRef && aliasRefMerged instanceof ParameterizedTypeRef) {
+						final ParameterizedTypeRef aliasRefMergedCasted = (ParameterizedTypeRef) aliasRefMerged;
+						if (replacementArg == replacementArgInitial) {
+							replacementArg = TypeUtils.copyPartial(replacementArg,
+									TypeRefsPackage.Literals.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF);
+						}
+						((TypeRef) replacementArg).setOriginalAliasTypeRef(aliasRefMergedCasted);
+					}
+				}
+			}
 
 			// capture wildcards
 			TypeRef replacement;
@@ -520,6 +308,25 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			replacement = TypeUtils.copy(replacement);
 
 			return replacement;
+		}
+
+		@Override
+		protected TypeArgument caseParameterizedTypeRef_processTypeArgument(RuleEnvironment G2, TypeVariable typeParam,
+				TypeArgument typeArg) {
+			final boolean captureContainedWildcardsNEW = typeArg instanceof Wildcard
+					? captureContainedWildcards
+					: false;
+			TypeArgument argSubst = substTypeVariables(G2, typeArg, captureContainedWildcardsNEW);
+			if (typeParam != null) {
+				RuleEnvironmentExtensions.addTypeMapping(G2, typeParam, argSubst);
+			}
+			return argSubst;
+		}
+
+		@Override
+		protected TypeRef caseParameterizedTypeRef_processStructuralMembers(StructuralTypeRef typeRef,
+				boolean alreadyCopied) {
+			return typeSystemHelper.substTypeVariablesInStructuralMembers(G, typeRef);
 		}
 	}
 }

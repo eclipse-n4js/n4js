@@ -399,13 +399,6 @@ class TypeVariable extends Type {
 	contains TypeRef declaredUpperBound
 
 	/*
-	 * If and only if this TypeVariable is an AST node (note: instances of TypeVariable are used for both the AST
-	 * and in the TModule), then this property will point to the corresponding TypeVariable instance created in the
-	 * TModule, similar to {@code TypeDefiningElement#definedType}.
-	 */
-	refers transient TypeVariable definedTypeVariable
-
-	/*
 	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns
 	 * invariant, unless the type variable was explicitly declared on definition site to be co- or contravariant.
 	 */
@@ -443,7 +436,7 @@ class InferenceVariable extends TypeVariable {}
  * Represents a function declaration. In JavaScript, functions are first-class objects, hence
  * a function declaration also is a type declaration.
  */
-class TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
+class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable {
 	boolean external
 	/*
 	 * Formal parameters
@@ -463,10 +456,6 @@ class TFunction extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, T
 	 * Return type
 	 */
 	contains TypeRef returnTypeRef
-	/*
-	 * Type parameters of a generic function or method. Do not confuse this with the formal parameters.
-	 */
-	contains TypeVariable[] typeVars
 	/*
 	 * optional thisType declaration (@This)
 	 */
@@ -562,7 +551,6 @@ enum MemberAccessModifier {
 	public = 6
 }
 
-// TODO jvp: probably need more methods, cf. ECMAScript spec properties
 /*
  * Base class for all types. This abstraction provides all necessary information
  * when dealing with types, e.g. it helps with conformance checks and other constraints.
@@ -572,6 +560,11 @@ enum MemberAccessModifier {
  */
 //TODO why not abstract (doesn't work when it is abstract, but why?)
 class Type extends TExportableElement, TAnnotableElement, org.eclipse.n4js.ts.typeRefs.Versionable {
+
+	/** Returns true iff this type is a type alias. */
+	op boolean isAlias() {
+		return false;
+	}
 
 	/**
 	 * Returns true if type's implementation is provided by runtime. Default implementation returns true, overridden in user-defined (meta) types.
@@ -687,6 +680,13 @@ class Type extends TExportableElement, TAnnotableElement, org.eclipse.n4js.ts.ty
 //	}
 }
 
+abstract class GenericType extends Type {
+	/*
+	 * The type parameters of this generic type.
+	 */
+	contains TypeVariable[] typeVars
+}
+
 abstract class AccessibleTypeElement {
 	TypeAccessModifier declaredTypeAccessModifier
 
@@ -717,10 +717,6 @@ abstract class AccessibleTypeElement {
 
 }
 
-class DeclaredTypeWithAccessModifier extends Type, AccessibleTypeElement {
-
-}
-
 type NameAndAccess wraps NameAndAccess
 
 type MemberList wraps List<? extends TMember>
@@ -728,16 +724,11 @@ type MemberList wraps List<? extends TMember>
 /*
  * Base class for types containing members, such as TClassifier and PrimitiveTypes.
  */
-abstract class ContainerType<MT extends TMember> extends Type {
+abstract class ContainerType<MT extends TMember> extends GenericType {
 	transient EMap<NameAndAccess, ? extends TMember> ownedMembersByNameAndAccess
 
 	contains MT[] ownedMembers
 	contains TMethod callableCtor // required in TClass and TObjectPrototype
-
-	/*
-	 * type parameters of generic types
-	 */
-	contains TypeVariable[] typeVars
 
 	/**
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.
@@ -1050,7 +1041,7 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
  * Plain JavaScript objects with super type (=prototype).
  * This is used for defining predefined types such as Object, String, Date etc.
  */
-class TObjectPrototype extends TClassifier, DeclaredTypeWithAccessModifier, ArrayLike {
+class TObjectPrototype extends TClassifier, AccessibleTypeElement, ArrayLike {
 	contains ParameterizedTypeRef superType
 
 	boolean declaredFinal
@@ -1086,7 +1077,7 @@ abstract class ArrayLike {
 	op TypeRef getElementType()
 }
 
-class TN4Classifier extends TClassifier, DeclaredTypeWithAccessModifier, TMigratable {
+class TN4Classifier extends TClassifier, AccessibleTypeElement, TMigratable {
 	/*
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */
@@ -1596,7 +1587,7 @@ abstract class FieldAccessor extends TMemberWithAccessModifier {
 	boolean declaredAbstract
 	contains TypeRef declaredThisType
 
-	op TypeRef getDeclaredTypeRef()
+	op TypeRef getTypeRef()
 
 	/**
 	 * Returns true if the method is either declared abstract or it is implicitly abstract, i.e. it is declared in a role and has no body.
@@ -1610,7 +1601,7 @@ abstract class FieldAccessor extends TMemberWithAccessModifier {
  * Getter of a field, declaration (type, name) is derived from field (and its type).
  */
 class TGetter extends FieldAccessor, TMemberWithAccessModifier {
-	contains TypeRef declaredTypeRef
+	contains TypeRef typeRef
 
 	/** Always returns GETTER */
 	op MemberType getMemberType() {
@@ -1626,7 +1617,7 @@ class TGetter extends FieldAccessor, TMemberWithAccessModifier {
 		strb.append(name);
 		if (optional) strb.append("?");
 		strb.append("()");
-		if (declaredTypeRef!==null) strb.append(": ").append(declaredTypeRef.typeRefAsString);
+		if (typeRef!==null) strb.append(": ").append(typeRef.typeRefAsString);
 		return strb.toString();
 	}
 
@@ -1646,7 +1637,7 @@ class TStructGetter extends TGetter, TStructMember {
  */
 class TSetter extends FieldAccessor, TMemberWithAccessModifier {
 	contains TFormalParameter fpar
-	op TypeRef getDeclaredTypeRef() {
+	op TypeRef getTypeRef() {
 		return fpar?.typeRef;
 	}
 	op boolean isReadable() {
@@ -1684,7 +1675,7 @@ class TStructSetter extends TSetter, TStructMember {
  * Represents a user defined enumeration type. All enums implicitly (and transparently
  * to the user) inherit from N4Enum, which provides properties shared by all enums.
  */
-class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable, TMigratable {
+class TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable, TMigratable {
 
 	boolean external
 	contains TEnumLiteral[] literals
@@ -1710,6 +1701,18 @@ class TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement {
 	 * a normal or <code>@StringBased</code> enum.
 	 */
 	BigDecimal valueNumber
+}
+
+/*
+ * A type alias.
+ * <p>
+ * Note that references to type aliases are tricky, see {@link TypeRef#isAliasResolved()}.
+ */
+class TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
+
+	op boolean isAlias() {
+		return true;
+	}
 }
 
 /*

@@ -25,7 +25,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.TGetter#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TGetter#getTypeRef <em>Type Ref</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTGetter()
@@ -34,26 +34,26 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  */
 public interface TGetter extends FieldAccessor, TMemberWithAccessModifier {
 	/**
-	 * Returns the value of the '<em><b>Declared Type Ref</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Type Ref</em>' containment reference.
-	 * @see #setDeclaredTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTGetter_DeclaredTypeRef()
+	 * @return the value of the '<em>Type Ref</em>' containment reference.
+	 * @see #setTypeRef(TypeRef)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTGetter_TypeRef()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TypeRef getDeclaredTypeRef();
+	TypeRef getTypeRef();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TGetter#getDeclaredTypeRef <em>Declared Type Ref</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TGetter#getTypeRef <em>Type Ref</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Type Ref</em>' containment reference.
-	 * @see #getDeclaredTypeRef()
+	 * @param value the new value of the '<em>Type Ref</em>' containment reference.
+	 * @see #getTypeRef()
 	 * @generated
 	 */
-	void setDeclaredTypeRef(TypeRef value);
+	void setTypeRef(TypeRef value);
 
 	/**
 	 * <!-- begin-user-doc -->

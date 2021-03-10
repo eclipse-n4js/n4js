@@ -248,7 +248,8 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private boolean holdsSuperClass(N4ClassDeclaration n4Class) {
-		val superType = n4Class.superClassRef?.declaredType;
+		val superTypeRef = n4Class.superClassRef?.typeRef;
+		val superType = superTypeRef?.declaredType;
 		if (superType !== null && superType.name !== null) { // note: in case superType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 			if (superType instanceof PrimitiveType) {
@@ -302,6 +303,11 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					return false;
 				}
 			}
+		} else if (superTypeRef !== null && superTypeRef.isAliasResolved) {
+			// not all aliases are illegal after "extends", but if we get to this point we have an illegal case:
+			val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "extend", superTypeRef.internalGetTypeRefAsString);
+			addIssue(message, n4Class.superClassRef, null, CLF_WRONG_META_TYPE);
+			return false;
 		}
 		return true;
 	}
@@ -321,7 +327,8 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private internalCheckImplementedInterfaces(N4ClassDeclaration n4Class) {
 		n4Class.implementedInterfaceRefs.forEach [
-			val consumedType = it.declaredType;
+			val consumedTypeRef = it.typeRef;
+			val consumedType = consumedTypeRef?.declaredType;
 			if (consumedType !== null && consumedType.name !== null) { // note: in case consumedType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 				// consumed type must be an interface
@@ -337,6 +344,10 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 						addIssue(message, it, null, CLF_WRONG_META_TYPE);
 					}
 				}
+			} else if (consumedTypeRef !== null && consumedTypeRef.isAliasResolved) {
+				// not all aliases are illegal after "implements", but if we get to this point we have an illegal case:
+				val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "implement", consumedTypeRef.internalGetTypeRefAsString);
+				addIssue(message, it, null, CLF_WRONG_META_TYPE);
 			}
 		]
 	}
@@ -396,7 +407,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				if (subtypeRes.failure) {
 					val message = getMessageForCLF_SPEC_WRONG_ADD_MEMBERTYPE(smember.name, description(tfield),
 						trimTypesystemMessage(subtypeRes));
-					val errMember = (ctor.fpars.get(parIndex).declaredTypeRef as StructuralTypeRef).structuralMembers.
+					val errMember = (ctor.fpars.get(parIndex).declaredTypeRefInAST as StructuralTypeRef).structuralMembers.
 						get(memberIndex);
 					val sourceObject = (if (errMember.astElement !== null) errMember.astElement else errMember);
 					addIssue(

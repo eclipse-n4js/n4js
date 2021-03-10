@@ -64,9 +64,9 @@ public class N4JSObjectLiteralTypesBuilder {
 		val TStructField field = TypesFactory.eINSTANCE.createTStructField
 		field.setMemberName(nameValuePair);
 		field.optional = nameValuePair.declaredOptional;
-		if (nameValuePair.declaredTypeRef !== null) {
+		if (nameValuePair.declaredTypeRefInAST !== null) {
 			if (!preLinkingPhase) {
-				field.typeRef = TypeUtils.copyWithProxies(nameValuePair.declaredTypeRef)
+				field.typeRef = TypeUtils.copyWithProxies(nameValuePair.declaredTypeRefInAST)
 			}
 		}
 		else if(nameValuePair.expression !== null) {
@@ -94,12 +94,12 @@ public class N4JSObjectLiteralTypesBuilder {
 		val TStructGetter getter = TypesFactory.eINSTANCE.createTStructGetter
 		getter.setMemberName(getterDecl);
 		getter.optional = getterDecl.declaredOptional;
-		if (getterDecl.declaredTypeRef !== null) {
+		if (getterDecl.declaredTypeRefInAST !== null) {
 			if (!preLinkingPhase) {
-				getter.declaredTypeRef = TypeUtils.copyWithProxies(getterDecl.declaredTypeRef)
+				getter.typeRef = TypeUtils.copyWithProxies(getterDecl.declaredTypeRefInAST)
 			}
 		} else {
-			getter.declaredTypeRef = TypeUtils.createDeferredTypeRef;
+			getter.typeRef = TypeUtils.createDeferredTypeRef;
 		}
 		getter.astElement = getterDecl;
 		getterDecl.definedGetter = getter;
@@ -119,7 +119,7 @@ public class N4JSObjectLiteralTypesBuilder {
 		val param = TypesFactory.eINSTANCE.createTFormalParameter
 		if (setterDecl.fpar !== null) {
 			param.name = setterDecl.fpar.name
-			val fparDeclTypeRef = setterDecl.fpar.declaredTypeRef;
+			val fparDeclTypeRef = setterDecl.fpar.declaredTypeRefInAST;
 			if(fparDeclTypeRef!==null) {
 				if (!preLinkingPhase) {
 					param.typeRef = TypeUtils.copyWithProxies(fparDeclTypeRef);
@@ -148,9 +148,9 @@ public class N4JSObjectLiteralTypesBuilder {
 		// IMPORTANT: do not create the formal parameters as above for the property setters but instead create them with
 		// method N4JSFormalParameterTypesBuilder#createFormalParameter() (for consistency with methods in classes)
 		result.fpars += methodDecl.fpars.map[createFormalParameter(builtInTypeScope, preLinkingPhase)];
-		if (methodDecl.returnTypeRef !== null) {
+		if (methodDecl.declaredReturnTypeRefInAST !== null) {
 			if (!preLinkingPhase) {
-				result.returnTypeRef = TypeUtils.copyWithProxies(methodDecl.returnTypeRef);
+				result.returnTypeRef = TypeUtils.copyWithProxies(methodDecl.declaredReturnTypeRefInAST);
 			}
 		} else {
 			result.returnTypeRef = builtInTypeScope.voidTypeRef;

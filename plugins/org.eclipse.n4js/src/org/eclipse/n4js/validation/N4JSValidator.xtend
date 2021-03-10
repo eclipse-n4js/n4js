@@ -44,6 +44,7 @@ import org.eclipse.n4js.validation.validators.N4JSNameValidator
 import org.eclipse.n4js.validation.validators.N4JSStatementValidator
 import org.eclipse.n4js.validation.validators.N4JSSuperValidator
 import org.eclipse.n4js.validation.validators.N4JSSyntaxValidator
+import org.eclipse.n4js.validation.validators.N4JSTypeAliasValidator
 import org.eclipse.n4js.validation.validators.N4JSTypeValidator
 import org.eclipse.n4js.validation.validators.N4JSVariableValidator
 import org.eclipse.n4js.validation.validators.N4JSXValidator
@@ -86,6 +87,7 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSDependencyInjectionValidator,
 	N4JSDestructureValidator,
 	N4JSEnumValidator,
+	N4JSTypeAliasValidator,
 	N4JSExpressionValidator,
 	N4JSExternalValidator,
 	N4JSFlowgraphValidator,

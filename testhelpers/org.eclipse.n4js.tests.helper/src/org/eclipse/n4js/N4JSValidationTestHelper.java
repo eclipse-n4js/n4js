@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.validation.Issue;
 
@@ -66,6 +67,11 @@ public class N4JSValidationTestHelper extends ValidationTestHelper {
 			final EObject currObj = iter.next();
 			if (currObj != null && !currObj.eIsProxy()) {
 				for (EReference currRef : currObj.eClass().getEAllReferences()) {
+					if (currRef == N4JSPackage.Literals.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF) {
+						// if the processing of the TypeReferenceNode#typeRefInAST by TypeRefProcessor led to any
+						// changes, then the #cachedProcessedTypeRef will not be contained in the AST
+						continue;
+					}
 					if (!currRef.isContainment() && !currRef.isContainer() && currRef.getEOpposite() == null) {
 						if (currRef.isMany()) {
 							@SuppressWarnings("unchecked")

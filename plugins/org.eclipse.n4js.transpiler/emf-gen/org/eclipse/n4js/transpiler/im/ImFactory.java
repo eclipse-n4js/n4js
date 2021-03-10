@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.emf.ecore.EFactory;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -73,6 +74,15 @@ public interface ImFactory extends EFactory {
 	 * @generated
 	 */
 	SymbolTableEntryInternal createSymbolTableEntryInternal();
+
+	/**
+	 * Returns a new object of class '<em>Type Reference Node IM</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Type Reference Node IM</em>'.
+	 * @generated
+	 */
+	<T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM();
 
 	/**
 	 * Returns a new object of class '<em>Identifier Ref IM</em>'.

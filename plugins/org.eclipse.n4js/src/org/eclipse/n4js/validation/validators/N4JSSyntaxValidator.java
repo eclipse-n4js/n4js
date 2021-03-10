@@ -336,9 +336,9 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	public void checkCatchVariable(CatchVariable catchVariable) {
-		if (catchVariable.getDeclaredTypeRef() != null) {
+		if (catchVariable.getDeclaredTypeRefInAST() != null) {
 			addIssue(getMessageForAST_CATCH_VAR_TYPED(), catchVariable,
-					N4JSPackage.eINSTANCE.getTypedElement_DeclaredTypeRef(),
+					N4JSPackage.Literals.TYPED_ELEMENT__DECLARED_TYPE_REF_NODE,
 					AST_CATCH_VAR_TYPED);
 		}
 	}

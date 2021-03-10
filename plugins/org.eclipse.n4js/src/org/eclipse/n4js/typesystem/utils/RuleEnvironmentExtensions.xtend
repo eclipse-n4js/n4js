@@ -112,11 +112,13 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
 	public static final String GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD = "substTypeVars_implicitUpperBoundOfWildcard";
+	public static final String GUARD_RESOLVE_TYPE_ALIASES_SWITCH = "ResolveTypeAliasesSwitch";
 	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS = "StructuralTypingComputer__inProgress";
 	public static final String GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS_FOR_TYPE_REF = "StructuralTypingComputer__inProgressForTypeRef";
 	public static final String GUARD_CHECK_TYPE_ARGUMENT_COMPATIBILITY = "N4JSTypeSystem#checkTypeArgumentCompatibility";
 	public static final String GUARD_REDUCER__IS_SUBTYPE_OF = "Reducer#isSubtypeOf";
 	public static final String GUARD_REDUCER__REDUCE_STRUCTURAL_TYPE_REF = "Reducer#reduceStructuralTypeRef";
+	public static final String GUARD_TYPE_REFS_NESTED_MODIFICATION_SWITCH__MODIFY_BOUNDS_OF_WILDCARD = "TypeRefsNestedModificationSwitch#modifyBoundsOfWildcard";
 
 	/**
 	 * Returns a new {@code RuleEnvironment}; we need this because of the
@@ -249,11 +251,11 @@ class RuleEnvironmentExtensions {
 	 * a  ParameterizedTypeRef or a BoundThisTypeRef. The latter case happens if the receiver
 	 * of a function call is a function call itself, returning a this type.
 	 */
-	def static void addThisType(RuleEnvironment G, TypeRef actualThisTypeRef) {
+	def static void setThisBinding(RuleEnvironment G, TypeRef actualThisTypeRef) {
 		switch (actualThisTypeRef) {
 			TypeTypeRef: // IDE-785 decompose
 				if (actualThisTypeRef.getTypeArg instanceof TypeRef) {
-					addThisType(G,actualThisTypeRef.getTypeArg as TypeRef)
+					setThisBinding(G,actualThisTypeRef.getTypeArg as TypeRef)
 				}
 			ParameterizedTypeRef:
 				G.put(KEY__THIS_BINDING, TypeUtils.createBoundThisTypeRef(actualThisTypeRef))
@@ -266,7 +268,7 @@ class RuleEnvironmentExtensions {
 	 * Returns the current this type, this must have been added before via
 	 * {@link #addThisType(RuleEnvironment, TypeRef)}
 	 */
-	def static TypeRef getThisType(RuleEnvironment G) {
+	def static TypeRef getThisBinding(RuleEnvironment G) {
 		G.get(KEY__THIS_BINDING) as TypeRef;
 	}
 
@@ -299,6 +301,10 @@ class RuleEnvironmentExtensions {
 	def static List<TypeRef> getInconsistentSubstitutions(RuleEnvironment G, TypeVariable typeVar) {
 		val storage = G.get(KEY__INCONSISTENT_SUBSTITUTIONS) as ListMultimap<TypeVariable,TypeRef>;
 		return if(storage!==null) storage.get(typeVar) else Collections.emptyList();
+	}
+
+	def static boolean hasReplacements(RuleEnvironment G) {
+		return G.get(KEY__TYPE_REPLACEMENT) !== null;
 	}
 
 	def static void setTypeReplacement(RuleEnvironment G, ITypeReplacementProvider replacementProvider) {
@@ -1124,7 +1130,7 @@ class RuleEnvironmentExtensions {
 	 */
 	public def static boolean isInReturnDeclaration_Of_StaticMethod(EObject locationToCheck,N4MethodDeclaration container) {
 		if( ! container.isStatic ) return false;
-		val isInReturn = EcoreUtil2.isAncestor(container.returnTypeRef,locationToCheck)
+		val isInReturn = EcoreUtil2.isAncestor(container.declaredReturnTypeRefInAST,locationToCheck)
 		return isInReturn;
 	}
 

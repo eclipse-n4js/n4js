@@ -144,7 +144,7 @@ public class MemberRedefinitionUtils {
 	/**
 	 * Returns the context type to be used as this binding (see
 	 * {@link N4JSTypeSystem#createRuleEnvironmentForContext(TypeRef, TypeRef, Resource) here} and
-	 * {@link RuleEnvironmentExtensions#addThisType(RuleEnvironment, TypeRef)} here) for checking constructor
+	 * {@link RuleEnvironmentExtensions#setThisBinding(RuleEnvironment, TypeRef)} here) for checking constructor
 	 * compatibility.
 	 *
 	 * For example, given the following code

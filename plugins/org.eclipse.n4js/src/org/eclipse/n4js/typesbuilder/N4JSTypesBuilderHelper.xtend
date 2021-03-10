@@ -34,7 +34,6 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
-import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
@@ -57,6 +56,7 @@ package class N4JSTypesBuilderHelper {
 
 	def protected <T extends AnnotableElement & ModifiableElement> void setTypeAccessModifier(
 		AccessibleTypeElement classifier, T definition) {
+
 		val isPlainJS = jsVariantHelper.isPlainJS(definition);
 		// IDEBUG-861 assume public visibility if plain JS
 		if (isPlainJS) {
@@ -67,7 +67,7 @@ package class N4JSTypesBuilderHelper {
 		}
 	}
 
-	def package void setProvidedByRuntime(DeclaredTypeWithAccessModifier declaredType,
+	def package void setProvidedByRuntime(AccessibleTypeElement declaredType,
 		AnnotableElement annotableElement, boolean preLinkingPhase) {
 
 		declaredType.declaredProvidedByRuntime = AnnotationDefinition.PROVIDED_BY_RUNTIME.hasAnnotation(
@@ -146,7 +146,7 @@ package class N4JSTypesBuilderHelper {
 					}
 					TypeRefAnnotationArgument: {
 						val arg = TypesFactory.eINSTANCE.createTAnnotationTypeRefArgument();
-						arg.typeRef = TypeUtils.copyWithProxies(typeRef);
+						arg.typeRef = TypeUtils.copyWithProxies(typeRefNode?.typeRefInAST);
 						return arg;
 					}
 				}
@@ -191,7 +191,7 @@ package class N4JSTypesBuilderHelper {
 
 	def private TypeRef internalGetDeclaredThisTypeFromAnnotation(AnnotableElement element) {
 		val annThis = AnnotationDefinition.THIS.getAnnotation(element);
-		return annThis?.args?.filter(TypeRefAnnotationArgument)?.head?.typeRef;
+		return annThis?.args?.filter(TypeRefAnnotationArgument)?.head?.typeRefNode?.typeRefInAST;
 	}
 
 

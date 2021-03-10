@@ -60,7 +60,7 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 		if (astNode != null && !astNode.eIsProxy()) {
 			List<INode> nodes = super.getDocumentationNodes(astNode);
 			if (nodes.isEmpty() && astNode instanceof VariableDeclaration) {
-				TypeRef typeRef = ((VariableDeclaration) astNode).getDeclaredTypeRef();
+				TypeRef typeRef = ((VariableDeclaration) astNode).getDeclaredTypeRefInAST();
 				if (typeRef != null) {
 					nodes = getDocumentationNodes(typeRef);
 				}

@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class C {}
+class D {}
+
+let str: string;
+let c: C;
+let arr: Array<?>;
+let arrStr: Array<string>;
+let fn: (any)=>boolean;
+let fnStr: (string)=>boolean;
+let obj: ~Object with { prop: any };
+let objStr: ~Object with { prop: string };
+
+
+type A1 = string;
+let a1: A1;
+// XPECT noerrors -->
+a1 = str;
+// XPECT noerrors -->
+str = a1;
+
+
+type A2 = C;
+let a2: A2;
+// XPECT noerrors -->
+a2 = c;
+// XPECT noerrors -->
+c = a2;
+
+
+type A3 = C | D;
+let a3: A3;
+// XPECT noerrors -->
+a3 = c;
+// XPECT errors --> "A3 is not a subtype of C." at "a3"
+c = a3;
+
+
+type A4 = Array<string>;
+let a4: A4;
+// XPECT errors --> "Array<?> is not a subtype of A4." at "arr"
+a4 = arr;
+// XPECT noerrors -->
+arr = a4;
+// XPECT noerrors -->
+a4 = arrStr;
+// XPECT noerrors -->
+arrStr = a4;
+
+
+type A5 = (string)=>boolean;
+let a5: A5;
+// XPECT noerrors -->
+a5 = fn;
+// XPECT errors --> "A5 is not a subtype of {function(any):boolean}." at "a5"
+fn = a5;
+// XPECT noerrors -->
+a5 = fnStr;
+// XPECT noerrors -->
+fnStr = a5;
+
+
+type A6 = ~Object with { prop: string };
+let a6: A6;
+// XPECT errors --> "~Object with { prop: any } is not a structural subtype of A6: prop failed: any is not equal to string." at "obj"
+a6 = obj;
+// XPECT errors --> "A6 is not a structural subtype of ~Object with { prop: any }: prop failed: string is not equal to any." at "a6"
+obj = a6;
+// XPECT noerrors -->
+a6 = objStr;
+// XPECT noerrors -->
+objStr = a6;

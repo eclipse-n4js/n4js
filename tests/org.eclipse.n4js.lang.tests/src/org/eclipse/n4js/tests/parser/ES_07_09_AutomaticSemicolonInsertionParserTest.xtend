@@ -317,7 +317,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
-		assertNull(varDecl.declaredTypeRef)
+		assertNull(varDecl.declaredTypeRefInAST)
 		val node = NodeModelUtils.findActualNodeFor(script)
 		assertEquals(3, node.children.size) // hidden (empty as in 'no children, length=0'), var, x
 	}
@@ -328,7 +328,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
-		assertNull(varDecl.declaredTypeRef)
+		assertNull(varDecl.declaredTypeRefInAST)
 		val node = NodeModelUtils.findActualNodeFor(script)
 		assertEquals(3, node.children.size) // hidden (empty as in 'no children, length=0'), var, x
 	}
@@ -428,7 +428,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
-		assertNull(varDecl.declaredTypeRef)
+		assertNull(varDecl.declaredTypeRefInAST)
 		val node = NodeModelUtils.findActualNodeFor(script)
 		assertEquals(3, node.children.size) // hidden (empty as in 'no children, length=0'), var, x
 	}
@@ -479,7 +479,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
-		assertNull(varDecl.declaredTypeRef)
+		assertNull(varDecl.declaredTypeRefInAST)
 		val node = NodeModelUtils.findActualNodeFor(script)
 		assertEquals(3, node.children.size) // hidden (empty as in 'no children, length=0'), var, x
 	}
@@ -492,7 +492,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
-		assertNull(varDecl.declaredTypeRef)
+		assertNull(varDecl.declaredTypeRefInAST)
 		val node = NodeModelUtils.findActualNodeFor(script)
 		assertEquals(3, node.children.size) // hidden (empty as in 'no children, length=0'), var, x
 	}
@@ -507,7 +507,7 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		val varStatement = script.scriptElements.head as VariableStatement
 		val varDecl = varStatement.varDecl.head
 		assertEquals('x', varDecl.name)
-		assertNull(varDecl.declaredTypeRef)
+		assertNull(varDecl.declaredTypeRefInAST)
 		val node = NodeModelUtils.findActualNodeFor(script)
 		assertEquals(3, node.children.size) // hidden (empty as in 'no children, length=0'), var, x
 	}

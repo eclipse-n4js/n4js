@@ -21,8 +21,8 @@ public abstract class AbstractN4JSValidator extends AbstractDeclarativeValidator
 	protected List<EPackage> getEPackages() {
 		List<EPackage> result = new ArrayList<EPackage>();
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/n4js/N4JS"));
-		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/ts/Types"));
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/ts/TypeRefs"));
+		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/ts/Types"));
 		return result;
 	}
 }

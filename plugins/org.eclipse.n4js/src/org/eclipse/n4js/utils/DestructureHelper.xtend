@@ -22,8 +22,10 @@ import org.eclipse.n4js.n4JS.DestructNode
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
+import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.postprocessing.ASTProcessor
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
@@ -33,6 +35,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TStructMember
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -129,7 +132,7 @@ class DestructureHelper {
 		if(rootNode.defaultExpr.eContainer instanceof ForStatement) {
 			// valueTypeRef is currently the type of 'expr' and thus something like Iterable<T>
 			// -> we are interested in the T
-			valueTypeRef = tsh.extractIterableElementTypeUB(G, valueTypeRef);
+			valueTypeRef = tsh.extractIterableElementType(G, valueTypeRef, false);
 		}
 		// now, valueTypeRef is the type of the root value to be destructured by rootNode.nestedNodes (or null if invalid)
 		if(valueTypeRef!==null) {
@@ -148,7 +151,7 @@ class DestructureHelper {
 		// depending on whether we are in an array or object destructuring (sub-)pattern
 		if(nodes.arePositional) {
 			// positional
-			val elementTypeRefs = tsh.extractIterableElementTypesUBs(G,valueTypeRef).toList;
+			val elementTypeRefs = tsh.extractIterableElementTypes(G,valueTypeRef);
 			if(!elementTypeRefs.empty) {
 				val maxIdx = elementTypeRefs.size-1;
 				for(var idx=0;idx<nodes.size;idx++) {
@@ -226,15 +229,14 @@ class DestructureHelper {
 		if(m!==null && !m.eIsProxy) {
 			val result = switch(m) {
 				TField: m.typeRef
-				TGetter: m.declaredTypeRef
+				TGetter: m.typeRef
 			};
 			if(result!==null) {
 				// substitute type variables in 'result'
 				val G2 = G.wrap;
 				tsh.addSubstitutions(G2, parentValueTypeRef);
 				val resultSubst = ts.substTypeVariables(G2, result);
-				val resultSubstUB = if(resultSubst!==null) ts.upperBound(G2, resultSubst);
-				return resultSubstUB;
+				return resultSubst;
 			}
 		}
 		return null;
@@ -270,9 +272,7 @@ class DestructureHelper {
 	 * Both the given value type and inferred expression type may be null and then this returns null.
 	 */
 	private def TypeRef mergeWithTypeOfDefaultExpression(RuleEnvironment G, TypeRef valueTypeRef, DestructNode node) {
-		val exprTypeRefRaw = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
-		val isNullOrUndef = if(exprTypeRefRaw!==null) ts.subtypeSucceeded(G,exprTypeRefRaw,G.undefinedTypeRef) || ts.subtypeSucceeded(G,exprTypeRefRaw,G.nullTypeRef);
-		val exprTypeRef = if(exprTypeRefRaw!==null && !isNullOrUndef) ts.upperBound(G,exprTypeRefRaw);
+		val exprTypeRef = if(node.defaultExpr!==null) ts.type(G, node.defaultExpr);
 		if(valueTypeRef!==null && exprTypeRef!==null) {
 			// we have to merge the two types ...
 			// (the small optimization with the subtype checks should be done by #createUnionType(), but isn't)
@@ -340,7 +340,7 @@ class DestructureHelper {
 				val field = TypesFactory.eINSTANCE.createTStructField
 				field.name = nestedNode.propName;
 				field.typeRef = if (elemExpectedType !== null) {
-					elemExpectedType
+					TypeUtils.copyIfContained(elemExpectedType)
 				} else {
 					// If the expected type is not specified, the expected type is arbitrary hence return a new inference variable.
 					val iv = infCtx.newInferenceVariable;
@@ -383,22 +383,45 @@ class DestructureHelper {
 	}
 
 	/** Create expected type for a leaf DestructNode */
-	private def createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
+	private def TypeRef createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
 		val varDecl = leafNode.varDecl
 		val varRef = leafNode.varRef
 		if (varDecl !== null) {
 			// If it is a variable declaration, simply retrieve the declared type
-			var declaredTypeRef = varDecl.declaredTypeRef;
-			if (declaredTypeRef !== null) {
-				return declaredTypeRef
+			val declTypeRef = getDeclaredTypeRefOfVarDecl(G, varDecl);
+			if (declTypeRef !== null) {
+				return declTypeRef;
 			}
 		} else if (varRef !== null) {
-			// It is a variable reference, retrieve the declared type of the variable
-			if (varRef.id instanceof VariableDeclaration && (varRef.id as VariableDeclaration).declaredTypeRef !== null) {
-				return (varRef.id as VariableDeclaration).declaredTypeRef
+			// It is a variable reference, retrieve the (declared or inferred) type of the variable
+			val id = varRef.id;
+			if (id instanceof VariableDeclaration || id instanceof TVariable) {
+				return ts.type(G, id);
 			}
 		}
 		// In case the expected type does not exist, simply return null
 		return null
+	}
+
+	/**
+	 * This is invoked from {@code PolyProcessor#inferType(RuleEnvironment, Expression, ASTMetaInfoCache)}
+	 * and in case of for-of loops it may inspect its variable declaration before {@code TypeRefProcessor}
+	 * has processed that variable declaration (see order defined for ForStatement in
+	 * {@link ASTProcessor#childrenToBeProcessed(RuleEnvironment, EObject)}). Therefore, we cannot rely
+	 * on {@link TypedElement#getDeclaredTypeRef()} here.
+	 */
+	private def TypeRef getDeclaredTypeRefOfVarDecl(RuleEnvironment G, VariableDeclaration varDecl) {
+		val typeRefNode = varDecl.declaredTypeRefNode;
+		if (typeRefNode !== null) {
+			val cached = typeRefNode.cachedProcessedTypeRef;
+			if (cached !== null) {
+				return cached;
+			}
+			val inAST = typeRefNode.typeRefInAST;
+			if (inAST !== null) {
+				return tsh.resolveTypeAliases(G, inAST);
+			}
+		}
+		return null;
 	}
 }

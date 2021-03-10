@@ -1610,17 +1610,17 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cOptionalQuestionMarkKeyword_1_0 = (Keyword)cOptionalAssignment_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final RuleCall cColonSepDeclaredTypeRefParserRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
+		private final RuleCall cColonSepTypeRefParserRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
 		
 		//TGetter:
 		//	=>
 		//	(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
 		//	'get' (name=TypesIdentifier | name=TypesComputedPropertyName)) optional?='?'?
-		//	'(' ')' ColonSepDeclaredTypeRef;
+		//	'(' ')' ColonSepTypeRef;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=> (declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')? 'get'
-		//(name=TypesIdentifier | name=TypesComputedPropertyName)) optional?='?'? '(' ')' ColonSepDeclaredTypeRef
+		//(name=TypesIdentifier | name=TypesComputedPropertyName)) optional?='?'? '(' ')' ColonSepTypeRef
 		public Group getGroup() { return cGroup; }
 		
 		//=> (declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')? 'get'
@@ -1682,8 +1682,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//')'
 		public Keyword getRightParenthesisKeyword_3() { return cRightParenthesisKeyword_3; }
 		
-		//ColonSepDeclaredTypeRef
-		public RuleCall getColonSepDeclaredTypeRefParserRuleCall_4() { return cColonSepDeclaredTypeRefParserRuleCall_4; }
+		//ColonSepTypeRef
+		public RuleCall getColonSepTypeRefParserRuleCall_4() { return cColonSepTypeRefParserRuleCall_4; }
 	}
 	public class TSetterElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.Types.TSetter");
@@ -2580,7 +2580,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	=>
 	//	(declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
 	//	'get' (name=TypesIdentifier | name=TypesComputedPropertyName)) optional?='?'?
-	//	'(' ')' ColonSepDeclaredTypeRef;
+	//	'(' ')' ColonSepTypeRef;
 	public TGetterElements getTGetterAccess() {
 		return pTGetter;
 	}
@@ -2979,7 +2979,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMethodAccess().getRule();
 	}
 	
-	//// TODO extract TypeVariableContainer to be used here
 	//fragment TypeVariables *:
 	//	'<' typeVars+=super::TypeVariable (',' typeVars+=super::TypeVariable)* '>';
 	public TypeExpressionsGrammarAccess.TypeVariablesElements getTypeVariablesAccess() {
@@ -2988,16 +2987,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getTypeVariablesRule() {
 		return getTypeVariablesAccess().getRule();
-	}
-	
-	//fragment ColonSepDeclaredTypeRef *:
-	//	':' declaredTypeRef=super::TypeRef;
-	public TypeExpressionsGrammarAccess.ColonSepDeclaredTypeRefElements getColonSepDeclaredTypeRefAccess() {
-		return gaTypeExpressions.getColonSepDeclaredTypeRefAccess();
-	}
-	
-	public ParserRule getColonSepDeclaredTypeRefRule() {
-		return getColonSepDeclaredTypeRefAccess().getRule();
 	}
 	
 	//fragment ColonSepTypeRef *:
@@ -3034,7 +3023,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	=> ({TStructGetter}
 	//	'get'
 	//	name=IdentifierName) optional?='?'?
-	//	'(' ')' ColonSepDeclaredTypeRef?;
+	//	'(' ')' ColonSepTypeRef?;
 	public TypeExpressionsGrammarAccess.TStructGetterElements getTStructGetterAccess() {
 		return gaTypeExpressions.getTStructGetterAccess();
 	}

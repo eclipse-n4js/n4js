@@ -94,3 +94,15 @@ abstract class E implements MyIterSub<A,B> {
 		let [,value31] = this;
 	}
 }
+
+
+// --------------------------------------------------------------------------------
+// part #4: type of value to be destructured is an alias
+//
+// NOTE: more tests for destructuring with alias can be found here:
+// org.eclipse.n4js.spec.tests/xpect-tests/Ch04_14__TypeAlias/TypeAlias_destructuring_*.n4js.xt
+
+type MyAlias = MyIter<A,B>;
+let iter41: MyAlias;
+// XPECT type of 'value41' --> B
+let [,value41] = iter41;

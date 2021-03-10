@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
@@ -81,6 +82,8 @@ public class PreparationStep {
 	private static final ImmutableMap<EClass, EClass> ECLASS_REPLACEMENT = ImmutableMap.<EClass, EClass> builder()
 			.put(N4JSPackage.eINSTANCE.getScript(),
 					ImPackage.eINSTANCE.getScript_IM())
+			.put(N4JSPackage.eINSTANCE.getTypeReferenceNode(),
+					ImPackage.eINSTANCE.getTypeReferenceNode_IM())
 			.put(N4JSPackage.eINSTANCE.getIdentifierRef(),
 					ImPackage.eINSTANCE.getIdentifierRef_IM())
 			.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
@@ -234,6 +237,11 @@ public class PreparationStep {
 			} else if (copy instanceof N4MemberDeclaration) {
 				info.setOriginalDefinedMember_internal((N4MemberDeclaration) copy,
 						((N4MemberDeclaration) eObject).getDefinedTypeElement());
+			} else if (copy instanceof TypeReferenceNode<?>) {
+				if (((TypeReferenceNode<?>) eObject).getTypeRefInAST() != null) {
+					info.setOriginalProcessedTypeRef_internal((TypeReferenceNode<?>) copy,
+							((TypeReferenceNode<?>) eObject).getTypeRef());
+				}
 			}
 			return copy;
 		}
@@ -266,6 +274,8 @@ public class PreparationStep {
 				}
 				rewire(eObject, (ReferencingElement_IM) copyEObject);
 				// note: suppress default behavior (references "id", "property", "declaredType" should stay at 'null')
+			} else if (eReference == N4JSPackage.Literals.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF) {
+				// should always be 'null' in the intermediate model
 			} else {
 				super.copyReference(eReference, eObject, copyEObject);
 			}

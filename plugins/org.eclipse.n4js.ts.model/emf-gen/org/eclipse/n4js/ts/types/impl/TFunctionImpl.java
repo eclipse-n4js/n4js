@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -34,6 +36,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 
+import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
@@ -41,6 +44,7 @@ import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -56,13 +60,14 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getAstElement <em>Ast Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getDeclaredThisType <em>Declared This Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDeclaredGenerator <em>Declared Generator</em>}</li>
@@ -71,7 +76,47 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *
  * @generated
  */
-public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements TFunction {
+public class TFunctionImpl extends GenericTypeImpl implements TFunction {
+	/**
+	 * The default value of the '{@link #getDeclaredTypeAccessModifier() <em>Declared Type Access Modifier</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredTypeAccessModifier()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final TypeAccessModifier DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT = TypeAccessModifier.UNDEFINED;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredTypeAccessModifier() <em>Declared Type Access Modifier</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredTypeAccessModifier()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeAccessModifier declaredTypeAccessModifier = DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDeclaredProvidedByRuntime() <em>Declared Provided By Runtime</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredProvidedByRuntime()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDeclaredProvidedByRuntime() <em>Declared Provided By Runtime</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredProvidedByRuntime()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean declaredProvidedByRuntime = DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
+
 	/**
 	 * The cached value of the '{@link #getAstElement() <em>Ast Element</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -163,16 +208,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	protected TypeRef returnTypeRef;
 
 	/**
-	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTypeVars()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<TypeVariable> typeVars;
-
-	/**
 	 * The cached value of the '{@link #getDeclaredThisType() <em>Declared This Type</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -259,6 +294,52 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TFUNCTION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeAccessModifier getDeclaredTypeAccessModifier() {
+		return declaredTypeAccessModifier;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredTypeAccessModifier(TypeAccessModifier newDeclaredTypeAccessModifier) {
+		TypeAccessModifier oldDeclaredTypeAccessModifier = declaredTypeAccessModifier;
+		declaredTypeAccessModifier = newDeclaredTypeAccessModifier == null ? DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT : newDeclaredTypeAccessModifier;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER, oldDeclaredTypeAccessModifier, declaredTypeAccessModifier));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDeclaredProvidedByRuntime() {
+		return declaredProvidedByRuntime;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredProvidedByRuntime(boolean newDeclaredProvidedByRuntime) {
+		boolean oldDeclaredProvidedByRuntime = declaredProvidedByRuntime;
+		declaredProvidedByRuntime = newDeclaredProvidedByRuntime;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME, oldDeclaredProvidedByRuntime, declaredProvidedByRuntime));
 	}
 
 	/**
@@ -426,19 +507,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__RETURN_TYPE_REF, newReturnTypeRef, newReturnTypeRef));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<TypeVariable> getTypeVars() {
-		if (typeVars == null) {
-			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypesPackage.TFUNCTION__TYPE_VARS);
-		}
-		return typeVars;
 	}
 
 	/**
@@ -673,14 +741,43 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isProvidedByRuntime() {
+		return this.isDeclaredProvidedByRuntime();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeAccessModifier getTypeAccessModifier() {
+		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
+		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);
+		if (_equals) {
+			boolean _isExported = this.isExported();
+			if (_isExported) {
+				return TypeAccessModifier.PROJECT;
+			}
+			else {
+				return TypeAccessModifier.PRIVATE;
+			}
+		}
+		return this.getDeclaredTypeAccessModifier();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TFUNCTION__FPARS:
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				return basicSetReturnTypeRef(null, msgs);
-			case TypesPackage.TFUNCTION__TYPE_VARS:
-				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				return basicSetDeclaredThisType(null, msgs);
 		}
@@ -695,6 +792,10 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
+				return getDeclaredTypeAccessModifier();
+			case TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME:
+				return isDeclaredProvidedByRuntime();
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
@@ -708,8 +809,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 				return isReturnValueMarkedOptional();
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				return getReturnTypeRef();
-			case TypesPackage.TFUNCTION__TYPE_VARS:
-				return getTypeVars();
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				return getDeclaredThisType();
 			case TypesPackage.TFUNCTION__DECLARED_ASYNC:
@@ -731,6 +830,12 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
+				setDeclaredTypeAccessModifier((TypeAccessModifier)newValue);
+				return;
+			case TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME:
+				setDeclaredProvidedByRuntime((Boolean)newValue);
+				return;
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				setAstElement((EObject)newValue);
 				return;
@@ -749,10 +854,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 				return;
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)newValue);
-				return;
-			case TypesPackage.TFUNCTION__TYPE_VARS:
-				getTypeVars().clear();
-				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
 				return;
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)newValue);
@@ -778,6 +879,12 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
+				setDeclaredTypeAccessModifier(DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT);
+				return;
+			case TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME:
+				setDeclaredProvidedByRuntime(DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT);
+				return;
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				setAstElement((EObject)null);
 				return;
@@ -795,9 +902,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 				return;
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)null);
-				return;
-			case TypesPackage.TFUNCTION__TYPE_VARS:
-				getTypeVars().clear();
 				return;
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)null);
@@ -823,6 +927,10 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
+				return declaredTypeAccessModifier != DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT;
+			case TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME:
+				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				return astElement != null;
 			case TypesPackage.TFUNCTION__DECLARED_VERSION:
@@ -835,8 +943,6 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 				return returnValueMarkedOptional != RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT;
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				return returnTypeRef != null;
-			case TypesPackage.TFUNCTION__TYPE_VARS:
-				return typeVars != null && !typeVars.isEmpty();
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				return declaredThisType != null;
 			case TypesPackage.TFUNCTION__DECLARED_ASYNC:
@@ -856,6 +962,13 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == AccessibleTypeElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER;
+				case TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME: return TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME;
+				default: return -1;
+			}
+		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TFUNCTION__AST_ELEMENT: return TypesPackage.SYNTAX_RELATED_TELEMENT__AST_ELEMENT;
@@ -878,6 +991,13 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == AccessibleTypeElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER;
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME: return TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME;
+				default: return -1;
+			}
+		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.SYNTAX_RELATED_TELEMENT__AST_ELEMENT: return TypesPackage.TFUNCTION__AST_ELEMENT;
@@ -908,9 +1028,19 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 		}
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
+				case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TFUNCTION___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.TYPE___IS_FINAL: return TypesPackage.TFUNCTION___IS_FINAL;
+				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TFUNCTION___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.TYPE___GET_VERSION: return TypesPackage.TFUNCTION___GET_VERSION;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == AccessibleTypeElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TFUNCTION___IS_PROVIDED_BY_RUNTIME;
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TFUNCTION___GET_TYPE_ACCESS_MODIFIER;
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TFUNCTION___IS_EXPORTED;
+				default: return -1;
 			}
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
@@ -947,6 +1077,10 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 				return isFinal();
 			case TypesPackage.TFUNCTION___GET_VERSION:
 				return getVersion();
+			case TypesPackage.TFUNCTION___IS_PROVIDED_BY_RUNTIME:
+				return isProvidedByRuntime();
+			case TypesPackage.TFUNCTION___GET_TYPE_ACCESS_MODIFIER:
+				return getTypeAccessModifier();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
@@ -961,7 +1095,11 @@ public class TFunctionImpl extends DeclaredTypeWithAccessModifierImpl implements
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredVersion: ");
+		result.append(" (declaredTypeAccessModifier: ");
+		result.append(declaredTypeAccessModifier);
+		result.append(", declaredProvidedByRuntime: ");
+		result.append(declaredProvidedByRuntime);
+		result.append(", declaredVersion: ");
 		result.append(declaredVersion);
 		result.append(", external: ");
 		result.append(external);

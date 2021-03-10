@@ -493,7 +493,7 @@ public class N4JSTypeSystem {
 		}
 		if (contextThisBinding instanceof ParameterizedTypeRef) {
 			if (contextThisBinding.getDeclaredType() instanceof TClassifier) {
-				RuleEnvironmentExtensions.addThisType(G, contextThisBinding);
+				RuleEnvironmentExtensions.setThisBinding(G, contextThisBinding);
 			}
 		}
 		return G;

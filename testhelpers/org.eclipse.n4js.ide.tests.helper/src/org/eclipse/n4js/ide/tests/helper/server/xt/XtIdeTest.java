@@ -574,7 +574,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void type(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "type", "of");
-		String typeStr = xtMethods.getTypeString(ocr.getEObject(), false);
+		String typeStr = xtMethods.getTypeString(ocr.getEObject(), false, false);
 		assertEquals(data.expectation, typeStr);
 	}
 

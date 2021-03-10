@@ -125,8 +125,8 @@ if(isValueToBeDestructured) {
 	 */
 	private def List<TypeRef> getExpectedElemTypeRefs(RuleEnvironment G, TypeRef expectedTypeRef) {
 		if (expectedTypeRef !== null) {
-			val extractedTypeRefs = tsh.extractIterableElementTypesUBs(G, expectedTypeRef);
-			return extractedTypeRefs.toList // will have len>1 only if expectation is IterableN
+			val extractedTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
+			return extractedTypeRefs; // will have len>1 only if expectation is IterableN
 		} else {
 			return newArrayList // no or invalid type expectation
 		}
@@ -329,7 +329,7 @@ if(isValueToBeDestructured) {
 		return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 	}
 
-	private def Iterable<? extends TypeRef> extractSpreadTypeRefs(RuleEnvironment G, TypeRef typeRef) {
+	private def List<? extends TypeRef> extractSpreadTypeRefs(RuleEnvironment G, TypeRef typeRef) {
 		// case 1: built-in type string
 		if (typeRef instanceof ParameterizedTypeRef) {
 			if (typeRef.declaredType === G.stringType) {

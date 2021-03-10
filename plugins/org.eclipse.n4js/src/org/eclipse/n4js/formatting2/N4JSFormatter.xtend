@@ -62,6 +62,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
@@ -105,7 +106,6 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TStructMember
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtext.AbstractRule
 import org.eclipse.xtext.Keyword
@@ -323,7 +323,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		field.configureOptionality(document);
 		field.regionFor.keyword("=").prepend[oneSpace].append[oneSpace];
 		field.expression.format;
-		field.declaredTypeRef.format;
+		field.declaredTypeRefInAST.format;
 	}
 
 
@@ -417,7 +417,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 			it.configureAnnotationsInLine(document); // TODO maybe we need some in-line-annotation config here.
 //			it.regionFor.ruleCallTo( bindingIdentifierAsFormalParameterRule  ) // feature(N4JSPackage.Literals.FORMAL_PARAMETER__NAME)
 //				.prepend[oneSpace;newLines=0].append[]
-			it.declaredTypeRef.format(document);
+			it.declaredTypeRefInAST.format(document);
 			if( it.isVariadic )
 				it.regionFor.keyword("...").prepend[newLines=0;/*oneSpace;*/].append[newLines=0;noSpace];
 			if( it.hasInitializerAssignment ) {
@@ -599,7 +599,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 	def dispatch void format(CastExpression expr, extension IFormattableDocument document) {
 		expr.regionFor.keyword("as").prepend[newLines = 0; oneSpace].append[newLines = 0; oneSpace];
 		expr.expression.format;
-		expr.targetTypeRef.format;
+		expr.targetTypeRefNode.format;
 	}
 
 	def dispatch void format(Block block, extension IFormattableDocument document) {
@@ -898,18 +898,18 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		// just leave as is.
 	}
 
-	def dispatch void format(TypeVariable tv, extension IFormattableDocument document) {
+	def dispatch void format(N4TypeVariable tv, extension IFormattableDocument document) {
 		// "out"
-		if( tv.declaredCovariant ) { tv.regionFor.feature(TypesPackage.Literals.TYPE_VARIABLE__DECLARED_COVARIANT).append[oneSpace]; }
+		if( tv.declaredCovariant ) { tv.regionFor.feature(N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_COVARIANT).append[oneSpace]; }
 		// "in"
-		if( tv.declaredContravariant ) {tv.regionFor.feature(TypesPackage.Literals.TYPE_VARIABLE__DECLARED_CONTRAVARIANT).append[oneSpace];}
+		if( tv.declaredContravariant ) {tv.regionFor.feature(N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT).append[oneSpace];}
 
-		if( tv.declaredUpperBound!==null ) {
+		val upperBoundNode = tv.declaredUpperBoundNode;
+		if( upperBoundNode!==null ) {
 			// "extends"
 			tv.regionFor.keyword("extends").surround[oneSpace];
-			val upperBound = tv.declaredUpperBound;
-			upperBound.immediatelyFollowing.keyword("&").surround[oneSpace];
-			upperBound.format(document);
+			upperBoundNode.immediatelyFollowing.keyword("&").surround[oneSpace];
+			upperBoundNode.format(document);
 		}
 
 	}
@@ -996,7 +996,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		vDecl.previousHiddenRegion.set[oneSpace];
 		vDecl.regionFor.keyword("=").surround[oneSpace];
 		vDecl.expression.format;
-		vDecl.declaredTypeRef.format;
+		vDecl.declaredTypeRefInAST.format;
 	}
 
 	def dispatch void format(VariableBinding vBind, extension IFormattableDocument document) {

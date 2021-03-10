@@ -45,7 +45,7 @@ class GenericsTest extends AbstractTypesystemTest {
 	def void testTypeVars() {
 
 		// class A{}
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class B extends A{}
@@ -77,7 +77,7 @@ class GenericsTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testUpperLowerBoundOfWildcard() {
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class B extends A {}
@@ -132,7 +132,7 @@ class GenericsTest extends AbstractTypesystemTest {
 	def void testSubtypeWithGenerics() {
 
 		// class A{}
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class B extends A {}
@@ -192,7 +192,7 @@ class GenericsTest extends AbstractTypesystemTest {
 	def void testSubtypeWithSimpleWildcard() {
 
 		// class A{}
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class B extends A {}
@@ -215,7 +215,7 @@ class GenericsTest extends AbstractTypesystemTest {
 	def void testSubtypeWithExistentialTypes() {
 
 		// class A{}
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class B extends A {}
@@ -280,7 +280,7 @@ class GenericsTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testParameterizedClassFunctionReturnType() {
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class G<T>{
@@ -306,7 +306,7 @@ class GenericsTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testParameterizedClassFunctionFparType() {
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class G<T>{
@@ -334,7 +334,7 @@ class GenericsTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testNestedParameterizedClassFunctionReturnType() {
-		val script = createScript(JavaScriptVariant.n4js,
+		val script = createAndValidateScript(JavaScriptVariant.n4js,
 			'''
 				class A{}
 				class G<T>{

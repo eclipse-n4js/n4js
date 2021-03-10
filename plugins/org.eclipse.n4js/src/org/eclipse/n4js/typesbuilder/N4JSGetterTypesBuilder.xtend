@@ -80,9 +80,9 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	def private void setReturnTypeConsideringThis(TGetter getterType, N4GetterDeclaration getterDecl,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		// TODO: explicitly differentiate between declared and inferred type
-		if(getterDecl.declaredTypeRef instanceof ThisTypeRef) {
+		if(getterDecl.declaredTypeRefInAST instanceof ThisTypeRef) {
 			// special case: TypingASTWalker will create a BoundThisTypeRef via Xsemantics judgment 'thisTypeRef'
-			getterType.declaredTypeRef = TypeUtils.createDeferredTypeRef
+			getterType.typeRef = TypeUtils.createDeferredTypeRef
 		}
 		else {
 			// standard case

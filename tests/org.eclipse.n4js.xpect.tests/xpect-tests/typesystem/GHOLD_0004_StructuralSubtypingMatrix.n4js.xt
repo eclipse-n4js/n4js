@@ -29,7 +29,7 @@ class ~SA { public f : string}
 		let a : int = new N4Object();
 	}
 	{
-		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let a : ~int = 3
 		// ~Primitive <: Primitive XPECT noerrors -->
 		let b : int = a;
@@ -69,7 +69,7 @@ class ~SA { public f : string}
 		let o : Object = new N4Object();
 	}
 	{
-		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let i : ~int = 3
 		// ~Primitive !<: Object XPECT issues --> "~int is not a subtype of Object." at "i"
 		let o : Object = i
@@ -108,7 +108,7 @@ class ~SA { public f : string}
 		let n4Object : N4Object = new N4Object();
 	}
 	{
-		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let a : ~int = 3;
 		// ~Primitive !<: N4Object XPECT issues --> "~int is not a subtype of N4Object." at "a"
 		let n4Object : N4Object = a;
@@ -136,41 +136,41 @@ class ~SA { public f : string}
 {
 	{
 		let p = 1
-		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let i : ~int = p;
 	}
 	{
 		let o = new Object();
 		/* Object !<: ~Primitive XPECT issues ---
 			"Object is not a subtype of ~int." at "o"
-			"Structural type operator ~ does not have any effect on primitive types" at "~int"
+			"Structural type operator ~ does not have any effect on primitive types." at "~int"
 		--- */ 
 		let i : ~int = o;
 	}
 	{
 		/* N4Object !<: ~Primitive XPECT issues ---
 			"N4Object is not a subtype of ~int." at "new N4Object()"
-			"Structural type operator ~ does not have any effect on primitive types" at "~int"
+			"Structural type operator ~ does not have any effect on primitive types." at "~int"
 		---  */
 		let i : ~int = new N4Object();
 	}
 	{
-		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT issues --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let s_p : ~int = 3
-		// ~Primitive <: ~Primitive XPECT issues --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// ~Primitive <: ~Primitive XPECT issues --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let p : ~int = s_p
 	}
 	{
 		let o = {};
 		/* ~Object without additional members !<: ~Primitive XPECT issues ---
-			"Structural type operator ~ does not have any effect on primitive types" at "~int"
+			"Structural type operator ~ does not have any effect on primitive types." at "~int"
 			"~Object is not a subtype of ~int." at "o"
 		---  */
 		let i : ~int = o;
 	}
 	{
 		/* ~Object with additional members !<: ~Primitive XPECT issues ---
-			"Structural type operator ~ does not have any effect on primitive types" at "~int"
+			"Structural type operator ~ does not have any effect on primitive types." at "~int"
 			"~Object with { f: string } is not a subtype of ~int." at "{ f: "" }"
 		--- */
 		let i : ~int = { f: "" }
@@ -178,7 +178,7 @@ class ~SA { public f : string}
 	{
 		let s_n4o : ~N4Object = new N4Object();
 		/* ~N4Object without additional  members !<: ~Primitive XPECT issues ---
-			"Structural type operator ~ does not have any effect on primitive types" at "~string"
+			"Structural type operator ~ does not have any effect on primitive types." at "~string"
 			"~N4Object is not a subtype of ~string." at "s_n4o"
 		--- */
 		let p : ~string = s_n4o;
@@ -186,14 +186,14 @@ class ~SA { public f : string}
 	{
 		/* ~N4Object with additional members !<: ~Primitive XPECT issues ---
 			"SA is not a subtype of ~int." at "new SA()"
-			"Structural type operator ~ does not have any effect on primitive types" at "~int"
+			"Structural type operator ~ does not have any effect on primitive types." at "~int"
 		--- */
 		let i : ~int = new SA();
 	}
 	{
-		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let s_int : ~int = 3;
-		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types" at "~string"
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~string"
 		let s_string : ~string = "test";
 		// ~int <: ~string XPECT issues --> "~int is not a subtype of ~string." at "s_int"
 		s_string = s_int;
@@ -214,7 +214,7 @@ class ~SA { public f : string}
 		let o : Object = new A();
 	}
 	{
-		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let s_i : ~int = 3;
 		// ~Primitive !<: ~Object without additional members XPECT issues --> "~int is not a subtype of ~Object." at "s_i"
 		let o : ~Object =  s_i;
@@ -253,7 +253,7 @@ class ~SA { public f : string}
 		let o : ~Object with { f : string } = new N4Object();
 	}
 	{
-		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let a : ~int = 3;
 		// ~Primitive !<: ~Object with additional members XPECT issues --> "~int is not a subtype of ~Object with { f: string }." at "a"
 		let o : ~Object with { f : string } = a;
@@ -292,7 +292,7 @@ class ~SA { public f : string}
 		let sn4O : ~N4Object = new N4Object();
 	}
 	{
-		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let a : ~int = 3;
 		// ~Primitive !<: ~N4Object without additional  members XPECT issues --> "~int is not a subtype of ~N4Object." at "a"
 		let sn4O : ~N4Object = a;
@@ -332,7 +332,7 @@ class ~SA { public f : string}
 		let a : ~A = o;
 	}
 	{
-		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types" at "~int"
+		// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~int"
 		let i : ~int = 3;
 		// ~Primitive !<: ~N4Object with additional members XPECT issues --> "~int is not a subtype of ~A." at "i"
 		let a : ~A = i;

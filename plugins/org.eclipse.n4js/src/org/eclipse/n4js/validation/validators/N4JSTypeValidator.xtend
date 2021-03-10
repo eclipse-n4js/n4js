@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.base.Optional
 import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
 import java.util.Collection
@@ -27,6 +28,7 @@ import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList
 import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
@@ -41,6 +43,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -60,9 +63,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
-import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
@@ -151,8 +152,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						// class C<T extends Function> {} makes sense even though Function is final
 						return;
 					}
+					val ubInAST = typeVar.declaredUpperBoundNode.typeRefInAST;
 					val message = getMessageForCLF_UPPER_BOUND_FINAL(declType.name, typeVar.name);
-					addIssue(message, ub, PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_UPPER_BOUND_FINAL);
+					addIssue(message, ubInAST, PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_UPPER_BOUND_FINAL);
 				}
 			};
 		];
@@ -169,88 +171,94 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkParameterizedTypeRef(ParameterizedTypeRef paramTypeRef) {
-		val declaredType = paramTypeRef.declaredType;
+	def checkParameterizedTypeRef(ParameterizedTypeRef paramTypeRefInAST) {
+		val declaredType = paramTypeRefInAST.declaredType;
 		if (declaredType === null || declaredType.eIsProxy) {
 			return;
 		}
 
-		val isInTypeTypeRef = paramTypeRef.eContainer instanceof TypeTypeRef || (
-			paramTypeRef.eContainer instanceof Wildcard && paramTypeRef.eContainer.eContainer instanceof TypeTypeRef);
+		val isInTypeTypeRef = paramTypeRefInAST.eContainer instanceof TypeTypeRef || (
+			paramTypeRefInAST.eContainer instanceof Wildcard && paramTypeRefInAST.eContainer.eContainer instanceof TypeTypeRef);
 
 		if (isInTypeTypeRef) {
-			internalCheckValidTypeInTypeTypeRef(paramTypeRef);
+			internalCheckValidTypeInTypeTypeRef(paramTypeRefInAST);
 		} else {
-			internalCheckTypeArguments(declaredType.typeVars, paramTypeRef.typeArgs, false, declaredType, paramTypeRef,
-				TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
+			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.typeArgs, Optional.absent, false,
+				declaredType, paramTypeRefInAST, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
 		}
-		internalCheckDynamic(paramTypeRef);
+		internalCheckDynamic(paramTypeRefInAST);
 
-		internalCheckStructuralPrimitiveTypeRef(paramTypeRef);
+		internalCheckStructuralPrimitiveTypeRef(paramTypeRefInAST);
 	}
 
 	/**
 	 * Add an issue if explicit use of structural type operator with a primitive type is detected.
 	 */
-	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
-		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
-			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
+	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRefInAST) {
+		if (typeRefInAST.typingStrategy != TypingStrategy.NOMINAL && !N4JSLanguageUtils.mayBeReferencedStructurally(typeRefInAST.declaredType)) {
+			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRefInAST, TYS_STRUCTURAL_PRIMITIVE);
 		}
 	}
 
-	def private void internalCheckValidTypeInTypeTypeRef(ParameterizedTypeRef paramTypeRef) {
+	def private void internalCheckValidTypeInTypeTypeRef(ParameterizedTypeRef paramTypeRefInAST) {
 		// IDE-785 uses ParamterizedTypeRefs in ClassifierTypeRefs. Currently Type Arguments are not supported in ClassifierTypeRefs, so
 		// we actively forbid them here. Will be loosened for IDE-1310
-		if (! paramTypeRef.typeArgs.isEmpty) {
-			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRef,
+		if (! paramTypeRefInAST.typeArgs.isEmpty) {
+			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF)
-		} else if (paramTypeRef instanceof FunctionTypeRef) {
-			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRef,
+		} else if (paramTypeRefInAST instanceof FunctionTypeRef) {
+			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
-		} else if (paramTypeRef.declaredType instanceof TFunction) {
-			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRef,
+		} else if (paramTypeRefInAST.declaredType instanceof TFunction) {
+			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
 		}
 	}
 
 	@Check
-	def checkThisTypeRef(ThisTypeRef thisTypeRef) {
-		if (thisTypeRef instanceof BoundThisTypeRef) {
+	def checkThisTypeRef(ThisTypeRef thisTypeRefInAST) {
+		if (thisTypeRefInAST instanceof BoundThisTypeRef) {
 			// the below validations do not apply to BoundThisTypeRefs
 			// (note: normally, BoundThisTypeRefs should never appear in the AST, anyway; but asserting this to be true
 			// is not the job of this validation)
 			return;
 		}
-		if (!(thisTypeRef.isUsedStructurallyAsFormalParametersInTheConstructor 
-			|| thisTypeRef.isUsedAtCovariantPositionInClassifierDeclaration 
-			|| thisTypeRef.isUsedInVariableWithSyntaxError)) {
-			addIssue(IssueCodes.getMessageForAST_THIS_WRONG_PLACE, thisTypeRef, IssueCodes.AST_THIS_WRONG_PLACE);
+		if (!(thisTypeRefInAST.isUsedStructurallyAsFormalParametersInTheConstructor 
+			|| thisTypeRefInAST.isUsedAtCovariantPositionInClassifierDeclaration 
+			|| thisTypeRefInAST.isUsedInVariableWithSyntaxError)) {
+			addIssue(IssueCodes.getMessageForAST_THIS_WRONG_PLACE, thisTypeRefInAST, IssueCodes.AST_THIS_WRONG_PLACE);
 		}
 	}
 
-	def private boolean isUsedStructurallyAsFormalParametersInTheConstructor(ThisTypeRef thisTypeRef) {
-		if (thisTypeRef.useSiteStructuralTyping) {
-			val methodOrConstructor = thisTypeRef?.eContainer?.eContainer;
-			if (methodOrConstructor instanceof N4MethodDeclaration) {
-				if (methodOrConstructor !== null && methodOrConstructor.isConstructor) {
-					return true
+	def private boolean isUsedStructurallyAsFormalParametersInTheConstructor(ThisTypeRef thisTypeRefInAST) {
+		if (thisTypeRefInAST.useSiteStructuralTyping) {
+			val node = thisTypeRefInAST.eContainer;
+			if (node instanceof TypeReferenceNode<?>) {
+				val fpar = node.eContainer;
+				if (fpar instanceof FormalParameter) {
+					val ctor = fpar.eContainer;
+					if (ctor instanceof N4MethodDeclaration) {
+						if (ctor.isConstructor) {
+							return true
+						}
+					}
 				}
 			}
 		}
 		return false
 	}
 
-	def private boolean isUsedAtCovariantPositionInClassifierDeclaration(ThisTypeRef thisTypeRef) {
-		val classifierDecl = EcoreUtil2.getContainerOfType(thisTypeRef, N4ClassifierDeclaration);
+	def private boolean isUsedAtCovariantPositionInClassifierDeclaration(ThisTypeRef thisTypeRefInAST) {
+		val classifierDecl = EcoreUtil2.getContainerOfType(thisTypeRefInAST, N4ClassifierDeclaration);
 		if (classifierDecl !== null) {
 			// exception: disallow for static members of interfaces
 			if (classifierDecl instanceof N4InterfaceDeclaration) {
-				val memberDecl = EcoreUtil2.getContainerOfType(thisTypeRef, N4MemberDeclaration);
+				val memberDecl = EcoreUtil2.getContainerOfType(thisTypeRefInAST, N4MemberDeclaration);
 				if (memberDecl !== null && memberDecl.static) {
 					return false;
 				}
 			}
-			val varianceOfPos = N4JSLanguageUtils.getVarianceOfPosition(thisTypeRef);
+			val varianceOfPos = N4JSLanguageUtils.getVarianceOfPosition(thisTypeRefInAST);
 			if (varianceOfPos !== null) {
 				return varianceOfPos === Variance.CO;
 			}
@@ -258,36 +266,36 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		return false;
 	}
 
-	private def boolean isUsedInVariableWithSyntaxError(ThisTypeRef ref) {
-		val container = ref.eContainer
-		if (container instanceof VariableDeclaration) {
-			return container.name === null
+	private def boolean isUsedInVariableWithSyntaxError(ThisTypeRef thisTypeRefInAST) {
+		val parent = thisTypeRefInAST.eContainer
+		if (parent instanceof TypeReferenceNode<?>) {
+			val grandParent = parent.eContainer;
+			if (grandParent instanceof VariableDeclaration) {
+				return grandParent.name === null;
+			}
 		}
-		return false
+		return false;
 	}
 
 	@Check
-	def checkSymbolReference(TypeRef typeRef) {
-		var bits = BuiltInTypeScope.get(typeRef?.eResource.resourceSet);
+	def checkSymbolReference(TypeRef typeRefInAST) {
+		val bits = BuiltInTypeScope.get(typeRefInAST.eResource.resourceSet);
+		val G = typeRefInAST.newRuleEnvironment;
+		val typeRef = tsh.resolveTypeAliasFlat(G, typeRefInAST);
 		if (typeRef.declaredType === bits.symbolObjectType) {
 			// we have a type reference to 'Symbol'
-			// -> the only allowed case is as target/receiver of a property access (i.e.: Symbol.iterator)
-			val parent = typeRef.eContainer;
-			if (!(parent instanceof ParameterizedPropertyAccessExpression) ||
-				(parent as ParameterizedPropertyAccessExpression).target !== typeRef) {
-				addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRef, BIT_SYMBOL_INVALID_USE);
-			}
+			addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
 		}
 	}
 
 	/*
 	 * Constraints 08: primitive types except any must not be declared dynamic
 	 */
-	def internalCheckDynamic(ParameterizedTypeRef ref) {
-		if (ref.dynamic) {
-			val Type t = ref.declaredType;
-			if (t instanceof PrimitiveType && ! (t instanceof AnyType)) {
-				addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(t.name), ref,
+	def private internalCheckDynamic(ParameterizedTypeRef refInAST) {
+		if (refInAST.dynamic) {
+			val Type t = refInAST.declaredType;
+			if (!N4JSLanguageUtils.mayBeReferencedDynamically(t)) {
+				addIssue(IssueCodes.getMessageForTYS_PRIMITIVE_TYPE_DYNAMIC(t.name), refInAST,
 					TYS_PRIMITIVE_TYPE_DYNAMIC);
 			}
 		}
@@ -437,7 +445,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (TypeUtils.isVoid(expectedTypeRef) || singleExprArrowFunction.isReturnValueOptional) {
 					return; // all good
 				}
-				if (singleExprArrowFunction.returnTypeRef === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
+				if (singleExprArrowFunction.declaredReturnTypeRefInAST === null) { // show specialized error message only if return type of arrow function was inferred (i.e. not declared explicitly)
 					val message = IssueCodes.
 						getMessageForFUN_SINGLE_EXP_LAMBDA_IMPLICIT_RETURN_ALLOWED_UNLESS_VOID();
 					addIssue(message, expression,

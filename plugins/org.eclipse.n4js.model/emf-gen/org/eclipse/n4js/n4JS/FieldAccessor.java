@@ -58,13 +58,21 @@ public interface FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEle
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getDeclaredTypeRef();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeRef getDeclaredTypeRef();
+	TypeRef getDeclaredTypeRefInAST();
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -85,7 +85,11 @@ public class ASTProcessor extends AbstractProcessor {
 	@Inject
 	private TypeProcessor typeProcessor;
 	@Inject
+	private TypeRefProcessor typeRefProcessor;
+	@Inject
 	private TypeDeferredProcessor typeDeferredProcessor;
+	@Inject
+	private TypeAliasProcessor typeAliasProcessor;
 	@Inject
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
 	@Inject
@@ -389,6 +393,9 @@ public class ASTProcessor extends AbstractProcessor {
 		if (node instanceof FunctionOrFieldAccessor) {
 			cache.potentialContainersOfLocalArgumentsVariable.add(node); // remember for later
 		}
+
+		typeRefProcessor.handleTypeRefs(G, node, cache);
+		typeAliasProcessor.handleTypeAlias(G, node, cache);
 
 		if (node instanceof FunctionDefinition) {
 			handleAsyncOrGeneratorFunctionDefinition(G, node, cache);

@@ -37,9 +37,11 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VersionedIdentifierRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -194,6 +196,14 @@ class SymbolTableEntryIMOnly extends SymbolTableEntry {
  */
 class SymbolTableEntryInternal extends SymbolTableEntry {
 	// no additional properties
+}
+
+
+class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T> {
+
+	op TypeRef getTypeRef() {
+		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
+	}
 }
 
 

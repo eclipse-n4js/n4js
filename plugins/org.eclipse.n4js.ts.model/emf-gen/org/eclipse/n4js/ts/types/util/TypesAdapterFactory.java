@@ -146,12 +146,12 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTypeAdapter();
 			}
 			@Override
-			public Adapter caseAccessibleTypeElement(AccessibleTypeElement object) {
-				return createAccessibleTypeElementAdapter();
+			public Adapter caseGenericType(GenericType object) {
+				return createGenericTypeAdapter();
 			}
 			@Override
-			public Adapter caseDeclaredTypeWithAccessModifier(DeclaredTypeWithAccessModifier object) {
-				return createDeclaredTypeWithAccessModifierAdapter();
+			public Adapter caseAccessibleTypeElement(AccessibleTypeElement object) {
+				return createAccessibleTypeElementAdapter();
 			}
 			@Override
 			public <MT extends TMember> Adapter caseContainerType(ContainerType<MT> object) {
@@ -292,6 +292,10 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseTEnumLiteral(TEnumLiteral object) {
 				return createTEnumLiteralAdapter();
+			}
+			@Override
+			public Adapter caseTypeAlias(TypeAlias object) {
+				return createTypeAliasAdapter();
 			}
 			@Override
 			public Adapter caseSyntaxRelatedTElement(SyntaxRelatedTElement object) {
@@ -568,6 +572,20 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.GenericType <em>Generic Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.GenericType
+	 * @generated
+	 */
+	public Adapter createGenericTypeAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.AccessibleTypeElement <em>Accessible Type Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -578,20 +596,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAccessibleTypeElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier <em>Declared Type With Access Modifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
-	 * @generated
-	 */
-	public Adapter createDeclaredTypeWithAccessModifierAdapter() {
 		return null;
 	}
 
@@ -1082,6 +1086,20 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTEnumLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TypeAlias <em>Type Alias</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.TypeAlias
+	 * @generated
+	 */
+	public Adapter createTypeAliasAdapter() {
 		return null;
 	}
 

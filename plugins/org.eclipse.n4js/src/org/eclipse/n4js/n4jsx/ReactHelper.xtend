@@ -165,7 +165,7 @@ class ReactHelper {
 
 		val G = jsxElem.newRuleEnvironment;
 		if (exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef) {
-			// The JSX elements refers to a class
+			// The JSX element refers to a class
 			val tclass = tsh.getStaticType(G, exprTypeRef as TypeTypeRef);
 			val tComponentClassifier = lookUpReactClassifier(jsxElem, ReactHelper.REACT_COMPONENT);
 			if (tComponentClassifier === null || tComponentClassifier.typeVars.isEmpty) {

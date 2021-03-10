@@ -30,8 +30,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRef <em>Declared Type Ref</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.TypedElement#getBogusTypeRef <em>Bogus Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement()
@@ -40,47 +39,41 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  */
 public interface TypedElement extends TypeProvidingElement {
 	/**
-	 * Returns the value of the '<em><b>Declared Type Ref</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Declared Type Ref Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Type Ref</em>' containment reference.
-	 * @see #setDeclaredTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement_DeclaredTypeRef()
+	 * @return the value of the '<em>Declared Type Ref Node</em>' containment reference.
+	 * @see #setDeclaredTypeRefNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement_DeclaredTypeRefNode()
 	 * @model containment="true"
+	 * @generated
+	 */
+	TypeReferenceNode<TypeRef> getDeclaredTypeRefNode();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Type Ref Node</em>' containment reference.
+	 * @see #getDeclaredTypeRefNode()
+	 * @generated
+	 */
+	void setDeclaredTypeRefNode(TypeReferenceNode<TypeRef> value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	TypeRef getDeclaredTypeRef();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypedElement#getDeclaredTypeRef <em>Declared Type Ref</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Type Ref</em>' containment reference.
-	 * @see #getDeclaredTypeRef()
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	void setDeclaredTypeRef(TypeRef value);
-
-	/**
-	 * Returns the value of the '<em><b>Bogus Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Bogus Type Ref</em>' containment reference.
-	 * @see #setBogusTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getTypedElement_BogusTypeRef()
-	 * @model containment="true"
-	 * @generated
-	 */
-	TypeRef getBogusTypeRef();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.TypedElement#getBogusTypeRef <em>Bogus Type Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Bogus Type Ref</em>' containment reference.
-	 * @see #getBogusTypeRef()
-	 * @generated
-	 */
-	void setBogusTypeRef(TypeRef value);
+	TypeRef getDeclaredTypeRefInAST();
 
 } // TypedElement

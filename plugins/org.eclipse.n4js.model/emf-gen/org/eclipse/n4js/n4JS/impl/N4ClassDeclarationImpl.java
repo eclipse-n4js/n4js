@@ -47,6 +47,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -56,7 +57,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
 /**
@@ -126,7 +126,7 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeVariable> typeVars;
+	protected EList<N4TypeVariable> typeVars;
 
 	/**
 	 * The default value of the '{@link #getTypingStrategy() <em>Typing Strategy</em>}' attribute.
@@ -274,9 +274,9 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * @generated
 	 */
 	@Override
-	public EList<TypeVariable> getTypeVars() {
+	public EList<N4TypeVariable> getTypeVars() {
 		if (typeVars == null) {
-			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.N4_CLASS_DECLARATION__TYPE_VARS);
+			typeVars = new EObjectContainmentEList<N4TypeVariable>(N4TypeVariable.class, this, N4JSPackage.N4_CLASS_DECLARATION__TYPE_VARS);
 		}
 		return typeVars;
 	}
@@ -539,7 +539,7 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				return;
 			case N4JSPackage.N4_CLASS_DECLARATION__TYPE_VARS:
 				getTypeVars().clear();
-				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				getTypeVars().addAll((Collection<? extends N4TypeVariable>)newValue);
 				return;
 			case N4JSPackage.N4_CLASS_DECLARATION__TYPING_STRATEGY:
 				setTypingStrategy((TypingStrategy)newValue);

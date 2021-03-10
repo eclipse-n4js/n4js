@@ -13,7 +13,6 @@ package org.eclipse.n4js.typesbuilder
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.FunctionDefinition
-import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -26,7 +25,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
  */
 package abstract class AbstractFunctionDefinitionTypesBuilder {
 
-	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
 
 	def protected void relinkFormalParameters(TFunction functionType, FunctionDefinition functionDef, boolean preLinkingPhase) {
@@ -44,18 +42,11 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 			functionDef.fpars.map[createFormalParameter(builtInTypeScope, preLinkingPhase)].filterNull);
 	}
 
-	/*
-	 * Transforms type variables from declaration (MethodDeclaration of FunctionDeclaration) to TFunction's type variables.
-	 */
-	def protected void addTypeVariables(TFunction functionType, GenericDeclaration genericDecl, boolean preLinkingPhase) {
-		addCopyOfReferences(functionType.typeVars, genericDecl.typeVars)
-	}
-
 	def protected void setReturnType(TGetter getterType, N4GetterDeclaration getterDef,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
-				if (getterDef.declaredTypeRef === null) {
+				if (getterDef.declaredTypeRefInAST === null) {
 					if (!preLinkingPhase) {
 						if(getterType.isAbstract) {
 							builtInTypeScope.anyTypeRef
@@ -64,9 +55,9 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 						}
 					}
 				} else {
-					getterDef.declaredTypeRef
+					getterDef.declaredTypeRefInAST
 				};
-			getterType.declaredTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
+			getterType.typeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
 		}
 	}
 
@@ -74,12 +65,12 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
-				if (functionDef.returnTypeRef === null) {
+				if (functionDef.declaredReturnTypeRefInAST === null) {
 					if (!preLinkingPhase) {
 						inferReturnTypeFromReturnStatements(functionDef, builtInTypeScope)
 					}
 				} else {
-					functionDef.returnTypeRef
+					functionDef.declaredReturnTypeRefInAST
 				};
 			functionType.returnTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
 			// note: handling of the return type of async functions not done here, see TypeProcessor#handleAsyncFunctionDeclaration()

@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+// XPECT noerrors -->
+export type A1 = string;
+
+// XPECT noerrors -->
+export public type A2 = string;
+
+// XPECT noerrors -->
+@Internal export public type A = string;
+
+// XPECT errors --> "A type with visibility public must be marked as exported." at "A3"
+public type A3 = string;

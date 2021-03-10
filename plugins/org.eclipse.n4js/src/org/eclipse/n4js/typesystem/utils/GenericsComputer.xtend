@@ -32,11 +32,12 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping
 import org.eclipse.n4js.ts.typeRefs.Wildcard
-import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.GenericType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeCompareHelper
@@ -82,16 +83,28 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		val declType = typeRef.declaredType;
 		if(typeRef instanceof ExistentialTypeRef) {
 			val wildcard = typeRef.wildcard;
-			val wildcardUB = ts.upperBound(G, wildcard);
-			addSubstitutions(G, wildcardUB);
+			if (wildcard !== null) {
+				val wildcardUB = ts.upperBound(G, wildcard);
+				addSubstitutions(G, wildcardUB);
+			}
 		}
 		else if(typeRef instanceof BoundThisTypeRef) {
-			addSubstitutions(G,typeRef.actualThisTypeRef);
+			val actualThisTypeRef = typeRef.actualThisTypeRef;
+			if (actualThisTypeRef !== null) {
+				addSubstitutions(G, actualThisTypeRef);
+			}
+		}
+		else if(declType instanceof TypeAlias) {
+			primAddSubstitutions(G, typeRef);
+			val actualTypeRef = declType.typeRef;
+			if (actualTypeRef !== null) {
+				addSubstitutions(G, actualTypeRef);
+			}
 		}
 		else if(declType instanceof TypeVariable) {
 			val currBound = declType.declaredUpperBound;
-			if(currBound!==null) {
-				addSubstitutions(G,currBound);
+			if(currBound !== null) {
+				addSubstitutions(G, currBound);
 			}
 		}
 		else if(declType instanceof TClassifier) {
@@ -104,23 +117,23 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	}
 	/**
 	 * Adds substitutions for an individual type reference (i.e. without taking
-	 * into account inheritance hierarchies).
+	 * into account inheritance hierarchies, bounds, aliases, etc.).
 	 */
 	private def void primAddSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof ParameterizedTypeRef) {
-			if (! typeRef.typeArgs.empty) {
-				var gen = typeRef.declaredType
-				if (gen instanceof ContainerType<?>) {
-					var varIter = gen.typeVars.iterator
+			if (!typeRef.typeArgs.empty) {
+				val declType = typeRef.declaredType
+				if (declType instanceof GenericType) {
+					val varIter = declType.typeVars.iterator
 					for (typeArg : typeRef.typeArgs) {
 						if (varIter.hasNext) {
-							var TypeVariable typeVar = varIter.next;
-							addSubstitution(G,typeVar,typeArg);
+							val typeVar = varIter.next;
+							addSubstitution(G, typeVar, typeArg);
 						}
 					}
 				}
 			}
-			if(typeRef instanceof StructuralTypeRef) {
+			if (typeRef instanceof StructuralTypeRef) {
 				G.restorePostponedSubstitutionsFrom(typeRef)
 			}
 		}
@@ -137,7 +150,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 			val actualTypeArgCasted = actualTypeArg as TypeRef; // otherwise #hasSubstitutionFor() would not have returned true
 			val fromEnv = G.environment.get(actualTypeArgCasted.declaredType);
 			actualTypeArg = if(fromEnv instanceof TypeRef) {
-				TypeUtils.mergeTypeModifiers(fromEnv, actualTypeArgCasted)
+				TypeUtils.mergeTypeModifiers(fromEnv, actualTypeArgCasted, false)
 			} else {
 				fromEnv
 			};
@@ -217,8 +230,10 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression paExpr) {
 		if (paExpr.parameterized) {
 			val prop = paExpr.property;
-			if(prop instanceof Type)
-				G.addTypeMappings(prop.typeVars, paExpr.typeArgs);
+			if(prop instanceof Type) {
+				val typeArgs = paExpr.typeArgs.map[typeRef].toList;
+				G.addTypeMappings(prop.typeVars, typeArgs);
+			}
 		}
 	}
 
@@ -260,7 +275,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 
 		if(F.generic) {
 			val typeArgs = if(callExpr.parameterized) {
-				callExpr.typeArgs
+				callExpr.typeArgs.map[typeRef].toList
 			} else {
 				ASTMetaInfoUtils.getInferredTypeArgs(callExpr) ?: #[]
 			};

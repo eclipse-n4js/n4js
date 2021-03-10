@@ -12,15 +12,14 @@ package org.eclipse.n4js.tests.parser
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.N4JSTestHelper
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
-import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -31,7 +30,7 @@ import static org.junit.Assert.*
 class N4_06_02_04_TypeCastTest {
 
 	@Inject
-	extension ParseHelper<Script>
+	extension N4JSTestHelper
 
 	@Test
 	def void testCastExpression() {
@@ -41,7 +40,7 @@ class N4_06_02_04_TypeCastTest {
 			}
 			var s: any = new A();
 			s as A;
-		'''.parse
+		'''.parseAndValidateSuccessfully
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 
@@ -59,7 +58,7 @@ class N4_06_02_04_TypeCastTest {
 			var s: any = 1;
 			var x =1;
 			s as number/x;
-		'''.parse
+		'''.parseAndValidateSuccessfully
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 

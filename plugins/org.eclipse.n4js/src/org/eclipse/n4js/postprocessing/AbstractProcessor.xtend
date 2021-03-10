@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -51,6 +52,8 @@ package abstract class AbstractProcessor {
 
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private TypeSystemHelper tsh;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -112,11 +115,16 @@ package abstract class AbstractProcessor {
 			if(tFunction instanceof TFunction) {
 				val innerReturnTypeRef = tFunction.returnTypeRef;
 				if (innerReturnTypeRef !== null && !(innerReturnTypeRef instanceof DeferredTypeRef)) {
+					// we took 'innerReturnTypeRef' from the TModule (not the AST), so normally we would not have to
+					// invoke #resolveTypeAliases() here; however, since this code is running before TypeAliasProcessor,
+					// we still have to invoke #resolveTypeAliases():
+					val innerReturnTypeRefResolved = tsh.resolveTypeAliases(G, innerReturnTypeRef);
+					val innerReturnTypeRefResolvedUB = ts.upperBoundWithReopenAndResolve(G, innerReturnTypeRefResolved);
 					val scope = G.builtInTypeScope;
 					val needsRewrite =
-						(isAsync && !isGenerator && !TypeUtils.isPromise(innerReturnTypeRef, scope)) ||
-						(!isAsync && isGenerator && !TypeUtils.isGenerator(innerReturnTypeRef, scope)) ||
-						(isAsync && isGenerator && !TypeUtils.isAsyncGenerator(innerReturnTypeRef, scope));
+						(isAsync && !isGenerator && !TypeUtils.isPromise(innerReturnTypeRefResolvedUB, scope)) ||
+						(!isAsync && isGenerator && !TypeUtils.isGenerator(innerReturnTypeRefResolvedUB, scope)) ||
+						(isAsync && isGenerator && !TypeUtils.isAsyncGenerator(innerReturnTypeRefResolvedUB, scope));
 					if (needsRewrite) {
 						val outerReturnTypeRef = if (!isGenerator) {
 							TypeUtils.createPromiseTypeRef(scope, innerReturnTypeRef, null);

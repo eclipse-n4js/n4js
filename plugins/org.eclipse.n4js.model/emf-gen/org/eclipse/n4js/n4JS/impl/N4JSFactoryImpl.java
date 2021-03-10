@@ -23,6 +23,9 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.n4js.n4JS.*;
 
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model <b>Factory</b>.
@@ -74,6 +77,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER: return createNamedImportSpecifier();
 			case N4JSPackage.DEFAULT_IMPORT_SPECIFIER: return createDefaultImportSpecifier();
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER: return createNamespaceImportSpecifier();
+			case N4JSPackage.TYPE_REFERENCE_NODE: return createTypeReferenceNode();
 			case N4JSPackage.ANNOTATION_LIST: return createAnnotationList();
 			case N4JSPackage.EXPRESSION_ANNOTATION_LIST: return createExpressionAnnotationList();
 			case N4JSPackage.ANNOTATION: return createAnnotation();
@@ -171,11 +175,13 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.CONDITIONAL_EXPRESSION: return createConditionalExpression();
 			case N4JSPackage.ASSIGNMENT_EXPRESSION: return createAssignmentExpression();
 			case N4JSPackage.COMMA_EXPRESSION: return createCommaExpression();
+			case N4JSPackage.N4_TYPE_VARIABLE: return createN4TypeVariable();
 			case N4JSPackage.N4_CLASS_DECLARATION: return createN4ClassDeclaration();
 			case N4JSPackage.N4_CLASS_EXPRESSION: return createN4ClassExpression();
 			case N4JSPackage.N4_INTERFACE_DECLARATION: return createN4InterfaceDeclaration();
 			case N4JSPackage.N4_ENUM_DECLARATION: return createN4EnumDeclaration();
 			case N4JSPackage.N4_ENUM_LITERAL: return createN4EnumLiteral();
+			case N4JSPackage.N4_TYPE_ALIAS_DECLARATION: return createN4TypeAliasDeclaration();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST: return createN4MemberAnnotationList();
 			case N4JSPackage.N4_FIELD_DECLARATION: return createN4FieldDeclaration();
 			case N4JSPackage.N4_METHOD_DECLARATION: return createN4MethodDeclaration();
@@ -243,6 +249,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 				return createIteratorOfStatementFromString(eDataType, initialValue);
 			case N4JSPackage.ITERATOR_OF_RETURN_STATEMENT:
 				return createIteratorOfReturnStatementFromString(eDataType, initialValue);
+			case N4JSPackage.PARAMETERIZED_TYPE_REF_NODE_ITERABLE:
+				return createParameterizedTypeRefNodeIterableFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -292,6 +300,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 				return convertIteratorOfStatementToString(eDataType, instanceValue);
 			case N4JSPackage.ITERATOR_OF_RETURN_STATEMENT:
 				return convertIteratorOfReturnStatementToString(eDataType, instanceValue);
+			case N4JSPackage.PARAMETERIZED_TYPE_REF_NODE_ITERABLE:
+				return convertParameterizedTypeRefNodeIterableToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -372,6 +382,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public NamespaceImportSpecifier createNamespaceImportSpecifier() {
 		NamespaceImportSpecifierImpl namespaceImportSpecifier = new NamespaceImportSpecifierImpl();
 		return namespaceImportSpecifier;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public <T extends TypeRef> TypeReferenceNode<T> createTypeReferenceNode() {
+		TypeReferenceNodeImpl<T> typeReferenceNode = new TypeReferenceNodeImpl<T>();
+		return typeReferenceNode;
 	}
 
 	/**
@@ -1447,6 +1468,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
+	public N4TypeVariable createN4TypeVariable() {
+		N4TypeVariableImpl n4TypeVariable = new N4TypeVariableImpl();
+		return n4TypeVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public N4ClassDeclaration createN4ClassDeclaration() {
 		N4ClassDeclarationImpl n4ClassDeclaration = new N4ClassDeclarationImpl();
 		return n4ClassDeclaration;
@@ -1494,6 +1526,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public N4EnumLiteral createN4EnumLiteral() {
 		N4EnumLiteralImpl n4EnumLiteral = new N4EnumLiteralImpl();
 		return n4EnumLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public N4TypeAliasDeclaration createN4TypeAliasDeclaration() {
+		N4TypeAliasDeclarationImpl n4TypeAliasDeclaration = new N4TypeAliasDeclarationImpl();
+		return n4TypeAliasDeclaration;
 	}
 
 	/**
@@ -2047,6 +2090,25 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	public String convertIteratorOfReturnStatementToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> createParameterizedTypeRefNodeIterableFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<TypeReferenceNode<ParameterizedTypeRef>>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertParameterizedTypeRefNodeIterableToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
 	}
 

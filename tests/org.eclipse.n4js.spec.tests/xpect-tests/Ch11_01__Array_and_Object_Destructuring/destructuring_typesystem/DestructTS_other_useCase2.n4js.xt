@@ -18,6 +18,7 @@
 
 function <F,S> swap(param : Iterable2<F,S>) : Iterable2<S,F> {
 	var [f,s] = param;
+	// XPECT noerrors -->
 	return [s,f];
 }
 

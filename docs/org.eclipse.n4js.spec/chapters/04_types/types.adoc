@@ -3063,6 +3063,38 @@ public function process(req: XMLHttpRequest) : void {
 
 
 [.language-n4js]
+== Type Alias
+
+An alias for an existing type can be declared with `type <name> = <type reference>;`. Such an alias may be parameterized.
+
+[source,n4js]
+----
+type Name = string;
+type Listener = (event: string)=>void;
+type ArrayOfNumbers = Array<number>;
+type ElementSelector<T> = (arr: Array<T>)=>T;
+----
+
+An alias does not introduce a new, distinct type but merely a new name for an existing type. Thus, assignments are
+allowed between an alias and its actual type and also between two aliases of compatible types:
+
+[source,n4js]
+----
+type Alias1 = string;
+type Alias2 = string;
+
+let str: string;
+let a1: Alias1;
+let a2: Alias2;
+
+str = a1;
+a1 = str;
+a1 = a2;
+----
+
+
+
+[.language-n4js]
 == Short-Hand Syntax
 
 Short-hand syntax is available for a number of built-in types.

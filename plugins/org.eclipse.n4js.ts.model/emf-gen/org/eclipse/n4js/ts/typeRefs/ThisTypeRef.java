@@ -26,7 +26,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getThisTypeRef()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface ThisTypeRef extends BaseTypeRef {
@@ -34,12 +34,12 @@ public interface ThisTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Overrides {@link TypeRef#getTypeRefAsString()}
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model unique="false"
 	 * @generated
 	 */
-	String getTypeRefAsString();
+	String internalGetTypeRefAsString();
 
 	/**
 	 * <!-- begin-user-doc -->

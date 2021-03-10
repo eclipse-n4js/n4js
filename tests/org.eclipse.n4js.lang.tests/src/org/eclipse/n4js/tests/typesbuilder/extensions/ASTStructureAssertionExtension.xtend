@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
@@ -39,8 +41,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
 
 import static org.junit.Assert.*
 
@@ -159,8 +159,8 @@ class ASTStructureAssertionExtension {
 	}
 
 	def assertReturnTypeRef(String phase, FunctionDefinition function, Resource newN4jsResource) {
-		assertTrue("Should have parameterized type ref", function.returnTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = function.returnTypeRef as ParameterizedTypeRef
+		assertTrue("Should have parameterized type ref", function.declaredReturnTypeRefInAST instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = function.declaredReturnTypeRef as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, newN4jsResource.contents.size)
 
 		// test whether reference can be resolved
@@ -170,8 +170,8 @@ class ASTStructureAssertionExtension {
 	}
 
 	def assertReturnTypeRef(String phase, TGetter getter, Resource newN4jsResource) {
-		assertTrue("Should have parameterized type ref", getter.declaredTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = getter.declaredTypeRef as ParameterizedTypeRef
+		assertTrue("Should have parameterized type ref", getter.typeRef instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = getter.typeRef as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, newN4jsResource.contents.size)
 
 		// test whether reference can be resolved
@@ -185,8 +185,8 @@ class ASTStructureAssertionExtension {
 		val parameter = function.fpars.filter[it.name == expectedName].head
 		assertNotNull(phase + ": Parameter should be found for name " + expectedName, parameter)
 		assertEquals(phase + ": Should have the expected variadic setup", variadic, parameter.variadic)
-		assertTrue("Should have parameterized type ref", parameter.declaredTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = parameter.declaredTypeRef as ParameterizedTypeRef
+		assertTrue("Should have parameterized type ref", parameter.declaredTypeRefInAST instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = parameter.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, newN4jsResource.contents.size)
 		val type = parameterizedTypeRef.declaredType;
 		assertNotNull(phase + ": declaredType should not be null", type)
@@ -271,7 +271,10 @@ class ASTStructureAssertionExtension {
 
 	def assertSuperClass(String phase, N4ClassDeclaration n4Class, Resource resource, String expectedSuperClassName) {
 		assertNotNull(phase + ": Should have a super type", n4Class.getSuperClassRef)
-		val superType = assertTypeRef(phase, n4Class.getSuperClassRef, resource)
+		val superClassTypeRef = n4Class.getSuperClassRef?.typeRef;
+		assertNotNull("expected superClassTypeRef to be non-null", superClassTypeRef);
+		assertTrue("expected superClassTypeRef to be a ParameterizedTypeRef", superClassTypeRef instanceof ParameterizedTypeRef);
+		val superType = assertTypeRef(phase, superClassTypeRef as ParameterizedTypeRef, resource)
 		assertTrue(phase + ": Should have a TClass as super type", superType instanceof TClass)
 		assertEquals(phase + ": Should have the expected super class name", expectedSuperClassName, superType.name)
 	}
@@ -293,7 +296,10 @@ class ASTStructureAssertionExtension {
 	def assertConsumedRole(String phase, N4ClassDeclaration n4Class, Resource resource, int index,
 		String expectedConsumedRoleName) {
 		assertTrue(phase + ": Should have an interface at the index", n4Class.implementedInterfaceRefs.size > index)
-		val consumedType = assertTypeRef(phase, n4Class.implementedInterfaceRefs.get(index), resource)
+		val implIfcRef = n4Class.implementedInterfaceRefs.get(index).typeRef;
+		assertNotNull("expected implementedInterfaceRefs[index] to be non-null", implIfcRef);
+		assertTrue("expected implementedInterfaceRefs[index] to be a ParameterizedTypeRef", implIfcRef instanceof ParameterizedTypeRef);
+		val consumedType = assertTypeRef(phase, implIfcRef as ParameterizedTypeRef, resource)
 		assertTrue(phase + ": Should have a TInterface as consumed type", consumedType instanceof TInterface)
 		assertEquals(phase + ": Should have the expected super class name", expectedConsumedRoleName, consumedType.name)
 	}
@@ -301,7 +307,10 @@ class ASTStructureAssertionExtension {
 	def assertConsumedRole(String phase, N4InterfaceDeclaration n4Role, Resource resource, int index,
 		String expectedConsumedRoleName) {
 		assertTrue(phase + ": Should have an interface at the index", n4Role.superInterfaceRefs.size > index)
-		val consumedType = assertTypeRef(phase, n4Role.superInterfaceRefs.get(index), resource)
+		val superIfcRef = n4Role.superInterfaceRefs.get(index).typeRef;
+		assertNotNull("expected superInterfaceRefs[index] to be non-null", superIfcRef);
+		assertTrue("expected superInterfaceRefs[index] to be a ParameterizedTypeRef", superIfcRef instanceof ParameterizedTypeRef);
+		val consumedType = assertTypeRef(phase, superIfcRef as ParameterizedTypeRef, resource)
 		assertTrue(phase + ": Should have a TInterface as consumed type", consumedType instanceof TInterface)
 		assertEquals(phase + ": Should have the expected super class name", expectedConsumedRoleName, consumedType.name)
 	}
@@ -311,7 +320,7 @@ class ASTStructureAssertionExtension {
 		assertEquals(phase + ": " + n4Interface.name + " should have expected super interfaces count",
 			expectedSuperInterfaceNames.size, n4Interface.superInterfaceRefs.size)
 		expectedSuperInterfaceNames.map[expectedSuperInterfaceNames.indexOf(it) -> it].forEach [
-			val typeRef = n4Interface.superInterfaceRefs.get(it.key)
+			val typeRef = n4Interface.superInterfaceRefs.get(it.key).typeRef;
 			val type = typeRef.declaredType;
 			assertNotNull(phase + ": declaredType should not be null", type)
 			assertTrue(phase + ": declaredType should not a TInterface", type instanceof TInterface)
@@ -324,7 +333,7 @@ class ASTStructureAssertionExtension {
 		assertEquals(phase + ": " + n4Role.name + " should have expected implemented interfaces count",
 			expectedImplementedInterfaceNames.size, n4Role.superInterfaceRefs.size)
 		expectedImplementedInterfaceNames.map[expectedImplementedInterfaceNames.indexOf(it) -> it].forEach [
-			val typeRef = n4Role.superInterfaceRefs.get(it.key)
+			val typeRef = n4Role.superInterfaceRefs.get(it.key).typeRef;
 			val type = typeRef.declaredType;
 			assertNotNull(phase + ": declaredType should not be null", type)
 			assertTrue(phase + ": declaredType should not a TInterface", type instanceof TInterface)

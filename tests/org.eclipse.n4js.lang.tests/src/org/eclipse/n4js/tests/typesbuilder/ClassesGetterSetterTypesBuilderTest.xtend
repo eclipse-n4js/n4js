@@ -140,8 +140,8 @@ class ClassesGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest {
 	def private assertN4Getter(String phase, N4ClassDeclaration n4Class, Resource resource, String expectedName, String expectedReturnTypeFragmentURI) {
 		val n4Getter = assertN4Getter(phase, n4Class, expectedName)
 
-		assertTrue("Should have parameterized type ref", n4Getter.declaredTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = n4Getter.declaredTypeRef as ParameterizedTypeRef
+		assertTrue("Should have parameterized type ref", n4Getter.declaredTypeRefInAST instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = n4Getter.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, resource.contents.size)
 		// test whether reference can be resolved
 		val type = parameterizedTypeRef.declaredType;
@@ -155,8 +155,8 @@ class ClassesGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest {
 		val parameter = n4Setter.fpar
 		assertEquals(expectedParameterName, parameter.name)
 		assertEquals(phase + ": Should have the expected variadic setup", false, parameter.variadic)
-		assertTrue("Should have parameterized type ref", parameter.declaredTypeRef instanceof ParameterizedTypeRef)
-		val parameterizedTypeRef = parameter.declaredTypeRef as ParameterizedTypeRef
+		assertTrue("Should have parameterized type ref", parameter.declaredTypeRefInAST instanceof ParameterizedTypeRef)
+		val parameterizedTypeRef = parameter.declaredTypeRefInAST as ParameterizedTypeRef
 		assertEquals(phase + ": expected resource content size", 2, resource.contents.size)
 		val type = parameterizedTypeRef.declaredType;
 		assertNotNull(phase + ": declaredType should not be null", type)

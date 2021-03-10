@@ -92,7 +92,7 @@ public class TypeCompareUtils {
 				return 0;
 			}
 			if (hashCode == null) {
-				hashCode = typeRef.getTypeRefAsString().hashCode(); // TODO find better way to compute a hash code
+				hashCode = typeRef.internalGetTypeRefAsString().hashCode(); // TODO find better way to compute a hash code
 			}
 			return hashCode.intValue();
 		}

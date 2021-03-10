@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+class X {}
+
+class G<T> {}
+
+let gb: G<B>;
+let gx: G<X>;
+let gw: G<?>;
+let gwsupb: G<? super B>;
+let gwextb: G<? extends B>;
+
+type AA = A;
+type AB = B;
+type AC = C;
+
+let gaa: G<AA>;
+let gab: G<AB>;
+let gac: G<AC>;
+
+
+// XPECT noerrors -->
+gab = gb;
+// XPECT noerrors -->
+gb = gab;
+
+// XPECT errors --> "G<X> is not a subtype of G<AB>." at "gx"
+gab = gx;
+// XPECT errors --> "G<AB> is not a subtype of G<X>." at "gab"
+gx = gab;
+
+// XPECT errors --> "G<?> is not a subtype of G<AB>." at "gw"
+gab = gw;
+// XPECT noerrors -->
+gw = gab;
+
+// XPECT errors --> "G<? extends B> is not a subtype of G<AB>." at "gwextb"
+gab = gwextb;
+// XPECT errors --> "G<AA> is not a subtype of G<? extends B>." at "gaa"
+gwextb = gaa;
+// XPECT noerrors -->
+gwextb = gab;
+// XPECT noerrors -->
+gwextb = gac;
+
+// XPECT errors --> "G<? super B> is not a subtype of G<AB>." at "gwsupb"
+gab = gwsupb;
+// XPECT noerrors -->
+gwsupb = gaa;
+// XPECT noerrors -->
+gwsupb = gab;
+// XPECT errors --> "G<AC> is not a subtype of G<? super B>." at "gac"
+gwsupb = gac;

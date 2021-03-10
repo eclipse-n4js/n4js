@@ -10,15 +10,14 @@
  */
 package org.eclipse.n4js.xsemantics
 
-import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -30,14 +29,11 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 @InjectWith(N4JSInjectorProvider)
 class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesystemTest {
 
-	@Inject
-	extension ParseHelper<Script>
-
 	@Test
 	def void testSubtypeSubclass() {
 
 		// class A{}
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class Nominal{
 				public s: string;
 				public foo(): void {}
@@ -57,7 +53,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 			var structural: Structural;
 			var a: A;
 			var b: B;
-		'''.parse()
+		''')
 
 		val G = newRuleEnvironment(script);
 
@@ -76,13 +72,13 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 
 	@Test
 	def void testSubtypeSubclassSameTypeDeclared() {
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class ~Structural{
 				public s: string;
 				public foo(): void {}
 			}
 			var structural: Structural;
-		'''.parse()
+		''')
 		val G = newRuleEnvironment(script);
 		val structural = script.varDeclTypeByName("structural")
 		assertSubtype(G, structural, structural, true)
@@ -94,14 +90,14 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 	 */
 	@Test
 	def void testSubtypeSubclassSameTypeInferredWithNominalTyping() {
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class Nominal{
 				public s: string;
 				public foo(): void {}
 			}
 			var nominal: Nominal;
 			var n = new Nominal();
-		'''.parse()
+		''')
 		val G = newRuleEnvironment(script);
 		val nominal = script.varDeclTypeByName("nominal")
 		val n = script.varDeclByName("n")
@@ -111,14 +107,14 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 
 	@Test
 	def void testSubtypeSubclassSameTypeInferred() {
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class ~Structural{
 				public s: string;
 				public foo(): void {}
 			}
 			var structural: Structural;
 			var s = new Structural();
-		'''.parse()
+		''')
 		val G = newRuleEnvironment(script);
 		val structural = script.varDeclTypeByName("structural")
 		val s = script.varDeclByName("s")
@@ -130,12 +126,12 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 	def void testSubtypeSubclassWithExternalClass() {
 
 		// class A{}
-		val script = '''
-			class Nominal{
+		val script = createAndValidateScript(JavaScriptVariant.external, '''
+			external class Nominal{
 				public s: string;
 				public foo(): void {}
 			}
-			class ~Structural{
+			external class ~Structural{
 				public s: string;
 				public foo(): void {}
 			}
@@ -150,7 +146,7 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 			var structural: Structural;
 			var a: A;
 			var b: B;
-		'''.parse()
+		''')
 
 		val G = newRuleEnvironment(script);
 

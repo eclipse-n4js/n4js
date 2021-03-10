@@ -77,6 +77,16 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 	 */
 	@Override
 	public String getTypeRefAsString() {
+		return this.internalGetTypeRefAsString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String internalGetTypeRefAsString() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -96,6 +106,8 @@ public abstract class TypeArgumentImpl extends ProxyResolvingEObjectImpl impleme
 				return getDeclaredType();
 			case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING:
 				return getTypeRefAsString();
+			case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

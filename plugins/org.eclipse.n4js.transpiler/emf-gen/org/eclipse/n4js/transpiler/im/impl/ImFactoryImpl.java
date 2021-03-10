@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.n4js.transpiler.im.*;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -69,6 +70,7 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL: return createSymbolTableEntryOriginal();
 			case ImPackage.SYMBOL_TABLE_ENTRY_IM_ONLY: return createSymbolTableEntryIMOnly();
 			case ImPackage.SYMBOL_TABLE_ENTRY_INTERNAL: return createSymbolTableEntryInternal();
+			case ImPackage.TYPE_REFERENCE_NODE_IM: return createTypeReferenceNode_IM();
 			case ImPackage.IDENTIFIER_REF_IM: return createIdentifierRef_IM();
 			case ImPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM: return createParameterizedPropertyAccessExpression_IM();
 			case ImPackage.PARAMETERIZED_TYPE_REF_IM: return createParameterizedTypeRef_IM();
@@ -140,6 +142,17 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	public SymbolTableEntryInternal createSymbolTableEntryInternal() {
 		SymbolTableEntryInternalImpl symbolTableEntryInternal = new SymbolTableEntryInternalImpl();
 		return symbolTableEntryInternal;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public <T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM() {
+		TypeReferenceNode_IMImpl<T> typeReferenceNode_IM = new TypeReferenceNode_IMImpl<T>();
+		return typeReferenceNode_IM;
 	}
 
 	/**

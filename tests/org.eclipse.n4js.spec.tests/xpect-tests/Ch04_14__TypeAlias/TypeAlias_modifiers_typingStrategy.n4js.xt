@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// check handling of type modifiers (i.e. structural/tilde and dynamic/plus) when combined with type aliases
+
+
+class C {}
+
+type A1 = C;
+type A2 = ~r~A1;
+type A3 = ~w~A2;
+
+let a1: A1;
+let a1w: ~w~A1;
+let a2: A2;
+let a2w: ~w~A2;
+let a3: A3;
+
+// XPECT typeWithAliasResolution of 'a1' --> A1 <=> C
+a1;
+// XPECT typeWithAliasResolution of 'a1w' --> ~w~A1 <=> ~w~C
+a1w;
+// XPECT typeWithAliasResolution of 'a2' --> A2 <=> ~r~C
+a2;
+// XPECT typeWithAliasResolution of 'a2w' --> ~w~A2 <=> ~∅~C
+a2w;
+// XPECT typeWithAliasResolution of 'a3' --> A3 <=> ~∅~C
+a3;
+
+class G<T> {
+	field: T;
+	fieldW: ~w~T;
+}
+
+let ga2: G<A2>;
+// XPECT typeWithAliasResolution of 'ga2.field' --> A2 <=> ~r~C
+ga2.field;
+// XPECT typeWithAliasResolution of 'ga2.fieldW' --> ~w~A2 <=> ~∅~C
+ga2.fieldW;
+
+let gwa2: G<~w~A2>;
+// XPECT typeWithAliasResolution of 'gwa2.field' --> ~w~A2 <=> ~∅~C
+gwa2.field;
+// XPECT typeWithAliasResolution of 'gwa2.fieldW' --> ~w~A2 <=> ~∅~C
+gwa2.fieldW;

@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class A {}
+class B {}
+
+type PromiseA = Promise<A,any>;
+type GeneratorAB = Generator<A,B,any>;
+type AsyncGeneratorAB = AsyncGenerator<A,B,any>;
+
+
+// -----------------------------------------------------------------
+// async functions
+
+class G1<T extends Promise<A,any>> {
+	// XPECT type of 'm' --> {function():T}
+	async m(): T {
+		// XPECT errors --> "int is not a subtype of A." at "42"
+		return 42;
+	}
+}
+
+// XPECT type of 'fn1' --> {function():PromiseA}
+async function fn1(): PromiseA {
+	// XPECT errors --> "int is not a subtype of A." at "42"
+	return 42;
+}
+
+
+// -----------------------------------------------------------------
+// generators
+
+class G2<T extends Generator<A,B,any>> {
+	// XPECT type of 'm' --> {function():T}
+	* m(): T {
+		// XPECT errors --> "int is not a subtype of A." at "42"
+		yield 42;
+		// XPECT errors --> "int is not a subtype of B." at "42"
+		return 42;
+	}
+}
+
+// XPECT type of 'fn2' --> {function():GeneratorAB}
+function * fn2(): GeneratorAB {
+	// XPECT errors --> "int is not a subtype of A." at "42"
+	yield 42;
+	// XPECT errors --> "int is not a subtype of B." at "42"
+	return 42;
+}
+
+
+// -----------------------------------------------------------------
+// async generators
+
+class G3<T extends AsyncGenerator<A,B,any>> {
+	// XPECT type of 'm' --> {function():T}
+	async * m(): T {
+		// XPECT errors --> "int is not a subtype of A." at "42"
+		yield 42;
+		// XPECT errors --> "int is not a subtype of B." at "42"
+		return 42;
+	}
+}
+
+// XPECT type of 'fn3' --> {function():AsyncGeneratorAB}
+async function * fn3(): AsyncGeneratorAB {
+	// XPECT errors --> "int is not a subtype of A." at "42"
+	yield 42;
+	// XPECT errors --> "int is not a subtype of B." at "42"
+	return 42;
+}
+
+
+// -----------------------------------------------------------------
+// validations Generator vs. AsyncGenerator
+
+class G4<T extends Generator<A,B,any>> {
+	// XPECT warnings --> "Type Generator is intended for synchronous generator functions; consider using type AsyncGenerator instead." at "T"
+	async * m(): T {}
+}
+
+// XPECT warnings --> "Type Generator is intended for synchronous generator functions; consider using type AsyncGenerator instead." at "GeneratorAB"
+async function * fn4(): GeneratorAB {}
+
+
+class G5<T extends AsyncGenerator<A,B,any>> {
+	// XPECT warnings --> "Type AsyncGenerator is intended for asynchronous generator functions; consider using type Generator instead." at "T"
+	* m(): T {}
+}
+
+// XPECT warnings --> "Type AsyncGenerator is intended for asynchronous generator functions; consider using type Generator instead." at "AsyncGeneratorAB"
+function * fn5(): AsyncGeneratorAB {}

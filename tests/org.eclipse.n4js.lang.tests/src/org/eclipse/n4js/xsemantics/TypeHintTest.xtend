@@ -12,14 +12,13 @@ package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -33,15 +32,12 @@ import static org.junit.Assert.*
 class TypeHintTest extends AbstractTypesystemTest {
 
 	@Inject
-	extension ParseHelper<Script>
-
-	@Inject
 	extension TypeSystemHelper
 
 
 	@Test
 	def void testNonNormalizationOfJoin() {
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class A{}
 			class B extends A{}
 			class C{}
@@ -51,15 +47,15 @@ class TypeHintTest extends AbstractTypesystemTest {
 
 			// v = join
 			// Case 1:
-			var /* no type */ x1 = true ? a : b; // x should have type A (as A v B = A)
+			var x1 /* no type */ = true ? a : b; // x should have type A (as A v B = A)
 			// Case 2:
-			var union{A,B}    y1 = true? a : b; // assignment should work already
+			var y1: union{A,B} = true? a : b; // assignment should work already
 			// Case 3:
-			var /* no type */ x2 = true? a : c; // x should have type N4Object (as A v C = N4Object)
+			var x2 /* no type */ = true? a : c; // x should have type N4Object (as A v C = N4Object)
 			// Case 4:
-			var union{A,C}    y2 = true? a : c; // rhs needs type hint!
+			var y2: union{A,C} = true? a : c; // rhs needs type hint!
 
-		'''.parse()
+		''')
 
 		val varDecls = EcoreUtil2.getAllContentsOfType(script, VariableDeclaration);
 		val vi = varDecls.iterator;

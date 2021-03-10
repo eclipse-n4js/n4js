@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.n4js.n4JS.*;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 
@@ -128,6 +129,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseNamespaceImportSpecifier(NamespaceImportSpecifier object) {
 				return createNamespaceImportSpecifierAdapter();
+			}
+			@Override
+			public <T extends TypeRef> Adapter caseTypeReferenceNode(TypeReferenceNode<T> object) {
+				return createTypeReferenceNodeAdapter();
 			}
 			@Override
 			public Adapter caseTypeProvidingElement(TypeProvidingElement object) {
@@ -642,6 +647,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createGenericDeclarationAdapter();
 			}
 			@Override
+			public Adapter caseN4TypeVariable(N4TypeVariable object) {
+				return createN4TypeVariableAdapter();
+			}
+			@Override
 			public Adapter caseN4TypeDefinition(N4TypeDefinition object) {
 				return createN4TypeDefinitionAdapter();
 			}
@@ -680,6 +689,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseN4EnumLiteral(N4EnumLiteral object) {
 				return createN4EnumLiteralAdapter();
+			}
+			@Override
+			public Adapter caseN4TypeAliasDeclaration(N4TypeAliasDeclaration object) {
+				return createN4TypeAliasDeclarationAdapter();
 			}
 			@Override
 			public Adapter caseModifiableElement(ModifiableElement object) {
@@ -994,6 +1007,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNamespaceImportSpecifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.TypeReferenceNode <em>Type Reference Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.TypeReferenceNode
+	 * @generated
+	 */
+	public Adapter createTypeReferenceNodeAdapter() {
 		return null;
 	}
 
@@ -2790,6 +2817,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4TypeVariable <em>N4 Type Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.N4TypeVariable
+	 * @generated
+	 */
+	public Adapter createN4TypeVariableAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4TypeDefinition <em>N4 Type Definition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -2926,6 +2967,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createN4EnumLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4TypeAliasDeclaration <em>N4 Type Alias Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
+	 * @generated
+	 */
+	public Adapter createN4TypeAliasDeclarationAdapter() {
 		return null;
 	}
 

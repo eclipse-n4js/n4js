@@ -22,7 +22,7 @@ import org.eclipse.n4js.ts.types.TMember;
  * @model abstract="true"
  * @generated
  */
-public interface MethodDeclaration extends FunctionDefinition, GenericDeclaration, TypedElement, PropertyNameOwner {
+public interface MethodDeclaration extends FunctionDefinition, GenericDeclaration, PropertyNameOwner {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

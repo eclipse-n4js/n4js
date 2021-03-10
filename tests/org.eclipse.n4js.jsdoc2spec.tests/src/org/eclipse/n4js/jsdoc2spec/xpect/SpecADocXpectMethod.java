@@ -21,6 +21,7 @@ import org.eclipse.n4js.jsdoc2spec.adoc.SpecIdentifiableElementSection;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -99,6 +100,9 @@ public class SpecADocXpectMethod {
 		}
 		if (eobj instanceof TypeDefiningElement) {
 			return ((TypeDefiningElement) eobj).getDefinedType();
+		}
+		if (eobj instanceof N4TypeVariable) {
+			return ((N4TypeVariable) eobj).getDefinedTypeVariable();
 		}
 		throw new IllegalStateException("No type defining element found at location.");
 	}
