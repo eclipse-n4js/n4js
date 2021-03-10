@@ -305,9 +305,7 @@ public class Project {
 			throw new IOException("'" + parentDirectory + "' is not a directory");
 
 		val File projectDirectory = new File(parentDirectory, projectName);
-		if (projectDirectory.exists)
-			FileDeleter.delete(projectDirectory);
-		projectDirectory.mkdirs();
+		rmkdirs(projectDirectory);
 
 		createProjectDescriptionFile(projectDirectory);
 		createModules(projectDirectory);
@@ -343,5 +341,11 @@ public class Project {
 	private def void createNodeModuleProjects(File parentDirectory) {
 		for (nodeModuleProject : nodeModuleProjects.values)
 			nodeModuleProject.create(parentDirectory.toPath());
+	}
+	
+	def void rmkdirs(File file) {
+		if (file.exists)
+			FileDeleter.delete(file);
+		file.mkdirs();
 	}
 }

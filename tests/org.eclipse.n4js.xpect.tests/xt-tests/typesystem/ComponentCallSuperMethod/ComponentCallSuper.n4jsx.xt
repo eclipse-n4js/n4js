@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   Workspace {
+   	 Project "ComponentSuperA" {
+   	 	Folder "src" {
+   	 		File "LowerComponent.n4jsx" {}
+   	 	}
+   	 	File "package.json" { from="package_A.json" }
+   	 }
+   	 Project "ComponentSuperB" {
+   	 	Folder "src" {
+   	 		ThisFile {}
+   	 	}
+   	 	File "package.json" { from="package_B.json" }
+   	 }
+     Project "react" {
+			File "index.n4jsd" { from = "../../../react-implementations/valid/index.n4jsd" }
+			File "index.js" { from = "../../../react-implementations/valid/index.js" }
+			File "package.json" { from = "../../../react-implementations/valid/package.json" }
+		}
+   }
+   END_SETUP
+*/
+
+import * as React from "react"
+import { LowerComponent } from "LowerComponent"
+
+
+class MyComponent extends LowerComponent {
+
+	@Override
+	public render() : React.Element{
+		// XPECT noerrors --> "The method render is not visible." at "render"
+		return super.render();
+	}
+
+	@Override
+	protected componentWillUnmount(): void{
+		// XPECT noerrors --> "The method componentWillUnmount is not visible." at "componentWillUnmount"
+		super.componentWillUnmount();
+	}
+}

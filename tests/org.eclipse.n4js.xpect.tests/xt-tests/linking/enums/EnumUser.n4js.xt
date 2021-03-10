@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				Folder "linking" {
+					Folder "enums" {
+						ThisFile {}
+						File "MyEnum.n4js" {}
+					}
+				}
+			}
+			File "package.json" { from="../../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+import { MyEnum } from "linking/enums/MyEnum"
+// XPECT linkedFragment at 'MyEnum.<|>ONE' --> MyEnum.n4js#/1/@topLevelTypes.0/@literals.0
+// Literals do not have a fully qualified name XPECT ! linkedName at 'MyEnum.<|>ONE' --> ONE
+var myEnum: MyEnum = MyEnum.ONE;

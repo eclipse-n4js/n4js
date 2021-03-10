@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+    Workspace {
+   	 Project "P_USERTL_A01" {
+   	 	Folder "src" {
+   	 		 File "A.n4js" { from="A_uses_a01.n4js.xt"}
+   	 	}
+   	 	File "package.json" { from="package_uses_a01.json" }
+   	 }
+   	 Project "P_RTL_A00" {
+   	 	Folder "src" {
+   	 		 File "ObjectExtension1.n4jsd" {}
+   	 	}
+   	 	File "package.json" { from="package_rtl_a00.json" }
+   	 }
+   	 Project "P_RTL_A01" {
+   	 	Folder "src" {
+   	 		 File "ObjectExtension2.n4jsd" {}
+   	 		 File "WrongObjectExtension2.n4jsd" {}
+   	 	}
+   	 	File "package.json" { from="package_rtl_a01.json"  }
+   	 }
+   	 Project "P_RTL_A02" {
+   	 	Folder "src" {
+   	 		 File "ObjectExtension3.n4jsd" {}
+   	 		 File "A.n4js" { from="A_uses_a00.n4js" }
+   	 	}
+   	 	// ThisFile "package.json" {  }
+   	 	ThisFile "package.json" {   }
+   	 }
+   }
+
+   END_SETUP
+ */
+
+{
+	"name": "P_RTL_A02",
+	"version": "0.0.1",
+	"dependencies": {
+		"P_RTL_A01": "*"
+	},
+	"n4js": {
+		"projectType": "runtimeLibrary",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"requiredRuntimeLibraries": [
+			// XPECT errors --> "Erroneous library P_RTL_A01 provides contradicting polyfills for "#.MObject#mi"." at ""P_RTL_A01""
+			"P_RTL_A01"
+		],
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

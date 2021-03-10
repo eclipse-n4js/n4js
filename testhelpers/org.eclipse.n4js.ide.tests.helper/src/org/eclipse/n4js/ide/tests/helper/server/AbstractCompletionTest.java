@@ -22,10 +22,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
-import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest.N4JSTestCompletionConfiguration;
@@ -126,17 +124,10 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	protected void performTest(Project project, String moduleName, N4JSTestCompletionConfiguration tcc)
 			throws InterruptedException, ExecutionException {
 
-		CompletionParams completionParams = new CompletionParams();
-		Position pos = new Position(tcc.getLine(), tcc.getColumn());
-		completionParams.setPosition(pos);
-
 		FileURI uri = getFileURIFromModuleName(tcc.getFilePath());
-		TextDocumentIdentifier textDocument = new TextDocumentIdentifier();
-		textDocument.setUri(uri.toString());
-		completionParams.setTextDocument(textDocument);
 
-		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = languageServer
-				.completion(completionParams);
+		CompletableFuture<Either<List<CompletionItem>, CompletionList>> future = callCompletion(uri.toString(),
+				tcc.getLine(), tcc.getColumn());
 
 		Either<List<CompletionItem>, CompletionList> result = future.get();
 		List<CompletionItem> items = result.isLeft() ? result.getLeft() : result.getRight().getItems();
@@ -162,6 +153,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 			String expectedCodeAfterApply = tcc.getExpectedCodeAfterApply();
 			CompletionItem itemToBeApplied = getCompletionItemToBeApplied(sortedItems, tcc);
 			if (expectedCodeAfterApply != null && itemToBeApplied != null) {
+				Position pos = new Position(tcc.getLine(), tcc.getColumn());
 				String actualCodeAfterApply = applyCompletionItem(tcc.getModel(), pos, itemToBeApplied);
 				String msg = "application of completion item did not yield correct result\n"
 						+ "EXPECTED:\n"

@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				Folder "linking" {
+					ThisFile {}
+				}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+/* pos 0 */
+export function foo1() {
+    foo1;
+// XPECT linkedFragment at 'foo1' --> /1/@topLevelTypes.0
+    foo1();
+    var b = function foo2() {
+// XPECT linkedFragment at 'foo2' --> /1/@internalTypes.0
+		foo2()
+    	var c = function foo3() {
+/*
+commented out here but tested with FunctionExpressionScopingTest, there seems to be a update problem with building up the types
+XPECT ! linkedFragment at 'foo3' ---
+/1/@internalTypes.1
+--- */
+			foo3()
+    		var d = function foo4() {
+/*
+commented out here but tested with FunctionExpressionScopingTest, there seems to be a update problem with building up the inner types
+XPECT ! linkedFragment at 'foo4' ---
+/1/@internalTypes.2
+--- */
+    			foo4()
+    		}
+    	}
+    }
+}
+// XPECT linkedFragment at 'foo' --> /1/@topLevelTypes.0
+foo1();

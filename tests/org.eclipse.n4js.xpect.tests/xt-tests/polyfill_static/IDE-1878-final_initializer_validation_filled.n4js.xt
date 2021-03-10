@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+    Workspace {
+   	 Project "P_USERTL_B00" {
+   	 	Folder "src" {
+	   	 	Folder "n4js" {
+	   	 		File "A.n4js" { from="IDE-1878-final_initializer_validation_filling.n4js" }
+	   	 	}
+	   	 	Folder "n4js-gen" {
+	   	 		ThisFile "A.n4js" { }
+	   	 	}
+	   	}
+   	 	File "package.json" { from="package_uses_b00.json" }
+   	 }
+   }
+
+   END_SETUP
+ */
+
+
+@@StaticPolyfillAware
+export public class A {
+
+	// CF. Polyfill --> it replaced this constructor but doesn't initialize the code
+	// In case no other error is issued here, then:
+	// XPECT errors --> "Final field n must be provided with an initializer or must be initialized in the constructor. HINT: You might want to check the polyfilled constructor." at "n"
+	@Final public n : number ;
+
+	constructor(){
+		this.n = 5;
+	}
+}
+
+
+export public class A2 {
+
+	// CF. Polyfill --> it removes the spec-style ctor
+	// In case no other error is issued here, then:
+	// XPECT errors --> "Final field n must be provided with an initializer or must be initialized in the constructor. HINT: You might want to check the polyfilled constructor." at "n"
+	@Final public n : number ;
+
+	public constructor(@Spec a : ~i~this ){
+	}
+
+}
+// Prove for removing the spec-style ctor:
+// XPECT noerrors --> "Incorrect number of arguments: expected 1, got 0." at "new A2()"
+var a2 : A2 = new A2();

@@ -12,4 +12,5 @@ FOLDERS
 --- D1 [SYMLINK_TO_PATH P1/packages/D1]
 
 EXPECT
+- P1
 - P1/packages/D1

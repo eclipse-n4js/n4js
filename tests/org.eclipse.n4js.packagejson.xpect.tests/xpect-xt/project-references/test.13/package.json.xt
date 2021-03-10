@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+			Project "test.13" {
+				File "package.json" { from="../test.13/package.json.xt"}
+				Folder "src" { }
+			}
+			Project "test.data.test.project.one" {
+				File "package.json" { from="../test.data.test.project.one/package.json" }
+			}
+			Project "test.data.test.project.two" {
+				File "package.json" { from="../test.data.test.project.two/package.json" }
+			}
+	}
+
+   END_SETUP
+ */
+// XPECT nowarnings -->
+{
+	"name": "test.13",
+	"version": "0.0.1",
+	"dependencies": {
+		// XPECT noerrors -->
+		"test.data.test.project.one": "*",
+		// XPECT noerrors -->
+		"test.data.test.project.two": "*",
+		// XPECT errors --> "Duplicate project reference test.data.test.project.one." at ""test.data.test.project.one": "*""
+		// XPECT warnings --> "Property test.data.test.project.one duplicates property test.data.test.project.one (line 35)." at ""test.data.test.project.one""
+		"test.data.test.project.one": "*"
+	},
+	"devDependencies": {
+		// XPECT errors --> "Duplicate project reference test.data.test.project.two." at ""test.data.test.project.two": "*""
+		"test.data.test.project.two": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

@@ -10,14 +10,11 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileRunner;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
 import org.eclipse.n4js.utils.Strings;
 import org.junit.After;
@@ -35,27 +32,6 @@ import com.google.common.collect.Multimap;
  * Base class for tests testing the xt test framework
  */
 public abstract class AbstractXtParentRunnerTest {
-
-	// FIXME: GH-2064: Reconsider this implementation due to runtime warnings regarding forbidden access
-	static class DynamicXtFolder implements XtFolder {
-		final String value;
-
-		/**  */
-		public DynamicXtFolder(String value) {
-			this.value = value;
-		}
-
-		@Override
-		public Class<? extends Annotation> annotationType() {
-			return XtFolder.class;
-		}
-
-		@Override
-		public String value() {
-			return value;
-		}
-	}
-
 	TestRunSimulator runListener;
 	Description parentDescription;
 	List<XtFileRunner> children;
@@ -64,11 +40,9 @@ public abstract class AbstractXtParentRunnerTest {
 
 	class TestRunSimulator extends RunListener {
 
-		void run(String folderName) throws Exception {
-			XtFolder dynamicXtFolder = new DynamicXtFolder(folderName);
-
-			alterAnnotationOn(XtTestSetupTestMockup.class, XtFolder.class, dynamicXtFolder);
-
+		void run(String folderName, Set<String> suppressedIssues) throws Exception {
+			XtTestSetupTestMockup.folder = folderName;
+			XtTestSetupTestMockup.suppressedIssues = suppressedIssues;
 			XtParentRunner xtParentRunner = new XtParentRunner(XtTestSetupTestMockup.class);
 			RunNotifier rn = new RunNotifier();
 			rn.addListener(this);
@@ -149,8 +123,12 @@ public abstract class AbstractXtParentRunnerTest {
 	}
 
 	void run(String folderName) throws Exception {
+		run(folderName, Collections.emptySet());
+	}
+
+	void run(String folderName, Set<String> suppressedIssues) throws Exception {
 		runListener = new TestRunSimulator();
-		runListener.run(folderName);
+		runListener.run(folderName, suppressedIssues);
 	}
 
 	void assertFiles(String files) {
@@ -194,27 +172,4 @@ public abstract class AbstractXtParentRunnerTest {
 				events.containsKey("testAssumptionFailure"));
 	}
 
-	static <A extends Annotation, A_NEW extends A> void alterAnnotationOn(Class<?> clazzToLookFor,
-			Class<A> annotationToAlter, A_NEW annotationValue) {
-
-		// Supported by JDK 8+
-		try {
-			// In JDK8 Class has a private method called annotationData().
-			// We first need to invoke it to obtain a reference to AnnotationData class which is a private class
-			Method method = Class.class.getDeclaredMethod("annotationData");
-			method.setAccessible(true);
-			// Since AnnotationData is a private class we cannot create a direct reference to it. We will have to
-			// manage with just Object
-			Object annotationData = method.invoke(clazzToLookFor);
-			// We now look for the map called "annotations" within AnnotationData object.
-			Field fieldAnnotations = annotationData.getClass().getDeclaredField("annotations");
-			fieldAnnotations.setAccessible(true);
-			@SuppressWarnings("unchecked")
-			Map<Class<? extends Annotation>, Annotation> map = (Map<Class<? extends Annotation>, Annotation>) fieldAnnotations
-					.get(annotationData);
-			map.put(annotationToAlter, annotationValue);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
