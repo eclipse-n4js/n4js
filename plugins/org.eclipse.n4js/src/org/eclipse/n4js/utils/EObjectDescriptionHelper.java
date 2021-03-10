@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.EcoreUtil2;
@@ -46,7 +45,7 @@ public final class EObjectDescriptionHelper {
 	 * Returns <code>true</code> only if provided {@link IEObjectDescription description} has the same
 	 * {@link QualifiedName} as module of the {@link EObject}. Additionally if {@link IEObjectDescription description}
 	 * describes {@link TModule#isMainModule() main module} then it is checked if both are contained in the same
-	 * {@link IN4JSProject}.
+	 * {@link N4JSProjectConfigSnapshot}.
 	 *
 	 * @returns true if {@link IEObjectDescription} describes module of {@link EObject}
 	 */

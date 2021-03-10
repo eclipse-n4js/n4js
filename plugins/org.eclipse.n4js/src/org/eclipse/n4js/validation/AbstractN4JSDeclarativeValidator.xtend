@@ -44,7 +44,7 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.WhileStatement
 import org.eclipse.n4js.n4JS.WithStatement
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
@@ -101,7 +101,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	@Inject
 	private TypeSystemHelper tsh;
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -129,8 +129,9 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 			 * </ul>
 			 */
 			private def boolean shouldInvoke(State state) {
-				if (state.currentObject?.eResource !== null) {
-					if (!n4jsCore.isNoValidate(state.currentObject.eResource.getURI())) {
+				val resource = state.currentObject?.eResource;
+				if (resource !== null) {
+					if (!n4jsCore.isNoValidate(resource, resource.getURI())) {
 						return true;
 					}
 				}

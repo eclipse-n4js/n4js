@@ -7,7 +7,6 @@ import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.json.validation.JSONValidator;
@@ -95,10 +94,6 @@ public class PackageJsonXpectInjectorSetup extends InjectorSetup {
 
 		Object jsonFactory = factoryMap.get("json");
 		factoryMap.put("xt", jsonFactory);
-
-		// Clear the caches of FileBasedWorkspace 
-		final FileBasedWorkspace workspace = n4jsInjector.get().getInstance(FileBasedWorkspace.class);
-		workspace.clear();
 
 		return jsonInjector;
 	}

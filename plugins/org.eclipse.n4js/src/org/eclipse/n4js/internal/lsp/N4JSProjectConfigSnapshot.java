@@ -28,7 +28,6 @@ import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -78,7 +77,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	}
 
 	/**
-	 * Returns the {@link IN4JSProject#getSortedDependencies() sorted dependencies}.
+	 * Returns the {@link N4JSProjectConfig#getSortedDependencies() sorted dependencies}.
 	 * <p>
 	 * WARNING: this value depends on other projects' properties (esp. "definesPackage") so it may change whenever other
 	 * projects' <code>package.json</code> files change! See

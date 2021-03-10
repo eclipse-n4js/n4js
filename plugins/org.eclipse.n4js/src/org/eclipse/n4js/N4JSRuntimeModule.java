@@ -23,9 +23,6 @@ import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.naming.N4JSImportedNamesAdapter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
@@ -36,8 +33,6 @@ import org.eclipse.n4js.parser.PropertyNameAwareElementFactory;
 import org.eclipse.n4js.parser.RegExLiteralAwareLexer;
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.AccessibleSerializer;
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.resource.N4JSCache;
@@ -380,20 +375,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/** Binds a custom {@link N4JSEObjectAtOffsetHelper}. */
 	public Class<? extends EObjectAtOffsetHelper> bindEObjectAtOffsetHelper() {
 		return N4JSEObjectAtOffsetHelper.class;
-	}
-
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
-	 */
-	public Class<? extends IN4JSCore> bindN4JSCore() {
-		return N4JSRuntimeCore.class;
-	}
-
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
-	 */
-	public Class<? extends InternalN4JSWorkspace<? extends SafeURI<?>>> bindInternalN4JSWorkspace() {
-		return FileBasedWorkspace.class;
 	}
 
 	/**

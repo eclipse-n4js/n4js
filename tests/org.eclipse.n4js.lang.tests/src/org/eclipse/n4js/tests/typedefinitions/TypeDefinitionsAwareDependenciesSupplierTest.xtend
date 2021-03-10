@@ -24,7 +24,6 @@ import org.eclipse.n4js.projectDescription.DependencyType
 import org.eclipse.n4js.projectDescription.ProjectDependency
 import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.utils.URIUtils
@@ -37,7 +36,7 @@ import org.junit.runner.RunWith
 /**
  * Unit test of {@link TypeDefinitionsAwareDependenciesSupplier}. 
  * 
- * Uses a custom mock-implementation {@link MockTypeDefinitionsProject} of {@link IN4JSProject} to avoid a complicated test setup.
+ * Uses a custom mock-implementation {@link MockTypeDefinitionsProject} of {@link N4JSProjectConfig} to avoid a complicated test setup.
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -238,7 +237,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 }
 
 /**
- * Mostly non-functional mock-implementation of {@link IN4JSProject}.
+ * Mostly non-functional mock-implementation of {@link N4JSProjectConfig}.
  *
  * Only methods directly overridden by this implementation can be used. Invoking other methods may result in
  * undefined behavior (or NPEs etc.).

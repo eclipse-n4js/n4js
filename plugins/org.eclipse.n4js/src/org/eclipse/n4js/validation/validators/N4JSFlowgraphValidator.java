@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.postprocessing.ASTFlowInfo;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
@@ -45,7 +45,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	private FindReferenceHelper findReferenceHelper;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	/**
 	 * NEEEDED

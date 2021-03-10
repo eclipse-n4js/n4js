@@ -13,7 +13,6 @@ package org.eclipse.n4js.scoping.utils;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.naming.QualifiedName;
 
 /**
@@ -59,7 +58,7 @@ public class ImportSpecifierUtil {
 		return ModuleSpecifierForm.PLAIN;
 	}
 
-	/** returns qualified name of the {@link IN4JSProject#getMainModule() } */
+	/** returns qualified name of the {@link N4JSProjectConfigSnapshot#getMainModule() main module}. */
 	public static QualifiedName getMainModuleOfProject(N4JSProjectConfigSnapshot project) {
 		if (project != null) {
 			final String mainModuleSpec = project.getMainModule();

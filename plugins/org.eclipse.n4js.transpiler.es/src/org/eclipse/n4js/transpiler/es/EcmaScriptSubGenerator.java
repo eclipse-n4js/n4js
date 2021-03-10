@@ -18,13 +18,13 @@ import java.nio.file.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
@@ -91,7 +91,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 	protected void internalDoGenerate(N4JSWorkspaceConfigSnapshot ws, Resource resource, GeneratorOption[] options,
 			IFileSystemAccess fsa) {
 		if (!(resource instanceof N4JSResource)) {
-			if (IN4JSProject.PACKAGE_JSON.equals(resource.getURI().lastSegment())) {
+			if (N4JSGlobals.PACKAGE_JSON.equals(resource.getURI().lastSegment())) {
 				return;
 			}
 			throw new IllegalArgumentException("Given resource is not an N4JSResource. " + resource);

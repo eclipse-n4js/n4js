@@ -16,7 +16,7 @@ import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescription
@@ -35,7 +35,7 @@ import org.eclipse.xtext.resource.IResourceDescription
 class ModuleNameComputer {
 
 	@Inject
-	private extension IN4JSCore core
+	private extension IN4JSCoreNEW core
 
 	/**
 	 * Returns the qualified module name which is implicitly defined by the given resource.
@@ -64,10 +64,10 @@ class ModuleNameComputer {
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
 	def getQualifiedModuleName(URI uri) {
-		val maybeSourceContainer = findN4JSSourceContainer(uri)
+		val maybeSourceContainer = findN4JSSourceContainer(TODO, uri)
 		if (maybeSourceContainer.present) {
 			val sourceContainer = maybeSourceContainer.get
-			val location = sourceContainer.location.withTrailingPathDelimiter.toURI
+			val location = sourceContainer.pathAsFileURI.withTrailingPathDelimiter.toURI
 			if(uri.uriStartsWith(location)) {
 				var relativeURI = uri.deresolve(location)
 				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {

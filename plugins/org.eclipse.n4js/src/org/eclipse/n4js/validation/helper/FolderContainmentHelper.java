@@ -16,8 +16,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 
 /**
@@ -29,9 +27,9 @@ public class FolderContainmentHelper {
 
 	/**
 	 * Returns {@code true} iff the given URI refers to a resource that is located in the declared output folder of the
-	 * corresponding {@link IN4JSProject}.
+	 * corresponding {@link N4JSProjectConfigSnapshot}.
 	 *
-	 * Returns {@code false} if the given URI is not contained by any known {@link IN4JSProject}.
+	 * Returns {@code false} if the given URI is not contained by any known {@link N4JSProjectConfigSnapshot}.
 	 */
 	public boolean isContainedInOutputFolder(N4JSWorkspaceConfigSnapshot ws, URI uri) {
 		final N4JSProjectConfigSnapshot project = ws.findProjectByNestedLocation(uri);
@@ -48,9 +46,9 @@ public class FolderContainmentHelper {
 
 	/**
 	 * Returns {@code true} iff the given URI refers to a resource that is located in one of the
-	 * {@link IN4JSSourceContainer}ss of an {@link IN4JSProject}.
+	 * {@link N4JSSourceFolderSnapshot}s of an {@link N4JSProjectConfigSnapshot}.
 	 *
-	 * Returns {@code false} if the given URI is not contained by any known {@link IN4JSProject}.
+	 * Returns {@code false} if the given URI is not contained by any known {@link N4JSProjectConfigSnapshot}.
 	 */
 	public boolean isContainedInSourceContainer(N4JSWorkspaceConfigSnapshot ws, SafeURI<?> location) {
 		final N4JSSourceFolderSnapshot container = ws.findSourceFolderContaining(location.toURI());
@@ -62,7 +60,7 @@ public class FolderContainmentHelper {
 
 	/**
 	 * Returns {@code true} iff the output folder of the given {@code project} is contained by any known
-	 * {@link IN4JSSourceContainer}.
+	 * {@link N4JSSourceFolderSnapshot}.
 	 *
 	 * Returns {@code false} if the given project declares no output path.
 	 */
@@ -91,7 +89,7 @@ public class FolderContainmentHelper {
 	 *
 	 * Returns {@code null} if the given {@code project} declares no output folder.
 	 *
-	 * @See {@link IN4JSProject#getOutputPath()}
+	 * @See {@link N4JSProjectConfigSnapshot#getOutputPath()}
 	 */
 	private static SafeURI<?> getOutputURI(N4JSProjectConfigSnapshot project) {
 		final String outputPathName = project.getOutputPath();

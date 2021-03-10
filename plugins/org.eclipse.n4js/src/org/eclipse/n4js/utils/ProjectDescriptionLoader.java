@@ -48,7 +48,6 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionBuilder;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.LazyStringInputStream;
@@ -207,9 +206,9 @@ public class ProjectDescriptionLoader {
 	}
 
 	private JSONDocument loadPackageJSONAtLocation(SafeURI<?> location) {
-		Path path = location.appendSegment(IN4JSProject.PACKAGE_JSON).toFileSystemPath();
+		Path path = location.appendSegment(N4JSGlobals.PACKAGE_JSON).toFileSystemPath();
 		if (!Files.isReadable(path)) {
-			path = location.appendSegment(IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION)
+			path = location.appendSegment(N4JSGlobals.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION)
 					.toFileSystemPath();
 			if (!Files.isReadable(path)) {
 				return null;
@@ -223,7 +222,7 @@ public class ProjectDescriptionLoader {
 				doc.setContent(copy(jsonElement));
 				return doc;
 			} catch (JsonParseException e) {
-				JSONDocument packageJSON = loadXtextFileAtLocation(location, IN4JSProject.PACKAGE_JSON, jsonString,
+				JSONDocument packageJSON = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_JSON, jsonString,
 						JSONDocument.class);
 				return packageJSON;
 			}

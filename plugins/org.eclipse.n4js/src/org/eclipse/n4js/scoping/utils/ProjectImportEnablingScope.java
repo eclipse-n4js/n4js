@@ -30,7 +30,6 @@ import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.Strings;
@@ -322,7 +321,7 @@ public class ProjectImportEnablingScope implements IScope {
 
 	/**
 	 * This method asks {@link #delegate} for elements matching provided <code>moduleSpecifier</code>. Returned results
-	 * are filtered by expected {@link IN4JSProject#getProjectName()}.
+	 * are filtered by expected {@link N4JSProjectName}.
 	 */
 	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
 			N4JSProjectName projectName) {

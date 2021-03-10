@@ -16,16 +16,17 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
@@ -37,10 +38,10 @@ import org.eclipse.xtext.EcoreUtil2;
 public class NullUndefinedValidator implements FlowValidator {
 	final private NullDereferenceAnalyser nda;
 	final private FindReferenceHelper findReferenceHelper;
-	final private IN4JSCore n4jsCore;
+	final private IN4JSCoreNEW n4jsCore;
 
 	/** Constructor */
-	public NullUndefinedValidator(NullDereferenceAnalyser nullDereferenceAnalyser, IN4JSCore n4jsCore,
+	public NullUndefinedValidator(NullDereferenceAnalyser nullDereferenceAnalyser, IN4JSCoreNEW n4jsCore,
 			FindReferenceHelper findReferenceHelper) {
 
 		this.findReferenceHelper = findReferenceHelper;
@@ -152,8 +153,9 @@ public class NullUndefinedValidator implements FlowValidator {
 	}
 
 	private boolean isInTestFolder(EObject eobj) {
-		URI location = eobj.eResource().getURI();
-		final IN4JSSourceContainer c = n4jsCore.findN4JSSourceContainer(location).orNull();
+		Resource resource = eobj.eResource();
+		URI location = resource.getURI();
+		final N4JSSourceFolderSnapshot c = n4jsCore.findN4JSSourceContainer(resource, location).orNull();
 		return c != null && c.isTest();
 	}
 

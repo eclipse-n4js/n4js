@@ -26,7 +26,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
@@ -244,13 +243,13 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	/**
-	 * The list of {@link IN4JSProject#getSortedDependencies() sorted dependencies} of {@link IN4JSProject}s is tricky
-	 * for two reasons:
+	 * The list of {@link N4JSProjectConfig#getSortedDependencies() sorted dependencies} of {@link N4JSProjectConfig}s
+	 * is tricky for two reasons:
 	 * <ol>
 	 * <li>the sorted dependencies do not contain names of non-existing projects (in case of unresolved project
 	 * references in the package.json),
 	 * <li>the order of the sorted dependencies depends on the characteristics of the target projects (mainly the
-	 * {@link IN4JSProject#getDefinesPackageName() "defines package"} property).
+	 * {@link ProjectDescription#getDefinesPackage() "defines package"} property).
 	 * </ol>
 	 * Therefore, the "sorted dependencies" can change even without a change in the <code>package.json</code> file of
 	 * the source project. To detect and apply these changes is the purpose of this method.

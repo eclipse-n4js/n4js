@@ -16,14 +16,14 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Helper that based on provided {@link URI}s resolved the {@link IN4JSProject}, or related package / file name.
+ * Helper that based on provided {@link URI}s resolves the {@link N4JSProjectConfigSnapshot}, or related package / file
+ * name.
  */
 @Singleton
 public class ProjectResolveHelper {
@@ -66,7 +66,7 @@ public class ProjectResolveHelper {
 
 	/**
 	 * Convenience method for {@link ProjectResolveHelper#resolvePackageAndFileName(URI, N4JSProjectConfigSnapshot)},
-	 * for which {@link IN4JSProject} is resolved based on the provided {@link URI}
+	 * for which {@link N4JSProjectConfigSnapshot} is resolved based on the provided {@link URI}
 	 *
 	 * @see #resolvePackageAndFileName(URI, N4JSProjectConfigSnapshot)
 	 */
@@ -76,8 +76,8 @@ public class ProjectResolveHelper {
 	}
 
 	/**
-	 * Resolves package and filename from provided {@link URI} against {@link IN4JSProject}. Provided project must be
-	 * {@link IN4JSProject#exists()}. In returned string file extension of the actual file is trimmed.
+	 * Resolves package and filename from provided {@link URI} against {@link N4JSProjectConfigSnapshot}. In returned
+	 * string file extension of the actual file is trimmed.
 	 */
 	public String resolvePackageAndFileName(URI uri, N4JSProjectConfigSnapshot project) {
 		final String msg = "Cannot locate source container for module " + uri + ".";

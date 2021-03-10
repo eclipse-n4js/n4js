@@ -28,7 +28,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -93,7 +92,7 @@ public class ProjectDescriptionUtils {
 	 * </tr>
 	 * <tr>
 	 * <td>N4JS project name</td>
-	 * <td>The value the value returned by {@link IN4JSProject#getProjectName()}. Always equal to<br>
+	 * <td>The value the value returned by {@link ProjectDescription#getProjectName()}. Always equal to<br>
 	 * the value of the top-level property "name" in the project's <code>package.json</code> file.</td>
 	 * <td>{@code @myScope/myProject}</td>
 	 * </tr>

@@ -102,6 +102,12 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 				: Optional.absent();
 	}
 
+	@Override
+	public boolean isNoValidate(Notifier context, URI nestedLocation) {
+		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
+		return config.isPresent() && config.get().isNoValidate(nestedLocation, wildcardHelper);
+	}
+
 	// FIXME GH-2073 important! reconsider the following!
 
 	@Override

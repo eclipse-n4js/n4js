@@ -22,14 +22,12 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
@@ -49,7 +47,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 /**
- * Wrapper around {@link IN4JSProject}.
+ * Like {@link N4JSWorkspaceConfig}, but for individual projects.
  */
 @SuppressWarnings("restriction")
 public class N4JSProjectConfig implements XIProjectConfig {
@@ -150,7 +148,6 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 * way. In a nutshell: Implementation projects may contribute modules to the index that are not available as n4jsd
 	 * files yet. All other modules should be shadowed by the definition project.
 	 *
-	 * @see N4JSModel#getSortedDependencies(IN4JSProject)
 	 * @see TypeDefinitionsAwareDependenciesSupplier#get(FileURI, Collection)
 	 */
 	public List<N4JSProjectConfig> getSortedDependencies() {

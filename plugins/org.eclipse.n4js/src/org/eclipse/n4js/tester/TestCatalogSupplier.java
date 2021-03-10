@@ -17,14 +17,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.tester.domain.TestTree;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 
 /**
- * Service for supplying the test catalog based on all tests available in the ({@link IN4JSCore N4JS core} based)
+ * Service for supplying the test catalog based on all tests available in the ({@link IN4JSCoreNEW N4JS core} based)
  * workspace. The content of the provided test catalog depends on the built state of the workspace.
  * <p>
  * By default, i.e. when method {@link #get(N4JSWorkspaceConfigSnapshot, Function)} is invoked, the generated JSON will

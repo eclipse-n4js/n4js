@@ -18,7 +18,6 @@ import java.util.Map
 import java.util.Objects
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.utils.Strings
 
 /**
@@ -78,7 +77,7 @@ public class YarnWorkspaceProject extends Project {
 
 
 	/**
-	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
+	 * Generates the {@link N4JSGlobals#PACKAGE_JSON} for this project.
 	 */
 	public override String generate() '''
 		«IF !projectDescriptionContent.nullOrEmpty»«

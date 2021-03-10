@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
@@ -278,12 +277,12 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	}
 
 	/**
-	 * Return true if this is a directory that contains a {@link IN4JSProject#PACKAGE_JSON package.json} file.
+	 * Return true if this is a directory that contains a {@link N4JSGlobals#PACKAGE_JSON package.json} file.
 	 */
 	public boolean isProjectRootDirectory() {
 		return isDirectory() &&
-				(appendSegment(IN4JSProject.PACKAGE_JSON).isFile() ||
-						appendSegment(IN4JSProject.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION).isFile());
+				(appendSegment(N4JSGlobals.PACKAGE_JSON).isFile() ||
+						appendSegment(N4JSGlobals.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION).isFile());
 	}
 
 	/**
@@ -297,9 +296,9 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 			return false;
 		}
 		String filename = raw.lastSegment();
-		if (IN4JSProject.PACKAGE_JSON.equals(filename) ||
-				filename.length() == IN4JSProject.PACKAGE_JSON.length() + 3 &&
-						filename.startsWith(IN4JSProject.PACKAGE_JSON) &&
+		if (N4JSGlobals.PACKAGE_JSON.equals(filename) ||
+				filename.length() == N4JSGlobals.PACKAGE_JSON.length() + 3 &&
+						filename.startsWith(N4JSGlobals.PACKAGE_JSON) &&
 						filename.endsWith(N4JSGlobals.XT_FILE_EXTENSION) &&
 						filename.charAt(filename.length() - 3) == '.') {
 			return true;
@@ -309,7 +308,7 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 
 	/**
 	 * Ascends the the given file-system location, until a directory is detected that qualifies as N4JS project location
-	 * (e.g. contains an {@link IN4JSProject#PACKAGE_JSON} file). Returns null if this location is not nested in a
+	 * (e.g. contains an {@link N4JSGlobals#PACKAGE_JSON} file). Returns null if this location is not nested in a
 	 * project.
 	 *
 	 * @return the nearest project root or null, if none.

@@ -45,6 +45,8 @@ public interface IN4JSCoreNEW {
 
 	public Optional<N4JSSourceFolderSnapshot> findN4JSSourceContainer(Notifier context, URI nestedLocation);
 
+	public boolean isNoValidate(Notifier context, URI nestedLocation);
+
 	public ResourceSet createResourceSet(); // TODO pass in a workspace context object
 
 	public Optional<IResourceDescriptions> getXtextIndex(Notifier context);

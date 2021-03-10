@@ -62,7 +62,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.smith.Measurement;
@@ -267,7 +267,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private N4JSScopingDiagnostician scopingDiagnostician;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
@@ -1114,7 +1114,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 								&& (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
 							// uri points to a TModule element in a resource not yet contained in our resource set
 							// --> try to load target resource from index
-							final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+							final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet).get();
 							final IResourceDescription resDesc = index.getResourceDescription(targetResourceUri);
 							if (resDesc != null) {
 								// next line will add the new resource to resSet.resources
