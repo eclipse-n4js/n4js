@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +43,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Iterables;
@@ -204,20 +205,22 @@ public abstract class N4JSASTUtils {
 	 * all implemented interface references will be returned at the same time). Only direct contents will be returned.
 	 * For AST nodes that cannot contain {@code TypeReferenceNode}s an empty iterable will be returned.
 	 */
-	public static Iterable<TypeReferenceNode<?>> getContainedTypeReferenceNodes(EObject astNode) {
-		List<EReference> eRefs = containersOfTypeReferenceNodes.get(astNode.eClass());
-		return FluentIterable.from(eRefs)
-				.transformAndConcat(eRef -> {
-					Object value = astNode.eGet(eRef);
-					if (value != null) {
-						@SuppressWarnings("unchecked")
-						Iterable<TypeReferenceNode<?>> valueAsIterable = eRef.isMany()
-								? (Iterable<TypeReferenceNode<?>>) value
-								: Collections.singleton((TypeReferenceNode<?>) value);
-						return valueAsIterable;
-					}
-					return Collections.emptyList();
-				});
+	public static List<TypeReferenceNode<?>> getContainedTypeReferenceNodes(EObject astNode) {
+		List<TypeReferenceNode<?>> result = new ArrayList<>();
+		for (EReference eRef : containersOfTypeReferenceNodes.get(astNode.eClass())) {
+			// we know eRef is a containment reference, so no need to worry about proxy resolution in next line
+			Object value = astNode.eGet(eRef);
+			if (value != null) {
+				if (eRef.isMany()) {
+					@SuppressWarnings("unchecked")
+					Collection<TypeReferenceNode<?>> valueCasted = (Collection<TypeReferenceNode<?>>) value;
+					result.addAll(valueCasted);
+				} else {
+					result.add((TypeReferenceNode<?>) value);
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
