@@ -13,6 +13,7 @@ package org.eclipse.n4js.compare;
 import static org.eclipse.n4js.AnnotationDefinition.PROVIDES_DEFAULT_IMPLEMENTATION;
 import static org.eclipse.n4js.AnnotationDefinition.PROVIDES_INITIALZER;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,9 +31,11 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.MultiCleartriggerCache;
 import org.eclipse.n4js.internal.MultiCleartriggerCache.CleartriggerSupplier;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -67,7 +70,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 /**
@@ -77,7 +79,7 @@ import com.google.inject.Inject;
 public class ProjectCompareHelper {
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 	@Inject
 	private FindArtifactHelper artifactHelper;
 	@Inject
@@ -105,10 +107,16 @@ public class ProjectCompareHelper {
 	 * Returns <code>null</code> in case of error and adds human-readable error messages to the given list.
 	 */
 	public ProjectComparison createComparison(boolean fullCompare, List<String> addErrorMessagesHere) {
-		final ResourceSet resourceSet = n4jsCore.createResourceSet(Optional.absent());
-		final IResourceDescriptions index = n4jsCore.getXtextIndex(resourceSet);
+		final ResourceSet resourceSet = n4jsCore.createResourceSet();
+		final N4JSWorkspaceConfigSnapshot wc = n4jsCore.getWorkspaceConfig(resourceSet).orNull();
+		final IResourceDescriptions index = n4jsCore.getXtextIndex(resourceSet).orNull();
+		if (wc == null || index == null) {
+			addErrorMessagesHere.add(
+					"failed to create a new resource set with properly configured workspace configuration and index");
+			return null;
+		}
 
-		final ApiImplMapping mapping = ApiImplMapping.of(n4jsCore);
+		final ApiImplMapping mapping = ApiImplMapping.of(wc);
 		if (mapping.hasErrors()) {
 			if (addErrorMessagesHere != null)
 				addErrorMessagesHere.addAll(mapping.getErrorMessages());
@@ -121,8 +129,8 @@ public class ProjectCompareHelper {
 		final ProjectComparison root = new ProjectComparison(allImplIds.toArray(new N4JSProjectName[implCount]));
 
 		for (N4JSProjectName currApiId : mapping.getApiIds()) {
-			final IN4JSProject currApi = mapping.getApi(currApiId);
-			final IN4JSProject[] currImpls = new IN4JSProject[implCount];
+			final N4JSProjectConfigSnapshot currApi = mapping.getApi(currApiId);
+			final N4JSProjectConfigSnapshot[] currImpls = new N4JSProjectConfigSnapshot[implCount];
 			for (int idx = 0; idx < implCount; idx++) {
 				final N4JSProjectName currImplId = allImplIds.get(idx);
 				currImpls[idx] = mapping.getImpl(currApiId, currImplId);
@@ -144,13 +152,13 @@ public class ProjectCompareHelper {
 	// may be made public later
 	private ProjectComparisonEntry createEntries(
 			ProjectComparison root,
-			IN4JSProject api, IN4JSProject[] impls,
+			N4JSProjectConfigSnapshot api, N4JSProjectConfigSnapshot[] impls,
 			ResourceSet resourceSet, IResourceDescriptions index) {
 
 		final ProjectComparisonEntry entry = new ProjectComparisonEntry(root, api, impls);
 
-		for (IN4JSSourceContainer currSrcConti : api.getSourceContainers()) {
-			for (URI uri : currSrcConti) {
+		for (N4JSSourceFolderSnapshot currSrcFolder : api.getSourceFolders()) {
+			for (URI uri : currSrcFolder.getContents()) {
 				final String uriStr = uri.toString();
 				if (uriStr.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION)
 						|| uriStr.endsWith("." + N4JSGlobals.N4JSD_FILE_EXTENSION)) {
@@ -159,7 +167,7 @@ public class ProjectCompareHelper {
 					if (moduleApi != null) {
 						final TModule[] moduleImpls = new TModule[impls.length];
 						for (int idx = 0; idx < impls.length; idx++) {
-							final IN4JSProject projectImpl = impls[idx];
+							final N4JSProjectConfigSnapshot projectImpl = impls[idx];
 							if (projectImpl != null)
 								moduleImpls[idx] = findImplementation(moduleApi, projectImpl, resourceSet, index);
 							else
@@ -184,9 +192,10 @@ public class ProjectCompareHelper {
 	 */
 	public Optional<N4JSProjectName> getImplementationID(TModule apiImplModule) {
 
-		Optional<? extends IN4JSProject> opt = n4jsCore.findProject(apiImplModule.eResource().getURI());
-		IN4JSProject implProject = opt.get();
-		return implProject.getImplementationId();
+		Optional<? extends N4JSProjectConfigSnapshot> opt = n4jsCore.findProject(apiImplModule.eResource());
+		N4JSProjectConfigSnapshot implProject = opt.get();
+		String implId = implProject.getImplementationId();
+		return implId != null ? Optional.of(new N4JSProjectName(implId)) : Optional.absent();
 	}
 
 	/**
@@ -219,22 +228,22 @@ public class ProjectCompareHelper {
 	}
 
 	static private class ApiImplMappingSupplier implements CleartriggerSupplier<ApiImplMapping> {
-		final private IN4JSCore n4jsCore;
+		final private N4JSWorkspaceConfigSnapshot wc;
 
-		private ApiImplMappingSupplier(IN4JSCore n4jsCore) {
-			this.n4jsCore = n4jsCore;
+		private ApiImplMappingSupplier(N4JSWorkspaceConfigSnapshot wc) {
+			this.wc = wc;
 		}
 
 		@Override
 		public ApiImplMapping get() {
-			return ApiImplMapping.of(n4jsCore);
+			return ApiImplMapping.of(wc);
 		}
 
 		@Override
 		public Collection<URI> getCleartriggers() {
 			Collection<URI> allPckjsons = new LinkedList<>();
-			for (IN4JSProject prj : n4jsCore.findAllProjects()) {
-				URI pckjsonUri = prj.getLocation().toURI();
+			for (N4JSProjectConfigSnapshot prj : wc.getProjects()) {
+				URI pckjsonUri = prj.getPath();
 				if (pckjsonUri != null) {
 					allPckjsons.add(pckjsonUri);
 				}
@@ -249,7 +258,7 @@ public class ProjectCompareHelper {
 	 * @param module
 	 *            can be either Implementation or API
 	 * @param implementationID
-	 *            the current context to compare with
+	 *            the current implementation to compare with
 	 *
 	 * @param includePolyfills
 	 *            {@code true} if polyfills should be considered as the part of the API and the implementation.
@@ -260,27 +269,33 @@ public class ProjectCompareHelper {
 	public ProjectComparisonEntry compareModules(TModule module, N4JSProjectName implementationID,
 			final boolean includePolyfills) {
 
-		Optional<? extends IN4JSProject> opt = n4jsCore.findProject(module.eResource().getURI());
+		Resource resource = module.eResource();
+		N4JSWorkspaceConfigSnapshot wc = n4jsCore.getWorkspaceConfig(resource).orNull();
+		if (wc == null) {
+			return null;
+		}
+
+		Optional<? extends N4JSProjectConfigSnapshot> opt = n4jsCore.findProject(resource);
 
 		if (!opt.isPresent()) {
 			return null;
 		}
 
-		IN4JSProject project = opt.get();
+		N4JSProjectConfigSnapshot project = opt.get();
 
-		IN4JSProject implProject = null;
-		IN4JSProject apiProject = null;
+		N4JSProjectConfigSnapshot implProject = null;
+		N4JSProjectConfigSnapshot apiProject = null;
 		TModule apiModule = null;
 		TModule apiImplModule = null;
 
-		if (!project.getImplementationId().isPresent()) {
+		if (project.getImplementationId() == null) {
 			// this is NOT an implementation project, so assume we have the api
 			// need to load the correct implementation. Since there might be multiple implementors
 
-			Supplier<ApiImplMapping> supplier = new ApiImplMappingSupplier(n4jsCore);
+			Supplier<ApiImplMapping> supplier = new ApiImplMappingSupplier(wc);
 			ApiImplMapping mapping = cache.get(supplier, MultiCleartriggerCache.CACHE_KEY_API_IMPL_MAPPING);
 
-			implProject = mapping.getImpl(project.getProjectName(), implementationID);
+			implProject = mapping.getImpl(project.getN4JSProjectName(), implementationID);
 			if (implProject == null) {
 				return null; // no implementation found.
 			}
@@ -289,9 +304,10 @@ public class ProjectCompareHelper {
 			URI impUri = artifactHelper.findArtifact(implProject, apiModule.getQualifiedName(),
 					Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));
 			if (impUri != null) {
-				IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(module.eResource()
-						.getResourceSet());
-				IResourceDescription resourceDescription = xtextIndex.getResourceDescription(impUri);
+				IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(module).orNull();
+				IResourceDescription resourceDescription = xtextIndex != null
+						? xtextIndex.getResourceDescription(impUri)
+						: null;
 				if (resourceDescription != null) {
 					apiImplModule = n4jsCore.loadModuleFromIndex(module.eResource().getResourceSet(),
 							resourceDescription,
@@ -319,19 +335,24 @@ public class ProjectCompareHelper {
 		} else {
 			// it is an implementations project
 			// check that the implementation ID matches.
-			if (implementationID.equals(project.getImplementationId().get())) {
+			if (implementationID.equals(new N4JSProjectName(project.getImplementationId()))) {
 				implProject = project;
 				apiImplModule = module;
 
-				ImmutableList<? extends IN4JSProject> apiProjects = implProject.getImplementedProjects();
+				List<N4JSProjectConfigSnapshot> apiProjects = new ArrayList<>();
+				for (ProjectReference apiProjectRef : implProject.getProjectDescription().getImplementedProjects()) {
+					N4JSProjectConfigSnapshot currApiProject = wc.findProjectByName(apiProjectRef.getProjectName());
+					if (currApiProject != null) {
+						apiProjects.add(currApiProject);
+					}
+				}
 				// should only find one relevant API-project:
 
-				labelA: for (IN4JSProject ap : apiProjects) {
+				labelA: for (N4JSProjectConfigSnapshot ap : apiProjects) {
 					URI apiURI = artifactHelper.findArtifact(ap, apiImplModule.getQualifiedName(),
 							Optional.of(N4JSGlobals.N4JSD_FILE_EXTENSION));
 					if (apiURI != null) {
-						IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(apiImplModule.eResource()
-								.getResourceSet());
+						IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(apiImplModule).orNull();
 						IResourceDescription resourceDescription = xtextIndex.getResourceDescription(apiURI);
 						if (resourceDescription != null) {
 							apiModule = n4jsCore.loadModuleFromIndex(apiImplModule.eResource().getResourceSet(),
@@ -371,10 +392,12 @@ public class ProjectCompareHelper {
 	 *            Otherwise {@code false}.
 	 * @return data containing the comparison (implementation is in slot 0)
 	 */
-	public ProjectComparisonEntry compareModules(IN4JSProject apiProject, TModule api, IN4JSProject implProject,
-			TModule impl, final boolean includePolyfills) {
+	public ProjectComparisonEntry compareModules(N4JSProjectConfigSnapshot apiProject, TModule api,
+			N4JSProjectConfigSnapshot implProject, TModule impl, final boolean includePolyfills) {
+		String implId = implProject.getImplementationId();
+		N4JSProjectName implIdAsName = implId != null ? new N4JSProjectName(implId) : null;
 		ProjectComparison projectComparison = new ProjectComparison(new N4JSProjectName[] {
-				implProject.getImplementationId().orNull()
+				implIdAsName
 		});
 		ProjectComparisonEntry dummyParent = new ProjectComparisonEntry(projectComparison, apiProject, implProject);
 		ProjectComparisonEntry ret = createEntries(dummyParent, -1, api, new EObject[] { impl },
@@ -438,7 +461,7 @@ public class ProjectCompareHelper {
 		return entry;
 	}
 
-	private TModule findImplementation(TModule moduleApi, IN4JSProject projectImpl,
+	private TModule findImplementation(TModule moduleApi, N4JSProjectConfigSnapshot projectImpl,
 			ResourceSet resourceSet, IResourceDescriptions index) {
 		final String fqnStr = moduleApi.getQualifiedName();
 		final URI uri = artifactHelper.findArtifact(projectImpl, fqnStr, Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));

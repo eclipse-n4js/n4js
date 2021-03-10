@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import java.util.Arrays
 import java.util.Objects
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -23,8 +24,7 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
@@ -39,7 +39,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 class ModuleWrappingTransformation extends Transformation {
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
@@ -106,16 +106,16 @@ class ModuleWrappingTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		val targetProject = n4jsCore.findProject(targetModule.eResource.URI).orNull;
+		val targetProject = n4jsCore.findProject(targetModule.eResource).orNull;
 
-		if (targetProject.projectType === ProjectType.RUNTIME_LIBRARY) {
+		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
 			// SPECIAL CASE #1
 			// pointing to a module in a runtime library
 			// --> always use plain module specifier
 			return targetModule.moduleSpecifier;
 		}
 
-		val importingFromModuleInSameProject = targetProject.location == state.project.location;
+		val importingFromModuleInSameProject = targetProject.pathAsFileURI == state.project.pathAsFileURI;
 		if (importingFromModuleInSameProject) {
 			// SPECIAL CASE #2
 			// module specifiers are always absolute in N4JS, but Javascript requires relative module
@@ -153,7 +153,7 @@ class ModuleWrappingTransformation extends Transformation {
 		return result;
 	}
 
-	def private String createAbsoluteModuleSpecifier(IN4JSProject targetProject, TModule targetModule) {
+	def private String createAbsoluteModuleSpecifier(N4JSProjectConfigSnapshot targetProject, TModule targetModule) {
 		val sb = new StringBuilder();
 		
 		// first segment is the project name
@@ -185,14 +185,14 @@ class ModuleWrappingTransformation extends Transformation {
 		return sb.toString();
 	}
 
-	def private N4JSProjectName getActualProjectName(IN4JSProject project) {
-		if (project.projectType === ProjectType.DEFINITION) {
-			val definedProjectName = project.definesPackageName;
+	def private N4JSProjectName getActualProjectName(N4JSProjectConfigSnapshot project) {
+		if (project.type === ProjectType.DEFINITION) {
+			val definedProjectName = project.definesPackage;
 			if (definedProjectName !== null && !definedProjectName.isEmpty) {
 				return definedProjectName;
 			}
 		}
-		return project.projectName;
+		return new N4JSProjectName(project.name);
 	}
 
 	/**

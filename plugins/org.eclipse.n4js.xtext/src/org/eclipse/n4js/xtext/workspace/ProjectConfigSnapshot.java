@@ -85,6 +85,16 @@ public class ProjectConfigSnapshot extends Snapshot {
 		return sourceFolders;
 	}
 
+	/** Returns the source folder that {@link SourceFolderSnapshot#contains(URI) contains} the given URI. */
+	public SourceFolderSnapshot findSourceFolderContaining(URI uri) {
+		for (SourceFolderSnapshot sourceFolder : sourceFolders) {
+			if (sourceFolder.contains(uri)) {
+				return sourceFolder;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(

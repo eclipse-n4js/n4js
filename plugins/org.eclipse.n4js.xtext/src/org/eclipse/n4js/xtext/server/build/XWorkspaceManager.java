@@ -87,8 +87,7 @@ public class XWorkspaceManager {
 		public final List<IResourceDescription> removedProjectsContents;
 		/**
 		 * Names of projects that have been or are now inside a dependency cycle before or after this update. Note that
-		 * {@link BuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state
-		 * only.
+		 * {@link BuildOrderInfo#getProjectCycles()} of {@link WorkspaceConfigSnapshot} represents the new state only.
 		 */
 		public final List<String> cyclicProjectChanges;
 
@@ -115,11 +114,6 @@ public class XWorkspaceManager {
 	 *            the location
 	 */
 	public void initialize(URI newBaseDir) {
-		refreshWorkspaceConfig(newBaseDir);
-	}
-
-	/** Refresh the workspace. */
-	private void refreshWorkspaceConfig(URI newBaseDir) {
 		setWorkspaceConfig(workspaceConfigFactory.createWorkspaceConfig(newBaseDir));
 	}
 

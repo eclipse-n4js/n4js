@@ -220,7 +220,7 @@ class ExpressionTransformation extends Transformation {
 								case n4NamedElement_name:
 									id.name
 								case n4Element_origin:
-									resourceNameComputer.generateProjectDescriptor(id.eResource.URI)
+									resourceNameComputer.generateProjectDescriptor(id.eResource)
 								case n4Type_fqn:
 									// avoid optimizing this case for built-in types
 									// (we cannot know for sure the value of the 'fqn' property set in the .js files)

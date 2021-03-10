@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.jsdoc.N4JSDocHelper;
 import org.eclipse.n4js.jsdoc.N4JSDocletParser;
 import org.eclipse.n4js.jsdoc.dom.ContentNode;
@@ -35,9 +37,7 @@ import org.eclipse.n4js.jsdoc.tags.LineTagWithFullElementReference;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
@@ -53,7 +53,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -68,7 +68,7 @@ public class N4JSDReader {
 	N4JSDocHelper n4jsDocHelper;
 
 	@Inject
-	IN4JSCore n4jsCore;
+	IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	N4JSGlobalScopeProvider globalScopeProvider;
@@ -86,20 +86,21 @@ public class N4JSDReader {
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	public Collection<SpecInfo> readN4JSDs(Collection<IN4JSProject> projects,
-			Function<IN4JSProject, ResourceSet> resSetProvider, SubMonitorMsg monitor) throws InterruptedException {
+	public Collection<SpecInfo> readN4JSDs(Collection<N4JSProjectConfigSnapshot> projects,
+			Function<N4JSProjectConfigSnapshot, ResourceSet> resSetProvider, SubMonitorMsg monitor)
+			throws InterruptedException {
 
 		SpecInfosByName specInfosByName = new SpecInfosByName(issueAcceptor, globalScopeProvider, containerTypesHelper,
 				n4jsCore);
 		ResourceSet resSet = null;
 		SubMonitorMsg sub = monitor.convert(2 * 100 * projects.size());
-		for (IN4JSProject project : projects) {
+		for (N4JSProjectConfigSnapshot project : projects) {
 			if (resSet == null) {
 				resSet = resSetProvider.apply(project);
 			}
 			readScripts(specInfosByName, project, resSet, sub.newChild(100));
 		}
-		for (IN4JSProject project : projects) {
+		for (N4JSProjectConfigSnapshot project : projects) {
 			if (resSet == null) {
 				resSet = resSetProvider.apply(project);
 			}
@@ -119,23 +120,23 @@ public class N4JSDReader {
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	private void readScripts(SpecInfosByName specInfosByName, IN4JSProject project, ResourceSet resSet,
+	private void readScripts(SpecInfosByName specInfosByName, N4JSProjectConfigSnapshot project, ResourceSet resSet,
 			SubMonitorMsg monitor) throws InterruptedException {
 
-		ImmutableList<? extends IN4JSSourceContainer> srcCont = project.getSourceContainers();
-		List<IN4JSSourceContainer> srcContFilter = new LinkedList<>();
+		ImmutableSet<? extends N4JSSourceFolderSnapshot> srcCont = project.getSourceFolders();
+		List<N4JSSourceFolderSnapshot> srcContFilter = new LinkedList<>();
 
 		int count = 0;
-		for (IN4JSSourceContainer container : srcCont) {
+		for (N4JSSourceFolderSnapshot container : srcCont) {
 			if (container.isSource() || container.isTest()) {
-				count += Iterables.size(container);
+				count += Iterables.size(container.getContents());
 				srcContFilter.add(container);
 			}
 		}
 		SubMonitorMsg sub = monitor.convert(count);
 
-		for (IN4JSSourceContainer container : srcContFilter) {
-			for (URI uri : container) {
+		for (N4JSSourceFolderSnapshot container : srcContFilter) {
+			for (URI uri : container.getContents()) {
 				String ext = uri.fileExtension();
 				if ("n4js".equals(ext) || "n4jsd".equals(ext)) {
 					try {
@@ -197,7 +198,7 @@ public class N4JSDReader {
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	private void linkTests(SpecInfosByName specInfosByName, IN4JSProject project, ResourceSet resSet,
+	private void linkTests(SpecInfosByName specInfosByName, N4JSProjectConfigSnapshot project, ResourceSet resSet,
 			SubMonitorMsg monitor) throws InterruptedException {
 
 		List<Type> testTypes = getTestTypes(project, resSet, monitor);
@@ -216,25 +217,25 @@ public class N4JSDReader {
 		}
 	}
 
-	private List<Type> getTestTypes(IN4JSProject project, ResourceSet resSet, SubMonitorMsg monitor)
+	private List<Type> getTestTypes(N4JSProjectConfigSnapshot project, ResourceSet resSet, SubMonitorMsg monitor)
 			throws InterruptedException {
 
 		List<Type> testTypes = new ArrayList<>();
-		ImmutableList<? extends IN4JSSourceContainer> srcCont = project.getSourceContainers();
+		ImmutableSet<? extends N4JSSourceFolderSnapshot> srcCont = project.getSourceFolders();
 
 		// count container
 		int count = 0;
-		for (IN4JSSourceContainer container : srcCont) {
+		for (N4JSSourceFolderSnapshot container : srcCont) {
 			if (container.isTest()) {
-				count += Iterables.size(container);
+				count += Iterables.size(container.getContents());
 			}
 		}
 		SubMonitorMsg sub = monitor.convert(count);
 
 		// scan for types
-		for (IN4JSSourceContainer container : srcCont) {
+		for (N4JSSourceFolderSnapshot container : srcCont) {
 			if (container.isTest()) {
-				for (URI uri : container) {
+				for (URI uri : container.getContents()) {
 					String ext = uri.fileExtension();
 					if ("n4js".equals(ext)) {
 						Resource resource = resSet.getResource(uri, true);
@@ -260,7 +261,7 @@ public class N4JSDReader {
 	}
 
 	private void processClassifier(SpecInfosByName specInfosByName, TClassifier testType) {
-		RepoRelativePath rrpOfTest = RepoRelativePath.compute(createFileURI(testType), n4jsCore);
+		RepoRelativePath rrpOfTest = RepoRelativePath.compute(createFileURI(testType), n4jsCore, testType);
 
 		// Retrieve the references to testees stated in the jsdoc of the test class itself.
 		Doclet testTypeDoclet = n4jsDocHelper.getDoclet(testType.getAstElement());
@@ -302,7 +303,7 @@ public class N4JSDReader {
 
 		} else if ("testeeFromType".equals(title)) {
 			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
-					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore);
+					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore, astElement);
 
 			for (FullMemberReference ref : testeeRefsFromType) {
 				specInfosByName.addTestInfoForCodeElement(rrpTestMethod, testMethodDoclet, ref, testMember);
@@ -311,7 +312,7 @@ public class N4JSDReader {
 		} else if ("testeeMember".equals(title)) {
 			String testeeMember = N4JSDocletParser.TAG_TESTEEMEMBER.getValue(tag, "");
 			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
-					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore);
+					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore, astElement);
 
 			for (FullMemberReference testeeTypeRef : testeeTypeRefsFromType) {
 				FullMemberReference combinedTesteeRef = EcoreUtil.copy(testeeTypeRef);
@@ -330,7 +331,7 @@ public class N4JSDReader {
 				throw new IllegalStateException("Found reqid tag without requirement ID.");
 			}
 			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
-					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore);
+					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore, astElement);
 
 			specInfosByName.addTestInfoForRequirement(rrpTestMethod, testMethodDoclet, reqid, testMember);
 

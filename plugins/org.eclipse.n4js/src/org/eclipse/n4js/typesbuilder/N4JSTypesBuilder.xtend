@@ -31,7 +31,7 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.naming.ModuleNameComputer
 import org.eclipse.n4js.naming.SpecifierConverter
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -80,7 +80,7 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSNamespaceImportTypesBuilder
 
 	@Inject extension ModuleNameComputer
-	@Inject private IN4JSCore n4jscore
+	@Inject private IN4JSCoreNEW n4jsCore
 	@Inject private IQualifiedNameConverter qualifiedNameConverter
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
@@ -169,11 +169,11 @@ public class N4JSTypesBuilder {
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
 
-			val optionalProject = n4jscore.findProject(resource.URI);
+			val optionalProject = n4jsCore.findProject(resource);
 			if (optionalProject.present) {
 				val project = optionalProject.get;
-				result.projectName = project.projectName.rawName;
-				result.vendorID = project.vendorID;
+				result.projectName = project.name;
+				result.vendorID = project.vendorId;
 
 				// main module
 				val mainModuleSpec = project.mainModule;

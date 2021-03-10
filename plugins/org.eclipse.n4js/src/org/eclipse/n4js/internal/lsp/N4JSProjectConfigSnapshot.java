@@ -10,23 +10,39 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import static com.google.common.collect.Iterables.isEmpty;
+import static java.util.Collections.emptyList;
+
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.projectDescription.ModuleFilter;
+import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
+import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.xtext.util.UriExtensions;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -92,6 +108,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 
+	public N4JSProjectName getN4JSProjectName() {
+		return new N4JSProjectName(getName());
+	}
+
 	@Override
 	public ImmutableSet<N4JSSourceFolderSnapshot> getSourceFolders() {
 		@SuppressWarnings("unchecked")
@@ -99,8 +119,162 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return sourceFolders;
 	}
 
+	@Override
+	public N4JSSourceFolderSnapshot findSourceFolderContaining(URI uri) {
+		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(uri);
+	}
+
 	/** Returns the {@link ProjectType project type}. */
 	public ProjectType getType() {
 		return projectDescription.getProjectType();
+	}
+
+	public VersionNumber getVersion() {
+		return projectDescription.getProjectVersion();
+	}
+
+	public String getVendorId() {
+		return projectDescription.getVendorId();
+	}
+
+	public String getOutputPath() {
+		return projectDescription.getOutputPath();
+	}
+
+	public String getMainModule() {
+		return projectDescription.getMainModule();
+	}
+
+	public String getImplementationId() {
+		return projectDescription.getImplementationId();
+	}
+
+	// FIXME reconsider!
+	public FileURI getPathAsFileURI() {
+		return new FileURI(new UriExtensions().withEmptyAuthority(getPath()));
+	}
+
+	public boolean isMatchedByModuleFilterOfType(URI nestedLocation, ModuleFilterType moduleFilterType,
+			WildcardPathFilterHelper wildcardHelper) {
+		return wildcardHelper.isPathContainedByFilter(nestedLocation,
+				getModuleFilterSpecifiersByType(moduleFilterType));
+	}
+
+	public ImmutableList<ModuleFilterSpecifier> getModuleFilterSpecifiersByType(ModuleFilterType moduleFilterType) {
+		Builder<ModuleFilterSpecifier> result = ImmutableList.builder();
+		for (ModuleFilter mf : projectDescription.getModuleFilters()) {
+			if (mf.getModuleFilterType() == moduleFilterType) {
+				result.addAll(mf.getModuleSpecifiers());
+			}
+		}
+		return result.build();
+	}
+
+	// FIXME consider caching this value
+	public boolean isExternal() {
+		return isInNodeModulesFolder(getPathAsFileURI());
+	}
+
+	// note: implementation taken from old class org.eclipse.n4js.internal.N4JSProject
+	private static boolean isInNodeModulesFolder(SafeURI<?> location) {
+		if (location instanceof FileURI) {
+			URI parent = location.getParent().toURI();
+			String lastSegment = parent.lastSegment();
+			if (parent.lastSegment() != null && parent.lastSegment().isBlank()) {
+				parent = parent.trimSegments(1);
+				lastSegment = parent.lastSegment();
+			}
+			if (lastSegment != null && lastSegment.startsWith("@")) {
+				parent = parent.trimSegments(1);
+				lastSegment = parent.lastSegment();
+			}
+			if (N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public ImmutableList<N4JSProjectConfigSnapshot> getDependenciesOLD() {
+		return _model_getDependencies(false);
+	}
+
+	public ImmutableList<N4JSProjectConfigSnapshot> getAllDirectDependencies() {
+		return _model_getDependencies(false);
+	}
+
+	public ImmutableList<ProjectReference> getDependenciesAndImplementedApis() {
+		ImmutableList.Builder<ProjectReference> result = ImmutableList.builder();
+		result.addAll(projectDescription.getProjectDependencies());
+		result.addAll(projectDescription.getImplementedProjects());
+		return result.build();
+	}
+
+	// from N4JSModel
+	private ImmutableList<N4JSProjectConfigSnapshot> _model_getDependencies(boolean includeAbsentProjects) {
+		return _model_getDependencies(false, includeAbsentProjects);
+	}
+
+	// from N4JSModel
+	private ImmutableList<N4JSProjectConfigSnapshot> _model_getDependenciesAndImplementedApis(
+			boolean includeAbsentProjects) {
+		return _model_getDependencies(true, includeAbsentProjects);
+	}
+
+	// from N4JSModel
+	private ImmutableList<N4JSProjectConfigSnapshot> _model_getDependencies(boolean includeApis,
+			boolean includeAbsentProjects) {
+
+		ImmutableList.Builder<N4JSProjectConfigSnapshot> result = ImmutableList.builder();
+		ProjectDescription description = projectDescription;
+		if (description != null) {
+			result.addAll(
+					_model_resolveProjectReferences(description.getProjectDependencies(), includeAbsentProjects));
+			if (includeApis) {
+				result.addAll(
+						_model_resolveProjectReferences(description.getImplementedProjects(), includeAbsentProjects));
+			}
+		}
+		return result.build();
+	}
+
+	// from N4JSModel
+	private Collection<N4JSProjectConfigSnapshot> _model_resolveProjectReferences(
+			final Iterable<? extends ProjectReference> references,
+			boolean includeAbsentProjects) {
+
+		if (null == references || isEmpty(references)) {
+			return emptyList();
+		}
+
+		LinkedList<N4JSProjectConfigSnapshot> resolvedReferences = new LinkedList<>();
+		for (ProjectReference ref : references) {
+			N4JSProjectConfigSnapshot projectReference = _model_resolveProjectReference(ref, includeAbsentProjects)
+					.orNull();
+			if (projectReference != null) {
+				resolvedReferences.add(projectReference);
+			}
+		}
+
+		return resolvedReferences;
+	}
+
+	// from N4JSModel
+	private Optional<N4JSProjectConfigSnapshot> _model_resolveProjectReference(final ProjectReference reference,
+			boolean includeAbsentProjects) {
+
+		throw new UnsupportedOperationException("TODO");
+		// if (null == reference) {
+		// return absent();
+		// }
+		// SafeURI<?> dependencyLocation = workspace.getLocation(reference);
+		// if (null != dependencyLocation) {
+		// return fromNullable(getN4JSProject(dependencyLocation));
+		// }
+		//
+		// if (includeAbsentProjects) {
+		// return fromNullable(newAbsentProject(reference.getProjectName()));
+		// }
+		// return absent();
 	}
 }

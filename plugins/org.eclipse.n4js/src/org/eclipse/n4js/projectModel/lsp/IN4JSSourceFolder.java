@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.projectModel.lsp;
 
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -22,4 +23,7 @@ public interface IN4JSSourceFolder extends ISourceFolder {
 	/** @return the parent project */
 	IProjectConfig getProject();
 
+	SourceContainerType getType();
+
+	String getRelativePath();
 }

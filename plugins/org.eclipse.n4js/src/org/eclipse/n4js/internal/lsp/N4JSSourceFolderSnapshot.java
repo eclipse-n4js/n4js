@@ -10,27 +10,56 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.util.Iterator;
+import java.util.Objects;
+
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.xtext.util.UriExtensions;
+
+import com.google.common.collect.Iterators;
 
 /**
  * N4JS-specific adjustments to {@link SourceFolderSnapshot}.
  */
 public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 
+	private final SourceContainerType type;
+	private final String relativeLocation;
+
 	/** Creates a new {@link N4JSSourceFolderSnapshot}. */
-	public N4JSSourceFolderSnapshot(String name, URI path) {
+	public N4JSSourceFolderSnapshot(String name, URI path, SourceContainerType type, String relativeLocation) {
 		super(name, path);
+		this.type = type;
+		this.relativeLocation = relativeLocation;
+	}
+
+	/** The {@link SourceContainerType type}. */
+	public SourceContainerType getType() {
+		return type;
+	}
+
+	/** The relative location of this source folder inside its parent project. */
+	public String getRelativeLocation() {
+		return relativeLocation;
 	}
 
 	@Override
 	protected int computeHashCode() {
-		return super.computeHashCode(); // no additional data in this class, so simply use super implementation
+		return Objects.hash(
+				super.computeHashCode(),
+				type,
+				relativeLocation);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
-		return super.computeEquals(obj); // no additional data in this class, so simply use super implementation
+		N4JSSourceFolderSnapshot other = (N4JSSourceFolderSnapshot) obj;
+		return super.computeEquals(obj)
+				&& type == other.type
+				&& Objects.equals(relativeLocation, other.relativeLocation);
 	}
 
 	@Override
@@ -41,4 +70,33 @@ public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 
+	// FIXME reconsider!
+	public FileURI getPathAsFileURI() {
+		return new FileURI(new UriExtensions().withEmptyAuthority(getPath()));
+	}
+
+	/** Tells whether this is a folder for N4JS source files. */
+	public boolean isSource() {
+		return type == SourceContainerType.SOURCE;
+	}
+
+	/** Tells whether this is a folder for external source files. */
+	public boolean isExternal() {
+		return type == SourceContainerType.EXTERNAL;
+	}
+
+	/** Tells whether this is a folder for test source files. */
+	public boolean isTest() {
+		return type == SourceContainerType.TEST;
+	}
+
+	// FIXME reconsider!!!
+	public Iterable<URI> getContents() {
+		return new Iterable<>() {
+			@Override
+			public Iterator<URI> iterator() {
+				return Iterators.transform(getPathAsFileURI().getAllChildren(), pl -> pl.toURI());
+			}
+		};
+	}
 }

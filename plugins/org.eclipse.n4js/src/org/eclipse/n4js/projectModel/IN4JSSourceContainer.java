@@ -13,6 +13,7 @@ package org.eclipse.n4js.projectModel;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -23,6 +24,8 @@ import com.google.common.collect.Iterators;
  * The project model representation of a configured source folder in a project.
  */
 public interface IN4JSSourceContainer extends Iterable<URI> {
+
+	SourceContainerType getType();
 
 	/**
 	 * Returns the project this source container belongs to.

@@ -36,11 +36,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
@@ -74,7 +75,7 @@ public class TestDiscoveryHelper {
 	private FileExtensionsRegistry fileExtensionRegistry;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCore n4jsCoreOLD;
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
@@ -114,35 +115,35 @@ public class TestDiscoveryHelper {
 	 * details because many checks are better handled at later stages when meaningful error messages can be provided to
 	 * the user.
 	 */
-	public boolean isTestable(final URI location) {
+	public boolean isTestable(N4JSWorkspaceConfigSnapshot ws, final URI location) {
 
 		if (null == location) {
 			return false;
 		}
 
-		if (isProject(location)) {
+		if (isProject(ws, location)) {
 			// location points an N4JS project
 			// --> must contain at least 1 source container of type "test"
 			// (do *not* check if the folder contains test classes (for performance reasons and
 			// to show better error messages; same behavior as in JUnit support in Eclipse))
-			final IN4JSProject p = n4jsCore.create(location);
-			return p.getSourceContainers().stream().anyMatch(IN4JSSourceContainer::isTest);
+			final N4JSProjectConfigSnapshot p = ws.findProjectByPath(location);
+			return p.getSourceFolders().stream().anyMatch(N4JSSourceFolderSnapshot::isTest);
 		} else {
 
 			// otherwise:
 			// (1) if the location URI contains the special test method fragment
 			// then extract the fragment and check the location for the module.
 			if (location.hasFragment()) {
-				return isTestable(location.trimFragment());
+				return isTestable(ws, location.trimFragment());
 			}
 
 			// (2) location must lie in a source container of type "test"
-			final IN4JSSourceContainer c = n4jsCore.findN4JSSourceContainer(location).orNull();
+			final N4JSSourceFolderSnapshot c = ws.findSourceFolderContaining(location);
 			if (c == null || !c.isTest())
 				return false;
 			// (3) if the location points to an n4js-file, it must contain at least one test class
-			final ResourceSet resourceSet = n4jsCore.createResourceSet(Optional.of(c.getProject()));
-			final IResourceDescriptions index = n4jsCore.getXtextIndex(resourceSet);
+			final ResourceSet resourceSet = n4jsCoreOLD.createResourceSet(Optional.absent());
+			final IResourceDescriptions index = n4jsCoreOLD.getXtextIndex(resourceSet);
 			final IResourceDescription rdesc = index.getResourceDescription(location);
 			if (rdesc != null) {
 				return stream(rdesc.getExportedObjectsByType(T_CLASS))
@@ -168,16 +169,16 @@ public class TestDiscoveryHelper {
 	 * @return The test tree representing one or more test cases. Never returns with {@code null}, but the returned test
 	 *         tree may be empty.
 	 */
-	public TestTree collectTests(final List<URI> uris) {
+	public TestTree collectTests(N4JSWorkspaceConfigSnapshot ws, final List<URI> uris) {
 		final ResourceSet resSet = newResourceSet();
-		return collectTests(any -> resSet, uris);
+		return collectTests(ws, any -> resSet, uris);
 	}
 
 	/**
 	 * @return a new resource set.
 	 */
 	ResourceSet newResourceSet() {
-		return n4jsCore.createResourceSet(Optional.absent());
+		return n4jsCoreOLD.createResourceSet(Optional.absent());
 	}
 
 	/**
@@ -192,18 +193,19 @@ public class TestDiscoveryHelper {
 	 *
 	 * @return a test tree representing all test cases in the workspace.
 	 */
-	public TestTree collectAllTestsFromProjects(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
-			Iterable<? extends IN4JSProject> projects) {
+	public TestTree collectAllTestsFromProjects(N4JSWorkspaceConfigSnapshot ws,
+			Function<? super URI, ? extends ResourceSet> resourceSetAccess,
+			Iterable<? extends N4JSProjectConfigSnapshot> projects) {
 
 		List<URI> testableProjectURIs = new ArrayList<>();
 
-		for (IN4JSProject project : projects) {
-			URI location = project.getLocation().toURI();
-			if (project.exists() && isTestable(location)) {
+		for (N4JSProjectConfigSnapshot project : projects) {
+			URI location = project.getPathAsFileURI().toURI();
+			if (isTestable(ws, location)) {
 				testableProjectURIs.add(location);
 			}
 		}
-		TestTree collectedTests = collectTests(resourceSetAccess, testableProjectURIs);
+		TestTree collectedTests = collectTests(ws, resourceSetAccess, testableProjectURIs);
 		return collectedTests;
 	}
 
@@ -215,12 +217,12 @@ public class TestDiscoveryHelper {
 	 * Low-level method to collect all test modules, i.e. N4JS files containing classes containing at least one method
 	 * annotated with &#64;Test, as {@link IResourceDescription}s.
 	 */
-	private List<URI> collectDistinctTestLocations(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
-			List<URI> locations) {
+	private List<URI> collectDistinctTestLocations(N4JSWorkspaceConfigSnapshot ws,
+			Function<? super URI, ? extends ResourceSet> resourceSetAccess, List<URI> locations) {
 		return locations.stream().flatMap(loc -> {
 			ResourceSet resSet = resourceSetAccess.apply(loc);
-			IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
-			return collectTestLocations(index, resSet, loc);
+			IResourceDescriptions index = n4jsCoreOLD.getXtextIndex(resSet);
+			return collectTestLocations(ws, index, resSet, loc);
 		}).distinct().collect(Collectors.toList());
 	}
 
@@ -228,7 +230,8 @@ public class TestDiscoveryHelper {
 	 * Low-level method to collect all test modules, i.e. N4JS files containing classes containing at least one method
 	 * annotated with &#64;Test, as {@link IResourceDescription}s.
 	 */
-	private Stream<URI> collectTestLocations(final IResourceDescriptions index, final ResourceSet resSet,
+	private Stream<URI> collectTestLocations(N4JSWorkspaceConfigSnapshot ws, final IResourceDescriptions index,
+			final ResourceSet resSet,
 			URI location) {
 
 		if (null == location) {
@@ -236,15 +239,15 @@ public class TestDiscoveryHelper {
 		}
 
 		// does location point to an N4JS project?
-		if (isProject(location)) {
+		if (isProject(ws, location)) {
 			// yes
 			// --> collect all test modules (files containing test classes) located in source containers of type "test"
-			final IN4JSProject p = n4jsCore.create(location);
-			return p.getSourceContainers()
+			final N4JSProjectConfigSnapshot p = ws.findProjectByPath(location);
+			return p.getSourceFolders()
 					.stream()
-					.filter(IN4JSSourceContainer::isTest)
-					.flatMap(TestDiscoveryHelper::stream) // note: IN4JSSourceContainer is an Iterable<URI>
-					// filter out everything but N4JS files.
+					.filter(N4JSSourceFolderSnapshot::isTest)
+					.map(N4JSSourceFolderSnapshot::getContents)
+					.flatMap(TestDiscoveryHelper::stream)
 					.filter(uri -> isTestFile(uri) && isTestModule(resSet, index.getResourceDescription(uri)));
 		}
 
@@ -254,8 +257,7 @@ public class TestDiscoveryHelper {
 			// yes --> is it a test module? (i.e. does it contain test classes and the class is not abstract?)
 			if (isTestModule(resSet, resDesc)) {
 				// yes --> is it contained in a source container of type "test"?
-				final IN4JSSourceContainer srcContainer = n4jsCore.findN4JSSourceContainer(location.trimFragment())
-						.orNull();
+				final N4JSSourceFolderSnapshot srcContainer = ws.findSourceFolderContaining(location.trimFragment());
 				if (srcContainer != null && srcContainer.isTest()) {
 					// yes --> return it!
 					return Stream.of(location); // return location with fragment! (if any)
@@ -265,14 +267,13 @@ public class TestDiscoveryHelper {
 		}
 
 		// does location point to a source container (or sub-folder)?
-		final IN4JSSourceContainer srcContainer = n4jsCore.findN4JSSourceContainer(location).orNull();
+		final N4JSSourceFolderSnapshot srcContainer = ws.findSourceFolderContaining(location);
 		if (srcContainer != null) {
 			// yes --> is this a source container of type "test"?
 			if (srcContainer.isTest()) {
 				// yes --> collect all test modules (files containing test classes) in this source container
 				final String locationStr = location.toString();
-				return stream(srcContainer) // note: IN4JSSourceContainer is an Iterable<URI>
-						// TODO improve?
+				return stream(srcContainer.getContents())
 						.filter(uri -> uri.toString().startsWith(locationStr)
 								&& isTestModule(resSet, index.getResourceDescription(uri)));
 			}
@@ -296,14 +297,14 @@ public class TestDiscoveryHelper {
 	 * @return The test tree representing one or more test cases. Never returns with {@code null}, but the returned test
 	 *         tree may be empty.
 	 */
-	private TestTree collectTests(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
-			final List<URI> locations) {
+	private TestTree collectTests(N4JSWorkspaceConfigSnapshot ws,
+			Function<? super URI, ? extends ResourceSet> resourceSetAccess, final List<URI> locations) {
 
 		// create test cases (aggregated in test suites)
 		final Map<String, TestSuite> suites = new LinkedHashMap<>();
 
 		// create MultiMap from trimmed(!) URI -> original URIs for this prefix URI
-		final List<URI> testLocations = collectDistinctTestLocations(resourceSetAccess, locations);
+		final List<URI> testLocations = collectDistinctTestLocations(ws, resourceSetAccess, locations);
 		// module URI --> test case URIs
 		final HashMultimap<URI, URI> testLocationMapping = createTestLocationMapping(testLocations);
 		// module URI --> module
@@ -328,11 +329,11 @@ public class TestDiscoveryHelper {
 			if (testLocationsForModule.get(0).equals(moduleLocation)) {
 				// The first item is referencing the entire module
 				// --> collect all test methods in module and ignore remaining URIs
-				collectTestCasesAndSuitesForModule(module, suites);
+				collectTestCasesAndSuitesForModule(ws, module, suites);
 			} else {
 				// we have URIs pointing to individual test methods -> collect all URIs
 				for (final URI uri : testLocationsForModule) {
-					collectTestSuiteAndTestCaseForMethod(uri, module, suites);
+					collectTestSuiteAndTestCaseForMethod(ws, uri, module, suites);
 				}
 			}
 		}
@@ -358,37 +359,38 @@ public class TestDiscoveryHelper {
 		return new TestTree(sessionId, suites.values(), name).sort();
 	}
 
-	private void collectTestSuiteAndTestCaseForMethod(final URI uri, final TModule module,
+	private void collectTestSuiteAndTestCaseForMethod(N4JSWorkspaceConfigSnapshot ws, URI uri, TModule module,
 			Map<String, TestSuite> suites) {
 		final EObject object = module.eResource().getResourceSet().getEObject(uri, true);
 		final Type type = (object instanceof N4MethodDeclaration) ? ((N4MethodDeclaration) object).getDefinedType()
 				: (object instanceof TMethod) ? (TMethod) object : null;
 		if (type instanceof TMethod) {
 			final TMethod method = (TMethod) type;
-			TestSuite testSuite = addOrCreateSuite((TClass) method.getContainingType(), suites);
-			testSuite.add(createTestCase(method, module));
+			TestSuite testSuite = addOrCreateSuite(ws, (TClass) method.getContainingType(), suites);
+			testSuite.add(createTestCase(ws, method, module));
 		}
 	}
 
 	/**
 	 * Collect test cases for all all top level non-abstract exported classes, exclude everything else.
 	 */
-	private void collectTestCasesAndSuitesForModule(final TModule module, Map<String, TestSuite> suites) {
+	private void collectTestCasesAndSuitesForModule(N4JSWorkspaceConfigSnapshot ws, TModule module,
+			Map<String, TestSuite> suites) {
 		for (final TClass clazz : from(module.getTopLevelTypes()).filter(TClass.class)
 				.filter(c -> !c.isAbstract() && c.isExported())) {
 			Iterable<TMethod> testMethods = getAllTestMethodsOfClass(clazz);
 			if (testMethods.iterator().hasNext()) {
-				TestSuite testSuite = addOrCreateSuite(clazz, suites);
+				TestSuite testSuite = addOrCreateSuite(ws, clazz, suites);
 				for (final TMethod method : testMethods) {
-					final TestCase testCase = createTestCase(method, module, getTestCatalogNameFor(clazz));
+					final TestCase testCase = createTestCase(method, module, getTestCatalogNameFor(ws, clazz));
 					testSuite.add(testCase);
 				}
 			}
 		}
 	}
 
-	private TestSuite addOrCreateSuite(TClass clazz, Map<String, TestSuite> suites) {
-		String suiteKey = getTestCatalogNameFor(clazz);
+	private TestSuite addOrCreateSuite(N4JSWorkspaceConfigSnapshot ws, TClass clazz, Map<String, TestSuite> suites) {
+		String suiteKey = getTestCatalogNameFor(ws, clazz);
 		TestSuite suite = suites.get(suiteKey);
 		if (suite == null) {
 			suite = new TestSuite(suiteKey);
@@ -397,8 +399,8 @@ public class TestDiscoveryHelper {
 		return suite;
 	}
 
-	private TestCase createTestCase(final TMethod method, final TModule module) {
-		return createTestCase(method, module, getClassName(method));
+	private TestCase createTestCase(N4JSWorkspaceConfigSnapshot ws, final TMethod method, final TModule module) {
+		return createTestCase(method, module, getClassName(ws, method));
 	}
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
@@ -407,15 +409,15 @@ public class TestDiscoveryHelper {
 		return testCase;
 	}
 
-	private String getClassName(final TMethod method) {
-		return getTestCatalogNameFor(getContainerOfType(method, TClass.class));
+	private String getClassName(N4JSWorkspaceConfigSnapshot ws, final TMethod method) {
+		return getTestCatalogNameFor(ws, getContainerOfType(method, TClass.class));
 	}
 
 	/**
 	 * Returns the name to be used in the test catalog for the given {@link TClass}. We use the fully qualified name for
 	 * this purpose.
 	 */
-	private String getTestCatalogNameFor(TClass clazz) {
+	private String getTestCatalogNameFor(N4JSWorkspaceConfigSnapshot ws, TClass clazz) {
 		String classStr = "";
 		if (clazz.getDeclaredVersion() > 0) {
 			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
@@ -424,7 +426,7 @@ public class TestDiscoveryHelper {
 			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz);
 		}
 
-		IN4JSProject project = n4jsCore.findProject(clazz.eResource().getURI()).orNull();
+		N4JSProjectConfigSnapshot project = ws.findProjectContaining(clazz.eResource().getURI());
 		if (project != null) {
 			String output = project.getOutputPath();
 			if (Strings.isNullOrEmpty(output) == false && output != ".") {
@@ -445,9 +447,9 @@ public class TestDiscoveryHelper {
 		final Map<URI, TModule> uri2Modules = newHashMap();
 		for (final URI moduleUri : moduleUris) {
 			ResourceSet resSet = resourceSetAccess.apply(moduleUri);
-			IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+			IResourceDescriptions index = n4jsCoreOLD.getXtextIndex(resSet);
 			final IResourceDescription resDesc = index.getResourceDescription(moduleUri);
-			uri2Modules.put(moduleUri, n4jsCore.loadModuleFromIndex(resSet, resDesc, false));
+			uri2Modules.put(moduleUri, n4jsCoreOLD.loadModuleFromIndex(resSet, resDesc, false));
 		}
 		return uri2Modules;
 	}
@@ -471,13 +473,8 @@ public class TestDiscoveryHelper {
 				.filter(m -> isTestMethod(m));
 	}
 
-	private boolean isProject(final URI location) {
-		// TODO change implementation!!!
-		try {
-			return n4jsCore.create(location).exists();
-		} catch (final Exception e) {
-			return false;
-		}
+	private boolean isProject(N4JSWorkspaceConfigSnapshot ws, final URI location) {
+		return ws.findProjectByPath(location) != null;
 	}
 
 	private boolean isTestFile(final URI uri) {

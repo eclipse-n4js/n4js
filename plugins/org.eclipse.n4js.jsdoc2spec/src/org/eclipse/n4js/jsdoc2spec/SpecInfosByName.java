@@ -14,11 +14,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.jsdoc.dom.Doclet;
 import org.eclipse.n4js.jsdoc.dom.FullMemberReference;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -45,7 +46,7 @@ public class SpecInfosByName {
 	private final IJSDoc2SpecIssueAcceptor issueAcceptor;
 	private final ContainerTypesHelper containerTypesHelper;
 	private final N4JSGlobalScopeProvider globalScopeProvider;
-	private final IN4JSCore n4jsCore;
+	private final IN4JSCoreNEW n4jsCore;
 
 	/**
 	 * @param issueAcceptor
@@ -58,7 +59,7 @@ public class SpecInfosByName {
 	 *            injected in creator and passed here to avoid DI for this helper type
 	 */
 	SpecInfosByName(IJSDoc2SpecIssueAcceptor issueAcceptor, N4JSGlobalScopeProvider globalScopeProvider,
-			ContainerTypesHelper containerTypesHelper, IN4JSCore n4jsCore) {
+			ContainerTypesHelper containerTypesHelper, IN4JSCoreNEW n4jsCore) {
 		this.issueAcceptor = issueAcceptor;
 		this.globalScopeProvider = globalScopeProvider;
 		this.containerTypesHelper = containerTypesHelper;
@@ -144,13 +145,14 @@ public class SpecInfosByName {
 	}
 
 	private RepoRelativePath computeRRP(FullMemberReference ref, TMember testMember) {
-		IScope scope = globalScopeProvider.getScope(testMember.eResource(),
+		Resource resource = testMember.eResource();
+		IScope scope = globalScopeProvider.getScope(resource,
 				N4JSPackage.Literals.IMPORT_DECLARATION__MODULE);
 		QualifiedName qn = QualifiedName.create(ref.getModuleName().split("/"));
 		IEObjectDescription eod = scope.getSingleElement(qn);
 		if (eod != null) {
 			FileURI uri = new FileURI(eod.getEObjectURI());
-			RepoRelativePath rrp = RepoRelativePath.compute(uri, n4jsCore);
+			RepoRelativePath rrp = RepoRelativePath.compute(uri, n4jsCore, resource);
 			return rrp;
 		} else {
 			issueAcceptor.addWarning("Cannot resolve testee " + ref, testMember);

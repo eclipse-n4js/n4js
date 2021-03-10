@@ -16,10 +16,11 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
@@ -43,16 +44,16 @@ public class RepoRelativePath {
 	 * Creates the RepoRelativePath from a given resource. Returns null, if resource is not contained in a repository.
 	 * If a repository is found, the simple name of the origin is used.
 	 */
-	public static RepoRelativePath compute(FileURI uriOfResource, IN4JSCore n4jsCore) {
-		Optional<? extends IN4JSProject> optProj = n4jsCore.findProject(uriOfResource.toURI());
+	public static RepoRelativePath compute(FileURI uriOfResource, IN4JSCoreNEW n4jsCore, Notifier context) {
+		Optional<? extends N4JSProjectConfigSnapshot> optProj = n4jsCore.findProject(context, uriOfResource.toURI());
 		if (!optProj.isPresent()) {
 			return null;
 		}
 
-		IN4JSProject project = optProj.get();
+		N4JSProjectConfigSnapshot project = optProj.get();
 
 		Path pathOfResource = uriOfResource.toFileSystemPath();
-		Path pathOfProject = project.getLocation().toFileSystemPath();
+		Path pathOfProject = project.getPathAsFileURI().toFileSystemPath();
 		String fileOfResourceInsideProject = pathOfProject.relativize(pathOfResource).toString();
 		// strip anchor part if present, i.e. path to type within the resource
 		int anchorIndex = fileOfResourceInsideProject.indexOf("#");
@@ -83,7 +84,7 @@ public class RepoRelativePath {
 			pathOfProjectInRepo = pathOfProjectInRepo.replace(File.separatorChar, '/');
 		}
 
-		N4JSProjectName projName = project.getProjectName();
+		N4JSProjectName projName = project.getN4JSProjectName();
 		String repoName = getRepoName(repoFolder);
 		return new RepoRelativePath(repoName, pathOfProjectInRepo, // repo relative
 				projName, pathOfResourceInProject, // project relative

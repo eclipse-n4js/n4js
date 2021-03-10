@@ -15,8 +15,9 @@ import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.tester.domain.TestTree;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,14 +27,11 @@ import com.google.inject.Inject;
  * Service for supplying the test catalog based on all tests available in the ({@link IN4JSCore N4JS core} based)
  * workspace. The content of the provided test catalog depends on the built state of the workspace.
  * <p>
- * By default, i.e. when method {@link #get(Function)} is invoked, the generated JSON will include a top-level property
- * "endpoint" with a URL pointing to the Jetty server for test reporting. Method {@link #get(Function, boolean)} may be
- * used to avoid this property.
+ * By default, i.e. when method {@link #get(N4JSWorkspaceConfigSnapshot, Function)} is invoked, the generated JSON will
+ * include a top-level property "endpoint" with a URL pointing to the Jetty server for test reporting. Method
+ * {@link #get(N4JSWorkspaceConfigSnapshot, Function, boolean)} may be used to avoid this property.
  */
 public class TestCatalogSupplier {
-
-	@Inject
-	private IN4JSCore n4jsCore;
 
 	@Inject
 	private ObjectMapper objectMapper;
@@ -49,9 +47,9 @@ public class TestCatalogSupplier {
 	 *
 	 * @return the test catalog as a JSON formatted string.
 	 */
-	public String get() {
+	public String get(N4JSWorkspaceConfigSnapshot ws) {
 		ResourceSet resourceSet = testDiscoveryHelper.newResourceSet();
-		return get(any -> resourceSet, false);
+		return get(ws, any -> resourceSet, false);
 	}
 
 	/**
@@ -59,9 +57,9 @@ public class TestCatalogSupplier {
 	 *
 	 * @return the test catalog as a JSON formatted string.
 	 */
-	public String get(boolean suppressEndpointProperty) {
+	public String get(N4JSWorkspaceConfigSnapshot ws, boolean suppressEndpointProperty) {
 		ResourceSet resourceSet = testDiscoveryHelper.newResourceSet();
-		return get(any -> resourceSet, suppressEndpointProperty);
+		return get(ws, any -> resourceSet, suppressEndpointProperty);
 	}
 
 	/**
@@ -70,29 +68,29 @@ public class TestCatalogSupplier {
 	 *
 	 * @return the test catalog as a JSON formatted string or null iff no test suites where found.
 	 */
-	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
-		return get(resourceSetAccess, false);
+	public String get(N4JSWorkspaceConfigSnapshot ws, Function<? super URI, ? extends ResourceSet> resourceSetAccess) {
+		return get(ws, resourceSetAccess, false);
 	}
 
 	/**
-	 * Same as {@link #get(Function)}, except that this method can be configured to not emit property "endpoint" to the
-	 * returned JSON string, by passing in <code>true</code> as argument for parameter
+	 * Same as {@link #get(N4JSWorkspaceConfigSnapshot, Function)}, except that this method can be configured to not
+	 * emit property "endpoint" to the returned JSON string, by passing in <code>true</code> as argument for parameter
 	 * <code>suppressEndpointProperty</code>.
 	 */
-	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
+	public String get(N4JSWorkspaceConfigSnapshot ws, Function<? super URI, ? extends ResourceSet> resourceSetAccess,
 			boolean suppressEndpointProperty) {
 
-		return get(resourceSetAccess, n4jsCore.findAllProjects(), suppressEndpointProperty);
+		return get(ws, resourceSetAccess, ws.getProjects(), suppressEndpointProperty);
 	}
 
 	/**
-	 * Same as {@link #get(Function, boolean)}, except that this method only returns those tests that are contained in
-	 * the given projects.
+	 * Same as {@link #get(N4JSWorkspaceConfigSnapshot, Function, boolean)}, except that this method only returns those
+	 * tests that are contained in the given projects.
 	 */
-	public String get(Function<? super URI, ? extends ResourceSet> resourceSetAccess,
-			Iterable<? extends IN4JSProject> projects, boolean suppressEndpointProperty) {
+	public String get(N4JSWorkspaceConfigSnapshot ws, Function<? super URI, ? extends ResourceSet> resourceSetAccess,
+			Iterable<? extends N4JSProjectConfigSnapshot> projects, boolean suppressEndpointProperty) {
 
-		final TestTree testTree = testDiscoveryHelper.collectAllTestsFromProjects(resourceSetAccess, projects);
+		final TestTree testTree = testDiscoveryHelper.collectAllTestsFromProjects(ws, resourceSetAccess, projects);
 		if (testTree.getSuites().isEmpty()) {
 			return null;
 		}
@@ -100,11 +98,13 @@ public class TestCatalogSupplier {
 	}
 
 	/**
-	 * Same as {@link #get(Function, boolean)}, except that this method only returns those tests that are contained in
-	 * the given projects.
+	 * Same as {@link #get(N4JSWorkspaceConfigSnapshot, Function, boolean)}, except that this method only returns those
+	 * tests that are contained in the given projects.
 	 */
-	public String get(ResourceSet resourceSet, IN4JSProject project, boolean suppressEndpointProperty) {
-		final TestTree testTree = testDiscoveryHelper.collectAllTestsFromProjects((uri) -> resourceSet,
+	public String get(N4JSWorkspaceConfigSnapshot ws, ResourceSet resourceSet, N4JSProjectConfigSnapshot project,
+			boolean suppressEndpointProperty) {
+
+		final TestTree testTree = testDiscoveryHelper.collectAllTestsFromProjects(ws, (uri) -> resourceSet,
 				Collections.singletonList(project));
 
 		if (testTree.getSuites().isEmpty()) {

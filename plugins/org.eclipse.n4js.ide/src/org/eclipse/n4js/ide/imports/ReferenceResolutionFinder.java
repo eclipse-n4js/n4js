@@ -19,12 +19,12 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
@@ -80,9 +80,6 @@ public class ReferenceResolutionFinder {
 	private IScopeProvider scopeProvider;
 
 	@Inject
-	private IN4JSCore n4jsCore;
-
-	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
 
 	@Inject
@@ -96,7 +93,7 @@ public class ReferenceResolutionFinder {
 
 	/**
 	 * An acceptor receiving valid {@link ReferenceResolution}s for a given {@link ReferenceDescriptor reference}. See
-	 * {@link ReferenceResolutionFinder#findResolutions(ReferenceDescriptor, boolean, boolean, Predicate, Predicate, IResolutionAcceptor)
+	 * {@link ReferenceResolutionFinder#findResolutions(N4JSWorkspaceConfigSnapshot, ReferenceDescriptor, boolean, boolean, Predicate, Predicate, IResolutionAcceptor)
 	 * #searchResolutions()} for details.
 	 */
 	public interface IResolutionAcceptor {
@@ -133,6 +130,7 @@ public class ReferenceResolutionFinder {
 	 *            an {@link IResolutionAcceptor} that will be invoked with all valid resolutions.
 	 */
 	public void findResolutions(
+			N4JSWorkspaceConfigSnapshot wc,
 			ReferenceDescriptor reference,
 			boolean requireFullMatch,
 			boolean isUnresolvedReference,
@@ -155,10 +153,14 @@ public class ReferenceResolutionFinder {
 					continue;
 				}
 
+				final N4JSProjectConfigSnapshot candidateProject = wc.findProjectContaining(candidate.getEObjectURI());
+				if (candidateProject == null) {
+					continue;
+				}
 				final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
 						: Optional.of(scope);
 				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
-						requireFullMatch, candidate, scopeForCollisionCheck, conflictChecker);
+						requireFullMatch, candidate, candidateProject, scopeForCollisionCheck, conflictChecker);
 				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 					acceptor.accept(resolution);
 				}
@@ -185,6 +187,8 @@ public class ReferenceResolutionFinder {
 	 *
 	 * @param candidate
 	 *            the {@link IEObjectDescription} representing the potential target element of the resolution.
+	 * @param candidateProject
+	 *            the containing project of the <code>candidate</code>.
 	 * @param scopeForCollisionCheck
 	 *            a scope that will be used for a collision check. If the reference being resolved is known to be an
 	 *            unresolved reference and <code>requireFullMatch</code> is set to <code>true</code>, then this
@@ -192,11 +196,12 @@ public class ReferenceResolutionFinder {
 	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
-			IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
+			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProject,
+			Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
 
 		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
-			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, scopeForCollisionCheck, text,
-					requireFullMatch, parseTreeNode, conflictChecker);
+			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, candidateProject,
+					scopeForCollisionCheck, text, requireFullMatch, parseTreeNode, conflictChecker);
 
 			if (!rrc.isValid) {
 				return null;
@@ -280,7 +285,7 @@ public class ReferenceResolutionFinder {
 		QualifiedName qualifiedName = requestedImport.name;
 		String optionalAlias = requestedImport.alias;
 
-		N4JSProjectName projectName = rrc.candidateProject != null ? rrc.candidateProject.getProjectName() : null;
+		N4JSProjectName projectName = rrc.candidateProject != null ? rrc.candidateProject.getN4JSProjectName() : null;
 		if (projectName == null) {
 			return null;
 		}
@@ -309,7 +314,7 @@ public class ReferenceResolutionFinder {
 	private class ReferenceResolutionCandidate {
 		final IEObjectDescription candidate;
 		final IEObjectDescription candidateViaScopeShortName;
-		final IN4JSProject candidateProject;
+		final N4JSProjectConfigSnapshot candidateProject;
 		final boolean isScopedCandidateEqual;
 		final boolean isScopedCandidateCollisioning;
 		final boolean isValid;
@@ -322,7 +327,8 @@ public class ReferenceResolutionFinder {
 		final CandidateAccessType accessType;
 		final NameAndAlias addedImportNameAndAlias;
 
-		ReferenceResolutionCandidate(IEObjectDescription candidate, Optional<IScope> scopeForCollisionCheck,
+		ReferenceResolutionCandidate(IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProject,
+				Optional<IScope> scopeForCollisionCheck,
 				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
 
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
@@ -332,7 +338,7 @@ public class ReferenceResolutionFinder {
 				}
 
 				this.candidate = candidate;
-				this.candidateProject = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+				this.candidateProject = candidateProject;
 				this.shortName = getShortName();
 				this.qualifiedName = getQualifiedName();
 				this.parentImportElement = getParentImportElement(parseTreeNode);
@@ -620,7 +626,7 @@ public class ReferenceResolutionFinder {
 			QualifiedName qfn = candidate.getQualifiedName();
 			int qfnSegmentCount = qfn.getSegmentCount();
 			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
-			ProjectType projectType = candidateProject != null ? candidateProject.getProjectType() : null;
+			ProjectType projectType = candidateProject != null ? candidateProject.getType() : null;
 
 			QualifiedName candidateName;
 			if (candidateProject != null && tmodule != null && tmodule.equals(candidateProject.getMainModule())) {
@@ -660,14 +666,14 @@ public class ReferenceResolutionFinder {
 		}
 	}
 
-	private static N4JSProjectName getNameOfDefinedOrGivenProject(IN4JSProject project) {
-		if (project.getProjectType() == ProjectType.DEFINITION) {
-			N4JSProjectName definedProjectName = project.getDefinesPackageName();
+	private static N4JSProjectName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {
+		if (project.getType() == ProjectType.DEFINITION) {
+			N4JSProjectName definedProjectName = project.getDefinesPackage();
 			if (definedProjectName != null) {
 				return definedProjectName;
 			}
 		}
-		return project.getProjectName();
+		return project.getN4JSProjectName();
 	}
 
 	private static class NameAndAlias {

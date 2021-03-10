@@ -10,27 +10,45 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.util.Strings;
 
 /**
- * Wrapper around {@link IN4JSSourceContainer}.
+ * Wrapper around {@link SourceContainerDescription}.
  */
 public class N4JSSourceFolder implements IN4JSSourceFolder {
 
-	private final IN4JSSourceContainer delegate;
 	private final N4JSProjectConfig project;
+	private final SourceContainerType type;
+	private final String relativePath;
+	private final FileURI absolutePath;
 
 	/**
 	 * Constructor
 	 */
-	public N4JSSourceFolder(N4JSProjectConfig project, IN4JSSourceContainer delegate) {
-		this.project = project;
-		this.delegate = delegate;
+	public N4JSSourceFolder(N4JSProjectConfig project, SourceContainerType type, String relativePath) {
+		this.project = Objects.requireNonNull(project);
+		this.type = Objects.requireNonNull(type);
+		this.relativePath = Objects.requireNonNull(relativePath);
+		this.absolutePath = createAbsolutePath(project, relativePath);
+	}
+
+	protected FileURI createAbsolutePath(N4JSProjectConfig project, String relativePath) {
+		if (!Strings.isEmpty(relativePath) && !relativePath.equals(".")) {
+			String linuxPath = OSInfo.isWindows() ? relativePath.replace(File.separatorChar, '/') : relativePath;
+			return project.getPathAsFileURI().appendPath(linuxPath);
+		}
+		return project.getPathAsFileURI();
 	}
 
 	@Override
@@ -40,12 +58,26 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 
 	@Override
 	public String getName() {
-		return delegate.getRelativeLocation();
+		return relativePath;
+	}
+
+	@Override
+	public SourceContainerType getType() {
+		return type;
+	}
+
+	@Override
+	public String getRelativePath() {
+		return relativePath;
 	}
 
 	@Override
 	public URI getPath() {
-		return delegate.getLocation().withTrailingPathDelimiter().toURI();
+		return absolutePath.withTrailingPathDelimiter().toURI();
+	}
+
+	public FileURI getPathAsFileURI() {
+		return absolutePath;
 	}
 
 	@Override

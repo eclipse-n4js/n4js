@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
@@ -22,8 +23,7 @@ import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.xtext.AbstractElement;
@@ -51,7 +51,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 	private IPrefixMatcher prefixMatcher;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	@Override
 	protected void _createProposals(Keyword keyword, ContentAssistContext context,
@@ -87,8 +87,8 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 			String last = namePath.get(namePath.size() - 1);
 			if (PackageJsonProperties.DEPENDENCIES.name.equals(last)
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(last)) {
-				for (IN4JSProject project : n4jsCore.findAllProjects()) {
-					N4JSProjectName projectName = project.getProjectName();
+				for (N4JSProjectConfigSnapshot project : n4jsCore.findAllProjects(context.getResource())) {
+					N4JSProjectName projectName = project.getN4JSProjectName();
 					ContentAssistEntry entryForModule = getProposalCreator().createProposal(
 							'"' + projectName.getRawName() + '"', context, ContentAssistEntry.KIND_MODULE, null);
 					if (entryForModule != null) {
@@ -132,7 +132,8 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(devOrDep)) {
 
 				NameValuePair pair = (NameValuePair) context.getCurrentModel();
-				IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(pair.getName())).orNull();
+				N4JSProjectConfigSnapshot project = n4jsCore.findProject(context.getResource(),
+						new N4JSProjectName(pair.getName())).orNull();
 				if (project != null) {
 					VersionNumber version = project.getVersion();
 					ContentAssistEntry versionEntry = getProposalCreator().createProposal(

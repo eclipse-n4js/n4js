@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.n4js.cli.N4jscFactory;
@@ -81,7 +82,8 @@ public class ProjectDiscoveryTest {
 	}
 
 	private ArrayList<String> getActualFolders(Path tmpDir, Path workspaceRoot) {
-		List<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(workspaceRoot);
+		List<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(Collections.singleton(workspaceRoot),
+				new HashMap<>(), false);
 		ArrayList<String> actualFolders = new ArrayList<>();
 		for (Path projectDir : projectDirs) {
 			String relativeFolder = tmpDir.relativize(projectDir).toString();

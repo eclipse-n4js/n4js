@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.utils;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.TModule;
@@ -32,7 +34,7 @@ import com.google.inject.Singleton;
 @Singleton
 public final class EObjectDescriptionHelper {
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
@@ -48,7 +50,7 @@ public final class EObjectDescriptionHelper {
 	 *
 	 * @returns true if {@link IEObjectDescription} describes module of {@link EObject}
 	 */
-	public boolean isDescriptionOfModuleWith(IEObjectDescription eoDescription, EObject eObject) {
+	public boolean isDescriptionOfModuleWith(Notifier context, IEObjectDescription eoDescription, EObject eObject) {
 		// check if module names are the same
 		final Script containingScript = EcoreUtil2.getContainerOfType(eObject, Script.class);
 		final TModule containingModule = containingScript != null ? containingScript.getModule() : null;
@@ -70,8 +72,9 @@ public final class EObjectDescriptionHelper {
 			return false;
 		}
 
-		final IN4JSProject targetProject = n4jsCore.findProject(eoDescription.getEObjectURI()).orNull();
-		final IN4JSProject currentProject = n4jsCore.findProject(eObjectResourceURI).orNull();
+		final N4JSProjectConfigSnapshot targetProject = n4jsCore.findProject(context, eoDescription.getEObjectURI())
+				.orNull();
+		final N4JSProjectConfigSnapshot currentProject = n4jsCore.findProject(context, eObjectResourceURI).orNull();
 
 		return targetProject == currentProject;
 	}

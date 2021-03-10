@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -52,14 +52,14 @@ public class ProjectComparisonEntry {
 	private final ProjectComparisonEntry parent;
 	private final List<ProjectComparisonEntry> children = new ArrayList<>();
 
-	private final IN4JSProject projectAPI;
-	private final IN4JSProject projectImpl[]; // non-null iff this is a project entry
+	private final N4JSProjectConfigSnapshot projectAPI;
+	private final N4JSProjectConfigSnapshot projectImpl[]; // non-null iff this is a project entry
 	private final EObject elementAPI;
 	private final EObject[] elementImpl; // non-null iff this is an element entry
 	private final ProjectCompareResult[] cachedCompareResults; // non-null iff this is an element entry
 
 	public ProjectComparisonEntry(
-			ProjectComparison root, IN4JSProject projectAPI, IN4JSProject... projectImpl) {
+			ProjectComparison root, N4JSProjectConfigSnapshot projectAPI, N4JSProjectConfigSnapshot... projectImpl) {
 		this(root, null, -1, projectAPI, projectImpl, null, null);
 	}
 
@@ -75,7 +75,7 @@ public class ProjectComparisonEntry {
 	protected ProjectComparisonEntry(
 			ProjectComparison root,
 			ProjectComparisonEntry parent, int index,
-			IN4JSProject projectAPI, IN4JSProject[] projectImpl,
+			N4JSProjectConfigSnapshot projectAPI, N4JSProjectConfigSnapshot[] projectImpl,
 			EObject elementAPI, EObject[] elementImpl) {
 
 		if (root == null)
@@ -166,15 +166,15 @@ public class ProjectComparisonEntry {
 		return elementImpl != null;
 	}
 
-	public IN4JSProject getProjectAPI() {
+	public N4JSProjectConfigSnapshot getProjectAPI() {
 		return projectAPI;
 	}
 
-	public IN4JSProject[] getProjectImpl() {
+	public N4JSProjectConfigSnapshot[] getProjectImpl() {
 		return projectImpl;
 	}
 
-	public IN4JSProject getProjectImpl(int implIdx) {
+	public N4JSProjectConfigSnapshot getProjectImpl(int implIdx) {
 		if (projectImpl != null) {
 			return implIdx >= 0 && implIdx < projectImpl.length ? projectImpl[implIdx] : null;
 		}
@@ -280,8 +280,8 @@ public class ProjectComparisonEntry {
 	}
 
 	private static String toText(Object element) {
-		if (element instanceof IN4JSProject)
-			return ((IN4JSProject) element).getProjectName().getRawName();
+		if (element instanceof N4JSProjectConfigSnapshot)
+			return ((N4JSProjectConfigSnapshot) element).getName();
 		if (element instanceof TModule)
 			return ((TModule) element).getQualifiedName();
 		if (element instanceof TMember)

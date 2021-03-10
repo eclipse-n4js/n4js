@@ -13,6 +13,7 @@ package org.eclipse.n4js.xtext.workspace;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
@@ -21,17 +22,27 @@ import org.eclipse.xtext.workspace.IWorkspaceConfig;
 @SuppressWarnings("restriction")
 public interface XIWorkspaceConfig extends IWorkspaceConfig {
 
+	/** @return base directory of workspace */
+	URI getPath();
+
 	@Override
 	Set<? extends XIProjectConfig> getProjects();
 
 	@Override
-	XIProjectConfig findProjectContaining(URI member);
-
-	@Override
 	XIProjectConfig findProjectByName(String name);
 
-	/** @return base directory of workspace */
-	URI getPath();
+	/**
+	 * No longer supported; will throw {@link UnsupportedOperationException}.
+	 *
+	 * @deprecated for obtaining a project by nested URI, use either of the methods
+	 *             {@link WorkspaceConfigSnapshot#findProjectByNestedLocation(URI) #findProjectByNestedLocation(URI)} or
+	 *             {@link WorkspaceConfigSnapshot#findProjectContaining(URI) #findProjectContaining(URI)} in
+	 *             {@link WorkspaceConfigSnapshot}, instead of this method. In particular, the new
+	 *             {@link XWorkspaceManager} now follows this rule.
+	 */
+	@Override
+	@Deprecated
+	XIProjectConfig findProjectContaining(URI nestedURI);
 
 	/**
 	 * Updates internal data based on changes of the given resources.

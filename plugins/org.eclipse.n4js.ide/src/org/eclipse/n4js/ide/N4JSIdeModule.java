@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide;
 
 import org.eclipse.n4js.N4JSRuntimeModule;
-import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.ide.editor.contentassist.CustomN4JSParser;
@@ -19,7 +18,6 @@ import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistContextFactory
 import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
-import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.N4JSDebugService;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
@@ -29,6 +27,7 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
+import org.eclipse.n4js.ide.server.N4JSWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.build.N4JSBuildOrderInfoComputer;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
@@ -75,7 +74,6 @@ import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
-import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
@@ -142,15 +140,11 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	}
 
 	public Class<? extends XIWorkspaceConfigFactory> bindXIWorkspaceConfigFactory() {
-		return FileBasedWorkspaceInitializer.class;
+		return N4JSWorkspaceConfigFactory.class;
 	}
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
 		return N4JSProjectDescriptionFactory.class;
-	}
-
-	public Class<? extends IGenerator> bindIGenerator() {
-		return N4JSCompositeGenerator.class;
 	}
 
 	public Class<? extends OutputConfigurationProvider> bindOutputConfigurationProvider() {

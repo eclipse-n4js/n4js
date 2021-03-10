@@ -23,9 +23,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -36,16 +37,16 @@ import org.eclipse.xtext.xbase.lib.Pair;
 public class ApiImplMapping {
 
 	private final Map<N4JSProjectName, ApiImplAssociation> assocs = new LinkedHashMap<>();
-	private final Set<IN4JSProject> projectsWithUndefImplIds = new LinkedHashSet<>();
-	private final Map<Pair<N4JSProjectName, N4JSProjectName>, Set<IN4JSProject>> conflicts = new LinkedHashMap<>();
+	private final Set<N4JSProjectConfigSnapshot> projectsWithUndefImplIds = new LinkedHashSet<>();
+	private final Map<Pair<N4JSProjectName, N4JSProjectName>, Set<N4JSProjectConfigSnapshot>> conflicts = new LinkedHashMap<>();
 
 	/** A 1:N association between a single API project and its N implementation projects. */
 	private static final class ApiImplAssociation {
 
-		public final IN4JSProject api;
-		public final Map<N4JSProjectName, IN4JSProject> impls = new LinkedHashMap<>();
+		public final N4JSProjectConfigSnapshot api;
+		public final Map<N4JSProjectName, N4JSProjectConfigSnapshot> impls = new LinkedHashMap<>();
 
-		public ApiImplAssociation(IN4JSProject api) {
+		public ApiImplAssociation(N4JSProjectConfigSnapshot api) {
 			this.api = api;
 		}
 
@@ -53,29 +54,30 @@ public class ApiImplMapping {
 			return impls.keySet();
 		}
 
-		public Collection<IN4JSProject> getImpls() {
+		public Collection<N4JSProjectConfigSnapshot> getImpls() {
 			return impls.values();
 		}
 
-		public IN4JSProject getImpl(N4JSProjectName implId) {
+		public N4JSProjectConfigSnapshot getImpl(N4JSProjectName implId) {
 			return impls.get(implId);
 		}
 
-		public IN4JSProject putImpl(IN4JSProject impl) {
-			final N4JSProjectName implId = impl.getImplementationId().orNull();
+		public N4JSProjectConfigSnapshot putImpl(N4JSProjectConfigSnapshot impl) {
+			final String implId = impl.getImplementationId();
 			if (implId != null)
-				return impls.put(implId, impl);
+				return impls.put(new N4JSProjectName(implId), impl);
 			return null;
 		}
 	}
 
 	/**
-	 * Creates a new, empty mapping that can be filled via method {@link #put(IN4JSProject,IN4JSProject)}. Usually,
-	 * client code should use one of the static <code>#of()</code> methods.
+	 * Creates a new, empty mapping that can be filled via method
+	 * {@link #put(N4JSProjectConfigSnapshot,N4JSProjectConfigSnapshot)}. Usually, client code should use one of the
+	 * static <code>#of()</code> methods.
 	 *
-	 * @see ApiImplMapping#of(IN4JSCore)
-	 * @see ApiImplMapping#of(Iterable)
-	 * @see ApiImplMapping#of(Iterable,Iterable)
+	 * @see ApiImplMapping#of(N4JSWorkspaceConfigSnapshot)
+	 * @see ApiImplMapping#of(N4JSWorkspaceConfigSnapshot, Iterable)
+	 * @see ApiImplMapping#of(N4JSWorkspaceConfigSnapshot, Iterable,Iterable)
 	 */
 	public ApiImplMapping() {
 	}
@@ -83,11 +85,16 @@ public class ApiImplMapping {
 	/**
 	 * Create mapping of all API / implementation projects in the workspace.
 	 */
-	public static ApiImplMapping of(IN4JSCore n4jsCore) {
+	public static ApiImplMapping of(N4JSWorkspaceConfigSnapshot wc) {
 		final ApiImplMapping mapping = new ApiImplMapping();
-		n4jsCore.findAllProjects().forEach(
-				pImpl -> pImpl.getImplementedProjects().forEach(
-						pApi -> mapping.put(pApi, pImpl)));
+		for (N4JSProjectConfigSnapshot pImpl : wc.getProjects()) {
+			for (ProjectReference pApi : pImpl.getProjectDescription().getImplementedProjects()) {
+				N4JSProjectConfigSnapshot pApiResolved = wc.findProjectByName(pApi.getProjectName());
+				if (pApiResolved != null) {
+					mapping.put(pApiResolved, pImpl);
+				}
+			}
+		}
 		return mapping;
 	}
 
@@ -95,8 +102,8 @@ public class ApiImplMapping {
 	 * Create mapping of all API / implementation projects in the given list. The list may contain unrelated projects
 	 * that are neither API nor implementation projects.
 	 */
-	public static ApiImplMapping of(Iterable<IN4JSProject> projects) {
-		return of(projects, projects);
+	public static ApiImplMapping of(N4JSWorkspaceConfigSnapshot wc, Iterable<N4JSProjectConfigSnapshot> projects) {
+		return of(wc, projects, projects);
 	}
 
 	/**
@@ -105,32 +112,40 @@ public class ApiImplMapping {
 	 * <code>implProjects</code>, so the given lists serve as a kind of filter. The two given lists may contain
 	 * unrelated projects that are neither API nor implementation projects and they may intersect.
 	 */
-	public static ApiImplMapping of(Iterable<? extends IN4JSProject> apiProjects,
-			Iterable<? extends IN4JSProject> implProjects) {
-		return new ApiImplMapping().enhance(apiProjects, implProjects);
+	public static ApiImplMapping of(N4JSWorkspaceConfigSnapshot wc,
+			Iterable<? extends N4JSProjectConfigSnapshot> apiProjects,
+			Iterable<? extends N4JSProjectConfigSnapshot> implProjects) {
+		return new ApiImplMapping().enhance(wc, apiProjects, implProjects);
 	}
 
 	/**
 	 * Enhance the existing ApiImplMapping to also cover the given list of apiProjects. Only apiProjects contained in
 	 * apiProject will be covered. Implementation of APIs not listed there are not taken into account.
 	 *
+	 * @param wc
+	 *            the workspace configuration.
 	 * @param apiProjects
 	 *            list APIs
 	 * @param implProjects
 	 *            list of likely implementations.
 	 * @return this
 	 */
-	public ApiImplMapping enhance(Iterable<? extends IN4JSProject> apiProjects,
-			Iterable<? extends IN4JSProject> implProjects) {
-		final Set<N4JSProjectName> apiProjectsIds = StreamSupport.stream(apiProjects.spliterator(), false)
-				.map(p -> p.getProjectName()).collect(Collectors.toSet());
+	public ApiImplMapping enhance(N4JSWorkspaceConfigSnapshot wc,
+			Iterable<? extends N4JSProjectConfigSnapshot> apiProjects,
+			Iterable<? extends N4JSProjectConfigSnapshot> implProjects) {
 
-		for (IN4JSProject pImpl : implProjects) {
-			for (IN4JSProject pApi : pImpl.getImplementedProjects()) {
-				// note: #getImplementedProjects() will return implemented projects from entire workspace,
-				// so we here have to make sure pApi is contained in apiProjects
-				if (apiProjectsIds.contains(pApi.getProjectName()))
-					this.put(pApi, pImpl);
+		final Set<String> apiProjectsIds = StreamSupport.stream(apiProjects.spliterator(), false)
+				.map(p -> p.getName()).collect(Collectors.toSet());
+
+		for (N4JSProjectConfigSnapshot pImpl : implProjects) {
+			for (ProjectReference pApiRef : pImpl.getProjectDescription().getImplementedProjects()) {
+				N4JSProjectConfigSnapshot pApi = wc.findProjectByName(pApiRef.getProjectName());
+				if (pApi != null) {
+					// note: #getImplementedProjects() will return implemented projects from entire workspace,
+					// so we here have to make sure pApi is contained in apiProjects
+					if (apiProjectsIds.contains(pApi.getName()))
+						this.put(pApi, pImpl);
+				}
 			}
 		}
 		return this;
@@ -139,11 +154,12 @@ public class ApiImplMapping {
 	/**
 	 * Add a single API -> implementation association to the receiving mapping (if it is not present already).
 	 */
-	public void put(IN4JSProject api, IN4JSProject impl) {
-		final N4JSProjectName apiId = api.getProjectName();
+	public void put(N4JSProjectConfigSnapshot api, N4JSProjectConfigSnapshot impl) {
+		final N4JSProjectName apiId = api.getN4JSProjectName();
 		if (apiId == null)
 			return; // just ignore (complaining about this problem is not our business)
-		final N4JSProjectName implId = impl.getImplementationId().orNull();
+		final String implIdStr = impl.getImplementationId();
+		final N4JSProjectName implId = implIdStr != null ? new N4JSProjectName(implIdStr) : null;
 		if (implId == null) {
 			projectsWithUndefImplIds.add(impl);
 			return;
@@ -153,7 +169,7 @@ public class ApiImplMapping {
 			assoc = new ApiImplAssociation(api);
 			assocs.put(apiId, assoc);
 		}
-		final IN4JSProject replaced = assoc.putImpl(impl);
+		final N4JSProjectConfigSnapshot replaced = assoc.putImpl(impl);
 		if (replaced != null && !Objects.equals(replaced, impl)) {
 			// ooops! we have several projects defining an implementation for project 'api' with the same
 			// implementation id -> remember them!
@@ -161,9 +177,9 @@ public class ApiImplMapping {
 		}
 	}
 
-	private void putConflict(N4JSProjectName apiId, N4JSProjectName implId, IN4JSProject... culprit) {
+	private void putConflict(N4JSProjectName apiId, N4JSProjectName implId, N4JSProjectConfigSnapshot... culprit) {
 		final Pair<N4JSProjectName, N4JSProjectName> apiId_implId = new Pair<>(apiId, implId);
-		Set<IN4JSProject> culprits = conflicts.get(apiId_implId);
+		Set<N4JSProjectConfigSnapshot> culprits = conflicts.get(apiId_implId);
 		if (culprits == null) {
 			culprits = new LinkedHashSet<>();
 			conflicts.put(apiId_implId, culprits);
@@ -173,7 +189,7 @@ public class ApiImplMapping {
 
 	/**
 	 * Tells whether this mapping has seen any invalid or inconsistent mappings (via method
-	 * {@link #put(IN4JSProject, IN4JSProject)}).
+	 * {@link #put(N4JSProjectConfigSnapshot, N4JSProjectConfigSnapshot)}).
 	 * <p>
 	 * Clients may choose to simply ignore this value; in case of error all other methods will fall back to a default
 	 * fail-safe behavior (e.g. implementation projects with a missing <code>ImplementationId</code> manifest property
@@ -189,15 +205,16 @@ public class ApiImplMapping {
 	 */
 	public List<String> getErrorMessages() {
 		final List<String> msgs = new ArrayList<>();
-		for (IN4JSProject p : projectsWithUndefImplIds) {
-			msgs.add("project '" + p.getProjectName() + "' does not define an ImplementationId in its manifest");
+		for (N4JSProjectConfigSnapshot p : projectsWithUndefImplIds) {
+			msgs.add("project '" + p.getName() + "' does not define an ImplementationId in its manifest");
 		}
-		for (Map.Entry<Pair<N4JSProjectName, N4JSProjectName>, Set<IN4JSProject>> currConflict : conflicts.entrySet()) {
+		for (Map.Entry<Pair<N4JSProjectName, N4JSProjectName>, Set<N4JSProjectConfigSnapshot>> currConflict : conflicts
+				.entrySet()) {
 			final N4JSProjectName apiId = currConflict.getKey().getKey();
 			final N4JSProjectName implId = currConflict.getKey().getValue();
-			final Set<IN4JSProject> culprits = currConflict.getValue();
+			final Set<N4JSProjectConfigSnapshot> culprits = currConflict.getValue();
 			final String culpritsStr = " - "
-					+ culprits.stream().map(c -> c.getProjectName().getRawName()).collect(Collectors.joining("\n - "));
+					+ culprits.stream().map(c -> c.getName()).collect(Collectors.joining("\n - "));
 			msgs.add("several projects define an implementation for API project '" + apiId
 					+ "' with implementation ID '" + implId + "':\n" + culpritsStr);
 		}
@@ -247,7 +264,7 @@ public class ApiImplMapping {
 	 * Returns the API project with the given projectName or <code>null</code> if this mapping does not contain any API
 	 * -> implementation associations for an API project with the given projectName.
 	 */
-	public IN4JSProject getApi(N4JSProjectName apiProjectName) {
+	public N4JSProjectConfigSnapshot getApi(N4JSProjectName apiProjectName) {
 		final ApiImplMapping.ApiImplAssociation assoc = assocs.get(apiProjectName);
 		return assoc != null ? assoc.api : null;
 	}
@@ -255,7 +272,7 @@ public class ApiImplMapping {
 	/**
 	 * Returns all implementation projects for the API project with the given projectName registered in this mapping.
 	 */
-	public Collection<IN4JSProject> getImpls(N4JSProjectName apiProjectName) {
+	public Collection<N4JSProjectConfigSnapshot> getImpls(N4JSProjectName apiProjectName) {
 		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiProjectName);
 		return pair != null ? pair.getImpls() : Collections.emptyList();
 	}
@@ -277,7 +294,7 @@ public class ApiImplMapping {
 	 * {@link PackageJsonProperties#NAME "name"}) whereas <code>implId</code> is an implementation ID (i.e. package.json
 	 * property {@link PackageJsonProperties#IMPLEMENTATION_ID "implementationId"} and <b>not</b> <code>"name"</code>).
 	 */
-	public IN4JSProject getImpl(N4JSProjectName apiProjectName, N4JSProjectName implId) {
+	public N4JSProjectConfigSnapshot getImpl(N4JSProjectName apiProjectName, N4JSProjectName implId) {
 		final ApiImplMapping.ApiImplAssociation pair = assocs.get(apiProjectName);
 		return pair != null ? pair.getImpl(implId) : null;
 	}

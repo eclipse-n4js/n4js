@@ -55,6 +55,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -68,8 +69,8 @@ import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
 import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement;
@@ -112,7 +113,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 	@Inject
 	private SemverHelper semverHelper;
 
@@ -974,7 +975,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		final String moduleSpecifier = moduleSpecifierLiteral.getValue();
 		final String relativeModulePath = moduleSpecifier.replace('/', File.separator.charAt(0));
 
-		final Path absoluteProjectPath = getAbsoluteProjectPath(uri);
+		final Path absoluteProjectPath = getAbsoluteProjectPath(moduleSpecifierLiteral, uri);
 
 		// obtain a stream of File representations of all declared source containers
 		final Stream<File> sourceFolders = getAllSourceContainerPaths().stream()
@@ -1032,19 +1033,21 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	 * Returns {@code false} and adds issues to {@code pathLiteral} otherwise.
 	 */
 	private boolean holdsExistingDirectoryPath(JSONStringLiteral pathLiteral) {
-		final URI resourceURI = pathLiteral.eResource().getURI();
-		final Optional<? extends IN4JSProject> n4jsProject = n4jsCore.findProject(resourceURI);
+		final Resource resource = pathLiteral.eResource();
+		final URI resourceURI = resource.getURI();
+		final Optional<? extends N4JSProjectConfigSnapshot> n4jsProject = n4jsCore.findProject(resource);
 
 		if (!n4jsProject.isPresent()) {
 			// container project cannot be determined, fail gracefully (validation running on non-N4JS project?)
 			return true;
 		}
 
-		final URI projectLocation = n4jsProject.get().getLocation().toURI();
+		final FileURI path = n4jsProject.get().getPathAsFileURI();
+		final URI projectLocation = path.toURI();
 		// resolve against project uri with trailing slash
 		final URI projectRelativeResourceURI = resourceURI.deresolve(projectLocation.appendSegment(""));
 
-		final Path absoluteProjectPath = n4jsProject.get().getLocation().toFileSystemPath();
+		final Path absoluteProjectPath = path.toFileSystemPath();
 		if (absoluteProjectPath == null) {
 			throw new IllegalStateException(
 					"Failed to compute project path for package.json at " + resourceURI.toString());
@@ -1104,12 +1107,12 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	 *
 	 * Returns {@code null} if no N4JS project can be found that contains the given {@code nestedLocation}.
 	 */
-	private Path getAbsoluteProjectPath(URI nestedLocation) {
-		Optional<? extends IN4JSProject> n4jsProject = n4jsCore.findProject(nestedLocation);
+	private Path getAbsoluteProjectPath(EObject context, URI nestedLocation) {
+		Optional<? extends N4JSProjectConfigSnapshot> n4jsProject = n4jsCore.findProject(context, nestedLocation);
 		if (!n4jsProject.isPresent()) {
 			return null;
 		}
-		return n4jsProject.get().getLocation().toFileSystemPath();
+		return n4jsProject.get().getPathAsFileURI().toFileSystemPath();
 	}
 
 	/**

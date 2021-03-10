@@ -71,6 +71,12 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 		return name2Project.get(name);
 	}
 
+	/** Find the project with the given exact project path. Does <em>not</em> find projects for nested locations. */
+	@SuppressWarnings("hiding")
+	public ProjectConfigSnapshot findProjectByPath(URI path) {
+		return projectPath2Project.get(path);
+	}
+
 	/**
 	 * Finds the project having a path that is a prefix of the given URI. Returns <code>null</code> if no such project
 	 * is found. The given URI may point to a file or folder.
@@ -97,10 +103,8 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 		if (candidate != null) {
 			// in addition to checking the source folder paths, we have to make sure the source folder actually
 			// "contains" the URI as defined by method SourceFolderSnapshot#contains(URI):
-			for (SourceFolderSnapshot sourceFolder : candidate.getSourceFolders()) {
-				if (sourceFolder.contains(nestedSourceLocation)) {
-					return candidate;
-				}
+			if (candidate.findSourceFolderContaining(nestedSourceLocation) != null) {
+				return candidate;
 			}
 		}
 		return null;
@@ -114,10 +118,9 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 		if (candidate != null) {
 			// in addition to checking the source folder paths, we have to make sure the source folder actually
 			// "contains" the URI as defined by method SourceFolderSnapshot#contains(URI):
-			for (SourceFolderSnapshot sourceFolder : candidate.getSourceFolders()) {
-				if (sourceFolder.contains(nestedSourceLocation)) {
-					return sourceFolder;
-				}
+			SourceFolderSnapshot sourceFolder = candidate.findSourceFolderContaining(nestedSourceLocation);
+			if (sourceFolder != null) {
+				return sourceFolder;
 			}
 		}
 		return null;

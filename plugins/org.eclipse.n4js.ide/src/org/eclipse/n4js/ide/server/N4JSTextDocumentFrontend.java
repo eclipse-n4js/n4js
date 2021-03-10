@@ -30,8 +30,8 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollector;
@@ -59,7 +59,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
-	private IN4JSCore core;
+	private IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
@@ -102,12 +102,12 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			TextDocumentPositionParams positionParams, CancelIndicator cancelIndicator) {
 
 		URI uri = rtc.getURI();
-		IN4JSProject project = core.findProject(uri).orNull();
-		String targetFileName = resourceNameComputer.generateFileDescriptor(uri, JS_FILE_EXTENSION);
+		N4JSProjectConfigSnapshot project = n4jsCore.findProject(rtc.getResource()).orNull();
+		String targetFileName = resourceNameComputer.generateFileDescriptor(rtc.getResource(), uri, JS_FILE_EXTENSION);
 		List<Location> locations = new ArrayList<>();
 		if (project != null && !Strings.isNullOrEmpty(targetFileName)) {
 			String outputPath = project.getOutputPath();
-			Path projectLocation = project.getLocation().toFileSystemPath();
+			Path projectLocation = project.getPathAsFileURI().toFileSystemPath();
 			Path genFilePath = projectLocation.resolve(outputPath + "/" + targetFileName);
 
 			Range range = findRange(positionParams, genFilePath);

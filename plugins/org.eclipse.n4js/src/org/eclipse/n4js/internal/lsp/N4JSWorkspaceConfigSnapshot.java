@@ -11,8 +11,14 @@
 package org.eclipse.n4js.internal.lsp;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
@@ -64,6 +70,12 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 
 	/** {@inheritDoc} */
 	@Override
+	public N4JSProjectConfigSnapshot findProjectByPath(@SuppressWarnings("hiding") URI path) {
+		return (N4JSProjectConfigSnapshot) super.findProjectByPath(path);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public N4JSProjectConfigSnapshot findProjectByNestedLocation(URI nestedLocation) {
 		return (N4JSProjectConfigSnapshot) super.findProjectByNestedLocation(nestedLocation);
 	}
@@ -78,5 +90,22 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 	@Override
 	public N4JSSourceFolderSnapshot findSourceFolderContaining(URI nestedSourceLocation) {
 		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(nestedSourceLocation);
+	}
+
+	// FIXME this method has a bad name (the uri is just sanitized)
+	public SafeURI<?> toProjectLocation(URI uri) {
+		return new FileURI(new UriExtensions().withEmptyAuthority(uri));
+	}
+
+	public boolean isNoValidate(URI nestedLocation, WildcardPathFilterHelper wildcardHelper) {
+		N4JSProjectConfigSnapshot project = findProjectContaining(nestedLocation);
+		return project != null
+				&& project.isMatchedByModuleFilterOfType(nestedLocation, ModuleFilterType.NO_VALIDATE, wildcardHelper);
+	}
+
+	public String getOutputPath(URI nestedLocation) {
+		N4JSProjectConfigSnapshot project = findProjectContaining(nestedLocation);
+		ProjectDescription pd = project != null ? project.getProjectDescription() : null;
+		return pd != null ? pd.getOutputPath() : null;
 	}
 }

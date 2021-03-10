@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 
 import com.google.inject.Inject;
@@ -67,8 +67,8 @@ abstract public class JSDoc2SpecProcessor {
 	 * @throws InterruptedException
 	 *             thrown when user cancels the operation
 	 */
-	public Collection<SpecFile> convert(File docRoot, Collection<IN4JSProject> projects,
-			Function<IN4JSProject, ResourceSet> resSetProvider, SubMonitorMsg monitor)
+	public Collection<SpecFile> convert(File docRoot, Collection<N4JSProjectConfigSnapshot> projects,
+			Function<N4JSProjectConfigSnapshot, ResourceSet> resSetProvider, SubMonitorMsg monitor)
 			throws IOException, InterruptedException {
 
 		setRootDir(docRoot);
@@ -97,8 +97,9 @@ abstract public class JSDoc2SpecProcessor {
 	 *             thrown when user cancels the operation
 	 * @see N4JSDReader#readN4JSDs(Collection, Function, SubMonitorMsg)
 	 */
-	public Collection<SpecInfo> readN4JSDs(Collection<IN4JSProject> projects,
-			Function<IN4JSProject, ResourceSet> resSetProvider, SubMonitorMsg monitor) throws InterruptedException {
+	public Collection<SpecInfo> readN4JSDs(Collection<N4JSProjectConfigSnapshot> projects,
+			Function<N4JSProjectConfigSnapshot, ResourceSet> resSetProvider, SubMonitorMsg monitor)
+			throws InterruptedException {
 
 		SubMonitorMsg sub = monitor.convert(100 * (projects.size() + 2));
 		n4jsdReader.issueAcceptor = this.issueAcceptor;

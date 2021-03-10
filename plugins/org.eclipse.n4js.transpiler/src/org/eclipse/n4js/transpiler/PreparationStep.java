@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.generator.UnresolvedProxyInSubGeneratorException;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -41,8 +42,7 @@ import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.n4idl.versioning.VersionHelper;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -107,7 +107,7 @@ public class PreparationStep {
 	};
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
@@ -125,7 +125,7 @@ public class PreparationStep {
 	 */
 	public TranspilerState prepare(Script script, GeneratorOption[] options) {
 		final N4JSResource resource = (N4JSResource) script.eResource();
-		final IN4JSProject project = n4jsCore.findProject(resource.getURI()).orNull();
+		final N4JSProjectConfigSnapshot project = n4jsCore.findProject(resource).orNull();
 		final ContainerTypesHelper.MemberCollector memberCollector = containerTypesHelper.fromContext(resource);
 		final Tracer tracer = new Tracer();
 		final InformationRegistry info = new InformationRegistry();

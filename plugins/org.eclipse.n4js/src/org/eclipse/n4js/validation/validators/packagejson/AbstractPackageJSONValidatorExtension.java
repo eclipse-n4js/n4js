@@ -16,6 +16,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
@@ -28,8 +31,7 @@ import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
@@ -70,7 +72,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 	private static final String JSON_DOCUMENT = "JSON_DOCUMENT";
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	@Inject
@@ -287,20 +289,21 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		}
 
 		// this validator extension only applies to package.json files located in the root of a project
-		URI pckjsonUri = eObject.eResource().getURI();
+		Resource resource = eObject.eResource();
+		URI pckjsonUri = resource.getURI();
 		String fileName = fileExtensionCalculator.getFilenameWithoutXpectExtension(pckjsonUri);
-		if (!fileName.equals(IN4JSProject.PACKAGE_JSON)) {
+		if (!fileName.equals(N4JSGlobals.PACKAGE_JSON)) {
 			return false;
 		}
-		Optional<? extends IN4JSProject> optProject = n4jsCore.findProject(pckjsonUri);
+		Optional<? extends N4JSProjectConfigSnapshot> optProject = n4jsCore.findProject(resource);
 		if (!optProject.isPresent()) {
 			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
 			// (maybe during manual creation of a new project); therefore we cannot log an error here:
 			// LOGGER.error("no containing project found for package.json URI:" + pckjsonUri);
 			return false;
 		}
-		IN4JSProject project = optProject.get();
-		URI expectedLocation = project.getLocation().appendSegment(IN4JSProject.PACKAGE_JSON).toURI();
+		N4JSProjectConfigSnapshot project = optProject.get();
+		URI expectedLocation = project.getPathAsFileURI().appendSegment(N4JSGlobals.PACKAGE_JSON).toURI();
 
 		// In test Xpect scenarios (see bundle packagejson.xpect.tests) package.json files can be named package.json.xt
 		URI pckjsonUriWithoutXpectExtension = fileExtensionCalculator.getUriWithoutXpectExtension(pckjsonUri);
@@ -531,7 +534,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 	private boolean isPckjsonOfPlainJS(JSONDocument jsonDocument) {
 		URI uri = jsonDocument.eResource().getURI();
 		String fileExtension = fileExtensionCalculator.getFilenameWithoutXpectExtension(uri);
-		boolean isPckjson = fileExtension.equals(IN4JSProject.PACKAGE_JSON);
+		boolean isPckjson = fileExtension.equals(N4JSGlobals.PACKAGE_JSON);
 		if (isPckjson) {
 			ProjectDescriptionBuilder pdb = pckjsonHelper.convertToProjectDescription(jsonDocument, true, "xyz");
 			return pdb != null && pdb.build().getProjectType() == ProjectType.PLAINJS;

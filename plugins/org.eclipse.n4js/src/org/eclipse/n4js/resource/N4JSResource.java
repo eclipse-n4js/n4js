@@ -346,11 +346,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Tells if this resource represents an {@link N4JSLanguageHelper#isOpaqueModule(URI) opaque module}. Intended as
-	 * convenience and for client code that is unable to inject {@link N4JSLanguageHelper} (e.g. in builder).
+	 * Tells if this resource represents an {@link N4JSLanguageHelper#isOpaqueModule(Resource) opaque module}. Intended
+	 * as convenience and for client code that is unable to inject {@link N4JSLanguageHelper} (e.g. in builder).
 	 */
 	public boolean isOpaque() {
-		return langHelper.isOpaqueModule(this.uri);
+		return langHelper.isOpaqueModule(this);
 	}
 
 	/**

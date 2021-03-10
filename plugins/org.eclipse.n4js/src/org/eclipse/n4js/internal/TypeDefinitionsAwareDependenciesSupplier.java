@@ -19,12 +19,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfig;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-
-import com.google.common.collect.ImmutableList;
+import org.eclipse.n4js.projectModel.locations.FileURI;
 
 /**
  * Supplier for the ordered list of dependencies of a given {@link IN4JSProject} such that it is assured that type
@@ -36,38 +37,51 @@ import com.google.common.collect.ImmutableList;
 public class TypeDefinitionsAwareDependenciesSupplier {
 
 	/**
-	 * Returns an iterable of dependencies of the given {@code project}.
+	 * Returns the dependencies of the given project, in the same order as defined by {@link #get(FileURI, Collection)}.
+	 */
+	static public List<N4JSProjectConfig> get(N4JSWorkspaceConfig workspace, N4JSProjectConfig project) {
+		List<N4JSProjectConfig> dependencies = project.getDependencies().stream()
+				.map(depName -> workspace.findProjectByName(depName))
+				.filter(p -> p != null).collect(Collectors.toList());
+		return get(project.getPathAsFileURI(), dependencies);
+	}
+
+	/**
+	 * Returns the given project dependencies in a well-defined order.
 	 *
 	 * Re-arranges the positions of type definition projects in such that they always occur right in front of the
 	 * corresponding implementation project. As a consequence, the contents of the type definition source containers
 	 * always has precedence over implementation project's source containers, enabling shadowing on the module-level.
 	 *
+	 * @param projectPath
+	 *            path of the project.
+	 * @param dependencies
+	 *            resolved dependencies of the project.
 	 * @throws IllegalStateException
 	 *             This method will always return with a list of all dependencies declared by the given {@code project}.
 	 *             In case the computation encounters a problem that results in the loss of a dependency, this method
 	 *             will throw an {@link IllegalStateException}.
 	 */
-	static public Iterable<IN4JSProject> get(IN4JSProject project) {
-		final ImmutableList<? extends IN4JSProject> dependencies = project.getDependencies();
+	static public List<N4JSProjectConfig> get(FileURI projectPath, Collection<N4JSProjectConfig> dependencies) {
 		// keep ordered list of type definition projects per project ID of the definesPackage property
-		final Map<N4JSProjectName, List<IN4JSProject>> typeDefinitionsById = new HashMap<>();
+		final Map<String, List<N4JSProjectConfig>> typeDefinitionsById = new HashMap<>();
 		// runtime dependencies (non-type dependencies)
-		final List<IN4JSProject> runtimeDependencies = new LinkedList<>();
+		final List<N4JSProjectConfig> runtimeDependencies = new LinkedList<>();
 
 		// keep track of unused type definition projects (this set also assures that
 		// conflicts do not remove type definition dependencies entirely)
-		final Set<IN4JSProject> unusedTypeDefinitionProjects = new HashSet<>();
+		final Set<N4JSProjectConfig> unusedTypeDefinitionProjects = new HashSet<>();
 
 		// separate type definition projects from runtime projects
-		for (IN4JSProject dependency : dependencies) {
-			if (dependency.getProjectType() == ProjectType.DEFINITION) {
-				final N4JSProjectName definesPackage = dependency.getDefinesPackageName();
-				if (definesPackage != null) {
+		for (N4JSProjectConfig dependency : dependencies) {
+			if (dependency.getType() == ProjectType.DEFINITION) {
+				final String definedPackage = dependency.getProjectDescription().getDefinesPackage();
+				if (definedPackage != null) {
 					// get existing or create new list of type definition projects
-					List<IN4JSProject> typeDefinitionsProjects = typeDefinitionsById.getOrDefault(definesPackage,
+					List<N4JSProjectConfig> typeDefinitionsProjects = typeDefinitionsById.getOrDefault(definedPackage,
 							new ArrayList<>());
 					typeDefinitionsProjects.add(dependency);
-					typeDefinitionsById.put(definesPackage, typeDefinitionsProjects);
+					typeDefinitionsById.put(definedPackage, typeDefinitionsProjects);
 				}
 				unusedTypeDefinitionProjects.add(dependency);
 			} else {
@@ -75,16 +89,16 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 			}
 		}
 
-		final List<IN4JSProject> orderedDependencies = new LinkedList<>();
+		final List<N4JSProjectConfig> orderedDependencies = new LinkedList<>();
 
 		// construct ordered list of dependencies
-		for (IN4JSProject dependency : runtimeDependencies) {
-			final N4JSProjectName projectName = dependency.getProjectName();
-			final Collection<IN4JSProject> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectName,
+		for (N4JSProjectConfig dependency : runtimeDependencies) {
+			final String projectName = dependency.getName();
+			final Collection<N4JSProjectConfig> typeDefinitionProjects = typeDefinitionsById.getOrDefault(projectName,
 					Collections.emptyList());
 
 			// first list all type definition dependencies
-			for (IN4JSProject typeDefinitionProject : typeDefinitionProjects) {
+			for (N4JSProjectConfig typeDefinitionProject : typeDefinitionProjects) {
 				// only add type definition, if it has not been added further up already
 				if (unusedTypeDefinitionProjects.contains(typeDefinitionProject)) {
 					orderedDependencies.add(typeDefinitionProject);
@@ -102,7 +116,7 @@ public class TypeDefinitionsAwareDependenciesSupplier {
 		// make lost dependencies very explicit
 		if (orderedDependencies.size() != dependencies.size()) {
 			throw new IllegalStateException(
-					"Failed to compute dependency order for project " + project.getLocation()
+					"Failed to compute dependency order for project " + projectPath
 							+ ": Ordered list of dependencies does not match original dependencies list in length.\n"
 							+ "Length " + orderedDependencies.size() + ": " + orderedDependencies.toString() + " vs. "
 							+ "Length " + dependencies.size() + ": " + dependencies.toString());

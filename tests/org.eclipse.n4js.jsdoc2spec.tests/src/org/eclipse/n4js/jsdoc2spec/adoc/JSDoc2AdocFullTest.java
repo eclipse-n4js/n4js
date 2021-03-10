@@ -27,10 +27,10 @@ import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessorFullTest;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SubMonitorMsg;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -73,7 +73,7 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 				N4JSModel<FileURI> model = new N4JSModel<>(workspace);
 				injector.injectMembers(model);
 				runtimeCore = new N4JSRuntimeCore(workspace, model);
-				IN4JSProject project = runtimeCore.findProject(uriProject.toURI()).get();
+				N4JSProjectConfigSnapshot project = runtimeCore.findProject(uriProject.toURI()).get();
 
 				assertNotNull("Project not found", project);
 

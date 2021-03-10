@@ -51,7 +51,7 @@ import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.n4jsx.ReactHelper
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -120,7 +120,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Named(NAMED_DELEGATE)
 	IScopeProvider delegate;
 
-	@Inject private IN4JSCore n4jsCore;
+	@Inject private IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	ResourceDescriptionsProvider resourceDescriptionsProvider;
@@ -348,7 +348,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		// filter out clashing module name (can be main module with the same name but in different project)
 		return new FilteringScope(projectImportEnabledScope, [
-			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(it, importDeclaration);
+			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(resource, it, importDeclaration);
 		]);
 	}
 
@@ -362,7 +362,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(initialScope,
 			resourceDescriptions, reference.EReferenceType);
 
-		val projectImportEnabledScope = ProjectImportEnablingScope.create(n4jsCore, resource, importDeclaration,
+		val ws = n4jsCore.getWorkspaceConfig(resource).get();
+		val projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, importDeclaration,
 			initialScope, delegateMainModuleAwareScope);
 
 		return projectImportEnabledScope;

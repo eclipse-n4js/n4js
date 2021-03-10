@@ -2,11 +2,8 @@ package org.eclipse.n4js.json.extension;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.json.JSON.JSONDocument;
-import org.eclipse.n4js.utils.resources.IBuildSuppressingResourceDescriptionManager;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -22,12 +19,6 @@ import org.eclipse.xtext.util.IAcceptor;
  * {@link IDefaultResourceDescriptionStrategy} for certain JSON files. Also handles creation of qualified names.
  */
 public interface IJSONResourceDescriptionExtension {
-
-	/**
-	 * Tells if the given resource with the given URI should be built by the incremental builder. See
-	 * {@link IBuildSuppressingResourceDescriptionManager#isToBeBuilt(URI, Resource)} for details.
-	 */
-	public boolean isToBeBuilt(URI uri, Resource resource);
 
 	/**
 	 * Batch operation to check whether a description is affected by any given delta in the given context. See

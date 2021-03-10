@@ -38,11 +38,11 @@ import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.GeneratorOption;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
@@ -61,7 +61,7 @@ import com.google.inject.Inject;
 public class XpectN4JSES5TranspilerHelper {
 
 	@Inject
-	private IN4JSCore core;
+	private IN4JSCoreNEW core;
 
 	@Inject
 	private XpectN4JSES5GeneratorHelper xpectGenerator;
@@ -207,21 +207,21 @@ public class XpectN4JSES5TranspilerHelper {
 			return;
 		}
 
-		Optional<? extends IN4JSSourceContainer> sourceOpt = core.findN4JSSourceContainer(dep.getURI());
+		Optional<N4JSSourceFolderSnapshot> sourceOpt = core.findN4JSSourceContainer(dep, dep.getURI());
 		if (sourceOpt.isPresent()) {
-			IN4JSSourceContainer source = sourceOpt.get();
-			IN4JSProject project = source.getProject();
-			for (IN4JSSourceContainer c : project.getSourceContainers()) {
+			N4JSSourceFolderSnapshot source = sourceOpt.get();
+			N4JSProjectConfigSnapshot project = core.findProjectContaining(dep, dep.getURI()).get();
+			for (N4JSSourceFolderSnapshot c : project.getSourceFolders()) {
 				if (c.isExternal()) {
 					String sourceRelativePath = dep.getURI().toString()
-							.replace(source.getLocation().toString(), "");
+							.replace(source.getPathAsFileURI().toString(), "");
 					String[] potentialExternalSourceRelativeURISegments = null;
 					String potentialExternalSourceRelativePath = sourceRelativePath.replace(".n4jsd", ".js");
 					potentialExternalSourceRelativeURISegments = URI.createURI(potentialExternalSourceRelativePath)
 							.segments();
 
 					if (potentialExternalSourceRelativeURISegments != null) {
-						URI potentialExternalSourceURI = c.getLocation().appendSegments(
+						URI potentialExternalSourceURI = c.getPathAsFileURI().appendSegments(
 								potentialExternalSourceRelativeURISegments).toURI();
 						try {
 							Resource externalDep = dep.getResourceSet().getResource(potentialExternalSourceURI, true);
@@ -291,7 +291,7 @@ public class XpectN4JSES5TranspilerHelper {
 				? script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
 				: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
-		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
+		N4JSProjectConfigSnapshot project = core.findProject(script.eResource()).orNull();
 		if (project != null) {
 			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, includeProjectName);
 		}

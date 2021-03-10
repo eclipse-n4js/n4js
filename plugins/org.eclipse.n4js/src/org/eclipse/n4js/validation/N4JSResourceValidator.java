@@ -17,16 +17,18 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -52,11 +54,13 @@ import com.google.inject.Inject;
 public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 	@Inject
 	private N4JSCache n4jsCache;
+	@Inject
+	private WildcardPathFilterHelper wildcardHelper;
 
 	private List<Issue> doValidate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		try (Measurement m = N4JSDataCollectors.dcValidations.getMeasurement()) {
@@ -66,14 +70,15 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	private List<Issue> doValidateWithMeasurement(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
-		final IN4JSProject project = n4jsCore.findProject(resource.getURI()).orNull();
+		final N4JSWorkspaceConfigSnapshot ws = n4jsCore.getWorkspaceConfig(resource).get();
+		final N4JSProjectConfigSnapshot project = ws.findProjectContaining(resource.getURI());
 		if (project != null && !isValidFileTypeForProjectType(resource, project)) {
 			final Issue issue = createInvalidFileTypeError(resource, project);
 			return Collections.singletonList(issue);
 		}
 
 		// QUICK EXIT #2: for files that match a "noValidate" module filter from package.json
-		if (n4jsCore.isNoValidate(resource.getURI())) {
+		if (ws.isNoValidate(resource.getURI(), wildcardHelper)) {
 			return Collections.emptyList();
 		}
 
@@ -155,9 +160,9 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		}
 	}
 
-	private boolean isValidFileTypeForProjectType(Resource resource, IN4JSProject project) {
+	private boolean isValidFileTypeForProjectType(Resource resource, N4JSProjectConfigSnapshot project) {
 		final ResourceType resourceType = ResourceType.getResourceType(resource);
-		final ProjectType projectType = project.getProjectType();
+		final ProjectType projectType = project.getType();
 		if (resourceType == ResourceType.JS
 				|| resourceType == ResourceType.JSX
 				|| resourceType == ResourceType.N4JS
@@ -173,8 +178,8 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		return true;
 	}
 
-	private static Issue createInvalidFileTypeError(Resource res, IN4JSProject project) {
-		final String projectTypeStr = PackageJsonUtils.getProjectTypeStringRepresentation(project.getProjectType());
+	private static Issue createInvalidFileTypeError(Resource res, N4JSProjectConfigSnapshot project) {
+		final String projectTypeStr = PackageJsonUtils.getProjectTypeStringRepresentation(project.getType());
 		final String msg = IssueCodes.getMessageForINVALID_FILE_TYPE_FOR_PROJECT_TYPE(projectTypeStr);
 		return createFileIssue(res, msg, IssueCodes.INVALID_FILE_TYPE_FOR_PROJECT_TYPE);
 	}

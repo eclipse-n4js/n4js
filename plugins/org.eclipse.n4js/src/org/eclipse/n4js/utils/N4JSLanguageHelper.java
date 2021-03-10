@@ -16,10 +16,11 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
@@ -43,7 +44,7 @@ public final class N4JSLanguageHelper {
 	private N4JSGrammarAccess grammarAccess;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	/**
 	 * Returns the reserved ECMAScript keywords which are defined in the grammar. The result is cached.
@@ -92,14 +93,27 @@ public final class N4JSLanguageHelper {
 				.collect(Collectors.toList());
 	}
 
+	@Deprecated
+	public boolean isOpaqueModule(URI resourceURI) {
+		N4JSProjectConfigSnapshot project = n4jsCore.findProject(resourceURI).orNull();
+		ProjectType projectType = project != null ? project.getType() : null;
+		return isOpaqueModule(projectType, resourceURI);
+	}
+
 	/**
-	 * Opaque resources are not post processed neither validated. The transpiler will wrap opaque resources only.
+	 * Opaque resources are not post-processed neither validated. The transpiler will wrap opaque resources only.
 	 *
-	 * @param resourceURI
-	 *            The URI of a resource
+	 * @param resource
+	 *            The resource to check.
 	 * @return true if the given resource is opaque.
 	 */
-	public boolean isOpaqueModule(URI resourceURI) {
+	public boolean isOpaqueModule(Resource resource) {
+		N4JSProjectConfigSnapshot project = n4jsCore.findProject(resource).orNull();
+		ProjectType projectType = project != null ? project.getType() : null;
+		return isOpaqueModule(projectType, resource.getURI());
+	}
+
+	public boolean isOpaqueModule(ProjectType projectType, URI resourceURI) {
 		ResourceType resourceType = ResourceType.getResourceType(resourceURI);
 
 		switch (resourceType) {
@@ -110,11 +124,9 @@ public final class N4JSLanguageHelper {
 		case N4JS:
 		case N4JSX:
 		case N4IDL:
-			IN4JSProject project = n4jsCore.findProject(resourceURI).orNull();
-			if (project == null) {
+			if (projectType == null) {
 				return false; // happens in tests
 			}
-			ProjectType projectType = project.getProjectType();
 			// N4JS files of definition projects are not processed.
 			return projectType == ProjectType.DEFINITION;
 

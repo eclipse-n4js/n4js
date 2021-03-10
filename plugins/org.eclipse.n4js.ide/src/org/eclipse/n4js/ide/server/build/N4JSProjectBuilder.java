@@ -21,10 +21,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.xtext.server.ResourceChangeSet;
 import org.eclipse.n4js.xtext.server.build.IBuildRequestFactory;
@@ -43,9 +41,6 @@ import com.google.inject.Inject;
  */
 public class N4JSProjectBuilder extends ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(N4JSProjectBuilder.class);
-
-	@Inject
-	private IN4JSCore n4jsCore;
 
 	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
@@ -111,13 +106,15 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	/** Generates the test catalog for the project. */
 	private void writeTestCatalog() {
-		ProjectConfigSnapshot projectConfig = getProjectConfig();
-		IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(projectConfig.getName())).orNull();
+		N4JSWorkspaceConfigSnapshot workspaceConfig = (N4JSWorkspaceConfigSnapshot) workspaceManager
+				.getWorkspaceConfig();
+		N4JSProjectConfigSnapshot projectConfig = getProjectConfig();
 		File testCatalog = getTestCatalogFile(projectConfig);
 
 		String catalog = testCatalogSupplier.get(
+				workspaceConfig,
 				getResourceSet(),
-				project,
+				projectConfig,
 				true); // do not include "endpoint" property here
 
 		if (catalog != null) {

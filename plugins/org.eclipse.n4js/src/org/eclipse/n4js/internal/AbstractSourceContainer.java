@@ -34,6 +34,10 @@ abstract class AbstractSourceContainer {
 		this.relativeLocation = relativeLocation;
 	}
 
+	public SourceContainerType getType() {
+		return type;
+	}
+
 	public boolean isTest() {
 		return type == SourceContainerType.TEST;
 	}

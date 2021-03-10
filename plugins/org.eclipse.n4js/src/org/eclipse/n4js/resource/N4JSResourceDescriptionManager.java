@@ -18,9 +18,11 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
@@ -58,13 +60,13 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	private N4JSCrossReferenceComputer crossReferenceComputer;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 	@Inject
 	private FileExtensionTypeHelper fileExtensionTypeHelper;
 
 	@Inject
-	private N4JSLanguageHelper langHelper;
+	private N4JSLanguageHelper languageHelper;
 
 	@Override
 	protected IResourceDescription createResourceDescription(final Resource resource,
@@ -100,7 +102,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 
 		// Opaque modules cannot contain any references to one of the deltas.
 		// Thus, they will never be affected by any change.
-		if (langHelper.isOpaqueModule(candidateURI)) {
+		if (languageHelper.isOpaqueModule(candidateURI)) {
 			return false;
 		}
 
@@ -109,7 +111,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 			for (IResourceDescription.Delta delta : deltas) {
 				URI uri = delta.getUri();
 				// if uri looks like a N4JS project description file (i.e. package.json)
-				if (IN4JSProject.PACKAGE_JSON.equalsIgnoreCase(uri.lastSegment())) {
+				if (N4JSGlobals.PACKAGE_JSON.equalsIgnoreCase(uri.lastSegment())) {
 					URI prefixURI = uri.trimSegments(1).appendSegment("");
 					if (candidateURI.replacePrefix(prefixURI, prefixURI) != null) {
 						return true;
@@ -176,8 +178,8 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	 * 'toUri'.
 	 */
 	private boolean hasDependencyTo(URI fromUri, URI toUri) {
-		final IN4JSProject fromProject = n4jsCore.findProject(fromUri).orNull();
-		final IN4JSProject toProject = n4jsCore.findProject(toUri).orNull();
+		final N4JSProjectConfigSnapshot fromProject = n4jsCore.findProject(fromUri).orNull();
+		final N4JSProjectConfigSnapshot toProject = n4jsCore.findProject(toUri).orNull();
 
 		if (null != fromProject && null != toProject) { // Consider libraries. TODO: implement it at #findProject(URI)
 
@@ -185,9 +187,10 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 				return true;
 			}
 
-			Iterable<? extends IN4JSProject> fromProjectDependencies = getDependenciesForIsAffected(fromProject);
-			for (IN4JSProject fromProjectDependency : fromProjectDependencies) {
-				if (Objects.equals(fromProjectDependency, toProject)) {
+			String toProjectName = toProject.getName();
+			Iterable<ProjectReference> fromProjectDependencies = getDependenciesForIsAffected(fromProject);
+			for (ProjectReference fromProjectDependencyName : fromProjectDependencies) {
+				if (Objects.equals(fromProjectDependencyName.getProjectName(), toProjectName)) {
 					return true;
 				}
 			}
@@ -199,13 +202,13 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	 * Returns project dependencies of the given project that should be considered when computing the
 	 * {@link #isAffected(Collection, IResourceDescription, IResourceDescriptions) isAffected()} relation.
 	 * <p>
-	 * Normally this method should return {@link IN4JSProject#getDependenciesAndImplementedApis()}, but subclasses may
-	 * choose to filter out certain dependencies. In effect, filtering out certain dependencies will mean that
-	 * incremental builds won't propagate along those dependencies.
+	 * Normally this method should return {@link N4JSProjectConfigSnapshot#getDependenciesAndImplementedApis()}, but
+	 * subclasses may choose to filter out certain dependencies. In effect, filtering out certain dependencies will mean
+	 * that incremental builds won't propagate along those dependencies.
 	 * <p>
 	 * NOTE: only required for external library workspace in Eclipse.
 	 */
-	protected Iterable<? extends IN4JSProject> getDependenciesForIsAffected(IN4JSProject fromProject) {
+	protected Iterable<ProjectReference> getDependenciesForIsAffected(N4JSProjectConfigSnapshot fromProject) {
 		return fromProject.getDependenciesAndImplementedApis();
 	}
 

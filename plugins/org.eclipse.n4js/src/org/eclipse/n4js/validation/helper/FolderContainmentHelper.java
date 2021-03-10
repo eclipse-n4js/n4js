@@ -13,21 +13,19 @@ package org.eclipse.n4js.validation.helper;
 import java.nio.file.Path;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
-
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
 
 /**
  * A helper class to compute whether two folders (source folders and output folder specifically) are contained within
  * each other.
  */
+// FIXME this entire class is only used from AbstractSubGenerator and can probably be removed!!!
 public class FolderContainmentHelper {
-	@Inject
-	private IN4JSCore n4jsCore;
 
 	/**
 	 * Returns {@code true} iff the given URI refers to a resource that is located in the declared output folder of the
@@ -35,12 +33,12 @@ public class FolderContainmentHelper {
 	 *
 	 * Returns {@code false} if the given URI is not contained by any known {@link IN4JSProject}.
 	 */
-	public boolean isContainedInOutputFolder(URI uri) {
-		final IN4JSProject project = n4jsCore.findProject(uri).orNull();
+	public boolean isContainedInOutputFolder(N4JSWorkspaceConfigSnapshot ws, URI uri) {
+		final N4JSProjectConfigSnapshot project = ws.findProjectByNestedLocation(uri);
 		if (project != null) {
 			final SafeURI<?> absoluteOutputLocation = getOutputURI(project);
 			if (absoluteOutputLocation != null) {
-				if (isContained(n4jsCore.toProjectLocation(uri), absoluteOutputLocation)) {
+				if (isContained(ws.toProjectLocation(uri), absoluteOutputLocation)) {
 					return true;
 				}
 			}
@@ -54,9 +52,9 @@ public class FolderContainmentHelper {
 	 *
 	 * Returns {@code false} if the given URI is not contained by any known {@link IN4JSProject}.
 	 */
-	public boolean isContainedInSourceContainer(SafeURI<?> location) {
-		final Optional<? extends IN4JSSourceContainer> container = n4jsCore.findN4JSSourceContainer(location.toURI());
-		if (container.isPresent()) {
+	public boolean isContainedInSourceContainer(N4JSWorkspaceConfigSnapshot ws, SafeURI<?> location) {
+		final N4JSSourceFolderSnapshot container = ws.findSourceFolderContaining(location.toURI());
+		if (container != null) {
 			return true;
 		}
 		return false;
@@ -68,10 +66,11 @@ public class FolderContainmentHelper {
 	 *
 	 * Returns {@code false} if the given project declares no output path.
 	 */
-	public boolean isOutputContainedInSourceContainer(IN4JSProject project) {
+	public boolean isOutputContainedInSourceContainer(N4JSWorkspaceConfigSnapshot ws,
+			N4JSProjectConfigSnapshot project) {
 		final SafeURI<?> absoluteOutputLocation = getOutputURI(project);
 		if (absoluteOutputLocation != null) {
-			return isContainedInSourceContainer(absoluteOutputLocation);
+			return isContainedInSourceContainer(ws, absoluteOutputLocation);
 		}
 		return false;
 	}
@@ -94,10 +93,10 @@ public class FolderContainmentHelper {
 	 *
 	 * @See {@link IN4JSProject#getOutputPath()}
 	 */
-	private static SafeURI<?> getOutputURI(IN4JSProject project) {
+	private static SafeURI<?> getOutputURI(N4JSProjectConfigSnapshot project) {
 		final String outputPathName = project.getOutputPath();
 		if (outputPathName != null) {
-			return project.getLocation().resolve(outputPathName);
+			return project.getPathAsFileURI().resolve(outputPathName);
 		}
 		return null;
 	}

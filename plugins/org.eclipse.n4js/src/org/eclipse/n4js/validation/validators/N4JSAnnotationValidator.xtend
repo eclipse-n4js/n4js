@@ -12,6 +12,9 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.common.base.Joiner
 import com.google.inject.Inject
+import java.util.HashSet
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AnnotableElement
@@ -30,7 +33,8 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.TInterface
@@ -41,10 +45,8 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.HashSet
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
@@ -57,15 +59,13 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 
 /**
  * Annotation validation rules for N4JS.
  */
 class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
-	@Inject IN4JSCore n4jsCore;
+	@Inject IN4JSCoreNEW n4jsCore;
 
 	@Inject IQualifiedNameProvider qnProvider
 
@@ -403,11 +403,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		val uri = fileExtensionCalculator.getUriWithoutXpectExtension(element);
-		val project = n4jsCore.findProject(uri).orNull;
-		if (project === null) {
-			return;
-		}
-		val srcContainer = project.findSourceContainerWith(uri);
+		val srcContainer = n4jsCore.findN4JSSourceContainer(annotation, uri).orNull;
 		if (srcContainer === null) {
 			return;
 		}
@@ -450,13 +446,13 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		val projURI = element.eResource.URI;
-		val project = n4jsCore.findProject(projURI);
+		val project = n4jsCore.findProject(annotation, projURI);
 		if (!project.present) {
 			val msg = getMessageForNO_PROJECT_FOUND(projURI);
 			val script = EcoreUtil2.getContainerOfType(element, Script);
 			addIssue(msg, script, NO_PROJECT_FOUND);
 		} else {
-			val projectType = project.orNull?.projectType;
+			val projectType = project.orNull?.type;
 			if (projectType !== ProjectType.RUNTIME_ENVIRONMENT && projectType !== ProjectType.RUNTIME_LIBRARY) {
 				addIssue(getMessageForANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT(annotation.name), annotation,
 					ANNOTATION__NAME, ANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT);
@@ -510,28 +506,36 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (moduleQN === null) return;
 
-		val currentProject = n4jsCore.findProject(script.eResource.URI).orNull
+		val resource = script.eResource;
+		if (resource === null) {
+			return;
+		}
+		val ws = n4jsCore.getWorkspaceConfig(resource).orNull;
+		if (ws === null) {
+			return;
+		}
+		val currentProject = ws.findProjectByPath(resource.URI);
 		if (currentProject === null) {
 			return
 		}
 
-		val index = indexAccess.getResourceDescriptions(script.eResource.resourceSet)
+		val index = indexAccess.getResourceDescriptions(resource.resourceSet)
 
-		val currentResDesc = index.getResourceDescription(script.eResource.URI);
+		val currentResDesc = index.getResourceDescription(resource.URI);
 
 		val sameResdesc = index.getExportedObjectsByType(TypesPackage.Literals.TMODULE).filter [
 			it.qualifiedName !== null && it.qualifiedName.startsWith(moduleQN)
 		].map[it.EObjectURI].map[it.trimFragment].map[index.getResourceDescription(it)].filter[currentResDesc != it] // not me
-		.filter[val prj = n4jsCore.findProject(it.URI).orNull; currentProject == prj] // same Project
+		.filter[val prj = ws.findProjectByPath(it.URI); currentProject == prj] // same Project
 		.toList
 
 		if (! sameResdesc.empty) {
 			// multiple Resources with Static Polyfill Module.
 			val msg_prefix = "module" + (if (sameResdesc.size > 1) "s" else "") + " in "
 			val clashes = Joiner.on(", ").join(sameResdesc.map [
-				val srcCon = n4jsCore.findN4JSSourceContainer(it.URI);
-				if (srcCon.isPresent) {
-					srcCon.get.relativeLocation
+				val srcCon = ws.findSourceFolderContaining(it.URI);
+				if (srcCon !== null) {
+					srcCon.relativeLocation
 				} else {
 					it.URI.toString
 				}
