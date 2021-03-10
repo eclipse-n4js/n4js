@@ -334,7 +334,9 @@ public class ProjectDescriptionUtils {
 			return null;
 		}
 		// strip file extension
-		if (path.endsWith(".js")) {
+		if (!path.contains(".")) {
+			// no file extension -> no need to change 'path'
+		} else if (path.endsWith(".js")) {
 			path = path.substring(0, path.length() - 3);
 		} else {
 			return null; // in the standard package.json property "main", we ignore all files other than plain js files
