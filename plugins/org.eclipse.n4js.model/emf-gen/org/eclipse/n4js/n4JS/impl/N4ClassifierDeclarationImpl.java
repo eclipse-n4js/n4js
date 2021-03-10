@@ -42,11 +42,12 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.ThisTarget;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -87,7 +88,7 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeVariable> typeVars;
+	protected EList<N4TypeVariable> typeVars;
 
 	/**
 	 * The default value of the '{@link #getTypingStrategy() <em>Typing Strategy</em>}' attribute.
@@ -147,9 +148,9 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 	 * @generated
 	 */
 	@Override
-	public EList<TypeVariable> getTypeVars() {
+	public EList<N4TypeVariable> getTypeVars() {
 		if (typeVars == null) {
-			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, N4JSPackage.N4_CLASSIFIER_DECLARATION__TYPE_VARS);
+			typeVars = new EObjectContainmentEList<N4TypeVariable>(N4TypeVariable.class, this, N4JSPackage.N4_CLASSIFIER_DECLARATION__TYPE_VARS);
 		}
 		return typeVars;
 	}
@@ -284,8 +285,8 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 	 * @generated
 	 */
 	@Override
-	public Iterable<ParameterizedTypeRef> getSuperClassifierRefs() {
-		return Collections.<ParameterizedTypeRef>emptyList();
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs() {
+		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList();
 	}
 
 	/**
@@ -294,8 +295,8 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 	 * @generated
 	 */
 	@Override
-	public Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs() {
-		return Collections.<ParameterizedTypeRef>emptyList();
+	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs() {
+		return Collections.<TypeReferenceNode<ParameterizedTypeRef>>emptyList();
 	}
 
 	/**
@@ -362,7 +363,7 @@ public abstract class N4ClassifierDeclarationImpl extends N4TypeDeclarationImpl 
 				return;
 			case N4JSPackage.N4_CLASSIFIER_DECLARATION__TYPE_VARS:
 				getTypeVars().clear();
-				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				getTypeVars().addAll((Collection<? extends N4TypeVariable>)newValue);
 				return;
 			case N4JSPackage.N4_CLASSIFIER_DECLARATION__TYPING_STRATEGY:
 				setTypingStrategy((TypingStrategy)newValue);

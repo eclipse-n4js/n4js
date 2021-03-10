@@ -24,6 +24,8 @@ import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -31,7 +33,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.xtext.util.IResourceScopeCache
 
@@ -160,6 +161,10 @@ class SourceElementExtensions {
 					next.collectVisibleTypedElement(addHere)
 					allContents.prune
 				}
+				N4TypeAliasDeclaration: {
+					next.collectVisibleTypedElement(addHere)
+					allContents.prune
+				}
 				FunctionDeclaration: {
 					next.collectVisibleTypedElement(addHere)
 					allContents.prune
@@ -171,7 +176,7 @@ class SourceElementExtensions {
 					next.collectVisibleVariable(addHere)
 					allContents.prune
 				}
-				IdentifiableElement case !(next instanceof TypeVariable): {
+				IdentifiableElement case !(next instanceof N4TypeVariable): {
 					// exclude type variables here, they can only be referred to as types
 					if(next.isBlockScoped) {
 						// let, const

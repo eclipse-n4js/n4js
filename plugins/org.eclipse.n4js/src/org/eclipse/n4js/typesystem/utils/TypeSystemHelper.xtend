@@ -21,14 +21,13 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
-import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
@@ -38,7 +37,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
@@ -97,6 +95,7 @@ class TypeSystemHelper {
 	@Inject private StructuralTypingComputer structuralTypingComputer;
 	@Inject private ThisTypeComputer thisTypeComputer;
 	@Inject private IterableComputer iterableComputer;
+	@Inject private TypeAliasComputer typeAliasComputer;
 
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
@@ -211,24 +210,29 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return thisTypeComputer.getThisTypeAtLocation(G, location);
 	}
 
-	/** @see IterableComputer#extractIterableElementTypesUBs(RuleEnvironment, TypeRef) */
-	public def Iterable<TypeRef> extractIterableElementTypesUBs(RuleEnvironment G, TypeRef typeRef) {
-		return iterableComputer.extractIterableElementTypesUBs(G, typeRef);
-	}
-
 	/** @see IterableComputer#extractIterableElementTypes(RuleEnvironment, TypeRef) */
-	public def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
+	public def List<TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRef) {
 		return iterableComputer.extractIterableElementTypes(G, typeRef);
 	}
 
-	/** @see IterableComputer#extractIterableElementTypeUB(RuleEnvironment, TypeRef) */
-	public def TypeRef extractIterableElementTypeUB(RuleEnvironment G, TypeRef typeRef) {
-		return iterableComputer.extractIterableElementTypeUB(G, typeRef);
+	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef, boolean) */
+	public def TypeRef extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
+		return iterableComputer.extractIterableElementType(G, typeRef, includeAsyncIterable);
 	}
 
-	/** @see IterableComputer#extractIterableElementType(RuleEnvironment, TypeRef, boolean) */
-	public def TypeArgument extractIterableElementType(RuleEnvironment G, TypeRef typeRef, boolean includeAsyncIterable) {
-		return iterableComputer.extractIterableElementType(G, typeRef, includeAsyncIterable);
+	/** @see TypeAliasComputer#resolveTypeAliasFlat(RuleEnvironment, TypeRef) */
+	public def TypeRef resolveTypeAliasFlat(RuleEnvironment G, TypeRef typeRef) {
+		return typeAliasComputer.resolveTypeAliasFlat(G, typeRef);
+	}
+
+	/** @see TypeAliasComputer#resolveTypeAliases(RuleEnvironment, TypeRef) */
+	public def TypeRef resolveTypeAliases(RuleEnvironment G, TypeRef typeRef) {
+		return typeAliasComputer.resolveTypeAliases(G, typeRef);
+	}
+
+	/** @see TypeAliasComputer#resolveTypeAliases(RuleEnvironment, TypeArgument) */
+	public def TypeArgument resolveTypeAliases(RuleEnvironment G, TypeArgument typeArg) {
+		return typeAliasComputer.resolveTypeAliases(G, typeArg);
 	}
 
 
@@ -332,7 +336,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		// create a BoundThisTypeRef for given location
 		val boundThisTypeRef = getThisTypeAtLocation(G, location);
 		val localG = G.wrap;
-		localG.addThisType(boundThisTypeRef);
+		localG.setThisBinding(boundThisTypeRef);
 		// substitute all unbound ThisTypeRefs with the newly created BoundThisTypeRef
 		return ts.substTypeVariables(localG, typeRef);
 	}
@@ -408,24 +412,40 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return null;
 	}
 
+	/** Same as {@link #getStaticType(RuleEnvironment, TypeTypeRef, boolean)} without resolving type variables. */
+	def public Type getStaticType(RuleEnvironment G, TypeTypeRef typeTypeRef) {
+		return getStaticType(G, typeTypeRef, false);
+	}
+
 	/**
 	 * Returns the so-called "static type" of the given {@link TypeTypeRef} or <code>null</code> if not
-	 * available.
+	 * available. Iff {@code resolveTypeVariables} is <code>true</code>, then type variables will be resolved
+	 * (i.e. replaced by their explicit or implicit upper bound).
 	 * <p>
 	 * Formerly, this was a utility operation in {@code TypeRefs.xcore} but since the introduction of wildcards in
 	 * {@code TypeTypeRef}s the 'upperBound' judgment (and thus a RuleEnvironment) is required to compute this
 	 * and hence it was moved here.
 	 */
-	def public Type getStaticType(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
-		return getStaticTypeRef(G, ctorTypeRef)?.declaredType; // will return null if #getStaticTypeRef() is not of type ParameterizedTypeRef
+	def public Type getStaticType(RuleEnvironment G, TypeTypeRef typeTypeRef, boolean resolveTypeVariables) {
+		return getStaticTypeRef(G, typeTypeRef, resolveTypeVariables)?.declaredType; // will return null if #getStaticTypeRef() is not of type ParameterizedTypeRef
 	}
 
-	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef ctorTypeRef) {
-		var typeArg = ctorTypeRef.typeArg;
-		while(typeArg instanceof Wildcard || typeArg instanceof ExistentialTypeRef || typeArg instanceof BoundThisTypeRef) {
-			typeArg = ts.upperBoundWithReopen(G, typeArg);
-		}
-		return typeArg as TypeRef;
+	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef typeTypeRef) {
+		return getStaticTypeRef(G, typeTypeRef, false);
+	}
+
+	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef typeTypeRef, boolean resolveTypeVariables) {
+		val typeArg = typeTypeRef.typeArg;
+		val typeArgUB = if (resolveTypeVariables) {
+			ts.upperBoundWithReopenAndResolve(G, typeArg)
+		} else {
+			ts.upperBoundWithReopen(G, typeArg)
+		};
+		return typeArgUB;
+	}
+
+	def public TypeRef createTypeRefFromStaticType(RuleEnvironment G, TypeTypeRef ctr, ParameterizedAccess paramAccess) {
+		return createTypeRefFromStaticType(G, ctr, paramAccess.typeArgs.map[typeRef]);
 	}
 
 	/**
@@ -485,7 +505,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		val funDef = EcoreUtil2.getContainerOfType(expr?.eContainer, FunctionDefinition);
 		val G2 = G.wrap;
 		val myThisTypeRef = getThisTypeAtLocation(G, expr);
-		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
+		G2.setThisBinding(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)
 			return null; // yield only occurs in generator functions
@@ -538,18 +558,5 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 				nextTypeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
 		}
 		return nextTypeRef;
-	}
-
-	/**
-	 * Given a {@link TypeRef} to an {@code Iterable<T>}, this method returns T, if existent.
-	 */
-	def TypeRef getIterableTypeArg(RuleEnvironment G, TypeRef iterableTypeRef) {
-		var TypeRef typeRef = null;
-		if (iterableTypeRef.typeArgs.length === 1) {
-			val nextTypeArg = iterableTypeRef.typeArgs.get(0);
-			if (nextTypeArg !== null)
-				typeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
-		}
-		return typeRef;
 	}
 }

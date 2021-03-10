@@ -57,6 +57,7 @@ ScriptElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
+	| N4TypeAliasDeclaration<Yield=false>
 	| => ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 	| ExportDeclaration
 	| RootStatement<Yield=false>
@@ -84,14 +85,14 @@ AnnotatedScriptElement returns ScriptElement:
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
 				VersionDeclaration?
-				TypeVariables?
+				TypeParameters?
 				ClassExtendsImplements<Yield=false>?
 			|   {N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				'interface' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
 				VersionDeclaration?
-				TypeVariables?
+				TypeParameters?
 				InterfaceExtendsList?
 			)
 			Members<Yield=false>
@@ -103,6 +104,12 @@ AnnotatedScriptElement returns ScriptElement:
 		'{'
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'
+	|	{N4TypeAliasDeclaration.annotationList=current}
+		(declaredModifiers+=N4ModifierWithoutConst)*
+		'type' name=BindingIdentifier<Yield=false>
+		TypeParameters?
+		'='
+		declaredTypeRefNode=TypeReferenceNode
 	)
 ;
 
@@ -139,6 +146,7 @@ ExportableElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
+	| N4TypeAliasDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
 	| ExportedVariableStatement
 ;
@@ -165,12 +173,12 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 				(declaredModifiers+=N4Modifier)*
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield>
-				TypeVariables?
+				TypeParameters?
 				ClassExtendsImplements<Yield>?
 			|	{N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				('interface') typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>
-				TypeVariables?
+				TypeParameters?
 				InterfaceExtendsList?
 			)
 			Members<Yield>
@@ -181,6 +189,12 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		'{'
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'
+	|	{N4TypeAliasDeclaration.annotationList=current}
+		(declaredModifiers+=N4ModifierWithoutConst)*
+		'type' name=BindingIdentifier<Yield=false>
+		TypeParameters?
+		'='	
+		declaredTypeRefNode=TypeReferenceNode
 	)
 ;
 
@@ -244,11 +258,11 @@ fragment FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>*:
 ;
 
 fragment FunctionHeader<Yield, Generator>*:
-	TypeVariables?
+	TypeParameters?
 	name=BindingIdentifier<Yield>?
 	VersionDeclaration?
 	StrictFormalParameters<Yield=Generator>
-	(-> ColonSepReturnTypeRef)?
+	(-> ColonSepDeclaredReturnTypeRef)?
 ;
 
 fragment FunctionBody <Yield, Expression>*:
@@ -287,8 +301,8 @@ ArrowExpression <In, Yield> returns ArrowFunction:
 			(
 					// we cannot use fragments here since we have to combine the terminals into a syntactic predicate
 					// also, we have to use explicit alternatives instead of making async optional due to a generation bug
-					StrictFormalParameters<Yield> ColonSepReturnTypeRef?
-				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepReturnTypeRef?
+					StrictFormalParameters<Yield> ColonSepDeclaredReturnTypeRef?
+				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 				| 	fpars+=BindingIdentifierAsFormalParameter<Yield>
 			)
 			/* no line terminator here, guaranteed implicitly */ '=>'
@@ -328,10 +342,9 @@ AnnotatedExpression <Yield> returns Expression:
 	)
 ;
 
-@Override
-TypeVariable returns types::TypeVariable:
+N4TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
-	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?
+	name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 ;
 
 FormalParameter <Yield>:
@@ -656,7 +669,7 @@ PropertyAssignment <Yield>:
 AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 	PropertyAssignmentAnnotationList (
 	// TODO extract property header into an own instance to defer the object instantiation
-	=>(	{PropertyNameValuePair.annotationList=current} declaredTypeRef=TypeRefWithModifiers?
+	=>(	{PropertyNameValuePair.annotationList=current} declaredTypeRefNode=TypeReferenceWithModifiersNode?
 			declaredName=LiteralOrComputedPropertyName<Yield> ':'
 		) expression=AssignmentExpression<In=true,Yield>
 	| =>({PropertyGetterDeclaration.annotationList=current}
@@ -666,19 +679,19 @@ AnnotatedPropertyAssignment <Yield> returns PropertyAssignment:
 			'set' ->declaredName=LiteralOrComputedPropertyName <Yield>
 		) (declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' body=Block<Yield=false>
 	| =>({PropertyMethodDeclaration.annotationList=current}
-			TypeVariables? returnTypeRef=TypeRefWithModifiers?
+			TypeParameters? declaredReturnTypeRefNode=TypeReferenceWithModifiersNode?
 			(generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody <Generator=true>
 				| declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsAndBody <Generator=false>
 			)
 		) ';'?
-	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRef=TypeRef? expression=PropertyNameValuePairSingleNamePart<Yield>
+	| {PropertyNameValuePairSingleName.annotationList=current} declaredTypeRefNode=TypeReferenceWithModifiersNode? expression=PropertyNameValuePairSingleNamePart<Yield>
 	| {PropertySpread.annotationList=current} '...' expression=AssignmentExpression<In=true,Yield>
 	)
 ;
 
 PropertyMethodDeclaration <Yield>:
 	=> ({PropertyMethodDeclaration}
-		TypeVariables? returnTypeRef=TypeRefWithModifiers?
+		TypeParameters? declaredReturnTypeRefNode=TypeReferenceWithModifiersNode?
 		AsyncNoTrailingLineBreak
 			(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> ->MethodParamsAndBody<Generator=true>
@@ -691,7 +704,7 @@ PropertyMethodDeclaration <Yield>:
 PropertyNameValuePair <Yield>:
 	=> (
 		{PropertyNameValuePair}
-		declaredTypeRef=TypeRefWithModifiers?
+		declaredTypeRefNode=TypeReferenceWithModifiersNode?
 		declaredName=LiteralOrComputedPropertyName<Yield>
 		(declaredOptional?='?')?
 		':'
@@ -700,7 +713,7 @@ PropertyNameValuePair <Yield>:
 ;
 
 PropertyNameValuePairSingleName <Yield>:
-	declaredTypeRef=TypeRef?
+	declaredTypeRefNode=TypeReferenceNode?
 	expression=PropertyNameValuePairSingleNamePart<Yield>
 ;
 
@@ -743,7 +756,31 @@ ParameterizedCallExpression <Yield>:
 ;
 
 fragment ConcreteTypeArguments*:
-	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
+	'<' typeArgs+=TypeReferenceNode (',' typeArgs+=TypeReferenceNode)* '>'
+;
+
+fragment ColonSepDeclaredTypeRef*:
+	':' declaredTypeRefNode=TypeReferenceNode
+;
+
+fragment ColonSepDeclaredReturnTypeRef*:
+	':' declaredReturnTypeRefNode=TypeReferenceNode
+;
+
+TypeReferenceNode returns TypeReferenceNode:
+	typeRefInAST=TypeRef
+;
+
+TypeReferenceWithModifiersNode returns TypeReferenceNode:
+	typeRefInAST=TypeRefWithModifiers
+;
+
+ParameterizedTypeRefNominalNode returns TypeReferenceNode:
+	typeRefInAST=ParameterizedTypeRefNominal
+;
+
+ArrayTypeExpressionNode returns TypeReferenceNode:
+	typeRefInAST=ArrayTypeExpression
 ;
 
 ImportCallExpression<Yield>:
@@ -819,7 +856,7 @@ enum PostfixOperator: inc='++' | dec='--';
 
 /* Cast expression (N4JS 6.2.3) */
 CastExpression <Yield> returns Expression: PostfixExpression<Yield>
-	(=>({CastExpression.expression=current} 'as') targetTypeRef=ArrayTypeExpression)?;
+	(=>({CastExpression.expression=current} 'as') targetTypeRefNode=ArrayTypeExpressionNode)?;
 
 /* Unary operators ([ECM11] 11.4) */
 UnaryExpression <Yield> returns Expression:
@@ -1219,7 +1256,7 @@ LiteralAnnotationArgument:
 ;
 
 TypeRefAnnotationArgument:
-	typeRef=TypeRef
+	typeRefNode=TypeReferenceNode
 ;
 
 AnnotationList:
@@ -1274,9 +1311,13 @@ N4ClassDeclaration <Yield>:
 		name=BindingIdentifier<Yield>?
 		VersionDeclaration?
 	)
-	TypeVariables?
+	TypeParameters?
 	ClassExtendsImplements<Yield>?
 	Members<Yield>
+;
+
+fragment TypeParameters*:
+	'<' typeVars+=N4TypeVariable (',' typeVars+=N4TypeVariable)* '>'
 ;
 
 fragment Members <Yield>*:
@@ -1293,14 +1334,14 @@ fragment ClassExtendsImplements <Yield>*:
 
 fragment ClassExtendsClause <Yield>*:
 	'extends' (
-		  =>superClassRef=ParameterizedTypeRefNominal
+		  =>superClassRef=ParameterizedTypeRefNominalNode
 		| superClassExpression=LeftHandSideExpression<Yield>
 	)
 ;
 
 fragment ClassImplementsList*:
-	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal
-	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
+	'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalNode
+	(',' implementedInterfaceRefs+=ParameterizedTypeRefNominalNode)*
 ;
 
 N4ClassExpression <Yield>:
@@ -1317,15 +1358,15 @@ N4InterfaceDeclaration <Yield>:
 		name=BindingIdentifier<Yield>?
 		VersionDeclaration?
 	)
-	TypeVariables?
+	TypeParameters?
 	InterfaceExtendsList?
 	Members<Yield>
 ;
 
 // we allow both 'extends' and 'implements' here, a validation will ensure 'extends' is used
 fragment InterfaceExtendsList*:
-	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominal
-	(',' superInterfaceRefs+=ParameterizedTypeRefNominal)*
+	('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	(',' superInterfaceRefs+=ParameterizedTypeRefNominalNode)*
 ;
 
 // cf. N4JSSpec §13
@@ -1343,9 +1384,26 @@ N4EnumDeclaration <Yield>:
 
 N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?;
 
+
+N4TypeAliasDeclaration <Yield>:
+	=>(
+		{N4TypeAliasDeclaration}
+		(declaredModifiers+=N4ModifierWithoutConst)*
+		'type' name=BindingIdentifier<Yield>?
+	)
+	TypeParameters?
+	'='	
+	declaredTypeRefNode=TypeReferenceNode
+;
+
+
 // grammar allows use of these modifiers in many places that are not actually valid;
 // this is checked in N4JSSyntaxValidator (see N4Modifier in N4JS.xcore for details)
-enum N4Modifier: private | project | protected | public | external | abstract | static | const;
+enum N4Modifier:
+	private | project | protected | public | external | abstract | static | const;
+enum N4ModifierWithoutConst returns N4Modifier:
+	private | project | protected | public | external | abstract | static;
+
 
 N4MemberDeclaration <Yield>:
 	AnnotatedN4MemberDeclaration<Yield>
@@ -1369,7 +1427,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 		| 	=> ({N4SetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* 'set' -> declaredName=LiteralOrComputedPropertyName <Yield>)
 				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
 		| 	=> (
-				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeVariables?
+				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* TypeParameters?
 				(
 						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
@@ -1394,7 +1452,7 @@ N4FieldDeclaration <Yield>:
 ;
 
 N4MethodDeclaration <Yield>:
-	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeVariables?
+	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)* TypeParameters?
 		AsyncNoTrailingLineBreak
 		(
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=true>
@@ -1414,7 +1472,7 @@ fragment MethodParamsAndBody <Generator>*:
 
 fragment MethodParamsReturnAndBody <Generator>*:
 	StrictFormalParameters<Yield=Generator>
-	ColonSepReturnTypeRef?
+	ColonSepDeclaredReturnTypeRef?
 	(body=Block<Yield=Generator>)?
 ;
 

@@ -182,7 +182,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
 	 *     declaredOptional?='?' '(' ')' (ambiguity) (rule end)
-	 *     declaredTypeRef=TypeRef (ambiguity) (rule end)
+	 *     declaredTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 */
 	protected void emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_0_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -207,8 +207,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_2_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -292,12 +292,12 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredAsync?='async' NO_LINE_TERMINATOR? 'function' '(' ')' (ambiguity) (rule end)
 	 *     declaredModifiers+=N4Modifier 'function' '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     declaredVersion=VERSION '(' ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
 	 *     name=BindingIdentifier '(' ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
-	 *     typeVars+=TypeVariable '>' '(' ')' (ambiguity) (rule end)
+	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_FunctionDeclaration_SemiParserRuleCall_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -319,12 +319,12 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     'extends' | 'implements'
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     declaredModifiers+=N4Modifier 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     declaredVersion=VERSION (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     name=BindingIdentifier (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     typeVars+=TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     typingStrategy=TypingStrategyDefSiteOperator (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
+	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     declaredModifiers+=N4Modifier 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     declaredVersion=VERSION (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     name=BindingIdentifier (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     typeVars+=N4TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     typingStrategy=TypingStrategyDefSiteOperator (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
 	 */
 	protected void emit_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -338,8 +338,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) '(' ')' (ambiguity) (rule start)
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_N4CallableConstructorDeclaration_SemicolonKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -353,7 +353,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
 	 *     declaredOptional?='?' '(' ')' (ambiguity) (rule end)
-	 *     declaredTypeRef=TypeRef (ambiguity) (rule end)
+	 *     declaredTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 */
 	protected void emit_N4GetterDeclaration_SemicolonKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -366,8 +366,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     returnTypeRef=TypeRef (ambiguity) (rule end)
 	 */
 	protected void emit_N4MethodDeclaration_SemicolonKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -390,16 +390,16 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     NO_LINE_TERMINATOR?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' returnTypeRef=TypeRef
+	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) '(' ')' '=>' body=ExpressionDisguisedAsBlock
 	 *     declaredAsync?='async' (ambiguity) '(' ')' '=>' hasBracesAroundBody?='{'
 	 *     declaredAsync?='async' (ambiguity) '(' fpars+=FormalParameter
-	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' returnTypeRef=TypeRef
+	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' Semi? (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' body=Block
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' fpars+=FormalParameter
-	 *     declaredAsync?='async' (ambiguity) 'function' '<' typeVars+=TypeVariable
+	 *     declaredAsync?='async' (ambiguity) 'function' '<' typeVars+=N4TypeVariable
 	 *     declaredAsync?='async' (ambiguity) 'function' declaredVersion=VERSION
 	 *     declaredAsync?='async' (ambiguity) 'function' generator?='*'
 	 *     declaredAsync?='async' (ambiguity) 'function' name=BindingIdentifier

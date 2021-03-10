@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class A {}
+
+class C {
+	field: A;
+	get getter(): A { return null; }
+	set setter(p: A) {}
+}
+
+// without alias:
+
+let c: C;
+// XPECT noerrors -->
+let { field: t01 } = c;
+// XPECT noerrors -->
+let { getter: t02 } = c;
+// XPECT errors --> "Property named "setter" is not readable: The accessor setter is write-only." at "setter"
+let { setter: t03 } = c;
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "missing": C." at "missing"
+let { missing: t04 } = c;
+
+
+// same with alias:
+
+type AC = C;
+let ac: AC;
+// XPECT noerrors -->
+let { field: t11 } = ac;
+// XPECT noerrors -->
+let { getter: t12 } = ac;
+// XPECT errors --> "Property named "setter" is not readable: The accessor setter is write-only." at "setter"
+let { setter: t13 } = ac;
+// XPECT errors --> "Value to be destructured does not contain a property, field or getter named "missing": AC." at "missing"
+let { missing: t14 } = ac;
+
+
+// validation for checking correct type of target variable:
+
+let obj: ~Object with { prop: AC };
+let str: string;
+// XPECT noerrors -->
+({ prop: c } = obj);
+// XPECT errors --> "Variable str cannot hold destructured value of property 'prop': AC is not a subtype of string." at "str"
+({ prop: str } = obj);

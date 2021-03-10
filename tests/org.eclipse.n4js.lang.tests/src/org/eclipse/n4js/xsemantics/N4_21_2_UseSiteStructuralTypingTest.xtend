@@ -10,14 +10,13 @@
  */
 package org.eclipse.n4js.xsemantics
 
-import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -29,14 +28,11 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 @InjectWith(N4JSInjectorProvider)
 class N4_21_2_UseSiteStructuralTypingTest extends AbstractTypesystemTest {
 
-	@Inject
-	extension ParseHelper<Script>
-
 	@Test
 	def void testClassesOnly() {
 
 		// class A{}
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class C{
 				public s: string;
 				public foo(): void {}
@@ -52,7 +48,7 @@ class N4_21_2_UseSiteStructuralTypingTest extends AbstractTypesystemTest {
 			var structural: ~C;
 			var a: A;
 			var b: B;
-		'''.parse()
+		''')
 
 		val G = newRuleEnvironment(script);
 
@@ -71,7 +67,7 @@ class N4_21_2_UseSiteStructuralTypingTest extends AbstractTypesystemTest {
 	def void testClassesOnlyWithWrongFunctionType() {
 
 		// class A{}
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class C{
 				public s: string;
 				public foo(): void {}
@@ -83,7 +79,7 @@ class N4_21_2_UseSiteStructuralTypingTest extends AbstractTypesystemTest {
 
 			var structural: ~C;
 			var a: A;
-		'''.parse()
+		''')
 
 		val G = newRuleEnvironment(script);
 
@@ -97,7 +93,7 @@ class N4_21_2_UseSiteStructuralTypingTest extends AbstractTypesystemTest {
 	def void testClassesOnlyWithWrongTypes() {
 
 		// class A{}
-		val script = '''
+		val script = createAndValidateScript(JavaScriptVariant.n4js, '''
 			class C{
 				public s: string;
 				public foo(): void {}
@@ -114,7 +110,7 @@ class N4_21_2_UseSiteStructuralTypingTest extends AbstractTypesystemTest {
 			var fields: ~~C;
 			var a: A;
 			var b: B;
-		'''.parse()
+		''')
 
 		val G = newRuleEnvironment(script);
 

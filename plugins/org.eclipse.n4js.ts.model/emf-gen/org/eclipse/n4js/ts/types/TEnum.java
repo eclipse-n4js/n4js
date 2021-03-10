@@ -34,7 +34,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable, TMigratable {
+public interface TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable, TMigratable {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -39,6 +39,7 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
@@ -73,6 +74,7 @@ import org.eclipse.xtext.scoping.IScopeProvider;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -302,8 +304,7 @@ public class XtMethods {
 	}
 
 	/** Implementation for {@link XtIdeTest#type(XtMethodData)} */
-	public String getTypeString(EObject eobject, boolean expectedType) {
-		final String calculatedString;
+	public String getTypeString(EObject eobject, boolean expectedType, boolean withAliasResolution) {
 		if (eobject instanceof LiteralOrComputedPropertyName) {
 			eobject = eobject.eContainer();
 		}
@@ -333,7 +334,9 @@ public class XtMethods {
 				return "Not a TypableElement at given region; got instead: " + eobject.eClass().getName();
 			result = ts.type(G, (TypableElement) eobject);
 		}
-		calculatedString = result.getTypeRefAsString();
+		final String calculatedString = withAliasResolution
+				? result.getTypeRefAsStringWithAliasResolution()
+				: result.getTypeRefAsString();
 		return calculatedString;
 	}
 
@@ -370,7 +373,7 @@ public class XtMethods {
 		} else {
 			// call expression is parameterized -> use the explicitly given type arguments
 			// (just provided for completeness)
-			typeArgs = callExpr.getTypeArgs();
+			typeArgs = FluentIterable.from(callExpr.getTypeArgs()).transform(TypeReferenceNode::getTypeRef).toList();
 		}
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < expectedNumOfTypeArgs; i++) {

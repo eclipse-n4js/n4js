@@ -10,12 +10,17 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -25,6 +30,7 @@ import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -33,9 +39,14 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.ListMultimap;
 import com.google.common.hash.Hashing;
 
 /**
@@ -49,6 +60,31 @@ public abstract class N4JSASTUtils {
 
 	/** The reserved {@value} keyword. */
 	public static final String CONSTRUCTOR = "constructor";
+
+	/**
+	 * Maps {@link EClass}es of {@link N4JSPackage} to their containment {@link EReference}s of type
+	 * {@link TypeReferenceNode}, including both owned and inherited references. The references may be single- or
+	 * many-valued.
+	 * <p>
+	 * Most clients will want to use utility method {@link #getContainedTypeReferenceNodes(EObject)} instead.
+	 */
+	public static final ListMultimap<EClass, EReference> containersOfTypeReferenceNodes;
+
+	static {
+		ListMultimap<EClass, EReference> eClassToOwnedRefs = ArrayListMultimap.create();
+		for (EClass eClass : IterableExtensions.filter(N4JSPackage.eINSTANCE.getEClassifiers(), EClass.class)) {
+			eClassToOwnedRefs.putAll(eClass, IterableExtensions.filter(eClass.getEReferences(),
+					eRef -> eRef.isContainment()
+							&& N4JSPackage.Literals.TYPE_REFERENCE_NODE.isSuperTypeOf(eRef.getEReferenceType())));
+		}
+		ListMultimap<EClass, EReference> map2 = ArrayListMultimap.create();
+		for (EClass eClass : IterableExtensions.filter(N4JSPackage.eINSTANCE.getEClassifiers(), EClass.class)) {
+			map2.putAll(eClass, Iterables.concat(
+					eClassToOwnedRefs.get(eClass),
+					IterableExtensions.flatMap(eClass.getEAllSuperTypes(), eClassToOwnedRefs::get)));
+		}
+		containersOfTypeReferenceNodes = ImmutableListMultimap.copyOf(map2);
+	}
 
 	/**
 	 * Tells if the given {@link EObject} represents a write access, e.g. left-hand side of an assignment.
@@ -110,6 +146,17 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Tells if given object is an <em>AST node</em>, i.e. contained below a {@link Script} element.
+	 * <p>
+	 * Note that it is not possible to tell AST nodes from type model elements only based on the object's type, because
+	 * there exist type model entities that may appear as a node in the AST (e.g. some TypeRefs, TStructField).
+	 */
+	public static boolean isASTNode(EObject obj) {
+		// note: despite its name, #getContainerOfType() returns 'obj' if instance of Script
+		return EcoreUtil2.getContainerOfType(obj, Script.class) != null;
+	}
+
+	/**
 	 * Returns <code>true</code> iff the given AST node belongs to top-level code, i.e. is not wrapped in a function or
 	 * field accessor.
 	 */
@@ -150,6 +197,30 @@ public abstract class N4JSASTUtils {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Returns all {@link TypeReferenceNode}s contained in the given AST node. The returned nodes might belong to
+	 * several {@link EReference}s (for example: when given a class declaration, nodes for the super class reference and
+	 * all implemented interface references will be returned at the same time). Only direct contents will be returned.
+	 * For AST nodes that cannot contain {@code TypeReferenceNode}s an empty iterable will be returned.
+	 */
+	public static List<TypeReferenceNode<?>> getContainedTypeReferenceNodes(EObject astNode) {
+		List<TypeReferenceNode<?>> result = new ArrayList<>();
+		for (EReference eRef : containersOfTypeReferenceNodes.get(astNode.eClass())) {
+			// we know eRef is a containment reference, so no need to worry about proxy resolution in next line
+			Object value = astNode.eGet(eRef);
+			if (value != null) {
+				if (eRef.isMany()) {
+					@SuppressWarnings("unchecked")
+					Collection<TypeReferenceNode<?>> valueCasted = (Collection<TypeReferenceNode<?>>) value;
+					result.addAll(valueCasted);
+				} else {
+					result.add((TypeReferenceNode<?>) value);
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -362,10 +433,6 @@ public abstract class N4JSASTUtils {
 	public static EObject getCorrespondingTypeModelElement(EObject obj) {
 		// is obj already a type model element?
 		if (obj != null && obj.eClass().getEPackage() == TypesPackage.eINSTANCE) {
-			// special case: is obj a TypeVariable used in the AST?
-			if (obj instanceof TypeVariable && ((TypeVariable) obj).getDefinedTypeVariable() != null) {
-				return ((TypeVariable) obj).getDefinedTypeVariable();
-			}
 			// special case: is obj a TStructMember used in the AST?
 			if (obj instanceof TStructMember && ((TStructMember) obj).getDefinedMember() != null)
 				return ((TStructMember) obj).getDefinedMember();
@@ -379,6 +446,8 @@ public abstract class N4JSASTUtils {
 			return ((N4MemberDeclaration) obj).getDefinedTypeElement();
 		} else if (obj instanceof N4EnumLiteral) {
 			return ((N4EnumLiteral) obj).getDefinedLiteral();
+		} else if (obj instanceof N4TypeVariable) {
+			return ((N4TypeVariable) obj).getDefinedTypeVariable();
 		} else if (obj instanceof PropertyAssignment) {
 			return ((PropertyAssignment) obj).getDefinedMember();
 		} else if (obj instanceof FormalParameter) {
@@ -398,8 +467,6 @@ public abstract class N4JSASTUtils {
 		// is obj already an AST node?
 		if (obj != null && obj.eClass().getEPackage() == N4JSPackage.eINSTANCE) {
 			return obj;
-		} else if (obj instanceof TypeVariable && ((TypeVariable) obj).getDefinedTypeVariable() != null) {
-			return obj; // type variables with a non-null 'definedTypeVariable' property are AST nodes
 		}
 		// is obj a type model element related to an AST node?
 		if (obj instanceof SyntaxRelatedTElement) {
@@ -412,21 +479,29 @@ public abstract class N4JSASTUtils {
 
 	/**
 	 * If the given type variable is located in the TModule, then this method returns its corresponding type variable in
-	 * the AST or <code>null</code> if it is not available or not found. If the given type variable is already located
-	 * in the AST, it is returned unchanged.
+	 * the AST or <code>null</code> if it is not available or not found. Usually returns a {@link N4TypeVariable}, but
+	 * in some cases also a {@link TypeVariable} may be returned.
 	 */
-	public static TypeVariable getCorrespondingTypeVariableInAST(TypeVariable tv) {
-		if (tv.getDefinedTypeVariable() != null) {
-			return tv; // 'tv' is already an AST node
-		}
+	public static IdentifiableElement getCorrespondingTypeVariableInAST(TypeVariable tv) {
 		EObject containerInTModule = tv.eContainer();
-		EObject containerInAST = containerInTModule != null ? getCorrespondingASTNode(containerInTModule) : null;
-		if (containerInTModule instanceof Type && containerInAST instanceof GenericDeclaration) {
+		if (containerInTModule instanceof Type) {
 			List<TypeVariable> typeVarsInTModule = ((Type) containerInTModule).getTypeVars();
-			List<TypeVariable> typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
-			int idx = typeVarsInTModule.indexOf(tv);
-			if (idx >= 0 && idx < typeVarsInAST.size()) {
-				return typeVarsInAST.get(idx);
+			if (!typeVarsInTModule.isEmpty()) {
+				EObject containerInAST = getCorrespondingASTNode(containerInTModule);
+				List<? extends IdentifiableElement> typeVarsInAST = null;
+				if (containerInAST instanceof GenericDeclaration) {
+					typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
+				} else if (containerInAST instanceof TStructMethod) {
+					typeVarsInAST = ((TStructMethod) containerInAST).getTypeVars();
+				} else if (containerInAST instanceof FunctionTypeExpression) {
+					typeVarsInAST = ((FunctionTypeExpression) containerInAST).getTypeVars();
+				}
+				if (typeVarsInAST != null) {
+					int idx = typeVarsInTModule.indexOf(tv);
+					if (idx >= 0 && idx < typeVarsInAST.size()) {
+						return typeVarsInAST.get(idx);
+					}
+				}
 			}
 		}
 		return null;

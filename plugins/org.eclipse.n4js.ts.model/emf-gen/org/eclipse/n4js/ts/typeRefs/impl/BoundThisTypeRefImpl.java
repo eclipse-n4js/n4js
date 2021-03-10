@@ -336,11 +336,11 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		String _plus = (_typingStrategy + "this[");
-		String _typeRefAsString = this.getActualThisTypeRef().getTypeRefAsString();
-		String _plus_1 = (_plus + _typeRefAsString);
+		String _internalGetTypeRefAsString = this.getActualThisTypeRef().internalGetTypeRefAsString();
+		String _plus_1 = (_plus + _internalGetTypeRefAsString);
 		String _plus_2 = (_plus_1 + "]");
 		String _modifiersAsString = this.getModifiersAsString();
 		return (_plus_2 + _modifiersAsString);
@@ -624,7 +624,7 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -637,7 +637,6 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_REF___GET_DECLARED_UPPER_BOUND: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_DECLARED_UPPER_BOUND;
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 				case TypeRefsPackage.TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
@@ -648,7 +647,7 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 		}
 		if (baseClass == ThisTypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.THIS_TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				case TypeRefsPackage.THIS_TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 				case TypeRefsPackage.THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
@@ -680,8 +679,8 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 			case TypeRefsPackage.BOUND_THIS_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY:
 				setTypingStrategy((TypingStrategy)arguments.get(0));
 				return null;
-			case TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 			case TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_DECLARED_UPPER_BOUND:
 				return getDeclaredUpperBound();
 			case TypeRefsPackage.BOUND_THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING:

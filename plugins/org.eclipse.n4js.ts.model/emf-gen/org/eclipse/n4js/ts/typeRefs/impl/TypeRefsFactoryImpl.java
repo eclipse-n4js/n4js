@@ -69,7 +69,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 		switch (eClass.getClassifierID()) {
 			case TypeRefsPackage.UNION_TYPE_EXPRESSION: return createUnionTypeExpression();
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION: return createIntersectionTypeExpression();
-			case TypeRefsPackage.THIS_TYPE_REF: return createThisTypeRef();
 			case TypeRefsPackage.THIS_TYPE_REF_NOMINAL: return createThisTypeRefNominal();
 			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL: return createThisTypeRefStructural();
 			case TypeRefsPackage.BOUND_THIS_TYPE_REF: return createBoundThisTypeRef();
@@ -145,17 +144,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	public IntersectionTypeExpression createIntersectionTypeExpression() {
 		IntersectionTypeExpressionImpl intersectionTypeExpression = new IntersectionTypeExpressionImpl();
 		return intersectionTypeExpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ThisTypeRef createThisTypeRef() {
-		ThisTypeRefImpl thisTypeRef = new ThisTypeRefImpl();
-		return thisTypeRef;
 	}
 
 	/**

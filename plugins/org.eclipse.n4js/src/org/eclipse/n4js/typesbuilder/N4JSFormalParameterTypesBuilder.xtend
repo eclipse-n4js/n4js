@@ -69,7 +69,7 @@ package class N4JSFormalParameterTypesBuilder {
 				TypeRef defaultTypeRef, BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase
 	) {
 		if (!preLinkingPhase)
-			formalParameterType.typeRef = TypeUtils.copyWithProxies(astFormalParameter.declaredTypeRef) ?: getDefaultParameterType(defaultTypeRef, astFormalParameter, builtInTypeScope)
+			formalParameterType.typeRef = TypeUtils.copyWithProxies(astFormalParameter.declaredTypeRefInAST) ?: getDefaultParameterType(defaultTypeRef, astFormalParameter, builtInTypeScope)
 	}
 
 	def private TypeRef getDefaultParameterType(TypeRef defaultTypeRef,

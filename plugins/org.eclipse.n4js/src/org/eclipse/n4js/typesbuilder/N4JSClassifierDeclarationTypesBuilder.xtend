@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
-import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
@@ -19,7 +18,6 @@ import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TypeVariable
 
 /**
  * Abstract base class for N4JSClassDeclarationTypesBuilder and N4JSInterfaceDeclarationTypesBuilder
@@ -28,6 +26,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 package abstract class N4JSClassifierDeclarationTypesBuilder {
 	
 	@Inject protected extension N4JSTypesBuilderHelper
+	@Inject protected extension N4JSTypeVariableTypesBuilder
 	@Inject protected extension N4JSFieldTypesBuilder
 	@Inject protected extension N4JSMethodTypesBuilder
 	@Inject protected extension N4JSGetterTypesBuilder
@@ -58,16 +57,6 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		val n4Setters = definition.ownedMembers.filter(N4SetterDeclaration)
 		val setters = n4Setters.map[createSetter(classifier, preLinkingPhase)].filterNull
 		classifier.ownedMembers.addAll(setters);
-	}
-
-	def protected void addTypeParameters(TClassifier classifier, GenericDeclaration decl, boolean preLinkingPhase) {
-		addCopyOfReferences(classifier.typeVars, decl.typeVars);
-		// Link AST TypeVariable to TModule TypeVariable
-		for (var i = 0; i < classifier.typeVars.length; i++) {
-			var TypeVariable typeVar = decl.typeVars.get(i);
-			var TypeVariable definedTypeVar = classifier.typeVars.get(i);
-			typeVar.definedTypeVariable = definedTypeVar;
-		}
 	}
 
 	def package void relinkClassifierAndMembers(TClassifier classifier, N4ClassifierDeclaration declaration, boolean preLinkingPhase) {

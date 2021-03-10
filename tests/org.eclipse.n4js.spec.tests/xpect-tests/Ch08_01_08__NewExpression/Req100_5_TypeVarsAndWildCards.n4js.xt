@@ -14,7 +14,7 @@
 // cf. GH 132
 
 class C {
-	static S;
+	static S: string;
 }
 class D<T extends C> {
     m() {
@@ -29,7 +29,9 @@ class D<T extends C> {
 
         // additional tests:
         // XPECT noerrors -->
-        t.constructor.S;
+        let s = t.constructor.S;
+        // XPECT type of 's' --> string
+        s;
 
         // XPECT type of t.constructor --> constructor{? extends T}
         t.constructor;

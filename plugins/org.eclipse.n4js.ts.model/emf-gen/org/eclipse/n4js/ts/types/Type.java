@@ -40,6 +40,17 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * * Returns true iff this type is a type alias.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isAlias();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * *
 	 * Returns true if type's implementation is provided by runtime. Default implementation returns true, overridden in user-defined (meta) types.
 	 * Since it is about the implementation, types without implementation (structural types, primitive types) that are always handled as if they

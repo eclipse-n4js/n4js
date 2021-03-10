@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+interface C {}
+interface D {}
+
+type A1 = C & D;
+type A2 = C | D;
+type A3 = (C)=>number;
+type A4 = C;
+type A5 = string;
+type A6 = ~Object with { prop: number };
+type A7 = type{C};
+type A8 = constructor{C};
+
+
+// XPECT errors --> "A type alias may be referenced dynamically only if its aliased type may be referenced dynamically." at "A1"
+let a01: A1+;
+// XPECT errors --> "A type alias may be referenced dynamically only if its aliased type may be referenced dynamically." at "A2"
+let a02: A2+;
+// XPECT errors --> "A type alias may be referenced dynamically only if its aliased type may be referenced dynamically." at "A3"
+let a03: A3+;
+// XPECT noerrors -->
+let a04: A4+;
+// XPECT errors --> "Primitive type string must not be referenced dynamically." at "A5"
+let a05: A5+;
+// XPECT noerrors -->
+let a06: A6+;
+// XPECT errors --> "A type alias may be referenced dynamically only if its aliased type may be referenced dynamically." at "A7"
+let a07: A7+;
+// XPECT errors --> "A type alias may be referenced dynamically only if its aliased type may be referenced dynamically." at "A8"
+let a08: A8+;
+
+
+// XPECT errors --> "A type alias may be referenced structurally only if its aliased type may be referenced structurally." at "~A1"
+let a11: ~A1;
+// XPECT errors --> "A type alias may be referenced structurally only if its aliased type may be referenced structurally." at "~A2"
+let a12: ~A2;
+// XPECT errors --> "A type alias may be referenced structurally only if its aliased type may be referenced structurally." at "~A3"
+let a13: ~A3;
+// XPECT noerrors -->
+let a14: ~A4;
+// XPECT warnings --> "Structural type operator ~ does not have any effect on primitive types." at "~A5"
+let a15: ~A5;
+// XPECT noerrors -->
+let a16: ~A6;
+// XPECT errors --> "A type alias may be referenced structurally only if its aliased type may be referenced structurally." at "~A7"
+let a17: ~A7;
+// XPECT errors --> "A type alias may be referenced structurally only if its aliased type may be referenced structurally." at "~A8"
+let a18: ~A8;
+
+
+// regarding 'a06':
+// applying '+' to a structural-with type is actually allowed:
+
+// XPECT noerrors -->
+let dynObj: ~Object with { someProp }+; // note the plus at the end

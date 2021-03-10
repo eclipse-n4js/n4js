@@ -12,12 +12,12 @@ package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.hasReplacements;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isFunction;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isObject;
@@ -29,6 +29,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTy
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectType;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.setThisBinding;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringObjectType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
@@ -83,11 +84,7 @@ import com.google.common.collect.Iterables;
 
 	/** See {@link N4JSTypeSystem#subtype(RuleEnvironment, TypeArgument, TypeArgument)}. */
 	public Result apply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
-		// get rid of wildcards by taking their upper/lower bound
-		final TypeRef left = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
-		final TypeRef right = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
-		Result result = getResult(G, left, right);
-
+		Result result = getResult(G, leftArg, rightArg);
 		if (result.isFailure()) {
 			// set default failure message
 			final String leftMsg = leftArg != null ? leftArg.getTypeRefAsString() : "<null>";
@@ -97,26 +94,33 @@ import com.google.common.collect.Iterables;
 		return result;
 	}
 
-	private Result getResult(RuleEnvironment G, TypeRef left, TypeRef right) {
-		final Result firstResult = doApply(G, left, right);
-		if (firstResult.isFailure() && left.isDynamic()) {
+	private Result getResult(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+		final Result firstResult = doApply(G, leftArg, rightArg);
+		if (firstResult.isFailure() && leftArg instanceof TypeRef && ((TypeRef) leftArg).isDynamic()) {
 			// right<:left => left+<:right
-			final TypeRef nonDynamicCopy = TypeUtils.copy(left);
+			final TypeRef nonDynamicCopy = TypeUtils.copy((TypeRef) leftArg);
 			nonDynamicCopy.eSet(TypeRefsPackage.eINSTANCE.getBaseTypeRef_Dynamic(), false);
-			return doApply(G, right, nonDynamicCopy);
+			return doApply(G, rightArg, nonDynamicCopy);
 		}
 		return firstResult;
 	}
 
-	private Result doApply(RuleEnvironment G, TypeRef left, TypeRef right) {
-		if (left == null || right == null) {
+	private Result doApply(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
+		if (leftArg == null || rightArg == null) {
 			return failure();
 		}
 
-		if (left == right) {
+		if (leftArg == rightArg) {
 			// TODO: GH-2051: Comment out to see failing tests (search for 'GH-2051')
 			return success();
 		}
+
+		// get rid of wildcards by taking their upper/lower bound
+		final TypeRef leftRef = leftArg instanceof Wildcard ? ts.upperBound(G, leftArg) : (TypeRef) leftArg;
+		final TypeRef rightRef = rightArg instanceof Wildcard ? ts.lowerBound(G, rightArg) : (TypeRef) rightArg;
+
+		final TypeRef left = replaceAndResolveAlias(G, leftRef);
+		final TypeRef right = replaceAndResolveAlias(G, rightRef);
 
 		// ComposedTypeRef
 		if (left instanceof UnionTypeExpression) {
@@ -218,6 +222,19 @@ import com.google.common.collect.Iterables;
 		return failure();
 	}
 
+	private TypeRef replaceAndResolveAlias(RuleEnvironment G, TypeRef typeRef) {
+		if (!hasReplacements(G)) {
+			return tsh.resolveTypeAliasFlat(G, typeRef);
+		}
+		TypeRef lastTypeRef;
+		do {
+			lastTypeRef = typeRef;
+			typeRef = getReplacement(G, typeRef);
+			typeRef = tsh.resolveTypeAliasFlat(G, typeRef);
+		} while (typeRef != lastTypeRef);
+		return typeRef;
+	}
+
 	private Result applyUnion_Left(RuleEnvironment G,
 			UnionTypeExpression U, TypeRef S) {
 		return requireAllSuccess(
@@ -250,10 +267,7 @@ import com.google.common.collect.Iterables;
 								.trimCauses(); // legacy behavior; could improve error messages here!
 	}
 
-	private Result applyParameterizedTypeRef(RuleEnvironment G,
-			ParameterizedTypeRef leftOriginal, ParameterizedTypeRef rightOriginal) {
-		final TypeRef left = getReplacement(G, leftOriginal);
-		final TypeRef right = getReplacement(G, rightOriginal);
+	private Result applyParameterizedTypeRef(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right) {
 		final Type leftDeclType = left.getDeclaredType();
 		final Type rightDeclType = right.getDeclaredType();
 		if (leftDeclType == null || rightDeclType == null) {
@@ -517,9 +531,9 @@ import com.google.common.collect.Iterables;
 				final RuleEnvironment G_left = wrap(G);
 				final RuleEnvironment G_right = wrap(G);
 				typeSystemHelper.addSubstitutions(G_left, ref(left_staticType));
-				addThisType(G_left, ref(left_staticType));
+				setThisBinding(G_left, ref(left_staticType));
 				typeSystemHelper.addSubstitutions(G_right, ref(right_staticType));
-				addThisType(G_right, ref(right_staticType));
+				setThisBinding(G_right, ref(right_staticType));
 				final TypeRef leftCtorRefSubst = ts.substTypeVariables(G_left, leftCtorRef);
 				final TypeRef rightCtorRefSubst = ts.substTypeVariables(G_right, rightCtorRef);
 

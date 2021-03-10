@@ -27,6 +27,8 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
@@ -58,6 +60,10 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 
 	def dispatch String keyword(N4EnumDeclaration n4EnumDeclaration) {
 		"enum"
+	}
+
+	def dispatch String keyword(N4TypeAliasDeclaration n4TypeAliasDeclaration) {
+		"type alias"
 	}
 
 	def dispatch String keyword(FunctionDeclaration functionDeclaration) {
@@ -98,6 +104,10 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 
 	def dispatch String keyword(VariableDeclaration VariableDecl) {
 		"variable"
+	}
+
+	def dispatch String keyword(N4TypeVariable typeVar) {
+		"type variable"
 	}
 
 	def dispatch String keyword(CatchVariable catchVar) {

@@ -93,6 +93,7 @@ import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.Snippet
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
@@ -668,7 +669,9 @@ public class TranspilerBuilderBlocks
 		val result = N4JSFactory.eINSTANCE.createFormalParameter;
 		result.name = name;
 		result.variadic = variadic;
-		result.declaredTypeRef = TypeUtils.copy(typeRef); // ok if typeRef===null
+		if (typeRef !== null) {
+			result.declaredTypeRefNode = _TypeReferenceNode(typeRef);
+		}
 		if(isSpecFpar) {
 			result.annotations += _Annotation(AnnotationDefinition.SPEC);
 		}
@@ -822,6 +825,12 @@ public class TranspilerBuilderBlocks
 
 	// ############################################################################################
 	// IM.xcore
+
+	public static def <T extends TypeRef> TypeReferenceNode_IM<T> _TypeReferenceNode(T typeRef) {
+		val result = ImFactory.eINSTANCE.createTypeReferenceNode_IM();
+		result.typeRefInAST = TypeUtils.copyIfContained(typeRef);
+		return result;
+	}
 
 	public static def IdentifierRef_IM _IdentRef(SymbolTableEntry symbolTableEntry) {
 		if(symbolTableEntry===null) {

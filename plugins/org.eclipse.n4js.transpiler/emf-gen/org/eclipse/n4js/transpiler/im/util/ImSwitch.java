@@ -49,6 +49,7 @@ import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.VersionedElement;
@@ -81,7 +82,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
  * @see org.eclipse.n4js.transpiler.im.ImPackage
  * @generated
  */
-public class ImSwitch<T> extends Switch<T> {
+public class ImSwitch<T1> extends Switch<T1> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -123,11 +124,11 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject) {
+	protected T1 doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case ImPackage.SCRIPT_IM: {
 				Script_IM script_IM = (Script_IM)theEObject;
-				T result = caseScript_IM(script_IM);
+				T1 result = caseScript_IM(script_IM);
 				if (result == null) result = caseScript(script_IM);
 				if (result == null) result = caseVariableEnvironmentElement(script_IM);
 				if (result == null) result = caseAnnotableElement(script_IM);
@@ -137,46 +138,53 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.SYMBOL_TABLE: {
 				SymbolTable symbolTable = (SymbolTable)theEObject;
-				T result = caseSymbolTable(symbolTable);
+				T1 result = caseSymbolTable(symbolTable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ImPackage.SYMBOL_TABLE_ENTRY: {
 				SymbolTableEntry symbolTableEntry = (SymbolTableEntry)theEObject;
-				T result = caseSymbolTableEntry(symbolTableEntry);
+				T1 result = caseSymbolTableEntry(symbolTableEntry);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL: {
 				SymbolTableEntryOriginal symbolTableEntryOriginal = (SymbolTableEntryOriginal)theEObject;
-				T result = caseSymbolTableEntryOriginal(symbolTableEntryOriginal);
+				T1 result = caseSymbolTableEntryOriginal(symbolTableEntryOriginal);
 				if (result == null) result = caseSymbolTableEntry(symbolTableEntryOriginal);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ImPackage.SYMBOL_TABLE_ENTRY_IM_ONLY: {
 				SymbolTableEntryIMOnly symbolTableEntryIMOnly = (SymbolTableEntryIMOnly)theEObject;
-				T result = caseSymbolTableEntryIMOnly(symbolTableEntryIMOnly);
+				T1 result = caseSymbolTableEntryIMOnly(symbolTableEntryIMOnly);
 				if (result == null) result = caseSymbolTableEntry(symbolTableEntryIMOnly);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ImPackage.SYMBOL_TABLE_ENTRY_INTERNAL: {
 				SymbolTableEntryInternal symbolTableEntryInternal = (SymbolTableEntryInternal)theEObject;
-				T result = caseSymbolTableEntryInternal(symbolTableEntryInternal);
+				T1 result = caseSymbolTableEntryInternal(symbolTableEntryInternal);
 				if (result == null) result = caseSymbolTableEntry(symbolTableEntryInternal);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ImPackage.TYPE_REFERENCE_NODE_IM: {
+				TypeReferenceNode_IM<?> typeReferenceNode_IM = (TypeReferenceNode_IM<?>)theEObject;
+				T1 result = caseTypeReferenceNode_IM(typeReferenceNode_IM);
+				if (result == null) result = caseTypeReferenceNode(typeReferenceNode_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ImPackage.REFERENCING_ELEMENT_IM: {
 				ReferencingElement_IM referencingElement_IM = (ReferencingElement_IM)theEObject;
-				T result = caseReferencingElement_IM(referencingElement_IM);
+				T1 result = caseReferencingElement_IM(referencingElement_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ImPackage.REFERENCING_ELEMENT_EXPRESSION_IM: {
 				ReferencingElementExpression_IM referencingElementExpression_IM = (ReferencingElementExpression_IM)theEObject;
-				T result = caseReferencingElementExpression_IM(referencingElementExpression_IM);
+				T1 result = caseReferencingElementExpression_IM(referencingElementExpression_IM);
 				if (result == null) result = caseReferencingElement_IM(referencingElementExpression_IM);
 				if (result == null) result = caseExpression(referencingElementExpression_IM);
 				if (result == null) result = caseTypableElement(referencingElementExpression_IM);
@@ -186,7 +194,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.IDENTIFIER_REF_IM: {
 				IdentifierRef_IM identifierRef_IM = (IdentifierRef_IM)theEObject;
-				T result = caseIdentifierRef_IM(identifierRef_IM);
+				T1 result = caseIdentifierRef_IM(identifierRef_IM);
 				if (result == null) result = caseIdentifierRef(identifierRef_IM);
 				if (result == null) result = caseReferencingElementExpression_IM(identifierRef_IM);
 				if (result == null) result = casePrimaryExpression(identifierRef_IM);
@@ -201,7 +209,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM: {
 				ParameterizedPropertyAccessExpression_IM parameterizedPropertyAccessExpression_IM = (ParameterizedPropertyAccessExpression_IM)theEObject;
-				T result = caseParameterizedPropertyAccessExpression_IM(parameterizedPropertyAccessExpression_IM);
+				T1 result = caseParameterizedPropertyAccessExpression_IM(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseParameterizedPropertyAccessExpression(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseReferencingElementExpression_IM(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseExpressionWithTarget(parameterizedPropertyAccessExpression_IM);
@@ -216,7 +224,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.PARAMETERIZED_TYPE_REF_IM: {
 				ParameterizedTypeRef_IM parameterizedTypeRef_IM = (ParameterizedTypeRef_IM)theEObject;
-				T result = caseParameterizedTypeRef_IM(parameterizedTypeRef_IM);
+				T1 result = caseParameterizedTypeRef_IM(parameterizedTypeRef_IM);
 				if (result == null) result = caseParameterizedTypeRef(parameterizedTypeRef_IM);
 				if (result == null) result = caseReferencingElement_IM(parameterizedTypeRef_IM);
 				if (result == null) result = caseBaseTypeRef(parameterizedTypeRef_IM);
@@ -229,7 +237,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: {
 				ParameterizedTypeRefStructural_IM parameterizedTypeRefStructural_IM = (ParameterizedTypeRefStructural_IM)theEObject;
-				T result = caseParameterizedTypeRefStructural_IM(parameterizedTypeRefStructural_IM);
+				T1 result = caseParameterizedTypeRefStructural_IM(parameterizedTypeRefStructural_IM);
 				if (result == null) result = caseParameterizedTypeRef_IM(parameterizedTypeRefStructural_IM);
 				if (result == null) result = caseParameterizedTypeRefStructural(parameterizedTypeRefStructural_IM);
 				if (result == null) result = caseParameterizedTypeRef(parameterizedTypeRefStructural_IM);
@@ -245,7 +253,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.SNIPPET: {
 				Snippet snippet = (Snippet)theEObject;
-				T result = caseSnippet(snippet);
+				T1 result = caseSnippet(snippet);
 				if (result == null) result = caseExpression(snippet);
 				if (result == null) result = caseTypableElement(snippet);
 				if (result == null) result = caseControlFlowElement(snippet);
@@ -254,11 +262,10 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.DELEGATING_MEMBER: {
 				DelegatingMember delegatingMember = (DelegatingMember)theEObject;
-				T result = caseDelegatingMember(delegatingMember);
+				T1 result = caseDelegatingMember(delegatingMember);
 				if (result == null) result = caseN4MemberDeclaration(delegatingMember);
 				if (result == null) result = caseAnnotableElement(delegatingMember);
 				if (result == null) result = caseModifiableElement(delegatingMember);
-				if (result == null) result = caseTypeProvidingElement(delegatingMember);
 				if (result == null) result = caseTypableElement(delegatingMember);
 				if (result == null) result = caseNamedElement(delegatingMember);
 				if (result == null) result = defaultCase(theEObject);
@@ -266,7 +273,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.DELEGATING_GETTER_DECLARATION: {
 				DelegatingGetterDeclaration delegatingGetterDeclaration = (DelegatingGetterDeclaration)theEObject;
-				T result = caseDelegatingGetterDeclaration(delegatingGetterDeclaration);
+				T1 result = caseDelegatingGetterDeclaration(delegatingGetterDeclaration);
 				if (result == null) result = caseN4GetterDeclaration(delegatingGetterDeclaration);
 				if (result == null) result = caseDelegatingMember(delegatingGetterDeclaration);
 				if (result == null) result = caseGetterDeclaration(delegatingGetterDeclaration);
@@ -275,13 +282,13 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTypedElement(delegatingGetterDeclaration);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(delegatingGetterDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingGetterDeclaration);
+				if (result == null) result = caseTypeProvidingElement(delegatingGetterDeclaration);
 				if (result == null) result = casePropertyNameOwner(delegatingGetterDeclaration);
 				if (result == null) result = caseN4MemberDeclaration(delegatingGetterDeclaration);
 				if (result == null) result = caseAnnotableElement(delegatingGetterDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(delegatingGetterDeclaration);
 				if (result == null) result = caseThisArgProvider(delegatingGetterDeclaration);
 				if (result == null) result = caseTypableElement(delegatingGetterDeclaration);
-				if (result == null) result = caseTypeProvidingElement(delegatingGetterDeclaration);
 				if (result == null) result = caseNamedElement(delegatingGetterDeclaration);
 				if (result == null) result = caseModifiableElement(delegatingGetterDeclaration);
 				if (result == null) result = defaultCase(theEObject);
@@ -289,7 +296,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.DELEGATING_SETTER_DECLARATION: {
 				DelegatingSetterDeclaration delegatingSetterDeclaration = (DelegatingSetterDeclaration)theEObject;
-				T result = caseDelegatingSetterDeclaration(delegatingSetterDeclaration);
+				T1 result = caseDelegatingSetterDeclaration(delegatingSetterDeclaration);
 				if (result == null) result = caseN4SetterDeclaration(delegatingSetterDeclaration);
 				if (result == null) result = caseDelegatingMember(delegatingSetterDeclaration);
 				if (result == null) result = caseSetterDeclaration(delegatingSetterDeclaration);
@@ -297,13 +304,13 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseFieldAccessor(delegatingSetterDeclaration);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(delegatingSetterDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingSetterDeclaration);
+				if (result == null) result = caseTypeProvidingElement(delegatingSetterDeclaration);
 				if (result == null) result = casePropertyNameOwner(delegatingSetterDeclaration);
 				if (result == null) result = caseN4MemberDeclaration(delegatingSetterDeclaration);
 				if (result == null) result = caseAnnotableElement(delegatingSetterDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(delegatingSetterDeclaration);
 				if (result == null) result = caseThisArgProvider(delegatingSetterDeclaration);
 				if (result == null) result = caseTypableElement(delegatingSetterDeclaration);
-				if (result == null) result = caseTypeProvidingElement(delegatingSetterDeclaration);
 				if (result == null) result = caseNamedElement(delegatingSetterDeclaration);
 				if (result == null) result = caseModifiableElement(delegatingSetterDeclaration);
 				if (result == null) result = defaultCase(theEObject);
@@ -311,7 +318,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.DELEGATING_METHOD_DECLARATION: {
 				DelegatingMethodDeclaration delegatingMethodDeclaration = (DelegatingMethodDeclaration)theEObject;
-				T result = caseDelegatingMethodDeclaration(delegatingMethodDeclaration);
+				T1 result = caseDelegatingMethodDeclaration(delegatingMethodDeclaration);
 				if (result == null) result = caseN4MethodDeclaration(delegatingMethodDeclaration);
 				if (result == null) result = caseDelegatingMember(delegatingMethodDeclaration);
 				if (result == null) result = caseAnnotableN4MemberDeclaration(delegatingMethodDeclaration);
@@ -319,10 +326,8 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseN4MemberDeclaration(delegatingMethodDeclaration);
 				if (result == null) result = caseFunctionDefinition(delegatingMethodDeclaration);
 				if (result == null) result = caseGenericDeclaration(delegatingMethodDeclaration);
-				if (result == null) result = caseTypedElement(delegatingMethodDeclaration);
 				if (result == null) result = casePropertyNameOwner(delegatingMethodDeclaration);
 				if (result == null) result = caseModifiableElement(delegatingMethodDeclaration);
-				if (result == null) result = caseTypeProvidingElement(delegatingMethodDeclaration);
 				if (result == null) result = caseNamedElement(delegatingMethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingMethodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(delegatingMethodDeclaration);
@@ -336,7 +341,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.STRING_LITERAL_FOR_STE: {
 				StringLiteralForSTE stringLiteralForSTE = (StringLiteralForSTE)theEObject;
-				T result = caseStringLiteralForSTE(stringLiteralForSTE);
+				T1 result = caseStringLiteralForSTE(stringLiteralForSTE);
 				if (result == null) result = caseStringLiteral(stringLiteralForSTE);
 				if (result == null) result = caseLiteral(stringLiteralForSTE);
 				if (result == null) result = casePrimaryExpression(stringLiteralForSTE);
@@ -348,7 +353,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_IM: {
 				VersionedParameterizedTypeRef_IM versionedParameterizedTypeRef_IM = (VersionedParameterizedTypeRef_IM)theEObject;
-				T result = caseVersionedParameterizedTypeRef_IM(versionedParameterizedTypeRef_IM);
+				T1 result = caseVersionedParameterizedTypeRef_IM(versionedParameterizedTypeRef_IM);
 				if (result == null) result = caseParameterizedTypeRef_IM(versionedParameterizedTypeRef_IM);
 				if (result == null) result = caseVersionedParameterizedTypeRef(versionedParameterizedTypeRef_IM);
 				if (result == null) result = caseParameterizedTypeRef(versionedParameterizedTypeRef_IM);
@@ -364,7 +369,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: {
 				VersionedParameterizedTypeRefStructural_IM versionedParameterizedTypeRefStructural_IM = (VersionedParameterizedTypeRefStructural_IM)theEObject;
-				T result = caseVersionedParameterizedTypeRefStructural_IM(versionedParameterizedTypeRefStructural_IM);
+				T1 result = caseVersionedParameterizedTypeRefStructural_IM(versionedParameterizedTypeRefStructural_IM);
 				if (result == null) result = caseParameterizedTypeRef_IM(versionedParameterizedTypeRefStructural_IM);
 				if (result == null) result = caseVersionedParameterizedTypeRefStructural(versionedParameterizedTypeRefStructural_IM);
 				if (result == null) result = caseReferencingElement_IM(versionedParameterizedTypeRefStructural_IM);
@@ -383,7 +388,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.VERSIONED_IDENTIFIER_REF_IM: {
 				VersionedIdentifierRef_IM versionedIdentifierRef_IM = (VersionedIdentifierRef_IM)theEObject;
-				T result = caseVersionedIdentifierRef_IM(versionedIdentifierRef_IM);
+				T1 result = caseVersionedIdentifierRef_IM(versionedIdentifierRef_IM);
 				if (result == null) result = caseIdentifierRef_IM(versionedIdentifierRef_IM);
 				if (result == null) result = caseVersionedIdentifierRef(versionedIdentifierRef_IM);
 				if (result == null) result = caseIdentifierRef(versionedIdentifierRef_IM);
@@ -401,7 +406,7 @@ public class ImSwitch<T> extends Switch<T> {
 			}
 			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM: {
 				VersionedNamedImportSpecifier_IM versionedNamedImportSpecifier_IM = (VersionedNamedImportSpecifier_IM)theEObject;
-				T result = caseVersionedNamedImportSpecifier_IM(versionedNamedImportSpecifier_IM);
+				T1 result = caseVersionedNamedImportSpecifier_IM(versionedNamedImportSpecifier_IM);
 				if (result == null) result = caseNamedImportSpecifier(versionedNamedImportSpecifier_IM);
 				if (result == null) result = caseImportSpecifier(versionedNamedImportSpecifier_IM);
 				if (result == null) result = defaultCase(theEObject);
@@ -422,7 +427,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScript_IM(Script_IM object) {
+	public T1 caseScript_IM(Script_IM object) {
 		return null;
 	}
 
@@ -437,7 +442,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSymbolTable(SymbolTable object) {
+	public T1 caseSymbolTable(SymbolTable object) {
 		return null;
 	}
 
@@ -452,7 +457,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSymbolTableEntry(SymbolTableEntry object) {
+	public T1 caseSymbolTableEntry(SymbolTableEntry object) {
 		return null;
 	}
 
@@ -467,7 +472,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSymbolTableEntryOriginal(SymbolTableEntryOriginal object) {
+	public T1 caseSymbolTableEntryOriginal(SymbolTableEntryOriginal object) {
 		return null;
 	}
 
@@ -482,7 +487,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSymbolTableEntryIMOnly(SymbolTableEntryIMOnly object) {
+	public T1 caseSymbolTableEntryIMOnly(SymbolTableEntryIMOnly object) {
 		return null;
 	}
 
@@ -497,7 +502,22 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSymbolTableEntryInternal(SymbolTableEntryInternal object) {
+	public T1 caseSymbolTableEntryInternal(SymbolTableEntryInternal object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Type Reference Node IM</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Type Reference Node IM</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public <T extends TypeRef> T1 caseTypeReferenceNode_IM(TypeReferenceNode_IM<T> object) {
 		return null;
 	}
 
@@ -512,7 +532,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseReferencingElement_IM(ReferencingElement_IM object) {
+	public T1 caseReferencingElement_IM(ReferencingElement_IM object) {
 		return null;
 	}
 
@@ -527,7 +547,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseReferencingElementExpression_IM(ReferencingElementExpression_IM object) {
+	public T1 caseReferencingElementExpression_IM(ReferencingElementExpression_IM object) {
 		return null;
 	}
 
@@ -542,7 +562,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIdentifierRef_IM(IdentifierRef_IM object) {
+	public T1 caseIdentifierRef_IM(IdentifierRef_IM object) {
 		return null;
 	}
 
@@ -557,7 +577,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedPropertyAccessExpression_IM(ParameterizedPropertyAccessExpression_IM object) {
+	public T1 caseParameterizedPropertyAccessExpression_IM(ParameterizedPropertyAccessExpression_IM object) {
 		return null;
 	}
 
@@ -572,7 +592,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedTypeRef_IM(ParameterizedTypeRef_IM object) {
+	public T1 caseParameterizedTypeRef_IM(ParameterizedTypeRef_IM object) {
 		return null;
 	}
 
@@ -587,7 +607,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedTypeRefStructural_IM(ParameterizedTypeRefStructural_IM object) {
+	public T1 caseParameterizedTypeRefStructural_IM(ParameterizedTypeRefStructural_IM object) {
 		return null;
 	}
 
@@ -602,7 +622,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSnippet(Snippet object) {
+	public T1 caseSnippet(Snippet object) {
 		return null;
 	}
 
@@ -617,7 +637,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDelegatingMember(DelegatingMember object) {
+	public T1 caseDelegatingMember(DelegatingMember object) {
 		return null;
 	}
 
@@ -632,7 +652,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDelegatingGetterDeclaration(DelegatingGetterDeclaration object) {
+	public T1 caseDelegatingGetterDeclaration(DelegatingGetterDeclaration object) {
 		return null;
 	}
 
@@ -647,7 +667,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDelegatingSetterDeclaration(DelegatingSetterDeclaration object) {
+	public T1 caseDelegatingSetterDeclaration(DelegatingSetterDeclaration object) {
 		return null;
 	}
 
@@ -662,7 +682,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDelegatingMethodDeclaration(DelegatingMethodDeclaration object) {
+	public T1 caseDelegatingMethodDeclaration(DelegatingMethodDeclaration object) {
 		return null;
 	}
 
@@ -677,7 +697,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStringLiteralForSTE(StringLiteralForSTE object) {
+	public T1 caseStringLiteralForSTE(StringLiteralForSTE object) {
 		return null;
 	}
 
@@ -692,7 +712,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedParameterizedTypeRef_IM(VersionedParameterizedTypeRef_IM object) {
+	public T1 caseVersionedParameterizedTypeRef_IM(VersionedParameterizedTypeRef_IM object) {
 		return null;
 	}
 
@@ -707,7 +727,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedParameterizedTypeRefStructural_IM(VersionedParameterizedTypeRefStructural_IM object) {
+	public T1 caseVersionedParameterizedTypeRefStructural_IM(VersionedParameterizedTypeRefStructural_IM object) {
 		return null;
 	}
 
@@ -722,7 +742,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedIdentifierRef_IM(VersionedIdentifierRef_IM object) {
+	public T1 caseVersionedIdentifierRef_IM(VersionedIdentifierRef_IM object) {
 		return null;
 	}
 
@@ -737,7 +757,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedNamedImportSpecifier_IM(VersionedNamedImportSpecifier_IM object) {
+	public T1 caseVersionedNamedImportSpecifier_IM(VersionedNamedImportSpecifier_IM object) {
 		return null;
 	}
 
@@ -752,7 +772,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVariableEnvironmentElement(VariableEnvironmentElement object) {
+	public T1 caseVariableEnvironmentElement(VariableEnvironmentElement object) {
 		return null;
 	}
 
@@ -767,7 +787,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotableElement(AnnotableElement object) {
+	public T1 caseAnnotableElement(AnnotableElement object) {
 		return null;
 	}
 
@@ -782,7 +802,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseControlFlowElement(ControlFlowElement object) {
+	public T1 caseControlFlowElement(ControlFlowElement object) {
 		return null;
 	}
 
@@ -797,7 +817,22 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseScript(Script object) {
+	public T1 caseScript(Script object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Type Reference Node</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Type Reference Node</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public <T extends TypeRef> T1 caseTypeReferenceNode(TypeReferenceNode<T> object) {
 		return null;
 	}
 
@@ -812,7 +847,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypableElement(TypableElement object) {
+	public T1 caseTypableElement(TypableElement object) {
 		return null;
 	}
 
@@ -827,7 +862,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExpression(Expression object) {
+	public T1 caseExpression(Expression object) {
 		return null;
 	}
 
@@ -842,7 +877,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePrimaryExpression(PrimaryExpression object) {
+	public T1 casePrimaryExpression(PrimaryExpression object) {
 		return null;
 	}
 
@@ -857,7 +892,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStrictModeRelevant(StrictModeRelevant object) {
+	public T1 caseStrictModeRelevant(StrictModeRelevant object) {
 		return null;
 	}
 
@@ -872,7 +907,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionable(Versionable object) {
+	public T1 caseVersionable(Versionable object) {
 		return null;
 	}
 
@@ -887,7 +922,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIdentifierRef(IdentifierRef object) {
+	public T1 caseIdentifierRef(IdentifierRef object) {
 		return null;
 	}
 
@@ -902,7 +937,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExpressionWithTarget(ExpressionWithTarget object) {
+	public T1 caseExpressionWithTarget(ExpressionWithTarget object) {
 		return null;
 	}
 
@@ -917,7 +952,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMemberAccess(MemberAccess object) {
+	public T1 caseMemberAccess(MemberAccess object) {
 		return null;
 	}
 
@@ -932,7 +967,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedAccess(ParameterizedAccess object) {
+	public T1 caseParameterizedAccess(ParameterizedAccess object) {
 		return null;
 	}
 
@@ -947,7 +982,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression object) {
+	public T1 caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression object) {
 		return null;
 	}
 
@@ -962,7 +997,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeArgument(TypeArgument object) {
+	public T1 caseTypeArgument(TypeArgument object) {
 		return null;
 	}
 
@@ -977,7 +1012,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeRef(TypeRef object) {
+	public T1 caseTypeRef(TypeRef object) {
 		return null;
 	}
 
@@ -992,7 +1027,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStaticBaseTypeRef(StaticBaseTypeRef object) {
+	public T1 caseStaticBaseTypeRef(StaticBaseTypeRef object) {
 		return null;
 	}
 
@@ -1007,7 +1042,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBaseTypeRef(BaseTypeRef object) {
+	public T1 caseBaseTypeRef(BaseTypeRef object) {
 		return null;
 	}
 
@@ -1022,7 +1057,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedTypeRef(ParameterizedTypeRef object) {
+	public T1 caseParameterizedTypeRef(ParameterizedTypeRef object) {
 		return null;
 	}
 
@@ -1037,7 +1072,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStructuralTypeRef(StructuralTypeRef object) {
+	public T1 caseStructuralTypeRef(StructuralTypeRef object) {
 		return null;
 	}
 
@@ -1052,7 +1087,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseParameterizedTypeRefStructural(ParameterizedTypeRefStructural object) {
+	public T1 caseParameterizedTypeRefStructural(ParameterizedTypeRefStructural object) {
 		return null;
 	}
 
@@ -1067,7 +1102,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseModifiableElement(ModifiableElement object) {
+	public T1 caseModifiableElement(ModifiableElement object) {
 		return null;
 	}
 
@@ -1082,7 +1117,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeProvidingElement(TypeProvidingElement object) {
+	public T1 caseTypeProvidingElement(TypeProvidingElement object) {
 		return null;
 	}
 
@@ -1097,7 +1132,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNamedElement(NamedElement object) {
+	public T1 caseNamedElement(NamedElement object) {
 		return null;
 	}
 
@@ -1112,7 +1147,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4MemberDeclaration(N4MemberDeclaration object) {
+	public T1 caseN4MemberDeclaration(N4MemberDeclaration object) {
 		return null;
 	}
 
@@ -1127,7 +1162,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseThisArgProvider(ThisArgProvider object) {
+	public T1 caseThisArgProvider(ThisArgProvider object) {
 		return null;
 	}
 
@@ -1142,7 +1177,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionOrFieldAccessor(FunctionOrFieldAccessor object) {
+	public T1 caseFunctionOrFieldAccessor(FunctionOrFieldAccessor object) {
 		return null;
 	}
 
@@ -1157,7 +1192,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyNameOwner(PropertyNameOwner object) {
+	public T1 casePropertyNameOwner(PropertyNameOwner object) {
 		return null;
 	}
 
@@ -1172,7 +1207,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFieldAccessor(FieldAccessor object) {
+	public T1 caseFieldAccessor(FieldAccessor object) {
 		return null;
 	}
 
@@ -1187,7 +1222,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypedElement(TypedElement object) {
+	public T1 caseTypedElement(TypedElement object) {
 		return null;
 	}
 
@@ -1202,7 +1237,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseGetterDeclaration(GetterDeclaration object) {
+	public T1 caseGetterDeclaration(GetterDeclaration object) {
 		return null;
 	}
 
@@ -1217,7 +1252,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAnnotableN4MemberDeclaration(AnnotableN4MemberDeclaration object) {
+	public T1 caseAnnotableN4MemberDeclaration(AnnotableN4MemberDeclaration object) {
 		return null;
 	}
 
@@ -1232,7 +1267,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4FieldAccessor(N4FieldAccessor object) {
+	public T1 caseN4FieldAccessor(N4FieldAccessor object) {
 		return null;
 	}
 
@@ -1247,7 +1282,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4GetterDeclaration(N4GetterDeclaration object) {
+	public T1 caseN4GetterDeclaration(N4GetterDeclaration object) {
 		return null;
 	}
 
@@ -1262,7 +1297,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSetterDeclaration(SetterDeclaration object) {
+	public T1 caseSetterDeclaration(SetterDeclaration object) {
 		return null;
 	}
 
@@ -1277,7 +1312,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4SetterDeclaration(N4SetterDeclaration object) {
+	public T1 caseN4SetterDeclaration(N4SetterDeclaration object) {
 		return null;
 	}
 
@@ -1292,7 +1327,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTypeDefiningElement(TypeDefiningElement object) {
+	public T1 caseTypeDefiningElement(TypeDefiningElement object) {
 		return null;
 	}
 
@@ -1307,7 +1342,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedElement(VersionedElement object) {
+	public T1 caseVersionedElement(VersionedElement object) {
 		return null;
 	}
 
@@ -1322,7 +1357,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseFunctionDefinition(FunctionDefinition object) {
+	public T1 caseFunctionDefinition(FunctionDefinition object) {
 		return null;
 	}
 
@@ -1337,7 +1372,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseGenericDeclaration(GenericDeclaration object) {
+	public T1 caseGenericDeclaration(GenericDeclaration object) {
 		return null;
 	}
 
@@ -1352,7 +1387,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMethodDeclaration(MethodDeclaration object) {
+	public T1 caseMethodDeclaration(MethodDeclaration object) {
 		return null;
 	}
 
@@ -1367,7 +1402,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseN4MethodDeclaration(N4MethodDeclaration object) {
+	public T1 caseN4MethodDeclaration(N4MethodDeclaration object) {
 		return null;
 	}
 
@@ -1382,7 +1417,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLiteral(Literal object) {
+	public T1 caseLiteral(Literal object) {
 		return null;
 	}
 
@@ -1397,7 +1432,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStringLiteral(StringLiteral object) {
+	public T1 caseStringLiteral(StringLiteral object) {
 		return null;
 	}
 
@@ -1412,7 +1447,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedReference(VersionedReference object) {
+	public T1 caseVersionedReference(VersionedReference object) {
 		return null;
 	}
 
@@ -1427,7 +1462,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedParameterizedTypeRef(VersionedParameterizedTypeRef object) {
+	public T1 caseVersionedParameterizedTypeRef(VersionedParameterizedTypeRef object) {
 		return null;
 	}
 
@@ -1442,7 +1477,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedParameterizedTypeRefStructural(VersionedParameterizedTypeRefStructural object) {
+	public T1 caseVersionedParameterizedTypeRefStructural(VersionedParameterizedTypeRefStructural object) {
 		return null;
 	}
 
@@ -1457,7 +1492,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+	public T1 caseVersionedIdentifierRef(VersionedIdentifierRef object) {
 		return null;
 	}
 
@@ -1472,7 +1507,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseImportSpecifier(ImportSpecifier object) {
+	public T1 caseImportSpecifier(ImportSpecifier object) {
 		return null;
 	}
 
@@ -1487,7 +1522,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNamedImportSpecifier(NamedImportSpecifier object) {
+	public T1 caseNamedImportSpecifier(NamedImportSpecifier object) {
 		return null;
 	}
 
@@ -1503,7 +1538,7 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object) {
+	public T1 defaultCase(EObject object) {
 		return null;
 	}
 

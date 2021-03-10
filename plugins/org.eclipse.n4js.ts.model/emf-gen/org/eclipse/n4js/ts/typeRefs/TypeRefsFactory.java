@@ -48,15 +48,6 @@ public interface TypeRefsFactory extends EFactory {
 	IntersectionTypeExpression createIntersectionTypeExpression();
 
 	/**
-	 * Returns a new object of class '<em>This Type Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>This Type Ref</em>'.
-	 * @generated
-	 */
-	ThisTypeRef createThisTypeRef();
-
-	/**
 	 * Returns a new object of class '<em>This Type Ref Nominal</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

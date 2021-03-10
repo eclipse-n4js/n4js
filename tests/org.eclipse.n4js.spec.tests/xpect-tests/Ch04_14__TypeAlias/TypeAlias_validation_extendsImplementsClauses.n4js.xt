@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class Cls {}
+class Cls2 {}
+interface Ifc {}
+enum SomeEnum { Red, Green, Blue }
+
+type AliCls = Cls;
+type AliIfc = Ifc;
+type AliBad1 = SomeEnum;
+type AliBad2 = Cls | Cls2;
+type AliBad3 = (string)=>number;
+
+
+// XPECT noerrors -->
+class SubCls01 extends AliCls {}
+// XPECT noerrors -->
+class SubCls02 implements AliIfc {}
+
+// XPECT errors --> "The class SubCls11 cannot extend interface Ifc, use "implements"." at "AliIfc"
+class SubCls11 extends AliIfc {}
+// XPECT errors --> "The class SubCls12 cannot extend enum SomeEnum." at "AliBad1"
+class SubCls12 extends AliBad1 {}
+// XPECT errors --> "The class SubCls13 cannot extend union{Cls,Cls2}." at "AliBad2"
+class SubCls13 extends AliBad2 {}
+// XPECT errors --> "The class SubCls14 cannot extend {function(string):number}." at "AliBad3"
+class SubCls14 extends AliBad3 {}
+
+// XPECT errors --> "The class SubCls21 cannot implement class Cls, use "extends"." at "AliCls"
+class SubCls21 implements AliCls {}
+// XPECT errors --> "The class SubCls22 cannot implement enum SomeEnum." at "AliBad1"
+class SubCls22 implements AliBad1 {}
+// XPECT errors --> "The class SubCls23 cannot implement union{Cls,Cls2}." at "AliBad2"
+class SubCls23 implements AliBad2 {}
+// XPECT errors --> "The class SubCls24 cannot implement {function(string):number}." at "AliBad3"
+class SubCls24 implements AliBad3 {}
+
+
+// XPECT noerrors -->
+interface SubIfc01 extends AliIfc {}
+
+// XPECT errors --> "The interface SubIfc11 cannot extend class Cls." at "AliCls"
+interface SubIfc11 extends AliCls {}
+// XPECT errors --> "The interface SubIfc12 cannot extend enum SomeEnum." at "AliBad1"
+interface SubIfc12 extends AliBad1 {}
+// XPECT errors --> "The interface SubIfc13 cannot extend union{Cls,Cls2}." at "AliBad2"
+interface SubIfc13 extends AliBad2 {}
+// XPECT errors --> "The interface SubIfc14 cannot extend {function(string):number}." at "AliBad3"
+interface SubIfc14 extends AliBad3 {}

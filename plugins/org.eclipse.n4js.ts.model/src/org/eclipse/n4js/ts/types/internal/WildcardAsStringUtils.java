@@ -18,9 +18,9 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 
 /**
- * In the {@link TypeArgument#getTypeRefAsString() #getTypeRefAsString()} method of {@link Wildcard}s, we want to show
- * implicit upper bounds (e.g. helpful in error messages). However, this means we will run into an infinite recursion
- * issue in cases like:
+ * In the {@link TypeArgument#internalGetTypeRefAsString() #internalGetTypeRefAsString()} method of {@link Wildcard}s,
+ * we want to show implicit upper bounds (e.g. helpful in error messages). However, this means we will run into an
+ * infinite recursion issue in cases like:
  *
  * <pre>
  * class C&lt;T extends C&lt;?>> {
@@ -28,22 +28,22 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
  * </pre>
  *
  * To properly guard for infinite recursion in such cases, this class contains some special handling and method
- * {@link Wildcard#getTypeRefAsString()} delegates here.
+ * {@link Wildcard#internalGetTypeRefAsString()} delegates here.
  */
 public final class WildcardAsStringUtils {
 
 	private static final Set<Thread> threadsCurrentlyConvertingWildcardsWithImplicitUpperBounds = ConcurrentHashMap
 			.newKeySet();
 
-	/** workaround for Xtend/Xcore bug. Delegates to {@link #getTypeRefAsString(Wildcard)}. */
-	public static final String getTypeRefAsString_workaround(Object wildcard) {
-		return getTypeRefAsString((Wildcard) wildcard);
+	/** workaround for Xtend/Xcore bug. Delegates to {@link #internalGetTypeRefAsString(Wildcard)}. */
+	public static final String internalGetTypeRefAsString_workaround(Object wildcard) {
+		return internalGetTypeRefAsString((Wildcard) wildcard);
 	}
 
 	/**
 	 * Method {@link Wildcard#getTypeRefAsString()} delegates here. Should not be called by any other code!
 	 */
-	public static final String getTypeRefAsString(Wildcard w) {
+	public static final String internalGetTypeRefAsString(Wildcard w) {
 		if (w.isImplicitUpperBoundInEffect()) {
 			final Thread myThread = Thread.currentThread();
 			final boolean wIsFirst = threadsCurrentlyConvertingWildcardsWithImplicitUpperBounds.add(myThread);

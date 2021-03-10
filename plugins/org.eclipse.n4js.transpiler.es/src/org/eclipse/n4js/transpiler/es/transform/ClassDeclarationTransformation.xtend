@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
@@ -36,7 +37,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
-import org.eclipse.n4js.n4JS.N4Modifier
 
 /**
  * Transforms {@link N4ClassDeclaration}s into a constructor function and a <code>$makeClass</code> call.
@@ -134,9 +134,9 @@ class ClassDeclarationTransformation extends Transformation {
 			}
 			switch (currMember) {
 				N4GetterDeclaration:
-					currMember.declaredTypeRef = null
+					currMember.declaredTypeRefNode = null
 				N4MethodDeclaration:
-					currMember.returnTypeRef = null
+					currMember.declaredReturnTypeRefNode = null
 			}
 		}
 	}

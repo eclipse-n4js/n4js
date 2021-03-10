@@ -38,4 +38,12 @@ public interface TypeProvidingElement extends EObject {
 	 */
 	TypeRef getDeclaredTypeRef();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getDeclaredTypeRefInAST();
+
 } // TypeProvidingElement

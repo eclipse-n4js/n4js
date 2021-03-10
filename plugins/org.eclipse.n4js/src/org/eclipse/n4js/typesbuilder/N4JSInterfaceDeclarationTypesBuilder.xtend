@@ -77,6 +77,6 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 
 	def private void addExtendedInterfaces(TInterface interfaceType, N4InterfaceDeclaration c, boolean preLinkingPhase) {
 		if (!preLinkingPhase)
-			addCopyOfReferences(interfaceType.superInterfaceRefs, c.superInterfaceRefs)
+			addCopyOfReferences(interfaceType.superInterfaceRefs, c.superInterfaceRefs.map[typeRefInAST])
 	}
 }

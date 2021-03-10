@@ -82,6 +82,7 @@ import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
@@ -136,7 +137,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 
 /**
  */
@@ -226,7 +226,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		// check type arguments
 		val prop = propAccessExpression.property;
 		val typeVars = if (prop instanceof Type) prop.typeVars else #[]; // else-case required for TField, TGetter, TSetter
-		internalCheckTypeArguments(typeVars, propAccessExpression.typeArgs, true, prop, propAccessExpression,
+		internalCheckTypeArgumentsNodes(typeVars, propAccessExpression.typeArgs, true, prop, propAccessExpression,
 			N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property);
 
 		internalCheckTargetSubtypeOfDeclaredThisType(propAccessExpression);
@@ -394,7 +394,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (typeRef instanceof FunctionTypeExprOrRef) {
 			// check type arguments
-			internalCheckTypeArguments(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
+			internalCheckTypeArgumentsNodes(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
 				callExpression, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 
 			// check Calling async functions with missing await
@@ -601,7 +601,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// success case; but perform some further checks
-		internalCheckTypeArguments(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
+		internalCheckTypeArgumentsNodes(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
 			
 		
@@ -1216,8 +1216,10 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkCastExpression(CastExpression castExpression) {
 		// avoid validating a broken AST
-		if (castExpression.expression === null || castExpression.targetTypeRef === null)
+		if (castExpression.expression === null
+			|| castExpression.targetTypeRefNode?.typeRefInAST === null) {
 			return;
+		}
 
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(castExpression);
 

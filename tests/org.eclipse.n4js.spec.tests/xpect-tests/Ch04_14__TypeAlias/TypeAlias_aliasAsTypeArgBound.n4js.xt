@@ -1,0 +1,113 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+class X {}
+
+class G<T> {}
+
+let ga: G<A>;
+let gb: G<B>;
+let gc: G<C>;
+let gx: G<X>;
+let gw: G<?>;
+let gwsupb: G<? super B>;
+let gwextb: G<? extends B>;
+
+type AA = A;
+type AB = B;
+type AC = C;
+
+let gwsupab: G<? super AB>;
+let gwextab: G<? extends AB>;
+
+
+// ======================================================================
+// alias as upper bound
+
+// XPECT errors --> "G<A> is not a subtype of G<? extends AB>." at "ga"
+gwextab = ga;
+// XPECT errors --> "G<? extends AB> is not a subtype of G<A>." at "gwextab"
+ga = gwextab;
+
+// XPECT noerrors -->
+gwextab = gb;
+// XPECT errors --> "G<? extends AB> is not a subtype of G<B>." at "gwextab"
+gb = gwextab;
+
+// XPECT noerrors -->
+gwextab = gc;
+// XPECT errors --> "G<? extends AB> is not a subtype of G<C>." at "gwextab"
+gc = gwextab;
+
+// XPECT errors --> "G<X> is not a subtype of G<? extends AB>." at "gx"
+gwextab = gx;
+// XPECT errors --> "G<? extends AB> is not a subtype of G<X>." at "gwextab"
+gx = gwextab;
+
+// XPECT errors --> "G<?> is not a subtype of G<? extends AB>." at "gw"
+gwextab = gw;
+// XPECT noerrors -->
+gw = gwextab;
+
+// XPECT errors --> "G<? super B> is not a subtype of G<? extends AB>." at "gwsupb"
+gwextab = gwsupb;
+// XPECT errors --> "G<? extends AB> is not a subtype of G<? super B>." at "gwextab"
+gwsupb = gwextab;
+
+// XPECT noerrors -->
+gwextab = gwextb;
+// XPECT noerrors -->
+gwextb = gwextab;
+
+
+// ======================================================================
+// alias as lower bound
+
+// XPECT noerrors -->
+gwsupab = ga;
+// XPECT errors --> "G<? super AB> is not a subtype of G<A>." at "gwsupab"
+ga = gwsupab;
+
+// XPECT noerrors -->
+gwsupab = gb;
+// XPECT errors --> "G<? super AB> is not a subtype of G<B>." at "gwsupab"
+gb = gwsupab;
+
+// XPECT errors --> "G<C> is not a subtype of G<? super AB>." at "gc"
+gwsupab = gc;
+// XPECT errors --> "G<? super AB> is not a subtype of G<C>." at "gwsupab"
+gc = gwsupab;
+
+// XPECT errors --> "G<X> is not a subtype of G<? super AB>." at "gx"
+gwsupab = gx;
+// XPECT errors --> "G<? super AB> is not a subtype of G<X>." at "gwsupab"
+gx = gwsupab;
+
+// XPECT errors --> "G<?> is not a subtype of G<? super AB>." at "gw"
+gwsupab = gw;
+// XPECT noerrors -->
+gw = gwsupab;
+
+// XPECT noerrors -->
+gwsupab = gwsupb;
+// XPECT noerrors -->
+gwsupb = gwsupab;
+
+// XPECT errors --> "G<? extends B> is not a subtype of G<? super AB>." at "gwextb"
+gwsupab = gwextb;
+// XPECT errors --> "G<? super AB> is not a subtype of G<? extends B>." at "gwsupab"
+gwextb = gwsupab;

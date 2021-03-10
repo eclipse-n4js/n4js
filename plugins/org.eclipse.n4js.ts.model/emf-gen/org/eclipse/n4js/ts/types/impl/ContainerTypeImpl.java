@@ -36,7 +36,6 @@ import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.NameAndAccess;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap;
@@ -60,12 +59,11 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembersByNameAndAccess <em>Owned Members By Name And Access</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembers <em>Owned Members</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getCallableCtor <em>Callable Ctor</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getTypeVars <em>Type Vars</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl implements ContainerType<MT> {
+public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeImpl implements ContainerType<MT> {
 	/**
 	 * The cached value of the '{@link #getOwnedMembersByNameAndAccess() <em>Owned Members By Name And Access</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -95,16 +93,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * @ordered
 	 */
 	protected TMethod callableCtor;
-
-	/**
-	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTypeVars()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<TypeVariable> typeVars;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -204,19 +192,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR, newCallableCtor, newCallableCtor));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<TypeVariable> getTypeVars() {
-		if (typeVars == null) {
-			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypesPackage.CONTAINER_TYPE__TYPE_VARS);
-		}
-		return typeVars;
 	}
 
 	/**
@@ -325,8 +300,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 				return ((InternalEList<?>)getOwnedMembers()).basicRemove(otherEnd, msgs);
 			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
 				return basicSetCallableCtor(null, msgs);
-			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
-				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -345,8 +318,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 				return getOwnedMembers();
 			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
 				return getCallableCtor();
-			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
-				return getTypeVars();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -370,10 +341,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
 				setCallableCtor((TMethod)newValue);
 				return;
-			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
-				getTypeVars().clear();
-				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -395,9 +362,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
 				setCallableCtor((TMethod)null);
 				return;
-			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
-				getTypeVars().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -416,8 +380,6 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 				return ownedMembers != null && !ownedMembers.isEmpty();
 			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
 				return callableCtor != null;
-			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
-				return typeVars != null && !typeVars.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

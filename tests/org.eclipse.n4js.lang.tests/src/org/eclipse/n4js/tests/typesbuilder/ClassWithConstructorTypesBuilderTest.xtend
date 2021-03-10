@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.tests.typesbuilder
 
+import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.tests.parser.AbstractParserTest
-import org.eclipse.n4js.ts.types.TMethod
-import org.junit.Test
-import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.tests.parser.AbstractParserTest
+import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.n4js.n4JS.ExportDeclaration
+import org.junit.Test
 
 class ClassWithConstructorTypesBuilderTest extends AbstractParserTest {
 
@@ -64,7 +64,7 @@ class ClassWithConstructorTypesBuilderTest extends AbstractParserTest {
 		assertEquals("constructor", ctor.name);
 		assertTrue(ctorDecl.constructor);
 		assertTrue(ctor.constructor);
-		assertNull(ctorDecl.returnTypeRef);
+		assertNull(ctorDecl.declaredReturnTypeRefInAST);
 		assertTrue(ctor.returnTypeRef instanceof DeferredTypeRef);
 
 		val mDecl = classDecl.getOwnedMembers.get(1) as N4MethodDeclaration

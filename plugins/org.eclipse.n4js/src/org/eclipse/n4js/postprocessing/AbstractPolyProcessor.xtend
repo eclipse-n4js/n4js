@@ -77,7 +77,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 					// since the type of the invoked migration is not known at this point.
 					return false;
 				}
-				
+
 				// NOTE: in next line, we do not propagate the cancel indicator; however, this is not required, because
 				// all we do with the newly created rule environment is to type a backward(!) reference, so we can be
 				// sure that no significant processing will be triggered by the type judgment invocation below
@@ -90,8 +90,8 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				}
 			}
 			FunctionExpression:
-				obj.fpars.exists[declaredTypeRef === null] // type of 1 or more fpars is undeclared
-				|| obj.returnTypeRef === null // return type is undeclared
+				obj.fpars.exists[declaredTypeRefInAST === null] // type of 1 or more fpars is undeclared
+				|| obj.declaredReturnTypeRefInAST === null // return type is undeclared
 				// note: if the FunctionExpression is generic, this does *not* make it poly!
 			ArrayLiteral:
 				true
@@ -108,11 +108,11 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 	def private boolean isPoly(PropertyAssignment pa) {
 		switch (pa) {
 			PropertyNameValuePair:
-				pa.expression !== null && pa.declaredTypeRef === null // FIXME requiring pa.expression!==null is inconsistent!
+				pa.expression !== null && pa.declaredTypeRefInAST === null // FIXME requiring pa.expression!==null is inconsistent!
 			PropertyGetterDeclaration:
-				pa.declaredTypeRef === null
+				pa.declaredTypeRefInAST === null
 			PropertySetterDeclaration:
-				pa.declaredTypeRef === null
+				pa.declaredTypeRefInAST === null
 			PropertyMethodDeclaration:
 				false
 			PropertySpread:
@@ -244,7 +244,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			TField:
 				m.typeRef
 			TGetter:
-				m.declaredTypeRef
+				m.typeRef
 			TSetter:
 				m?.fpar.typeRef
 			TMethod:
@@ -259,7 +259,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 			TField:
 				m.typeRef = type
 			TGetter:
-				m.declaredTypeRef = type
+				m.typeRef = type
 			TSetter:
 				if (m.fpar !== null) m.fpar.typeRef = type
 			TMethod:

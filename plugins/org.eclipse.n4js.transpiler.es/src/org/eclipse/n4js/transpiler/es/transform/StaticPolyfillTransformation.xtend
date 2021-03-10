@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -43,6 +44,7 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 class StaticPolyfillTransformation extends Transformation {
 
 	@Inject private StaticPolyfillHelper staticPolyfillHelper;
+	@Inject private TypeAssistant typeAssistant;
 
 	/**
 	 * While inserting members into classes, we add here the elements referenced in the initializer expressions, fpar
@@ -91,19 +93,19 @@ class StaticPolyfillTransformation extends Transformation {
 	def private void doStaticPolyfilling(N4ClassDeclaration classFilled, N4ClassDeclaration classFiller) {
 		// fill additionally implemented interfaces
 		val currentIfcs = classFilled.implementedInterfaceRefs.filter(ParameterizedTypeRef_IM).map[declaredType_IM].filter(TInterface).toSet;
-		classFiller.implementedInterfaceRefs.forEach[classFilled.insertImplementedInterface(it, currentIfcs)];
+		classFiller.implementedInterfaceRefs
+			.map[typeAssistant.getOriginalDeclaredType(it)]
+			.filter(TInterface)
+			.forEach[classFilled.insertImplementedInterface(it, currentIfcs)];
 		// fill members
 		classFiller.ownedMembers.forEach[classFilled.insertMember(it)];
 	}
 
-	def private void insertImplementedInterface(N4ClassDefinition classFilled, ParameterizedTypeRef ifcRefToBeInserted,
+	def private void insertImplementedInterface(N4ClassDefinition classFilled, TInterface ifcToBeInserted,
 		Set<TInterface> currentIfcs) {
-		val ifcType = ifcRefToBeInserted.declaredType;
-		if(ifcType instanceof TInterface) {
-			if(!currentIfcs.contains(ifcType)) { // avoid duplicates!
-				val ifcSTE = getSymbolTableEntryOriginal(ifcType, true);
-				classFilled.implementedInterfaceRefs += _ParameterizedTypeRef(ifcSTE);
-			}
+		if(!currentIfcs.contains(ifcToBeInserted)) { // avoid duplicates!
+			val ifcSTE = getSymbolTableEntryOriginal(ifcToBeInserted, true);
+			classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceNode(_ParameterizedTypeRef(ifcSTE));
 		}
 	}
 

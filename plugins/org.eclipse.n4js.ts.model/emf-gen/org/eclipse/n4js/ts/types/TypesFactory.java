@@ -156,15 +156,6 @@ public interface TypesFactory extends EFactory {
 	Type createType();
 
 	/**
-	 * Returns a new object of class '<em>Declared Type With Access Modifier</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Declared Type With Access Modifier</em>'.
-	 * @generated
-	 */
-	DeclaredTypeWithAccessModifier createDeclaredTypeWithAccessModifier();
-
-	/**
 	 * Returns a new object of class '<em>Virtual Base Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -397,6 +388,15 @@ public interface TypesFactory extends EFactory {
 	 * @generated
 	 */
 	TEnumLiteral createTEnumLiteral();
+
+	/**
+	 * Returns a new object of class '<em>Type Alias</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Type Alias</em>'.
+	 * @generated
+	 */
+	TypeAlias createTypeAlias();
 
 	/**
 	 * Returns a new object of class '<em>TVariable</em>'.

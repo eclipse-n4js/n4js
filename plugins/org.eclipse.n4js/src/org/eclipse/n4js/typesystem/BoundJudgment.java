@@ -13,40 +13,23 @@ package org.eclipse.n4js.typesystem;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottomTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Function;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
-import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
-import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
-import org.eclipse.n4js.ts.typeRefs.util.TypeRefsSwitch;
-import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
-import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.BoundType;
+import org.eclipse.n4js.typesystem.utils.NestedTypeRefsSwitch;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.RecursionGuard;
-
-import com.google.common.base.Optional;
 
 /* package */ class BoundJudgment extends AbstractJudgment {
 
@@ -72,9 +55,8 @@ import com.google.common.base.Optional;
 		return result;
 	}
 
-	private final class BoundSwitch extends TypeRefsSwitch<TypeRef> {
+	private final class BoundSwitch extends NestedTypeRefsSwitch {
 
-		private final RuleEnvironment G;
 		private final BoundType boundType;
 		private final boolean reopen;
 		private final boolean resolve;
@@ -82,20 +64,21 @@ import com.google.common.base.Optional;
 		private final RecursionGuard<EObject> guard = new RecursionGuard<>();
 
 		public BoundSwitch(RuleEnvironment G, BoundType boundType, boolean reopen, boolean resolve) {
-			this.G = G;
+			super(G);
 			this.boundType = boundType;
 			this.reopen = reopen;
 			this.resolve = resolve;
 		}
 
-		// the following two methods are provided to increase readability of recursive invocations of #doSwitch()
-
-		private TypeRef bound(TypeArgument typeArg) {
-			return bound(G, typeArg, boundType, reopen, resolve);
+		@Override
+		protected NestedTypeRefsSwitch derive(RuleEnvironment G_NEW) {
+			return new BoundSwitch(G_NEW, boundType, reopen, resolve);
 		}
 
-		private TypeRef bound(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW, boolean reopenNEW,
-				boolean resolveNEW) {
+		// the following method is provided to increase readability of recursive invocations of #doSwitch()
+
+		private TypeRef bound(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW,
+				boolean reopenNEW, boolean resolveNEW) {
 			if (G_NEW == G && boundTypeNEW == boundType && reopenNEW == reopen && resolveNEW == resolve) {
 				return doSwitch(typeArg);
 			} else {
@@ -104,11 +87,20 @@ import com.google.common.base.Optional;
 			}
 		}
 
+		/**
+		 * This switch converts all wildcards to {@link TypeRef}s, so you always get a {@code TypeRef} when passing in a
+		 * {@link TypeArgument}.
+		 */
+		@Override
+		public TypeRef doSwitch(TypeArgument eObject) {
+			return (TypeRef) super.doSwitch(eObject);
+		}
+
 		@Override
 		protected TypeRef doSwitch(int classifierID, EObject eObject) {
 			if (guard.tryNext(eObject)) {
 				try {
-					return super.doSwitch(classifierID, eObject);
+					return (TypeRef) super.doSwitch(classifierID, eObject);
 				} finally {
 					guard.done(eObject);
 				}
@@ -119,17 +111,12 @@ import com.google.common.base.Optional;
 		}
 
 		@Override
-		public TypeRef caseTypeRef(TypeRef typeRef) {
-			return typeRef;
-		}
-
-		@Override
 		public TypeRef caseWildcard(Wildcard wildcard) {
 			final TypeRef declBound = boundType == BoundType.UPPER
 					? wildcard.getDeclaredOrImplicitUpperBound()
 					: wildcard.getDeclaredLowerBound();
 			if (declBound != null) {
-				return declBound;
+				return processNested(G, declBound);
 			}
 			return getFallbackBoundForWildcard(wildcard);
 		}
@@ -150,81 +137,59 @@ import com.google.common.base.Optional;
 		}
 
 		@Override
-		public TypeRef caseUnionTypeExpression(UnionTypeExpression union) {
-			final Optional<List<TypeRef>> typeRefsBounds = mapAndCompare(union.getTypeRefs(), this::bound);
-			if (typeRefsBounds.isPresent()) {
-				final UnionTypeExpression result = TypeUtils
-						.createNonSimplifiedUnionType(typeRefsBounds.get());
-				TypeUtils.copyTypeModifiers(result, union);
-				return result;
-			}
-			return union;
-		}
-
-		@Override
-		public TypeRef caseIntersectionTypeExpression(IntersectionTypeExpression intersection) {
-			final Optional<List<TypeRef>> typeRefsBounds = mapAndCompare(intersection.getTypeRefs(), this::bound);
-			if (typeRefsBounds.isPresent()) {
-				final IntersectionTypeExpression result = TypeUtils
-						.createNonSimplifiedIntersectionType(typeRefsBounds.get());
-				TypeUtils.copyTypeModifiers(result, intersection);
-				return result;
-			}
-			return intersection;
-		}
-
-		private <T extends TypeArgument> Optional<List<T>> mapAndCompare(List<T> typeArgs, Function<T, T> fn) {
-			final List<T> typeArgsBounds = new ArrayList<>(typeArgs.size());
-			boolean haveChange = false;
-			for (T typeArg : typeArgs) {
-				final T typeArgBound = fn.apply(typeArg);
-				typeArgsBounds.add(typeArgBound);
-				haveChange |= typeArgBound != typeArg;
-			}
-			return haveChange ? Optional.of(typeArgsBounds) : Optional.absent();
-		}
-
-		@Override
-		public TypeRef caseParameterizedTypeRef(ParameterizedTypeRef ptr) {
-			final Type declType = ptr.getDeclaredType();
-			if (declType instanceof TypeVariable) {
-				if (resolve) {
+		protected TypeRef caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
+			TypeRef result = typeRef;
+			if (resolve) {
+				final Type declType = result.getDeclaredType();
+				if (declType instanceof TypeVariable) {
 					switch (boundType) {
 					case UPPER:
 						final TypeRef upperBound = ((TypeVariable) declType).getDeclaredUpperBound();
 						if (upperBound != null) {
-							final TypeRef upperBoundOfUpperBound = bound(upperBound);
-							return upperBoundOfUpperBound;
+							TypeRef upperBoundOfUpperBound = processNested(G, upperBound);
+							if (upperBoundOfUpperBound == upperBound) {
+								// IMPORTANT: in order to comply with rule #3 described in API doc of
+								// NestedTypeRefsSwitch, we always need to create a copy, here:
+								upperBoundOfUpperBound = TypeUtils.copy(upperBoundOfUpperBound);
+							}
+							result = upperBoundOfUpperBound;
+						} else {
+							result = RuleEnvironmentExtensions.topTypeRef(G);
 						}
-						return RuleEnvironmentExtensions.topTypeRef(G);
+						break;
 					case LOWER:
-						return RuleEnvironmentExtensions.bottomTypeRef(G);
+						result = RuleEnvironmentExtensions.bottomTypeRef(G);
+						break;
+					}
+					if (result != typeRef) {
+						result = TypeUtils.mergeTypeModifiers(result, typeRef, true);
 					}
 				}
 			}
-			if (ptr.isGeneric()) {
-				final Iterator<TypeVariable> typeParamsIter = declType != null ? declType.getTypeVars().iterator()
-						: Collections.emptyIterator();
-				final List<TypeArgument> typeArgsPushed = new ArrayList<>();
-				boolean haveChange = false;
-				for (TypeArgument typeArg : ptr.getTypeArgs()) {
-					final TypeVariable typeParam = typeParamsIter.hasNext() ? typeParamsIter.next() : null;
-					final Variance defSiteVariance = typeParam != null ? typeParam.getVariance() : Variance.INV;
-					final TypeArgument typeArgPushed = pushBoundOfTypeArgument(typeArg, defSiteVariance);
-					typeArgsPushed.add(typeArgPushed);
-					haveChange |= typeArgPushed != typeArg;
-				}
-				if (haveChange) {
-					final ParameterizedTypeRef ptrCpy = TypeUtils.copyPartial(ptr,
-							TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_TypeArgs());
-					ptrCpy.getTypeArgs().clear();
-					ptrCpy.getTypeArgs().addAll(TypeUtils.copyAll(typeArgsPushed));
-					return ptrCpy;
-				}
-			}
-			return ptr;
+			return result;
 		}
 
+		@Override
+		protected TypeArgument caseParameterizedTypeRef_processTypeArgument(RuleEnvironment G2, TypeVariable typeParam,
+				TypeArgument typeArg) {
+			final Variance defSiteVariance = typeParam != null ? typeParam.getVariance() : Variance.INV;
+			TypeArgument typeArgPushed = pushBoundOfTypeArgument(typeArg, defSiteVariance);
+			if (typeArgPushed != typeArg) {
+				typeArgPushed = TypeUtils.copyIfContained(typeArgPushed);
+			}
+			return typeArgPushed;
+		}
+
+		/**
+		 * Taking the bound of a Wildcard / open ExistentialTypeRef is different depending on whether we are on top
+		 * level or nested inside another type reference:
+		 * <ul>
+		 * <li>the upper bound of <code>? extends A</code> is <code>A</code>, but
+		 * <li>the upper bound of <code>G&lt;? extends A></code> is *not* <code>G&lt;A></code>.
+		 * </ul>
+		 * This method implements the second case, i.e. handling a nested type argument while computing the upper/lower
+		 * bound of its containing type reference.
+		 */
 		private TypeArgument pushBoundOfTypeArgument(TypeArgument typeArg, Variance defSiteVariance) {
 			if (typeArg instanceof Wildcard) {
 				final Wildcard wildcard = (Wildcard) typeArg;
@@ -289,86 +254,21 @@ import com.google.common.base.Optional;
 			return typeArg; // no change
 		}
 
-		// required due to multiple inheritance, to ensure FunctionTypeRef is handled like a FunctionTypeExpression,
-		// not as a ParameterizedTypeRef
 		@Override
-		public TypeRef caseFunctionTypeRef(FunctionTypeRef F) {
-			return caseFunctionTypeExprOrRef(F);
+		protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
+			return bound(G, returnTypeRef, boundType, reopen, false);
 		}
 
 		@Override
-		public TypeRef caseFunctionTypeExprOrRef(FunctionTypeExprOrRef F) {
-			boolean haveReplacement = false;
-
-			// upper/lower bound of return type
-			final TypeRef returnTypeRef = F.getReturnTypeRef();
-			final TypeRef resultReturnTypeRef = returnTypeRef != null
-					? bound(G, F.getReturnTypeRef(), boundType, reopen, false)
-					: null;
-			haveReplacement |= resultReturnTypeRef != returnTypeRef;
-
-			// lower/upper bounds of parameter types
-			final List<TFormalParameter> fpars = F.getFpars();
-			final List<TFormalParameter> resultFpars = new ArrayList<>(fpars.size());
-			for (TFormalParameter oldPar : fpars) {
-				if (oldPar == null) {
-					resultFpars.add(null);
-					continue;
-				}
-				final TFormalParameter newPar = TypesFactory.eINSTANCE.createTFormalParameter();
-				newPar.setName(oldPar.getName());
-				newPar.setVariadic(oldPar.isVariadic());
-				newPar.setHasInitializerAssignment(oldPar.isHasInitializerAssignment());
-				// note: property 'astInitializer' is not copied since it's part of the AST
-
-				final TypeRef oldParTypeRef = oldPar.getTypeRef();
-				if (oldParTypeRef != null) {
-					final TypeRef newParTypeRef = bound(G, oldParTypeRef, boundType.inverse(), reopen, false);
-					newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
-					haveReplacement |= newParTypeRef != oldParTypeRef;
-				}
-
-				resultFpars.add(newPar);
-			}
-
-			if (haveReplacement) {
-				final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
-
-				// let posterity know that the newly created FunctionTypeExpression
-				// represents the binding of another FunctionTypeExprOrRef
-				result.setBinding(true);
-
-				// retain the pointer to declared type of original FunctionTypeExprOrRef (if any)
-				// (see API doc of FunctionTypeExpression#declaredType for more info)
-				result.setDeclaredType(F.getFunctionType());
-
-				result.getUnboundTypeVars().addAll(F.getTypeVars());
-				if (F instanceof FunctionTypeExpression) {
-					result.getUnboundTypeVarsUpperBounds().addAll(TypeUtils.copyAll(
-							((FunctionTypeExpression) F).getUnboundTypeVarsUpperBounds()));
-				}
-
-				if (F.getDeclaredThisType() != null) {
-					result.setDeclaredThisType(TypeUtils.copyIfContained(F.getDeclaredThisType()));
-				}
-
-				result.setReturnTypeRef(TypeUtils.copyIfContained(resultReturnTypeRef));
-				result.setReturnValueMarkedOptional(F.isReturnValueOptional());
-
-				result.getFpars().addAll(resultFpars); // no need to copy; all fpars were newly created above!
-
-				TypeUtils.copyTypeModifiers(result, F);
-
-				return result;
-			}
-			return F;
+		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
+			return bound(G, fparTypeRef, boundType.inverse(), reopen, false);
 		}
 
 		@Override
 		public TypeRef caseBoundThisTypeRef(BoundThisTypeRef boundThisTypeRef) {
 			if (reopen) {
 				if (boundType == BoundType.UPPER) {
-					return bound(TypeUtils.createResolvedThisTypeRef(boundThisTypeRef));
+					return processNested(G, TypeUtils.createResolvedThisTypeRef(boundThisTypeRef));
 				} else {
 					final TypeRef result = bottomTypeRef(G);
 					TypeUtils.copyTypeModifiers(result, boundThisTypeRef);
@@ -394,14 +294,16 @@ import com.google.common.base.Optional;
 				}
 			}
 			// ordinary handling of type argument
-			final TypeArgument typeArg = ct.getTypeArg();
-			final TypeArgument typeArgBound = pushBoundOfTypeArgument(typeArg, Variance.INV);
-			if (typeArgBound != typeArg) {
-				TypeTypeRef ctCpy = TypeUtils.copyPartial(ct, TypeRefsPackage.eINSTANCE.getTypeTypeRef_TypeArg());
-				ctCpy.setTypeArg(TypeUtils.copyIfContained(typeArgBound));
-				return ctCpy;
+			return super.caseTypeTypeRef(ct);
+		}
+
+		@Override
+		protected TypeArgument caseTypeTypeRef_processTypeArg(TypeArgument typeArg) {
+			TypeArgument typeArgPushed = pushBoundOfTypeArgument(typeArg, Variance.INV);
+			if (typeArgPushed != typeArg) {
+				typeArgPushed = TypeUtils.copyIfContained(typeArgPushed);
 			}
-			return ct;
+			return typeArgPushed;
 		}
 
 		private boolean shouldBeReopened(ExistentialTypeRef etr) {

@@ -22,9 +22,11 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant;
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TEnum;
@@ -46,6 +48,7 @@ public class InformationRegistry {
 	private final Map<ImportDeclaration, TModule> importedModules = new HashMap<>();
 	private final Map<N4TypeDeclaration, Type> originalDefinedTypes = new HashMap<>();
 	private final Map<N4MemberDeclaration, TMember> originalDefinedMembers = new HashMap<>();
+	private final Map<TypeReferenceNode<?>, TypeRef> originalProcessedTypeRefs = new HashMap<>();
 	private final Map<TClassifier, ConcreteMembersOrderedForTranspiler> cachedCMOFTs = new HashMap<>();
 
 	/**
@@ -200,6 +203,41 @@ public class InformationRegistry {
 	 */
 	public void setOriginalDefinedMember_internal(N4MemberDeclaration elementInIM, TMember originalDefinedMember) {
 		originalDefinedMembers.put(elementInIM, originalDefinedMember);
+	}
+
+	/**
+	 * NOTE: most client code will want to use one of:
+	 * <ul>
+	 * <li>{@link TypeAssistant#getOriginalOrContainedTypeRef(TypeReferenceNode)},
+	 * <li>{@link TypeAssistant#getOriginalDeclaredType(TypeReferenceNode)},
+	 * <li>{@link TypeAssistant#getOriginalDeclaredTypeSTE(TypeReferenceNode)}
+	 * </ul>
+	 * <p>
+	 * Returns the original processed type reference for the given node, as originally returned by
+	 * {@link TypeReferenceNode#getTypeRef()}.
+	 */
+	public TypeRef getOriginalProcessedTypeRef(TypeReferenceNode<?> elementInIM) {
+		TranspilerUtils.assertIntermediateModelElement(elementInIM);
+		return originalProcessedTypeRefs.get(elementInIM);
+	}
+
+	/**
+	 * Sets the <em>original processed type reference</em> (as usually returned by
+	 * {@link TypeReferenceNode#getTypeRef()} for AST nodes) of the given node in the intermediate model.
+	 */
+	public void setOriginalProcessedTypeRef(TypeReferenceNode<?> elementInIM, TypeRef originalProcessedTypeRef) {
+		TranspilerUtils.assertIntermediateModelElement(elementInIM);
+		setOriginalProcessedTypeRef_internal(elementInIM, originalProcessedTypeRef);
+	}
+
+	/**
+	 * As {@link #setOriginalProcessedTypeRef(TypeReferenceNode, TypeRef)}, but does not assert that
+	 * <code>elementInIM</code> is actually contained in the intermediate model. Should only be called from
+	 * {@link PreparationStep}.
+	 */
+	public void setOriginalProcessedTypeRef_internal(TypeReferenceNode<?> elementInIM,
+			TypeRef originalProcessedTypeRef) {
+		originalProcessedTypeRefs.put(elementInIM, originalProcessedTypeRef);
 	}
 
 	/**

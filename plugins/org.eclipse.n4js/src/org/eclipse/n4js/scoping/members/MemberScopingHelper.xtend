@@ -39,7 +39,6 @@ import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -220,7 +219,7 @@ class MemberScopingHelper {
 	private def dispatch IScope members(TypeTypeRef ttr, MemberScopeRequest request) {
 		val MemberScopeRequest staticRequest = request.enforceStatic;
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(request.context);
-		val ctrStaticType = tsh.getStaticType(G, ttr);
+		val ctrStaticType = tsh.getStaticType(G, ttr, true);
 		var IScope staticMembers = membersOfType(ctrStaticType, staticRequest) // staticAccess is always true in this case
 		if (ctrStaticType instanceof TEnum) {
 			// enums have their literals as static members
@@ -370,18 +369,6 @@ class MemberScopingHelper {
 			case StringBased: builtInTypeScope.n4StringBasedEnumType
 		};
 		return membersOfType(specificEnumType, request);
-	}
-
-	private def dispatch IScope membersOfType(TypeVariable typeVar, MemberScopeRequest request) {
-		val declUB = typeVar.declaredUpperBound;
-		if (declUB!==null) {
-			return members(declUB, request)
-		} else {
-			val builtInTypeScope = BuiltInTypeScope.get(getResourceSet(typeVar, request.context));
-			val anyType = builtInTypeScope.anyType
-			return membersOfType(anyType, request);
-		}
-
 	}
 
 	private def dispatch IScope membersOfType(TStructuralType structType, MemberScopeRequest request) {

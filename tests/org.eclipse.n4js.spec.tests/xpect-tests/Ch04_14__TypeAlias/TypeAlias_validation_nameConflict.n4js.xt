@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// XPECT noerrors -->
+type A = number;
+// XPECT errors --> "Type alias A duplicates type alias A (line 16)." at "A"
+type A = string;
+
+
+// XPECT noerrors -->
+class C {}
+// XPECT errors --> "Class C duplicates class C (line 22)." at "C"
+class C {}
+
+
+// XPECT errors --> "Class A duplicates type alias A (line 16)." at "A"
+class A {}

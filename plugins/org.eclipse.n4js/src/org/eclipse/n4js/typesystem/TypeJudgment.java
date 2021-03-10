@@ -14,7 +14,6 @@ import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_CALL_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_VARIABLE_DECLARATION;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.addThisType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
@@ -40,6 +39,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.object
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.promiseTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.regexpTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.setThisBinding;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.stringTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
@@ -98,6 +98,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
 import org.eclipse.n4js.n4JS.NullLiteral;
@@ -263,13 +264,13 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseTGetter(TGetter tGetter) {
-			final TypeRef declTypeRef = tGetter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = tGetter.getTypeRef();
 			return declTypeRef != null ? declTypeRef : anyTypeRef(G);
 		}
 
 		@Override
 		public TypeRef caseTSetter(TSetter tSetter) {
-			final TypeRef declTypeRef = tSetter.getDeclaredTypeRef();
+			final TypeRef declTypeRef = tSetter.getTypeRef();
 			return declTypeRef != null ? declTypeRef : anyTypeRef(G);
 		}
 
@@ -362,7 +363,7 @@ import com.google.inject.Inject;
 					G2.put(guardKey, Boolean.TRUE);
 					// compute the value type at this location in the destructuring pattern
 					final TypeRef raw = destructureHelper.getTypeOfVariableDeclarationInDestructuringPattern(G2, vdecl);
-					T = raw != null ? raw : anyTypeRef(G);
+					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, raw);
 				} else {
 					T = anyTypeRef(G);
 				}
@@ -439,7 +440,7 @@ import com.google.inject.Inject;
 				return declTypeRef;
 			} else {
 				final TGetter defGetter = getter.getDefinedGetter();
-				final TypeRef defDeclTypeRef = defGetter != null ? defGetter.getDeclaredTypeRef() : null;
+				final TypeRef defDeclTypeRef = defGetter != null ? defGetter.getTypeRef() : null;
 				if (defDeclTypeRef != null) {
 					return defDeclTypeRef;
 				} else {
@@ -455,7 +456,7 @@ import com.google.inject.Inject;
 				return declTypeRef;
 			} else {
 				final TSetter defSetter = setter.getDefinedSetter();
-				final TypeRef defDeclTypeRef = defSetter != null ? defSetter.getDeclaredTypeRef() : null;
+				final TypeRef defDeclTypeRef = defSetter != null ? defSetter.getTypeRef() : null;
 				if (defDeclTypeRef != null) {
 					return defDeclTypeRef;
 				} else {
@@ -466,6 +467,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseFormalParameter(FormalParameter fpar) {
+			final TypeRef fparTypeRefInAST = fpar.getDeclaredTypeRefInAST();
 			final TypeRef fparTypeRef = fpar.getDeclaredTypeRef();
 			final TypeRef T;
 			if (fparTypeRef != null) {
@@ -480,7 +482,7 @@ import com.google.inject.Inject;
 						&& hasFormalParameterWithThisType((FunctionTypeExpression) fparTypeRef);
 
 				if (case1 || case2) {
-					T = typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRef, fparTypeRef);
+					T = typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRefInAST, fparTypeRef);
 				} else {
 					// note: it's a bit cleaner to return the type from the TModule, if one was already determined
 					final TFormalParameter definedElem = fpar.getDefinedTypeElement();
@@ -880,7 +882,7 @@ import com.google.inject.Inject;
 				} else {
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, targetTypeRef);
-					addThisType(G2, targetTypeRef);
+					setThisBinding(G2, targetTypeRef);
 					final TypeRef elementTypeRef = targetIsLiteralOfStringBasedEnum
 							? stringType(G).getElementType()
 							: targetDeclType.getElementType();
@@ -907,7 +909,7 @@ import com.google.inject.Inject;
 					TypeRef memberTypeRef = ts.type(G, (TMember) member);
 					final RuleEnvironment G2 = wrap(G);
 					typeSystemHelper.addSubstitutions(G2, targetTypeRef);
-					addThisType(G2, targetTypeRef);
+					setThisBinding(G2, targetTypeRef);
 					T = ts.substTypeVariables(G2, memberTypeRef);
 				} else if (targetTypeRef.isDynamic()) {
 					T = anyTypeRefDynamic(G);
@@ -939,7 +941,7 @@ import com.google.inject.Inject;
 			final TypeRef receiverTypeRef = ts.type(G2, expr.getTarget());
 
 			typeSystemHelper.addSubstitutions(G2, receiverTypeRef);
-			addThisType(G2, receiverTypeRef);
+			setThisBinding(G2, receiverTypeRef);
 
 			// add parameterization stemming from super types, e.g., "class C extends G<string>",
 			// in case of super or this literals
@@ -1126,8 +1128,7 @@ import com.google.inject.Inject;
 		public TypeRef caseNewExpression(NewExpression e) {
 			TypeRef T = ts.type(G, e.getCallee());
 			if (T instanceof TypeTypeRef) {
-				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T,
-						e.getTypeArgs().toArray(new TypeArgument[0]));
+				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T, e);
 			}
 			return T;
 		}
@@ -1327,6 +1328,12 @@ import com.google.inject.Inject;
 		// ----------------------------------------------------------------------
 		// AST nodes: miscellaneous
 		// ----------------------------------------------------------------------
+
+		@Override
+		public TypeRef caseN4TypeVariable(N4TypeVariable n4TypeVar) {
+			final TypeRef typeRef = TypeUtils.wrapTypeInTypeRef(n4TypeVar.getDefinedTypeVariable());
+			return typeRef != null ? typeRef : unknown();
+		}
 
 		@Override
 		public TypeRef caseCatchVariable(CatchVariable catchVariable) {

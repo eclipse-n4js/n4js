@@ -61,6 +61,7 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.AnyType;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -89,6 +90,7 @@ import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Iterables;
 
@@ -375,6 +377,36 @@ public class TypeUtils {
 	}
 
 	/**
+	 * If the given type argument is not a {@link TypeRef}, an equivalent {@code TypeRef} is created and returned;
+	 * otherwise, the given {@code TypeRef} is returned unchanged.
+	 * <p>
+	 * BACKGROUND: this is intended for cases when the only motivation for changing a type is that a {@link TypeRef} is
+	 * required instead of a {@link TypeArgument} (e.g. for passing it to a utility method that only accepts
+	 * {@link TypeRef}s). For a long time, we've been using {@code N4JSTypeSystem#upperBound()} for this purpose, but
+	 * <ul>
+	 * <li>taking the upper bound may lead to other, undesired/unnecessary changes and a loss of information,
+	 * <li>taking the upper bound is an operation with important semantic implications and must be done in just the
+	 * right places during type checking, so also taking upper bounds only for technical reasons to work around
+	 * intricacies in the structure of our <code>TypeRefs.xcore</code> data model would be confusing.
+	 * </ul>
+	 * TODO consider refactoring TypeRefs.xcore such that {@link Wildcard} is a subtype of {@link TypeRef} (then this
+	 * method will no longer be required)
+	 */
+	public static TypeRef convertTypeArgToRef(TypeArgument typeArg) {
+		if (typeArg instanceof Wildcard) {
+			final ExistentialTypeRef etr = captureWildcard((Wildcard) typeArg);
+			etr.setReopened(true);
+			return etr;
+		}
+		return (TypeRef) typeArg;
+	}
+
+	/** Same as {@link #convertTypeArgToRef(TypeArgument)}, but for many type arguments. */
+	public static Iterable<? extends TypeRef> convertTypeArgsToRefs(Iterable<? extends TypeArgument> typeArgs) {
+		return IterableExtensions.map(typeArgs, TypeUtils::convertTypeArgToRef);
+	}
+
+	/**
 	 * Creates a new this type reference bound to the given actual type. This method also sets the typing strategy and
 	 * structural members. The returned type is normalized in terms of only the actual type is never structurally typed.
 	 * E.g., {@code ~this[~C]} is normalized to {@code ~this[C]}.
@@ -508,56 +540,75 @@ public class TypeUtils {
 	 * support structural typing).
 	 * </ol>
 	 *
+	 * @param targetAlreadyCopied
+	 *            if <code>true</code>, will try(!) to change the given <code>target</code> in place without copying it.
+	 *            IMPORTANT: because in-place modification cannot be guaranteed, the client must still use the returned
+	 *            reference instead of relying on the passed-in reference being updated!
+	 *
 	 * @see #concatTypingStrategies(TypingStrategy, TypingStrategy)
 	 */
-	public static TypeArgument mergeTypeModifiers(TypeArgument target, TypeRef source) {
+	public static TypeArgument mergeTypeModifiers(TypeArgument target, TypeRef source, boolean targetAlreadyCopied) {
 		if (target instanceof Wildcard) {
-			return mergeTypeModifiers((Wildcard) target, source);
+			return mergeTypeModifiers((Wildcard) target, source, targetAlreadyCopied);
 		} else {
-			return mergeTypeModifiers((TypeRef) target, source);
+			return mergeTypeModifiers((TypeRef) target, source, targetAlreadyCopied);
 		}
 	}
 
-	/** Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef)}, but for the special case of {@link Wildcard}s. */
-	public static Wildcard mergeTypeModifiers(Wildcard target, TypeRef source) {
+	/**
+	 * Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef, boolean)}, but for the special case of
+	 * {@link Wildcard}s.
+	 */
+	public static Wildcard mergeTypeModifiers(Wildcard target, TypeRef source, boolean targetAlreadyCopied) {
 		final TypeRef ub = target.getDeclaredOrImplicitUpperBound();
 		if (ub != null) {
-			final TypeRef ubMerged = mergeTypeModifiers(ub, source);
+			final TypeRef ubMerged = mergeTypeModifiers(ub, source, false);
 			if (ubMerged != ub) {
-				target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+				if (!targetAlreadyCopied) {
+					target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+				}
 				target.setDeclaredUpperBound(ubMerged);
 			}
 		}
 		return target;
 	}
 
-	/** Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef)}, but for the special case of {@link TypeRef}s. */
-	public static TypeRef mergeTypeModifiers(TypeRef target, TypeRef source) {
+	/**
+	 * Same as {@link #mergeTypeModifiers(TypeArgument, TypeRef, boolean)}, but for the special case of
+	 * {@link TypeRef}s.
+	 */
+	public static TypeRef mergeTypeModifiers(TypeRef target, TypeRef source, boolean targetAlreadyCopied) {
 		if (target instanceof ExistentialTypeRef) {
 			final Wildcard wc = ((ExistentialTypeRef) target).getWildcard();
 			if (wc != null) {
-				final Wildcard wcMerged = mergeTypeModifiers(wc, source);
+				final Wildcard wcMerged = mergeTypeModifiers(wc, source, false);
 				if (wcMerged != wc) {
-					target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+					if (!targetAlreadyCopied) {
+						target = copyPartial(target, TypeRefsPackage.eINSTANCE.getWildcard_DeclaredUpperBound());
+					}
 					((ExistentialTypeRef) target).setWildcard(wcMerged);
 				}
 			}
 			return target;
 		} else {
 			TypeRef result = target;
-			result = mergeTypingStrategies(result, source.getTypingStrategy());
-			result = mergeDynamicModifiers(result, source.isDynamic(), result != target);
+			result = mergeTypingStrategies(result, source.getTypingStrategy(), targetAlreadyCopied);
+			result = mergeDynamicModifiers(result, source.isDynamic(), targetAlreadyCopied || result != target);
 			return result;
 		}
 	}
 
 	// must adhere to the on-demand copy semantics specified in API doc of #mergeTypeModifiers(TypeRef, ...)
-	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source) {
+	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source, boolean targetAlreadyCopied) {
 		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source);
 		if (combined != target.getTypingStrategy()) {
 			if (target instanceof ParameterizedTypeRef && !(target instanceof FunctionTypeRef)) {
-				final ParameterizedTypeRefStructural ptrs = copyToParameterizedTypeRefStructural(
-						(ParameterizedTypeRef) target);
+				final ParameterizedTypeRefStructural ptrs;
+				if (!targetAlreadyCopied || !(target instanceof ParameterizedTypeRefStructural)) {
+					ptrs = copyToParameterizedTypeRefStructural((ParameterizedTypeRef) target);
+				} else {
+					ptrs = (ParameterizedTypeRefStructural) target;
+				}
 				ptrs.setTypingStrategy(combined);
 				target = ptrs;
 			} else {
@@ -910,9 +961,9 @@ public class TypeUtils {
 		else if (m instanceof TField)
 			return ((TField) m).getTypeRef();
 		else if (m instanceof TGetter)
-			return ((TGetter) m).getDeclaredTypeRef(); // TODO should use actual(!) type here, but not available yet!
+			return ((TGetter) m).getTypeRef();
 		else if (m instanceof TSetter)
-			return ((TSetter) m).getDeclaredTypeRef(); // note: this returns typeRef of the fpar
+			return ((TSetter) m).getTypeRef(); // note: this returns typeRef of the fpar
 		else if (m instanceof TMethod)
 			return ((TMethod) m).getReturnTypeRef();
 		else
@@ -928,7 +979,7 @@ public class TypeUtils {
 		if (m instanceof TField)
 			((TField) m).setTypeRef(typeRef);
 		else if (m instanceof TGetter)
-			((TGetter) m).setDeclaredTypeRef(typeRef);
+			((TGetter) m).setTypeRef(typeRef);
 		else if (m instanceof TSetter) {
 			final TSetter s = (TSetter) m;
 			if (s.getFpar() == null)
@@ -1021,33 +1072,38 @@ public class TypeUtils {
 	 * the given typeRef references a type variable or contains a reference to a type variable.
 	 */
 	public static boolean isOrContainsRefToTypeVar(EObject obj, TypeVariable... typeVars) {
-		return isOrContainsRefToTypeVar(obj, false, typeVars);
+		return isOrContainsRefToTypeVar(obj, false, typeVars, new RecursionGuard<>());
 	}
 
 	/**
 	 * Like {@link #isOrContainsRefToTypeVar(EObject, TypeVariable...)}, but checks for inference variables.
 	 */
 	public static boolean isOrContainsRefToInfVar(EObject obj, InferenceVariable... infVars) {
-		return isOrContainsRefToTypeVar(obj, true, infVars);
+		return isOrContainsRefToTypeVar(obj, true, infVars, new RecursionGuard<>());
 	}
 
-	private static boolean isOrContainsRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable... typeVars) {
+	private static boolean isOrContainsRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable[] typeVars,
+			RecursionGuard<EObject> guard) {
 		if (obj == null)
 			return false;
-		if (isRefToTypeVar(obj, checkForInfVars, typeVars))
+		if (!guard.tryNext(obj)) {
+			return false;
+		}
+		if (isRefToTypeVar(obj, checkForInfVars, typeVars, guard))
 			return true;
 		if (obj instanceof ExistentialTypeRef) {
-			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars)) {
+			if (isOrContainsRefToTypeVar(((ExistentialTypeRef) obj).getWildcard(), checkForInfVars, typeVars, guard)) {
 				return true;
 			}
 		}
 		final Iterator<EObject> iter = obj.eAllContents();
 		while (iter.hasNext()) {
 			EObject curr = iter.next();
-			if (isRefToTypeVar(curr, checkForInfVars, typeVars))
+			if (isRefToTypeVar(curr, checkForInfVars, typeVars, guard))
 				return true;
 			if (curr instanceof ExistentialTypeRef) {
-				if (isOrContainsRefToTypeVar(((ExistentialTypeRef) curr).getWildcard(), checkForInfVars, typeVars)) {
+				if (isOrContainsRefToTypeVar(((ExistentialTypeRef) curr).getWildcard(), checkForInfVars, typeVars,
+						guard)) {
 					return true;
 				}
 			}
@@ -1055,11 +1111,13 @@ public class TypeUtils {
 		return false;
 	}
 
-	private static boolean isRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable... typeVars) {
+	private static boolean isRefToTypeVar(EObject obj, boolean checkForInfVars, TypeVariable[] typeVars,
+			RecursionGuard<EObject> guard) {
 		// special case: for StructuralTypeRef we have to consider the TStructuralType as well
 		if (obj instanceof StructuralTypeRef
 				// FIXME should better use #getStructuralMembers() in next line???
-				&& isOrContainsRefToTypeVar(((StructuralTypeRef) obj).getStructuralType(), checkForInfVars, typeVars))
+				&& isOrContainsRefToTypeVar(((StructuralTypeRef) obj).getStructuralType(), checkForInfVars, typeVars,
+						guard))
 			return true;
 		final Class<?> expectedType = checkForInfVars ? InferenceVariable.class : TypeVariable.class;
 		return obj instanceof TypeRef
@@ -1072,24 +1130,29 @@ public class TypeUtils {
 	 * Returns all type variables referenced by the given object or its contents.
 	 */
 	public static Set<TypeVariable> getReferencedTypeVars(EObject obj) {
-		return collectReferencedTypeVars(obj, true, new LinkedHashSet<>());
+		return collectReferencedTypeVars(obj, true, new LinkedHashSet<>(), null);
 	}
 
 	private static Set<TypeVariable> collectReferencedTypeVars(EObject obj, boolean includeChildren,
-			Set<TypeVariable> addHere) {
+			Set<TypeVariable> addHere, RecursionGuard<IdentifiableElement> guard) {
 		final Type declType = obj instanceof TypeRef ? ((TypeRef) obj).getDeclaredType() : null;
 		if (declType instanceof TypeVariable) {
 			addHere.add((TypeVariable) declType);
 		}
 		if (obj instanceof StructuralTypeRef) {
 			for (TStructMember m : ((StructuralTypeRef) obj).getStructuralMembers()) {
-				collectReferencedTypeVars(m, true, addHere);
+				if (guard == null) {
+					guard = new RecursionGuard<>();
+				}
+				if (guard.tryNext(m)) {
+					collectReferencedTypeVars(m, true, addHere, guard);
+				}
 			}
 		}
 		if (includeChildren) {
 			final Iterator<EObject> iter = obj.eAllContents();
 			while (iter.hasNext()) {
-				collectReferencedTypeVars(iter.next(), false, addHere);
+				collectReferencedTypeVars(iter.next(), false, addHere, guard);
 			}
 		}
 		return addHere;
@@ -1159,11 +1222,12 @@ public class TypeUtils {
 	 */
 	public static Set<TypeVariable> getTypeVarsInStructMembers(StructuralTypeRef typeRef) {
 		final Set<TypeVariable> result = new HashSet<>();
-		primCollectTypeVarsInStructMembers(typeRef, result);
+		primCollectTypeVarsInStructMembers(typeRef, result, new RecursionGuard<>());
 		return result;
 	}
 
-	private static void primCollectTypeVarsInStructMembers(StructuralTypeRef typeRef, Set<TypeVariable> addHere) {
+	private static void primCollectTypeVarsInStructMembers(StructuralTypeRef typeRef, Set<TypeVariable> addHere,
+			RecursionGuard<Object> guard) {
 		typeRef.getStructuralMembers().forEach(currM -> {
 			currM.eAllContents().forEachRemaining(currObj -> {
 				if (currObj instanceof ParameterizedTypeRef
@@ -1172,7 +1236,9 @@ public class TypeUtils {
 					addHere.add(tv);
 				}
 				if (currObj instanceof StructuralTypeRef) {
-					primCollectTypeVarsInStructMembers((StructuralTypeRef) currObj, addHere);
+					if (guard.tryNext(currObj)) {
+						primCollectTypeVarsInStructMembers((StructuralTypeRef) currObj, addHere, guard);
+					}
 				}
 			});
 		});
@@ -1487,7 +1553,7 @@ public class TypeUtils {
 		Objects.requireNonNull(funDef);
 
 		boolean async = funDef.isAsync();
-		TypeRef definedReturn = funDef.getReturnTypeRef();
+		TypeRef definedReturn = funDef.getDeclaredReturnTypeRef();
 		TypeArgument tYield;
 		TypeArgument tReturn = inferReturnTypeFromReturns(funDef, scope);
 

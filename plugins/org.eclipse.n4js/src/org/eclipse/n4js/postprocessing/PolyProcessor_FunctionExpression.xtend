@@ -218,7 +218,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	) {
 		val fun = funExpr.definedType as TFunction; // types builder will have created this already
 		var TypeRef returnTypeRef;
-		if (funExpr.returnTypeRef !== null) {
+		if (funExpr.declaredReturnTypeRef !== null) {
 			// explicitly declared return type
 			// -> take the type reference created by the types builder (but wrap in Promise if required)
 			returnTypeRef = TypeUtils.copy(fun.returnTypeRef);

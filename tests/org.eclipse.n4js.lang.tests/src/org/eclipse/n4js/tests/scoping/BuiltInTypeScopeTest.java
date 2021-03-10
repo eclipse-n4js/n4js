@@ -128,7 +128,7 @@ public class BuiltInTypeScopeTest {
 		Assert.assertTrue(elem instanceof VariableStatement);
 		VariableStatement stmt = (VariableStatement) elem;
 		VariableDeclaration varDecl = stmt.getVarDecl().get(0);
-		ParameterizedTypeRef typeRef = (ParameterizedTypeRef) varDecl.getDeclaredTypeRef();
+		ParameterizedTypeRef typeRef = (ParameterizedTypeRef) varDecl.getDeclaredTypeRefInAST();
 		Assert.assertFalse("Proxy URI: " + ((InternalEObject) typeRef.getDeclaredType()).eProxyURI(), typeRef
 				.getDeclaredType().eIsProxy());
 	}

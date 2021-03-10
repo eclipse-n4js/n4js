@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+class A {}
+class B {}
+
+type AI2AB = Iterable2<A,B>;
+
+// -------------------------------------------------------------------------------------
+// PART 1: alias is mentioned directly
+
+function foo() {
+	// immediate alias
+	let ai2ab: AI2AB;
+	// XPECT type of 'a0' --> A
+	// XPECT type of 'b0' --> B
+	let [a0,b0] = ai2ab;
+
+	// alias wrapped in Iterable
+	let arr: Array<AI2AB>;
+	// must not be resolved XPECT type of 'e1' --> AI2AB
+	let [ e1 ] = arr;
+	// XPECT type of 'a1' --> A
+	// XPECT type of 'b1' --> B
+	let [[a1,b1]] = arr;
+	// must not be resolved XPECT type of 'e2' --> AI2AB
+	for (let e2 of arr) {}
+	// XPECT type of 'a2' --> A
+	// XPECT type of 'b2' --> B
+	for (let [a2,b2] of arr) {}
+
+	// alias wrapped in Object
+	let obj: ~Object with { prop: AI2AB };
+	// must not be resolved XPECT type of 'e3' --> AI2AB
+	let { prop: e3 } = obj;
+	// XPECT type of 'a3' --> A
+	// XPECT type of 'b3' --> B
+	let { prop: [a3,b3] } = obj;
+}
+
+
+// -------------------------------------------------------------------------------------
+// PART 2: alias appears as upper bound of a type variable
+
+class G1<T extends AI2AB> {
+	m() {
+		// immediate alias
+		let ai2ab: T;
+		// XPECT type of 'a0' --> A
+		// XPECT type of 'b0' --> B
+		let [a0,b0] = ai2ab;
+
+		// alias wrapped in Iterable
+		let arr: Array<T>;
+		// must not be resolved XPECT type of 'e1' --> T
+		let [ e1 ] = arr;
+		// XPECT type of 'a1' --> A
+		// XPECT type of 'b1' --> B
+		let [[a1,b1]] = arr;
+		// must not be resolved XPECT type of 'e2' --> T
+		for (let e2 of arr) {}
+		// XPECT type of 'a2' --> A
+		// XPECT type of 'b2' --> B
+		for (let [a2,b2] of arr) {}
+
+		// alias wrapped in Object
+		let obj: ~Object with { prop: T };
+		// must not be resolved XPECT type of 'e3' --> T
+		let { prop: e3 } = obj;
+		// XPECT type of 'a3' --> A
+		// XPECT type of 'b3' --> B
+		let { prop: [a3,b3] } = obj;
+	}
+}
+
+
+// -------------------------------------------------------------------------------------
+// PART 3: generic alias (as upper bound of a type variable)
+
+type AI2<T1,T2> = Iterable2<T1,T2>;
+
+class G2<T extends AI2<A,B>> {
+	m() {
+		// immediate alias
+		let ai2ab: T;
+		// XPECT type of 'a0' --> A
+		// XPECT type of 'b0' --> B
+		let [a0,b0] = ai2ab;
+
+		// alias wrapped in Iterable
+		let arr: Array<T>;
+		// must not be resolved XPECT type of 'e1' --> T
+		let [ e1 ] = arr;
+		// XPECT type of 'a1' --> A
+		// XPECT type of 'b1' --> B
+		let [[a1,b1]] = arr;
+		// must not be resolved XPECT type of 'e2' --> T
+		for (let e2 of arr) {}
+		// XPECT type of 'a2' --> A
+		// XPECT type of 'b2' --> B
+		for (let [a2,b2] of arr) {}
+
+		// alias wrapped in Object
+		let obj: ~Object with { prop: T };
+		// must not be resolved XPECT type of 'e3' --> T
+		let { prop: e3 } = obj;
+		// XPECT type of 'a3' --> A
+		// XPECT type of 'b3' --> B
+		let { prop: [a3,b3] } = obj;
+	}
+}

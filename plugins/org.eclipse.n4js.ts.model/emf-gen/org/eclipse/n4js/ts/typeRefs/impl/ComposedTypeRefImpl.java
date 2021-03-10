@@ -107,7 +107,7 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		final Function1<TypeRef, String> _function = new Function1<TypeRef, String>() {
 			public String apply(final TypeRef it) {
 				return it.getTypeRefAsString();
@@ -203,14 +203,13 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_REF___IS_DYNAMIC: return TypeRefsPackage.COMPOSED_TYPE_REF___IS_DYNAMIC;
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -227,8 +226,8 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 		switch (operationID) {
 			case TypeRefsPackage.COMPOSED_TYPE_REF___IS_DYNAMIC:
 				return isDynamic();
-			case TypeRefsPackage.COMPOSED_TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.COMPOSED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

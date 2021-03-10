@@ -32,6 +32,18 @@ class OrganizeImportsAddMissingTest extends AbstractOrganizeImportsTest {
 	}
 
 	@Test
+	def void testAddImportForTypeAlias() {
+		test('''
+			let x: SomeTypeAlias;
+		''', #[
+			"(Error, [0:7 - 0:20], Couldn't resolve reference to Type 'SomeTypeAlias'.)"
+		], '''
+			import {SomeTypeAlias} from "A";
+			let x: SomeTypeAlias;
+		''')
+	}
+
+	@Test
 	def void testDoNotAddMultipleImportsForSameElement() {
 		test('''
 			A01;

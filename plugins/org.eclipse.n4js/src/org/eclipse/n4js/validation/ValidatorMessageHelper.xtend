@@ -357,14 +357,14 @@ class ValidatorMessageHelper {
 			val astElem = tfunction.astElement;
 			switch (astElem) {
 				FunctionDeclaration: {
-					val retType = astElem.returnTypeRef;
+					val retType = astElem.declaredReturnTypeRef;
 					if (retType !== null) {
 						strb.append(retType.typeRefAsString);
 						return true;
 					}
 				}
 				FunctionDefinition: {
-					val retType = astElem.returnTypeRef
+					val retType = astElem.declaredReturnTypeRef
 					if (retType !== null) {
 						strb.append(retType.typeRefAsString);
 						return true;

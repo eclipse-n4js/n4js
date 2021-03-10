@@ -34,9 +34,7 @@ import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.Snippet;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -210,7 +208,7 @@ import com.google.common.base.Strings;
 		write("class ");
 		write(original.getName());
 		write(' ');
-		final ParameterizedTypeRef superClassRef = original.getSuperClassRef();
+		final TypeReferenceNode<ParameterizedTypeRef> superClassRef = original.getSuperClassRef();
 		final Expression superClassExpression = original.getSuperClassExpression();
 		if (superClassRef != null) {
 			// We cannot support this, because we cannot look up the symbol table entry for the TypeRef returned by
@@ -241,10 +239,7 @@ import com.google.common.base.Strings;
 		write("get ");
 		processPropertyName(original);
 		write("() ");
-		if (original.getDeclaredTypeRef() != null) {
-			processReturnTypeRef(original.getDeclaredTypeRef());
-			write(' ');
-		}
+		processDeclaredTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -285,10 +280,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getReturnTypeRef() != null) {
-			processReturnTypeRef(original.getReturnTypeRef());
-			write(' ');
-		}
+		processReturnTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -321,10 +313,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getReturnTypeRef() != null) {
-			processReturnTypeRef(original.getReturnTypeRef());
-			write(' ');
-		}
+		processReturnTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -350,10 +339,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(") ");
-		if (original.getReturnTypeRef() != null) {
-			processReturnTypeRef(original.getReturnTypeRef());
-			write(' ');
-		}
+		processReturnTypeRef(original, " ");
 		process(original.getBody());
 		return DONE;
 	}
@@ -366,7 +352,7 @@ import com.google.common.base.Strings;
 		write('(');
 		process(original.getFpars(), ", ");
 		write(')');
-		processReturnTypeRef(original.getReturnTypeRef());
+		processReturnTypeRef(original, "");
 		write("=>");
 		if (original.isHasBracesAroundBody()) {
 			process(original.getBody());
@@ -394,7 +380,7 @@ import com.google.common.base.Strings;
 			write("...");
 		}
 		write(original.getName());
-		processTypeRef(original.getDeclaredTypeRef());
+		processDeclaredTypeRef(original, "");
 		if (original.getInitializer() != null) {
 			write("=");
 			process(original.getInitializer());
@@ -453,7 +439,7 @@ import com.google.common.base.Strings;
 	public Boolean caseVariableDeclaration(VariableDeclaration original) {
 		processAnnotations(original.getAnnotations());
 		write(original.getName());
-		processTypeRef(original.getDeclaredTypeRef());
+		processDeclaredTypeRef(original, "");
 		if (original.getExpression() != null) {
 			write(" = ");
 			process(original.getExpression());
@@ -1064,7 +1050,11 @@ import com.google.common.base.Strings;
 	public Boolean caseCastExpression(CastExpression original) {
 		process(original.getExpression());
 		write(" as ");
-		write(original.getTargetTypeRef().getTypeRefAsString());
+		TypeRef targetTypeRef = original.getTargetTypeRef();
+		if (targetTypeRef == null) {
+			targetTypeRef = original.getTargetTypeRefNode().getTypeRefInAST();
+		}
+		write(targetTypeRef.getTypeRefAsString());
 		return DONE;
 	}
 
@@ -1335,7 +1325,11 @@ import com.google.common.base.Strings;
 		}
 	}
 
-	private void processReturnTypeRef(TypeRef returnTypeRef) {
+	@SuppressWarnings("unused")
+	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
+		TypeRef returnTypeRef = funDef.getDeclaredReturnTypeRef();
+		if (returnTypeRef == null)
+			returnTypeRef = funDef.getDeclaredReturnTypeRefInAST();
 		if (returnTypeRef == null)
 			return;
 
@@ -1343,22 +1337,28 @@ import com.google.common.base.Strings;
 		throw new IllegalStateException("Return type reference still left in code. typeref=" + returnTypeRef + " in "
 				+ EcoreUtil2.getContainerOfType(returnTypeRef, FunctionOrFieldAccessor.class));
 
-		// if(returnTypeRef!=null) {
 		// write(" : ");
 		// process(returnTypeRef);
-		// write(' ');
-		// }
+		// write(suffix);
 	}
 
-	private void processTypeRef(TypeRef declaredTypeRef) {
+	@SuppressWarnings("unused")
+	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {
+		TypeRef declaredTypeRef = elem.getDeclaredTypeRef();
+		if (declaredTypeRef == null)
+			declaredTypeRef = elem.getDeclaredTypeRefInAST();
 		if (declaredTypeRef == null)
 			return;
 
 		// In case of plain-JS output no types will be written
 		throw new IllegalStateException("Type reference still left in code. typeRef=" + declaredTypeRef);
+
+		// write(" : ");
+		// process(declaredTypeRef);
+		// write(suffix);
 	}
 
-	private void processTypeParams(EList<TypeVariable> typeParams) {
+	private void processTypeParams(EList<N4TypeVariable> typeParams) {
 		if (typeParams.isEmpty())
 			return;
 
@@ -1366,7 +1366,7 @@ import com.google.common.base.Strings;
 		throw new IllegalStateException("Type reference still left in code. typeParams=" + typeParams);
 	}
 
-	private void processTypeArgs(EList<? extends TypeArgument> typeArgs) {
+	private void processTypeArgs(EList<? extends TypeReferenceNode<TypeRef>> typeArgs) {
 		if (typeArgs.isEmpty())
 			return;
 

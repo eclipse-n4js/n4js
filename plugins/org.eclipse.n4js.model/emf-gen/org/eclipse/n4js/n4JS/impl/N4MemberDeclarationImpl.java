@@ -36,9 +36,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.NamedElement;
-import org.eclipse.n4js.n4JS.TypeProvidingElement;
-
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -273,18 +270,6 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredTypeRef() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_MEMBER_DECLARATION__OWNER:
@@ -407,11 +392,6 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				default: return -1;
 			}
 		}
-		if (baseClass == TypeProvidingElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == TypableElement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
@@ -438,11 +418,6 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				default: return -1;
 			}
 		}
-		if (baseClass == TypeProvidingElement.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == TypableElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
@@ -465,12 +440,6 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == TypeProvidingElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF;
 				default: return -1;
 			}
 		}
@@ -516,8 +485,6 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				return isCallableConstructor();
 			case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME:
 				return getName();
-			case N4JSPackage.N4_MEMBER_DECLARATION___GET_DECLARED_TYPE_REF:
-				return getDeclaredTypeRef();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

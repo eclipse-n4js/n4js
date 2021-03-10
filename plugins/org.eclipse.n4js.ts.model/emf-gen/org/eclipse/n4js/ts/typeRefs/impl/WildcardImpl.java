@@ -284,8 +284,8 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
-		return WildcardAsStringUtils.getTypeRefAsString_workaround(this);
+	public String internalGetTypeRefAsString() {
+		return WildcardAsStringUtils.internalGetTypeRefAsString_workaround(this);
 	}
 
 	/**
@@ -394,8 +394,8 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 				return getDeclaredOrImplicitUpperBound();
 			case TypeRefsPackage.WILDCARD___IS_IMPLICIT_UPPER_BOUND_IN_EFFECT:
 				return isImplicitUpperBoundInEffect();
-			case TypeRefsPackage.WILDCARD___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.WILDCARD___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

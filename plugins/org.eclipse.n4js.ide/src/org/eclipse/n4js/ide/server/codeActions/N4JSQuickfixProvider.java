@@ -28,8 +28,8 @@ import org.eclipse.n4js.ide.imports.ImportHelper;
 import org.eclipse.n4js.ide.imports.ReferenceResolution;
 import org.eclipse.n4js.ide.server.codeActions.util.ChangeProvider;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
-import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -96,7 +96,8 @@ public class N4JSQuickfixProvider {
 	@Fix(IssueCodes.CLF_FIELD_OPTIONAL_OLD_SYNTAX)
 	public void fixOldSyntaxForOptionalFields(QuickfixContext context, ICodeActionAcceptor acceptor) {
 		Document doc = context.options.getDocument();
-		int offsetNameEnd = getOffsetOfNameEnd(getEObject(context).eContainer());
+		EObject element = getEObject(context);
+		int offsetNameEnd = getOffsetOfNameEnd(element);
 		List<TextEdit> textEdits = new ArrayList<>();
 		// removes the ? at the old location
 		int endOffset = doc.getOffSet(context.getDiagnostic().getRange().getEnd());
@@ -120,20 +121,24 @@ public class N4JSQuickfixProvider {
 		acceptor.acceptQuickfixCodeAction(context, "Change to Default Parameter", textEdits);
 	}
 
-	private int getOffsetOfNameEnd(EObject object) {
+	private int getOffsetOfNameEnd(EObject element) {
+		EObject parent = element.eContainer();
+		if (parent instanceof TypeReferenceNode<?>) {
+			parent = parent.eContainer();
+		}
 		INode node;
-		if (object instanceof N4FieldDeclaration) {
-			N4FieldDeclaration fieldDecl = (N4FieldDeclaration) object;
+		if (parent instanceof N4FieldDeclaration) {
+			N4FieldDeclaration fieldDecl = (N4FieldDeclaration) parent;
 			if (fieldDecl.isDeclaredOptional()) {
 				return -1;
 			}
-			node = NodeModelUtils.findActualNodeFor(((PropertyNameOwner) object).getDeclaredName());
-		} else if (object instanceof TField) {
-			TField field = (TField) object;
+			node = NodeModelUtils.findActualNodeFor(fieldDecl.getDeclaredName());
+		} else if (parent instanceof TField) {
+			TField field = (TField) parent;
 			if (field.isOptional()) {
 				return -1;
 			}
-			node = NodeModelUtils.findNodesForFeature(object, TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME).get(0);
+			node = NodeModelUtils.findNodesForFeature(field, TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME).get(0);
 		} else {
 			return -1;
 		}

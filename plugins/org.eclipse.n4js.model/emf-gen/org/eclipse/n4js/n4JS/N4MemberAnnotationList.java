@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-
 import org.eclipse.n4js.ts.types.TMember;
 
 /**
@@ -39,14 +37,6 @@ public interface N4MemberAnnotationList extends AbstractAnnotationList, N4Member
 	 * @generated
 	 */
 	TMember getDefinedTypeElement();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	TypeRef getDeclaredTypeRef();
 
 	/**
 	 * <!-- begin-user-doc -->

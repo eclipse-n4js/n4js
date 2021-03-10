@@ -56,26 +56,26 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 		// DeferredTypeRefs related to poly expressions should not be handled here (poly computer responsible for this!)
 		switch (obj) {
 			N4MethodDeclaration: {
-				val returnTypeRef = obj.returnTypeRef;
+				val declReturnTypeRefInAST = obj.declaredReturnTypeRefNode?.typeRefInAST;
 				if (obj.isConstructor) {
 					val tCtor = obj.definedType as TMethod;
 					if (null !== tCtor) {
 						assertTrueIfRigid(cache, "TMethod in TModule should be a constructor", tCtor.isConstructor);
 						assertTrueIfRigid(cache, "return type of constructor in TModule should be a DeferredTypeRef",
 							tCtor.returnTypeRef instanceof DeferredTypeRef);
-						val implicitReturnTypeRef = TypeRefsFactory.eINSTANCE.createThisTypeRef;
+						val implicitReturnTypeRef = TypeRefsFactory.eINSTANCE.createThisTypeRefNominal;
 						val boundThisTypeRef = tsh.bindAndSubstituteThisTypeRef(G, obj, implicitReturnTypeRef);
 						EcoreUtilN4.doWithDeliver(false, [
 							tCtor.returnValueMarkedOptional = true;
 							tCtor.returnTypeRef = TypeUtils.copy(boundThisTypeRef);
 						], tCtor);
 					}
-				} else if (returnTypeRef instanceof ThisTypeRef) {
+				} else if (declReturnTypeRefInAST instanceof ThisTypeRef) {
 					val tMethod = obj.definedType as TMethod;
 					if (null !== tMethod) {
 						assertTrueIfRigid(cache, "return type of TMethod in TModule should be a DeferredTypeRef",
 							tMethod.returnTypeRef instanceof DeferredTypeRef);
-						val boundThisTypeRef = tsh.bindAndSubstituteThisTypeRef(G, returnTypeRef, returnTypeRef);
+						val boundThisTypeRef = tsh.bindAndSubstituteThisTypeRef(G, declReturnTypeRefInAST, declReturnTypeRefInAST);
 						EcoreUtilN4.doWithDeliver(false, [
 							tMethod.returnTypeRef = TypeUtils.copy(boundThisTypeRef);
 						], tMethod);
@@ -83,14 +83,14 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 				}
 			}
 			N4GetterDeclaration: {
-				val returnTypeRef = obj.declaredTypeRef;
-				if (returnTypeRef instanceof ThisTypeRef) {
+				val declReturnTypeRefInAST = obj.declaredTypeRefNode?.typeRefInAST;
+				if (declReturnTypeRefInAST instanceof ThisTypeRef) {
 					val tGetter = obj.definedGetter;
 					assertTrueIfRigid(cache, "return type of TGetter in TModule should be a DeferredTypeRef",
-						tGetter.declaredTypeRef instanceof DeferredTypeRef);
-					val boundThisTypeRef = tsh.getThisTypeAtLocation(G, returnTypeRef); // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
+						tGetter.typeRef instanceof DeferredTypeRef);
+					val boundThisTypeRef = tsh.getThisTypeAtLocation(G, declReturnTypeRefInAST); // G |~ methodDecl.returnTypeRef ~> boundThisTypeRef
 					EcoreUtilN4.doWithDeliver(false, [
-						tGetter.declaredTypeRef = TypeUtils.copy(boundThisTypeRef);
+						tGetter.typeRef = TypeUtils.copy(boundThisTypeRef);
 					], tGetter);
 				}
 			}
@@ -152,7 +152,8 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 				if (useContext) {
 					fieldTypeRef = ts.substTypeVariables(G2, fieldTypeRef);
 				}
-				val fieldTypeRefSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, fieldTypeRef);
+				val fieldTypeRefResolved = tsh.resolveTypeAliases(G, fieldTypeRef); // this runs after TypeAliasProcessor, so we need to resolve here
+				val fieldTypeRefSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, fieldTypeRefResolved);
 				EcoreUtilN4.doWithDeliver(false, [
 					tte.typeRef = TypeUtils.copy(fieldTypeRefSane);
 				], tte);

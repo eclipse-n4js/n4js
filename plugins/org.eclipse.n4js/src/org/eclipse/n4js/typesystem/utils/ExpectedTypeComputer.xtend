@@ -51,7 +51,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		val fofa = EcoreUtil2.getContainerOfType(returnValueExpr?.eContainer, FunctionOrFieldAccessor);
 		val G2 = G.wrap;
 		val myThisTypeRef = tsh.getThisTypeAtLocation(G, returnValueExpr);
-		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
+		G2.setThisBinding(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		return getExpectedTypeOfFunctionOrFieldAccessor(G2, fofa); // null means: no type expectation
 	}
@@ -77,7 +77,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		} else {
 			// funDef === null, so maybe we are in a getter:
 			if (fofa instanceof GetterDeclaration) {
-				return fofa?.definedGetter?.declaredTypeRef;
+				return fofa?.definedGetter?.typeRef;
 			}
 		}
 		return null; // null means: no type expectation
@@ -89,7 +89,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		// funDef.definedType.returnTypeRef to Promise<R,?>, where R can be based on funDef.returnTypeRef
 		val tFun = funDef.definedType;
 		if (tFun instanceof TFunction) {
-			val actualReturnTypeRef = tFun.returnTypeRef;
+			val actualReturnTypeRef = getAndResolveOuterReturnType(G, tFun);
 			if (TypeUtils.isPromise(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
 				val firstTypeArg = actualReturnTypeRef.typeArgs.head;
 				if (firstTypeArg !== null)
@@ -97,8 +97,8 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 			}
 		}
 
-		if (funDef.returnTypeRef !== null) {
-			return funDef.returnTypeRef;
+		if (funDef.declaredReturnTypeRef !== null) {
+			return funDef.declaredReturnTypeRef;
 		}
 
 		return null;
@@ -110,14 +110,14 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		// sets funDef.definedType.returnTypeRef to Generator<TYield,TResult,TNext>, where TYield can be based on funDef.returnTypeRef
 		val tFun = funDef.definedFunction;
 		if (tFun !== null) {
-			val actualReturnTypeRef = tFun.returnTypeRef;
+			val actualReturnTypeRef = getAndResolveOuterReturnType(G, tFun);
 			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
 				return tsh.getGeneratorTReturn(G, actualReturnTypeRef);
 			}
 		}
 
-		if (funDef.returnTypeRef !== null) {
-			return funDef.returnTypeRef;
+		if (funDef.declaredReturnTypeRef !== null) {
+			return funDef.declaredReturnTypeRef;
 		}
 
 		return null;
@@ -128,24 +128,25 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	 * (with regard to {@code Generator<TYield,TReturn,TNext>}). In case the yield expression is recursive (features a star),
 	 * the expected type must conform to {@code [Async]Generator<? extends TYield,?,? super TNext>}.
 	 */
-	def TypeRef getExpectedTypeOfYieldValueExpression(RuleEnvironment G, YieldExpression yieldExpr, TypeRef exprTypeRef) {
+	def TypeRef getExpectedTypeOfYieldValueExpression(RuleEnvironment G, YieldExpression yieldExpr, TypeRef exprTypeRefRaw) {
 		val expression = yieldExpr.expression;
 		val funDef = EcoreUtil2.getContainerOfType(expression?.eContainer, FunctionDefinition);
 		val G2 = G.wrap;
 		val myThisTypeRef = tsh.getThisTypeAtLocation(G, expression);
-		G2.addThisType(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
+		G2.setThisBinding(myThisTypeRef); // takes the real-this type even if it is a type{this} reference.
 
 		if (funDef === null || !funDef.isGenerator)
 			return null; // yield only occurs in generator functions
 
 		val tFun = funDef.definedFunction;
 		if (tFun !== null) {
-			val actualReturnTypeRef = tFun.returnTypeRef;
+			val actualReturnTypeRef = getAndResolveOuterReturnType(G, tFun);
 			val scope = G.getPredefinedTypes().builtInTypeScope;
 			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {
 				val yieldTypeRef = tsh.getGeneratorTYield(G, actualReturnTypeRef);
 				val yieldTypeRefCopy = TypeUtils.copyWithProxies(yieldTypeRef);
 				if (yieldExpr.isMany()) {
+					val exprTypeRef = ts.upperBoundWithReopenAndResolve(G, exprTypeRefRaw);
 					if (TypeUtils.isGeneratorOrAsyncGenerator(exprTypeRef, scope)) {
 						val nextTypeRef = tsh.getGeneratorTNext(G, actualReturnTypeRef);
 						val nextTypeRefCopy = TypeUtils.copyWithProxies(nextTypeRef);
@@ -173,4 +174,11 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		return null; // null means: no type expectation
 	}
 
+	private def TypeRef getAndResolveOuterReturnType(RuleEnvironment G, TFunction tFun) {
+		val actualReturnTypeRef = tFun.returnTypeRef;
+		if (actualReturnTypeRef !== null) {
+			return ts.upperBoundWithReopenAndResolve(G, actualReturnTypeRef);
+		}
+		return null;
+	}
 }

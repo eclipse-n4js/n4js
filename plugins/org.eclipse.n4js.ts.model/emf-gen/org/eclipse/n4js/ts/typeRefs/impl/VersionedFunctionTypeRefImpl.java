@@ -179,7 +179,7 @@ public class VersionedFunctionTypeRefImpl extends VersionedParameterizedTypeRefI
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
+	public String internalGetTypeRefAsString() {
 		String _xifexpression = null;
 		TypeRef _declaredThisType = this.getDeclaredThisType();
 		boolean _tripleNotEquals = (_declaredThisType != null);
@@ -252,7 +252,7 @@ public class VersionedFunctionTypeRefImpl extends VersionedParameterizedTypeRefI
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -260,13 +260,12 @@ public class VersionedFunctionTypeRefImpl extends VersionedParameterizedTypeRefI
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_REF___IS_GENERIC: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___IS_GENERIC;
 				case TypeRefsPackage.TYPE_REF___IS_RAW: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___IS_RAW;
-				case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == ParameterizedTypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_GENERIC: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___IS_GENERIC;
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_RAW: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___IS_RAW;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
@@ -284,7 +283,7 @@ public class VersionedFunctionTypeRefImpl extends VersionedParameterizedTypeRefI
 				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___IS_GENERIC: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___IS_GENERIC;
 				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___IS_RAW: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___IS_RAW;
 				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___GET_FPAR_FOR_ARG_IDX__INT: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___GET_FPAR_FOR_ARG_IDX__INT;
-				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
 				default: return -1;
 			}
 		}
@@ -329,8 +328,8 @@ public class VersionedFunctionTypeRefImpl extends VersionedParameterizedTypeRefI
 				return isRaw();
 			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___GET_FPAR_FOR_ARG_IDX__INT:
 				return getFparForArgIdx((Integer)arguments.get(0));
-			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
+			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

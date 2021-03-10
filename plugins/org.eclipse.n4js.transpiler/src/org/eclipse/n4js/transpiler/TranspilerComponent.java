@@ -310,8 +310,15 @@ public abstract class TranspilerComponent {
 	// DELEGATION METHODS TO TRANSPILER UTILITIES
 
 	@SuppressWarnings("javadoc")
-	public <T extends EObject> List<T> collectNodes(EObject root, Class<T> cls, boolean searchForNestedNodes) {
-		return TranspilerUtils.collectNodes(root, cls, searchForNestedNodes);
+	public final <T extends EObject> List<T> collectNodes(EObject root, Class<T> cls, boolean searchForNestedNodes) {
+		return TranspilerUtils.collectNodes(root, searchForNestedNodes, cls);
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("javadoc")
+	public final <T extends EObject> List<T> collectNodes(EObject root, boolean searchForNestedNodes,
+			Class<? extends T>... cls) {
+		return TranspilerUtils.collectNodes(root, searchForNestedNodes, cls);
 	}
 
 	@SuppressWarnings("javadoc")

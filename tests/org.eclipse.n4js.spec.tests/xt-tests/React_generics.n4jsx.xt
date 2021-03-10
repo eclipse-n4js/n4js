@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+   Workspace {
+		Project "N4JSXSpecTest" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "react/index.n4jsd" }
+			File "package.json" { from = "react/package.json" }
+		}
+	}
+
+	END_SETUP
+*/
+
+import * as React from "react/index"
+
+interface ~MyProps extends React.ComponentProps  {
+	public prop: int;
+}
+
+class MyComponent<PropsT extends MyProps, StateT extends Object> extends React.Component<PropsT, StateT> {
+	@Override
+	public render(): React.Element {
+		return null;
+	}
+}
+
+// XPECT noerrors --> "Non-optional property prop should be specified." at "MyComponent"
+// XPECT nowarnings --> "Attribute prop is not a declared property in the props of MyComponent." at "prop"
+<MyComponent prop={42}/>;
