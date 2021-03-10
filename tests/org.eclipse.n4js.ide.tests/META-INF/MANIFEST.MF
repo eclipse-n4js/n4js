@@ -4,23 +4,23 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.ide.tests
-Require-Bundle: org.eclipse.n4js,
- org.junit,
+Require-Bundle: org.junit,
  org.eclipse.equinox.app,
  com.google.guava,
- org.eclipse.n4js.runner,
  org.apache.log4j,
  org.slf4j.api;bundle-version="1.7.2",
- org.eclipse.n4js.utils,
  org.eclipse.xtext.testing,
+ org.eclipse.n4js,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.ide.tests.helper,
  org.eclipse.n4js.json,
  org.eclipse.n4js.cli.tests.helper,
  org.eclipse.n4js.ide,
- org.eclipse.lsp4j,
- org.eclipse.lsp4j.jsonrpc,
  org.eclipse.n4js.cli,
- org.eclipse.n4js.ts
+ org.eclipse.n4js.ts,
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.xtext,
+ org.eclipse.lsp4j,
+ org.eclipse.lsp4j.jsonrpc
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.eclipse.n4js.ide.tests

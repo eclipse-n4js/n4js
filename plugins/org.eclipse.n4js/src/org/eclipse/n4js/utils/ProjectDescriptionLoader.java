@@ -47,6 +47,7 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -97,12 +98,13 @@ public class ProjectDescriptionLoader {
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
 		adjustMainPath(location, packageJSON);
 		String defaultProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
-		ProjectDescription pdFromPackageJSON = packageJSON != null
+		ProjectDescriptionBuilder pdbFromPackageJSON = packageJSON != null
 				? packageJsonHelper.convertToProjectDescription(packageJSON, true, defaultProjectName)
 				: null;
-		if (pdFromPackageJSON != null) {
-			setInformationFromFileSystem(location, pdFromPackageJSON);
-			return pdFromPackageJSON;
+		if (pdbFromPackageJSON != null) {
+			setInformationFromFileSystem(location, pdbFromPackageJSON);
+			ProjectDescription result = pdbFromPackageJSON.build();
+			return result;
 		} else {
 			return null;
 		}
@@ -198,10 +200,10 @@ public class ProjectDescriptionLoader {
 	 * Store some ancillary information about the state of the file system at the location of the
 	 * <code>package.json</code> file in the given JSON document.
 	 */
-	private void setInformationFromFileSystem(URI location, ProjectDescription target) {
+	private void setInformationFromFileSystem(URI location, ProjectDescriptionBuilder target) {
 		boolean hasNestedNodeModulesFolder = exists(URIConverter.INSTANCE,
 				location.appendSegment(N4JSGlobals.NODE_MODULES));
-		target.setHasNestedNodeModulesFolder(hasNestedNodeModulesFolder);
+		target.setNestedNodeModulesFolder(hasNestedNodeModulesFolder);
 	}
 
 	private JSONDocument loadPackageJSONAtLocation(SafeURI<?> location) {

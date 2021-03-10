@@ -10,8 +10,9 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import org.eclipse.n4js.ide.xtext.server.LanguageServerFrontend;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.xtext.server.LanguageServerFrontend;
+import org.eclipse.n4js.xtext.server.util.LspLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

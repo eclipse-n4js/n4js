@@ -2,7 +2,6 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.n4js.ui.tests
-Fragment-Host: org.eclipse.n4js.ide
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-11
@@ -18,10 +17,13 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.emf.common,
  org.antlr.runtime,
  org.eclipse.xtext.testing,
- org.eclipse.n4js.ide.tests.helper,
- org.eclipse.n4js.tests.helper,
  org.eclipse.n4js,
+ org.eclipse.n4js.ide,
+ org.eclipse.n4js.ts,
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.xtext,
  org.eclipse.n4js.tests.helper,
+ org.eclipse.n4js.ide.tests.helper,
  org.eclipse.n4js.cli.tests.helper,
  org.junit,
  org.eclipse.lsp4j,

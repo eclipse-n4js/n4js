@@ -13,8 +13,8 @@ package org.eclipse.n4js.ide.server.concurrent;
 import java.util.function.Function;
 
 import org.eclipse.n4js.ide.N4JSIdeDataCollectors;
-import org.eclipse.n4js.ide.xtext.server.QueuedExecutorService;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.xtext.server.QueuedExecutorService;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Singleton;

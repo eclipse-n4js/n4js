@@ -22,13 +22,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.Enumerator;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.json.JSON.JSONArray;
@@ -37,11 +35,11 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.projectDescription.KeywordEnum;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionFactory;
-import org.eclipse.n4js.projectDescription.ProjectDescriptionPackage;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
@@ -58,12 +56,19 @@ import com.google.gson.JsonElement;
  * <p>
  * These utility methods do not validate the structure of the given {@link JSONPackage} instances. Rather, they will
  * defensively abort and return {@code null} in case the given {@link JSONValue} is not a valid representation of the
- * {@link ProjectDescriptionPackage} instance in question (for validation see {@link PackageJsonValidatorExtension} and
+ * {@link ProjectDescription} instance in question (for validation see {@link PackageJsonValidatorExtension} and
  * {@link N4JSProjectSetupJsonValidatorExtension}).
  * <p>
  * Example: obtain source containers in terms of {@link SourceContainerDescription}s from a given {@link JSONObject})
  */
 public class PackageJsonUtils {
+
+	private static final Map<String, ModuleFilterType> keywordToModuleFilterType = KeywordEnum
+			.createKeywordToLiteralMap(ModuleFilterType.class);
+	private static final Map<String, ProjectType> keywordToProjectType = KeywordEnum
+			.createKeywordToLiteralMap(ProjectType.class);
+	private static final Map<String, SourceContainerType> keywordToSourceContainerType = KeywordEnum
+			.createKeywordToLiteralMap(SourceContainerType.class);
 
 	/**
 	 * Converts given JSON value to a {@link ProjectReference}; returns <code>null</code> if not possible.
@@ -71,9 +76,7 @@ public class PackageJsonUtils {
 	public static ProjectReference asProjectReferenceOrNull(JSONValue jsonValue) {
 		String valueStr = asNonEmptyStringOrNull(jsonValue);
 		if (!Strings.isNullOrEmpty(valueStr)) {
-			final ProjectReference result = ProjectDescriptionFactory.eINSTANCE.createProjectReference();
-			result.setProjectName(valueStr);
-			return result;
+			return new ProjectReference(valueStr);
 		}
 		return null;
 	}
@@ -109,10 +112,7 @@ public class PackageJsonUtils {
 		if (type != null) {
 			List<ModuleFilterSpecifier> mspecs = asModuleFilterSpecifierInArrayOrEmpty(pair.getValue());
 			if (!mspecs.isEmpty()) {
-				ModuleFilter mfilter = ProjectDescriptionFactory.eINSTANCE.createModuleFilter();
-				mfilter.setModuleFilterType(type);
-				mfilter.getModuleSpecifiers().addAll(mspecs);
-				return mfilter;
+				return new ModuleFilter(type, mspecs);
 			}
 		}
 		return null;
@@ -148,7 +148,7 @@ public class PackageJsonUtils {
 		// 1st variant:
 		String singleString = asNonEmptyStringOrNull(jsonValue);
 		if (singleString != null) {
-			return createModuleFilterSpecifier(null, singleString);
+			return new ModuleFilterSpecifier(singleString, null);
 		}
 		// 2nd variant:
 		List<NameValuePair> pairs = asNameValuePairsOrEmpty(jsonValue);
@@ -160,17 +160,9 @@ public class PackageJsonUtils {
 		String pathStr = pathNVP != null ? asNonEmptyStringOrNull(pathNVP.getValue()) : null;
 		String moduleStr = moduleNVP != null ? asNonEmptyStringOrNull(moduleNVP.getValue()) : null;
 		if (moduleStr != null) { // pathStr may be null, i.e. "sourceContainer" is optional
-			return createModuleFilterSpecifier(pathStr, moduleStr);
+			return new ModuleFilterSpecifier(moduleStr, pathStr);
 		}
 		return null;
-	}
-
-	private static ModuleFilterSpecifier createModuleFilterSpecifier(String sourcePath,
-			String moduleSpecifierWithWildcard) {
-		final ModuleFilterSpecifier result = ProjectDescriptionFactory.eINSTANCE.createModuleFilterSpecifier();
-		result.setSourcePath(sourcePath);
-		result.setModuleSpecifierWithWildcard(moduleSpecifierWithWildcard);
-		return result;
 	}
 
 	/**
@@ -207,11 +199,7 @@ public class PackageJsonUtils {
 		SourceContainerType type = parseSourceContainerType(pair.getName());
 		List<String> paths = asNonEmptyStringsInArrayOrEmpty(pair.getValue());
 		if (type != null && !paths.isEmpty()) {
-			SourceContainerDescription sourceContainerDescription = ProjectDescriptionFactory.eINSTANCE
-					.createSourceContainerDescription();
-			sourceContainerDescription.setSourceContainerType(type);
-			sourceContainerDescription.getPaths().addAll(paths);
-			return sourceContainerDescription;
+			return new SourceContainerDescription(type, paths);
 		}
 		return null;
 	}
@@ -234,22 +222,14 @@ public class PackageJsonUtils {
 	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ModuleFilterType}.
 	 */
 	public static ModuleFilterType parseModuleFilterType(String value) {
-		if (value.equals("noValidate")) {
-			return ModuleFilterType.NO_VALIDATE;
-		} else {
-			return null;
-		}
+		return value != null ? keywordToModuleFilterType.get(value) : null;
 	}
 
 	/**
-	 * Returns the string representation of the given {@link ModuleFilterType}.
+	 * Returns the string representation of the given {@link ModuleFilterType} or <code>null</code>.
 	 */
 	public static String getModuleFilterTypeStringRepresentation(ModuleFilterType type) {
-		if (type == ModuleFilterType.NO_VALIDATE) {
-			return "noValidate";
-		} else {
-			return "<invalid module filter type>";
-		}
+		return type != null ? type.getKeyword() : null;
 	}
 
 	/**
@@ -258,26 +238,14 @@ public class PackageJsonUtils {
 	 * Returns {@code null} if {@code value} is not a valid string representation of a {@link ProjectType}.
 	 */
 	public static ProjectType parseProjectType(String projectTypeStr) {
-		if ("runtimeEnvironment".equals(projectTypeStr))
-			return ProjectType.RUNTIME_ENVIRONMENT;
-		if ("runtimeLibrary".equals(projectTypeStr))
-			return ProjectType.RUNTIME_LIBRARY;
-		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getProjectType(), ProjectType.class,
-				projectTypeStr);
+		return projectTypeStr != null ? keywordToProjectType.get(projectTypeStr) : null;
 	}
 
 	/**
-	 * Returns the string representation of the given {@link ProjectType}.
+	 * Returns the string representation of the given {@link ProjectType} or <code>null</code>.
 	 */
 	public static String getProjectTypeStringRepresentation(ProjectType projectType) {
-		switch (projectType) {
-		case RUNTIME_ENVIRONMENT:
-			return "runtimeEnvironment";
-		case RUNTIME_LIBRARY:
-			return "runtimeLibrary";
-		default:
-			return projectType.getName();
-		}
+		return projectType != null ? projectType.getKeyword() : null;
 	}
 
 	/**
@@ -287,31 +255,14 @@ public class PackageJsonUtils {
 	 * representation.
 	 */
 	public static SourceContainerType parseSourceContainerType(String sourceContainerTypeStr) {
-		return parseEnumLiteral(ProjectDescriptionPackage.eINSTANCE.getSourceContainerType(), SourceContainerType.class,
-				sourceContainerTypeStr);
+		return sourceContainerTypeStr != null ? keywordToSourceContainerType.get(sourceContainerTypeStr) : null;
 	}
 
 	/**
-	 * Returns the string representation of the given {@link SourceContainerType}.
-	 *
-	 * @throw {@link NullPointerException} if {@code type} is null.
+	 * Returns the string representation of the given {@link SourceContainerType} or <code>null</code>.
 	 */
 	public static String getSourceContainerTypeStringRepresentation(SourceContainerType type) {
-		return type.getLiteral().toLowerCase();
-	}
-
-	private static <T extends Enumerator> T parseEnumLiteral(EEnum emfEnumType, Class<T> javaEnumType,
-			String enumLiteralStr) {
-		EEnumLiteral emfLit = enumLiteralStr != null ? emfEnumType.getELiterals().stream()
-				.filter(lit -> lit.getName().equalsIgnoreCase(enumLiteralStr))
-				.findFirst().orElse(null) : null;
-		if (emfLit == null) {
-			return null;
-		}
-		final Enumerator javaLit = emfLit.getInstance();
-		@SuppressWarnings("unchecked")
-		T javaLitCasted = javaEnumType.isInstance(javaLit) ? (T) javaLit : null;
-		return javaLitCasted;
+		return type != null ? type.getKeyword() : null;
 	}
 
 	/**

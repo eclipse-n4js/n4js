@@ -26,7 +26,7 @@ import org.eclipse.n4js.json.validation.JSONIssueCodes;
 import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -533,8 +533,8 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		String fileExtension = fileExtensionCalculator.getFilenameWithoutXpectExtension(uri);
 		boolean isPckjson = fileExtension.equals(IN4JSProject.PACKAGE_JSON);
 		if (isPckjson) {
-			ProjectDescription pd = pckjsonHelper.convertToProjectDescription(jsonDocument, true, "xyz");
-			return pd.getProjectType() == ProjectType.PLAINJS;
+			ProjectDescriptionBuilder pdb = pckjsonHelper.convertToProjectDescription(jsonDocument, true, "xyz");
+			return pdb != null && pdb.build().getProjectType() == ProjectType.PLAINJS;
 		}
 		return false;
 	}

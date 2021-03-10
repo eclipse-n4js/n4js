@@ -38,8 +38,6 @@ import org.eclipse.n4js.parser.PropertyNameAwareElementFactory;
 import org.eclipse.n4js.parser.RegExLiteralAwareLexer;
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.preferences.FileBasedExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.AccessibleSerializer;
@@ -391,14 +389,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends IN4JSCore> bindN4JSCore() {
 		return N4JSRuntimeCore.class;
-	}
-
-	/**
-	 * Binds the preference store implementation for the external libraries to the
-	 * {@link FileBasedExternalLibraryPreferenceStore file based} one.
-	 */
-	public Class<? extends ExternalLibraryPreferenceStore> bindExternalLibraryPreferenceStore() {
-		return FileBasedExternalLibraryPreferenceStore.class;
 	}
 
 	/**

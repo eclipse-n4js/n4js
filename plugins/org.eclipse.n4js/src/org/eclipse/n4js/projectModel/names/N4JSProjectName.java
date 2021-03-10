@@ -98,13 +98,6 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	}
 
 	/**
-	 * Convert this name to a valid Eclipse project name.
-	 */
-	public EclipseProjectName toEclipseProjectName() {
-		return new EclipseProjectName(ProjectDescriptionUtils.convertN4JSProjectNameToEclipseProjectName(name));
-	}
-
-	/**
 	 * Convert this project name to an Xtext qualified name.
 	 * <p>
 	 * As explained {@link ProjectDescriptionUtils#isProjectNameWithScope(String) here}, a scope name, if present, and

@@ -209,7 +209,7 @@ public interface IN4JSProject {
 	/**
 	 * Returns {@code true} if this {@link IN4JSProject} was explicitly configured to be of the N4JS nature.
 	 *
-	 * @See {@link ProjectDescription#isHasN4JSNature()}
+	 * @See {@link ProjectDescription#hasN4JSNature()}
 	 */
 	boolean hasN4JSNature();
 

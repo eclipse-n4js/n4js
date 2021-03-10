@@ -22,8 +22,8 @@ import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.SystemExitRedirecter.SystemExitException;
-import org.eclipse.n4js.ide.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 
 import com.google.common.base.Optional;
