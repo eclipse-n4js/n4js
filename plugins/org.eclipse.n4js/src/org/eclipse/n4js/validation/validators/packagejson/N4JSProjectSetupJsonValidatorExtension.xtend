@@ -69,11 +69,11 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
+import org.eclipse.n4js.utils.ModuleFilterUtils
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.Strings
-import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
@@ -154,9 +154,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
-
-	@Inject
-	private WildcardPathFilterHelper wildcardHelper;
 
 	@Inject
 	protected N4JSElementKeywordProvider keywordProvider;
@@ -882,7 +879,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 				val location = getFileInSources(project, filterSpecifierTraceable.element, path);
 				
 				if (checkForMatches && location !== null) {
-					val matchesFile = setupValidator.wildcardHelper.isPathContainedByFilter(location, filterSpecifierTraceable.element);
+					val matchesFile = ModuleFilterUtils.isPathContainedByFilter(project, location, filterSpecifierTraceable.element);
 					val matchesN4JSFile = matchesFile && isN4JSFile(path.toString()); 
 					
 					// check whether the current filter matches the current file

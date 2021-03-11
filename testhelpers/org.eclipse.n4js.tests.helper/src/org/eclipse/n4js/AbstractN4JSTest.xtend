@@ -16,7 +16,7 @@ import java.util.List
 import java.util.stream.Collectors
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.ts.types.TModule
@@ -48,7 +48,7 @@ public abstract class AbstractN4JSTest extends Assert {
 	private Provider<XtextResourceSet> resourceSetProvider
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private IN4JSCoreNEW n4jsCore;
 
 
 	/**

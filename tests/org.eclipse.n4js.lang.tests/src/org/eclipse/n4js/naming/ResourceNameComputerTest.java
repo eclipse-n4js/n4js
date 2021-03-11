@@ -32,8 +32,8 @@ import com.google.inject.Provider;
 
 /**
  */
-@InjectWith(N4JSInjectorProviderWithMockProject.class)
 @RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProviderWithMockProject.class)
 public class ResourceNameComputerTest {
 
 	@Inject

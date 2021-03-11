@@ -32,7 +32,7 @@ import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.utils.WildcardPathFilterHelper;
+import org.eclipse.n4js.utils.ModuleFilterUtils;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
@@ -153,9 +153,8 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return new FileURI(new UriExtensions().withEmptyAuthority(getPath()));
 	}
 
-	public boolean isMatchedByModuleFilterOfType(URI nestedLocation, ModuleFilterType moduleFilterType,
-			WildcardPathFilterHelper wildcardHelper) {
-		return wildcardHelper.isPathContainedByFilter(nestedLocation,
+	public boolean isMatchedByModuleFilterOfType(URI nestedLocation, ModuleFilterType moduleFilterType) {
+		return ModuleFilterUtils.isPathContainedByFilter(this, nestedLocation,
 				getModuleFilterSpecifiersByType(moduleFilterType));
 	}
 

@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js;
 
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.tests.helper.mock.MockConcurrentIndex;
+import org.eclipse.n4js.tests.helper.mock.MockWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
 
 /**
  * An injector provider which binds a mock N4JS workspace implementation.
@@ -28,19 +29,13 @@ public class N4JSInjectorProviderWithMockProject extends N4JSInjectorProvider {
 	 */
 	public static class MockProjectModule extends BaseTestModule {
 		/** */
-		public Class<? extends IN4JSCore> bindN4JSCore() {
-			return N4JSRuntimeCoreWithMockProject.class;
+		public Class<? extends XIWorkspaceConfigFactory> bindXIWorkspaceConfigFactory() {
+			return MockWorkspaceConfigFactory.class;
 		}
 
 		/** */
-		@Override
-		public Class<? extends InternalN4JSWorkspace<MockURIWrapper>> bindInternalN4JSWorkspace() {
-			return MockWorkspace.class;
-		}
-
-		/** */
-		public Class<? extends N4JSModel<?>> bindN4JSModel() {
-			return MockN4JSModel.class;
+		public Class<? extends ConcurrentIndex> bindConcurrentIndex() {
+			return MockConcurrentIndex.class;
 		}
 
 	}

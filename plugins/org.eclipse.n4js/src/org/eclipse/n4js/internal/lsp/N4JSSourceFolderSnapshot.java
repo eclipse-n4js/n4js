@@ -11,14 +11,17 @@
 package org.eclipse.n4js.internal.lsp;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.UriExtensions;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
 
 /**
@@ -90,7 +93,7 @@ public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 		return type == SourceContainerType.TEST;
 	}
 
-	// FIXME reconsider!!!
+	// FIXME reconsider: (1) maybe move elsewhere (2) why not return a FileURI (or at least a SafeURI<>)?
 	public Iterable<URI> getContents() {
 		return new Iterable<>() {
 			@Override
@@ -98,5 +101,35 @@ public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 				return Iterators.transform(getPathAsFileURI().getAllChildren(), pl -> pl.toURI());
 			}
 		};
+	}
+
+	// FIXME reconsider: maybe move elsewhere (e.g. in FindArtifactHelper)
+	/**
+	 * If the receiving source folder actually contains a file for the given fully qualified name and file extension on
+	 * disk, this method will return a URI for this file of the same format as the URIs returned by method
+	 * {@link #getContents()}. Otherwise, this method returns <code>null</code>.
+	 * <p>
+	 * The file extension may but need not contain a leading '.'.
+	 * <p>
+	 * Implementations are expected to be optimized for fast look-up (in particular, they should avoid iterating over
+	 * all URIs returned by method {@link #getContents()}).
+	 */
+	public FileURI findArtifact(QualifiedName name, Optional<String> fileExtension) {
+		final List<String> nameSegments = name.getSegments();
+		if (nameSegments.isEmpty()) {
+			return null;
+		}
+		final String[] nameSegmentsCpy = nameSegments.toArray(new String[nameSegments.size()]);
+		final String ext = fileExtension.or("").trim();
+		final String extWithDot = !ext.isEmpty() && !ext.startsWith(".") ? "." + ext : ext;
+		final int idxLast = nameSegmentsCpy.length - 1;
+		nameSegmentsCpy[idxLast] = nameSegmentsCpy[idxLast] + extWithDot;
+
+		FileURI sourceFolderPath = getPathAsFileURI();
+		FileURI result = sourceFolderPath.appendSegments(nameSegmentsCpy);
+		if (result.exists()) {
+			return result;
+		}
+		return null;
 	}
 }

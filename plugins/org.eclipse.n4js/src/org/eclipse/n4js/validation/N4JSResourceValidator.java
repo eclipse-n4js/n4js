@@ -28,7 +28,6 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -59,8 +58,6 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	private OperationCanceledManager operationCanceledManager;
 	@Inject
 	private N4JSCache n4jsCache;
-	@Inject
-	private WildcardPathFilterHelper wildcardHelper;
 
 	private List<Issue> doValidate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		try (Measurement m = N4JSDataCollectors.dcValidations.getMeasurement()) {
@@ -78,7 +75,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		}
 
 		// QUICK EXIT #2: for files that match a "noValidate" module filter from package.json
-		if (ws.isNoValidate(resource.getURI(), wildcardHelper)) {
+		if (ws.isNoValidate(resource.getURI())) {
 			return Collections.emptyList();
 		}
 

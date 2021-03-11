@@ -48,15 +48,15 @@ import com.google.common.collect.Sets;
 @SuppressWarnings("restriction")
 public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
-	private final URI baseDirectory;
-	private final ProjectDiscoveryHelper projectDiscoveryHelper;
-	private final ProjectDescriptionLoader projectDescriptionLoader;
-	private final ConfigSnapshotFactory configSnapshotFactory;
-	private final UriExtensions uriExtensions;
+	protected final URI baseDirectory;
+	protected final ProjectDiscoveryHelper projectDiscoveryHelper;
+	protected final ProjectDescriptionLoader projectDescriptionLoader;
+	protected final ConfigSnapshotFactory configSnapshotFactory;
+	protected final UriExtensions uriExtensions;
 
-	private final Set<N4JSProjectConfig> projects = new LinkedHashSet<>();
-	private final Map<String, N4JSProjectConfig> projectsByName = new HashMap<>();
-	private final Map<FileURI, N4JSProjectConfig> projectsByURI = new HashMap<>();
+	protected final Set<N4JSProjectConfig> projects = new LinkedHashSet<>();
+	protected final Map<String, N4JSProjectConfig> projectsByName = new HashMap<>();
+	protected final Map<FileURI, N4JSProjectConfig> projectsByURI = new HashMap<>();
 
 	/**
 	 * Creates a new, empty {@link N4JSWorkspaceConfig}. It will not contain any projects until
@@ -100,10 +100,15 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		if (projectsByName.containsKey(name)) {
 			return; // see note on shadowing in API doc of this method!
 		}
-		N4JSProjectConfig newProject = new N4JSProjectConfig(this, path, pd, projectDescriptionLoader);
+		N4JSProjectConfig newProject = createProjectConfig(path, pd);
 		projects.add(newProject);
 		projectsByName.put(newProject.getName(), newProject);
 		projectsByURI.put(path, newProject);
+	}
+
+	/** Creates an instance of {@link N4JSProjectConfig} without registering it. */
+	protected N4JSProjectConfig createProjectConfig(FileURI path, ProjectDescription pd) {
+		return new N4JSProjectConfig(this, path, pd, projectDescriptionLoader);
 	}
 
 	protected void scanDiskForProjects() {

@@ -251,7 +251,7 @@ public class NodeModulesDiscoveryHelper {
 
 	private boolean isPointingTo(File base, String relativePath, File target) {
 		String pattern = base.getAbsolutePath() + File.separator + relativePath;
-		PathMatcher matcher = WildcardPathFilterHelper.createPathMatcher(pattern);
+		PathMatcher matcher = ModuleFilterUtils.createPathMatcher(pattern);
 		return matcher.matches(target.toPath());
 	}
 

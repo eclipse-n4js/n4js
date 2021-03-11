@@ -244,6 +244,7 @@ public class ResourceTaskContext {
 		XtextResourceSet result = resourceSetProvider.get();
 		WorkspaceConfigAccess.setWorkspaceConfig(result, workspaceConfig);
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
+
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 
 		IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);

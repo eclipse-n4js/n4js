@@ -11,7 +11,7 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.N4JSInjectorProviderMockProjectSuppressedValidator
+import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -23,7 +23,7 @@ import org.junit.runners.MethodSorters
 /**
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderMockProjectSuppressedValidator)
+@InjectWith(N4JSInjectorProviderWithMockProject)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class BlockTransformationTest extends AbstractTranspilerTest {
 

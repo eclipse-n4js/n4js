@@ -22,7 +22,6 @@ import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
@@ -30,8 +29,9 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.ISynchronizable;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -43,10 +43,7 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 	private ResourceTaskManager resourceTaskManager;
 
 	@Inject
-	private ResourceDescriptionsProvider resourceDescriptionsProvider;
-
-	@Inject
-	private WildcardPathFilterHelper wildcardHelper;
+	private IResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	@Override
 	public Optional<N4JSWorkspaceConfigSnapshot> getWorkspaceConfig(Notifier context) {
@@ -105,24 +102,28 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 	@Override
 	public boolean isNoValidate(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() && config.get().isNoValidate(nestedLocation, wildcardHelper);
+		return config.isPresent() && config.get().isNoValidate(nestedLocation);
 	}
 
-	// FIXME GH-2073 important! reconsider the following!
+	// FIXME GH-2073 important! reconsider all following methods!
 
 	@Override
 	public ResourceSet createResourceSet() {
-		// FIXME
+		return resourceTaskManager.createTemporaryResourceSet();
 	}
 
 	@Override
 	public Optional<IResourceDescriptions> getXtextIndex(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
-		return Optional.fromNullable(resourceDescriptionsProvider.getResourceDescriptions(resourceSet));
-		// IResourceDescriptions index = resourceSet != null
-		// ? ResourceDescriptionsData.ResourceSetAdapter.findResourceDescriptionsData(resourceSet)
-		// : null;
-		// return Optional.fromNullable(index);
+		if (resourceSet == null) {
+			return Optional.absent();
+		}
+		IResourceDescriptions result = resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
+		if (result == null) {
+			// FIXME this should not be necessary! maybe implement and bind an IResourceDescriptionsProvider doing that
+			result = ResourceDescriptionsData.ResourceSetAdapter.findResourceDescriptionsData(resourceSet);
+		}
+		return Optional.fromNullable(result);
 	}
 
 	@Override

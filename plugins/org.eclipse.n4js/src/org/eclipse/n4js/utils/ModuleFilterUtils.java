@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018 NumberFour AG.
+ * Copyright (c) 2021 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,31 +17,30 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectDescription.ProjectDescription;
 
 import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
 
 /**
- * Utility methods for wildcards in project description, e.g. in module filters
+ * Utility methods for wildcards in {@link ModuleFilter module filters} of a {@link ProjectDescription project
+ * description}.
  */
-public class WildcardPathFilterHelper {
+public class ModuleFilterUtils {
 
-	@Inject
-	private IN4JSCore n4jsCore;
-
-	/** @return true iff the given location is matched the given filter */
-	public boolean isPathContainedByFilter(URI location, ModuleFilter filter) {
-		return isPathContainedByFilter(location, filter.getModuleSpecifiers());
+	/** @return true iff the given location is matched by the given filter. */
+	public static boolean isPathContainedByFilter(N4JSProjectConfigSnapshot project, URI location,
+			ModuleFilter filter) {
+		return isPathContainedByFilter(project, location, filter.getModuleSpecifiers());
 	}
 
-	public boolean isPathContainedByFilter(URI location, Iterable<? extends ModuleFilterSpecifier> filterSpecifiers) {
+	public static boolean isPathContainedByFilter(N4JSProjectConfigSnapshot project, URI location,
+			Iterable<? extends ModuleFilterSpecifier> filterSpecifiers) {
 		for (ModuleFilterSpecifier spec : filterSpecifiers) {
-			String prjRelativeLocation = getProjectRelativeLocation(location, spec);
+			String prjRelativeLocation = getProjectRelativeLocation(project, location, spec);
 			if (prjRelativeLocation != null) {
 				boolean isContained = locationMatchesGlobSpecifier(spec, prjRelativeLocation);
 				if (isContained) {
@@ -52,23 +51,25 @@ public class WildcardPathFilterHelper {
 		return false;
 	}
 
-	/** @return true iff the given location is matched the given specifier */
-	public boolean isPathContainedByFilter(URI location, ModuleFilterSpecifier spec) {
-		String prjRelativeLocation = getProjectRelativeLocation(location, spec);
+	/** @return true iff the given location is matched the given specifier. */
+	public static boolean isPathContainedByFilter(N4JSProjectConfigSnapshot project, URI location,
+			ModuleFilterSpecifier spec) {
+		String prjRelativeLocation = getProjectRelativeLocation(project, location, spec);
 		if (prjRelativeLocation != null) {
 			return locationMatchesGlobSpecifier(spec, prjRelativeLocation);
 		}
 		return false;
 	}
 
-	private String getProjectRelativeLocation(URI location, ModuleFilterSpecifier spec) {
-		IN4JSSourceContainer sourceContainer = n4jsCore.findN4JSSourceContainer(location).orNull();
+	private static String getProjectRelativeLocation(N4JSProjectConfigSnapshot project, URI location,
+			ModuleFilterSpecifier spec) {
+
+		N4JSSourceFolderSnapshot sourceContainer = project.findSourceFolderContaining(location);
 		if (sourceContainer == null) {
 			return null;
 		}
 
-		IN4JSProject project = sourceContainer.getProject();
-		Path prjLocationPath = Paths.get(project.getLocation().toURI().toString());
+		Path prjLocationPath = Paths.get(project.getPath().toString());
 		Path locationPath = Paths.get(location.toString());
 		Preconditions.checkState(locationPath.startsWith(prjLocationPath));
 		Path prjRelativeLocationPath = prjLocationPath.relativize(locationPath);
@@ -76,7 +77,7 @@ public class WildcardPathFilterHelper {
 		String filterSrcCont = spec.getSourcePath();
 		if (filterSrcCont == null) {
 			// e.g. noValidate { "**/*" }
-			for (IN4JSSourceContainer srcCont : project.getSourceContainers()) {
+			for (N4JSSourceFolderSnapshot srcCont : project.getSourceFolders()) {
 				Path srcContLocationPath = Paths.get(srcCont.getRelativeLocation());
 				if (prjRelativeLocationPath.startsWith(srcContLocationPath)) {
 					Path srcRelativeLocationPath = srcContLocationPath.relativize(prjRelativeLocationPath);
@@ -95,8 +96,8 @@ public class WildcardPathFilterHelper {
 		return null;
 	}
 
-	/** @return true iff the given location is matched the given GLOB specifier */
-	private boolean locationMatchesGlobSpecifier(ModuleFilterSpecifier spec, String prjRelativeLocation) {
+	/** @return true iff the given location is matched the given GLOB specifier. */
+	private static boolean locationMatchesGlobSpecifier(ModuleFilterSpecifier spec, String prjRelativeLocation) {
 		String pathsToFind = spec.getModuleSpecifierWithWildcard();
 		if (pathsToFind == null) {
 			return false;

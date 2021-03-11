@@ -30,7 +30,6 @@ import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.URIUtils
-import org.eclipse.n4js.utils.WildcardPathFilterHelper
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
@@ -78,8 +77,6 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	@Inject private FolderContainmentHelper containmentHelper;
 	
 	@Inject	private UriExtensions uriExtensions;
-
-	@Inject private WildcardPathFilterHelper wildcardHelper;
 
 
 	override getCompilerDescriptor() {
@@ -188,7 +185,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	private def isNoValidate(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
-		return ws.isNoValidate(n4jsSourceURI, wildcardHelper);
+		return ws.isNoValidate(n4jsSourceURI);
 	}
 
 	private def isExternal(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {

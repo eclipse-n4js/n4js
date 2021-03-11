@@ -15,7 +15,6 @@ import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
-import org.eclipse.n4js.utils.WildcardPathFilterHelper;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
@@ -97,10 +96,9 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 		return new FileURI(new UriExtensions().withEmptyAuthority(uri));
 	}
 
-	public boolean isNoValidate(URI nestedLocation, WildcardPathFilterHelper wildcardHelper) {
+	public boolean isNoValidate(URI nestedLocation) {
 		N4JSProjectConfigSnapshot project = findProjectContaining(nestedLocation);
-		return project != null
-				&& project.isMatchedByModuleFilterOfType(nestedLocation, ModuleFilterType.NO_VALIDATE, wildcardHelper);
+		return project != null && project.isMatchedByModuleFilterOfType(nestedLocation, ModuleFilterType.NO_VALIDATE);
 	}
 
 	public String getOutputPath(URI nestedLocation) {
