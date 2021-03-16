@@ -12,23 +12,23 @@
 /**
  * @testeeType A.A
  */
-public class ATest {
+export public class ATest {
 
 	/**
 	 * @testeeMember bar
 	 */
 	@Test
-	testBarBasics(): string {}
+	testBarBasics() {}
 
 	/**
 	 * @testee A.A.bar
 	 */
 	@Test
-	testOnlyInA(): string {}
+	testOnlyInA() {}
 }
 
 /**
  * @testeeType A.B
  */
-public class BTest extends ATest {
+export public class BTest extends ATest {
 }

@@ -27,12 +27,12 @@ include::{find}config.adoc[]
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:poly1/X:X#bar++[``++project bar(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample9_StaticPolyfill:poly1/X:X#bar++[``++project bar(): void++``]
 
 
 ==== Semantics
 
-. *++test++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[Test]#)
+. *++test++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[Test]#)
 
 
 [[gsec:spec_X.X.foo]]
@@ -41,7 +41,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:poly1/X:X#foo++[``++project foo(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample9_StaticPolyfill:poly1/X:X#foo++[``++project foo(): void++``]
 
 
 
@@ -62,7 +62,7 @@ Add tests specifying semantics for ``++foo(): void++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:src/X:X#my++[``++project my(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample9_StaticPolyfill:src/X:X#my++[``++project my(): void++``]
 
 
 

@@ -12,29 +12,21 @@ package org.eclipse.n4js.jsdoc2spec;
 
 import java.io.IOException;
 
-import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Provider;
 
 /**
  * Runs a full test, that is, reading n4js projects and generate new spec. Is based on LaTeX tests which refer to
  * IDEBUGs.
  */
-@InjectWith(N4JSInjectorProvider.class)
-@RunWith(XtextRunner.class)
 @SuppressWarnings("javadoc")
-abstract public class JSDoc2SpecProcessorFullTest {
+abstract public class JSDoc2SpecProcessorFullTest extends AbstractIdeTest {
 
 	abstract protected void fullTest(String projectName)
 			throws IOException, InterruptedException, InterruptedException;
@@ -49,13 +41,6 @@ abstract public class JSDoc2SpecProcessorFullTest {
 
 	@Inject
 	protected ProjectDescriptionLoader projectDescriptionLoader;
-
-	@Inject
-	protected Injector injector;
-
-	protected FileBasedWorkspace workspace;
-
-	protected N4JSRuntimeCore runtimeCore;
 
 	/**
 	 * Full test with SpecSample1 project
@@ -135,14 +120,6 @@ abstract public class JSDoc2SpecProcessorFullTest {
 	@Test
 	public void testSample10() throws IOException, InterruptedException {
 		fullTest("SpecSample10_TodoTags");
-	}
-
-	/**
-	 * Full test with SpecSample11 project
-	 */
-	@Test
-	public void testSample11() throws IOException, InterruptedException {
-		fullTest("SpecSample11_sameModuleNames");
 	}
 
 	/**

@@ -514,7 +514,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		if (ws === null) {
 			return;
 		}
-		val currentProject = ws.findProjectByPath(resource.URI);
+		val currentProject = ws.findProjectByNestedLocation(resource.URI);
 		if (currentProject === null) {
 			return
 		}
@@ -526,7 +526,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		val sameResdesc = index.getExportedObjectsByType(TypesPackage.Literals.TMODULE).filter [
 			it.qualifiedName !== null && it.qualifiedName.startsWith(moduleQN)
 		].map[it.EObjectURI].map[it.trimFragment].map[index.getResourceDescription(it)].filter[currentResDesc != it] // not me
-		.filter[val prj = ws.findProjectByPath(it.URI); currentProject == prj] // same Project
+		.filter[val prj = ws.findProjectByNestedLocation(it.URI); currentProject == prj] // same Project
 		.toList
 
 		if (! sameResdesc.empty) {

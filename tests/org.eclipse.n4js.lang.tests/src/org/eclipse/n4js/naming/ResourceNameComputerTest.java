@@ -51,8 +51,9 @@ public class ResourceNameComputerTest {
 	@SuppressWarnings("javadoc")
 	@Before
 	public void prepare() throws Exception {
-		URI fileUri = URIUtils.toFileUri("p/C.n4js");
-		this.script = parserHelper.parse("class C{}", fileUri, resourceSetProvider.get());
+		XtextResourceSet rs = resourceSetProvider.get();
+		URI fileUri = rs.getURIConverter().normalize(URIUtils.toFileUri("src/p/C.n4js"));
+		this.script = parserHelper.parse("class C {}", fileUri, rs);
 		this.module = script.getModule();
 		this.type = module.getTopLevelTypes().get(0);
 	}

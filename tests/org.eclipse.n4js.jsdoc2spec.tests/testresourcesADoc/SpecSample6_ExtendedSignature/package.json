@@ -1,5 +1,5 @@
 {
-	"name": "SpecSample1",
+	"name": "SpecSample6_ExtendedSignature",
 	"version": "0.0.1",
 	"n4js": {
 		"projectType": "library",
@@ -9,9 +9,6 @@
 		"sources": {
 			"source": [
 				"src"
-			],
-			"test": [
-				"test"
 			]
 		}
 	}

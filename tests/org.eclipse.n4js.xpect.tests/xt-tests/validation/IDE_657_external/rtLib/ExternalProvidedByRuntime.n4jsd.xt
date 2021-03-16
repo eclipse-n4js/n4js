@@ -9,7 +9,19 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+    Workspace {
+   	 Project "TestProject" {
+   	 	Folder "src" {
+   	 		ThisFile "ExternalProvidedByRuntime.n4jsd" {}
+	   	}
+   	 	File "package.json" { from="package.json" }
+   	 }
+   }
+
+   END_SETUP
+ */
 
 //IDE-1223
 

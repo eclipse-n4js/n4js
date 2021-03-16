@@ -32,7 +32,7 @@ abstract class AbstractN4IDLTranspilerTest extends AbstractTranspilerTest {
 	override protected Script createScript(CharSequence code, ResourceSet resourceSet) {
 		try {
 			if(resourceSet!==null) {
-				return code.parse(URI.createURI("src/Main." + N4IDLGlobals.N4IDL_FILE_EXTENSION), resourceSet);
+				return code.parse(toTestProjectURI("Main." + N4IDLGlobals.N4IDL_FILE_EXTENSION), resourceSet);
 			} else {
 				return code.parseN4IDL;
 			}

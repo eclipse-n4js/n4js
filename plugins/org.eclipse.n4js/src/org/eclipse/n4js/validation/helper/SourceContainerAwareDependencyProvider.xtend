@@ -12,6 +12,7 @@ package org.eclipse.n4js.validation.helper
 
 import com.google.common.collect.ImmutableList
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
@@ -22,6 +23,7 @@ import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
  */
 class SourceContainerAwareDependencyProvider implements DependencyProvider<N4JSProjectConfigSnapshot> {
 
+	private final N4JSWorkspaceConfigSnapshot workspaceConfig;
 	private final boolean ignoreExternalPlainJsProjects;
 
 	/** 
@@ -36,16 +38,18 @@ class SourceContainerAwareDependencyProvider implements DependencyProvider<N4JSP
 	 * 				Specifies whether the traverser should terminate early when dependency cycles are 
 	 * 				detected, or whether it should continue.
 	 */
-	public new(boolean ignoreExternalPlainJsProjects) {
+	public new(N4JSWorkspaceConfigSnapshot workspaceConfig, boolean ignoreExternalPlainJsProjects) {
+		this.workspaceConfig = workspaceConfig;
 		this.ignoreExternalPlainJsProjects = ignoreExternalPlainJsProjects;
 	}
 
 	override getDependencies(N4JSProjectConfigSnapshot p) {
+		val directDepsResolved = p.dependencies.map[workspaceConfig.findProjectByName(it)].filterNull;
 		if (ignoreExternalPlainJsProjects) {
-			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isIgnored(dep)]);
+			return ImmutableList.copyOf(directDepsResolved.filter[dep|!isIgnored(dep)]);
 		} else {
 			// this is used by default
-			return p.allDirectDependencies;
+			return ImmutableList.copyOf(directDepsResolved);
 		}
 	}
 

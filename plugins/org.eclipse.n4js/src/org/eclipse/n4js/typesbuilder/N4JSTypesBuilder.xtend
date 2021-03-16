@@ -164,7 +164,7 @@ public class N4JSTypesBuilder {
 			result.astMD5 = N4JSASTUtils.md5Hex(resource);
 			result.reconciled = false;
 
-			var qualifiedModuleName = resource.qualifiedModuleName;
+			val qualifiedModuleName = resource.qualifiedModuleName;
 			result.simpleName = qualifiedModuleName.lastSegment;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;

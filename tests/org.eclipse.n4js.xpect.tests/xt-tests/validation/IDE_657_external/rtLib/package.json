@@ -7,7 +7,7 @@
 		"vendorId": "org.eclipse.n4js",
 		"sources": {
 			"source": [
-				"model"
+				"src"
 			]
 		},
 		"output": "src-gen"

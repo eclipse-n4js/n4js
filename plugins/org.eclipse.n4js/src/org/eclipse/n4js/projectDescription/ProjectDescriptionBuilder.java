@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 
+import com.google.common.collect.Iterables;
+
 /**
  * Builder for {@link ProjectDescription}s.
  */
@@ -177,6 +179,12 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder addSourceContainer(SourceContainerDescription sourceContainer) {
 		this.sourceContainers.add(sourceContainer);
+		return this;
+	}
+
+	public ProjectDescriptionBuilder addSourceContainers(
+			@SuppressWarnings("hiding") Iterable<SourceContainerDescription> sourceContainers) {
+		Iterables.addAll(this.sourceContainers, sourceContainers);
 		return this;
 	}
 

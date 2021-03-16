@@ -2,6 +2,7 @@
   "name": "org.eclipse.n4js.sample.n4js",
   "version": "0.0.1",
   "dependencies": {
+    "n4js-runtime": "",
     "org.eclipse.n4js.sample.utils": "*"
   },
   "n4js": {

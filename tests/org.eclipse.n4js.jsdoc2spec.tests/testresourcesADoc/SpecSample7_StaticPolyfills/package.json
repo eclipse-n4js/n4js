@@ -1,5 +1,5 @@
 {
-	"name": "SpecSample7",
+	"name": "SpecSample7_StaticPolyfills",
 	"version": "0.0.1",
 	"n4js": {
 		"projectType": "library",

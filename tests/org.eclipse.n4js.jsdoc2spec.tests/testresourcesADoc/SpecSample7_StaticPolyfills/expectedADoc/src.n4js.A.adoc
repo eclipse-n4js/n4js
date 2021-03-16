@@ -27,7 +27,7 @@ include::{find}config.adoc[]
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js/A:A#bar++[``++public bar(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample7_StaticPolyfills:src/n4js/A:A#bar++[``++public bar(): void++``]
 
 
 
@@ -48,7 +48,7 @@ Add tests specifying semantics for ``++bar(): void++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js-gen/A:A#base++[``++public base(x: number): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample7_StaticPolyfills:src/n4js-gen/A:A#base++[``++public base(x: number): void++``]
 
 
 
@@ -67,7 +67,7 @@ Add tests specifying semantics for ``++base(x: number): void++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample7_StaticPolyfills:src/n4js/A:A#foo++[``++public foo(x: any, n: number=…): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample7_StaticPolyfills:src/n4js/A:A#foo++[``++public foo(x: any, n: number=…): void++``]
 
 
 

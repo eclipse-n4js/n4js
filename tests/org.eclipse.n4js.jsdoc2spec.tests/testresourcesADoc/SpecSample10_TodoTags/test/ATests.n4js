@@ -12,12 +12,12 @@
 /**
  * @testeeType A.A
  */
-public class ATest {
+export public class ATest {
 
 	/**
 	 * @testeeMember bar
 	 */
 	@Test
-	testBarBasics(): string {}
+	testBarBasics() {}
 }
 

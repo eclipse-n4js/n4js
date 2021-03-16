@@ -10,12 +10,7 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
-import static com.google.common.collect.Iterables.isEmpty;
-import static java.util.Collections.emptyList;
-
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +34,6 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -136,6 +130,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return projectDescription.getVendorId();
 	}
 
+	public String getVendorName() {
+		return projectDescription.getVendorName();
+	}
+
 	public String getOutputPath() {
 		return projectDescription.getOutputPath();
 	}
@@ -193,86 +191,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return false;
 	}
 
-	public ImmutableList<N4JSProjectConfigSnapshot> getDependenciesOLD() {
-		return _model_getDependencies(false);
-	}
-
-	public ImmutableList<N4JSProjectConfigSnapshot> getAllDirectDependencies() {
-		return _model_getDependencies(false);
-	}
-
 	public ImmutableList<ProjectReference> getDependenciesAndImplementedApis() {
 		ImmutableList.Builder<ProjectReference> result = ImmutableList.builder();
 		result.addAll(projectDescription.getProjectDependencies());
 		result.addAll(projectDescription.getImplementedProjects());
 		return result.build();
-	}
-
-	// from N4JSModel
-	private ImmutableList<N4JSProjectConfigSnapshot> _model_getDependencies(boolean includeAbsentProjects) {
-		return _model_getDependencies(false, includeAbsentProjects);
-	}
-
-	// from N4JSModel
-	private ImmutableList<N4JSProjectConfigSnapshot> _model_getDependenciesAndImplementedApis(
-			boolean includeAbsentProjects) {
-		return _model_getDependencies(true, includeAbsentProjects);
-	}
-
-	// from N4JSModel
-	private ImmutableList<N4JSProjectConfigSnapshot> _model_getDependencies(boolean includeApis,
-			boolean includeAbsentProjects) {
-
-		ImmutableList.Builder<N4JSProjectConfigSnapshot> result = ImmutableList.builder();
-		ProjectDescription description = projectDescription;
-		if (description != null) {
-			result.addAll(
-					_model_resolveProjectReferences(description.getProjectDependencies(), includeAbsentProjects));
-			if (includeApis) {
-				result.addAll(
-						_model_resolveProjectReferences(description.getImplementedProjects(), includeAbsentProjects));
-			}
-		}
-		return result.build();
-	}
-
-	// from N4JSModel
-	private Collection<N4JSProjectConfigSnapshot> _model_resolveProjectReferences(
-			final Iterable<? extends ProjectReference> references,
-			boolean includeAbsentProjects) {
-
-		if (null == references || isEmpty(references)) {
-			return emptyList();
-		}
-
-		LinkedList<N4JSProjectConfigSnapshot> resolvedReferences = new LinkedList<>();
-		for (ProjectReference ref : references) {
-			N4JSProjectConfigSnapshot projectReference = _model_resolveProjectReference(ref, includeAbsentProjects)
-					.orNull();
-			if (projectReference != null) {
-				resolvedReferences.add(projectReference);
-			}
-		}
-
-		return resolvedReferences;
-	}
-
-	// from N4JSModel
-	private Optional<N4JSProjectConfigSnapshot> _model_resolveProjectReference(final ProjectReference reference,
-			boolean includeAbsentProjects) {
-
-		throw new UnsupportedOperationException("TODO");
-		// if (null == reference) {
-		// return absent();
-		// }
-		// SafeURI<?> dependencyLocation = workspace.getLocation(reference);
-		// if (null != dependencyLocation) {
-		// return fromNullable(getN4JSProject(dependencyLocation));
-		// }
-		//
-		// if (includeAbsentProjects) {
-		// return fromNullable(newAbsentProject(reference.getProjectName()));
-		// }
-		// return absent();
 	}
 }

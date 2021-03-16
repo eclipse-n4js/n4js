@@ -1,9 +1,6 @@
 {
-	"name": "SpecEx",
+	"name": "SpecSample9_StaticPolyfill",
 	"version": "0.0.1",
-	"dependencies": {
-		"org.eclipse.n4js.mangelhaft": "*"
-	},
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",
@@ -12,8 +9,7 @@
 		"sources": {
 			"source": [
 				"src",
-				"poly1",
-				"poly2"
+				"poly1"
 			],
 			"test": [
 				"tests"

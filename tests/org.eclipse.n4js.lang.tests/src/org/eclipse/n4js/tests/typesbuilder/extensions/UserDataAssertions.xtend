@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
+import java.io.File
+import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.tests.typesbuilder.utils.OrderedEmfFormatter
@@ -33,6 +35,9 @@ class UserDataAssertions {
 	}
 
 	def compareUserData(IEObjectDescription syntaxEoDesc, TModule fromUserData, String expectedTypesSerialization) {
-		assertEquals("Stored user data " + syntaxEoDesc, expectedTypesSerialization, OrderedEmfFormatter.objToStr(fromUserData))
+		val fromUserDataStr = OrderedEmfFormatter.objToStr(fromUserData);
+		val uriPrefixToTrim = new FileURI(new File("").getAbsoluteFile()).toString + "/";
+		val fromUserDataStrTrimmed = fromUserDataStr.replace(uriPrefixToTrim, "");
+		assertEquals("Stored user data " + syntaxEoDesc, expectedTypesSerialization, fromUserDataStrTrimmed);
 	}
 }

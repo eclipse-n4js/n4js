@@ -10,8 +10,9 @@
  */
 package org.eclipse.n4js.internal.lsp;
 
+import java.util.Collections;
+
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceContainerForPackageJson;
 
 /**
  * An {@link N4JSSourceFolderSnapshot} that only contains a single <code>package.json</code> file.
@@ -21,10 +22,10 @@ public class N4JSSourceFolderSnapshotForPackageJson extends N4JSSourceFolderSnap
 	private final URI packageJsonURI;
 
 	/** Creates a new {@link N4JSSourceFolderSnapshotForPackageJson}. */
-	public N4JSSourceFolderSnapshotForPackageJson(SourceContainerForPackageJson sourceFolder) {
+	public N4JSSourceFolderSnapshotForPackageJson(N4JSSourceFolderForPackageJson sourceFolder) {
 		super(sourceFolder.getName(), sourceFolder.getPath(), sourceFolder.getType(),
 				sourceFolder.getRelativePath());
-		this.packageJsonURI = sourceFolder.pckjsonURI;
+		this.packageJsonURI = sourceFolder.getPackageJsonURI();
 	}
 
 	/** @return the URI of the <code>package.json</code> file of this source folder. */
@@ -35,6 +36,11 @@ public class N4JSSourceFolderSnapshotForPackageJson extends N4JSSourceFolderSnap
 	@Override
 	public boolean contains(URI uri) {
 		return packageJsonURI.equals(uri);
+	}
+
+	@Override
+	public Iterable<URI> getContents() {
+		return Collections.singleton(packageJsonURI);
 	}
 
 	@Override

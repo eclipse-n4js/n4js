@@ -22,6 +22,7 @@ import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -47,7 +48,7 @@ public interface IN4JSCoreNEW {
 
 	public boolean isNoValidate(Notifier context, URI nestedLocation);
 
-	public ResourceSet createResourceSet(); // TODO pass in a workspace context object
+	public XtextResourceSet createResourceSet(); // TODO pass in a workspace context object
 
 	public Optional<IResourceDescriptions> getXtextIndex(Notifier context);
 

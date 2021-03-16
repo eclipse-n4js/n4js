@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.typedefinitions
 
 import com.google.common.collect.ImmutableList
+import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.Collections
 import java.util.LinkedHashSet
@@ -26,6 +27,7 @@ import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -41,7 +43,10 @@ import org.junit.runner.RunWith
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
 class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
-	
+
+	@Inject
+	private ProjectDescriptionLoader projectDescriptionLoader;
+
 	/** There is a single implementation and definition project. The implementation project is listed first. */
 	@Test
 	public def void testSingleTypeDefinitionDependencyOrder1() {
@@ -201,8 +206,8 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	/**
 	 * Returns with a new project (of type 'library') with the given projectName and list of dependencies.
 	 */
-	private static def N4JSProjectConfig project(N4JSProjectName projectName, N4JSProjectConfig... dependencies) {
-		return new MockTypeDefinitionsProject(projectName, dependencies);
+	private def N4JSProjectConfig project(N4JSProjectName projectName, N4JSProjectConfig... dependencies) {
+		return new MockTypeDefinitionsProject(projectName, null, dependencies, projectDescriptionLoader);
 	}
 	
 	/**
@@ -211,7 +216,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	 * 
 	 * The name of the type definition project is inferred from the {@code implementationProject} by appending the suffix {@code -n4jsd}. 
 	 */
-	private static def N4JSProjectConfig definitionProject(N4JSProjectConfig implementationProject) {
+	private def N4JSProjectConfig definitionProject(N4JSProjectConfig implementationProject) {
 		return definitionProject(new N4JSProjectName(implementationProject.name + "-n4jsd"), implementationProject);
 	}
 	
@@ -219,7 +224,7 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	 * Returns with a new definition project (of type 'definition') whose "definesPackage" property is set to the 
 	 * projectName of {@code implementationProject}. 
 	 */
-	private static def N4JSProjectConfig definitionProject(N4JSProjectName projectName, N4JSProjectConfig implementationProject) {
+	private def N4JSProjectConfig definitionProject(N4JSProjectName projectName, N4JSProjectConfig implementationProject) {
 		return definitionProject(projectName, implementationProject.n4JSProjectName);
 	}
 	
@@ -227,8 +232,8 @@ class TypeDefinitionsAwareDependenciesSupplierTest extends Assert {
 	 * Returns with a new definition project (of type 'definition') whose "definesPackage" property is set to the 
 	 * {@code definesPackage}. 
 	 */
-	private static def N4JSProjectConfig definitionProject(N4JSProjectName projectName, N4JSProjectName definesPackage) {
-		return new MockTypeDefinitionsProject(projectName, definesPackage);
+	private def N4JSProjectConfig definitionProject(N4JSProjectName projectName, N4JSProjectName definesPackage) {
+		return new MockTypeDefinitionsProject(projectName, definesPackage, #[], projectDescriptionLoader);
 	}
 	
 	private static def FileURI clientPath() {
@@ -246,20 +251,12 @@ class MockTypeDefinitionsProject extends N4JSProjectConfig {
 	private final N4JSProjectName definesPackage;
 	private final ImmutableList<? extends N4JSProjectConfig> dependencies;
 
-	new(N4JSProjectName projectName) {
-		this(projectName, null as N4JSProjectName);
-	}
-
-	new(N4JSProjectName projectName, N4JSProjectConfig... dependencies) {
-		this(projectName, null, dependencies);
-	}
-	
-	new(N4JSProjectName projectName, N4JSProjectName definesPackage, N4JSProjectConfig... dependencies) {
+	new(N4JSProjectName projectName, N4JSProjectName definesPackage, N4JSProjectConfig[] dependencies, ProjectDescriptionLoader pdLoader) {
 		super(
 			new N4JSWorkspaceConfig(null, null, null, null, null),
 			newLocation(projectName),
 			newProjectDescription(projectName, definesPackage, dependencies),
-			null);
+			pdLoader);
 		this.definesPackage = definesPackage;
 		this.dependencies = ImmutableList.copyOf(dependencies);
 	}
@@ -309,7 +306,7 @@ class MockTypeDefinitionsProject extends N4JSProjectConfig {
 
 		val pdb = ProjectDescription.builder()
 			.setProjectName(projectName.rawName)
-			.setDefinesPackage(definesPackage.rawName);
+			.setDefinesPackage(definesPackage?.rawName);
 		for (projectConfig : dependencies) {
 			pdb.addProjectDependency(new ProjectDependency(projectConfig.name, DependencyType.RUNTIME, "", null));
 		}

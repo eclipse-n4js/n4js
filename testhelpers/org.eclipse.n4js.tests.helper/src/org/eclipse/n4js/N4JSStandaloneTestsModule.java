@@ -16,7 +16,6 @@ import org.eclipse.xpect.setup.XpectGuiceModule;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.testing.util.ParseHelper;
-import org.eclipse.xtext.testing.util.ResourceHelper;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 
 /**
@@ -53,12 +52,6 @@ public class N4JSStandaloneTestsModule extends BaseTestModule {
 	/** */
 	public Class<? extends N4JSParseHelper> bindN4JSParseHelper() {
 		return SmokeTestWriter.class;
-	}
-
-	/** */
-	@SingletonBinding
-	public Class<? extends ResourceHelper> bindResourceHelper() {
-		return ResourceHelper.class;
 	}
 
 	/** */

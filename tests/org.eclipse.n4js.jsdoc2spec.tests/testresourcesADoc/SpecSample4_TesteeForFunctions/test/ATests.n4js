@@ -9,23 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-public class ATest {
+export public class ATest {
 
 	/**
 	 * @testee A.foofunc
 	 */
 	@Test
-	testFuncBasics(): string {}
+	testFuncBasics() {}
 
 	/**
 	 * @testee A.barvar
 	 */
 	@Test
-	testBarBasics(): string {}
+	testBarBasics() {}
 
 	/**
 	 * @testee A.barvar
 	 */
 	@Test
-	testCAPITALS(): string {}
+	testCAPITALS() {}
 }

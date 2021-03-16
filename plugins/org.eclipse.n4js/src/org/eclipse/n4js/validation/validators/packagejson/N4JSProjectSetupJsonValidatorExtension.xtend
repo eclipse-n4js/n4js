@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
@@ -362,12 +363,14 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			return;
 		}
 		
+		val wc = workspaceConfigProvider.workspaceConfigSnapshot as N4JSWorkspaceConfigSnapshot;
+		
 		// pairs that represent project dependencies
 		val dependencyPairs = (dependenciesValue as JSONObject).nameValuePairs;
 		// obtain project description for higher-level access to contained information
 		val projectName = getProjectDescription().projectName;
 		// get project build order of current build
-		val projectOrderInfo = workspaceConfigProvider.workspaceConfigSnapshot.getBuildOrderInfo;
+		val projectOrderInfo = wc.getBuildOrderInfo;
 		
 		// check for dependency cycles
 		for (projectCycle : projectOrderInfo.getProjectCycles) {
@@ -387,7 +390,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			// the following cannot be checked in presence of dependency cycles
 			val project = n4jsCore.findProject(document, document.eResource.URI).orNull;
 			if (null !== project) {
-				holdsProjectWithTestFragmentDependsOnTestLibrary(project);
+				holdsProjectWithTestFragmentDependsOnTestLibrary(wc, project);
 			}
 		}
 	}
@@ -397,7 +400,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 * Checks if a project containing {@link SourceContainerType#TEST} depends 
 	 * (directly or transitively) on a {@link ProjectType#RUNTIME_LIBRARY} test runtime library.
 	 */
-	private def holdsProjectWithTestFragmentDependsOnTestLibrary(N4JSProjectConfigSnapshot project) {
+	private def holdsProjectWithTestFragmentDependsOnTestLibrary(N4JSWorkspaceConfigSnapshot wc, N4JSProjectConfigSnapshot project) {
 
 		val JSONValue sourcesSection = getSingleDocumentValue(SOURCES, JSONValue);
 		val List<SourceContainerDescription> sourceContainers = PackageJsonUtils.asSourceContainerDescriptionsOrEmpty(sourcesSection);
@@ -412,7 +415,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			return;
 		}
 		
-		if(!anyDependsOnTestLibrary(#[project])){
+		if(!anyDependsOnTestLibrary(wc, #[project])){
 			addIssuePreferred(#[], getMessageForSRCTEST_NO_TESTLIB_DEP(N4JSGlobals.MANGELHAFT), SRCTEST_NO_TESTLIB_DEP);
 		}
 	}
@@ -424,8 +427,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 *
 	 * @returns true if any of the projects in the provided list depends (transitively) on the test library.
 	 */
-	private def boolean anyDependsOnTestLibrary(List<? extends N4JSProjectConfigSnapshot> projects) {
-		val dependencyProvider = new SourceContainerAwareDependencyProvider(true);
+	private def boolean anyDependsOnTestLibrary(N4JSWorkspaceConfigSnapshot wc, List<? extends N4JSProjectConfigSnapshot> projects) {
+		val dependencyProvider = new SourceContainerAwareDependencyProvider(wc, true);
 		val hasTestDependencyVisitor = new HasTestDependencyVisitor();
 		for (N4JSProjectConfigSnapshot project : projects) {
 			val dependencyTraverser = new DependencyTraverser<N4JSProjectConfigSnapshot>(project, hasTestDependencyVisitor, dependencyProvider, true);
@@ -444,10 +447,9 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		}
 
 		private def boolean hasTestDependency(N4JSProjectConfigSnapshot p) {
-			for (N4JSProjectConfigSnapshot pDep : p.dependenciesOLD) {
-				if ((N4JSGlobals.VENDOR_ID.equals(pDep.vendorId) && (N4JSGlobals.MANGELHAFT.equals(pDep.name))
-					|| N4JSGlobals.MANGELHAFT_ASSERT.equals(pDep.name)
-				)) {
+			for (String depNameRaw : p.dependencies) {
+				val depName = new N4JSProjectName(depNameRaw);
+				if (N4JSGlobals.MANGELHAFT.equals(depName) || N4JSGlobals.MANGELHAFT_ASSERT.equals(depName)) {
 					return true;
 				}
 			}
@@ -541,7 +543,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		val visitedProjectNames = <String>newHashSet();
 		val stack = new Stack<N4JSProjectConfigSnapshot>();
-		stack.addAll(currentProject.allDirectDependencies.filter(N4JSProjectConfigSnapshot).filter[external]);
+		stack.addAll(currentProject.dependencies.map[allProjects.get(new N4JSProjectName(it))].filterNull.filter[external]);
 
 		while (!stack.isEmpty) {
 
@@ -554,7 +556,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 				return;
 			}
 
-			val actualDirectDependencies = actual.allDirectDependencies.filter(N4JSProjectConfigSnapshot);
+			val actualDirectDependencies = actual.dependencies.map[allProjects.get(new N4JSProjectName(it))].filterNull;
 			// If external has any *NON* external dependency we should raise a warning.
 			val workspaceDependency = actualDirectDependencies.findFirst[!external];
 			if (null !== workspaceDependency) {

@@ -9,20 +9,14 @@
 #   NumberFour AG - Initial API and implementation
 #
 
-n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
+n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.packages
 	SpecSample9_StaticPolyfill#poly1
 		NO_PACKAGE
 			X.n4js
 				X::15::21::22
 				X#bar::16::23::36
 				X#foo::17::37::55
-				X#my::15::56::76::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample9_StaticPolyfill:src
-	SpecSample9_StaticPolyfill#poly2
-		NO_PACKAGE
-			X.n4js
-				X::15::21::22
-				X#my::15::23::43::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample9_StaticPolyfill:src
-				X#snafu::16::44::62
+				X#my::15::56::76::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.packages:SpecSample9_StaticPolyfill:src
 	SpecSample9_StaticPolyfill#src
 		NO_PACKAGE
 			X.n4js

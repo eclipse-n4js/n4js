@@ -74,7 +74,7 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	/** Find the project with the given exact project path. Does <em>not</em> find projects for nested locations. */
 	@SuppressWarnings("hiding")
 	public ProjectConfigSnapshot findProjectByPath(URI path) {
-		return projectPath2Project.get(path);
+		return projectPath2Project.get(URIUtils.trimTrailingPathSeparator(path));
 	}
 
 	/**

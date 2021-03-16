@@ -24,12 +24,12 @@ abstract class BaseTests {
 /**
  * @testeeType A.A
  */
-class TestsFixture1 extends BaseTests {
+export public class TestsFixture1 extends BaseTests {
     @Override initFixture() {  }
 }
 /**
  * @testeeType A.A
  */
-class TestsFixture2 extends BaseTests {
+export public class TestsFixture2 extends BaseTests {
     @Override initFixture() {  }
 }

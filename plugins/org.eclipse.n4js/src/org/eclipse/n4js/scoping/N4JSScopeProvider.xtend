@@ -362,6 +362,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(initialScope,
 			resourceDescriptions, reference.EReferenceType);
 
+if (!n4jsCore.getWorkspaceConfig(resource).isPresent()) {
+	println("!!!")
+}
 		val ws = n4jsCore.getWorkspaceConfig(resource).get();
 		val projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, importDeclaration,
 			initialScope, delegateMainModuleAwareScope);

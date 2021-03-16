@@ -27,7 +27,7 @@ include::{find}config.adoc[]
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample12:src/A:A#baseFromAware++[``++public baseFromAware(x: number): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample12:src/A:A#baseFromAware++[``++public baseFromAware(x: number): void++``]
 
 
 
@@ -46,7 +46,7 @@ Add tests specifying semantics for ``++baseFromAware(x: number): void++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample12:src/A:A#formSrc++[``++public formSrc(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample12:src/A:A#formSrc++[``++public formSrc(): void++``]
 
 
 

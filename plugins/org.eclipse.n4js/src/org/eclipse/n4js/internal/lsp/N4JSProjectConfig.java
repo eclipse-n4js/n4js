@@ -12,7 +12,6 @@ package org.eclipse.n4js.internal.lsp;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -39,8 +38,6 @@ import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
-import org.eclipse.xtext.util.IFileSystemScanner;
-import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 import com.google.common.collect.ImmutableList;
@@ -88,7 +85,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 				result.add(new N4JSSourceFolder(this, type, relPath));
 			}
 		}
-		result.add(new SourceContainerForPackageJson());
+		result.add(new N4JSSourceFolderForPackageJson(this));
 		return result;
 	}
 
@@ -152,50 +149,6 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 */
 	public List<N4JSProjectConfig> getSortedDependencies() {
 		return TypeDefinitionsAwareDependenciesSupplier.get(workspace, this);
-	}
-
-	/** Special implementation for package.json files */
-	public class SourceContainerForPackageJson implements IN4JSSourceFolder {
-		final URI pckjsonURI;
-
-		SourceContainerForPackageJson() {
-			pckjsonURI = path.appendSegment(N4JSGlobals.PACKAGE_JSON).toURI();
-		}
-
-		@Override
-		public String getName() {
-			return N4JSGlobals.PACKAGE_JSON;
-		}
-
-		@Override
-		public SourceContainerType getType() {
-			return SourceContainerType.SOURCE;
-		}
-
-		@Override
-		public String getRelativePath() {
-			return ".";
-		}
-
-		@Override
-		public List<URI> getAllResources(IFileSystemScanner scanner) {
-			return Collections.singletonList(pckjsonURI);
-		}
-
-		@Override
-		public IProjectConfig getProject() {
-			return N4JSProjectConfig.this;
-		}
-
-		@Override
-		public boolean contains(URI uri) {
-			return pckjsonURI.equals(uri);
-		}
-
-		@Override
-		public URI getPath() {
-			return path.toURI();
-		}
 	}
 
 	@Override

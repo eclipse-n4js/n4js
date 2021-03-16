@@ -22,7 +22,6 @@ import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.xtext.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -31,16 +30,20 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.ISynchronizable;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
+@Singleton
 public class N4JSCoreNEW implements IN4JSCoreNEW {
 
 	@Inject
-	private ResourceTaskManager resourceTaskManager;
+	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Inject
 	private IResourceDescriptionsProvider resourceDescriptionsProvider;
@@ -108,8 +111,8 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 	// FIXME GH-2073 important! reconsider all following methods!
 
 	@Override
-	public ResourceSet createResourceSet() {
-		return resourceTaskManager.createTemporaryResourceSet();
+	public XtextResourceSet createResourceSet() {
+		return resourceSetProvider.get();
 	}
 
 	@Override

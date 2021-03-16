@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide;
 
 import org.eclipse.n4js.N4JSRuntimeModule;
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.ide.editor.contentassist.CamelCasePrefixMatcher;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.ide.editor.contentassist.CustomN4JSParser;
@@ -44,6 +45,7 @@ import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvi
 import org.eclipse.n4js.ide.server.util.N4JSServerIncidentLogger;
 import org.eclipse.n4js.internal.lsp.FileSystemScanner;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
+import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.xtext.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.xtext.server.DebugService;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
@@ -74,6 +76,7 @@ import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
+import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
@@ -104,6 +107,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public ClassLoader bindClassLoaderToInstance() {
 		return getClass().getClassLoader();
+	}
+
+	public Class<? extends IN4JSCoreNEW> bindIN4JSCore() {
+		return N4JSIdeCoreNEW.class;
 	}
 
 	/**
@@ -145,6 +152,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
 		return N4JSProjectDescriptionFactory.class;
+	}
+
+	public Class<? extends IGenerator> bindIGenerator() {
+		return N4JSCompositeGenerator.class;
 	}
 
 	public Class<? extends OutputConfigurationProvider> bindOutputConfigurationProvider() {

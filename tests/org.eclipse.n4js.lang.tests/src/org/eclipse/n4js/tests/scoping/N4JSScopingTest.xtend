@@ -366,7 +366,7 @@ class N4JSScopingTest {
 
 		var rs = resourceSetProvider.get
 
-		val supplierResource = rs.createResource(URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js"))
+		val supplierResource = rs.createResource(rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js")))
 
 		supplierResource.load(emptyMap)
 		EcoreUtil.resolveAll(supplierResource)
