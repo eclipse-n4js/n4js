@@ -69,7 +69,7 @@ public class WorkspaceConfigAccess {
 
 	private static final class WorkspaceConfigAdapter extends AdapterImpl {
 
-		public final WorkspaceConfigSnapshot workspaceConfig;
+		private final WorkspaceConfigSnapshot workspaceConfig;
 
 		private WorkspaceConfigAdapter(WorkspaceConfigSnapshot workspaceConfig) {
 			this.workspaceConfig = workspaceConfig;
