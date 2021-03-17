@@ -14,9 +14,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
 import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
@@ -32,7 +35,8 @@ import com.google.common.base.Preconditions;
  * Parses the workspace configuration in the setup section of an .xt file
  */
 public class XtSetupWorkspaceParser {
-	static final String ERROR = "Workspace parse error: ";
+
+	static final String ERROR = "Xt setup parse error: ";
 
 	static class TokenStream implements Iterator<String> {
 		final String[] tokens;
@@ -104,11 +108,100 @@ public class XtSetupWorkspaceParser {
 	}
 
 	/**
+	 * Configuration values as parsed from the Xt setup.
+	 */
+	static public class XtSetupParseResult {
+		String runner;
+		XtWorkspace workspace;
+		Set<String> suppressedIssues;
+	}
+
+	/**
 	 * @param xtFile
 	 *            without {@code xt} extension
 	 */
-	static public XtWorkspace parse(File xtFile, String setupWorkspace, String xtFileContent) {
-		TokenStream tokens = new TokenStream(setupWorkspace);
+	static public XtSetupParseResult parse(File xtFile, String setupStr, String xtFileContent) {
+		TokenStream tokens = new TokenStream(setupStr);
+
+		XtSetupParseResult result = new XtSetupParseResult();
+		result.suppressedIssues = new HashSet<>(N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
+
+		tokens.expect(XtFileDataParser.XT_SETUP_START);
+
+		result.runner = tokens.next();
+
+		while (tokens.hasNext()) {
+			switch (tokens.next()) {
+			case "IssueConfiguration":
+				tokens.expect("{");
+				parseIssueConfiguration(tokens, xtFile, result.suppressedIssues);
+				break;
+			case "Workspace":
+				Preconditions.checkState(result.workspace == null,
+						ERROR + "Multiple Workspace nodes in file " + xtFile.getPath());
+				tokens.expect("{");
+				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
+				break;
+			case XtFileDataParser.XT_SETUP_END:
+				return result;
+			default:
+				Preconditions.checkState(false,
+						ERROR + "Unexpected token in setup: " + tokens.lookLast() + " in file " + xtFile.getPath());
+			}
+		}
+
+		throw new IllegalStateException(
+				ERROR + "Unexpected end of Xt setup preamble in file " + xtFile.getPath());
+	}
+
+	private static void parseIssueConfiguration(TokenStream tokens, File xtFile,
+			Set<String> currentlySuppressedIssues) {
+
+		LOOP: while (tokens.hasNext()) {
+			switch (tokens.next()) {
+			case "IssueCode":
+				parseIssueCode(tokens, xtFile, currentlySuppressedIssues);
+				break;
+			case "}":
+				break LOOP;
+			default:
+				Preconditions.checkState(false,
+						ERROR + "Unexpected token in IssueConfiguration: " + tokens.lookLast() + " in file "
+								+ xtFile.getPath());
+			}
+		}
+	}
+
+	private static void parseIssueCode(TokenStream tokens, File xtFile, Set<String> currentlySuppressedIssues) {
+		String issueCode = tokens.expectNameInQuotes();
+
+		boolean enabled = false;
+		if (tokens.hasNext() && Objects.equal(tokens.current(), "{")) { // optional block
+			tokens.next(); // consume opening curly brace
+			tokens.expect("enabled");
+			// tokens.expect("="); // note: tokenizer is removing '='
+			switch (tokens.next().toLowerCase()) {
+			case "true":
+				enabled = true;
+				break;
+			case "false":
+				enabled = false;
+				break;
+			default:
+				Preconditions.checkState(false,
+						ERROR + "Unexpected value for property 'enabled' of IssueCode in file " + xtFile.getPath());
+			}
+			tokens.expect("}");
+		}
+
+		if (enabled) {
+			currentlySuppressedIssues.remove(issueCode);
+		} else {
+			currentlySuppressedIssues.add(issueCode);
+		}
+	}
+
+	private static XtWorkspace parseWorkspace(TokenStream tokens, File xtFile, String xtFileContent) {
 		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
 		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
 

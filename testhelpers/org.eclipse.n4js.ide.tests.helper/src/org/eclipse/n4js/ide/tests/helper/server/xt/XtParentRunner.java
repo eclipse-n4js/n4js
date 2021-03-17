@@ -120,19 +120,19 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	}
 
 	static private Set<String> getSuppressedIssues(Class<?> testClass) {
-		try {
-			for (Method m : testClass.getDeclaredMethods()) {
-				XtSuppressedIssues[] annFolder = m.getDeclaredAnnotationsByType(XtSuppressedIssues.class);
-				if (annFolder != null && annFolder.length > 0) {
-					m.setAccessible(true);
-					@SuppressWarnings("unchecked")
-					Set<String> folderName = (Set<String>) m.invoke(null);
-					return folderName;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			for (Method m : testClass.getDeclaredMethods()) {
+//				XtSuppressedIssues[] annFolder = m.getDeclaredAnnotationsByType(XtSuppressedIssues.class);
+//				if (annFolder != null && annFolder.length > 0) {
+//					m.setAccessible(true);
+//					@SuppressWarnings("unchecked")
+//					Set<String> folderName = (Set<String>) m.invoke(null);
+//					return folderName;
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return Collections.emptySet();
 	}
 

@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Set;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -34,7 +33,6 @@ public class XtFileRunner extends Runner {
 	/** Meta data of xt file */
 	final public XtFileData xtFileData;
 
-	Set<String> suppressedIssues;
 	Description description;
 
 	/** Constructor */

@@ -103,6 +103,8 @@ public class XtIdeTest extends AbstractIdeTest {
 		cleanupTestDataFolder();
 		testWorkspaceManager.createTestOnDisk(xtData.workspace);
 
+		setSuppressedIssues(xtData.suppressedIssues);
+
 		for (XtMethodData startupMethod : xtData.startupMethodData) {
 			switch (startupMethod.name) {
 			case "startAndWaitForLspServer":
