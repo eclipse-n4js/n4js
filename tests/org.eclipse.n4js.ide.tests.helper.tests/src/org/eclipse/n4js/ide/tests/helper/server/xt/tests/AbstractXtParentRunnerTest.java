@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFileRunner;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
 import org.eclipse.n4js.utils.Strings;
@@ -123,7 +123,7 @@ public abstract class AbstractXtParentRunnerTest {
 	}
 
 	void run(String folderName) throws Exception {
-		run(folderName, Collections.emptySet());
+		run(folderName, N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
 	}
 
 	void run(String folderName, Set<String> suppressedIssues) throws Exception {

@@ -10,11 +10,14 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
-   
-   IGNORE_ISSUES
-   
-   END_SETUP
- */
+
+	IssueConfiguration {
+		IssueCode "org.eclipse.xtext.diagnostics.Diagnostic.Linking" { enabled = false }
+		IssueCode "AST_NAME_SHADOW_ERR" { enabled = false }
+	}
+
+	END_SETUP
+*/
 
 // ast:0
 // tested with Node.js and Chrome Dev Tools
@@ -30,7 +33,7 @@ function test2Fun(test2FunParam : { function(): string }) {
 	test2FunParam();
 }
 // ast:3
-test2Fun(function () { console.log("test2FunParam"); })
+test2Fun(function (): string { console.log("test2FunParam"); return null; })
 
 // ast:4, types:1
 // tested with Node.js and Chrome Dev Tools (with calling test3Fun())

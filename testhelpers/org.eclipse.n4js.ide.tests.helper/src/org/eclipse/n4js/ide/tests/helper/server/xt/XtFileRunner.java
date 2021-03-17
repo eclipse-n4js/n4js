@@ -31,17 +31,20 @@ public class XtFileRunner extends Runner {
 	final public String testClassName;
 	/** xt file */
 	final public File file;
+	/** Issue codes of issues suppressed globally for all tests. Can be changed in Xt setup on a per-file basis. */
+	final public Set<String> globallySuppressedIssues;
 	/** Meta data of xt file */
 	final public XtFileData xtFileData;
 
-	Set<String> suppressedIssues;
 	Description description;
 
 	/** Constructor */
-	public XtFileRunner(XtIdeTest ideTest, String testClassName, File file) throws IOException {
+	public XtFileRunner(XtIdeTest ideTest, String testClassName, File file, Set<String> globallySuppressedIssues)
+			throws IOException {
 		this.ideTest = ideTest;
 		this.testClassName = testClassName;
 		this.file = file;
+		this.globallySuppressedIssues = globallySuppressedIssues;
 		this.xtFileData = XtFileDataParser.parse(file);
 	}
 
@@ -74,7 +77,7 @@ public class XtFileRunner extends Runner {
 		try {
 			notifier.fireTestRunStarted(getDescription());
 
-			ideTest.initializeXtFile(xtFileData);
+			ideTest.initializeXtFile(globallySuppressedIssues, xtFileData);
 			for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
 				Description testDescription = testMethodData.getDescription(xtFileData);
 				if (testMethodData.isIgnore) {

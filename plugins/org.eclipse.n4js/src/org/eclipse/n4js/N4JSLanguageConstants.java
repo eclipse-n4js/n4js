@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.n4js.json.validation.JSONIssueCodes;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -59,7 +60,8 @@ public abstract class N4JSLanguageConstants {
 	 */
 	public static final Set<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableSet(newHashSet(
 			IssueCodes.CFG_LOCAL_VAR_UNUSED,
-			IssueCodes.DFG_NULL_DEREFERENCE
+			IssueCodes.DFG_NULL_DEREFERENCE,
+			JSONIssueCodes.JSON_COMMENT_UNSUPPORTED
 	));
 
 	//@formatter:on

@@ -30,11 +30,10 @@
    	 }
    }
    
-//   IssueConfiguration {
-//   	IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
-//   	IssueCode "MISSING_YARN_WORKSPACE" { enabled=false }
-//    IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled=false }
-//   }
+   IssueConfiguration {
+      IssueCode "JSON_COMMENT_UNSUPPORTED" { enabled=false }
+      IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled=false }
+   }
 
    END_SETUP
  */

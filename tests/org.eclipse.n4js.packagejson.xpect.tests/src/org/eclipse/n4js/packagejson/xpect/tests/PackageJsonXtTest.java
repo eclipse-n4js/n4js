@@ -46,7 +46,7 @@ public class PackageJsonXtTest {
 	@XtSuppressedIssues
 	static Set<String> getSuppressedIssueCodes() {
 		return unmodifiableSet(newHashSet(
-				JSONIssueCodes.JSON_COMMENT_UNSUPPORTED, IssueCodes.PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME
-		));
+				JSONIssueCodes.JSON_COMMENT_UNSUPPORTED,
+				IssueCodes.PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME));
 	}
 }

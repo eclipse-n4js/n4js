@@ -10,20 +10,12 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt.tests.debug;
 
-import java.util.Set;
-
-import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtSuppressedIssues;
-import org.eclipse.n4js.json.validation.JSONIssueCodes;
-import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.xtext.lib.setup.workspace.WorkspaceDefaultsSetup;
 import org.junit.runner.RunWith;
-
-import com.google.common.collect.Sets;
 
 /**
  * Common JUnit runner implementation that uses some annotations of Xpect to enable UI features of the Eclipse IDE
@@ -46,12 +38,5 @@ public class IdeTestsHelperXtTest_ {
 	@XtFolder
 	static String getFolder() {
 		return "probands";
-	}
-
-	@XtSuppressedIssues
-	static Set<String> getSuppressedIssueCodes() {
-		return Sets.union(N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS,
-				Sets.newHashSet(JSONIssueCodes.JSON_COMMENT_UNSUPPORTED,
-						IssueCodes.PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME));
 	}
 }
