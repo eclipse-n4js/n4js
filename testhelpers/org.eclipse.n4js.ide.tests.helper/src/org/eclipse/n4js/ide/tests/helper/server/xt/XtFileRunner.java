@@ -77,7 +77,7 @@ public class XtFileRunner extends Runner {
 		try {
 			notifier.fireTestRunStarted(getDescription());
 
-			ideTest.initializeXtFile(xtFileData, globallySuppressedIssues);
+			ideTest.initializeXtFile(globallySuppressedIssues, xtFileData);
 			for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
 				Description testDescription = testMethodData.getDescription(xtFileData);
 				if (testMethodData.isIgnore) {

@@ -28,14 +28,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupWorkspaceParser.XtSetupParseResult;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupWorkspaceParser.XtWorkspace;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtSetupParseResult;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
@@ -51,12 +50,9 @@ public class XtFileDataParser {
 		String xtFileContent = Files.readString(xtFile.toPath());
 
 		String setupStr = getXtSetupString(xtFileContent);
-		XtSetupParseResult setupParseResult = XtSetupWorkspaceParser.parse(xtFile, setupStr, xtFileContent);
-		String setupRunner = setupParseResult.runner;
-		XtWorkspace workspace = setupParseResult.workspace;
-		Set<String> enabledIssues = ImmutableSet.copyOf(setupParseResult.enabledIssues);
-		Set<String> disabledIssues = ImmutableSet.copyOf(setupParseResult.disabledIssues);
+		XtSetupParseResult setupParseResult = XtSetupParser.parse(xtFile, setupStr, xtFileContent);
 
+		XtWorkspace workspace = setupParseResult.workspace;
 		if (workspace == null) {
 			File xtFileStripped = XtFileData.stripXtExtension(xtFile);
 			workspace = createDefaultWorkspace(xtFileStripped.getName(), xtFileContent);
@@ -69,7 +65,8 @@ public class XtFileDataParser {
 		TreeSet<XtMethodData> testMethodData2 = new TreeSet<>();
 		fillTestMethodData(xtFile.toString(), xtFileContent, testMethodData1, testMethodData2);
 
-		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, enabledIssues, disabledIssues,
+		return new XtFileData(xtFile, xtFileContent, setupParseResult.runner, workspace,
+				setupParseResult.enabledIssues, setupParseResult.disabledIssues,
 				startupMethodData, testMethodData1, testMethodData2, teardownMethodData);
 	}
 

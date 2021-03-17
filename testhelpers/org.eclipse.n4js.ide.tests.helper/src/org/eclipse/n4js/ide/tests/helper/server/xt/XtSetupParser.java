@@ -31,9 +31,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
- * Parses the workspace configuration in the setup section of an .xt file
+ * Parses the configuration in the Xt setup section of an .xt file.
  */
-public class XtSetupWorkspaceParser {
+public class XtSetupParser {
 
 	static final String ERROR = "Xt setup parse error: ";
 

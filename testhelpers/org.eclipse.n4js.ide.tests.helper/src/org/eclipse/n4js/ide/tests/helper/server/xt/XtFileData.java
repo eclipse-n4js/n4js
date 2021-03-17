@@ -20,10 +20,11 @@ import java.util.Set;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupWorkspaceParser.XtWorkspace;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 /**
@@ -73,8 +74,8 @@ public class XtFileData {
 		this.setupRunnerName = setupRunnerName;
 		this.lineLengths = calculateLineLengths(content);
 		this.workspace = workspace;
-		this.enabledIssues = enabledIssues;
-		this.disabledIssues = disabledIssues;
+		this.enabledIssues = ImmutableSet.copyOf(enabledIssues);
+		this.disabledIssues = ImmutableSet.copyOf(disabledIssues);
 		this.startupMethodData = startupMethodData;
 		this.testMethodData1 = testMethodData1;
 		this.testMethodData2 = testMethodData2;

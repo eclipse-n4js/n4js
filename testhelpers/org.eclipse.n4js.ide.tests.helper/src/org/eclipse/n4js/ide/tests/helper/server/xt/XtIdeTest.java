@@ -96,7 +96,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * Call this before calling any other methods of {@link XtIdeTest}.
 	 */
-	public void initializeXtFile(XtFileData newXtData, Set<String> globallySuppressedIssues) throws IOException {
+	public void initializeXtFile(Set<String> globallySuppressedIssues, XtFileData newXtData) throws IOException {
 		Preconditions.checkNotNull(newXtData);
 		xtData = newXtData;
 
