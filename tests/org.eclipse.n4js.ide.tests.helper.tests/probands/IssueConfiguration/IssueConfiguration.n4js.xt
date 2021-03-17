@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.ide.tests.helper.server.xt.tests.XtTestSetupTestMockup
+
+	IssueConfiguration {
+		IssueCode "CFG_LOCAL_VAR_UNUSED" { enabled = true }
+		IssueCode "CLF_NAME_DOES_NOT_START_LOWERCASE" { enabled = false }
+	}
+
+   END_SETUP
+ */
+
+// case #1: an issue that is suppressed by default
+let x: String = null;
+// XPECT nowarnings -->
+x.length;
+
+// case #2: an issue that is suppressed by default but re-activated by local setup
+// XPECT warnings --> "The local variable y is never used" at "y"
+let y : int = 3;
+
+// case #3: an issue that is not suppressed by default
+// XPECT warnings --> "Class names should start with upper case letter." at "myCls"
+class myCls {}
+
+// case #4: an issue that is not suppressed by default but suppressed by local setup
+// XPECT nowarnings --> "Variable names should start with lower case letter." at "MyVar"
+let MyVar: int = -42;
+MyVar;

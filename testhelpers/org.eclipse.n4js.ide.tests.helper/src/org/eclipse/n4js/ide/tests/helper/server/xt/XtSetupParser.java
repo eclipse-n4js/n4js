@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
@@ -29,10 +31,11 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
- * Parses the workspace configuration in the setup section of an .xt file
+ * Parses the configuration in the Xt setup section of an .xt file.
  */
-public class XtSetupWorkspaceParser {
-	static final String ERROR = "Workspace parse error: ";
+public class XtSetupParser {
+
+	static final String ERROR = "Xt setup parse error: ";
 
 	static class TokenStream implements Iterator<String> {
 		final String[] tokens;
@@ -104,11 +107,94 @@ public class XtSetupWorkspaceParser {
 	}
 
 	/**
+	 * Configuration values as parsed from the Xt setup.
+	 */
+	static public class XtSetupParseResult {
+		String runner;
+		XtWorkspace workspace;
+		final Set<String> enabledIssues = new HashSet<>();
+		final Set<String> disabledIssues = new HashSet<>();
+	}
+
+	/**
 	 * @param xtFile
 	 *            without {@code xt} extension
 	 */
-	static public XtWorkspace parse(File xtFile, String setupWorkspace, String xtFileContent) {
-		TokenStream tokens = new TokenStream(setupWorkspace);
+	static public XtSetupParseResult parse(File xtFile, String setupStr, String xtFileContent) {
+		TokenStream tokens = new TokenStream(setupStr);
+
+		XtSetupParseResult result = new XtSetupParseResult();
+
+		tokens.expect(XtFileDataParser.XT_SETUP_START);
+
+		result.runner = tokens.next();
+
+		while (tokens.hasNext()) {
+			switch (tokens.next()) {
+			case "IssueConfiguration":
+				tokens.expect("{");
+				parseIssueConfiguration(tokens, xtFile, result);
+				break;
+			case "Workspace":
+				Preconditions.checkState(result.workspace == null,
+						ERROR + "Multiple Workspace nodes in file " + xtFile.getPath());
+				tokens.expect("{");
+				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
+				break;
+			case XtFileDataParser.XT_SETUP_END:
+				return result;
+			default:
+				Preconditions.checkState(false,
+						ERROR + "Unexpected token in setup: " + tokens.lookLast() + " in file " + xtFile.getPath());
+			}
+		}
+
+		throw new IllegalStateException(
+				ERROR + "Unexpected end of Xt setup preamble in file " + xtFile.getPath());
+	}
+
+	private static void parseIssueConfiguration(TokenStream tokens, File xtFile, XtSetupParseResult result) {
+
+		LOOP: while (tokens.hasNext()) {
+			switch (tokens.next()) {
+			case "IssueCode":
+				parseIssueCode(tokens, xtFile, result);
+				break;
+			case "}":
+				break LOOP;
+			default:
+				Preconditions.checkState(false,
+						ERROR + "Unexpected token in IssueConfiguration: " + tokens.lookLast() + " in file "
+								+ xtFile.getPath());
+			}
+		}
+	}
+
+	private static void parseIssueCode(TokenStream tokens, File xtFile, XtSetupParseResult result) {
+		String issueCode = tokens.expectNameInQuotes();
+
+		if (tokens.hasNext() && Objects.equal(tokens.current(), "{")) { // optional block
+			tokens.next(); // consume opening curly brace
+			tokens.expect("enabled");
+			// tokens.expect("="); // note: tokenizer is removing '='
+			switch (tokens.next().toLowerCase()) {
+			case "true":
+				result.disabledIssues.remove(issueCode);
+				result.enabledIssues.add(issueCode);
+				break;
+			case "false":
+				result.enabledIssues.remove(issueCode);
+				result.disabledIssues.add(issueCode);
+				break;
+			default:
+				Preconditions.checkState(false,
+						ERROR + "Unexpected value for property 'enabled' of IssueCode in file " + xtFile.getPath());
+			}
+			tokens.expect("}");
+		}
+	}
+
+	private static XtWorkspace parseWorkspace(TokenStream tokens, File xtFile, String xtFileContent) {
 		WorkspaceBuilder builder = new WorkspaceBuilder(new BuilderInfo());
 		YarnProjectBuilder yarnProjectBuilder = builder.addYarnProject(TestWorkspaceManager.YARN_TEST_PROJECT);
 

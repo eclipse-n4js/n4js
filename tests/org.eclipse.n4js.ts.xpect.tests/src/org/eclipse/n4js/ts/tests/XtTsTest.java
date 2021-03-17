@@ -10,13 +10,9 @@
  */
 package org.eclipse.n4js.ts.tests;
 
-import java.util.Set;
-
-import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtFolder;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtIdeTest;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtParentRunner;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtSuppressedIssues;
 import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.xtext.lib.setup.workspace.WorkspaceDefaultsSetup;
 import org.junit.runner.RunWith;
@@ -37,10 +33,5 @@ public class XtTsTest {
 	@XtFolder
 	static String getFolder() {
 		return "model";
-	}
-
-	@XtSuppressedIssues
-	static Set<String> getSuppressedIssueCodes() {
-		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
 	}
 }

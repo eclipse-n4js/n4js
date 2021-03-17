@@ -20,12 +20,12 @@ import java.util.Set;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupWorkspaceParser.XtWorkspace;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 
 /**
  * Meta data to describe a test file
@@ -46,6 +46,10 @@ public class XtFileData {
 	final public int[] lineLengths;
 	/** Workspace, either default or according to description in SETUP section */
 	final public XtWorkspace workspace;
+	/** Issue codes locally enabled in this test file via an <code>IssueConfiguration</code> in the Xt setup. */
+	final public Set<String> enabledIssues;
+	/** Issue codes locally disabled in this test file via an <code>IssueConfiguration</code> in the Xt setup. */
+	final public Set<String> disabledIssues;
 	/** Methods to execute to start the LSP server */
 	final public List<XtMethodData> startupMethodData;
 	/** Test methods, first run */
@@ -54,14 +58,12 @@ public class XtFileData {
 	final public Collection<XtMethodData> testMethodData2;
 	/** Methods to execute to terminate the LSP server */
 	final public List<XtMethodData> teardownMethodData;
-	/** Modifiers stated in the setup section */
-	final public Set<String> configModifiers;
 
 	/** Constructor */
 	public XtFileData(File xtFile, String content, String setupRunnerName, XtWorkspace workspace,
+			Set<String> enabledIssues, Set<String> disabledIssues,
 			List<XtMethodData> startupMethodData, Collection<XtMethodData> testMethodData1,
-			Collection<XtMethodData> testMethodData2, List<XtMethodData> teardownMethodData,
-			String[] configModifiers) {
+			Collection<XtMethodData> testMethodData2, List<XtMethodData> teardownMethodData) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
 
@@ -72,11 +74,12 @@ public class XtFileData {
 		this.setupRunnerName = setupRunnerName;
 		this.lineLengths = calculateLineLengths(content);
 		this.workspace = workspace;
+		this.enabledIssues = ImmutableSet.copyOf(enabledIssues);
+		this.disabledIssues = ImmutableSet.copyOf(disabledIssues);
 		this.startupMethodData = startupMethodData;
 		this.testMethodData1 = testMethodData1;
 		this.testMethodData2 = testMethodData2;
 		this.teardownMethodData = teardownMethodData;
-		this.configModifiers = Sets.newHashSet(configModifiers);
 	}
 
 	static private String computeRelativePath(File xtFile) {
@@ -159,10 +162,5 @@ public class XtFileData {
 	/** @return substring of this file's content at the given offset and with the given length */
 	public String getText(int offset, int length) {
 		return content.substring(offset, offset + length);
-	}
-
-	/** @return true iff all issues should be ignored in this xt file */
-	public boolean isModifierIgnoreIssues() {
-		return configModifiers.contains("IGNORE_ISSUES");
 	}
 }

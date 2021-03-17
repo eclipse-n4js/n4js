@@ -27,16 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupWorkspaceParser.XtWorkspace;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtSetupParseResult;
+import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Sets;
 
@@ -45,37 +42,22 @@ import com.google.common.collect.Sets;
  */
 public class XtFileDataParser {
 
-	/** Pattern group name for the qualified name of the xt test runner */
-	static final String XT_RUNNER = "RUNNER";
-
-	/** Pattern group name for the workspace configuration */
-	static final String XT_WORKSPACE = "WORKSPACE";
-
-	/** Pattern group name for everything behind the workspace configuration */
-	static final String XT_REST = "REST";
-
-	/**
-	 * Pattern for Setup section of xt files
-	 */
-	static final Pattern XT_SETUP = Pattern.compile(
-			"XPECT_SETUP\\s+(?:(?<" + XT_RUNNER
-					+ ">[\\w\\d\\.]+)[\\s]*)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*)(Workspace\\s*\\{(?<" + XT_WORKSPACE
-					+ ">[\\s\\S]*)\\}[\\s]*(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?((?<" + XT_REST
-					+ ">[\\s\\S]*?)(?:(?:\\/\\/[^\\n]*\\n[\\s]*)*))?END_SETUP");
+	static final String XT_SETUP_START = "X" + "PECT_SETUP"; // break into 2 strings to keep Xpect editor at bay!
+	static final String XT_SETUP_END = "END_SETUP";
 
 	/** Parses the contents of the given file */
 	static public XtFileData parse(File xtFile) throws IOException {
 		String xtFileContent = Files.readString(xtFile.toPath());
 
-		Matcher matcher = XT_SETUP.matcher(xtFileContent);
-		Preconditions.checkState(matcher.find());
-		String setupRunner = matcher.group(XT_RUNNER);
-		Preconditions.checkNotNull(setupRunner);
-		String setupWorkspace = matcher.group(XT_WORKSPACE);
-		String configModifierString = Strings.nullToEmpty(matcher.group(XT_REST)).trim();
-		String[] configModifiers = configModifierString.split("\\\\s+");
+		String setupStr = getXtSetupString(xtFileContent);
+		XtSetupParseResult setupParseResult = XtSetupParser.parse(xtFile, setupStr, xtFileContent);
 
-		XtWorkspace workspace = getWorkspace(xtFile, setupWorkspace, xtFileContent);
+		XtWorkspace workspace = setupParseResult.workspace;
+		if (workspace == null) {
+			File xtFileStripped = XtFileData.stripXtExtension(xtFile);
+			workspace = createDefaultWorkspace(xtFileStripped.getName(), xtFileContent);
+		}
+
 		List<XtMethodData> startupMethodData = getDefaultStartupMethodData();
 		List<XtMethodData> teardownMethodData = getDefaultTeardownMethodData();
 
@@ -83,17 +65,24 @@ public class XtFileDataParser {
 		TreeSet<XtMethodData> testMethodData2 = new TreeSet<>();
 		fillTestMethodData(xtFile.toString(), xtFileContent, testMethodData1, testMethodData2);
 
-		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, startupMethodData, testMethodData1,
-				testMethodData2, teardownMethodData, configModifiers);
+		return new XtFileData(xtFile, xtFileContent, setupParseResult.runner, workspace,
+				setupParseResult.enabledIssues, setupParseResult.disabledIssues,
+				startupMethodData, testMethodData1, testMethodData2, teardownMethodData);
 	}
 
-	static XtWorkspace getWorkspace(File xtFile, String setupWorkspace, String xtFileContent) {
-		if (setupWorkspace == null) {
-			File xtFileStripped = XtFileData.stripXtExtension(xtFile);
-			return createDefaultWorkspace(xtFileStripped.getName(), xtFileContent);
-		} else {
-			return XtSetupWorkspaceParser.parse(xtFile, setupWorkspace, xtFileContent);
+	private static String getXtSetupString(String xtFileContent) {
+		int idxStart = xtFileContent.indexOf(XT_SETUP_START);
+		if (idxStart < 0) {
+			throw new IllegalStateException("Xt setup not found, missing keyword \"" + XT_SETUP_START + "\"");
 		}
+		int idxEnd = xtFileContent.indexOf(XT_SETUP_END);
+		if (idxEnd < 0) {
+			throw new IllegalStateException("end of Xt setup not found, missing keyword \"" + XT_SETUP_END + "\"");
+		}
+		if (idxStart > idxEnd) {
+			throw new IllegalStateException("end of Xt setup marked before it was started");
+		}
+		return xtFileContent.substring(idxStart, idxEnd + XT_SETUP_END.length());
 	}
 
 	static XtWorkspace createDefaultWorkspace(String fileName, String xtFileContent) {
