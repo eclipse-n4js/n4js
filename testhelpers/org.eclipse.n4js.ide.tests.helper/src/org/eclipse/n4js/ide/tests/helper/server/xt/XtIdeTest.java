@@ -96,14 +96,17 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * Call this before calling any other methods of {@link XtIdeTest}.
 	 */
-	public void initializeXtFile(XtFileData newXtData) throws IOException {
+	public void initializeXtFile(XtFileData newXtData, Set<String> globallySuppressedIssues) throws IOException {
 		Preconditions.checkNotNull(newXtData);
 		xtData = newXtData;
 
 		cleanupTestDataFolder();
 		testWorkspaceManager.createTestOnDisk(xtData.workspace);
 
-		setSuppressedIssues(xtData.suppressedIssues);
+		Set<String> actuallySuppressedIssues = new HashSet<>(globallySuppressedIssues);
+		actuallySuppressedIssues.removeAll(xtData.enabledIssues);
+		actuallySuppressedIssues.addAll(xtData.disabledIssues);
+		setSuppressedIssues(actuallySuppressedIssues);
 
 		for (XtMethodData startupMethod : xtData.startupMethodData) {
 			switch (startupMethod.name) {

@@ -45,8 +45,10 @@ public class XtFileData {
 	final public int[] lineLengths;
 	/** Workspace, either default or according to description in SETUP section */
 	final public XtWorkspace workspace;
-	/** Issue codes of issues that should be suppressed. */
-	final public Set<String> suppressedIssues;
+	/** Issue codes locally enabled in this test file via an <code>IssueConfiguration</code> in the Xt setup. */
+	final public Set<String> enabledIssues;
+	/** Issue codes locally disabled in this test file via an <code>IssueConfiguration</code> in the Xt setup. */
+	final public Set<String> disabledIssues;
 	/** Methods to execute to start the LSP server */
 	final public List<XtMethodData> startupMethodData;
 	/** Test methods, first run */
@@ -58,9 +60,9 @@ public class XtFileData {
 
 	/** Constructor */
 	public XtFileData(File xtFile, String content, String setupRunnerName, XtWorkspace workspace,
-			Set<String> suppressedIssues, List<XtMethodData> startupMethodData,
-			Collection<XtMethodData> testMethodData1, Collection<XtMethodData> testMethodData2,
-			List<XtMethodData> teardownMethodData) {
+			Set<String> enabledIssues, Set<String> disabledIssues,
+			List<XtMethodData> startupMethodData, Collection<XtMethodData> testMethodData1,
+			Collection<XtMethodData> testMethodData2, List<XtMethodData> teardownMethodData) {
 
 		Preconditions.checkState(xtFile.getName().endsWith("." + N4JSGlobals.XT_FILE_EXTENSION));
 
@@ -71,7 +73,8 @@ public class XtFileData {
 		this.setupRunnerName = setupRunnerName;
 		this.lineLengths = calculateLineLengths(content);
 		this.workspace = workspace;
-		this.suppressedIssues = suppressedIssues;
+		this.enabledIssues = enabledIssues;
+		this.disabledIssues = disabledIssues;
 		this.startupMethodData = startupMethodData;
 		this.testMethodData1 = testMethodData1;
 		this.testMethodData2 = testMethodData2;

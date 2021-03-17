@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
 import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
@@ -113,7 +112,8 @@ public class XtSetupWorkspaceParser {
 	static public class XtSetupParseResult {
 		String runner;
 		XtWorkspace workspace;
-		Set<String> suppressedIssues;
+		final Set<String> enabledIssues = new HashSet<>();
+		final Set<String> disabledIssues = new HashSet<>();
 	}
 
 	/**
@@ -124,7 +124,6 @@ public class XtSetupWorkspaceParser {
 		TokenStream tokens = new TokenStream(setupStr);
 
 		XtSetupParseResult result = new XtSetupParseResult();
-		result.suppressedIssues = new HashSet<>(N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
 
 		tokens.expect(XtFileDataParser.XT_SETUP_START);
 
@@ -134,7 +133,7 @@ public class XtSetupWorkspaceParser {
 			switch (tokens.next()) {
 			case "IssueConfiguration":
 				tokens.expect("{");
-				parseIssueConfiguration(tokens, xtFile, result.suppressedIssues);
+				parseIssueConfiguration(tokens, xtFile, result);
 				break;
 			case "Workspace":
 				Preconditions.checkState(result.workspace == null,
@@ -154,13 +153,12 @@ public class XtSetupWorkspaceParser {
 				ERROR + "Unexpected end of Xt setup preamble in file " + xtFile.getPath());
 	}
 
-	private static void parseIssueConfiguration(TokenStream tokens, File xtFile,
-			Set<String> currentlySuppressedIssues) {
+	private static void parseIssueConfiguration(TokenStream tokens, File xtFile, XtSetupParseResult result) {
 
 		LOOP: while (tokens.hasNext()) {
 			switch (tokens.next()) {
 			case "IssueCode":
-				parseIssueCode(tokens, xtFile, currentlySuppressedIssues);
+				parseIssueCode(tokens, xtFile, result);
 				break;
 			case "}":
 				break LOOP;
@@ -172,32 +170,27 @@ public class XtSetupWorkspaceParser {
 		}
 	}
 
-	private static void parseIssueCode(TokenStream tokens, File xtFile, Set<String> currentlySuppressedIssues) {
+	private static void parseIssueCode(TokenStream tokens, File xtFile, XtSetupParseResult result) {
 		String issueCode = tokens.expectNameInQuotes();
 
-		boolean enabled = false;
 		if (tokens.hasNext() && Objects.equal(tokens.current(), "{")) { // optional block
 			tokens.next(); // consume opening curly brace
 			tokens.expect("enabled");
 			// tokens.expect("="); // note: tokenizer is removing '='
 			switch (tokens.next().toLowerCase()) {
 			case "true":
-				enabled = true;
+				result.disabledIssues.remove(issueCode);
+				result.enabledIssues.add(issueCode);
 				break;
 			case "false":
-				enabled = false;
+				result.enabledIssues.remove(issueCode);
+				result.disabledIssues.add(issueCode);
 				break;
 			default:
 				Preconditions.checkState(false,
 						ERROR + "Unexpected value for property 'enabled' of IssueCode in file " + xtFile.getPath());
 			}
 			tokens.expect("}");
-		}
-
-		if (enabled) {
-			currentlySuppressedIssues.remove(issueCode);
-		} else {
-			currentlySuppressedIssues.add(issueCode);
 		}
 	}
 

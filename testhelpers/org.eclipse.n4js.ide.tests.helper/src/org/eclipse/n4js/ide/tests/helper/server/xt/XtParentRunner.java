@@ -19,15 +19,17 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Superclass to be inherited from when defining a xt test directory. Use the annotations
@@ -42,6 +44,7 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	final Path currentProject;
 	final Path startLocation;
 	final String xtFilesFolder;
+	final Set<String> globallySuppressedIssues;
 
 	List<XtFileRunner> fileRunners;
 
@@ -52,7 +55,7 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		this.currentProject = new File("").getAbsoluteFile().toPath();
 		this.xtFilesFolder = getFolder(testClass);
 		this.startLocation = currentProject.resolve(xtFilesFolder);
-		ideTest.setSuppressedIssues(getSuppressedIssues(testClass));
+		this.globallySuppressedIssues = getGloballySuppressedIssues(testClass);
 	}
 
 	@Override
@@ -84,7 +87,8 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, file);
+							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, file,
+									globallySuppressedIssues);
 							fileRunners.add(fileRunner);
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
@@ -119,21 +123,29 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		}
 	}
 
-	static private Set<String> getSuppressedIssues(Class<?> testClass) {
-//		try {
-//			for (Method m : testClass.getDeclaredMethods()) {
-//				XtSuppressedIssues[] annFolder = m.getDeclaredAnnotationsByType(XtSuppressedIssues.class);
-//				if (annFolder != null && annFolder.length > 0) {
-//					m.setAccessible(true);
-//					@SuppressWarnings("unchecked")
-//					Set<String> folderName = (Set<String>) m.invoke(null);
-//					return folderName;
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		return Collections.emptySet();
+	/**
+	 * Returns issue codes of issues that should be suppressed in all test files executed by this parent runner, as
+	 * defined by the test class via a method annotated with {@link XtSuppressedIssues} or the
+	 * {@link N4JSLanguageConstants#DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS global default}.
+	 * <p>
+	 * The configuration returned here can be overridden on a per-file basis in the Xt setup by way of an
+	 * <code>IssueConfiguration</code>.
+	 */
+	static private Set<String> getGloballySuppressedIssues(Class<?> testClass) {
+		try {
+			for (Method m : testClass.getDeclaredMethods()) {
+				XtSuppressedIssues[] annFolder = m.getDeclaredAnnotationsByType(XtSuppressedIssues.class);
+				if (annFolder != null && annFolder.length > 0) {
+					m.setAccessible(true);
+					@SuppressWarnings("unchecked")
+					Set<String> folderName = (Set<String>) m.invoke(null);
+					return ImmutableSet.copyOf(folderName);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
 	}
 
 }

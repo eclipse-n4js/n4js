@@ -35,6 +35,7 @@ import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
@@ -53,7 +54,8 @@ public class XtFileDataParser {
 		XtSetupParseResult setupParseResult = XtSetupWorkspaceParser.parse(xtFile, setupStr, xtFileContent);
 		String setupRunner = setupParseResult.runner;
 		XtWorkspace workspace = setupParseResult.workspace;
-		Set<String> suppressedIssues = setupParseResult.suppressedIssues;
+		Set<String> enabledIssues = ImmutableSet.copyOf(setupParseResult.enabledIssues);
+		Set<String> disabledIssues = ImmutableSet.copyOf(setupParseResult.disabledIssues);
 
 		if (workspace == null) {
 			File xtFileStripped = XtFileData.stripXtExtension(xtFile);
@@ -67,8 +69,8 @@ public class XtFileDataParser {
 		TreeSet<XtMethodData> testMethodData2 = new TreeSet<>();
 		fillTestMethodData(xtFile.toString(), xtFileContent, testMethodData1, testMethodData2);
 
-		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, suppressedIssues, startupMethodData,
-				testMethodData1, testMethodData2, teardownMethodData);
+		return new XtFileData(xtFile, xtFileContent, setupRunner, workspace, enabledIssues, disabledIssues,
+				startupMethodData, testMethodData1, testMethodData2, teardownMethodData);
 	}
 
 	private static String getXtSetupString(String xtFileContent) {
