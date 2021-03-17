@@ -14,14 +14,14 @@ import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.tests.helper.mock.MockWorkspaceSupplier
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
-import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -37,6 +37,7 @@ class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest {
 
 	@Inject extension ParseHelper<Script>
 	@Inject extension ValidationTestHelper
+	@Inject private MockWorkspaceSupplier mockWorkspaceSupplier;
 
 	@Inject
 	XtextResourceSet rs
@@ -46,11 +47,11 @@ class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest {
 		'''
 			export class X {}
 			export class Z {}
-		'''.parse(URI.createURI("a/X.n4js"), rs)
+		'''.parse(mockWorkspaceSupplier.toTestProjectURI("a/X.n4js"), rs)
 		'''
 			export class Y {}
 			export class Z {}
-		'''.parse(URI.createURI("b/Y.n4js"), rs)
+		'''.parse(mockWorkspaceSupplier.toTestProjectURI("b/Y.n4js"), rs)
 	}
 
 	@After
@@ -259,7 +260,7 @@ class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest {
 
 		'''
 			export class Z {}
-		'''.parse(URI.createURI("c/Z.n4js"), rs)
+		'''.parse(mockWorkspaceSupplier.toTestProjectURI("c/Z.n4js"), rs)
 
 
 		val script = '''

@@ -15,6 +15,7 @@ import java.util.Arrays
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.tests.issues.IssueUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -114,6 +115,6 @@ class AT_136_AccessPredefinedTypesTest {
 
 	def private void assertErrors(EObject model, String... errorMsgs) {
 		val issues = model.eResource.validate;
-		Assert.assertEquals(issues.map[toString], Arrays.asList(errorMsgs));
+		Assert.assertEquals(issues.map[IssueUtils.toString(it)], Arrays.asList(errorMsgs));
 	}
 }

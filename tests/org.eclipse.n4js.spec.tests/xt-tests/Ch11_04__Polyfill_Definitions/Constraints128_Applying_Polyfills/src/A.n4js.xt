@@ -9,21 +9,24 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
-		ThisFile {}
-		File "F.n4jsd" {}
-		File "P1.n4jsd" {}
-		File "P2.n4jsd" {}
+	 Workspace {
+		Project "PolyfillTest" {
+			Folder "src" {
+				ThisFile {}
+				File "F.n4jsd" {}
+				File "P1.n4jsd" {}
+				File "P2.n4jsd" {}
+			}
+			File "package.json" { from="../package.json" }
+		}
 	}
 
-END_SETUP */
+	END_SETUP
+ */
 
-
-class Sub extends F{}
-
-var f = new Sub();
+var f = new F();
 // XPECT noerrors --> "bind to original def"
 f.initialMethod();
 // XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
@@ -35,4 +38,4 @@ f.additionalMethod2();
 
 
 // XPECT noerrors --> "bind to polyfill in P1"
-Sub.addStatic();
+F.addStatic();

@@ -9,17 +9,27 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	 Workspace {
+		Project "PolyfillTest" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
 
 // Test needs to be run in project configured as ProjectType: runtimeLibrary (i.e. need package.json in this or parent folder)
 
 @@ProvidedByRuntime
 @@Global
 
-export public interface ~I {}
-
 @Polyfill
-// XPECT errors --> "Polyfill Object must not implement any interfaces or consume any interfaces." at "Object"
-export external public class Object extends Object implements I {
-	additionalMethod();
+export external public class Object extends Object {
+	// XPECT errors --> "Signature of constructor of class Object (line 34) does not conform to overridden constructor of classifier Object: {function(number)} is not a subtype of {function(any=…)}." at "constructor"
+	constructor(n : number)
 }

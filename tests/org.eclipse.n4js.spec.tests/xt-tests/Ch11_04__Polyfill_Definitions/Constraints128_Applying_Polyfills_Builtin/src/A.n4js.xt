@@ -9,14 +9,20 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
-	ResourceSet {
-		ThisFile {}
-		File "P.n4jsd" {}
+	 Workspace {
+		Project "PolyfillTest" {
+			Folder "src" {
+				ThisFile {}
+				File "P.n4jsd" {}
+			}
+			File "package.json" { from="../package.json" }
+		}
 	}
 
-END_SETUP */
+	END_SETUP
+ */
 
 
 // Note: if this test fails, maybe have a look at

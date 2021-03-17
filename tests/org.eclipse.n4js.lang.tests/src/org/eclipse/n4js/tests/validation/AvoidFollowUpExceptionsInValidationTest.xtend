@@ -17,6 +17,7 @@ import org.eclipse.n4js.postprocessing.N4JSPostProcessor
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor
+import org.eclipse.n4js.tests.issues.IssueUtils
 import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.XtextResource
@@ -65,7 +66,7 @@ class AvoidFollowUpExceptionsInValidationTest extends AbstractN4JSTest {
 
 		// ASSERTION #2: the exception thrown during post-processing should show up as a single error
 		assertEquals("incorrect number of issues", 1, issues.size);
-		val issueStr = issues.get(0).toString;
+		val issueStr = IssueUtils.toString(issues.get(0));
 		assertTrue("incorrect beginning of issue string", issueStr.startsWith(
 			"ERROR:exception FailedPostProcessingException thrown during post-processing (please report this!): failure of post-processing as simulated by FailingN4JSPostProcessor\n"));
 		assertTrue("incorrect end of issue string", issueStr.endsWith(

@@ -9,14 +9,20 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
 
- 	ResourceSet {
-		ThisFile {}
-		File "F.n4jsd" {}
+	 Workspace {
+		Project "PolyfillTest" {
+			Folder "src" {
+				ThisFile {}
+				File "F.n4jsd" {}
+			}
+			File "package.json" { from="../package.json" }
+		}
 	}
 
-END_SETUP */
+	END_SETUP
+ */
 
 
 // Test needs to be run in project configured as ProjectType: runtimeEnvironment (i.e. need package.json in this or parent folder)
