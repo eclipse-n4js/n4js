@@ -25,8 +25,6 @@ import org.junit.runner.notification.RunNotifier;
  * Runs all tests defined by {@value XtFileDataParser.XtMethodIterator#XT_KEYWORD} of a single .xt file
  */
 public class XtFileRunner extends Runner {
-	/** Reference to the XtIdeTest (and language server) */
-	final public XtIdeTest ideTest;
 	/** Name of the JUnit test class runner */
 	final public String testClassName;
 	/** xt file */
@@ -36,12 +34,11 @@ public class XtFileRunner extends Runner {
 	/** Meta data of xt file */
 	final public XtFileData xtFileData;
 
-	Description description;
+	private XtIdeTest ideTest;
+	private Description description;
 
 	/** Constructor */
-	public XtFileRunner(XtIdeTest ideTest, String testClassName, File file, Set<String> globallySuppressedIssues)
-			throws IOException {
-		this.ideTest = ideTest;
+	public XtFileRunner(String testClassName, File file, Set<String> globallySuppressedIssues) throws IOException {
 		this.testClassName = testClassName;
 		this.file = file;
 		this.globallySuppressedIssues = globallySuppressedIssues;
@@ -67,15 +64,25 @@ public class XtFileRunner extends Runner {
 		return getOrCreateDescription();
 	}
 
+	/** Sets the {@link XtIdeTest} instance to be used when {@link #run(RunNotifier) running} the test. */
+	public void setIdeTest(XtIdeTest ideTest) {
+		this.ideTest = ideTest;
+	}
+
 	@Override
 	public void run(RunNotifier notifier) {
 		if (!testClassName.equals(getSetupRunnerName())) {
 			notifier.fireTestIgnored(getDescription());
 			return;
 		}
+		if (ideTest == null) {
+			throw new IllegalStateException("ideTest was not set yet");
+		}
 
 		try {
 			notifier.fireTestRunStarted(getDescription());
+
+			XtParentRunner.invokeBeforeMethods(ideTest);
 
 			ideTest.initializeXtFile(globallySuppressedIssues, xtFileData);
 			for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
@@ -107,7 +114,7 @@ public class XtFileRunner extends Runner {
 			notifier.fireTestFailure(new Failure(getDescription(), testFailure));
 		} finally {
 			try {
-				ideTest.teardown();
+				XtParentRunner.invokeAfterMethods(ideTest);
 
 				notifier.fireTestRunFinished(new Result());
 			} catch (Throwable t) {

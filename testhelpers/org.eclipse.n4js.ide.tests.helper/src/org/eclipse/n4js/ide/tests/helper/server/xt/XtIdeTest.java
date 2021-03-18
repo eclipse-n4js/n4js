@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -96,11 +95,10 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * Call this before calling any other methods of {@link XtIdeTest}.
 	 */
-	public void initializeXtFile(Set<String> globallySuppressedIssues, XtFileData newXtData) throws IOException {
+	public void initializeXtFile(Set<String> globallySuppressedIssues, XtFileData newXtData) {
 		Preconditions.checkNotNull(newXtData);
 		xtData = newXtData;
 
-		cleanupTestDataFolder();
 		testWorkspaceManager.createTestOnDisk(xtData.workspace);
 
 		Set<String> actuallySuppressedIssues = new HashSet<>(globallySuppressedIssues);
@@ -270,11 +268,6 @@ public class XtIdeTest extends AbstractIdeTest {
 		default:
 			throw new IllegalArgumentException("Unknown method: " + testMethodData.name);
 		}
-	}
-
-	/** 	 */
-	public void teardown() throws IOException {
-		deleteTestProject();
 	}
 
 	/**

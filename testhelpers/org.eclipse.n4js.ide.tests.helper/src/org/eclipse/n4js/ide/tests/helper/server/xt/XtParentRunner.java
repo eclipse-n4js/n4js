@@ -22,10 +22,12 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -47,20 +49,24 @@ import com.google.common.collect.Lists;
  */
 public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	final Class<?> testClass;
-	final XtIdeTest ideTest;
 	final Path currentProject;
 	final Path startLocation;
 	final String xtFilesFolder;
 	final Set<String> globallySuppressedIssues;
 
-	boolean disposed = false;
+	XtIdeTest ideTest;
 	List<XtFileRunner> fileRunners;
+	boolean disposed = false;
 
 	/** Constructor */
 	public XtParentRunner(Class<?> testClass) throws InitializationError {
 		super(testClass); // This will run methods annotated with @BeforeAll/@AfterAll
+
+		// call the following as early as possible; otherwise the loggers will already have cached System.out and
+		// System.err and the redirection of AbstractIdeTest would fail:
+		AbstractIdeTest.redirectPrintStreams();
+
 		this.testClass = testClass;
-		this.ideTest = createXtIdeTest();
 		this.currentProject = new File("").getAbsoluteFile().toPath();
 		this.xtFilesFolder = getFolder(testClass);
 		this.startLocation = currentProject.resolve(xtFilesFolder);
@@ -68,15 +74,17 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	}
 
 	/** Creates the instanceof of {@link XtIdeTest} to be used by child runners for test execution. */
-	protected XtIdeTest createXtIdeTest() {
+	protected void createIdeTest() {
 		invokeBeforeClassMethods(XtIdeTest.class);
-		return new XtIdeTest();
+		this.ideTest = new XtIdeTest();
 	}
 
 	/** Executed after running all child runners. */
-	protected void dispose() {
+	protected void disposeIdeTest() {
 		disposed = true;
-		invokeAfterClassMethods(ideTest.getClass());
+		Class<?> ideTestClass = ideTest.getClass();
+		this.ideTest = null;
+		invokeAfterClassMethods(ideTestClass);
 	}
 
 	/** Throws exception if this runner is disposed. */
@@ -101,17 +109,26 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	@Override
 	public void run(RunNotifier notifier) {
 		checkDisposed();
-		super.run(notifier);
-		// we assume the test is finished
-		dispose();
+		if (this.ideTest != null) {
+			throw new AssertionError("reentrant invocation of #run()");
+		}
+		createIdeTest();
+		try {
+			super.run(notifier);
+		} finally {
+			disposeIdeTest();
+		}
 	}
 
 	@Override
 	public void runChild(XtFileRunner child, RunNotifier notifier) {
 		checkDisposed();
-		invokeBeforeMethods(ideTest);
-		child.run(notifier);
-		invokeAfterMethods(ideTest);
+		child.setIdeTest(ideTest);
+		try {
+			child.run(notifier);
+		} finally {
+			child.setIdeTest(null);
+		}
 	}
 
 	private List<XtFileRunner> getOrFindFileRunners() {
@@ -128,8 +145,7 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, file,
-									globallySuppressedIssues);
+							XtFileRunner fileRunner = new XtFileRunner(testClassName, file, globallySuppressedIssues);
 							fileRunners.add(fileRunner);
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
@@ -193,11 +209,11 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		invokeAnnotatedMethods(testClass, null, BeforeClass.class);
 	}
 
-	static private void invokeBeforeMethods(Object test) {
+	static /* package */ void invokeBeforeMethods(Object test) {
 		invokeAnnotatedMethods(test.getClass(), test, Before.class);
 	}
 
-	static private void invokeAfterMethods(Object test) {
+	static /* package */ void invokeAfterMethods(Object test) {
 		invokeAnnotatedMethods(test.getClass(), test, After.class);
 	}
 
@@ -208,21 +224,26 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	static private void invokeAnnotatedMethods(Class<?> testClass, Object target, Class<? extends Annotation> ann) {
 		try {
 			// collect methods in well-defined order (cannot use Class#getMethods())
-			List<Method> ms = new ArrayList<>();
+			boolean useStaticMethods = target == null;
+			Set<String> instanceMethodNames = new HashSet<>();
+			List<Method> methodsToInvoke = new ArrayList<>();
 			Class<?> currCls = testClass;
 			while (currCls != null && currCls != Object.class) {
 				for (Method m : currCls.getDeclaredMethods()) {
 					int modifiers = m.getModifiers();
-					if (Modifier.isPublic(modifiers) && (target != null || Modifier.isStatic(modifiers))) {
-						if (m.isAnnotationPresent(ann)) {
-							ms.add(m);
+					if (Modifier.isPublic(modifiers) && m.isAnnotationPresent(ann)) {
+						boolean wrongStatic = useStaticMethods != Modifier.isStatic(modifiers);
+						boolean overriddenInstanceMethod = !useStaticMethods
+								&& !instanceMethodNames.add(m.getName());
+						if (!wrongStatic && !overriddenInstanceMethod) {
+							methodsToInvoke.add(m);
 						}
 					}
 				}
 				currCls = currCls.getSuperclass();
 			}
 			// invoke the methods with those of super classes having priority over those of subclasses
-			for (Method m : Lists.reverse(ms)) {
+			for (Method m : Lists.reverse(methodsToInvoke)) {
 				m.invoke(target);
 			}
 		} catch (Throwable th) {

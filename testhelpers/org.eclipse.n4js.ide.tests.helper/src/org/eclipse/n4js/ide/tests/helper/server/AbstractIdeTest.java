@@ -113,6 +113,7 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.After;
@@ -173,6 +174,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Name of the npm node_modules folder. */
 	protected static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 
+	private static GlobalStateMemento oldGlobalState;
+
 	/** Clear global state to ensure IDE tests run on a clean slate. */
 	@BeforeClass
 	static final public void clearGlobalRegistries() {
@@ -181,7 +184,14 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		// Should be fixed as of GH-1915, so clearing the global state should no longer be necessary, here. But because
 		// this is hard to notice and debug, we still clear the global state to make the IDE tests more robust against
 		// similar problems in the future.
+		oldGlobalState = GlobalRegistries.makeCopyOfGlobalState();
 		GlobalRegistries.clearGlobalRegistries();
+	}
+
+	/** Reset global state to what was in effect before this IDE test started. */
+	@AfterClass
+	static final public void restoreGlobalRegistries() {
+		oldGlobalState.restoreGlobalState();
 	}
 
 	/** Catch outputs on console to an internal buffer */

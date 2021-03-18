@@ -21,14 +21,17 @@ import org.junit.Assert;
  * Test for checking whether plain JS files have the proper module export.
  */
 public class SystemOutRedirecter {
-	private PrintStream oldSystemOut;
-	private PrintStream oldSystemErr;
+	private PrintStream oldSystemOut = null;
+	private PrintStream oldSystemErr = null;
 	private ByteArrayOutputStream redirectOut;
 	private ByteArrayOutputStream redirectErr;
 
 	/** Sets up the System outputs and Security Manager */
 	@SuppressWarnings("resource")
 	final public void set(boolean mirrorOnSystemOut) {
+		if (oldSystemOut != null && oldSystemErr != null) {
+			return; // already set
+		}
 		oldSystemOut = System.out;
 		oldSystemErr = System.err;
 
@@ -50,16 +53,19 @@ public class SystemOutRedirecter {
 
 	/** Restores everything. */
 	final public void unset() {
-		if (oldSystemOut != null && oldSystemErr != null) {
-			System.out.flush();
-			System.err.flush();
-			System.out.close();
-			System.err.close();
-			System.setOut(oldSystemOut);
-			System.setErr(oldSystemErr);
-			redirectOut = null;
-			redirectErr = null;
+		if (oldSystemOut == null || oldSystemErr == null) {
+			return; // not set yet
 		}
+		System.out.flush();
+		System.err.flush();
+		System.out.close();
+		System.err.close();
+		System.setOut(oldSystemOut);
+		System.setErr(oldSystemErr);
+		oldSystemOut = null;
+		oldSystemErr = null;
+		redirectOut = null;
+		redirectErr = null;
 	}
 
 	/** Clear output from {@link System#out} that was recorded so far. */
