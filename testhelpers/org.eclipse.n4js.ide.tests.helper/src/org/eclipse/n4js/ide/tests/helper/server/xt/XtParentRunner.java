@@ -37,6 +37,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
@@ -53,6 +54,11 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	final Path startLocation;
 	final String xtFilesFolder;
 	final Set<String> globallySuppressedIssues;
+
+	final List<Method> beforeClassMethods;
+	final List<Method> beforeMethods;
+	final List<Method> afterMethods;
+	final List<Method> afterClassMethods;
 
 	XtIdeTest ideTest;
 	List<XtFileRunner> fileRunners;
@@ -71,20 +77,34 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		this.xtFilesFolder = getFolder(testClass);
 		this.startLocation = currentProject.resolve(xtFilesFolder);
 		this.globallySuppressedIssues = getGloballySuppressedIssues(testClass);
+
+		Class<? extends XtIdeTest> xtIdeTestClass = getXtIdeTestClass();
+		this.beforeClassMethods = collectAnnotatedMethods(xtIdeTestClass, true, BeforeClass.class);
+		this.beforeMethods = collectAnnotatedMethods(xtIdeTestClass, false, Before.class);
+		this.afterMethods = collectAnnotatedMethods(xtIdeTestClass, false, After.class);
+		this.afterClassMethods = collectAnnotatedMethods(xtIdeTestClass, true, AfterClass.class);
+	}
+
+	/** Return the type of the {@link #ideTest} created by {@link #createIdeTest()}. */
+	protected Class<? extends XtIdeTest> getXtIdeTestClass() {
+		return XtIdeTest.class;
 	}
 
 	/** Creates the instanceof of {@link XtIdeTest} to be used by child runners for test execution. */
 	protected void createIdeTest() {
-		invokeBeforeClassMethods(XtIdeTest.class);
-		this.ideTest = new XtIdeTest();
+		invokeBeforeClassMethods();
+		try {
+			this.ideTest = getXtIdeTestClass().getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
+			throw new AssertionError("exception while instantiating XtIdeTest class: " + getXtIdeTestClass());
+		}
 	}
 
 	/** Executed after running all child runners. */
 	protected void disposeIdeTest() {
 		disposed = true;
-		Class<?> ideTestClass = ideTest.getClass();
 		this.ideTest = null;
-		invokeAfterClassMethods(ideTestClass);
+		invokeAfterClassMethods();
 	}
 
 	/** Throws exception if this runner is disposed. */
@@ -145,7 +165,8 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(testClassName, file, globallySuppressedIssues);
+							XtFileRunner fileRunner = new XtFileRunner(XtParentRunner.this, testClassName, file,
+									globallySuppressedIssues);
 							fileRunners.add(fileRunner);
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
@@ -162,6 +183,57 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 
 		fileRunners.sort(Comparator.comparing(XtFileRunner::getName));
 		return fileRunners;
+	}
+
+	private void invokeBeforeClassMethods() {
+		invokeMethods(null, beforeClassMethods);
+	}
+
+	/* package */ void invokeBeforeMethods(Object test) {
+		invokeMethods(test, beforeMethods);
+	}
+
+	/* package */ void invokeAfterMethods(Object test) {
+		invokeMethods(test, afterMethods);
+	}
+
+	private void invokeAfterClassMethods() {
+		invokeMethods(null, afterClassMethods);
+	}
+
+	static private void invokeMethods(Object target, List<Method> methods) {
+		try {
+			for (Method m : methods) {
+				m.invoke(target);
+			}
+		} catch (Throwable th) {
+			th.printStackTrace();
+			throw new AssertionError("exception while invoking methods on the Xt test class", th);
+		}
+	}
+
+	static private List<Method> collectAnnotatedMethods(Class<?> testClass, boolean collectStaticMethods,
+			Class<? extends Annotation> ann) {
+		// collect methods in well-defined order (cannot use Class#getMethods())
+		Set<String> instanceMethodNames = new HashSet<>();
+		List<Method> methodsToInvoke = new ArrayList<>();
+		Class<?> currCls = testClass;
+		while (currCls != null && currCls != Object.class) {
+			for (Method m : currCls.getDeclaredMethods()) {
+				int modifiers = m.getModifiers();
+				if (Modifier.isPublic(modifiers) && m.isAnnotationPresent(ann)) {
+					boolean wrongStatic = collectStaticMethods != Modifier.isStatic(modifiers);
+					boolean overriddenInstanceMethod = !collectStaticMethods
+							&& !instanceMethodNames.add(m.getName());
+					if (!wrongStatic && !overriddenInstanceMethod) {
+						methodsToInvoke.add(m);
+					}
+				}
+			}
+			currCls = currCls.getSuperclass();
+		}
+		// return the methods with those of super classes having priority over those of subclasses
+		return ImmutableList.copyOf(Lists.reverse(methodsToInvoke));
 	}
 
 	static private String getFolder(Class<?> testClass) throws InitializationError {
@@ -203,52 +275,5 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 			e.printStackTrace();
 		}
 		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
-	}
-
-	static private void invokeBeforeClassMethods(Class<?> testClass) {
-		invokeAnnotatedMethods(testClass, null, BeforeClass.class);
-	}
-
-	static /* package */ void invokeBeforeMethods(Object test) {
-		invokeAnnotatedMethods(test.getClass(), test, Before.class);
-	}
-
-	static /* package */ void invokeAfterMethods(Object test) {
-		invokeAnnotatedMethods(test.getClass(), test, After.class);
-	}
-
-	static private void invokeAfterClassMethods(Class<?> testClass) {
-		invokeAnnotatedMethods(testClass, null, AfterClass.class);
-	}
-
-	static private void invokeAnnotatedMethods(Class<?> testClass, Object target, Class<? extends Annotation> ann) {
-		try {
-			// collect methods in well-defined order (cannot use Class#getMethods())
-			boolean useStaticMethods = target == null;
-			Set<String> instanceMethodNames = new HashSet<>();
-			List<Method> methodsToInvoke = new ArrayList<>();
-			Class<?> currCls = testClass;
-			while (currCls != null && currCls != Object.class) {
-				for (Method m : currCls.getDeclaredMethods()) {
-					int modifiers = m.getModifiers();
-					if (Modifier.isPublic(modifiers) && m.isAnnotationPresent(ann)) {
-						boolean wrongStatic = useStaticMethods != Modifier.isStatic(modifiers);
-						boolean overriddenInstanceMethod = !useStaticMethods
-								&& !instanceMethodNames.add(m.getName());
-						if (!wrongStatic && !overriddenInstanceMethod) {
-							methodsToInvoke.add(m);
-						}
-					}
-				}
-				currCls = currCls.getSuperclass();
-			}
-			// invoke the methods with those of super classes having priority over those of subclasses
-			for (Method m : Lists.reverse(methodsToInvoke)) {
-				m.invoke(target);
-			}
-		} catch (Throwable th) {
-			th.printStackTrace();
-			throw new AssertionError("exception while invoking @BeforeClass methods on the Xt test class", th);
-		}
 	}
 }

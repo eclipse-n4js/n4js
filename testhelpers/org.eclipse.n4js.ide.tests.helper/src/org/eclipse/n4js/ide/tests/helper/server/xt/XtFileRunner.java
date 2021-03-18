@@ -25,6 +25,8 @@ import org.junit.runner.notification.RunNotifier;
  * Runs all tests defined by {@value XtFileDataParser.XtMethodIterator#XT_KEYWORD} of a single .xt file
  */
 public class XtFileRunner extends Runner {
+	/** The parent runner. */
+	final public XtParentRunner parent;
 	/** Name of the JUnit test class runner */
 	final public String testClassName;
 	/** xt file */
@@ -38,7 +40,9 @@ public class XtFileRunner extends Runner {
 	private Description description;
 
 	/** Constructor */
-	public XtFileRunner(String testClassName, File file, Set<String> globallySuppressedIssues) throws IOException {
+	public XtFileRunner(XtParentRunner parent, String testClassName, File file, Set<String> globallySuppressedIssues)
+			throws IOException {
+		this.parent = parent;
 		this.testClassName = testClassName;
 		this.file = file;
 		this.globallySuppressedIssues = globallySuppressedIssues;
@@ -82,7 +86,7 @@ public class XtFileRunner extends Runner {
 		try {
 			notifier.fireTestRunStarted(getDescription());
 
-			XtParentRunner.invokeBeforeMethods(ideTest);
+			parent.invokeBeforeMethods(ideTest);
 
 			ideTest.initializeXtFile(globallySuppressedIssues, xtFileData);
 			for (XtMethodData testMethodData : xtFileData.getTestMethodData()) {
@@ -114,7 +118,7 @@ public class XtFileRunner extends Runner {
 			notifier.fireTestFailure(new Failure(getDescription(), testFailure));
 		} finally {
 			try {
-				XtParentRunner.invokeAfterMethods(ideTest);
+				parent.invokeAfterMethods(ideTest);
 
 				notifier.fireTestRunFinished(new Result());
 			} catch (Throwable t) {
