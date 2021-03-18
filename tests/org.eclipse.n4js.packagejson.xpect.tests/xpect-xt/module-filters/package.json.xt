@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "module-filters" {
+			Folder "src1" {
+				File "a-filter.js" { from="src1/a-filter.js" }
+				File "b-filter.js" { from="src1/b-filter.js" }
+				File "c-filter.txt" { from="src1/c-filter.txt" }
+				File "filter.js" { from="src1/filter.js" }
+			}
+			Folder "src2" {
+				File "a-filter.js" { from="src2/a-filter.js" }
+				File "b-filter.txt" { from="src2/b-filter.txt" }
+				File "filter.js" { from="src2/filter.js" }
+				File "valid-filter.txt" { from="src2/valid-filter.txt" }
+			}
+			Folder "src-ext" {}
+			ThisFile "package.json" {}
+		}
+	}
+
+	IssueConfiguration {
+		IssueCode "JSON_DUPLICATE_KEY" { enabled = false }
+	}
+
+	END_SETUP
+*/
+
+{
+	"name": "module-filters",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "library",
+		// XPECT errors --> "Expected object instead of number as moduleFilters section." at "12"
+		"moduleFilters": 12,
+		"moduleFilters": {
+			// XPECT errors --> "Invalid module filter type "invalidFilterType". Valid filter types are noValidate." at ""invalidFilterType""
+			"invalidFilterType": [],
+			// XPECT errors --> "Expected array instead of string as module filter specifiers." at ""Invalid specifier list""
+			"noValidate": "Invalid specifier list",
+			"noValidate": [
+				// XPECT errors --> "Invalid module specifier. Use simple strings or object syntax instead." at "{"invalidFilter": ""}"
+				{"invalidFilter": ""},
+				// XPECT errors --> "Invalid module specifier. Use simple strings or object syntax instead." at "123"
+				123,
+				// XPECT errors --> "Invalid module specifier. Use simple strings or object syntax instead." at "["invalid"]"
+				["invalid"]
+			],
+			"noValidate": [
+				// XPECT noerrors
+				"valid-filter",
+				// XPECT noerrors
+				{
+					"sourceContainer": "src1",
+					"module": "filter"
+				},
+				// XPECT noerrors
+				{ "sourceContainer": "src2", "module": "filter" }
+			]
+		},
+		
+		"sources": {
+			"source": [
+				"src1",
+				"src2"
+			],
+			"external": [
+				"src-ext"
+			]
+		},
+		"output": "src-gen"
+	}
+}

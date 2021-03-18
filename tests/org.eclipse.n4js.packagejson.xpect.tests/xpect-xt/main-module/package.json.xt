@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "main-module" {
+			Folder "non-src" {
+				File "non-module.n4js" { from="non-src/non-module.n4js" }
+			}
+			Folder "src1" {
+				Folder "nested" {
+					File "nested.n4js" { from="src1/nested/nested.n4js" }
+				}
+				File "A.n4jsx" { from="src1/A.n4jsx" }
+				File "B.n4jsd" { from="src1/B.n4jsd" }
+				File "C.js" { from="src1/C.js" }
+				File "toplevel.n4js" { from="src1/toplevel.n4js" }
+			}
+			Folder "src2" {
+				File "A2.n4js" { from="src2/A2.n4js" }
+				File "B2.n4jsd" { from="src2/B2.n4jsd" }
+			}
+			Folder "src-ext" {}
+			ThisFile "package.json" {}
+		}
+	}
+
+	IssueConfiguration {
+		IssueCode "JSON_DUPLICATE_KEY" { enabled = false }
+	}
+
+	END_SETUP
+*/
+{
+	"name": "main-module",
+	"version": "0.0.1",
+	"n4js": {
+		"projectType": "library",
+		// XPECT errors --> "Main module specifier <empty string> does not exist." at """"
+		"mainModule": "",
+		// XPECT noerrors
+		"mainModule": "A",
+		// XPECT noerrors
+		"mainModule": "B",
+		// XPECT noerrors
+		"mainModule": "C",
+		// XPECT noerrors
+		"mainModule": "nested/nested",
+		// XPECT noerrors
+		"mainModule": "toplevel",
+		// XPECT errors --> "Main module specifier non-module does not exist." at ""non-module""
+		"mainModule": "non-module",
+		// XPECT noerrors
+		"mainModule": "A2",
+		// XPECT noerrors
+		"mainModule": "B2",
+
+		// XPECT errors --> "Expected string instead of array as main module specifier." at "[]"
+		"mainModule": [],
+		// XPECT errors --> "Expected string instead of number as main module specifier." at "123"
+		"mainModule": 123,
+		
+		"sources": {
+			"source": [
+				"src1",
+				"src2"
+			],
+			"external": [
+				"src-ext"
+			]
+		},
+		"output": "src-gen"
+	}
+}

@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "duplicates" {
+			Folder "lib" {}
+			Folder "lib2" {}
+			Folder "resources" {
+				File "info.txt" { from="resources/info.txt" }
+			}
+			Folder "src" {
+				Folder "other" {
+					File "C.n4js" { from="src/other/C.n4js" }
+				}
+				Folder "p" {
+					Folder "q" {
+						File "A.js" { from="src/p/q/A.js" }
+						File "B.js" { from="src/p/q/B.js" }
+					}
+					File "A.js" { from="src/p/A.js" }
+					File "B.js" { from="src/p/B.js" }
+					File "O.js" { from="src/p/O.js" }
+					File "P.js" { from="src/p/P.js" }
+				}
+			}
+			Folder "src2" {
+				Folder "p" {
+					File "C.js" { from="src2/p/C.js" }
+				}
+			}
+			Folder "src3" {
+				Folder "p" {
+					File "D.js" { from="src3/p/D.js" }
+				}
+			}
+			Folder "src-external" {
+				Folder "p" {
+					File "External.n4jsd" { from="src-external/p/External.n4jsd" }
+				}
+			}
+			ThisFile "package.json" {}
+		}
+	}
+
+	END_SETUP
+*/
+{
+	"name": "duplicates",
+	"version": "0.0.1",
+	// TODO re-consider whether this validation is desired X!PECT errors --> "There is no output folder defined, so compilation isn't possible." at ""n4js""
+	"n4js": {
+		"projectType": "library",
+		// XPECT warnings --> "Property "projectVersion" is unknown." at ""projectVersion""
+		"projectVersion": "0.0.1",
+		// XPECT warnings --> "Property "hello" is unknown." at ""hello""
+		"hello": {},
+		"vendorId": "MyVendorID",
+		"vendorName": "My Vendor Name",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				// XPECT warnings --> "Duplicate path "src" has already been declared as source container in external." at "\"src\""
+				"src",
+				// IDEBUG-339 XPECT warnings --> "Source container path src_does_not_exist does not exist." at ""src_does_not_exist""
+				"src_does_not_exist",
+				// XPECT errors --> ""src/p/q/*.js" is not a valid path." at ""src/p/q/*.js""
+				"src/p/q/*.js",
+				// XPECT errors --> "Path "src/p/O.js" does not point to a directory." at ""src/p/O.js""
+				"src/p/O.js",
+				"src2",
+				"src3"
+			],
+			"external": [
+				// XPECT warnings --> "Duplicate path "src" has already been declared as source container in source." at "\"src\""
+				"src",
+				"src-external"
+			]
+		},
+		"moduleFilters": {
+			"noValidate": [
+				"p/P.js",
+				"p/P.*",
+				"p/P",
+				"p/q/*",
+				// XPECT errors --> "Duplicate module filter specifier." at ""p/q/*""
+				"p/q/*",
+				// XPECT warnings --> "Module filter "p/doesntexist/" does not match any modules." at ""p/doesntexist/""
+				"p/doesntexist/",
+				// External is available in src-external but not in src XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at "{ "sourceContainer": "src-external", "module": "p/External" }"
+				{ "sourceContainer": "src-external", "module": "p/External" },
+				// XPECT errors --> ""***" is not a valid character sequence in a wildcard." at ""***/A""
+				"***/A",
+				// XPECT errors --> "Relative navigation is not allowed in a module filter specifier." at "\"**/../p/A\""
+				"**/../p/A",
+				// XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at "\"other/*\""
+				"other/*",
+				{
+					"sourceContainer": "src2",
+					"module": "**/*"
+				},
+				{
+					"sourceContainer": "src3",
+					"module": "**/*"
+				}
+			],
+			// XPECT warnings --> "Property noValidate duplicates property noValidate (line 90)." at ""noValidate""
+			"noValidate": [
+				"p/A"
+			]
+		}
+	}
+}

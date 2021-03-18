@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "@_invalidScope/MyProject" {
+			Folder "src" {}
+			ThisFile "package.json" {}
+		}
+	}
+
+	END_SETUP
+*/
+
+{
+	// note: underscore not allowed at beginning of scope names (according to npm)!
+	// XPECT errors --> "The name "_invalidScope" is not a valid scope name." at ""@_invalidScope/MyProject""
+	"name": "@_invalidScope/MyProject",
+	"n4js": {
+		"projectType": "validation"
+	}
+}

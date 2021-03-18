@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "module-filter-n4js-matches" {
+			Folder "src" {
+				Folder "js" {
+					File "D1.js" { from="src/js/D1.js" }
+					File "D2.js" { from="src/js/D2.js" }
+				}
+				Folder "n4js" {
+					File "D1.n4js" { from="src/n4js/D1.n4js" }
+					File "D2.n4js" { from="src/n4js/D2.n4js" }
+				}
+			}
+			Folder "src1" {
+				Folder "nested" {
+					File "E1.js" { from="src1/nested/E1.js" }
+				}
+				File "A.js" { from="src1/A.js" }
+				File "B.js" { from="src1/B.js" }
+				File "C.js" { from="src1/C.js" }
+			}
+			Folder "src2" {
+				Folder "nested" {
+					File "E2.n4js" { from="src2/nested/E2.n4js" }
+				}
+				File "A.n4jsd" { from="src2/A.n4jsd" }
+				File "B.n4jsd" { from="src2/B.n4jsd" }
+				File "C.js" { from="src2/C.js" }
+			}
+			Folder "src3" {
+				File "C.n4js" { from="src3/C.n4js" }
+			}
+			ThisFile "package.json" {}
+		}
+	}
+
+	END_SETUP
+*/
+
+{
+	"name": "module-filter-n4js-matches",
+	"version": "0.0.1-SNAPSHOT",
+	"n4js": {
+		"projectType": "validation",
+		"moduleFilters": {
+			"noValidate": [
+				// A matches src1/A.js, src2/A.n4jsd XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at ""A""
+				"A",
+				// B matches src1/B.js XPECT noerrors
+				{"sourceContainer": "src1", "module": "B"},
+				// D* matches src/js/D1.js, src/js/D2.js XPECT noerrors
+				{"sourceContainer": "src/js", "module": "D*"},
+				// D* matches src/js/D1.n4js, src/js/D2.n4js XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at "{"sourceContainer": "src/n4js", "module": "D*"}"
+				{"sourceContainer": "src/n4js", "module": "D*"},
+				// nested/E* matches src1/nested/E1.js, src2/nested/E2.n4js XPECT errors --> "Module filters of type noValidate must not match N4JS modules/files." at ""nested/E*""
+				"nested/E*"
+			]
+		},
+		"sources": {
+			"source": [
+				"src1",
+				"src3",
+				"src/n4js"
+			],
+			"external": [
+				"src2",
+				"src/js"
+			]
+		},
+		"output": "src-gen"
+	}
+}
