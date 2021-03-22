@@ -33,6 +33,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Sets;
@@ -180,14 +181,14 @@ public class XtFileDataParser {
 			}
 
 			Token locStart = locKeyword.pred == null ? new Token("", cursorInComment, null) : locKeyword.pred;
-			Token locModifier = indexOf(comment, locKeyword.end,
+			Token locModifier = indexOf(comment, locKeyword.end, false,
 					XT_FIXME, XT_IGNORE, XT_EXPECT_SL, XT_EXPECT_ML, XT_EXPECT_ML_LIT, NL);
 			Token locExpectation = locModifier;
 
 			switch (locModifier.text) {
 			case XT_FIXME:
 			case XT_IGNORE:
-				locExpectation = indexOf(comment, locModifier.end,
+				locExpectation = indexOf(comment, locModifier.end, false,
 						XT_EXPECT_SL, XT_EXPECT_ML, XT_EXPECT_ML_LIT, NL);
 				break;
 			default:
@@ -202,13 +203,13 @@ public class XtFileDataParser {
 				locEnd = new Token(NL, locExpectation.end, null);
 				break;
 			case XT_EXPECT_SL:
-				locEnd = indexOf(comment, locExpectation.end, NL);
+				locEnd = indexOf(comment, locExpectation.end, false, NL);
 				break;
 			case XT_EXPECT_ML:
-				locEnd = indexOf(comment, locExpectation.end, XT_EXPECT_ML);
+				locEnd = indexOf(comment, locExpectation.end, false, XT_EXPECT_ML);
 				break;
 			case XT_EXPECT_ML_LIT:
-				locEnd = indexOf(comment, locExpectation.end, XT_EXPECT_ML_LIT);
+				locEnd = indexOf(comment, locExpectation.end, false, XT_EXPECT_ML_LIT);
 				isLiteral = true;
 				break;
 			default:
@@ -257,7 +258,7 @@ public class XtFileDataParser {
 
 		@Override
 		protected Token computeNext() {
-			Token commentOpensAT = indexOf(fullString, cursor, COMMENT_SL_OPEN, COMMENT_ML_OPEN);
+			Token commentOpensAT = indexOf(fullString, cursor, true, COMMENT_SL_OPEN, COMMENT_ML_OPEN);
 			if (commentOpensAT.isEOF) {
 				endOfData();
 				return null;
@@ -268,17 +269,17 @@ public class XtFileDataParser {
 			switch (commentOpensAT.text) {
 			case COMMENT_SL_OPEN:
 				Token tmpCommentOpensAT = commentOpensAT;
-				commentClosesAT = indexOf(fullString, tmpCommentOpensAT.end, NL);
+				commentClosesAT = indexOf(fullString, tmpCommentOpensAT.end, false, NL);
 
 				tmpCommentOpensAT = indexOfOtherThan(fullString, commentClosesAT.end, WHITESPACE);
 				while (!tmpCommentOpensAT.isEOF && tmpCommentOpensAT.text.startsWith(COMMENT_SL_OPEN)) {
-					commentClosesAT = indexOf(fullString, tmpCommentOpensAT.start, NL);
+					commentClosesAT = indexOf(fullString, tmpCommentOpensAT.start, false, NL);
 					tmpCommentOpensAT = indexOfOtherThan(fullString, commentClosesAT.end, WHITESPACE);
 				}
 
 				break;
 			case COMMENT_ML_OPEN:
-				commentClosesAT = indexOf(fullString, commentOpensAT.end, COMMENT_ML_CLOSE);
+				commentClosesAT = indexOf(fullString, commentOpensAT.end, false, COMMENT_ML_CLOSE);
 				comment = fullString.substring(commentOpensAT.end, commentClosesAT.start);
 				break;
 			default:
@@ -335,7 +336,7 @@ public class XtFileDataParser {
 		Token lastLoc = null;
 		int currIdx = cursorStart;
 		Token loc = null;
-		while (!(loc = indexOf(content, currIdx, search)).isEOF) {
+		while (!(loc = indexOf(content, currIdx, false, search)).isEOF) {
 			if (findSet.contains(loc.text)) {
 				return new Token(loc.text, loc.start, lastLoc);
 			}
@@ -351,11 +352,14 @@ public class XtFileDataParser {
 		return result;
 	}
 
-	static Token indexOf(String content, int cursorStart, String... strings) {
+	static Token indexOf(String content, int cursorStart, boolean skipQuotedText, String... strings) {
 		int cursor = cursorStart;
 		int minLength = Integer.MAX_VALUE;
 		for (int i = 0; i < strings.length; i++) {
 			minLength = Math.min(minLength, strings[i].length());
+		}
+		if (skipQuotedText) {
+			cursor = UtilN4.skipQuotedText(content, cursor);
 		}
 		while (content.length() > cursor + minLength - 1) {
 			for (int i = 0; i < strings.length; i++) {
@@ -364,6 +368,9 @@ public class XtFileDataParser {
 				}
 			}
 			cursor++;
+			if (skipQuotedText) {
+				cursor = UtilN4.skipQuotedText(content, cursor);
+			}
 		}
 		return new Token(content.length());
 	}

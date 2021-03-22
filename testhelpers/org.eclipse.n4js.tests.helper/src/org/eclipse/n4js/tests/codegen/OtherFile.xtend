@@ -20,7 +20,12 @@ import org.eclipse.n4js.N4JSGlobals
  * Generates code for a module containing imports and either given classifiers or contents.
  */
 class OtherFile {
+	/** The file name without extension. */
 	final protected String name;
+	/**
+	 * The file extension. Will be <code>null</code> for files without extension and empty string for files
+	 * with a name ending in ".".
+	 */
 	final protected String fExtension;
 	protected String content;
 
@@ -40,7 +45,7 @@ class OtherFile {
 	 */
 	public new(String name, String fExtension) {
 		this.name = Objects.requireNonNull(name);
-		this.fExtension = Objects.requireNonNull(fExtension);
+		this.fExtension = fExtension;
 	}
 
 	/**
@@ -53,12 +58,18 @@ class OtherFile {
 	}
 
 	/**
-	 * Returns the file extension of this module.
+	 * Returns the file extension of this module. Will be <code>null</code> for files without extension
+	 * and the empty string for files with a name ending in ".".
 	 * 
-	 * @return the file extension of this module
+	 * @return the file extension of this module or <code>null</code>.
 	 */
 	public def String getExtension() {
 		return fExtension
+	}
+
+	/** @return filename with extension (if any). */
+	public def String getNameWithExtension() {
+		return fExtension !== null ? name + "." + fExtension : name;
 	}
 
 	/**
@@ -84,7 +95,7 @@ class OtherFile {
 		if (!parentDirectory.directory)
 			throw new IOException("'" + parentDirectory + "' is not a directory");
 
-		val File filePath = new File(parentDirectory, this.name.replace('/', File.separatorChar) + "." + fExtension);
+		val File filePath = new File(parentDirectory, this.getNameWithExtension().replace('/', File.separatorChar));
 		filePath.parentFile.mkdirs();
 
 		var FileWriter out = null;

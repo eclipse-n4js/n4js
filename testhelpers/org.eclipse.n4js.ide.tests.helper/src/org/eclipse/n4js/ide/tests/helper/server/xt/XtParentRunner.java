@@ -12,7 +12,9 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,16 +22,24 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 
 /**
  * Superclass to be inherited from when defining a xt test directory. Use the annotations
@@ -40,13 +50,19 @@ import com.google.common.collect.ImmutableSet;
  */
 public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	final Class<?> testClass;
-	final XtIdeTest ideTest = new XtIdeTest();
 	final Path currentProject;
 	final Path startLocation;
 	final String xtFilesFolder;
 	final Set<String> globallySuppressedIssues;
 
+	final List<Method> beforeClassMethods;
+	final List<Method> beforeMethods;
+	final List<Method> afterMethods;
+	final List<Method> afterClassMethods;
+
+	XtIdeTest ideTest;
 	List<XtFileRunner> fileRunners;
+	boolean disposed = false;
 
 	/** Constructor */
 	public XtParentRunner(Class<?> testClass) throws InitializationError {
@@ -56,6 +72,43 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		this.xtFilesFolder = getFolder(testClass);
 		this.startLocation = currentProject.resolve(xtFilesFolder);
 		this.globallySuppressedIssues = getGloballySuppressedIssues(testClass);
+
+		Class<? extends XtIdeTest> xtIdeTestClass = getXtIdeTestClass();
+		this.beforeClassMethods = collectBeforeAfterMethods(xtIdeTestClass, BeforeClass.class);
+		this.beforeMethods = collectBeforeAfterMethods(xtIdeTestClass, Before.class);
+		this.afterMethods = collectBeforeAfterMethods(xtIdeTestClass, After.class);
+		this.afterClassMethods = collectBeforeAfterMethods(xtIdeTestClass, AfterClass.class);
+	}
+
+	/** Return the type of the {@link #ideTest} created by {@link #createIdeTest()}. */
+	protected Class<? extends XtIdeTest> getXtIdeTestClass() {
+		return XtIdeTest.class;
+	}
+
+	/** Creates the instanceof of {@link XtIdeTest} to be used by child runners for test execution. */
+	protected void createIdeTest() {
+		invokeBeforeClassMethods();
+		try {
+			this.ideTest = getXtIdeTestClass().getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
+			throw new AssertionError("exception while instantiating XtIdeTest class: " + getXtIdeTestClass());
+		}
+	}
+
+	/** Executed after running all child runners. */
+	protected void disposeIdeTest() {
+		disposed = true;
+		this.ideTest = null;
+		invokeAfterClassMethods();
+	}
+
+	/** Throws exception if this runner is disposed. */
+	protected void checkDisposed() {
+		if (disposed) {
+			Error err = new AssertionError("this " + XtParentRunner.class.getSimpleName() + " is already disposed");
+			err.printStackTrace();
+			throw err;
+		}
 	}
 
 	@Override
@@ -69,16 +122,41 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	}
 
 	@Override
-	public void runChild(XtFileRunner child, RunNotifier notifier) {
-		child.run(notifier);
+	public void run(RunNotifier notifier) {
+		checkDisposed();
+		if (this.ideTest != null) {
+			throw new AssertionError("reentrant invocation of #run()");
+		}
+		createIdeTest();
+		try {
+			super.run(notifier);
+		} finally {
+			disposeIdeTest();
+		}
 	}
 
-	private List<XtFileRunner> getOrFindFileRunners() {
-		if (fileRunners != null) {
-			return fileRunners;
+	@Override
+	public void runChild(XtFileRunner child, RunNotifier notifier) {
+		checkDisposed();
+		child.setIdeTest(ideTest);
+		try {
+			child.run(notifier);
+		} finally {
+			child.setIdeTest(null);
 		}
+	}
 
-		fileRunners = new ArrayList<>();
+	/** Returns the file runners, {@link #createFileRunners() creating them} if necessary. */
+	protected List<XtFileRunner> getOrFindFileRunners() {
+		if (fileRunners == null) {
+			fileRunners = ImmutableList.copyOf(createFileRunners());
+		}
+		return fileRunners;
+	}
+
+	/** Creates and returns the file runners. Will be invoked only once by {@link #getOrFindFileRunners()}. */
+	protected List<XtFileRunner> createFileRunners() {
+		List<XtFileRunner> result = new ArrayList<>();
 		try {
 			String testClassName = testClass.getName();
 			Files.walkFileTree(startLocation, new SimpleFileVisitor<Path>() {
@@ -87,9 +165,9 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					File file = path.toFile();
 					if (file.isFile() && file.getName().endsWith(".xt")) {
 						try {
-							XtFileRunner fileRunner = new XtFileRunner(ideTest, testClassName, file,
+							XtFileRunner fileRunner = new XtFileRunner(XtParentRunner.this, testClassName, file,
 									globallySuppressedIssues);
-							fileRunners.add(fileRunner);
+							result.add(fileRunner);
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
 							// precondition failed. Problem should show up in the JUnit view.
@@ -103,8 +181,67 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 			e.printStackTrace();
 		}
 
-		fileRunners.sort(Comparator.comparing(XtFileRunner::getName));
-		return fileRunners;
+		result.sort(Comparator.comparing(XtFileRunner::getName));
+		return result;
+	}
+
+	private void invokeBeforeClassMethods() {
+		invokeMethods(null, beforeClassMethods);
+	}
+
+	/* package */ void invokeBeforeMethods(Object test) {
+		invokeMethods(test, beforeMethods);
+	}
+
+	/* package */ void invokeAfterMethods(Object test) {
+		invokeMethods(test, afterMethods);
+	}
+
+	private void invokeAfterClassMethods() {
+		invokeMethods(null, afterClassMethods);
+	}
+
+	static private void invokeMethods(Object target, List<Method> methods) {
+		try {
+			for (Method m : methods) {
+				m.invoke(target);
+			}
+		} catch (Throwable th) {
+			th.printStackTrace();
+			throw new AssertionError("exception while invoking methods on the Xt test class", th);
+		}
+	}
+
+	static private List<Method> collectBeforeAfterMethods(Class<?> testClass, Class<? extends Annotation> ann) {
+		boolean collectStaticMethods = ann == BeforeClass.class || ann == AfterClass.class;
+		boolean isBeforeMethods = ann == BeforeClass.class || ann == Before.class;
+		// collect methods in well-defined order (cannot use Class#getMethods())
+		Set<String> instanceMethodNames = new HashSet<>();
+		List<List<Method>> methodsToInvoke = new ArrayList<>();
+		Class<?> currCls = testClass;
+		while (currCls != null && currCls != Object.class) {
+			List<Method> methodsOfCurrCls = new ArrayList<>();
+			for (Method m : currCls.getDeclaredMethods()) {
+				int modifiers = m.getModifiers();
+				if (Modifier.isPublic(modifiers) && m.isAnnotationPresent(ann)) {
+					boolean wrongStatic = collectStaticMethods != Modifier.isStatic(modifiers);
+					boolean overriddenInstanceMethod = !collectStaticMethods
+							&& !instanceMethodNames.add(m.getName());
+					if (!wrongStatic && !overriddenInstanceMethod) {
+						methodsOfCurrCls.add(m);
+					}
+				}
+			}
+			methodsToInvoke.add(methodsOfCurrCls);
+			currCls = currCls.getSuperclass();
+		}
+		// return the methods
+		if (isBeforeMethods) {
+			// for @BeforeClass and @Before methods of super classes have priority over those of subclasses, so reverse
+			// the list:
+			return ImmutableList.copyOf(IterableExtensions.flatten(Lists.reverse(methodsToInvoke)));
+		}
+		return ImmutableList.copyOf(IterableExtensions.flatten(methodsToInvoke));
 	}
 
 	static private String getFolder(Class<?> testClass) throws InitializationError {
@@ -147,5 +284,4 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		}
 		return N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS;
 	}
-
 }
