@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -67,11 +66,6 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 	/** Constructor */
 	public XtParentRunner(Class<?> testClass) throws InitializationError {
 		super(testClass); // This will run methods annotated with @BeforeAll/@AfterAll
-
-		// call the following as early as possible; otherwise the loggers will already have cached System.out and
-		// System.err and the redirection of AbstractIdeTest would fail:
-		AbstractIdeTest.redirectPrintStreams();
-
 		this.testClass = testClass;
 		this.currentProject = new File("").getAbsoluteFile().toPath();
 		this.xtFilesFolder = getFolder(testClass);
