@@ -22,12 +22,10 @@ import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
-import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -38,24 +36,10 @@ import com.google.common.collect.Lists;
 public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 
 	@Override
-	public N4JSWorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
-			ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project,
-			ImmutableMap<URI, ? extends ProjectConfigSnapshot> projectPath2Project,
-			ImmutableMap<URI, ? extends ProjectConfigSnapshot> sourceFolderPath2Project,
+	public N4JSWorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path, ProjectSet projects,
 			BuildOrderInfo buildOrderInfo) {
 
-		@SuppressWarnings("unchecked")
-		ImmutableBiMap<String, N4JSProjectConfigSnapshot> name2ProjectCasted = (ImmutableBiMap<String, N4JSProjectConfigSnapshot>) name2Project;
-		@SuppressWarnings("unchecked")
-		ImmutableMap<URI, N4JSProjectConfigSnapshot> projectPath2ProjectCasted = (ImmutableMap<URI, N4JSProjectConfigSnapshot>) projectPath2Project;
-		@SuppressWarnings("unchecked")
-		ImmutableMap<URI, N4JSProjectConfigSnapshot> sourceFolderPath2ProjectCasted = (ImmutableMap<URI, N4JSProjectConfigSnapshot>) sourceFolderPath2Project;
-
-		return new N4JSWorkspaceConfigSnapshot(path,
-				ImmutableBiMap.copyOf(name2ProjectCasted),
-				ImmutableMap.copyOf(projectPath2ProjectCasted),
-				ImmutableMap.copyOf(sourceFolderPath2ProjectCasted),
-				buildOrderInfo);
+		return new N4JSWorkspaceConfigSnapshot(path, projects, buildOrderInfo);
 	}
 
 	@Override

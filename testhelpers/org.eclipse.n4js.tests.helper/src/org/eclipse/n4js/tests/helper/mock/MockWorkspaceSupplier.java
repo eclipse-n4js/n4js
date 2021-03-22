@@ -32,16 +32,14 @@ import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -124,21 +122,9 @@ public class MockWorkspaceSupplier {
 	protected N4JSWorkspaceConfigSnapshot createWorkspaceConfig() {
 		N4JSProjectConfigSnapshot projectConfig = createProjectConfig();
 		URI workspacePath = URIUtils.trimTrailingPathSeparator(projectConfig.getPath()).trimSegments(1);
-
-		ImmutableBiMap<String, N4JSProjectConfigSnapshot> name2Project = ImmutableBiMap.of(projectConfig.getName(),
-				projectConfig);
-		ImmutableMap<URI, N4JSProjectConfigSnapshot> projectPath2Project = ImmutableMap.of(
-				URIUtils.trimTrailingPathSeparator(projectConfig.getPath()), projectConfig);
-		ImmutableMap.Builder<URI, N4JSProjectConfigSnapshot> sourceFolderPath2Project = ImmutableMap.builder();
-		for (N4JSSourceFolderSnapshot sourceFolder : projectConfig.getSourceFolders()) {
-			sourceFolderPath2Project.put(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()), projectConfig);
-		}
-
-		BuildOrderInfo buildOrderInfo = new BuildOrderInfo(ArrayListMultimap.create(), Collections.emptyList(),
-				Collections.emptySet());
-
-		return new N4JSWorkspaceConfigSnapshot(workspacePath, name2Project, projectPath2Project,
-				sourceFolderPath2Project.build(), buildOrderInfo);
+		ProjectSet projects = new ProjectSet(Collections.singleton(projectConfig));
+		BuildOrderInfo buildOrderInfo = new BuildOrderInfo(Collections.emptyList(), Collections.emptySet());
+		return new N4JSWorkspaceConfigSnapshot(workspacePath, projects, buildOrderInfo);
 	}
 
 	/** See {@link #createWorkspaceConfig()}. */

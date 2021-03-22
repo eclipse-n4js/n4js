@@ -68,7 +68,7 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 
 	/** Mark all projects as to be visited that are affected by a change in the given project. */
 	public IOrderIterator<ProjectConfigSnapshot> visitAffected(String projectName) {
-		visit(boi.inversedDependencies.get(projectName));
+		visit(wcs.getProjectsDependingOn(projectName));
 		return this;
 	}
 
@@ -94,7 +94,7 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 
 		Set<ProjectConfigSnapshot> affectedProjects = new HashSet<>();
 		for (String changedProjectName : changedProjectsNames) {
-			affectedProjects.addAll(boi.inversedDependencies.get(changedProjectName));
+			affectedProjects.addAll(wcs.getProjectsDependingOn(changedProjectName));
 		}
 
 		return affectedProjects;

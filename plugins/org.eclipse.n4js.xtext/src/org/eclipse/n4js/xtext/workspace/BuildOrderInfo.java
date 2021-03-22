@@ -13,12 +13,9 @@ package org.eclipse.n4js.xtext.workspace;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
 /**
@@ -27,11 +24,8 @@ import com.google.common.collect.Sets;
 public class BuildOrderInfo {
 
 	/** Empty build order instance */
-	public static final BuildOrderInfo NULL = new BuildOrderInfo(HashMultimap.create(),
-			Lists.newArrayList(), Sets.newHashSet());
+	public static final BuildOrderInfo NULL = new BuildOrderInfo(Lists.newArrayList(), Sets.newHashSet());
 
-	/** Inverse set of project dependency information */
-	final protected ImmutableMultimap<String, ProjectConfigSnapshot> inversedDependencies;
 	/** Build order of projects */
 	final protected ImmutableList<ProjectConfigSnapshot> sortedProjects;
 	/** All project cycles, each cycle given as a list of project names */
@@ -39,11 +33,9 @@ public class BuildOrderInfo {
 
 	/** Constructor */
 	public BuildOrderInfo(
-			Multimap<String, ProjectConfigSnapshot> pInversedDependencies,
 			List<ProjectConfigSnapshot> pSortedProjects,
 			Set<ImmutableList<String>> pProjectCycles) {
 
-		inversedDependencies = ImmutableMultimap.copyOf(pInversedDependencies);
 		sortedProjects = ImmutableList.copyOf(pSortedProjects);
 		projectCycles = ImmutableList.copyOf(pProjectCycles);
 	}

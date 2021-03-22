@@ -16,11 +16,10 @@ import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
+import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
 
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -29,11 +28,8 @@ import com.google.common.collect.ImmutableSet;
 public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 
 	/** Creates a {@link N4JSWorkspaceConfigSnapshot}. */
-	public N4JSWorkspaceConfigSnapshot(URI path, ImmutableBiMap<String, N4JSProjectConfigSnapshot> name2Project,
-			ImmutableMap<URI, N4JSProjectConfigSnapshot> projectPath2Project,
-			ImmutableMap<URI, N4JSProjectConfigSnapshot> sourceFolderPath2Project, BuildOrderInfo buildOrderInfo) {
-
-		super(path, name2Project, projectPath2Project, sourceFolderPath2Project, buildOrderInfo);
+	public N4JSWorkspaceConfigSnapshot(URI path, ProjectSet projects, BuildOrderInfo buildOrderInfo) {
+		super(path, projects, buildOrderInfo);
 	}
 
 	@Override
