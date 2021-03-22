@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -73,10 +74,10 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		this.globallySuppressedIssues = getGloballySuppressedIssues(testClass);
 
 		Class<? extends XtIdeTest> xtIdeTestClass = getXtIdeTestClass();
-		this.beforeClassMethods = collectAnnotatedMethods(xtIdeTestClass, true, BeforeClass.class);
-		this.beforeMethods = collectAnnotatedMethods(xtIdeTestClass, false, Before.class);
-		this.afterMethods = collectAnnotatedMethods(xtIdeTestClass, false, After.class);
-		this.afterClassMethods = collectAnnotatedMethods(xtIdeTestClass, true, AfterClass.class);
+		this.beforeClassMethods = collectBeforeAfterMethods(xtIdeTestClass, BeforeClass.class);
+		this.beforeMethods = collectBeforeAfterMethods(xtIdeTestClass, Before.class);
+		this.afterMethods = collectBeforeAfterMethods(xtIdeTestClass, After.class);
+		this.afterClassMethods = collectBeforeAfterMethods(xtIdeTestClass, AfterClass.class);
 	}
 
 	/** Return the type of the {@link #ideTest} created by {@link #createIdeTest()}. */
@@ -145,12 +146,17 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		}
 	}
 
-	private List<XtFileRunner> getOrFindFileRunners() {
-		if (fileRunners != null) {
-			return fileRunners;
+	/** Returns the file runners, {@link #createFileRunners() creating them} if necessary. */
+	protected List<XtFileRunner> getOrFindFileRunners() {
+		if (fileRunners == null) {
+			fileRunners = ImmutableList.copyOf(createFileRunners());
 		}
+		return fileRunners;
+	}
 
-		fileRunners = new ArrayList<>();
+	/** Creates and returns the file runners. Will be invoked only once by {@link #getOrFindFileRunners()}. */
+	protected List<XtFileRunner> createFileRunners() {
+		List<XtFileRunner> result = new ArrayList<>();
 		try {
 			String testClassName = testClass.getName();
 			Files.walkFileTree(startLocation, new SimpleFileVisitor<Path>() {
@@ -161,7 +167,7 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 						try {
 							XtFileRunner fileRunner = new XtFileRunner(XtParentRunner.this, testClassName, file,
 									globallySuppressedIssues);
-							fileRunners.add(fileRunner);
+							result.add(fileRunner);
 						} catch (Exception e) {
 							System.err.println("Error on file: " + file.getAbsolutePath().toString());
 							// precondition failed. Problem should show up in the JUnit view.
@@ -175,8 +181,8 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 			e.printStackTrace();
 		}
 
-		fileRunners.sort(Comparator.comparing(XtFileRunner::getName));
-		return fileRunners;
+		result.sort(Comparator.comparing(XtFileRunner::getName));
+		return result;
 	}
 
 	private void invokeBeforeClassMethods() {
@@ -206,13 +212,15 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 		}
 	}
 
-	static private List<Method> collectAnnotatedMethods(Class<?> testClass, boolean collectStaticMethods,
-			Class<? extends Annotation> ann) {
+	static private List<Method> collectBeforeAfterMethods(Class<?> testClass, Class<? extends Annotation> ann) {
+		boolean collectStaticMethods = ann == BeforeClass.class || ann == AfterClass.class;
+		boolean isBeforeMethods = ann == BeforeClass.class || ann == Before.class;
 		// collect methods in well-defined order (cannot use Class#getMethods())
 		Set<String> instanceMethodNames = new HashSet<>();
-		List<Method> methodsToInvoke = new ArrayList<>();
+		List<List<Method>> methodsToInvoke = new ArrayList<>();
 		Class<?> currCls = testClass;
 		while (currCls != null && currCls != Object.class) {
+			List<Method> methodsOfCurrCls = new ArrayList<>();
 			for (Method m : currCls.getDeclaredMethods()) {
 				int modifiers = m.getModifiers();
 				if (Modifier.isPublic(modifiers) && m.isAnnotationPresent(ann)) {
@@ -220,14 +228,20 @@ public class XtParentRunner extends ParentRunner<XtFileRunner> {
 					boolean overriddenInstanceMethod = !collectStaticMethods
 							&& !instanceMethodNames.add(m.getName());
 					if (!wrongStatic && !overriddenInstanceMethod) {
-						methodsToInvoke.add(m);
+						methodsOfCurrCls.add(m);
 					}
 				}
 			}
+			methodsToInvoke.add(methodsOfCurrCls);
 			currCls = currCls.getSuperclass();
 		}
-		// return the methods with those of super classes having priority over those of subclasses
-		return ImmutableList.copyOf(Lists.reverse(methodsToInvoke));
+		// return the methods
+		if (isBeforeMethods) {
+			// for @BeforeClass and @Before methods of super classes have priority over those of subclasses, so reverse
+			// the list:
+			return ImmutableList.copyOf(IterableExtensions.flatten(Lists.reverse(methodsToInvoke)));
+		}
+		return ImmutableList.copyOf(IterableExtensions.flatten(methodsToInvoke));
 	}
 
 	static private String getFolder(Class<?> testClass) throws InitializationError {

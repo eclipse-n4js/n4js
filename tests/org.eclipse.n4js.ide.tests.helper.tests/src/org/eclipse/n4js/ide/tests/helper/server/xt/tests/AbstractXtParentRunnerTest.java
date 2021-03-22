@@ -24,6 +24,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.InitializationError;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -43,13 +44,17 @@ public abstract class AbstractXtParentRunnerTest {
 		void run(String folderName, Set<String> suppressedIssues) throws Exception {
 			XtTestSetupTestMockup.folder = folderName;
 			XtTestSetupTestMockup.suppressedIssues = suppressedIssues;
-			XtParentRunner xtParentRunner = new XtParentRunner(XtTestSetupTestMockup.class);
+			XtParentRunner xtParentRunner = createParentRunner();
 			RunNotifier rn = new RunNotifier();
 			rn.addListener(this);
 
 			parentDescription = xtParentRunner.getDescription();
 			children = xtParentRunner.getChildren();
 			xtParentRunner.run(rn);
+		}
+
+		protected XtParentRunner createParentRunner() throws InitializationError {
+			return new XtParentRunner(XtTestSetupTestMockup.class);
 		}
 
 		@Override
@@ -123,12 +128,21 @@ public abstract class AbstractXtParentRunnerTest {
 	}
 
 	void run(String folderName) throws Exception {
-		run(folderName, N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
+		run(folderName, null);
 	}
 
 	void run(String folderName, Set<String> suppressedIssues) throws Exception {
-		runListener = new TestRunSimulator();
-		runListener.run(folderName, suppressedIssues);
+		run(new TestRunSimulator(), folderName, suppressedIssues);
+	}
+
+	void run(TestRunSimulator testRunSimulator, String folderName) throws Exception {
+		run(testRunSimulator, folderName, null);
+	}
+
+	void run(TestRunSimulator testRunSimulator, String folderName, Set<String> suppressedIssues) throws Exception {
+		runListener = testRunSimulator;
+		runListener.run(folderName, suppressedIssues != null ? suppressedIssues
+				: N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS);
 	}
 
 	void assertFiles(String files) {
