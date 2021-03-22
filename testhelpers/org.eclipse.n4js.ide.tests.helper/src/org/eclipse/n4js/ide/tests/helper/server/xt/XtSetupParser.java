@@ -327,11 +327,11 @@ public class XtSetupParser {
 		Preconditions.checkState(content != null,
 				ERROR + "Missing content of file " + name + " in file " + xtFile.getPath());
 
-		int idx = name.lastIndexOf(".");
-		String nameWithoutExtension = name.substring(0, idx);
-		String extension = name.substring(idx + 1);
-		boolean isModule = N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
-		OtherFileBuilder fileBuilder = null;
+		int idx = name.lastIndexOf(".", name.lastIndexOf('/') + 1);
+		String nameWithoutExtension = idx >= 0 ? name.substring(0, idx) : name;
+		String extension = idx >= 0 ? name.substring(idx + 1) : null;
+		boolean isModule = extension != null && N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
+		OtherFileBuilder fileBuilder;
 		if (isModule) {
 			fileBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
 			folderBuilder.setSourceFolder();

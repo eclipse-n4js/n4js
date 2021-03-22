@@ -183,6 +183,50 @@ public class UtilN4 {
 	}
 
 	/**
+	 * If the character at the given index is a quote (as defined by {@link #isQuote(char)}), then this method will
+	 * return the index after the corresponding closing quote, after the next NL character, or after the last character
+	 * in <code>str</code> (whichever is encountered first). Otherwise, the given index is returned unchanged.
+	 * <p>
+	 * Does not handle:
+	 * <ul>
+	 * <li>the case that <code>idx</code> already points to a character inside a string literal.
+	 * <li>triple-quoted string literals, e.g. <code>'''hello world!'''</code>.
+	 * </ul>
+	 */
+	public static int skipQuotedText(String str, int idx) {
+		int l = str.length();
+		if (idx >= l) {
+			return idx;
+		}
+		char quote = str.charAt(idx);
+		if (!isQuote(quote)) {
+			return idx;
+		}
+		char ch;
+		do {
+			idx++;
+			if (idx >= l) {
+				break;
+			}
+			ch = str.charAt(idx);
+			if (ch == '\\') {
+				// consume the backslash and the following control character
+				// (even if the control character is CR or NL)
+				idx++;
+				continue;
+			}
+		} while (ch != quote && ch != '\n'); // note: we assume unquoted NL ends string literals
+		return idx < l ? idx + 1 : l;
+	}
+
+	/**
+	 * Tells whether the given character is a single or double quote or a back tick.
+	 */
+	public static boolean isQuote(char ch) {
+		return ch == '"' || ch == '\'' || ch == '`';
+	}
+
+	/**
 	 * Like {@link String#toUpperCase()}, but converts the first character only.
 	 */
 	public static final String toUpperCaseFirst(String str) {
