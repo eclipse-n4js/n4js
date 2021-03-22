@@ -14,13 +14,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.List;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.OptionHandler;
 import org.junit.Assert;
 
 /**
  * Test for checking whether plain JS files have the proper module export.
  */
 public class SystemOutRedirecter {
+
 	private PrintStream oldSystemOut = null;
 	private PrintStream oldSystemErr = null;
 	private ByteArrayOutputStream redirectOut;
@@ -32,6 +38,7 @@ public class SystemOutRedirecter {
 		if (oldSystemOut != null && oldSystemErr != null) {
 			return; // already set
 		}
+
 		oldSystemOut = System.out;
 		oldSystemErr = System.err;
 
@@ -49,6 +56,8 @@ public class SystemOutRedirecter {
 		} catch (UnsupportedEncodingException e) {
 			Assert.fail("Could not redirect output streams");
 		}
+
+		updateLoggers();
 	}
 
 	/** Restores everything. */
@@ -66,6 +75,8 @@ public class SystemOutRedirecter {
 		oldSystemErr = null;
 		redirectOut = null;
 		redirectErr = null;
+
+		updateLoggers();
 	}
 
 	/** Clear output from {@link System#out} that was recorded so far. */
@@ -105,6 +116,23 @@ public class SystemOutRedirecter {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return "";
+		}
+	}
+
+	/**
+	 * Assuming that a change of configuration ({@code System.out}, etc.) has just taken place, this method will ensure
+	 * that the Log4J logging framework is updated accordingly. This is necessary because Loggers/Appenders cache
+	 * certain configuration values (e.g. {@link ConsoleAppender} caches {@code System.out|err}).
+	 */
+	private void updateLoggers() {
+		@SuppressWarnings("unchecked")
+		List<?> appenders = Collections.list(Logger.getRootLogger().getAllAppenders());
+		for (Object appender : appenders) {
+			// note: an alternative would be to invoke ConsoleAppender#setFollow(true), but the following approach is
+			// more generic (i.e. should work for all configuration properties) and does not change any global state:
+			if (appender instanceof OptionHandler) {
+				((OptionHandler) appender).activateOptions();
+			}
 		}
 	}
 
