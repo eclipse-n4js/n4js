@@ -97,19 +97,20 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 * workspace projects shadowing projects of same name in the {@code node_modules} folder.
 	 */
 	// TODO GH-1314 reconsider shadowing of projects with same name
-	protected void registerProject(FileURI path, ProjectDescription pd) {
+	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
 		if (projectsByURI.containsKey(path)) {
-			return;
+			return null;
 		}
 		String name = pd.getProjectName();
 		if (projectsByName.containsKey(name)) {
-			return; // see note on shadowing in API doc of this method!
+			return null; // see note on shadowing in API doc of this method!
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
 		projects.add(newProject);
 		projectsByName.put(newProject.getName(), newProject);
 		projectsByURI.put(path, newProject);
 		updateDefinitionProjects(null, pd);
+		return newProject;
 	}
 
 	protected void onProjectChanged(FileURI path, ProjectDescription pdOld, ProjectDescription pdNew) {
