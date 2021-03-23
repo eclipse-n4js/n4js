@@ -31,7 +31,7 @@ import org.eclipse.n4js.xtext.server.build.ImmutableProjectState;
 import org.eclipse.n4js.xtext.server.build.ProjectStatePersister;
 import org.eclipse.n4js.xtext.server.build.ProjectStatePersister.URITransformer;
 import org.eclipse.n4js.xtext.server.build.XSource2GeneratedMapping;
-import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;

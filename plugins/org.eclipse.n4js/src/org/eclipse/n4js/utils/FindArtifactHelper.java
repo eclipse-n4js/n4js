@@ -11,9 +11,9 @@
 package org.eclipse.n4js.utils;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
 

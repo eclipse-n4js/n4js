@@ -16,8 +16,8 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 
 import com.google.inject.Inject;
 

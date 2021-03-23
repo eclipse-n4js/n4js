@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.VariableStatement;
@@ -33,6 +32,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**

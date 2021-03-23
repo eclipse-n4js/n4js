@@ -21,12 +21,12 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSResourceValidator
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName

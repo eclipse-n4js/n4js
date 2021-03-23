@@ -28,9 +28,9 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.SourceContainerDescription;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.n4js.workspace.locations.SafeURI;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Joiner;

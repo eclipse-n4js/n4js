@@ -18,8 +18,8 @@ import java.util.Map;
 
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;

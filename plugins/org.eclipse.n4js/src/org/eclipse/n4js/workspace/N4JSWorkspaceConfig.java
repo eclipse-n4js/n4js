@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -27,9 +27,10 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.utils.DefinitionProjectMap;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;

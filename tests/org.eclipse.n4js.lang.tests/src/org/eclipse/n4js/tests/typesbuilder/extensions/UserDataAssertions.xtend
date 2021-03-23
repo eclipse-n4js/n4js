@@ -11,11 +11,11 @@
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
 import java.io.File
-import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.tests.typesbuilder.utils.OrderedEmfFormatter
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.workspace.locations.FileURI
 import org.eclipse.xtext.resource.IEObjectDescription
 
 import static org.junit.Assert.*

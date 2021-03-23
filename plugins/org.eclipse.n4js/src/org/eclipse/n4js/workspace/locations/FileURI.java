@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel.locations;
+package org.eclipse.n4js.workspace.locations;
 
 import java.io.BufferedInputStream;
 import java.io.File;

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -22,11 +22,11 @@ import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.locations.SafeURI;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.util.UriExtensions;

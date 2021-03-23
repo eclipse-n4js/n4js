@@ -59,7 +59,6 @@ import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -70,6 +69,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.IResourceScopeCache

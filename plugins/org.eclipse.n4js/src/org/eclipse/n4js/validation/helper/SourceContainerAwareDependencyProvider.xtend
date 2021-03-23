@@ -11,11 +11,11 @@
 package org.eclipse.n4js.validation.helper
 
 import com.google.common.collect.ImmutableList
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot
-import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 
 /**
  * A {@link DependencyProvider} implementation for traversing the dependency 

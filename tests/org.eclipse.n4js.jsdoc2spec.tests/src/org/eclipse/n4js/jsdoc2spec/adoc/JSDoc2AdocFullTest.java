@@ -27,14 +27,14 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessorFullTest;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SubMonitorMsg;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;

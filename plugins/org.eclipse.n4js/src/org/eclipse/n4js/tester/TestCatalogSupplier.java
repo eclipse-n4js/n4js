@@ -15,10 +15,10 @@ import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;

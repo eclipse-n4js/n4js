@@ -8,13 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.ModuleFilterType;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;

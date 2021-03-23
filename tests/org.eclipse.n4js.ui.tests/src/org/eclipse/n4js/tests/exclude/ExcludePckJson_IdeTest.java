@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.junit.Before;

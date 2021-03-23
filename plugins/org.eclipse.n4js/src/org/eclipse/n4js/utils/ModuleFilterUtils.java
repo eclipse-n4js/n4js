@@ -17,11 +17,11 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.projectDescription.ModuleFilter;
 import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 
 import com.google.common.base.Preconditions;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel.lsp;
+package org.eclipse.n4js.workspace;
 
 import org.eclipse.n4js.projectDescription.SourceContainerType;
 import org.eclipse.xtext.workspace.IProjectConfig;

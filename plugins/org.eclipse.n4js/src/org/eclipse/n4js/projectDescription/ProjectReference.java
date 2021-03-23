@@ -12,8 +12,8 @@ package org.eclipse.n4js.projectDescription;
 
 import java.util.Objects;
 
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ImmutableDataClass;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 
 /**
  * Reference to another project without version requirement.

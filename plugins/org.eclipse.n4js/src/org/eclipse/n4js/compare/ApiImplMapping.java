@@ -23,11 +23,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.projectDescription.ProjectReference;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**

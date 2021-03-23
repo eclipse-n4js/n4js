@@ -8,20 +8,16 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel.internal;
+package org.eclipse.n4js.workspace;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;

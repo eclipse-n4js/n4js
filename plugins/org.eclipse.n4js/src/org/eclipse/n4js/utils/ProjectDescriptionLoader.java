@@ -48,7 +48,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectDescriptionBuilder;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.util.Pair;

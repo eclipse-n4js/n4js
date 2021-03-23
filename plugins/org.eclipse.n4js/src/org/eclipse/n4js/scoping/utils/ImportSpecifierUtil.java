@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.naming.QualifiedName;
 
 /**

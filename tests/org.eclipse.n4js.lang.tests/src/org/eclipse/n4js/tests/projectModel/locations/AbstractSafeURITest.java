@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.projectModel.locations;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.junit.Assert;
 import org.junit.Test;
 

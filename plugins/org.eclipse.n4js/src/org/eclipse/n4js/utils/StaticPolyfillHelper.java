@@ -15,18 +15,18 @@ import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfi
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;

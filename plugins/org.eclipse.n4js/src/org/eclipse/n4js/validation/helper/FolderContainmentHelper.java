@@ -13,10 +13,10 @@ package org.eclipse.n4js.validation.helper;
 import java.nio.file.Path;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 
 /**
  * A helper class to compute whether two folders (source folders and output folder specifically) are contained within

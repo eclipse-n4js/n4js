@@ -16,11 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutionCommand;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 
 import com.google.common.base.Joiner;
 import com.google.inject.Inject;

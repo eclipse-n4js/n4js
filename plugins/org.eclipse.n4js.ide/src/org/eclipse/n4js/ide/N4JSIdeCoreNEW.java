@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide;
 
-import org.eclipse.n4js.projectModel.internal.N4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSCoreNEW;
 import org.eclipse.n4js.xtext.server.ResourceTaskManager;
 import org.eclipse.xtext.resource.XtextResourceSet;
 

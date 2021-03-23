@@ -15,15 +15,15 @@ import static java.util.Collections.emptyList;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.projectDescription.ProjectReference;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.util.Strings;
 

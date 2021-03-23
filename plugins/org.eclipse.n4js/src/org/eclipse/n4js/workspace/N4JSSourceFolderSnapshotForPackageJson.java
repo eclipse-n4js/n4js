@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace;
 
 import java.util.Collections;
 

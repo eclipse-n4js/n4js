@@ -16,11 +16,11 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.inject.Inject;

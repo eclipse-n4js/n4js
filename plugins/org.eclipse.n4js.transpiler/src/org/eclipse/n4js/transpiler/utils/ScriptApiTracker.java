@@ -36,7 +36,6 @@ import org.eclipse.n4js.compare.ProjectCompareHelper;
 import org.eclipse.n4js.compare.ProjectComparisonEntry;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TClass;
@@ -60,6 +59,7 @@ import org.eclipse.n4js.ts.types.util.AccessorTuple;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Pair;
 

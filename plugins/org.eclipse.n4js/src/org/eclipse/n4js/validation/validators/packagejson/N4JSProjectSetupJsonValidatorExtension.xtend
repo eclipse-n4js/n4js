@@ -41,8 +41,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot
-import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
@@ -58,8 +56,6 @@ import org.eclipse.n4js.projectDescription.ProjectDescription
 import org.eclipse.n4js.projectDescription.ProjectType
 import org.eclipse.n4js.projectDescription.SourceContainerDescription
 import org.eclipse.n4js.projectDescription.SourceContainerType
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 import org.eclipse.n4js.semver.SemverHelper
@@ -78,6 +74,10 @@ import org.eclipse.n4js.utils.Strings
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
+import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils

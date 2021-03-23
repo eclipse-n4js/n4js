@@ -44,7 +44,6 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.WhileStatement
 import org.eclipse.n4js.n4JS.WithStatement
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
@@ -70,6 +69,7 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils

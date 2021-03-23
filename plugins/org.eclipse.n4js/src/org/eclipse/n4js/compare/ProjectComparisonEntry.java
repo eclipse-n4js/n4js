@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -23,6 +22,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.util.Arrays;
 
 /**

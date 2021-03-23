@@ -51,7 +51,6 @@ import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.n4jsx.ReactHelper
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -82,6 +81,7 @@ import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.TameAutoClosable
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription

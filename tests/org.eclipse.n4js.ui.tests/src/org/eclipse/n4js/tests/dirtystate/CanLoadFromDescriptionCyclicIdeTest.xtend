@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.tests.dirtystate
 
-import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
+import org.eclipse.n4js.workspace.locations.FileURI
 import org.junit.Assert
 import org.junit.Assume
 import org.junit.Before

@@ -33,7 +33,6 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.types.FieldAccessor
@@ -47,6 +46,7 @@ import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider

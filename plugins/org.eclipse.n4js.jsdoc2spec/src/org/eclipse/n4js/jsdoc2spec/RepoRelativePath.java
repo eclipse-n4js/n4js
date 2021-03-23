@@ -19,12 +19,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.utils.Log;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 

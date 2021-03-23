@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 
 /**
  * Comparison of one or more API projects and their corresponding implementation projects. This is mainly a tree of

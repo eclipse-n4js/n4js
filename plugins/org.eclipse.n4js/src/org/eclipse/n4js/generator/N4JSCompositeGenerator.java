@@ -17,10 +17,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 
 import com.google.common.base.Optional;

@@ -15,7 +15,6 @@ import com.google.inject.Inject
 import java.util.Arrays
 import java.util.Objects
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -24,11 +23,12 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.utils.N4JSProjectName
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 

@@ -36,7 +36,6 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClass
@@ -49,6 +48,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.xtext.util.Tuples
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar

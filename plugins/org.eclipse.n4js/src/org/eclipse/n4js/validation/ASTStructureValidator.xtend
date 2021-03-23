@@ -87,12 +87,12 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.xtend.lib.annotations.ToString
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.DiagnosticMessage

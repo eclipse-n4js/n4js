@@ -31,7 +31,6 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.naming.ModuleNameComputer
 import org.eclipse.n4js.naming.SpecifierConverter
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -44,6 +43,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 

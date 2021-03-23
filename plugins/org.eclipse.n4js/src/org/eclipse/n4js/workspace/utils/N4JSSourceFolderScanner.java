@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace.utils;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshotForPackageJson;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.util.IFileSystemScanner;

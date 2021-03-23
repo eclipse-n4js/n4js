@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace;
 
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.projectDescription.SourceContainerType;
-import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.UriExtensions;

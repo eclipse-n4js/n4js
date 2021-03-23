@@ -11,7 +11,7 @@
 package org.eclipse.n4js.xpect.common;
 
 import org.eclipse.n4js.ide.N4JSIdeSetup;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.xpect.runner.IXpectURIProvider;
 import org.eclipse.xpect.runner.XpectRunner;
 import org.eclipse.xpect.runner.XpectTestFiles;

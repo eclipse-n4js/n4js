@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace.utils;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -19,7 +19,6 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.projectDescription.DependencyType;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.SemverUtils;
 
 /**

@@ -14,9 +14,9 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
-import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfig;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfig;
 import org.eclipse.n4js.xtext.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;

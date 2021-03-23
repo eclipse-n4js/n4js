@@ -15,7 +15,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xpect.xtext.lib.setup.workspace.Workspace;
 import org.eclipse.xtext.resource.FileExtensionProvider;

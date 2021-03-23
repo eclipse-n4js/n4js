@@ -22,14 +22,14 @@ import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**

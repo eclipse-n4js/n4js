@@ -25,14 +25,14 @@ import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;

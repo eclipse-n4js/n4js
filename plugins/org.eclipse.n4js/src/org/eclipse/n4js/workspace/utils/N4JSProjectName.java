@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel.names;
+package org.eclipse.n4js.workspace.utils;
 
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_PREFIX;
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR;

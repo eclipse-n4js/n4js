@@ -18,15 +18,15 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.semver.Semver.VersionNumber
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 

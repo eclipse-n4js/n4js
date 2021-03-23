@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ImmutableDataClass;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 
 import com.google.common.collect.ImmutableList;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectModel.locations;
+package org.eclipse.n4js.workspace.locations;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,9 +20,9 @@ import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 
 import com.google.common.base.Preconditions;
 

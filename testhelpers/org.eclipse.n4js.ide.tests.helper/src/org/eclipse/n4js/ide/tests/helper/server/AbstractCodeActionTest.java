@@ -26,8 +26,8 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCodeActionTest.N4JSTestCodeActionConfiguration;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.testing.AbstractLanguageServerTest.TestCodeActionConfiguration;
 
 import com.google.common.collect.Lists;

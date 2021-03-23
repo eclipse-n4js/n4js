@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.internal.lsp;
+package org.eclipse.n4js.workspace.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +18,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.RuntimeIOException;

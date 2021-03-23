@@ -12,10 +12,10 @@ package org.eclipse.n4js.n4idl.scoping;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.projectModel.IN4JSCoreNEW;
 import org.eclipse.n4js.scoping.TopLevelElementsCollector;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Optional;
