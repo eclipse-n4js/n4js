@@ -42,8 +42,6 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  com.google.gson
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js,
- org.eclipse.n4js.binaries,
- org.eclipse.n4js.binaries.nodejs,
  org.eclipse.n4js.compare,
  org.eclipse.n4js.conversion,
  org.eclipse.n4js.documentation,

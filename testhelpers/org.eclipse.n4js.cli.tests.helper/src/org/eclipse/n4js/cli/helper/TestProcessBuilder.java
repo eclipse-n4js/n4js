@@ -20,14 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.n4js.binaries.Binary;
-import org.eclipse.n4js.binaries.nodejs.JavaBinary;
-import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.binaries.nodejs.NodeYarnProcessBuilder;
-import org.eclipse.n4js.binaries.nodejs.NpmBinary;
-import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.utils.BinariesConstants;
+import org.eclipse.n4js.cli.utils.BinariesLocatorHelper;
+import org.eclipse.n4js.cli.utils.BinariesUtils;
 
 import com.google.common.base.Optional;
 
@@ -37,19 +33,11 @@ import com.google.common.base.Optional;
 public class TestProcessBuilder {
 	Map<String, String> additionalEnvironmentVariables = new ConcurrentHashMap<>();
 
-	final private NodeJsBinary nodeJsBinary;
-	final private NpmBinary npmBinary;
-	final private YarnBinary yarnBinary;
-	final private JavaBinary javaBinary;
+	private final BinariesLocatorHelper binariesLocatorHelper;
 
 	/** Constructor */
-	public TestProcessBuilder(NodeJsBinary nodeJsBinary, NpmBinary npmBinary, YarnBinary yarnBinary,
-			JavaBinary javaBinary) {
-
-		this.nodeJsBinary = nodeJsBinary;
-		this.npmBinary = npmBinary;
-		this.yarnBinary = yarnBinary;
-		this.javaBinary = javaBinary;
+	public TestProcessBuilder(BinariesLocatorHelper binariesLocatorHelper) {
+		this.binariesLocatorHelper = binariesLocatorHelper;
 	}
 
 	/** @return a process: {@code node -r esm fileToRun} */
@@ -74,7 +62,7 @@ public class TestProcessBuilder {
 
 	/** @return a Java process: {@code java -jar n4jsc.jar OPTIONS} */
 	public ProcessBuilder n4jscRun(Path workingDirectory, Map<String, String> environment, N4jscOptions options) {
-		Binary.inheritNodeJsPathEnvVariable(environment); // necessary?
+		BinariesUtils.inheritNodeJsPathEnvVariable(environment); // necessary?
 		final String[] cmd = createCommandN4jscRun(environment, options);
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
@@ -98,18 +86,18 @@ public class TestProcessBuilder {
 		optionList.addAll(Arrays.asList(options));
 		String[] cmdOptions = optionList.toArray(String[]::new);
 
-		List<String> cmd = getCommands(output_env, nodeJsBinary, cmdOptions);
+		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getNodeBinary(), cmdOptions);
 
 		return cmd.toArray(new String[0]);
 	}
 
 	private String[] createCommandNpmRun(Map<String, String> output_env, String[] options) {
-		List<String> cmd = getCommands(output_env, npmBinary, options);
+		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getNpmBinary(), options);
 		return cmd.toArray(new String[0]);
 	}
 
 	private String[] createCommandYarnRun(Map<String, String> output_env, String[] options) {
-		List<String> cmd = getCommands(output_env, yarnBinary, options);
+		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getYarnBinary(), options);
 		return cmd.toArray(new String[0]);
 	}
 
@@ -123,7 +111,7 @@ public class TestProcessBuilder {
 		optionList.addAll(options.toArgs());
 		String[] cmdOptions = optionList.toArray(String[]::new);
 
-		List<String> cmd = getCommands(output_env, javaBinary, cmdOptions);
+		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getJavaBinary(), cmdOptions);
 		return cmd.toArray(new String[0]);
 	}
 
@@ -133,10 +121,8 @@ public class TestProcessBuilder {
 		return cmd.toArray(new String[0]);
 	}
 
-	private List<String> getCommands(Map<String, String> output_env, Binary binary, String... options) {
-		String binaryPathAndName = binary.getBinaryAbsolutePath();
-		Path binaryPath = new File(binaryPathAndName).toPath();
-		return getCommands(Optional.absent(), output_env, binaryPath, options);
+	private List<String> getCommands(Map<String, String> output_env, Path binaryPathAndName, String... options) {
+		return getCommands(Optional.absent(), output_env, binaryPathAndName, options);
 	}
 
 	private List<String> getCommands(Optional<Path> workingDirectory, Map<String, String> output_env, Path executable,
@@ -147,7 +133,7 @@ public class TestProcessBuilder {
 				: executable.toAbsolutePath();
 
 		String additionalPath = executableAbsolute.getParent().toString();
-		output_env.put(Binary.PATH, additionalPath);
+		output_env.put(BinariesUtils.PATH, additionalPath);
 
 		ArrayList<String> cmd = new ArrayList<>();
 
@@ -155,11 +141,11 @@ public class TestProcessBuilder {
 		String npmPath = "\"" + executableAbsolute.toString() + "\"";
 
 		if (isWindows()) {
-			cmd.addAll(Arrays.asList(NodeYarnProcessBuilder.WIN_SHELL_COMAMNDS));
+			cmd.addAll(Arrays.asList(BinariesConstants.WIN_SHELL_COMAMNDS));
 			cmd.add(npmPath);
 			cmd.addAll(Arrays.asList(options));
 		} else {
-			cmd.addAll(Arrays.asList(NodeYarnProcessBuilder.NIX_SHELL_COMAMNDS));
+			cmd.addAll(Arrays.asList(BinariesConstants.NIX_SHELL_COMAMNDS));
 			cmd.add(npmPath + " " + String.join(" ", options));
 		}
 
@@ -167,10 +153,6 @@ public class TestProcessBuilder {
 	}
 
 	private ProcessBuilder createProcessBuilder(Path workingDirectory, String[] cmd, Map<String, String> env) {
-		final IStatus status = nodeJsBinary.validate();
-		if (!status.isOK()) {
-			throw new IllegalStateException(status.getMessage());
-		}
 		if (workingDirectory == null) {
 			throw new IllegalArgumentException("run configuration does not specify a working directory");
 		}
@@ -179,7 +161,7 @@ public class TestProcessBuilder {
 
 		ProcessBuilder pb = new ProcessBuilder(cmd);
 		Map<String, String> environment = pb.environment();
-		Binary.mergeEnvironments(environment, env);
+		BinariesUtils.mergeEnvironments(environment, env);
 
 		pb.directory(workingDirectory.toFile());
 		// pb.inheritIO(); // output is captured in NodejsExecuter

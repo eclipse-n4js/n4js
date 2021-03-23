@@ -18,11 +18,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import org.eclipse.n4js.binaries.nodejs.JavaBinary;
-import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
-import org.eclipse.n4js.binaries.nodejs.NpmBinary;
-import org.eclipse.n4js.binaries.nodejs.YarnBinary;
 import org.eclipse.n4js.cli.N4jscOptions;
+import org.eclipse.n4js.cli.utils.BinariesLocatorHelper;
 import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 
@@ -49,11 +46,8 @@ public class TestProcessExecuter {
 		this.ignoreFailure = ignoreFailure;
 		this.timeout = timeout;
 		this.timeoutUnit = unit;
-		NodeJsBinary nodeJsBinary = injector.getInstance(NodeJsBinary.class);
-		NpmBinary npmBinary = injector.getInstance(NpmBinary.class);
-		YarnBinary yarnBinary = injector.getInstance(YarnBinary.class);
-		JavaBinary javaBinary = injector.getInstance(JavaBinary.class);
-		testProcessBuilder = new TestProcessBuilder(nodeJsBinary, npmBinary, yarnBinary, javaBinary);
+		BinariesLocatorHelper binariesLocatorHelper = injector.getInstance(BinariesLocatorHelper.class);
+		testProcessBuilder = new TestProcessBuilder(binariesLocatorHelper);
 		processExecutor = injector.getInstance(ProcessExecutor.class);
 	}
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.binaries;
+package org.eclipse.n4js.cli.utils;
 
 import static java.io.File.separator;
 import static org.eclipse.n4js.utils.OSInfo.isWindows;
@@ -172,6 +172,11 @@ public final class BinariesConstants {
 	public static final String[] EXECS_OTHERS = { "" };
 	/** File extensions for executable files (OS specific) */
 	public static final String[] EXECUTABLE_FILE_EXTENSIONS = isWindows() ? EXECS_WINDOWS : EXECS_OTHERS;
+
+	/** Shell command for Windows OS */
+	public static final String[] WIN_SHELL_COMAMNDS = { "cmd", "/c" };
+	/** Shell command for *nix OS */
+	public static final String[] NIX_SHELL_COMAMNDS = { "sh", "-c" };
 
 	private BinariesConstants() {
 		// No initialization.

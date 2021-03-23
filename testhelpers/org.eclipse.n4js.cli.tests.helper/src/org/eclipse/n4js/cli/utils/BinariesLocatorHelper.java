@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.binaries;
+package org.eclipse.n4js.cli.utils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -43,6 +43,43 @@ public class BinariesLocatorHelper {
 	@Inject
 	private ProcessExecutor processExecutor;
 
+	private Path memoizedJavaPath = null;
+	private Path memoizedNodePath = null;
+	private Path memoizedNpmPath = null;
+	private Path memoizedYarnPath = null;
+
+	/** Returns the path to the Java binary. */
+	public Path getJavaBinary() {
+		if (memoizedJavaPath == null) {
+			memoizedJavaPath = findJavaPath().resolve(BinariesConstants.JAVA_BINARY_NAME);
+		}
+		return memoizedJavaPath;
+	}
+
+	/** Returns the path to the node binary. */
+	public Path getNodeBinary() {
+		if (memoizedNodePath == null) {
+			memoizedNodePath = findNodePath().resolve(BinariesConstants.NODE_BINARY_NAME);
+		}
+		return memoizedNodePath;
+	}
+
+	/** Returns the path to the npm binary. */
+	public Path getNpmBinary() {
+		if (memoizedNpmPath == null) {
+			memoizedNpmPath = getNodeBinary().getParent().resolve(BinariesConstants.NPM_BINARY_NAME);
+		}
+		return memoizedNpmPath;
+	}
+
+	/** Returns the path to the yarn binary. */
+	public Path getYarnBinary() {
+		if (memoizedYarnPath == null) {
+			memoizedYarnPath = findYarnPath().resolve(BinariesConstants.YARN_BINARY_NAME);
+		}
+		return memoizedYarnPath;
+	}
+
 	/**
 	 * Performs lookup of the node binary. Uses {@link BinariesConstants} properties to perform lookup. When binary not
 	 * found, will ask OS to locate node binary via {@link #lookForBinary}. If everything else fails returns (not
@@ -50,7 +87,7 @@ public class BinariesLocatorHelper {
 	 *
 	 * @return absolute path to the binary.
 	 */
-	public Path findNodePath() {
+	private Path findNodePath() {
 
 		logSystemProperties();
 		logEnvironmentVariables();
@@ -112,7 +149,7 @@ public class BinariesLocatorHelper {
 	 *
 	 * @return string with absolute path to the binary
 	 */
-	public Path findYarnPath() {
+	private Path findYarnPath() {
 		Path yarnPathCandidate = null;
 
 		// 1. lookup by DEFAULT_YARN_PATH_VM_ARG
@@ -169,7 +206,7 @@ public class BinariesLocatorHelper {
 	 *
 	 * @return string with absolute path to the binary
 	 */
-	public Path findJavaPath() {
+	private Path findJavaPath() {
 		Path javaPathCandidate = null;
 
 		// 1. lookup by DEFAULT_JAVA_PATH_VM_ARG
