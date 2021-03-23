@@ -29,7 +29,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
-import org.eclipse.n4js.workspace.utils.SemanticDependencyUtils;
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
@@ -52,7 +52,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	private final N4JSWorkspaceConfig workspace;
 	private final FileURI path;
 	// the following are not immutable, because an existing project might have its properties changed:
-	private ProjectDescription pd;
+	private ProjectDescription projectDescription;
 	private Set<? extends IN4JSSourceFolder> sourceFolders;
 
 	/**
@@ -64,20 +64,35 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		this.path = Objects.requireNonNull(path);
 		this.projectDescriptionLoader = Objects.requireNonNull(projectDescriptionLoader);
 
-		this.pd = Objects.requireNonNull(pd);
+		this.projectDescription = Objects.requireNonNull(pd);
 		this.sourceFolders = createSourceFolders(pd);
 	}
 
-	protected void readProjectStateFromDisk() {
-		ProjectDescription pdOld = pd;
-		pd = projectDescriptionLoader.loadProjectDescriptionAtLocation(path);
-		if (pd == null) {
-			pd = ProjectDescription.builder().build();
+	/**
+	 * Re-reads the project state from disk and notifies the parent workspace (if a change occurred).
+	 */
+	protected void updateProjectStateFromDisk() {
+		ProjectDescription pdOld = projectDescription;
+		projectDescription = projectDescriptionLoader.loadProjectDescriptionAtLocation(path);
+		if (projectDescription == null) {
+			projectDescription = ProjectDescription.builder().build();
 		}
-		sourceFolders = createSourceFolders(pd);
-		workspace.onProjectChanged(path, pdOld, pd);
+		// a project is not allowed to change its name
+		String nameOld = pdOld.getProjectName();
+		if (!Objects.equals(projectDescription.getProjectName(), nameOld)) {
+			projectDescription = projectDescription.change().setProjectName(nameOld).build();
+		}
+		if (projectDescription.equals(pdOld)) {
+			return; // nothing changed
+		}
+		sourceFolders = createSourceFolders(projectDescription);
+		workspace.onProjectChanged(path, pdOld, projectDescription);
 	}
 
+	/**
+	 * Create source folders from the information in the given project description. Does not update the state of this
+	 * project configuration.
+	 */
 	protected Set<? extends IN4JSSourceFolder> createSourceFolders(ProjectDescription pd) {
 		Set<IN4JSSourceFolder> result = new LinkedHashSet<>();
 		for (SourceContainerDescription scd : pd.getSourceContainers()) {
@@ -95,42 +110,52 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return workspace;
 	}
 
+	/** Tells whether this project exists. */
+	public boolean exists() {
+		return getProjectDescriptionURI().isFile();
+	}
+
 	@Override
 	public URI getPath() {
 		return path.withTrailingPathDelimiter().toURI();
 	}
 
+	/** Returns the {@link #getPath() path} as a {@link FileURI}. */
 	public FileURI getPathAsFileURI() {
 		return path;
 	}
 
+	/** Returns the project description. */
 	public ProjectDescription getProjectDescription() {
-		return pd;
+		return projectDescription;
+	}
+
+	/** Returns a {@link FileURI} pointing to the <code>package.json</code> file of this project. */
+	public FileURI getProjectDescriptionURI() {
+		return getPathAsFileURI().appendSegment(N4JSGlobals.PACKAGE_JSON);
 	}
 
 	@Override
 	public String getName() {
-		return pd.getProjectName();
+		return projectDescription.getProjectName();
 	}
 
+	/** Returns this project's name as an {@link N4JSProjectName}. */
 	public N4JSProjectName getN4JSProjectName() {
 		return new N4JSProjectName(getName());
 	}
 
-	public ProjectType getType() {
-		return pd.getProjectType();
-	}
-
-	public boolean isWorkspacesProject() {
-		return pd.isYarnWorkspaceRoot() && pd.getWorkspaces() != null && !pd.getWorkspaces().isEmpty();
+	/** Tells whether this project is a yarn workspace project. */
+	public boolean isWorkspaceProject() {
+		return projectDescription.isYarnWorkspaceRoot()
+				&& projectDescription.getWorkspaces() != null
+				&& !projectDescription.getWorkspaces().isEmpty();
 	}
 
 	/** The dependencies of this project as given in the <code>package.json</code> file. */
 	@Override
 	public Set<String> getDependencies() {
-		// note: it is important to return a list that contains names of unresolved (i.e. non-existing) projects, to
-		// avoid the need to recompute the list of dependencies of all existing projects whenever a project is added!
-		List<ProjectDependency> deps = pd.getProjectDependencies();
+		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
 		Set<String> result = new LinkedHashSet<>(deps.size());
 		for (ProjectDependency dep : deps) {
 			result.add(dep.getProjectName());
@@ -150,9 +175,9 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 * files yet. All other modules should be shadowed by the definition project.
 	 */
 	public List<ProjectDependency> computeSemanticDependencies() {
-		List<ProjectDependency> deps = pd.getProjectDependencies();
+		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
 		return ImmutableList.copyOf(
-				SemanticDependencyUtils.computeSemanticDependencies(workspace.definitionProjects, deps));
+				SemanticDependencySupplier.computeSemanticDependencies(workspace.definitionProjects, deps));
 	}
 
 	@Override
@@ -198,16 +223,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	@Override
 	public boolean isGeneratorEnabled() {
-		ProjectType projectType = pd.getProjectType();
+		ProjectType projectType = projectDescription.getProjectType();
 		return !N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(projectType);
-	}
-
-	public FileURI getProjectDescriptionURI() {
-		return getPathAsFileURI().appendSegment(N4JSGlobals.PACKAGE_JSON);
-	}
-
-	public boolean exists() {
-		return getProjectDescriptionURI().isFile();
 	}
 
 	/**
@@ -240,7 +257,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 		// package.json was modified
 
-		readProjectStateFromDisk();
+		updateProjectStateFromDisk();
 		ProjectConfigSnapshot newProjectConfig = configSnapshotFactory.createProjectConfigSnapshot(this);
 
 		if (oldProjectConfig == null) {

@@ -22,9 +22,9 @@ import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.semver.SemverUtils;
 
 /**
- * From a set of N4JS projects, this computes the semantic dependencies of each project.
+ * Computes the semantic dependencies of an N4JS project.
  */
-public class SemanticDependencyUtils {
+public class SemanticDependencySupplier {
 
 	/**
 	 * FIXME GH-2090 explain implicit dependencies

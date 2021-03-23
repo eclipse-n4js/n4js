@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,6 +27,7 @@ import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
+import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.DefinitionProjectMap;
@@ -40,7 +40,10 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.collect.BiMap;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
@@ -50,21 +53,26 @@ import com.google.common.collect.Sets;
 @SuppressWarnings("restriction")
 public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
+	/** The root path of this workspace. */
 	protected final URI baseDirectory;
+
+	/***/
 	protected final ProjectDiscoveryHelper projectDiscoveryHelper;
+	/***/
 	protected final ProjectDescriptionLoader projectDescriptionLoader;
+	/***/
 	protected final ConfigSnapshotFactory configSnapshotFactory;
+	/***/
 	protected final UriExtensions uriExtensions;
 
-	protected final Set<N4JSProjectConfig> projects = new LinkedHashSet<>();
-	protected final Map<String, N4JSProjectConfig> projectsByName = new HashMap<>();
-	protected final Map<FileURI, N4JSProjectConfig> projectsByURI = new HashMap<>();
+	/** All projects registered in this workspace. */
+	protected final BiMap<String, N4JSProjectConfig> name2ProjectConfig = HashBiMap.create();
 	/** Map between definition projects and their defined projects. */
 	protected final DefinitionProjectMap definitionProjects = new DefinitionProjectMap();
 
 	/**
 	 * Creates a new, empty {@link N4JSWorkspaceConfig}. It will not contain any projects until
-	 * {@link #scanDiskForProjects()} is invoked for the first time.
+	 * {@link #reloadAllProjectInformationFromDisk()} is invoked for the first time.
 	 */
 	public N4JSWorkspaceConfig(URI baseDirectory, ProjectDiscoveryHelper projectDiscoveryHelper,
 			ProjectDescriptionLoader projectDescriptionLoader, ConfigSnapshotFactory configSnapshotFactory,
@@ -77,14 +85,41 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		this.uriExtensions = uriExtensions;
 	}
 
-	protected FileURI createFileURI(URI uri) {
-		return new FileURI(uriExtensions.withEmptyAuthority(uri));
+	@Override
+	public URI getPath() {
+		return baseDirectory;
 	}
 
+	/** Returns the {@link #getPath() path} as a {@link FileURI}. */
+	public FileURI getPathAsFileURI() {
+		return new FileURI(uriExtensions.withEmptyAuthority(baseDirectory));
+	}
+
+	@Override
+	public Set<? extends N4JSProjectConfig> getProjects() {
+		return ImmutableSet.copyOf(name2ProjectConfig.values());
+	}
+
+	@Override
+	public N4JSProjectConfig findProjectByName(String name) {
+		return name2ProjectConfig.get(name);
+	}
+
+	/**
+	 * No longer supported; will throw {@code UnsupportedOperationException}. See
+	 * {@link XIWorkspaceConfig#findProjectContaining(URI)} for details on deprecation.
+	 */
+	@Override
+	@Deprecated
+	@SuppressWarnings("deprecation")
+	public N4JSProjectConfig findProjectContaining(URI nestedURI) {
+		throw new UnsupportedOperationException(
+				"obtaining an N4JSProjectConfig by nested URI is not supported (see API documentation for details)");
+	}
+
+	/** Remove all {@link N4JSProjectConfig}s from this workspace. */
 	protected void deregisterAllProjects() {
-		projects.clear();
-		projectsByName.clear();
-		projectsByURI.clear();
+		name2ProjectConfig.clear();
 		definitionProjects.clear();
 	}
 
@@ -98,25 +133,44 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 */
 	// TODO GH-1314 reconsider shadowing of projects with same name
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
-		if (projectsByURI.containsKey(path)) {
-			return null;
-		}
+		pd = sanitizeProjectDescription(path, pd);
 		String name = pd.getProjectName();
-		if (projectsByName.containsKey(name)) {
+		if (name2ProjectConfig.containsKey(name)) {
 			return null; // see note on shadowing in API doc of this method!
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
-		projects.add(newProject);
-		projectsByName.put(newProject.getName(), newProject);
-		projectsByURI.put(path, newProject);
+		name2ProjectConfig.put(newProject.getName(), newProject);
 		updateDefinitionProjects(null, pd);
 		return newProject;
 	}
 
-	protected void onProjectChanged(FileURI path, ProjectDescription pdOld, ProjectDescription pdNew) {
+	/**
+	 * Opportunity to tweak values of a project description before it is used for creating the {@link N4JSProjectConfig}
+	 * instance.
+	 * <p>
+	 * By default, this enforces the name stored in the project description to be consistent with the project folder's
+	 * name.
+	 */
+	protected ProjectDescription sanitizeProjectDescription(FileURI path, ProjectDescription pd) {
+		String saneName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(path);
+		if (!saneName.equals(pd.getProjectName())) {
+			return pd.change().setProjectName(saneName).build();
+		}
+		return pd;
+	}
+
+	/** Creates an instance of {@link N4JSProjectConfig} without registering it. */
+	protected N4JSProjectConfig createProjectConfig(FileURI path, ProjectDescription pd) {
+		return new N4JSProjectConfig(this, path, pd, projectDescriptionLoader);
+	}
+
+	/** Invoked by {@link N4JSProjectConfig} when its state changes. */
+	protected void onProjectChanged(@SuppressWarnings("unused") FileURI path, ProjectDescription pdOld,
+			ProjectDescription pdNew) {
 		updateDefinitionProjects(pdOld, pdNew);
 	}
 
+	/** Internal. Updates the registry of definition projects in {@link #definitionProjects}. */
 	protected void updateDefinitionProjects(ProjectDescription pdOldOrNull, ProjectDescription pdNew) {
 		if (pdOldOrNull != null) {
 			definitionProjects.changeProject(pdOldOrNull, pdNew);
@@ -125,12 +179,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 	}
 
-	/** Creates an instance of {@link N4JSProjectConfig} without registering it. */
-	protected N4JSProjectConfig createProjectConfig(FileURI path, ProjectDescription pd) {
-		return new N4JSProjectConfig(this, path, pd, projectDescriptionLoader);
-	}
-
-	protected void scanDiskForProjects() {
+	/** Clears this workspace and re-initializes it by searching the file system for projects. */
+	protected void reloadAllProjectInformationFromDisk() {
 		deregisterAllProjects();
 		Path baseDir = getPathAsFileURI().toPath();
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
@@ -141,37 +191,6 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			ProjectDescription pd = pdCache.get(newProjectPath); // should not be null (we forced loading above)
 			registerProject(newProjectPathAsFileURI, pd);
 		}
-	}
-
-	@Override
-	public URI getPath() {
-		return baseDirectory;
-	}
-
-	public FileURI getPathAsFileURI() {
-		return createFileURI(baseDirectory);
-	}
-
-	@Override
-	public Set<? extends N4JSProjectConfig> getProjects() {
-		return projects;
-	}
-
-	@Override
-	public N4JSProjectConfig findProjectByName(String name) {
-		return projectsByName.get(name);
-	}
-
-	/**
-	 * No longer supported; will throw {@code UnsupportedOperationException}. See
-	 * {@link XIWorkspaceConfig#findProjectContaining(URI)} for details on deprecation.
-	 */
-	@Override
-	@Deprecated
-	@SuppressWarnings("deprecation")
-	public N4JSProjectConfig findProjectContaining(URI nestedURI) {
-		throw new UnsupportedOperationException(
-				"obtaining an N4JSProjectConfig by nested URI is not supported (see API documentation for details)");
 	}
 
 	@Override
@@ -213,7 +232,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				changes = changes.merge(((N4JSProjectConfig) project).update(oldWorkspaceConfig, changedResource,
 						configSnapshotFactory));
 
-				if (((N4JSProjectConfig) project).isWorkspacesProject()) {
+				if (((N4JSProjectConfig) project).isWorkspaceProject()) {
 					needToDetectAddedRemovedProjects = true;
 				}
 			} else {
@@ -237,7 +256,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			boolean alsoDetectChangedProjects) {
 
 		// update all projects
-		scanDiskForProjects();
+		reloadAllProjectInformationFromDisk();
 
 		// detect project additions, removals (and also changes, iff 'alsoDetectChangedProjects' is set)
 		Map<URI, ProjectConfigSnapshot> oldProjectsMap = IterableExtensions.toMap(oldWorkspaceConfig.getProjects(),
@@ -290,7 +309,6 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 						pc -> didDefinitionPropertiesChange(pc, oldWorkspaceConfig));
 
 		if (needRecompute) {
-			// FIXME GH-2073 at this point a recomputation of semantic deps was triggered!! (by way of cache clear)
 			List<ProjectConfigSnapshot> projectsWithChangedSemanticDeps = new ArrayList<>();
 			for (XIProjectConfig pc : getProjects()) {
 				String projectName = pc.getName();
