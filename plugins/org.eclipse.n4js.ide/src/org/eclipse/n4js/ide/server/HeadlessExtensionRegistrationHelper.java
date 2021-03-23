@@ -18,7 +18,7 @@ import org.eclipse.n4js.json.JSONGlobals;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.resource.packagejson.PackageJsonResourceDescriptionExtension;
+import org.eclipse.n4js.resource.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;

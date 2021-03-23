@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.resource.packagejson
+package org.eclipse.n4js.resource
 
 import com.google.common.base.Preconditions
 import com.google.common.collect.ImmutableMap
