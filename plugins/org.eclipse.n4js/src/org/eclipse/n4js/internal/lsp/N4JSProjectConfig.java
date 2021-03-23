@@ -11,7 +11,6 @@
 package org.eclipse.n4js.internal.lsp;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.TypeDefinitionsAwareDependenciesSupplier;
 import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
@@ -49,9 +47,10 @@ import com.google.common.collect.Iterables;
 @SuppressWarnings("restriction")
 public class N4JSProjectConfig implements XIProjectConfig {
 
+	private final ProjectDescriptionLoader projectDescriptionLoader;
+
 	private final N4JSWorkspaceConfig workspace;
 	private final FileURI path;
-	private final ProjectDescriptionLoader projectDescriptionLoader;
 	// the following are not immutable, because an existing project might have its properties changed:
 	private ProjectDescription pd;
 	private Set<? extends IN4JSSourceFolder> sourceFolders;
@@ -70,11 +69,13 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	}
 
 	protected void readProjectStateFromDisk() {
+		ProjectDescription pdOld = pd;
 		pd = projectDescriptionLoader.loadProjectDescriptionAtLocation(path);
 		if (pd == null) {
 			pd = ProjectDescription.builder().build();
 		}
 		sourceFolders = createSourceFolders(pd);
+		workspace.onProjectChanged(path, pdOld, pd);
 	}
 
 	protected Set<? extends IN4JSSourceFolder> createSourceFolders(ProjectDescription pd) {
@@ -124,6 +125,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return pd.isYarnWorkspaceRoot() && pd.getWorkspaces() != null && !pd.getWorkspaces().isEmpty();
 	}
 
+	/** The dependencies of this project as given in the <code>package.json</code> file. */
 	@Override
 	public Set<String> getDependencies() {
 		// note: it is important to return a list that contains names of unresolved (i.e. non-existing) projects, to
@@ -137,18 +139,20 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	}
 
 	/**
-	 * Return the dependencies of this project in a well defined order. Ensures that type definition projects always
-	 * occur right in front of the corresponding implementation project (see
-	 * {@link TypeDefinitionsAwareDependenciesSupplier#get(FileURI, Collection) here} for details).
-	 * <p>
+	 * Like {@link #getDependencies()}, but the dependencies returned here are
+	 * <ol>
+	 * <li>unresolved dependencies are removed,
+	 * <li>sorted (definition projects before their implementation projects),
+	 * <li>implicit dependencies are added (dependency to definition project added).
+	 * </ol>
 	 * The sorting allows the use definition projects and their implementation counterparts side by side in a meaningful
 	 * way. In a nutshell: Implementation projects may contribute modules to the index that are not available as n4jsd
 	 * files yet. All other modules should be shadowed by the definition project.
-	 *
-	 * @see TypeDefinitionsAwareDependenciesSupplier#get(FileURI, Collection)
 	 */
-	public List<N4JSProjectConfig> getSortedDependencies() {
-		return TypeDefinitionsAwareDependenciesSupplier.get(workspace, this);
+	public List<ProjectDependency> computeSemanticDependencies() {
+		List<ProjectDependency> deps = pd.getProjectDependencies();
+		return ImmutableList.copyOf(
+				SemanticDependencyUtils.computeSemanticDependencies(workspace.definitionProjects, deps));
 	}
 
 	@Override

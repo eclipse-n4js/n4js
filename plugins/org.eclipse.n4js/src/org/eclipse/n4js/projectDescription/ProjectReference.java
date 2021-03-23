@@ -12,6 +12,7 @@ package org.eclipse.n4js.projectDescription;
 
 import java.util.Objects;
 
+import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.ImmutableDataClass;
 
 /**
@@ -28,6 +29,10 @@ public class ProjectReference extends ImmutableDataClass {
 
 	public String getProjectName() {
 		return projectName;
+	}
+
+	public N4JSProjectName getN4JSProjectName() {
+		return projectName != null ? new N4JSProjectName(projectName) : null;
 	}
 
 	@Override

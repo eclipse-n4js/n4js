@@ -30,7 +30,7 @@ public class N4JSProjectDescriptionFactory extends XDefaultProjectDescriptionFac
 			// see N4JSProjectBuildOrderInfo for why we ignore dependencies of PLAINJS projects:
 			return projectDescription;
 		}
-		projectDescription.getDependencies().addAll(casted.getSortedDependencies());
+		projectDescription.getDependencies().addAll(casted.getDependencies());
 		return projectDescription;
 	}
 

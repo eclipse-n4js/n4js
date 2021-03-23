@@ -135,7 +135,7 @@ public class MockWorkspaceSupplier {
 		ProjectDescription pd = loadedOrCreated.getValue();
 		List<N4JSSourceFolderSnapshot> sourceFolders = createSourceFolders(projectPath, pd);
 		return new N4JSProjectConfigSnapshot(pd, projectPath.withTrailingPathDelimiter().toURI(), false, true,
-				Collections.emptyList(), Collections.emptyList(), sourceFolders);
+				Collections.emptyList(), sourceFolders);
 	}
 
 	/** See {@link #createWorkspaceConfig()}. */

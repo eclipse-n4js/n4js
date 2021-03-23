@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectDescription.ProjectDescription;
 import org.eclipse.n4js.projectDescription.ProjectType;
 import org.eclipse.n4js.projectModel.locations.FileURI;
@@ -57,6 +58,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	protected final Set<N4JSProjectConfig> projects = new LinkedHashSet<>();
 	protected final Map<String, N4JSProjectConfig> projectsByName = new HashMap<>();
 	protected final Map<FileURI, N4JSProjectConfig> projectsByURI = new HashMap<>();
+	/** Map between definition projects and their defined projects. */
+	protected final DefinitionProjectMap definitionProjects = new DefinitionProjectMap();
 
 	/**
 	 * Creates a new, empty {@link N4JSWorkspaceConfig}. It will not contain any projects until
@@ -81,6 +84,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		projects.clear();
 		projectsByName.clear();
 		projectsByURI.clear();
+		definitionProjects.clear();
 	}
 
 	/**
@@ -104,6 +108,19 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		projects.add(newProject);
 		projectsByName.put(newProject.getName(), newProject);
 		projectsByURI.put(path, newProject);
+		updateDefinitionProjects(null, pd);
+	}
+
+	protected void onProjectChanged(FileURI path, ProjectDescription pdOld, ProjectDescription pdNew) {
+		updateDefinitionProjects(pdOld, pdNew);
+	}
+
+	protected void updateDefinitionProjects(ProjectDescription pdOldOrNull, ProjectDescription pdNew) {
+		if (pdOldOrNull != null) {
+			definitionProjects.changeProject(pdOldOrNull, pdNew);
+		} else {
+			definitionProjects.addProject(pdNew);
+		}
 	}
 
 	/** Creates an instance of {@link N4JSProjectConfig} without registering it. */
@@ -163,7 +180,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				? doCompleteUpdate(oldWorkspaceConfig)
 				: doMinimalUpdate(oldWorkspaceConfig, dirtyFiles, deletedFiles);
 
-		changes = recomputeSortedDependenciesIfNecessary(oldWorkspaceConfig, changes);
+		changes = recomputeSemanticDependenciesIfNecessary(oldWorkspaceConfig, changes);
 
 		return changes;
 	}
@@ -248,49 +265,52 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	/**
-	 * The list of {@link N4JSProjectConfig#getSortedDependencies() sorted dependencies} of {@link N4JSProjectConfig}s
-	 * is tricky for two reasons:
+	 * The list of {@link N4JSProjectConfig#computeSemanticDependencies() semantic dependencies} of
+	 * {@link N4JSProjectConfig}s is tricky for two reasons:
 	 * <ol>
-	 * <li>the sorted dependencies do not contain names of non-existing projects (in case of unresolved project
+	 * <li>the semantic dependencies do not contain names of non-existing projects (in case of unresolved project
 	 * references in the package.json),
-	 * <li>the order of the sorted dependencies depends on the characteristics of the target projects (mainly the
+	 * <li>the order of the semantic dependencies depends on the characteristics of the target projects (mainly the
 	 * {@link ProjectDescription#getDefinesPackage() "defines package"} property).
 	 * </ol>
-	 * Therefore, the "sorted dependencies" can change even without a change in the <code>package.json</code> file of
+	 * Therefore, the "semantic dependencies" can change even without a change in the <code>package.json</code> file of
 	 * the source project. To detect and apply these changes is the purpose of this method.
 	 * <p>
 	 * TODO: sorted dependencies should not be a property of IN4JSProject/N4JSProjectConfig/N4JSProjectConfigSnapshot
 	 * (probably the scoping has to be adjusted, because the sorted dependencies ensure correct shadowing between
 	 * definition and defined projects)
 	 */
-	protected WorkspaceChanges recomputeSortedDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
+	protected WorkspaceChanges recomputeSemanticDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
 			WorkspaceChanges changes) {
 
 		boolean needRecompute = !changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()
-				|| Iterables.any(changes.getChangedProjects(), pc -> didDefinesPackageChange(pc, oldWorkspaceConfig));
+				|| Iterables.any(changes.getChangedProjects(),
+						pc -> didDefinitionPropertiesChange(pc, oldWorkspaceConfig));
 
 		if (needRecompute) {
-			// FIXME GH-2073 at this point a recomputation of sorted deps was triggered!! (by way of cache clear)
-			List<ProjectConfigSnapshot> projectsWithChangedSortedDeps = new ArrayList<>();
+			// FIXME GH-2073 at this point a recomputation of semantic deps was triggered!! (by way of cache clear)
+			List<ProjectConfigSnapshot> projectsWithChangedSemanticDeps = new ArrayList<>();
 			for (XIProjectConfig pc : getProjects()) {
 				String projectName = pc.getName();
-				ProjectConfigSnapshot oldSnapshot = oldWorkspaceConfig.findProjectByName(projectName);
+				N4JSProjectConfigSnapshot oldSnapshot = (N4JSProjectConfigSnapshot) oldWorkspaceConfig
+						.findProjectByName(projectName);
 				if (oldSnapshot == null) {
 					continue;
 				}
-				List<String> oldSortedDeps = ((N4JSProjectConfigSnapshot) oldSnapshot).getSortedDependencies();
-				List<String> newSortedDeps = ((N4JSProjectConfig) pc).getSortedDependencies().stream()
-						.map(N4JSProjectConfig::getName)
+				// convert to list in next line, because we want the below #equals() check to also include the order:
+				List<String> oldSemanticDeps = new ArrayList<>(oldSnapshot.getDependencies());
+				List<String> newSemanticDeps = ((N4JSProjectConfig) pc).computeSemanticDependencies().stream()
+						.map(ProjectDependency::getProjectName)
 						.collect(Collectors.toList());
-				if (!newSortedDeps.equals(oldSortedDeps)) {
+				if (!newSemanticDeps.equals(oldSemanticDeps)) {
 					ProjectConfigSnapshot newSnapshot = configSnapshotFactory.createProjectConfigSnapshot(pc);
 					if (!newSnapshot.equals(oldSnapshot)) {
-						projectsWithChangedSortedDeps.add(newSnapshot);
+						projectsWithChangedSemanticDeps.add(newSnapshot);
 					}
 				}
 			}
-			if (!projectsWithChangedSortedDeps.isEmpty()) {
-				changes = changes.merge(WorkspaceChanges.createProjectsChanged(projectsWithChangedSortedDeps));
+			if (!projectsWithChangedSemanticDeps.isEmpty()) {
+				changes = changes.merge(WorkspaceChanges.createProjectsChanged(projectsWithChangedSemanticDeps));
 			}
 		}
 		return changes;
@@ -315,12 +335,25 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	/** Tells whether the property {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} changed. */
-	private static boolean didDefinesPackageChange(ProjectConfigSnapshot projectConfig,
+	private static boolean didDefinitionPropertiesChange(ProjectConfigSnapshot newProjectConfig,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
-		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(projectConfig.getName());
-		return oldProjectConfig == null || !Objects.equals(
-				((N4JSProjectConfigSnapshot) projectConfig).getDefinesPackage(),
-				((N4JSProjectConfigSnapshot) oldProjectConfig).getDefinesPackage());
+		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(newProjectConfig.getName());
+		if (oldProjectConfig == null) {
+			return true;
+		}
+		N4JSProjectConfigSnapshot newCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
+		N4JSProjectConfigSnapshot oldCasted = (N4JSProjectConfigSnapshot) oldProjectConfig;
+		boolean newIsDefinition = newCasted.getType() == ProjectType.DEFINITION;
+		boolean oldIsDefinition = oldCasted.getType() == ProjectType.DEFINITION;
+		if (newIsDefinition != oldIsDefinition) {
+			return true;
+		}
+		if (newIsDefinition && oldIsDefinition) {
+			if (!Objects.equals(newCasted.getDefinesPackage(), oldCasted.getDefinesPackage())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static FluentIterable<? extends ProjectConfigSnapshot> allExceptPlainjs(

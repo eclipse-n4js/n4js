@@ -349,7 +349,11 @@ public class ProjectImportEnablingScope implements IScope {
 			return project;
 		}
 
-		Iterable<String> dependencies = project.getSortedDependencies();
+		// We here rely on dependencies being sorted such that definition projects appear before the corresponding
+		// defined projects. Since the dependency list stored in (N4JS)ProjectConfigSnapshots is the list of "semantic
+		// dependencies" (see N4JSProjectConfig#computeSemanticDependencies()) we can simply invoke #getDependencies()
+		// here:
+		Iterable<String> dependencies = project.getDependencies();
 		for (String pName : dependencies) {
 			N4JSProjectConfigSnapshot p = workspaceConfigSnapshot.findProjectByName(pName);
 			if (p == null) {

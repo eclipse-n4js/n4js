@@ -11,7 +11,6 @@
 package org.eclipse.n4js.internal.lsp;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
@@ -30,8 +29,6 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
-import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.collect.ImmutableList;
@@ -44,11 +41,10 @@ import com.google.common.collect.ImmutableSet;
 public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	private final ProjectDescription projectDescription;
-	private final ImmutableList<String> sortedDependencies;
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
-	public N4JSProjectConfigSnapshot(ProjectDescription projectDescription, URI path, boolean indexOnly,
-			boolean generatorEnabled, Iterable<String> dependencies, Iterable<String> sortedDependencies,
+	public N4JSProjectConfigSnapshot(ProjectDescription projectDescription, URI path,
+			boolean indexOnly, boolean generatorEnabled, Iterable<String> dependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
 		super(projectDescription.getProjectName(), path,
@@ -56,7 +52,18 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
 
 		this.projectDescription = Objects.requireNonNull(projectDescription);
-		this.sortedDependencies = ImmutableList.copyOf(sortedDependencies);
+	}
+
+	/**
+	 * Returns the project dependencies.
+	 * <p>
+	 * Note that this method does not return the {@link N4JSProjectConfig#getDependencies() raw dependencies} as given
+	 * in the <code>package.json</code> but the {@link N4JSProjectConfig#computeSemanticDependencies() semantic
+	 * dependencies} computed by class {@link N4JSProjectConfig}.
+	 */
+	@Override
+	public ImmutableSet<String> getDependencies() {
+		return super.getDependencies();
 	}
 
 	/** Returns the {@link ProjectDescription}. */
@@ -70,32 +77,18 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return definesPackage != null ? new N4JSProjectName(definesPackage) : null;
 	}
 
-	/**
-	 * Returns the {@link N4JSProjectConfig#getSortedDependencies() sorted dependencies}.
-	 * <p>
-	 * WARNING: this value depends on other projects' properties (esp. "definesPackage") so it may change whenever other
-	 * projects' <code>package.json</code> files change! See
-	 * {@link N4JSWorkspaceConfig#recomputeSortedDependenciesIfNecessary(WorkspaceConfigSnapshot, WorkspaceChanges)
-	 * here} for details.
-	 */
-	public List<String> getSortedDependencies() {
-		return sortedDependencies;
-	}
-
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
 				super.computeHashCode(),
-				projectDescription,
-				sortedDependencies);
+				projectDescription);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
 		N4JSProjectConfigSnapshot other = (N4JSProjectConfigSnapshot) obj;
 		return super.computeEquals(other)
-				&& Objects.equals(projectDescription, other.projectDescription)
-				&& Objects.equals(sortedDependencies, other.sortedDependencies);
+				&& Objects.equals(projectDescription, other.projectDescription);
 	}
 
 	// ==============================================================================================================

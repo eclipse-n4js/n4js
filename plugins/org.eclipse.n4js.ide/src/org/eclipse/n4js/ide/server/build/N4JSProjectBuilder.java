@@ -51,24 +51,6 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	}
 
 	@Override
-	public void setProjectConfig(ProjectConfigSnapshot newProjectConfig) {
-		N4JSProjectConfigSnapshot oldPC = getProjectConfig();
-		N4JSProjectConfigSnapshot newPCCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
-		boolean depsHaveChanged = oldPC == null
-				|| !oldPC.getDependencies().equals(newProjectConfig.getDependencies());
-		boolean sortedDepsHaveChanged = oldPC == null
-				|| !oldPC.getSortedDependencies().equals(newPCCasted.getSortedDependencies());
-
-		super.setProjectConfig(newProjectConfig);
-
-		if (sortedDepsHaveChanged && !depsHaveChanged) {
-			// note: not doing this if 'depsHaveChanged', because then the super method has already invoked
-			// #onDependenciesChanged()
-			onDependenciesChanged();
-		}
-	}
-
-	@Override
 	protected XBuildResult doBuild(IBuildRequestFactory buildRequestFactory, Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<Delta> externalDeltas, CancelIndicator cancelIndicator) {
 

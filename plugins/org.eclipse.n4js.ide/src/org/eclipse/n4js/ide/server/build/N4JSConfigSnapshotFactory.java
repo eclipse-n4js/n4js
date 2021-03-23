@@ -19,6 +19,7 @@ import org.eclipse.n4js.internal.lsp.N4JSSourceFolderForPackageJson;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.internal.lsp.N4JSSourceFolderSnapshotForPackageJson;
 import org.eclipse.n4js.internal.lsp.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.projectDescription.ProjectDependency;
 import org.eclipse.n4js.projectModel.lsp.IN4JSSourceFolder;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
@@ -46,16 +47,15 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 	public N4JSProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
 		N4JSProjectConfig projectConfigCasted = (N4JSProjectConfig) projectConfig;
 
-		List<String> sortedDependencies = Lists.transform(projectConfigCasted.getSortedDependencies(),
-				N4JSProjectConfig::getName);
+		List<String> semanticDependencies = Lists.transform(projectConfigCasted.computeSemanticDependencies(),
+				ProjectDependency::getProjectName);
 
 		return new N4JSProjectConfigSnapshot(
 				projectConfigCasted.getProjectDescription(),
 				projectConfig.getPath(),
 				projectConfig.indexOnly(),
 				projectConfig.isGeneratorEnabled(),
-				projectConfig.getDependencies(),
-				sortedDependencies,
+				semanticDependencies,
 				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot));
 	}
 
