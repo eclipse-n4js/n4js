@@ -126,7 +126,10 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 public class N4JSLanguageUtils {
 
 	/**
-	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
+	 * Tells whether the {@link #isOpaqueModule(ProjectType, URI) "opaque modules"} feature is turned on
+	 * (i.e. processing of opaque modules is suppressed).
+	 * <p>
+	 * WARNING: this field is set via reflection from {@code JSActivationUtil}.
 	 */
 	public static boolean OPAQUE_JS_MODULES = true;
 
