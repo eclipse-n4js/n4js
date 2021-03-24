@@ -26,8 +26,8 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.ResourceNameComputer
-import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -106,7 +106,7 @@ class ModuleWrappingTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		val targetProject = workspaceAccess.findProject(targetModule.eResource).orNull;
+		val targetProject = workspaceAccess.findProject(targetModule.eResource);
 
 		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
 			// SPECIAL CASE #1

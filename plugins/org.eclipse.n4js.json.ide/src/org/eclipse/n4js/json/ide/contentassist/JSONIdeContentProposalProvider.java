@@ -23,8 +23,8 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.Assignment;
@@ -132,8 +132,8 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(devOrDep)) {
 
 				NameValuePair pair = (NameValuePair) context.getCurrentModel();
-				N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context.getResource(),
-						new N4JSProjectName(pair.getName())).orNull();
+				N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(context.getResource(),
+						pair.getName());
 				if (project != null) {
 					VersionNumber version = project.getVersion();
 					ContentAssistEntry versionEntry = getProposalCreator().createProposal(

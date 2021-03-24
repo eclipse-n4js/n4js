@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.UserDataMapper;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.ISynchronizable;
@@ -186,7 +186,7 @@ public class CanLoadFromDescriptionHelper {
 			// early check whether the candidates stem from the same project as the requested thisURI
 			// (note: this is based on the assumption that there cannot be a cyclic dependency between modules of
 			// different projects, because cyclic dependencies between projects are disallowed)
-			thisProject = workspaceAccess.findProject(context, thisURI).orNull();
+			thisProject = workspaceAccess.findProjectByNestedLocation(context, thisURI);
 			candidates = filterCandidatesByProject(candidates, thisProject);
 		}
 		// are there any relevant candidates at all?

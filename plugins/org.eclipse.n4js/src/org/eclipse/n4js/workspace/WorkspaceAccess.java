@@ -18,6 +18,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
@@ -27,6 +28,8 @@ import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.ISynchronizable;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -34,6 +37,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+/**
+ * Helper class for accessing the current workspace configuration of a context defined by an EMF {@link ResourceSet} (or
+ * an element contained in a resource set).
+ */
 @Singleton
 public class WorkspaceAccess {
 
@@ -43,6 +50,10 @@ public class WorkspaceAccess {
 	@Inject
 	private IResourceDescriptionsProvider resourceDescriptionsProvider;
 
+	/**
+	 * Returns the current workspace configuration of the context defined by the given EMF {@link ResourceSet} or
+	 * element contained in a resource set.
+	 */
 	public Optional<N4JSWorkspaceConfigSnapshot> getWorkspaceConfig(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
 		WorkspaceConfigSnapshot config = resourceSet != null
@@ -51,56 +62,113 @@ public class WorkspaceAccess {
 		return Optional.fromNullable((N4JSWorkspaceConfigSnapshot) config);
 	}
 
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#getProjects()}. */
 	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects(Notifier context) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent()
-				? config.get().getProjects()
-				: ImmutableSet.of();
+		return config.isPresent() ? config.get().getProjects() : ImmutableSet.of();
 	}
 
-	public Optional<N4JSProjectConfigSnapshot> findProject(Resource resource) {
-		return resource != null ? findProject(resource, resource.getURI()) : Optional.absent();
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByPath(URI)}. */
+	public N4JSProjectConfigSnapshot findProject(Resource resource) {
+		return resource != null ? findProjectByPath(resource, resource.getURI()) : null;
 	}
 
-	public Optional<N4JSProjectConfigSnapshot> findProject(Notifier context, URI nestedLocation) {
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByPath(URI)}. */
+	public N4JSProjectConfigSnapshot findProjectByPath(Notifier context, URI path) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent()
-				? Optional.fromNullable(config.get().findProjectByNestedLocation(nestedLocation))
-				: Optional.absent();
+		return config.isPresent() ? config.get().findProjectByPath(path) : null;
 	}
 
-	public Optional<N4JSProjectConfigSnapshot> findProject(Notifier context, N4JSProjectName projectName) {
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
+	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, N4JSProjectName projectName) {
+		return projectName != null ? findProjectByName(context, projectName.getRawName()) : null;
+	}
+
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
+	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, String projectName) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent()
-				? Optional.fromNullable(config.get().findProjectByName(projectName.getRawName()))
-				: Optional.absent();
+		return config.isPresent() ? config.get().findProjectByName(projectName) : null;
 	}
 
-	public Optional<N4JSProjectConfigSnapshot> findProjectContaining(Notifier context, URI nestedLocation) {
+	/**
+	 * Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByNestedLocation(URI)}.
+	 * <p>
+	 * Note the difference to {@link #findProjectContaining(Notifier, URI)}; for details see
+	 * {@link ProjectSet#findProjectByNestedLocation(URI) HERE}.
+	 */
+	public N4JSProjectConfigSnapshot findProjectByNestedLocation(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent()
-				? Optional.fromNullable(config.get().findProjectContaining(nestedLocation))
-				: Optional.absent();
+		return config.isPresent() ? config.get().findProjectByNestedLocation(nestedLocation) : null;
 	}
 
-	public Optional<N4JSSourceFolderSnapshot> findN4JSSourceContainer(Notifier context, URI nestedLocation) {
+	/**
+	 * Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectContaining(URI)}.
+	 * <p>
+	 * Note the difference to {@link #findProjectByNestedLocation(Notifier, URI)}; for details see
+	 * {@link ProjectSet#findProjectByNestedLocation(URI) HERE}.
+	 */
+	public N4JSProjectConfigSnapshot findProjectContaining(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent()
-				? Optional.fromNullable(config.get().findSourceFolderContaining(nestedLocation))
-				: Optional.absent();
+		return config.isPresent() ? config.get().findProjectContaining(nestedLocation) : null;
 	}
 
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findSourceFolderContaining(URI)}. */
+	public N4JSSourceFolderSnapshot findSourceFolderContaining(Notifier context, URI nestedLocation) {
+		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
+		return config.isPresent() ? config.get().findSourceFolderContaining(nestedLocation) : null;
+	}
+
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectAndSourceFolderContaining(URI)}. */
+	public Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot> findProjectAndSourceFolderContaining(
+			Notifier context, URI nestedLocation) {
+		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
+		return config.isPresent() ? config.get().findProjectAndSourceFolderContaining(nestedLocation) : null;
+	}
+
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#isNoValidate(URI)}. */
 	public boolean isNoValidate(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent() && config.get().isNoValidate(nestedLocation);
 	}
 
-	// FIXME GH-2073 important! reconsider all following methods!
+	// ######################################################################################################
+	// The following methods are included here for historic reasons:
 
+	/**
+	 * Creates a new resource set and configures it with the "current" state of the "default workspace", if possible. It
+	 * is undefined which workspace will be used (in case several exist) and which exact point in time its state will
+	 * represent. <b>Therefore, this method should only be used when setting up an independent environment from scratch
+	 * (e.g. some external tooling).</b>
+	 * <p>
+	 * Because no workspace context is defined on the level of bundle <code>org.eclispe.n4js</code> this method will not
+	 * configure any workspace, by default. In the IDE context, the current workspace configuration of the LSP builder's
+	 * {@code ConcurrentIndex} will be used (configure in override of this method). In tests, a mock workspace
+	 * configuration will be used (configured via {@code MockResourceSetProvider}).
+	 * <p>
+	 * IMPORTANT:
+	 * <ul>
+	 * <li>This method should <b>NEVER</b> be used in a context where a resource set is already in place, e.g. during
+	 * validations use the editor's resource set, within the incremental builder always use the builder's resource set.
+	 * <li>This method should <b>ONLY</b> be used to access the
+	 * {@link ResourceDescriptionsProvider#PERSISTED_DESCRIPTIONS persisted state} and <b>NEVER</b> in cases where the
+	 * dirty state of the editor(s) or the live scope is to be taken into account (in such cases it is very unlikely
+	 * that you have to create a new resource set from scratch, so probably you are in the above case and should try to
+	 * obtain an existing resource set).
+	 * </ul>
+	 */
 	public XtextResourceSet createResourceSet() {
 		return resourceSetProvider.get();
 	}
 
+	/**
+	 * Returns the Xtext index for the the given resource set. This resource set should be properly set up for Xtext and
+	 * N4JS; usually client code should always prefer obtaining an existing resource set from Xtext and only if this is
+	 * not available pass in a resource set returned by method {@link #createResourceSet()}.
+	 * <p>
+	 * Use with care. If this method is used with a resource set newly created via method {@link #createResourceSet()},
+	 * then the returned index represents the persisted information, only. All dirty editors or the currently running
+	 * build with incrementally compiled resources are ignored.
+	 */
 	public Optional<IResourceDescriptions> getXtextIndex(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
 		if (resourceSet == null) {
@@ -114,6 +182,20 @@ public class WorkspaceAccess {
 		return Optional.fromNullable(result);
 	}
 
+	/**
+	 * Deserialize the TModule stored in the user data of the Xtext index.
+	 * <p>
+	 * If the resource set already contains a resource for the given resource description <em>and</em> that resource is
+	 * already loaded (and thus has an AST loaded from source) or even already contains a TModule, then this method
+	 * returns the TModule derived from the existing AST or the existing TModule, respectively. If loading from index
+	 * fails <em>and</em> <code>allowFullLoad</code> is set to <code>true</code>, then this method loads the resource
+	 * from source.
+	 * <p>
+	 * If loading from index is successfully performed, the resource containing the returned TModule will be in the
+	 * state <code>fullyProcessed</code>; in all the other above cases that a non-<code>null</code> value is returned,
+	 * the resource will be in state <code>fullyInitialized</code>; if <code>null</code> is returned, the state of the
+	 * resource (if it exists) will be unchanged.
+	 */
 	public TModule loadModuleFromIndex(final ResourceSet resourceSet, IResourceDescription resourceDescription,
 			boolean allowFullLoad) {
 

@@ -56,10 +56,10 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.FindArtifactHelper;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -185,8 +185,7 @@ public class ProjectCompareHelper {
 	 */
 	public Optional<N4JSProjectName> getImplementationID(TModule apiImplModule) {
 
-		Optional<? extends N4JSProjectConfigSnapshot> opt = workspaceAccess.findProject(apiImplModule.eResource());
-		N4JSProjectConfigSnapshot implProject = opt.get();
+		N4JSProjectConfigSnapshot implProject = workspaceAccess.findProject(apiImplModule.eResource());
 		String implId = implProject.getImplementationId();
 		return implId != null ? Optional.of(new N4JSProjectName(implId)) : Optional.absent();
 	}
@@ -243,13 +242,10 @@ public class ProjectCompareHelper {
 			return null;
 		}
 
-		Optional<? extends N4JSProjectConfigSnapshot> opt = workspaceAccess.findProject(resource);
-
-		if (!opt.isPresent()) {
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource);
+		if (project == null) {
 			return null;
 		}
-
-		N4JSProjectConfigSnapshot project = opt.get();
 
 		N4JSProjectConfigSnapshot implProject = null;
 		N4JSProjectConfigSnapshot apiProject = null;

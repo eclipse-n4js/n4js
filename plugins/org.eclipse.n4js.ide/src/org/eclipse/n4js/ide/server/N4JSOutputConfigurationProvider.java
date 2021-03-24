@@ -20,7 +20,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -47,8 +46,7 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 		EList<Resource> resources = context.getResources();
 		if (resources.isEmpty()) {
 			ProjectDescription description = ProjectDescription.findInEmfObject(context);
-			N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context,
-					new N4JSProjectName(description.getName())).orNull();
+			N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(context, description.getName());
 			return getOutputConfigurationSet(project); // returns a default configuration if 'project' is still 'null'
 		}
 		return getOutputConfigurations(resources.get(0));
@@ -56,7 +54,7 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context);
 		return getOutputConfigurationSet(project);
 	}
 

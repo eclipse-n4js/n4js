@@ -76,7 +76,7 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	}
 
 	/** See {@link ProjectSet#findProjectAndSourceFolderContaining(URI)}. */
-	public Pair<ProjectConfigSnapshot, SourceFolderSnapshot> findProjectAndSourceFolderContaining(
+	public Pair<? extends ProjectConfigSnapshot, ? extends SourceFolderSnapshot> findProjectAndSourceFolderContaining(
 			URI nestedSourceLocation) {
 		return projects.findProjectAndSourceFolderContaining(nestedSourceLocation);
 	}

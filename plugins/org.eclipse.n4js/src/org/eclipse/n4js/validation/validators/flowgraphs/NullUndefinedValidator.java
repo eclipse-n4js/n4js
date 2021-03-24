@@ -28,8 +28,8 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -155,7 +155,7 @@ public class NullUndefinedValidator implements FlowValidator {
 	private boolean isInTestFolder(EObject eobj) {
 		Resource resource = eobj.eResource();
 		URI location = resource.getURI();
-		final N4JSSourceFolderSnapshot c = workspaceAccess.findN4JSSourceContainer(resource, location).orNull();
+		final N4JSSourceFolderSnapshot c = workspaceAccess.findSourceFolderContaining(resource, location);
 		return c != null && c.isTest();
 	}
 

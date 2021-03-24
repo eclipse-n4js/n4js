@@ -19,6 +19,7 @@ import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -85,6 +86,14 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 	@Override
 	public N4JSSourceFolderSnapshot findSourceFolderContaining(URI nestedSourceLocation) {
 		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(nestedSourceLocation);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot> findProjectAndSourceFolderContaining(
+			URI nestedSourceLocation) {
+		return (Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot>) super.findProjectAndSourceFolderContaining(
+				nestedSourceLocation);
 	}
 
 	// FIXME this method has a bad name (the uri is just sanitized)

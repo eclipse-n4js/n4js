@@ -42,16 +42,16 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xtext.resource.FileExtensionProvider;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
@@ -61,7 +61,7 @@ import com.google.inject.Inject;
 public class XpectN4JSES5TranspilerHelper {
 
 	@Inject
-	private WorkspaceAccess core;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private XpectN4JSES5GeneratorHelper xpectGenerator;
@@ -180,9 +180,10 @@ public class XpectN4JSES5TranspilerHelper {
 	private void loadXpectConfiguration(
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init, FileSetupContext fileSetupContext) {
 		if (Platform.isRunning()) {
-			readOutConfiguration = new ReadOutWorkspaceConfiguration(fileSetupContext, core, fileExtensionProvider);
+			readOutConfiguration = new ReadOutWorkspaceConfiguration(fileSetupContext, workspaceAccess,
+					fileExtensionProvider);
 		} else {
-			readOutConfiguration = new ReadOutResourceSetConfiguration(fileSetupContext, core);
+			readOutConfiguration = new ReadOutResourceSetConfiguration(fileSetupContext, workspaceAccess);
 		}
 		init.initialize(readOutConfiguration);
 	}
@@ -207,10 +208,11 @@ public class XpectN4JSES5TranspilerHelper {
 			return;
 		}
 
-		Optional<N4JSSourceFolderSnapshot> sourceOpt = core.findN4JSSourceContainer(dep, dep.getURI());
-		if (sourceOpt.isPresent()) {
-			N4JSSourceFolderSnapshot source = sourceOpt.get();
-			N4JSProjectConfigSnapshot project = core.findProjectContaining(dep, dep.getURI()).get();
+		Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot> pair = workspaceAccess
+				.findProjectAndSourceFolderContaining(dep, dep.getURI());
+		N4JSProjectConfigSnapshot project = pair.getKey();
+		N4JSSourceFolderSnapshot source = pair.getValue();
+		if (project != null && source != null) {
 			for (N4JSSourceFolderSnapshot c : project.getSourceFolders()) {
 				if (c.isExternal()) {
 					String sourceRelativePath = dep.getURI().toString()
@@ -291,7 +293,7 @@ public class XpectN4JSES5TranspilerHelper {
 				? script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
 				: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
-		N4JSProjectConfigSnapshot project = core.findProject(script.eResource()).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(script.eResource());
 		if (project != null) {
 			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, includeProjectName);
 		}

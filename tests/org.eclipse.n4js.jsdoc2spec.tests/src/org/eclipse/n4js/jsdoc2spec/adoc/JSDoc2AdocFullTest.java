@@ -31,10 +31,9 @@ import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessorFullTest;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SubMonitorMsg;
 import org.eclipse.n4js.utils.io.FileCopier;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
@@ -82,8 +81,7 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 				String expectationFileName = projectName + "/expected.adoc";
 
 				ResourceSet resourceSet = workspaceAccess.createResourceSet();
-				N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resourceSet, new N4JSProjectName(projectName))
-						.orNull();
+				N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(resourceSet, projectName);
 				assertNotNull("Project not found", project);
 
 				Collection<SpecFile> specChangeSet = jSDoc2SpecProcessor.convert(

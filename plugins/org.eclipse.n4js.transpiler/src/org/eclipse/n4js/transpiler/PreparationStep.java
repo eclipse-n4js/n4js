@@ -62,8 +62,8 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
@@ -125,7 +125,7 @@ public class PreparationStep {
 	 */
 	public TranspilerState prepare(Script script, GeneratorOption[] options) {
 		final N4JSResource resource = (N4JSResource) script.eResource();
-		final N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource).orNull();
+		final N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource);
 		final ContainerTypesHelper.MemberCollector memberCollector = containerTypesHelper.fromContext(resource);
 		final Tracer tracer = new Tracer();
 		final InformationRegistry info = new InformationRegistry();

@@ -403,7 +403,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		val uri = fileExtensionCalculator.getUriWithoutXpectExtension(element);
-		val srcContainer = workspaceAccess.findN4JSSourceContainer(annotation, uri).orNull;
+		val srcContainer = workspaceAccess.findSourceFolderContaining(annotation, uri);
 		if (srcContainer === null) {
 			return;
 		}
@@ -446,13 +446,13 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		val projURI = element.eResource.URI;
-		val project = workspaceAccess.findProject(annotation, projURI);
-		if (!project.present) {
+		val project = workspaceAccess.findProjectByNestedLocation(annotation, projURI);
+		if (project === null) {
 			val msg = getMessageForNO_PROJECT_FOUND(projURI);
 			val script = EcoreUtil2.getContainerOfType(element, Script);
 			addIssue(msg, script, NO_PROJECT_FOUND);
 		} else {
-			val projectType = project.orNull?.type;
+			val projectType = project.type;
 			if (projectType !== ProjectType.RUNTIME_ENVIRONMENT && projectType !== ProjectType.RUNTIME_LIBRARY) {
 				addIssue(getMessageForANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT(annotation.name), annotation,
 					ANNOTATION__NAME, ANN_DISALLOWED_IN_NON_RUNTIME_COMPONENT);

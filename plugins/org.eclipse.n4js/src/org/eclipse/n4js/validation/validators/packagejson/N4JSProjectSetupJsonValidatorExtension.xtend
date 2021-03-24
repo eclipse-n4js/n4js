@@ -74,9 +74,9 @@ import org.eclipse.n4js.utils.Strings
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
-import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 import org.eclipse.xtend.lib.annotations.Data
@@ -388,7 +388,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		// check for required dependency to mangelhaft
 		if (projectOrderInfo.getProjectCycles.isEmpty) {
 			// the following cannot be checked in presence of dependency cycles
-			val project = workspaceAccess.findProject(document, document.eResource.URI).orNull;
+			val project = workspaceAccess.findProjectByNestedLocation(document, document.eResource.URI);
 			if (null !== project) {
 				holdsProjectWithTestFragmentDependsOnTestLibrary(wc, project);
 			}
@@ -577,8 +577,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	@Check
 	def void checkDependenciesAndDevDependencies(JSONDocument document) {
 		// determine whether current project is external
-		val project = workspaceAccess.findProject(document, document.eResource.URI);
-		val isExternal = project.present && project.get.external;
+		val project = workspaceAccess.findProjectByNestedLocation(document, document.eResource.URI);
+		val isExternal = project !== null && project.external;
 
 		// collect all references, skip devDependencies if project is external, because these 
 		// are not installed by npm for transitive dependencies
@@ -752,7 +752,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 */
 	@CheckProperty(property = MODULE_FILTERS)
 	def checkModuleFilters(JSONValue moduleFiltersValue) {
-		val project = workspaceAccess.findProject(moduleFiltersValue.eResource).get;
+		val project = workspaceAccess.findProject(moduleFiltersValue.eResource);
 		
 		// early-exit for malformed structure
 		if (!(moduleFiltersValue instanceof JSONObject)) {
@@ -1109,7 +1109,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		val existentIds = HashMultimap.<N4JSProjectName, ValidationProjectReference>create;
 
 		val projectDescriptionFileURI = document.eResource.URI;
-		val currentProject = workspaceAccess.findProject(getDocument(), projectDescriptionFileURI).orNull;
+		val currentProject = workspaceAccess.findProjectByNestedLocation(getDocument(), projectDescriptionFileURI);
 		if (currentProject === null) {
 			// TODO
 		}

@@ -54,9 +54,8 @@ class ModuleNameComputer {
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
 	def public getQualifiedModuleName(Notifier context, URI uri) {
-		val maybeSourceContainer = workspaceAccess.findN4JSSourceContainer(context, uri);
-		if (maybeSourceContainer.present) {
-			val sourceContainer = maybeSourceContainer.get
+		val sourceContainer = workspaceAccess.findSourceFolderContaining(context, uri);
+		if (sourceContainer !== null) {
 			val location = sourceContainer.pathAsFileURI.withTrailingPathDelimiter.toURI
 			if(uri.uriStartsWith(location)) {
 				var relativeURI = uri.deresolve(location)

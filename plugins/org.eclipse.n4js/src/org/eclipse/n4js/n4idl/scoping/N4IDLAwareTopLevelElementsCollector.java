@@ -14,11 +14,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.scoping.TopLevelElementsCollector;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
@@ -32,11 +31,11 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 
 	@Override
 	public Iterable<IEObjectDescription> getTopLevelElements(TModule module, Resource contextResource) {
-		Optional<N4JSProjectConfigSnapshot> project = workspaceAccess.findProject(contextResource);
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(contextResource);
 		Iterable<IEObjectDescription> allTopLevelElements = super.getTopLevelElements(module, contextResource);
 
 		// if project isn't available, include all top-level elements
-		if (!project.isPresent()) {
+		if (project == null) {
 			LOGGER.warn(String.format("Failed to determine project of resource %s.", contextResource.getURI()));
 			return allTopLevelElements;
 		}
@@ -48,15 +47,15 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 		}
 
 		// otherwise filter by context version
-		Optional<N4JSProjectConfigSnapshot> moduleProject = workspaceAccess.findProject(module.eResource());
+		N4JSProjectConfigSnapshot moduleProject = workspaceAccess.findProject(module.eResource());
 
-		if (!moduleProject.isPresent()) {
+		if (moduleProject == null) {
 			LOGGER.warn(String.format("Failed to determine project of TModule %s.", module.getQualifiedName()));
 			return allTopLevelElements;
 		}
 
-		N4JSProjectConfigSnapshot contextN4JSProject = project.get();
-		N4JSProjectConfigSnapshot versionedN4JSProject = moduleProject.get();
+		N4JSProjectConfigSnapshot contextN4JSProject = project;
+		N4JSProjectConfigSnapshot versionedN4JSProject = moduleProject;
 
 		final int contextVersion = getProjectContextVersion(versionedN4JSProject, contextN4JSProject);
 

@@ -22,8 +22,8 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.util.Strings;
 
@@ -160,10 +160,12 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		if (contextResource != null) {
 			final TModule contextModule = N4JSResource.getModule(contextResource);
 			if (contextModule != null) {
-				return this.workspaceAccess.findProject(contextResource, element.getEObjectURI()).transform(project -> {
-					boolean result = Strings.equal(contextModule.getVendorID(), project.getVendorId());
-					return result;
-				}).or(true);
+				N4JSProjectConfigSnapshot project = this.workspaceAccess.findProjectByNestedLocation(contextResource,
+						element.getEObjectURI());
+				if (project == null) {
+					return true;
+				}
+				return Strings.equal(contextModule.getVendorID(), project.getVendorId());
 			}
 		}
 		return false;
@@ -202,12 +204,14 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 			if (contextModule == null) {
 				return false;
 			}
-			return this.workspaceAccess.findProject(contextResource, element.getEObjectURI()).transform(project -> {
-				boolean result = Strings.equal(contextModule.getProjectName(), project.getName())
-						&& Strings.equal(contextModule.getVendorID(), project.getVendorId())
-						|| isTestedProjectOf(contextModule, project);
-				return result;
-			}).or(true);
+			N4JSProjectConfigSnapshot project = this.workspaceAccess.findProjectByNestedLocation(contextResource,
+					element.getEObjectURI());
+			if (project == null) {
+				return true;
+			}
+			return Strings.equal(contextModule.getProjectName(), project.getName())
+					&& Strings.equal(contextModule.getVendorID(), project.getVendorId())
+					|| isTestedProjectOf(contextModule, project);
 		}
 		return false;
 	}
@@ -232,7 +236,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		for (final ProjectReference testedProject : getTestedProjects(contextModule.eResource())) {
 			final Resource eResource = elementModule.eResource();
 			if (null != eResource) {
-				final N4JSProjectConfigSnapshot elementProject = workspaceAccess.findProject(eResource).orNull();
+				final N4JSProjectConfigSnapshot elementProject = workspaceAccess.findProject(eResource);
 				if (null != elementProject) {
 					if (elementProject.getName().equals(testedProject.getProjectName())) {
 						return true;
@@ -277,7 +281,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 			return emptyList();
 		}
 
-		final N4JSProjectConfigSnapshot contextProject = workspaceAccess.findProject(contextResource).orNull();
+		final N4JSProjectConfigSnapshot contextProject = workspaceAccess.findProject(contextResource);
 		if (null == contextProject) {
 			return emptyList();
 		}

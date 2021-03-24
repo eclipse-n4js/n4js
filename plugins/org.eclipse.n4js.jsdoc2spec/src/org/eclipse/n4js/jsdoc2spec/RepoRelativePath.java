@@ -21,14 +21,13 @@ import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.utils.Log;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
@@ -45,12 +44,10 @@ public class RepoRelativePath {
 	 * If a repository is found, the simple name of the origin is used.
 	 */
 	public static RepoRelativePath compute(FileURI uriOfResource, WorkspaceAccess workspaceAccess, Notifier context) {
-		Optional<? extends N4JSProjectConfigSnapshot> optProj = workspaceAccess.findProject(context, uriOfResource.toURI());
-		if (!optProj.isPresent()) {
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByNestedLocation(context, uriOfResource.toURI());
+		if (project == null) {
 			return null;
 		}
-
-		N4JSProjectConfigSnapshot project = optProj.get();
 
 		Path pathOfResource = uriOfResource.toFileSystemPath();
 		Path pathOfProject = project.getPathAsFileURI().toFileSystemPath();

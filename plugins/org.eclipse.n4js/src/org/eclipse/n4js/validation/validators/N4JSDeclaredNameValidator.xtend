@@ -160,7 +160,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 				val name = exportableElement.declaredName;
 				if (name !== null) {
 					if (BASE_JS_TYPES.contains(name)) {
-						val project = workspaceAccess.findProject(exportableElement.eResource).get;
+						val project = workspaceAccess.findProject(exportableElement.eResource);
 						if (project === null || project.type !== ProjectType.RUNTIME_ENVIRONMENT) {
 							addIssue(getMessageForAST_GLOBAL_JS_NAME_CONFLICT(name), exportableElement,
 								AST_GLOBAL_JS_NAME_CONFLICT);

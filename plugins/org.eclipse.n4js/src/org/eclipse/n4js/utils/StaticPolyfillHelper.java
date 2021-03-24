@@ -23,9 +23,9 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -118,8 +118,8 @@ public final class StaticPolyfillHelper {
 			final Optional<String> fileExtension = Optional.of(res.getURI().fileExtension()); // see Req.155#4: "Both
 																								// extensions are
 																								// equal."
-			final N4JSSourceFolderSnapshot filledSrcContainer = workspaceAccess.findN4JSSourceContainer(res, res.getURI())
-					.get();
+			final N4JSSourceFolderSnapshot filledSrcContainer = workspaceAccess.findSourceFolderContaining(res,
+					res.getURI());
 			for (N4JSSourceFolderSnapshot srcConti : project.getSourceFolders()) {
 				if (!Objects.equals(filledSrcContainer, srcConti)) {
 					final SafeURI<?> uri = srcConti.findArtifact(fqn, fileExtension);

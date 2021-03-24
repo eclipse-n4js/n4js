@@ -307,7 +307,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	 * Constraints 70. 1
 	 */
 	def private holdsDefinedInRuntime(ExportableElement element) {
-		val projectType = workspaceAccess.findProject(element?.eResource).orNull?.type;
+		val projectType = workspaceAccess.findProject(element?.eResource)?.type;
 		if (projectType === null || projectType === ProjectType.RUNTIME_ENVIRONMENT ||
 			projectType === ProjectType.RUNTIME_LIBRARY) {
 			return true;

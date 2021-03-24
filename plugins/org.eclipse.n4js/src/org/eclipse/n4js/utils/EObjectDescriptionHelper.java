@@ -17,8 +17,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -71,9 +71,10 @@ public final class EObjectDescriptionHelper {
 			return false;
 		}
 
-		final N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProject(context, eoDescription.getEObjectURI())
-				.orNull();
-		final N4JSProjectConfigSnapshot currentProject = workspaceAccess.findProject(context, eObjectResourceURI).orNull();
+		final N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProjectByNestedLocation(context,
+				eoDescription.getEObjectURI());
+		final N4JSProjectConfigSnapshot currentProject = workspaceAccess.findProjectByNestedLocation(context,
+				eObjectResourceURI);
 
 		return targetProject == currentProject;
 	}
