@@ -34,6 +34,9 @@ import com.google.common.collect.SetMultimap;
  */
 public class ProjectSet {
 
+	/** An empty project set. */
+	public static final ProjectSet EMPTY = new ProjectSet(Collections.emptyList());
+
 	/** Map from {@link ProjectConfigSnapshot#getName() project name} to the project's configuration snapshot. */
 	protected final ImmutableBiMap<String, ? extends ProjectConfigSnapshot> name2Project;
 	/** Inverse dependencies, i.e. map from name of a project P to all projects with a dependency to P. */
@@ -140,9 +143,14 @@ public class ProjectSet {
 		}
 	}
 
+	/** Tells whether this project set is empty. */
+	public boolean isEmpty() {
+		return name2Project.isEmpty();
+	}
+
 	/** Returns the number of projects in this project set. */
 	public int size() {
-		return name2Project.size();
+		return name2Project.values().size();
 	}
 
 	/** Tells whether the given project is contained in this set. */

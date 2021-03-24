@@ -28,9 +28,9 @@ import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper
-import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
@@ -116,10 +116,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * </ul>
 	 */
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
-		val ws = workspaceAccess.getWorkspaceConfig(input).orNull;
-		if (ws === null) {
-			return;
-		}
+		val ws = workspaceAccess.getWorkspaceConfig(input);
 
 		try {
 			// remove error-marker
@@ -151,10 +148,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	override shouldBeCompiled(Resource input, CancelIndicator monitor) {
-		val ws = workspaceAccess.getWorkspaceConfig(input).orNull;
-		if (ws === null) {
-			return false;
-		}
+		val ws = workspaceAccess.getWorkspaceConfig(input);
 
 		val autobuildEnabled = isActive(input)
 		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase

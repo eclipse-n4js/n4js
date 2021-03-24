@@ -90,7 +90,7 @@ public final class N4JSLanguageHelper {
 
 	/** Convenience method for {@link N4JSLanguageUtils#isOpaqueModule(ProjectType, URI)}. */
 	public boolean isOpaqueModule(Resource resource) {
-		N4JSWorkspaceConfigSnapshot workspaceConfig = workspaceAccess.getWorkspaceConfig(resource).orNull();
+		N4JSWorkspaceConfigSnapshot workspaceConfig = workspaceAccess.getWorkspaceConfig(resource);
 		return N4JSLanguageUtils.isOpaqueModule(workspaceConfig, resource.getURI());
 	}
 }

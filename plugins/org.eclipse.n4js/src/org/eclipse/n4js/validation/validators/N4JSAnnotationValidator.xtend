@@ -510,10 +510,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		if (resource === null) {
 			return;
 		}
-		val ws = workspaceAccess.getWorkspaceConfig(resource).orNull;
-		if (ws === null) {
-			return;
-		}
+		val ws = workspaceAccess.getWorkspaceConfig(resource);
 		val currentProject = ws.findProjectByNestedLocation(resource.URI);
 		if (currentProject === null) {
 			return

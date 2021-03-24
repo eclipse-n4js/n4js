@@ -53,26 +53,25 @@ public class WorkspaceAccess {
 
 	/**
 	 * Returns the current workspace configuration of the context defined by the given EMF {@link ResourceSet} or
-	 * element contained in a resource set.
+	 * element contained in a resource set. Returns {@link N4JSWorkspaceConfigSnapshot#EMPTY} in case no workspace
+	 * configuration can be found. Never returns <code>null</code>.
 	 */
-	public Optional<N4JSWorkspaceConfigSnapshot> getWorkspaceConfig(Notifier context) {
+	public N4JSWorkspaceConfigSnapshot getWorkspaceConfig(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
 		WorkspaceConfigSnapshot config = resourceSet != null
 				? WorkspaceConfigAdapter.getWorkspaceConfig(resourceSet)
 				: null;
-		return Optional.fromNullable((N4JSWorkspaceConfigSnapshot) config);
+		return config != null ? (N4JSWorkspaceConfigSnapshot) config : N4JSWorkspaceConfigSnapshot.EMPTY;
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#getProjects()}. */
 	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects(Notifier context) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() ? config.get().getProjects() : ImmutableSet.of();
+		return getWorkspaceConfig(context).getProjects();
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByPath(URI)}. */
 	public N4JSProjectConfigSnapshot findProjectByPath(Notifier context, URI path) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() ? config.get().findProjectByPath(path) : null;
+		return getWorkspaceConfig(context).findProjectByPath(path);
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
@@ -82,8 +81,7 @@ public class WorkspaceAccess {
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
 	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, String projectName) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() ? config.get().findProjectByName(projectName) : null;
+		return getWorkspaceConfig(context).findProjectByName(projectName);
 	}
 
 	/**
@@ -93,8 +91,7 @@ public class WorkspaceAccess {
 	 * {@link ProjectSet#findProjectByNestedLocation(URI) HERE}.
 	 */
 	public N4JSProjectConfigSnapshot findProjectByNestedLocation(Notifier context, URI nestedLocation) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() ? config.get().findProjectByNestedLocation(nestedLocation) : null;
+		return getWorkspaceConfig(context).findProjectByNestedLocation(nestedLocation);
 	}
 
 	/**
@@ -120,42 +117,39 @@ public class WorkspaceAccess {
 	 * {@link ProjectSet#findProjectByNestedLocation(URI) HERE}.
 	 */
 	public N4JSProjectConfigSnapshot findProjectContaining(Notifier context, URI nestedLocation) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() ? config.get().findProjectContaining(nestedLocation) : null;
+		return getWorkspaceConfig(context).findProjectContaining(nestedLocation);
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findSourceFolderContaining(URI)}. */
 	public N4JSSourceFolderSnapshot findSourceFolderContaining(Notifier context, URI nestedLocation) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() ? config.get().findSourceFolderContaining(nestedLocation) : null;
+		return getWorkspaceConfig(context).findSourceFolderContaining(nestedLocation);
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectAndSourceFolderContaining(URI)}. */
 	public Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot> findProjectAndSourceFolderContaining(
 			Notifier context, URI nestedLocation) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() ? config.get().findProjectAndSourceFolderContaining(nestedLocation) : null;
+		return getWorkspaceConfig(context).findProjectAndSourceFolderContaining(nestedLocation);
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#isNoValidate(URI)}. */
 	public boolean isNoValidate(Notifier context, URI nestedLocation) {
-		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
-		return config.isPresent() && config.get().isNoValidate(nestedLocation);
+		return getWorkspaceConfig(context).isNoValidate(nestedLocation);
 	}
 
 	// ######################################################################################################
 	// The following methods are included here for historic reasons:
 
 	/**
-	 * Creates a new resource set and configures it with the "current" state of the "default workspace", if possible. It
-	 * is undefined which workspace will be used (in case several exist) and which exact point in time its state will
-	 * represent. <b>Therefore, this method should only be used when setting up an independent environment from scratch
-	 * (e.g. some external tooling).</b>
+	 * Creates a new resource set and configures it with the "current" state of the "default workspace". It is undefined
+	 * which workspace will be used (in case several exist) and which exact point in time its state will represent.
+	 * <b>Therefore, this method should only be used when setting up an independent environment from scratch (e.g. some
+	 * external tooling).</b>
 	 * <p>
-	 * Because no workspace context is defined on the level of bundle <code>org.eclispe.n4js</code> this method will not
-	 * configure any workspace, by default. In the IDE context, the current workspace configuration of the LSP builder's
-	 * {@code ConcurrentIndex} will be used (configure in override of this method). In tests, a mock workspace
-	 * configuration will be used (configured via {@code MockResourceSetProvider}).
+	 * Because no workspace context is defined on the level of bundle <code>org.eclispe.n4js</code> this method will use
+	 * an {@link N4JSWorkspaceConfigSnapshot#EMPTY EMPTY} workspace configuration, by default. In the IDE context, the
+	 * current workspace configuration of the LSP builder's {@code ConcurrentIndex} will be used (configured in override
+	 * of this method in subclass {@code IdeWorkspaceAccess}). In tests, a mock workspace configuration will be used
+	 * (configured indirectly via {@code MockResourceSetProvider}).
 	 * <p>
 	 * IMPORTANT:
 	 * <ul>
@@ -169,7 +163,9 @@ public class WorkspaceAccess {
 	 * </ul>
 	 */
 	public XtextResourceSet createResourceSet() {
-		return resourceSetProvider.get();
+		XtextResourceSet result = resourceSetProvider.get();
+		WorkspaceConfigAdapter.installWorkspaceConfig(result, N4JSWorkspaceConfigSnapshot.EMPTY);
+		return result;
 	}
 
 	/**

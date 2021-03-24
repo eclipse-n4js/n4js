@@ -180,7 +180,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		// lookup of names in project description
 		val Map<N4JSProjectName, JSONStringLiteral> mQName2rtDep = newHashMap()
 
-		val ws = workspaceAccess.getWorkspaceConfig(document).orNull;
+		val ws = workspaceAccess.getWorkspaceConfig(document);
 
 		val description = getProjectDescription();
 		val projectName = description.projectName;

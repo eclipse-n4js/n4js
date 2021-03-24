@@ -28,6 +28,11 @@ import com.google.common.collect.ImmutableSet;
  */
 public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 
+	/** An empty N4JS workspace configuration with a {@link #EMPTY_PATH default path}. */
+	@SuppressWarnings("hiding")
+	public static final N4JSWorkspaceConfigSnapshot EMPTY = new N4JSWorkspaceConfigSnapshot(EMPTY_PATH,
+			ProjectSet.EMPTY, BuildOrderInfo.NULL);
+
 	/** Creates a {@link N4JSWorkspaceConfigSnapshot}. */
 	public N4JSWorkspaceConfigSnapshot(URI path, ProjectSet projects, BuildOrderInfo buildOrderInfo) {
 		super(path, projects, buildOrderInfo);

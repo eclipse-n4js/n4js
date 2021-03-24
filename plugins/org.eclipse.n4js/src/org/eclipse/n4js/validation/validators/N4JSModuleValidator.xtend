@@ -173,8 +173,8 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				// non MainModules are follow normal visibility check
 				// but MainModules have checks relaxed:
 				if(module.isMainModule){
-					val ws = workspaceAccess.getWorkspaceConfig(resource).orNull;
-					val pr = ws?.findProjectByPath(resource.URI);
+					val ws = workspaceAccess.getWorkspaceConfig(resource);
+					val pr = ws.findProjectByPath(resource.URI);
 					if (pr === null) {
 						return;
 					}

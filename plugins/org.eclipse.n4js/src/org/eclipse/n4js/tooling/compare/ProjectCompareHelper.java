@@ -101,9 +101,9 @@ public class ProjectCompareHelper {
 	 */
 	public ProjectComparison createComparison(boolean fullCompare, List<String> addErrorMessagesHere) {
 		final ResourceSet resourceSet = workspaceAccess.createResourceSet();
-		final N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resourceSet).orNull();
+		final N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resourceSet);
 		final IResourceDescriptions index = workspaceAccess.getXtextIndex(resourceSet).orNull();
-		if (wc == null || index == null) {
+		if (index == null) {
 			addErrorMessagesHere.add(
 					"failed to create a new resource set with properly configured workspace configuration and index");
 			return null;
@@ -184,9 +184,8 @@ public class ProjectCompareHelper {
 	 *         API definition.
 	 */
 	public Optional<N4JSProjectName> getImplementationID(TModule apiImplModule) {
-
 		N4JSProjectConfigSnapshot implProject = workspaceAccess.findProjectContaining(apiImplModule);
-		String implId = implProject.getImplementationId();
+		String implId = implProject != null ? implProject.getImplementationId() : null;
 		return implId != null ? Optional.of(new N4JSProjectName(implId)) : Optional.absent();
 	}
 
@@ -237,11 +236,7 @@ public class ProjectCompareHelper {
 			final boolean includePolyfills) {
 
 		Resource resource = module.eResource();
-		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resource).orNull();
-		if (wc == null) {
-			return null;
-		}
-
+		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resource);
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(resource);
 		if (project == null) {
 			return null;

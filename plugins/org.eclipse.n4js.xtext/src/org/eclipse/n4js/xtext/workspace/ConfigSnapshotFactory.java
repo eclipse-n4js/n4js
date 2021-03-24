@@ -33,7 +33,7 @@ public class ConfigSnapshotFactory {
 	@Inject
 	protected BuildOrderFactory buildOrderFactory;
 
-	/** Creates an instance of {@link WorkspaceConfigSnapshot} representing an empty workspace. */
+	/** Creates an empty instance of {@link WorkspaceConfigSnapshot} representing an empty workspace. */
 	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path) {
 		return createWorkspaceConfigSnapshot(path, Collections.emptyList());
 	}

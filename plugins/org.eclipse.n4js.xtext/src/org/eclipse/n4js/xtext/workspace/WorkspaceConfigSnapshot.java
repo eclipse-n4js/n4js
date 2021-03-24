@@ -25,6 +25,13 @@ import com.google.common.collect.ImmutableSet;
 @SuppressWarnings("restriction")
 public class WorkspaceConfigSnapshot extends Snapshot {
 
+	/** The path used for the {@link #EMPTY default empty} workspace configuration. */
+	public static final URI EMPTY_PATH = URI.createFileURI("/empty-workspace");
+
+	/** An empty workspace configuration with a {@link #EMPTY_PATH default path}. */
+	public static final WorkspaceConfigSnapshot EMPTY = new WorkspaceConfigSnapshot(EMPTY_PATH, ProjectSet.EMPTY,
+			BuildOrderInfo.NULL);
+
 	/** The root path of the workspace */
 	protected final URI path;
 	/** Set of projects in the workspace, prepared for fast lookup by name, path, etc. */
@@ -42,6 +49,16 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	/** Getter for the root path. */
 	public URI getPath() {
 		return path;
+	}
+
+	/** Tells whether this workspace is empty, i.e. does not contain any projects. */
+	public boolean isEmpty() {
+		return projects.isEmpty();
+	}
+
+	/** Number of projects in this workspace. */
+	public int size() {
+		return projects.size();
 	}
 
 	/** Get all the projects known in this snapshot. */
