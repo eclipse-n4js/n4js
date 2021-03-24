@@ -20,5 +20,6 @@ Require-Bundle: com.google.inject,
  org.eclipse.n4js.cli.tests.helper,
  org.eclipse.lsp4j,
  org.eclipse.n4js.ide,
- org.eclipse.n4js.xtext
+ org.eclipse.n4js.xtext,
+ org.eclipse.n4js.xtext.ide
 Automatic-Module-Name: org.eclipse.n4js.accesscontrol.tests

@@ -29,11 +29,11 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.n4js.xtext.server.LanguageServerFrontend;
-import org.eclipse.n4js.xtext.server.ProjectStatePersisterConfig;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.build.DefaultBuildRequestFactory;
-import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
+import org.eclipse.n4js.xtext.ide.server.LanguageServerFrontend;
+import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.build.DefaultBuildRequestFactory;
+import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 
 import com.google.common.base.Stopwatch;

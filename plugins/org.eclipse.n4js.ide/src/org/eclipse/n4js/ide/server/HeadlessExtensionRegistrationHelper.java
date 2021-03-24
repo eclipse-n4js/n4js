@@ -23,7 +23,7 @@ import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
-import org.eclipse.n4js.xtext.server.util.IHeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 
 import com.google.inject.Inject;

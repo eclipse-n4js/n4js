@@ -11,9 +11,9 @@
 package org.eclipse.n4js.ide.tests.helper.server;
 
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.LanguageInfo;

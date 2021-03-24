@@ -11,7 +11,7 @@
 package org.eclipse.n4js.ide.editor.contentassist;
 
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.xtext.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.TextRegion;

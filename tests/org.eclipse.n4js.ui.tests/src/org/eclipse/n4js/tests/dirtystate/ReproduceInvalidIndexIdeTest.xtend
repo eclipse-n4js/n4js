@@ -24,7 +24,7 @@ import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex
 import org.eclipse.xtext.testing.RepeatedTest
 import org.junit.Assert
 import org.junit.Rule

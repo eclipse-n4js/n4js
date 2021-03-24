@@ -19,10 +19,10 @@ import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.xtext.server.ResourceTaskContext;
-import org.eclipse.n4js.xtext.server.XDocument;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.util.ParamHelper;
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
+import org.eclipse.n4js.xtext.ide.server.XDocument;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.util.ParamHelper;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;

@@ -13,7 +13,7 @@ package org.eclipse.n4js.cli.lsp;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import org.eclipse.n4js.xtext.server.util.LspLogger;
+import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 
 /**
  * A print stream that forwards character-based output to an {@link LspLogger}. Low-level byte-based output sent to this

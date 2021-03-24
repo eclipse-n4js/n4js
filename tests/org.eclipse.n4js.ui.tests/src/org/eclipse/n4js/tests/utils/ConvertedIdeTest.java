@@ -43,7 +43,7 @@ import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;

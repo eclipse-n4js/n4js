@@ -43,10 +43,10 @@ import org.eclipse.n4js.utils.ResourceNameComputer;
 import org.eclipse.n4js.workspace.IN4JSCoreNEW;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.xtext.server.ResourceTaskContext;
-import org.eclipse.n4js.xtext.server.TextDocumentFrontend;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
+import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Strings;

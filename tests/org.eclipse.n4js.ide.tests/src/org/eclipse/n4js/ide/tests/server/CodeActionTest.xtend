@@ -12,8 +12,7 @@ package org.eclipse.n4js.ide.tests.server
 
 import org.eclipse.lsp4j.CodeAction
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCodeActionTest
-import org.eclipse.n4js.ide.tests.helper.server.AbstractCodeActionTest.N4JSTestCodeActionConfiguration
-import org.eclipse.n4js.xtext.server.XDocument
+import org.eclipse.n4js.xtext.ide.server.XDocument
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals

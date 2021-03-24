@@ -25,7 +25,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.impl.TypeImpl
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
 import org.eclipse.n4js.workspace.locations.FileURI
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex
 import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData

@@ -18,7 +18,6 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
@@ -193,19 +192,14 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 
 	// FIXME GH-2073 important! get rid of the following!
 
-	@Inject
-	private ConcurrentIndex concurrentIndex;
-
 	@Override
 	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects() {
-		N4JSWorkspaceConfigSnapshot wcs = (N4JSWorkspaceConfigSnapshot) concurrentIndex.getWorkspaceConfigSnapshot();
-		return wcs.getProjects();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Optional<N4JSProjectConfigSnapshot> findProject(URI nestedLocation) {
-		N4JSWorkspaceConfigSnapshot wcs = (N4JSWorkspaceConfigSnapshot) concurrentIndex.getWorkspaceConfigSnapshot();
-		return Optional.fromNullable(wcs.findProjectByNestedLocation(nestedLocation));
+		throw new UnsupportedOperationException();
 	}
 
 }

@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.n4js.xtext
 Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext,
- org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.change,
@@ -15,12 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.log4j,
  com.google.inject,
  com.google.gson
-Export-Package: org.eclipse.n4js.xtext.editor.contentassist,
- org.eclipse.n4js.xtext.server.contentassist,
- org.eclipse.n4js.xtext.server,
- org.eclipse.n4js.xtext.server.build,
- org.eclipse.n4js.xtext.server.issues,
- org.eclipse.n4js.xtext.server.util,
- org.eclipse.n4js.xtext.workspace
+Export-Package: org.eclipse.n4js.xtext.workspace
 Automatic-Module-Name: org.eclipse.n4js.xtext
 Bundle-RequiredExecutionEnvironment: JavaSE-11

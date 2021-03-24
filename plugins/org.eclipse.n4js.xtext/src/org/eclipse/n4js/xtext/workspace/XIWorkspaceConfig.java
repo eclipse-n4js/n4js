@@ -13,7 +13,6 @@ package org.eclipse.n4js.xtext.workspace;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
 /**
@@ -38,7 +37,7 @@ public interface XIWorkspaceConfig extends IWorkspaceConfig {
 	 *             {@link WorkspaceConfigSnapshot#findProjectByNestedLocation(URI) #findProjectByNestedLocation(URI)} or
 	 *             {@link WorkspaceConfigSnapshot#findProjectContaining(URI) #findProjectContaining(URI)} in
 	 *             {@link WorkspaceConfigSnapshot}, instead of this method. In particular, the new
-	 *             {@link XWorkspaceManager} now follows this rule.
+	 *             {@code XWorkspaceManager} now follows this rule.
 	 */
 	@Override
 	@Deprecated

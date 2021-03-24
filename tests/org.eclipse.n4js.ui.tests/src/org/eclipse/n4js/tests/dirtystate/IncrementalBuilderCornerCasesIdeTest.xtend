@@ -15,7 +15,7 @@ import java.util.Collections
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta

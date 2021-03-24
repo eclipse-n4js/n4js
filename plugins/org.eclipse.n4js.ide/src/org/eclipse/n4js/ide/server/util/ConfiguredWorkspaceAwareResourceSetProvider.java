@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.server.util;
 
 import org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider;
 import org.eclipse.n4js.ts.scoping.builtin.DelegatingConfiguredResourceSetProvider;
-import org.eclipse.n4js.xtext.server.build.WorkspaceAwareResourceSet;
+import org.eclipse.n4js.xtext.ide.server.build.WorkspaceAwareResourceSet;
 
 import com.google.inject.Inject;
 

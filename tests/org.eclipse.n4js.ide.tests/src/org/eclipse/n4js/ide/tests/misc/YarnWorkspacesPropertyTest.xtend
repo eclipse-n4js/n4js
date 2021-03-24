@@ -14,7 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager
 import org.eclipse.n4js.workspace.locations.FileURI
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex
 import org.junit.Test
 
 import static org.junit.Assert.*

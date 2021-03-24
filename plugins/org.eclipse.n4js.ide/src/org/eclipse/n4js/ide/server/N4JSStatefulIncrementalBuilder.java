@@ -12,8 +12,8 @@ package org.eclipse.n4js.ide.server;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.build.XStatefulIncrementalBuilder;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
 
 /**
  * N4JS-specific adjustments to {@link XLanguageServerImpl}.

@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.server;
 
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.server.XDefaultProjectDescriptionFactory;
+import org.eclipse.n4js.xtext.ide.server.XDefaultProjectDescriptionFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
 

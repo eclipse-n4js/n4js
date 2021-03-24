@@ -63,6 +63,7 @@ Contributors:
 		<module>org.eclipse.n4js.xpect</module>
 		<!-- xtext -->
 		<module>org.eclipse.n4js.xtext</module>
+		<module>org.eclipse.n4js.xtext.ide</module>
 	</modules>
 
 	<properties>

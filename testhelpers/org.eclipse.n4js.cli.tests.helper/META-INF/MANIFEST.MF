@@ -7,6 +7,7 @@ Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.xtext,
+ org.eclipse.n4js.xtext.ide,
  org.eclipse.n4js.cli,
  org.junit,
  org.kohsuke.args4j,

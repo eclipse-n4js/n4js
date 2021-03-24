@@ -10,10 +10,16 @@
  */
 package org.eclipse.n4js.ide;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.workspace.N4JSCoreNEW;
-import org.eclipse.n4js.xtext.server.ResourceTaskManager;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -26,5 +32,22 @@ public class N4JSIdeCoreNEW extends N4JSCoreNEW {
 	@Override
 	public XtextResourceSet createResourceSet() {
 		return resourceTaskManager.createTemporaryResourceSet();
+	}
+
+	// FIXME GH-2073 important! get rid of the following!
+
+	@Inject
+	private ConcurrentIndex concurrentIndex;
+
+	@Override
+	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects() {
+		N4JSWorkspaceConfigSnapshot wcs = (N4JSWorkspaceConfigSnapshot) concurrentIndex.getWorkspaceConfigSnapshot();
+		return wcs.getProjects();
+	}
+
+	@Override
+	public Optional<N4JSProjectConfigSnapshot> findProject(URI nestedLocation) {
+		N4JSWorkspaceConfigSnapshot wcs = (N4JSWorkspaceConfigSnapshot) concurrentIndex.getWorkspaceConfigSnapshot();
+		return Optional.fromNullable(wcs.findProjectByNestedLocation(nestedLocation));
 	}
 }

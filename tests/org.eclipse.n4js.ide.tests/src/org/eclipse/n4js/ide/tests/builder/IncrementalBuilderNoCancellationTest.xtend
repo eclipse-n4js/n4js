@@ -15,7 +15,7 @@ import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager
 import org.eclipse.n4js.workspace.locations.FileURI
-import org.eclipse.n4js.xtext.server.QueuedExecutorService
+import org.eclipse.n4js.xtext.ide.server.QueuedExecutorService
 import org.eclipse.xtext.service.AbstractGenericModule
 import org.junit.Test
 

@@ -19,7 +19,7 @@ import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.workspace.locations.FileURI
-import org.eclipse.n4js.xtext.server.ResourceTaskManager
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
 

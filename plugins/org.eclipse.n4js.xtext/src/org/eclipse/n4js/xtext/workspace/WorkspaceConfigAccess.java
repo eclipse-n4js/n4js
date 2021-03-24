@@ -14,13 +14,10 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.n4js.xtext.server.ResourceTaskContext;
-import org.eclipse.n4js.xtext.server.build.WorkspaceAwareResourceSet;
-import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
 
 /**
  * A utility providing access to a {@link WorkspaceConfigSnapshot} when given a resource set as context. This works both
- * inside the LSP builder and inside open editors or other {@link ResourceTaskContext}s.
+ * inside the LSP builder and inside open editors or other {@code ResourceTaskContext}s.
  */
 public class WorkspaceConfigAccess {
 
@@ -29,13 +26,11 @@ public class WorkspaceConfigAccess {
 			return null;
 		}
 		// in the LSP builder we can obtain the workspace config via the XWorkspaceManager:
-		if (resourceSet instanceof WorkspaceAwareResourceSet) {
-			XWorkspaceManager workspaceManager = ((WorkspaceAwareResourceSet) resourceSet).getWorkspaceManager();
-			if (workspaceManager != null) {
-				WorkspaceConfigSnapshot workspaceConfig = workspaceManager.getWorkspaceConfig();
-				if (workspaceConfig != null) {
-					return workspaceConfig;
-				}
+		if (resourceSet instanceof IWorkspaceAwareResourceSet) {
+			WorkspaceConfigSnapshot workspaceConfig = ((IWorkspaceAwareResourceSet) resourceSet)
+					.getWorkspaceConfiguration();
+			if (workspaceConfig != null) {
+				return workspaceConfig;
 			}
 		}
 		// in all other cases (i.e. in a ResourceTaskContext) we expect the workspace config to be set on the resource
