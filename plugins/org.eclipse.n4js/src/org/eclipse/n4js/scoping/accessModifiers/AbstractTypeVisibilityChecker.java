@@ -15,8 +15,8 @@ import static java.util.Collections.emptyList;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.projectDescription.ProjectReference;
-import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;

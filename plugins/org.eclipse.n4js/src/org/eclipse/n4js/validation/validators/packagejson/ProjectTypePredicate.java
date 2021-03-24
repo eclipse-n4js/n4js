@@ -13,12 +13,12 @@ package org.eclipse.n4js.validation.validators.packagejson;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Lists.asList;
 
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
-
-import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectType;
 
 /**
  * Convenient predicate for {@link ProjectType project type}s. Provides {@code true} result for the evaluation if the

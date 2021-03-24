@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4JS.extensions
+package org.eclipse.n4js.scoping.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton

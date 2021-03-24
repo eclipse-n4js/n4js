@@ -17,7 +17,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
+import org.eclipse.n4js.scoping.utils.ExpressionExtensions;
 import org.eclipse.n4js.scoping.utils.UnsatisfiedRWAccessDescription;
 import org.eclipse.n4js.scoping.utils.WrongStaticAccessDescription;
 import org.eclipse.n4js.scoping.utils.WrongWriteAccessDescription;

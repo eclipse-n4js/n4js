@@ -10,15 +10,16 @@
  */
 package org.eclipse.n4js.tests.n4JS.extensions
 
+import java.util.List
+import javax.inject.Inject
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
-import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import java.util.List
-import javax.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -27,7 +28,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /**
  */

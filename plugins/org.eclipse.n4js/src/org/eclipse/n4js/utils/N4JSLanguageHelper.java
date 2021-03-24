@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.workspace.IN4JSCoreNEW;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;

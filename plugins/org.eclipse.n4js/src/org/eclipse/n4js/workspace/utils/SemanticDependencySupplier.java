@@ -17,8 +17,8 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.n4js.projectDescription.DependencyType;
-import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.packagejson.projectDescription.DependencyType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.semver.SemverUtils;
 
 /**

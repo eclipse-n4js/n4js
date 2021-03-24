@@ -21,7 +21,7 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
-import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.workspace.IN4JSCoreNEW;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;

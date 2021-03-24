@@ -25,8 +25,8 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONPackage
 import org.eclipse.n4js.json.^extension.IJSONResourceDescriptionExtension
 import org.eclipse.n4js.packagejson.PackageJsonUtils
-import org.eclipse.n4js.projectDescription.ProjectDescription
-import org.eclipse.n4js.projectDescription.ProjectReference
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.ProjectDescriptionUtils

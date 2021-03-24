@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.server.XDefaultProjectDescriptionFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;

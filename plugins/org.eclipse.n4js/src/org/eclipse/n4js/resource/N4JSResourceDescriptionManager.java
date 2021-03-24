@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;

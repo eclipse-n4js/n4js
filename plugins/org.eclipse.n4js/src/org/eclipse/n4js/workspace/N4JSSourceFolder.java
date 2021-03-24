@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectDescription.SourceContainerDescription;
-import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;

@@ -17,9 +17,9 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectDescription.ModuleFilter;
-import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ModuleFilter;
+import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterSpecifier;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 

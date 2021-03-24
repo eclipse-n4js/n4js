@@ -50,12 +50,12 @@ import org.eclipse.n4js.json.JSON.JSONValue
 import org.eclipse.n4js.json.JSON.NameValuePair
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.packagejson.PackageJsonUtils
-import org.eclipse.n4js.projectDescription.ModuleFilterSpecifier
-import org.eclipse.n4js.projectDescription.ProjectDependency
-import org.eclipse.n4js.projectDescription.ProjectDescription
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectDescription.SourceContainerDescription
-import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterSpecifier
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement
 import org.eclipse.n4js.semver.SemverHelper
@@ -90,7 +90,7 @@ import org.eclipse.xtext.validation.Check
 
 import static com.google.common.base.Preconditions.checkState
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.*
-import static org.eclipse.n4js.projectDescription.ProjectType.*
+import static org.eclipse.n4js.packagejson.projectDescription.ProjectType.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 

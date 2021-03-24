@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import org.eclipse.n4js.projectDescription.ProjectType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Class;
 import org.eclipse.n4js.tests.codegen.Classifier;
 import org.eclipse.n4js.tests.codegen.Field;

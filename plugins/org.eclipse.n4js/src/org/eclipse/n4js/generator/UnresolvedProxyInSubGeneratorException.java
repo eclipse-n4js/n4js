@@ -11,7 +11,7 @@
 package org.eclipse.n4js.generator;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType;
 import org.eclipse.xtext.util.LineAndColumn;
 
 import com.google.common.base.Optional;

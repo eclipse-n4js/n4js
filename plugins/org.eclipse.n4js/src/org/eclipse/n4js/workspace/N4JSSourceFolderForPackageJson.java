@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.xtext.util.IFileSystemScanner;
 
 /**

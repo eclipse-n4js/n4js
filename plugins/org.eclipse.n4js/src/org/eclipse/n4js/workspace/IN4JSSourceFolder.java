@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.workspace;
 
-import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.xtext.workspace.IProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 

@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectDescription.SourceContainerDescription;
-import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;

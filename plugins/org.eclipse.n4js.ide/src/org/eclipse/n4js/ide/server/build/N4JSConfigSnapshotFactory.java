@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.server.build;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.projectDescription.ProjectDependency;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.workspace.IN4JSSourceFolder;
 import org.eclipse.n4js.workspace.N4JSProjectConfig;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;

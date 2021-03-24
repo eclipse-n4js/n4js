@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectDescription;
+package org.eclipse.n4js.packagejson.projectDescription;
 
 import java.util.List;
 import java.util.Objects;

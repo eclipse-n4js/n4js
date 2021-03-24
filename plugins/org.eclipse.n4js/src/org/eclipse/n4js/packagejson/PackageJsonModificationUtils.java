@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.n4js.projectDescription.SourceContainerType;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.xbase.lib.Pair;

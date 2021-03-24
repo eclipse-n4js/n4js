@@ -19,7 +19,7 @@ import java.util.Map
 import java.util.Objects
 import java.util.Set
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.eclipse.xpect.setup.XpectSetupComponent
 

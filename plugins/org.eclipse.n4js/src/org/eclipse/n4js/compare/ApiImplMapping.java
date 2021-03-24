@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
-import org.eclipse.n4js.projectDescription.ProjectReference;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;

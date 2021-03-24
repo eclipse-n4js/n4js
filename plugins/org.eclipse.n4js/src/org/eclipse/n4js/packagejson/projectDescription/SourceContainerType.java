@@ -8,17 +8,20 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectDescription;
+package org.eclipse.n4js.packagejson.projectDescription;
 
 @SuppressWarnings("javadoc")
-public enum ModuleFilterType implements KeywordEnum {
+public enum SourceContainerType implements KeywordEnum {
 
-	/** Turns off validation of affected modules. */
-	NO_VALIDATE("noValidate");
+	// @formatter:off
+	SOURCE("source"),
+	TEST("test"),
+	EXTERNAL("external");
+	// @formatter:on
 
 	private final String keyword;
 
-	private ModuleFilterType(String keyword) {
+	private SourceContainerType(String keyword) {
 		this.keyword = keyword;
 	}
 

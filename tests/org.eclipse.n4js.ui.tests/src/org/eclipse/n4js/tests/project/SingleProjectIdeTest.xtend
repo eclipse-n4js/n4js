@@ -12,7 +12,7 @@ package org.eclipse.n4js.tests.project
 
 import java.nio.file.Files
 import org.eclipse.n4js.packagejson.PackageJsonUtils
-import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.workspace.locations.FileURI
 import org.junit.Before

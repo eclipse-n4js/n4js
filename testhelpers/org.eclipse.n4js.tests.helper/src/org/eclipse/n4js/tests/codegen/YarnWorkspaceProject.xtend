@@ -17,7 +17,7 @@ import java.util.Collection
 import java.util.Map
 import java.util.Objects
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.utils.Strings
 
 /**

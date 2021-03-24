@@ -16,7 +16,7 @@ import org.eclipse.n4js.compare.ProjectCompareResult.Status
 import org.eclipse.n4js.compare.ProjectComparison
 import org.eclipse.n4js.compare.ProjectComparisonEntry
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
-import org.eclipse.n4js.projectDescription.ProjectReference
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.Type
 

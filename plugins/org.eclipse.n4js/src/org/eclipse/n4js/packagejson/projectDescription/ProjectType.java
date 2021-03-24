@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.projectDescription;
+package org.eclipse.n4js.packagejson.projectDescription;
 
 @SuppressWarnings("javadoc")
 public enum ProjectType implements KeywordEnum {
