@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -47,7 +47,7 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 	public Optional<N4JSWorkspaceConfigSnapshot> getWorkspaceConfig(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
 		WorkspaceConfigSnapshot config = resourceSet != null
-				? WorkspaceConfigAccess.getWorkspaceConfig(resourceSet)
+				? WorkspaceConfigAdapter.getWorkspaceConfig(resourceSet)
 				: null;
 		return Optional.fromNullable((N4JSWorkspaceConfigSnapshot) config);
 	}

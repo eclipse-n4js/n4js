@@ -26,7 +26,7 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.xtext.server.LSPIssue;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -243,7 +243,7 @@ public class ResourceTaskContext {
 	/** Returns a newly created and fully configured resource set */
 	protected XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
-		WorkspaceConfigAccess.setWorkspaceConfig(result, workspaceConfig);
+		WorkspaceConfigAdapter.installWorkspaceConfig(result, workspaceConfig);
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
 
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
@@ -418,7 +418,7 @@ public class ResourceTaskContext {
 
 		boolean workspaceConfigChanged = !workspaceConfig.equals(oldWorkspaceConfig);
 		if (workspaceConfigChanged) {
-			WorkspaceConfigAccess.setWorkspaceConfig(mainResourceSet, workspaceConfig);
+			WorkspaceConfigAdapter.installWorkspaceConfig(mainResourceSet, workspaceConfig);
 		}
 
 		// refresh if I am affected by the changes

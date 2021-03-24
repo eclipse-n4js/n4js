@@ -13,7 +13,7 @@ package org.eclipse.n4js.tests.helper.mock;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider;
 import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInSchemeProvider;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.util.UriExtensions;
 
@@ -40,7 +40,7 @@ public class MockResourceSetProvider extends ConfiguredResourceSetProvider {
 	@Override
 	public SynchronizedXtextResourceSet get() {
 		SynchronizedXtextResourceSet result = super.get();
-		WorkspaceConfigAccess.setWorkspaceConfig(result, mockWorkspaceSupplier.getMockWorkspaceConfig());
+		WorkspaceConfigAdapter.installWorkspaceConfig(result, mockWorkspaceSupplier.getMockWorkspaceConfig());
 		return result;
 	}
 

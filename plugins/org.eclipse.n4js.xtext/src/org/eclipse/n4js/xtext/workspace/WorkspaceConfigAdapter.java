@@ -19,7 +19,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4;
  * A utility providing access to a {@link WorkspaceConfigSnapshot} when given a resource set as context. This works both
  * inside the LSP builder and inside open editors or other {@code ResourceTaskContext}s.
  */
-public class WorkspaceConfigAccess {
+public class WorkspaceConfigAdapter extends AdapterImpl {
 
 	public static WorkspaceConfigSnapshot getWorkspaceConfig(ResourceSet resourceSet) {
 		if (resourceSet == null) {
@@ -43,17 +43,17 @@ public class WorkspaceConfigAccess {
 		return null;
 	}
 
-	public static void setWorkspaceConfig(ResourceSet resourceSet, WorkspaceConfigSnapshot workspaceConfig) {
+	public static void installWorkspaceConfig(ResourceSet resourceSet, WorkspaceConfigSnapshot workspaceConfig) {
 		if (resourceSet == null) {
 			return;
 		}
-		unsetWorkspaceConfig(resourceSet);
+		uninstallWorkspaceConfig(resourceSet);
 		EcoreUtilN4.doWithDeliver(false, () -> {
 			resourceSet.eAdapters().add(new WorkspaceConfigAdapter(workspaceConfig));
 		}, resourceSet);
 	}
 
-	public static void unsetWorkspaceConfig(ResourceSet resourceSet) {
+	public static void uninstallWorkspaceConfig(ResourceSet resourceSet) {
 		if (resourceSet == null) {
 			return;
 		}
@@ -62,17 +62,14 @@ public class WorkspaceConfigAccess {
 		}, resourceSet);
 	}
 
-	private static final class WorkspaceConfigAdapter extends AdapterImpl {
+	private final WorkspaceConfigSnapshot workspaceConfig;
 
-		private final WorkspaceConfigSnapshot workspaceConfig;
+	private WorkspaceConfigAdapter(WorkspaceConfigSnapshot workspaceConfig) {
+		this.workspaceConfig = workspaceConfig;
+	}
 
-		private WorkspaceConfigAdapter(WorkspaceConfigSnapshot workspaceConfig) {
-			this.workspaceConfig = workspaceConfig;
-		}
-
-		@Override
-		public boolean isAdapterForType(Object type) {
-			return type == WorkspaceConfigAdapter.class;
-		}
+	@Override
+	public boolean isAdapterForType(Object type) {
+		return type instanceof WorkspaceConfigAdapter;
 	}
 }

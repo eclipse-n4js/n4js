@@ -29,7 +29,7 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.CancelIndicatorUtil;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAccess;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -311,7 +311,7 @@ public class ResourceTaskManager {
 		// OR: consider introducing a class XIIdeResourceSetProvider as a non-UI replacement for
 		// org.eclipse.xtext.ui.resource.IResourceSetProvider (which relies on Eclipse UI)
 		XtextResourceSet result = resourceSetProvider.get();
-		WorkspaceConfigAccess.setWorkspaceConfig(result, workspaceConfig);
+		WorkspaceConfigAdapter.installWorkspaceConfig(result, workspaceConfig);
 		ResourceDescriptionsData index = createPersistedStateIndex();
 		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
 		return result;
