@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import com.google.inject.Provider
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.findReferences.HeadlessReferenceFinder
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
@@ -26,6 +25,7 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.tooling.findReferences.HeadlessReferenceFinder
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner

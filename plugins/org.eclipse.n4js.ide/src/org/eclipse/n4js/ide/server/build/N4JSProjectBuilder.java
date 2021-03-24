@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
-import org.eclipse.n4js.tester.TestCatalogSupplier;
+import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.server.ResourceChangeSet;

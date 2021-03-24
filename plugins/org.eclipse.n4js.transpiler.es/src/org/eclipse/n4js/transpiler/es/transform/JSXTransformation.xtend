@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4JS.JSXSpreadAttribute
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
-import org.eclipse.n4js.n4jsx.ReactHelper
+import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.Script_IM

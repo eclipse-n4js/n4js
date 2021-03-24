@@ -79,7 +79,7 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.ReactHelper;
+import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;

@@ -49,7 +49,6 @@ import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
-import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -62,6 +61,7 @@ import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.scoping.utils.ScopesHelper
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
+import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef

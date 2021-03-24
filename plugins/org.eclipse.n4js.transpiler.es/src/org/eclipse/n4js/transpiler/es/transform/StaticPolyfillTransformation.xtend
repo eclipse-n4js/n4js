@@ -19,8 +19,8 @@ import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.tooling.organizeImports.ScriptDependencyResolver
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM

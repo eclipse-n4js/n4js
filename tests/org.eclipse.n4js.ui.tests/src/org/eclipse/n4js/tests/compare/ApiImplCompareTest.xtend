@@ -13,9 +13,9 @@ package org.eclipse.n4js.tests.compare
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.n4js.ApiImplCompareTestHelper
-import org.eclipse.n4js.compare.ProjectCompareHelper
-import org.eclipse.n4js.compare.ProjectCompareResult.Status
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
+import org.eclipse.n4js.tooling.compare.ProjectCompareHelper
+import org.eclipse.n4js.tooling.compare.ProjectCompareResult.Status
 import org.eclipse.n4js.workspace.IN4JSCoreNEW
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.junit.Test

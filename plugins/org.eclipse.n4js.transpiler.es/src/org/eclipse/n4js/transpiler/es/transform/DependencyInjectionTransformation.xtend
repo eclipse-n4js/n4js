@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.types.TN4Classifier
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.organize.imports.DIUtility.*
+import static extension org.eclipse.n4js.tooling.organizeImports.DIUtility.*
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 

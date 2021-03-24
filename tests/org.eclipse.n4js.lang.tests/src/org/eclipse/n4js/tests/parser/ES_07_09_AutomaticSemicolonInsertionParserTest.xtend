@@ -17,18 +17,18 @@ import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
+import org.eclipse.n4js.tooling.N4JSDocumentationProvider
 import org.eclipse.xtext.formatting.IWhitespaceInformationProvider
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.ILeafNode
+import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.XtextResource
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.documentation.N4JSDocumentationProvider
-import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError
-import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProviderWithoutStructureValidation)

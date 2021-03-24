@@ -16,14 +16,14 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
+import org.eclipse.n4js.tooling.organizeImports.ScriptDependencyResolver
+import org.eclipse.n4js.transpiler.AbstractTranspiler
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.n4js.transpiler.AbstractTranspiler
 
 /**
  * Transformation to clean up imports:

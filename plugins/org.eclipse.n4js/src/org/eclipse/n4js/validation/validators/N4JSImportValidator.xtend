@@ -22,8 +22,8 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.organize.imports.ImportProvidedElement
-import org.eclipse.n4js.organize.imports.ImportStateCalculator
+import org.eclipse.n4js.tooling.organizeImports.ImportProvidedElement
+import org.eclipse.n4js.tooling.organizeImports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
@@ -38,7 +38,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
-import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
+import static extension org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil.*
 
 /** Validations for the import statements. */
 @Log
