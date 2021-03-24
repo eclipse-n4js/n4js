@@ -11,7 +11,7 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import java.math.BigDecimal
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -34,7 +34,7 @@ import static extension org.junit.Assert.*
 /**
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ArrowFunctionTest extends AbstractTranspilerTest {
 

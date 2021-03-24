@@ -11,7 +11,7 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import java.util.regex.Pattern
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -23,7 +23,7 @@ import org.junit.runners.MethodSorters
 /**
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class AT_IDE_2004_YieldTest extends AbstractTranspilerTest {
 

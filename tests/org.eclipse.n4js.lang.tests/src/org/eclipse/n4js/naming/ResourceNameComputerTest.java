@@ -13,7 +13,7 @@ package org.eclipse.n4js.naming;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject;
+import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -33,7 +33,7 @@ import com.google.inject.Provider;
 /**
  */
 @RunWith(XtextRunner.class)
-@InjectWith(N4JSInjectorProviderWithMockProject.class)
+@InjectWith(N4JSInjectorProvider.class)
 public class ResourceNameComputerTest {
 
 	@Inject

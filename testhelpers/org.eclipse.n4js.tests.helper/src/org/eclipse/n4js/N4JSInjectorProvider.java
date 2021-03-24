@@ -162,18 +162,5 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 		public Class<? extends ResourceHelper> bindResourceHelper() {
 			return MockResourceHelper.class;
 		}
-
-		// FIXME GH-2073 !!!!
-		// /** Bind custom workspace implementation that automatically discovers existing projects on-the-fly. */
-		// @SingletonBinding
-		// public Class<? extends InternalN4JSWorkspace<?>> bindInternalN4JSWorkspace() {
-		// return AutoDiscoveryFileBasedWorkspace.class;
-		// }
-		//
-		// /** @see #bindInternalN4JSWorkspace() */
-		// @SingletonBinding
-		// public Class<? extends FileBasedWorkspace> bindFileBasedWorkspace() {
-		// return AutoDiscoveryFileBasedWorkspace.class;
-		// }
 	}
 }
