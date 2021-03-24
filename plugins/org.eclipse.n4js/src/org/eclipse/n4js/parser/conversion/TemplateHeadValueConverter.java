@@ -8,45 +8,30 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.conversion;
+package org.eclipse.n4js.parser.conversion;
 
-import org.eclipse.xtext.AbstractRule;
-import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 
 import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  */
-public class TemplateEndValueConverter extends AbstractTemplateSegmentValueConverter {
+public class TemplateHeadValueConverter extends AbstractTemplateSegmentValueConverter {
 
 	@Override
 	protected String getRightDelimiter() {
-		return "`";
+		return "${";
 	}
 
 	@Override
 	protected String getLeftDelimiter() {
-		return "";
-	}
-
-	@Override
-	public String toValue(String string, INode node) {
-		if (string == null) {
-			string = ""; // If the data type rule did not consume anything but that was syntactically ok, null is given
-		}
-		return super.toValue(string, node);
+		return "`";
 	}
 
 	@Override
 	protected N4JSValueConverterWithValueException newN4JSValueConverterException(INode node, String value) {
 		return new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_TEMPLATE_QUOTE(),
-				IssueCodes.VCO_TEMPLATE_QUOTE, node, -1 /* offset relative to node */, value.length() + 1, value, null);
+				IssueCodes.VCO_TEMPLATE_MIDDLE, node, value, null);
 	}
 
-	@Override
-	public void setRule(AbstractRule rule) {
-		// use the nested terminal rule
-		super.setRule(((RuleCall) rule.getAlternatives()).getRule());
-	}
 }

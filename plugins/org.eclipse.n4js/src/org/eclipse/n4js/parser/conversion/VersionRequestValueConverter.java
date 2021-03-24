@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.conversion;
+package org.eclipse.n4js.parser.conversion;
 
 import java.math.BigDecimal;
 

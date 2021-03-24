@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.tests.conversion;
 
-import org.eclipse.n4js.conversion.IdentifierValueConverter;
+import org.eclipse.n4js.parser.conversion.IdentifierValueConverter;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.ValueConverterWithValueException;
 import org.junit.Assert;

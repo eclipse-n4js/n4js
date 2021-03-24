@@ -16,8 +16,6 @@ import static org.eclipse.n4js.N4JSModuleDefaults.HTTP_SERVER_PORT_VALUE;
 import java.util.Properties;
 
 import org.eclipse.emf.ecore.util.Diagnostician;
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
-import org.eclipse.n4js.conversion.ValueConverters;
 import org.eclipse.n4js.documentation.N4JSDocumentationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
@@ -34,6 +32,8 @@ import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser;
 import org.eclipse.n4js.parser.PropertyNameAwareElementFactory;
 import org.eclipse.n4js.parser.RegExLiteralAwareLexer;
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
+import org.eclipse.n4js.parser.conversion.N4JSStringValueConverter;
+import org.eclipse.n4js.parser.conversion.ValueConverters;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.resource.AccessibleSerializer;
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;

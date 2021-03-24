@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.conversion;
+package org.eclipse.n4js.parser.conversion;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.conversion.ValueConverterUtils.StringConverterResult;
+import org.eclipse.n4js.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.n4js.regex.regularExpression.CharacterClassEscapeSequence;
 import org.eclipse.n4js.regex.regularExpression.CharacterClassRange;
 import org.eclipse.n4js.regex.regularExpression.ControlLetterEscapeSequence;

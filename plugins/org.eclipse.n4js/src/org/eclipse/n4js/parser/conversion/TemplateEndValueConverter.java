@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.conversion;
+package org.eclipse.n4js.parser.conversion;
 
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.RuleCall;
@@ -18,11 +18,11 @@ import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  */
-public class TemplateMiddleValueConverter extends AbstractTemplateSegmentValueConverter {
+public class TemplateEndValueConverter extends AbstractTemplateSegmentValueConverter {
 
 	@Override
 	protected String getRightDelimiter() {
-		return "${";
+		return "`";
 	}
 
 	@Override
@@ -31,9 +31,17 @@ public class TemplateMiddleValueConverter extends AbstractTemplateSegmentValueCo
 	}
 
 	@Override
+	public String toValue(String string, INode node) {
+		if (string == null) {
+			string = ""; // If the data type rule did not consume anything but that was syntactically ok, null is given
+		}
+		return super.toValue(string, node);
+	}
+
+	@Override
 	protected N4JSValueConverterWithValueException newN4JSValueConverterException(INode node, String value) {
 		return new N4JSValueConverterWithValueException(IssueCodes.getMessageForVCO_TEMPLATE_QUOTE(),
-				IssueCodes.VCO_TEMPLATE_MIDDLE, node, value, null);
+				IssueCodes.VCO_TEMPLATE_QUOTE, node, -1 /* offset relative to node */, value.length() + 1, value, null);
 	}
 
 	@Override

@@ -103,9 +103,9 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 
-import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
+import static extension org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.*
 
 /**
  * A utility that validates the structure of the AST in one pass.

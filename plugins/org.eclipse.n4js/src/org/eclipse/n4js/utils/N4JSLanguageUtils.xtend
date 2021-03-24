@@ -19,7 +19,6 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
-import org.eclipse.n4js.conversion.IdentifierValueConverter
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ConditionalExpression
@@ -59,6 +58,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
