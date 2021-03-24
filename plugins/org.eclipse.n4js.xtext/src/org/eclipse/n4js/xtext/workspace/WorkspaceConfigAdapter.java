@@ -70,6 +70,6 @@ public class WorkspaceConfigAdapter extends AdapterImpl {
 
 	@Override
 	public boolean isAdapterForType(Object type) {
-		return type instanceof WorkspaceConfigAdapter;
+		return type == WorkspaceConfigAdapter.class;
 	}
 }
