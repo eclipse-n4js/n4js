@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.log4j,
  com.google.inject,
  com.google.gson
-Export-Package: org.eclipse.n4js.xtext.workspace
+Export-Package: org.eclipse.n4js.xtext.resource,
+ org.eclipse.n4js.xtext.workspace
 Automatic-Module-Name: org.eclipse.n4js.xtext
 Bundle-RequiredExecutionEnvironment: JavaSE-11

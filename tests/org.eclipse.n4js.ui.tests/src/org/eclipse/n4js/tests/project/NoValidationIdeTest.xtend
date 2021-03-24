@@ -14,12 +14,12 @@ import java.nio.file.Files
 import org.eclipse.n4js.packagejson.PackageJsonUtils
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.utils.N4JSLanguageHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 
-import static org.eclipse.n4js.utils.N4JSLanguageHelper.*
+import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
 import static org.junit.Assert.*
 
 /**
@@ -31,13 +31,13 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 
 	@BeforeClass
 	def static void setOpaqueJsModules() {
-		oldOpaqueJsModules = N4JSLanguageHelper.OPAQUE_JS_MODULES;
-		N4JSLanguageHelper.OPAQUE_JS_MODULES = true;
+		oldOpaqueJsModules = N4JSLanguageUtils.OPAQUE_JS_MODULES;
+		N4JSLanguageUtils.OPAQUE_JS_MODULES = true;
 	}
 
 	@AfterClass
 	def static void restoreOpaqueJsModules() {
-		N4JSLanguageHelper.OPAQUE_JS_MODULES = oldOpaqueJsModules;
+		N4JSLanguageUtils.OPAQUE_JS_MODULES = oldOpaqueJsModules;
 	}
 
 	@Test

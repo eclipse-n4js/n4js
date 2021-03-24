@@ -23,9 +23,11 @@ import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.utils.TypeHelper;
-import org.eclipse.n4js.utils.N4JSLanguageHelper;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.resource.IWorkspaceAwareResourceDescriptionManager;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.DerivedStateAwareResourceDescriptionManager;
@@ -48,7 +50,8 @@ import com.google.inject.Singleton;
  * {@link org.eclipse.xtext.resource.IResourceDescription.Delta} implementation to customize the builder behavior.
  */
 @Singleton
-public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDescriptionManager implements N4Scheme {
+public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDescriptionManager
+		implements IWorkspaceAwareResourceDescriptionManager, N4Scheme {
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
@@ -60,13 +63,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	private N4JSCrossReferenceComputer crossReferenceComputer;
 
 	@Inject
-	private WorkspaceAccess workspaceAccess;
-
-	@Inject
 	private FileExtensionTypeHelper fileExtensionTypeHelper;
-
-	@Inject
-	private N4JSLanguageHelper languageHelper;
 
 	@Override
 	protected IResourceDescription createResourceDescription(final Resource resource,
@@ -89,6 +86,19 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 		return new N4JSResourceDescriptionDelta(oldDescription, newDescription);
 	}
 
+	@Override
+	public boolean isAffected(Delta delta, IResourceDescription candidate) {
+		throw new UnsupportedOperationException(
+				"a workspace configuration must be provided for isAffected computation");
+	}
+
+	@Override
+	public boolean isAffected(Collection<IResourceDescription.Delta> deltas, IResourceDescription candidate,
+			IResourceDescriptions context) {
+		throw new UnsupportedOperationException(
+				"a workspace configuration must be provided for isAffected computation");
+	}
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -97,16 +107,22 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	 */
 	@Override
 	public boolean isAffected(Collection<IResourceDescription.Delta> deltas, IResourceDescription candidate,
-			IResourceDescriptions context) {
+			IResourceDescriptions context, WorkspaceConfigSnapshot workspaceConfig) {
+
+		if (workspaceConfig == null) {
+			isAffected(deltas, candidate, context); // will throw exception
+		}
+
+		N4JSWorkspaceConfigSnapshot workspaceConfigCasted = (N4JSWorkspaceConfigSnapshot) workspaceConfig;
 		URI candidateURI = candidate.getURI();
 
 		// Opaque modules cannot contain any references to one of the deltas.
 		// Thus, they will never be affected by any change.
-		if (languageHelper.isOpaqueModule(candidateURI)) {
+		if (N4JSLanguageUtils.isOpaqueModule(workspaceConfigCasted, candidateURI)) {
 			return false;
 		}
 
-		boolean result = basicIsAffected(deltas, candidate);
+		boolean result = basicIsAffected(deltas, candidate, workspaceConfigCasted);
 		if (!result) {
 			for (IResourceDescription.Delta delta : deltas) {
 				URI uri = delta.getUri();
@@ -125,7 +141,9 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	/**
 	 * Computes if a candidate is affected by any change, aka delta. It is affected, if
 	 */
-	private boolean basicIsAffected(Collection<Delta> deltas, final IResourceDescription candidate) {
+	private boolean basicIsAffected(Collection<Delta> deltas, final IResourceDescription candidate,
+			N4JSWorkspaceConfigSnapshot workspaceConfig) {
+
 		// The super implementation DefaultResourceDescriptionManager#isAffected is based on a tradeoff / some
 		// assumptions which do not hold for n4js wrt to manifest changes
 
@@ -149,7 +167,8 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 				IResourceDescription newDesc = delta.getNew();
 				if (isAffected(namesImportedByCandidate, newDesc) // we may added a new exported name!
 						|| isAffected(namesImportedByCandidate, oldDesc)) { // we may removed an exported name
-					if (hasDependencyTo(candidate, delta)) { // isAffected does not compare project names
+					if (hasDependencyTo(candidate, delta, workspaceConfig)) { // isAffected does not compare project
+																				// names
 						return true;
 					}
 				}
@@ -169,17 +188,19 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	 * Returns true iff project containing the 'candidate' has a direct dependency to the project containing the
 	 * 'delta'.
 	 */
-	private boolean hasDependencyTo(IResourceDescription candidate, IResourceDescription.Delta delta) {
-		return hasDependencyTo(candidate.getURI(), delta.getUri());
+	private boolean hasDependencyTo(IResourceDescription candidate, IResourceDescription.Delta delta,
+			N4JSWorkspaceConfigSnapshot workspaceConfig) {
+
+		return hasDependencyTo(candidate.getURI(), delta.getUri(), workspaceConfig);
 	}
 
 	/**
 	 * Returns true iff the project containing the 'fromUri' has a direct dependency to the project containing the
 	 * 'toUri'.
 	 */
-	private boolean hasDependencyTo(URI fromUri, URI toUri) {
-		final N4JSProjectConfigSnapshot fromProject = workspaceAccess.findProject(fromUri).orNull();
-		final N4JSProjectConfigSnapshot toProject = workspaceAccess.findProject(toUri).orNull();
+	private boolean hasDependencyTo(URI fromUri, URI toUri, N4JSWorkspaceConfigSnapshot workspaceConfig) {
+		final N4JSProjectConfigSnapshot fromProject = workspaceConfig.findProjectContaining(fromUri);
+		final N4JSProjectConfigSnapshot toProject = workspaceConfig.findProjectContaining(toUri);
 
 		if (null != fromProject && null != toProject) { // Consider libraries. TODO: implement it at #findProject(URI)
 

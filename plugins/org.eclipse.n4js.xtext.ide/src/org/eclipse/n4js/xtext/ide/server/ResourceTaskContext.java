@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
+import org.eclipse.n4js.xtext.resource.IWorkspaceAwareResourceDescriptionManager;
 import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -434,13 +435,41 @@ public class ResourceTaskContext {
 					List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
 							.filter(d -> d.haveEObjectDescriptionsChanged())
 							.collect(Collectors.toList());
-					isAffected = rdm.isAffected(changedDeltas, candidateDesc, indexSnapshot);
+					if (!changedDeltas.isEmpty()) {
+						if (rdm instanceof IWorkspaceAwareResourceDescriptionManager) {
+							isAffected = ((IWorkspaceAwareResourceDescriptionManager) rdm).isAffected(changedDeltas,
+									candidateDesc, indexSnapshot, workspaceConfig);
+						} else {
+							isAffected = rdm.isAffected(changedDeltas, candidateDesc, indexSnapshot);
+						}
+					}
 				}
 			}
 		}
 
 		if (isAffected) {
 			refreshContext(cancelIndicator);
+		}
+	}
+
+	protected boolean isAffected(IResourceDescription candidateDesc, IResourceDescription.Manager manager,
+			Collection<IResourceDescription.Delta> allDeltas) {
+
+		if (manager instanceof AllChangeAware) {
+			return ((AllChangeAware) manager).isAffectedByAny(allDeltas, candidateDesc, indexSnapshot);
+		} else {
+			List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
+					.filter(d -> d.haveEObjectDescriptionsChanged())
+					.collect(Collectors.toList());
+			if (changedDeltas.isEmpty()) {
+				return false;
+			} else {
+				if (manager instanceof IWorkspaceAwareResourceDescriptionManager) {
+					return ((IWorkspaceAwareResourceDescriptionManager) manager)
+							.isAffected(changedDeltas, candidateDesc, indexSnapshot, workspaceConfig);
+				}
+				return manager.isAffected(changedDeltas, candidateDesc, indexSnapshot);
+			}
 		}
 	}
 

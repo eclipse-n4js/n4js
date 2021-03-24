@@ -20,8 +20,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
 
@@ -34,11 +34,6 @@ import com.google.inject.Inject;
  * grammar which means that any grammar changes will be reflected by this class.
  */
 public final class N4JSLanguageHelper {
-
-	/**
-	 * Opaque modules have empty Script nodes in their AST. Other than that they behave normally.
-	 */
-	public static boolean OPAQUE_JS_MODULES = true;
 
 	@Inject
 	private N4JSGrammarAccess grammarAccess;
@@ -93,50 +88,9 @@ public final class N4JSLanguageHelper {
 				.collect(Collectors.toList());
 	}
 
-	@Deprecated
-	public boolean isOpaqueModule(URI resourceURI) {
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resourceURI).orNull();
-		ProjectType projectType = project != null ? project.getType() : null;
-		return isOpaqueModule(projectType, resourceURI);
-	}
-
-	/**
-	 * Opaque resources are not post-processed neither validated. The transpiler will wrap opaque resources only.
-	 *
-	 * @param resource
-	 *            The resource to check.
-	 * @return true if the given resource is opaque.
-	 */
+	/** Convenience method for {@link N4JSLanguageUtils#isOpaqueModule(ProjectType, URI)}. */
 	public boolean isOpaqueModule(Resource resource) {
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource).orNull();
-		ProjectType projectType = project != null ? project.getType() : null;
-		return isOpaqueModule(projectType, resource.getURI());
-	}
-
-	public boolean isOpaqueModule(ProjectType projectType, URI resourceURI) {
-		ResourceType resourceType = ResourceType.getResourceType(resourceURI);
-
-		switch (resourceType) {
-		case JS:
-		case JSX:
-			return OPAQUE_JS_MODULES; // JavaScript modules are not processed iff OPAQUE_JS_MODULES is true
-
-		case N4JS:
-		case N4JSX:
-		case N4IDL:
-			if (projectType == null) {
-				return false; // happens in tests
-			}
-			// N4JS files of definition projects are not processed.
-			return projectType == ProjectType.DEFINITION;
-
-		case N4JSD:
-		case UNKOWN:
-		case XT:
-			// default
-		}
-
-		// default: process file
-		return false;
+		N4JSWorkspaceConfigSnapshot workspaceConfig = workspaceAccess.getWorkspaceConfig(resource).orNull();
+		return N4JSLanguageUtils.isOpaqueModule(workspaceConfig, resource.getURI());
 	}
 }

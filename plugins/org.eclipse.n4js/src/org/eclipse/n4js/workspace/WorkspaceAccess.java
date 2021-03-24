@@ -114,8 +114,9 @@ public class WorkspaceAccess {
 		return Optional.fromNullable(result);
 	}
 
-	public TModule loadModuleFromIndex(final ResourceSet resourceSet,
-			final IResourceDescription resourceDescription, boolean allowFullLoad) {
+	public TModule loadModuleFromIndex(final ResourceSet resourceSet, IResourceDescription resourceDescription,
+			boolean allowFullLoad) {
+
 		final URI resourceURI = resourceDescription.getURI();
 		Resource resource = resourceSet.getResource(resourceURI, false);
 		TModule result = loadModuleFromResource(resource);
@@ -178,11 +179,4 @@ public class WorkspaceAccess {
 		}
 		return null;
 	}
-
-	// FIXME GH-2073 important! get rid of the following!
-
-	public Optional<N4JSProjectConfigSnapshot> findProject(URI nestedLocation) {
-		throw new UnsupportedOperationException();
-	}
-
 }

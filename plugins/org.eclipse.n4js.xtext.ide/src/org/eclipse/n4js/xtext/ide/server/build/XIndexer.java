@@ -20,6 +20,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.xtext.ide.server.build.XClusteringStorageAwareResourceLoader.LoadResult;
+import org.eclipse.n4js.xtext.resource.IWorkspaceAwareResourceDescriptionManager;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.CompilerPhases;
 import org.eclipse.xtext.resource.EObjectDescription;
@@ -235,7 +238,7 @@ public class XIndexer {
 			IResourceServiceProvider resourceServiceProvider = context.getResourceServiceProvider(uri);
 			IResourceDescription.Manager manager = resourceServiceProvider.getResourceDescriptionManager();
 			IResourceDescription resourceDescription = originalIndex.getResourceDescription(uri);
-			if (isAffected(resourceDescription, manager, newDeltas, allDeltas, index)) {
+			if (isAffected(resourceDescription, manager, newDeltas, allDeltas, index, context)) {
 				affectedURIs.add(uri);
 			}
 		}
@@ -335,7 +338,8 @@ public class XIndexer {
 	 */
 	protected boolean isAffected(IResourceDescription affectionCandidate,
 			IResourceDescription.Manager manager, Collection<IResourceDescription.Delta> newDeltas,
-			Collection<IResourceDescription.Delta> allDeltas, IResourceDescriptions resourceDescriptions) {
+			Collection<IResourceDescription.Delta> allDeltas, IResourceDescriptions resourceDescriptions,
+			XBuildContext context) {
 
 		if (manager instanceof IResourceDescription.Manager.AllChangeAware) {
 			AllChangeAware allChangeAwareManager = (IResourceDescription.Manager.AllChangeAware) manager;
@@ -344,6 +348,14 @@ public class XIndexer {
 			if (newDeltas.isEmpty()) {
 				return false;
 			} else {
+				if (manager instanceof IWorkspaceAwareResourceDescriptionManager) {
+					WorkspaceConfigSnapshot workspaceConfig = WorkspaceConfigAdapter.getWorkspaceConfig(
+							context.getResourceSet());
+					if (workspaceConfig != null) {
+						return ((IWorkspaceAwareResourceDescriptionManager) manager)
+								.isAffected(newDeltas, affectionCandidate, resourceDescriptions, workspaceConfig);
+					}
+				}
 				return manager.isAffected(newDeltas, affectionCandidate, resourceDescriptions);
 			}
 		}
