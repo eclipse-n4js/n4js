@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
@@ -44,7 +44,7 @@ public final class N4JSLanguageHelper {
 	private N4JSGrammarAccess grammarAccess;
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * Returns the reserved ECMAScript keywords which are defined in the grammar. The result is cached.
@@ -95,7 +95,7 @@ public final class N4JSLanguageHelper {
 
 	@Deprecated
 	public boolean isOpaqueModule(URI resourceURI) {
-		N4JSProjectConfigSnapshot project = n4jsCore.findProject(resourceURI).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resourceURI).orNull();
 		ProjectType projectType = project != null ? project.getType() : null;
 		return isOpaqueModule(projectType, resourceURI);
 	}
@@ -108,7 +108,7 @@ public final class N4JSLanguageHelper {
 	 * @return true if the given resource is opaque.
 	 */
 	public boolean isOpaqueModule(Resource resource) {
-		N4JSProjectConfigSnapshot project = n4jsCore.findProject(resource).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource).orNull();
 		ProjectType projectType = project != null ? project.getType() : null;
 		return isOpaqueModule(projectType, resource.getURI());
 	}

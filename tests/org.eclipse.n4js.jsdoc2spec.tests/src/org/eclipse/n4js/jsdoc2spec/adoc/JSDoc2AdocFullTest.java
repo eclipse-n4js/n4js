@@ -31,7 +31,7 @@ import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessorFullTest;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SubMonitorMsg;
 import org.eclipse.n4js.utils.io.FileCopier;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
@@ -52,7 +52,7 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 	}
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 	@Inject
 	private JSDoc2ADocSpecProcessor jSDoc2SpecProcessor;
 
@@ -81,8 +81,8 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 				System.setProperty("line.separator", lsep);
 				String expectationFileName = projectName + "/expected.adoc";
 
-				ResourceSet resourceSet = n4jsCore.createResourceSet();
-				N4JSProjectConfigSnapshot project = n4jsCore.findProject(resourceSet, new N4JSProjectName(projectName))
+				ResourceSet resourceSet = workspaceAccess.createResourceSet();
+				N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resourceSet, new N4JSProjectName(projectName))
 						.orNull();
 				assertNotNull("Project not found", project);
 

@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -35,13 +35,13 @@ import com.google.inject.Singleton;
 public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations() {
 		Set<OutputConfiguration> outputConfs = new HashSet<>();
 
-		for (N4JSProjectConfigSnapshot prj : n4jsCore.findAllProjects()) {
+		for (N4JSProjectConfigSnapshot prj : workspaceAccess.findAllProjects()) {
 			OutputConfiguration outputConfiguration = getOutputConfiguration(prj);
 			if (outputConfiguration != null) {
 				outputConfs.add(outputConfiguration);
@@ -56,7 +56,7 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 		EList<Resource> resources = context.getResources();
 		if (resources.isEmpty()) {
 			ProjectDescription description = ProjectDescription.findInEmfObject(context);
-			N4JSProjectConfigSnapshot project = n4jsCore.findProject(context,
+			N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context,
 					new N4JSProjectName(description.getName())).orNull();
 			return getOutputConfigurationSet(project);
 		}
@@ -65,7 +65,7 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
-		N4JSProjectConfigSnapshot project = n4jsCore.findProject(context).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context).orNull();
 		return getOutputConfigurationSet(project);
 	}
 

@@ -42,7 +42,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
@@ -61,7 +61,7 @@ import com.google.inject.Inject;
 public class XpectN4JSES5TranspilerHelper {
 
 	@Inject
-	private IN4JSCoreNEW core;
+	private WorkspaceAccess core;
 
 	@Inject
 	private XpectN4JSES5GeneratorHelper xpectGenerator;

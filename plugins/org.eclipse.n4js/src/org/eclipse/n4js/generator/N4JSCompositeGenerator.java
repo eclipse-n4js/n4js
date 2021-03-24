@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.xtext.generator.IFileSystemAccess;
@@ -37,7 +37,7 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	private static final Logger LOGGER = Logger.getLogger(N4JSCompositeGenerator.class);
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private SubGeneratorRegistry subGeneratorRegistry;
@@ -80,7 +80,7 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 		}
 		// This composite generator is applicable to the input resource if the resource is in a N4JS source
 		// container
-		Optional<? extends N4JSSourceFolderSnapshot> n4jsContainer = n4jsCore.findN4JSSourceContainer(input,
+		Optional<? extends N4JSSourceFolderSnapshot> n4jsContainer = workspaceAccess.findN4JSSourceContainer(input,
 				input.getURI());
 		return (n4jsContainer.isPresent());
 	}
@@ -88,7 +88,7 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	private boolean isExternalLocation(final Resource input) {
 		URI uri = input.getURI();
 		if (null != uri && uri.isFile()) {
-			final N4JSProjectConfigSnapshot project = n4jsCore.findProject(input).orNull();
+			final N4JSProjectConfigSnapshot project = workspaceAccess.findProject(input).orNull();
 			return null != project && project.isExternal();
 		}
 		return false;

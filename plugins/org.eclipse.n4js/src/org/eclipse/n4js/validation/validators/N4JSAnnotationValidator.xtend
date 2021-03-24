@@ -46,7 +46,7 @@ import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
@@ -65,7 +65,7 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  */
 class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
-	@Inject IN4JSCoreNEW n4jsCore;
+	@Inject WorkspaceAccess workspaceAccess;
 
 	@Inject IQualifiedNameProvider qnProvider
 
@@ -403,7 +403,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		val uri = fileExtensionCalculator.getUriWithoutXpectExtension(element);
-		val srcContainer = n4jsCore.findN4JSSourceContainer(annotation, uri).orNull;
+		val srcContainer = workspaceAccess.findN4JSSourceContainer(annotation, uri).orNull;
 		if (srcContainer === null) {
 			return;
 		}
@@ -446,7 +446,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 		val projURI = element.eResource.URI;
-		val project = n4jsCore.findProject(annotation, projURI);
+		val project = workspaceAccess.findProject(annotation, projURI);
 		if (!project.present) {
 			val msg = getMessageForNO_PROJECT_FOUND(projURI);
 			val script = EcoreUtil2.getContainerOfType(element, Script);
@@ -510,7 +510,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 		if (resource === null) {
 			return;
 		}
-		val ws = n4jsCore.getWorkspaceConfig(resource).orNull;
+		val ws = workspaceAccess.getWorkspaceConfig(resource).orNull;
 		if (ws === null) {
 			return;
 		}

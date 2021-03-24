@@ -77,7 +77,7 @@ import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -267,7 +267,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private N4JSScopingDiagnostician scopingDiagnostician;
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
@@ -1114,11 +1114,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 								&& (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
 							// uri points to a TModule element in a resource not yet contained in our resource set
 							// --> try to load target resource from index
-							final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet).get();
+							final IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
 							final IResourceDescription resDesc = index.getResourceDescription(targetResourceUri);
 							if (resDesc != null) {
 								// next line will add the new resource to resSet.resources
-								n4jsCore.loadModuleFromIndex(resSet, resDesc, false);
+								workspaceAccess.loadModuleFromIndex(resSet, resDesc, false);
 							}
 						}
 					}

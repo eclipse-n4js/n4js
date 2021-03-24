@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.UserDataMapper;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -42,7 +42,7 @@ import com.google.inject.Singleton;
 public class CanLoadFromDescriptionHelper {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * Tells whether the load-from-source behavior is entirely deactivated.
@@ -139,7 +139,7 @@ public class CanLoadFromDescriptionHelper {
 	 * Facade to access the index from subclasses.
 	 */
 	protected IResourceDescriptions getIndex(ResourceSet resourceSet) {
-		return n4jsCore.getXtextIndex(resourceSet).orNull();
+		return workspaceAccess.getXtextIndex(resourceSet).orNull();
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class CanLoadFromDescriptionHelper {
 			// early check whether the candidates stem from the same project as the requested thisURI
 			// (note: this is based on the assumption that there cannot be a cyclic dependency between modules of
 			// different projects, because cyclic dependencies between projects are disallowed)
-			thisProject = n4jsCore.findProject(context, thisURI).orNull();
+			thisProject = workspaceAccess.findProject(context, thisURI).orNull();
 			candidates = filterCandidatesByProject(candidates, thisProject);
 		}
 		// are there any relevant candidates at all?

@@ -28,7 +28,7 @@ import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.linking.impl.DefaultLinkingService;
@@ -59,7 +59,7 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 	private IQualifiedNameConverter qualifiedNameConverter;
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * Override to get scope based on the context, otherwise we might get scope for main language, while context is from
@@ -96,7 +96,7 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 					&& (errorDescr = IEObjectDescriptionWithError
 							.getDescriptionWithError(eObjectDescription)) != null
 					// isNoValidate traverses the file system so it should be the last part of the check
-					&& !n4jsCore.isNoValidate(resource, resource.getURI())) {
+					&& !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 				addError(context, node, errorDescr);
 			} else if (eObjectDescription instanceof UnresolvableObjectDescription) {
 				return Collections.<EObject> singletonList((EObject) context.eGet(ref, false));

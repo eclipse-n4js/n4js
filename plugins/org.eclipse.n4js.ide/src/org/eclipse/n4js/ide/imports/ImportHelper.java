@@ -35,7 +35,7 @@ import org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.conversion.IValueConverterService;
@@ -67,7 +67,7 @@ public class ImportHelper {
 			.getParameterizedTypeRef_DeclaredType();
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private ReferenceResolutionFinder referenceResolutionFinder;
@@ -179,7 +179,7 @@ public class ImportHelper {
 
 		triggerProxyResolution(script, cancelIndicator);
 
-		N4JSWorkspaceConfigSnapshot wc = n4jsCore.getWorkspaceConfig(script).get();
+		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(script).get();
 		List<ReferenceResolution> result = new ArrayList<>();
 		Set<String> donePrefixes = new HashSet<>();
 		Iterator<EObject> iter = script.eAllContents();
@@ -215,7 +215,7 @@ public class ImportHelper {
 
 		triggerProxyResolution(astNode, cancelIndicator);
 
-		N4JSWorkspaceConfigSnapshot wc = n4jsCore.getWorkspaceConfig(astNode).get();
+		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(astNode).get();
 
 		ReferenceDescriptor reference = getUnresolvedReferenceForASTNode(astNode);
 		if (reference == null) {

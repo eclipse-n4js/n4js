@@ -11,9 +11,9 @@
 package org.eclipse.n4js.ide;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.workspace.N4JSCoreNEW;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class N4JSIdeCoreNEW extends N4JSCoreNEW {
+public class IdeWorkspaceAccess extends WorkspaceAccess {
 
 	@Inject
 	private ResourceTaskManager resourceTaskManager;

@@ -53,7 +53,7 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 		// Resource originalResource = object.eResource();
 		// URI originalResourceURI = originalResource != null ? originalResource.getURI() : null;
 		// if (originalResource != null && originalResourceURI != null) {
-		// ResourceSet tempResSet = n4jsCore.createResourceSet(Optional.absent());
+		// ResourceSet tempResSet = workspaceAccess.createResourceSet(Optional.absent());
 		// astNode = EcoreUtil.resolve(astNode, tempResSet); // TODO disable types builder & post-processing!
 		// }
 		// }

@@ -46,7 +46,7 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -68,7 +68,7 @@ public class N4JSDReader {
 	N4JSDocHelper n4jsDocHelper;
 
 	@Inject
-	IN4JSCoreNEW n4jsCore;
+	WorkspaceAccess workspaceAccess;
 
 	@Inject
 	N4JSGlobalScopeProvider globalScopeProvider;
@@ -91,7 +91,7 @@ public class N4JSDReader {
 			throws InterruptedException {
 
 		SpecInfosByName specInfosByName = new SpecInfosByName(issueAcceptor, globalScopeProvider, containerTypesHelper,
-				n4jsCore);
+				workspaceAccess);
 		ResourceSet resSet = null;
 		SubMonitorMsg sub = monitor.convert(2 * 100 * projects.size());
 		for (N4JSProjectConfigSnapshot project : projects) {
@@ -261,7 +261,7 @@ public class N4JSDReader {
 	}
 
 	private void processClassifier(SpecInfosByName specInfosByName, TClassifier testType) {
-		RepoRelativePath rrpOfTest = RepoRelativePath.compute(createFileURI(testType), n4jsCore, testType);
+		RepoRelativePath rrpOfTest = RepoRelativePath.compute(createFileURI(testType), workspaceAccess, testType);
 
 		// Retrieve the references to testees stated in the jsdoc of the test class itself.
 		Doclet testTypeDoclet = n4jsDocHelper.getDoclet(testType.getAstElement());
@@ -303,7 +303,7 @@ public class N4JSDReader {
 
 		} else if ("testeeFromType".equals(title)) {
 			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
-					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore, astElement);
+					: RepoRelativePath.compute(createFileURI(astElement), workspaceAccess, astElement);
 
 			for (FullMemberReference ref : testeeRefsFromType) {
 				specInfosByName.addTestInfoForCodeElement(rrpTestMethod, testMethodDoclet, ref, testMember);
@@ -312,7 +312,7 @@ public class N4JSDReader {
 		} else if ("testeeMember".equals(title)) {
 			String testeeMember = N4JSDocletParser.TAG_TESTEEMEMBER.getValue(tag, "");
 			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
-					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore, astElement);
+					: RepoRelativePath.compute(createFileURI(astElement), workspaceAccess, astElement);
 
 			for (FullMemberReference testeeTypeRef : testeeTypeRefsFromType) {
 				FullMemberReference combinedTesteeRef = EcoreUtil.copy(testeeTypeRef);
@@ -331,7 +331,7 @@ public class N4JSDReader {
 				throw new IllegalStateException("Found reqid tag without requirement ID.");
 			}
 			RepoRelativePath rrpTestMethod = isOwnedMember ? rrpOfTest
-					: RepoRelativePath.compute(createFileURI(astElement), n4jsCore, astElement);
+					: RepoRelativePath.compute(createFileURI(astElement), workspaceAccess, astElement);
 
 			specInfosByName.addTestInfoForRequirement(rrpTestMethod, testMethodDoclet, reqid, testMember);
 

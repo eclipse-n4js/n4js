@@ -82,7 +82,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils.ProjectNameInfo;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -113,7 +113,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 	@Inject
 	private SemverHelper semverHelper;
 
@@ -1035,7 +1035,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	private boolean holdsExistingDirectoryPath(JSONStringLiteral pathLiteral) {
 		final Resource resource = pathLiteral.eResource();
 		final URI resourceURI = resource.getURI();
-		final Optional<? extends N4JSProjectConfigSnapshot> n4jsProject = n4jsCore.findProject(resource);
+		final Optional<? extends N4JSProjectConfigSnapshot> n4jsProject = workspaceAccess.findProject(resource);
 
 		if (!n4jsProject.isPresent()) {
 			// container project cannot be determined, fail gracefully (validation running on non-N4JS project?)
@@ -1108,7 +1108,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	 * Returns {@code null} if no N4JS project can be found that contains the given {@code nestedLocation}.
 	 */
 	private Path getAbsoluteProjectPath(EObject context, URI nestedLocation) {
-		Optional<? extends N4JSProjectConfigSnapshot> n4jsProject = n4jsCore.findProject(context, nestedLocation);
+		Optional<? extends N4JSProjectConfigSnapshot> n4jsProject = workspaceAccess.findProject(context, nestedLocation);
 		if (!n4jsProject.isPresent()) {
 			return null;
 		}

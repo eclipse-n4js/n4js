@@ -27,7 +27,7 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -46,7 +46,7 @@ public class SpecInfosByName {
 	private final IJSDoc2SpecIssueAcceptor issueAcceptor;
 	private final ContainerTypesHelper containerTypesHelper;
 	private final N4JSGlobalScopeProvider globalScopeProvider;
-	private final IN4JSCoreNEW n4jsCore;
+	private final WorkspaceAccess workspaceAccess;
 
 	/**
 	 * @param issueAcceptor
@@ -55,15 +55,15 @@ public class SpecInfosByName {
 	 *            injected in creator and passed here to avoid DI for this helper type
 	 * @param containerTypesHelper
 	 *            injected in creator and passed here to avoid DI for this helper type
-	 * @param n4jsCore
+	 * @param workspaceAccess
 	 *            injected in creator and passed here to avoid DI for this helper type
 	 */
 	SpecInfosByName(IJSDoc2SpecIssueAcceptor issueAcceptor, N4JSGlobalScopeProvider globalScopeProvider,
-			ContainerTypesHelper containerTypesHelper, IN4JSCoreNEW n4jsCore) {
+			ContainerTypesHelper containerTypesHelper, WorkspaceAccess workspaceAccess) {
 		this.issueAcceptor = issueAcceptor;
 		this.globalScopeProvider = globalScopeProvider;
 		this.containerTypesHelper = containerTypesHelper;
-		this.n4jsCore = n4jsCore;
+		this.workspaceAccess = workspaceAccess;
 	}
 
 	void createTypeSpecInfo(Type type, RepoRelativePathHolder rrph) {
@@ -152,7 +152,7 @@ public class SpecInfosByName {
 		IEObjectDescription eod = scope.getSingleElement(qn);
 		if (eod != null) {
 			FileURI uri = new FileURI(eod.getEObjectURI());
-			RepoRelativePath rrp = RepoRelativePath.compute(uri, n4jsCore, resource);
+			RepoRelativePath rrp = RepoRelativePath.compute(uri, workspaceAccess, resource);
 			return rrp;
 		} else {
 			issueAcceptor.addWarning("Cannot resolve testee " + ref, testMember);

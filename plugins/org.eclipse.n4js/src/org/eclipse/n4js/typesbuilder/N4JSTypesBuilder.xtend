@@ -43,7 +43,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 
@@ -80,7 +80,7 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSNamespaceImportTypesBuilder
 
 	@Inject extension ModuleNameComputer
-	@Inject private IN4JSCoreNEW n4jsCore
+	@Inject private WorkspaceAccess workspaceAccess
 	@Inject private IQualifiedNameConverter qualifiedNameConverter
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
@@ -169,7 +169,7 @@ public class N4JSTypesBuilder {
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
 
-			val optionalProject = n4jsCore.findProject(resource);
+			val optionalProject = workspaceAccess.findProject(resource);
 			if (optionalProject.present) {
 				val project = optionalProject.get;
 				result.projectName = project.name;

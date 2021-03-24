@@ -19,7 +19,7 @@ import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.util.UriExtensions;
 
@@ -33,7 +33,7 @@ import com.google.inject.Inject;
 public class RepoRelativePathHolder {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	// TODO FIXME: Should not be necessary since resource should have been created with a proper URI
 	@Inject
@@ -51,7 +51,7 @@ public class RepoRelativePathHolder {
 		if (res != null) {
 			if (!modulesToRepoCache.containsKey(res)) {
 				FileURI fileURI = new FileURI(fixupURI(res));
-				RepoRelativePath rrpRes = RepoRelativePath.compute(fileURI, n4jsCore, res);
+				RepoRelativePath rrpRes = RepoRelativePath.compute(fileURI, workspaceAccess, res);
 				if (rrpRes != null) {
 					modulesToRepoCache.put(res, rrpRes);
 				}

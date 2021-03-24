@@ -52,7 +52,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ResourceNameComputer;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
@@ -74,7 +74,7 @@ public class TestDiscoveryHelper {
 	private FileExtensionsRegistry fileExtensionRegistry;
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
@@ -141,8 +141,8 @@ public class TestDiscoveryHelper {
 			if (c == null || !c.isTest())
 				return false;
 			// (3) if the location points to an n4js-file, it must contain at least one test class
-			final ResourceSet resourceSet = n4jsCore.createResourceSet();
-			final IResourceDescriptions index = n4jsCore.getXtextIndex(resourceSet).get();
+			final ResourceSet resourceSet = workspaceAccess.createResourceSet();
+			final IResourceDescriptions index = workspaceAccess.getXtextIndex(resourceSet).get();
 			final IResourceDescription rdesc = index.getResourceDescription(location);
 			if (rdesc != null) {
 				return stream(rdesc.getExportedObjectsByType(T_CLASS))
@@ -177,7 +177,7 @@ public class TestDiscoveryHelper {
 	 * @return a new resource set.
 	 */
 	ResourceSet newResourceSet() {
-		return n4jsCore.createResourceSet();
+		return workspaceAccess.createResourceSet();
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class TestDiscoveryHelper {
 			Function<? super URI, ? extends ResourceSet> resourceSetAccess, List<URI> locations) {
 		return locations.stream().flatMap(loc -> {
 			ResourceSet resSet = resourceSetAccess.apply(loc);
-			IResourceDescriptions index = n4jsCore.getXtextIndex(resSet).orNull();
+			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).orNull();
 			return index != null ? collectTestLocations(ws, index, resSet, loc) : Stream.empty();
 		}).distinct().collect(Collectors.toList());
 	}
@@ -446,9 +446,9 @@ public class TestDiscoveryHelper {
 		final Map<URI, TModule> uri2Modules = newHashMap();
 		for (final URI moduleUri : moduleUris) {
 			ResourceSet resSet = resourceSetAccess.apply(moduleUri);
-			IResourceDescriptions index = n4jsCore.getXtextIndex(resSet).or(new IResourceDescriptions.NullImpl());
+			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).or(new IResourceDescriptions.NullImpl());
 			final IResourceDescription resDesc = index.getResourceDescription(moduleUri);
-			uri2Modules.put(moduleUri, n4jsCore.loadModuleFromIndex(resSet, resDesc, false));
+			uri2Modules.put(moduleUri, workspaceAccess.loadModuleFromIndex(resSet, resDesc, false));
 		}
 		return uri2Modules;
 	}

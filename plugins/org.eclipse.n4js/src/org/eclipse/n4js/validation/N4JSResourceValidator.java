@@ -25,7 +25,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.server.LSPIssue;
@@ -53,7 +53,7 @@ import com.google.inject.Inject;
 public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 	@Inject
@@ -67,7 +67,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	private List<Issue> doValidateWithMeasurement(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
-		final N4JSWorkspaceConfigSnapshot ws = n4jsCore.getWorkspaceConfig(resource).get();
+		final N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(resource).get();
 		final N4JSProjectConfigSnapshot project = ws.findProjectContaining(resource.getURI());
 		if (project != null && !isValidFileTypeForProjectType(resource, project)) {
 			final Issue issue = createInvalidFileTypeError(resource, project);

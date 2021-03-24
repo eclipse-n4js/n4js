@@ -16,7 +16,7 @@ import org.eclipse.n4js.ApiImplCompareTestHelper
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.tooling.compare.ProjectCompareHelper
 import org.eclipse.n4js.tooling.compare.ProjectCompareResult.Status
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.junit.Test
 
@@ -33,7 +33,7 @@ class ApiImplCompareTest extends ConvertedIdeTest {
 	@Inject
 	private extension ApiImplCompareTestHelper;
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Test
 	public def void testBasicCases() {

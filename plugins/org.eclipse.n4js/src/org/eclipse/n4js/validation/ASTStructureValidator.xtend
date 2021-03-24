@@ -92,7 +92,7 @@ import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtend.lib.annotations.ToString
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.DiagnosticMessage
@@ -119,7 +119,7 @@ import static extension org.eclipse.n4js.parser.conversion.AbstractN4JSStringVal
 class ASTStructureValidator {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private N4JSGrammarAccess grammarAccess;
@@ -280,7 +280,7 @@ class ASTStructureValidator {
 
 	def void validate(EObject model, IDiagnosticConsumer consumer) {
 		val resource = model?.eResource;
-		if(resource !== null && !n4jsCore.isNoValidate(resource, resource.getURI())) {
+		if(resource !== null && !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 			val producer = new ASTStructureDiagnosticProducer(consumer);
 			validateASTStructure(model, producer, Sets.newHashSetWithExpectedSize(2),
 				new Constraints(jsVariantHelper.isN4JSMode(model), jsVariantHelper.isExternalMode(model))

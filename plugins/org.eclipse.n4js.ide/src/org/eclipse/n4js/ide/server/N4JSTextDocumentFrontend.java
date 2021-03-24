@@ -40,7 +40,7 @@ import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.n4js.utils.ResourceNameComputer;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
@@ -59,7 +59,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
@@ -102,7 +102,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			TextDocumentPositionParams positionParams, CancelIndicator cancelIndicator) {
 
 		URI uri = rtc.getURI();
-		N4JSProjectConfigSnapshot project = n4jsCore.findProject(rtc.getResource()).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(rtc.getResource()).orNull();
 		String targetFileName = resourceNameComputer.generateFileDescriptor(rtc.getResource(), uri, JS_FILE_EXTENSION);
 		List<Location> locations = new ArrayList<>();
 		if (project != null && !Strings.isNullOrEmpty(targetFileName)) {

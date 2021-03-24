@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.utils.ResourceType
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.QualifiedName
 
 /**
@@ -35,7 +35,7 @@ import org.eclipse.xtext.naming.QualifiedName
 class ModuleNameComputer {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore
+	private WorkspaceAccess workspaceAccess
 
 	/**
 	 * Returns the qualified module name which is implicitly defined by the given resource.
@@ -54,7 +54,7 @@ class ModuleNameComputer {
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
 	def public getQualifiedModuleName(Notifier context, URI uri) {
-		val maybeSourceContainer = n4jsCore.findN4JSSourceContainer(context, uri);
+		val maybeSourceContainer = workspaceAccess.findN4JSSourceContainer(context, uri);
 		if (maybeSourceContainer.present) {
 			val sourceContainer = maybeSourceContainer.get
 			val location = sourceContainer.pathAsFileURI.withTrailingPathDelimiter.toURI

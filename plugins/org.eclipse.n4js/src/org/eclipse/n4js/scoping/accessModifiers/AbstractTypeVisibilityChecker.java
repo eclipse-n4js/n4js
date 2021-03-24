@@ -22,7 +22,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.util.Strings;
@@ -37,7 +37,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 
 	/** The N4JS core. This service is used for resolving projects by its contained modules. */
 	@Inject
-	protected IN4JSCoreNEW n4jsCore;
+	protected WorkspaceAccess workspaceAccess;
 
 	@Override
 	public TypeVisibility isVisible(
@@ -160,7 +160,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		if (contextResource != null) {
 			final TModule contextModule = N4JSResource.getModule(contextResource);
 			if (contextModule != null) {
-				return this.n4jsCore.findProject(contextResource, element.getEObjectURI()).transform(project -> {
+				return this.workspaceAccess.findProject(contextResource, element.getEObjectURI()).transform(project -> {
 					boolean result = Strings.equal(contextModule.getVendorID(), project.getVendorId());
 					return result;
 				}).or(true);
@@ -202,7 +202,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 			if (contextModule == null) {
 				return false;
 			}
-			return this.n4jsCore.findProject(contextResource, element.getEObjectURI()).transform(project -> {
+			return this.workspaceAccess.findProject(contextResource, element.getEObjectURI()).transform(project -> {
 				boolean result = Strings.equal(contextModule.getProjectName(), project.getName())
 						&& Strings.equal(contextModule.getVendorID(), project.getVendorId())
 						|| isTestedProjectOf(contextModule, project);
@@ -232,7 +232,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		for (final ProjectReference testedProject : getTestedProjects(contextModule.eResource())) {
 			final Resource eResource = elementModule.eResource();
 			if (null != eResource) {
-				final N4JSProjectConfigSnapshot elementProject = n4jsCore.findProject(eResource).orNull();
+				final N4JSProjectConfigSnapshot elementProject = workspaceAccess.findProject(eResource).orNull();
 				if (null != elementProject) {
 					if (elementProject.getName().equals(testedProject.getProjectName())) {
 						return true;
@@ -277,7 +277,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 			return emptyList();
 		}
 
-		final N4JSProjectConfigSnapshot contextProject = n4jsCore.findProject(contextResource).orNull();
+		final N4JSProjectConfigSnapshot contextProject = workspaceAccess.findProject(contextResource).orNull();
 		if (null == contextProject) {
 			return emptyList();
 		}

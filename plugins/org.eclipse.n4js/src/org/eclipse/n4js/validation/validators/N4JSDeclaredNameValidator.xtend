@@ -69,7 +69,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.IResourceScopeCache
@@ -88,7 +88,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject ValidatorMessageHelper messageHelper;
 
-	@Inject IN4JSCoreNEW n4jsCore;
+	@Inject WorkspaceAccess workspaceAccess;
 
 	@Inject SourceElementExtensions sourceElementExtensions;
 
@@ -160,7 +160,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 				val name = exportableElement.declaredName;
 				if (name !== null) {
 					if (BASE_JS_TYPES.contains(name)) {
-						val project = n4jsCore.findProject(exportableElement.eResource).get;
+						val project = workspaceAccess.findProject(exportableElement.eResource).get;
 						if (project === null || project.type !== ProjectType.RUNTIME_ENVIRONMENT) {
 							addIssue(getMessageForAST_GLOBAL_JS_NAME_CONFLICT(name), exportableElement,
 								AST_GLOBAL_JS_NAME_CONFLICT);

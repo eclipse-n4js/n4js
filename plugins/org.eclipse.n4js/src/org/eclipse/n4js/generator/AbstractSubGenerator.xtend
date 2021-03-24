@@ -28,7 +28,7 @@ import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.helper.FolderContainmentHelper
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -58,7 +58,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	
 	@Inject protected StaticPolyfillHelper staticPolyfillHelper
 
-	@Inject protected IN4JSCoreNEW n4jsCore
+	@Inject protected WorkspaceAccess workspaceAccess
 
 	@Inject protected ResourceNameComputer resourceNameComputer
 
@@ -116,7 +116,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * </ul>
 	 */
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
-		val ws = n4jsCore.getWorkspaceConfig(input).orNull;
+		val ws = workspaceAccess.getWorkspaceConfig(input).orNull;
 		if (ws === null) {
 			return;
 		}
@@ -151,7 +151,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	override shouldBeCompiled(Resource input, CancelIndicator monitor) {
-		val ws = n4jsCore.getWorkspaceConfig(input).orNull;
+		val ws = workspaceAccess.getWorkspaceConfig(input).orNull;
 		if (ws === null) {
 			return false;
 		}

@@ -28,7 +28,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -38,14 +38,14 @@ import org.eclipse.xtext.EcoreUtil2;
 public class NullUndefinedValidator implements FlowValidator {
 	final private NullDereferenceAnalyser nda;
 	final private FindReferenceHelper findReferenceHelper;
-	final private IN4JSCoreNEW n4jsCore;
+	final private WorkspaceAccess workspaceAccess;
 
 	/** Constructor */
-	public NullUndefinedValidator(NullDereferenceAnalyser nullDereferenceAnalyser, IN4JSCoreNEW n4jsCore,
+	public NullUndefinedValidator(NullDereferenceAnalyser nullDereferenceAnalyser, WorkspaceAccess workspaceAccess,
 			FindReferenceHelper findReferenceHelper) {
 
 		this.findReferenceHelper = findReferenceHelper;
-		this.n4jsCore = n4jsCore;
+		this.workspaceAccess = workspaceAccess;
 		this.nda = nullDereferenceAnalyser;
 	}
 
@@ -155,7 +155,7 @@ public class NullUndefinedValidator implements FlowValidator {
 	private boolean isInTestFolder(EObject eobj) {
 		Resource resource = eobj.eResource();
 		URI location = resource.getURI();
-		final N4JSSourceFolderSnapshot c = n4jsCore.findN4JSSourceContainer(resource, location).orNull();
+		final N4JSSourceFolderSnapshot c = workspaceAccess.findN4JSSourceContainer(resource, location).orNull();
 		return c != null && c.isTest();
 	}
 

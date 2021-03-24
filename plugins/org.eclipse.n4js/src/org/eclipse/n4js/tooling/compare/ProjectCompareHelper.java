@@ -56,7 +56,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.FindArtifactHelper;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
@@ -74,7 +74,7 @@ import com.google.inject.Inject;
 public class ProjectCompareHelper {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 	@Inject
 	private FindArtifactHelper artifactHelper;
 	@Inject
@@ -100,9 +100,9 @@ public class ProjectCompareHelper {
 	 * Returns <code>null</code> in case of error and adds human-readable error messages to the given list.
 	 */
 	public ProjectComparison createComparison(boolean fullCompare, List<String> addErrorMessagesHere) {
-		final ResourceSet resourceSet = n4jsCore.createResourceSet();
-		final N4JSWorkspaceConfigSnapshot wc = n4jsCore.getWorkspaceConfig(resourceSet).orNull();
-		final IResourceDescriptions index = n4jsCore.getXtextIndex(resourceSet).orNull();
+		final ResourceSet resourceSet = workspaceAccess.createResourceSet();
+		final N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resourceSet).orNull();
+		final IResourceDescriptions index = workspaceAccess.getXtextIndex(resourceSet).orNull();
 		if (wc == null || index == null) {
 			addErrorMessagesHere.add(
 					"failed to create a new resource set with properly configured workspace configuration and index");
@@ -185,7 +185,7 @@ public class ProjectCompareHelper {
 	 */
 	public Optional<N4JSProjectName> getImplementationID(TModule apiImplModule) {
 
-		Optional<? extends N4JSProjectConfigSnapshot> opt = n4jsCore.findProject(apiImplModule.eResource());
+		Optional<? extends N4JSProjectConfigSnapshot> opt = workspaceAccess.findProject(apiImplModule.eResource());
 		N4JSProjectConfigSnapshot implProject = opt.get();
 		String implId = implProject.getImplementationId();
 		return implId != null ? Optional.of(new N4JSProjectName(implId)) : Optional.absent();
@@ -238,12 +238,12 @@ public class ProjectCompareHelper {
 			final boolean includePolyfills) {
 
 		Resource resource = module.eResource();
-		N4JSWorkspaceConfigSnapshot wc = n4jsCore.getWorkspaceConfig(resource).orNull();
+		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resource).orNull();
 		if (wc == null) {
 			return null;
 		}
 
-		Optional<? extends N4JSProjectConfigSnapshot> opt = n4jsCore.findProject(resource);
+		Optional<? extends N4JSProjectConfigSnapshot> opt = workspaceAccess.findProject(resource);
 
 		if (!opt.isPresent()) {
 			return null;
@@ -271,12 +271,12 @@ public class ProjectCompareHelper {
 			URI impUri = artifactHelper.findArtifact(implProject, apiModule.getQualifiedName(),
 					Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION));
 			if (impUri != null) {
-				IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(module).orNull();
+				IResourceDescriptions xtextIndex = workspaceAccess.getXtextIndex(module).orNull();
 				IResourceDescription resourceDescription = xtextIndex != null
 						? xtextIndex.getResourceDescription(impUri)
 						: null;
 				if (resourceDescription != null) {
-					apiImplModule = n4jsCore.loadModuleFromIndex(module.eResource().getResourceSet(),
+					apiImplModule = workspaceAccess.loadModuleFromIndex(module.eResource().getResourceSet(),
 							resourceDescription,
 							false);
 				} else {
@@ -319,10 +319,10 @@ public class ProjectCompareHelper {
 					URI apiURI = artifactHelper.findArtifact(ap, apiImplModule.getQualifiedName(),
 							Optional.of(N4JSGlobals.N4JSD_FILE_EXTENSION));
 					if (apiURI != null) {
-						IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(apiImplModule).orNull();
+						IResourceDescriptions xtextIndex = workspaceAccess.getXtextIndex(apiImplModule).orNull();
 						IResourceDescription resourceDescription = xtextIndex.getResourceDescription(apiURI);
 						if (resourceDescription != null) {
-							apiModule = n4jsCore.loadModuleFromIndex(apiImplModule.eResource().getResourceSet(),
+							apiModule = workspaceAccess.loadModuleFromIndex(apiImplModule.eResource().getResourceSet(),
 									resourceDescription, false);
 							if (apiModule != null)
 								break labelA;
@@ -511,7 +511,7 @@ public class ProjectCompareHelper {
 
 	private TModule getModuleFrom(ResourceSet resourceSet, IResourceDescription resDesc) {
 		if (resDesc != null) {
-			return n4jsCore.loadModuleFromIndex(resourceSet, resDesc, false);
+			return workspaceAccess.loadModuleFromIndex(resourceSet, resDesc, false);
 		}
 		return null;
 	}

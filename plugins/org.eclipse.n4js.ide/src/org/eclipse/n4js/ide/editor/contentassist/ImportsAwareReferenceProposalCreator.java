@@ -23,7 +23,7 @@ import org.eclipse.n4js.ide.imports.ReferenceResolutionFinder.IResolutionAccepto
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
@@ -42,7 +42,7 @@ import com.google.inject.Inject;
 public class ImportsAwareReferenceProposalCreator {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private ImportHelper importHelper;
@@ -80,7 +80,7 @@ public class ImportsAwareReferenceProposalCreator {
 		}
 		N4JSResource resourceCasted = (N4JSResource) resource;
 
-		N4JSWorkspaceConfigSnapshot wc = n4jsCore.getWorkspaceConfig(resourceCasted).get();
+		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(resourceCasted).get();
 		ReferenceDescriptor referenceDesc = new ReferenceDescriptor(context.getPrefix(), model, reference,
 				context.getCurrentNode());
 		Predicate<String> conflictChecker = (proposalToCheck) -> conflictHelper.existsConflict(proposalToCheck,

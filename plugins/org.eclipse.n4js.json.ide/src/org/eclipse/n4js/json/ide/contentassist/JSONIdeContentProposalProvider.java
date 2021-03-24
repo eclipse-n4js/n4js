@@ -23,7 +23,7 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.AbstractElement;
@@ -51,7 +51,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 	private IPrefixMatcher prefixMatcher;
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Override
 	protected void _createProposals(Keyword keyword, ContentAssistContext context,
@@ -87,7 +87,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 			String last = namePath.get(namePath.size() - 1);
 			if (PackageJsonProperties.DEPENDENCIES.name.equals(last)
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(last)) {
-				for (N4JSProjectConfigSnapshot project : n4jsCore.findAllProjects(context.getResource())) {
+				for (N4JSProjectConfigSnapshot project : workspaceAccess.findAllProjects(context.getResource())) {
 					N4JSProjectName projectName = project.getN4JSProjectName();
 					ContentAssistEntry entryForModule = getProposalCreator().createProposal(
 							'"' + projectName.getRawName() + '"', context, ContentAssistEntry.KIND_MODULE, null);
@@ -132,7 +132,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(devOrDep)) {
 
 				NameValuePair pair = (NameValuePair) context.getCurrentModel();
-				N4JSProjectConfigSnapshot project = n4jsCore.findProject(context.getResource(),
+				N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context.getResource(),
 						new N4JSProjectName(pair.getName())).orNull();
 				if (project != null) {
 					VersionNumber version = project.getVersion();

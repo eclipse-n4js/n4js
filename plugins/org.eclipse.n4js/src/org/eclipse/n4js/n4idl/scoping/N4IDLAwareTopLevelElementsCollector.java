@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.scoping.TopLevelElementsCollector;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
@@ -28,11 +28,11 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 	private static final Logger LOGGER = Logger.getLogger(N4IDLAwareTopLevelElementsCollector.class);
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Override
 	public Iterable<IEObjectDescription> getTopLevelElements(TModule module, Resource contextResource) {
-		Optional<N4JSProjectConfigSnapshot> project = n4jsCore.findProject(contextResource);
+		Optional<N4JSProjectConfigSnapshot> project = workspaceAccess.findProject(contextResource);
 		Iterable<IEObjectDescription> allTopLevelElements = super.getTopLevelElements(module, contextResource);
 
 		// if project isn't available, include all top-level elements
@@ -48,7 +48,7 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 		}
 
 		// otherwise filter by context version
-		Optional<N4JSProjectConfigSnapshot> moduleProject = n4jsCore.findProject(module.eResource());
+		Optional<N4JSProjectConfigSnapshot> moduleProject = workspaceAccess.findProject(module.eResource());
 
 		if (!moduleProject.isPresent()) {
 			LOGGER.warn(String.format("Failed to determine project of TModule %s.", module.getQualifiedName()));

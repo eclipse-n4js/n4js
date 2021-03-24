@@ -43,7 +43,7 @@ import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvider;
 import org.eclipse.n4js.ide.server.util.N4JSServerIncidentLogger;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.utils.FileSystemScanner;
 import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;
 import org.eclipse.n4js.xtext.ide.editor.contentassist.XIdeContentProposalAcceptor;
@@ -109,8 +109,8 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return getClass().getClassLoader();
 	}
 
-	public Class<? extends IN4JSCoreNEW> bindIN4JSCore() {
-		return N4JSIdeCoreNEW.class;
+	public Class<? extends WorkspaceAccess> bindWorkspaceAccess() {
+		return IdeWorkspaceAccess.class;
 	}
 
 	/**

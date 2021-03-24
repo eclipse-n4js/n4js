@@ -13,7 +13,7 @@ package org.eclipse.n4js.utils;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 
@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 public class ProjectResolveHelper {
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * Convenience method for {@link ProjectResolveHelper#resolveProject(Notifier, URI)}, for which {@link URI} is
@@ -45,7 +45,7 @@ public class ProjectResolveHelper {
 	 * Resolves project from provided URI.
 	 */
 	public N4JSProjectConfigSnapshot resolveProject(Notifier context, URI n4jsSourceURI) {
-		final Optional<? extends N4JSProjectConfigSnapshot> optionalProject = n4jsCore.findProject(context,
+		final Optional<? extends N4JSProjectConfigSnapshot> optionalProject = workspaceAccess.findProject(context,
 				n4jsSourceURI);
 		if (!optionalProject.isPresent()) {
 			throw new RuntimeException(
@@ -71,7 +71,7 @@ public class ProjectResolveHelper {
 	 * @see #resolvePackageAndFileName(URI, N4JSProjectConfigSnapshot)
 	 */
 	public String resolvePackageAndFileName(Notifier context, URI uri) {
-		final N4JSProjectConfigSnapshot project = n4jsCore.findProject(context, uri).orNull();
+		final N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context, uri).orNull();
 		return resolvePackageAndFileName(uri, project);
 	}
 

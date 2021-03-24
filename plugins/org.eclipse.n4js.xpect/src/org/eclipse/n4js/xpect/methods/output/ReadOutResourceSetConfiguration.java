@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xpect.xtext.lib.setup.emf.ResourceFactory;
 
@@ -26,7 +26,7 @@ import org.eclipse.xpect.xtext.lib.setup.emf.ResourceFactory;
 public class ReadOutResourceSetConfiguration extends ReadOutConfiguration {
 	private org.eclipse.xpect.xtext.lib.setup.emf.ResourceSet configuredResourceSet;
 
-	ReadOutResourceSetConfiguration(FileSetupContext ctx, IN4JSCoreNEW resourceSet) {
+	ReadOutResourceSetConfiguration(FileSetupContext ctx, WorkspaceAccess resourceSet) {
 		super(ctx, resourceSet);
 	}
 

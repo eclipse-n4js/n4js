@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -33,7 +33,7 @@ import com.google.inject.Singleton;
 @Singleton
 public final class EObjectDescriptionHelper {
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
@@ -71,9 +71,9 @@ public final class EObjectDescriptionHelper {
 			return false;
 		}
 
-		final N4JSProjectConfigSnapshot targetProject = n4jsCore.findProject(context, eoDescription.getEObjectURI())
+		final N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProject(context, eoDescription.getEObjectURI())
 				.orNull();
-		final N4JSProjectConfigSnapshot currentProject = n4jsCore.findProject(context, eObjectResourceURI).orNull();
+		final N4JSProjectConfigSnapshot currentProject = workspaceAccess.findProject(context, eObjectResourceURI).orNull();
 
 		return targetProject == currentProject;
 	}

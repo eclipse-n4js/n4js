@@ -81,7 +81,7 @@ import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.TameAutoClosable
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription
@@ -120,7 +120,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Named(NAMED_DELEGATE)
 	IScopeProvider delegate;
 
-	@Inject private IN4JSCoreNEW n4jsCore;
+	@Inject private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	ResourceDescriptionsProvider resourceDescriptionsProvider;
@@ -362,10 +362,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(initialScope,
 			resourceDescriptions, reference.EReferenceType);
 
-if (!n4jsCore.getWorkspaceConfig(resource).isPresent()) {
+if (!workspaceAccess.getWorkspaceConfig(resource).isPresent()) {
 	println("!!!")
 }
-		val ws = n4jsCore.getWorkspaceConfig(resource).get();
+		val ws = workspaceAccess.getWorkspaceConfig(resource).get();
 		val projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, importDeclaration,
 			initialScope, delegateMainModuleAwareScope);
 

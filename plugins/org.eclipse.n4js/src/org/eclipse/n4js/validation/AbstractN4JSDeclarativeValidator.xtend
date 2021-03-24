@@ -69,7 +69,7 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -101,7 +101,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	@Inject
 	private TypeSystemHelper tsh;
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -131,7 +131,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 			private def boolean shouldInvoke(State state) {
 				val resource = state.currentObject?.eResource;
 				if (resource !== null) {
-					if (!n4jsCore.isNoValidate(resource, resource.getURI())) {
+					if (!workspaceAccess.isNoValidate(resource, resource.getURI())) {
 						return true;
 					}
 				}

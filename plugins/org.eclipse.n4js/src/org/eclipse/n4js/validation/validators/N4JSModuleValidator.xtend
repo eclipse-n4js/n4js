@@ -26,7 +26,7 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSResourceValidator
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
@@ -58,7 +58,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject IQualifiedNameConverter qualifiedNameConverter
 
-	@Inject IN4JSCoreNEW n4jsCore;
+	@Inject WorkspaceAccess workspaceAccess;
 
 	/**
 	 * NEEDED
@@ -173,7 +173,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				// non MainModules are follow normal visibility check
 				// but MainModules have checks relaxed:
 				if(module.isMainModule){
-					val ws = n4jsCore.getWorkspaceConfig(resource).orNull;
+					val ws = workspaceAccess.getWorkspaceConfig(resource).orNull;
 					val pr = ws?.findProjectByPath(resource.URI);
 					if (pr === null) {
 						return;

@@ -24,7 +24,7 @@ import org.eclipse.n4js.validation.validators.flowgraphs.FlowValidator;
 import org.eclipse.n4js.validation.validators.flowgraphs.MissingReturnOrThrowValidator;
 import org.eclipse.n4js.validation.validators.flowgraphs.NullUndefinedValidator;
 import org.eclipse.n4js.validation.validators.flowgraphs.UsedBeforeDeclaredValidator;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
@@ -45,7 +45,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	private FindReferenceHelper findReferenceHelper;
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * NEEEDED
@@ -80,7 +80,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		FlowValidator[] fValidators = {
 				new DeadCodeValidator(flowInfo.deadCodeAnalyser, keywordProvider),
 				new UsedBeforeDeclaredValidator(flowInfo.usedBeforeDeclaredAnalyser),
-				new NullUndefinedValidator(flowInfo.nullDereferenceAnalyser, n4jsCore, findReferenceHelper),
+				new NullUndefinedValidator(flowInfo.nullDereferenceAnalyser, workspaceAccess, findReferenceHelper),
 				new MissingReturnOrThrowValidator(flowInfo.missingReturnOrThrowAnalyser)
 		};
 

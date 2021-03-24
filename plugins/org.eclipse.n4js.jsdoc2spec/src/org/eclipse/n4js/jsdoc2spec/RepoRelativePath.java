@@ -21,7 +21,7 @@ import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.utils.Log;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
@@ -44,8 +44,8 @@ public class RepoRelativePath {
 	 * Creates the RepoRelativePath from a given resource. Returns null, if resource is not contained in a repository.
 	 * If a repository is found, the simple name of the origin is used.
 	 */
-	public static RepoRelativePath compute(FileURI uriOfResource, IN4JSCoreNEW n4jsCore, Notifier context) {
-		Optional<? extends N4JSProjectConfigSnapshot> optProj = n4jsCore.findProject(context, uriOfResource.toURI());
+	public static RepoRelativePath compute(FileURI uriOfResource, WorkspaceAccess workspaceAccess, Notifier context) {
+		Optional<? extends N4JSProjectConfigSnapshot> optProj = workspaceAccess.findProject(context, uriOfResource.toURI());
 		if (!optProj.isPresent()) {
 			return null;
 		}

@@ -24,7 +24,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -60,7 +60,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	private N4JSCrossReferenceComputer crossReferenceComputer;
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private FileExtensionTypeHelper fileExtensionTypeHelper;
@@ -178,8 +178,8 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	 * 'toUri'.
 	 */
 	private boolean hasDependencyTo(URI fromUri, URI toUri) {
-		final N4JSProjectConfigSnapshot fromProject = n4jsCore.findProject(fromUri).orNull();
-		final N4JSProjectConfigSnapshot toProject = n4jsCore.findProject(toUri).orNull();
+		final N4JSProjectConfigSnapshot fromProject = workspaceAccess.findProject(fromUri).orNull();
+		final N4JSProjectConfigSnapshot toProject = workspaceAccess.findProject(toUri).orNull();
 
 		if (null != fromProject && null != toProject) { // Consider libraries. TODO: implement it at #findProject(URI)
 

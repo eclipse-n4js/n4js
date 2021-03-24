@@ -35,7 +35,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 @Singleton
-public class N4JSCoreNEW implements IN4JSCoreNEW {
+public class WorkspaceAccess {
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -43,7 +43,6 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 	@Inject
 	private IResourceDescriptionsProvider resourceDescriptionsProvider;
 
-	@Override
 	public Optional<N4JSWorkspaceConfigSnapshot> getWorkspaceConfig(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
 		WorkspaceConfigSnapshot config = resourceSet != null
@@ -52,7 +51,6 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 		return Optional.fromNullable((N4JSWorkspaceConfigSnapshot) config);
 	}
 
-	@Override
 	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects(Notifier context) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent()
@@ -60,12 +58,10 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 				: ImmutableSet.of();
 	}
 
-	@Override
 	public Optional<N4JSProjectConfigSnapshot> findProject(Resource resource) {
 		return resource != null ? findProject(resource, resource.getURI()) : Optional.absent();
 	}
 
-	@Override
 	public Optional<N4JSProjectConfigSnapshot> findProject(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent()
@@ -73,7 +69,6 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 				: Optional.absent();
 	}
 
-	@Override
 	public Optional<N4JSProjectConfigSnapshot> findProject(Notifier context, N4JSProjectName projectName) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent()
@@ -81,7 +76,6 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 				: Optional.absent();
 	}
 
-	@Override
 	public Optional<N4JSProjectConfigSnapshot> findProjectContaining(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent()
@@ -89,7 +83,6 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 				: Optional.absent();
 	}
 
-	@Override
 	public Optional<N4JSSourceFolderSnapshot> findN4JSSourceContainer(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent()
@@ -97,7 +90,6 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 				: Optional.absent();
 	}
 
-	@Override
 	public boolean isNoValidate(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent() && config.get().isNoValidate(nestedLocation);
@@ -105,12 +97,10 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 
 	// FIXME GH-2073 important! reconsider all following methods!
 
-	@Override
 	public XtextResourceSet createResourceSet() {
 		return resourceSetProvider.get();
 	}
 
-	@Override
 	public Optional<IResourceDescriptions> getXtextIndex(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
 		if (resourceSet == null) {
@@ -124,7 +114,6 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 		return Optional.fromNullable(result);
 	}
 
-	@Override
 	public TModule loadModuleFromIndex(final ResourceSet resourceSet,
 			final IResourceDescription resourceDescription, boolean allowFullLoad) {
 		final URI resourceURI = resourceDescription.getURI();
@@ -192,12 +181,10 @@ public class N4JSCoreNEW implements IN4JSCoreNEW {
 
 	// FIXME GH-2073 important! get rid of the following!
 
-	@Override
 	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects() {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
 	public Optional<N4JSProjectConfigSnapshot> findProject(URI nestedLocation) {
 		throw new UnsupportedOperationException();
 	}

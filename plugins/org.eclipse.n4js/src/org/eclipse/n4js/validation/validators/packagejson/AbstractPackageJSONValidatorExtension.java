@@ -35,8 +35,8 @@ import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.validation.N4JSValidator.N4JSMethodWrapperCancelable;
-import org.eclipse.n4js.workspace.IN4JSCoreNEW;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -72,7 +72,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 	private static final String JSON_DOCUMENT = "JSON_DOCUMENT";
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 	@Inject
 	private XpectAwareFileExtensionCalculator fileExtensionCalculator;
 	@Inject
@@ -295,7 +295,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		if (!fileName.equals(N4JSGlobals.PACKAGE_JSON)) {
 			return false;
 		}
-		Optional<? extends N4JSProjectConfigSnapshot> optProject = n4jsCore.findProject(resource);
+		Optional<? extends N4JSProjectConfigSnapshot> optProject = workspaceAccess.findProject(resource);
 		if (!optProject.isPresent()) {
 			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
 			// (maybe during manual creation of a new project); therefore we cannot log an error here:

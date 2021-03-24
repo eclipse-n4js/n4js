@@ -48,7 +48,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.workspace.IN4JSCoreNEW
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.util.Tuples
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -68,7 +68,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	]
 
 	@Inject
-	private IN4JSCoreNEW n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
@@ -307,7 +307,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	 * Constraints 70. 1
 	 */
 	def private holdsDefinedInRuntime(ExportableElement element) {
-		val projectType = n4jsCore.findProject(element?.eResource).orNull?.type;
+		val projectType = workspaceAccess.findProject(element?.eResource).orNull?.type;
 		if (projectType === null || projectType === ProjectType.RUNTIME_ENVIRONMENT ||
 			projectType === ProjectType.RUNTIME_LIBRARY) {
 			return true;
