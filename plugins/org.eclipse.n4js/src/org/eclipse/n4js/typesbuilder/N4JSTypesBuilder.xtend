@@ -169,7 +169,7 @@ public class N4JSTypesBuilder {
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
 
-			val project = workspaceAccess.findProject(resource);
+			val project = workspaceAccess.findProjectContaining(resource);
 			if (project !== null) {
 				result.projectName = project.name;
 				result.vendorID = project.vendorId;

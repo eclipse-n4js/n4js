@@ -31,7 +31,7 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 
 	@Override
 	public Iterable<IEObjectDescription> getTopLevelElements(TModule module, Resource contextResource) {
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(contextResource);
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(contextResource);
 		Iterable<IEObjectDescription> allTopLevelElements = super.getTopLevelElements(module, contextResource);
 
 		// if project isn't available, include all top-level elements
@@ -47,7 +47,7 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 		}
 
 		// otherwise filter by context version
-		N4JSProjectConfigSnapshot moduleProject = workspaceAccess.findProject(module.eResource());
+		N4JSProjectConfigSnapshot moduleProject = workspaceAccess.findProjectContaining(module);
 
 		if (moduleProject == null) {
 			LOGGER.warn(String.format("Failed to determine project of TModule %s.", module.getQualifiedName()));

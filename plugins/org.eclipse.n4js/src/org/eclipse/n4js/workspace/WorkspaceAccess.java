@@ -12,6 +12,7 @@ package org.eclipse.n4js.workspace;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
@@ -69,11 +70,6 @@ public class WorkspaceAccess {
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByPath(URI)}. */
-	public N4JSProjectConfigSnapshot findProject(Resource resource) {
-		return resource != null ? findProjectByPath(resource, resource.getURI()) : null;
-	}
-
-	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByPath(URI)}. */
 	public N4JSProjectConfigSnapshot findProjectByPath(Notifier context, URI path) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent() ? config.get().findProjectByPath(path) : null;
@@ -99,6 +95,22 @@ public class WorkspaceAccess {
 	public N4JSProjectConfigSnapshot findProjectByNestedLocation(Notifier context, URI nestedLocation) {
 		Optional<N4JSWorkspaceConfigSnapshot> config = getWorkspaceConfig(context);
 		return config.isPresent() ? config.get().findProjectByNestedLocation(nestedLocation) : null;
+	}
+
+	/**
+	 * Same as {@link #findProjectContaining(Notifier, URI)}, using the resource containing the given eObject both as
+	 * context and for the URI.
+	 */
+	public N4JSProjectConfigSnapshot findProjectContaining(EObject eObject) {
+		Resource resource = eObject != null ? eObject.eResource() : null;
+		return resource != null ? findProjectContaining(resource, resource.getURI()) : null;
+	}
+
+	/**
+	 * Same as {@link #findProjectContaining(Notifier, URI)}, using the given resource both as context and for the URI.
+	 */
+	public N4JSProjectConfigSnapshot findProjectContaining(Resource resource) {
+		return resource != null ? findProjectContaining(resource, resource.getURI()) : null;
 	}
 
 	/**

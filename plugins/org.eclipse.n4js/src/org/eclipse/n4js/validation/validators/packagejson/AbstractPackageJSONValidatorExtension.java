@@ -294,7 +294,7 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 		if (!fileName.equals(N4JSGlobals.PACKAGE_JSON)) {
 			return false;
 		}
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource);
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(resource);
 		if (project == null) {
 			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
 			// (maybe during manual creation of a new project); therefore we cannot log an error here:

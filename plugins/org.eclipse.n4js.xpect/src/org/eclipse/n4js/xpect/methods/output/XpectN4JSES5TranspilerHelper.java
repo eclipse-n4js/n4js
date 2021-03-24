@@ -293,7 +293,7 @@ public class XpectN4JSES5TranspilerHelper {
 				? script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
 				: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(script.eResource());
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(script);
 		if (project != null) {
 			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, includeProjectName);
 		}

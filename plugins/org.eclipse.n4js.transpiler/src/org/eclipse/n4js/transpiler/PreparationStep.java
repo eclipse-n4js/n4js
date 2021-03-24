@@ -125,7 +125,7 @@ public class PreparationStep {
 	 */
 	public TranspilerState prepare(Script script, GeneratorOption[] options) {
 		final N4JSResource resource = (N4JSResource) script.eResource();
-		final N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource);
+		final N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(resource);
 		final ContainerTypesHelper.MemberCollector memberCollector = containerTypesHelper.fromContext(resource);
 		final Tracer tracer = new Tracer();
 		final InformationRegistry info = new InformationRegistry();

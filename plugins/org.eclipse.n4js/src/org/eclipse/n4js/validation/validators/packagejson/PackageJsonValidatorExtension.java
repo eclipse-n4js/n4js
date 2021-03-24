@@ -1035,7 +1035,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	private boolean holdsExistingDirectoryPath(JSONStringLiteral pathLiteral) {
 		final Resource resource = pathLiteral.eResource();
 		final URI resourceURI = resource.getURI();
-		final N4JSProjectConfigSnapshot n4jsProject = workspaceAccess.findProject(resource);
+		final N4JSProjectConfigSnapshot n4jsProject = workspaceAccess.findProjectContaining(resource);
 
 		if (n4jsProject == null) {
 			// container project cannot be determined, fail gracefully (validation running on non-N4JS project?)

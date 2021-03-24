@@ -106,7 +106,7 @@ class ModuleWrappingTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		val targetProject = workspaceAccess.findProject(targetModule.eResource);
+		val targetProject = workspaceAccess.findProjectContaining(targetModule);
 
 		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
 			// SPECIAL CASE #1

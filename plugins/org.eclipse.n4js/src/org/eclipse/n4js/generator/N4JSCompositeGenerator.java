@@ -85,7 +85,7 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	private boolean isExternalLocation(final Resource input) {
 		URI uri = input.getURI();
 		if (null != uri && uri.isFile()) {
-			final N4JSProjectConfigSnapshot project = workspaceAccess.findProject(input);
+			final N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(input);
 			return null != project && project.isExternal();
 		}
 		return false;

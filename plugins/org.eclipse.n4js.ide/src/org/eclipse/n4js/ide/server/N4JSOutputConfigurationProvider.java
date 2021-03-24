@@ -54,7 +54,7 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(context);
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(context);
 		return getOutputConfigurationSet(project);
 	}
 

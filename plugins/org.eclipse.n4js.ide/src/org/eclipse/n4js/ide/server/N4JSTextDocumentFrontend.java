@@ -102,7 +102,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			TextDocumentPositionParams positionParams, CancelIndicator cancelIndicator) {
 
 		URI uri = rtc.getURI();
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(rtc.getResource());
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(rtc.getResource());
 		String targetFileName = resourceNameComputer.generateFileDescriptor(rtc.getResource(), uri, JS_FILE_EXTENSION);
 		List<Location> locations = new ArrayList<>();
 		if (project != null && !Strings.isNullOrEmpty(targetFileName)) {

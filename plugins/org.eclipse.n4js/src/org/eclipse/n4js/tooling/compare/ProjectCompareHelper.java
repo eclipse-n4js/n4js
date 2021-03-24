@@ -185,7 +185,7 @@ public class ProjectCompareHelper {
 	 */
 	public Optional<N4JSProjectName> getImplementationID(TModule apiImplModule) {
 
-		N4JSProjectConfigSnapshot implProject = workspaceAccess.findProject(apiImplModule.eResource());
+		N4JSProjectConfigSnapshot implProject = workspaceAccess.findProjectContaining(apiImplModule);
 		String implId = implProject.getImplementationId();
 		return implId != null ? Optional.of(new N4JSProjectName(implId)) : Optional.absent();
 	}
@@ -242,7 +242,7 @@ public class ProjectCompareHelper {
 			return null;
 		}
 
-		N4JSProjectConfigSnapshot project = workspaceAccess.findProject(resource);
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(resource);
 		if (project == null) {
 			return null;
 		}

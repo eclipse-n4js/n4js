@@ -752,7 +752,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 */
 	@CheckProperty(property = MODULE_FILTERS)
 	def checkModuleFilters(JSONValue moduleFiltersValue) {
-		val project = workspaceAccess.findProject(moduleFiltersValue.eResource);
+		val project = workspaceAccess.findProjectContaining(moduleFiltersValue);
 		
 		// early-exit for malformed structure
 		if (!(moduleFiltersValue instanceof JSONObject)) {
