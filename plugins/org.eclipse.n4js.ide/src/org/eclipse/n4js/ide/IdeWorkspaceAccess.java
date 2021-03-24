@@ -19,7 +19,6 @@ import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -38,12 +37,6 @@ public class IdeWorkspaceAccess extends WorkspaceAccess {
 
 	@Inject
 	private ConcurrentIndex concurrentIndex;
-
-	@Override
-	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects() {
-		N4JSWorkspaceConfigSnapshot wcs = (N4JSWorkspaceConfigSnapshot) concurrentIndex.getWorkspaceConfigSnapshot();
-		return wcs.getProjects();
-	}
 
 	@Override
 	public Optional<N4JSProjectConfigSnapshot> findProject(URI nestedLocation) {

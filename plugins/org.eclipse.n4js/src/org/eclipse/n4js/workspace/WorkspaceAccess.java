@@ -181,10 +181,6 @@ public class WorkspaceAccess {
 
 	// FIXME GH-2073 important! get rid of the following!
 
-	public ImmutableSet<N4JSProjectConfigSnapshot> findAllProjects() {
-		throw new UnsupportedOperationException();
-	}
-
 	public Optional<N4JSProjectConfigSnapshot> findProject(URI nestedLocation) {
 		throw new UnsupportedOperationException();
 	}
