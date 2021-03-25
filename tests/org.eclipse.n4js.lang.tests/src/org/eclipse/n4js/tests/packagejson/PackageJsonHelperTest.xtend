@@ -256,14 +256,14 @@ class PackageJsonHelperTest {
 
 
 	def private assertCorrectDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
-		assertEquals(DEFAULT_PROJECT_ID, pd.projectName);
-		assertEquals(VERSION.defaultValue, pd.projectVersion.toString);
+		assertEquals(DEFAULT_PROJECT_ID, pd.getName);
+		assertEquals(VERSION.defaultValue, pd.getVersion.toString);
 		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
 		assertEquals(null, pd.vendorName);
 		if(hasDefaultProjectType) {
-			assertEquals(ProjectType.PLAINJS, pd.projectType);
+			assertEquals(ProjectType.PLAINJS, pd.getType);
 		} else {
-			assertNotEquals(ProjectType.PLAINJS, pd.projectType);
+			assertNotEquals(ProjectType.PLAINJS, pd.getType);
 		}
 		assertEquals(MAIN_MODULE.defaultValue, pd.mainModule);
 		assertEquals(null, pd.extendedRuntimeEnvironment);

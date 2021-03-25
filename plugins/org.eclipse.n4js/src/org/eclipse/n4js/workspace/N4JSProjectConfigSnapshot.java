@@ -48,7 +48,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			boolean indexOnly, boolean generatorEnabled, Iterable<String> dependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
-		super(projectDescription.getProjectName(), path,
+		super(projectDescription.getName(), path,
 				Collections.singleton(URIUtils.trimTrailingPathSeparator(path).trimSegments(1)
 						.appendSegment(N4JSGlobals.PACKAGE_JSON)),
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
@@ -137,14 +137,14 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(uri);
 	}
 
-	/** Returns this project's {@link ProjectDescription#getProjectType() type}. */
+	/** Returns this project's {@link ProjectDescription#getType() type}. */
 	public ProjectType getType() {
-		return projectDescription.getProjectType();
+		return projectDescription.getType();
 	}
 
-	/** Returns this project's {@link ProjectDescription#getProjectVersion() version}. */
+	/** Returns this project's {@link ProjectDescription#getVersion() version}. */
 	public VersionNumber getVersion() {
-		return projectDescription.getProjectVersion();
+		return projectDescription.getVersion();
 	}
 
 	/** Returns this project's {@link ProjectDescription#getVendorId() vendor ID}. */

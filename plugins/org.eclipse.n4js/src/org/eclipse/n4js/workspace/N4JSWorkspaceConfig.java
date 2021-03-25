@@ -134,7 +134,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	// TODO GH-1314 reconsider shadowing of projects with same name
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
 		pd = sanitizeProjectDescription(path, pd);
-		String name = pd.getProjectName();
+		String name = pd.getName();
 		if (name2ProjectConfig.containsKey(name)) {
 			return null; // see note on shadowing in API doc of this method!
 		}
@@ -153,8 +153,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 */
 	protected ProjectDescription sanitizeProjectDescription(FileURI path, ProjectDescription pd) {
 		String saneName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(path);
-		if (!saneName.equals(pd.getProjectName())) {
-			return pd.change().setProjectName(saneName).build();
+		if (!saneName.equals(pd.getName())) {
+			return pd.change().setName(saneName).build();
 		}
 		return pd;
 	}

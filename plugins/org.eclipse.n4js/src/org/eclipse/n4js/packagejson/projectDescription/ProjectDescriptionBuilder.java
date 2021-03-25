@@ -23,16 +23,16 @@ import com.google.common.collect.Iterables;
 @SuppressWarnings("javadoc")
 public class ProjectDescriptionBuilder {
 
-	private String projectName;
+	private String name;
 	private String vendorId;
 	private String vendorName;
-	private VersionNumber projectVersion;
-	private ProjectType projectType;
+	private VersionNumber version;
+	private ProjectType type;
 	private String mainModule;
 	private ProjectReference extendedRuntimeEnvironment;
 	private final List<ProjectReference> providedRuntimeLibraries = new ArrayList<>();
 	private final List<ProjectReference> requiredRuntimeLibraries = new ArrayList<>();
-	private final List<ProjectDependency> projectDependencies = new ArrayList<>();
+	private final List<ProjectDependency> dependencies = new ArrayList<>();
 	private String implementationId;
 	private final List<ProjectReference> implementedProjects = new ArrayList<>();
 	private String outputPath;
@@ -50,18 +50,18 @@ public class ProjectDescriptionBuilder {
 
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
-		return new ProjectDescription(projectName, vendorId, vendorName, projectVersion, projectType, mainModule,
-				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, projectDependencies,
+		return new ProjectDescription(name, vendorId, vendorName, version, type, mainModule,
+				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
 				implementationId, implementedProjects, outputPath, sourceContainers, moduleFilters, testedProjects,
 				definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, workspaces);
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public String getName() {
+		return name;
 	}
 
-	public ProjectDescriptionBuilder setProjectName(String projectName) {
-		this.projectName = projectName;
+	public ProjectDescriptionBuilder setName(String name) {
+		this.name = name;
 		return this;
 	}
 
@@ -83,21 +83,21 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public VersionNumber getProjectVersion() {
-		return projectVersion;
+	public VersionNumber getVersion() {
+		return version;
 	}
 
-	public ProjectDescriptionBuilder setProjectVersion(VersionNumber projectVersion) {
-		this.projectVersion = projectVersion;
+	public ProjectDescriptionBuilder setVersion(VersionNumber version) {
+		this.version = version;
 		return this;
 	}
 
-	public ProjectType getProjectType() {
-		return projectType;
+	public ProjectType getType() {
+		return type;
 	}
 
-	public ProjectDescriptionBuilder setProjectType(ProjectType projectType) {
-		this.projectType = projectType;
+	public ProjectDescriptionBuilder setType(ProjectType type) {
+		this.type = type;
 		return this;
 	}
 
@@ -137,12 +137,12 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public List<ProjectDependency> getProjectDependencies() {
-		return projectDependencies;
+	public List<ProjectDependency> getDependencies() {
+		return dependencies;
 	}
 
-	public ProjectDescriptionBuilder addProjectDependency(ProjectDependency projectDependency) {
-		this.projectDependencies.add(projectDependency);
+	public ProjectDescriptionBuilder addDependency(ProjectDependency dependency) {
+		this.dependencies.add(dependency);
 		return this;
 	}
 

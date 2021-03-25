@@ -92,7 +92,7 @@ public class ProjectDescriptionUtils {
 	 * </tr>
 	 * <tr>
 	 * <td>N4JS project name</td>
-	 * <td>The value the value returned by {@link ProjectDescription#getProjectName()}. Always equal to<br>
+	 * <td>The value the value returned by {@link ProjectDescription#getName()}. Always equal to<br>
 	 * the value of the top-level property "name" in the project's <code>package.json</code> file.</td>
 	 * <td>{@code @myScope/myProject}</td>
 	 * </tr>

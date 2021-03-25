@@ -27,17 +27,17 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class ProjectDescription extends ImmutableDataClass {
 
-	private final String projectName;
+	private final String name;
 	private final String vendorId;
 	private final String vendorName;
-	private final VersionNumber projectVersion;
-	private final String internalProjectVersionStr; // for hash code computation and equality checks
-	private final ProjectType projectType;
+	private final VersionNumber version;
+	private final String internalVersionStr; // for hash code computation and equality checks
+	private final ProjectType type;
 	private final String mainModule;
 	private final ProjectReference extendedRuntimeEnvironment;
 	private final ImmutableList<ProjectReference> providedRuntimeLibraries;
 	private final ImmutableList<ProjectReference> requiredRuntimeLibraries;
-	private final ImmutableList<ProjectDependency> projectDependencies;
+	private final ImmutableList<ProjectDependency> dependencies;
 	private final String implementationId;
 	private final ImmutableList<ProjectReference> implementedProjects;
 	private final String outputPath;
@@ -51,25 +51,25 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
-	public ProjectDescription(String projectName, String vendorId, String vendorName, VersionNumber projectVersion,
-			ProjectType projectType, String mainModule, ProjectReference extendedRuntimeEnvironment,
+	public ProjectDescription(String name, String vendorId, String vendorName, VersionNumber version,
+			ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
-			Iterable<ProjectDependency> projectDependencies, String implementationId,
+			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
 			boolean n4jsNature, boolean yarnWorkspaceRoot, Iterable<String> workspaces) {
-		this.projectName = projectName;
+		this.name = name;
 		this.vendorId = vendorId;
 		this.vendorName = vendorName;
-		this.projectVersion = projectVersion != null ? EcoreUtil.copy(projectVersion) : null;
-		this.internalProjectVersionStr = projectVersion != null ? SemverSerializer.serialize(projectVersion) : null;
-		this.projectType = projectType;
+		this.version = version != null ? EcoreUtil.copy(version) : null;
+		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
+		this.type = type;
 		this.mainModule = mainModule;
 		this.extendedRuntimeEnvironment = extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = ImmutableList.copyOf(providedRuntimeLibraries);
 		this.requiredRuntimeLibraries = ImmutableList.copyOf(requiredRuntimeLibraries);
-		this.projectDependencies = ImmutableList.copyOf(projectDependencies);
+		this.dependencies = ImmutableList.copyOf(dependencies);
 		this.implementationId = implementationId;
 		this.implementedProjects = ImmutableList.copyOf(implementedProjects);
 		this.outputPath = outputPath;
@@ -84,17 +84,17 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	public ProjectDescription(ProjectDescription template) {
-		this.projectName = template.projectName;
+		this.name = template.name;
 		this.vendorId = template.vendorId;
 		this.vendorName = template.vendorName;
-		this.projectVersion = template.projectVersion != null ? EcoreUtil.copy(template.projectVersion) : null;
-		this.internalProjectVersionStr = projectVersion != null ? SemverSerializer.serialize(projectVersion) : null;
-		this.projectType = template.projectType;
+		this.version = template.version != null ? EcoreUtil.copy(template.version) : null;
+		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
+		this.type = template.type;
 		this.mainModule = template.mainModule;
 		this.extendedRuntimeEnvironment = template.extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = template.providedRuntimeLibraries;
 		this.requiredRuntimeLibraries = template.requiredRuntimeLibraries;
-		this.projectDependencies = template.projectDependencies;
+		this.dependencies = template.dependencies;
 		this.implementationId = template.implementationId;
 		this.implementedProjects = template.implementedProjects;
 		this.outputPath = template.outputPath;
@@ -115,16 +115,16 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public ProjectDescriptionBuilder change() {
 		ProjectDescriptionBuilder builder = new ProjectDescriptionBuilder();
-		builder.setProjectName(projectName);
+		builder.setName(name);
 		builder.setVendorId(vendorId);
 		builder.setVendorName(vendorName);
-		builder.setProjectVersion(projectVersion != null ? EcoreUtil.copy(projectVersion) : null);
-		builder.setProjectType(projectType);
+		builder.setVersion(version != null ? EcoreUtil.copy(version) : null);
+		builder.setType(type);
 		builder.setMainModule(mainModule);
 		builder.setExtendedRuntimeEnvironment(extendedRuntimeEnvironment);
 		builder.getProvidedRuntimeLibraries().addAll(providedRuntimeLibraries);
 		builder.getRequiredRuntimeLibraries().addAll(requiredRuntimeLibraries);
-		builder.getProjectDependencies().addAll(projectDependencies);
+		builder.getDependencies().addAll(dependencies);
 		builder.setImplementationId(implementationId);
 		builder.getImplementedProjects().addAll(implementedProjects);
 		builder.setOutputPath(outputPath);
@@ -140,12 +140,12 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	/** The project name, possibly including a scope prefix (e.g. {@code "@someScope/myProject"}). */
-	public String getProjectName() {
-		return projectName;
+	public String getName() {
+		return name;
 	}
 
 	public N4JSProjectName getN4JSProjectName() {
-		return projectName != null ? new N4JSProjectName(projectName) : null;
+		return name != null ? new N4JSProjectName(name) : null;
 	}
 
 	public String getVendorId() {
@@ -156,12 +156,12 @@ public class ProjectDescription extends ImmutableDataClass {
 		return vendorName;
 	}
 
-	public VersionNumber getProjectVersion() {
-		return projectVersion;
+	public VersionNumber getVersion() {
+		return version;
 	}
 
-	public ProjectType getProjectType() {
-		return projectType;
+	public ProjectType getType() {
+		return type;
 	}
 
 	public String getMainModule() {
@@ -181,7 +181,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	public List<ProjectDependency> getProjectDependencies() {
-		return projectDependencies;
+		return dependencies;
 	}
 
 	public String getImplementationId() {
@@ -251,17 +251,17 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				projectName,
+				name,
 				vendorId,
 				vendorName,
 				// projectVersion is covered by internalProjectVersionStr
-				internalProjectVersionStr,
-				projectType,
+				internalVersionStr,
+				type,
 				mainModule,
 				extendedRuntimeEnvironment,
 				providedRuntimeLibraries,
 				requiredRuntimeLibraries,
-				projectDependencies,
+				dependencies,
 				implementationId,
 				implementedProjects,
 				outputPath,
@@ -278,17 +278,17 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ProjectDescription other = (ProjectDescription) obj;
-		return Objects.equals(projectName, other.projectName)
+		return Objects.equals(name, other.name)
 				&& Objects.equals(vendorId, other.vendorId)
 				&& Objects.equals(vendorName, other.vendorName)
-				// projectVersion is covered by internalProjectVersionStr
-				&& Objects.equals(internalProjectVersionStr, other.internalProjectVersionStr)
-				&& projectType == other.projectType
+				// version is covered by internalVersionStr
+				&& Objects.equals(internalVersionStr, other.internalVersionStr)
+				&& type == other.type
 				&& Objects.equals(mainModule, other.mainModule)
 				&& Objects.equals(extendedRuntimeEnvironment, other.extendedRuntimeEnvironment)
 				&& Objects.equals(providedRuntimeLibraries, other.providedRuntimeLibraries)
 				&& Objects.equals(requiredRuntimeLibraries, other.requiredRuntimeLibraries)
-				&& Objects.equals(projectDependencies, other.projectDependencies)
+				&& Objects.equals(dependencies, other.dependencies)
 				&& Objects.equals(implementationId, other.implementationId)
 				&& Objects.equals(implementedProjects, other.implementedProjects)
 				&& Objects.equals(outputPath, other.outputPath)

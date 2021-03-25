@@ -188,11 +188,11 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	 */
 	private def Map<String, String> createProjectDescriptionUserData(ProjectDescription it) {
 		val builder = ImmutableMap.builder;
-		builder.put(PROJECT_TYPE_KEY, '''«PackageJsonUtils.getProjectTypeStringRepresentation(projectType)»''');
-		builder.put(PROJECT_NAME_KEY, projectName.nullToEmpty);
+		builder.put(PROJECT_TYPE_KEY, '''«PackageJsonUtils.getProjectTypeStringRepresentation(getType)»''');
+		builder.put(PROJECT_NAME_KEY, getName.nullToEmpty);
 		builder.put(IMPLEMENTATION_ID_KEY, implementationId.nullToEmpty);
 
-		val vers = projectVersion;
+		val vers = getVersion;
 		if (vers !== null) {
 			val versionStr = SemverSerializer.serialize(vers);
 			builder.put(PROJECT_VERSION_KEY, versionStr);

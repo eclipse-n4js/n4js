@@ -81,9 +81,9 @@ public class N4JSProjectConfig implements XIProjectConfig {
 			projectDescription = ProjectDescription.builder().build();
 		}
 		// a project is not allowed to change its name
-		String nameOld = pdOld.getProjectName();
-		if (!Objects.equals(projectDescription.getProjectName(), nameOld)) {
-			projectDescription = projectDescription.change().setProjectName(nameOld).build();
+		String nameOld = pdOld.getName();
+		if (!Objects.equals(projectDescription.getName(), nameOld)) {
+			projectDescription = projectDescription.change().setName(nameOld).build();
 		}
 		if (projectDescription.equals(pdOld)) {
 			return; // nothing changed
@@ -149,7 +149,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	@Override
 	public String getName() {
-		return projectDescription.getProjectName();
+		return projectDescription.getName();
 	}
 
 	/** Returns this project's name as an {@link N4JSProjectName}. */
@@ -237,7 +237,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	@Override
 	public boolean isGeneratorEnabled() {
-		ProjectType projectType = projectDescription.getProjectType();
+		ProjectType projectType = projectDescription.getType();
 		return !N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(projectType);
 	}
 

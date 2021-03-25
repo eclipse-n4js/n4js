@@ -91,10 +91,10 @@ public class ProjectTypePredicate implements Predicate<ProjectType> {
 	 */
 	public Predicate<ProjectDescription> forProjectDescriptions() {
 		return description -> {
-			if (null == description || null == description.getProjectType()) {
+			if (null == description || null == description.getType()) {
 				return false;
 			}
-			return delegate.apply(description.getProjectType());
+			return delegate.apply(description.getType());
 		};
 	}
 

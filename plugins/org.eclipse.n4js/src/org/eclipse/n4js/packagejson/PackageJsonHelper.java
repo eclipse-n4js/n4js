@@ -111,10 +111,10 @@ public class PackageJsonHelper {
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case NAME:
-				target.setProjectName(asNonEmptyStringOrNull(value));
+				target.setName(asNonEmptyStringOrNull(value));
 				break;
 			case VERSION:
-				target.setProjectVersion(asVersionNumberOrNull(value));
+				target.setVersion(asVersionNumberOrNull(value));
 				break;
 			case DEPENDENCIES:
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.RUNTIME);
@@ -166,7 +166,7 @@ public class PackageJsonHelper {
 			case PROJECT_TYPE:
 				ProjectType projectType = parseProjectType(asNonEmptyStringOrNull(value));
 				if (projectType != null) {
-					target.setProjectType(projectType);
+					target.setType(projectType);
 				}
 				break;
 			case VENDOR_ID:
@@ -221,7 +221,7 @@ public class PackageJsonHelper {
 
 		Set<String> existingProjectNames = new HashSet<>();
 		if (avoidDuplicates) {
-			for (ProjectDependency pd : target.getProjectDependencies()) {
+			for (ProjectDependency pd : target.getDependencies()) {
 				existingProjectNames.add(pd.getProjectName());
 			}
 		}
@@ -239,7 +239,7 @@ public class PackageJsonHelper {
 				String valueStr = asStringOrNull(value);
 				NPMVersionRequirement versionRequirement = valueStr != null ? semverHelper.parse(valueStr) : null;
 				ProjectDependency dep = new ProjectDependency(projectName, type, valueStr, versionRequirement);
-				target.addProjectDependency(dep);
+				target.addDependency(dep);
 			}
 		}
 	}
@@ -275,7 +275,7 @@ public class PackageJsonHelper {
 		// and implementation projects will be specified as dependency in the package.json and the following code will
 		// filter out implementation projects to not confuse API/Impl logic in other places)
 		Set<String> projectNamesToRemove = new HashSet<>();
-		List<ProjectDependency> projectDependencies = target.getProjectDependencies();
+		List<ProjectDependency> projectDependencies = target.getDependencies();
 		for (ProjectDependency dep : projectDependencies) {
 			String otherProject = dep.getProjectName();
 			if (otherProject.endsWith(".api")) {
@@ -296,16 +296,16 @@ public class PackageJsonHelper {
 	 * converting the project description from JSON.
 	 */
 	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
-		if (!target.hasN4JSNature() || target.getProjectType() == null) {
+		if (!target.hasN4JSNature() || target.getType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
-			target.setProjectType(parseProjectType(PROJECT_TYPE.defaultValue));
+			target.setType(parseProjectType(PROJECT_TYPE.defaultValue));
 		}
-		if (target.getProjectName() == null) {
-			target.setProjectName(defaultProjectName);
+		if (target.getName() == null) {
+			target.setName(defaultProjectName);
 		}
-		if (target.getProjectVersion() == null) {
-			target.setProjectVersion(createDefaultVersionNumber());
+		if (target.getVersion() == null) {
+			target.setVersion(createDefaultVersionNumber());
 		}
 		if (target.getVendorId() == null) {
 			target.setVendorId(VENDOR_ID.defaultValue);

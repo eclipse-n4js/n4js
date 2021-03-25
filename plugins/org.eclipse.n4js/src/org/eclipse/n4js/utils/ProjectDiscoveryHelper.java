@@ -334,7 +334,7 @@ public class ProjectDiscoveryHelper {
 			if (pd == null) {
 				continue;
 			}
-			ProjectType type = pd.getProjectType();
+			ProjectType type = pd.getType();
 			if (type == ProjectType.PLAINJS) {
 				plainjsProjects.put(getProjectNameFromPath(project), project);
 			} else {
@@ -349,7 +349,7 @@ public class ProjectDiscoveryHelper {
 
 	private void addIfNotPlainjs(Map<String, Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
 		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
-		if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
+		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
 			addHere.putIfAbsent(getProjectNameFromPath(project), project);
 		}
 	}
