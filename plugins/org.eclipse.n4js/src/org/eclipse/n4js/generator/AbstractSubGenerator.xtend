@@ -172,7 +172,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	private def hasOutput(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI){
-		return ws.getOutputPath(n4jsSourceURI) !== null;
+		return getOutputPath(ws, n4jsSourceURI) !== null;
 	}
 	private def isSource(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
 		return ws.findSourceFolderContaining(n4jsSourceURI) !== null;
@@ -300,13 +300,17 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 	/** Adjust output-path of the generator to match the N4JS projects-settings. */
 	private def void updateOutputPath(N4JSWorkspaceConfigSnapshot ws, IFileSystemAccess fsa, String compilerID, Resource input) {
-		val outputPath = ws.getOutputPath(input.URI) ?: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
+		val outputPath = getOutputPath(ws, input.URI) ?: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 		if (fsa instanceof AbstractFileSystemAccess) {
 			val conf = fsa.outputConfigurations.get(compilerID)
 			if (conf !== null) {
 				conf.setOutputDirectory(outputPath)
 			}
 		}
+	}
+
+	private static def String getOutputPath(N4JSWorkspaceConfigSnapshot ws, URI nestedLocation) {
+		return ws.findProjectContaining(nestedLocation)?.getProjectDescription()?.getOutputPath();
 	}
 
 	/** Navigation from the generated output-location to the location of the input-resource  */
@@ -425,5 +429,4 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	override boolean isApplicableTo(Resource input) {
 		return shouldBeCompiled(input, null);
 	}
-
 }

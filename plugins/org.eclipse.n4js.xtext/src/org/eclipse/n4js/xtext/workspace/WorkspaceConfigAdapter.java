@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.Objects;
+
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -21,6 +23,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4;
  */
 public class WorkspaceConfigAdapter extends AdapterImpl {
 
+	/** Obtain the workspace configuration attached to the given resource set. */
 	public static WorkspaceConfigSnapshot getWorkspaceConfig(ResourceSet resourceSet) {
 		if (resourceSet == null) {
 			return null;
@@ -43,6 +46,7 @@ public class WorkspaceConfigAdapter extends AdapterImpl {
 		return null;
 	}
 
+	/** Attach the given workspace configuration to the given resource set. */
 	public static void installWorkspaceConfig(ResourceSet resourceSet, WorkspaceConfigSnapshot workspaceConfig) {
 		if (resourceSet == null) {
 			return;
@@ -53,6 +57,7 @@ public class WorkspaceConfigAdapter extends AdapterImpl {
 		}, resourceSet);
 	}
 
+	/** Remove the workspace configuration attached to the given resource set (if any). */
 	public static void uninstallWorkspaceConfig(ResourceSet resourceSet) {
 		if (resourceSet == null) {
 			return;
@@ -71,5 +76,10 @@ public class WorkspaceConfigAdapter extends AdapterImpl {
 	@Override
 	public boolean isAdapterForType(Object type) {
 		return type == WorkspaceConfigAdapter.class;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " --> " + Objects.toString(workspaceConfig);
 	}
 }

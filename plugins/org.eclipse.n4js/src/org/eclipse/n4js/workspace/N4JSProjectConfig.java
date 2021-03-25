@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.workspace;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -25,6 +26,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -38,6 +40,7 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
@@ -125,6 +128,15 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return path;
 	}
 
+	/** Returns an absolute {@link FileURI} for the given project-relative path. */
+	public FileURI getAbsolutePath(String relativePath) {
+		if (!Strings.isNullOrEmpty(relativePath) && !relativePath.equals(".")) {
+			String linuxPath = OSInfo.isWindows() ? relativePath.replace(File.separatorChar, '/') : relativePath;
+			return getPathAsFileURI().appendPath(linuxPath);
+		}
+		return getPathAsFileURI();
+	}
+
 	/** Returns the project description. */
 	public ProjectDescription getProjectDescription() {
 		return projectDescription;
@@ -164,15 +176,17 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	}
 
 	/**
-	 * Like {@link #getDependencies()}, but the dependencies returned here are
+	 * Like {@link #getDependencies()}, but ...
 	 * <ol>
 	 * <li>unresolved dependencies are removed,
-	 * <li>sorted (definition projects before their implementation projects),
-	 * <li>implicit dependencies are added (dependency to definition project added).
+	 * <li>dependencies are sorted (definition projects appear before implementation projects),
+	 * <li>implicit dependencies are added (definition projects are added if their defined project is among the
+	 * dependencies).
 	 * </ol>
-	 * The sorting allows the use definition projects and their implementation counterparts side by side in a meaningful
-	 * way. In a nutshell: Implementation projects may contribute modules to the index that are not available as n4jsd
-	 * files yet. All other modules should be shadowed by the definition project.
+	 * The sorting allows the use of definition projects and their implementation counterparts side by side in a
+	 * meaningful way. In a nut-shell: implementation projects may contribute modules to the index that are not
+	 * available as n4jsd files yet; all other modules should be shadowed by the definition project (i.e. shadowing on
+	 * the module-level).
 	 */
 	public List<ProjectDependency> computeSemanticDependencies() {
 		List<ProjectDependency> deps = projectDescription.getProjectDependencies();

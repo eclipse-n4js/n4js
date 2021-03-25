@@ -56,6 +56,9 @@ public final class StaticPolyfillHelper {
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
 
+	@Inject
+	private FindArtifactHelper findArtifactHelper;
+
 	/**
 	 * For a given N4JSResource annotated with {@code @@StaticPolyfillAware} lookup the filling Module. returns
 	 * {@code true} if the filling Module exists in the project.
@@ -122,7 +125,7 @@ public final class StaticPolyfillHelper {
 					res.getURI());
 			for (N4JSSourceFolderSnapshot srcConti : project.getSourceFolders()) {
 				if (!Objects.equals(filledSrcContainer, srcConti)) {
-					final SafeURI<?> uri = srcConti.findArtifact(fqn, fileExtension);
+					final SafeURI<?> uri = findArtifactHelper.findArtifact(srcConti, fqn, fileExtension);
 					if (uri != null) {
 						return uri;
 					}

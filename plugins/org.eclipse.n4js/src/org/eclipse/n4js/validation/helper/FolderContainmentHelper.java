@@ -16,7 +16,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.locations.SafeURI;
+import org.eclipse.xtext.util.UriExtensions;
 
 /**
  * A helper class to compute whether two folders (source folders and output folder specifically) are contained within
@@ -36,7 +38,8 @@ public class FolderContainmentHelper {
 		if (project != null) {
 			final SafeURI<?> absoluteOutputLocation = getOutputURI(project);
 			if (absoluteOutputLocation != null) {
-				if (isContained(ws.toProjectLocation(uri), absoluteOutputLocation)) {
+				FileURI fileURI = new FileURI(new UriExtensions().withEmptyAuthority(uri));
+				if (isContained(fileURI, absoluteOutputLocation)) {
 					return true;
 				}
 			}

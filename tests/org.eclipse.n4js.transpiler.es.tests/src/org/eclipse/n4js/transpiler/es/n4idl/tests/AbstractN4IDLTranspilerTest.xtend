@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler.es.n4idl.tests
 
 import com.google.inject.Inject
-import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.common.util.WrappedException
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.Script

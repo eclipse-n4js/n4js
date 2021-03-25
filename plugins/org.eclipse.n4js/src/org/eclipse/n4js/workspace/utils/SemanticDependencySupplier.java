@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.packagejson.projectDescription.DependencyType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.workspace.N4JSProjectConfig;
 
 /**
  * Computes the semantic dependencies of an N4JS project.
@@ -27,12 +28,7 @@ import org.eclipse.n4js.semver.SemverUtils;
 public class SemanticDependencySupplier {
 
 	/**
-	 * FIXME GH-2090 explain implicit dependencies
-	 * <p>
-	 * In addition, re-arranges the positions of type definition projects in such that they always occur right in front
-	 * of the corresponding implementation project. As a consequence, the contents of the type definition source
-	 * containers always has precedence over implementation project's source containers, enabling shadowing on the
-	 * module-level.
+	 * Actually computes the semantic dependencies, see {@link N4JSProjectConfig#computeSemanticDependencies()}.
 	 */
 	public static List<ProjectDependency> computeSemanticDependencies(
 			DefinitionProjectMap definitionProjects, List<ProjectDependency> dependencies) {

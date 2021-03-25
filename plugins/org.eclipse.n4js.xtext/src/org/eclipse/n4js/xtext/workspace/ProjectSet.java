@@ -186,19 +186,24 @@ public class ProjectSet {
 	 * Finds the project having a path that is a prefix of the given URI. Returns <code>null</code> if no such project
 	 * is found. The given URI may point to a file or folder.
 	 * <p>
-	 * Note the difference to {@link #findProjectContaining(URI)}: this method will return a project <code>P</code> when
-	 * given any URI denoting a file/folder below the path of <code>P</code>, whereas {@code #findProjectContaining()}
-	 * will return <code>P</code> only when given URIs {@link SourceFolderSnapshot#contains(URI) actually contained} in
-	 * one of <code>P</code>'s source folders.
+	 * Note the difference to {@link #findProjectContaining(URI)} which will return <code>P</code> only when given a URI
+	 * that is {@link SourceFolderSnapshot#contains(URI) actually contained} in one of <code>P</code>'s source folders,
+	 * whereas this method will return a project <code>P</code> when given any URI denoting a file/folder below the path
+	 * of <code>P</code>.
 	 */
 	public ProjectConfigSnapshot findProjectByNestedLocation(URI nestedLocation) {
 		return URIUtils.findInMapByNestedURI(projectPath2Project, nestedLocation);
 	}
 
 	/**
-	 * Same as {@link XIWorkspaceConfig#findProjectContaining(URI)}: finds the project having a source folder that
-	 * {@link SourceFolderSnapshot#contains(URI) actually contains} the given nested URI. Returns <code>null</code> if
-	 * no such project is found. The given URI may point to a file or folder.
+	 * Finds the project having a source folder that {@link SourceFolderSnapshot#contains(URI) actually contains} the
+	 * given nested URI. Returns <code>null</code> if no such project is found. The given URI may point to a file or
+	 * folder.
+	 * <p>
+	 * Note the difference to {@link #findProjectByNestedLocation(URI)} which will return a project <code>P</code> when
+	 * given any URI denoting a file/folder below the path of <code>P</code>, whereas this method will return
+	 * <code>P</code> only when given a URI that is {@link SourceFolderSnapshot#contains(URI) actually contained} in one
+	 * of <code>P</code>'s source folders.
 	 *
 	 * @see SourceFolderSnapshot#contains(URI)
 	 * @see XIWorkspaceConfig#findProjectContaining(URI)
@@ -209,18 +214,14 @@ public class ProjectSet {
 		return result != null ? result.getKey() : null;
 	}
 
-	/**
-	 * Same as {@link #findProjectContaining(URI)}, but returns the containing source folder instead of project.
-	 */
+	/** Same as {@link #findProjectContaining(URI)}, but returns the containing source folder instead of project. */
 	public SourceFolderSnapshot findSourceFolderContaining(URI nestedSourceLocation) {
 		Pair<ProjectConfigSnapshot, SourceFolderSnapshot> result = findProjectAndSourceFolderContaining(
 				nestedSourceLocation);
 		return result != null ? result.getValue() : null;
 	}
 
-	/**
-	 * Same as {@link #findProjectContaining(URI)}, but returns both the containing project and source folder.
-	 */
+	/** Same as {@link #findProjectContaining(URI)}, but returns both the containing project and source folder. */
 	public Pair<ProjectConfigSnapshot, SourceFolderSnapshot> findProjectAndSourceFolderContaining(
 			URI nestedSourceLocation) {
 		ProjectConfigSnapshot candidate = URIUtils.findInMapByNestedURI(sourceFolderPath2Project, nestedSourceLocation);

@@ -107,10 +107,12 @@ public class ConfigSnapshotFactory {
 		return new SourceFolderSnapshot(sourceFolder.getName(), sourceFolder.getPath());
 	}
 
+	/** Creates instances of {@link ProjectSet}. */
 	public ProjectSet createProjectSet(Iterable<? extends ProjectConfigSnapshot> projects) {
 		return new ProjectSet(projects);
 	}
 
+	/** Updates the given project set by adding, changing, removing some projects. */
 	public ProjectSet updateProjectSet(ProjectSet projects,
 			Iterable<? extends ProjectConfigSnapshot> changedProjects, Iterable<String> removedProjects) {
 		return projects.update(changedProjects, removedProjects);

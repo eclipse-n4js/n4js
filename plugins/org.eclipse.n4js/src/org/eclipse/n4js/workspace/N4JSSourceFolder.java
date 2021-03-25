@@ -10,18 +10,15 @@
  */
 package org.eclipse.n4js.workspace;
 
-import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
-import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;
 import org.eclipse.xtext.util.IFileSystemScanner;
-import org.eclipse.xtext.util.Strings;
 
 /**
  * Wrapper around {@link SourceContainerDescription}.
@@ -40,15 +37,7 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 		this.project = Objects.requireNonNull(project);
 		this.type = Objects.requireNonNull(type);
 		this.relativePath = Objects.requireNonNull(relativePath);
-		this.absolutePath = createAbsolutePath(project, relativePath);
-	}
-
-	protected FileURI createAbsolutePath(N4JSProjectConfig project, String relativePath) {
-		if (!Strings.isEmpty(relativePath) && !relativePath.equals(".")) {
-			String linuxPath = OSInfo.isWindows() ? relativePath.replace(File.separatorChar, '/') : relativePath;
-			return project.getPathAsFileURI().appendPath(linuxPath);
-		}
-		return project.getPathAsFileURI();
+		this.absolutePath = project.getAbsolutePath(relativePath);
 	}
 
 	@Override
@@ -76,6 +65,7 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 		return absolutePath.withTrailingPathDelimiter().toURI();
 	}
 
+	/** Returns this source folder's {@link #getPath() path} as an absolute {@link FileURI}. */
 	public FileURI getPathAsFileURI() {
 		return absolutePath;
 	}

@@ -12,13 +12,9 @@ package org.eclipse.n4js.workspace;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
-import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.collect.ImmutableSet;
@@ -93,27 +89,22 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(nestedSourceLocation);
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	@SuppressWarnings("unchecked")
 	public Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot> findProjectAndSourceFolderContaining(
 			URI nestedSourceLocation) {
-		return (Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot>) super.findProjectAndSourceFolderContaining(
+		@SuppressWarnings("unchecked")
+		Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot> result = (Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot>) super.findProjectAndSourceFolderContaining(
 				nestedSourceLocation);
+		return result;
 	}
 
-	// FIXME this method has a bad name (the uri is just sanitized)
-	public SafeURI<?> toProjectLocation(URI uri) {
-		return new FileURI(new UriExtensions().withEmptyAuthority(uri));
-	}
-
+	/**
+	 * Returns <code>true</code> iff the given URI denotes a source file in an N4JS project and is matched by a module
+	 * filter of type {@link ModuleFilterType#NO_VALIDATE} in the project's <code>package.json</code> file.
+	 */
 	public boolean isNoValidate(URI nestedLocation) {
 		N4JSProjectConfigSnapshot project = findProjectContaining(nestedLocation);
 		return project != null && project.isMatchedByModuleFilterOfType(nestedLocation, ModuleFilterType.NO_VALIDATE);
-	}
-
-	public String getOutputPath(URI nestedLocation) {
-		N4JSProjectConfigSnapshot project = findProjectContaining(nestedLocation);
-		ProjectDescription pd = project != null ? project.getProjectDescription() : null;
-		return pd != null ? pd.getOutputPath() : null;
 	}
 }

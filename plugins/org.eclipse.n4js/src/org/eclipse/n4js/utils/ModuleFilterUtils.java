@@ -37,6 +37,7 @@ public class ModuleFilterUtils {
 		return isPathContainedByFilter(project, location, filter.getModuleSpecifiers());
 	}
 
+	/** @return true iff the given location is matched by one of the given filter specifiers. */
 	public static boolean isPathContainedByFilter(N4JSProjectConfigSnapshot project, URI location,
 			Iterable<? extends ModuleFilterSpecifier> filterSpecifiers) {
 		for (ModuleFilterSpecifier spec : filterSpecifiers) {

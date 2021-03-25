@@ -429,21 +429,7 @@ public class ResourceTaskContext {
 			IResourceDescription.Manager rdm = getResourceDescriptionManager(mainURI);
 			IResourceDescription candidateDesc = indexSnapshot.getResourceDescription(mainURI);
 			if (rdm != null && candidateDesc != null) {
-				if (rdm instanceof AllChangeAware) {
-					isAffected = ((AllChangeAware) rdm).isAffectedByAny(allDeltas, candidateDesc, indexSnapshot);
-				} else {
-					List<IResourceDescription.Delta> changedDeltas = allDeltas.stream()
-							.filter(d -> d.haveEObjectDescriptionsChanged())
-							.collect(Collectors.toList());
-					if (!changedDeltas.isEmpty()) {
-						if (rdm instanceof IWorkspaceAwareResourceDescriptionManager) {
-							isAffected = ((IWorkspaceAwareResourceDescriptionManager) rdm).isAffected(changedDeltas,
-									candidateDesc, indexSnapshot, workspaceConfig);
-						} else {
-							isAffected = rdm.isAffected(changedDeltas, candidateDesc, indexSnapshot);
-						}
-					}
-				}
+				isAffected = isAffected(candidateDesc, rdm, allDeltas);
 			}
 		}
 
@@ -452,6 +438,12 @@ public class ResourceTaskContext {
 		}
 	}
 
+	/**
+	 * Checks whether the given candidate resource description is affected by the given deltas, by delegating to the
+	 * given resource description manager.
+	 * <p>
+	 * Compare with method {@code XIndexer#isAffected(...)}.
+	 */
 	protected boolean isAffected(IResourceDescription candidateDesc, IResourceDescription.Manager manager,
 			Collection<IResourceDescription.Delta> allDeltas) {
 

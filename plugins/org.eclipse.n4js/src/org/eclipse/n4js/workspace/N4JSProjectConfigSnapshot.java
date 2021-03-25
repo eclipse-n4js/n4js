@@ -24,8 +24,8 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableSet;
 public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	private final ProjectDescription projectDescription;
+	private final boolean external;
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
 	public N4JSProjectConfigSnapshot(ProjectDescription projectDescription, URI path,
@@ -48,17 +49,32 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
 		super(projectDescription.getProjectName(), path,
-				Collections.singleton(path.trimSegments(1).appendSegment(N4JSGlobals.PACKAGE_JSON)),
+				Collections.singleton(URIUtils.trimTrailingPathSeparator(path).trimSegments(1)
+						.appendSegment(N4JSGlobals.PACKAGE_JSON)),
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
 
 		this.projectDescription = Objects.requireNonNull(projectDescription);
+		this.external = isDirectlyLocatedInNodeModulesFolder(path);
+	}
+
+	private static boolean isDirectlyLocatedInNodeModulesFolder(URI location) {
+		URI parent = URIUtils.trimTrailingPathSeparator(location).trimSegments(1);
+		String lastSegment = parent.lastSegment();
+		if (lastSegment != null && lastSegment.startsWith("@")) {
+			parent = parent.trimSegments(1);
+			lastSegment = parent.lastSegment();
+		}
+		if (N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Returns the project dependencies.
 	 * <p>
 	 * Note that this method does not return the {@link N4JSProjectConfig#getDependencies() raw dependencies} as given
-	 * in the <code>package.json</code> but the {@link N4JSProjectConfig#computeSemanticDependencies() semantic
+	 * in the <code>package.json</code> but the {@link N4JSProjectConfig#computeSemanticDependencies() "semantic"
 	 * dependencies} computed by class {@link N4JSProjectConfig}.
 	 */
 	@Override
@@ -69,6 +85,11 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	/** Returns the {@link ProjectDescription}. */
 	public ProjectDescription getProjectDescription() {
 		return projectDescription;
+	}
+
+	/** Tells whether this project is located in a <code>node_modules</code> folder. */
+	public boolean isExternal() {
+		return external;
 	}
 
 	/** Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property. */
@@ -94,8 +115,14 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 
+	/** This project's name as an {@link N4JSProjectName}. */
 	public N4JSProjectName getN4JSProjectName() {
 		return new N4JSProjectName(getName());
+	}
+
+	/** Returns this project's {@link #getPath() path} as a {@link FileURI}. */
+	public FileURI getPathAsFileURI() {
+		return new FileURI(new UriExtensions().withEmptyAuthority(getPath()));
 	}
 
 	@Override
@@ -110,45 +137,62 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(uri);
 	}
 
-	/** Returns the {@link ProjectType project type}. */
+	/** Returns this project's {@link ProjectDescription#getProjectType() type}. */
 	public ProjectType getType() {
 		return projectDescription.getProjectType();
 	}
 
+	/** Returns this project's {@link ProjectDescription#getProjectVersion() version}. */
 	public VersionNumber getVersion() {
 		return projectDescription.getProjectVersion();
 	}
 
+	/** Returns this project's {@link ProjectDescription#getVendorId() vendor ID}. */
 	public String getVendorId() {
 		return projectDescription.getVendorId();
 	}
 
+	/** Returns this project's {@link ProjectDescription#getVendorName() vendor name}. */
 	public String getVendorName() {
 		return projectDescription.getVendorName();
 	}
 
+	/** Returns this project's {@link ProjectDescription#getOutputPath() output path}. */
 	public String getOutputPath() {
 		return projectDescription.getOutputPath();
 	}
 
+	/** Returns this project's {@link ProjectDescription#getMainModule() main module}. */
 	public String getMainModule() {
 		return projectDescription.getMainModule();
 	}
 
+	/** Returns this project's {@link ProjectDescription#getImplementationId() implementation ID}. */
 	public String getImplementationId() {
 		return projectDescription.getImplementationId();
 	}
 
-	// FIXME reconsider!
-	public FileURI getPathAsFileURI() {
-		return new FileURI(new UriExtensions().withEmptyAuthority(getPath()));
+	/**
+	 * Returns this project's {@link ProjectDescription#getProjectDependencies() dependencies} and
+	 * {@link ProjectDescription#getImplementedProjects() implemented projects} (in this order).
+	 */
+	public ImmutableList<ProjectReference> getDependenciesAndImplementedApis() {
+		ImmutableList.Builder<ProjectReference> result = ImmutableList.builder();
+		result.addAll(projectDescription.getProjectDependencies());
+		result.addAll(projectDescription.getImplementedProjects());
+		return result.build();
 	}
 
+	/**
+	 * Tells whether the given nested location URI is matched by a module filter in this project's
+	 * <code>package.json</code> file, only taking into account module filters of the given type.
+	 */
 	public boolean isMatchedByModuleFilterOfType(URI nestedLocation, ModuleFilterType moduleFilterType) {
 		return ModuleFilterUtils.isPathContainedByFilter(this, nestedLocation,
 				getModuleFilterSpecifiersByType(moduleFilterType));
 	}
 
+	/** Returns this project's {@link ProjectDescription#getModuleFilters() module filers} of the given type */
 	public ImmutableList<ModuleFilterSpecifier> getModuleFilterSpecifiersByType(ModuleFilterType moduleFilterType) {
 		Builder<ModuleFilterSpecifier> result = ImmutableList.builder();
 		for (ModuleFilter mf : projectDescription.getModuleFilters()) {
@@ -156,38 +200,6 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 				result.addAll(mf.getModuleSpecifiers());
 			}
 		}
-		return result.build();
-	}
-
-	// FIXME consider caching this value
-	public boolean isExternal() {
-		return isInNodeModulesFolder(getPathAsFileURI());
-	}
-
-	// note: implementation taken from old class org.eclipse.n4js.internal.N4JSProject
-	private static boolean isInNodeModulesFolder(SafeURI<?> location) {
-		if (location instanceof FileURI) {
-			URI parent = location.getParent().toURI();
-			String lastSegment = parent.lastSegment();
-			if (parent.lastSegment() != null && parent.lastSegment().isBlank()) {
-				parent = parent.trimSegments(1);
-				lastSegment = parent.lastSegment();
-			}
-			if (lastSegment != null && lastSegment.startsWith("@")) {
-				parent = parent.trimSegments(1);
-				lastSegment = parent.lastSegment();
-			}
-			if (N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public ImmutableList<ProjectReference> getDependenciesAndImplementedApis() {
-		ImmutableList.Builder<ProjectReference> result = ImmutableList.builder();
-		result.addAll(projectDescription.getProjectDependencies());
-		result.addAll(projectDescription.getImplementedProjects());
 		return result.build();
 	}
 }

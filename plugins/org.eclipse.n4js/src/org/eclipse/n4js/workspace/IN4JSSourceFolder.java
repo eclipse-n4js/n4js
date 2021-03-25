@@ -23,7 +23,9 @@ public interface IN4JSSourceFolder extends ISourceFolder {
 	/** @return the parent project */
 	IProjectConfig getProject();
 
+	/** @return the {@link SourceContainerType}. */
 	SourceContainerType getType();
 
+	/** @return the relative path of this source folder. */
 	String getRelativePath();
 }
