@@ -164,7 +164,10 @@ public class WorkspaceAccess {
 	 */
 	public XtextResourceSet createResourceSet() {
 		XtextResourceSet result = resourceSetProvider.get();
-		WorkspaceConfigAdapter.installWorkspaceConfig(result, N4JSWorkspaceConfigSnapshot.EMPTY);
+		// use EMPTY iff the resource set provider did not install a workspace config (e.g. MockResourceSetProvider):
+		if (WorkspaceConfigAdapter.getWorkspaceConfig(result) == null) {
+			WorkspaceConfigAdapter.installWorkspaceConfig(result, N4JSWorkspaceConfigSnapshot.EMPTY);
+		}
 		return result;
 	}
 
