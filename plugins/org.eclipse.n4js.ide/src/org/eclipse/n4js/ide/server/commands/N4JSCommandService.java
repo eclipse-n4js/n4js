@@ -345,8 +345,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 					versionRequirement = SemverUtils.createEmptyVersionRequirement();
 				}
 // @formatter:off
-// FIXME GH-2073
-access.getLanguageClient().showMessage(new MessageParams(MessageType.Warning, "Installation of npm packages is disabled."));
+access.getLanguageClient().showMessage(new MessageParams(MessageType.Warning, "Installation of npm packages is disabled. Use command line."));
 //				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
 //
 //				N4JSProjectName projectName = new N4JSProjectName(packageName);

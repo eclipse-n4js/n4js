@@ -44,7 +44,8 @@ public class ProjectDescriptionUtils {
 	public static final String NPM_SCOPE_PREFIX = "@";
 	/** Character used in N4JS project names for separating the scope name from the plain project name. */
 	public static final char NPM_SCOPE_SEPARATOR = '/';
-	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. */
+	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. Obsolete: no longer used. */
+	@Deprecated
 	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = ':';
 
 	/**
@@ -93,7 +94,8 @@ public class ProjectDescriptionUtils {
 	 * <td>{@code @myScope/myProject}</td>
 	 * </tr>
 	 * <tr>
-	 * <td>Eclipse project name</td>
+	 * <td>Eclipse project name<br>
+	 * (obsolete; no longer used)</td>
 	 * <td>The value returned by {@link IProject#getName()}. Different from the N4JS project name,<br>
 	 * because Eclipse does not support NPM's scope separator character {@value #NPM_SCOPE_SEPARATOR} in project
 	 * names.</td>
