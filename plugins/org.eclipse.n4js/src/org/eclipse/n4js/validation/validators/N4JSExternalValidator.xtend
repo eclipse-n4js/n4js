@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.TypeReferenceNode
@@ -522,6 +523,11 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		if (eo instanceof N4EnumDeclaration) {
+			if (eo.external) {
+				return false;
+			}
+		}
+		if (eo instanceof N4TypeAliasDeclaration) {
 			if (eo.external) {
 				return false;
 			}

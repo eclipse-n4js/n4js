@@ -12,13 +12,16 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 // XPECT noerrors -->
-export type A1 = string;
+export external type A1 = string;
 
 // XPECT noerrors -->
-export public type A2 = string;
+export external public type A2 = string;
 
 // XPECT noerrors -->
-@Internal export public type A3 = string;
+@Internal export external public type A3 = string;
 
-// XPECT errors --> "A type with visibility public must be marked as exported." at "A4"
+/* XPECT errors ---
+"A type with visibility public must be marked as exported." at "A4"
+"Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "A4"
+--- */
 public type A4 = string;
