@@ -51,8 +51,6 @@ public abstract class AbstractTranspiler {
 	/** */
 	public static final boolean DEBUG_DUMP_STATE = false;
 	/** */
-	public static final boolean DEBUG_DRAW_STATE = false;
-	/** */
 	public static final boolean DEBUG_PERFORM_ASSERTIONS = false;
 	/** */
 	public static final boolean DEBUG_PERFORM_VALIDATIONS = false;
@@ -235,9 +233,6 @@ public abstract class AbstractTranspiler {
 									.println("============================== PRE " + currT.getClass().getSimpleName());
 							TranspilerDebugUtils.dump(state);
 						}
-						if (DEBUG_DRAW_STATE) {
-							TranspilerDebugUtils.dumpGraph(state, "PRE " + currT.getClass().getSimpleName());
-						}
 
 						if (DEBUG_PERFORM_ASSERTIONS) {
 							currT.assertPreConditions();
@@ -259,9 +254,6 @@ public abstract class AbstractTranspiler {
 			if (DEBUG_DUMP_STATE) {
 				System.out.println("============================== POST all transformations");
 				TranspilerDebugUtils.dump(state);
-			}
-			if (DEBUG_DRAW_STATE) {
-				TranspilerDebugUtils.dumpGraph(state, "POST all transformations");
 			}
 
 		} finally {
