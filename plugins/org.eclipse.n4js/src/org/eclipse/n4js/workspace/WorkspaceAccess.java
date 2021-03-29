@@ -28,7 +28,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceDescriptionsProvider;
 import org.eclipse.xtext.resource.ISynchronizable;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -172,13 +171,8 @@ public class WorkspaceAccess {
 	}
 
 	/**
-	 * Returns the Xtext index for the the given resource set. This resource set should be properly set up for Xtext and
-	 * N4JS; usually client code should always prefer obtaining an existing resource set from Xtext and only if this is
-	 * not available pass in a resource set returned by method {@link #createResourceSet()}.
-	 * <p>
-	 * Use with care. If this method is used with a resource set newly created via method {@link #createResourceSet()},
-	 * then the returned index represents the persisted information, only. All dirty editors or the currently running
-	 * build with incrementally compiled resources are ignored.
+	 * Returns the Xtext index for the the given context object. Convenience method for
+	 * {@link IResourceDescriptionsProvider#getResourceDescriptions(ResourceSet)}.
 	 */
 	public Optional<IResourceDescriptions> getXtextIndex(Notifier context) {
 		ResourceSet resourceSet = EcoreUtil2.getResourceSet(context);
@@ -186,10 +180,6 @@ public class WorkspaceAccess {
 			return Optional.absent();
 		}
 		IResourceDescriptions result = resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
-		if (result == null) {
-			// FIXME this should not be necessary! maybe implement and bind an IResourceDescriptionsProvider doing that
-			result = ResourceDescriptionsData.ResourceSetAdapter.findResourceDescriptionsData(resourceSet);
-		}
 		return Optional.fromNullable(result);
 	}
 

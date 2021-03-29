@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation.helper;
+package org.eclipse.n4js.utils;
 
 import java.nio.file.Path;
 
@@ -24,7 +24,6 @@ import org.eclipse.xtext.util.UriExtensions;
  * A helper class to compute whether two folders (source folders and output folder specifically) are contained within
  * each other.
  */
-// FIXME this entire class is only used from AbstractSubGenerator and can probably be removed!!!
 public class FolderContainmentHelper {
 
 	/**

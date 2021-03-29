@@ -23,7 +23,7 @@ import org.eclipse.xtext.resource.containers.IAllContainersState;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Provides visibility information across projects within the resource set of an resource task context.
+ * Provides visibility information across projects within the resource set of a resource task context.
  */
 public class ResourceTaskContextAllContainerState implements IAllContainersState {
 

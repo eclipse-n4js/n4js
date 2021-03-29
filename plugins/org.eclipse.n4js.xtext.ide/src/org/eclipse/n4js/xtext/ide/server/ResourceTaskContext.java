@@ -54,7 +54,6 @@ import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * Represents the context for tasks that operate on a certain EMF resource, called main resource, including all
@@ -79,9 +78,6 @@ public class ResourceTaskContext {
 	 *
 	 * #prepareRefresh is sort-of a brute force approach that has potential for optimizations.
 	 */
-
-	@Inject
-	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Inject
 	private IExternalContentSupport externalContentSupport;
@@ -241,11 +237,9 @@ public class ResourceTaskContext {
 		this.alive = true;
 	}
 
-	/** Returns a newly created and fully configured resource set */
+	/** Returns a newly created and fully configured resource set. */
 	protected XtextResourceSet createResourceSet() {
-		XtextResourceSet result = resourceSetProvider.get();
-		WorkspaceConfigAdapter.installWorkspaceConfig(result, workspaceConfig);
-		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, indexSnapshot);
+		XtextResourceSet result = parent.createResourceSet(workspaceConfig, indexSnapshot);
 
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 

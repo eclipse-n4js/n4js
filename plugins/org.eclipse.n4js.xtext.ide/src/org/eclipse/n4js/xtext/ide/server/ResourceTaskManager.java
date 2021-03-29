@@ -300,20 +300,30 @@ public class ResourceTaskManager {
 
 	/**
 	 * Creates a resource set configured with the current workspace configuration and the current
-	 * {@link #createPersistedStateIndex() persisted index}. Just as temporary resource task contexts, this resource set
-	 * represents a fixed point in time and will not receive any updates of the workspace configuration of files on
-	 * disk.
+	 * {@link #createPersistedStateIndex() persisted index}. Just as is the case in temporary resource task contexts,
+	 * the returned resource set's workspace configuration represents a fixed point in time and will not receive any
+	 * updates of the workspace state on disk.
 	 */
 	public XtextResourceSet createTemporaryResourceSet() {
-		// FIXME avoid duplication with ResourceTaskContext#createResourceSet()
-		// consider making ResourceTaskContext independent of a 'main resource' and create a temporary
-		// ResourceTaskContext in these cases
-		// OR: consider introducing a class XIIdeResourceSetProvider as a non-UI replacement for
-		// org.eclipse.xtext.ui.resource.IResourceSetProvider (which relies on Eclipse UI)
-		XtextResourceSet result = resourceSetProvider.get();
-		WorkspaceConfigAdapter.installWorkspaceConfig(result, workspaceConfig);
 		ResourceDescriptionsData index = createPersistedStateIndex();
-		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, index);
+		XtextResourceSet result = createResourceSet(workspaceConfig, index);
+		return result;
+	}
+
+	/**
+	 * Single method for creating a resource set for all three use cases:
+	 * <ol>
+	 * <li>ordinary resource task contexts,
+	 * <li>temporary resource task contexts,
+	 * <li>temporary resource sets (without a containing resource task context; as created with method
+	 * {@link #createTemporaryResourceSet()}).
+	 * </ol>
+	 */
+	protected XtextResourceSet createResourceSet(WorkspaceConfigSnapshot currWorkspaceConfig,
+			ResourceDescriptionsData currResourceDescriptions) {
+		XtextResourceSet result = resourceSetProvider.get();
+		WorkspaceConfigAdapter.installWorkspaceConfig(result, currWorkspaceConfig);
+		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, currResourceDescriptions);
 		return result;
 	}
 

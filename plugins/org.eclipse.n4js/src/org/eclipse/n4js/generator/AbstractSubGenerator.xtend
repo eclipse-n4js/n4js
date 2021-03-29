@@ -23,11 +23,11 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.FolderContainmentHelper
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.URIUtils
-import org.eclipse.n4js.validation.helper.FolderContainmentHelper
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess

@@ -125,9 +125,9 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	/**
 	 * Registers the project at the given path with the given project description. Does nothing if a project for that
-	 * path or name was already registered*.
+	 * path or name was already registered.
 	 * <p>
-	 * * this behavior means that projects registered first will shadow all projects registered later; together with the
+	 * This behavior means that projects registered first will shadow all projects registered later; together with the
 	 * fact that the {@link ProjectDiscoveryHelper} will return dependencies after workspace projects, this leads to
 	 * workspace projects shadowing projects of same name in the {@code node_modules} folder.
 	 */
@@ -287,19 +287,18 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	/**
 	 * The list of {@link N4JSProjectConfig#computeSemanticDependencies() semantic dependencies} of
-	 * {@link N4JSProjectConfig}s is tricky for two reasons:
+	 * {@link N4JSProjectConfig}s is tricky for three reasons:
 	 * <ol>
 	 * <li>the semantic dependencies do not contain names of non-existing projects (in case of unresolved project
 	 * references in the package.json),
 	 * <li>the order of the semantic dependencies depends on the characteristics of the target projects (mainly the
-	 * {@link ProjectDescription#getDefinesPackage() "defines package"} property).
+	 * {@link ProjectDescription#getDefinesPackage() "defines package"} property),
+	 * <li>each implicitly added dependency to a definition project PI depends on the characteristics of the target
+	 * project PT triggering this implicit dependency (i.e. the defined project) <em>and</em> the overall workspace
+	 * contents (Are definition projects available in the workspace for project PT?).
 	 * </ol>
-	 * Therefore, the "semantic dependencies" can change even without a change in the <code>package.json</code> file of
-	 * the source project. To detect and apply these changes is the purpose of this method.
-	 * <p>
-	 * TODO: sorted dependencies should not be a property of IN4JSProject/N4JSProjectConfig/N4JSProjectConfigSnapshot
-	 * (probably the scoping has to be adjusted, because the sorted dependencies ensure correct shadowing between
-	 * definition and defined projects)
+	 * Therefore, the "semantic dependencies" of a project P can change even without a change in the
+	 * <code>package.json</code> file of P. To detect and apply these changes is the purpose of this method.
 	 */
 	protected WorkspaceChanges recomputeSemanticDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
 			WorkspaceChanges changes) {
