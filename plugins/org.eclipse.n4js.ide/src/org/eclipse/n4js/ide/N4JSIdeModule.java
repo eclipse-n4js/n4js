@@ -56,7 +56,6 @@ import org.eclipse.n4js.xtext.ide.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.xtext.ide.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
-import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.ide.server.build.DefaultBuildRequestFactory;
 import org.eclipse.n4js.xtext.ide.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
@@ -75,7 +74,6 @@ import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -286,10 +284,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
 		return WorkspaceValidateListener.class;
-	}
-
-	public Class<? extends XWorkspaceConfigSnapshotProvider> bindXWorkspaceConfigSnapshotProvider() {
-		return ConcurrentIndex.class;
 	}
 
 	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {

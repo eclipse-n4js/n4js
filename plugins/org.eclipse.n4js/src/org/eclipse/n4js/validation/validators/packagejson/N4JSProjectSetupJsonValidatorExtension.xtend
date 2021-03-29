@@ -72,7 +72,6 @@ import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -152,9 +151,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 	@Inject
 	protected NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
-
-	@Inject
-	protected XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
 
 
 	/**
@@ -351,7 +347,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			return;
 		}
 		
-		val wc = workspaceConfigProvider.workspaceConfigSnapshot as N4JSWorkspaceConfigSnapshot;
+		val wc = workspaceAccess.getWorkspaceConfig(dependenciesValue);
 		
 		// pairs that represent project dependencies
 		val dependencyPairs = (dependenciesValue as JSONObject).nameValuePairs;

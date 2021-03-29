@@ -106,7 +106,6 @@ import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -230,9 +229,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** */
 	@Inject
 	protected BuildOrderFactory projectBuildOrderFactory;
-	/** */
-	@Inject
-	protected XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
 
 	/** Utility to create/delete the test workspace on disk */
 	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
@@ -1187,7 +1183,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Asserts the build order of all projects in the workspace. */
 	protected void assertProjectBuildOrder(String expectedProjectBuildOrder) {
-		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
+		WorkspaceConfigSnapshot workspaceConfig = concurrentIndex.getWorkspaceConfigSnapshot();
 		BuildOrderIterator iter = projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig).visitAll();
 		String buildOrderString = org.eclipse.n4js.utils.Strings.toString(pd -> pd.getName(), () -> iter);
 		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);

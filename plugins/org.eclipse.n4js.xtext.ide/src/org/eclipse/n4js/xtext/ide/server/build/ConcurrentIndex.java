@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
@@ -50,7 +49,7 @@ import com.google.inject.Singleton;
  * </ul>
  */
 @Singleton
-public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
+public class ConcurrentIndex {
 
 	@Inject
 	private ConfigSnapshotFactory configSnapshotFactory;
@@ -113,7 +112,7 @@ public class ConcurrentIndex implements XWorkspaceConfigSnapshotProvider {
 		return project2Index.get(projectName);
 	}
 
-	@Override
+	/** Returns the current configuration of the workspace. */
 	public synchronized WorkspaceConfigSnapshot getWorkspaceConfigSnapshot() {
 		return workspaceConfig;
 	}
