@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
@@ -47,7 +46,6 @@ import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
-import org.eclipse.xtext.resource.FileExtensionProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
@@ -65,9 +63,6 @@ public class XpectN4JSES5TranspilerHelper {
 
 	@Inject
 	private XpectN4JSES5GeneratorHelper xpectGenerator;
-
-	@Inject
-	private FileExtensionProvider fileExtensionProvider;
 
 	private ReadOutConfiguration readOutConfiguration;
 
@@ -179,12 +174,7 @@ public class XpectN4JSES5TranspilerHelper {
 	 */
 	private void loadXpectConfiguration(
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init, FileSetupContext fileSetupContext) {
-		if (Platform.isRunning()) {
-			readOutConfiguration = new ReadOutWorkspaceConfiguration(fileSetupContext, workspaceAccess,
-					fileExtensionProvider);
-		} else {
-			readOutConfiguration = new ReadOutResourceSetConfiguration(fileSetupContext, workspaceAccess);
-		}
+		readOutConfiguration = new ReadOutResourceSetConfiguration(fileSetupContext, workspaceAccess);
 		init.initialize(readOutConfiguration);
 	}
 

@@ -49,7 +49,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -178,25 +177,6 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		if (scopeName != null && !scopeName.equals(nameInfo.parentFolderName)) {
 			String msg = IssueCodes.getMessageForPKGJ_SCOPE_NAME_MISMATCH(scopeName, nameInfo.parentFolderName);
 			addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_SCOPE_NAME_MISMATCH);
-		}
-
-		// make sure the project name equals the name of the Eclipse workspace project
-		if (Platform.isRunning()) {
-
-			if (!nameInfo.eclipseProjectName.isPresent()) {
-				// Eclipse project name cannot be determined, fail gracefully. We currently assume that this case will
-				// only occur (1) in the headless case and (2) in the UI case when a nested package.json is validated in
-				// an editor (we ignore nested package.json files in the builder)
-				return;
-			}
-
-			String expectedEclipseProjectName = ProjectDescriptionUtils
-					.convertN4JSProjectNameToEclipseProjectName(projectName);
-			if (!expectedEclipseProjectName.equals(nameInfo.eclipseProjectName.get())) {
-				String msg = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
-						expectedEclipseProjectName, nameInfo.eclipseProjectName.get());
-				addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
-			}
 		}
 	}
 

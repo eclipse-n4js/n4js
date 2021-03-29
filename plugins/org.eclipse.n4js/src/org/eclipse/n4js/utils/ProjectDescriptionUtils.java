@@ -20,9 +20,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
@@ -34,7 +31,6 @@ import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
@@ -434,14 +430,10 @@ public class ProjectDescriptionUtils {
 		public final String projectFolderName;
 		/** Name of the folder containing the {@link #projectFolderName project folder}. */
 		public final String parentFolderName;
-		/** The Eclipse project name, iff in UI case. */
-		public final Optional<String> eclipseProjectName;
 
-		private ProjectNameInfo(String projectFolderName, String parentFolderName,
-				Optional<String> eclipseProjectName) {
+		private ProjectNameInfo(String projectFolderName, String parentFolderName) {
 			this.projectFolderName = projectFolderName;
 			this.parentFolderName = parentFolderName;
-			this.eclipseProjectName = eclipseProjectName;
 		}
 
 		/** Creates a new instance. Given URI should point to an N4JS project, not a file within an N4JS project. */
@@ -454,18 +446,7 @@ public class ProjectDescriptionUtils {
 				// a file URI actually represents the file system hierarchy -> no need to look up names on disk
 				return new ProjectNameInfo(
 						projectUri.lastSegment(),
-						projectUri.trimSegments(1).lastSegment(),
-						Optional.absent() // no Eclipse project name in this case
-				);
-			} else if (projectUri.isPlatform()) {
-				// for platform URIs (i.e. UI case) we actually have to look up the folder name on disk
-				final String platformURI = projectUri.toPlatformString(true);
-				final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(platformURI);
-				final IPath path = resource.getLocation();
-				return new ProjectNameInfo(
-						path.lastSegment(),
-						path.removeLastSegments(1).lastSegment(),
-						resource instanceof IProject ? Optional.of(resource.getName()) : Optional.absent());
+						projectUri.trimSegments(1).lastSegment());
 			}
 			throw new IllegalStateException("not a file or platform URI: " + projectUri);
 		}

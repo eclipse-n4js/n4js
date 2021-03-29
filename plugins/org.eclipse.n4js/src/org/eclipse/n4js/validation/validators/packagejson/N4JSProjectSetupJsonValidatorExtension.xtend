@@ -18,7 +18,6 @@ import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.io.File
 import java.io.IOException
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
@@ -32,10 +31,6 @@ import java.util.Map
 import java.util.Set
 import java.util.Stack
 import org.apache.log4j.Logger
-import org.eclipse.core.resources.IProject
-import org.eclipse.core.resources.IWorkspaceRoot
-import org.eclipse.core.resources.ResourcesPlugin
-import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -68,7 +63,6 @@ import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyVisitor
 import org.eclipse.n4js.utils.ModuleFilterUtils
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper
-import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
 import org.eclipse.n4js.utils.Strings
 import org.eclipse.n4js.validation.IssueCodes
@@ -131,12 +125,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 * @See {@link #getAllExistingProjectNames()} 
 	 */
 	private static String ALL_EXISTING_PROJECT_CACHE = "ALL_EXISTING_PROJECT_CACHE";
-
-	/**
-	 * Key to store a map of all user projects and their node_modules folders in the validation context for re-use across different check-methods.
-	 * @See {@link #getAllNodeModulesFolders()}
-	 */
-	private static String NODE_MODULES_LOCATION_CACHE = "NODE_MODULES_LOCATION_CACHE";
 
 	/**
 	 * Key to store a map of all declared project dependencies in the validation context for re-use across different check-methods.
@@ -1103,7 +1091,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		val description = getProjectDescription();
 		val allProjects = getAllProjectsByName();
-		val allNodeModuleFolders = getAllNodeModulesFolders();
 
 		// keeps track of all valid references
 		val existentIds = HashMultimap.<N4JSProjectName, ValidationProjectReference>create;
@@ -1121,7 +1108,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			val id = ref.referencedProjectName;
 			// Assuming completely broken AST.
 			if (null !== id) {
-				checkReference(ref, allProjects, allNodeModuleFolders, description, currentProject, allReferencedProjectNames,
+				checkReference(ref, allProjects, description, currentProject, allReferencedProjectNames,
 					existentIds, allowReflexive, projectPredicate, sectionLabel
 				);
 			}
@@ -1137,7 +1124,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	}
 
 	private def void checkReference(ValidationProjectReference ref, Map<N4JSProjectName, N4JSProjectConfigSnapshot> allProjects,
-		Map<N4JSProjectName, NodeModulesFolder> allNodeModuleFolders, ProjectDescription description, N4JSProjectConfigSnapshot currentProject,
+		ProjectDescription description, N4JSProjectConfigSnapshot currentProject,
 		Set<N4JSProjectName> allReferencedProjectNames, HashMultimap<N4JSProjectName, ValidationProjectReference> existentIds,
 		boolean allowReflexive, Predicate<N4JSProjectConfigSnapshot> projectPredicate, String sectionLabel
 	) {
@@ -1166,31 +1153,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		} else {
 			// keep track of actually existing projects
 			existentIds.put(id, ref);
-		}
-
-		if (!currentProject.isExternal) {
-			// search for the dependency in all node_modules folders (respecting shadowing order)
-			var Path currNPM = null;
-			val nmFolders = allNodeModuleFolders.get(currentProjectName);
-			if (nmFolders !== null) {
-				for (File nodeModulesFolder : nmFolders.nodeModulesFoldersInOrderOfPriority) {
-					if (currNPM === null || !currNPM.toFile.exists) {
-						currNPM = nodeModulesFolder.toPath.resolve(id.rawName);
-					}
-				}
-			}
-
-			// check if dependency was found
-			if (currNPM !== null && !currNPM.toFile.exists) {
-				val packageVersion = if (ref.npmVersion === null) "" else ref.npmVersion.toString;
-				if (project.external) {
-					val msg = getMessageForNON_EXISTING_PROJECT(id);
-					addIssue(msg, ref.astRepresentation, null, NON_EXISTING_PROJECT, id.rawName, packageVersion);
-				} else {
-					val msg = getMessageForMISSING_YARN_WORKSPACE(id);
-					addIssue(msg, ref.astRepresentation, null, MISSING_YARN_WORKSPACE, id.rawName, packageVersion);
-				}
-			}
 		}
 
 		// create only a single validation issue for a particular project reference.
@@ -1381,34 +1343,6 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			val document = getDocument();
 			val Map<N4JSProjectName, N4JSProjectConfigSnapshot> res = new HashMap;
 			workspaceAccess.findAllProjects(document).forEach[p | res.put(new N4JSProjectName(p.name), p)];
-			return res;
-		]
-	}
-
-	/**
-	 * Returns a map between all user projects and their corresponding 
-	 * node_modules folder locations.
-	 *
-	 * The result of this method is cached in the validation context.
-	 */
-	private def Map<N4JSProjectName, NodeModulesFolder> getAllNodeModulesFolders() {
-		return contextMemoize(NODE_MODULES_LOCATION_CACHE) [
-			val Map<N4JSProjectName, NodeModulesFolder> res = new HashMap();
-
-			if (Platform.isRunning) { // necessary for xpect tests (non-ui)
-				val IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				for (IProject project : root.projects) {
-					if (project.isAccessible) {
-						val iPath = project.location;
-						val projectPath = iPath.toFile.toPath;
-						val NodeModulesFolder nmFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectPath);
-						if (nmFolder !== null) {
-							val projectName = new N4JSProjectName(project.name);
-							res.put(projectName, nmFolder);
-						}
-					}
-				}
-			}
 			return res;
 		]
 	}
