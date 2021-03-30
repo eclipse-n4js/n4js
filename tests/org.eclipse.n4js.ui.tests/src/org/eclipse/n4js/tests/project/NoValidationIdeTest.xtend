@@ -132,7 +132,7 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 		// assert markers
 		assertIssues(
 			"Shadowed.n4jsd" -> #[
-				"(Error, [1:20 - 1:26], Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files.)"
+				"(Error, [1:20 - 1:26], Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files.)"
 			]
 		);
 		assertEquals("file src/js/Shadowed.js should have 0 markers", 0, getIssuesInFile(fileImpl).size);

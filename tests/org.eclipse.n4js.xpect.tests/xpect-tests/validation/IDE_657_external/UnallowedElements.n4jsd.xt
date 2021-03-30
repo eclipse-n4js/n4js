@@ -24,7 +24,7 @@ export public interface ~Line {
 	public end : Point;
 }
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "InternalPoint"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "InternalPoint"
 export public class InternalPoint {
 }
 
@@ -48,7 +48,7 @@ export external public class InternalPoint3 {
 @Internal
 /* XPECT errors ---
 "A interface with visibility project shouldn't be annotated with @Internal." at "InternalClonable"
-"Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "InternalClonable"
+"Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "InternalClonable"
 --- */
 export interface InternalClonable {
 }
@@ -69,7 +69,7 @@ external public interface InternalClonable2 {
 export external public interface InternalClonable3 {
 }
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "NonStructuralTypedLine"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "NonStructuralTypedLine"
 export public interface NonStructuralTypedLine {
 	public start : Point;
 	public end : Point;
@@ -96,59 +96,59 @@ export public interface ~NonApiStructuralTypedLine2 {
 	public end : Point;
 };
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "MyEnum"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "MyEnum"
 enum MyEnum {
 	LIT1
 };
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "foo"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "foo"
 export function foo() {
 };
 
 // no errors expected XPECT noerrors
 ;
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "{"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "{"
 {
 
 };
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "LABEL"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "LABEL"
 LABEL: undefined;
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "if"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "if"
 if(true) {
 
 };
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "do"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "do"
 do {
 
 } while(true);
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "while"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "while"
 while(true) {
 
 };
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "for"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "for"
 for(var i in {}) {
 
 };
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "with"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "with"
 with (true);
 
 export var a;
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "switch"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "switch"
 switch(a) {
 
 };
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "throw"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "throw"
 throw(new Error);
 
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "try"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "try"
 try {
 
 } catch(e) {
@@ -156,5 +156,5 @@ try {
 }
 
 // XPECT warnings --> "Dead code." at "debugger;"
-// XPECT errors --> "Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files." at "debugger"
+// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "debugger"
 debugger;
