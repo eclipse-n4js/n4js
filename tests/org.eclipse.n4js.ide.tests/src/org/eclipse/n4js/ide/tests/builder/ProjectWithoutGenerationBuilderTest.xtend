@@ -61,7 +61,7 @@ class ProjectWithoutGenerationBuilderTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 		assertIssues(
 			"Test.n4jsd" -> #[
-				"(Error, [1:0 - 1:7], Only classes, interfaces, enums and functions declared as external as well as structural typed interfaces are allowed in n4jsd files.)"
+				"(Error, [1:0 - 1:7], Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files.)"
 			]
 		);
 	}
