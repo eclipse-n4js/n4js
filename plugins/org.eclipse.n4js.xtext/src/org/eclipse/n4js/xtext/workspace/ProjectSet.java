@@ -241,4 +241,30 @@ public class ProjectSet {
 	public ImmutableSet<? extends ProjectConfigSnapshot> getProjectsDependingOn(String projectName) {
 		return name2DependentProjects.get(projectName);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" [");
+		if (isEmpty()) {
+			sb.append("]");
+		} else {
+			int numOmitted = 0;
+			for (ProjectConfigSnapshot p : getProjects()) {
+				if (p.isOmittedFromToString()) {
+					numOmitted++;
+					continue;
+				}
+				sb.append("\n    ");
+				sb.append(p.toStringBrief());
+			}
+			if (numOmitted > 0) {
+				sb.append("\n    ");
+				sb.append("(... " + numOmitted + " project(s) omitted ...)");
+			}
+			sb.append("\n]");
+		}
+		return sb.toString();
+	}
 }

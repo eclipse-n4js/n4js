@@ -141,7 +141,19 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 
 	@Override
 	public String toString() {
-		return "WorkspaceConfigSnapshot [path=" + path + ", projects=" + projects.getProjectsByName() + "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" {\n");
+		sb.append("    path: " + path + "\n");
+		sb.append("    projects: ");
+		String pset = projects.toString();
+		pset = pset.replace("\n", "\n    "); // increase indentation, except for the first line
+		sb.append(pset + "\n");
+		sb.append("    buildOrderInfo: ");
+		String boi = buildOrderInfo.toString();
+		boi = boi.replace("\n", "\n    "); // increase indentation, except for the first line
+		sb.append(boi + "\n");
+		sb.append("}");
+		return sb.toString();
 	}
-
 }

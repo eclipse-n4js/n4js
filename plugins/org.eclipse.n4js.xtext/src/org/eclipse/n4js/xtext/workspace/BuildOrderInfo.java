@@ -13,6 +13,9 @@ package org.eclipse.n4js.xtext.workspace;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -45,4 +48,42 @@ public class BuildOrderInfo {
 		return this.projectCycles;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" {\n");
+
+		// sorted projects
+		sb.append("    sortedProjects: [");
+		if (!sortedProjects.isEmpty()) {
+			sb.append(" ");
+			final int maxProjects = 15;
+			Iterable<String> projectsToShow = IterableExtensions.map(
+					IterableExtensions.take(sortedProjects, maxProjects),
+					ProjectConfigSnapshot::getName);
+			sb.append(Joiner.on(", ").join(projectsToShow));
+			int numRemaining = sortedProjects.size() - maxProjects;
+			if (numRemaining > 0) {
+				sb.append(", ... and " + numRemaining + " more ...");
+			}
+			sb.append(" ");
+		}
+		sb.append("]\n");
+
+		// project cycles
+		sb.append("    projectCycles: [");
+		if (!projectCycles.isEmpty()) {
+			for (List<String> cycle : projectCycles) {
+				sb.append("\n        ");
+				sb.append(Joiner.on(" --> ").join(cycle));
+			}
+			sb.append("\n    ]\n");
+		} else {
+			sb.append("]\n");
+		}
+
+		sb.append("}");
+		return sb.toString();
+	}
 }

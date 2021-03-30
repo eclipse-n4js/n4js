@@ -65,7 +65,10 @@ public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 
 	@Override
 	public String toString() {
-		return "N4JS" + super.toString();
+		return getClass().getSimpleName() + " { name: " + getName()
+				+ ", type: " + type
+				+ ", relativeLocation: " + relativeLocation
+				+ ", path: " + getPath() + " }";
 	}
 
 	// ==============================================================================================================

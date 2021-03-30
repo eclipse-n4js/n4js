@@ -44,11 +44,6 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 		return super.computeEquals(obj); // no additional data in this class, so simply use super implementation
 	}
 
-	@Override
-	public String toString() {
-		return "N4JS" + super.toString();
-	}
-
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 
