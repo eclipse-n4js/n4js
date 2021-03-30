@@ -14,7 +14,7 @@ Contributors:
 Build HTML and launch in browser: :: Note that you need `ant` to be installed.
 [source,bash]
 ----
-cd docs/org.eclipse.n4js.ide.spec
+cd docs/org.eclipse.n4js.design
 ant
 ----
 
