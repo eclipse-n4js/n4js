@@ -23,7 +23,6 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
-import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -31,9 +30,7 @@ import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -116,26 +113,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	@Override
 	protected void toStringAdditionalProperties(StringBuilder sb) {
-		sb.append("    version: " + SemverSerializer.serialize(projectDescription.getVersion()) + "\n");
-		sb.append("    type: " + projectDescription.getType() + "\n");
 		if (external) {
 			sb.append("    external: true\n");
 		}
-		sb.append("    mainModule: " + projectDescription.getMainModule() + "\n");
-		if (!projectDescription.getTestedProjects().isEmpty()) {
-			String namesStr = Joiner.on(", ").join(
-					IterableExtensions.map(projectDescription.getTestedProjects(), ProjectReference::getProjectName));
-			sb.append("    testedProjects: [ " + namesStr + " ]\n");
-		}
-		if (projectDescription.getDefinesPackage() != null) {
-			sb.append("    definesPackage: " + projectDescription.getDefinesPackage() + "\n");
-		}
-		if (projectDescription.isYarnWorkspaceRoot()) {
-			sb.append("    yarnWorkspaceRoot: true\n");
-		}
-		if (!projectDescription.getWorkspaces().isEmpty()) {
-			sb.append("    workspaces: [ " + Joiner.on(", ").join(projectDescription.getWorkspaces()) + " ]\n");
-		}
+		projectDescription.toStringAdditionalProperties(sb);
 	}
 
 	@Override

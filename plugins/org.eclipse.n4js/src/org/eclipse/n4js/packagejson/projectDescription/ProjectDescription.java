@@ -17,8 +17,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ImmutableDataClass;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -300,5 +303,65 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& n4jsNature == other.n4jsNature
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
 				&& Objects.equals(workspaces, other.workspaces);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" {\n");
+		sb.append("    name: " + name + "\n");
+		toStringAdditionalProperties(sb);
+		sb.append("    dependencies: [");
+		if (dependencies.isEmpty()) {
+			sb.append("]\n");
+		} else {
+			sb.append(' ');
+			sb.append(Joiner.on(", ").join(IterableExtensions.map(dependencies, ProjectDependency::getProjectName)));
+			sb.append(" ]\n");
+		}
+		sb.append("    sourceContainers: [");
+		if (sourceContainers.isEmpty()) {
+			sb.append("]\n");
+		} else {
+			for (SourceContainerDescription scd : sourceContainers) {
+				sb.append("\n        ");
+				sb.append(scd.toString());
+			}
+			sb.append("\n    ]\n");
+		}
+		sb.append("    moduleFilters: [");
+		if (moduleFilters.isEmpty()) {
+			sb.append("]\n");
+		} else {
+			for (ModuleFilter mf : moduleFilters) {
+				sb.append("\n        ");
+				sb.append(mf.toString());
+			}
+			sb.append("\n    ]\n");
+		}
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/** Factored out from {@link #toString()} only to allow reuse in {@link N4JSProjectConfigSnapshot}. */
+	public void toStringAdditionalProperties(StringBuilder sb) {
+		sb.append("    version: " + internalVersionStr + "\n");
+		sb.append("    type: " + type + "\n");
+		sb.append("    mainModule: " + mainModule + "\n");
+		if (!testedProjects.isEmpty()) {
+			String namesStr = Joiner.on(", ").join(
+					IterableExtensions.map(testedProjects, ProjectReference::getProjectName));
+			sb.append("    testedProjects: [ " + namesStr + " ]\n");
+		}
+		if (definesPackage != null) {
+			sb.append("    definesPackage: " + definesPackage + "\n");
+		}
+		if (yarnWorkspaceRoot) {
+			sb.append("    yarnWorkspaceRoot: true\n");
+		}
+		if (!workspaces.isEmpty()) {
+			sb.append("    workspaces: [ " + Joiner.on(", ").join(workspaces) + " ]\n");
+		}
 	}
 }

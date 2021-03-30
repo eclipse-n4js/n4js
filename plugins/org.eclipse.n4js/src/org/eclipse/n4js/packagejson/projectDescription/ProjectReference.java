@@ -46,4 +46,9 @@ public class ProjectReference extends ImmutableDataClass {
 		ProjectReference other = (ProjectReference) obj;
 		return Objects.equals(projectName, other.projectName);
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " { projectName: " + projectName + " }";
+	}
 }

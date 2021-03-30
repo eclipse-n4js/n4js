@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import org.eclipse.n4js.utils.ImmutableDataClass;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -23,16 +24,16 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class SourceContainerDescription extends ImmutableDataClass {
 
-	private final SourceContainerType sourceContainerType;
+	private final SourceContainerType type;
 	private final ImmutableList<String> paths;
 
-	public SourceContainerDescription(SourceContainerType sourceContainerType, Iterable<String> paths) {
-		this.sourceContainerType = sourceContainerType;
+	public SourceContainerDescription(SourceContainerType type, Iterable<String> paths) {
+		this.type = type;
 		this.paths = ImmutableList.copyOf(paths);
 	}
 
 	public SourceContainerType getSourceContainerType() {
-		return sourceContainerType;
+		return type;
 	}
 
 	public List<String> getPaths() {
@@ -43,13 +44,20 @@ public class SourceContainerDescription extends ImmutableDataClass {
 	protected int computeHashCode() {
 		return Objects.hash(
 				paths,
-				sourceContainerType);
+				type);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
 		SourceContainerDescription other = (SourceContainerDescription) obj;
 		return Objects.equals(paths, other.paths)
-				&& sourceContainerType == other.sourceContainerType;
+				&& type == other.type;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " { type: " + getSourceContainerType()
+				+ ", paths: " + (paths.isEmpty() ? "[]" : "[ " + Joiner.on(", ").join(paths) + " ]")
+				+ " }";
 	}
 }

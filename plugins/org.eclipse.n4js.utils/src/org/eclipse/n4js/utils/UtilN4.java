@@ -52,6 +52,8 @@ public class UtilN4 {
 	public static final String PACKAGE_JSON__N4JS = "n4js";
 	/** Name of package.json property "sources". */
 	public static final String PACKAGE_JSON__SOURCES = "sources";
+	/** Default string used for indentation of a single level. */
+	public static final String DEFAULT_INDENTATION_STR = "    ";
 
 	private static Logger logger = Logger.getLogger(UtilN4.class);
 
@@ -270,6 +272,26 @@ public class UtilN4 {
 			result.addAll(coll);
 		}
 		return result;
+	}
+
+	/** Same as {@link #indent(String, String)}, using the {@link #DEFAULT_INDENTATION_STR}. */
+	public static String indent(String str) {
+		return indent(str, DEFAULT_INDENTATION_STR);
+	}
+
+	/** Same as {@link #indentExceptFirstLine(String, String)}, but using the {@link #DEFAULT_INDENTATION_STR}. */
+	public static String indentExceptFirstLine(String str) {
+		return indentExceptFirstLine(str, DEFAULT_INDENTATION_STR);
+	}
+
+	/** Adds the given indentation string at the beginning of each line of {@code str}. */
+	public static String indent(String str, String indentStr) {
+		return indentStr + indentExceptFirstLine(str, indentStr);
+	}
+
+	/** Adds the given indentation string at the beginning of each line of {@code str}, except the first line. */
+	public static String indentExceptFirstLine(String str, String indentStr) {
+		return str.replace("\n", "\n" + indentStr);
 	}
 
 	/**

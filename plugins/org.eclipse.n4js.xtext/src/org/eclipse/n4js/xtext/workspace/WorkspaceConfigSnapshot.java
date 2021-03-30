@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.workspace.IWorkspaceConfig;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -146,13 +147,11 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 		sb.append(" {\n");
 		sb.append("    path: " + path + "\n");
 		sb.append("    projects: ");
-		String pset = projects.toString();
-		pset = pset.replace("\n", "\n    "); // increase indentation, except for the first line
-		sb.append(pset + "\n");
+		sb.append(UtilN4.indentExceptFirstLine(projects.toString()));
+		sb.append("\n");
 		sb.append("    buildOrderInfo: ");
-		String boi = buildOrderInfo.toString();
-		boi = boi.replace("\n", "\n    "); // increase indentation, except for the first line
-		sb.append(boi + "\n");
+		sb.append(UtilN4.indentExceptFirstLine(buildOrderInfo.toString()));
+		sb.append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

@@ -17,16 +17,16 @@ import org.eclipse.n4js.utils.ImmutableDataClass;
 @SuppressWarnings("javadoc")
 public class ModuleFilterSpecifier extends ImmutableDataClass {
 
-	private final String moduleSpecifierWithWildcard;
+	private final String specifierWithWildcard;
 	private final String sourcePath;
 
-	public ModuleFilterSpecifier(String moduleSpecifierWithWildcard, String sourcePath) {
-		this.moduleSpecifierWithWildcard = moduleSpecifierWithWildcard;
+	public ModuleFilterSpecifier(String specifierWithWildcard, String sourcePath) {
+		this.specifierWithWildcard = specifierWithWildcard;
 		this.sourcePath = sourcePath;
 	}
 
 	public String getModuleSpecifierWithWildcard() {
-		return moduleSpecifierWithWildcard;
+		return specifierWithWildcard;
 	}
 
 	public String getSourcePath() {
@@ -36,14 +36,20 @@ public class ModuleFilterSpecifier extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				moduleSpecifierWithWildcard,
+				specifierWithWildcard,
 				sourcePath);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ModuleFilterSpecifier other = (ModuleFilterSpecifier) obj;
-		return Objects.equals(moduleSpecifierWithWildcard, other.moduleSpecifierWithWildcard)
+		return Objects.equals(specifierWithWildcard, other.specifierWithWildcard)
 				&& Objects.equals(sourcePath, other.sourcePath);
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " { specifierWithWildcard: " + specifierWithWildcard
+				+ ", sourcePath: " + sourcePath + " }";
 	}
 }

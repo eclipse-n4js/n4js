@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import org.eclipse.n4js.utils.ImmutableDataClass;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -24,33 +25,40 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class ModuleFilter extends ImmutableDataClass {
 
-	private final ModuleFilterType moduleFilterType;
-	private final ImmutableList<ModuleFilterSpecifier> moduleSpecifiers;
+	private final ModuleFilterType type;
+	private final ImmutableList<ModuleFilterSpecifier> specifiers;
 
-	public ModuleFilter(ModuleFilterType moduleFilterType, Iterable<ModuleFilterSpecifier> moduleSpecifiers) {
-		this.moduleFilterType = moduleFilterType;
-		this.moduleSpecifiers = ImmutableList.copyOf(moduleSpecifiers);
+	public ModuleFilter(ModuleFilterType type, Iterable<ModuleFilterSpecifier> specifiers) {
+		this.type = type;
+		this.specifiers = ImmutableList.copyOf(specifiers);
 	}
 
 	public ModuleFilterType getModuleFilterType() {
-		return moduleFilterType;
+		return type;
 	}
 
 	public List<ModuleFilterSpecifier> getModuleSpecifiers() {
-		return moduleSpecifiers;
+		return specifiers;
 	}
 
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				moduleFilterType,
-				moduleSpecifiers);
+				type,
+				specifiers);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ModuleFilter other = (ModuleFilter) obj;
-		return moduleFilterType == other.moduleFilterType
-				&& Objects.equals(moduleSpecifiers, other.moduleSpecifiers);
+		return type == other.type
+				&& Objects.equals(specifiers, other.specifiers);
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " { type: " + type
+				+ ", specifiers: " + (specifiers.isEmpty() ? "[]" : "[ " + Joiner.on(", ").join(specifiers) + " ]")
+				+ " }";
 	}
 }

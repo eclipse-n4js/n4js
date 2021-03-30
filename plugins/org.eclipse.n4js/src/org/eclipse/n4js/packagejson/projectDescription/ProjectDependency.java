@@ -64,4 +64,12 @@ public class ProjectDependency extends ProjectReference {
 				&& Objects.equals(versionRequirementString, other.versionRequirementString)
 				&& Objects.equals(internalVersionRequirementStr, other.internalVersionRequirementStr);
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " { type: " + type
+				+ ", projectName: " + getProjectName()
+				+ ", versionRequirementString: " + versionRequirementString
+				+ ", versionRequirement: " + internalVersionRequirementStr + " }";
+	}
 }
