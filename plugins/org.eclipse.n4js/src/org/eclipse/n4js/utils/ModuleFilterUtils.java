@@ -34,7 +34,7 @@ public class ModuleFilterUtils {
 	/** @return true iff the given location is matched by the given filter. */
 	public static boolean isPathContainedByFilter(N4JSProjectConfigSnapshot project, URI location,
 			ModuleFilter filter) {
-		return isPathContainedByFilter(project, location, filter.getModuleSpecifiers());
+		return isPathContainedByFilter(project, location, filter.getSpecifiers());
 	}
 
 	/** @return true iff the given location is matched by one of the given filter specifiers. */
@@ -99,7 +99,7 @@ public class ModuleFilterUtils {
 
 	/** @return true iff the given location is matched the given GLOB specifier. */
 	private static boolean locationMatchesGlobSpecifier(ModuleFilterSpecifier spec, String prjRelativeLocation) {
-		String pathsToFind = spec.getModuleSpecifierWithWildcard();
+		String pathsToFind = spec.getSpecifierWithWildcard();
 		if (pathsToFind == null) {
 			return false;
 		}

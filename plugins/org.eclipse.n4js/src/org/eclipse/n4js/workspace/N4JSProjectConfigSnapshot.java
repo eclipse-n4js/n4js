@@ -208,8 +208,8 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	public ImmutableList<ModuleFilterSpecifier> getModuleFilterSpecifiersByType(ModuleFilterType moduleFilterType) {
 		Builder<ModuleFilterSpecifier> result = ImmutableList.builder();
 		for (ModuleFilter mf : projectDescription.getModuleFilters()) {
-			if (mf.getModuleFilterType() == moduleFilterType) {
-				result.addAll(mf.getModuleSpecifiers());
+			if (mf.getType() == moduleFilterType) {
+				result.addAll(mf.getSpecifiers());
 			}
 		}
 		return result.build();

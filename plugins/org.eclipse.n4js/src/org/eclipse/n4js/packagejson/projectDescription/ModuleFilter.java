@@ -33,11 +33,11 @@ public class ModuleFilter extends ImmutableDataClass {
 		this.specifiers = ImmutableList.copyOf(specifiers);
 	}
 
-	public ModuleFilterType getModuleFilterType() {
+	public ModuleFilterType getType() {
 		return type;
 	}
 
-	public List<ModuleFilterSpecifier> getModuleSpecifiers() {
+	public List<ModuleFilterSpecifier> getSpecifiers() {
 		return specifiers;
 	}
 

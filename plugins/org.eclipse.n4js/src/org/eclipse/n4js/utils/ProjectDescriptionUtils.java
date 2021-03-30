@@ -406,7 +406,7 @@ public class ProjectDescriptionUtils {
 			return other == null ? 0 : 1;
 		if (other == null)
 			return -1;
-		return first.getSourceContainerType().compareTo(other.getSourceContainerType());
+		return first.getType().compareTo(other.getType());
 	}
 
 	/**

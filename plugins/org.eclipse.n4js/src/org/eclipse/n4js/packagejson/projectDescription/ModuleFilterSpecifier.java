@@ -25,7 +25,7 @@ public class ModuleFilterSpecifier extends ImmutableDataClass {
 		this.sourcePath = sourcePath;
 	}
 
-	public String getModuleSpecifierWithWildcard() {
+	public String getSpecifierWithWildcard() {
 		return specifierWithWildcard;
 	}
 

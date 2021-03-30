@@ -333,7 +333,7 @@ public class PackageJsonHelper {
 				return;
 			}
 			if (sourceContainerOfTypeSource == null
-					&& sourceContainer.getSourceContainerType() == SourceContainerType.SOURCE) {
+					&& sourceContainer.getType() == SourceContainerType.SOURCE) {
 				sourceContainerOfTypeSource = sourceContainer;
 			}
 		}

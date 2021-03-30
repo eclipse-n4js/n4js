@@ -32,7 +32,7 @@ public class SourceContainerDescription extends ImmutableDataClass {
 		this.paths = ImmutableList.copyOf(paths);
 	}
 
-	public SourceContainerType getSourceContainerType() {
+	public SourceContainerType getType() {
 		return type;
 	}
 
@@ -56,7 +56,7 @@ public class SourceContainerDescription extends ImmutableDataClass {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " { type: " + getSourceContainerType()
+		return getClass().getSimpleName() + " { type: " + getType()
 				+ ", paths: " + (paths.isEmpty() ? "[]" : "[ " + Joiner.on(", ").join(paths) + " ]")
 				+ " }";
 	}

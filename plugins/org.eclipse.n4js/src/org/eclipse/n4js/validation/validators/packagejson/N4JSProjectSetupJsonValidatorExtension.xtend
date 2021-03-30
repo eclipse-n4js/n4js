@@ -393,7 +393,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			return;
 		}
 		
-		val hasTestFragment = sourceContainers.findFirst[sf| SourceContainerType.TEST.equals(sf.getSourceContainerType)] !== null;
+		val hasTestFragment = sourceContainers.findFirst[sf| SourceContainerType.TEST.equals(sf.getType)] !== null;
 
 		if(!hasTestFragment){
 			return;
@@ -774,8 +774,8 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		val ModuleFilterSpecifier filterSpecifier = filterSpecifierTraceable?.element;
 
 		// check for invalid character sequences within wildcard patterns
-		if (filterSpecifier?.moduleSpecifierWithWildcard !== null) {
-			if (filterSpecifier.moduleSpecifierWithWildcard.contains(wrongWildcardPattern)) {
+		if (filterSpecifier?.getSpecifierWithWildcard !== null) {
+			if (filterSpecifier.getSpecifierWithWildcard.contains(wrongWildcardPattern)) {
 				addIssue(
 					getMessageForPKGJ_INVALID_WILDCARD(wrongWildcardPattern),
 					filterSpecifierTraceable.astElement,
@@ -784,7 +784,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 				return false
 			}
 			val wrongRelativeNavigation = "../"
-			if (filterSpecifier.moduleSpecifierWithWildcard.contains(wrongRelativeNavigation)) {
+			if (filterSpecifier.getSpecifierWithWildcard.contains(wrongRelativeNavigation)) {
 				addIssue(
 					getMessageForPKGJ_NO_RELATIVE_NAVIGATION,
 					filterSpecifierTraceable.astElement,
@@ -835,7 +835,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			.filter[e | e.value == false].map[e | e.key]
 
 		for (ASTTraceable<ModuleFilterSpecifier> filterSpecifier : unmatchedSpecifiers) {
-			val msg = getMessageForPKGJ_MODULE_FILTER_DOES_NOT_MATCH(filterSpecifier.element.moduleSpecifierWithWildcard);
+			val msg = getMessageForPKGJ_MODULE_FILTER_DOES_NOT_MATCH(filterSpecifier.element.getSpecifierWithWildcard);
 			addIssue(msg, filterSpecifier.astElement, PKGJ_MODULE_FILTER_DOES_NOT_MATCH);
 		}
 	}
@@ -855,7 +855,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			for (val iter = filterSpecifiers.entrySet.iterator(); iter.hasNext();) {
 				val entry = iter.next();
 				val filterSpecifierTraceable = entry.key;
-				val specifier = filterSpecifierTraceable.element?.moduleSpecifierWithWildcard;
+				val specifier = filterSpecifierTraceable.element?.getSpecifierWithWildcard;
 
 				// only check for valid filter specifiers for matches
 				val checkForMatches = specifier !== null && 
