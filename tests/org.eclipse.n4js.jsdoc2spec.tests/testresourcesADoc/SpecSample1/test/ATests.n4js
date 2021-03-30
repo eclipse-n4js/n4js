@@ -9,28 +9,28 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-public class ATest {
+export public class ATest {
 
 	/**
 	 * @testee A.A.bar
 	 */
 	@Test
-	testBarBasics(): string {}
+	testBarBasics() {}
 }
 
-public class DTest {
+export public class DTest {
 
 	/**
 	 * Test internal comment
 	 * @testee A.D.bar
 	 */
 	@Test
-	testBarAgain(): string {}
+	testBarAgain() {}
 	/**
 	 * Baz is supposed to do nothing.
 	 * @testee A.D.baz
 	 * @specFromDescription
 	 */
 	@Test
-	testBazAgain(): string {}
+	testBazAgain() {}
 }

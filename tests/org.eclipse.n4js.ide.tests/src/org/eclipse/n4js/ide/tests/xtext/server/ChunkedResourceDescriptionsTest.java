@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.n4js.xtext.server.util.IndexedChunkedResourceDescriptions;
+import org.eclipse.n4js.xtext.ide.server.util.IndexedChunkedResourceDescriptions;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;

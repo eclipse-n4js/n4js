@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "mandatory2" {
+			Folder "src" {}
+			ThisFile "package.json" {}
+		}
+	}
+
+	IssueConfiguration {
+		IssueCode "PKGJ_MISSING_DEPENDENCY_N4JS_RUNTIME" { enabled = true } // suppressed by default!
+		IssueCode "NON_EXISTING_PROJECT" { enabled = false }
+	}
+
+	END_SETUP
+*/
+{
+	"name": "mandatory2",
+	"version": "0.0.1",
+	"devDependencies": {
+		// XPECT errors --> "Dependency to n4js-runtime should be defined below key "dependencies", not "devDependencies"." at ""n4js-runtime": "*""
+		"n4js-runtime": "*"
+	},
+	"n4js": {
+		// XPECT noerrors -->
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				"src"
+			]
+		},
+		"output": "src-gen"
+	}
+}

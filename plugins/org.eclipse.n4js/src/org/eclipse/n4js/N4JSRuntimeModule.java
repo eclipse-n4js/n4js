@@ -16,18 +16,10 @@ import static org.eclipse.n4js.N4JSModuleDefaults.HTTP_SERVER_PORT_VALUE;
 import java.util.Properties;
 
 import org.eclipse.emf.ecore.util.Diagnostician;
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
-import org.eclipse.n4js.conversion.ValueConverters;
-import org.eclipse.n4js.documentation.N4JSDocumentationProvider;
-import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
-import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.naming.N4JSImportedNamesAdapter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
@@ -37,9 +29,9 @@ import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser;
 import org.eclipse.n4js.parser.PropertyNameAwareElementFactory;
 import org.eclipse.n4js.parser.RegExLiteralAwareLexer;
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
+import org.eclipse.n4js.parser.conversion.N4JSStringValueConverter;
+import org.eclipse.n4js.parser.conversion.ValueConverters;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.AccessibleSerializer;
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.resource.N4JSCache;
@@ -60,6 +52,9 @@ import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.scoping.builtin.ScopeRegistrar;
 import org.eclipse.n4js.scoping.imports.ImportedElementsMap;
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider;
+import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
+import org.eclipse.n4js.tooling.findReferences.ConcreteSyntaxAwareReferenceFinder;
+import org.eclipse.n4js.tooling.findReferences.InferredElementsTargetURICollector;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
@@ -382,20 +377,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	/** Binds a custom {@link N4JSEObjectAtOffsetHelper}. */
 	public Class<? extends EObjectAtOffsetHelper> bindEObjectAtOffsetHelper() {
 		return N4JSEObjectAtOffsetHelper.class;
-	}
-
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
-	 */
-	public Class<? extends IN4JSCore> bindN4JSCore() {
-		return N4JSRuntimeCore.class;
-	}
-
-	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
-	 */
-	public Class<? extends InternalN4JSWorkspace<? extends SafeURI<?>>> bindInternalN4JSWorkspace() {
-		return FileBasedWorkspace.class;
 	}
 
 	/**

@@ -11,8 +11,8 @@
 package org.eclipse.n4js.scoping.members;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope;
+import org.eclipse.n4js.scoping.utils.ExpressionExtensions;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.utils.TypeUtils;

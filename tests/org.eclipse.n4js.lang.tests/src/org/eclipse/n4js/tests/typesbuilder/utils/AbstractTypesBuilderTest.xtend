@@ -58,7 +58,7 @@ public abstract class AbstractTypesBuilderTest {
 		var rs = resourceSetProvider.get();
 
 		// load original resource
-		val testResource = rs.createResource(URI.createURI("src/" + path + "/" + testFileName))
+		val testResource = rs.createResource(rs.URIConverter.normalize(URI.createURI("src/" + path + "/" + testFileName)))
 		testResource.load(emptyMap)
 
 		executeUnloadLoadFromDescriptionsAndCompleteLoadTest(0, 1, testResource,

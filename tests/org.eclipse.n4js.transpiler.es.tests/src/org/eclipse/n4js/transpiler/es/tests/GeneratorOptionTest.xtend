@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.generator.GeneratorOption
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith
  * turning them on and off works.
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 class GeneratorOptionTest extends AbstractTranspilerTest {
 
 	val snippet = '''

@@ -20,10 +20,10 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
-import org.eclipse.n4js.xtext.server.build.XBuildRequest;
-import org.eclipse.n4js.xtext.server.build.XBuildRequest.AfterBuildListener;
-import org.eclipse.n4js.xtext.server.build.XBuildResult;
-import org.eclipse.n4js.xtext.server.issues.DiagnosticComparator;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
+import org.eclipse.n4js.xtext.ide.server.issues.DiagnosticComparator;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;

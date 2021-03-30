@@ -87,12 +87,12 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtend.lib.annotations.ToString
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.DiagnosticMessage
@@ -103,9 +103,9 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 
-import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
+import static extension org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.*
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -119,7 +119,7 @@ import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructur
 class ASTStructureValidator {
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private N4JSGrammarAccess grammarAccess;
@@ -279,7 +279,8 @@ class ASTStructureValidator {
 	}
 
 	def void validate(EObject model, IDiagnosticConsumer consumer) {
-		if(model?.eResource !== null && !n4jsCore.isNoValidate(model.eResource.getURI())) {
+		val resource = model?.eResource;
+		if(resource !== null && !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 			val producer = new ASTStructureDiagnosticProducer(consumer);
 			validateASTStructure(model, producer, Sets.newHashSetWithExpectedSize(2),
 				new Constraints(jsVariantHelper.isN4JSMode(model), jsVariantHelper.isExternalMode(model))

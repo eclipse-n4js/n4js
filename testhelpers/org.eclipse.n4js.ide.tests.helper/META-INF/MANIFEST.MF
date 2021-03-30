@@ -7,6 +7,7 @@ Bundle-SymbolicName: org.eclipse.n4js.ide.tests.helper
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.xtext,
+ org.eclipse.n4js.xtext.ide,
  org.junit,
  org.eclipse.equinox.app,
  com.google.guava,

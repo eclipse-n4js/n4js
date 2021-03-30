@@ -55,10 +55,11 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
-import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.n4JS.VersionedElement
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TClass
@@ -68,6 +69,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.IResourceScopeCache
@@ -77,8 +79,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.n4JS.VersionedElement
-import org.eclipse.n4js.n4idl.versioning.VersionUtils
 
 /**
  */
@@ -88,7 +88,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject ValidatorMessageHelper messageHelper;
 
-	@Inject IN4JSCore n4jsCore;
+	@Inject WorkspaceAccess workspaceAccess;
 
 	@Inject SourceElementExtensions sourceElementExtensions;
 
@@ -160,8 +160,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 				val name = exportableElement.declaredName;
 				if (name !== null) {
 					if (BASE_JS_TYPES.contains(name)) {
-						val project = n4jsCore.findProject(exportableElement.eResource.URI).get;
-						if (project === null || project.projectType !== ProjectType.RUNTIME_ENVIRONMENT) {
+						val project = workspaceAccess.findProjectContaining(exportableElement);
+						if (project === null || project.type !== ProjectType.RUNTIME_ENVIRONMENT) {
 							addIssue(getMessageForAST_GLOBAL_JS_NAME_CONFLICT(name), exportableElement,
 								AST_GLOBAL_JS_NAME_CONFLICT);
 						}

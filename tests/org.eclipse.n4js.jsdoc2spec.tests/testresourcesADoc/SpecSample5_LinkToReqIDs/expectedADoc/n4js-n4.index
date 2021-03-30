@@ -1,6 +1,0 @@
-tests
-	org.eclipse.n4js.jsdoc2spec.tests
-		testresources
-			A
-				A::1::8::9
-				A#foo::2::10::25

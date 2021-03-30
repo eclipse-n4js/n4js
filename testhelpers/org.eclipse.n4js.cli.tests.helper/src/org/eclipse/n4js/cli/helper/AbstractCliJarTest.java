@@ -16,8 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;

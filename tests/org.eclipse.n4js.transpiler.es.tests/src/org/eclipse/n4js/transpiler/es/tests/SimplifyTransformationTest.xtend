@@ -10,14 +10,15 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.tests.helper.mock.MockWorkspaceSupplier
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 class SimplifyTransformationTest extends AbstractTranspilerTest {
 
 	@Test
@@ -96,7 +97,7 @@ class SimplifyTransformationTest extends AbstractTranspilerTest {
 				method3() {}
 				enumLiteralIdentifier() {}
 				static get n4type() {
-					return $getReflectionForClass(this, '["Fully","__synthetic0","test"]');
+					return $getReflectionForClass(this, '["Fully","__synthetic0","«MockWorkspaceSupplier.TEST_PROJECT__NAME»"]');
 				}
 			}
 			class Partially extends N4Object {
@@ -104,7 +105,7 @@ class SimplifyTransformationTest extends AbstractTranspilerTest {
 				'not an identifier2'() {}
 				'enumLiteral Not An Identifier'() {}
 				static get n4type() {
-					return $getReflectionForClass(this, '["Partially","__synthetic0","test"]');
+					return $getReflectionForClass(this, '["Partially","__synthetic0","«MockWorkspaceSupplier.TEST_PROJECT__NAME»"]');
 				}
 			}
 			class NotAtAll extends N4Object {
@@ -112,7 +113,7 @@ class SimplifyTransformationTest extends AbstractTranspilerTest {
 				[21 * 2]() {}
 				[Symbol.iterator]() {}
 				static get n4type() {
-					return $getReflectionForClass(this, '["NotAtAll","__synthetic0","test",["m.#iterator"]]');
+					return $getReflectionForClass(this, '["NotAtAll","__synthetic0","«MockWorkspaceSupplier.TEST_PROJECT__NAME»",["m.#iterator"]]');
 				}
 			}
 		''');

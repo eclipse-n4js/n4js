@@ -11,8 +11,7 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import java.math.BigDecimal
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -20,6 +19,7 @@ import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.tests.helper.mock.MockWorkspaceSupplier
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
@@ -34,7 +34,7 @@ import static extension org.junit.Assert.*
 /**
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ArrowFunctionTest extends AbstractTranspilerTest {
 
@@ -144,7 +144,7 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 				}
 				notifyListeners() {}
 				static get n4type() {
-					return $getReflectionForClass(this,'["C","A","test",["f._data","f.argsTotal"]]');
+					return $getReflectionForClass(this,'["C","A","«MockWorkspaceSupplier.TEST_PROJECT__NAME»",["f._data","f.argsTotal"]]');
 				}
 			}
 		''';
@@ -152,7 +152,7 @@ class ArrowFunctionTest extends AbstractTranspilerTest {
 	 	// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet);
+   		val Script scriptNode = script.parse(toTestProjectURI("A.n4js"),resSet);
 		scriptNode.resolveLazyRefs;
 
 		assertCompileResult(scriptNode,moduleWrapped);

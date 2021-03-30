@@ -20,13 +20,13 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.documentation.N4JSDocumentationProvider;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.TerminalRule;

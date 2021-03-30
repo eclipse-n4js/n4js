@@ -20,10 +20,10 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.UserDataMapper;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.ISynchronizable;
@@ -42,7 +42,7 @@ import com.google.inject.Singleton;
 public class CanLoadFromDescriptionHelper {
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * Tells whether the load-from-source behavior is entirely deactivated.
@@ -115,7 +115,7 @@ public class CanLoadFromDescriptionHelper {
 				}
 			}
 		}
-		return dependsOnAny(resourceURI, sourceURIs, getIndex(resourceSet), true);
+		return dependsOnAny(resourceURI, sourceURIs, resourceSet, getIndex(resourceSet), true);
 	}
 
 	/**
@@ -123,10 +123,12 @@ public class CanLoadFromDescriptionHelper {
 	 * definition of "dependencies", see {@link UserDataMapper#readDependenciesFromDescription(IResourceDescription)}.
 	 */
 	public boolean dependsOnAny(Resource resource, Set<URI> others) {
+		ResourceSet resourceSet = resource.getResourceSet();
 		if (dependsOnAny(
 				resource.getURI(),
 				others,
-				getIndex(resource.getResourceSet()),
+				resourceSet,
+				getIndex(resourceSet),
 				false)) {
 			return true;
 		}
@@ -137,7 +139,7 @@ public class CanLoadFromDescriptionHelper {
 	 * Facade to access the index from subclasses.
 	 */
 	protected IResourceDescriptions getIndex(ResourceSet resourceSet) {
-		return n4jsCore.getXtextIndex(resourceSet);
+		return workspaceAccess.getXtextIndex(resourceSet).orNull();
 	}
 
 	/**
@@ -145,12 +147,14 @@ public class CanLoadFromDescriptionHelper {
 	 *
 	 * @param thisURI
 	 *            the resource
+	 * @param context
+	 *            the context resource set used for obtaining the workspace configuration.
 	 * @param index
 	 *            the index to be used
 	 * @return true, if this resource is part of a cycle.
 	 */
-	public boolean isPartOfDependencyCycle(URI thisURI, IResourceDescriptions index) {
-		return dependsOnAny(thisURI, Collections.singleton(thisURI), index, true);
+	public boolean isPartOfDependencyCycle(URI thisURI, ResourceSet context, IResourceDescriptions index) {
+		return dependsOnAny(thisURI, Collections.singleton(thisURI), context, index, true);
 	}
 
 	/**
@@ -167,20 +171,22 @@ public class CanLoadFromDescriptionHelper {
 	 *            the URI under consideration.
 	 * @param candidates
 	 *            the URIs to be checked against
+	 * @param context
+	 *            the context resource set used for obtaining the workspace configuration.
 	 * @param index
 	 *            the index to be used.
 	 * @param considerOnlySameProject
 	 *            flag to consider / ignore project boundaries.
 	 * @return true, if this resource has a transitive dependency to any of the others.
 	 */
-	protected boolean dependsOnAny(URI thisURI, Set<URI> candidates, IResourceDescriptions index,
+	protected boolean dependsOnAny(URI thisURI, Set<URI> candidates, ResourceSet context, IResourceDescriptions index,
 			boolean considerOnlySameProject) {
-		IN4JSProject thisProject = null;
+		N4JSProjectConfigSnapshot thisProject = null;
 		if (considerOnlySameProject && !candidates.isEmpty()) {
 			// early check whether the candidates stem from the same project as the requested thisURI
 			// (note: this is based on the assumption that there cannot be a cyclic dependency between modules of
 			// different projects, because cyclic dependencies between projects are disallowed)
-			thisProject = n4jsCore.findProject(thisURI).orNull();
+			thisProject = workspaceAccess.findProjectByNestedLocation(context, thisURI);
 			candidates = filterCandidatesByProject(candidates, thisProject);
 		}
 		// are there any relevant candidates at all?
@@ -226,7 +232,7 @@ public class CanLoadFromDescriptionHelper {
 		return false;
 	}
 
-	private Set<URI> filterCandidatesByProject(Set<URI> candidates, IN4JSProject project) {
+	private Set<URI> filterCandidatesByProject(Set<URI> candidates, N4JSProjectConfigSnapshot project) {
 		if (project == null) {
 			return Collections.emptySet();
 		}
@@ -235,8 +241,8 @@ public class CanLoadFromDescriptionHelper {
 				.toSet();
 	}
 
-	private boolean projectContainsURI(IN4JSProject project, URI candidate) {
-		return project.equals(n4jsCore.findProject(candidate).orNull());
+	private boolean projectContainsURI(N4JSProjectConfigSnapshot project, URI candidate) {
+		return project.findSourceFolderContaining(candidate) != null;
 	}
 
 	private Optional<List<String>> readDirectDependencies(IResourceDescriptions index, URI next) {

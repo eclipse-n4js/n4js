@@ -10,10 +10,8 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * Some operations {@link ExpressionExtensions#isBothReadFromAndWrittenTo(org.eclipse.emf.ecore.EObject) require both

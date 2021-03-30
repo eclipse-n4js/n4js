@@ -12,14 +12,18 @@ package org.eclipse.n4js.ide.server.build;
 
 import java.util.List;
 
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceContainerForPackageJson;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfig.SourceFolderSnapshotForPackageJson;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
+import org.eclipse.n4js.workspace.IN4JSSourceFolder;
+import org.eclipse.n4js.workspace.N4JSProjectConfig;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderForPackageJson;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshotForPackageJson;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
-import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.XIProjectConfig;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -33,29 +37,35 @@ import com.google.common.collect.Lists;
 public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 
 	@Override
-	public ProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
-		IN4JSProject project = ((N4JSProjectConfig) projectConfig).toProject();
+	public N4JSWorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path, ProjectSet projects,
+			BuildOrderInfo buildOrderInfo) {
 
-		List<String> sortedDependencies = Lists.transform(project.getSortedDependencies(),
-				p -> p.getProjectName().getRawName());
+		return new N4JSWorkspaceConfigSnapshot(path, projects, buildOrderInfo);
+	}
+
+	@Override
+	public N4JSProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
+		N4JSProjectConfig projectConfigCasted = (N4JSProjectConfig) projectConfig;
+
+		List<String> semanticDependencies = Lists.transform(projectConfigCasted.computeSemanticDependencies(),
+				ProjectDependency::getProjectName);
 
 		return new N4JSProjectConfigSnapshot(
-				projectConfig.getName(),
+				projectConfigCasted.getProjectDescription(),
 				projectConfig.getPath(),
-				project.getProjectType(),
-				project.getDefinesPackageName(),
 				projectConfig.indexOnly(),
 				projectConfig.isGeneratorEnabled(),
-				projectConfig.getDependencies(),
-				sortedDependencies,
+				semanticDependencies,
 				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot));
 	}
 
 	@Override
-	public SourceFolderSnapshot createSourceFolderSnapshot(ISourceFolder sourceFolder) {
-		if (sourceFolder instanceof SourceContainerForPackageJson) {
-			return new SourceFolderSnapshotForPackageJson((SourceContainerForPackageJson) sourceFolder);
+	public N4JSSourceFolderSnapshot createSourceFolderSnapshot(ISourceFolder sourceFolder) {
+		if (sourceFolder instanceof N4JSSourceFolderForPackageJson) {
+			return new N4JSSourceFolderSnapshotForPackageJson((N4JSSourceFolderForPackageJson) sourceFolder);
 		}
-		return super.createSourceFolderSnapshot(sourceFolder);
+		IN4JSSourceFolder sourceFolderCasted = (IN4JSSourceFolder) sourceFolder;
+		return new N4JSSourceFolderSnapshot(sourceFolder.getName(), sourceFolder.getPath(),
+				sourceFolderCasted.getType(), sourceFolderCasted.getRelativePath());
 	}
 }

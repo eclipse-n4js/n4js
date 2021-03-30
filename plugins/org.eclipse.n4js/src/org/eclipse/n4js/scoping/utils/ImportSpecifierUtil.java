@@ -10,40 +10,15 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import java.util.Objects;
-
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.naming.QualifiedName;
 
 /**
  * Utility that computes meta information about import specifiers.
  */
 public class ImportSpecifierUtil {
-
-	/** Returns provided project or one of its dependencies with matching project ID. */
-	public static IN4JSProject getDependencyWithID(N4JSProjectName projectName, IN4JSProject project) {
-		if (Objects.equals(project.getProjectName(), projectName))
-			return project;
-
-		for (IN4JSProject p : project.getDependencies()) {
-			if (Objects.equals(p.getProjectName(), projectName))
-				return p;
-		}
-		return null;
-	}
-
-	/**
-	 * Convenience method over {@link ImportSpecifierUtil#computeImportType(QualifiedName, boolean, IN4JSProject)}
-	 */
-	public static ModuleSpecifierForm computeImportType(QualifiedName name, IN4JSProject project) {
-		final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
-		final IN4JSProject targetProject = getDependencyWithID(firstSegment, project);
-		final boolean firstSegmentIsProjectName = targetProject != null;
-		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
-	}
 
 	/**
 	 * Computes {@link ModuleSpecifierForm} for a given name in the given project.
@@ -57,7 +32,7 @@ public class ImportSpecifierUtil {
 	 * @return the {@link ModuleSpecifierForm}
 	 */
 	public static ModuleSpecifierForm computeImportType(QualifiedName name, boolean useProjectName,
-			IN4JSProject project) {
+			N4JSProjectConfigSnapshot project) {
 		if (useProjectName) {
 			// PRIORITY 1: 'name' is a complete module specifier, i.e. projectName+'/'+moduleSpecifier
 			// -> search all Xtext index entries that match moduleSpecifier and filter by projectName
@@ -83,8 +58,8 @@ public class ImportSpecifierUtil {
 		return ModuleSpecifierForm.PLAIN;
 	}
 
-	/** returns qualified name of the {@link IN4JSProject#getMainModule() } */
-	public static QualifiedName getMainModuleOfProject(IN4JSProject project) {
+	/** returns qualified name of the {@link N4JSProjectConfigSnapshot#getMainModule() main module}. */
+	public static QualifiedName getMainModuleOfProject(N4JSProjectConfigSnapshot project) {
 		if (project != null) {
 			final String mainModuleSpec = project.getMainModule();
 			if (mainModuleSpec != null) {

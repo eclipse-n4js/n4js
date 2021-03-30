@@ -10,14 +10,15 @@
  */
 package org.eclipse.n4js.utils;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -32,7 +33,7 @@ import com.google.inject.Singleton;
 @Singleton
 public final class EObjectDescriptionHelper {
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
@@ -44,11 +45,11 @@ public final class EObjectDescriptionHelper {
 	 * Returns <code>true</code> only if provided {@link IEObjectDescription description} has the same
 	 * {@link QualifiedName} as module of the {@link EObject}. Additionally if {@link IEObjectDescription description}
 	 * describes {@link TModule#isMainModule() main module} then it is checked if both are contained in the same
-	 * {@link IN4JSProject}.
+	 * {@link N4JSProjectConfigSnapshot}.
 	 *
 	 * @returns true if {@link IEObjectDescription} describes module of {@link EObject}
 	 */
-	public boolean isDescriptionOfModuleWith(IEObjectDescription eoDescription, EObject eObject) {
+	public boolean isDescriptionOfModuleWith(Notifier context, IEObjectDescription eoDescription, EObject eObject) {
 		// check if module names are the same
 		final Script containingScript = EcoreUtil2.getContainerOfType(eObject, Script.class);
 		final TModule containingModule = containingScript != null ? containingScript.getModule() : null;
@@ -70,8 +71,10 @@ public final class EObjectDescriptionHelper {
 			return false;
 		}
 
-		final IN4JSProject targetProject = n4jsCore.findProject(eoDescription.getEObjectURI()).orNull();
-		final IN4JSProject currentProject = n4jsCore.findProject(eObjectResourceURI).orNull();
+		final N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProjectByNestedLocation(context,
+				eoDescription.getEObjectURI());
+		final N4JSProjectConfigSnapshot currentProject = workspaceAccess.findProjectByNestedLocation(context,
+				eObjectResourceURI);
 
 		return targetProject == currentProject;
 	}

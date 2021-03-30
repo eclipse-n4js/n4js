@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	 Workspace {
+		Project "PolyfillTest" {
+			Folder "src" {
+				ThisFile {}
+				File "F.n4jsd" {}
+				File "P1.n4jsd" {}
+				File "P2.n4jsd" {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+
+var f : F<string> = new F<string>();
+var s : string;
+
+// XPECT noerrors --> "bind to original def"
+s = f.initialMethod();
+// XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
+s = f.additionalMethod();
+// XPECT noerrors --> No error expected: "bind to polyfile in P1"
+s = f.additionalMethod1();
+// XPECT noerrors --> No error expected: "bind to polyfile in P2"
+s = f.additionalMethod2();

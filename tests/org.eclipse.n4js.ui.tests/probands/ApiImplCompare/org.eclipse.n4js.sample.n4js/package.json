@@ -1,0 +1,23 @@
+{
+  "name": "org.eclipse.n4js.sample.n4js",
+  "version": "0.0.1",
+  "dependencies": {
+    "n4js-runtime": "",
+    "org.eclipse.n4js.sample.utils": "*"
+  },
+  "n4js": {
+    "projectType": "library",
+    "vendorId": "org.eclipse.n4js",
+    "vendorName": "Eclipse N4JS Project",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src"
+      ]
+    },
+    "implementationId": "impl.n4js",
+    "implementedProjects": [
+      "org.eclipse.n4js.sample.api"
+    ]
+  }
+}

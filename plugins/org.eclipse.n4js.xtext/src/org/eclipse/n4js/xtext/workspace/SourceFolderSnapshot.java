@@ -73,6 +73,6 @@ public class SourceFolderSnapshot extends Snapshot {
 
 	@Override
 	public String toString() {
-		return "SourceFolderSnapshot [name=" + name + ", path=" + path + "]";
+		return getClass().getSimpleName() + " { name: " + name + ", path: " + path + " }";
 	}
 }

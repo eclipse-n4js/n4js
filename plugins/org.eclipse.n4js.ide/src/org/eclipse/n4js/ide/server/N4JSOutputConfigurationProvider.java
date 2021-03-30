@@ -17,10 +17,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.resource.impl.ProjectDescription;
@@ -35,20 +34,11 @@ import com.google.inject.Singleton;
 public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider {
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations() {
-		Set<OutputConfiguration> outputConfs = new HashSet<>();
-
-		for (IN4JSProject prj : n4jsCore.findAllProjects()) {
-			OutputConfiguration outputConfiguration = getOutputConfiguration(prj);
-			if (outputConfiguration != null) {
-				outputConfs.add(outputConfiguration);
-			}
-		}
-
-		return outputConfs;
+		return getOutputConfigurationSet(null); // returns a default configuration
 	}
 
 	@Override
@@ -56,19 +46,19 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 		EList<Resource> resources = context.getResources();
 		if (resources.isEmpty()) {
 			ProjectDescription description = ProjectDescription.findInEmfObject(context);
-			IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(description.getName())).orNull();
-			return getOutputConfigurationSet(project);
+			N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(context, description.getName());
+			return getOutputConfigurationSet(project); // returns a default configuration if 'project' is still 'null'
 		}
 		return getOutputConfigurations(resources.get(0));
 	}
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations(Resource context) {
-		IN4JSProject project = n4jsCore.findProject(context.getURI()).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(context);
 		return getOutputConfigurationSet(project);
 	}
 
-	private Set<OutputConfiguration> getOutputConfigurationSet(IN4JSProject project) {
+	private Set<OutputConfiguration> getOutputConfigurationSet(N4JSProjectConfigSnapshot project) {
 		Set<OutputConfiguration> outputConfs = new HashSet<>();
 		OutputConfiguration outputConf = getOutputConfiguration(project);
 		if (outputConf != null) {
@@ -77,9 +67,9 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 		return outputConfs;
 	}
 
-	private OutputConfiguration getOutputConfiguration(IN4JSProject project) {
+	private OutputConfiguration getOutputConfiguration(N4JSProjectConfigSnapshot project) {
 		if (project != null
-				&& N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(project.getProjectType())) {
+				&& N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(project.getType())) {
 			return null;
 		}
 

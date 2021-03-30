@@ -28,10 +28,10 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractOrganizeImportsTest.TestOrganizeImportsConfiguration;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 

@@ -17,10 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
 /**
@@ -54,50 +51,44 @@ public class BuildOrderFactory {
 	 * {@link WorkspaceConfigSnapshot}
 	 */
 	public BuildOrderInfo createBuildOrderInfo(WorkspaceConfigSnapshot workspaceConfig) {
-		return createBuildOrderInfo(workspaceConfig.name2Project);
+		return createBuildOrderInfo(workspaceConfig.projects);
 	}
 
 	/**
 	 * Creates a new instance of {@link BuildOrderInfo}. Computes the build order of the given
 	 * {@link WorkspaceConfigSnapshot}
 	 */
-	public BuildOrderInfo createBuildOrderInfo(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project) {
-		Multimap<String, ProjectConfigSnapshot> pInversedDependencies = HashMultimap.create();
+	public BuildOrderInfo createBuildOrderInfo(ProjectSet projects) {
 		List<ProjectConfigSnapshot> pSortedProjects = new ArrayList<>();
 		Set<ImmutableList<String>> pProjectCycles = new HashSet<>();
 
-		buildOrderInfoComputer.init(name2Project, pInversedDependencies, pSortedProjects, pProjectCycles);
+		buildOrderInfoComputer.init(projects, pSortedProjects, pProjectCycles);
 
-		return createNewProjectBuildOrderInfo(pInversedDependencies, pSortedProjects, pProjectCycles);
+		return createNewProjectBuildOrderInfo(pSortedProjects, pProjectCycles);
 	}
 
 	/** Creates new instance of {@link BuildOrderInfo} */
 	protected BuildOrderInfo createNewProjectBuildOrderInfo(
-			Multimap<String, ProjectConfigSnapshot> pInversedDependencies,
 			List<ProjectConfigSnapshot> pSortedProjects, Set<ImmutableList<String>> pProjectCycles) {
 
-		return new BuildOrderInfo(pInversedDependencies, pSortedProjects, pProjectCycles);
+		return new BuildOrderInfo(pSortedProjects, pProjectCycles);
 	}
 
 	/** Computes all collections for {@link BuildOrderInfo} */
 	public static class BuildOrderInfoComputer {
 
 		/** Populates {@code #pSortedProjects}, {@code #pInversedDependencies} and {@code pProjectCycles} */
-		protected void init(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
-				Multimap<String, ProjectConfigSnapshot> pInversedDependencies,
+		protected void init(ProjectSet projects,
 				List<ProjectConfigSnapshot> pSortedProjects,
 				Collection<ImmutableList<String>> pProjectCycles) {
 
 			LinkedHashSet<String> orderedProjectNames = new LinkedHashSet<>();
-			for (ProjectConfigSnapshot pc : getAllProjects(name2Project)) {
-				for (String dependencyName : getDependencies(pc)) {
-					pInversedDependencies.put(dependencyName, pc);
-				}
-				computeOrder(name2Project, pProjectCycles, pc, orderedProjectNames, new LinkedHashSet<>());
+			for (ProjectConfigSnapshot pc : getAllProjects(projects)) {
+				computeOrder(projects, pProjectCycles, pc, orderedProjectNames, new LinkedHashSet<>());
 			}
 
 			for (String projectName : orderedProjectNames) {
-				ProjectConfigSnapshot pc = findProjectByName(name2Project, projectName);
+				ProjectConfigSnapshot pc = findProjectByName(projects, projectName);
 				if (pc != null) {
 					pSortedProjects.add(pc);
 				}
@@ -105,9 +96,8 @@ public class BuildOrderFactory {
 		}
 
 		/** Computes the build order of all projects in the workspace */
-		protected void computeOrder(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
-				Collection<ImmutableList<String>> pProjectCycles, ProjectConfigSnapshot pc,
-				LinkedHashSet<String> orderedProjects, LinkedHashSet<String> projectStack) {
+		protected void computeOrder(ProjectSet projects, Collection<ImmutableList<String>> pProjectCycles,
+				ProjectConfigSnapshot pc, LinkedHashSet<String> orderedProjects, LinkedHashSet<String> projectStack) {
 
 			String pdName = pc.getName();
 			if (orderedProjects.contains(pdName)) {
@@ -122,9 +112,9 @@ public class BuildOrderFactory {
 				projectStack.add(pdName);
 
 				for (String depName : getDependencies(pc)) {
-					ProjectConfigSnapshot depPC = findProjectByName(name2Project, depName);
+					ProjectConfigSnapshot depPC = findProjectByName(projects, depName);
 					if (depPC != null) {
-						computeOrder(name2Project, pProjectCycles, depPC, orderedProjects, projectStack);
+						computeOrder(projects, pProjectCycles, depPC, orderedProjects, projectStack);
 					}
 				}
 
@@ -134,17 +124,13 @@ public class BuildOrderFactory {
 		}
 
 		/** Returns all projects of the given {@link WorkspaceConfigSnapshot}. */
-		protected Collection<? extends ProjectConfigSnapshot> getAllProjects(
-				ImmutableBiMap<String, ProjectConfigSnapshot> name2Project) {
-
-			return name2Project.values();
+		protected Collection<? extends ProjectConfigSnapshot> getAllProjects(ProjectSet projects) {
+			return projects.getProjects();
 		}
 
 		/** Find the project with the given name. */
-		protected ProjectConfigSnapshot findProjectByName(ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
-				String name) {
-
-			return name2Project.get(name);
+		protected ProjectConfigSnapshot findProjectByName(ProjectSet projects, String name) {
+			return projects.findProjectByName(name);
 		}
 
 		/**

@@ -13,7 +13,7 @@ package org.eclipse.n4js.naming;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject;
+import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -32,8 +32,8 @@ import com.google.inject.Provider;
 
 /**
  */
-@InjectWith(N4JSInjectorProviderWithMockProject.class)
 @RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProvider.class)
 public class ResourceNameComputerTest {
 
 	@Inject
@@ -51,8 +51,9 @@ public class ResourceNameComputerTest {
 	@SuppressWarnings("javadoc")
 	@Before
 	public void prepare() throws Exception {
-		URI fileUri = URIUtils.toFileUri("p/C.n4js");
-		this.script = parserHelper.parse("class C{}", fileUri, resourceSetProvider.get());
+		XtextResourceSet rs = resourceSetProvider.get();
+		URI fileUri = rs.getURIConverter().normalize(URIUtils.toFileUri("src/p/C.n4js"));
+		this.script = parserHelper.parse("class C {}", fileUri, rs);
 		this.module = script.getModule();
 		this.type = module.getTopLevelTypes().get(0);
 	}

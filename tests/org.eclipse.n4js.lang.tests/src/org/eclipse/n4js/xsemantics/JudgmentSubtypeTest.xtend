@@ -15,6 +15,7 @@ import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.N4JSTestHelper
 import org.eclipse.n4js.WildcardCaptureTestHelper
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.tests.issues.IssueUtils
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -82,7 +83,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 		assertEquals(#[
 			"ERROR:Couldn't resolve reference to Type 'Unknown1'. (__synthetic0.n4js line : 1 column : 8)",
 			"ERROR:Couldn't resolve reference to Type 'Unknown2'. (__synthetic0.n4js line : 2 column : 8)"
-		], script.validate.map[toString]);
+		], script.validate.map[IssueUtils.toString(it)]);
 
 		val lastTwoVars = script.scriptElements.reverseView.subList(0, 2)
 		val firstType = lastTwoVars.head.variableStatementDeclaredType
@@ -100,7 +101,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 		'''.parse
 		assertEquals(#[
 			"ERROR:Couldn't resolve reference to Type 'Unknown'. (__synthetic0.n4js line : 2 column : 8)"
-		], script.validate.map[toString]);
+		], script.validate.map[IssueUtils.toString(it)]);
 
 		val lastTwoVars = script.scriptElements.reverseView.subList(0, 2)
 		val firstType = lastTwoVars.head.variableStatementDeclaredType
@@ -118,7 +119,7 @@ class JudgmentSubtypeTest extends AbstractTypesystemTest {
 		'''.parse
 		assertEquals(#[
 			"ERROR:Couldn't resolve reference to Type 'Unknown'. (__synthetic0.n4js line : 1 column : 8)"
-		], script.validate.map[toString]);
+		], script.validate.map[IssueUtils.toString(it)]);
 
 		val lastTwoVars = script.scriptElements.reverseView.subList(0, 2)
 		val firstType = lastTwoVars.head.variableStatementDeclaredType

@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.tests.helper.mock.MockWorkspaceSupplier
 import org.eclipse.n4js.transpiler.PreparationStep
 import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator
@@ -62,6 +63,7 @@ abstract class AbstractTranspilerTest {
 	@Inject protected extension N4JSTestHelper;
 	@Inject protected extension N4JSParseHelper;
 	@Inject protected extension ValidationTestHelper;
+	@Inject private MockWorkspaceSupplier mockWorkspace;
 
 	@Inject private Provider<XtextResourceSet> resourceSetProvider;
 	@Inject private PreparationStep preparationStep;
@@ -243,7 +245,7 @@ abstract class AbstractTranspilerTest {
 	def protected Script createScript(CharSequence code, ResourceSet resourceSet) {
 		try {
 			if(resourceSet!==null) {
-				return code.parse(URI.createURI("src/Main.n4js"), resourceSet);
+				return code.parse(toTestProjectURI("Main.n4js"), resourceSet);
 			} else {
 				return code.parseN4js;
 			}
@@ -270,8 +272,8 @@ abstract class AbstractTranspilerTest {
 		} else {
 			N4JSGlobals.N4JSD_FILE_EXTENSION
 		};
-		val uriStr = "src" + (if(!name.startsWith("/")) "/" else "") + name + "." + fileExt;
-		val uri = URI.createURI(uriStr);
+		val uriStr = (if(!name.startsWith("/")) "/" else "") + name + "." + fileExt;
+		val uri = toTestProjectURI(uriStr);
 		try {
 			code.resource(uri, resourceSet);
 		} catch(Exception e) {
@@ -346,7 +348,7 @@ abstract class AbstractTranspilerTest {
    		export public class C1 { public m1(){} }
    		export public class C2 { public m2(){} }
    		'''
-   		val exported = exportedScript.resource(URI.createURI("src/ExportedStuff."+N4JSGlobals.N4JS_FILE_EXTENSION));
+   		val exported = exportedScript.resource(toTestProjectURI("ExportedStuff."+N4JSGlobals.N4JS_FILE_EXTENSION));
 		val resSet = exported.resourceSet;
 		return resSet;
 	}
@@ -354,13 +356,13 @@ abstract class AbstractTranspilerTest {
 
 	/** Install the content as 'srcJsScript_01.js' */
 	def Resource installJSScript(String jsScript) throws Throwable {
-   		val res = jsScript.resource(URI.createURI("src/JsScript_01."+N4JSGlobals.JS_FILE_EXTENSION));
+   		val res = jsScript.resource(toTestProjectURI("JsScript_01."+N4JSGlobals.JS_FILE_EXTENSION));
 		return res;
 	}
 
 	/** Install the content as 'srcJsxScript_01.jsx' */
 	def Resource installJSXScript(String jsxScript) throws Throwable {
-   		val res = jsxScript.resource(URI.createURI("src/JsxScript_01."+N4JSGlobals.JSX_FILE_EXTENSION));
+   		val res = jsxScript.resource(toTestProjectURI("JsxScript_01."+N4JSGlobals.JSX_FILE_EXTENSION));
 		return res;
 	}
 
@@ -391,5 +393,9 @@ abstract class AbstractTranspilerTest {
 		val generatedResult = esSubGen.getCompileResultAsText(scriptNode, GENERATOR_OPTIONS);
 		val matcher = pattern.matcher(generatedResult);
 		if( matcher.find ) throw new AssertionError("The generated output unexpectedly matches the pattern "+pattern.toString );
+	}
+
+	def URI toTestProjectURI(String projectRelativePath) {
+		return mockWorkspace.toTestProjectURI(projectRelativePath);
 	}
 }

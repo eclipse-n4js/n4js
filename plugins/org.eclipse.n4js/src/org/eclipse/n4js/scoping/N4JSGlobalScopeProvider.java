@@ -13,6 +13,7 @@ package org.eclipse.n4js.scoping;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
@@ -89,7 +90,7 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 	 * <p>
 	 * This method is called for every container the current project depends on according to the settings in the project
 	 * description file. This information has been indirectly retrieved via
-	 * {@link org.eclipse.n4js.projectModel.IN4JSProject#getDependencies()}.
+	 * {@link ProjectDescription#getProjectDependencies()}.
 	 */
 	@Override
 	protected IScope createContainerScopeWithContext(Resource resource, IScope parent, IContainer container,

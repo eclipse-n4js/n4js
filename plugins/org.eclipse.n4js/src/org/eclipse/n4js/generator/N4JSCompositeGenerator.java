@@ -17,10 +17,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 
 import com.google.inject.Inject;
@@ -36,7 +36,7 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	private static final Logger LOGGER = Logger.getLogger(N4JSCompositeGenerator.class);
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private SubGeneratorRegistry subGeneratorRegistry;
@@ -71,23 +71,22 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	@Override
 	public boolean isApplicableTo(Resource input) {
 		// Skip external resource
-		if (isExternalLocation(input.getURI())) {
+		if (isExternalLocation(input)) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.info("Skipped generation for external resource: " + input.getURI());
 			}
 			return false;
 		}
-		// This composite generator is applicable to the input resource if the resource is in a N4JS source
-		// container
-		com.google.common.base.Optional<? extends IN4JSSourceContainer> n4jsContainer = n4jsCore
-				.findN4JSSourceContainer(input.getURI());
-		return (n4jsContainer.isPresent());
+		// This composite generator is applicable to the input resource if the resource is in an N4JS source folder
+		N4JSSourceFolderSnapshot n4jsContainer = workspaceAccess.findSourceFolderContaining(input, input.getURI());
+		return n4jsContainer != null;
 	}
 
-	private boolean isExternalLocation(final URI uri) {
+	private boolean isExternalLocation(final Resource input) {
+		URI uri = input.getURI();
 		if (null != uri && uri.isFile()) {
-			final IN4JSProject project = n4jsCore.findProject(uri).orNull();
-			return null != project && project.exists() && project.isExternal();
+			final N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(input);
+			return null != project && project.isExternal();
 		}
 		return false;
 	}

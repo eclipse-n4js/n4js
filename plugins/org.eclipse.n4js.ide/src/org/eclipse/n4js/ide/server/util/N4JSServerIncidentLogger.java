@@ -26,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.n4js.xtext.server.DebugService;
-import org.eclipse.n4js.xtext.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.xtext.ide.server.DebugService;
+import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 
 import com.google.common.base.Throwables;
 import com.google.inject.Inject;

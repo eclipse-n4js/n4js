@@ -16,10 +16,10 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSONGlobals
 import org.eclipse.n4js.json.JSONParseHelper
 import org.eclipse.n4js.packagejson.PackageJsonHelper
-import org.eclipse.n4js.projectDescription.ModuleFilterType
-import org.eclipse.n4js.projectDescription.ProjectDescription
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType
 import org.eclipse.n4js.semver.Semver.TagVersionRequirement
 import org.eclipse.n4js.semver.Semver.VersionRangeSetRequirement
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
@@ -134,12 +134,12 @@ class PackageJsonHelperTest {
 		assertEquals(1, pd.moduleFilters.size);
 		val mf0 = pd.moduleFilters.get(0);
 
-		assertEquals(ModuleFilterType.NO_VALIDATE, mf0.moduleFilterType);
-		assertEquals(2, mf0.moduleSpecifiers.size);
-		assertEquals(null, mf0.moduleSpecifiers.get(0).sourcePath);
-		assertEquals("abc*", mf0.moduleSpecifiers.get(0).moduleSpecifierWithWildcard);
-		assertEquals("src", mf0.moduleSpecifiers.get(1).sourcePath);
-		assertEquals("def*", mf0.moduleSpecifiers.get(1).moduleSpecifierWithWildcard);
+		assertEquals(ModuleFilterType.NO_VALIDATE, mf0.getType);
+		assertEquals(2, mf0.getSpecifiers.size);
+		assertEquals(null, mf0.getSpecifiers.get(0).sourcePath);
+		assertEquals("abc*", mf0.getSpecifiers.get(0).getSpecifierWithWildcard);
+		assertEquals("src", mf0.getSpecifiers.get(1).sourcePath);
+		assertEquals("def*", mf0.getSpecifiers.get(1).getSpecifierWithWildcard);
 	}
 
 	@Test
@@ -174,11 +174,11 @@ class PackageJsonHelperTest {
 		val sc1 = pd.sourceContainers.get(1);
 		val sc2 = pd.sourceContainers.get(2);
 
-		assertEquals(SourceContainerType.EXTERNAL, sc0.sourceContainerType);
+		assertEquals(SourceContainerType.EXTERNAL, sc0.getType);
 		assertEquals(#[ "src-ext1", "src-ext2" ], sc0.paths);
-		assertEquals(SourceContainerType.SOURCE, sc1.sourceContainerType);
+		assertEquals(SourceContainerType.SOURCE, sc1.getType);
 		assertEquals(#[ "src1", "src2" ], sc1.paths);
-		assertEquals(SourceContainerType.TEST, sc2.sourceContainerType);
+		assertEquals(SourceContainerType.TEST, sc2.getType);
 		assertEquals(#[ "src-test1", "src-test2" ], sc2.paths);
 	}
 
@@ -256,14 +256,14 @@ class PackageJsonHelperTest {
 
 
 	def private assertCorrectDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
-		assertEquals(DEFAULT_PROJECT_ID, pd.projectName);
-		assertEquals(VERSION.defaultValue, pd.projectVersion.toString);
+		assertEquals(DEFAULT_PROJECT_ID, pd.getName);
+		assertEquals(VERSION.defaultValue, pd.getVersion.toString);
 		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
 		assertEquals(null, pd.vendorName);
 		if(hasDefaultProjectType) {
-			assertEquals(ProjectType.PLAINJS, pd.projectType);
+			assertEquals(ProjectType.PLAINJS, pd.getType);
 		} else {
-			assertNotEquals(ProjectType.PLAINJS, pd.projectType);
+			assertNotEquals(ProjectType.PLAINJS, pd.getType);
 		}
 		assertEquals(MAIN_MODULE.defaultValue, pd.mainModule);
 		assertEquals(null, pd.extendedRuntimeEnvironment);
@@ -281,7 +281,7 @@ class PackageJsonHelperTest {
 		// expect a single source container of type "source" with path "."
 		assertEquals(1, pd.sourceContainers.size);
 		assertEquals(#["."], pd.sourceContainers.head.paths);
-		assertEquals(SourceContainerType.SOURCE, pd.sourceContainers.head.sourceContainerType);
+		assertEquals(SourceContainerType.SOURCE, pd.sourceContainers.head.getType);
 	}
 
 

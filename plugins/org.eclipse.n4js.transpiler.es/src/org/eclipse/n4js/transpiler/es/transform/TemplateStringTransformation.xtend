@@ -12,7 +12,6 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.common.collect.Lists
 import java.util.ArrayList
-import org.eclipse.n4js.conversion.ValueConverterUtils
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedAccess
@@ -20,6 +19,7 @@ import org.eclipse.n4js.n4JS.PrimaryExpression
 import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
+import org.eclipse.n4js.parser.conversion.ValueConverterUtils
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 

@@ -18,8 +18,8 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONFactory
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType
 
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES

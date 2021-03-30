@@ -12,17 +12,12 @@ package org.eclipse.n4js.xtext.workspace;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
-import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -38,7 +33,12 @@ public class ConfigSnapshotFactory {
 	@Inject
 	protected BuildOrderFactory buildOrderFactory;
 
-	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
+	/** Creates an empty instance of {@link WorkspaceConfigSnapshot} representing an empty workspace. */
+	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path) {
+		return createWorkspaceConfigSnapshot(path, Collections.emptyList());
+	}
+
+	/** Creates an instance of {@link WorkspaceConfigSnapshot} representing the current workspace. */
 	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(XIWorkspaceConfig workspaceConfig) {
 		List<? extends XIProjectConfig> projects = new ArrayList<>(workspaceConfig.getProjects());
 		List<ProjectConfigSnapshot> projectSnapshots = Lists.transform(projects, this::createProjectConfigSnapshot);
@@ -46,50 +46,28 @@ public class ConfigSnapshotFactory {
 		return createWorkspaceConfigSnapshot(workspaceConfig.getPath(), projectSnapshots);
 	}
 
-	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
+	/** Creates an instance of {@link WorkspaceConfigSnapshot} for the given project snapshots. */
 	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
 			Iterable<? extends ProjectConfigSnapshot> projects) {
 
-		Map<String, ProjectConfigSnapshot> lookupName2Project = new LinkedHashMap<>();
-		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new LinkedHashMap<>();
-		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new LinkedHashMap<>();
-		updateWorkspaceConfigSnapshotLookupMaps(lookupName2Project, lookupProjectPath2Project,
-				lookupSourceFolderPath2Project, projects, Collections.emptyList());
-
-		return createWorkspaceConfigSnapshot(path,
-				ImmutableBiMap.copyOf(lookupName2Project),
-				ImmutableMap.copyOf(lookupProjectPath2Project),
-				ImmutableMap.copyOf(lookupSourceFolderPath2Project));
+		ProjectSet projectSet = createProjectSet(projects);
+		return createWorkspaceConfigSnapshot(path, projectSet);
 	}
 
-	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
-	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(WorkspaceConfigSnapshot snapshot) {
-
-		return createWorkspaceConfigSnapshot(snapshot.path,
-				snapshot.name2Project, snapshot.projectPath2Project, snapshot.sourceFolderPath2Project);
+	/** Creates an instance of {@link WorkspaceConfigSnapshot} for the given project snapshots. */
+	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path, ProjectSet projects) {
+		BuildOrderInfo buildOrderInfo = buildOrderFactory.createBuildOrderInfo(projects);
+		return createWorkspaceConfigSnapshot(path, projects, buildOrderInfo);
 	}
 
-	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
-	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path) {
-		return createWorkspaceConfigSnapshot(path, ImmutableBiMap.of(), ImmutableMap.of(), ImmutableMap.of());
+	/** Creates an instance of {@link WorkspaceConfigSnapshot}. */
+	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path, ProjectSet projects,
+			BuildOrderInfo buildOrderInfo) {
+
+		return new WorkspaceConfigSnapshot(path, projects, buildOrderInfo);
 	}
 
-	/** Creates an instance of {@link WorkspaceConfigSnapshot} */
-	public WorkspaceConfigSnapshot createWorkspaceConfigSnapshot(URI path,
-			ImmutableBiMap<String, ProjectConfigSnapshot> name2Project,
-			ImmutableMap<URI, ProjectConfigSnapshot> projectPath2Project,
-			ImmutableMap<URI, ProjectConfigSnapshot> sourceFolderPath2Project) {
-
-		BuildOrderInfo buildOrderInfo = buildOrderFactory.createBuildOrderInfo(name2Project);
-
-		return new WorkspaceConfigSnapshot(path,
-				ImmutableBiMap.copyOf(name2Project),
-				ImmutableMap.copyOf(projectPath2Project),
-				ImmutableMap.copyOf(sourceFolderPath2Project),
-				buildOrderInfo);
-	}
-
-	/** Creates an instance of {@link WorkspaceConfigSnapshot} only with the path of the given snapshot */
+	/** Creates an empty instance of {@link WorkspaceConfigSnapshot} with the path of the given snapshot. */
 	public WorkspaceConfigSnapshot clear(WorkspaceConfigSnapshot wcs) {
 		return createWorkspaceConfigSnapshot(wcs.path);
 	}
@@ -99,65 +77,21 @@ public class ConfigSnapshotFactory {
 			ImmutableList<? extends ProjectConfigSnapshot> changedProjects,
 			ImmutableSet<String> removedProjects) {
 
-		Map<String, ProjectConfigSnapshot> lookupName2Project = new LinkedHashMap<>(wcs.name2Project);
-		Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project = new LinkedHashMap<>(wcs.projectPath2Project);
-		Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project = new LinkedHashMap<>(
-				wcs.sourceFolderPath2Project);
-
-		updateWorkspaceConfigSnapshotLookupMaps(lookupName2Project,
-				lookupProjectPath2Project,
-				lookupSourceFolderPath2Project,
-				changedProjects, removedProjects);
-
-		return createWorkspaceConfigSnapshot(wcs.path,
-				ImmutableBiMap.copyOf(lookupName2Project),
-				ImmutableMap.copyOf(lookupProjectPath2Project),
-				ImmutableMap.copyOf(lookupSourceFolderPath2Project));
-	}
-
-	/** Change the given lookup maps to include the given project changes and removals. */
-	protected void updateWorkspaceConfigSnapshotLookupMaps(
-			Map<String, ProjectConfigSnapshot> lookupName2Project,
-			Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project,
-			Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project,
-			Iterable<? extends ProjectConfigSnapshot> changedProjects, Iterable<String> removedProjectNames) {
-
-		// collect removed projects
-		List<ProjectConfigSnapshot> removedProjects = new ArrayList<>();
-		for (String projectName : removedProjectNames) {
-			ProjectConfigSnapshot removedProject = lookupName2Project.get(projectName);
-			if (removedProject != null) {
-				removedProjects.add(removedProject);
-			}
-		}
-
-		// apply updates for changed projects
-		for (ProjectConfigSnapshot project : changedProjects) {
-			ProjectConfigSnapshot oldProject = lookupName2Project.put(project.getName(), project);
-			if (oldProject != null) {
-				lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(oldProject.getPath()));
-				for (SourceFolderSnapshot sourceFolder : oldProject.getSourceFolders()) {
-					lookupSourceFolderPath2Project.remove(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()));
-				}
-			}
-			lookupProjectPath2Project.put(URIUtils.trimTrailingPathSeparator(project.getPath()), project);
-			for (SourceFolderSnapshot sourceFolder : project.getSourceFolders()) {
-				lookupSourceFolderPath2Project.put(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()), project);
-			}
-		}
-
-		// apply updates for removed projects
-		for (ProjectConfigSnapshot removedProject : removedProjects) {
-			lookupName2Project.remove(removedProject.getName());
-			lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(removedProject.getPath()));
-			for (SourceFolderSnapshot sourceFolder : removedProject.getSourceFolders()) {
-				lookupSourceFolderPath2Project.remove(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()));
-			}
-		}
+		ProjectSet projectSetOld = wcs.projects;
+		ProjectSet projectSetNew = updateProjectSet(projectSetOld, changedProjects, removedProjects);
+		return createWorkspaceConfigSnapshot(wcs.path, projectSetNew);
 	}
 
 	/** Creates instances of {@link ProjectConfigSnapshot} */
 	public ProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
+		Iterable<SourceFolderSnapshot> sourceFolders = Iterables.transform(projectConfig.getSourceFolders(),
+				this::createSourceFolderSnapshot);
+		return createProjectConfigSnapshot(projectConfig, sourceFolders);
+	}
+
+	/** Creates instances of {@link ProjectConfigSnapshot} */
+	public ProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig,
+			Iterable<SourceFolderSnapshot> sourceFolders) {
 		return new ProjectConfigSnapshot(
 				projectConfig.getName(),
 				projectConfig.getPath(),
@@ -165,7 +99,7 @@ public class ConfigSnapshotFactory {
 				projectConfig.indexOnly(),
 				projectConfig.isGeneratorEnabled(),
 				projectConfig.getDependencies(),
-				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot));
+				sourceFolders);
 	}
 
 	/** Creates instances of {@link SourceFolderSnapshot} */
@@ -173,4 +107,14 @@ public class ConfigSnapshotFactory {
 		return new SourceFolderSnapshot(sourceFolder.getName(), sourceFolder.getPath());
 	}
 
+	/** Creates instances of {@link ProjectSet}. */
+	public ProjectSet createProjectSet(Iterable<? extends ProjectConfigSnapshot> projects) {
+		return new ProjectSet(projects);
+	}
+
+	/** Updates the given project set by adding, changing, removing some projects. */
+	public ProjectSet updateProjectSet(ProjectSet projects,
+			Iterable<? extends ProjectConfigSnapshot> changedProjects, Iterable<String> removedProjects) {
+		return projects.update(changedProjects, removedProjects);
+	}
 }

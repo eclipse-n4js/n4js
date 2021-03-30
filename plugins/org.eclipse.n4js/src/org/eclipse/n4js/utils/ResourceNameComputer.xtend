@@ -13,19 +13,20 @@ package org.eclipse.n4js.utils
 import com.google.common.base.Strings
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.eclipse.emf.common.notify.Notifier
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 import org.eclipse.n4js.semver.Semver.VersionNumber
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
@@ -127,16 +128,16 @@ public final class ResourceNameComputer {
 
 	/**
 	 * Based on provided URI generates project in form of Project-0.0.1
-	 * Convenience method, delegates to {@link ResourceNameComputer#generateProjectDescriptor(IN4JSProject project)} with project
-	 * derived from the URI.
+	 * Convenience method, delegates to {@link ResourceNameComputer#generateProjectDescriptor(N4JSProjectConfigSnapshot project)}
+	 * with project derived from the URI.
 	 * 
 	 * @n4jsSourceURI URI from file resource
 	 */
-	def public String generateProjectDescriptor(URI n4jsSourceURI) {
-		if (N4Scheme.isN4Scheme(n4jsSourceURI)) {
+	def public String generateProjectDescriptor(Resource resource) {
+		if (N4Scheme.isN4Scheme(resource.getURI())) {
 			return N4JSGlobals.N4JS_RUNTIME.rawName;
 		}
-		val project = projectResolver.resolveProject(n4jsSourceURI)
+		val project = projectResolver.resolveProject(resource)
 		val unitPath = ""
 		formatDescriptor(project, unitPath, "-", ".", "", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, !MAKE_SIMPLE_DESCRIPTOR);
 	}
@@ -164,9 +165,9 @@ public final class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 * @fileExtension String containing desired extensions, should include dot
 	 */
-	def public String generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
-		val project = projectResolver.resolveProject(n4jsSourceURI)
-		val unitPath = projectResolver.resolvePackageAndFileName(n4jsSourceURI)
+	def public String generateFileDescriptor(Notifier context, URI n4jsSourceURI, String fileExtension) {
+		val project = projectResolver.resolveProject(context, n4jsSourceURI)
+		val unitPath = projectResolver.resolvePackageAndFileName(context, n4jsSourceURI)
 		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
 			normalizeFileExtension(fileExtension);
 	}
@@ -179,14 +180,14 @@ public final class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 * @fileExtension String containing desired extensions, should include dot
 	 */
-	def public String generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
+	def public String generateFileDescriptor(N4JSProjectConfigSnapshot project, URI n4jsSourceURI, String fileExtension) {
 		val unitPath = projectResolver.resolvePackageAndFileName(n4jsSourceURI, project)
 		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
 			normalizeFileExtension(fileExtension);
 	}
 
-	def private IN4JSProject resolveProject(TModule module) {
-		return projectResolver.resolveProject(module.eResource().getURI());
+	def private N4JSProjectConfigSnapshot resolveProject(TModule module) {
+		return projectResolver.resolveProject(module.eResource());
 	}
 
 	/** Simple normalization of provided file extension to form {@code .abc} or empty string. */
@@ -217,13 +218,13 @@ public final class ResourceNameComputer {
 	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
 	 * @param makeSimpleDescriptor  tells if simple form of descriptor is to be used.
 	 */
-	def private static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
+	def private static String formatDescriptor(N4JSProjectConfigSnapshot project, String unitPath, String sep1, String sep2,
 		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
-		var projectName = project.projectName
+		var projectName = project.n4JSProjectName
 		var path = unitPath
 		if (asJsIdentifier) {
-			projectName = new N4JSProjectName(getValidJavascriptIdentifierName(project.projectName.rawName))
+			projectName = new N4JSProjectName(getValidJavascriptIdentifierName(project.name))
 			path = getValidUnitPath(unitPath)
 		}
 

@@ -1,0 +1,145 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "overall" {
+			Folder "src" {}
+			ThisFile "package.json" {}
+		}
+	}
+
+	IssueConfiguration {
+		IssueCode "JSON_DUPLICATE_KEY" { enabled = false }
+		IssueCode "INVALID_FEATURE_FOR_PROJECT_TYPE" { enabled = false }
+		IssueCode "OBSOLETE_BLOCK" { enabled = false }
+		IssueCode "NON_EXISTING_PROJECT" { enabled = false }
+	}
+
+	END_SETUP
+
+	Disable issue codes above to limit this tests to validation wrt. the structure of package.json files.
+*/
+{
+	// XPECT errors --> "Expected string instead of object as package name." at "{}"
+	"name": {},
+	// XPECT noerrors
+	"name": "overall",
+	
+	// XPECT errors --> "Expected string instead of number as package version." at "123"
+	"version": 123,
+	// XPECT noerrors
+	"version": "1.0",
+	
+	// XPECT errors --> "Expected object instead of array as list of dependencies." at "[]"
+	"dependencies": [],
+	// XPECT noerrors
+	"dependencies": {
+		"valid": "*"
+	},
+	
+	// XPECT errors --> "Expected object instead of number as list of dependencies." at "123"
+	"devDependencies": 123,
+	// XPECT noerrors
+	"devDependencies": {
+		"valid": "*"
+	},
+	
+	// XPECT errors --> "Expected object instead of number as package.json n4js section.." at "123"
+	"n4js": 123,
+	// XPECT noerrors
+	"n4js": {
+		
+		// XPECT errors --> "Expected string instead of number ." at "123"
+		"projectType": 123,
+		// XPECT errors --> "Invalid project type "invalid"." at ""invalid""
+		"projectType": "invalid",
+		// XPECT noerrors
+		"projectType": "validation",
+	
+		// XPECT errors --> "Expected string instead of array as vendor ID." at "[]"
+		"vendorId": [],
+		// XPECT noerrors
+		"vendorId": "vid",
+		
+		// XPECT errors --> "Expected string instead of number as vendor name." at "123"
+		"vendorName": 123,
+		// XPECT noerrors
+		"vendorName": "abc",
+		
+		// XPECT errors --> "Expected string instead of object as output folder path." at "{}"
+		"output": {},
+		// XPECT noerrors
+		"output": "",
+		
+		// XPECT errors --> "Expected object instead of number as source container section." at "123"
+		"sources": 123,
+		// XPECT errors --> "Expected object instead of array as source container section." at "[]"
+		"sources": [],
+		// XPECT noerrors
+		"sources": {},
+		
+		// XPECT errors --> "Expected object instead of number as moduleFilters section." at "123"
+		"moduleFilters": 123,
+		// XPECT errors --> "Expected object instead of array as moduleFilters section." at "[]"
+		"moduleFilters": [],
+		// XPECT noerrors
+		"moduleFilters": {},
+		
+		// XPECT errors --> "Expected string instead of number as main module specifier." at "123"
+		"mainModule": 123,
+		// XPECT errors --> "Expected string instead of object as main module specifier." at "{}"
+		"mainModule": {},
+		// XPECT errors --> "Main module specifier valid does not exist." at ""valid""
+		"mainModule": "valid",
+		
+		// XPECT errors --> "Expected array instead of number as list of tested projects." at "123"
+		"testedProjects": 123,
+		// XPECT errors --> "Expected array instead of string as list of tested projects." at ""abc""
+		"testedProjects": "abc",
+		// XPECT noerrors
+		"testedProjects": [
+			"valid"
+		],
+		
+		// XPECT errors --> "Expected string instead of number as implementation ID." at "123"
+		"implementationId": 123,
+		// XPECT noerrors
+		"implementationId": "valid",
+		
+		// XPECT noerrors
+		"implementedProjects": [
+			"valid "
+		],
+		// XPECT errors --> "Expected array instead of string as list of implemented projects." at """"
+		"implementedProjects": "",
+		
+		// XPECT errors --> "Expected string instead of object as reference to extended runtime environment." at "{}"
+		"extendedRuntimeEnvironment": {},
+		// XPECT noerrors
+		"extendedRuntimeEnvironment": "valid",
+		
+		// XPECT errors --> "Expected array instead of object as provided runtime libraries." at "{}"
+		"providedRuntimeLibraries": {},
+		// XPECT noerrors
+		"providedRuntimeLibraries": [
+			"valid"
+		],
+		
+		// XPECT errors --> "Expected array instead of object as required runtime libraries." at "{}"
+		"requiredRuntimeLibraries": {},
+		// XPECT noerrors
+		"requiredRuntimeLibraries": [
+			
+		]
+	}
+}

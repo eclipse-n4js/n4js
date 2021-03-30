@@ -9,14 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-public class ReqTest {
+export public class ReqTest {
 
 	/**
 	 * @spec Basic Description
 	 * @reqid 1000_a
 	 */
 	@Test
-	basics___Case(): string {}
+	basics___Case() {}
 
 	/**
 	 * @spec
@@ -37,5 +37,5 @@ public class ReqTest {
 	 * @reqid 1001_b
 	 */
 	@Test
-	ext___Case(): string {}
+	ext___Case() {}
 }

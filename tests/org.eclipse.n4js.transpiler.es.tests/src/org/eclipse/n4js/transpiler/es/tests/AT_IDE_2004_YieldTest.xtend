@@ -11,8 +11,7 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import java.util.regex.Pattern
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -24,7 +23,7 @@ import org.junit.runners.MethodSorters
 /**
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class AT_IDE_2004_YieldTest extends AbstractTranspilerTest {
 
@@ -39,7 +38,7 @@ class AT_IDE_2004_YieldTest extends AbstractTranspilerTest {
 	 	// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
+   		val Script scriptNode = script.parse(toTestProjectURI("A.n4js"),resSet)
 		scriptNode.resolveLazyRefs
 
    		// \\h is a horizontal white-space

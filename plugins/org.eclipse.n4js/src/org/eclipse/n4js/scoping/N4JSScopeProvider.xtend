@@ -42,7 +42,6 @@ import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
-import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
 import org.eclipse.n4js.n4idl.scoping.FailedToInferContextVersionWrappingScope
 import org.eclipse.n4js.n4idl.scoping.MigrationScopeHelper
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScope
@@ -50,8 +49,6 @@ import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
-import org.eclipse.n4js.n4jsx.ReactHelper
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -63,6 +60,8 @@ import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.scoping.utils.ScopesHelper
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
+import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -82,6 +81,7 @@ import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.TameAutoClosable
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription
@@ -120,7 +120,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Named(NAMED_DELEGATE)
 	IScopeProvider delegate;
 
-	@Inject private IN4JSCore n4jsCore;
+	@Inject private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	ResourceDescriptionsProvider resourceDescriptionsProvider;
@@ -348,7 +348,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		// filter out clashing module name (can be main module with the same name but in different project)
 		return new FilteringScope(projectImportEnabledScope, [
-			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(it, importDeclaration);
+			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(resource, it, importDeclaration);
 		]);
 	}
 
@@ -362,7 +362,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(initialScope,
 			resourceDescriptions, reference.EReferenceType);
 
-		val projectImportEnabledScope = ProjectImportEnablingScope.create(n4jsCore, resource, importDeclaration,
+		val ws = workspaceAccess.getWorkspaceConfig(resource);
+		val projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, importDeclaration,
 			initialScope, delegateMainModuleAwareScope);
 
 		return projectImportEnabledScope;

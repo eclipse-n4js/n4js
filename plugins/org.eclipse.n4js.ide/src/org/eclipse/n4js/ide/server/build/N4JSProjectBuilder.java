@@ -20,18 +20,16 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.internal.lsp.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
-import org.eclipse.n4js.tester.TestCatalogSupplier;
-import org.eclipse.n4js.xtext.server.ResourceChangeSet;
-import org.eclipse.n4js.xtext.server.build.IBuildRequestFactory;
-import org.eclipse.n4js.xtext.server.build.ImmutableProjectState;
-import org.eclipse.n4js.xtext.server.build.ProjectBuilder;
-import org.eclipse.n4js.xtext.server.build.XBuildRequest;
-import org.eclipse.n4js.xtext.server.build.XBuildResult;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.xtext.ide.server.ResourceChangeSet;
+import org.eclipse.n4js.xtext.ide.server.build.IBuildRequestFactory;
+import org.eclipse.n4js.xtext.ide.server.build.ImmutableProjectState;
+import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -45,32 +43,11 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(N4JSProjectBuilder.class);
 
 	@Inject
-	private IN4JSCore n4jsCore;
-
-	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
 
 	@Override
 	public N4JSProjectConfigSnapshot getProjectConfig() {
 		return (N4JSProjectConfigSnapshot) super.getProjectConfig();
-	}
-
-	@Override
-	public void setProjectConfig(ProjectConfigSnapshot newProjectConfig) {
-		N4JSProjectConfigSnapshot oldPC = getProjectConfig();
-		N4JSProjectConfigSnapshot newPCCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
-		boolean depsHaveChanged = oldPC == null
-				|| !oldPC.getDependencies().equals(newProjectConfig.getDependencies());
-		boolean sortedDepsHaveChanged = oldPC == null
-				|| !oldPC.getSortedDependencies().equals(newPCCasted.getSortedDependencies());
-
-		super.setProjectConfig(newProjectConfig);
-
-		if (sortedDepsHaveChanged && !depsHaveChanged) {
-			// note: not doing this if 'depsHaveChanged', because then the super method has already invoked
-			// #onDependenciesChanged()
-			onDependenciesChanged();
-		}
 	}
 
 	@Override
@@ -111,13 +88,15 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	/** Generates the test catalog for the project. */
 	private void writeTestCatalog() {
-		ProjectConfigSnapshot projectConfig = getProjectConfig();
-		IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(projectConfig.getName())).orNull();
+		N4JSWorkspaceConfigSnapshot workspaceConfig = (N4JSWorkspaceConfigSnapshot) workspaceManager
+				.getWorkspaceConfig();
+		N4JSProjectConfigSnapshot projectConfig = getProjectConfig();
 		File testCatalog = getTestCatalogFile(projectConfig);
 
 		String catalog = testCatalogSupplier.get(
+				workspaceConfig,
 				getResourceSet(),
-				project,
+				projectConfig,
 				true); // do not include "endpoint" property here
 
 		if (catalog != null) {

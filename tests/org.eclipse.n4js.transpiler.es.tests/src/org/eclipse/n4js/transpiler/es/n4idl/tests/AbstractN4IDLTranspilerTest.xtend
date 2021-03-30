@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler.es.n4idl.tests
 
 import com.google.inject.Inject
-import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.common.util.WrappedException
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.Script
@@ -32,7 +31,7 @@ abstract class AbstractN4IDLTranspilerTest extends AbstractTranspilerTest {
 	override protected Script createScript(CharSequence code, ResourceSet resourceSet) {
 		try {
 			if(resourceSet!==null) {
-				return code.parse(URI.createURI("src/Main." + N4IDLGlobals.N4IDL_FILE_EXTENSION), resourceSet);
+				return code.parse(toTestProjectURI("Main." + N4IDLGlobals.N4IDL_FILE_EXTENSION), resourceSet);
 			} else {
 				return code.parseN4IDL;
 			}

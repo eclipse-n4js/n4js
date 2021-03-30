@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	 Workspace {
+		Project "PolyfillTest" {
+			Folder "src" {
+				ThisFile {}
+				File "F.n4jsd" {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+
+// Test needs to be run in project configured as ProjectType: runtimeEnvironment (i.e. need package.json in this or parent folder)
+
+@@ProvidedByRuntime
+@@Global
+
+@Polyfill
+// XPECT errors --> "Polyfill F must declare same type parameters as filled class." at "F"
+export external public class F<S>
+	// XPECT errors --> "Couldn't resolve reference to Type 'T'." at "T"
+	extends F<T> {
+
+	// XPECT noerrors --> "but we can use T"
+	genMethod(t : T) : T;
+}

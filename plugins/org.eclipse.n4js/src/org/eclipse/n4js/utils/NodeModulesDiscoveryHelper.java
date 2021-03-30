@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.workspace.locations.FileURI;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -251,7 +251,7 @@ public class NodeModulesDiscoveryHelper {
 
 	private boolean isPointingTo(File base, String relativePath, File target) {
 		String pattern = base.getAbsolutePath() + File.separator + relativePath;
-		PathMatcher matcher = WildcardPathFilterHelper.createPathMatcher(pattern);
+		PathMatcher matcher = ModuleFilterUtils.createPathMatcher(pattern);
 		return matcher.matches(target.toPath());
 	}
 

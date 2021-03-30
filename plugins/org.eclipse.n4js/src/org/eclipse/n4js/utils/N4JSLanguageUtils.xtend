@@ -13,13 +13,13 @@ package org.eclipse.n4js.utils
 import java.io.IOException
 import java.io.InputStream
 import java.util.Properties
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
-import org.eclipse.n4js.conversion.IdentifierValueConverter
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ConditionalExpression
@@ -59,6 +59,8 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
+import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
@@ -101,6 +103,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -121,6 +124,14 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  * @see TypeUtils
  */
 public class N4JSLanguageUtils {
+
+	/**
+	 * Tells whether the {@link #isOpaqueModule(ProjectType, URI) "opaque modules"} feature is turned on
+	 * (i.e. processing of opaque modules is suppressed).
+	 * <p>
+	 * WARNING: this field is set via reflection from {@code JSActivationUtil}.
+	 */
+	public static boolean OPAQUE_JS_MODULES = true;
 
 	/**
 	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
@@ -184,6 +195,49 @@ public class N4JSLanguageUtils {
 			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property " + propertyId);
 		}
 		return value;
+	}
+
+	/** Convenience method for {@link #isOpaqueModule(ProjectType, URI)}. */
+	def public static boolean isOpaqueModule(N4JSWorkspaceConfigSnapshot workspaceConfig, URI resourceURI) {
+		val project = workspaceConfig?.findProjectContaining(resourceURI);
+		val projectType = project?.getType();
+		return N4JSLanguageUtils.isOpaqueModule(projectType, resourceURI);
+	}
+
+	/**
+	 * Tells whether a module with the given properties is an "opaque module". These modules
+	 * are neither post-processed nor validated. The transpiler will only wrap opaque resources.
+	 * <p>
+	 * Note that if dependency injection is available, this more convenient method can be used:
+	 * {@link N4JSLanguageHelper#isOpaqueModule(org.eclipse.emf.ecore.resource.Resource)}.
+	 */
+	def public static boolean isOpaqueModule(ProjectType typeOfContainingProject, URI resourceURI) {
+		val ResourceType resourceType = ResourceType.getResourceType(resourceURI);
+
+		if (resourceType === ResourceType.JS
+			|| resourceType === ResourceType.JSX) {
+
+			return OPAQUE_JS_MODULES; // JavaScript modules are not processed iff OPAQUE_JS_MODULES is true
+
+		} else if (resourceType === ResourceType.N4JS
+			|| resourceType === ResourceType.N4JSX
+			|| resourceType === ResourceType.N4IDL) {
+
+			if (typeOfContainingProject === null) {
+				return false; // happens in tests
+			}
+			// N4JS files of definition projects are not processed.
+			return typeOfContainingProject === ProjectType.DEFINITION;
+
+		} else if (resourceType === ResourceType.N4JSD
+			|| resourceType === ResourceType.UNKOWN
+			|| resourceType === ResourceType.XT) {
+
+			// default
+		}
+
+		// default: process file
+		return false;
 	}
 
 	static enum EnumKind {

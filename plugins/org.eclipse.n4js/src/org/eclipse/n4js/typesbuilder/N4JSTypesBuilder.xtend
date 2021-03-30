@@ -31,7 +31,6 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.naming.ModuleNameComputer
 import org.eclipse.n4js.naming.SpecifierConverter
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -44,6 +43,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 
@@ -80,7 +80,7 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSNamespaceImportTypesBuilder
 
 	@Inject extension ModuleNameComputer
-	@Inject private IN4JSCore n4jscore
+	@Inject private WorkspaceAccess workspaceAccess
 	@Inject private IQualifiedNameConverter qualifiedNameConverter
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
@@ -164,16 +164,15 @@ public class N4JSTypesBuilder {
 			result.astMD5 = N4JSASTUtils.md5Hex(resource);
 			result.reconciled = false;
 
-			var qualifiedModuleName = resource.qualifiedModuleName;
+			val qualifiedModuleName = resource.qualifiedModuleName;
 			result.simpleName = qualifiedModuleName.lastSegment;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
 
-			val optionalProject = n4jscore.findProject(resource.URI);
-			if (optionalProject.present) {
-				val project = optionalProject.get;
-				result.projectName = project.projectName.rawName;
-				result.vendorID = project.vendorID;
+			val project = workspaceAccess.findProjectContaining(resource);
+			if (project !== null) {
+				result.projectName = project.name;
+				result.vendorID = project.vendorId;
 
 				// main module
 				val mainModuleSpec = project.mainModule;

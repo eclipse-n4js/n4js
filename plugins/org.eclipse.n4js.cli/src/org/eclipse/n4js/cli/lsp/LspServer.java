@@ -40,12 +40,12 @@ import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.xtext.server.DebugService;
-import org.eclipse.n4js.xtext.server.ExecuteCommandParamsTypeAdapter;
-import org.eclipse.n4js.xtext.server.ProjectStatePersisterConfig;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.util.LspLogger;
-import org.eclipse.n4js.xtext.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.xtext.ide.server.DebugService;
+import org.eclipse.n4js.xtext.ide.server.ExecuteCommandParamsTypeAdapter;
+import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
+import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 
 import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Futures;

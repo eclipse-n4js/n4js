@@ -29,7 +29,7 @@ spec for class A from source code
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#field++[``++@Final public field: any++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:src/A:A#field++[``++@Final public field: any++``]
 
 
 ==== Description
@@ -44,7 +44,7 @@ This is some documentation for a final field.
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#<finalGetter++[``++@Final public get finalGetter(): string++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:src/A:A#<finalGetter++[``++@Final public get finalGetter(): string++``]
 
 
 ==== Description
@@ -67,7 +67,7 @@ Add tests specifying semantics for ``++get finalGetter(): string++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#>finalSetter++[``++@Final public set finalSetter(n: any)++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:src/A:A#>finalSetter++[``++@Final public set finalSetter(n: any)++``]
 
 
 ==== Description
@@ -90,7 +90,7 @@ Add tests specifying semantics for ``++set finalSetter(n: any)++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#bar++[``++project bar(n: number): string++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:src/A:A#bar++[``++project bar(n: number): string++``]
 
 
 ==== Description
@@ -99,7 +99,7 @@ spec for method A.bar from source code
 
 ==== Semantics
 
-. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:ATest#testBarBasics++[Test]#)
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:test/ATests:ATest#testBarBasics++[Test]#)
 
 
 [[gsec:spec_A.A.baz]]
@@ -108,7 +108,7 @@ spec for method A.bar from source code
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#baz++[``++project baz(): string++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:src/A:A#baz++[``++project baz(): string++``]
 
 
 ==== Description
@@ -131,7 +131,7 @@ Add tests specifying semantics for ``++baz(): string++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#method++[``++@Final public method(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:src/A:A#method++[``++@Final public method(): void++``]
 
 
 ==== Description
@@ -158,7 +158,7 @@ Add tests specifying semantics for ``++method(): void++``
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:B#foo++[``++project foo(s: string): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:src/A:B#foo++[``++project foo(s: string): void++``]
 
 
 
@@ -183,7 +183,7 @@ Inherited from
 
 ==== Semantics
 
-. *++Bar again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBarAgain++[Test]#)
+. *++Bar again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:test/ATests:DTest#testBarAgain++[Test]#)
 
 [[gsec:spec_D.A.baz]]
 [role=memberdoc]
@@ -194,7 +194,7 @@ Inherited from
 
 ==== Semantics
 
-. *++Baz again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[Test]#)
+. *++Baz again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample1:test/ATests:DTest#testBazAgain++[Test]#)
 +
 [.generatedApiConstraint]
 ====

@@ -10,12 +10,12 @@
  */
 package org.eclipse.n4js.parser;
 
-import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
-import org.eclipse.n4js.conversion.CompositeSyntaxErrorMessages;
-import org.eclipse.n4js.conversion.LegacyOctalIntValueConverter;
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
-import org.eclipse.n4js.conversion.N4JSValueConverterWithValueException;
-import org.eclipse.n4js.conversion.RegExLiteralConverter;
+import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter;
+import org.eclipse.n4js.parser.conversion.CompositeSyntaxErrorMessages;
+import org.eclipse.n4js.parser.conversion.LegacyOctalIntValueConverter;
+import org.eclipse.n4js.parser.conversion.N4JSStringValueConverter;
+import org.eclipse.n4js.parser.conversion.N4JSValueConverterWithValueException;
+import org.eclipse.n4js.parser.conversion.RegExLiteralConverter;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.parser.antlr.SyntaxErrorMessageProvider;

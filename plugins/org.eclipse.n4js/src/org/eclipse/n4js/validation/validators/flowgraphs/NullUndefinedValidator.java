@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
@@ -24,11 +25,11 @@ import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.validators.N4JSFlowgraphValidator;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -37,14 +38,14 @@ import org.eclipse.xtext.EcoreUtil2;
 public class NullUndefinedValidator implements FlowValidator {
 	final private NullDereferenceAnalyser nda;
 	final private FindReferenceHelper findReferenceHelper;
-	final private IN4JSCore n4jsCore;
+	final private WorkspaceAccess workspaceAccess;
 
 	/** Constructor */
-	public NullUndefinedValidator(NullDereferenceAnalyser nullDereferenceAnalyser, IN4JSCore n4jsCore,
+	public NullUndefinedValidator(NullDereferenceAnalyser nullDereferenceAnalyser, WorkspaceAccess workspaceAccess,
 			FindReferenceHelper findReferenceHelper) {
 
 		this.findReferenceHelper = findReferenceHelper;
-		this.n4jsCore = n4jsCore;
+		this.workspaceAccess = workspaceAccess;
 		this.nda = nullDereferenceAnalyser;
 	}
 
@@ -152,8 +153,9 @@ public class NullUndefinedValidator implements FlowValidator {
 	}
 
 	private boolean isInTestFolder(EObject eobj) {
-		URI location = eobj.eResource().getURI();
-		final IN4JSSourceContainer c = n4jsCore.findN4JSSourceContainer(location).orNull();
+		Resource resource = eobj.eResource();
+		URI location = resource.getURI();
+		final N4JSSourceFolderSnapshot c = workspaceAccess.findSourceFolderContaining(resource, location);
 		return c != null && c.isTest();
 	}
 

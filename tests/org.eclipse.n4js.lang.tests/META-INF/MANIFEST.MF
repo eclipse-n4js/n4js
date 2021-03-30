@@ -7,6 +7,7 @@ Bundle-SymbolicName: org.eclipse.n4js.lang.tests;singleton:=true
 Fragment-Host: org.eclipse.n4js
 Require-Bundle: org.eclipse.n4js.ide,
  org.eclipse.n4js.xtext,
+ org.eclipse.n4js.xtext.ide,
  org.eclipse.core.runtime,
  org.eclipse.xtext.testing,
  org.eclipse.ui.workbench;resolution:=optional,

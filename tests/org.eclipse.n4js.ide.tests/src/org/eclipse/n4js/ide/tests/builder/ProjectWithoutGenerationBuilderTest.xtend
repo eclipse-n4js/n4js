@@ -14,10 +14,10 @@ import com.google.common.base.Optional
 import java.io.File
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.eclipse.n4js.projectDescription.ProjectType
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.junit.Test
 
-import static org.eclipse.n4js.projectDescription.ProjectType.*
+import static org.eclipse.n4js.packagejson.projectDescription.ProjectType.*
 import static org.junit.Assert.*
 
 /**

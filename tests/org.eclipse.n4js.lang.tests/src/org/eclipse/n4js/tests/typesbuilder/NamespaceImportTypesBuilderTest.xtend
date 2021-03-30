@@ -94,8 +94,4 @@ class NamespaceImportTypesBuilderTest extends AbstractTypesBuilderTest {
 	override assertExampleJSStructure(String phase, Resource resource) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
-
-
-
-
 }

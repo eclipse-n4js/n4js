@@ -12,22 +12,23 @@ package org.eclipse.n4js;
 
 import java.util.Arrays;
 
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.xpect.projects.AutoDiscoveryFileBasedWorkspace;
+import org.eclipse.n4js.tests.helper.mock.MockResourceHelper;
+import org.eclipse.n4js.tests.helper.mock.MockResourceSetProvider;
+import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.service.AbstractGenericModule;
-import org.eclipse.xtext.service.DefaultRuntimeModule;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.testing.IInjectorProvider;
 import org.eclipse.xtext.testing.IRegistryConfigurator;
 import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.util.ResourceHelper;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 import com.google.inject.util.Modules;
 
 /**
@@ -69,7 +70,7 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 	/**
 	 * Called in constructor to create runtime module, may be overridden in subclasses for derived languages.
 	 */
-	protected DefaultRuntimeModule createRuntimeModule() {
+	protected Module createRuntimeModule() {
 		return new N4JSRuntimeModule();
 	}
 
@@ -151,16 +152,15 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 			return getClass().getClassLoader();
 		}
 
-		/** Bind custom workspace implementation that automatically discovers existing projects on-the-fly. */
-		@SingletonBinding
-		public Class<? extends InternalN4JSWorkspace<?>> bindInternalN4JSWorkspace() {
-			return AutoDiscoveryFileBasedWorkspace.class;
+		/***/
+		public Class<? extends Provider<? extends SynchronizedXtextResourceSet>> provideConfiguredXtextResourceSet() {
+			return MockResourceSetProvider.class;
 		}
 
-		/** @see #bindInternalN4JSWorkspace() */
+		/***/
 		@SingletonBinding
-		public Class<? extends FileBasedWorkspace> bindFileBasedWorkspace() {
-			return AutoDiscoveryFileBasedWorkspace.class;
+		public Class<? extends ResourceHelper> bindResourceHelper() {
+			return MockResourceHelper.class;
 		}
 	}
 }

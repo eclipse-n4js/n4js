@@ -14,9 +14,9 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.util.List
-import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
+import org.eclipse.n4js.workspace.locations.FileURI
 import org.junit.Test
 
 import static org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.YARN_TEST_PROJECT

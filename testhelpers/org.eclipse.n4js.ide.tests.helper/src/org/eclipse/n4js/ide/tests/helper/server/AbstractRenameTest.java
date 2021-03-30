@@ -32,9 +32,9 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractRenameTest.RenameTestConfiguration;
-import org.eclipse.n4js.xtext.server.XDocument;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 

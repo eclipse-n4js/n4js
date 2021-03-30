@@ -10,13 +10,11 @@
  */
 package org.eclipse.n4js.xpect.methods.output;
 
-import static com.google.common.base.Optional.absent;
-
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.xpect.common.DuplicateResourceAwareFileSetupContext;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -28,16 +26,16 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
  */
 public abstract class ReadOutConfiguration {
 
-	/** Resource set initialized from {@link IN4JSCore} and wrapped into a delegate. */
+	/** Resource set initialized from {@link WorkspaceAccess} and wrapped into a delegate. */
 	protected final ResourceSet resourceSet;
 	/** The Xtext index for the resource set. */
 	protected final IResourceDescriptions index;
 	/** Context of the current running Xpect test. */
 	protected final FileSetupContext fileSetupCtx;
 
-	ReadOutConfiguration(final FileSetupContext ctx, final IN4JSCore core) {
-		this.resourceSet = core.createResourceSet(absent());
-		index = core.getXtextIndex(this.resourceSet);
+	ReadOutConfiguration(final FileSetupContext ctx, final WorkspaceAccess core) {
+		this.resourceSet = core.createResourceSet();
+		index = core.getXtextIndex(this.resourceSet).orNull();
 		this.fileSetupCtx = new DuplicateResourceAwareFileSetupContext(ctx);
 	}
 

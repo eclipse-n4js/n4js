@@ -12,6 +12,7 @@ package org.eclipse.n4js.jsdoc2spec.adoc;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,30 +22,26 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.internal.N4JSModel;
-import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessorFullTest;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SubMonitorMsg;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
-import org.eclipse.xtext.util.UriExtensions;
-import org.junit.runner.RunWith;
+import org.eclipse.n4js.utils.io.FileCopier;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.locations.FileURI;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 
 /**
  * Runs a full test, that is, reading n4js projects and generate new spec.
  */
-@InjectWith(N4JSInjectorProvider.class)
-@RunWith(XtextRunner.class)
 public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 	private final static String TESTRESOURCES = "testresourcesADoc/";
 
@@ -54,6 +51,8 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 	}
 
 	@Inject
+	private WorkspaceAccess workspaceAccess;
+	@Inject
 	private JSDoc2ADocSpecProcessor jSDoc2SpecProcessor;
 
 	@Override
@@ -61,26 +60,34 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 	protected void fullTest(String projectName)
 			throws IOException, InterruptedException, InterruptedException {
 
+		testWorkspaceManager.createTestOnDisk(); // create an empty yarn workspace
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		File probandFolder = new File(TESTRESOURCES + projectName);
+		File projectFolder = new File(getProjectLocation(), projectName);
+		assertTrue("proband folder not found", probandFolder.isDirectory());
+		FileCopier.copy(probandFolder, projectFolder);
+		cleanBuildAndWait();
+		FileURI packageJsonURI = toFileURI(getProjectLocation()).appendSegments(projectName, N4JSGlobals.PACKAGE_JSON);
+		assertIssues(Map.of(
+				packageJsonURI, Lists.newArrayList(
+						"(Error, [4:17 - 4:26], Missing dependency to n4js-runtime (mandatory for all N4JS projects of type library, application, test).)")));
+
 		String systemSeparator = System.getProperty("line.separator", "\n");
 		try {
 			for (String lsep : new String[] { "\n", "\r\n", "\r" }) {
 				System.setProperty("line.separator", lsep);
 				String expectationFileName = projectName + "/expected.adoc";
-				workspace = new FileBasedWorkspace(projectDescriptionLoader, new UriExtensions());
 
-				FileURI uriProject = new FileURI(new File(TESTRESOURCES + projectName));
-				workspace.registerProject(uriProject);
-				N4JSModel<FileURI> model = new N4JSModel<>(workspace);
-				injector.injectMembers(model);
-				runtimeCore = new N4JSRuntimeCore(workspace, model);
-				IN4JSProject project = runtimeCore.findProject(uriProject.toURI()).get();
-
+				ResourceSet resourceSet = workspaceAccess.createResourceSet();
+				N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(resourceSet, projectName);
 				assertNotNull("Project not found", project);
 
 				Collection<SpecFile> specChangeSet = jSDoc2SpecProcessor.convert(
 						new File(TESTRESOURCES),
 						Collections.singleton(project),
-						(p) -> resourceSetProvider.get(),
+						(p) -> resourceSet,
 						SubMonitorMsg.nullProgressMonitor());
 
 				String adocRootName = TESTRESOURCES + projectName + "/expectedADoc";

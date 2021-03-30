@@ -66,9 +66,9 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
+import org.eclipse.n4js.scoping.utils.ExpressionExtensions
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef

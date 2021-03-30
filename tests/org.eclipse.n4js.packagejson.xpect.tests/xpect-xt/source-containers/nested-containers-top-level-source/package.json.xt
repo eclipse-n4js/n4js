@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.packagejson.xpect.tests.PackageJsonXtTest
+
+	Workspace {
+		Project "nested-containers-top-level-source" {
+			Folder "src" {
+				Folder "A" {
+					Folder "B" {}
+				}
+			}
+			Folder "src2" {
+				Folder "A" {}
+				Folder "B" {}
+				Folder "C" {}
+			}
+			Folder "src3" {}
+			ThisFile "package.json" {}
+		}
+	}
+
+	END_SETUP
+*/
+
+{
+	"name": "nested-containers-top-level-source",
+	"version": "0.0.1",
+	"dependencies": {},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"sources": {
+			"source": [
+				".",
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".")" at ""src/""
+				"src/",
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".", "src/")" at ""src/A""
+				"src/A",
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".", "src/", "src/A")" at ""src/A/B""
+				"src/A/B",
+				// XPECT warnings --> "Duplicate path "src3" has already been declared as source container." at ""src3""
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".")" at ""src3""
+				"src3",
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".")" at ""src2/A""
+				"src2/A",
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".")" at ""src2/B""
+				"src2/B",
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".")" at ""src2/C""
+				"src2/C",
+				// XPECT warnings --> "Duplicate path "src3" has already been declared as source container." at ""src3""
+				// XPECT errors --> "A source container must not be nested within other source containers (nested in ".")" at ""src3""
+				"src3"
+			]
+		},
+		// XPECT errors --> "The output folder must not be located inside a source folder." at ""src-gen""
+		"output": "src-gen"
+	}
+}

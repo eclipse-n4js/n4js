@@ -11,7 +11,7 @@
 package org.eclipse.n4js.transpiler.es.n4idl.tests
 
 import java.util.Map
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IfStatement
@@ -35,7 +35,7 @@ import org.junit.runner.RunWith
  * of if-statements in those type switches (one per registered migration).
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 class MigrationTransformationTranspilerTest extends AbstractN4IDLTranspilerTest {
 	@Test
 	def void testSimpleMigrationTransformation() {

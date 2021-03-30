@@ -21,11 +21,11 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
-import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
@@ -51,7 +51,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 	private IPrefixMatcher prefixMatcher;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Override
 	protected void _createProposals(Keyword keyword, ContentAssistContext context,
@@ -87,8 +87,8 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 			String last = namePath.get(namePath.size() - 1);
 			if (PackageJsonProperties.DEPENDENCIES.name.equals(last)
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(last)) {
-				for (IN4JSProject project : n4jsCore.findAllProjects()) {
-					N4JSProjectName projectName = project.getProjectName();
+				for (N4JSProjectConfigSnapshot project : workspaceAccess.findAllProjects(context.getResource())) {
+					N4JSProjectName projectName = project.getN4JSProjectName();
 					ContentAssistEntry entryForModule = getProposalCreator().createProposal(
 							'"' + projectName.getRawName() + '"', context, ContentAssistEntry.KIND_MODULE, null);
 					if (entryForModule != null) {
@@ -132,7 +132,8 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(devOrDep)) {
 
 				NameValuePair pair = (NameValuePair) context.getCurrentModel();
-				IN4JSProject project = n4jsCore.findProject(new N4JSProjectName(pair.getName())).orNull();
+				N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(context.getResource(),
+						pair.getName());
 				if (project != null) {
 					VersionNumber version = project.getVersion();
 					ContentAssistEntry versionEntry = getProposalCreator().createProposal(

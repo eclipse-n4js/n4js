@@ -26,7 +26,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
 
 /**
@@ -125,16 +124,6 @@ class TranspilerDebugUtils {
 		val ex = new AssertionError(message);
 		ex.printStackTrace; // make sure we see this on the console even if exceptions are eaten up by someone
 		throw ex;
-	}
-
-	/**
-	 * Dumps the transpiler state to the {@code ASTGraphView}.
-	 * <p>
-	 * Does nothing if running in headless mode, or if {@code ASTGraphView} is unavailable for some other reason. May be
-	 * invoked from non-UI threads. It is thus safe to call this method at all times and from everywhere.
-	 */
-	def public static void dumpGraph(TranspilerState state, String label) {
-		UtilN4.takeSnapshotInGraphView(label, state.im);
 	}
 
 	def public static void dump(TranspilerState state) {

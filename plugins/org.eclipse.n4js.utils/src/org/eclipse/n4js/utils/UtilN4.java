@@ -15,7 +15,6 @@ import static org.eclipse.xtext.util.Tuples.pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,17 +25,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.nodemodel.impl.LeafNodeWithSyntaxError;
 import org.eclipse.xtext.util.Pair;
-import org.osgi.framework.Bundle;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -59,6 +52,8 @@ public class UtilN4 {
 	public static final String PACKAGE_JSON__N4JS = "n4js";
 	/** Name of package.json property "sources". */
 	public static final String PACKAGE_JSON__SOURCES = "sources";
+	/** Default string used for indentation of a single level. */
+	public static final String DEFAULT_INDENTATION_STR = "    ";
 
 	private static Logger logger = Logger.getLogger(UtilN4.class);
 
@@ -139,47 +134,6 @@ public class UtilN4 {
 	 */
 	public static final String sanitizeForHTML(String str) {
 		return ESCAPE_FUNC.apply(UNESCAPE_FUNC.apply(str));
-	}
-
-	/**
-	 * Add a snapshot of the current state of 'root' to the {@code ASTGraphView}. Does nothing if in headless mode or
-	 * the {@code ASTGraphView} is not installed or unavailable for some other reason. May be invoked from non-UI
-	 * threads.
-	 * <p>
-	 * A copy of all required information is taken on the invoking thread before this method returns, so it is safe to
-	 * change 'root' or its contents right after this method returns.
-	 * <p>
-	 * If 'root' is a {@link Resource} or an {@link EObject} contained in a {@code Resource}, then the name of the
-	 * (containing) resource will be appended to the label.
-	 *
-	 * @param label
-	 *            the label for the new graph or <code>null</code>.
-	 * @param root
-	 *            the root object to create the graph from; must be a {@link ResourceSet}, {@link Resource}, or
-	 *            {@link EObject}.
-	 * @throws IllegalArgumentException
-	 *             if 'root' is <code>null</code> or of incorrect type.
-	 */
-	public static final void takeSnapshotInGraphView(String label, Object root) {
-		if (!(root instanceof ResourceSet || root instanceof Resource || root instanceof EObject))
-			throw new IllegalArgumentException("root must be a ResourceSet, Resource, or EObject");
-		// append name of root's containing resource to label (if any)
-		final Resource resource = root instanceof Resource ? (Resource) root
-				: (root instanceof EObject ? ((EObject) root).eResource() : null);
-		final URI uri = resource != null ? resource.getURI() : null;
-		final String name = uri != null ? uri.lastSegment() : null;
-		if (name != null)
-			label = label + " (" + name + ")";
-		// send request to ASTGraphView
-		try {
-			// we don't want a dependency on the debug bundle where ASTGraphView is located, so use reflection
-			final Bundle testViewBundle = Platform.getBundle("org.eclipse.n4js.smith.graph");
-			final Class<?> testViewClass = testViewBundle.loadClass("org.eclipse.n4js.smith.graph.ASTGraphView");
-			final Method m = testViewClass.getMethod("show", String.class, Object.class);
-			m.invoke(null, label, root);
-		} catch (Throwable e) {
-			// ignore
-		}
 	}
 
 	/**
@@ -318,6 +272,26 @@ public class UtilN4 {
 			result.addAll(coll);
 		}
 		return result;
+	}
+
+	/** Same as {@link #indent(String, String)}, using the {@link #DEFAULT_INDENTATION_STR}. */
+	public static String indent(String str) {
+		return indent(str, DEFAULT_INDENTATION_STR);
+	}
+
+	/** Same as {@link #indentExceptFirstLine(String, String)}, but using the {@link #DEFAULT_INDENTATION_STR}. */
+	public static String indentExceptFirstLine(String str) {
+		return indentExceptFirstLine(str, DEFAULT_INDENTATION_STR);
+	}
+
+	/** Adds the given indentation string at the beginning of each line of {@code str}. */
+	public static String indent(String str, String indentStr) {
+		return indentStr + indentExceptFirstLine(str, indentStr);
+	}
+
+	/** Adds the given indentation string at the beginning of each line of {@code str}, except the first line. */
+	public static String indentExceptFirstLine(String str, String indentStr) {
+		return str.replace("\n", "\n" + indentStr);
 	}
 
 	/**

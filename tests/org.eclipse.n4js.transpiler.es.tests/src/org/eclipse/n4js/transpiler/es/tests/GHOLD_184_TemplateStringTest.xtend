@@ -10,8 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -23,7 +22,7 @@ import org.junit.runners.MethodSorters
 /**
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class GHOLD_184_TemplateStringTest extends AbstractTranspilerTest {
 
@@ -54,7 +53,7 @@ class GHOLD_184_TemplateStringTest extends AbstractTranspilerTest {
 	 	// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet);
+   		val Script scriptNode = script.parse(toTestProjectURI("A.n4js"),resSet);
 		scriptNode.resolveLazyRefs;
 
 		assertCompileResult(scriptNode,moduleWrapped);

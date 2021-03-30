@@ -21,7 +21,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
-import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.workspace.locations.FileURI;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;

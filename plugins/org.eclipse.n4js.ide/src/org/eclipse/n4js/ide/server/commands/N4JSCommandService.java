@@ -50,9 +50,9 @@ import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorUtils;
-import org.eclipse.n4js.xtext.server.ExecuteCommandParamsDescriber;
-import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.xtext.server.util.ParamHelper;
+import org.eclipse.n4js.xtext.ide.server.ExecuteCommandParamsDescriber;
+import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.ide.server.util.ParamHelper;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
@@ -345,8 +345,7 @@ public class N4JSCommandService implements IExecutableCommandService, ExecuteCom
 					versionRequirement = SemverUtils.createEmptyVersionRequirement();
 				}
 // @formatter:off
-// FIXME GH-2073
-access.getLanguageClient().showMessage(new MessageParams(MessageType.Warning, "Installation of npm packages is disabled."));
+access.getLanguageClient().showMessage(new MessageParams(MessageType.Warning, "Installation of npm packages is disabled. Use command line."));
 //				String normalizedVersion = SemverSerializer.serialize(versionRequirement);
 //
 //				N4JSProjectName projectName = new N4JSProjectName(packageName);

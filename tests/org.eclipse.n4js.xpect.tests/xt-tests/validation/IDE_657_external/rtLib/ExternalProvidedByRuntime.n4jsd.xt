@@ -1,0 +1,71 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+    Workspace {
+   	 Project "TestProject" {
+   	 	Folder "src" {
+   	 		ThisFile "ExternalProvidedByRuntime.n4jsd" {}
+	   	}
+   	 	File "package.json" { from="package.json" }
+   	 }
+   }
+
+   END_SETUP
+ */
+
+//IDE-1223
+
+
+// XPECT noerrors --> "n4jsd can export variables"
+export var a1;
+
+// XPECT noerrors --> "n4jsd can export external variable"
+export external var a2;
+
+// XPECT noerrors --> "eported external variables can be provided by runtime"
+@ProvidedByRuntime export external var a3;
+
+//eported external variables provided by runtime cannot have value
+// XPECT errors --> "External variable declaration cannot be initialized." at "a4 = 42"
+@ProvidedByRuntime export external var a4 = 42;
+
+//exported external variable cannot be initialized
+// XPECT errors --> "External variable declaration cannot be initialized." at "a5 = 42"
+export external var a5 = 42;
+
+// XPECT errors --> "External variable declaration cannot be initialized." at "a6 = 42"
+export var a6 = 42;
+
+//n4jsd can export constants, but they need not (and must not) be initialized
+// XPECT noerrors -->
+export const c1;
+
+//n4jsd can export constants, but they need not (and must not) be initialized
+// XPECT noerrors -->
+export external const c2;
+
+//n4jsd can export constants, but they need not (and must not) be initialized
+// XPECT noerrors -->
+@ProvidedByRuntime export external const c3;
+
+//n4jsd cannot export external constants (init-non initi conflict)
+// XPECT errors --> "External constant declaration cannot be initialized." at "c4 = 42"
+@ProvidedByRuntime export external const c4 = 42;
+
+//n4jsd cannot export external constants (init-non initi conflict)
+// XPECT errors --> "External constant declaration cannot be initialized." at "c5 = 42"
+export external const c5 = 42;
+
+
+// XPECT errors --> "External constant declaration cannot be initialized." at "c6 = 42"
+export const c6 = 42;

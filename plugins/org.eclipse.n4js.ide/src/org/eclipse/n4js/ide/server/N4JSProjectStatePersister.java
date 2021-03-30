@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.server;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.n4js.xtext.server.build.ProjectStatePersister;
+import org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister;
 
 /**
  * Setup {@link ProjectStatePersister}

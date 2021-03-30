@@ -13,8 +13,8 @@ package org.eclipse.n4js.ide.imports;
 import java.util.Objects;
 
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.naming.QualifiedName;
 

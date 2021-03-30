@@ -12,13 +12,12 @@ package org.eclipse.n4js.n4idl.scoping;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.scoping.TopLevelElementsCollector;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
@@ -28,15 +27,15 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 	private static final Logger LOGGER = Logger.getLogger(N4IDLAwareTopLevelElementsCollector.class);
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Override
 	public Iterable<IEObjectDescription> getTopLevelElements(TModule module, Resource contextResource) {
-		Optional<? extends IN4JSProject> project = n4jsCore.findProject(contextResource.getURI());
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(contextResource);
 		Iterable<IEObjectDescription> allTopLevelElements = super.getTopLevelElements(module, contextResource);
 
 		// if project isn't available, include all top-level elements
-		if (!project.isPresent()) {
+		if (project == null) {
 			LOGGER.warn(String.format("Failed to determine project of resource %s.", contextResource.getURI()));
 			return allTopLevelElements;
 		}
@@ -48,15 +47,15 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 		}
 
 		// otherwise filter by context version
-		Optional<? extends IN4JSProject> moduleProject = n4jsCore.findProject(module.eResource().getURI());
+		N4JSProjectConfigSnapshot moduleProject = workspaceAccess.findProjectContaining(module);
 
-		if (!moduleProject.isPresent()) {
+		if (moduleProject == null) {
 			LOGGER.warn(String.format("Failed to determine project of TModule %s.", module.getQualifiedName()));
 			return allTopLevelElements;
 		}
 
-		IN4JSProject contextN4JSProject = project.get();
-		IN4JSProject versionedN4JSProject = moduleProject.get();
+		N4JSProjectConfigSnapshot contextN4JSProject = project;
+		N4JSProjectConfigSnapshot versionedN4JSProject = moduleProject;
 
 		final int contextVersion = getProjectContextVersion(versionedN4JSProject, contextN4JSProject);
 
@@ -78,7 +77,8 @@ public class N4IDLAwareTopLevelElementsCollector extends TopLevelElementsCollect
 	 * @param contextProject
 	 *            The project from which the type is accessed
 	 */
-	private int getProjectContextVersion(IN4JSProject versionedProject, IN4JSProject contextProject) {
+	private int getProjectContextVersion(N4JSProjectConfigSnapshot versionedProject,
+			N4JSProjectConfigSnapshot contextProject) {
 		// disable logic to get context version from project dependency
 		// ProjectDependency moduleDependency = contextProject.getProjectDependencies().stream()
 		// .filter(dep -> dep.getProject().getProjectName().equals(versionedProject.getProjectName()))

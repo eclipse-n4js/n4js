@@ -30,12 +30,14 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.organize.imports.ImportSpecifiersUtil;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -63,6 +65,9 @@ public class ImportHelper {
 	private static final EReference identifierRef_id = N4JSPackage.eINSTANCE.getIdentifierRef_Id();
 	private static final EReference parameterizedTypeRef_declaredType = TypeRefsPackage.eINSTANCE
 			.getParameterizedTypeRef_DeclaredType();
+
+	@Inject
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private ReferenceResolutionFinder referenceResolutionFinder;
@@ -166,14 +171,15 @@ public class ImportHelper {
 	 * resolutions of those unresolved references that are unambiguous, i.e. that have only a single possible
 	 * resolution.
 	 *
-	 * @see ReferenceResolutionFinder#findResolutions(ReferenceDescriptor, boolean, boolean, Predicate, Predicate,
-	 *      IResolutionAcceptor)
+	 * @see ReferenceResolutionFinder#findResolutions(N4JSWorkspaceConfigSnapshot, ReferenceDescriptor, boolean,
+	 *      boolean, Predicate, Predicate, IResolutionAcceptor)
 	 */
 	public List<ReferenceResolution> findResolutionsForAllUnresolvedReferences(Script script,
 			CancelIndicator cancelIndicator) {
 
 		triggerProxyResolution(script, cancelIndicator);
 
+		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(script);
 		List<ReferenceResolution> result = new ArrayList<>();
 		Set<String> donePrefixes = new HashSet<>();
 		Iterator<EObject> iter = script.eAllContents();
@@ -183,7 +189,7 @@ public class ImportHelper {
 			ReferenceDescriptor reference = getUnresolvedReferenceForASTNode(curr);
 			if (reference != null && donePrefixes.add(reference.text)) {
 				ResolutionAcceptor acceptor = new ResolutionAcceptor(2, cancelIndicator);
-				referenceResolutionFinder.findResolutions(reference, true, true, Predicates.alwaysFalse(),
+				referenceResolutionFinder.findResolutions(wc, reference, true, true, Predicates.alwaysFalse(),
 						Predicates.alwaysTrue(), acceptor);
 				// only add a found resolution if we have exactly one resolution (i.e. if reference is unambiguous)
 				List<ReferenceResolution> resolutions = acceptor.getResolutions();
@@ -208,13 +214,16 @@ public class ImportHelper {
 			CancelIndicator cancelIndicator) {
 
 		triggerProxyResolution(astNode, cancelIndicator);
+
+		N4JSWorkspaceConfigSnapshot wc = workspaceAccess.getWorkspaceConfig(astNode);
+
 		ReferenceDescriptor reference = getUnresolvedReferenceForASTNode(astNode);
 		if (reference == null) {
 			return Collections.emptyList();
 		}
 		operationCanceledManager.checkCanceled(cancelIndicator);
 		ResolutionAcceptor acceptor = new ResolutionAcceptor(-1, cancelIndicator);
-		referenceResolutionFinder.findResolutions(reference, true, true, Predicates.alwaysFalse(),
+		referenceResolutionFinder.findResolutions(wc, reference, true, true, Predicates.alwaysFalse(),
 				Predicates.alwaysTrue(), acceptor);
 		return acceptor.getResolutions();
 	}

@@ -12,51 +12,104 @@ package org.eclipse.n4js.tests.compare
 
 import com.google.inject.Inject
 import java.io.File
-import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.internal.FileBasedWorkspace
-import org.eclipse.n4js.internal.N4JSRuntimeCore
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
-import org.junit.Before
-import org.junit.runner.RunWith
-import org.eclipse.n4js.projectModel.locations.FileURI
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
+import org.eclipse.n4js.ApiImplCompareTestHelper
+import org.eclipse.n4js.tests.utils.ConvertedIdeTest
+import org.eclipse.n4js.tooling.compare.ProjectCompareHelper
+import org.eclipse.n4js.tooling.compare.ProjectCompareResult.Status
+import org.eclipse.n4js.workspace.WorkspaceAccess
+import org.eclipse.n4js.workspace.utils.N4JSProjectName
+import org.junit.Test
 
-@RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProvider)
-class ApiImplCompareTest extends AbstractApiImplCompareTest {
+import static org.junit.Assert.*
+
+class ApiImplCompareTest extends ConvertedIdeTest {
+
+	protected static val PROJECT_ID_API = new N4JSProjectName("org.eclipse.n4js.sample.api")
+	protected static val PROJECT_ID_IMPL = new N4JSProjectName("org.eclipse.n4js.sample.n4js")
+	protected static val PROJECT_ID_UTILS = new N4JSProjectName("org.eclipse.n4js.sample.utils")
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private ProjectCompareHelper projectCompareHelper;
 	@Inject
-	private FileBasedWorkspace fbWorkspace;
+	private extension ApiImplCompareTestHelper;
+	@Inject
+	private WorkspaceAccess workspaceAccess;
 
-	private boolean setupDone = false;
+	@Test
+	public def void testBasicCases() {
+		importProband(new File("probands", "ApiImplCompare"));
+		assertNoIssues();
 
+		val errMsgs = newArrayList
+		val comparison = projectCompareHelper.createComparison(true,errMsgs)
+		assertEquals(0, errMsgs.size)
 
-	@Before
-	public def void setupHeadlessWorkspace() {
+		// checking class Clazz
 
-		if(setupDone) // cannot use @BeforeClass here (because static), so using this work-around
-			return;
-		setupDone = true;
+		comparison.assertCorrectChildEntries("x/y/M","Clazz",
 
-		// make sure this test runs in headless mode
-		assertTrue(n4jsCore instanceof N4JSRuntimeCore)
+			// format:
+			// childName  ->  expected comparison status  ->  expected comparison description
 
-		registerProject(PROJECT_ID_API)
-		registerProject(PROJECT_ID_IMPL)
-		registerProject(PROJECT_ID_UTILS)
+			"fieldOK" -> Status.EQUAL -> null,
+			"fieldOK_ClazzOther" -> Status.EQUAL -> null,
+			"fieldOK_B" -> Status.EQUAL -> null,
+			"fieldGONE" -> Status.ERROR -> "missing implementation",
+			"fieldWrongType" -> Status.ERROR -> "number is not a subtype of string",
+			"fieldOnlyInImplementation" -> Status.COMPLIANT -> null,
+			"fieldVisibilityReduced" -> Status.ERROR -> "reduced visibility",
 
-		assertEquals(3, n4jsCore.findAllProjects.length);
-	}
+			"methodOK" -> Status.EQUAL -> null,
+			"methodImplicitVoid" -> Status.EQUAL -> null,
+			"methodFewerPars" -> Status.COMPLIANT -> null,
+			"methodCompliant" -> Status.COMPLIANT -> null,
+			"methodOnlyInImplementation" -> Status.COMPLIANT -> null,
+			"methodGetType" -> Status.EQUAL -> null,
+			"methodReducedVisibility" -> Status.ERROR -> "reduced visibility",
+			"methodWithSurplusOptionalFparsOnApiSide" -> Status.COMPLIANT -> null,
+			"methodWithSurplusOptionalFparsOnImplSide" -> Status.COMPLIANT -> null
+		)
 
+		// checking enum Color
 
-	// note: main test contained in super class (common for UI and headless cases)
+		comparison.assertCorrectChildEntries("x/y/M", "Color",
 
+			// format:
+			// childName  ->  expected comparison status  ->  expected comparison description
 
-	private def registerProject(N4JSProjectName name) {
-		fbWorkspace.registerProject(new FileURI(new File("probands/ApiImplCompare/YarnWorkspaceProject/packages/"+name)))
+			"RED" -> Status.EQUAL -> null,
+			"BLACK" -> Status.COMPLIANT -> null,
+			"GREEN" -> Status.EQUAL -> null,
+			"BLUE" -> Status.EQUAL -> null
+		)
+
+		// checking interface I
+
+		comparison.assertCorrectChildEntries("x/y/M", "I",
+			"methodOK" -> Status.EQUAL -> null,
+			"methodDefaultImpl" -> Status.EQUAL -> null,
+			"methodMissingDefaultImpl" -> Status.ERROR -> "no body in implementation but @ProvidesDefaultImplementation in API"
+		)
+
+		comparison.assertCorrectChildEntries("x/y/M", "DB",
+			"method" -> Status.COMPLIANT -> null,
+			"mFromSuperClassInImpl" -> Status.EQUAL -> null,
+			"mFromInterfaceInImpl" -> Status.EQUAL -> null
+		)
+
+		comparison.assertCorrectChildEntries("x/y/M", "DC",
+			"method" -> Status.COMPLIANT -> null
+		)
+
+		comparison.assertCorrectChildEntries("x/y/M", "DD",
+			"method" -> Status.EQUAL -> null
+		)
+
+		comparison.assertCorrectTypeEntry("x/y/M",
+			"TypeVariableTest1" -> Status.ERROR -> "the number of type variables doesn't match",
+			"TypeVariableTest2" -> Status.EQUAL -> null,
+			"TypeVariableTest21" -> Status.ERROR -> "the upper bound of type variable Other isn't compatible with the API",
+			"TypeVariableTest3" -> Status.EQUAL -> null
+		)
 	}
 }

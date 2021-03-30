@@ -24,6 +24,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -37,12 +38,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.projectDescription.ProjectDependency;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectReference;
-import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.locations.FileURI;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
+import org.eclipse.n4js.workspace.locations.FileURI;
 
 import com.google.inject.Inject;
 
@@ -107,8 +108,8 @@ public class ProjectDiscoveryHelper {
 	 * Note that the dependencies (i.e. projects in {@code node_modules} folders) are listed after all workspace
 	 * projects.
 	 */
-	public List<Path> collectAllProjectDirs(Path... workspaceRoots) {
-		Map<Path, ProjectDescription> pdCache = new HashMap<>();
+	public List<Path> collectAllProjectDirs(Collection<Path> workspaceRoots, Map<Path, ProjectDescription> pdCache,
+			boolean loadAllDescriptions) {
 
 		Map<String, Path> projects = collectAllProjects(workspaceRoots, pdCache);
 		Map<String, Path> dependencies = collectNecessaryDependencies(projects, pdCache);
@@ -126,11 +127,19 @@ public class ProjectDiscoveryHelper {
 
 		sortedProjects.addAll(sortedDependecies);
 
+		if (loadAllDescriptions) {
+			for (Path path : sortedProjects) {
+				getCachedProjectDescription(path, pdCache);
+			}
+		}
+
 		return sortedProjects;
 	}
 
 	/** Searches all projects in the given array of workspace directories */
-	private Map<String, Path> collectAllProjects(Path[] workspaceRoots, Map<Path, ProjectDescription> pdCache) {
+	private Map<String, Path> collectAllProjects(Collection<Path> workspaceRoots,
+			Map<Path, ProjectDescription> pdCache) {
+
 		Map<String, Path> allProjectDirs = new HashMap<>();
 		for (Path wsRoot : workspaceRoots) {
 			collectAllProjects(wsRoot, allProjectDirs, pdCache);
@@ -325,7 +334,7 @@ public class ProjectDiscoveryHelper {
 			if (pd == null) {
 				continue;
 			}
-			ProjectType type = pd.getProjectType();
+			ProjectType type = pd.getType();
 			if (type == ProjectType.PLAINJS) {
 				plainjsProjects.put(getProjectNameFromPath(project), project);
 			} else {
@@ -340,7 +349,7 @@ public class ProjectDiscoveryHelper {
 
 	private void addIfNotPlainjs(Map<String, Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
 		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
-		if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
+		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
 			addHere.putIfAbsent(getProjectNameFromPath(project), project);
 		}
 	}

@@ -13,8 +13,8 @@ package org.eclipse.n4js.ide.tests.builder
 import java.io.File
 import java.io.IOException
 import java.util.Map
-import org.eclipse.n4js.projectModel.locations.FileURI
 import org.eclipse.n4js.utils.io.FileCopier
+import org.eclipse.n4js.workspace.locations.FileURI
 import org.junit.Test
 
 /**

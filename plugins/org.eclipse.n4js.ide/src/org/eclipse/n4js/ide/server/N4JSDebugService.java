@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import org.eclipse.n4js.xtext.server.DebugService.DebugServiceDefaultImpl;
+import org.eclipse.n4js.xtext.ide.server.DebugService.DebugServiceDefaultImpl;
 
 import com.google.inject.Singleton;
 

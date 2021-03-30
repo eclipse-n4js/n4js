@@ -23,7 +23,7 @@ import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4jsx.ReactHelper
+import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -46,7 +46,7 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.JSX_PROPERTY_ATTRIBUTE_
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.JSX_SPREAD_ATTRIBUTE__EXPRESSION
 import static org.eclipse.n4js.validation.IssueCodes.*
 
-import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
+import static extension org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**

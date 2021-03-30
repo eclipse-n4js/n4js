@@ -9,7 +9,7 @@
 #   NumberFour AG - Initial API and implementation
 #
 
-n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
+n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.test-workspace.yarn-test-project.packages
 	SpecSample12#poly
 		NO_PACKAGE
 			A.n4js
@@ -21,9 +21,3 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 				A::14::21::22
 				A#baseFromAware::15::23::41
 				A#formSrc::17::42::60
-	SpecSample12#src2
-		NO_PACKAGE
-			A.n4js
-				A::14::21::22
-				A#baseFromAware::14::23::43::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample12:poly
-				A#formSrc2::15::44::62

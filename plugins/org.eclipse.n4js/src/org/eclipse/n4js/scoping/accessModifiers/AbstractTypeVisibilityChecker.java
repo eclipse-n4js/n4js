@@ -14,16 +14,16 @@ import static java.util.Collections.emptyList;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.util.Strings;
 
@@ -37,7 +37,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 
 	/** The N4JS core. This service is used for resolving projects by its contained modules. */
 	@Inject
-	protected IN4JSCore core;
+	protected WorkspaceAccess workspaceAccess;
 
 	@Override
 	public TypeVisibility isVisible(
@@ -160,10 +160,12 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		if (contextResource != null) {
 			final TModule contextModule = N4JSResource.getModule(contextResource);
 			if (contextModule != null) {
-				return this.core.findProject(element.getEObjectURI()).transform(project -> {
-					boolean result = Strings.equal(contextModule.getVendorID(), project.getVendorID());
-					return result;
-				}).or(true);
+				N4JSProjectConfigSnapshot project = this.workspaceAccess.findProjectByNestedLocation(contextResource,
+						element.getEObjectURI());
+				if (project == null) {
+					return true;
+				}
+				return Strings.equal(contextModule.getVendorID(), project.getVendorId());
 			}
 		}
 		return false;
@@ -202,12 +204,14 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 			if (contextModule == null) {
 				return false;
 			}
-			return this.core.findProject(element.getEObjectURI()).transform(project -> {
-				boolean result = Strings.equal(contextModule.getProjectName(), project.getProjectName().getRawName())
-						&& Strings.equal(contextModule.getVendorID(), project.getVendorID())
-						|| isTestedProjectOf(contextModule, project);
-				return result;
-			}).or(true);
+			N4JSProjectConfigSnapshot project = this.workspaceAccess.findProjectByNestedLocation(contextResource,
+					element.getEObjectURI());
+			if (project == null) {
+				return true;
+			}
+			return Strings.equal(contextModule.getProjectName(), project.getName())
+					&& Strings.equal(contextModule.getVendorID(), project.getVendorId())
+					|| isTestedProjectOf(contextModule, project);
 		}
 		return false;
 	}
@@ -229,21 +233,16 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 			return false;
 		}
 
-		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
-			final URI testProjectLocation = testedProject.getLocation().toURI();
-			if (null != testProjectLocation) {
-				final Resource eResource = elementModule.eResource();
-				if (null != eResource) {
-					final URI resourceUri = eResource.getURI();
-					final IN4JSProject elementProject = core.findProject(resourceUri).orNull();
-					if (null != elementProject) {
-						if (elementProject.getProjectName().equals(testedProject.getProjectName())) {
-							return true;
-						}
+		for (final ProjectReference testedProject : getTestedProjects(contextModule.eResource())) {
+			final Resource eResource = elementModule.eResource();
+			if (null != eResource) {
+				final N4JSProjectConfigSnapshot elementProject = workspaceAccess.findProjectContaining(eResource);
+				if (null != elementProject) {
+					if (elementProject.getName().equals(testedProject.getProjectName())) {
+						return true;
 					}
 				}
 			}
-
 		}
 
 		return false;
@@ -260,9 +259,9 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 * @return {@code true} if the element module's container project is the tested project of the context module.
 	 *         Otherwise returns with {@code false}.
 	 */
-	public boolean isTestedProjectOf(final TModule contextModule, final IN4JSProject elementProject) {
-		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
-			if (elementProject.getProjectName().equals(testedProject.getProjectName())) {
+	public boolean isTestedProjectOf(final TModule contextModule, final N4JSProjectConfigSnapshot elementProject) {
+		for (final ProjectReference testedProject : getTestedProjects(contextModule.eResource())) {
+			if (elementProject.getName().equals(testedProject.getProjectName())) {
 				return true;
 			}
 		}
@@ -273,21 +272,21 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 * Returns with a collection of projects that are tested by the container project for the resource given with the
 	 * unique resource URI.
 	 *
-	 * @param contextResourceUri
-	 *            the URI of the context resource to retrieve its container project's host.
+	 * @param contextResource
+	 *            the context resource to retrieve its container project's host.
 	 * @return a collection of tested projects. May be empty but never {@code null}.
 	 */
-	public Collection<? extends IN4JSProject> getTestedProjects(final URI contextResourceUri) {
-		if (null == contextResourceUri) {
+	public Collection<? extends ProjectReference> getTestedProjects(Resource contextResource) {
+		if (null == contextResource) {
 			return emptyList();
 		}
 
-		final IN4JSProject contextProject = core.findProject(contextResourceUri).orNull();
-		if (null == contextProject || !contextProject.exists()) {
+		final N4JSProjectConfigSnapshot contextProject = workspaceAccess.findProjectContaining(contextResource);
+		if (null == contextProject) {
 			return emptyList();
 		}
 
-		return contextProject.getTestedProjects();
+		return contextProject.getProjectDescription().getTestedProjects();
 	}
 
 	/**

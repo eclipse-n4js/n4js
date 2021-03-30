@@ -16,6 +16,7 @@ import java.util.Objects;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.workspace.IProjectConfig;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -85,6 +86,16 @@ public class ProjectConfigSnapshot extends Snapshot {
 		return sourceFolders;
 	}
 
+	/** Returns the source folder that {@link SourceFolderSnapshot#contains(URI) contains} the given URI. */
+	public SourceFolderSnapshot findSourceFolderContaining(URI uri) {
+		for (SourceFolderSnapshot sourceFolder : sourceFolders) {
+			if (sourceFolder.contains(uri)) {
+				return sourceFolder;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
@@ -111,8 +122,49 @@ public class ProjectConfigSnapshot extends Snapshot {
 
 	@Override
 	public String toString() {
-		return "ProjectConfigSnapshot [name=" + name + ", path=" + path + ", dependencies=" + dependencies
-				+ ", sourceFolders=" + sourceFolders + "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" {\n");
+		sb.append("    name: " + name + "\n");
+		toStringAdditionalProperties(sb);
+		sb.append("    path: " + path + "\n");
+		sb.append("    dependencies: [");
+		if (dependencies.isEmpty()) {
+			sb.append("]\n");
+		} else {
+			sb.append(' ');
+			sb.append(Joiner.on(", ").join(dependencies));
+			sb.append(" ]\n");
+		}
+		sb.append("    sourceFolders: [");
+		if (sourceFolders.isEmpty()) {
+			sb.append("]\n");
+		} else {
+			for (SourceFolderSnapshot sf : sourceFolders) {
+				sb.append("\n        ");
+				sb.append(sf.toString());
+			}
+			sb.append("\n    ]\n");
+		}
+		sb.append("}");
+		return sb.toString();
 	}
 
+	/** Subclasses may override to emit more properties. */
+	protected void toStringAdditionalProperties(@SuppressWarnings("unused") StringBuilder sb) {
+		// nothing to add
+	}
+
+	/**
+	 * Subclasses may override to omit this project from project list in {@link #toString()} methods of
+	 * {@link WorkspaceConfigSnapshot} and {@link ProjectSet}.
+	 */
+	protected boolean isOmittedFromToString() {
+		return false;
+	}
+
+	/** Like {@link #toString()}, but with fewer properties and without line breaks. */
+	public String toStringBrief() {
+		return getClass().getSimpleName() + " { name: " + name + ", path: " + path + " }";
+	}
 }

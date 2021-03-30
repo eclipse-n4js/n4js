@@ -94,19 +94,18 @@ import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.NameAndExtension;
-import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectModel.locations.FileURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.n4js.xtext.server.ProjectStatePersisterConfig;
-import org.eclipse.n4js.xtext.server.XDocument;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
+import org.eclipse.n4js.xtext.ide.server.XDocument;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -230,9 +229,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** */
 	@Inject
 	protected BuildOrderFactory projectBuildOrderFactory;
-	/** */
-	@Inject
-	protected XWorkspaceConfigSnapshotProvider workspaceConfigProvider;
 
 	/** Utility to create/delete the test workspace on disk */
 	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
@@ -1187,7 +1183,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Asserts the build order of all projects in the workspace. */
 	protected void assertProjectBuildOrder(String expectedProjectBuildOrder) {
-		WorkspaceConfigSnapshot workspaceConfig = workspaceConfigProvider.getWorkspaceConfigSnapshot();
+		WorkspaceConfigSnapshot workspaceConfig = concurrentIndex.getWorkspaceConfigSnapshot();
 		BuildOrderIterator iter = projectBuildOrderFactory.createBuildOrderIterator(workspaceConfig).visitAll();
 		String buildOrderString = org.eclipse.n4js.utils.Strings.toString(pd -> pd.getName(), () -> iter);
 		assertEquals("Project build order did not match expectation.", expectedProjectBuildOrder, buildOrderString);

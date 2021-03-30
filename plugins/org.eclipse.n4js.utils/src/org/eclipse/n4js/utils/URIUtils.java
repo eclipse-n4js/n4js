@@ -328,6 +328,7 @@ public class URIUtils {
 	 * given URI, if it has one. Otherwise returns the given URI unchanged.
 	 */
 	public static URI trimTrailingPathSeparator(URI uri) {
+		uri = uri.trimFragment();
 		return uri.hasTrailingPathSeparator() ? uri.trimSegments(1) : uri;
 	}
 }

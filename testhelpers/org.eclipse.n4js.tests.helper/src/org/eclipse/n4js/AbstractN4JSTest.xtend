@@ -16,10 +16,10 @@ import java.util.List
 import java.util.stream.Collectors
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.testing.InjectWith
@@ -48,7 +48,7 @@ public abstract class AbstractN4JSTest extends Assert {
 	private Provider<XtextResourceSet> resourceSetProvider
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 
 	/**
@@ -171,7 +171,7 @@ public abstract class AbstractN4JSTest extends Assert {
 		
 		// re-load all resources from index
 		val reloadedResources = descriptions.stream.map[resDesc |
-			val resFromIndex = n4jsCore.loadModuleFromIndex(resSet, resDesc, false).eResource as N4JSResource;
+			val resFromIndex = workspaceAccess.loadModuleFromIndex(resSet, resDesc, false).eResource as N4JSResource;
 			
 			assertTrue(resFromIndex.script.eIsProxy);
 			assertFalse(resFromIndex.module.eIsProxy);

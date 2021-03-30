@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.tests.conversion;
 
-import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
+import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter;
 import org.junit.Assert;
 import org.junit.Test;
 

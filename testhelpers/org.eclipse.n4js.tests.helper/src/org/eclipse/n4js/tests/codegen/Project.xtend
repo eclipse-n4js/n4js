@@ -19,8 +19,7 @@ import java.util.Map
 import java.util.Objects
 import java.util.Set
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.eclipse.xpect.setup.XpectSetupComponent
 
@@ -228,7 +227,7 @@ public class Project {
 	}
 
 	/**
-	 * Generates the {@link IN4JSProject#PACKAGE_JSON} for this project.
+	 * Generates the {@link N4JSGlobals#PACKAGE_JSON} for this project.
 	 */
 	public def String generate() '''
 		«IF !projectDescriptionContent.nullOrEmpty»«
@@ -322,7 +321,7 @@ public class Project {
 	}
 
 	private def void createProjectDescriptionFile(File parentDirectory) {
-		val File filePath = new File(parentDirectory, IN4JSProject.PACKAGE_JSON);
+		val File filePath = new File(parentDirectory, N4JSGlobals.PACKAGE_JSON);
 		var FileWriter out = null;
 		try {
 			out = new FileWriter(filePath);

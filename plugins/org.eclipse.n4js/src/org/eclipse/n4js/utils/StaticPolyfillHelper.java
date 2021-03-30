@@ -17,16 +17,16 @@ import java.util.Objects;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -48,13 +48,16 @@ public final class StaticPolyfillHelper {
 	private ProjectResolveHelper projectResolver;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private ResourceDescriptionsProvider indexAccess;
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
+
+	@Inject
+	private FindArtifactHelper findArtifactHelper;
 
 	/**
 	 * For a given N4JSResource annotated with {@code @@StaticPolyfillAware} lookup the filling Module. returns
@@ -113,15 +116,16 @@ public final class StaticPolyfillHelper {
 				return null;
 
 			final QualifiedName qnFilled = qualifiedNameConverter.toQualifiedName(res.getModule().getQualifiedName());
-			final IN4JSProject project = projectResolver.resolveProject(res.getURI());
+			final N4JSProjectConfigSnapshot project = projectResolver.resolveProject(res, res.getURI());
 			final QualifiedName fqn = qnFilled;
 			final Optional<String> fileExtension = Optional.of(res.getURI().fileExtension()); // see Req.155#4: "Both
 																								// extensions are
 																								// equal."
-			final IN4JSSourceContainer filledSrcContainer = n4jsCore.findN4JSSourceContainer(res.getURI()).get();
-			for (IN4JSSourceContainer srcConti : project.getSourceContainers()) {
+			final N4JSSourceFolderSnapshot filledSrcContainer = workspaceAccess.findSourceFolderContaining(res,
+					res.getURI());
+			for (N4JSSourceFolderSnapshot srcConti : project.getSourceFolders()) {
 				if (!Objects.equals(filledSrcContainer, srcConti)) {
-					final SafeURI<?> uri = srcConti.findArtifact(fqn, fileExtension);
+					final SafeURI<?> uri = findArtifactHelper.findArtifact(srcConti, fqn, fileExtension);
 					if (uri != null) {
 						return uri;
 					}

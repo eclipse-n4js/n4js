@@ -41,7 +41,7 @@ import org.eclipse.n4js.tests.codegen.Member;
 import org.eclipse.n4js.tests.issues.IssueExpectations;
 import org.eclipse.n4js.utils.SimpleParserException;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.xtext.server.issues.LSPIssueToLSPDiagnosticConverter;
+import org.eclipse.n4js.xtext.ide.server.issues.LSPIssueToLSPDiagnosticConverter;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.Test;
 import org.junit.runner.RunWith;

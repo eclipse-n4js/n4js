@@ -19,7 +19,6 @@ import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistContextFactory
 import org.eclipse.n4js.ide.editor.contentassist.N4JSContentAssistService;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
-import org.eclipse.n4js.ide.server.FileBasedWorkspaceInitializer;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.N4JSDebugService;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
@@ -29,6 +28,7 @@ import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
+import org.eclipse.n4js.ide.server.N4JSWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.build.N4JSBuildOrderInfoComputer;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
@@ -43,38 +43,37 @@ import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
 import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvider;
 import org.eclipse.n4js.ide.server.util.N4JSServerIncidentLogger;
-import org.eclipse.n4js.internal.lsp.FileSystemScanner;
-import org.eclipse.n4js.internal.lsp.N4JSSourceFolderScanner;
-import org.eclipse.n4js.xtext.editor.contentassist.XIdeContentProposalAcceptor;
-import org.eclipse.n4js.xtext.server.DebugService;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.utils.FileSystemScanner;
+import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;
+import org.eclipse.n4js.xtext.ide.editor.contentassist.XIdeContentProposalAcceptor;
+import org.eclipse.n4js.xtext.ide.server.DebugService;
+import org.eclipse.n4js.xtext.ide.server.LanguageServerFrontend;
+import org.eclipse.n4js.xtext.ide.server.QueuedExecutorService;
+import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
+import org.eclipse.n4js.xtext.ide.server.XExecutableCommandRegistry;
+import org.eclipse.n4js.xtext.ide.server.XIProjectDescriptionFactory;
+import org.eclipse.n4js.xtext.ide.server.XIWorkspaceConfigFactory;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.ide.server.build.DefaultBuildRequestFactory;
+import org.eclipse.n4js.xtext.ide.server.build.IBuildRequestFactory;
+import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
+import org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister;
+import org.eclipse.n4js.xtext.ide.server.build.WorkspaceAwareResourceSet;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
+import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
+import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
+import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.xtext.ide.server.issues.WorkspaceValidateListener;
+import org.eclipse.n4js.xtext.ide.server.symbol.XDocumentSymbolService;
+import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.xtext.ide.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
-import org.eclipse.n4js.xtext.server.LanguageServerFrontend;
-import org.eclipse.n4js.xtext.server.QueuedExecutorService;
-import org.eclipse.n4js.xtext.server.TextDocumentFrontend;
-import org.eclipse.n4js.xtext.server.XExecutableCommandRegistry;
-import org.eclipse.n4js.xtext.server.XIProjectDescriptionFactory;
-import org.eclipse.n4js.xtext.server.XIWorkspaceConfigFactory;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex;
-import org.eclipse.n4js.xtext.server.build.DefaultBuildRequestFactory;
-import org.eclipse.n4js.xtext.server.build.IBuildRequestFactory;
-import org.eclipse.n4js.xtext.server.build.ProjectBuilder;
-import org.eclipse.n4js.xtext.server.build.ProjectStatePersister;
-import org.eclipse.n4js.xtext.server.build.WorkspaceAwareResourceSet;
-import org.eclipse.n4js.xtext.server.build.XBuildRequest.AfterValidateListener;
-import org.eclipse.n4js.xtext.server.build.XStatefulIncrementalBuilder;
-import org.eclipse.n4js.xtext.server.build.XWorkspaceManager;
-import org.eclipse.n4js.xtext.server.contentassist.XContentAssistService;
-import org.eclipse.n4js.xtext.server.issues.WorkspaceValidateListener;
-import org.eclipse.n4js.xtext.server.symbol.XDocumentSymbolService;
-import org.eclipse.n4js.xtext.server.util.IHeadlessExtensionRegistrationHelper;
-import org.eclipse.n4js.xtext.server.util.ServerIncidentLogger;
-import org.eclipse.n4js.xtext.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
-import org.eclipse.n4js.xtext.workspace.XWorkspaceConfigSnapshotProvider;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -106,6 +105,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public ClassLoader bindClassLoaderToInstance() {
 		return getClass().getClassLoader();
+	}
+
+	public Class<? extends WorkspaceAccess> bindWorkspaceAccess() {
+		return IdeWorkspaceAccess.class;
 	}
 
 	/**
@@ -142,7 +145,7 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 	}
 
 	public Class<? extends XIWorkspaceConfigFactory> bindXIWorkspaceConfigFactory() {
-		return FileBasedWorkspaceInitializer.class;
+		return N4JSWorkspaceConfigFactory.class;
 	}
 
 	public Class<? extends XIProjectDescriptionFactory> bindXIProjectDescriptionFactory() {
@@ -281,10 +284,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
 		return WorkspaceValidateListener.class;
-	}
-
-	public Class<? extends XWorkspaceConfigSnapshotProvider> bindXWorkspaceConfigSnapshotProvider() {
-		return ConcurrentIndex.class;
 	}
 
 	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {

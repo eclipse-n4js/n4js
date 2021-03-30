@@ -32,11 +32,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.binaries.Binary;
+import org.eclipse.n4js.cli.utils.BinariesUtils;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
@@ -275,7 +275,7 @@ public class N4CliHelper {
 		// include user-provided environment variables
 		pb.environment().putAll(environment);
 		pb.directory(new File(workingDir));
-		Binary.inheritNodeJsPathEnvVariable(pb.environment());
+		BinariesUtils.inheritNodeJsPathEnvVariable(pb.environment());
 
 		pb.redirectErrorStream(true);
 		pb.redirectOutput(Redirect.to(log));

@@ -19,16 +19,18 @@ import java.util.regex.Pattern
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSResourceValidator
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.IResourceDescription
@@ -38,8 +40,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.n4js.n4JS.N4JSPackage
 
 /**
  * Contains module-level validations, i.e. validations that need to be checked once per module / file.
@@ -58,7 +58,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject IQualifiedNameConverter qualifiedNameConverter
 
-	@Inject IN4JSCore n4jscore;
+	@Inject WorkspaceAccess workspaceAccess;
 
 	/**
 	 * NEEDED
@@ -133,10 +133,12 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 * Check the found candidates for reach	ability via the visible containers.
 	 */
 	private def void checkUniqueInIndex(Script script, TModule module, Iterable<IEObjectDescription> descriptions, Provider<List<IContainer>> lazyContainersList) {
+		val resource = module.eResource;
+
 		val resourceURIs = descriptions.map[
 			EObjectURI.trimFragment
 		].filter[
-			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(module.eResource) && fileExtension != N4JSGlobals.JS_FILE_EXTENSION
+			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && fileExtension != N4JSGlobals.JS_FILE_EXTENSION
 		].toSet;
 
 		if (resourceURIs.size > 0) {
@@ -171,16 +173,20 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				// non MainModules are follow normal visibility check
 				// but MainModules have checks relaxed:
 				if(module.isMainModule){
-					val pr = n4jscore.findProject(module.eResource.URI).get;
+					val ws = workspaceAccess.getWorkspaceConfig(resource);
+					val pr = ws.findProjectByPath(resource.URI);
+					if (pr === null) {
+						return;
+					}
 					filteredMutVisibleResourceURIs = filteredMutVisibleResourceURIs.filter[u| {
-							if(pr == n4jscore.findProject(u).get){
+							if(pr == ws.findProjectByPath(u)){
 								// the same project, MainModule is hidden within the project
 								//if other file with the same source container relative path
 								//(also across different containers)
-								val baseModuleSrcCon = n4jscore.findN4JSSourceContainer(module.eResource.URI).get.location.toString;
-								val otherModuleSrcCon = n4jscore.findN4JSSourceContainer(u).get.location.toString;
+								val baseModuleSrcCon = ws.findSourceFolderContaining(resource.URI).path.toString;
+								val otherModuleSrcCon = ws.findSourceFolderContaining(u).path.toString;
 
-								val baseModuleSrcContainerRelativePath = module.eResource.URI.toString.substring(baseModuleSrcCon.length);
+								val baseModuleSrcContainerRelativePath = resource.URI.toString.substring(baseModuleSrcCon.length);
 								val otherModuleSrcContainerRelativePath = u.toString.substring(otherModuleSrcCon.length);
 								return baseModuleSrcContainerRelativePath == otherModuleSrcContainerRelativePath;
 							}else{

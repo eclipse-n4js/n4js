@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
@@ -40,18 +39,17 @@ import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
-import org.eclipse.xtext.resource.FileExtensionProvider;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
@@ -61,13 +59,10 @@ import com.google.inject.Inject;
 public class XpectN4JSES5TranspilerHelper {
 
 	@Inject
-	private IN4JSCore core;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private XpectN4JSES5GeneratorHelper xpectGenerator;
-
-	@Inject
-	private FileExtensionProvider fileExtensionProvider;
 
 	private ReadOutConfiguration readOutConfiguration;
 
@@ -179,11 +174,7 @@ public class XpectN4JSES5TranspilerHelper {
 	 */
 	private void loadXpectConfiguration(
 			org.eclipse.xpect.setup.ISetupInitializer<Object> init, FileSetupContext fileSetupContext) {
-		if (Platform.isRunning()) {
-			readOutConfiguration = new ReadOutWorkspaceConfiguration(fileSetupContext, core, fileExtensionProvider);
-		} else {
-			readOutConfiguration = new ReadOutResourceSetConfiguration(fileSetupContext, core);
-		}
+		readOutConfiguration = new ReadOutResourceSetConfiguration(fileSetupContext, workspaceAccess);
 		init.initialize(readOutConfiguration);
 	}
 
@@ -207,21 +198,22 @@ public class XpectN4JSES5TranspilerHelper {
 			return;
 		}
 
-		Optional<? extends IN4JSSourceContainer> sourceOpt = core.findN4JSSourceContainer(dep.getURI());
-		if (sourceOpt.isPresent()) {
-			IN4JSSourceContainer source = sourceOpt.get();
-			IN4JSProject project = source.getProject();
-			for (IN4JSSourceContainer c : project.getSourceContainers()) {
+		Pair<N4JSProjectConfigSnapshot, N4JSSourceFolderSnapshot> pair = workspaceAccess
+				.findProjectAndSourceFolderContaining(dep, dep.getURI());
+		N4JSProjectConfigSnapshot project = pair.getKey();
+		N4JSSourceFolderSnapshot source = pair.getValue();
+		if (project != null && source != null) {
+			for (N4JSSourceFolderSnapshot c : project.getSourceFolders()) {
 				if (c.isExternal()) {
 					String sourceRelativePath = dep.getURI().toString()
-							.replace(source.getLocation().toString(), "");
+							.replace(source.getPathAsFileURI().toString(), "");
 					String[] potentialExternalSourceRelativeURISegments = null;
 					String potentialExternalSourceRelativePath = sourceRelativePath.replace(".n4jsd", ".js");
 					potentialExternalSourceRelativeURISegments = URI.createURI(potentialExternalSourceRelativePath)
 							.segments();
 
 					if (potentialExternalSourceRelativeURISegments != null) {
-						URI potentialExternalSourceURI = c.getLocation().appendSegments(
+						URI potentialExternalSourceURI = c.getPathAsFileURI().appendSegments(
 								potentialExternalSourceRelativeURISegments).toURI();
 						try {
 							Resource externalDep = dep.getResourceSet().getResource(potentialExternalSourceURI, true);
@@ -291,7 +283,7 @@ public class XpectN4JSES5TranspilerHelper {
 				? script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
 				: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
-		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(script);
 		if (project != null) {
 			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project, includeProjectName);
 		}

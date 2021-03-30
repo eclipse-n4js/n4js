@@ -98,7 +98,7 @@ public class ReflectionBuilder {
 				? ((N4ClassifierDeclaration) typeDecl).getOwnedMembers()
 				: Collections.emptyList();
 
-		String origin = resourceNameComputer.generateProjectDescriptor(state.resource.getURI());
+		String origin = resourceNameComputer.generateProjectDescriptor(state.resource);
 		String fqn = resourceNameComputer.getFullyQualifiedTypeName(type);
 		String modulePath = fqn.substring(0, fqn.length() - typeSTE.getName().length() - 1);
 

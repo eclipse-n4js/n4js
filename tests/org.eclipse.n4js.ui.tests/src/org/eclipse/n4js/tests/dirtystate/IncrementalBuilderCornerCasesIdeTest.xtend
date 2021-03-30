@@ -15,7 +15,7 @@ import java.util.Collections
 import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
-import org.eclipse.n4js.xtext.server.build.ConcurrentIndex
+import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.resource.IResourceDescription.Delta
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta
@@ -154,9 +154,10 @@ public class IncrementalBuilderCornerCasesIdeTest extends ConvertedIdeTest {
 		assertTrue(resourceDescriptionsManager instanceof N4JSResourceDescriptionManager)
 		val rdm = resourceDescriptionsManager as N4JSResourceDescriptionManager;
 		val xtextIndex = new ResourceDescriptionsData(concurrentIndex.entries.flatMap[value.allResourceDescriptions]);
+		val workspaceConfig = concurrentIndex.workspaceConfigSnapshot;
 
-		assertTrue("file M.n4js in first project should be affected by change to file C.n4js in first project", rdm.isAffected(deltas, m1_rd, xtextIndex))
-		assertFalse("file M.n4js in second project should *not* be affected by change to file C.n4js in first project", rdm.isAffected(deltas, m2_rd, xtextIndex))
+		assertTrue("file M.n4js in first project should be affected by change to file C.n4js in first project", rdm.isAffected(deltas, m1_rd, xtextIndex, workspaceConfig))
+		assertFalse("file M.n4js in second project should *not* be affected by change to file C.n4js in first project", rdm.isAffected(deltas, m2_rd, xtextIndex, workspaceConfig))
 
 // note: the following assertion is obsolete after the transition to LSP and converting this test to an IDE test
 // (method #assertXtextIndexIsValid() made sure that the index does not contain any instances of class

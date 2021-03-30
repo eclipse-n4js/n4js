@@ -11,19 +11,21 @@
 package org.eclipse.n4js.validation.helper
 
 import com.google.common.collect.ImmutableList
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.utils.DependencyTraverser
 import org.eclipse.n4js.utils.DependencyTraverser.DependencyProvider
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 
 /**
  * A {@link DependencyProvider} implementation for traversing the dependency 
- * graph defined by {@link IN4JSProject} entities via {@link DependencyTraverser}. 
+ * graph defined by {@link N4JSProjectConfigSnapshot} entities via {@link DependencyTraverser}. 
  */
-class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JSProject> {
+class SourceContainerAwareDependencyProvider implements DependencyProvider<N4JSProjectConfigSnapshot> {
 
+	private final N4JSWorkspaceConfigSnapshot workspaceConfig;
 	private final boolean ignoreExternalPlainJsProjects;
-	
+
 	/** 
 	 * Creates a new traverser instance with the given root node.
 	 * 
@@ -36,23 +38,25 @@ class SourceContainerAwareDependencyProvider implements DependencyProvider<IN4JS
 	 * 				Specifies whether the traverser should terminate early when dependency cycles are 
 	 * 				detected, or whether it should continue.
 	 */
-	public new(boolean ignoreExternalPlainJsProjects) {
+	public new(N4JSWorkspaceConfigSnapshot workspaceConfig, boolean ignoreExternalPlainJsProjects) {
+		this.workspaceConfig = workspaceConfig;
 		this.ignoreExternalPlainJsProjects = ignoreExternalPlainJsProjects;
 	}
-	
-	override getDependencies(IN4JSProject p) {
+
+	override getDependencies(N4JSProjectConfigSnapshot p) {
+		val directDepsResolved = p.dependencies.map[workspaceConfig.findProjectByName(it)].filterNull;
 		if (ignoreExternalPlainJsProjects) {
-			return ImmutableList.copyOf(p.allDirectDependencies.filter[dep|!isIgnored(dep)]);
+			return ImmutableList.copyOf(directDepsResolved.filter[dep|!isIgnored(dep)]);
 		} else {
 			// this is used by default
-			return p.allDirectDependencies;
+			return ImmutableList.copyOf(directDepsResolved);
 		}
 	}
-	
-	private static def boolean isIgnored(IN4JSProject project) {
+
+	private static def boolean isIgnored(N4JSProjectConfigSnapshot project) {
 		return project.external && 
-			(project.projectType===ProjectType.VALIDATION || 
-				project.projectType===ProjectType.PLAINJS);
+			(project.type===ProjectType.VALIDATION || 
+				project.type===ProjectType.PLAINJS);
 	}
 
 }

@@ -27,12 +27,12 @@ include::{find}config.adoc[]
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample5_LinkToReqIDs:src/A:A#foo++[``++project foo(): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample5_LinkToReqIDs:src/A:A#foo++[``++project foo(): void++``]
 
 
 ==== Semantics
 
-. *++Foo++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample5_LinkToReqIDs:test/ReqTest:ReqTest#testFoo++[Test]#)
+. *++Foo++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample5_LinkToReqIDs:test/ReqTest:ReqTest#testFoo++[Test]#)
 +
 [.generatedApiConstraint]
 ====

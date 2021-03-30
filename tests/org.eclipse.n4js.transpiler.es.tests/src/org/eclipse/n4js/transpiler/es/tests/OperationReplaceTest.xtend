@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
@@ -28,7 +28,7 @@ import static extension org.eclipse.n4js.transpiler.TranspilerStateOperations.*
 /**
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSInjectorProviderWithMockProject)
+@InjectWith(N4JSInjectorProvider)
 class OperationReplaceTest extends AbstractTranspilerTest {
 
 	@Test

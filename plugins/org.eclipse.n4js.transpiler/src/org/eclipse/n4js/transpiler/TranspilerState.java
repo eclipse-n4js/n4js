@@ -19,7 +19,6 @@ import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.VariableStatement;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional;
 import org.eclipse.n4js.transpiler.im.Script_IM;
@@ -33,6 +32,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -50,7 +50,7 @@ public class TranspilerState {
 	/**
 	 * The containing project of the resource to transpile.
 	 */
-	public final IN4JSProject project;
+	public final N4JSProjectConfigSnapshot project;
 
 	/**
 	 * The {@link GeneratorOption}s that were specified for configuration purposes when transpilation was initiated.
@@ -111,7 +111,7 @@ public class TranspilerState {
 	/**
 	 * Creates a new transpiler state.
 	 */
-	public TranspilerState(N4JSResource resource, IN4JSProject project, GeneratorOption[] options,
+	public TranspilerState(N4JSResource resource, N4JSProjectConfigSnapshot project, GeneratorOption[] options,
 			MemberCollector memberCollector, Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info) {
 		this.resource = resource;
 		this.project = project;

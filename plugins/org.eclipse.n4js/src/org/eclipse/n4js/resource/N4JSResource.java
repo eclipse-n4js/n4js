@@ -52,17 +52,16 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter;
-import org.eclipse.n4js.conversion.CompositeSyntaxErrorMessages;
-import org.eclipse.n4js.conversion.LegacyOctalIntValueConverter;
-import org.eclipse.n4js.conversion.N4JSStringValueConverter;
-import org.eclipse.n4js.conversion.RegExLiteralConverter;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter;
+import org.eclipse.n4js.parser.conversion.CompositeSyntaxErrorMessages;
+import org.eclipse.n4js.parser.conversion.LegacyOctalIntValueConverter;
+import org.eclipse.n4js.parser.conversion.N4JSStringValueConverter;
+import org.eclipse.n4js.parser.conversion.RegExLiteralConverter;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.smith.Measurement;
@@ -78,6 +77,7 @@ import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -267,7 +267,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private N4JSScopingDiagnostician scopingDiagnostician;
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
@@ -346,11 +346,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Tells if this resource represents an {@link N4JSLanguageHelper#isOpaqueModule(URI) opaque module}. Intended as
-	 * convenience and for client code that is unable to inject {@link N4JSLanguageHelper} (e.g. in builder).
+	 * Tells if this resource represents an {@link N4JSLanguageHelper#isOpaqueModule(Resource) opaque module}. Intended
+	 * as convenience and for client code that is unable to inject {@link N4JSLanguageHelper} (e.g. in builder).
 	 */
 	public boolean isOpaque() {
-		return langHelper.isOpaqueModule(this.uri);
+		return langHelper.isOpaqueModule(this);
 	}
 
 	/**
@@ -1114,11 +1114,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 								&& (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
 							// uri points to a TModule element in a resource not yet contained in our resource set
 							// --> try to load target resource from index
-							final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+							final IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).get();
 							final IResourceDescription resDesc = index.getResourceDescription(targetResourceUri);
 							if (resDesc != null) {
 								// next line will add the new resource to resSet.resources
-								n4jsCore.loadModuleFromIndex(resSet, resDesc, false);
+								workspaceAccess.loadModuleFromIndex(resSet, resDesc, false);
 							}
 						}
 					}

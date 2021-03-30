@@ -30,9 +30,6 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.locations.FileURI;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectorUtils;
@@ -43,10 +40,13 @@ import org.eclipse.n4js.transpiler.sourcemap.MappingEntry;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMap;
 import org.eclipse.n4js.transpiler.sourcemap.SourceMapFileLocator;
 import org.eclipse.n4js.utils.ResourceNameComputer;
-import org.eclipse.n4js.xtext.server.ResourceTaskContext;
-import org.eclipse.n4js.xtext.server.TextDocumentFrontend;
-import org.eclipse.n4js.xtext.server.XLanguageServerImpl;
-import org.eclipse.n4js.xtext.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
+import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
+import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
+import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Strings;
@@ -59,7 +59,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 	private static Logger LOG = Logger.getLogger(XLanguageServerImpl.class);
 
 	@Inject
-	private IN4JSCore core;
+	private WorkspaceAccess workspaceAccess;
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
@@ -102,12 +102,12 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			TextDocumentPositionParams positionParams, CancelIndicator cancelIndicator) {
 
 		URI uri = rtc.getURI();
-		IN4JSProject project = core.findProject(uri).orNull();
-		String targetFileName = resourceNameComputer.generateFileDescriptor(uri, JS_FILE_EXTENSION);
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(rtc.getResource());
+		String targetFileName = resourceNameComputer.generateFileDescriptor(rtc.getResource(), uri, JS_FILE_EXTENSION);
 		List<Location> locations = new ArrayList<>();
 		if (project != null && !Strings.isNullOrEmpty(targetFileName)) {
 			String outputPath = project.getOutputPath();
-			Path projectLocation = project.getLocation().toFileSystemPath();
+			Path projectLocation = project.getPathAsFileURI().toFileSystemPath();
 			Path genFilePath = projectLocation.resolve(outputPath + "/" + targetFileName);
 
 			Range range = findRange(positionParams, genFilePath);

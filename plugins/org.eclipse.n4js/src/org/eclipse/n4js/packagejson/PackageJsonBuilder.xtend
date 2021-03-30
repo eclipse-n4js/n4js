@@ -16,13 +16,13 @@ import java.util.SortedMap
 import java.util.TreeMap
 import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.projectDescription.ProjectType
-import org.eclipse.n4js.projectDescription.SourceContainerType
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
+import org.eclipse.n4js.workspace.utils.N4JSProjectName
 
 import static com.google.common.base.Optional.fromNullable
 import static com.google.common.base.Preconditions.checkNotNull
-import org.eclipse.n4js.projectModel.names.N4JSProjectName
 
 /**
  * Convenient builder for creating the N4JS package.json compliant {@link JSONDocument} model 

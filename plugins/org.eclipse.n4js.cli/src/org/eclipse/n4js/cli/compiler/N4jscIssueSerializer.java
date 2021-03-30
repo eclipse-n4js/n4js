@@ -13,7 +13,7 @@ package org.eclipse.n4js.cli.compiler;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
-import org.eclipse.n4js.xtext.server.build.BuilderFrontend;
+import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

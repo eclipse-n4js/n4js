@@ -20,22 +20,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.SourceContainerDescription;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.locations.SafeURI;
-import org.eclipse.n4js.projectModel.names.N4JSProjectName;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.utils.io.FileUtils;
+import org.eclipse.n4js.workspace.locations.SafeURI;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
@@ -49,7 +44,8 @@ public class ProjectDescriptionUtils {
 	public static final String NPM_SCOPE_PREFIX = "@";
 	/** Character used in N4JS project names for separating the scope name from the plain project name. */
 	public static final char NPM_SCOPE_SEPARATOR = '/';
-	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. */
+	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. Obsolete: no longer used. */
+	@Deprecated
 	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = ':';
 
 	/**
@@ -93,12 +89,13 @@ public class ProjectDescriptionUtils {
 	 * </tr>
 	 * <tr>
 	 * <td>N4JS project name</td>
-	 * <td>The value the value returned by {@link IN4JSProject#getProjectName()}. Always equal to<br>
+	 * <td>The value the value returned by {@link ProjectDescription#getName()}. Always equal to<br>
 	 * the value of the top-level property "name" in the project's <code>package.json</code> file.</td>
 	 * <td>{@code @myScope/myProject}</td>
 	 * </tr>
 	 * <tr>
-	 * <td>Eclipse project name</td>
+	 * <td>Eclipse project name<br>
+	 * (obsolete; no longer used)</td>
 	 * <td>The value returned by {@link IProject#getName()}. Different from the N4JS project name,<br>
 	 * because Eclipse does not support NPM's scope separator character {@value #NPM_SCOPE_SEPARATOR} in project
 	 * names.</td>
@@ -409,7 +406,7 @@ public class ProjectDescriptionUtils {
 			return other == null ? 0 : 1;
 		if (other == null)
 			return -1;
-		return first.getSourceContainerType().compareTo(other.getSourceContainerType());
+		return first.getType().compareTo(other.getType());
 	}
 
 	/**
@@ -435,14 +432,10 @@ public class ProjectDescriptionUtils {
 		public final String projectFolderName;
 		/** Name of the folder containing the {@link #projectFolderName project folder}. */
 		public final String parentFolderName;
-		/** The Eclipse project name, iff in UI case. */
-		public final Optional<String> eclipseProjectName;
 
-		private ProjectNameInfo(String projectFolderName, String parentFolderName,
-				Optional<String> eclipseProjectName) {
+		private ProjectNameInfo(String projectFolderName, String parentFolderName) {
 			this.projectFolderName = projectFolderName;
 			this.parentFolderName = parentFolderName;
-			this.eclipseProjectName = eclipseProjectName;
 		}
 
 		/** Creates a new instance. Given URI should point to an N4JS project, not a file within an N4JS project. */
@@ -455,18 +448,7 @@ public class ProjectDescriptionUtils {
 				// a file URI actually represents the file system hierarchy -> no need to look up names on disk
 				return new ProjectNameInfo(
 						projectUri.lastSegment(),
-						projectUri.trimSegments(1).lastSegment(),
-						Optional.absent() // no Eclipse project name in this case
-				);
-			} else if (projectUri.isPlatform()) {
-				// for platform URIs (i.e. UI case) we actually have to look up the folder name on disk
-				final String platformURI = projectUri.toPlatformString(true);
-				final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(platformURI);
-				final IPath path = resource.getLocation();
-				return new ProjectNameInfo(
-						path.lastSegment(),
-						path.removeLastSegments(1).lastSegment(),
-						resource instanceof IProject ? Optional.of(resource.getName()) : Optional.absent());
+						projectUri.trimSegments(1).lastSegment());
 			}
 			throw new IllegalStateException("not a file or platform URI: " + projectUri);
 		}

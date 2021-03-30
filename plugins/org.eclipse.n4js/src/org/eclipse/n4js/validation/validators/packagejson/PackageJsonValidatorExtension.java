@@ -49,7 +49,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -64,12 +63,10 @@ import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
-import org.eclipse.n4js.projectDescription.ModuleFilterType;
-import org.eclipse.n4js.projectDescription.ProjectDescription;
-import org.eclipse.n4js.projectDescription.ProjectType;
-import org.eclipse.n4js.projectDescription.SourceContainerType;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.GitHubVersionRequirement;
 import org.eclipse.n4js.semver.Semver.LocalPathVersionRequirement;
@@ -84,6 +81,9 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils.ProjectNameInfo;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -112,7 +112,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	private static final String N4JS_SOURCE_CONTAINERS = "N4JS_SOURCE_CONTAINERS";
 
 	@Inject
-	private IN4JSCore n4jsCore;
+	private WorkspaceAccess workspaceAccess;
 	@Inject
 	private SemverHelper semverHelper;
 
@@ -177,25 +177,6 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		if (scopeName != null && !scopeName.equals(nameInfo.parentFolderName)) {
 			String msg = IssueCodes.getMessageForPKGJ_SCOPE_NAME_MISMATCH(scopeName, nameInfo.parentFolderName);
 			addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_SCOPE_NAME_MISMATCH);
-		}
-
-		// make sure the project name equals the name of the Eclipse workspace project
-		if (Platform.isRunning()) {
-
-			if (!nameInfo.eclipseProjectName.isPresent()) {
-				// Eclipse project name cannot be determined, fail gracefully. We currently assume that this case will
-				// only occur (1) in the headless case and (2) in the UI case when a nested package.json is validated in
-				// an editor (we ignore nested package.json files in the builder)
-				return;
-			}
-
-			String expectedEclipseProjectName = ProjectDescriptionUtils
-					.convertN4JSProjectNameToEclipseProjectName(projectName);
-			if (!expectedEclipseProjectName.equals(nameInfo.eclipseProjectName.get())) {
-				String msg = IssueCodes.getMessageForPKGJ_PROJECT_NAME_ECLIPSE_MISMATCH(
-						expectedEclipseProjectName, nameInfo.eclipseProjectName.get());
-				addIssue(msg, projectNameLiteral, IssueCodes.PKGJ_PROJECT_NAME_ECLIPSE_MISMATCH);
-			}
 		}
 	}
 
@@ -974,7 +955,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		final String moduleSpecifier = moduleSpecifierLiteral.getValue();
 		final String relativeModulePath = moduleSpecifier.replace('/', File.separator.charAt(0));
 
-		final Path absoluteProjectPath = getAbsoluteProjectPath(uri);
+		final Path absoluteProjectPath = getAbsoluteProjectPath(moduleSpecifierLiteral, uri);
 
 		// obtain a stream of File representations of all declared source containers
 		final Stream<File> sourceFolders = getAllSourceContainerPaths().stream()
@@ -1032,19 +1013,21 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	 * Returns {@code false} and adds issues to {@code pathLiteral} otherwise.
 	 */
 	private boolean holdsExistingDirectoryPath(JSONStringLiteral pathLiteral) {
-		final URI resourceURI = pathLiteral.eResource().getURI();
-		final Optional<? extends IN4JSProject> n4jsProject = n4jsCore.findProject(resourceURI);
+		final Resource resource = pathLiteral.eResource();
+		final URI resourceURI = resource.getURI();
+		final N4JSProjectConfigSnapshot n4jsProject = workspaceAccess.findProjectContaining(resource);
 
-		if (!n4jsProject.isPresent()) {
+		if (n4jsProject == null) {
 			// container project cannot be determined, fail gracefully (validation running on non-N4JS project?)
 			return true;
 		}
 
-		final URI projectLocation = n4jsProject.get().getLocation().toURI();
+		final FileURI path = n4jsProject.getPathAsFileURI();
+		final URI projectLocation = path.toURI();
 		// resolve against project uri with trailing slash
 		final URI projectRelativeResourceURI = resourceURI.deresolve(projectLocation.appendSegment(""));
 
-		final Path absoluteProjectPath = n4jsProject.get().getLocation().toFileSystemPath();
+		final Path absoluteProjectPath = path.toFileSystemPath();
 		if (absoluteProjectPath == null) {
 			throw new IllegalStateException(
 					"Failed to compute project path for package.json at " + resourceURI.toString());
@@ -1104,12 +1087,9 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	 *
 	 * Returns {@code null} if no N4JS project can be found that contains the given {@code nestedLocation}.
 	 */
-	private Path getAbsoluteProjectPath(URI nestedLocation) {
-		Optional<? extends IN4JSProject> n4jsProject = n4jsCore.findProject(nestedLocation);
-		if (!n4jsProject.isPresent()) {
-			return null;
-		}
-		return n4jsProject.get().getLocation().toFileSystemPath();
+	private Path getAbsoluteProjectPath(EObject context, URI nestedLocation) {
+		N4JSProjectConfigSnapshot n4jsProject = workspaceAccess.findProjectByNestedLocation(context, nestedLocation);
+		return n4jsProject != null ? n4jsProject.getPathAsFileURI().toFileSystemPath() : null;
 	}
 
 	/**

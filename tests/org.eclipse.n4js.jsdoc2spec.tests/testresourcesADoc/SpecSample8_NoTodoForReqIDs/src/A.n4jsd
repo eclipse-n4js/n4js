@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-class A {
+export external public class A {
 	/**
 	 * @reqid 1000_a
 	 */

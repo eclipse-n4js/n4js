@@ -110,7 +110,7 @@ class N4JSScopingTestWithIndexTest {
 
 		val supplierJS = rs.URIConverter.normalize(URI.createURI(supplierFileName))
 		val supplierResource = rs.createResource(supplierJS)
-		supplierResource.load(emptyMap)
+		supplierResource.load(emptyMap);
 		EcoreUtil.resolveAll(supplierResource)
 		assertTrue(supplierResource.errors.toString(), supplierResource.errors.empty)
 		assertEquals("supplier content count", 2, supplierResource.contents.size)

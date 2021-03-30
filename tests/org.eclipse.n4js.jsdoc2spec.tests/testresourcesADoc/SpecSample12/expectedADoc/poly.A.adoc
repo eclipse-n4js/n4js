@@ -27,7 +27,7 @@ include::{find}config.adoc[]
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample12:poly/A:A#baseFromAware++[``++public baseFromAware(x: number): void++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample12:poly/A:A#baseFromAware++[``++public baseFromAware(x: number): void++``]
 
 
 

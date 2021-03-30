@@ -13,13 +13,13 @@ package org.eclipse.n4js.naming
 import com.google.common.base.Preconditions
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.eclipse.emf.common.notify.Notifier
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.utils.ResourceType
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.resource.IResourceDescription
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.
@@ -35,7 +35,7 @@ import org.eclipse.xtext.resource.IResourceDescription
 class ModuleNameComputer {
 
 	@Inject
-	private extension IN4JSCore core
+	private WorkspaceAccess workspaceAccess
 
 	/**
 	 * Returns the qualified module name which is implicitly defined by the given resource.
@@ -43,18 +43,8 @@ class ModuleNameComputer {
 	 * Please note there is also a special treatment for Xpect test files that may have a file extension
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
-	def QualifiedName getQualifiedModuleName(Resource resource) {
-		resource.getURI().getQualifiedModuleName
-	}
-
-	/**
-	 * Returns the qualified module name which is implicitly defined by the given resource description.
-	 * <p>
-	 * Please note there is also a special treatment for Xpect test files that may have a file extension
-	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
-	 */
-	def QualifiedName getQualifiedModuleName(IResourceDescription resourceDesc) {
-		resourceDesc.getURI().getQualifiedModuleName
+	def public QualifiedName getQualifiedModuleName(Resource resource) {
+		getQualifiedModuleName(resource, resource.getURI());
 	}
 
 	/**
@@ -63,11 +53,10 @@ class ModuleNameComputer {
 	 * Please note there is also a special treatment for Xpect test files that may have a file extension
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
-	def getQualifiedModuleName(URI uri) {
-		val maybeSourceContainer = findN4JSSourceContainer(uri)
-		if (maybeSourceContainer.present) {
-			val sourceContainer = maybeSourceContainer.get
-			val location = sourceContainer.location.withTrailingPathDelimiter.toURI
+	def public getQualifiedModuleName(Notifier context, URI uri) {
+		val sourceContainer = workspaceAccess.findSourceFolderContaining(context, uri);
+		if (sourceContainer !== null) {
+			val location = sourceContainer.pathAsFileURI.withTrailingPathDelimiter.toURI
 			if(uri.uriStartsWith(location)) {
 				var relativeURI = uri.deresolve(location)
 				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {
@@ -99,7 +88,7 @@ class ModuleNameComputer {
 		return QualifiedName.create(segmentList)
 	}
 
-	private def boolean uriStartsWith(URI resourceLocation, URI containerLocation) {
+	def private boolean uriStartsWith(URI resourceLocation, URI containerLocation) {
 		Preconditions.checkArgument(containerLocation.hasTrailingPathSeparator, 'Must have trailing separator: %s', containerLocation);
 		val maxSegments = containerLocation.segmentCount() - 1
 		if (resourceLocation.segmentCount < maxSegments) {

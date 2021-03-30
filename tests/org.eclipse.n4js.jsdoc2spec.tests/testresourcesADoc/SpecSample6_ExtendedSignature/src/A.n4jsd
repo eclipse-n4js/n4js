@@ -9,15 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-async function func(x: string, n: number=, ...p: string): string { return null; }
+export external public async function func(x: string, n: number=, ...p: string): string;
 
-class A {
-	public constructor(@Spec s: ~i~this) {}
-	public foo(x: string, n: number=, ...p: string): void {}
-	async bar(): string {return null;}
-	@TestAPI @Final @Internal public baz(): string {return null;}
-	static xgreet(some: union{string,number}): void {
-		function nestedDoesNotAppearInAPI() {
-		}
-	}
+export external public class A {
+	public constructor(@Spec s: ~i~this);
+	public foo(x: string, n: number=, ...p: string): void;
+	async bar(): string;
+	@TestAPI @Final @Internal public baz(): string;
+	static xgreet(some: union{string,number}): void;
 }

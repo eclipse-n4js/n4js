@@ -20,16 +20,17 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.FolderContainmentHelper
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.URIUtils
-import org.eclipse.n4js.validation.helper.FolderContainmentHelper
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
@@ -57,7 +58,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	
 	@Inject protected StaticPolyfillHelper staticPolyfillHelper
 
-	@Inject protected IN4JSCore n4jsCore
+	@Inject protected WorkspaceAccess workspaceAccess
 
 	@Inject protected ResourceNameComputer resourceNameComputer
 
@@ -115,13 +116,14 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * </ul>
 	 */
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
-		try {
+		val ws = workspaceAccess.getWorkspaceConfig(input);
 
+		try {
 			// remove error-marker
 			genMarkerSupport.deleteMarker(input)
 
-			updateOutputPath(fsa, getCompilerID, input);
-			internalDoGenerate(input, GeneratorOption.DEFAULT_OPTIONS, fsa);
+			updateOutputPath(ws, fsa, getCompilerID, input);
+			internalDoGenerate(ws, input, GeneratorOption.DEFAULT_OPTIONS, fsa);
 
 		} catch (UnresolvedProxyInSubGeneratorException e) {
 			genMarkerSupport.createMarker(input, e.message, Severity.ERROR);
@@ -146,18 +148,20 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	override shouldBeCompiled(Resource input, CancelIndicator monitor) {
+		val ws = workspaceAccess.getWorkspaceConfig(input);
+
 		val autobuildEnabled = isActive(input)
 		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase
 		val inputUri = input.URI
 
 		val boolean result = (autobuildEnabled
-			&& isGenerateProjectType(inputUri)
-			&& hasOutput(inputUri)
-			&& isOutputNotInSourceContainer(inputUri)
-			&& isOutsideOfOutputFolder(inputUri)
-			&& isSource(inputUri)
-			&& (isNoValidate(inputUri)
-				|| isExternal(inputUri)
+			&& isGenerateProjectType(ws, inputUri)
+			&& hasOutput(ws, inputUri)
+			&& isOutputNotInSourceContainer(ws, inputUri)
+			&& isOutsideOfOutputFolder(ws, inputUri)
+			&& isSource(ws, inputUri)
+			&& (isNoValidate(ws, inputUri)
+				|| isExternal(ws, inputUri)
 				// if platform is running (but not in XPECT mode) the generator is called from the builder, hence cannot have any validation errors
 				// (note: XPECT swallows errors hence we cannot rely on Eclipse in case of .xt files)
 				|| ((EMFPlugin.IS_ECLIPSE_RUNNING && !isXPECTMode) || hasNoErrors(input, monitor))
@@ -167,21 +171,21 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		return result
 	}
 
-	private def hasOutput(URI n4jsSourceURI){
-		return n4jsCore.getOutputPath(n4jsSourceURI) !== null;
+	private def hasOutput(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI){
+		return getOutputPath(ws, n4jsSourceURI) !== null;
 	}
-	private def isSource(URI n4jsSourceURI) {
-		return n4jsCore.findN4JSSourceContainer(n4jsSourceURI).present;
-	}
-
-	private def isNoValidate(URI n4jsSourceURI) {
-		return n4jsCore.isNoValidate(n4jsSourceURI);
+	private def isSource(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
+		return ws.findSourceFolderContaining(n4jsSourceURI) !== null;
 	}
 
-	private def isExternal(URI n4jsSourceURI) {
-		val sourceContainerOpt = n4jsCore.findN4JSSourceContainer(n4jsSourceURI);
-		if (sourceContainerOpt.present) {
-			val sourceContainer = sourceContainerOpt.get;
+	private def isNoValidate(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
+		return ws.isNoValidate(n4jsSourceURI);
+	}
+
+	private def isExternal(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
+		val sourceContainerOpt = ws.findSourceFolderContaining(n4jsSourceURI);
+		if (sourceContainerOpt !== null) {
+			val sourceContainer = sourceContainerOpt;
 			return sourceContainer.external;
 		}
 		return false;
@@ -231,10 +235,10 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	/** @return true iff the current project has a project type that is supposed to generate code. */
-	def protected boolean isGenerateProjectType(URI n4jsSourceURI) {
-		val project = n4jsCore.findProject(n4jsSourceURI).orNull();
+	private def boolean isGenerateProjectType(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
+		val project = ws.findProjectContaining(n4jsSourceURI);
 		if (project !== null) {
-			val projectType = project.getProjectType();
+			val projectType = project.getType();
 			if (N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(projectType)) {
 				return false;
 			}
@@ -244,15 +248,15 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	}
 
 	/** @return true iff the given resource does not lie within the output folder. */
-	def boolean isOutsideOfOutputFolder(URI n4jsSourceURI) {
-		return !containmentHelper.isContainedInOutputFolder(n4jsSourceURI);
+	private def boolean isOutsideOfOutputFolder(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
+		return !containmentHelper.isContainedInOutputFolder(ws, n4jsSourceURI);
 	}
 	
 	/** @return true iff the output folder of the given n4js resource is not contained by a source container. */
-	def boolean isOutputNotInSourceContainer(URI n4jsSourceURI) {
-		val project = n4jsCore.findProject(n4jsSourceURI);
-		if (project.isPresent()) {
-			return !containmentHelper.isOutputContainedInSourceContainer(project.get())
+	private def boolean isOutputNotInSourceContainer(N4JSWorkspaceConfigSnapshot ws, URI n4jsSourceURI) {
+		val project = ws.findProjectContaining(n4jsSourceURI);
+		if (project !== null) {
+			return !containmentHelper.isOutputContainedInSourceContainer(ws, project)
 		} else {
 			return false;
 		} 
@@ -261,7 +265,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	/**
 	 * Actual generation to be overridden by subclasses.
 	 */
-	def protected void internalDoGenerate(Resource resource, GeneratorOption[] options, IFileSystemAccess access)
+	protected def void internalDoGenerate(N4JSWorkspaceConfigSnapshot ws, Resource resource, GeneratorOption[] options, IFileSystemAccess access)
 
 	/**
 	 * Returns the name of the target file (without path) to which the source is to be compiled to.
@@ -271,32 +275,32 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * Convenience method, to provide all necessary API for the sub-classes.
 	 * Delegates to {@link ResourceNameComputer#getTargetFileName}.
 	 */
-	def String getTargetFileName(Resource n4jsSourceFile, String compiledFileExtension) {
+	protected def String getTargetFileName(Resource n4jsSourceFile, String compiledFileExtension) {
 		return resourceNameComputer.generateFileDescriptor(n4jsSourceFile, compiledFileExtension)
 	}
 
 	/**
 	 * Convenient access to the Script-Element
 	 */
-	def rootElement(Resource resource) {
+	protected def rootElement(Resource resource) {
 		resource.contents.filter(Script).head
 	}
 
 	/** The file-extension of the compiled result */
-	def String getCompiledFileExtension(Resource input) {
+	protected def String getCompiledFileExtension(Resource input) {
 		preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.COMPILED_FILE_EXTENSION,
 			getDefaultDescriptor())
 	}
 
 	/** The file-extension of the source-map to the compiled result */
-	def String getCompiledFileSourceMapExtension(Resource input) {
+	protected def String getCompiledFileSourceMapExtension(Resource input) {
 		preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.COMPILED_FILE_SOURCEMAP_EXTENSION,
 			getDefaultDescriptor())
 	}
 
 	/** Adjust output-path of the generator to match the N4JS projects-settings. */
-	def void updateOutputPath(IFileSystemAccess fsa, String compilerID, Resource input) {
-		val outputPath = n4jsCore.getOutputPath(input.URI) ?: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
+	private def void updateOutputPath(N4JSWorkspaceConfigSnapshot ws, IFileSystemAccess fsa, String compilerID, Resource input) {
+		val outputPath = getOutputPath(ws, input.URI) ?: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 		if (fsa instanceof AbstractFileSystemAccess) {
 			val conf = fsa.outputConfigurations.get(compilerID)
 			if (conf !== null) {
@@ -305,17 +309,19 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		}
 	}
 
-	/** Navigation from the generated output-location to the location of the input-resource  */
-	def Path calculateNavigationFromOutputToSourcePath(IFileSystemAccess fsa, String compilerID, N4JSResource input) {
+	private static def String getOutputPath(N4JSWorkspaceConfigSnapshot ws, URI nestedLocation) {
+		return ws.findProjectContaining(nestedLocation)?.getProjectDescription()?.getOutputPath();
+	}
 
+	/** Navigation from the generated output-location to the location of the input-resource  */
+	protected def Path calculateNavigationFromOutputToSourcePath(N4JSWorkspaceConfigSnapshot ws, IFileSystemAccess fsa, String compilerID, N4JSResource input) {
 		// --- Project locations ---
-		val projectctContainer = n4jsCore.findProject(input.URI)
-		val project = projectctContainer.get;
+		val project = ws.findProjectContaining(input.URI);
 
 		// /home/user/workspace/Project/
-		val projectPath = project.location.toFileSystemPath
+		val projectPath = project.pathAsFileURI.toFileSystemPath
 		// platform:/resource/Project/
-		val projectLocURI = project.getLocation().withTrailingPathDelimiter.toURI
+		val projectLocURI = project.pathAsFileURI.withTrailingPathDelimiter.toURI
 
 		// --- output locations ---
 		// src-gen
@@ -330,7 +336,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		var completetSource = URIUtils.toFile(completetSourceURI).toString();
 
 		// Handling case when source container is the project root itself. (Sources { source { '.' } })
-		if (null === completetSource && project.getLocation().toURI === input.URI.trimSegments(1)) {
+		if (null === completetSource && project.pathAsFileURI.toURI === input.URI.trimSegments(1)) {
 			completetSource = projectPath.toFile.absolutePath;
 		}
 
@@ -354,7 +360,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	private def Path getOutputRelativeLocation(N4JSResource input){
 		val uri = uriExtensions.withEmptyAuthority(input.URI);
 		// Project/a/b/c/Input.XX
-		val localOutputFilePath = Paths.get(resourceNameComputer.generateFileDescriptor(uri, ".XX"))
+		val localOutputFilePath = Paths.get(resourceNameComputer.generateFileDescriptor(input, uri, ".XX"))
 
 		// if calculated path  has just one element, e.g. "Input.XX"
 		// then local path segment is empty
@@ -372,15 +378,15 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 *
 	 * TODO IDE-1487 currently there is no notion of default compiler. We fake call to the ES5 sub generator.
 	 */
-	def final static String calculateProjectBasedOutputDirectory(IN4JSProject project, boolean includeProjectName) {
-		return if (includeProjectName) project.projectName + "/" + project.outputPath else project.outputPath;
+	def final static String calculateProjectBasedOutputDirectory(N4JSProjectConfigSnapshot project, boolean includeProjectName) {
+		return if (includeProjectName) project.name + "/" + project.outputPath else project.outputPath;
 	}
 
 	/** Access to compiler ID */
 	def abstract String getCompilerID()
 
 	/** Access to compiler descriptor  */
-	def abstract protected CompilerDescriptor getDefaultDescriptor()
+	def abstract CompilerDescriptor getDefaultDescriptor()
 
 	/** Answers: Is this compiler activated for the input at hand? */
 	def boolean isActive(Resource input) {
@@ -408,7 +414,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	/** 
 	 * Checking if this resource represents a static polyfill, which will contribute to a filled resource.
 	 **/
-	def boolean isStaticPolyfillingModule(Resource resource) {
+	private def boolean isStaticPolyfillingModule(Resource resource) {
 		val TModule tmodule = (N4JSResource.getModule(resource));
 		if (null !== tmodule) {
 			return tmodule.isStaticPolyfillModule;
@@ -423,5 +429,4 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	override boolean isApplicableTo(Resource input) {
 		return shouldBeCompiled(input, null);
 	}
-
 }

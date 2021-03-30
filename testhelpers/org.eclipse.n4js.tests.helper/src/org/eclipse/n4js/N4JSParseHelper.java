@@ -15,8 +15,6 @@
  */
 package org.eclipse.n4js;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.validation.JavaScriptVariant;
@@ -70,17 +68,17 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 		try {
 			switch (variant) {
 			case external: {
-				setFileExtension("n4jsd");
+				setFileExtension(N4JSGlobals.N4JSD_FILE_EXTENSION);
 				Script script = parse(text);
 				return script;
 			}
 			case n4js: {
-				setFileExtension("n4js");
+				setFileExtension(N4JSGlobals.N4JS_FILE_EXTENSION);
 				Script script = parse(text);
 				return script;
 			}
 			case strict: {
-				setFileExtension("js");
+				setFileExtension(N4JSGlobals.JS_FILE_EXTENSION);
 				Script script = parse("\"scrict mode\"\n" + text);
 				return script;
 			}
@@ -91,7 +89,7 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 			}
 			case unrestricted:
 			default: {
-				setFileExtension("js");
+				setFileExtension(N4JSGlobals.JS_FILE_EXTENSION);
 				Script script = parse(text);
 				return script;
 			}
@@ -100,22 +98,6 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 		} finally {
 			resourceHelper.setFileExtensionProvider(fileExtensionProvider);
 		}
-	}
-
-	@Override
-	protected URI computeUnusedUri(ResourceSet resourceSet) {
-		/*
-		 * Copied from {@link ResourceHelper} since the super class ParseHelper has a bug in that it does not set the
-		 * file extensions before computing an unused URI. This results in an offset setting of the file extension after
-		 * the parsing already took place and thus triggers the wrong set of validations (wrong variant).
-		 */
-		String name = "__synthetic";
-		for (int i = 0; i < Integer.MAX_VALUE; i++) {
-			URI syntheticUri = URI.createURI(name + i + "." + fileExtension);
-			if (resourceSet.getResource(syntheticUri, false) == null)
-				return syntheticUri;
-		}
-		throw new IllegalStateException();
 	}
 
 	/**

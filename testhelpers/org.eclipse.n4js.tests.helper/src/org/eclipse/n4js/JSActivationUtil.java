@@ -12,7 +12,7 @@ package org.eclipse.n4js;
 
 import java.lang.reflect.Field;
 
-import org.eclipse.n4js.utils.N4JSLanguageHelper;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 /**
  * JS support is turned by default. To test that the N4JS parser still supports JS, the support for JS modules can be
@@ -23,7 +23,7 @@ public class JSActivationUtil {
 	/** Enables JS support. Should only be used for test cases. */
 	public static void enableJSSupport() {
 		try {
-			Field declaredField = N4JSLanguageHelper.class.getDeclaredField("OPAQUE_JS_MODULES");
+			Field declaredField = N4JSLanguageUtils.class.getDeclaredField("OPAQUE_JS_MODULES");
 			declaredField.setAccessible(true);
 			declaredField.set(null, false);
 			declaredField.setAccessible(false);

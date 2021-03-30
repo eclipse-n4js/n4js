@@ -37,7 +37,7 @@ Do something here
 
 ==== Signature
 
-srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample10_TodoTags:src/A:A#bar++[``++public bar(n: number): string++``]
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample10_TodoTags:src/A:A#bar++[``++public bar(n: number): string++``]
 
 
 ==== Description
@@ -46,5 +46,5 @@ spec for method A.bar from source code
 
 ==== Semantics
 
-. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample10_TodoTags:test/ATests:ATest#testBarBasics++[Test]#)
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/test-workspace/yarn-test-project/packages:SpecSample10_TodoTags:test/ATests:ATest#testBarBasics++[Test]#)
 
