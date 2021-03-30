@@ -26,13 +26,6 @@ Contributors:
 	<modules>
 		<!-- main user documentation, to be split up later -->
 		<module>org.eclipse.n4js.doc</module>
-<!--
-
- A separate active help plugin
-
-		<module>org.eclipse.n4js.help.active</module>
-
--->
 	</modules>
 
 </project>
