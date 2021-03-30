@@ -17,12 +17,12 @@ Contributors:
 The main published artifacts are:
 
 * the headless builder, i.e. n4jsc.jar,
-* the IDE products for Windows, macOS, and Linux,
+  published to `download.eclipse.org` (see https://download.eclipse.org/n4js/),
 * the N4JS libraries (or "n4js-libs", for short), including the N4JS runtime libraries and
-  the 'mangelhaft' test framework (i.e. the projects in folder `n4js-libs/packages`).
-
-The former two are published to `download.eclipse.org` (see https://download.eclipse.org/n4js/) and
-the latter is published to the official public npm registry at https://www.npmjs.com/.
+  the 'mangelhaft' test framework (i.e. the projects in folder `n4js-libs/packages`),
+  published to the official public npm registry at https://www.npmjs.com/,
+* an LSP extension for Visual Studio Code, available at
+  https://marketplace.visualstudio.com/items?itemName=n4js.n4js-vscode-extension.
 
 Other published artifacts include various documentation and the N4JS web site.
 

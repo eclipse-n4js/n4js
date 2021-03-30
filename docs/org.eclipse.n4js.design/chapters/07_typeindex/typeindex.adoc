@@ -300,6 +300,8 @@ Note that this overview might easily get out-dated; see references to class `Def
 [.language-n4js]
 == Incremental Builder (Overview)
 
+WARNING: This section is outdated!
+
 This section provides a brief overview of how the incremental builder works.
 
 General remarks:
@@ -553,6 +555,8 @@ not because it imports and uses class `A` from module _A_ which should be the lo
 [[dirty-state-handling]]
 [.language-n4js]
 ==  Dirty state handling
+
+WARNING: This section is outdated!
 
 When two or more (N4)JS files are opened in editors and one of them is changed but without persisting this change the other
 open editors should be notified and if this change breaks (or heals) references in one of the other open resources their editors

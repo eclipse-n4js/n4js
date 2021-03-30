@@ -127,19 +127,11 @@ class C {
 ----
 
 
-== Caching
-* Caching of external libraries (implemented in ExternalProjectMappings)
-** update _only_ using `EclipseExternalLibraryWorkspace#updateState()`
-** always mind that the diff of current state and cached state is a necessary information for cleaning dependencies of removed npms
-*** see `EclipseExternalIndexSynchronizer#synchronizeNpms()` for implementation
-** updating also happens when external root locations change (see ExternalIndexUpdater)
-* Caching of user workspace projects (implemented in MuliCleartriggerCache)
-** caches only some project information and should be refactored along with Core, Model and EclipseBasedN4JSWorkspace
-
 == Dependency Injection
 
 There are some things to keep in mind when using dependency injection in the context of Xtext. This is a longer topic and it is discussed in the appendix
 <<sec:XtextInjection>>.
+
 
 == Miscellaneous
 * Resource load states: when an N4JS/N4JSD file is loaded, a certain sequence of processing is triggered (parsing,

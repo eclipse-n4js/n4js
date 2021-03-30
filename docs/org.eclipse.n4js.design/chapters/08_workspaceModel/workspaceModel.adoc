@@ -1,0 +1,46 @@
+////
+Copyright (c) 2019 NumberFour AG and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+= Workspace Model
+:find:
+
+[[sec:Package_json]]
+== Package.json File
+
+See cite:[N4JSSpec] for the format specification of N4JS-specific package.json files. Based on the JSON-model-based
+AST that can be parsed from the package.json file, we transform the information that can be extracted into an instance
+of the N4JS-specific project description model. This model with the main class `ProjectDescription` is defined in package
+`org.eclipse.n4js.packagejson.projectDescription` as immutable, plain Java data classes.
+
+[[fig:projectDescriptionModel]]
+image::{find}images/cd_projectDescription.svg[Project Description Model]
+
+
+== Accessing Workspace Information
+
+The information in the package.json files is parsed into memory at runtime and then wrapped into instances
+of `N4JSWorkspaceConfigSnapshot`, `N4JSProjectConfigSnapshot`, etc. This process is controlled by classes `N4JSWorkspaceConfig`
+and `N4JSProjectConfig` (without the `-Snapshot` suffix), which delegate to `ProjectDiscoveryHelper` for scanning the disk
+for existing projects.
+
+Project information is made available via the `ConcurrentIndex` (if outside the context of a particular resource set) or
+the `WorkspaceAccess` facade (see methods `#getWorkspaceConfig()` in those classes). In both cases, an immutable instance of
+`N4JSWorkspaceConfigSnapshot` is provided which contains information about all projects in the workspace (and some more
+information, such as the build order).
+
+
+[[sec:Caching]]
+== Caching
+
+Workspace information is cached in instances of `N4JSWorkspaceConfigSnaphsot`, `N4JSProjectConfigSnapshot`, etc. (note the
+`-Snapshot` suffix). Classes `N4JSWorkspaceConfig` and `N4JSProjectConfig` are responsible for updating these snapshots
+when corresponding file change events are received by the LSP server. They support minimal updates, to avoid
+re-reading unchanged project information from disk as far as possible.

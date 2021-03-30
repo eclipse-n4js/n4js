@@ -11,7 +11,7 @@ Contributors:
 
 = UI Concepts
 
-WARNING: Parts of this chapter may be outdated.
+WARNING: This chapter is outdated.
 
 [[sec:User_Interface_Concepts]]
 [.language-n4js]
