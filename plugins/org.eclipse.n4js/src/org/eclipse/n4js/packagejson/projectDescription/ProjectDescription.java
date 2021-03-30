@@ -346,8 +346,8 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	/** Factored out from {@link #toString()} only to allow reuse in {@link N4JSProjectConfigSnapshot}. */
 	public void toStringAdditionalProperties(StringBuilder sb) {
-		sb.append("    version: " + internalVersionStr + "\n");
 		sb.append("    type: " + type + "\n");
+		sb.append("    version: " + internalVersionStr + "\n");
 		sb.append("    mainModule: " + mainModule + "\n");
 		if (!testedProjects.isEmpty()) {
 			String namesStr = Joiner.on(", ").join(
