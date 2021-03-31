@@ -18,8 +18,8 @@ cite:[ECMA11a(S15,p.102)] are supported and their properties are annotated with 
 == Object
 
 `Object` is the super type of all declared types and `N4Object`. It is almost similar to the JavaScript type `Object` except that no properties may be dynamically added to it. In order to declare a variable to which properties can be dynamically added, the `Object+` type has to be declared (cf.
-<<_dynamic>>).
-//TODO : fix xref above
+<<Type_Modifiers_Dynamic>>).
+
 
 [discrete]
 === Attributes

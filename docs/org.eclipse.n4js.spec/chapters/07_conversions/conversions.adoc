@@ -93,7 +93,7 @@ In cite:[ECMA11a], autoboxing is defined by `ToObject` cite:[ECMA11a(S9.9)].
 Autoboxing is not directly supported in N4JS. Instead, primitive types virtually have the same members as their corresponding object types.
 It is then possible to use the Autoboxing feature when calling a member.
 In general, Autoboxing is only supported for accessing built-in read-only (immutable) properties.
-For example, `"some string value".split(" ");` is supported but `"some string value".foo=1;` will be rejected as String does not allow properties to be added (cf. `String` vs. `String+`, see <<_dynamic>>).
+For example, `"some string value".split(" ");` is supported but `"some string value".foo=1;` will be rejected as String does not allow properties to be added (cf. `String` vs. `String+`, see <<Type_Modifiers_Dynamic>>).
 
 Autoboxing often leads to problems, in particular in combination with dynamic types – this is why it is not directly supported in N4JS.
 

@@ -32,23 +32,4 @@ Contributors:
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>execute-plugin-tests</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-surefire-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>TychoSurefirePluginTest</id>
-								<phase>integration-test</phase>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

@@ -66,7 +66,7 @@ The following annotations are element-specific and are explained in the correspo
 
 |@Internal              |TypeDefiningElement, Member, Function, Export |<<_access-control>>
 |@Undefined             |Variable                                      |<<_undefined-type>>
-|@StringBased           |Enum                                          |<<_string-based-enums>>
+|@StringBased           |Enum                                          |<<Numer_and_String_Based_Enums>>
 |@Final                 |Class, Member                                 |<<_final-methods>>
 |@Spec                  |FPar                                          |<<Req-IDE-59>>
 |@Override              |Method                                        |<<_redefinition-of-members>>

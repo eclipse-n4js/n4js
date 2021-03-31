@@ -18,7 +18,7 @@ In this chapter, some tips and tricks regarding Eclipse, Xtend and Maven should 
 [[sec:XtextInjection]]
 == Xtext Injection
 
-<<fig:cd_XtextInjectors&gt;&gt; shows different injectors used by Xtext
+Figure <<fig:XtextInjectors>> shows different injectors used by Xtext
 and their relation to the injector of a custom language created with Xtext
 (in this example N4JS).
 

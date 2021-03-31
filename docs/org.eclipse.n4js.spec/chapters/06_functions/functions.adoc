@@ -133,6 +133,8 @@ $\spc r.expr\neq null \land \infType{r.expr.typeRef} <: \infType{F.typeRef}$
 // TODO - definition title needs comma like so: ".Function Type Conformance, Non-Parameterized"
 // comma currently breaks FOP PDF build, see https://github.com/NumberFour/asciispec/issues/9
 
+The following rules apply for subtype checks of function types.
+
 [[function_type_conformance_non_parameterized]]
 .Function Type Conformance Non-Parameterized
 [def]
@@ -343,12 +345,12 @@ we say $F_{left}$ conforms to $F_{right}$, written as $F_{left} <: F_{right}$, i
 
 * if $| F_{left}.typePars |=| F_{right}.typePars |=0$:
 ** $F_{left} <: F_{right}$
-(cf. <<function_type_conformance_non_parameterized,Function Type Conformance Non-Parameterized>>)
+(cf. <<function_type_conformance_non_parameterized>>)
 * else if +
 $|F_{left}.typePars |>0 \land | F_{right}.typePars |=0$:
-** $\exists \typeSubs: ( \typeEnvAdd \typeSubs ) \entails F_{left} <: F_{right}$ (cf. <<function_type_conformance_non_parameterized,Function Type Conformance Non-Parameterized>> )
+** $\exists \typeSubs: ( \typeEnvAdd \typeSubs ) \entails F_{left} <: F_{right}$ (cf. <<function_type_conformance_non_parameterized>> )
 +
-(i.e. there exists a substitution $\typeSubs$ of type variables in $F_{left}$ so that after substitution it becomes a subtype of $F_{right}$ as defined by <<function_type_conformance_non_parameterized,Function Type Conformance Non-Parameterized>>)
+(i.e. there exists a substitution $\typeSubs$ of type variables in $F_{left}$ so that after substitution it becomes a subtype of $F_{right}$ as defined by <<function_type_conformance_non_parameterized>>)
 * else if $|F_{left}.typePars|=|F_{right}.typePars|$:
 ** $\typeEnvAdd \{ V^r_i \leftarrow V^l_i | 0 \leq i \leq n \} \entails F_{left} <: F_{right}$
 ( accordingly)
@@ -364,7 +366,7 @@ $|F_{left}.typePars |>0 \land | F_{right}.typePars |=0$:
 +
 with $F_{left}.typePars=V^l_0, V^l_1, \dots V^l_n$ and $F_{right}.typePars=V^r_0, V^r_1, \dots V^r_n$ +
 (i.e. we replace each type variable in $F_{right}$ by the corresponding type variable at the same index in $F_{left}$
-and check the constraints from <<function_type_conformance_non_parameterized,Function Type Conformance Non-Parameterized>>  as if $F_{left}$ and $F_{right}$ were non-parameterized functions and, in
+and check the constraints from <<function_type_conformance_non_parameterized>>  as if $F_{left}$ and $F_{right}$ were non-parameterized functions and, in
 addition, the upper bounds on the left side need to be supertypes of the upper bounds on the right side).
 --
 

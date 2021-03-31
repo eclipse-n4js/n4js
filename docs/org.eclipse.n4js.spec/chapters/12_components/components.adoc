@@ -93,6 +93,7 @@ Different N4JS component types are described in this section.
 
 A library is a user project providing modules with declaration.
 
+[[Runtime_Environment_and_Runtime_Libraries]]
 === Runtime Environment and Runtime Libraries
 
 NOTE: runtime environments are not fully implemented at this time (see GH-1291).
@@ -228,10 +229,10 @@ api:::
   so-called implementation projects. See properties "implementationId", "implementedProjects".
   NOTE: the API/Implementation concept is not fully implemented at this time (see GH-1291).
 runtimeEnvironment:::
-  Runtime environments. See <<Runtime Environment Resolution>>.
+  Runtime environments. See <<Runtime_Environment_and_Runtime_Libraries>>.
   NOTE: runtime environments are not fully implemented at this time (see GH-1291).
 runtimeLibrary:::
-  Runtime libraries. See <<Runtime Environment and Runtime Libraries>>.
+  Runtime libraries. See <<Runtime_Environment_and_Runtime_Libraries>>.
 validation:::
   A project in which `.n4js` files are only being validated, not transpiled. This is used for projects
   that are implemented in terms of `.js` files but that also provide type information in terms of `.n4jsd` files.
@@ -310,7 +311,7 @@ projects must all be of the same project type and must not be of type "test" the
 implementationId::
 (string) If this property is defined, this component is called an "implementation project" and the string value
   provides a unique identifier for the implementation provided in this component. If this is defined, property
-  "implementedProjects" must be defined as well. For details, see <<API and Implementation Components>>.
+  "implementedProjects" must be defined as well. For details, see <<API_and_Implementation_Components>>.
 + 
 Only projects of type "application", "processor", "library", "api" or "validation" may declare this property.
 
@@ -318,7 +319,7 @@ Only projects of type "application", "processor", "library", "api" or "validatio
 implementedProjects::
   (array) A list of API components (components of type "api") that are implemented by this component. If this 
   is defined, property "implementationId" must be defined as well. For details, see 
-  <<API and Implementation Components>>. Only components of type  "application", "processor", "library", "api" 
+  <<API_and_Implementation_Components>>. Only components of type  "application", "processor", "library", "api" 
   or "validation" may declare this property.
 
 [[package-json-requiredRuntimeLibraries, requiredRuntimeLibraries]]
@@ -819,6 +820,7 @@ could potentially introduce additional load-time dependencies.
 
 
 [.language-n4js]
+[[API_and_Implementation_Components]]
 == API and Implementation Component
 
 NOTE: the API/Implementation concept is not fully implemented at this time (see GH-1291).
