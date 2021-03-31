@@ -133,6 +133,8 @@ $\spc r.expr\neq null \land \infType{r.expr.typeRef} <: \infType{F.typeRef}$
 // TODO - definition title needs comma like so: ".Function Type Conformance, Non-Parameterized"
 // comma currently breaks FOP PDF build, see https://github.com/NumberFour/asciispec/issues/9
 
+The following rules apply for subtype checks of function types.
+
 [[function_type_conformance_non_parameterized]]
 .Function Type Conformance Non-Parameterized
 [def]

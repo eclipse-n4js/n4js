@@ -307,7 +307,7 @@ Some elements are predefined by the JavaScript runtime such as DOM elements by t
 These elements can be defined by means of external definitions; however, no actual implementation can be provided as these elements are actually provided by the runtime itself.
 
 Since these cases are rather rare and in order to enable additional checks such as verification that a given runtime actually provides the elements,
-this kind of element can only be defined in components of type runtime environment or runtime library (cf <<_runtime-environment-and-runtime-libraries>>).
+this kind of element can only be defined in components of type runtime environment or runtime library (cf <<Runtime_Environment_and_Runtime_Libraries>>).
 
 N4JS supports runtime definitions via the annotation `@ProvidedByRuntime`.
 This annotation can be defined

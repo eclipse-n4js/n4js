@@ -983,7 +983,7 @@ Imported namespaces cannot be exported.
 
 Declared elements (types, variables, functions) are usually only visible outside the declaring module if the elements are exported and imported (by the using module, cf. <<_import-statement>>).
 
-Some special components (runtime environment and libraries, cf. <<_runtime-environment-and-runtime-libraries>>, may export elements globally.
+Some special components (runtime environment and libraries, cf. <<Runtime_Environment_and_Runtime_Libraries>>, may export elements globally.
 This is done by annotating the export (or the whole module) with `@Global`, see <<_global-definitions>> for details.
 
 By adding `default` after the keyword `export`, the identifiable element can be exported as ’the default’.
