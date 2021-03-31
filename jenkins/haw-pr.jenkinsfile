@@ -45,8 +45,6 @@ pipeline {
                             '-DWORKSPACE=' + env.WORKSPACE                               
                         ].join(' ')
                         def profiles = [
-                            'execute-plugin-tests',
-                            'execute-plugin-ui-tests',
                             'execute-ecma-tests',
                             'execute-accesscontrol-tests'
                          //   'execute-smoke-tests' // #1533

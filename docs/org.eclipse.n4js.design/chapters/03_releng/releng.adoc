@@ -172,12 +172,10 @@ You may have to increase the memory for maven via `export MAVEN_OPTS="-Xmx2048m"
 Available optional maven profiles are:
 
 [horizontal]
-execute-plugin-tests::          run OSGi tests (without UI)
-execute-plugin-ui-tests::       run UI-based OSGi tests
 execute-ecmas-tests::           run ECMA test suite
 execute-smoke-tests::           run generated tests using corrupted source code as input
 execute-accesscontrol-tests::   run generated tests for checking accessibility of class/interface members
-execute-hlc-integration-tests:: run integration tests using the headless jar (requires docker!)
+execute-hlc-integration-tests:: run tests using the headless jar (in bundle `org.eclipse.n4js.ide.tests.jar`, requires docker!)
 
 Available system properties:
 
