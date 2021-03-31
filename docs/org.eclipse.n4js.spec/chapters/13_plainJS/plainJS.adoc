@@ -130,7 +130,7 @@ Publicly exporting the class definition and providing a public constructor is go
 In some cases, the instantiation from an outer scope is not wanted.
 A possible approach is to use a structurally typed interface instead of a class to link to the implementation.
 
-In case of API-definitions (see <<_api-and-implementation-components>>), it might be useful to limit the visibility of classes to narrower scopes such as package or private.
+In case of API-definitions (see <<API_and_Implementation_Components>>), it might be useful to limit the visibility of classes to narrower scopes such as package or private.
 
 External declarations can be instantiated if the following three requirements are fulfilled (not a constraint!):
 
@@ -166,7 +166,7 @@ For that reason, it is possible to disable validation of implementations complet
 --
 
 For a given external declaration $D$ but not for
-API-definitions footnote:[<<_api-and-implementation-components>>], the
+API-definitions footnote:[<<API_and_Implementation_Components>>], the
 following constraints must hold:
 
 1.  If the declaration is neither provided by runtime nor validation of implementation is disabled,

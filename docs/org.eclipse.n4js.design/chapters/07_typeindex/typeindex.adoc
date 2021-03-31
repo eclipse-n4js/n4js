@@ -9,6 +9,7 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
+[[sec:Type_Index]]
 = Type Index
 :find:
 

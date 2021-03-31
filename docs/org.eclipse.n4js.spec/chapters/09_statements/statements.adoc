@@ -521,7 +521,7 @@ $\forall vdecl \in constStmt.varDecl: \lnot vdecl.writable$
 [[_for-of-statement]]
 === `for ... of` statement
 
-ES6 introduced a new form of `for` statement: `for ... of` to iterate over the elements of an  `Iterable`, cf. <<_iterablen>>.
+ES6 introduced a new form of `for` statement: `for ... of` to iterate over the elements of an  `Iterable`, cf. <<Iterable_Interface>>.
 
 [discrete]
 ==== Syntax [[for-of-statement-syntax]]

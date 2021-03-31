@@ -962,7 +962,7 @@ image::{find}images/diag_XpectLint.svg[title="Xpect Lint"]
 
 The test transpiles the provided n4js resource and checks the generated code. This is achieved using the Javascript linter JSHint.
 
-After transpiling the provided n4js resource the LintXpectMethod combines the generated code with the jshint code into a script. It calls the JSHint validation function and returns the linting result as a json object. The error results are displayed in the console. The script is executed using the `Engine` class. (<<sec:Design,Design>>)
+After transpiling the provided n4js resource the LintXpectMethod combines the generated code with the jshint code into a script. It calls the JSHint validation function and returns the linting result as a json object. The error results are displayed in the console. The script is executed using the `Engine` class.
 
 For the linting process an adapted configuration for JSHint is used. For the needs of N4JS the linter is configured to recognise N4JS specific globals. Details about the error codes can be found at the https://github.com/jshint/jshint/blob/2444a0463e1a99d46e4afa50ed934c317265529d/src/messages.js[jshint repository].
 

@@ -49,13 +49,13 @@ All those use cases may differ in their details, but can be divided into general
 3.  call to given n4js entry point
 4.  shutdown (optional)
 
-When N4JS execution is triggered, proper _Runner_ (see <<sec:Runners-introduction,Runners>>) is selected. In some cases it is done automatically, in others user needs to make a choice. Runner is responsible for perform all required preparations, according to <<sec:N4JS_Project_Execution_And_Linking_Model,N4JS Project Execution And Linking Model>>. Then JS execution environment (e.g. NodeJS, IOJS, Chrome, JavaScriptCore) performs bootstrapping according to <<sec:N4JS_Execution_And_Linking_File>>. As last step of bootstrap phase defend n4js entry point will be called which starts proper n4js execution phase. In some cases there may be shutdown phase, but that is highly dependent on use case and proceeding execution phases.
+When N4JS execution is triggered, proper _Runner_ is selected. In some cases it is done automatically, in others user needs to make a choice. Runner is responsible for perform all required preparations, according to <<sec:N4JS_Project_Execution_And_Linking_Model,N4JS Project Execution And Linking Model>>. Then JS execution environment (e.g. NodeJS, IOJS, Chrome, JavaScriptCore) performs bootstrapping. As last step of bootstrap phase defend n4js entry point will be called which starts proper n4js execution phase. In some cases there may be shutdown phase, but that is highly dependent on use case and proceeding execution phases.
 
 [[sec:N4JS_Project_Execution_And_Linking_Model]]
 [.language-n4js]
 === N4JS Project Execution And Linking Model
 
-N4JS project is compiled to JavaScript language, that in turn can be executed in some JS execution environment, Those environments (e.g. NodeJS, IOJS, Chrome, JavaScriptCore) will differ between each other in terms of JS APIs they expose and way JS code has to be provided to them, or the way it is triggered. We introduced systematic way of describing those features in terms of N4JS projects (see Components and Projects <<sec:N4_Components_and_IDE_Support,Components and IDE Support>>). N4JS project will be of different _PojectType_ that determines project purpose (see Package.json section <<sec:Package_json>>. When we want to execute some N4JS project, we can divide its dependency graph into 4 general areas
+N4JS project is compiled to JavaScript language, that in turn can be executed in some JS execution environment, Those environments (e.g. NodeJS, IOJS, Chrome, JavaScriptCore) will differ between each other in terms of JS APIs they expose and way JS code has to be provided to them, or the way it is triggered. We introduced systematic way of describing those features in terms of N4JS projects (see N4JS specification, chapter Components). N4JS project will be of different _PojectType_ that determines project purpose (see Package.json section <<sec:Package_json>>. When we want to execute some N4JS project, we can divide its dependency graph into 4 general areas
 
 1.  User Space, e.g. user code
 2.  System Space, e.g N4 Platform APIs
@@ -68,7 +68,7 @@ Example of that kind of graph can bee seen on <<fig:od_sampleProjectDependencyGr
 [.center]
 image::{find}images/od_sampleProjectDependencyGraph.svg[title="Sample Project Dependency Graph"]
 
-All dependencies are compile time dependency (as they are checked by the compiler), but _tend_ to weaken, the lower in the dependency graph we are. _User Space_ objects will have strong load time and run time dependency to each other and to the _System Space_. _System Space_ have strong load time and run time dependency to each other and, only runtime dependency to _Runtime Space_. _Runtime Space_ objects should not have any load time dependencies between each other. In some cases they may have weak runtime dependency to each other. In many cases those components are just api definitions that describe execution environment native apis, but may contain polyfills code. _Environment Space_ has no dependency to other components, except the fact different __RuntimeEnvironemnt__s can extend each other (see <<sec:N4_Components_and_IDE_Support>>).
+All dependencies are compile time dependency (as they are checked by the compiler), but _tend_ to weaken, the lower in the dependency graph we are. _User Space_ objects will have strong load time and run time dependency to each other and to the _System Space_. _System Space_ have strong load time and run time dependency to each other and, only runtime dependency to _Runtime Space_. _Runtime Space_ objects should not have any load time dependencies between each other. In some cases they may have weak runtime dependency to each other. In many cases those components are just api definitions that describe execution environment native apis, but may contain polyfills code. _Environment Space_ has no dependency to other components, except the fact different __RuntimeEnvironemnt__s can extend each other.
 
 Runner must configure JS execution environment in the way that all above areas of the dependency graph must be either
 
@@ -100,14 +100,13 @@ Assuming user selects `foo.n4js` file for execution, the NodeRunner in the IDE w
 
 * create working directory in temp folder, e.g. `/var/temp/N4JSNodeRun123/`
 * create `node_modules` folder inside working directory, to which projects will be linked
-* generate script, e.g. `n4jsELF.js` that will be responsible for booting execution (see <<sec:N4JS_Execution_And_Linking_File>>)
+* generate script, e.g. `n4jsELF.js` that will be responsible for booting execution
 * runner will put `/var/temp/N4JSNodeRun123/node_modules` into `NODE_PATH`
 * execute `/var/temp/N4JSNodeRun123/n4jsELF.js` with NodeJS
 
 For example with NodeJS environment if all projects from dependency graph are accessible in local file system, their
 paths would need to be put in NodeJS _NODE_PATH_ environment variable. In addition to configuring execution environment
-_Runner_ generates N4JS Elf file that is used by environment to bootstrap n4js execution 
-(see <<sec:N4JS_Execution_And_Linking_File>>).
+_Runner_ generates N4JS Elf file that is used by environment to bootstrap n4js execution.
 [[fig:od_sampleNodeProjectExecution]
 [.center]
 image::{find}images/od_sampleNodeProjectExecution.svg[title="Sample NodeJS Project Execution"]

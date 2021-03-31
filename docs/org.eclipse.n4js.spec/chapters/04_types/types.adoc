@@ -1344,9 +1344,8 @@ Interface `IteratorEntry` was introduced mainly as a workaround; this interface 
 structural type reference as return type of method `next()`
 
 
+[[Iterable_Interface]]
 === Iterable Interface
-
-
 
 A structurally typed interface for objects that can be iterated over, i.e. _iterables_ as defined by the ECMAScript 6 iterator protocol.
 
@@ -1848,8 +1847,6 @@ only undefined (or null) can be assigned to a type reference of this type.
   ** a type argument corresponding to a type parameter without def-site variance is a wildcard with an upper bound (use "extends" or no bound) or a type argument not defining an upper bound corresponds to a covariant (out) type parameter, and this constraint (IDE-27) holds for an intersection created from the upper bounds of the type argument (or the lower bound of the type parameter).
   ** a type argument is a wildcard with lower bounds (since Object would be a solution) 
 --
-
-Definition of structural typing attributes see <<Req-ID-78701>>.
 
 The combination of intersection types and generics is a bit tricky. The following example demonstrates that:
 
@@ -2904,6 +2901,7 @@ var c: Color = colors.get();
 
 
 
+[[Numer_and_String_Based_Enums]]
 === Number- and String-Based Enums
 
 An enum may be annotated with `@NumberBased` or `@StringBased` to obtain a light-weight form of enumeration
