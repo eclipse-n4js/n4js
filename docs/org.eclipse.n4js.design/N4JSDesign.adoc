@@ -51,7 +51,6 @@ include::{find}chapters/11_references/references.adoc[]
 include::{find}chapters/13_compilation/compilation.adoc[]
 include::{find}chapters/14_execution/execution.adoc[]
 include::{find}chapters/15_tests/tests.adoc[]
-include::{find}chapters/16_uiconcepts/uiconcepts.adoc[]
 include::{find}chapters/17_formatting/formatting.adoc[]
 
 include::{find}chapters/22_json/json.adoc[]
