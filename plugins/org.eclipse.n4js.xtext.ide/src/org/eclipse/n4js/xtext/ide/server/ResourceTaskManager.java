@@ -52,6 +52,9 @@ import com.google.inject.Singleton;
 @Singleton
 public class ResourceTaskManager {
 
+	/** Set to <code>true</code> for logging resource task starting, completion, cancellation. */
+	public static final boolean LOG_RESOURCE_TASK_EXECUTION = false;
+
 	@Inject
 	private Provider<ResourceTaskContext> resourceTaskContextProvider;
 
@@ -244,12 +247,35 @@ public class ResourceTaskManager {
 
 		Object queueId = getQueueIdForContext(rtc.getURI(), rtc.isTemporary());
 		return queuedExecutorService.submit(queueId, description, ci -> {
+
+			final long start;
+			if (LOG_RESOURCE_TASK_EXECUTION) {
+				start = System.currentTimeMillis();
+				System.out.println("===> starting: " + description);
+			}
+
 			try {
 				if (!rtc.isAlive()) {
 					throw new CancellationException();
 				}
 				currentContext.set(rtc);
-				return task.apply(rtc, ci);
+
+				T result = task.apply(rtc, ci);
+
+				if (LOG_RESOURCE_TASK_EXECUTION) {
+					long elapsed = System.currentTimeMillis() - start;
+					System.out.println("===> done: " + description + " (after " + elapsed + " ms)");
+				}
+
+				return result;
+
+			} catch (Throwable th) {
+				if (LOG_RESOURCE_TASK_EXECUTION) {
+					long elapsed = System.currentTimeMillis() - start;
+					System.out.println("===> ABORTED with " + th.getClass().getSimpleName() + ": " + description
+							+ " (after " + elapsed + " ms)");
+				}
+				throw th;
 			} finally {
 				currentContext.set(null);
 			}
