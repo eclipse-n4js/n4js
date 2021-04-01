@@ -12,7 +12,10 @@ package org.eclipse.n4js.ide.imports;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -142,7 +145,7 @@ public class ReferenceResolutionFinder {
 
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		List<IEObjectDescription> candidates = getAllElements(scope);
+		List<IEObjectDescription> candidates = collectAllElements(scope, acceptor);
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
@@ -168,9 +171,22 @@ public class ReferenceResolutionFinder {
 		}
 	}
 
-	private List<IEObjectDescription> getAllElements(IScope scope) {
+	/**
+	 * @param acceptor
+	 *            no resolutions will be passed to the acceptor by this method, only used for cancellation handling.
+	 */
+	private List<IEObjectDescription> collectAllElements(IScope scope, IResolutionAcceptor acceptor) {
 		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
-			return Lists.newArrayList(scope.getAllElements());
+			if (!acceptor.canAcceptMoreProposals()) {
+				return Collections.emptyList();
+			}
+			List<IEObjectDescription> result = new ArrayList<>(42);
+			Iterator<IEObjectDescription> iter = scope.getAllElements().iterator();
+			// note: checking #canAcceptMoreProposals() in next line is required to quickly react to cancellation
+			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
+				result.add(iter.next());
+			}
+			return result;
 		}
 	}
 
