@@ -34,7 +34,7 @@ console.log(S);
 
 
  /* XPECT output with SystemJS ---
-[Function: Error]
+[class Error extends N4Object]
 [Module] { C1: [Function: C1] }
 --- */
 

@@ -13,7 +13,7 @@
 
 
 /* XPECT output ~~~
-[Function: C2]
+[class C2 extends C1]
 ~~~ */
 
 interface I0{}
