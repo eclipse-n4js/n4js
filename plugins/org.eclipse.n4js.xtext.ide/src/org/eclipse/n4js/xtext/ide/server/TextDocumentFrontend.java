@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.xtext.ide.server;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -179,12 +180,15 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Compute the completion items. */
 	protected Either<List<CompletionItem>, CompletionList> completion(ResourceTaskContext rtc, CompletionParams params,
-			CancelIndicator cancelIndicator) {
+			CancelIndicator originalCancelIndicator) {
 		URI uri = rtc.getURI();
 		XContentAssistService contentAssistService = getService(uri, XContentAssistService.class);
 		if (contentAssistService == null) {
 			return Either.forRight(new CompletionList());
 		}
+		BufferedCancelIndicator cancelIndicator = new BufferedCancelIndicator(
+				originalCancelIndicator,
+				Duration.ofMillis(750));
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
 		return Either.forRight(contentAssistService.createCompletionList(doc, res, params, cancelIndicator));
