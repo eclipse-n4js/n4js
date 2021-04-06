@@ -10,9 +10,13 @@
  */
 package org.eclipse.n4js.utils.collections
 
+import com.google.common.base.Predicate
+import com.google.common.collect.Iterables
 import java.util.Iterator
 import java.util.List
+import java.util.function.Function
 
+import static com.google.common.collect.Sets.newHashSet
 import static java.util.Collections.singletonList
 
 import static extension com.google.common.base.Preconditions.*
@@ -21,6 +25,35 @@ import static extension com.google.common.base.Preconditions.*
  * Extension for {@link Iterable iterable}s.
  */
 class Iterables2 {
+
+	/**
+	 * Like {@link #skipDuplicates(Function, Iterable[])}, using the elements themselves as keys, i.e. a later element is
+	 * deemed a duplicate of an earlier element iff the two elements are {@link Object#equals(Object) equal}.
+	 */
+	@SafeVarargs
+	def static <T, K> Iterable<T> skipDuplicates(Iterable<? extends T>... inputs) {
+		return skipDuplicates(Function.identity, inputs);
+	}
+
+	/**
+	 * Returns a view of the concatenation of the given {@link Iterable}s that hides all duplicate elements. A later element
+	 * is deemed a duplicate of an earlier element iff the given key supplier returns {@link Object#equals(Object) equal} keys
+	 * for the two elements.
+	 */
+	@SafeVarargs
+	def static <T, K> Iterable<T> skipDuplicates(Function<T,K> keySupplier, Iterable<? extends T>... inputs) {
+		val keySet = <K>newHashSet;
+		val Predicate<T> recordingFilter = [ elem |
+			val key = keySupplier.apply(elem);
+			return keySet.add(key);
+		];
+		val len = inputs.length;
+		val inputsWrapped = newArrayOfSize(len);
+		for (var int i = 0; i < len; i++) {
+			inputsWrapped.set(i, Iterables.filter(inputs.get(i), recordingFilter));
+		}
+		return Iterables.concat(inputsWrapped);
+	}
 
 	/**
 	 * Creates a chain of the elements with the following rules:

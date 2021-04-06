@@ -16,6 +16,7 @@ import static java.util.Collections.emptyList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.n4js.utils.collections.Iterables2;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
@@ -75,4 +76,53 @@ class NonResolvingImportScope extends ImportScope {
 		}
 		return result;
 	}
+
+	/*
+	 * Overridden to avoid eager iteration over all elements.
+	 */
+	@Override
+	public Iterable<IEObjectDescription> getAllElements() {
+		final Iterable<IEObjectDescription> globalElements = getParent().getAllElements();
+		final Iterable<IEObjectDescription> aliased = getAllLocalElements();
+		return Iterables2.skipDuplicates(this::getIgnoreCaseAwareQualifiedName, aliased, globalElements);
+	}
+
+	// TODO GH-2099 deactivated for now; needs further investigation
+	/*
+	 * Overridden to avoid eager iteration over all candidates.
+	 *
+	 * WARNING: this changes the behavior! The implementation of the super class checks for name conflicts across all
+	 * candidates whereas this override checks only on a per-candidate basis.
+	 */
+// @formatter:off
+//	@Override
+//	protected Iterable<IEObjectDescription> getAliasedElements(Iterable<IEObjectDescription> candidates) {
+//		Multimap<QualifiedName, IEObjectDescription> keyToDescription = LinkedHashMultimap.create();
+//		Multimap<QualifiedName, ImportNormalizer> keyToNormalizer = HashMultimap.create();
+//		return IterableExtensions.flatMap(candidates, new Function1<>() {
+//			@Override
+//			public Iterable<IEObjectDescription> apply(IEObjectDescription imported) {
+//				keyToDescription.clear();
+//				keyToNormalizer.clear();
+//				QualifiedName fullyQualifiedName = imported.getName();
+//				for (ImportNormalizer normalizer : myNormalizers) {
+//					QualifiedName alias = normalizer.deresolve(fullyQualifiedName);
+//					if (alias != null) {
+//						QualifiedName key = alias;
+//						if (isIgnoreCase()) {
+//							key = key.toLowerCase();
+//						}
+//						keyToDescription.put(key, new AliasedEObjectDescription(alias, imported));
+//						keyToNormalizer.put(key, normalizer);
+//					}
+//				}
+//				for (QualifiedName name : keyToNormalizer.keySet()) {
+//					if (keyToNormalizer.get(name).size() > 1)
+//						keyToDescription.removeAll(name);
+//				}
+//				return keyToDescription.values();
+//			}
+//		});
+//	}
+// @formatter:on
 }

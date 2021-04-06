@@ -125,7 +125,11 @@ public class LspServer {
 					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
 				})
 				.wrapMessages(debugService.getTracingMessageWrapper())
+		// Use this for tracing LSP messages:
 		// .traceMessages(new PrintWriter(System.out))
+		// NOTES:
+		// 1) see class PatchedTracingMessageConsumer for further configuration options for tracing
+		// 2) consider activating logging of resource tasks via ResourceTaskManager#LOG_RESOURCE_TASK_EXECUTION
 		;
 
 		if (options.isStdio()) {
