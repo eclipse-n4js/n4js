@@ -22,3 +22,11 @@ export public type A2 = string;
 
 // XPECT errors --> "A type with visibility public must be marked as exported." at "A4"
 public type A4 = string;
+
+
+console.log('can be executed');
+
+
+/* XPECT output ---
+can be executed
+--- */
