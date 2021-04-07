@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.Type
 
@@ -48,6 +50,11 @@ class TrimTransformation extends Transformation {
 			TypeRef,
 			TypeReferenceNode,
 			N4TypeVariable,
-			N4TypeAliasDeclaration).forEach[remove]
+			N4TypeAliasDeclaration).forEach[removeNode]
+	}
+
+	def private removeNode(EObject nodeInIM) {
+		val actualNodeToRemove = TranspilerUtils.orContainingExportDeclaration(nodeInIM);
+		remove(actualNodeToRemove);
 	}
 }
