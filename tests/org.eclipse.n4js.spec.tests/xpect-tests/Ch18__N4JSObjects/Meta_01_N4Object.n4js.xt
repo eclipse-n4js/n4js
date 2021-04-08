@@ -24,7 +24,7 @@
 # inspect N4Object meta
  = test is not instance of N4Object
  = inspect test as Object
-  - test.prototype is object ::  N4Object {}
+  - test.prototype is object ::  {}
   - test.hasOwnProperty  is native function
   - test.isPrototypeOf  is native function
   - test.propertyIsEnumerable  is native function

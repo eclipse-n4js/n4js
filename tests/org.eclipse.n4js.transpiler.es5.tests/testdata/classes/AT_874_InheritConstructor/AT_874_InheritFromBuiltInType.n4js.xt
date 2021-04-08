@@ -13,7 +13,7 @@
 
 /* XPECT output ~~~
 B { prop1: 'test' }
-N4Class {
+<ref *1> N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'B',
@@ -34,7 +34,7 @@ N4Class {
       origin: undefined,
       annotations: [],
       name: 'prop1',
-      owner: [Circular],
+      owner: [Circular *1],
       isStatic: false
     }
   ],

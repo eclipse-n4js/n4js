@@ -12,14 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
 /* XPECT output ---
+[Object: null prototype] {}
+object
 {}
 object
-[String: '']
-object
-[]
+Object(0) []
 object
 0
-[Function]
+{}
 function
 --- */
 

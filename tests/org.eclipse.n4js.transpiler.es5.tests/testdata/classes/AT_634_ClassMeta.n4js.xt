@@ -13,7 +13,7 @@
 
 /* XPECT output ---
 a.constructor.n4type:
-N4Class {
+<ref *1> N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'A',
@@ -34,21 +34,21 @@ N4Class {
       origin: undefined,
       annotations: [Array],
       name: 'field1',
-      owner: [Circular],
+      owner: [Circular *1],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [Array],
       name: 'field2',
-      owner: [Circular],
+      owner: [Circular *1],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'field3',
-      owner: [Circular],
+      owner: [Circular *1],
       isStatic: false
     }
   ],
@@ -57,7 +57,7 @@ N4Class {
 
 
 A.n4type:
-N4Class {
+<ref *1> N4Class {
   origin: 'org.eclipse.n4js.transpiler.es5.tests',
   annotations: [],
   name: 'A',
@@ -78,21 +78,21 @@ N4Class {
       origin: undefined,
       annotations: [Array],
       name: 'field1',
-      owner: [Circular],
+      owner: [Circular *1],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [Array],
       name: 'field2',
-      owner: [Circular],
+      owner: [Circular *1],
       isStatic: false
     },
     N4DataField {
       origin: undefined,
       annotations: [],
       name: 'field3',
-      owner: [Circular],
+      owner: [Circular *1],
       isStatic: false
     }
   ],

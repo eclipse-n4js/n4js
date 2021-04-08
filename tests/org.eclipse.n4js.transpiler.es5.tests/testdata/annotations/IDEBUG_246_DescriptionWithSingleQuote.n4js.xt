@@ -14,7 +14,7 @@
    END_SETUP */
 
 /* XPECT output ---
-[Function: A]
+[class A extends N4Object]
 @ Description
   t1 <'>
   t2 true
@@ -36,5 +36,3 @@ A.n4type.annotations.forEach(function(a){
 		console.log(" ", "t4",ad.length, "<'>".length)
 	});
 });
-
-
