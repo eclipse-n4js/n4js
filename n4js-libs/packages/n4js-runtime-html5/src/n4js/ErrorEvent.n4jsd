@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@@Global @@ProvidedByRuntime
+
+/**
+ * @see https://html.spec.whatwg.org/multipage/webappapis.html#runtime-script-errors
+ */
+export external public class ~ErrorEvent extends Event {
+    public constructor(type: string, eventInitDict: Object+);
+
+    @Final public message: string;
+    @Final public filename: string;
+    @Final public lineno: int;
+    @Final public colno: int;
+    @Final public error?: any;
+}
