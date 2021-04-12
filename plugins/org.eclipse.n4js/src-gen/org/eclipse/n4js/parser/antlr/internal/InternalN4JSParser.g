@@ -30175,6 +30175,13 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 				}
 			)
 		)
+		{
+			newCompositeNode(grammarAccess.getN4TypeAliasDeclarationAccess().getSemiParserRuleCall_4());
+		}
+		ruleSemi
+		{
+			afterParserOrEnumRuleCall();
+		}
 	)
 ;
 

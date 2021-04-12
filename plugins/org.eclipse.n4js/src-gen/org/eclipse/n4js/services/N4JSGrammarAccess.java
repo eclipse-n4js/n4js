@@ -8649,16 +8649,18 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cDeclaredTypeRefNodeAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_3_0 = (RuleCall)cDeclaredTypeRefNodeAssignment_3.eContents().get(0);
+		private final RuleCall cSemiParserRuleCall_4 = (RuleCall)cGroup.eContents().get(4);
 		
 		//N4TypeAliasDeclaration <Yield>:
 		//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst*
 		//	'type' name=BindingIdentifier<Yield>?) TypeParameters?
 		//	'='
-		//	declaredTypeRefNode=TypeReferenceNode;
+		//	declaredTypeRefNode=TypeReferenceNode
+		//	Semi;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield>?)
-		//TypeParameters? '=' declaredTypeRefNode=TypeReferenceNode
+		//TypeParameters? '=' declaredTypeRefNode=TypeReferenceNode Semi
 		public Group getGroup() { return cGroup; }
 		
 		//=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst* 'type' name=BindingIdentifier<Yield>?)
@@ -8696,6 +8698,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//TypeReferenceNode
 		public RuleCall getDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_3_0() { return cDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_3_0; }
+		
+		//Semi
+		public RuleCall getSemiParserRuleCall_4() { return cSemiParserRuleCall_4; }
 	}
 	public class N4MemberDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4MemberDeclaration");
@@ -13702,7 +13707,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	=> ({N4TypeAliasDeclaration} declaredModifiers+=N4ModifierWithoutConst*
 	//	'type' name=BindingIdentifier<Yield>?) TypeParameters?
 	//	'='
-	//	declaredTypeRefNode=TypeReferenceNode;
+	//	declaredTypeRefNode=TypeReferenceNode
+	//	Semi;
 	public N4TypeAliasDeclarationElements getN4TypeAliasDeclarationAccess() {
 		return pN4TypeAliasDeclaration;
 	}

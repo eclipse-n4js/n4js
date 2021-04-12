@@ -7027,6 +7027,7 @@ ruleN4TypeAliasDeclaration:
 	ruleTypeParameters?
 	'='
 	ruleTypeReferenceNode
+	ruleSemi
 ;
 
 // Rule N4MemberDeclaration
