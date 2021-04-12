@@ -16,6 +16,6 @@ export external public class DataTransfer {
     public setData(type: string, data: string): void;
 }
 
-export external public class ~ClipBoardEvent extends Event {
+export external public class ClipBoardEvent extends Event {
     @Final public clipboardData: DataTransfer;
 }

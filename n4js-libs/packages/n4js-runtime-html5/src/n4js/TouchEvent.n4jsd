@@ -31,7 +31,7 @@ export external public class ~TouchList {
     public item(index: int): Touch;
 }
 
-export external public class ~TouchEvent extends Event {
+export external public class TouchEvent extends Event {
     public initTouchEvent(type: string, bubbles: boolean=, cancelable: boolean=): void;
 
     @Final public shiftKey: boolean;

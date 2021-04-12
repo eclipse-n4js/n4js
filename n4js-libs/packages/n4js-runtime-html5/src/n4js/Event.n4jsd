@@ -10,7 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public class ~Event {
+export external public class Event {
     public initEvent(type: string, bubbles: boolean=, cancelable: boolean=): void;
 
     public stopPropagation(): void;
