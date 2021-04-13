@@ -221,16 +221,21 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	 * See Req. IDE-241116
 	 */
 	def private void checkFunctionTypeExprOrRef(JSXElement jsxElem, FunctionTypeExprOrRef exprTypeRef) {
-		val elementClassTypeRef = reactHelper.lookUpReactElement(jsxElem);
-		if (elementClassTypeRef === null)
+		val tReactElement = reactHelper.lookUpReactElement(jsxElem);
+		if (tReactElement === null)
 			return;
+
+		val expectedReturnTypeRef = TypeUtils.createTypeRef(tReactElement, TypingStrategy.DEFAULT, true);
 
 		val expr = jsxElem.jsxElementName.expression;
 		val G = expr.newRuleEnvironment;
-		val result = ts.subtype(G, exprTypeRef.returnTypeRef, TypeUtils.createTypeRef(elementClassTypeRef));
+		val actualReturnTypeRef = exprTypeRef.returnTypeRef;
+		val result = ts.subtype(G, actualReturnTypeRef, expectedReturnTypeRef);
 		if (result.failure) {
-			val message = IssueCodes.
-				getMessageForJSX_REACT_ELEMENT_FUNCTION_NOT_REACT_ELEMENT_ERROR(exprTypeRef.returnTypeRef.typeRefAsString);
+			val message = IssueCodes.getMessageForJSX_REACT_ELEMENT_FUNCTION_NOT_REACT_ELEMENT_ERROR(
+				expectedReturnTypeRef.typeRefAsString,
+				actualReturnTypeRef.typeRefAsString
+			);
 			addIssue(
 				message,
 				expr,
@@ -244,15 +249,17 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	 * See Req. IDE-241116
 	 */
 	def private void checkTypeTypeRefConstructor(JSXElement jsxElem, TypeTypeRef exprTypeRef) {
-		val componentClassTypeRef = reactHelper.lookUpReactComponent(jsxElem);
-		if (componentClassTypeRef === null)
+		val tReactComponent = reactHelper.lookUpReactComponent(jsxElem);
+		if (tReactComponent === null)
 			return;
+
+		val expectedTypeRef = TypeUtils.createTypeRef(tReactComponent, TypingStrategy.DEFAULT, true);
 
 		val expr = jsxElem.jsxElementName.expression;
 		val G = expr.newRuleEnvironment;
 		val tclass = tsh.getStaticType(G, exprTypeRef);
-		val tclassTypeRef = TypeUtils.createTypeRef(tclass);
-		val resultSubType = ts.subtype(G, tclassTypeRef, TypeUtils.createTypeRef(componentClassTypeRef))
+		val actualTypeRef = TypeUtils.createTypeRef(tclass, TypingStrategy.DEFAULT, true);
+		val resultSubType = ts.subtype(G, actualTypeRef, expectedTypeRef)
 		if (resultSubType.failure) {
 			val message = getMessageForJSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR();
 			addIssue(message, expr, JSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR);
