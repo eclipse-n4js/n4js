@@ -281,6 +281,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.isYarnWorkspace();
 	}
 
+	/** @see TestWorkspaceManager#getNodeModulesFolder() */
+	public File getNodeModulesFolder() {
+		return testWorkspaceManager.getNodeModulesFolder();
+	}
+
 	/** @see TestWorkspaceManager#getNodeModulesFolder(N4JSProjectName) */
 	public File getNodeModulesFolder(N4JSProjectName projectName) {
 		return testWorkspaceManager.getNodeModulesFolder(projectName);

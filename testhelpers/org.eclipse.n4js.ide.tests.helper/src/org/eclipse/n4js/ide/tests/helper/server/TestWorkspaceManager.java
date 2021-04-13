@@ -163,6 +163,12 @@ public class TestWorkspaceManager {
 		return yarnProject.isDirectory();
 	}
 
+	/** @return the main node_modules folder of the workspace. */
+	public File getNodeModulesFolder() {
+		String rootProjectName = isYarnWorkspace() ? YARN_TEST_PROJECT : DEFAULT_PROJECT_NAME;
+		return getNodeModulesFolder(new N4JSProjectName(rootProjectName));
+	}
+
 	/** @return the node_modules folder of the project with the given name. Respects yarn workspace setups. */
 	public File getNodeModulesFolder(N4JSProjectName projectName) {
 		final File projectLocation = getProjectLocation();
@@ -365,7 +371,23 @@ public class TestWorkspaceManager {
 
 	/** Creates the default project on file system. Adds dependency to n4js-runtime. */
 	public Project createTestProjectOnDisk(Map<String, ? extends CharSequence> modulesContents) {
-		return createTestOnDisk(getRoot().toPath(), ImmutableMap.of(DEFAULT_PROJECT_NAME, modulesContents));
+		return createTestOnDisk(getRoot().toPath(), ImmutableMap.of(DEFAULT_PROJECT_NAME, modulesContents), false);
+	}
+
+	/** Same as {@link #createTestOnDisk(Pair...)}, but <em>always</em> creates a yarn workspace. */
+	@SafeVarargs
+	public final Project createTestYarnWorkspaceOnDisk(
+			Pair<String, ? extends List<? extends Pair<String, ? extends CharSequence>>>... projectsModulesContents) {
+		Map<String, Map<String, String>> projectsModulesContentsAsMap = new LinkedHashMap<>();
+		convertProjectsModulesContentsToMap(Arrays.asList(projectsModulesContents), projectsModulesContentsAsMap,
+				false);
+		return createTestYarnWorkspaceOnDisk(projectsModulesContentsAsMap);
+	}
+
+	/** Same as {@link #createTestOnDisk(Map)}, but <em>always</em> creates a yarn workspace. */
+	public Project createTestYarnWorkspaceOnDisk(
+			Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
+		return createTestOnDisk(getRoot().toPath(), projectsModulesContents, true);
 	}
 
 	/** Same as {@link #createTestOnDisk(Map)}, but accepts pairs instead of a map. */
@@ -386,14 +408,15 @@ public class TestWorkspaceManager {
 	 */
 	public Project createTestOnDisk(
 			Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
-		return createTestOnDisk(getRoot().toPath(), projectsModulesContents);
+		return createTestOnDisk(getRoot().toPath(), projectsModulesContents, false);
 	}
 
 	private Project createTestOnDisk(Path destination,
-			Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
+			Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents,
+			boolean forceYarnWorkspace) {
 
 		final Project project;
-		if (projectsModulesContents.size() == 1) {
+		if (!forceYarnWorkspace && projectsModulesContents.size() == 1) {
 			Entry<String, ? extends Map<String, ? extends CharSequence>> singleProject = projectsModulesContents
 					.entrySet().iterator().next();
 			String projectName = singleProject.getKey();
