@@ -24,13 +24,13 @@
     "src"
   ],
   "devDependencies": {
-    "mocha": "^6.2.3"
+    "mocha": "^8.3.2"
   },
   "dependencies": {
     "@n4jsd/debug": "<=4.1.*",
     "follow-redirects": "1.9.0",
     "decompress": "4.2.1",
-    "debug": "~4.1.1",
+    "debug": "~4.3.1",
     "esm": "3.2.25",
     "npmlog": "4.1.2",
     "n4js-runtime": "^0.1.0",
