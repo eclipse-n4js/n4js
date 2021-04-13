@@ -164,6 +164,7 @@ import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
@@ -248,6 +249,15 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseType(Type type) {
 			return TypeUtils.wrapTypeInTypeRef(type);
+		}
+
+		/**
+		 * This override is required only to solve the ambiguity due to {@link TypeAlias} being a subtype of both
+		 * {@link Type} and {@link TTypedElement}. We choose to treat it as a {@code Type}.
+		 */
+		@Override
+		public TypeRef caseTypeAlias(TypeAlias typeAlias) {
+			return this.caseType(typeAlias);
 		}
 
 		@Override
