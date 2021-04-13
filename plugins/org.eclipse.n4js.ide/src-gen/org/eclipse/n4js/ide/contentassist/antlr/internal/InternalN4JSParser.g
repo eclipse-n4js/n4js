@@ -63892,6 +63892,7 @@ rule__N4TypeAliasDeclaration__Group__3
 	}
 :
 	rule__N4TypeAliasDeclaration__Group__3__Impl
+	rule__N4TypeAliasDeclaration__Group__4
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -63906,6 +63907,32 @@ rule__N4TypeAliasDeclaration__Group__3__Impl
 	{ before(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefNodeAssignment_3()); }
 	(rule__N4TypeAliasDeclaration__DeclaredTypeRefNodeAssignment_3)
 	{ after(grammarAccess.getN4TypeAliasDeclarationAccess().getDeclaredTypeRefNodeAssignment_3()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__N4TypeAliasDeclaration__Group__4
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__N4TypeAliasDeclaration__Group__4__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__N4TypeAliasDeclaration__Group__4__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getN4TypeAliasDeclarationAccess().getSemiParserRuleCall_4()); }
+	ruleSemi
+	{ after(grammarAccess.getN4TypeAliasDeclarationAccess().getSemiParserRuleCall_4()); }
 )
 ;
 finally {

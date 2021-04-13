@@ -1394,6 +1394,7 @@ N4TypeAliasDeclaration <Yield>:
 	TypeParameters?
 	'='	
 	declaredTypeRefNode=TypeReferenceNode
+	Semi
 ;
 
 
