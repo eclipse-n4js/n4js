@@ -10,7 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public class ~KeyboardEvent extends Event {
+export external public class KeyboardEvent extends Event {
     public constructor(type: string, options: Object+);
     @Final public keyCode: number;
     @Final public shiftKey: boolean;

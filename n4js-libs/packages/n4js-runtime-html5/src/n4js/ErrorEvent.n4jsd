@@ -13,7 +13,7 @@
 /**
  * @see https://html.spec.whatwg.org/multipage/webappapis.html#runtime-script-errors
  */
-export external public class ~ErrorEvent extends Event {
+export external public class ErrorEvent extends Event {
     public constructor(type: string, eventInitDict: Object+);
 
     @Final public message: string;
