@@ -83,6 +83,7 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.TypingStrategy;
@@ -154,6 +155,14 @@ public class TypeUtils {
 			return createTypeTypeRef(createTypeRef(type, typeArgs), false);
 		} else if (type instanceof TObjectPrototype) {
 			return createConstructorTypeRef(type, typeArgs);
+		} else if (type instanceof TypeAlias) {
+			Type actualDeclType = getActualDeclaredType((TypeAlias) type);
+			if (actualDeclType != null) {
+				TypeRef result = wrapTypeInTypeRef(actualDeclType);
+				result.setOriginalAliasTypeRef(createTypeRef(type, typeArgs));
+				return result;
+			}
+			return createTypeTypeRef(createTypeRef(type, typeArgs), false);
 		} else {
 			return createTypeRef(type, typeArgs);
 		}
@@ -826,6 +835,34 @@ public class TypeUtils {
 		result.setTypeVar(typeVar);
 		result.setTypeArg(TypeUtils.copyIfContained(typeArg));
 		return result;
+	}
+
+	/**
+	 * Returns the {@link TypeRef#getDeclaredType() declared type} of the aliased / actual type of the given type alias
+	 * or <code>null</code> if the aliased / actual type does not have a declared type (e.g. in case of a type alias
+	 * such as <code>type A = Cls1 | Cls2;</code>) or in case of an invalid type model.
+	 * <p>
+	 * Resolves chains of type aliases and therefore <em>never</em> returns a value of type {@link TypeAlias}.
+	 */
+	public static Type getActualDeclaredType(TypeAlias alias) {
+		RecursionGuard<Type> guard = null;
+		Type currType = alias;
+		while (true) {
+			TypeRef actualTypeRef = ((TypeAlias) currType).getTypeRef();
+			currType = actualTypeRef != null ? actualTypeRef.getDeclaredType() : null;
+			if (!(currType instanceof TypeAlias)) {
+				break;
+			}
+			if (guard == null) {
+				guard = new RecursionGuard<>();
+			}
+			if (!guard.tryNext(currType)) {
+				// cyclic type alias declaration
+				currType = null;
+				break;
+			}
+		}
+		return currType;
 	}
 
 	/**
