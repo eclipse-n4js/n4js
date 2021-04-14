@@ -10,7 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-
 import {IteratorExt} from "Iterator";
 export public interface ~ArrayLike<T> {
     public get length(): int;
