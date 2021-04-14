@@ -17,7 +17,6 @@ import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.n4js.utils.io.FileCopier
 import org.eclipse.n4js.utils.io.FileDeleter
 import org.eclipse.n4js.utils.io.FileUtils
-import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -36,12 +35,12 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		Files.createSymbolicLink(nodeModulesFolder.resolve("ProjectOther"), other);
 		startAndWaitForLspServer();
 
-		assertProjectsInWorkspace('''
-			yarn-test-project
-			yarn-test-project/node_modules/n4js-runtime
-			yarn-test-project/node_modules/ProjectOther
-			yarn-test-project/packages/ProjectMain
-		''');
+		assertProjectsInWorkspace(
+			"yarn-test-project",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/node_modules/ProjectOther",
+			"yarn-test-project/packages/ProjectMain"
+		);
 		assertNoIssues();
 	}
 
@@ -53,12 +52,12 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		Files.createSymbolicLink(nodeModulesFolder.resolve("@someScope"), other.parent);
 		startAndWaitForLspServer();
 
-		assertProjectsInWorkspace('''
-			yarn-test-project
-			yarn-test-project/node_modules/n4js-runtime
-			yarn-test-project/node_modules/@someScope/ProjectOther
-			yarn-test-project/packages/ProjectMain
-		''');
+		assertProjectsInWorkspace(
+			"yarn-test-project",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/node_modules/@someScope/ProjectOther",
+			"yarn-test-project/packages/ProjectMain"
+		);
 		assertNoIssues();
 	}
 
@@ -71,12 +70,12 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		Files.createSymbolicLink(nodeModulesFolder.resolve("@someScope").resolve("ProjectOther"), other);
 		startAndWaitForLspServer();
 
-		assertProjectsInWorkspace('''
-			yarn-test-project
-			yarn-test-project/node_modules/n4js-runtime
-			yarn-test-project/node_modules/@someScope/ProjectOther
-			yarn-test-project/packages/ProjectMain
-		''');
+		assertProjectsInWorkspace(
+			"yarn-test-project",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/node_modules/@someScope/ProjectOther",
+			"yarn-test-project/packages/ProjectMain"
+		);
 		assertNoIssues();
 	}
 
@@ -88,12 +87,12 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		Files.createSymbolicLink(packagesFolder.resolve("ProjectOther"), other);
 		startAndWaitForLspServer();
 
-		assertProjectsInWorkspace('''
-			yarn-test-project
-			yarn-test-project/node_modules/n4js-runtime
-			yarn-test-project/packages/ProjectOther
-			yarn-test-project/packages/ProjectMain
-		''');
+		assertProjectsInWorkspace(
+			"yarn-test-project",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/packages/ProjectOther",
+			"yarn-test-project/packages/ProjectMain"
+		);
 		assertNoIssues();
 	}
 
@@ -105,12 +104,12 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		Files.createSymbolicLink(packagesFolder.resolve("@someScope"), other.parent);
 		startAndWaitForLspServer();
 
-		assertProjectsInWorkspace('''
-			yarn-test-project
-			yarn-test-project/node_modules/n4js-runtime
-			yarn-test-project/packages/@someScope/ProjectOther
-			yarn-test-project/packages/ProjectMain
-		''');
+		assertProjectsInWorkspace(
+			"yarn-test-project",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/packages/@someScope/ProjectOther",
+			"yarn-test-project/packages/ProjectMain"
+		);
 		assertNoIssues();
 	}
 
@@ -123,12 +122,12 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		Files.createSymbolicLink(packagesFolder.resolve("@someScope").resolve("ProjectOther"), other);
 		startAndWaitForLspServer();
 
-		assertProjectsInWorkspace('''
-			yarn-test-project
-			yarn-test-project/node_modules/n4js-runtime
-			yarn-test-project/packages/@someScope/ProjectOther
-			yarn-test-project/packages/ProjectMain
-		''');
+		assertProjectsInWorkspace(
+			"yarn-test-project",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/packages/@someScope/ProjectOther",
+			"yarn-test-project/packages/ProjectMain"
+		);
 		assertNoIssues();
 	}
 
@@ -172,17 +171,6 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		]);
 	}
 
-
-	def private void assertProjectsInWorkspace(CharSequence expectedProjects) {
-		val expectedProjectPathStrs = expectedProjects.toString.trim.split("\\n").map[trim].sort;
-		val baseFolder = getRoot().toPath;
-		val actualProjectPathStrs = concurrentIndex.workspaceConfigSnapshot.projects
-			.map[Path.of(path.toFileString)]
-			.map[baseFolder.relativize(it)]
-			.map[toString]
-			.sort;
-		Assert.assertEquals(expectedProjectPathStrs.join('\n'), actualProjectPathStrs.join('\n'))
-	}
 
 	def private Path createProjectOutsideWorkspace(String projectName, String nameSuffix) throws IOException {
 		val tempFolder = FileUtils.createTempDirectory(this.class.simpleName + "_");

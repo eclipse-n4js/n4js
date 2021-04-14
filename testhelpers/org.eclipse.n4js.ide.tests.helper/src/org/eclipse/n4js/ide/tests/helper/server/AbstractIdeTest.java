@@ -124,12 +124,15 @@ import org.junit.BeforeClass;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -1623,6 +1626,41 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				expectedOutput.toString().trim(), result.getStdOut().trim());
 		assertEquals("stderr was non-empty after running: " + fileToRun,
 				"", result.getErrOut().trim());
+	}
+
+	/**
+	 * Asserts the workspace contains the given projects. Each project is represented as a path to its project folder,
+	 * relative to the {@link #getRoot() root folder}.
+	 */
+	protected void assertProjectsInWorkspace(String... expectedProjects) {
+		Set<String> expectedProjectPathStrs = FluentIterable.from(expectedProjects)
+				.transform(String::trim)
+				.toSet();
+
+		Path baseFolder = getRoot().toPath();
+		WorkspaceConfigSnapshot wc = concurrentIndex.getWorkspaceConfigSnapshot();
+		Set<String> actualProjectPathStrs = FluentIterable.from(wc.getProjects())
+				.transform(p -> Path.of(p.getPath().toFileString()))
+				.transform(path -> baseFolder.relativize(path))
+				.transform(Object::toString)
+				.toSet();
+
+		SetView<String> missing = Sets.difference(expectedProjectPathStrs, actualProjectPathStrs);
+		SetView<String> unexpected = Sets.difference(actualProjectPathStrs, expectedProjectPathStrs);
+
+		if (!missing.isEmpty() || !unexpected.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			if (!missing.isEmpty()) {
+				sb.append(" is missing the expected project(s) \"" + Joiner.on("\", \"").join(missing) + "\"");
+			}
+			if (!unexpected.isEmpty()) {
+				if (sb.length() > 0) {
+					sb.append(" and");
+				}
+				sb.append(" contains the unexpected project(s) \"" + Joiner.on("\", \"").join(unexpected) + "\"");
+			}
+			Assert.fail("the workspace" + sb.toString());
+		}
 	}
 
 	/**
