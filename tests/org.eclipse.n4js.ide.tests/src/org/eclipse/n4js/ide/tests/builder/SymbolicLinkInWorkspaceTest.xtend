@@ -14,6 +14,8 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
+import org.eclipse.n4js.utils.io.FileCopier
+import org.eclipse.n4js.utils.io.FileDeleter
 import org.eclipse.n4js.utils.io.FileUtils
 import org.junit.Assert
 import org.junit.Test
@@ -130,12 +132,41 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		assertNoIssues();
 	}
 
+	@Test
+	def void testSymLinkInProject_sourceFolderIsSymLink() throws Exception {
+		createYarnWorkspaceWithProjectMainWithDependencyTo("ProjectOther");
+		val other = createProjectOutsideWorkspace("ProjectOther", "Other");
+		val packagesFolder = getProjectLocation().toPath;
+		val otherInWorkspace = packagesFolder.resolve("ProjectOther");
+		FileCopier.copy(other, otherInWorkspace);
+		FileDeleter.delete(otherInWorkspace.resolve("src"));
+		Files.createSymbolicLink(otherInWorkspace.resolve("src"), other.resolve("src"));
+		startAndWaitForLspServer();
+		assertNoIssues();
+	}
+
+	@Test
+	def void testSymLinkInProject_subFolderOfSourceFolderIsSymLink() throws Exception {
+		createYarnWorkspaceWithProjectMainWithDependencyTo("ProjectOther");
+		val other = createProjectOutsideWorkspace("ProjectOther", "Other");
+		val packagesFolder = getProjectLocation().toPath;
+		val otherInWorkspace = packagesFolder.resolve("ProjectOther");
+		FileCopier.copy(other, otherInWorkspace);
+		val folderB = otherInWorkspace.resolve("src").resolve("a").resolve("b");
+		FileDeleter.delete(folderB);
+		Files.createSymbolicLink(folderB, other.resolve("src").resolve("a").resolve("b"));
+		startAndWaitForLspServer();
+		assertNoIssues();
+	}
+
 
 	def private void createYarnWorkspaceWithProjectMainWithDependencyTo(CharSequence dependenciesOfProjectMain) {
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk("ProjectMain" -> #[
 			"Main" -> '''
 				import {ClassOther} from "ModuleOther"
+				import {NestedClassOther} from "a/b/c/NestedModuleOther"
 				new ClassOther();
+				new NestedClassOther();
 			''',
 			CFG_DEPENDENCIES -> dependenciesOfProjectMain
 		]);
@@ -156,8 +187,10 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 	def private Path createProjectOutsideWorkspace(String projectName, String nameSuffix) throws IOException {
 		val tempFolder = FileUtils.createTempDirectory(this.class.simpleName + "_");
 		val projectFolder = tempFolder.resolve(projectName); // note: supports npm scopes!
+		val srcFolder = projectFolder.resolve("src");
+		val srcFolderABC = srcFolder.resolve("a").resolve("b").resolve("c");
 		Files.createDirectories(projectFolder);
-		Files.createDirectories(projectFolder.resolve("src"));
+		Files.createDirectories(srcFolderABC);
 		Files.writeString(projectFolder.resolve(PACKAGE_JSON), '''
 			{
 				"name": "«projectName»",
@@ -172,8 +205,11 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 				}
 			}
 		''');
-		Files.writeString(projectFolder.resolve("src").resolve("Module" + nameSuffix + ".n4js"), '''
+		Files.writeString(srcFolder.resolve("Module" + nameSuffix + ".n4js"), '''
 			export public class Class«nameSuffix» {}
+		''');
+		Files.writeString(srcFolderABC.resolve("NestedModule" + nameSuffix + ".n4js"), '''
+			export public class NestedClass«nameSuffix» {}
 		''');
 		return projectFolder;
 	}
