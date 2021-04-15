@@ -406,14 +406,14 @@ public class ResourceTaskManager {
 		// update my internal state
 		changed.stream().forEachOrdered(desc -> persistedIndex.addDescription(desc.getURI(), desc));
 		removed.stream().forEachOrdered(persistedIndex::removeDescription);
+		for (String removedProjectName : removedProjects) {
+			project2BuiltURIs.removeAll(removedProjectName);
+		}
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
 			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 			project2BuiltURIs.removeAll(projectName);
 			project2BuiltURIs.putAll(projectName, newData.getAllURIs());
-		}
-		for (String removedProjectName : removedProjects) {
-			project2BuiltURIs.removeAll(removedProjectName);
 		}
 		project2BuiltURIsImmutable = ImmutableSetMultimap.copyOf(project2BuiltURIs);
 		workspaceConfig = newWorkspaceConfig;

@@ -28,6 +28,15 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 
 	@Test
 	def void testCreateShadowingProject() throws Exception {
+		doTestCreateShadowingProject(false);
+	}
+
+	@Test
+	def void testCreateShadowingProject_whileModuleMainIsOpen() throws Exception {
+		doTestCreateShadowingProject(true);
+	}
+
+	def private void doTestCreateShadowingProject(boolean openModuleMain) throws Exception {
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(
 			"ProjectMain" -> #[
 				"ModuleMain" -> '''
@@ -47,6 +56,11 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 		createProjectOther(nodeModulesFolder, "InNodeModules");
 
 		startAndWaitForLspServer();
+		if (openModuleMain) {
+			openFile("ModuleMain");
+			joinServerRequests();
+		}
+
 		assertProjectsInWorkspace(
 			"yarn-test-project",
 			"yarn-test-project/node_modules/n4js-runtime",
@@ -60,7 +74,7 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 		);
 
 		createProjectOther(packagesFolder, "InPackages");
-
+		// notify LSP server about project creation
 		val fileEvents = #[
 			new FileEvent(packagesFolder.resolve("ProjectOther").resolve(PACKAGE_JSON).toFileURI.toString, FileChangeType.Created)
 		];
@@ -83,6 +97,15 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 
 	@Test
 	def void testDeleteShadowingProject() throws Exception {
+		doTestDeleteShadowingProject(false);
+	}
+
+	@Test
+	def void testDeleteShadowingProject_whileModuleMainIsOpen() throws Exception {
+		doTestDeleteShadowingProject(true);
+	}
+
+	def private void doTestDeleteShadowingProject(boolean openModuleMain) throws Exception {
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(
 			"ProjectMain" -> #[
 				"ModuleMain" -> '''
@@ -103,6 +126,11 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 		createProjectOther(packagesFolder, "InPackages");
 
 		startAndWaitForLspServer();
+		if (openModuleMain) {
+			openFile("ModuleMain");
+			joinServerRequests();
+		}
+
 		assertProjectsInWorkspace(
 			"yarn-test-project",
 			"yarn-test-project/node_modules/n4js-runtime",
@@ -115,8 +143,9 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 			]
 		);
 
-		deleteFolderNotContainingOpenFiles(packagesFolder.resolve("ProjectOther").toFileURI, ".*");
+		deleteFolderNotContainingOpenFiles(packagesFolder.resolve("ProjectOther").toFileURI, ".*"); // will notify server
 		joinServerRequests();
+
 		assertProjectsInWorkspace(
 			"yarn-test-project",
 			"yarn-test-project/node_modules/n4js-runtime",
