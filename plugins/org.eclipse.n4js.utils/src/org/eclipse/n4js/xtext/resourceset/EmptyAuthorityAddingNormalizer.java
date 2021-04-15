@@ -140,13 +140,13 @@ public class EmptyAuthorityAddingNormalizer implements URIConverter {
 	 *     new File(parent).mkdirs();
 	 * }
 	 * </pre>
-	 * However, the method {@link File#mkdirs()} seems to <em>sometimes</em> have a problem if one of the existing
-	 * ancestor directories is a symbolic link. The newer {@link Files#createDirectories(Path, FileAttribute...)} does
-	 * not seem to have this problem.
+	 * However, the method {@link File#mkdirs()} seems to <em>sometimes</em> have a problem if one of the existing ancestor
+	 * directories is a symbolic link (at least on macOS). The newer {@link Files#createDirectories(Path, FileAttribute...)}
+	 * does not seem to have this problem and therefore we use it here to create the parent folder up front.
 	 * <p>
 	 * It would be nicer to do this in a custom subclass of {@link FileURIHandlerImpl}, but looking at how the
-	 * {@link ExtensibleURIConverterImpl} is created in {@link XtextResourceSet} this would probably require use of a
-	 * custom subclass of {@code XtextResourceSet}, which we want to avoid.
+	 * {@link ExtensibleURIConverterImpl} is created in {@link XtextResourceSet} this would probably require use
+	 * of a custom subclass of {@code XtextResourceSet}, which we want to avoid.
 	 */
 	// @formatter:on
 	protected void prepareParentFolderForOutputStream(URI uri) throws IOException {
