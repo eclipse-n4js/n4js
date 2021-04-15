@@ -1,0 +1,15 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+- otherLocation
+-- PX [PROJECT]
+- mainLocation
+--*P1 [PROJECT workspaces=["packages/*"]]
+--- packages
+---- PX [SYMLINK_TO_PATH otherLocation/PX]
+
+EXPECT
+- mainLocation/P1
+- mainLocation/P1/packages/PX

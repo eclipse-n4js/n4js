@@ -242,8 +242,8 @@ public class ProjectDiscoveryHelper {
 			depth = 3;
 		}
 		try {
-			EnumSet<FileVisitOption> none = EnumSet.noneOf(FileVisitOption.class);
-			Files.walkFileTree(root, none, depth, new SimpleFileVisitor<Path>() {
+			EnumSet<FileVisitOption> options = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+			Files.walkFileTree(root, options, depth, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (root.equals(dir)) {
@@ -283,8 +283,8 @@ public class ProjectDiscoveryHelper {
 		@SuppressWarnings("resource")
 		PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + location.resolve(glob));
 		try {
-			EnumSet<FileVisitOption> none = EnumSet.noneOf(FileVisitOption.class);
-			Files.walkFileTree(location, none, depth, new SimpleFileVisitor<Path>() {
+			EnumSet<FileVisitOption> options = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+			Files.walkFileTree(location, options, depth, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {

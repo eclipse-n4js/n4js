@@ -1,0 +1,18 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+# case: the project folder of a scoped project is a symlink
+
+FOLDERS
+- otherLocation
+-- @someScope
+--- PX [PROJECT]
+- mainLocation
+--*P1 [PROJECT workspaces=["packages/*"]]
+--- packages
+---- @someScope
+----- PX [SYMLINK_TO_PATH otherLocation/@someScope/PX]
+
+EXPECT
+- mainLocation/P1
+- mainLocation/P1/packages/@someScope/PX
