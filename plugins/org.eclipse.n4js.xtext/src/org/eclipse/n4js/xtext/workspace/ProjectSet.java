@@ -10,10 +10,8 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
@@ -100,16 +98,22 @@ public class ProjectSet {
 			Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project,
 			Iterable<? extends ProjectConfigSnapshot> changedProjects, Iterable<String> removedProjectNames) {
 
-		// collect removed projects
-		List<ProjectConfigSnapshot> removedProjects = new ArrayList<>();
+		// apply updates for removed projects
 		for (String projectName : removedProjectNames) {
 			ProjectConfigSnapshot removedProject = lookupName2Project.get(projectName);
 			if (removedProject != null) {
-				removedProjects.add(removedProject);
+				lookupName2Project.remove(removedProject.getName());
+				for (String dependencyName : removedProject.getDependencies()) {
+					lookupName2DependentProjects.remove(dependencyName, removedProject);
+				}
+				lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(removedProject.getPath()));
+				for (SourceFolderSnapshot sourceFolder : removedProject.getSourceFolders()) {
+					lookupSourceFolderPath2Project.remove(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()));
+				}
 			}
 		}
 
-		// apply updates for changed projects
+		// apply updates for added/changed projects
 		for (ProjectConfigSnapshot project : changedProjects) {
 			ProjectConfigSnapshot oldProject = lookupName2Project.put(project.getName(), project);
 			if (oldProject != null) {
@@ -127,18 +131,6 @@ public class ProjectSet {
 			lookupProjectPath2Project.put(URIUtils.trimTrailingPathSeparator(project.getPath()), project);
 			for (SourceFolderSnapshot sourceFolder : project.getSourceFolders()) {
 				lookupSourceFolderPath2Project.put(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()), project);
-			}
-		}
-
-		// apply updates for removed projects
-		for (ProjectConfigSnapshot removedProject : removedProjects) {
-			lookupName2Project.remove(removedProject.getName());
-			for (String dependencyName : removedProject.getDependencies()) {
-				lookupName2DependentProjects.remove(dependencyName, removedProject);
-			}
-			lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(removedProject.getPath()));
-			for (SourceFolderSnapshot sourceFolder : removedProject.getSourceFolders()) {
-				lookupSourceFolderPath2Project.remove(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()));
 			}
 		}
 	}
