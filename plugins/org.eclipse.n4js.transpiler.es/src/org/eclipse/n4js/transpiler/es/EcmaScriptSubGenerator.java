@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -173,6 +174,16 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		final Writer buffCode = new StringWriter();
 		getTranspiler().transpile(resourceCasted, options, buffCode, Optional.absent());
 		return buffCode.toString();
+	}
+
+	@Override
+	protected String getCompiledFileExtension(Resource input) {
+		N4JSProjectConfigSnapshot pc = workspaceAccess.findProjectContaining(input);
+		String extPerPackageJson = pc != null ? pc.getProjectDescription().getOutputExtension() : null;
+		if (extPerPackageJson != null) {
+			return extPerPackageJson;
+		}
+		return super.getCompiledFileExtension(input);
 	}
 
 	/**
