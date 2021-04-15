@@ -72,7 +72,13 @@ public class ConfigSnapshotFactory {
 		return createWorkspaceConfigSnapshot(wcs.path);
 	}
 
-	/** Updates the given {@link WorkspaceConfigSnapshot} */
+	/**
+	 * Updates the given {@link WorkspaceConfigSnapshot} with the changes defined by the given {@code changedProjects}
+	 * and {@code removedProjects}.
+	 * <p>
+	 * For important notes on the meaning of the two parameters, see method
+	 * {@link ProjectSet#update(Iterable, Iterable)}.
+	 */
 	public WorkspaceConfigSnapshot update(WorkspaceConfigSnapshot wcs,
 			ImmutableList<? extends ProjectConfigSnapshot> changedProjects,
 			ImmutableSet<String> removedProjects) {
@@ -112,7 +118,12 @@ public class ConfigSnapshotFactory {
 		return new ProjectSet(projects);
 	}
 
-	/** Updates the given project set by adding, changing, removing some projects. */
+	/**
+	 * Updates the given project set by adding, changing, removing some projects.
+	 * <p>
+	 * For important notes on the meaning of the two parameters, see method
+	 * {@link ProjectSet#update(Iterable, Iterable)}.
+	 */
 	public ProjectSet updateProjectSet(ProjectSet projects,
 			Iterable<? extends ProjectConfigSnapshot> changedProjects, Iterable<String> removedProjects) {
 		return projects.update(changedProjects, removedProjects);

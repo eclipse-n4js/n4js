@@ -113,7 +113,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return workspace;
 	}
 
-	/** Tells whether this project exists. */
+	/** Tells whether this project still exists on disk at the time this method is invoked. */
 	public boolean exists() {
 		return getProjectDescriptionURI().isFile();
 	}
