@@ -10,9 +10,13 @@
  */
 @@Global @@ProvidedByRuntime
 import {Geolocation} from "GeoLocation";
+import {NavigatorStorage} from "NavigatorStorage";
 import {ServiceWorkerContainer} from "ServiceWorkerContainer";
 
-export external public abstract class Navigator extends Element implements NavigatorID {
+export external public abstract class Navigator
+    extends Element
+    implements NavigatorID, NavigatorStorage {
+
     public onLine: boolean;
     public cookieEnabled: boolean;
     public languages: string[];

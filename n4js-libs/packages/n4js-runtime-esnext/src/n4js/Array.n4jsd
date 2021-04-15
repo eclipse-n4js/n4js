@@ -12,9 +12,9 @@
 
 @Polyfill export external public class Array<T> extends Array<T> {
     // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
-    public <U> flatMap(callback: (currentValue: T, index: int, array: T[]) => U, thisArg: Object=): U[];
+    public <U> flatMap(callback: (currentValue: T, index: int, array: T[]) => (U|U[]), thisArg: Object=): U[];
     // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat
-    public flat(depth: int = 1): T[];
+    public <U> flat(depth: int = 1): U[];
 
     // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
     public includes(valueToFind: T, fromIndex: int = 0): boolean;
