@@ -80,7 +80,7 @@ public class ProjectSet {
 	 * {@code removedProjects}, it is assumed that a project of that name was first removed and then re-created,
 	 * possibly with a different path. This special case has two important real-world use cases:
 	 * <ol>
-	 * <li>a project is moved or renamed and all related updates are sent to the LSP server in a single
+	 * <li>a project is moved and all related updates are sent to the LSP server in a single
 	 * {@code didChangeWatchedFiles} notification.
 	 * <li>a project is created or deleted in the "packages" folder that shadows an existing project in the
 	 * <code>node_modules</code> folder; this amounts to an event chain similar to case 1.
