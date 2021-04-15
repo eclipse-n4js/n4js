@@ -23,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
@@ -66,8 +67,11 @@ public class ConcurrentIndex {
 		/**
 		 * Invoked when the index has changed.
 		 * <p>
-		 * <b>Attention:</b> In case an index for a new project is added and this new index is empty, there is no event
-		 * emitted. The reason is to minimize events during startup.
+		 * <b>Attention #1:</b> In case an index for a new project is added and this new index is empty, there is no
+		 * event emitted. The reason is to minimize events during startup.
+		 * <p>
+		 * <b>Attention #2:</b> For important notes on the meaning of the two parameters {@code changedProjects} and
+		 * {@code removedProjects}, see method {@link ProjectSet#update(Iterable, Iterable)}.
 		 */
 		public void onIndexChanged(
 				WorkspaceConfigSnapshot newWorkspaceConfig,
@@ -148,12 +152,9 @@ public class ConcurrentIndex {
 
 	/**
 	 * Add or remove projects, or change the configuration of existing projects.
-	 *
-	 * @param changedProjects
-	 *            newly added projects and projects with a changed configuration (i.e. one of the properties in
-	 *            {@link ProjectConfigSnapshot} has changed).
-	 * @param removedProjects
-	 *            names of removed projects.
+	 * <p>
+	 * For important notes on the meaning of the two parameters, see method
+	 * {@link ProjectSet#update(Iterable, Iterable)}.
 	 */
 	public WorkspaceConfigSnapshot changeOrRemoveProjects(Iterable<? extends ProjectConfigSnapshot> changedProjects,
 			Iterable<String> removedProjects) {

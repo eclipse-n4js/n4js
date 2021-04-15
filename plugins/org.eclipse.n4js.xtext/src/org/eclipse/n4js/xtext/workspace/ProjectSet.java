@@ -10,10 +10,8 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
@@ -73,7 +71,32 @@ public class ProjectSet {
 		this.sourceFolderPath2Project = sourceFolderPath2Project;
 	}
 
-	/** Return an updated lookup registry with some projects added, changed, or removed. */
+	/**
+	 * Return an updated lookup registry with some projects added, changed, or removed.
+	 *
+	 * <h2>Same Project Name In Both Arguments</h2>
+	 *
+	 * In case {@code changedProjects} contains a project description with a name that is also in
+	 * {@code removedProjects}, it is assumed that a project of that name was first removed and then re-created,
+	 * possibly with a different path. This special case has two important real-world use cases:
+	 * <ol>
+	 * <li>a project is moved and all related updates are sent to the LSP server in a single
+	 * {@code didChangeWatchedFiles} notification.
+	 * <li>a project is created or deleted in the "packages" folder that shadows an existing project in the
+	 * <code>node_modules</code> folder; this amounts to an event chain similar to case 1.
+	 * </ol>
+	 * <p>
+	 * Note that the case of a project being created and then immediately deleted within a single notification cannot be
+	 * represented by the parameters to this method. Client code is expected to recognize this case and not produce an
+	 * update for such a change at all.
+	 *
+	 * @param changedProjects
+	 *            newly added projects and projects with a changed configuration (i.e. one of the properties in
+	 *            {@link ProjectConfigSnapshot} has changed).
+	 * @param removedProjects
+	 *            names of removed projects. Removals are assumed to have happened before the changes defined in
+	 *            {@code changedProjects} (see details above).
+	 */
 	public ProjectSet update(Iterable<? extends ProjectConfigSnapshot> changedProjects,
 			Iterable<String> removedProjects) {
 
@@ -92,7 +115,12 @@ public class ProjectSet {
 				ImmutableMap.copyOf(lookupSourceFolderPath2Project));
 	}
 
-	/** Change the given lookup maps to include the given project changes and removals. */
+	/**
+	 * Change the given lookup maps to include the given project changes and removals.
+	 * <p>
+	 * For important notes on the meaning of the two parameters {@code changedProjects} and {@code removedProjects}, see
+	 * method {@link #update(Iterable, Iterable)}.
+	 */
 	protected void updateLookupMaps(
 			BiMap<String, ProjectConfigSnapshot> lookupName2Project,
 			SetMultimap<String, ProjectConfigSnapshot> lookupName2DependentProjects,
@@ -100,16 +128,22 @@ public class ProjectSet {
 			Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project,
 			Iterable<? extends ProjectConfigSnapshot> changedProjects, Iterable<String> removedProjectNames) {
 
-		// collect removed projects
-		List<ProjectConfigSnapshot> removedProjects = new ArrayList<>();
+		// apply updates for removed projects (this must be done first!)
 		for (String projectName : removedProjectNames) {
 			ProjectConfigSnapshot removedProject = lookupName2Project.get(projectName);
 			if (removedProject != null) {
-				removedProjects.add(removedProject);
+				lookupName2Project.remove(removedProject.getName());
+				for (String dependencyName : removedProject.getDependencies()) {
+					lookupName2DependentProjects.remove(dependencyName, removedProject);
+				}
+				lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(removedProject.getPath()));
+				for (SourceFolderSnapshot sourceFolder : removedProject.getSourceFolders()) {
+					lookupSourceFolderPath2Project.remove(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()));
+				}
 			}
 		}
 
-		// apply updates for changed projects
+		// apply updates for added/changed projects
 		for (ProjectConfigSnapshot project : changedProjects) {
 			ProjectConfigSnapshot oldProject = lookupName2Project.put(project.getName(), project);
 			if (oldProject != null) {
@@ -127,18 +161,6 @@ public class ProjectSet {
 			lookupProjectPath2Project.put(URIUtils.trimTrailingPathSeparator(project.getPath()), project);
 			for (SourceFolderSnapshot sourceFolder : project.getSourceFolders()) {
 				lookupSourceFolderPath2Project.put(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()), project);
-			}
-		}
-
-		// apply updates for removed projects
-		for (ProjectConfigSnapshot removedProject : removedProjects) {
-			lookupName2Project.remove(removedProject.getName());
-			for (String dependencyName : removedProject.getDependencies()) {
-				lookupName2DependentProjects.remove(dependencyName, removedProject);
-			}
-			lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(removedProject.getPath()));
-			for (SourceFolderSnapshot sourceFolder : removedProject.getSourceFolders()) {
-				lookupSourceFolderPath2Project.remove(URIUtils.trimTrailingPathSeparator(sourceFolder.getPath()));
 			}
 		}
 	}

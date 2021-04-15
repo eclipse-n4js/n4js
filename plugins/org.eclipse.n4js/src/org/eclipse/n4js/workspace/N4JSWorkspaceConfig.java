@@ -241,9 +241,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			}
 		}
 
-		// because the ProjectDiscoveryHelper discovers a plainJS-project P only if there is an N4JS project with a
-		// dependency to P, we need to re-discover projects whenever dependencies of N4JS projects change:
-		needToDetectAddedRemovedProjects |= didDependenciesOfAnyN4JSProjectChange(changes, oldWorkspaceConfig);
+		needToDetectAddedRemovedProjects |= isProjectDiscoveryRequired(changes, oldWorkspaceConfig);
 
 		if (needToDetectAddedRemovedProjects) {
 			changes = changes.merge(detectAddedRemovedProjects(oldWorkspaceConfig, false));
@@ -335,11 +333,22 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return changes;
 	}
 
-	/** Tells whether the dependencies of any N4JS project changed w.r.t. the given old workspace config. */
-	private static boolean didDependenciesOfAnyN4JSProjectChange(WorkspaceChanges changes,
+	/**
+	 * Tells whether the given workspace changes, when applied to the given old workspace configuration, call for an
+	 * overall re-discovery of all projects in the workspace.
+	 * <p>
+	 * Some reasons why this is required:
+	 * <ul>
+	 * <li>Because the {@link ProjectDiscoveryHelper} discovers a plainJS-project P only if there is an N4JS project
+	 * with a dependency to P, we need to re-discover projects whenever dependencies of N4JS projects change.
+	 * <li>Because of workspace projects shadowing projects of same name in the <code>node_modules</code> folder, we
+	 * need to re-discover projects whenever workspace projects are added/removed.
+	 * </ul>
+	 */
+	private static boolean isProjectDiscoveryRequired(WorkspaceChanges changes,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
-		return !allExceptPlainjs(changes.getAddedProjects()).isEmpty()
-				|| !allExceptPlainjs(changes.getRemovedProjects()).isEmpty()
+		return !allExceptPlainjsInNodeModules(changes.getAddedProjects()).isEmpty()
+				|| !allExceptPlainjsInNodeModules(changes.getRemovedProjects()).isEmpty()
 				|| allExceptPlainjs(changes.getChangedProjects())
 						.anyMatch(pc -> didDependenciesChange(pc, oldWorkspaceConfig));
 	}
@@ -379,5 +388,12 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 			Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
 		return FluentIterable.from(projectConfigs)
 				.filter(pc -> ((N4JSProjectConfigSnapshot) pc).getType() != ProjectType.PLAINJS);
+	}
+
+	private static FluentIterable<? extends ProjectConfigSnapshot> allExceptPlainjsInNodeModules(
+			Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
+		return FluentIterable.from(projectConfigs)
+				.filter(pc -> ((N4JSProjectConfigSnapshot) pc).getType() != ProjectType.PLAINJS
+						|| !((N4JSProjectConfigSnapshot) pc).isExternal());
 	}
 }
