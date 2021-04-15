@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONBooleanLiteral;
 import org.eclipse.n4js.json.JSON.JSONObject;
@@ -79,6 +80,10 @@ public enum PackageJsonProperties {
 	VENDOR_NAME("vendorName", "", N4JS),
 	/** Key of package.json property "output". */
 	OUTPUT("output", "Output folder. Default is '.'", ".", N4JS),
+	/** Key of package.json property "outputExtension". */
+	OUTPUT_EXTENSION("outputExtension",
+			"File extension for output files. Default is 'mjs' or 'js' if '\"type\": \"module\"' is defined.",
+			N4JSGlobals.MJS_FILE_EXTENSION, N4JS),
 	/** Key of package.json property "sources". */
 	SOURCES(UtilN4.PACKAGE_JSON__SOURCES, "Source folders", JSONObject.class, N4JS),
 	/** Key of package.json property "moduleFilters". */

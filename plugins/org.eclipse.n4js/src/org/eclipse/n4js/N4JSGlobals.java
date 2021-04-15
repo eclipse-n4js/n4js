@@ -40,6 +40,11 @@ public final class N4JSGlobals {
 	public static final String JS_FILE_EXTENSION = "js";
 
 	/**
+	 * Files extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot).
+	 */
+	public static final String MJS_FILE_EXTENSION = "mjs";
+
+	/**
 	 * Files extension of N4JS source files (<b>not</b> including the separator dot).
 	 */
 	public static final String N4JS_FILE_EXTENSION = "n4js";

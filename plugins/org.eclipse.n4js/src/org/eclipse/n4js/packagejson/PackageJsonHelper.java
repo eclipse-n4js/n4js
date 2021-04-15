@@ -18,6 +18,7 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT_EXTENSION;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
@@ -36,6 +37,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -94,9 +96,10 @@ public class PackageJsonHelper {
 		List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 		convertRootPairs(target, rootPairs);
 
-		JSONValue property = getProperty((JSONObject) rootValue, MAIN.name).orElse(null);
-		String propertyAsString = asNonEmptyStringOrNull(property);
-		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, propertyAsString);
+		String valueOfPropMain = asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, MAIN.name).orElse(null));
+		String valueOfPropType = asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, "type").orElse(null));
+		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, valueOfPropMain,
+				valueOfPropType);
 
 		return target;
 	}
@@ -178,6 +181,9 @@ public class PackageJsonHelper {
 			case OUTPUT:
 				target.setOutputPath(asNonEmptyStringOrNull(value));
 				break;
+			case OUTPUT_EXTENSION:
+				target.setOutputExtension(asNonEmptyStringOrNull(value));
+				break;
 			case SOURCES:
 				target.getSourceContainers().addAll(asSourceContainerDescriptionsOrEmpty(value));
 				break;
@@ -245,14 +251,14 @@ public class PackageJsonHelper {
 	}
 
 	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target, boolean applyDefaultValues,
-			String defaultProjectName, String valueOfTopLevelPropertyMain) {
+			String defaultProjectName, String valueOfTopLevelPropertyMain, String valueOfTopLevelPropertyType) {
 
 		// store whether target has a declared mainModule *before* applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
 		// apply default values (if desired)
 		if (applyDefaultValues) {
-			applyDefaults(target, defaultProjectName);
+			applyDefaults(target, defaultProjectName, valueOfTopLevelPropertyType);
 		}
 
 		// sanitize and set value of top-level property "main"
@@ -295,7 +301,9 @@ public class PackageJsonHelper {
 	 * Apply default values to the given project description. This should be performed right after loading and
 	 * converting the project description from JSON.
 	 */
-	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
+	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName,
+			String valueOfTopLevelPropertyType) {
+
 		if (!target.hasN4JSNature() || target.getType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
@@ -317,6 +325,13 @@ public class PackageJsonHelper {
 			// note that in case the project is a yarn workspace project and there is a 'clean build' running
 			// the entire contents will be deleted.
 			target.setOutputPath(OUTPUT.defaultValue);
+		}
+		if (target.getOutputExtension() == null) {
+			if (valueOfTopLevelPropertyType != null && valueOfTopLevelPropertyType.trim().equals("module")) {
+				target.setOutputExtension(N4JSGlobals.JS_FILE_EXTENSION);
+			} else {
+				target.setOutputExtension(OUTPUT_EXTENSION.defaultValue);
+			}
 		}
 
 		// if no source containers are defined (no matter what type),
