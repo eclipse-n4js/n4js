@@ -13,11 +13,9 @@
   },
   "main": "src-gen/index.js",
   "bin": {
-    "n4jsc": "./bin/n4jsc.js"
+    "n4jsc": "./src-gen/n4jsc.js"
   },
   "files": [
-    "bin/n4jsc.js",
-    "bin/n4jsc.jar",
     "resources/PrintJavaVersion.java",
     "npm-postinstall.js",
     "src-gen",

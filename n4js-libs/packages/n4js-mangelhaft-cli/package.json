@@ -15,7 +15,7 @@
     "test": "./tests/npm-test.sh"
   },
   "bin": {
-    "n4js-mangelhaft": "./bin/n4js-mangelhaft-cli.js"
+    "n4js-mangelhaft": "./src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js"
   },
   "type": "module",
   "dependencies": {
