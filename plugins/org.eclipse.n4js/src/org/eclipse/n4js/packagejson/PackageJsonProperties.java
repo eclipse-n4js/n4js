@@ -83,7 +83,9 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "outputExtension". */
 	OUTPUT_EXTENSION("outputExtension",
 			"File extension for output files. Default is 'mjs' or 'js' if '\"type\": \"module\"' is defined.",
-			N4JSGlobals.MJS_FILE_EXTENSION, N4JS),
+			// FIXME
+			N4JSGlobals.JS_FILE_EXTENSION, // N4JSGlobals.MJS_FILE_EXTENSION,
+			N4JS),
 	/** Key of package.json property "sources". */
 	SOURCES(UtilN4.PACKAGE_JSON__SOURCES, "Source folders", JSONObject.class, N4JS),
 	/** Key of package.json property "moduleFilters". */
