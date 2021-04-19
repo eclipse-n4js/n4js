@@ -40,7 +40,7 @@ public class TestProcessBuilder {
 		this.binariesLocatorHelper = binariesLocatorHelper;
 	}
 
-	/** @return a process: {@code node -r esm fileToRun} */
+	/** @return a process: {@code node fileToRun} */
 	public ProcessBuilder nodejsRun(Path workingDirectory, Map<String, String> environment, Path fileToRun,
 			String[] options) {
 
@@ -80,8 +80,6 @@ public class TestProcessBuilder {
 		}
 
 		List<String> optionList = new ArrayList<>();
-		optionList.add("-r");
-		optionList.add("esm");
 		optionList.add(fileToRun.toString());
 		optionList.addAll(Arrays.asList(options));
 		String[] cmdOptions = optionList.toArray(String[]::new);
