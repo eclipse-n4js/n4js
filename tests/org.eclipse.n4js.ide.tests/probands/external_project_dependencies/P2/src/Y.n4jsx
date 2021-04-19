@@ -4,7 +4,7 @@ export public interface ~YProps extends React.ComponentProps {}
 
 export public interface ~YState {}
 
-export public class Y extends React.Component<YProps, YState, SS> {
+export public class Y extends React.Component<YProps, YState, Object> {
 	@Override
     public render(): React.Element<?> {
     	return (
