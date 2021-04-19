@@ -12,6 +12,7 @@
     "url": "https://github.com/eclipse/n4js"
   },
   "description": "N4JS node runtime tests.",
+  "type": "module",
   "n4js": {
     "projectType": "test",
     "vendorId": "org.eclipse.n4js",

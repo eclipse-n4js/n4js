@@ -19,6 +19,7 @@
   "engines": {
     "node": ">= 5.0.0"
   },
+  "type": "module",
   "dependencies": {
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "n4js-runtime": "^0.1.0",

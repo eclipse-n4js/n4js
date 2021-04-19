@@ -23,6 +23,7 @@
     "src-gen",
     "src"
   ],
+  "type": "module",
   "devDependencies": {
     "mocha": "^8.3.2"
   },

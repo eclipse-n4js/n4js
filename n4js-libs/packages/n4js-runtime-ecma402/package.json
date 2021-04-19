@@ -18,6 +18,7 @@
   "engines": {
     "node": ">= 8.0.0"
   },
+  "type": "module",
   "n4js": {
     "projectType": "runtimeLibrary",
     "vendorId": "org.eclipse.n4js",
