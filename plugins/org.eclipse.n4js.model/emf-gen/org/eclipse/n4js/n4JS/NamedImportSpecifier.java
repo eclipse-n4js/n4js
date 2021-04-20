@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 
 /**
@@ -21,6 +22,7 @@ import org.eclipse.n4js.ts.types.TExportableElement;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.NamedImportSpecifier#getDefinedDynamicElement <em>Defined Dynamic Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.NamedImportSpecifier#getImportedElement <em>Imported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.NamedImportSpecifier#getImportedElementAsText <em>Imported Element As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.NamedImportSpecifier#getAlias <em>Alias</em>}</li>
@@ -31,6 +33,28 @@ import org.eclipse.n4js.ts.types.TExportableElement;
  * @generated
  */
 public interface NamedImportSpecifier extends ImportSpecifier {
+	/**
+	 * Returns the value of the '<em><b>Defined Dynamic Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Defined Dynamic Element</em>' reference.
+	 * @see #setDefinedDynamicElement(TDynamicElement)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getNamedImportSpecifier_DefinedDynamicElement()
+	 * @model transient="true"
+	 * @generated
+	 */
+	TDynamicElement getDefinedDynamicElement();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.NamedImportSpecifier#getDefinedDynamicElement <em>Defined Dynamic Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Defined Dynamic Element</em>' reference.
+	 * @see #getDefinedDynamicElement()
+	 * @generated
+	 */
+	void setDefinedDynamicElement(TDynamicElement value);
+
 	/**
 	 * Returns the value of the '<em><b>Imported Element</b></em>' reference.
 	 * <!-- begin-user-doc -->

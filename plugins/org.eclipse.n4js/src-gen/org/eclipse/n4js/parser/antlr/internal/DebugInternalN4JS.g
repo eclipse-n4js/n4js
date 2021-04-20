@@ -439,16 +439,22 @@ ruleImportSpecifiersExceptDefault:
 ruleNamedImportSpecifier:
 	(
 		ruleBindingIdentifier
+		'+'
+		?
 		    |
 		ruleIdentifierName
 		'as'
 		ruleBindingIdentifier
+		'+'
+		?
 	)
 ;
 
 // Rule DefaultImportSpecifier
 ruleDefaultImportSpecifier:
 	ruleBindingIdentifier
+	'+'
+	?
 ;
 
 // Rule NamespaceImportSpecifier

@@ -521,13 +521,13 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 
 	def dispatch void format(NamedImportSpecifier namedImp, extension IFormattableDocument document){
 		namedImp.regionFor.keyword("as").prepend[oneSpace].append[oneSpace];
-		namedImp.regionFor.feature(N4JSPackage.Literals.NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC).prepend[noSpace].append[oneSpace]; // "+"-KW after alias-name
+		namedImp.regionFor.feature(N4JSPackage.Literals.IMPORT_SPECIFIER__DECLARED_DYNAMIC).prepend[noSpace].append[oneSpace]; // "+"-KW after alias-name
 	}
 
 	def dispatch void format(NamespaceImportSpecifier nsImp, extension IFormattableDocument document){
 		nsImp.regionFor.keyword("*").append[oneSpace];
 		nsImp.regionFor.keyword("as").append[oneSpace];
-		nsImp.regionFor.feature(N4JSPackage.Literals.NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC).prepend[noSpace].append[oneSpace]; // "+"-KW after alias-name
+		nsImp.regionFor.feature(N4JSPackage.Literals.IMPORT_SPECIFIER__DECLARED_DYNAMIC).prepend[noSpace].append[oneSpace]; // "+"-KW after alias-name
 	}
 
 	def dispatch void format(ExportDeclaration export, extension IFormattableDocument document){

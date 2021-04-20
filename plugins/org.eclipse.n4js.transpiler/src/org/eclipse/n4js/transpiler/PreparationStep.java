@@ -405,10 +405,10 @@ public class PreparationStep {
 				entry.getElementsOfThisName().add((Variable) copy);
 			} else {
 				final EObject astElement = getASTElementIfInSameResource(elem);
-				if (astElement instanceof NamespaceImportSpecifier) {
-					// special case of exported namespace imports
+				if (astElement instanceof ImportSpecifier) {
+					// special case of exported imports
 					final EObject copy = getCopyOf(astElement);
-					entry.setImportSpecifier((NamespaceImportSpecifier) copy);
+					entry.setImportSpecifier((ImportSpecifier) copy);
 				} else {
 					// standard case:
 					if (astElement instanceof NamedElement) {

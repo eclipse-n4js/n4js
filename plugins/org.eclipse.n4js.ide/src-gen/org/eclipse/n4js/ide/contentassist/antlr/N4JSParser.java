@@ -188,7 +188,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getGroup_1(), "rule__ImportSpecifiersExceptDefault__Group_1__0");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getGroup_1_1(), "rule__ImportSpecifiersExceptDefault__Group_1_1__0");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getGroup_1_1_1(), "rule__ImportSpecifiersExceptDefault__Group_1_1_1__0");
+			builder.put(grammarAccess.getNamedImportSpecifierAccess().getGroup_0(), "rule__NamedImportSpecifier__Group_0__0");
 			builder.put(grammarAccess.getNamedImportSpecifierAccess().getGroup_1(), "rule__NamedImportSpecifier__Group_1__0");
+			builder.put(grammarAccess.getDefaultImportSpecifierAccess().getGroup(), "rule__DefaultImportSpecifier__Group__0");
 			builder.put(grammarAccess.getNamespaceImportSpecifierAccess().getGroup(), "rule__NamespaceImportSpecifier__Group__0");
 			builder.put(grammarAccess.getFunctionDeclarationAccess().getGroup(), "rule__FunctionDeclaration__Group__0");
 			builder.put(grammarAccess.getFunctionDeclarationAccess().getGroup_0(), "rule__FunctionDeclaration__Group_0__0");
@@ -685,10 +687,13 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getImportSpecifiersAssignment_0(), "rule__ImportSpecifiersExceptDefault__ImportSpecifiersAssignment_0");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getImportSpecifiersAssignment_1_1_0(), "rule__ImportSpecifiersExceptDefault__ImportSpecifiersAssignment_1_1_0");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getImportSpecifiersAssignment_1_1_1_1(), "rule__ImportSpecifiersExceptDefault__ImportSpecifiersAssignment_1_1_1_1");
-			builder.put(grammarAccess.getNamedImportSpecifierAccess().getImportedElementAssignment_0(), "rule__NamedImportSpecifier__ImportedElementAssignment_0");
+			builder.put(grammarAccess.getNamedImportSpecifierAccess().getImportedElementAssignment_0_0(), "rule__NamedImportSpecifier__ImportedElementAssignment_0_0");
+			builder.put(grammarAccess.getNamedImportSpecifierAccess().getDeclaredDynamicAssignment_0_1(), "rule__NamedImportSpecifier__DeclaredDynamicAssignment_0_1");
 			builder.put(grammarAccess.getNamedImportSpecifierAccess().getImportedElementAssignment_1_0(), "rule__NamedImportSpecifier__ImportedElementAssignment_1_0");
 			builder.put(grammarAccess.getNamedImportSpecifierAccess().getAliasAssignment_1_2(), "rule__NamedImportSpecifier__AliasAssignment_1_2");
-			builder.put(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementAssignment(), "rule__DefaultImportSpecifier__ImportedElementAssignment");
+			builder.put(grammarAccess.getNamedImportSpecifierAccess().getDeclaredDynamicAssignment_1_3(), "rule__NamedImportSpecifier__DeclaredDynamicAssignment_1_3");
+			builder.put(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementAssignment_0(), "rule__DefaultImportSpecifier__ImportedElementAssignment_0");
+			builder.put(grammarAccess.getDefaultImportSpecifierAccess().getDeclaredDynamicAssignment_1(), "rule__DefaultImportSpecifier__DeclaredDynamicAssignment_1");
 			builder.put(grammarAccess.getNamespaceImportSpecifierAccess().getAliasAssignment_3(), "rule__NamespaceImportSpecifier__AliasAssignment_3");
 			builder.put(grammarAccess.getNamespaceImportSpecifierAccess().getDeclaredDynamicAssignment_4(), "rule__NamespaceImportSpecifier__DeclaredDynamicAssignment_4");
 			builder.put(grammarAccess.getFunctionDeclarationAccess().getDeclaredModifiersAssignment_0_0_1(), "rule__FunctionDeclaration__DeclaredModifiersAssignment_0_0_1");

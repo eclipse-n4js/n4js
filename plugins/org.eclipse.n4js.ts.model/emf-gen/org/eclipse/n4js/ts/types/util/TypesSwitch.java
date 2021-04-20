@@ -123,6 +123,16 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.TDYNAMIC_ELEMENT: {
+				TDynamicElement tDynamicElement = (TDynamicElement)theEObject;
+				T result = caseTDynamicElement(tDynamicElement);
+				if (result == null) result = caseTExportableElement(tDynamicElement);
+				if (result == null) result = caseSyntaxRelatedTElement(tDynamicElement);
+				if (result == null) result = caseIdentifiableElement(tDynamicElement);
+				if (result == null) result = caseTypableElement(tDynamicElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TANNOTATION: {
 				TAnnotation tAnnotation = (TAnnotation)theEObject;
 				T result = caseTAnnotation(tAnnotation);
@@ -868,6 +878,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTExportableElement(TExportableElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TDynamic Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TDynamic Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTDynamicElement(TDynamicElement object) {
 		return null;
 	}
 

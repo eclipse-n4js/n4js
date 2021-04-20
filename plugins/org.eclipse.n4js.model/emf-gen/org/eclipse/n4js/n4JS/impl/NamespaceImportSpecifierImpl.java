@@ -33,7 +33,6 @@ import org.eclipse.n4js.ts.types.Type;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamespaceImportSpecifierImpl#getDefinedType <em>Defined Type</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.NamespaceImportSpecifierImpl#isDeclaredDynamic <em>Declared Dynamic</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamespaceImportSpecifierImpl#getAlias <em>Alias</em>}</li>
  * </ul>
  *
@@ -49,26 +48,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * @ordered
 	 */
 	protected Type definedType;
-
-	/**
-	 * The default value of the '{@link #isDeclaredDynamic() <em>Declared Dynamic</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isDeclaredDynamic()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean DECLARED_DYNAMIC_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isDeclaredDynamic() <em>Declared Dynamic</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isDeclaredDynamic()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean declaredDynamic = DECLARED_DYNAMIC_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getAlias() <em>Alias</em>}' attribute.
@@ -155,29 +134,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 	 * @generated
 	 */
 	@Override
-	public boolean isDeclaredDynamic() {
-		return declaredDynamic;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDeclaredDynamic(boolean newDeclaredDynamic) {
-		boolean oldDeclaredDynamic = declaredDynamic;
-		declaredDynamic = newDeclaredDynamic;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC, oldDeclaredDynamic, declaredDynamic));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public String getAlias() {
 		return alias;
 	}
@@ -206,8 +162,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DEFINED_TYPE:
 				if (resolve) return getDefinedType();
 				return basicGetDefinedType();
-			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC:
-				return isDeclaredDynamic();
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__ALIAS:
 				return getAlias();
 		}
@@ -224,9 +178,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 		switch (featureID) {
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DEFINED_TYPE:
 				setDefinedType((Type)newValue);
-				return;
-			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC:
-				setDeclaredDynamic((Boolean)newValue);
 				return;
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__ALIAS:
 				setAlias((String)newValue);
@@ -246,9 +197,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DEFINED_TYPE:
 				setDefinedType((Type)null);
 				return;
-			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC:
-				setDeclaredDynamic(DECLARED_DYNAMIC_EDEFAULT);
-				return;
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__ALIAS:
 				setAlias(ALIAS_EDEFAULT);
 				return;
@@ -266,8 +214,6 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 		switch (featureID) {
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DEFINED_TYPE:
 				return definedType != null;
-			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC:
-				return declaredDynamic != DECLARED_DYNAMIC_EDEFAULT;
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER__ALIAS:
 				return ALIAS_EDEFAULT == null ? alias != null : !ALIAS_EDEFAULT.equals(alias);
 		}
@@ -326,9 +272,7 @@ public class NamespaceImportSpecifierImpl extends ImportSpecifierImpl implements
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredDynamic: ");
-		result.append(declaredDynamic);
-		result.append(", alias: ");
+		result.append(" (alias: ");
 		result.append(alias);
 		result.append(')');
 		return result.toString();

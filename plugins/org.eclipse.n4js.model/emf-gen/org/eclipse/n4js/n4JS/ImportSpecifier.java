@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isFlaggedUsedInCode <em>Flagged Used In Code</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isRetainedAtRuntime <em>Retained At Runtime</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportSpecifier#isDeclaredDynamic <em>Declared Dynamic</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportSpecifier()
@@ -81,5 +82,27 @@ public interface ImportSpecifier extends EObject {
 	 * @generated
 	 */
 	void setRetainedAtRuntime(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Declared Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Declared Dynamic</em>' attribute.
+	 * @see #setDeclaredDynamic(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportSpecifier_DeclaredDynamic()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDeclaredDynamic();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isDeclaredDynamic <em>Declared Dynamic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Dynamic</em>' attribute.
+	 * @see #isDeclaredDynamic()
+	 * @generated
+	 */
+	void setDeclaredDynamic(boolean value);
 
 } // ImportSpecifier

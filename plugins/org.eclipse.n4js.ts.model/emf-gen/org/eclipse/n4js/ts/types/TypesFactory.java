@@ -84,6 +84,15 @@ public interface TypesFactory extends EFactory {
 	TExportableElement createTExportableElement();
 
 	/**
+	 * Returns a new object of class '<em>TDynamic Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>TDynamic Element</em>'.
+	 * @generated
+	 */
+	TDynamicElement createTDynamicElement();
+
+	/**
 	 * Returns a new object of class '<em>TAnnotation</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

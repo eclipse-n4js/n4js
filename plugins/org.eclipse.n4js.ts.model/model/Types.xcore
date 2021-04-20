@@ -179,6 +179,8 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	contains Type[] exposedInternalTypes
 
+	contains transient TDynamicElement[] internalDynamicElements
+
 	/**
 	 * MD5 hash (hex) of the AST from which this type model was created. This can be used to quickly
 	 * compare two type models created from -- maybe -- different versions of the same AST.
@@ -310,6 +312,19 @@ class TExportableElement extends IdentifiableElement {
 	op boolean isExported() {
 		exportedName!==null
 	}
+}
+
+/*
+ * An identifiable element imported via a dynamic named or dynamic default import, with unknown characteristics
+ * that may or may not exist. However, we assume it exists and that it can be used in whatever way the programmer
+ * wants. In this sense, it corresponds to the dynamic type 'any+'.
+ * <p>
+ * A {@code TDynamicElement} will never be exported, but inside a module it plays the role of imported elements,
+ * which are always subtypes of 'TExportableElement', and thus the super type 'TExportableElement' is required.
+ */
+class TDynamicElement extends TExportableElement, SyntaxRelatedTElement {
+
+	// no additional properties
 }
 
 class TAnnotation {

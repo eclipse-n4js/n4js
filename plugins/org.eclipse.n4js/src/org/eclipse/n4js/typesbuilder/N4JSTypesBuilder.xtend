@@ -16,14 +16,12 @@ import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
-import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.MethodDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
-import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -36,7 +34,6 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
@@ -77,7 +74,7 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSFunctionDefinitionTypesBuilder
 	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesFromTypeRefBuilder
-	@Inject extension N4JSNamespaceImportTypesBuilder
+	@Inject extension N4JSImportTypesBuilder
 
 	@Inject extension ModuleNameComputer
 	@Inject private WorkspaceAccess workspaceAccess
@@ -125,7 +122,7 @@ public class N4JSTypesBuilder {
 			}
 			module.reconciled = true;
 
-			script.relinkNamespaceTypes(module, preLinkingPhase)
+			script.relinkTypeModelElementsForImports(module, preLinkingPhase)
 
 			script.buildTypesFromTypeRefs(module, preLinkingPhase);
 
@@ -184,7 +181,7 @@ public class N4JSTypesBuilder {
 
 			result.copyAnnotations(script, preLinkingPhase);
 
-			script.buildNamespaceTypesFromModuleImports(result, preLinkingPhase);
+			script.createTypeModelElementsForImports(result, preLinkingPhase);
 
 			result.n4jsdModule = jsVariantHelper.isExternalMode(script);
 
@@ -202,24 +199,6 @@ public class N4JSTypesBuilder {
 //			UtilN4.takeSnapshotInGraphView("TB end (preLinking=="+preLinkingPhase+")",resource.resourceSet);
 		} else {
 			throw new IllegalStateException(resource.URI + " has no parse result.");
-		}
-	}
-
-	/**
-	 * Creates new {@link ModuleNamespaceVirtualType} instances for the namespace imports in {@code script}
-	 * and adds them to the given {@code target} module's {@link TModule#internalTypes}.
-	 */
-	def private void buildNamespaceTypesFromModuleImports(Script script, TModule target, boolean preLinkingPhase) {
-		if (!preLinkingPhase) {
-			// process namespace imports
-			for (importDeclaration : script.scriptElements.filter(ImportDeclaration).toList) {
-				val namespaceImport = getNamespaceImportSpecifier(importDeclaration)
-				if (namespaceImport !== null) {
-					val importedModule = importDeclaration.eGet(N4JSPackage.eINSTANCE.importDeclaration_Module,
-						false) as TModule
-					target.internalTypes += createModuleNamespaceVirtualType(namespaceImport, importedModule);
-				}
-			}
 		}
 	}
 
