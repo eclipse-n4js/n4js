@@ -18,6 +18,10 @@ import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
 import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as child_process from "child_process";
 import * as lib_path from "path";
+import * as lib_url from "url";
+import * as __import_meta+ from "org/eclipse/n4js/mangelhaft/runner/node/__import_meta"
+
+const __dirname = lib_path.dirname(lib_url.fileURLToPath(__import_meta.url));
 
 const log = debug("n4js-mangelhaft:api");
 const rlog = debug("n4js-mangelhaft:test-run");
