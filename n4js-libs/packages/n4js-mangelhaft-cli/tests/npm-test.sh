@@ -13,7 +13,7 @@ set -e
 cd `dirname $0`/TestPrj
 
 echo "Create test catalogs"
-../../../n4js-cli/bin/n4jsc.js compile ../../../..
+../../../n4js-cli/src-gen/n4jsc.js compile ../../../..
 
 
 REPORT_NAME="./build/report.xml"

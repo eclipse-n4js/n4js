@@ -10,8 +10,10 @@
  */
 
 import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOptions";
-import * as lib_nomnom+ from "nomnom-patched";
+import * as lib_nomnom_namespace+ from "nomnom-patched";
 import * as lib_path from "path";
+
+const lib_nomnom = lib_nomnom_namespace.default;
 
 const cwd = process.cwd();
 const resolvePath = (p: string): string => lib_path.resolve(cwd, p);

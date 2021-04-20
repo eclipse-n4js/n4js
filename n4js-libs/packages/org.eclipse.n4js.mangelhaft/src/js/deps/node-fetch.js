@@ -1,1 +1,1 @@
-module.exports = require("node-fetch");
+export default import("node-fetch");
