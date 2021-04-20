@@ -1,6 +1,7 @@
 {
 	"name": "external.project.mm",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"n4js-runtime": "0.1.0",
 		"express": "4.13.4",
@@ -10,8 +11,8 @@
 		"bar": "0.1.2",
 		"pouchdb-find": "0.10.3",
 		"next": "5.0.0",
-		"react": "16.2.0",
-		"react-dom": "16.2.0",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
 		"body-parser": "1.18.2",
 		"@n4jsd/express": "<=4.13.*",
 		"@n4jsd/lodash": "<=4.16.*",

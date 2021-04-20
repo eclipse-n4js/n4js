@@ -1,9 +1,10 @@
 {
 	"name": "P2",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"n4js-runtime": "*",
-		"react": "*",
+		"react": "17.0.2",
 		"@n4jsd/react": "*"
 	},
 	"n4js": {

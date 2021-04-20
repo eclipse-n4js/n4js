@@ -1,6 +1,7 @@
 {
   "name": "Module.And.Folder.Names.With.Dots",
   "version": "0.0.1",
+  "type": "module",
   "dependencies": {
     "n4js-runtime": "0.1.0"
   },

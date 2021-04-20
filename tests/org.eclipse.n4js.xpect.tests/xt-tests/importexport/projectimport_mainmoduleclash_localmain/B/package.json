@@ -1,6 +1,7 @@
 {
 	"name": "B",
 	"version": "0.0.1",
+	"type": "module",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

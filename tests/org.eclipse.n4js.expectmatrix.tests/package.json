@@ -1,6 +1,7 @@
 {
 	"name": "org.eclipse.n4js.spec.tests",
 	"version": "0.0.1",
+	"type": "module",
 	"n4js": {
 		"vendorId": "org.eclipse.n4js",
 		"vendorName": "Eclipse N4JS Project",

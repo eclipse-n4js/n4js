@@ -1,6 +1,7 @@
 {
   "name": "GHOLD-45",
   "version": "0.0.1",
+  "type": "module",
   "dependencies": {
     "n4js-runtime": "0.1.0",
     "org.eclipse.n4js.mangelhaft": "0.1.0",

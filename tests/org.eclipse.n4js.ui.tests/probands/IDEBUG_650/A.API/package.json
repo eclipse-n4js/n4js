@@ -1,6 +1,7 @@
 {
   "name": "A.API",
   "version": "0.0.1",
+  "type": "module",
   "n4js": {
     "projectType": "api",
     "vendorId": "org.eclipse.n4js",

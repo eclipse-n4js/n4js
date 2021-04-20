@@ -1,6 +1,7 @@
 {
 	"name": "external.project",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"express": "4.16.0",
 		"n4js-runtime-node": "*",

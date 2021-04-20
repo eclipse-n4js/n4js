@@ -1,6 +1,7 @@
 {
 	"name": "react",
-	"version": "16.0.0",
+	"version": "17.0.0",
+	"type": "module",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "npm",

@@ -1,9 +1,10 @@
 {
 	"name": "P2",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
-		"react": "16.2.0",
-		"@n4jsd/react": "<=16.2.*"
+		"react": "17.0.2",
+		"@n4jsd/react": "*"
 	},
 	"n4js": {
 		"projectType": "library",
