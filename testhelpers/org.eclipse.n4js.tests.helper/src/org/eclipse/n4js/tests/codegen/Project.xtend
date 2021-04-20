@@ -236,6 +236,7 @@ public class Project {
 			{
 				"name": "«projectName»",
 				"version": "«projectVersion»",
+				"type": "module",
 				"n4js": {
 					"vendorId": "«vendorId»",
 					"vendorName": "«vendorName»",

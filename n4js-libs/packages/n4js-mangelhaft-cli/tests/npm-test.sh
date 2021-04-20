@@ -18,11 +18,10 @@ echo "Create test catalogs"
 
 REPORT_NAME="./build/report.xml"
 echo "Run Mangelhaft"
-../../bin/n4js-mangelhaft-cli.js ../../../.. \
+../../src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js ../../../.. \
 		--xunitReportFile $REPORT_NAME \
 		--xunitReportName test-report \
 		--xunitReportPackage n4js-libs-report \
 		$@
 
 echo "Saved test report at: ${REPORT_NAME}"
-

@@ -16,7 +16,7 @@ interface ~YProps extends React.ComponentProps {}
 
 interface ~YState {}
 
-class Y extends React.Component<YProps, YState> {
+class Y extends React.Component<YProps, YState, Object> {
     @Override
     public render(): React.Element<?> {
         return (

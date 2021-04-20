@@ -113,9 +113,10 @@ class ModuleWrappingTransformation extends Transformation {
 
 		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
 			// SPECIAL CASE #1
-			// pointing to a module in a runtime library
+			// pointing to a module in a runtime library, such as importing a node built-in library:
+			// import * as path_lib from "path"
 			// --> always use plain module specifier
-			return targetModule.moduleSpecifier + '.' + N4JSGlobals.JS_FILE_EXTENSION;
+			return targetModule.moduleSpecifier; // no file extension to add!
 		}
 
 		val importingFromModuleInSameProject = targetProject.pathAsFileURI == state.project.pathAsFileURI;

@@ -54,7 +54,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 		],
 		"MainProject/" + PACKAGE_JSON -> #[
-			"(Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)"
+			"(Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)"
 		]
 	];
 
@@ -322,7 +322,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
 			val errorsBeforeSaving = originalErrors + #[
 				sourceProjectName + "/" + PACKAGE_JSON -> #[
-					"(Error, [15:24 - 15:45], Project does not exist with project ID: PlainjsProject.)"
+					"(Error, [16:24 - 16:45], Project does not exist with project ID: PlainjsProject.)"
 				]
 			];
 			assertIssues(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor

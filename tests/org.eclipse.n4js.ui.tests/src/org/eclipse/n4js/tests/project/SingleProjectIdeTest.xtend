@@ -254,7 +254,7 @@ cleanBuildAndWait();
 
 		assertIssues(
 			DEFAULT_PROJECT_NAME + "/package.json" -> #[
-				"(Warning, [11:8 - 11:14], Source container path src3 does not exist.)"
+				"(Warning, [12:8 - 12:14], Source container path src3 does not exist.)"
 			],
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",

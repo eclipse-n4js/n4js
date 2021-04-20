@@ -242,7 +242,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		}
 
 		ProcessResult result = new CliTools().runNodejs(workingDir.toPath(),
-				Path.of("../../node_modules/n4js-mangelhaft-cli/bin/n4js-mangelhaft-cli.js"),
+				Path.of("../../node_modules/n4js-mangelhaft-cli/src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js"),
 				args.toArray(String[]::new));
 
 		String output = result.getStdOut();

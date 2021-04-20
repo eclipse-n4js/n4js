@@ -49,7 +49,7 @@ class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest {
 		]));
 		joinServerRequests();
 		assertIsAffectedBug("ProjectOther/" + PACKAGE_JSON,
-			"(Error, [7:17 - 7:34], Main module specifier some/path/Other does not exist.)"
+			"(Error, [8:17 - 8:34], Main module specifier some/path/Other does not exist.)"
 		);
 	}	
 
