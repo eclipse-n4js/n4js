@@ -13,8 +13,13 @@ package org.eclipse.n4js.transpiler.es;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
@@ -40,6 +45,9 @@ import com.google.inject.Inject;
  * Sub generator for the EcmaScript transpiler.
  */
 public class EcmaScriptSubGenerator extends AbstractSubGenerator {
+
+	private static final Logger LOGGER = Logger.getLogger(EcmaScriptSubGenerator.class);
+
 	private static String COMPILER_ID = "es";
 	private static CompilerDescriptor DEFAULT_DESCRIPTOR = createDefaultDescriptor();
 
@@ -153,6 +161,10 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 
 					fsa.generateFile(filename, COMPILER_ID, buffCode.toString());
 
+					if (resourceCasted.getScript().getHashbang() != null) {
+						makeGeneratedFileExecutable(resourceCasted, filename);
+					}
+
 					if (createSourceMap) {
 						fsa.generateFile(sourceMapFileName, COMPILER_ID,
 								optSourceMapData.get().sourceMapBuff.toString());
@@ -184,6 +196,41 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 			return extPerPackageJson;
 		}
 		return super.getCompiledFileExtension(input);
+	}
+
+	/**
+	 * Makes the generated output file executable by adding the corresponding POSIX file permissions.
+	 */
+	protected void makeGeneratedFileExecutable(N4JSResource resource, String outputFileName) {
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(resource);
+		if (project == null) {
+			return;
+		}
+		Path projectLocation = project.getPathAsFileURI().toFileSystemPath();
+		String outputPath = project.getOutputPath();
+		Path outputFilePath = projectLocation.resolve((outputPath + "/" + outputFileName).replace("/", File.separator));
+		if (!Files.isRegularFile(outputFilePath)) {
+			return;
+		}
+		try {
+			Set<PosixFilePermission> permsOld = Files.getPosixFilePermissions(outputFilePath);
+			Set<PosixFilePermission> permsNew = new HashSet<>(permsOld);
+			if (permsOld.contains(PosixFilePermission.OWNER_READ)) {
+				permsNew.add(PosixFilePermission.OWNER_EXECUTE);
+			}
+			if (permsOld.contains(PosixFilePermission.GROUP_READ)) {
+				permsNew.add(PosixFilePermission.GROUP_EXECUTE);
+			}
+			if (permsOld.contains(PosixFilePermission.OTHERS_READ)) {
+				permsNew.add(PosixFilePermission.OTHERS_EXECUTE);
+			}
+			if (!permsNew.equals(permsOld)) {
+				Files.setPosixFilePermissions(outputFilePath, permsNew);
+			}
+		} catch (Exception e) {
+			LOGGER.error("unable to get/set POSIX permissions of output file \"" + outputFilePath + "\": "
+					+ e.getMessage());
+		}
 	}
 
 	/**
