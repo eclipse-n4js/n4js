@@ -324,7 +324,7 @@ class TExportableElement extends IdentifiableElement {
  */
 class TDynamicElement extends TExportableElement, SyntaxRelatedTElement {
 
-	// no additional properties
+	refers TExportableElement actualElement
 }
 
 class TAnnotation {

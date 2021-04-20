@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TDynamicElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -31,6 +32,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TDynamicElementImpl#getAstElement <em>Ast Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TDynamicElementImpl#getActualElement <em>Actual Element</em>}</li>
  * </ul>
  *
  * @generated
@@ -45,6 +47,16 @@ public class TDynamicElementImpl extends TExportableElementImpl implements TDyna
 	 * @ordered
 	 */
 	protected EObject astElement;
+
+	/**
+	 * The cached value of the '{@link #getActualElement() <em>Actual Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getActualElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected TExportableElement actualElement;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -111,11 +123,54 @@ public class TDynamicElementImpl extends TExportableElementImpl implements TDyna
 	 * @generated
 	 */
 	@Override
+	public TExportableElement getActualElement() {
+		if (actualElement != null && actualElement.eIsProxy()) {
+			InternalEObject oldActualElement = (InternalEObject)actualElement;
+			actualElement = (TExportableElement)eResolveProxy(oldActualElement);
+			if (actualElement != oldActualElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.TDYNAMIC_ELEMENT__ACTUAL_ELEMENT, oldActualElement, actualElement));
+			}
+		}
+		return actualElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TExportableElement basicGetActualElement() {
+		return actualElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setActualElement(TExportableElement newActualElement) {
+		TExportableElement oldActualElement = actualElement;
+		actualElement = newActualElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TDYNAMIC_ELEMENT__ACTUAL_ELEMENT, oldActualElement, actualElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TDYNAMIC_ELEMENT__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
+			case TypesPackage.TDYNAMIC_ELEMENT__ACTUAL_ELEMENT:
+				if (resolve) return getActualElement();
+				return basicGetActualElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -130,6 +185,9 @@ public class TDynamicElementImpl extends TExportableElementImpl implements TDyna
 		switch (featureID) {
 			case TypesPackage.TDYNAMIC_ELEMENT__AST_ELEMENT:
 				setAstElement((EObject)newValue);
+				return;
+			case TypesPackage.TDYNAMIC_ELEMENT__ACTUAL_ELEMENT:
+				setActualElement((TExportableElement)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -146,6 +204,9 @@ public class TDynamicElementImpl extends TExportableElementImpl implements TDyna
 			case TypesPackage.TDYNAMIC_ELEMENT__AST_ELEMENT:
 				setAstElement((EObject)null);
 				return;
+			case TypesPackage.TDYNAMIC_ELEMENT__ACTUAL_ELEMENT:
+				setActualElement((TExportableElement)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -160,6 +221,8 @@ public class TDynamicElementImpl extends TExportableElementImpl implements TDyna
 		switch (featureID) {
 			case TypesPackage.TDYNAMIC_ELEMENT__AST_ELEMENT:
 				return astElement != null;
+			case TypesPackage.TDYNAMIC_ELEMENT__ACTUAL_ELEMENT:
+				return actualElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

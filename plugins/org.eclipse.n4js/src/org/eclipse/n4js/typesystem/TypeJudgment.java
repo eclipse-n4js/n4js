@@ -134,6 +134,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
 import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.ts.typeRefs.BaseTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
@@ -291,7 +292,15 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseTDynamicElement(TDynamicElement elem) {
+		public TypeRef caseTDynamicElement(TDynamicElement dynElem) {
+			IdentifiableElement actualElem = dynElem.getActualElement();
+			if (actualElem != null && !actualElem.eIsProxy()) {
+				TypeRef actualTypeRef = TypeUtils.copy(ts.type(G, actualElem));
+				if (actualTypeRef instanceof BaseTypeRef) {
+					((BaseTypeRef) actualTypeRef).setDynamic(true);
+					return actualTypeRef;
+				}
+			}
 			return anyTypeRefDynamic(G);
 		}
 	}
