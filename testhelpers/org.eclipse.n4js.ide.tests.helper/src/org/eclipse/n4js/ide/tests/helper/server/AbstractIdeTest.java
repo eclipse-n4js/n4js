@@ -95,6 +95,7 @@ import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.NameAndExtension;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
@@ -177,6 +178,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 
 	private static GlobalStateMemento oldGlobalState;
+	private static boolean oldOpaqueJsModules;
 
 	/** Clear global state to ensure IDE tests run on a clean slate. */
 	@BeforeClass
@@ -188,11 +190,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		// similar problems in the future.
 		oldGlobalState = GlobalRegistries.makeCopyOfGlobalState();
 		GlobalRegistries.clearGlobalRegistries();
+
+		// some tests clear the global flag N4JSLanguageUtils#OPAQUE_JS_MODULES via JSActivationUtil#enableJSSupport()
+		// and do not restore its old state, so we have to set it to its default value here:
+		oldOpaqueJsModules = N4JSLanguageUtils.OPAQUE_JS_MODULES;
+		N4JSLanguageUtils.OPAQUE_JS_MODULES = true;
 	}
 
 	/** Reset global state to what was in effect before this IDE test started. */
 	@AfterClass
 	static final public void restoreGlobalRegistries() {
+		N4JSLanguageUtils.OPAQUE_JS_MODULES = oldOpaqueJsModules;
 		oldGlobalState.restoreGlobalState();
 	}
 
