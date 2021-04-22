@@ -44,6 +44,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTemporaryTypes <em>Temporary Types</em>}</li>
@@ -476,6 +477,18 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	EList<Type> getExposedInternalTypes();
+
+	/**
+	 * Returns the value of the '<em><b>Internal Dynamic Elements</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TDynamicElement}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Internal Dynamic Elements</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_InternalDynamicElements()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	EList<TDynamicElement> getInternalDynamicElements();
 
 	/**
 	 * Returns the value of the '<em><b>Ast MD5</b></em>' attribute.

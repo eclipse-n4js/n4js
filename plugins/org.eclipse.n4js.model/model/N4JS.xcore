@@ -61,6 +61,7 @@ import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.ts.types.TDynamicElement
 
 type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
@@ -241,9 +242,14 @@ abstract class ImportSpecifier {
 	 * Set at the end of AST traversal.
 	 */
 	transient boolean retainedAtRuntime
+
+	boolean declaredDynamic
 }
 
 class NamedImportSpecifier extends ImportSpecifier {
+
+	refers transient TDynamicElement definedDynamicElement
+
 	refers TExportableElement importedElement
 	transient String importedElementAsText
 
@@ -266,7 +272,6 @@ class DefaultImportSpecifier extends NamedImportSpecifier {
 }
 
 class NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
-	boolean declaredDynamic
 	String alias
 }
 

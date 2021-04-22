@@ -4448,6 +4448,24 @@ public interface ImPackage extends EPackage {
 	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__RETAINED_AT_RUNTIME = N4JSPackage.NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
+	 * The feature id for the '<em><b>Declared Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__DECLARED_DYNAMIC = N4JSPackage.NAMED_IMPORT_SPECIFIER__DECLARED_DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Defined Dynamic Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM__DEFINED_DYNAMIC_ELEMENT = N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

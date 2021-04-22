@@ -77,6 +77,7 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.COMPOSED_MEMBER_CACHE: return createComposedMemberCache();
 			case TypesPackage.IDENTIFIABLE_ELEMENT: return createIdentifiableElement();
 			case TypesPackage.TEXPORTABLE_ELEMENT: return createTExportableElement();
+			case TypesPackage.TDYNAMIC_ELEMENT: return createTDynamicElement();
 			case TypesPackage.TANNOTATION: return createTAnnotation();
 			case TypesPackage.TANNOTATION_STRING_ARGUMENT: return createTAnnotationStringArgument();
 			case TypesPackage.TANNOTATION_TYPE_REF_ARGUMENT: return createTAnnotationTypeRefArgument();
@@ -248,6 +249,17 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TExportableElement createTExportableElement() {
 		TExportableElementImpl tExportableElement = new TExportableElementImpl();
 		return tExportableElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TDynamicElement createTDynamicElement() {
+		TDynamicElementImpl tDynamicElement = new TDynamicElementImpl();
+		return tDynamicElement;
 	}
 
 	/**

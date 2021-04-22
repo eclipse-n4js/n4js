@@ -30,6 +30,7 @@ import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
@@ -62,6 +63,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTemporaryTypes <em>Temporary Types</em>}</li>
@@ -360,6 +362,16 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<Type> exposedInternalTypes;
+
+	/**
+	 * The cached value of the '{@link #getInternalDynamicElements() <em>Internal Dynamic Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInternalDynamicElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TDynamicElement> internalDynamicElements;
 
 	/**
 	 * The default value of the '{@link #getAstMD5() <em>Ast MD5</em>}' attribute.
@@ -783,6 +795,19 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public EList<TDynamicElement> getInternalDynamicElements() {
+		if (internalDynamicElements == null) {
+			internalDynamicElements = new EObjectContainmentEList<TDynamicElement>(TDynamicElement.class, this, TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS);
+		}
+		return internalDynamicElements;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getAstMD5() {
 		return astMD5;
 	}
@@ -856,6 +881,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return ((InternalEList<?>)getInternalTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return ((InternalEList<?>)getExposedInternalTypes()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
+				return ((InternalEList<?>)getInternalDynamicElements()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return ((InternalEList<?>)getComposedMemberCaches()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__TEMPORARY_TYPES:
@@ -910,6 +937,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getInternalTypes();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return getExposedInternalTypes();
+			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
+				return getInternalDynamicElements();
 			case TypesPackage.TMODULE__AST_MD5:
 				return getAstMD5();
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
@@ -997,6 +1026,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				getExposedInternalTypes().clear();
 				getExposedInternalTypes().addAll((Collection<? extends Type>)newValue);
 				return;
+			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
+				getInternalDynamicElements().clear();
+				getInternalDynamicElements().addAll((Collection<? extends TDynamicElement>)newValue);
+				return;
 			case TypesPackage.TMODULE__AST_MD5:
 				setAstMD5((String)newValue);
 				return;
@@ -1077,6 +1110,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				getExposedInternalTypes().clear();
 				return;
+			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
+				getInternalDynamicElements().clear();
+				return;
 			case TypesPackage.TMODULE__AST_MD5:
 				setAstMD5(AST_MD5_EDEFAULT);
 				return;
@@ -1136,6 +1172,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return internalTypes != null && !internalTypes.isEmpty();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return exposedInternalTypes != null && !exposedInternalTypes.isEmpty();
+			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
+				return internalDynamicElements != null && !internalDynamicElements.isEmpty();
 			case TypesPackage.TMODULE__AST_MD5:
 				return AST_MD5_EDEFAULT == null ? astMD5 != null : !AST_MD5_EDEFAULT.equals(astMD5);
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:

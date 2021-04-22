@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -95,6 +96,7 @@ import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.NameAndExtension;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
@@ -177,6 +179,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected static final String NODE_MODULES = N4JSGlobals.NODE_MODULES;
 
 	private static GlobalStateMemento oldGlobalState;
+	private static boolean oldOpaqueJsModules;
 
 	/** Clear global state to ensure IDE tests run on a clean slate. */
 	@BeforeClass
@@ -188,11 +191,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		// similar problems in the future.
 		oldGlobalState = GlobalRegistries.makeCopyOfGlobalState();
 		GlobalRegistries.clearGlobalRegistries();
+
+		// some tests clear the global flag N4JSLanguageUtils#OPAQUE_JS_MODULES via JSActivationUtil#enableJSSupport()
+		// and do not restore its old state, so we have to set it to its default value here:
+		oldOpaqueJsModules = N4JSLanguageUtils.OPAQUE_JS_MODULES;
+		N4JSLanguageUtils.OPAQUE_JS_MODULES = true;
 	}
 
 	/** Reset global state to what was in effect before this IDE test started. */
 	@AfterClass
 	static final public void restoreGlobalRegistries() {
+		N4JSLanguageUtils.OPAQUE_JS_MODULES = oldOpaqueJsModules;
 		oldGlobalState.restoreGlobalState();
 	}
 
@@ -277,6 +286,28 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			// clear the state related to the test
 			testWorkspaceManager.deleteTestFromDiskIfCreated();
 		}
+	}
+
+	/** Actually prints the given objects and a line break, bypassing {@link #SYSTEM_OUT_REDIRECTER}. */
+	protected void println(Object... objs) {
+		print(true, objs);
+	}
+
+	/** Actually prints the given objects, bypassing {@link #SYSTEM_OUT_REDIRECTER}. */
+	protected void print(Object... objs) {
+		print(false, objs);
+	}
+
+	private void print(boolean newline, Object... objs) {
+		@SuppressWarnings("resource")
+		PrintStream out = SYSTEM_OUT_REDIRECTER.getOriginalSystemOut();
+		for (Object obj : objs) {
+			out.print(obj);
+		}
+		if (newline) {
+			out.println();
+		}
+		out.flush();
 	}
 
 	/** @see TestWorkspaceManager#isYarnWorkspace() */
@@ -1121,6 +1152,18 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/**
+	 * @return the current contents of the opened file with the given URI. This might include changes done via one of
+	 *         the {@code #changeOpenedFile()} methods that are not yet {@link #saveOpenedFile(FileURI) saved} to disk.
+	 */
+	protected String getContentOfOpenedFile(FileURI fileURI) {
+		if (!isOpen(fileURI)) {
+			Assert.fail("file is not open: " + fileURI);
+		}
+		OpenFileInfo info = openFiles.get(fileURI);
+		return info.content;
+	}
+
 	/** @return contents of the file with the given URI as a string. */
 	protected String getContentOfFileOnDisk(FileURI fileURI) {
 		try {
@@ -1212,7 +1255,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** Asserts that there are no ERRORs in the output streams. */
-	static protected void assertNoErrorsInOutput() {
+	protected void assertNoErrorsInOutput() {
 		String syserr = SYSTEM_OUT_REDIRECTER.getSystemErr();
 		assertFalse("an error was logged to System.err during the test:" + System.lineSeparator() + syserr,
 				syserr.contains("ERROR"));

@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 
+import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 
 /**
@@ -34,6 +35,7 @@ import org.eclipse.n4js.ts.types.TExportableElement;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getDefinedDynamicElement <em>Defined Dynamic Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getImportedElement <em>Imported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getImportedElementAsText <em>Imported Element As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl#getAlias <em>Alias</em>}</li>
@@ -42,6 +44,16 @@ import org.eclipse.n4js.ts.types.TExportableElement;
  * @generated
  */
 public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements NamedImportSpecifier {
+	/**
+	 * The cached value of the '{@link #getDefinedDynamicElement() <em>Defined Dynamic Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinedDynamicElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected TDynamicElement definedDynamicElement;
+
 	/**
 	 * The cached value of the '{@link #getImportedElement() <em>Imported Element</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -109,6 +121,46 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TDynamicElement getDefinedDynamicElement() {
+		if (definedDynamicElement != null && definedDynamicElement.eIsProxy()) {
+			InternalEObject oldDefinedDynamicElement = (InternalEObject)definedDynamicElement;
+			definedDynamicElement = (TDynamicElement)eResolveProxy(oldDefinedDynamicElement);
+			if (definedDynamicElement != oldDefinedDynamicElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT, oldDefinedDynamicElement, definedDynamicElement));
+			}
+		}
+		return definedDynamicElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TDynamicElement basicGetDefinedDynamicElement() {
+		return definedDynamicElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefinedDynamicElement(TDynamicElement newDefinedDynamicElement) {
+		TDynamicElement oldDefinedDynamicElement = definedDynamicElement;
+		definedDynamicElement = newDefinedDynamicElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT, oldDefinedDynamicElement, definedDynamicElement));
 	}
 
 	/**
@@ -215,6 +267,9 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
+				if (resolve) return getDefinedDynamicElement();
+				return basicGetDefinedDynamicElement();
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT:
 				if (resolve) return getImportedElement();
 				return basicGetImportedElement();
@@ -234,6 +289,9 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
+				setDefinedDynamicElement((TDynamicElement)newValue);
+				return;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT:
 				setImportedElement((TExportableElement)newValue);
 				return;
@@ -255,6 +313,9 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
+				setDefinedDynamicElement((TDynamicElement)null);
+				return;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT:
 				setImportedElement((TExportableElement)null);
 				return;
@@ -276,6 +337,8 @@ public class NamedImportSpecifierImpl extends ImportSpecifierImpl implements Nam
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT:
+				return definedDynamicElement != null;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT:
 				return importedElement != null;
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT:

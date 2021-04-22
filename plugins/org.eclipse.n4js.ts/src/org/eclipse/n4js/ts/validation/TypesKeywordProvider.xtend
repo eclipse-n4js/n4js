@@ -17,6 +17,7 @@ import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -156,6 +157,10 @@ class TypesKeywordProvider {
 
 	def dispatch String keyword(BuiltInType primitive) {
 		"built-in type"
+	}
+
+	def dispatch String keyword(TDynamicElement dynamicElement) {
+		"element"
 	}
 
 	// note: following method will also be required in case of unresolved proxies

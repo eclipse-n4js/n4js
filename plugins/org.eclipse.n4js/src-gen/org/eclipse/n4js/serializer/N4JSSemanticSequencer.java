@@ -11117,16 +11117,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     DefaultImportSpecifier returns DefaultImportSpecifier
 	 *
 	 * Constraint:
-	 *     importedElement=[TExportableElement|BindingIdentifier]
+	 *     (importedElement=[TExportableElement|BindingIdentifier] declaredDynamic?='+'?)
 	 */
 	protected void sequence_DefaultImportSpecifier(ISerializationContext context, DefaultImportSpecifier semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT, false));
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -20177,7 +20171,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     NamedImportSpecifier returns NamedImportSpecifier
 	 *
 	 * Constraint:
-	 *     (importedElement=[TExportableElement|BindingIdentifier] | (importedElement=[TExportableElement|IdentifierName] alias=BindingIdentifier))
+	 *     (
+	 *         (importedElement=[TExportableElement|BindingIdentifier] declaredDynamic?='+'?) | 
+	 *         (importedElement=[TExportableElement|IdentifierName] alias=BindingIdentifier declaredDynamic?='+'?)
+	 *     )
 	 */
 	protected void sequence_NamedImportSpecifier(ISerializationContext context, NamedImportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

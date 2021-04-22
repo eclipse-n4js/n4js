@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.tooling.organizeImports.ImportProvidedElement
 import org.eclipse.n4js.tooling.organizeImports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -77,25 +76,26 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkStaticVsDynamicImport(NamespaceImportSpecifier importSpecifier) {
-		val type = importSpecifier.definedType;
-		if (type instanceof ModuleNamespaceVirtualType) {
-			if (type.module !== null) {
+	def checkStaticVsDynamicImport(ImportSpecifier importSpecifier) {
+		val parent = importSpecifier.eContainer;
+		if (parent instanceof ImportDeclaration) {
+			val module = parent.module;
+			if (module !== null && !module.eIsProxy()) {
 				if (importSpecifier.declaredDynamic) {
-					if (jsVariantHelper.isN4JSMode(type.module)) {
+					if (jsVariantHelper.isN4JSMode(module)) {
 						addIssue(
-							getMessageForIMP_DYNAMIC_NAMESPACE_IMPORT_N4JS(type.module.moduleSpecifier),
-							importSpecifier, IMP_DYNAMIC_NAMESPACE_IMPORT_N4JS);
-					} else if (jsVariantHelper.isExternalMode(type.module)) {
+							getMessageForIMP_DYNAMIC_IMPORT_N4JS(module.moduleSpecifier),
+							importSpecifier, IMP_DYNAMIC_IMPORT_N4JS);
+					} else if (jsVariantHelper.isExternalMode(module)) {
 						addIssue(
-							getMessageForIMP_DYNAMIC_NAMESPACE_IMPORT_N4JSD(type.module.moduleSpecifier),
-							importSpecifier, IMP_DYNAMIC_NAMESPACE_IMPORT_N4JSD);
+							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(module.moduleSpecifier),
+							importSpecifier, IMP_DYNAMIC_IMPORT_N4JSD);
 					}
 				} else {
-					if (jsVariantHelper.isPlainJS(type.module)) {
+					if (jsVariantHelper.isPlainJS(module)) {
 						addIssue(
-							getMessageForIMP_STATIC_NAMESPACE_IMPORT_PLAIN_JS(type.module.moduleSpecifier),
-							importSpecifier, IMP_STATIC_NAMESPACE_IMPORT_PLAIN_JS);
+							getMessageForIMP_STATIC_IMPORT_PLAIN_JS(module.moduleSpecifier),
+							importSpecifier, IMP_STATIC_IMPORT_PLAIN_JS);
 					}
 				}
 			}
@@ -229,11 +229,12 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 					name -> "namespace name for " + first.importedModule.qualifiedName.toString
 				}
 				NamedImportSpecifier: {
+					val importedElemName = first.importedElement?.name ?: first.importedElementAsText;
 					if (first.alias !== null) {
-						name -> "alias name for named import " + first.importedElement.name + " from " +
+						name -> "alias name for named import " + importedElemName + " from " +
 							first.importedModule.qualifiedName.toString
 					} else {
-						name -> "name for named import " + first.importedElement.name + " from " +
+						name -> "name for named import " + importedElemName + " from " +
 							first.importedModule.qualifiedName.toString
 					}
 				}

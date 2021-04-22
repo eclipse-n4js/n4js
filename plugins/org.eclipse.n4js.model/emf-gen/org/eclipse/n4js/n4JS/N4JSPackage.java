@@ -776,13 +776,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = 1;
 
 	/**
+	 * The feature id for the '<em><b>Declared Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_SPECIFIER__DECLARED_DYNAMIC = 2;
+
+	/**
 	 * The number of structural features of the '<em>Import Specifier</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_SPECIFIER_FEATURE_COUNT = 2;
+	int IMPORT_SPECIFIER_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Import Specifier</em>' class.
@@ -822,13 +831,31 @@ public interface N4JSPackage extends EPackage {
 	int NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
+	 * The feature id for the '<em><b>Declared Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER__DECLARED_DYNAMIC = IMPORT_SPECIFIER__DECLARED_DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Defined Dynamic Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT = IMPORT_SPECIFIER_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT = IMPORT_SPECIFIER_FEATURE_COUNT + 0;
+	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT = IMPORT_SPECIFIER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element As Text</b></em>' attribute.
@@ -837,7 +864,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT = IMPORT_SPECIFIER_FEATURE_COUNT + 1;
+	int NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT = IMPORT_SPECIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Alias</b></em>' attribute.
@@ -846,7 +873,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER__ALIAS = IMPORT_SPECIFIER_FEATURE_COUNT + 2;
+	int NAMED_IMPORT_SPECIFIER__ALIAS = IMPORT_SPECIFIER_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Named Import Specifier</em>' class.
@@ -855,7 +882,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_IMPORT_SPECIFIER_FEATURE_COUNT = IMPORT_SPECIFIER_FEATURE_COUNT + 3;
+	int NAMED_IMPORT_SPECIFIER_FEATURE_COUNT = IMPORT_SPECIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Default Import</em>' operation.
@@ -902,6 +929,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int DEFAULT_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = NAMED_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
+
+	/**
+	 * The feature id for the '<em><b>Declared Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFAULT_IMPORT_SPECIFIER__DECLARED_DYNAMIC = NAMED_IMPORT_SPECIFIER__DECLARED_DYNAMIC;
+
+	/**
+	 * The feature id for the '<em><b>Defined Dynamic Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFAULT_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT = NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Imported Element</b></em>' reference.
@@ -995,6 +1040,15 @@ public interface N4JSPackage extends EPackage {
 	int NAMESPACE_IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = IMPORT_SPECIFIER__RETAINED_AT_RUNTIME;
 
 	/**
+	 * The feature id for the '<em><b>Declared Dynamic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC = IMPORT_SPECIFIER__DECLARED_DYNAMIC;
+
+	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1004,22 +1058,13 @@ public interface N4JSPackage extends EPackage {
 	int NAMESPACE_IMPORT_SPECIFIER__DEFINED_TYPE = IMPORT_SPECIFIER_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared Dynamic</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC = IMPORT_SPECIFIER_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Alias</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_IMPORT_SPECIFIER__ALIAS = IMPORT_SPECIFIER_FEATURE_COUNT + 2;
+	int NAMESPACE_IMPORT_SPECIFIER__ALIAS = IMPORT_SPECIFIER_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Namespace Import Specifier</em>' class.
@@ -1028,7 +1073,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_IMPORT_SPECIFIER_FEATURE_COUNT = IMPORT_SPECIFIER_FEATURE_COUNT + 3;
+	int NAMESPACE_IMPORT_SPECIFIER_FEATURE_COUNT = IMPORT_SPECIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Namespace Import Specifier</em>' class.
@@ -17176,6 +17221,17 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getImportSpecifier_RetainedAtRuntime();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ImportSpecifier#isDeclaredDynamic <em>Declared Dynamic</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Declared Dynamic</em>'.
+	 * @see org.eclipse.n4js.n4JS.ImportSpecifier#isDeclaredDynamic()
+	 * @see #getImportSpecifier()
+	 * @generated
+	 */
+	EAttribute getImportSpecifier_DeclaredDynamic();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.NamedImportSpecifier <em>Named Import Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17184,6 +17240,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getNamedImportSpecifier();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.NamedImportSpecifier#getDefinedDynamicElement <em>Defined Dynamic Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Defined Dynamic Element</em>'.
+	 * @see org.eclipse.n4js.n4JS.NamedImportSpecifier#getDefinedDynamicElement()
+	 * @see #getNamedImportSpecifier()
+	 * @generated
+	 */
+	EReference getNamedImportSpecifier_DefinedDynamicElement();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.NamedImportSpecifier#getImportedElement <em>Imported Element</em>}'.
@@ -17267,17 +17334,6 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getNamespaceImportSpecifier();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.NamespaceImportSpecifier#isDeclaredDynamic <em>Declared Dynamic</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Declared Dynamic</em>'.
-	 * @see org.eclipse.n4js.n4JS.NamespaceImportSpecifier#isDeclaredDynamic()
-	 * @see #getNamespaceImportSpecifier()
-	 * @generated
-	 */
-	EAttribute getNamespaceImportSpecifier_DeclaredDynamic();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.NamespaceImportSpecifier#getAlias <em>Alias</em>}'.
@@ -23348,6 +23404,14 @@ public interface N4JSPackage extends EPackage {
 		EAttribute IMPORT_SPECIFIER__RETAINED_AT_RUNTIME = eINSTANCE.getImportSpecifier_RetainedAtRuntime();
 
 		/**
+		 * The meta object literal for the '<em><b>Declared Dynamic</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_SPECIFIER__DECLARED_DYNAMIC = eINSTANCE.getImportSpecifier_DeclaredDynamic();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.NamedImportSpecifierImpl <em>Named Import Specifier</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -23356,6 +23420,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass NAMED_IMPORT_SPECIFIER = eINSTANCE.getNamedImportSpecifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Defined Dynamic Element</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT = eINSTANCE.getNamedImportSpecifier_DefinedDynamicElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Imported Element</b></em>' reference feature.
@@ -23424,14 +23496,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass NAMESPACE_IMPORT_SPECIFIER = eINSTANCE.getNamespaceImportSpecifier();
-
-		/**
-		 * The meta object literal for the '<em><b>Declared Dynamic</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC = eINSTANCE.getNamespaceImportSpecifier_DeclaredDynamic();
 
 		/**
 		 * The meta object literal for the '<em><b>Alias</b></em>' attribute feature.

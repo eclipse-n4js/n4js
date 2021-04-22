@@ -31,6 +31,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
@@ -131,7 +132,8 @@ class ScriptDependencyResolver {
 	 * @returns true if given EO should be imported
 	 */
 	def public static boolean shouldBeImported(TModule baseModule, EObject eo) {
-		if (eo instanceof ModuleNamespaceVirtualType) {
+		if (eo instanceof ModuleNamespaceVirtualType
+			|| eo instanceof TDynamicElement) {
 			return true;
 		}
 

@@ -2066,6 +2066,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getImportSpecifier_DeclaredDynamic() {
+		return (EAttribute)importSpecifierEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getNamedImportSpecifier() {
 		return namedImportSpecifierEClass;
 	}
@@ -2076,7 +2086,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNamedImportSpecifier_ImportedElement() {
+	public EReference getNamedImportSpecifier_DefinedDynamicElement() {
 		return (EReference)namedImportSpecifierEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2086,8 +2096,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getNamedImportSpecifier_ImportedElement() {
+		return (EReference)namedImportSpecifierEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getNamedImportSpecifier_ImportedElementAsText() {
-		return (EAttribute)namedImportSpecifierEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)namedImportSpecifierEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2097,7 +2117,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EAttribute getNamedImportSpecifier_Alias() {
-		return (EAttribute)namedImportSpecifierEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)namedImportSpecifierEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2156,18 +2176,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getNamespaceImportSpecifier_DeclaredDynamic() {
-		return (EAttribute)namespaceImportSpecifierEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getNamespaceImportSpecifier_Alias() {
-		return (EAttribute)namespaceImportSpecifierEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)namespaceImportSpecifierEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -7773,8 +7783,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		importSpecifierEClass = createEClass(IMPORT_SPECIFIER);
 		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE);
 		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__RETAINED_AT_RUNTIME);
+		createEAttribute(importSpecifierEClass, IMPORT_SPECIFIER__DECLARED_DYNAMIC);
 
 		namedImportSpecifierEClass = createEClass(NAMED_IMPORT_SPECIFIER);
+		createEReference(namedImportSpecifierEClass, NAMED_IMPORT_SPECIFIER__DEFINED_DYNAMIC_ELEMENT);
 		createEReference(namedImportSpecifierEClass, NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT);
 		createEAttribute(namedImportSpecifierEClass, NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT_AS_TEXT);
 		createEAttribute(namedImportSpecifierEClass, NAMED_IMPORT_SPECIFIER__ALIAS);
@@ -7785,7 +7797,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(defaultImportSpecifierEClass, DEFAULT_IMPORT_SPECIFIER___IS_DEFAULT_IMPORT);
 
 		namespaceImportSpecifierEClass = createEClass(NAMESPACE_IMPORT_SPECIFIER);
-		createEAttribute(namespaceImportSpecifierEClass, NAMESPACE_IMPORT_SPECIFIER__DECLARED_DYNAMIC);
 		createEAttribute(namespaceImportSpecifierEClass, NAMESPACE_IMPORT_SPECIFIER__ALIAS);
 
 		typeReferenceNodeEClass = createEClass(TYPE_REFERENCE_NODE);
@@ -8866,8 +8877,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(importSpecifierEClass, ImportSpecifier.class, "ImportSpecifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getImportSpecifier_FlaggedUsedInCode(), theEcorePackage.getEBoolean(), "flaggedUsedInCode", null, 0, 1, ImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportSpecifier_RetainedAtRuntime(), theEcorePackage.getEBoolean(), "retainedAtRuntime", null, 0, 1, ImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getImportSpecifier_DeclaredDynamic(), theEcorePackage.getEBoolean(), "declaredDynamic", null, 0, 1, ImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(namedImportSpecifierEClass, NamedImportSpecifier.class, "NamedImportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getNamedImportSpecifier_DefinedDynamicElement(), theTypesPackage.getTDynamicElement(), null, "definedDynamicElement", null, 0, 1, NamedImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getNamedImportSpecifier_ImportedElement(), theTypesPackage.getTExportableElement(), null, "importedElement", null, 0, 1, NamedImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNamedImportSpecifier_ImportedElementAsText(), theEcorePackage.getEString(), "importedElementAsText", null, 0, 1, NamedImportSpecifier.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNamedImportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, NamedImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8881,7 +8894,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getDefaultImportSpecifier__IsDefaultImport(), theEcorePackage.getEBoolean(), "isDefaultImport", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(namespaceImportSpecifierEClass, NamespaceImportSpecifier.class, "NamespaceImportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getNamespaceImportSpecifier_DeclaredDynamic(), theEcorePackage.getEBoolean(), "declaredDynamic", null, 0, 1, NamespaceImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNamespaceImportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, NamespaceImportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typeReferenceNodeEClass, TypeReferenceNode.class, "TypeReferenceNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

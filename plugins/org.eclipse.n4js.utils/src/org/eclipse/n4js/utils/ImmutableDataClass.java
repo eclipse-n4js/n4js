@@ -38,7 +38,7 @@ public abstract class ImmutableDataClass {
 			return false;
 		if (obj == this)
 			return true;
-		if (!getClass().isInstance(obj))
+		if (obj.getClass() != getClass())
 			return false;
 		return super.equals(obj);
 	}

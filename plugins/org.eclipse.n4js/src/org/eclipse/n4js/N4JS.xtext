@@ -220,12 +220,12 @@ fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
 ;
 
 NamedImportSpecifier:
-		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
-	|	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
+		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] (declaredDynamic?='+')?
+	|	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false> (declaredDynamic?='+')?
 ;
 
 DefaultImportSpecifier:
-	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
+	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] (declaredDynamic?='+')?
 ;
 
 NamespaceImportSpecifier: {NamespaceImportSpecifier} '*' 'as' alias=BindingIdentifier<false> (declaredDynamic?='+')?;

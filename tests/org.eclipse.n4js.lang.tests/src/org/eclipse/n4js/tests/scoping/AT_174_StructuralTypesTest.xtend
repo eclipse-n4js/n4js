@@ -72,13 +72,13 @@ class AT_174_StructuralTypesTest {
 		val rs = resourceSetProvider.get
 		'''
 			export var r: ~Object with {a: string; b: string;};
-		'''.parse(URI.createURI("A.js"), rs)
+		'''.parse(URI.createURI("A.n4js"), rs)
 		val script = '''
 			import {r} from "A"
 			var s: string;
 			s = r.a;
 			s = r.b;
-		'''.parse(URI.createURI("B.js"), rs)
+		'''.parse(URI.createURI("B.n4js"), rs)
 		script.assertNoErrors
 	}
 

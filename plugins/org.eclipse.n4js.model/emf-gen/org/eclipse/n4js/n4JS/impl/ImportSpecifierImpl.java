@@ -31,6 +31,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl#isFlaggedUsedInCode <em>Flagged Used In Code</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl#isRetainedAtRuntime <em>Retained At Runtime</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl#isDeclaredDynamic <em>Declared Dynamic</em>}</li>
  * </ul>
  *
  * @generated
@@ -75,6 +76,26 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 	 * @ordered
 	 */
 	protected boolean retainedAtRuntime = RETAINED_AT_RUNTIME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDeclaredDynamic() <em>Declared Dynamic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredDynamic()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DECLARED_DYNAMIC_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDeclaredDynamic() <em>Declared Dynamic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredDynamic()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean declaredDynamic = DECLARED_DYNAMIC_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -147,12 +168,37 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredDynamic() {
+		return declaredDynamic;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredDynamic(boolean newDeclaredDynamic) {
+		boolean oldDeclaredDynamic = declaredDynamic;
+		declaredDynamic = newDeclaredDynamic;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_SPECIFIER__DECLARED_DYNAMIC, oldDeclaredDynamic, declaredDynamic));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.IMPORT_SPECIFIER__FLAGGED_USED_IN_CODE:
 				return isFlaggedUsedInCode();
 			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
 				return isRetainedAtRuntime();
+			case N4JSPackage.IMPORT_SPECIFIER__DECLARED_DYNAMIC:
+				return isDeclaredDynamic();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -170,6 +216,9 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 				return;
 			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
 				setRetainedAtRuntime((Boolean)newValue);
+				return;
+			case N4JSPackage.IMPORT_SPECIFIER__DECLARED_DYNAMIC:
+				setDeclaredDynamic((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -189,6 +238,9 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
 				setRetainedAtRuntime(RETAINED_AT_RUNTIME_EDEFAULT);
 				return;
+			case N4JSPackage.IMPORT_SPECIFIER__DECLARED_DYNAMIC:
+				setDeclaredDynamic(DECLARED_DYNAMIC_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -205,6 +257,8 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 				return flaggedUsedInCode != FLAGGED_USED_IN_CODE_EDEFAULT;
 			case N4JSPackage.IMPORT_SPECIFIER__RETAINED_AT_RUNTIME:
 				return retainedAtRuntime != RETAINED_AT_RUNTIME_EDEFAULT;
+			case N4JSPackage.IMPORT_SPECIFIER__DECLARED_DYNAMIC:
+				return declaredDynamic != DECLARED_DYNAMIC_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -223,6 +277,8 @@ public abstract class ImportSpecifierImpl extends ProxyResolvingEObjectImpl impl
 		result.append(flaggedUsedInCode);
 		result.append(", retainedAtRuntime: ");
 		result.append(retainedAtRuntime);
+		result.append(", declaredDynamic: ");
+		result.append(declaredDynamic);
 		result.append(')');
 		return result.toString();
 	}

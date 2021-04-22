@@ -1322,9 +1322,12 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	public class NamedImportSpecifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamedImportSpecifier");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Assignment cImportedElementAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
-		private final CrossReference cImportedElementTExportableElementCrossReference_0_0 = (CrossReference)cImportedElementAssignment_0.eContents().get(0);
-		private final RuleCall cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_1 = (RuleCall)cImportedElementTExportableElementCrossReference_0_0.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Assignment cImportedElementAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final CrossReference cImportedElementTExportableElementCrossReference_0_0_0 = (CrossReference)cImportedElementAssignment_0_0.eContents().get(0);
+		private final RuleCall cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1 = (RuleCall)cImportedElementTExportableElementCrossReference_0_0_0.eContents().get(1);
+		private final Assignment cDeclaredDynamicAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final Keyword cDeclaredDynamicPlusSignKeyword_0_1_0 = (Keyword)cDeclaredDynamicAssignment_0_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Assignment cImportedElementAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
 		private final CrossReference cImportedElementTExportableElementCrossReference_1_0_0 = (CrossReference)cImportedElementAssignment_1_0.eContents().get(0);
@@ -1332,26 +1335,40 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cAsKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Assignment cAliasAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
 		private final RuleCall cAliasBindingIdentifierParserRuleCall_1_2_0 = (RuleCall)cAliasAssignment_1_2.eContents().get(0);
+		private final Assignment cDeclaredDynamicAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
+		private final Keyword cDeclaredDynamicPlusSignKeyword_1_3_0 = (Keyword)cDeclaredDynamicAssignment_1_3.eContents().get(0);
 		
 		//NamedImportSpecifier:
-		//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] |
-		//	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>;
+		//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] declaredDynamic?='+'?
+		//	| importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
+		//	declaredDynamic?='+'?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] |
+		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] declaredDynamic?='+'? |
 		//importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
+		//declaredDynamic?='+'?
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
+		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] declaredDynamic?='+'?
+		public Group getGroup_0() { return cGroup_0; }
+		
 		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
-		public Assignment getImportedElementAssignment_0() { return cImportedElementAssignment_0; }
+		public Assignment getImportedElementAssignment_0_0() { return cImportedElementAssignment_0_0; }
 		
 		//[types::TExportableElement|BindingIdentifier<Yield=false>]
-		public CrossReference getImportedElementTExportableElementCrossReference_0_0() { return cImportedElementTExportableElementCrossReference_0_0; }
+		public CrossReference getImportedElementTExportableElementCrossReference_0_0_0() { return cImportedElementTExportableElementCrossReference_0_0_0; }
 		
 		//BindingIdentifier<Yield=false>
-		public RuleCall getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_1() { return cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_1; }
+		public RuleCall getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1() { return cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_0_1; }
+		
+		//declaredDynamic?='+'?
+		public Assignment getDeclaredDynamicAssignment_0_1() { return cDeclaredDynamicAssignment_0_1; }
+		
+		//'+'
+		public Keyword getDeclaredDynamicPlusSignKeyword_0_1_0() { return cDeclaredDynamicPlusSignKeyword_0_1_0; }
 		
 		//importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
+		//declaredDynamic?='+'?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//importedElement=[types::TExportableElement|IdentifierName]
@@ -1371,25 +1388,43 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//BindingIdentifier<Yield=false>
 		public RuleCall getAliasBindingIdentifierParserRuleCall_1_2_0() { return cAliasBindingIdentifierParserRuleCall_1_2_0; }
+		
+		//declaredDynamic?='+'?
+		public Assignment getDeclaredDynamicAssignment_1_3() { return cDeclaredDynamicAssignment_1_3; }
+		
+		//'+'
+		public Keyword getDeclaredDynamicPlusSignKeyword_1_3_0() { return cDeclaredDynamicPlusSignKeyword_1_3_0; }
 	}
 	public class DefaultImportSpecifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.DefaultImportSpecifier");
-		private final Assignment cImportedElementAssignment = (Assignment)rule.eContents().get(1);
-		private final CrossReference cImportedElementTExportableElementCrossReference_0 = (CrossReference)cImportedElementAssignment.eContents().get(0);
-		private final RuleCall cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1 = (RuleCall)cImportedElementTExportableElementCrossReference_0.eContents().get(1);
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cImportedElementAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final CrossReference cImportedElementTExportableElementCrossReference_0_0 = (CrossReference)cImportedElementAssignment_0.eContents().get(0);
+		private final RuleCall cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_1 = (RuleCall)cImportedElementTExportableElementCrossReference_0_0.eContents().get(1);
+		private final Assignment cDeclaredDynamicAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Keyword cDeclaredDynamicPlusSignKeyword_1_0 = (Keyword)cDeclaredDynamicAssignment_1.eContents().get(0);
 		
 		//DefaultImportSpecifier:
-		//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>];
+		//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] declaredDynamic?='+'?;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] declaredDynamic?='+'?
+		public Group getGroup() { return cGroup; }
+		
 		//importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
-		public Assignment getImportedElementAssignment() { return cImportedElementAssignment; }
+		public Assignment getImportedElementAssignment_0() { return cImportedElementAssignment_0; }
 		
 		//[types::TExportableElement|BindingIdentifier<Yield=false>]
-		public CrossReference getImportedElementTExportableElementCrossReference_0() { return cImportedElementTExportableElementCrossReference_0; }
+		public CrossReference getImportedElementTExportableElementCrossReference_0_0() { return cImportedElementTExportableElementCrossReference_0_0; }
 		
 		//BindingIdentifier<Yield=false>
-		public RuleCall getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1() { return cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1; }
+		public RuleCall getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_1() { return cImportedElementTExportableElementBindingIdentifierParserRuleCall_0_0_1; }
+		
+		//declaredDynamic?='+'?
+		public Assignment getDeclaredDynamicAssignment_1() { return cDeclaredDynamicAssignment_1; }
+		
+		//'+'
+		public Keyword getDeclaredDynamicPlusSignKeyword_1_0() { return cDeclaredDynamicPlusSignKeyword_1_0; }
 	}
 	public class NamespaceImportSpecifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamespaceImportSpecifier");
@@ -11460,8 +11495,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//NamedImportSpecifier:
-	//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] |
-	//	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>;
+	//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] declaredDynamic?='+'?
+	//	| importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
+	//	declaredDynamic?='+'?;
 	public NamedImportSpecifierElements getNamedImportSpecifierAccess() {
 		return pNamedImportSpecifier;
 	}
@@ -11471,7 +11507,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//DefaultImportSpecifier:
-	//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>];
+	//	importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] declaredDynamic?='+'?;
 	public DefaultImportSpecifierElements getDefaultImportSpecifierAccess() {
 		return pDefaultImportSpecifier;
 	}
