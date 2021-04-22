@@ -79,6 +79,20 @@ public class SystemOutRedirecter {
 		updateLoggers();
 	}
 
+	/**
+	 * Returns the {@link System#out} in effect before this redirecter was set, or {@link System#out} itself if unset.
+	 */
+	public PrintStream getOriginalSystemOut() {
+		return oldSystemOut != null ? oldSystemOut : System.out;
+	}
+
+	/**
+	 * Returns the {@link System#err} in effect before this redirecter was set, or {@link System#err} itself if unset.
+	 */
+	public PrintStream getOriginalSystemErr() {
+		return oldSystemErr != null ? oldSystemErr : System.err;
+	}
+
 	/** Clear output from {@link System#out} that was recorded so far. */
 	public void clearSystemOut() {
 		ByteArrayOutputStream baos = redirectOut;

@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -277,6 +278,28 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			// clear the state related to the test
 			testWorkspaceManager.deleteTestFromDiskIfCreated();
 		}
+	}
+
+	/** Actually prints the given objects and a line break, bypassing {@link #SYSTEM_OUT_REDIRECTER}. */
+	protected void println(Object... objs) {
+		print(true, objs);
+	}
+
+	/** Actually prints the given objects, bypassing {@link #SYSTEM_OUT_REDIRECTER}. */
+	protected void print(Object... objs) {
+		print(false, objs);
+	}
+
+	private void print(boolean newline, Object... objs) {
+		@SuppressWarnings("resource")
+		PrintStream out = SYSTEM_OUT_REDIRECTER.getOriginalSystemOut();
+		for (Object obj : objs) {
+			out.print(obj);
+		}
+		if (newline) {
+			out.println();
+		}
+		out.flush();
 	}
 
 	/** @see TestWorkspaceManager#isYarnWorkspace() */
@@ -1121,6 +1144,18 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		}
 	}
 
+	/**
+	 * @return the current contents of the opened file with the given URI. This might include changes done via one of
+	 *         the {@code #changeOpenedFile()} methods that are not yet {@link #saveOpenedFile(FileURI) saved} to disk.
+	 */
+	protected String getContentOfOpenedFile(FileURI fileURI) {
+		if (!isOpen(fileURI)) {
+			Assert.fail("file is not open: " + fileURI);
+		}
+		OpenFileInfo info = openFiles.get(fileURI);
+		return info.content;
+	}
+
 	/** @return contents of the file with the given URI as a string. */
 	protected String getContentOfFileOnDisk(FileURI fileURI) {
 		try {
@@ -1212,7 +1247,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/** Asserts that there are no ERRORs in the output streams. */
-	static protected void assertNoErrorsInOutput() {
+	protected void assertNoErrorsInOutput() {
 		String syserr = SYSTEM_OUT_REDIRECTER.getSystemErr();
 		assertFalse("an error was logged to System.err during the test:" + System.lineSeparator() + syserr,
 				syserr.contains("ERROR"));
