@@ -15,7 +15,7 @@ import * as fs from "fs";
 import * as lib_url from "url";
 
 import * as lib_decompress+ from "decompress";
-import * as npmlog+ from "npmlog";
+import npmlog+ from "npmlog";
 import * as followRedirects+ from 'follow-redirects';
 import {JreInfo, Platform, JRE_INFO_MAP, JAVA_DEFAULT, BIN_DIR, JRE_URL_DIR, JRE_DIR} from 'Globals';
 import {detectJavaVersion} from 'JavaVersion';

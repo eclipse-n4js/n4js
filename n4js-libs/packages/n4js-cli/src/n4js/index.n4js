@@ -11,11 +11,11 @@
 
 
 import * as childProcess from "child_process";
-import * as npmlog+ from "npmlog";
 import * as path from "path";
 import * as fs from "fs";
 import * as url from "url";
 import debug from "debug";
+import npmlog+ from "npmlog";
 import {JAVA_VM_XMX, N4JS_CLI_CONFIG, BIN_DIR} from "Globals";
 import {getJavaCommand, downloadFile, toValidUrl} from "JreProvider";
 import {N4jscArguments} from "N4jscArguments";
