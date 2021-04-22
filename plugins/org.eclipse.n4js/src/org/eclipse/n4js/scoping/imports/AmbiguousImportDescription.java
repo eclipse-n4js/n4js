@@ -16,18 +16,18 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * If the {@link ErrorAwareLinkingService} obtains this thing from the scope, an error marker is produced on the
@@ -55,7 +55,14 @@ public class AmbiguousImportDescription extends AbstractDescriptionWithError {
 	public String getMessage() {
 		StringBuilder typeListStr = new StringBuilder();
 		IdentifiableElement first = (IdentifiableElement) EcoreUtil.resolve(getEObjectOrProxy(), context);
-		String typeIdent = first instanceof Type ? "type" : "variable";
+		String typeIdent;
+		if (first instanceof TVariable) {
+			typeIdent = "variable";
+		} else if (first instanceof Type) {
+			typeIdent = "type";
+		} else {
+			typeIdent = "element";
+		}
 		TModule module = (TModule) first.eContainer();
 		typeListStr.append(module.getQualifiedName());
 		Set<IdentifiableElement> uniqueTypes = Sets.newLinkedHashSet(elements);

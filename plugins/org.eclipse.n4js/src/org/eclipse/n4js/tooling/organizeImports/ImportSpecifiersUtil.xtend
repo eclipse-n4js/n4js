@@ -84,8 +84,12 @@ class ImportSpecifiersUtil {
 		if (element === null)
 			return "<" + specifier.importedElementAsText + ">(null)"
 
-		if (element.eIsProxy)
+		if (element.eIsProxy) {
+			if (specifier.declaredDynamic) {
+				return specifier.importedElementAsText;
+			}
 			return "<" + specifier.importedElementAsText + ">(proxy)"
+		}
 
 		return element.exportedName
 	}
@@ -131,8 +135,8 @@ class ImportSpecifiersUtil {
 			return true
 
 		// check import specifier
-		if (spec instanceof NamedImportSpecifier) {
-			val nis = spec
+		if (spec instanceof NamedImportSpecifier && !spec.declaredDynamic) {
+			val nis = spec as NamedImportSpecifier;
 			if (nis === null || nis.eIsProxy || nis.importedElementAsText.isNullOrEmpty)
 				return true
 

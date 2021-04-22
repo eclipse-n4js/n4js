@@ -229,11 +229,12 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 					name -> "namespace name for " + first.importedModule.qualifiedName.toString
 				}
 				NamedImportSpecifier: {
+					val importedElemName = first.importedElement?.name ?: first.importedElementAsText;
 					if (first.alias !== null) {
-						name -> "alias name for named import " + first.importedElement.name + " from " +
+						name -> "alias name for named import " + importedElemName + " from " +
 							first.importedModule.qualifiedName.toString
 					} else {
-						name -> "name for named import " + first.importedElement.name + " from " +
+						name -> "name for named import " + importedElemName + " from " +
 							first.importedModule.qualifiedName.toString
 					}
 				}
