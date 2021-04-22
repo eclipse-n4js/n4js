@@ -151,6 +151,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TFormalParameter;
@@ -287,6 +288,11 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseModuleNamespaceVirtualType(ModuleNamespaceVirtualType mnsvt) {
 			return TypeUtils.createTypeRef(mnsvt);
+		}
+
+		@Override
+		public TypeRef caseTDynamicElement(TDynamicElement elem) {
+			return anyTypeRefDynamic(G);
 		}
 	}
 

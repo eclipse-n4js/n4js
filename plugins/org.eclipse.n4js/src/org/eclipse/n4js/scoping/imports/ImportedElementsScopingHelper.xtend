@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.resource.N4JSEObjectDescription
+import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
@@ -40,6 +41,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
@@ -187,7 +189,13 @@ class ImportedElementsScopingHelper {
 		Resource contextResource, IEODesc2ISpec originatorMap,
 		ImportedElementsMap validImports,
 		ImportedElementsMap invalidImports, boolean importVariables) {
-		val element = specifier.importedElement
+
+		val element = if (specifier.declaredDynamic) {
+			(specifier.eResource as N4JSResource).module.internalDynamicElements.findFirst[it.astElement === specifier];
+		} else {
+			specifier.importedElement
+		};
+
 		if (element !== null && !element.eIsProxy) {
 
 			if (!importVariables && element.isVariableFrom(imp)) {
@@ -369,6 +377,8 @@ class ImportedElementsScopingHelper {
 			typeVisibilityChecker.isVisible(contextResource, element)
 		else if (element instanceof TVariable)
 			variableVisibilityChecker.isVisible(contextResource, element)
+		else if (element instanceof TDynamicElement)
+			return new AbstractTypeVisibilityChecker.TypeVisibility(true)
 		else
 			return new AbstractTypeVisibilityChecker.TypeVisibility(false);
 	}

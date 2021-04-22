@@ -2396,19 +2396,35 @@ ruleNamedImportSpecifier returns [EObject current=null]
 	(
 		(
 			(
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNamedImportSpecifierRule());
+				(
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNamedImportSpecifierRule());
+						}
 					}
-				}
-				{
-					newCompositeNode(grammarAccess.getNamedImportSpecifierAccess().getImportedElementTExportableElementCrossReference_0_0());
-				}
-				ruleBindingIdentifier
-				{
-					afterParserOrEnumRuleCall();
-				}
+					{
+						newCompositeNode(grammarAccess.getNamedImportSpecifierAccess().getImportedElementTExportableElementCrossReference_0_0_0());
+					}
+					ruleBindingIdentifier
+					{
+						afterParserOrEnumRuleCall();
+					}
+				)
 			)
+			(
+				(
+					lv_declaredDynamic_1_0=PlusSign
+					{
+						newLeafNode(lv_declaredDynamic_1_0, grammarAccess.getNamedImportSpecifierAccess().getDeclaredDynamicPlusSignKeyword_0_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNamedImportSpecifierRule());
+						}
+						setWithLastConsumed($current, "declaredDynamic", true, "+");
+					}
+				)
+			)?
 		)
 		    |
 		(
@@ -2428,16 +2444,16 @@ ruleNamedImportSpecifier returns [EObject current=null]
 					}
 				)
 			)
-			otherlv_2=As
+			otherlv_3=As
 			{
-				newLeafNode(otherlv_2, grammarAccess.getNamedImportSpecifierAccess().getAsKeyword_1_1());
+				newLeafNode(otherlv_3, grammarAccess.getNamedImportSpecifierAccess().getAsKeyword_1_1());
 			}
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getNamedImportSpecifierAccess().getAliasBindingIdentifierParserRuleCall_1_2_0());
 					}
-					lv_alias_3_0=ruleBindingIdentifier
+					lv_alias_4_0=ruleBindingIdentifier
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getNamedImportSpecifierRule());
@@ -2445,12 +2461,26 @@ ruleNamedImportSpecifier returns [EObject current=null]
 						set(
 							$current,
 							"alias",
-							lv_alias_3_0,
+							lv_alias_4_0,
 							"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
+			(
+				(
+					lv_declaredDynamic_5_0=PlusSign
+					{
+						newLeafNode(lv_declaredDynamic_5_0, grammarAccess.getNamedImportSpecifierAccess().getDeclaredDynamicPlusSignKeyword_1_3_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNamedImportSpecifierRule());
+						}
+						setWithLastConsumed($current, "declaredDynamic", true, "+");
+					}
+				)
+			)?
 		)
 	)
 ;
@@ -2472,19 +2502,35 @@ ruleDefaultImportSpecifier returns [EObject current=null]
 }:
 	(
 		(
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getDefaultImportSpecifierRule());
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getDefaultImportSpecifierRule());
+					}
 				}
-			}
-			{
-				newCompositeNode(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementTExportableElementCrossReference_0());
-			}
-			ruleBindingIdentifier
-			{
-				afterParserOrEnumRuleCall();
-			}
+				{
+					newCompositeNode(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementTExportableElementCrossReference_0_0());
+				}
+				ruleBindingIdentifier
+				{
+					afterParserOrEnumRuleCall();
+				}
+			)
 		)
+		(
+			(
+				lv_declaredDynamic_1_0=PlusSign
+				{
+					newLeafNode(lv_declaredDynamic_1_0, grammarAccess.getDefaultImportSpecifierAccess().getDeclaredDynamicPlusSignKeyword_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getDefaultImportSpecifierRule());
+					}
+					setWithLastConsumed($current, "declaredDynamic", true, "+");
+				}
+			)
+		)?
 	)
 ;
 

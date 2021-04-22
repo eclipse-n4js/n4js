@@ -20,7 +20,6 @@ package org.eclipse.n4js.n4JS;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.NamespaceImportSpecifier#isDeclaredDynamic <em>Declared Dynamic</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.NamespaceImportSpecifier#getAlias <em>Alias</em>}</li>
  * </ul>
  *
@@ -29,28 +28,6 @@ package org.eclipse.n4js.n4JS;
  * @generated
  */
 public interface NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
-	/**
-	 * Returns the value of the '<em><b>Declared Dynamic</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Dynamic</em>' attribute.
-	 * @see #setDeclaredDynamic(boolean)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getNamespaceImportSpecifier_DeclaredDynamic()
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean isDeclaredDynamic();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.NamespaceImportSpecifier#isDeclaredDynamic <em>Declared Dynamic</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Dynamic</em>' attribute.
-	 * @see #isDeclaredDynamic()
-	 * @generated
-	 */
-	void setDeclaredDynamic(boolean value);
-
 	/**
 	 * Returns the value of the '<em><b>Alias</b></em>' attribute.
 	 * <!-- begin-user-doc -->
