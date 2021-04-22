@@ -50,11 +50,11 @@ class AT_223_UseTypeLikeVarTest {
 		val rs = resourceSetProvider.get
 		'''
 			export class A {}
-		'''.parse(URI.createURI("A.js"), rs)
+		'''.parse(URI.createURI("A.n4js"), rs)
 		val script = '''
 			import { A } from "A"
 			var a = new A();
-		'''.parse(URI.createURI("B.js"), rs)
+		'''.parse(URI.createURI("B.n4js"), rs)
 		script.assertNoErrors
 	}
 	@Test
@@ -62,13 +62,13 @@ class AT_223_UseTypeLikeVarTest {
 		val rs = resourceSetProvider.get
 		'''
 			export class A {}
-		'''.parse(URI.createURI("A.js"), rs)
+		'''.parse(URI.createURI("A.n4js"), rs)
 		val script = '''
 			import { A } from "A"
 			var a;
 			if (a instanceof A) {
 			}
-		'''.parse(URI.createURI("B.js"), rs)
+		'''.parse(URI.createURI("B.n4js"), rs)
 		script.assertNoErrors
 	}
 	@Test
