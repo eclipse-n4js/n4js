@@ -672,22 +672,13 @@ public interface TypesPackage extends EPackage {
 	int TDYNAMIC_ELEMENT__AST_ELEMENT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Actual Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TDYNAMIC_ELEMENT__ACTUAL_ELEMENT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>TDynamic Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TDYNAMIC_ELEMENT_FEATURE_COUNT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 2;
+	int TDYNAMIC_ELEMENT_FEATURE_COUNT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -13745,17 +13736,6 @@ public interface TypesPackage extends EPackage {
 	EClass getTDynamicElement();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.TDynamicElement#getActualElement <em>Actual Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Actual Element</em>'.
-	 * @see org.eclipse.n4js.ts.types.TDynamicElement#getActualElement()
-	 * @see #getTDynamicElement()
-	 * @generated
-	 */
-	EReference getTDynamicElement_ActualElement();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TAnnotation <em>TAnnotation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16762,14 +16742,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TDYNAMIC_ELEMENT = eINSTANCE.getTDynamicElement();
-
-		/**
-		 * The meta object literal for the '<em><b>Actual Element</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TDYNAMIC_ELEMENT__ACTUAL_ELEMENT = eINSTANCE.getTDynamicElement_ActualElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TAnnotationImpl <em>TAnnotation</em>}' class.

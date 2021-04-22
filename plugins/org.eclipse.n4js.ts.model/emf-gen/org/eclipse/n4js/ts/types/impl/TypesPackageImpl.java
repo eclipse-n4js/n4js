@@ -1064,16 +1064,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTDynamicElement_ActualElement() {
-		return (EReference)tDynamicElementEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getTAnnotation() {
 		return tAnnotationEClass;
 	}
@@ -3704,7 +3694,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tExportableElementEClass, TEXPORTABLE_ELEMENT___IS_EXPORTED);
 
 		tDynamicElementEClass = createEClass(TDYNAMIC_ELEMENT);
-		createEReference(tDynamicElementEClass, TDYNAMIC_ELEMENT__ACTUAL_ELEMENT);
 
 		tAnnotationEClass = createEClass(TANNOTATION);
 		createEAttribute(tAnnotationEClass, TANNOTATION__NAME);
@@ -4212,7 +4201,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTExportableElement__IsExported(), theEcorePackage.getEBoolean(), "isExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tDynamicElementEClass, TDynamicElement.class, "TDynamicElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTDynamicElement_ActualElement(), this.getTExportableElement(), null, "actualElement", null, 0, 1, TDynamicElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tAnnotationEClass, TAnnotation.class, "TAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTAnnotation_Name(), theEcorePackage.getEString(), "name", null, 0, 1, TAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

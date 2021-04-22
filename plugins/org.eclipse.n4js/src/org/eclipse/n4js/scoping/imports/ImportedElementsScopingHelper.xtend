@@ -190,17 +190,11 @@ class ImportedElementsScopingHelper {
 		ImportedElementsMap validImports,
 		ImportedElementsMap invalidImports, boolean importVariables) {
 
-		var element = specifier.importedElement;
-
-		if (specifier.declaredDynamic) {
-			val dynElem = (specifier.eResource as N4JSResource).module.internalDynamicElements.findFirst[it.astElement === specifier];
-			if (dynElem !== null) {
-				if (element !== null && !element.eIsProxy) {
-					dynElem.actualElement = element;
-				}
-				element = dynElem;
-			}
-		}
+		val element = if (specifier.declaredDynamic) {
+			(specifier.eResource as N4JSResource).module.internalDynamicElements.findFirst[it.astElement === specifier];
+		} else {
+			specifier.importedElement
+		};
 
 		if (element !== null && !element.eIsProxy) {
 

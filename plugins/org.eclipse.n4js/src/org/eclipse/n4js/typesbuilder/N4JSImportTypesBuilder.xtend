@@ -120,7 +120,6 @@ class N4JSImportTypesBuilder {
 		val elem = TypesFactory.eINSTANCE.createTDynamicElement();
 		elem.name = getNameForDynamicElement(importSpecifier);
 		elem.astElement = importSpecifier;
-		elem.actualElement = null; // will be set during scoping, see ImportedElementsScopingHelper
 		importSpecifier.definedDynamicElement = elem;
 		return elem;
 	}
