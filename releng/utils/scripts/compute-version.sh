@@ -144,7 +144,8 @@ N4JS_LIBS_COMMIT="${N4JS_LIBS_COMMIT_ID_LOCAL}"
 N4JS_LIBS_DIST_TAG="latest"
 if [ \( "$VERSION_DIST_TAG_REQUESTED" != "null" \) -a \( "$VERSION_DIST_TAG_REQUESTED" != "" \) ]; then
     echo "Npm dist-tag requested -> appending a generated pre-release segment to n4js-libs version"
-    N4JS_LIBS_VERSION="${N4JS_LIBS_BASE_VERSION}-${VERSION_DIST_TAG_REQUESTED}.${TIMESTAMP_DATE}.${TIMESTAMP_TIME}"
+    # WARNING: don't use dot to separate date/time, because ".0" is not allowed in a Semver prerelase tag!
+    N4JS_LIBS_VERSION="${N4JS_LIBS_BASE_VERSION}-${VERSION_DIST_TAG_REQUESTED}.${TIMESTAMP_DATE}T${TIMESTAMP_TIME}"
     N4JS_LIBS_DIST_TAG="${VERSION_DIST_TAG_REQUESTED}"
 fi
 echo "This build's n4js-libs version: ${N4JS_LIBS_VERSION}"
