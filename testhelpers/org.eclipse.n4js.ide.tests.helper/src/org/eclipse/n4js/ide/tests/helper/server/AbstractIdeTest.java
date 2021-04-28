@@ -574,6 +574,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Opens the given file in the LSP server and waits for the triggered build to finish. */
 	protected void openFile(FileURI fileURI) {
+		openFileNoWait(fileURI);
+		joinServerRequests();
+	}
+
+	/** Same as {@link #openFile(FileURI)}, but without waiting for the server. */
+	protected void openFileNoWait(FileURI fileURI) {
 		if (isOpen(fileURI)) {
 			Assert.fail("trying to open a file that is already open: " + fileURI);
 		}
@@ -597,8 +603,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 		languageServer.didOpen(dotdp);
 		openFiles.put(fileURI, new OpenFileInfo(content));
-
-		joinServerRequests();
 	}
 
 	/** Closes all currently open files. */
@@ -618,7 +622,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * unsaved changes.
 	 */
 	protected void closeFile(FileURI fileURI) {
-		closeFile(fileURI, false, false);
+		closeFile(fileURI, false, false, true);
+	}
+
+	/** Same as {@link #closeFile(FileURI)}, but without waiting for the server. */
+	protected void closeFileNoWait(FileURI fileURI) {
+		closeFile(fileURI, false, false, false);
 	}
 
 	/**
@@ -638,10 +647,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 * Throws an exception if the file does not have unsaved changes.
 	 */
 	protected void closeFileDiscardingChanges(FileURI fileURI, boolean suppressDidChangeNotification) {
-		closeFile(fileURI, true, suppressDidChangeNotification);
+		closeFile(fileURI, true, suppressDidChangeNotification, true);
 	}
 
-	private void closeFile(FileURI fileURI, boolean discardChanges, boolean suppressDidChangeNotification) {
+	private void closeFile(FileURI fileURI, boolean discardChanges, boolean suppressDidChangeNotification,
+			boolean waitForServer) {
+
 		if (!isOpen(fileURI)) {
 			Assert.fail("trying to close a file that is not open: " + fileURI);
 		}
@@ -663,7 +674,10 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 			languageServer.didChange(params);
 		}
 		languageServer.didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(fileURI.toString())));
-		joinServerRequests();
+
+		if (waitForServer) {
+			joinServerRequests();
+		}
 	}
 
 	/**
