@@ -440,6 +440,11 @@ public class ResourceTaskManager {
 	 * Updates this manager and all its {@link ResourceTaskContext}s with the given changes to the persisted state
 	 * index. Should only be invoked internally from {@link ResourceTaskContext} after
 	 * {@link ResourceTaskContext#refreshContext(int, Iterable, CancelIndicator) refreshing} its internal state.
+	 *
+	 * @param uri
+	 *            uri of the resource that has changed or was deleted.
+	 * @param newDesc
+	 *            the new resource description or <code>null</code> if the resource was deleted.
 	 */
 	protected synchronized void updateSharedDirtyState(URI uri, IResourceDescription newDesc) {
 		// update my dirty state instance

@@ -758,7 +758,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return resourceTaskManager.runInExistingOrTemporaryContext(uri, "doRead", (ofc, ci) -> {
 				XtextResource res = ofc.getResource();
 				XDocument doc = ofc.getDocument();
-				boolean isOpen = ofc.isOpen();
+				boolean isOpen = ofc.isOpenEditor();
 				return function.apply(
 						new ILanguageServerAccess.Context(res, doc, isOpen, ci));
 			});

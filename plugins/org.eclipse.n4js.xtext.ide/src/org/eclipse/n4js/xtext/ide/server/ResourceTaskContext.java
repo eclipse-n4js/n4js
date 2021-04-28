@@ -189,7 +189,7 @@ public class ResourceTaskContext {
 	 * Tells whether this {@link ResourceTaskContext} represents a context for an open file, i.e. not a
 	 * {@link #isTemporary() temporary context}.
 	 */
-	public synchronized boolean isOpen() {
+	public synchronized boolean isOpenEditor() {
 		return !isTemporary();
 	}
 
