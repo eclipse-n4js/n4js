@@ -13,18 +13,24 @@ package org.eclipse.n4js.ide.tests.bugreports
 import com.google.common.util.concurrent.Uninterruptibles
 import com.google.inject.Inject
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
+import org.eclipse.n4js.ide.tests.xtext.server.ResourceTaskManagerIdeTest
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 /**
- * When CMD-clicking on an identifier, VS Code sends a sequence of `didOpen`, `didClose`, and `didOpen` notifications for
+ * Real-world use case that lead to this bug:
+ * <p>
+ * When CMD-clicking on an identifier, VS Code sends a sequence of 'didOpen', 'didClose', and 'didOpen' notifications for
  * the same file within a couple 100 microseconds (the first pair of open/close is for a special tool tip showing the target
- * file's source code within the original editor). Since after a `didClose` we give running operations a chance to end
- * gracefully (we just set the isCanceled flag), the second `didOpen` may occur before the old resource task context was
- * actually removed from the registry.
+ * file's source code within the original editor). Since after a 'didClose' we give running operations a chance to end
+ * gracefully (we just set the isCanceled flag), the second 'didOpen' may occur before the old resource task context was
+ * actually removed from the resource task context.
+ * 
+ * @see ResourceTaskManagerIdeTest#testCreateDisposeRecreate()
  */
 class GH_2130_EditorInvalidAfterFollowingHyperlink extends AbstractIdeTest {
 
@@ -48,7 +54,7 @@ class GH_2130_EditorInvalidAfterFollowingHyperlink extends AbstractIdeTest {
 		resourceTaskManager.runInExistingContextVoid(fileURI.toURI, "lengthy operation", [ rtc, ci |
 			// this simulates a long-running operation that does not react to cancellation and
 			// runs longer than a subsequently received didClose and didOpen for the same file
-			Uninterruptibles.awaitUninterruptibly(lengthyOperationMayFinish);
+			Uninterruptibles.awaitUninterruptibly(lengthyOperationMayFinish, 10, TimeUnit.SECONDS);
 		]);
 		closeFileNoWait(fileURI);
 
