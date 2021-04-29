@@ -127,13 +127,13 @@ public class ResourceTaskContext {
 	protected class ResourceTaskContentProvider implements IExternalContentProvider {
 		@Override
 		public String getContent(URI uri) {
-			XDocument doc = parent.getOpenDocument(uri);
+			XDocument doc = parent.getOpenDocumentOnQueue(uri);
 			return doc != null ? doc.getContents() : null;
 		}
 
 		@Override
 		public boolean hasContent(URI uri) {
-			return parent.getOpenDocument(uri) != null;
+			return parent.getOpenDocumentOnQueue(uri) != null;
 		}
 
 		@Override

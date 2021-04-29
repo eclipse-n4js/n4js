@@ -37,7 +37,6 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Iterables;
@@ -65,8 +64,8 @@ public class ResourceTaskManager {
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
 
-	/***/
 	protected final Map<URI, ResourceTaskContext> uri2RTCs = new HashMap<>();
+	protected final Map<URI, ResourceTaskContext> uri2RTCsOnQueue = new HashMap<>();
 
 	/**
 	 * For each thread that is currently executing a resource-related task, this stores the corresponding
@@ -110,9 +109,13 @@ public class ResourceTaskManager {
 		return uri2RTCs.containsKey(uri);
 	}
 
+	public synchronized boolean isOpenOnQueue(URI uri) {
+		return uri2RTCsOnQueue.containsKey(uri);
+	}
+
 	/** Returns the {@link XDocument} for the given uri iff #{@link #isOpen(URI)} holds for the given uri. */
-	public synchronized XDocument getOpenDocument(URI uri) {
-		ResourceTaskContext rtc = uri2RTCs.get(uri);
+	public synchronized XDocument getOpenDocumentOnQueue(URI uri) {
+		ResourceTaskContext rtc = uri2RTCsOnQueue.get(uri);
 		if (rtc != null) {
 			// note: since we only obtain an object reference to an immutable data structure (XDocument) we do not need
 			// to execute the following in the open file context:
@@ -123,15 +126,27 @@ public class ResourceTaskManager {
 
 	/** Create a new resource task context for the resource with the given URI. */
 	public synchronized CompletableFuture<ResourceTaskContext> createContext(URI uri, int version, String content) {
+		if (uri2RTCs.containsKey(uri)) {
+			throw new IllegalArgumentException("a context already exists for given URI: " + uri);
+		}
+		ResourceTaskContext newContext = doCreateContext(uri, false);
+		uri2RTCs.put(uri, newContext); // n.b.: add to this map immediately
+
 		// beware: there might be pending tasks in the queue for 'uri', if that file was recently closed, because we
 		// allow tasks to end gracefully after receiving a 'didClose' notification (see #closeContext(URI) below);
-		// therefore, we have to create the new context in a task:
-		Object queueId = getQueueIdForContext(uri, false);
-		return queuedExecutorService.submitAndCancelPrevious(queueId, "createContext", ci -> {
-			ResourceTaskContext newContext = doCreateContext(uri, false);
+		// therefore, we have to initialize the newly created context on the queue for the given URI
+		CompletableFuture<ResourceTaskContext> future = runInExistingContext(uri, "createContext", (rtc, ci) -> {
+			synchronized (ResourceTaskManager.this) {
+				uri2RTCsOnQueue.put(uri, newContext); // n.b.: add to this map later on the queue
+			}
 			newContext.initContext(version, content, ci);
 			return newContext;
 		});
+
+		// note: even though we created the ResourceTaskContext instance immediately (i.e. outside the queue), we do not
+		// immediately return that new instance but only return the future, in order to make sure the caller does not
+		// have access to the new ResourceTaskContext before its initialization completed (which happens on the queue):
+		return future;
 	}
 
 	/** Change the source text of the main resource of the resource task context for the given URI. */
@@ -165,16 +180,22 @@ public class ResourceTaskManager {
 		// cancel current tasks for this context (they are now out-dated, anyway)
 		doCancelCurrentTasks(uri);
 
-		return runInExistingContextVoid(uri, "closeContext", (rtc, ci) -> {
+		CompletableFuture<Void> future = runInExistingContextVoid(uri, "closeContext", (rtc, ci) -> {
 			doDiscardContext(rtc);
+			synchronized (ResourceTaskManager.this) {
+				uri2RTCsOnQueue.remove(uri); // n.b.: remove from this map later on the queue
+			}
 		});
+
+		uri2RTCs.remove(uri); // n.b.: remove from this map immediately, not later on the queue
+
+		return future;
 	}
 
 	/** Tries to run the given task in an existing context, falling back to a temporary context if necessary. */
 	public synchronized <T> CompletableFuture<T> runInExistingOrTemporaryContext(URI uri, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		XXXX;
 		if (isOpen(uri)) {
 			return runInExistingContext(uri, description, task);
 		} else {
@@ -199,8 +220,13 @@ public class ResourceTaskManager {
 	public synchronized <T> CompletableFuture<T> runInExistingContext(URI uri, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
+		ResourceTaskContext rtc = uri2RTCs.get(uri);
+		if (rtc == null) {
+			throw new IllegalArgumentException("no existing context found for given URI: " + uri);
+		}
+
 		String descriptionWithContext = description + " [" + uri.lastSegment() + "]";
-		return doSubmitTask(uri, Optional.absent(), descriptionWithContext, task);
+		return doSubmitTask(rtc, descriptionWithContext, task);
 	}
 
 	/**
@@ -234,7 +260,7 @@ public class ResourceTaskManager {
 		ResourceTaskContext tempContext = doCreateContext(uri, true);
 
 		String descriptionWithContext = description + " (temporary) [" + uri.lastSegment() + "]";
-		return doSubmitTask(uri, Optional.of(tempContext), descriptionWithContext, (_tempContext, ciFromExecutor) -> {
+		return doSubmitTask(tempContext, descriptionWithContext, (_tempContext, ciFromExecutor) -> {
 			CancelIndicator ciCombined = CancelIndicatorUtil.combine(outerCancelIndicator, ciFromExecutor);
 			_tempContext.initContext(resolveAndValidate, ciCombined);
 			return task.apply(_tempContext, ciCombined);
@@ -242,17 +268,11 @@ public class ResourceTaskManager {
 	}
 
 	/** Submit a task for execution within a resource task context to the executor service. */
-	protected <T> CompletableFuture<T> doSubmitTask(URI uri, Optional<ResourceTaskContext> rtcTemporary,
-			String description, BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
+	protected <T> CompletableFuture<T> doSubmitTask(ResourceTaskContext rtc, String description,
+			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		boolean isTemporary = rtcTemporary.isPresent();
-		Object queueId = getQueueIdForContext(uri, isTemporary);
+		Object queueId = getQueueIdForContext(rtc.getURI(), rtc.isTemporary());
 		return queuedExecutorService.submit(queueId, description, ci -> {
-
-			ResourceTaskContext rtc = rtcTemporary.isPresent() ? rtcTemporary.get() : doGetContext(uri);
-			if (rtc == null) {
-				throw new IllegalArgumentException("no existing context found for given URI: " + uri);
-			}
 
 			final long start;
 			if (LOG_RESOURCE_TASK_EXECUTION) {
@@ -317,23 +337,14 @@ public class ResourceTaskManager {
 		ResourceTaskContext rtc = resourceTaskContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
 		rtc.initialize(this, uri, isTemporary, index, project2BuiltURIsImmutable, workspaceConfig);
-		if (!isTemporary) {
-			uri2RTCs.put(uri, rtc);
-		}
 		return rtc;
-	}
-
-	protected synchronized ResourceTaskContext doGetContext(URI uri) {
-		return uri2RTCs.get(uri);
 	}
 
 	/** Internal removal of all information related to a particular resource task context. */
 	protected synchronized void doDiscardContext(ResourceTaskContext rtc) {
-		URI uri = rtc.getURI();
 		rtc.close();
 		if (!rtc.isTemporary()) {
-			uri2RTCs.remove(uri);
-			updateSharedDirtyState(uri, null);
+			updateSharedDirtyState(rtc.getURI(), null);
 		}
 	}
 
@@ -442,8 +453,8 @@ public class ResourceTaskManager {
 		workspaceConfig = newWorkspaceConfig;
 
 		// from this point forward: ignore changes/removals related to existing resource task contexts
-		changed.removeIf(desc -> uri2RTCs.containsKey(desc.getURI()));
-		removed.removeAll(uri2RTCs.keySet());
+		changed.removeIf(desc -> uri2RTCsOnQueue.containsKey(desc.getURI()));
+		removed.removeAll(uri2RTCsOnQueue.keySet());
 
 		// update internal state of all contexts
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
@@ -451,7 +462,7 @@ public class ResourceTaskManager {
 		}
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
-		for (URI currURI : uri2RTCs.keySet()) {
+		for (URI currURI : uri2RTCsOnQueue.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
 				rtc.onPersistedStateChanged(changed, removed,
 						capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
@@ -480,11 +491,13 @@ public class ResourceTaskManager {
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
-		for (URI currURI : uri2RTCs.keySet()) {
+		for (Entry<URI, ResourceTaskContext> currEntry : uri2RTCsOnQueue.entrySet()) {
+			URI currURI = currEntry.getKey();
+			ResourceTaskContext currRTC = currEntry.getValue();
 			if (currURI.equals(uri)) {
 				continue;
 			}
-			runInExistingContextVoid(currURI, "updateSharedDirtyState of existing context", (rtc, ci) -> {
+			doSubmitTask(currRTC, "updateSharedDirtyState of existing context", (rtc, ci) -> {
 				if (newDesc != null) {
 					// happens in case a resource context has changed
 					rtc.onDirtyStateChanged(newDesc, ci);
@@ -498,6 +511,7 @@ public class ResourceTaskManager {
 								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
 					}
 				}
+				return null;
 			});
 		}
 	}
