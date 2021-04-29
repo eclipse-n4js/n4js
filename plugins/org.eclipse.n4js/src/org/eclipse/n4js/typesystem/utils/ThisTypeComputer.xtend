@@ -132,7 +132,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 			if (jsVariantHelper.hasGlobalObject(location)) {
 				return G.globalObjectTypeRef;
 			}
-			return G.undefinedTypeRef;
+			return G.anyTypeRef;
 		}
 	}
 
