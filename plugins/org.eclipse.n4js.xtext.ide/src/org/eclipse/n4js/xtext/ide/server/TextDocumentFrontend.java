@@ -167,7 +167,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Override
 	public void didClose(DidCloseTextDocumentParams params) {
 		URI uri = paramHelper.getURI(params);
-		resourceTaskManager.closeContext(uri);
+		resourceTaskManager.disposeContext(uri);
 	}
 
 	@Override

@@ -55,7 +55,7 @@ class GH_2130_EditorInvalidAfterFollowingHyperlink extends AbstractIdeTest {
 		openFileNoWait(fileURI);
 
 		// this worked even before the bug fix:
-		assertTrue(resourceTaskManager.isOpen(fileURI.toURI));
+		assertTrue(resourceTaskManager.hasContext(fileURI.toURI));
 
 		// now let's allow the lengthy operation to finish:
 		lengthyOperationMayFinish.countDown();
@@ -63,7 +63,7 @@ class GH_2130_EditorInvalidAfterFollowingHyperlink extends AbstractIdeTest {
 		joinServerRequests();
 
 		// before fix: returned 'false'
-		assertTrue(resourceTaskManager.isOpen(fileURI.toURI));
+		assertTrue(resourceTaskManager.hasContext(fileURI.toURI));
 		// before fix: threw exception "no existing context found for given URI"
 		resourceTaskManager.runInExistingContextVoid(fileURI.toURI, "noop", [
 			// don't actually do anything here; we just want to make sure the ResourceTaskContext exists

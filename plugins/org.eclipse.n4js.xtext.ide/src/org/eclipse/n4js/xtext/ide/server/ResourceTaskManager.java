@@ -100,25 +100,28 @@ public class ResourceTaskManager {
 	 */
 	/** Listener for events in resource task contexts. */
 	public interface IResourceTaskListener {
-		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
+		/**
+		 * Invoked whenever a non-temporary {@link ResourceTaskContext resource task context}'s main resource was
+		 * resolved, validated, etc. Invoked in the given resource task context, i.e. on its corresponding queue.
+		 */
 		public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
 	/** Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI. */
-	public synchronized boolean isOpen(URI uri) {
+	public synchronized boolean hasContext(URI uri) {
 		return uri2RTCs.containsKey(uri);
 	}
 
-	public synchronized boolean isOpenOnQueue(URI uri) {
+	public synchronized boolean hasContextOnQueue(URI uri) {
 		return uri2RTCsOnQueue.containsKey(uri);
 	}
 
-	/** Returns the {@link XDocument} for the given uri iff #{@link #isOpen(URI)} holds for the given uri. */
-	public synchronized XDocument getOpenDocumentOnQueue(URI uri) {
+	/** Returns the {@link XDocument} for the given uri iff #{@link #hasContext(URI)} holds for the given uri. */
+	public synchronized XDocument getDocumentOnQueue(URI uri) {
 		ResourceTaskContext rtc = uri2RTCsOnQueue.get(uri);
 		if (rtc != null) {
 			// note: since we only obtain an object reference to an immutable data structure (XDocument) we do not need
-			// to execute the following in the open file context:
+			// to execute the following in the resource task context:
 			return rtc.getDocument();
 		}
 		return null;
@@ -133,7 +136,7 @@ public class ResourceTaskManager {
 		uri2RTCs.put(uri, newContext); // n.b.: add to this map immediately
 
 		// beware: there might be pending tasks in the queue for 'uri', if that file was recently closed, because we
-		// allow tasks to end gracefully after receiving a 'didClose' notification (see #closeContext(URI) below);
+		// allow tasks to end gracefully after receiving a 'didClose' notification (see #disposeContext(URI) below);
 		// therefore, we have to initialize the newly created context on the queue for the given URI
 		CompletableFuture<ResourceTaskContext> future = runInExistingContext(uri, "createContext", (rtc, ci) -> {
 			synchronized (ResourceTaskManager.this) {
@@ -163,25 +166,25 @@ public class ResourceTaskManager {
 	}
 
 	/** Dispose of all resource task contexts managed by this manager. */
-	public synchronized CompletableFuture<Void> closeAll() {
+	public synchronized CompletableFuture<Void> disposeAll() {
 		List<CompletableFuture<Void>> cfs = new ArrayList<>(uri2RTCs.size());
 		for (URI uri : new ArrayList<>(uri2RTCs.keySet())) {
-			cfs.add(closeContext(uri));
+			cfs.add(disposeContext(uri));
 		}
 		return CompletableFuture.allOf(cfs.toArray(new CompletableFuture<?>[cfs.size()]));
 	}
 
 	/** Dispose of the resource task context for the resource with the given URI. */
-	public synchronized CompletableFuture<Void> closeContext(URI uri) {
+	public synchronized CompletableFuture<Void> disposeContext(URI uri) {
 		// To allow running/pending tasks in the context of the given URI's file to complete gracefully, we only perform
-		// a cancellation and then put the call to #doDiscardContext() on the queue (note: this does not apply to tasks
-		// being submitted after this method returns and before #doDiscardContext() is invoked).
+		// a cancellation and then put the call to #doDisposeContext() on the queue (note: this does not apply to tasks
+		// being submitted after this method returns and before #doDisposeContext() is invoked).
 
 		// cancel current tasks for this context (they are now out-dated, anyway)
 		doCancelCurrentTasks(uri);
 
-		CompletableFuture<Void> future = runInExistingContextVoid(uri, "closeContext", (rtc, ci) -> {
-			doDiscardContext(rtc);
+		CompletableFuture<Void> future = runInExistingContextVoid(uri, "disposeContext", (rtc, ci) -> {
+			doDisposeContext(rtc);
 			synchronized (ResourceTaskManager.this) {
 				uri2RTCsOnQueue.remove(uri); // n.b.: remove from this map later on the queue
 			}
@@ -196,7 +199,7 @@ public class ResourceTaskManager {
 	public synchronized <T> CompletableFuture<T> runInExistingOrTemporaryContext(URI uri, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		if (isOpen(uri)) {
+		if (hasContext(uri)) {
 			return runInExistingContext(uri, description, task);
 		} else {
 			return runInTemporaryContext(uri, description, true, task);
@@ -329,7 +332,9 @@ public class ResourceTaskManager {
 	}
 
 	/**
-	 * Actually creates a new resource task context for the given URI.
+	 * Actually creates a new resource task context for the given URI and initializes it with its core values, but does
+	 * not invoke {@link ResourceTaskContext#initContext(boolean, CancelIndicator)} /
+	 * {@link ResourceTaskContext#initContext(int, String, CancelIndicator)} yet.
 	 * <p>
 	 * TODO IDE-3402 add support for language-specific bindings of ResourceTaskContext
 	 */
@@ -340,9 +345,12 @@ public class ResourceTaskManager {
 		return rtc;
 	}
 
-	/** Internal removal of all information related to a particular resource task context. */
-	protected synchronized void doDiscardContext(ResourceTaskContext rtc) {
-		rtc.close();
+	/**
+	 * Triggers work that needs to be done before a {@link ResourceTaskContext} can be entrusted to the garbage
+	 * collector.
+	 */
+	protected synchronized void doDisposeContext(ResourceTaskContext rtc) {
+		rtc.dispose();
 		if (!rtc.isTemporary()) {
 			updateSharedDirtyState(rtc.getURI(), null);
 		}
@@ -502,7 +510,7 @@ public class ResourceTaskManager {
 					// happens in case a resource context has changed
 					rtc.onDirtyStateChanged(newDesc, ci);
 				} else {
-					// happens in case a resource context is closed
+					// happens in case a resource context was disposed
 					if (replacementDesc != null) {
 						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
 								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
