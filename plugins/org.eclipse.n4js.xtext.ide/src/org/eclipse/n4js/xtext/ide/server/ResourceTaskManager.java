@@ -48,6 +48,29 @@ import com.google.inject.Singleton;
 /**
  * Manages a set of {@link ResourceTaskContext}s, including creation, disposal, and executing tasks within those
  * contexts.
+ *
+ * <h2>Life Times of Non-Temporary Contexts</h2>
+ *
+ * Regarding the creation and disposal of resource task contexts, two viewpoints have to be distinguished: "from outside
+ * the queue" and "on the queue". In the former sense, a context exists immediately after
+ * {@link #createContext(URI, int, String) #createContext()} has returned and ceases to exist immediately after a
+ * following call to {@link #disposeContext(URI) #disposeContext()} returns (represented by {@link #uri2RTCs}). In the
+ * latter sense, a context exist when its first task was started <em>on the queue</em> until its last task completed
+ * <em>on the queue</em> (represented by field {@link #uri2RTCsOnQueue}).
+ * <p>
+ * In other words, a context immediately shows up in / disappears from {@link #uri2RTCs} when
+ * {@link #createContext(URI, int, String)} / {@link #disposeContext(URI)} are called but may appear in / disappear from
+ * {@link #uri2RTCsOnQueue} much later, depending on delays caused by pending/running task on the context's queue.
+ * <p>
+ * Two examples for when this distinction matters:
+ * <ul>
+ * <li>For deciding whether a call to {@link #runInExistingContext(URI, String, BiFunction)} is allowed, the outside
+ * viewpoint is relevant. This means a call to this method is always valid right after
+ * {@link #createContext(URI, int, String)} was invoked as long as no {@link #disposeContext(URI)} invocation happened
+ * since then.
+ * <li>For deciding whether the builder should send validation diagnostics of a particular resource to the client, or if
+ * they are shadowed by an open editor, the "on the queue" viewpoint is relevant.
+ * </ul>
  */
 @Singleton
 public class ResourceTaskManager {
@@ -64,7 +87,16 @@ public class ResourceTaskManager {
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
 
+	/**
+	 * Contains all non-temporary contexts created with {@link #createContext(URI, int, String)} and not yet discarded
+	 * with {@link #disposeContext(URI)}, no matter whether those contexts were already created/disposed on the queue.
+	 */
 	protected final Map<URI, ResourceTaskContext> uri2RTCs = new HashMap<>();
+	/**
+	 * Contains all non-temporary contexts that were already created but not yet disposed <em>on the queue</em>. If
+	 * long-running tasks are on the queue, creation/disposal on the queue can happen significantly later than the
+	 * corresponding {@link #createContext(URI, int, String)} / {@link #disposeContext(URI)} invocations.
+	 */
 	protected final Map<URI, ResourceTaskContext> uri2RTCsOnQueue = new HashMap<>();
 
 	/**
@@ -107,11 +139,18 @@ public class ResourceTaskManager {
 		public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
-	/** Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI. */
+	/**
+	 * Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI, according to a viewpoint
+	 * "from outside the queue" (see details of context life times {@link ResourceTaskManager here}).
+	 */
 	public synchronized boolean hasContext(URI uri) {
 		return uri2RTCs.containsKey(uri);
 	}
 
+	/**
+	 * Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI, according to the "on the
+	 * queue" viewpoint (see details of context life times {@link ResourceTaskManager here}).
+	 */
 	public synchronized boolean hasContextOnQueue(URI uri) {
 		return uri2RTCsOnQueue.containsKey(uri);
 	}
