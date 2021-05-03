@@ -170,7 +170,7 @@ class N6_1_01_ThisKeywordTest extends AbstractTypesystemTest {
 		''')
 
 		val thisLiteral = EcoreUtil2.getAllContentsOfType(script, ThisLiteral).head;
-		assertTypeName("undefined", thisLiteral)
+		assertTypeName("any", thisLiteral)
 
 		assertNoValidationErrors(script);
 	}

@@ -37,7 +37,7 @@ public class WorkspaceValidateListener implements AfterValidateListener {
 	@Inject
 	public WorkspaceValidateListener(PublishingIssueAcceptor publisher,
 			ResourceTaskManager resourceTaskManager) {
-		this.acceptor = new FilteringIssueAcceptor(publisher, uri -> !resourceTaskManager.isOpen(uri));
+		this.acceptor = new FilteringIssueAcceptor(publisher, uri -> !resourceTaskManager.hasContext(uri));
 	}
 
 	@Override

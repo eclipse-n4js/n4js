@@ -112,7 +112,7 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 		'''.parse()
 
 		val thisLiteral = EcoreUtil2.getAllContentsOfType(script, ThisLiteral).head;
-		assertTypeName("undefined", thisLiteral);
+		assertTypeName("any", thisLiteral);
 		// eventually:
 		assertNoValidationErrors(script);
 	}

@@ -20,7 +20,6 @@ afoo2() : ok :: baz
 
 var o = {bar: "baz"};
 function foo():string{
-	//XPECT warnings ---> "Unnecessary cast from undefined to Object" at "this as Object"
 	return this!==undefined ? (this as Object)['bar'] as string : undefined; // note: if not bound, 'this' will be undefined (in strict mode) or the global object (in non-strict mode)
 }
 
@@ -29,7 +28,6 @@ var foo2 = foo.bind(o);
 console.log("foo2()", foo2())
 
 async function afoo():string{
-	//XPECT warnings ---> "Unnecessary cast from undefined to Object" at "this as Object"
 	return this!==undefined ? (this as Object)['bar'] as string : undefined; // note: if not bound, 'this' will be undefined (in strict mode) or the global object (in non-strict mode)
 }
 

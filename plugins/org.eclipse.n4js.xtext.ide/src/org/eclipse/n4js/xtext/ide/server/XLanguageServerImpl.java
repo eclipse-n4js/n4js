@@ -434,7 +434,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		LOG.info("Start shutdown");
 
 		disconnect();
-		return resourceTaskManager.closeAll()
+		return resourceTaskManager.disposeAll()
 				.thenCompose(none -> lsFrontend.shutdown())
 				.thenApply(any -> {
 					shutdownAndExitHandler.shutdown();
@@ -748,7 +748,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 				if (res instanceof XtextResource) {
 					String content = ((XtextResource) res).getParseResult().getRootNode().getText();
 					XDocument doc = new XDocument(1, content);
-					boolean isOpen = resourceTaskManager.isOpen(uri);
+					boolean isOpen = resourceTaskManager.hasContext(uri);
 					T result = function.apply(
 							new ILanguageServerAccess.Context(res, doc, isOpen, CancelIndicator.NullImpl));
 					return CompletableFuture.completedFuture(result);
@@ -758,7 +758,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			return resourceTaskManager.runInExistingOrTemporaryContext(uri, "doRead", (ofc, ci) -> {
 				XtextResource res = ofc.getResource();
 				XDocument doc = ofc.getDocument();
-				boolean isOpen = ofc.isOpen();
+				boolean isOpen = ofc.isOpenEditor();
 				return function.apply(
 						new ILanguageServerAccess.Context(res, doc, isOpen, ci));
 			});

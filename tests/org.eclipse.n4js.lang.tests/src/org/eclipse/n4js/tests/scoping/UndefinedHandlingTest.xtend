@@ -61,7 +61,7 @@ class UndefinedHandlingTest {
 			"use strict"
 			this.selector;
 		}
-		'''.assertUndefined()
+		'''.assertAny()
 	}
 
 	@Test
@@ -86,15 +86,23 @@ class UndefinedHandlingTest {
 		'''.parse.assertNoErrors
 	}
 
-	def void assertUndefined(CharSequence scriptSrc) {
+	def private void assertUndefined(CharSequence scriptSrc) {
+		assertUndefinedOrAny(scriptSrc, false);
+	}
+
+	def private void assertAny(CharSequence scriptSrc) {
+		assertUndefinedOrAny(scriptSrc, true);
+	}
+
+	def private void assertUndefinedOrAny(CharSequence scriptSrc, boolean useAny) {
 		val script = scriptSrc.parse
 		val access = script.eAllContents.filter(ParameterizedPropertyAccessExpression).head
 		assertNotNull("bogus test, no property access found", access);
 		val builtInTypeScope = BuiltInTypeScope.get(script.eResource.resourceSet);
-		val undefinedType = builtInTypeScope.undefinedType
-		assertNotNull("bogus test, no predefined undefined type found", undefinedType);
+		val type = if (useAny) builtInTypeScope.anyType else builtInTypeScope.undefinedType;
+		assertNotNull("bogus test, no predefined any type found", type);
 		val receiverType = ts.tau(access.target).declaredType;
-		assertEquals("wrong type inferred", undefinedType, receiverType);
+		assertEquals("wrong type inferred", type, receiverType);
 		assertTrue("property must not be bound", access.property.eIsProxy)
 
 		script.assertError(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION,
