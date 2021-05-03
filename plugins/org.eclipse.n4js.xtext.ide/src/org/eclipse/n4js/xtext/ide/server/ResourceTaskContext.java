@@ -98,7 +98,7 @@ public class ResourceTaskContext {
 	private ResourceTaskManager parent;
 	/** URI of the resource represented by this {@link ResourceTaskContext} (i.e. URI of the main resource). */
 	private URI mainURI;
-	/** Tells whether this context represents a temporarily opened file, see {@link #isTemporary()}. */
+	/** Tells whether this context is used only by a single, temporary operation, see {@link #isTemporary()}. */
 	private boolean temporary;
 	/** Tells whether this context is still managed by the ResourceTaskManager or was already removed */
 	private boolean alive;
@@ -127,13 +127,13 @@ public class ResourceTaskContext {
 	protected class ResourceTaskContentProvider implements IExternalContentProvider {
 		@Override
 		public String getContent(URI uri) {
-			XDocument doc = parent.getOpenDocument(uri);
+			XDocument doc = parent.getDocumentOnQueue(uri);
 			return doc != null ? doc.getContents() : null;
 		}
 
 		@Override
 		public boolean hasContent(URI uri) {
-			return parent.getOpenDocument(uri) != null;
+			return parent.getDocumentOnQueue(uri) != null;
 		}
 
 		@Override
@@ -148,11 +148,13 @@ public class ResourceTaskContext {
 	}
 
 	/**
-	 * Tells whether this {@link ResourceTaskContext} represents a temporary resource task. Such contexts do not
-	 * actually represent an open editor in the LSP client but were created to perform editing-related computations in
-	 * files not actually opened in the LSP client. For example, when API documentation needs to be retrieved from a
-	 * file not currently opened in an editor in the LSP client, such a temporary {@code OpenFileContext} will be
-	 * created.
+	 * Tells whether this {@link ResourceTaskContext} exists only for a single, temporary resource task and will be
+	 * disposed of immediately after this task completes.
+	 * <p>
+	 * Such contexts do not actually represent an open editor in the LSP client but were created to perform
+	 * editing-related computations in files not actually opened in the LSP client. For example, when API documentation
+	 * needs to be retrieved from a file not currently opened in an editor in the LSP client, such a temporary
+	 * {@code ResourceTaskContext} will be created.
 	 * <p>
 	 * Some special characteristics of temporary resource task contexts:
 	 * <ul>
@@ -165,17 +167,13 @@ public class ResourceTaskContext {
 		return temporary;
 	}
 
-	/**
-	 * Returns true if this context is still managed by the {@link ResourceTaskManager}.
-	 */
+	/** Returns <code>true</code> iff this context wasn't {@link #dispose() disposed} yet. */
 	public synchronized boolean isAlive() {
 		return alive;
 	}
 
-	/**
-	 * Mark this task context as no longer managed. Closes the context and sends the workspace issues to the client.
-	 */
-	public synchronized void close() {
+	/** Mark this context as no longer alive. Discards the context and sends the workspace issues to the client. */
+	public synchronized void dispose() {
 		this.alive = false;
 		if (!isTemporary()) {
 			URI uri = mainURI;
@@ -189,7 +187,7 @@ public class ResourceTaskContext {
 	 * Tells whether this {@link ResourceTaskContext} represents a context for an open file, i.e. not a
 	 * {@link #isTemporary() temporary context}.
 	 */
-	public synchronized boolean isOpen() {
+	public synchronized boolean isOpenEditor() {
 		return !isTemporary();
 	}
 

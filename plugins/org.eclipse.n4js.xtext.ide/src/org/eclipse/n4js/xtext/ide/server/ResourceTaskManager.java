@@ -48,6 +48,29 @@ import com.google.inject.Singleton;
 /**
  * Manages a set of {@link ResourceTaskContext}s, including creation, disposal, and executing tasks within those
  * contexts.
+ *
+ * <h2>Life Times of Non-Temporary Contexts</h2>
+ *
+ * Regarding the creation and disposal of resource task contexts, two viewpoints have to be distinguished: "from outside
+ * the queue" and "on the queue". In the former sense, a context exists immediately after a call to
+ * {@link #createContext(URI, int, String) #createContext()} and ceases to exist immediately after a following call to
+ * {@link #disposeContext(URI) #disposeContext()} (represented by {@link #uri2RTCs}). In the latter sense, a context
+ * exists when its first task was started <em>on the queue</em> until its last task completed <em>on the queue</em>
+ * (represented by field {@link #uri2RTCsOnQueue}).
+ * <p>
+ * In other words, a context immediately shows up in / disappears from {@link #uri2RTCs} when
+ * {@link #createContext(URI, int, String)} / {@link #disposeContext(URI)} are called but may appear in / disappear from
+ * {@link #uri2RTCsOnQueue} much later, depending on delays caused by pending/running tasks on the context's queue.
+ * <p>
+ * Two examples for when this distinction matters:
+ * <ul>
+ * <li>For deciding whether a call to {@link #runInExistingContext(URI, String, BiFunction)} is allowed, the outside
+ * viewpoint is relevant. This means a call to this method is always valid right after
+ * {@link #createContext(URI, int, String)} was invoked as long as no {@link #disposeContext(URI)} invocation happened
+ * since then.
+ * <li>For deciding whether the builder should send validation diagnostics of a particular resource to the client, or if
+ * they are shadowed by an open editor, the "on the queue" viewpoint is relevant.
+ * </ul>
  */
 @Singleton
 public class ResourceTaskManager {
@@ -64,8 +87,17 @@ public class ResourceTaskManager {
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
 
-	/***/
+	/**
+	 * Contains all non-temporary contexts created with {@link #createContext(URI, int, String)} and not yet discarded
+	 * with {@link #disposeContext(URI)}, no matter whether those contexts were already created/disposed on the queue.
+	 */
 	protected final Map<URI, ResourceTaskContext> uri2RTCs = new HashMap<>();
+	/**
+	 * Contains all non-temporary contexts that were already created but not yet disposed <em>on the queue</em>. If
+	 * long-running tasks are on the queue, creation/disposal on the queue can happen significantly later than the
+	 * corresponding {@link #createContext(URI, int, String)} / {@link #disposeContext(URI)} invocations.
+	 */
+	protected final Map<URI, ResourceTaskContext> uri2RTCsOnQueue = new HashMap<>();
 
 	/**
 	 * For each thread that is currently executing a resource-related task, this stores the corresponding
@@ -100,77 +132,113 @@ public class ResourceTaskManager {
 	 */
 	/** Listener for events in resource task contexts. */
 	public interface IResourceTaskListener {
-		/** Invoked whenever an open file was resolved, validated, etc. Invoked in the given open file context. */
+		/**
+		 * Invoked whenever a non-temporary {@link ResourceTaskContext resource task context}'s main resource was
+		 * resolved, validated, etc. Invoked in the given resource task context, i.e. on its corresponding queue.
+		 */
 		public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci);
 	}
 
-	/** Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI. */
-	public synchronized boolean isOpen(URI uri) {
+	/**
+	 * Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI, according to a viewpoint
+	 * "from outside the queue" (see details of context life times {@link ResourceTaskManager here}).
+	 */
+	public synchronized boolean hasContext(URI uri) {
 		return uri2RTCs.containsKey(uri);
 	}
 
-	/** Returns the {@link XDocument} for the given uri iff #{@link #isOpen(URI)} holds for the given uri. */
-	public synchronized XDocument getOpenDocument(URI uri) {
-		ResourceTaskContext rtc = uri2RTCs.get(uri);
+	/**
+	 * Returns true iff a non-temporary {@link ResourceTaskContext} exists for the given URI, according to the "on the
+	 * queue" viewpoint (see details of context life times {@link ResourceTaskManager here}).
+	 */
+	public synchronized boolean hasContextOnQueue(URI uri) {
+		return uri2RTCsOnQueue.containsKey(uri);
+	}
+
+	/** Returns the {@link XDocument} for the given uri iff #{@link #hasContext(URI)} holds for the given uri. */
+	public synchronized XDocument getDocumentOnQueue(URI uri) {
+		ResourceTaskContext rtc = uri2RTCsOnQueue.get(uri);
 		if (rtc != null) {
 			// note: since we only obtain an object reference to an immutable data structure (XDocument) we do not need
-			// to execute the following in the open file context:
+			// to execute the following in the resource task context:
 			return rtc.getDocument();
 		}
 		return null;
 	}
 
 	/** Create a new resource task context for the resource with the given URI. */
-	public synchronized void createContext(URI uri, int version, String content) {
+	public synchronized CompletableFuture<ResourceTaskContext> createContext(URI uri, int version, String content) {
 		if (uri2RTCs.containsKey(uri)) {
-			return;
+			throw new IllegalArgumentException("a context already exists for given URI: " + uri);
 		}
 		ResourceTaskContext newContext = doCreateContext(uri, false);
-		uri2RTCs.put(uri, newContext);
+		uri2RTCs.put(uri, newContext); // n.b.: add to this map immediately
 
-		runInExistingContextVoid(uri, "createContext", (rtc, ci) -> {
-			rtc.initContext(version, content, ci);
+		// beware: there might be pending tasks in the queue for 'uri', if that file was recently closed, because we
+		// allow tasks to end gracefully after receiving a 'didClose' notification (see #disposeContext(URI) below);
+		// therefore, we have to initialize the newly created context on the queue for the given URI
+		CompletableFuture<ResourceTaskContext> future = runInExistingContext(uri, "createContext", (rtc, ci) -> {
+			synchronized (ResourceTaskManager.this) {
+				uri2RTCsOnQueue.put(uri, newContext); // n.b.: add to this map later on the queue
+			}
+			newContext.initContext(version, content, ci);
+			return newContext;
 		});
+
+		// note: even though we created the ResourceTaskContext instance immediately (i.e. outside the queue), we do not
+		// immediately return that new instance but only return the future, in order to make sure the caller does not
+		// gain access to the new ResourceTaskContext before its initialization completed (which happens on the queue):
+		return future;
 	}
 
 	/** Change the source text of the main resource of the resource task context for the given URI. */
-	public synchronized void changeSourceTextOfExistingContext(URI uri, int version,
+	public synchronized CompletableFuture<Void> changeSourceTextOfExistingContext(URI uri, int version,
 			Iterable<? extends TextDocumentContentChangeEvent> changes) {
 
 		// cancel current tasks for this context (they are now out-dated, anyway)
-		Object queueId = getQueueIdForContext(uri, false);
-		queuedExecutorService.cancelAll(queueId);
+		doCancelCurrentTasks(uri);
 
 		// refresh the context
-		runInExistingContextVoid(uri, "changeSourceTextOfExistingContext", (rtc, ci) -> {
+		return runInExistingContextVoid(uri, "changeSourceTextOfExistingContext", (rtc, ci) -> {
 			rtc.refreshContext(version, changes, ci);
 		});
 	}
 
 	/** Dispose of all resource task contexts managed by this manager. */
-	public synchronized CompletableFuture<Void> closeAll() {
+	public synchronized CompletableFuture<Void> disposeAll() {
 		List<CompletableFuture<Void>> cfs = new ArrayList<>(uri2RTCs.size());
 		for (URI uri : new ArrayList<>(uri2RTCs.keySet())) {
-			cfs.add(closeContext(uri));
+			cfs.add(disposeContext(uri));
 		}
 		return CompletableFuture.allOf(cfs.toArray(new CompletableFuture<?>[cfs.size()]));
 	}
 
 	/** Dispose of the resource task context for the resource with the given URI. */
-	public synchronized CompletableFuture<Void> closeContext(URI uri) {
-		// To allow running/pending tasks in the context of the given URI's file to complete normally, we put the call
-		// to #discardOpenFileInfo() on the queue (note: this does not apply to tasks being submitted after this method
-		// returns and before #discardOpenFileInfo() is invoked).
-		return runInExistingContextVoid(uri, "closeContext", (rtc, ci) -> {
-			discardContextInfo(uri);
+	public synchronized CompletableFuture<Void> disposeContext(URI uri) {
+		// To allow running/pending tasks in the context of the given URI's file to complete gracefully, we only perform
+		// a cancellation and then put the call to #doDisposeContext() on the queue (note: this does not apply to tasks
+		// being submitted after this method returns and before #doDisposeContext() is invoked).
+
+		// cancel current tasks for this context (they are now out-dated, anyway)
+		doCancelCurrentTasks(uri);
+
+		CompletableFuture<Void> future = runInExistingContextVoid(uri, "disposeContext", (rtc, ci) -> {
+			doDisposeContext(rtc);
+			synchronized (ResourceTaskManager.this) {
+				uri2RTCsOnQueue.remove(uri); // n.b.: remove from this map later on the queue
+			}
 		});
+
+		uri2RTCs.remove(uri); // n.b.: remove from this map immediately, not later on the queue
+
+		return future;
 	}
 
 	/** Tries to run the given task in an existing context, falling back to a temporary context if necessary. */
 	public synchronized <T> CompletableFuture<T> runInExistingOrTemporaryContext(URI uri, String description,
 			BiFunction<ResourceTaskContext, CancelIndicator, T> task) {
 
-		if (isOpen(uri)) {
+		if (hasContext(uri)) {
 			return runInExistingContext(uri, description, task);
 		} else {
 			return runInTemporaryContext(uri, description, true, task);
@@ -282,6 +350,12 @@ public class ResourceTaskManager {
 		});
 	}
 
+	/** Cancels all tasks of the non-temporary context with the given URI. */
+	protected void doCancelCurrentTasks(URI uri) {
+		Object queueId = getQueueIdForContext(uri, false);
+		queuedExecutorService.cancelAll(queueId);
+	}
+
 	/** Returns a queue ID for tasks supposed to run in the resource task context of the given URI. */
 	protected Object getQueueIdForContext(URI uri, boolean isTemporary) {
 		if (isTemporary) {
@@ -290,28 +364,35 @@ public class ResourceTaskManager {
 			// be independent of one another), so we use "new Object()" as the actual ID here:
 			return Pair.of(ResourceTaskManager.class, new Object());
 		}
+		// note that the queue ID does not depend on the identity of a particular ResourceTaskContext instance; this
+		// means that if a file is closed and reopened all tasks will be on the same strand, no matter whether they
+		// belong to the file before or after it was closed & reopened:
 		return Pair.of(ResourceTaskManager.class, uri);
 	}
 
 	/**
-	 * Actually creates a new resource task context for the given URI.
+	 * Actually creates a new resource task context for the given URI and initializes it with its core values, but does
+	 * not invoke {@link ResourceTaskContext#initContext(boolean, CancelIndicator)} /
+	 * {@link ResourceTaskContext#initContext(int, String, CancelIndicator)} yet.
 	 * <p>
 	 * TODO IDE-3402 add support for language-specific bindings of ResourceTaskContext
 	 */
-	protected ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
+	protected synchronized ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = resourceTaskContextProvider.get();
 		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
 		rtc.initialize(this, uri, isTemporary, index, project2BuiltURIsImmutable, workspaceConfig);
 		return rtc;
 	}
 
-	/** Internal removal of all information related to a particular resource task context. */
-	protected synchronized void discardContextInfo(URI uri) {
-		ResourceTaskContext result = uri2RTCs.remove(uri);
-		if (result != null) {
-			result.close();
+	/**
+	 * Triggers work that needs to be done before a {@link ResourceTaskContext} can be entrusted to the garbage
+	 * collector.
+	 */
+	protected synchronized void doDisposeContext(ResourceTaskContext rtc) {
+		rtc.dispose();
+		if (!rtc.isTemporary()) {
+			updateSharedDirtyState(rtc.getURI(), null);
 		}
-		updateSharedDirtyState(uri, null);
 	}
 
 	/**
@@ -419,8 +500,8 @@ public class ResourceTaskManager {
 		workspaceConfig = newWorkspaceConfig;
 
 		// from this point forward: ignore changes/removals related to existing resource task contexts
-		changed.removeIf(desc -> uri2RTCs.containsKey(desc.getURI()));
-		removed.removeAll(uri2RTCs.keySet());
+		changed.removeIf(desc -> uri2RTCsOnQueue.containsKey(desc.getURI()));
+		removed.removeAll(uri2RTCsOnQueue.keySet());
 
 		// update internal state of all contexts
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
@@ -428,7 +509,7 @@ public class ResourceTaskManager {
 		}
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
-		for (URI currURI : uri2RTCs.keySet()) {
+		for (URI currURI : uri2RTCsOnQueue.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
 				rtc.onPersistedStateChanged(changed, removed,
 						capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
@@ -440,6 +521,11 @@ public class ResourceTaskManager {
 	 * Updates this manager and all its {@link ResourceTaskContext}s with the given changes to the persisted state
 	 * index. Should only be invoked internally from {@link ResourceTaskContext} after
 	 * {@link ResourceTaskContext#refreshContext(int, Iterable, CancelIndicator) refreshing} its internal state.
+	 *
+	 * @param uri
+	 *            uri of the resource that has changed or was deleted.
+	 * @param newDesc
+	 *            the new resource description or <code>null</code> if the resource was deleted.
 	 */
 	protected synchronized void updateSharedDirtyState(URI uri, IResourceDescription newDesc) {
 		// update my dirty state instance
@@ -452,16 +538,18 @@ public class ResourceTaskManager {
 		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
-		for (URI currURI : uri2RTCs.keySet()) {
+		for (Entry<URI, ResourceTaskContext> currEntry : uri2RTCsOnQueue.entrySet()) {
+			URI currURI = currEntry.getKey();
+			ResourceTaskContext currRTC = currEntry.getValue();
 			if (currURI.equals(uri)) {
 				continue;
 			}
-			runInExistingContextVoid(currURI, "updateSharedDirtyState of existing context", (rtc, ci) -> {
+			doSubmitTask(currRTC, "updateSharedDirtyState of existing context", (rtc, ci) -> {
 				if (newDesc != null) {
 					// happens in case a resource context has changed
 					rtc.onDirtyStateChanged(newDesc, ci);
 				} else {
-					// happens in case a resource context is closed
+					// happens in case a resource context was disposed
 					if (replacementDesc != null) {
 						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
 								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
@@ -470,6 +558,7 @@ public class ResourceTaskManager {
 								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
 					}
 				}
+				return null;
 			});
 		}
 	}
