@@ -132,7 +132,9 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 			if (jsVariantHelper.hasGlobalObject(location)) {
 				return G.globalObjectTypeRef;
 			}
-			return G.undefinedTypeRef;
+			// note: it is possible to pass in a primitive as "thisArg"; therefore, 'this' in functions must
+			// actually be inferred to 'any', by default, not to 'Object':
+			return G.anyTypeRef;
 		}
 	}
 
