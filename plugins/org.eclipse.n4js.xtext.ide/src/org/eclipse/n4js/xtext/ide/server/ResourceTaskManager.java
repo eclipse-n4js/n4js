@@ -52,15 +52,15 @@ import com.google.inject.Singleton;
  * <h2>Life Times of Non-Temporary Contexts</h2>
  *
  * Regarding the creation and disposal of resource task contexts, two viewpoints have to be distinguished: "from outside
- * the queue" and "on the queue". In the former sense, a context exists immediately after
- * {@link #createContext(URI, int, String) #createContext()} has returned and ceases to exist immediately after a
- * following call to {@link #disposeContext(URI) #disposeContext()} returns (represented by {@link #uri2RTCs}). In the
- * latter sense, a context exist when its first task was started <em>on the queue</em> until its last task completed
- * <em>on the queue</em> (represented by field {@link #uri2RTCsOnQueue}).
+ * the queue" and "on the queue". In the former sense, a context exists immediately after a call to
+ * {@link #createContext(URI, int, String) #createContext()} and ceases to exist immediately after a following call to
+ * {@link #disposeContext(URI) #disposeContext()} (represented by {@link #uri2RTCs}). In the latter sense, a context
+ * exists when its first task was started <em>on the queue</em> until its last task completed <em>on the queue</em>
+ * (represented by field {@link #uri2RTCsOnQueue}).
  * <p>
  * In other words, a context immediately shows up in / disappears from {@link #uri2RTCs} when
  * {@link #createContext(URI, int, String)} / {@link #disposeContext(URI)} are called but may appear in / disappear from
- * {@link #uri2RTCsOnQueue} much later, depending on delays caused by pending/running task on the context's queue.
+ * {@link #uri2RTCsOnQueue} much later, depending on delays caused by pending/running tasks on the context's queue.
  * <p>
  * Two examples for when this distinction matters:
  * <ul>
@@ -187,7 +187,7 @@ public class ResourceTaskManager {
 
 		// note: even though we created the ResourceTaskContext instance immediately (i.e. outside the queue), we do not
 		// immediately return that new instance but only return the future, in order to make sure the caller does not
-		// have access to the new ResourceTaskContext before its initialization completed (which happens on the queue):
+		// gain access to the new ResourceTaskContext before its initialization completed (which happens on the queue):
 		return future;
 	}
 
