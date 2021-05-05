@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 import org.eclipse.n4js.n4JS.BinaryLogicalOperator
+import org.eclipse.n4js.n4JS.BindingProperty
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BooleanLiteral
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -81,6 +82,7 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
+import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
@@ -101,6 +103,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 
 /**
  * Builder methods for intermediate elements.
@@ -150,14 +153,14 @@ public class TranspilerBuilderBlocks
 		return _VariableStatement(VariableStatementKeyword.VAR, varDecls);
 	}
 
-	public static def VariableStatement _VariableStatement(VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
+	public static def VariableStatement _VariableStatement(VariableStatementKeyword keyword, VariableDeclarationOrBinding... varDecls) {
 		val result = N4JSFactory.eINSTANCE.createVariableStatement;
 		result.varStmtKeyword = keyword;
 		result.varDeclsOrBindings += varDecls;
 		return result;
 	}
 
-	public static def ExportedVariableStatement _ExportedVariableStatement(VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
+	public static def ExportedVariableStatement _ExportedVariableStatement(VariableStatementKeyword keyword, VariableDeclarationOrBinding... varDecls) {
 		val result = N4JSFactory.eINSTANCE.createExportedVariableStatement;
 		result.varStmtKeyword = keyword;
 		result.varDeclsOrBindings += varDecls.filterNull;
@@ -173,6 +176,15 @@ public class TranspilerBuilderBlocks
 	public static def VariableDeclaration _VariableDeclaration(String name, Expression exp) {
 		val result = N4JSFactory.eINSTANCE.createVariableDeclaration;
 		result.name = name;
+		result.expression = exp;
+		return result;
+	}
+
+	public static def VariableBinding _VariableBinding(Iterable<? extends BindingProperty> properties, Expression exp) {
+		val pattern = N4JSFactory.eINSTANCE.createObjectBindingPattern;
+		pattern.properties += properties;
+		val result = N4JSFactory.eINSTANCE.createVariableBinding;
+		result.pattern = pattern;
 		result.expression = exp;
 		return result;
 	}

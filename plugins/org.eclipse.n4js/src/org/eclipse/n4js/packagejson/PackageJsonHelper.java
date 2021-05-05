@@ -119,6 +119,9 @@ public class PackageJsonHelper {
 			case VERSION:
 				target.setVersion(asVersionNumberOrNull(value));
 				break;
+			case TYPE:
+				target.setESM("module".equals(asNonEmptyStringOrNull(value)));
+				break;
 			case DEPENDENCIES:
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.RUNTIME);
 				break;

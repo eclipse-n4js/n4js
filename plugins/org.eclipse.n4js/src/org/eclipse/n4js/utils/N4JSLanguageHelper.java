@@ -17,9 +17,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.Keyword;
@@ -92,5 +95,42 @@ public final class N4JSLanguageHelper {
 	public boolean isOpaqueModule(Resource resource) {
 		N4JSWorkspaceConfigSnapshot workspaceConfig = workspaceAccess.getWorkspaceConfig(resource);
 		return N4JSLanguageUtils.isOpaqueModule(workspaceConfig, resource.getURI());
+	}
+
+	/**
+	 * Tells whether the given resource represents an ES6 module (otherwise, CommonJS is assumed).
+	 *
+	 * @see ProjectDescription#isESM()
+	 */
+	public boolean isES6Module(Resource resource) {
+		String targetURILastSegment = resource.getURI() != null ? resource.getURI().lastSegment() : null;
+		if (targetURILastSegment != null) {
+			if (targetURILastSegment.endsWith("." + N4JSGlobals.MJS_FILE_EXTENSION)) {
+				return true;
+			} else if (targetURILastSegment.endsWith("." + N4JSGlobals.CJS_FILE_EXTENSION)) {
+				return false;
+			} else if (targetURILastSegment.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION) // not for .n4jsd!!
+					|| targetURILastSegment.endsWith("." + N4JSGlobals.N4JSX_FILE_EXTENSION)) {
+				// since the N4JS transpiler uses ".js" as extension for output files (not ".mjs") we have to return
+				// 'true' here (in practice this should not matter much, because a validation enforces the use of
+				// "type":"module" in the package.json of N4JS projects and therefore the below call to
+				// targetProject.isEMS() would return 'true' anyway, leading to the same result)
+				return true;
+			}
+		}
+
+		N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProjectContaining(resource);
+		if (targetProject != null && targetProject.getType() == ProjectType.DEFINITION) {
+			targetProject = workspaceAccess.findProjectByName(resource, targetProject.getDefinesPackage());
+		}
+		if (targetProject == null) {
+			return true;
+		}
+
+		if (targetProject.isESM()) {
+			return true;
+		}
+
+		return false;
 	}
 }

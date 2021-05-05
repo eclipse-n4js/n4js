@@ -135,6 +135,11 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
+	protected void removeAll(Iterable<? extends EObject> elementsInIntermediateModel) {
+		TranspilerStateOperations.removeAll(state, elementsInIntermediateModel);
+	}
+
+	@SuppressWarnings("javadoc")
 	protected void remove(EObject elementInIntermediateModel) {
 		TranspilerStateOperations.remove(state, elementInIntermediateModel);
 	}

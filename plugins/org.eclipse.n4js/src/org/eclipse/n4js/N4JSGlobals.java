@@ -40,9 +40,14 @@ public final class N4JSGlobals {
 	public static final String JS_FILE_EXTENSION = "js";
 
 	/**
-	 * Files extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot).
+	 * File extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot).
 	 */
 	public static final String MJS_FILE_EXTENSION = "mjs";
+
+	/**
+	 * File extension of JS source files that contain CommonJS modules (<b>not</b> including the separator dot).
+	 */
+	public static final String CJS_FILE_EXTENSION = "cjs";
 
 	/**
 	 * Files extension of N4JS source files (<b>not</b> including the separator dot).
@@ -94,6 +99,15 @@ public final class N4JSGlobals {
 	 * Name of the npm package containing the mangelhaft command-line interface.
 	 */
 	public static final N4JSProjectName MANGELHAFT_CLI = new N4JSProjectName("n4js-mangelhaft-cli");
+
+	/**
+	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
+	 * {@link #N4JSX_FILE_EXTENSION}.
+	 */
+	public static final Collection<String> ALL_N4JS_FILE_EXTENSIONS = unmodifiableCollection(newLinkedHashSet(asList(
+			N4JS_FILE_EXTENSION,
+			N4JSD_FILE_EXTENSION,
+			N4JSX_FILE_EXTENSION)));
 
 	/**
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
@@ -255,5 +269,19 @@ public final class N4JSGlobals {
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.
+	}
+
+	/**
+	 * Tells whether the given string ends with one of the {@link #ALL_N4JS_FILE_EXTENSIONS N4JS files extensions}.
+	 */
+	public static boolean endsWithN4JSFileExtension(String fileName) {
+		if (fileName != null) {
+			for (String ext : ALL_N4JS_FILE_EXTENSIONS) {
+				if (fileName.endsWith("." + ext)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

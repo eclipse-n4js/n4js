@@ -50,6 +50,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableList<ProjectReference> testedProjects;
 	private final String definesPackage;
 	private final boolean nestedNodeModulesFolder;
+	private final boolean esm;
 	private final boolean n4jsNature;
 	private final boolean yarnWorkspaceRoot;
 	private final ImmutableList<String> workspaces;
@@ -62,7 +63,7 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> implementedProjects, String outputPath, String outputExtension,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
-			boolean n4jsNature, boolean yarnWorkspaceRoot, Iterable<String> workspaces) {
+			boolean esm, boolean n4jsNature, boolean yarnWorkspaceRoot, Iterable<String> workspaces) {
 		this.name = name;
 		this.vendorId = vendorId;
 		this.vendorName = vendorName;
@@ -83,6 +84,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.testedProjects = ImmutableList.copyOf(testedProjects);
 		this.definesPackage = definesPackage;
 		this.nestedNodeModulesFolder = nestedNodeModulesFolder;
+		this.esm = esm;
 		this.n4jsNature = n4jsNature;
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
 		this.workspaces = ImmutableList.copyOf(workspaces);
@@ -109,6 +111,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.testedProjects = template.testedProjects;
 		this.definesPackage = template.definesPackage;
 		this.nestedNodeModulesFolder = template.nestedNodeModulesFolder;
+		this.esm = template.esm;
 		this.n4jsNature = template.n4jsNature;
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
 		this.workspaces = template.workspaces;
@@ -140,6 +143,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.getTestedProjects().addAll(testedProjects);
 		builder.setDefinesPackage(definesPackage);
 		builder.setNestedNodeModulesFolder(nestedNodeModulesFolder);
+		builder.setESM(esm);
 		builder.setN4JSNature(n4jsNature);
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
 		builder.getWorkspaces().addAll(workspaces);
@@ -236,6 +240,24 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	/**
+	 * Tells whether this project is an "esm project", i.e. whether it is using node's native support for ES6 modules by
+	 * default.
+	 * <p>
+	 * This will be <code>true</code> iff <code>"type": "module"</code> is given in the project's
+	 * <code>package.json</code> file. This setting affects how node will treat files with an extension of ".js": if it
+	 * is <code>false</code>, they will be treated as CommonJS modules; if it is <code>true</code> they will be treated
+	 * as ES6 modules.
+	 * <p>
+	 * Note: files with an extension of ".cjs" / ".mjs" will <em>always</em> be treated as CommonJS / ES6 modules, no
+	 * matter how this setting is configured.
+	 *
+	 * @see <a href="https://nodejs.org/dist/latest/docs/api/packages.html#packages_type">Node.js Documentation</a>
+	 */
+	public boolean isESM() {
+		return esm;
+	}
+
+	/**
 	 * Indicates whether the underlying project description explicitly configured the project to be an N4JS project
 	 * (e.g. includes n4js section).
 	 */
@@ -282,6 +304,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				testedProjects,
 				definesPackage,
 				nestedNodeModulesFolder,
+				esm,
 				n4jsNature,
 				yarnWorkspaceRoot,
 				workspaces);
@@ -310,6 +333,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& Objects.equals(testedProjects, other.testedProjects)
 				&& Objects.equals(definesPackage, other.definesPackage)
 				&& nestedNodeModulesFolder == other.nestedNodeModulesFolder
+				&& esm == other.esm
 				&& n4jsNature == other.n4jsNature
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
 				&& Objects.equals(workspaces, other.workspaces);

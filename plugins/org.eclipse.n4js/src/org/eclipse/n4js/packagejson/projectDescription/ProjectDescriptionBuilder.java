@@ -42,6 +42,7 @@ public class ProjectDescriptionBuilder {
 	private final List<ProjectReference> testedProjects = new ArrayList<>();
 	private String definesPackage;
 	private boolean nestedNodeModulesFolder;
+	private boolean esm;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
 	private final List<String> workspaces = new ArrayList<>();
@@ -54,7 +55,8 @@ public class ProjectDescriptionBuilder {
 		return new ProjectDescription(name, vendorId, vendorName, version, type, mainModule,
 				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
 				implementationId, implementedProjects, outputPath, outputExtension, sourceContainers, moduleFilters,
-				testedProjects, definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, workspaces);
+				testedProjects, definesPackage, nestedNodeModulesFolder, esm, n4jsNature, yarnWorkspaceRoot,
+				workspaces);
 	}
 
 	public String getName() {
@@ -231,6 +233,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setNestedNodeModulesFolder(boolean nestedNodeModulesFolder) {
 		this.nestedNodeModulesFolder = nestedNodeModulesFolder;
+		return this;
+	}
+
+	public boolean isESM() {
+		return esm;
+	}
+
+	public ProjectDescriptionBuilder setESM(boolean esm) {
+		this.esm = esm;
 		return this;
 	}
 

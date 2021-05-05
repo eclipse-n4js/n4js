@@ -43,6 +43,8 @@ public enum PackageJsonProperties {
 	VERSION("version", "Npm semver version", "0.0.1"),
 	/** Key of package.json property "private". */
 	PRIVATE("private", "Whether npm should refuse to publish this package.", JSONBooleanLiteral.class),
+	/** Key of package.json property "type". */
+	TYPE("type", "The module format used for .js files in this project. Either 'commonjs' or 'module'."),
 	/** Key of package.json property "dependencies". */
 	DEPENDENCIES(UtilN4.PACKAGE_JSON__DEPENDENCIES, "Dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "devDependences". */
