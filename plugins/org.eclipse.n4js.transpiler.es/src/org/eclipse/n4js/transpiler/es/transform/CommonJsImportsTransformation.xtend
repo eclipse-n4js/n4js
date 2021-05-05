@@ -13,6 +13,7 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.common.collect.FluentIterable
 import com.google.inject.Inject
 import java.util.List
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.BindingProperty
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -27,6 +28,7 @@ import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
+import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.Strings
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -161,15 +163,24 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	def private String computeNameForIntermediateDefaultImport(TModule targetModule) {
-		val projectName = Strings.toIdentifier(targetModule.projectName, '_');
+		var projectNameRaw = targetModule.projectName;
+		if (projectNameRaw !== null) {
+			val n4jsdScopeWithSep = N4JSGlobals.N4JSD_SCOPE + ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR;
+			if (projectNameRaw.startsWith(n4jsdScopeWithSep)) {
+				projectNameRaw = projectNameRaw.substring(n4jsdScopeWithSep.length);
+			}
+		}
+
+		val projectName = Strings.toIdentifier(projectNameRaw, '_');
 		val moduleName = Strings.toIdentifier(targetModule.qualifiedName, '_');
-		val base = "$cjsImport__" + projectName + "__" + moduleName;
+		val baseName = "$cjsImport__" + projectName + "__" + moduleName;
+
 		var idx = 0;
-		var candidate = base;
+		var candidate = baseName;
 		// TODO: we won't find name conflicts with SymbolTableEntryOriginals (requires refactoring in TranspilerState.STECache)
 		while (getSymbolTableEntryInternal(candidate, false) !== null) {
 			idx++;
-			candidate = base + idx;
+			candidate = baseName + idx;
 		}
 		return candidate;
 	}
