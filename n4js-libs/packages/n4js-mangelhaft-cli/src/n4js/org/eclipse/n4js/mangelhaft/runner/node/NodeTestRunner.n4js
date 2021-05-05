@@ -10,6 +10,7 @@
  */
 
 import fetch from "deps/node-fetch";
+import cli_color_+ from "cli-color";
 import {Module} from "module";
 import {N4Injector} from "n4js/lang/N4Injector";
 import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test";
@@ -29,7 +30,6 @@ import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import {findProjectDirectories} from "org/eclipse/n4js/mangelhaft/runner/node/ProjectDiscoverer";
-import * as cli_color_+ from "cli-color";
 import {parse} from "url";
 import * as lib_path from "path";
 import * as lib_fs from "fs";
@@ -105,7 +105,7 @@ class NodeTestRunner  {
             testCatalog.testDescriptors = descriptors;
         }
         
-        this.consoleReporter.cliColor = cli_color_.default;
+        this.consoleReporter.cliColor = cli_color_;
         this.consoleReporter.setLogger(log);
 
         const reporters: ITestReporter[] = [this.consoleReporter];

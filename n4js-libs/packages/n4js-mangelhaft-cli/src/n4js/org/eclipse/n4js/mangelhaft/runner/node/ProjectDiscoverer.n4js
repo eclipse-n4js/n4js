@@ -12,7 +12,7 @@
 import * as lib_path from "path";
 import * as lib_fs from "fs";
 import * as lib_minimatch+ from "minimatch";
-import lib_glob from "glob";
+import {Glob} from "glob";
 
 const minimatch : {function(proband: string, pattern: string): boolean} = lib_minimatch as any+;
 
@@ -31,7 +31,7 @@ export public function findProjectDirectories(dir: string) : string[] {
         const options = { cwd: parentProjectDir, absolute: true, sync: true };
 
         for (const workspacesGlob of workspacesGlobs) {
-            const ee = new (lib_glob as Object+).Glob(workspacesGlob, options);
+            const ee = new Glob(workspacesGlob, options);
             const foundLocs = ee.found;
             for (const subProjectDir of foundLocs) {
                 const manifestFile = lib_path.join(subProjectDir, 'package.json');
