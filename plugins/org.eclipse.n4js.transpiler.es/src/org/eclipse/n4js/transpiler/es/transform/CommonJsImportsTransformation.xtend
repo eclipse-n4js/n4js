@@ -14,6 +14,7 @@ import com.google.common.collect.FluentIterable
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.BindingProperty
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -29,7 +30,6 @@ import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.Strings
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 
 /**
  * Since switching to node's native support for ES6 modules, we have to re-write all import declarations
@@ -83,7 +83,7 @@ class CommonJsImportsTransformation extends Transformation {
 				// in this case we can keep everything unchanged
 				return #[];
 			} else if (importSpec instanceof NamespaceImportSpecifier) {
-				// in this case we can simply replace namespace import by a default import
+				// in this case we can simply replace the namespace import by a default import
 				val namespaceName = importSpec.alias;
 				val newImportSpec = N4JSFactory.eINSTANCE.createDefaultImportSpecifier() => [
 					importedElementAsText = namespaceName;
@@ -108,13 +108,20 @@ class CommonJsImportsTransformation extends Transformation {
 			for (importSpec : importDecl.importSpecifiers) {
 				switch (importSpec) {
 					NamedImportSpecifier: { // including DefaultImportSpecifier
-						val localName = importSpec.alias ?: importSpec.importedElementAsText;
-						bindingProps += N4JSFactory.eINSTANCE.createBindingProperty => [
-							if (importSpec.isDefaultImport) {
-								declaredName = _LiteralOrComputedPropertyName("default");
+						val importedName = importSpec.importedElementAsText;
+						val localName = importSpec.alias ?: importedName;
+						bindingProps += N4JSFactory.eINSTANCE.createBindingProperty => [ newBindingProp |
+							val isDefaultImport = importSpec.isDefaultImport || importedName == "default";
+							if (isDefaultImport) {
+								newBindingProp.declaredName = _LiteralOrComputedPropertyName("default");
+							} else if (localName != importedName) {
+								newBindingProp.declaredName = _LiteralOrComputedPropertyName(importedName);
 							}
-							value = N4JSFactory.eINSTANCE.createBindingElement => [
-								varDecl = _VariableDeclaration(localName);
+							newBindingProp.value = N4JSFactory.eINSTANCE.createBindingElement => [ newBindingElem |
+								newBindingElem.varDecl = _VariableDeclaration(localName);
+								if (isDefaultImport) {
+									newBindingElem.varDecl.expression = _IdentRef(ste);
+								}
 							]
 						];
 					}
