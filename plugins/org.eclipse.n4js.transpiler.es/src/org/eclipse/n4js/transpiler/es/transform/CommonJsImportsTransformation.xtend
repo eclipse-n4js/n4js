@@ -15,7 +15,6 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.BindingProperty
-import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -78,13 +77,10 @@ class CommonJsImportsTransformation extends Transformation {
 			return #[];
 		}
 
-		// special cases with a simpler approach:
+		// special case with a simpler approach:
 		if (allImportDeclsForThisModule.size === 1 && allImportDeclsForThisModule.head.importSpecifiers.size === 1) {
 			val importSpec = allImportDeclsForThisModule.head.importSpecifiers.head;
-			if (importSpec instanceof DefaultImportSpecifier) {
-				// in this case we can keep everything unchanged
-				return #[];
-			} else if (importSpec instanceof NamespaceImportSpecifier) {
+			if (importSpec instanceof NamespaceImportSpecifier) {
 				// in this case we can simply replace the namespace import by a default import
 				val namespaceName = importSpec.alias;
 				val newImportSpec = N4JSFactory.eINSTANCE.createDefaultImportSpecifier() => [
