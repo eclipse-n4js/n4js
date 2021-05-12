@@ -203,7 +203,7 @@ public class JsonUtils {
 	 */
 	public static void saveJson(Path path, JsonElement jsonElement) throws FileNotFoundException, IOException {
 		try (BufferedWriter out = Files.newBufferedWriter(path, StandardOpenOption.TRUNCATE_EXISTING)) {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 			gson.toJson(jsonElement, out);
 		}
 	}
