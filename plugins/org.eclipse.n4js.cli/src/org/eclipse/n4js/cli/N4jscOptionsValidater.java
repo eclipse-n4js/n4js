@@ -11,14 +11,9 @@
 package org.eclipse.n4js.cli;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.cli.N4jscOptions.GoalRequirements;
 
 import com.google.common.base.Strings;
 
@@ -30,15 +25,9 @@ public class N4jscOptionsValidater {
 	/** Entry function for validator */
 	static public N4jscExitCode validate(N4jscOptions options) throws N4jscException {
 
-		validateGoalDefinitions(options);
-
 		switch (options.getGoal()) {
 		case version:
 			// User asked for version. Don't bother him.
-			break;
-
-		case help:
-			// User asked for help. Don't bother him.
 			break;
 
 		case lsp:
@@ -57,6 +46,15 @@ public class N4jscOptionsValidater {
 			break;
 
 		case watch:
+			break;
+
+		case init:
+			break;
+
+		case set_version:
+			break;
+
+		default:
 			break;
 		}
 
@@ -89,24 +87,6 @@ public class N4jscOptionsValidater {
 
 		if (options.isDefinedPerformanceOption()) {
 			validatePerformanceOptions(options);
-		}
-	}
-
-	private static void validateGoalDefinitions(N4jscOptions options) throws N4jscException {
-		Map<String, GoalRequirements> nameFieldMap = options.getOptionNameToGoalRequirementMap();
-
-		for (String name : options.getDefinedOptions().keySet()) {
-			if (nameFieldMap.containsKey(name)) {
-				GoalRequirements goalRequirements = nameFieldMap.get(name);
-				List<N4jscGoal> goals = Arrays.asList(goalRequirements.goals());
-				boolean optionGoalRequirementMet = goals.contains(options.getGoal());
-				if (!optionGoalRequirementMet) {
-					List<String> goalNames = goals.stream().map(g -> g.name()).collect(Collectors.toList());
-					String msg = "Given option " + name + " requires goal(s) " + String.join(", ", goalNames) //
-							+ ", but goal " + options.getGoal() + " was given.";
-					throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
-				}
-			}
 		}
 	}
 

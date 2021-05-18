@@ -11,38 +11,168 @@
 package org.eclipse.n4js.cli;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.AbstractList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.NamedOptionDef;
 import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.OptionHandlerFilter;
 import org.kohsuke.args4j.spi.BooleanOptionHandler;
 import org.kohsuke.args4j.spi.FileOptionHandler;
 import org.kohsuke.args4j.spi.IntOptionHandler;
+import org.kohsuke.args4j.spi.OptionHandler;
 import org.kohsuke.args4j.spi.Parameters;
 import org.kohsuke.args4j.spi.Setter;
 import org.kohsuke.args4j.spi.StringOptionHandler;
+import org.kohsuke.args4j.spi.SubCommand;
+import org.kohsuke.args4j.spi.SubCommandHandler;
+import org.kohsuke.args4j.spi.SubCommands;
 
 /**
- * This class encapsulates the {@link #definedOptions} which keep track of all given options
+ * This class enhances kohsuke's library:
+ * <ul>
+ * <li/>encapsule the {@link #definedOptions} to keep track of all given options
+ * <li/>enhance usage print outs (especially of sub commands)
+ * <li/>patch default sub command
+ * </ul>
  */
 public class N4JSCmdLineParser extends CmdLineParser {
 
 	/** Constructor */
 	public N4JSCmdLineParser(Object bean) {
+		this(bean, new LinkedHashMap<>());
+	}
+
+	/** Constructor */
+	public N4JSCmdLineParser(Object bean, Map<String, ParsedOption> definedOptions) {
 		super(bean);
+		this.definedOptions = definedOptions;
 	}
 
 	/** All user given options */
-	final Map<String, ParsedOption> definedOptions = new LinkedHashMap<>();
+	final Map<String, ParsedOption> definedOptions;
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void printUsage(Writer out, ResourceBundle rb, OptionHandlerFilter filter) {
+		PrintWriter w = new PrintWriter(out);
+		// determine the length of the option + metavar first
+		int len = 0;
+		for (OptionHandler h : getArguments()) {
+			int curLen = getPrefixLen(h, rb);
+			len = Math.max(len, curLen);
+		}
+		for (OptionHandler h : getOptions()) {
+			int curLen = getPrefixLen(h, rb);
+			len = Math.max(len, curLen);
+		}
+
+		// then print
+		for (OptionHandler h : getArguments()) {
+			printOption(w, h, len, rb, filter);
+		}
+		for (OptionHandler h : getOptions()) {
+			printOption(w, h, len, rb, filter);
+		}
+
+		w.flush();
+	}
+
+	@SuppressWarnings("rawtypes")
+	private int getPrefixLen(OptionHandler h, ResourceBundle rb) {
+		if (h.option.hidden())
+			return 0;
+		if (h.option.usage().length() == 0)
+			return 0;
+
+		String[] nameAndMetaLines = h.getNameAndMeta(rb, getProperties()).split("\n");
+		int maxLength = 0;
+		for (int i = 0; i < nameAndMetaLines.length; i++) {
+			maxLength = Math.max(maxLength, nameAndMetaLines[i].length());
+		}
+
+		return maxLength;
+	}
 
 	private void addDefinedOption(OptionDef optionDef, String defaultValue, String givenValue) {
 		if (optionDef instanceof NamedOptionDef) {
 			NamedOptionDef nod = (NamedOptionDef) optionDef;
 			ParsedOption parsedOption = new ParsedOption(nod, defaultValue, givenValue);
 			definedOptions.put(nod.name(), parsedOption);
+		}
+	}
+
+	/** Patched {@link SubCommandHandler} */
+	static public class N4JSSubCommandHandler extends SubCommandHandler {
+		private final SubCommands commands;
+
+		/** Constructor */
+		public N4JSSubCommandHandler(CmdLineParser parser, OptionDef option, Setter<Object> setter) {
+			super(parser, option, setter);
+			commands = setter.asAnnotatedElement().getAnnotation(SubCommands.class);
+		}
+
+		@Override
+		public int parseArguments(Parameters params) throws CmdLineException {
+			String subCmd = params.getParameter(0);
+
+			for (SubCommand c : commands.value()) {
+				if (c.name().equals(subCmd)) {
+					Object subCommand = subCommand(c, params);
+					setter.addValue(subCommand);
+					return params.size(); // consume all the remaining tokens
+				}
+			}
+
+			defaultSubCommand(params);
+			return params.size(); // consume all the remaining tokens
+		}
+
+		/** @return the default sub command */
+		protected Object defaultSubCommand(final Parameters params) throws CmdLineException {
+			SubCommand defaultSubCommand = commands.value()[0];
+			Object subCmd = instantiate(defaultSubCommand);
+			CmdLineParser p = configureParser(subCmd, defaultSubCommand);
+			p.parseArgument(new AbstractList<String>() {
+				@Override
+				public String get(int index) {
+					try {
+						return params.getParameter(index);
+					} catch (CmdLineException e) {
+						// invalid index was accessed.
+						throw new IndexOutOfBoundsException();
+					}
+				}
+
+				@Override
+				public int size() {
+					return params.size();
+				}
+			});
+			return subCmd;
+		}
+
+		@Override
+		protected CmdLineParser configureParser(Object subCmd, SubCommand c) {
+			return new N4JSCmdLineParser(subCmd, ((N4JSCmdLineParser) owner).definedOptions);
+		}
+
+		@Override
+		public String getDefaultMetaVariable() {
+			String superResult = super.getDefaultMetaVariable();
+			String[] split = superResult.substring(1, superResult.length() - 1).split("\s\\|\s");
+			return this.option.metaVar() + "\n  " + String.join("\n  ", split);
+		}
+
+		@Override
+		public String printDefaultValue() {
+			return null;
 		}
 	}
 
