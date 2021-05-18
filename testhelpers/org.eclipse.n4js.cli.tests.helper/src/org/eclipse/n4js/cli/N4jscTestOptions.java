@@ -11,13 +11,11 @@
 package org.eclipse.n4js.cli;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.kohsuke.args4j.NamedOptionDef;
 import org.kohsuke.args4j.Option;
@@ -26,6 +24,22 @@ import com.google.common.base.Objects;
 
 /** Helper class to create n4jsc option programmatically */
 public class N4jscTestOptions extends N4jscOptions {
+
+	/**
+	 * Will set options {@code --clean} and {@code --noPersist}
+	 *
+	 * @return a new instance of {@link N4jscTestOptions} with goal compile
+	 */
+	static public N4jscTestOptions IMPLICIT_COMPILE(File... files) {
+		return IMPLICIT_COMPILE(true, Arrays.asList(files));
+	}
+
+	/**
+	 * @return a new instance of {@link N4jscTestOptions} with goal compile
+	 */
+	static public N4jscTestOptions IMPLICIT_COMPILE(boolean cleanNoPersist, List<File> files) {
+		return ABSTRACT_COMPILE(new ImplicitCompileOptions(), cleanNoPersist, files);
+	}
 
 	/**
 	 * Will set options {@code --clean} and {@code --noPersist}
@@ -56,8 +70,17 @@ public class N4jscTestOptions extends N4jscOptions {
 	 * @return a new instance of {@link N4jscTestOptions} with goal compile
 	 */
 	static public N4jscTestOptions COMPILE(boolean cleanNoPersist, List<File> files) {
+		return ABSTRACT_COMPILE(new ExplicitCompileOptions(), cleanNoPersist, files);
+	}
+
+	/**
+	 * @return a new instance of {@link N4jscTestOptions} with goal compile
+	 */
+	static public N4jscTestOptions ABSTRACT_COMPILE(AbstractCompileRelatedOptions options, boolean cleanNoPersist,
+			List<File> files) {
+
 		N4jscTestOptions instance = new N4jscTestOptions();
-		instance.options.goal = N4jscGoal.compile;
+		instance.options = options;
 		instance.f(files);
 		if (cleanNoPersist) {
 			instance.clean().noPersist();
@@ -73,7 +96,7 @@ public class N4jscTestOptions extends N4jscOptions {
 	/** @return a new instance of {@link N4jscTestOptions} with goal clean */
 	static public N4jscTestOptions CLEAN(List<File> files) {
 		N4jscTestOptions instance = new N4jscTestOptions();
-		instance.options.goal = N4jscGoal.clean;
+		instance.options = new CleanOptions();
 		return instance.f(files);
 	}
 
@@ -85,7 +108,7 @@ public class N4jscTestOptions extends N4jscOptions {
 	/** @return a new instance of {@link N4jscTestOptions} with goal watch */
 	static public N4jscTestOptions WATCH(List<File> files) {
 		N4jscTestOptions instance = new N4jscTestOptions();
-		instance.options.goal = N4jscGoal.watch;
+		instance.options = new WatchOptions();
 		return instance.f(files);
 	}
 
@@ -97,21 +120,35 @@ public class N4jscTestOptions extends N4jscOptions {
 	/** @return a new instance of {@link N4jscTestOptions} with goal api */
 	static public N4jscTestOptions API(List<File> files) {
 		N4jscTestOptions instance = new N4jscTestOptions();
-		instance.options.goal = N4jscGoal.api;
+		instance.options = new APIOptions();
 		return instance.f(files);
-	}
-
-	/** @return a new instance of {@link N4jscTestOptions} with goal help */
-	static public N4jscTestOptions HELP() {
-		N4jscTestOptions instance = new N4jscTestOptions();
-		instance.options.goal = N4jscGoal.help;
-		return instance;
 	}
 
 	/** @return a new instance of {@link N4jscTestOptions} with goal lsp */
 	static public N4jscTestOptions LSP() {
 		N4jscTestOptions instance = new N4jscTestOptions();
-		instance.options.goal = N4jscGoal.lsp;
+		instance.options = new LSPOptions();
+		return instance;
+	}
+
+	/** @return a new instance of {@link N4jscTestOptions} with goal version */
+	static public N4jscTestOptions VERSION() {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options = new VersionOptions();
+		return instance;
+	}
+
+	/** @return a new instance of {@link N4jscTestOptions} with goal set-versions */
+	static public N4jscTestOptions SET_VERSIONS() {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options = new SetVersionsOptions();
+		return instance;
+	}
+
+	/** @return a new instance of {@link N4jscTestOptions} with goal init */
+	static public N4jscTestOptions INIT() {
+		N4jscTestOptions instance = new N4jscTestOptions();
+		instance.options = new InitOptions();
 		return instance;
 	}
 
@@ -124,15 +161,14 @@ public class N4jscTestOptions extends N4jscOptions {
 
 	/** Set goal to compile */
 	public N4jscTestOptions f(List<File> files) {
-		files = files.stream().map(f -> {
-			try {
-				return f.getCanonicalFile();
-			} catch (IOException e) {
-				return null;
-			}
-		}).filter(f -> f != null).collect(Collectors.toList());
+		options.setDirs(files);
+		interpretAndAdjustDirs();
+		return this;
+	}
 
-		options.dirs = files;
+	/** Sets option */
+	public N4jscTestOptions help() {
+		setDefinedOption(() -> options.help = true);
 		return this;
 	}
 
@@ -149,30 +185,6 @@ public class N4jscTestOptions extends N4jscOptions {
 	}
 
 	/** Sets option */
-	public N4jscTestOptions clean() {
-		setDefinedOption(() -> options.clean = true);
-		return this;
-	}
-
-	/** Sets option */
-	public N4jscTestOptions noPersist() {
-		setDefinedOption(() -> options.noPersist = true);
-		return this;
-	}
-
-	/** Sets option */
-	public N4jscTestOptions testOnly() {
-		setDefinedOption(() -> options.testOnly = true);
-		return this;
-	}
-
-	/** Sets option */
-	public N4jscTestOptions noTests() {
-		setDefinedOption(() -> options.noTests = true);
-		return this;
-	}
-
-	/** Sets option */
 	public N4jscTestOptions log() {
 		setDefinedOption(() -> options.log = true);
 		return this;
@@ -185,20 +197,44 @@ public class N4jscTestOptions extends N4jscOptions {
 	}
 
 	/** Sets option */
+	public N4jscTestOptions clean() {
+		setDefinedOption(() -> ((AbstractCompileRelatedOptions) options).clean = true);
+		return this;
+	}
+
+	/** Sets option */
+	public N4jscTestOptions noPersist() {
+		setDefinedOption(() -> ((AbstractCompileRelatedOptions) options).noPersist = true);
+		return this;
+	}
+
+	/** Sets option */
+	public N4jscTestOptions testOnly() {
+		setDefinedOption(() -> ((AbstractCompileRelatedOptions) options).testOnly = true);
+		return this;
+	}
+
+	/** Sets option */
+	public N4jscTestOptions noTests() {
+		setDefinedOption(() -> ((AbstractCompileRelatedOptions) options).noTests = true);
+		return this;
+	}
+
+	/** Sets option */
 	public N4jscTestOptions maxErrs(int pMaxErrs) {
-		setDefinedOption(() -> options.maxErrs = pMaxErrs);
+		setDefinedOption(() -> ((AbstractCompileRelatedOptions) options).maxErrs = pMaxErrs);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions maxWarns(int pMaxWarns) {
-		setDefinedOption(() -> options.maxWarns = pMaxWarns);
+		setDefinedOption(() -> ((AbstractCompileRelatedOptions) options).maxWarns = pMaxWarns);
 		return this;
 	}
 
 	/** Sets option */
 	public N4jscTestOptions port(int pPort) {
-		setDefinedOption(() -> options.port = pPort);
+		setDefinedOption(() -> ((LSPOptions) options).port = pPort);
 		return this;
 	}
 
