@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -271,7 +272,12 @@ public class N4jscTestOptions extends N4jscOptions {
 
 		Map<Field, Object> optionFieldValues = new LinkedHashMap<>();
 		try {
-			Field[] fields = options.getClass().getDeclaredFields();
+			List<Field> fields = new ArrayList<>();
+			Class<?> optionClass = options.getClass();
+			while (optionClass != null) {
+				fields.addAll(Arrays.asList(optionClass.getDeclaredFields()));
+				optionClass = optionClass.getSuperclass();
+			}
 
 			for (Field field : fields) {
 				Object currentValue = field.get(options);
