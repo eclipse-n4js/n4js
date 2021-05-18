@@ -238,8 +238,8 @@ public class CliTools {
 		result.errOut = result.errOut.replace(workingDirAbsolute, RELATIVE_PATH);
 
 		if (removeUsage) {
-			result.stdOut = result.stdOut.replace(N4jscOptions.USAGE, "");
-			result.errOut = result.errOut.replace(N4jscOptions.USAGE, "");
+			result.stdOut = result.stdOut.replace(N4jscOptions.USAGE_TEMPLATE, "");
+			result.errOut = result.errOut.replace(N4jscOptions.USAGE_TEMPLATE, "");
 		}
 
 		result.stdOut = result.stdOut.trim();

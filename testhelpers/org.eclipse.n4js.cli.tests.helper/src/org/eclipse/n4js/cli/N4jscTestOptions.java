@@ -250,6 +250,13 @@ public class N4jscTestOptions extends N4jscOptions {
 		return this;
 	}
 
+	/** Sets option */
+	public N4jscTestOptions version() {
+		setDefinedOption(() -> options.version = true);
+		interpretAndAdjustVersionOption();
+		return this;
+	}
+
 	@Override
 	public Map<String, N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
 		return definedOptions;

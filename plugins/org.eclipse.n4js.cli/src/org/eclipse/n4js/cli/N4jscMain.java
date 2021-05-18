@@ -99,7 +99,7 @@ public class N4jscMain {
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			N4jscConsole.println(N4jscOptions.USAGE);
+			N4jscConsole.println(N4jscOptions.USAGE_TEMPLATE);
 			System.exit(e.getExitCode());
 		}
 

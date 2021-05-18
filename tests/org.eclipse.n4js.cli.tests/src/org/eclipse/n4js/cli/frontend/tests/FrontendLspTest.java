@@ -64,9 +64,9 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	@Test
 	public void testLspSuperfluousDirArgument() {
 		String args[] = { "lsp", "./dir/" };
-		CliCompileResult result = n4jsc(args, 12);
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid dir(s)):  Goal LSP does not expect superfluous directory argument",
+				"ERROR-10 (Invalid command line string):  No argument is allowed: ./dir/",
 				result.getStdOut());
 	}
 

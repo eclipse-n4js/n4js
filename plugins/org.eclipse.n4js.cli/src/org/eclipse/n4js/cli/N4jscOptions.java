@@ -52,18 +52,21 @@ public class N4jscOptions {
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information. */
-	public static final String USAGE = "Usage: n4jsc [GOAL] [DIR] [OPTION(s)]";
+	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s [DIR] [OPTION(s)]";
 
 	static abstract class AbstractOptions {
-		AbstractOptions() {
-			setDirs(Lists.newArrayList(new File(".")));
-		}
 
 		abstract N4jscGoal getGoal();
 
 		abstract protected void setDirs(List<File> files);
 
 		abstract List<File> getDirs();
+
+		abstract AbstractOptions newInstance();
+
+		boolean isImplicitGoal() {
+			return false;
+		}
 
 		/** @return a string that lists all relevant settings of n4jsc.jar */
 		public String toSettingsString() {
@@ -179,8 +182,18 @@ public class N4jscOptions {
 	 */
 	static public class ImplicitCompileOptions extends AbstractCompileRelatedOptions {
 		@Override
+		AbstractOptions newInstance() {
+			return new ImplicitCompileOptions();
+		}
+
+		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.compile;
+		}
+
+		@Override
+		boolean isImplicitGoal() {
+			return true;
 		}
 
 		@Override
@@ -198,8 +211,9 @@ public class N4jscOptions {
 						"  Compile src folders" + "\n" +
 						"  Clean output folders and type index" + "\n" +
 						"  Start LSP server" + "\n" +
-						"  Start daemon to watch a given directory" + "\n" +
-						"  Generate API documentation from n4js files" + "\n" +
+						// not implemented:
+						// " Start daemon to watch a given directory" + "\n" +
+						// " Generate API documentation from n4js files" + "\n" +
 						"  Set versions of n4js-related dependencies" + "\n" +
 						"  Create an empty n4js project" + "\n" +
 						"  Print version of this tool", //
@@ -208,8 +222,9 @@ public class N4jscOptions {
 				@SubCommand(name = "compile", impl = ExplicitCompileOptions.class),
 				@SubCommand(name = "clean", impl = CleanOptions.class),
 				@SubCommand(name = "lsp", impl = LSPOptions.class),
-				@SubCommand(name = "watch", impl = WatchOptions.class),
-				@SubCommand(name = "api", impl = APIOptions.class),
+				// not implemented:
+				// @SubCommand(name = "watch", impl = WatchOptions.class),
+				// @SubCommand(name = "api", impl = APIOptions.class),
 				@SubCommand(name = "set-versions", impl = SetVersionsOptions.class),
 				@SubCommand(name = "init", impl = InitOptions.class),
 				@SubCommand(name = "version", impl = VersionOptions.class)
@@ -219,7 +234,7 @@ public class N4jscOptions {
 		@Argument(metaVar = "DIR", multiValued = true, index = 1, required = false, //
 				usage = "name of n4js project or workspace directory (default: .)", //
 				handler = N4JSFileOptionHandler.class)
-		List<File> dirs;
+		List<File> dirs = new ArrayList<>();
 	}
 
 	/** Options for compile related goals when given explicitly */
@@ -237,11 +252,16 @@ public class N4jscOptions {
 		@Argument(metaVar = "DIR", multiValued = true, index = 0, required = false, //
 				usage = "name of n4js project or workspace directory", //
 				handler = N4JSFileOptionHandler.class)
-		List<File> dirs;
+		List<File> dirs = new ArrayList<>();
 	}
 
 	/** Option for goal compile given explicitly */
 	static public class ExplicitCompileOptions extends AbstractExplicitCompileRelatedOptions {
+		@Override
+		AbstractOptions newInstance() {
+			return new ExplicitCompileOptions();
+		}
+
 		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.compile;
@@ -251,6 +271,11 @@ public class N4jscOptions {
 	/** Option for goal clean */
 	static public class CleanOptions extends AbstractExplicitCompileRelatedOptions {
 		@Override
+		AbstractOptions newInstance() {
+			return new CleanOptions();
+		}
+
+		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.clean;
 		}
@@ -258,6 +283,11 @@ public class N4jscOptions {
 
 	/** Option for goal api */
 	static public class APIOptions extends AbstractExplicitCompileRelatedOptions {
+		@Override
+		AbstractOptions newInstance() {
+			return new APIOptions();
+		}
+
 		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.api;
@@ -268,7 +298,7 @@ public class N4jscOptions {
 	static abstract public class SingleDirOptions extends AbstractOptions {
 		@Override
 		List<File> getDirs() {
-			return Lists.newArrayList(dir);
+			return dir == null ? Collections.emptyList() : Lists.newArrayList(dir);
 		}
 
 		@Override
@@ -285,13 +315,23 @@ public class N4jscOptions {
 	/** Option for goal watch */
 	static public class WatchOptions extends SingleDirOptions {
 		@Override
+		AbstractOptions newInstance() {
+			return new WatchOptions();
+		}
+
+		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.watch;
 		}
 	}
 
 	/** Option for goal LSP */
-	static public class LSPOptions extends SingleDirOptions {
+	static public class LSPOptions extends AbstractOptions {
+		@Override
+		AbstractOptions newInstance() {
+			return new LSPOptions();
+		}
+
 		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.lsp;
@@ -299,7 +339,12 @@ public class N4jscOptions {
 
 		@Override
 		List<File> getDirs() {
-			return Lists.newArrayList(dir);
+			return Collections.emptyList();
+		}
+
+		@Override
+		protected void setDirs(List<File> files) {
+			// goal lsp does not support dirs
 		}
 
 		@Override
@@ -333,6 +378,11 @@ public class N4jscOptions {
 	/** This class defines option fields for command set-versions. */
 	static public class SetVersionsOptions extends SingleDirOptions {
 		@Override
+		AbstractOptions newInstance() {
+			return new SetVersionsOptions();
+		}
+
+		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.set_version;
 		}
@@ -341,6 +391,11 @@ public class N4jscOptions {
 	/** This class defines option fields for command init. */
 	static public class InitOptions extends SingleDirOptions {
 		@Override
+		AbstractOptions newInstance() {
+			return new InitOptions();
+		}
+
+		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.init;
 		}
@@ -348,6 +403,11 @@ public class N4jscOptions {
 
 	/** This class defines option fields for command init. */
 	static public class VersionOptions extends SingleDirOptions {
+		@Override
+		AbstractOptions newInstance() {
+			return new VersionOptions();
+		}
+
 		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.version;
@@ -365,20 +425,24 @@ public class N4jscOptions {
 	/** Internal data store of options */
 	protected AbstractOptions options;
 
+	/** Constructor */
+	public N4jscOptions() {
+		options = new ImplicitCompileOptions();
+		parser = new N4JSCmdLineParser(options);
+	}
+
 	/**
 	 * Parses given options and returns an instance of {@link N4jscOptions}. In case the options could not be parsed,
 	 * null is returned.
 	 */
 	public void read(String... args) throws N4jscException {
 		try {
-			ImplicitCompileOptions ciOptions = new ImplicitCompileOptions();
-			parser = new N4JSCmdLineParser(ciOptions);
 			parser.getProperties().withUsageWidth(130);
 
 			parser.definedOptions.clear();
 			parser.parseArgument(args);
 
-			options = ciOptions.cmd;
+			options = ((ImplicitCompileOptions) options).cmd;
 
 			integrateEnvironment();
 			interpretAndAdjust();
@@ -405,10 +469,16 @@ public class N4jscOptions {
 	protected void interpretAndAdjust() {
 		// note: contents of this methods are split-up since they are individually called from N4jscTestOptions
 		interpretAndAdjustDirs();
+		interpretAndAdjustVersionOption();
 	}
 
 	/** Post-processing of parsed arguments dirs */
 	protected void interpretAndAdjustDirs() {
+		if (getDirs().isEmpty()) {
+			options.setDirs(Lists.newArrayList(new File(".")));
+
+		}
+
 		List<File> canonicalFiles = new ArrayList<>();
 		for (File file : getDirs()) {
 			try {
@@ -422,6 +492,22 @@ public class N4jscOptions {
 			}
 		}
 		options.setDirs(canonicalFiles);
+	}
+
+	/** Post-processing of parsed option version */
+	protected void interpretAndAdjustVersionOption() {
+		if (options.version) {
+			VersionOptions newOptions = new VersionOptions();
+			newOptions.help = options.help;
+			newOptions.log = options.log;
+			newOptions.showSetup = options.showSetup;
+			newOptions.verbose = options.verbose;
+			newOptions.version = options.version;
+			newOptions.logFile = options.logFile;
+			newOptions.performanceKey = options.performanceKey;
+			newOptions.performanceReport = options.performanceReport;
+			options = newOptions;
+		}
 	}
 
 	/** @return list of all user defined options */
@@ -545,21 +631,27 @@ public class N4jscOptions {
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
-		out.println(N4jscOptions.USAGE);
+		out.println(getUsage());
 
-		N4JSCmdLineParser parserWithDefault = new N4JSCmdLineParser(this.options);
+		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(this.options.newInstance());
 
 		// switch to English locale because args4j will use the user locale for some words like "Vorgabe"
 		Locale curLocale = Locale.getDefault();
 		Locale.setDefault(new Locale("en"));
-		parserWithDefault.printUsage(out);
+		parserWithDefaults.printUsage(out);
 		Locale.setDefault(curLocale);
+	}
+
+	private String getUsage() {
+		String goal = options.isImplicitGoal() ? "[GOAL]" : getGoal().name();
+		String usage = String.format(USAGE_TEMPLATE, goal);
+		return usage;
 	}
 
 	/** @return a string that lists all relevant settings of n4jsc.jar */
 	public String toSettingsString() {
 		String s = "N4jsc.options=";
-		s += "\n  Current execution directory=" + new File(".").getAbsolutePath();
+		s += "\n  Current execution directory=" + new File(".").toPath().toAbsolutePath();
 		s += "\n  goal=" + getGoal();
 		s += "\n  srcFiles=" + options.getDirs().stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
 		s += "\n  showSetup=" + options.showSetup;

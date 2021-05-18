@@ -53,7 +53,7 @@ public class InProcessExecuter {
 
 	/**
 	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
-	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
+	 * of the invocation. Removes {@link N4jscOptions#USAGE_TEMPLATE} text if desired.
 	 */
 	protected CliCompileResult n4jsc(File workspaceRoot, String[] args, CliCompileResult cliResult) {
 		Stopwatch sw = Stopwatch.createStarted();

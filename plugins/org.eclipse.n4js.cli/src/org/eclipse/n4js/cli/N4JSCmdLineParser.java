@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.util.AbstractList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -118,8 +119,8 @@ public class N4JSCmdLineParser extends CmdLineParser {
 			commands = setter.asAnnotatedElement().getAnnotation(SubCommands.class);
 		}
 
-		@Override
-		public int parseArguments(Parameters params) throws CmdLineException {
+		// @Override
+		public int parseArguments2(Parameters params) throws CmdLineException {
 			String subCmd = params.getParameter(0);
 
 			for (SubCommand c : commands.value()) {
@@ -130,8 +131,31 @@ public class N4JSCmdLineParser extends CmdLineParser {
 				}
 			}
 
-			defaultSubCommand(params);
+			int pos = extractPosFromParameters(params);
+			if (owner.getArguments().size() > pos) {
+				OptionHandler<?> nextOptionHandler = owner.getArguments().get(pos + 1);
+				return nextOptionHandler.parseArguments(params);
+			}
+			// defaultSubCommand(params);
 			return params.size(); // consume all the remaining tokens
+		}
+
+		private int extractPosFromParameters(Parameters params) {
+			try {
+				String name = CmdLineParser.class.getCanonicalName() + "$CmdLineImpl";
+				Class<?> classCmdLineImpl = CmdLineParser.class.getClassLoader().loadClass(name);
+				Field fieldPos = classCmdLineImpl.getDeclaredField("pos");
+				fieldPos.setAccessible(true);
+				return fieldPos.getInt(params);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
+
+		@Override
+		protected int fallback(String subCmd) throws CmdLineException {
+			return 0;
 		}
 
 		/** @return the default sub command */
