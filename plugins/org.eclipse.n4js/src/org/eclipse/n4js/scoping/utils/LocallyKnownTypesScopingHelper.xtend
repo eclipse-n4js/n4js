@@ -11,18 +11,17 @@
 package org.eclipse.n4js.scoping.utils
 
 import com.google.inject.Inject
+import java.util.function.Supplier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
@@ -98,11 +97,10 @@ class LocallyKnownTypesScopingHelper {
 	/**
 	 * Returns scope with locally known types and (as parent) import scope; the result is cached.
 	 */
-	def IScope scopeWithLocallyKnownTypes(Script script, IScopeProvider delegate) {
+	def IScope scopeWithLocallyKnownTypes(Script script, Supplier<IScope> parentSupplier) {
 		return cache.get(script -> 'locallyKnownTypes', script.eResource) [|
 			// all types in the index:
-			val parent = delegate.getScope(script,
-				TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
+			val parent = parentSupplier.get();
 			// but imported types are preferred (or maybe renamed with aliases):
 			val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script);
 			// finally, add locally declared types as the outer scope
@@ -131,9 +129,7 @@ class LocallyKnownTypesScopingHelper {
 	 * The result is not cached as this scope is needed only one time.
 	 */
 	def IScope scopeWithLocallyKnownTypesForPolyfillSuperRef(Script script,
-		IScopeProvider delegate, Type polyfillType) {
-		val IScope parent = delegate.getScope(script,
-			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
+		IScope parent, Type polyfillType) {
 
 		// imported and locally defined types are preferred (or maybe renamed with aliases):
 		val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script)

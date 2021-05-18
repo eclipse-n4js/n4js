@@ -54,6 +54,7 @@ import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
+import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
@@ -77,6 +78,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.TameAutoClosable
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -96,7 +98,6 @@ import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
  * This class contains custom scoping description.
@@ -109,35 +110,36 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  */
 class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScopeProvider, IContentAssistScopeProvider {
 
-
 	public final static String NAMED_DELEGATE = "org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.delegate";
 
 	@Inject
 	IResourceScopeCache cache
 
-	/* The scope provider creating the "parent" scope, i.e. including elements from the index */
+	/**
+	 * The scope provider creating the "parent" scope, i.e. including elements from the index.
+	 * At runtime, the value will be of type {@link N4JSImportedNamespaceAwareLocalScopeProvider}.
+	 */
 	@Inject
 	@Named(NAMED_DELEGATE)
 	IScopeProvider delegate;
 
-	@Inject private WorkspaceAccess workspaceAccess;
+	@Inject WorkspaceAccess workspaceAccess;
 
-	@Inject
-	ResourceDescriptionsProvider resourceDescriptionsProvider;
+	@Inject ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	@Inject N4JSTypeSystem ts
 
 	@Inject MemberScopingHelper memberScopingHelper
 
-	@Inject extension LocallyKnownTypesScopingHelper locallyKnownTypesScopingHelper
+	@Inject LocallyKnownTypesScopingHelper locallyKnownTypesScopingHelper
 
-	@Inject extension ImportedElementsScopingHelper
+	@Inject ImportedElementsScopingHelper importedElementsScopingHelper
 
-	@Inject extension SourceElementExtensions
+	@Inject SourceElementExtensions sourceElementExtensions;
 
 	@Inject EObjectDescriptionHelper descriptionsHelper;
 
-	@Inject extension ReactHelper;
+	@Inject ReactHelper reactHelper;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
 
@@ -149,11 +151,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject ScopesHelper scopesHelper
 
-	@Inject private VersionHelper versionHelper;
+	@Inject VersionHelper versionHelper;
 
-	@Inject private ValidatorMessageHelper messageHelper;
+	@Inject ValidatorMessageHelper messageHelper;
 
-	@Inject private MigrationScopeHelper migrationScopeHelper;
+	@Inject MigrationScopeHelper migrationScopeHelper;
 	
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
 	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
@@ -175,6 +177,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 	
 
+	/**
+	 * Delegates to {@link N4JSImportedNamespaceAwareLocalScopeProvider#getScope(EObject, EReference)}, which in turn
+	 * delegates further to {@link N4JSGlobalScopeProvider}.
+	 */
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
 	}
@@ -312,7 +318,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * allows for better error and quick fix handling. However, most inner (and correct) scope is preferred (solving problems in case of duplicate names).
 	 */
 	private def IScope scope_LabelledStatement(EObject context) {
-		val parent = (EcoreUtil.getRootContainer(context) as Script).allLabels;
+		val parent = getAllLabels(EcoreUtil.getRootContainer(context) as Script);
 		val names = newHashSet;
 		val elements = newArrayList;
 		var current = context;
@@ -392,7 +398,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * Called from getScope(), binds an identifier reference.
 	 */
 	private def IScope scope_IdentifierRef_id(IdentifierRef identifierRef, EReference ref) {
-		val VariableEnvironmentElement vee = identifierRef.ancestor(VariableEnvironmentElement);
+		val VariableEnvironmentElement vee = ancestor(identifierRef, VariableEnvironmentElement);
 		val scope = getLexicalEnvironmentScope(vee, identifierRef, ref);
 		// Handle constructor visibility
 		if (identifierRef.eContainer instanceof NewExpression) {
@@ -410,7 +416,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val VariableEnvironmentElement vee = if (obj instanceof VariableEnvironmentElement)
 				obj
 			else
-				obj.ancestor(VariableEnvironmentElement);
+				ancestor(obj, VariableEnvironmentElement);
 		return getLexicalEnvironmentScope(vee, obj, ref);
 	}
 
@@ -441,9 +447,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			scope = IScope.NULLSCOPE;
 		} else {
 			val Script script = EcoreUtil.getRootContainer(vee) as Script;
-			val IScope baseScope = script.getScriptBaseScope(context, reference);
+			val IScope baseScope = getScriptBaseScope(script, context, reference);
 			// imported variables (added as second step to enable shadowing of imported elements)
-			scope = getImportedIdentifiables(baseScope, script);
+			scope = importedElementsScopingHelper.getImportedIdentifiables(baseScope, script);
 		}
 
 		for (scopeList : scopeLists.reverseView) {
@@ -454,7 +460,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	private def IScope getScriptBaseScope(Script script, EObject context, EReference ref) {
 		// IDE-1065: there may be user declared globals (i.e. @@Global)
-		val IScope globalScope = delegate.getScope(script, ref);
+		val IScope globalScope = delegateGetScope(script, ref);
 
 		if (jsVariantHelper.activateDynamicPseudoScope(context)) { // cf. sec. 13.1
 			return new DynamicPseudoScope(globalScope);
@@ -465,12 +471,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	def private List<Iterable<IEObjectDescription>> collectLexialEnvironmentsScopeLists(VariableEnvironmentElement vee,
 		List<Iterable<IEObjectDescription>> result) {
 
-		result.add(Scopes.scopedElementsFor(vee.collectVisibleIdentifiableElements));
+		result.add(Scopes.scopedElementsFor(sourceElementExtensions.collectVisibleIdentifiableElements(vee)));
 
 		// arguments must be in own outer scope in order to enable shadowing of inner variables named "arguments"
-		result.add(Scopes.scopedElementsFor(vee.collectLocalArguments));
+		result.add(Scopes.scopedElementsFor(sourceElementExtensions.collectLocalArguments(vee)));
 
-		val parent = vee.ancestor(VariableEnvironmentElement);
+		val parent = ancestor(vee, VariableEnvironmentElement);
 		if (parent !== null) {
 			collectLexialEnvironmentsScopeLists(parent, result);
 		}
@@ -562,10 +568,13 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	def private IScope getTypeScopeInternal(EObject context, boolean fromStaticContext) {
 		switch context {
 			Script: {
-				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, delegate);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, [
+					delegateGetScope(context, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
+				]);
 			}
 			TModule: {
-				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context.astElement as Script, delegate);
+				val script = context.astElement as Script;
+				return getTypeScopeInternal(script, fromStaticContext);
 			}
 			N4FieldDeclaration: {
 				val isStaticContext = context.static;
@@ -578,17 +587,17 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			TypeDefiningElement: {
 				val isStaticContext = context instanceof N4MemberDeclaration && (context as N4MemberDeclaration).static;
 				val IScope parent = getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
-				val polyfilledOrOriginalType = context.getTypeOrPolyfilledType();
+				val polyfilledOrOriginalType = sourceElementExtensions.getTypeOrPolyfilledType(context);
 
-				return scopeWithTypeAndItsTypeVariables(parent, polyfilledOrOriginalType, fromStaticContext); // use old static access status for current scope
+				return locallyKnownTypesScopingHelper.scopeWithTypeAndItsTypeVariables(parent, polyfilledOrOriginalType, fromStaticContext); // use old static access status for current scope
 			}
 			TStructMethod: {
 				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
-				return scopeWithTypeVarsOfTStructMethod(parent, context);
+				return locallyKnownTypesScopingHelper.scopeWithTypeVarsOfTStructMethod(parent, context);
 			}
 			FunctionTypeExpression: {
 				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
-				return scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
+				return locallyKnownTypesScopingHelper.scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
 			}
 			TypeDefs: {
 				// This case applies when a scope for the built-in type definition
@@ -601,19 +610,20 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				// handle special areas inside a polyfill that should *not* get the usual polyfill handling implemented
 				// in the above case for "TypeDefiningElement":
 				if (container instanceof N4ClassDeclaration) {
-					if (container.isPolyfill || container.isStaticPolyfill) {
+					if (N4JSLanguageUtils.isPolyfill(container) || N4JSLanguageUtils.isStaticPolyfill(container)) {
 						if (container.typeVars.contains(context)) {
 							// area #1: upper/lower bound of type parameter of polyfill, e.g. the 2nd 'T' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T,S extends T> extends ToBeFilled<T,S> {}
 							val IScope parent = getTypeScopeInternal(context.eContainer, false);
-							return scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
+							return locallyKnownTypesScopingHelper.scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
 						} else if (container.superClassRef === context) {
 							// area #2: super type reference of polyfill, e.g. everything after 'extends' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T> extends ToBeFilled<T> {}
 							val script = EcoreUtil2.getContainerOfType(container, Script);
-							val parent = scopeWithLocallyKnownTypesForPolyfillSuperRef(script, delegate,
+							val globalScope = delegateGetScope(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
+							val parent = locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypesForPolyfillSuperRef(script, globalScope,
 								container.definedType);
 							return parent;
 						}
@@ -710,7 +720,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (reference == N4JSPackage.Literals.JSX_PROPERTY_ATTRIBUTE__PROPERTY) {
 			if (context instanceof JSXPropertyAttribute) {
 				val jsxElem = (context.eContainer as JSXElement);
-				val TypeRef propsTypeRef = jsxElem.getPropsType();
+				val TypeRef propsTypeRef = reactHelper.getPropsType(jsxElem);
 				val checkVisibility = true;
 				val staticAccess = false;
 				val structFieldInitMode = false;

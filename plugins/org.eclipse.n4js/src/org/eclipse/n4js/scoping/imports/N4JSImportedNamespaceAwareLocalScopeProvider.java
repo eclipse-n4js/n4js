@@ -38,6 +38,19 @@ import com.google.common.base.Predicate;
  */
 public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamespaceAwareLocalScopeProvider {
 
+	/**
+	 * NOTE: for N4JS, 'context' is only used to retrieve the containing resource, and 'reference' will be one of:
+	 * <ul>
+	 * <li>IdentifierRef#id
+	 * <li>ImportDeclaration#module
+	 * <li>ParameterizedTypeRef#declaredType
+	 * </ul>
+	 */
+	@Override
+	public IScope getScope(EObject context, EReference reference) {
+		return super.getScope(context, reference);
+	}
+
 	@Override
 	protected List<ImportNormalizer> getImportedNamespaceResolvers(EObject context, boolean ignoreCase) {
 		return Collections.emptyList();
