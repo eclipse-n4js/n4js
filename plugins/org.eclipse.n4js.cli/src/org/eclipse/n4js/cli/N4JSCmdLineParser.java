@@ -149,13 +149,14 @@ public class N4JSCmdLineParser extends CmdLineParser {
 
 		@Override
 		protected CmdLineParser configureParser(Object subCmd, SubCommand c) {
+			owner.getArguments().clear(); // very dirty hack to avoid complaints about missing dir argument
 			return new N4JSCmdLineParser(subCmd, ((N4JSCmdLineParser) owner).definedOptions);
 		}
 
 		@Override
 		public String getDefaultMetaVariable() {
 			String superResult = super.getDefaultMetaVariable();
-			String[] split = superResult.substring(1, superResult.length() - 1).split("\\s\\\\|\\s");
+			String[] split = superResult.substring(1, superResult.length() - 1).split("\\s\\|\\s");
 			return this.option.metaVar() + "\n  " + String.join("\n  ", split);
 		}
 

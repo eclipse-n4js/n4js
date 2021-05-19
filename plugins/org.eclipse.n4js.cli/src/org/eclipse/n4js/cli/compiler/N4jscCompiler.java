@@ -143,7 +143,7 @@ public class N4jscCompiler {
 	private void warnIfNoProjectsFound() {
 		Set<? extends ProjectConfigSnapshot> projects = workspaceManager.getProjectConfigs();
 		if (projects.isEmpty()) {
-			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
+			N4jscConsole.println("No projects found at the given location: " + options.getDir());
 		}
 	}
 
@@ -157,7 +157,7 @@ public class N4jscCompiler {
 			String prjNameWithPadding = "%-" + maxPrjNameLength + "s";
 
 			if (!projects.isEmpty()) {
-				Path workspace = options.getDirs().get(0).toPath();
+				Path workspace = options.getDir().toPath();
 
 				SortedMap<String, String> projectNameList = new TreeMap<>();
 				for (ProjectConfigSnapshot prj : projects) {

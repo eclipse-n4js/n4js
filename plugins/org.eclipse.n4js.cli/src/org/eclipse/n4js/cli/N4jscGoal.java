@@ -29,7 +29,7 @@ public enum N4jscGoal {
 	/** Creates an N4JS project */
 	init,
 	/** Sets version strings of all N4JS related packages to the given version */
-	set_version
+	setVersions
 
 	;
 }

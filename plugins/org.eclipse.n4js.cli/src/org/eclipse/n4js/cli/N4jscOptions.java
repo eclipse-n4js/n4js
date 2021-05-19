@@ -14,14 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4JSCmdLineParser.N4JSBooleanOptionHandler;
 import org.eclipse.n4js.cli.N4JSCmdLineParser.N4JSFileOptionHandler;
+import org.eclipse.n4js.cli.N4JSCmdLineParser.N4JSIntOptionHandler;
+import org.eclipse.n4js.cli.N4JSCmdLineParser.N4JSStringOptionHandler;
 import org.eclipse.n4js.cli.N4JSCmdLineParser.N4JSSubCommandHandler;
 import org.eclipse.n4js.cli.N4JSCmdLineParser.ParsedOption;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
@@ -33,7 +34,6 @@ import org.kohsuke.args4j.spi.SubCommand;
 import org.kohsuke.args4j.spi.SubCommands;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 /**
  */
@@ -51,18 +51,32 @@ public class N4jscOptions {
 	/** Marker used to distinguish between compile-messages and runner output. */
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
+	/** Usage information template. */
+	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s%s [OPTION(s)]";
 	/** Usage information. */
-	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s [DIR] [OPTION(s)]";
+	public static final String USAGE = getUsage(new N4jscOptions());
+
+	/** @return the usage string respecting the goal specified in the given options */
+	public static String getUsage(N4jscOptions options) {
+		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
+		String dir = options.options.getDir() == null ? "" : " DIR";
+		String usage = String.format(USAGE_TEMPLATE, goal, dir);
+		return usage;
+	}
 
 	static abstract class AbstractOptions {
 
 		abstract N4jscGoal getGoal();
 
-		abstract protected void setDirs(List<File> files);
-
-		abstract List<File> getDirs();
-
 		abstract AbstractOptions newInstance();
+
+		void setDir(@SuppressWarnings("unused") File file) {
+			// if necessary, overwrite this
+		}
+
+		File getDir() {
+			return null;
+		}
 
 		boolean isImplicitGoal() {
 			return false;
@@ -87,7 +101,7 @@ public class N4jscOptions {
 				usage = "enables performance data collection and specifies the path and name of the performance report. "
 						+ "A date/time stamp will appended to the file name. If the file name ends in \".csv\", CSV file format will "
 						+ "be emitted; otherwise a human-readable format is used.", //
-				handler = N4JSCmdLineParser.N4JSFileOptionHandler.class)
+				handler = N4JSFileOptionHandler.class)
 		File performanceReport = new File("performance-report.txt");
 
 		@Option(name = "--performanceKey", aliases = "-pk", //
@@ -95,31 +109,33 @@ public class N4jscOptions {
 				usage = "enables performance data collection and specifies the key of the data collector whose performance data "
 						+ "will be saved in the performance report. An asterisk may be used to emit data of all root data collectors (not "
 						+ "supported for CSV output).", //
-				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
+				handler = N4JSStringOptionHandler.class)
 		String performanceKey = N4JSDataCollectors.dcBuild.getId();
 
 		@Option(name = "--showSetup", usage = "prints n4jsc setup", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean showSetup = false;
 
 		@Option(name = "--verbose", usage = "enables verbose output", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean verbose = false;
 
 		@Option(name = "--log", hidden = true, usage = "", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean log = false;
 
 		@Option(name = "--logfile", hidden = true, usage = "specifies the log file name", //
-				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
+				handler = N4JSStringOptionHandler.class)
 		String logFile = "n4jsc.log";
 
 		@Option(name = "--version", aliases = "-v", usage = "prints version and exits", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class, //
+				help = true)
 		boolean version = false;
 
 		@Option(name = "--help", aliases = "-h", usage = "prints help and exits", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class, //
+				help = true)
 		boolean help = false;
 	}
 
@@ -141,33 +157,33 @@ public class N4jscOptions {
 		@Option(name = "--noTests", //
 				forbids = "--testOnly", //
 				usage = "don't process test folders", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean noTests = false;
 
 		@Option(name = "--testOnly", //
 				forbids = "--noTests", //
 				usage = "only transpile test folders", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean testOnly = false;
 
 		@Option(name = "--maxErrs", //
 				usage = "set the maximum number of errors to print", //
-				handler = N4JSCmdLineParser.N4JSIntOptionHandler.class)
+				handler = N4JSIntOptionHandler.class)
 		int maxErrs = 0;
 
 		@Option(name = "--maxWarns", //
 				usage = "set the maximum number of warnings to print", //
-				handler = N4JSCmdLineParser.N4JSIntOptionHandler.class)
+				handler = N4JSIntOptionHandler.class)
 		int maxWarns = 0;
 
 		@Option(name = "--clean", aliases = "-c", //
 				usage = "clean output folders at start", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean clean = false;
 
 		@Option(name = "--noPersist", aliases = "-np", //
 				usage = "disable persisting of type index to disk.", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean noPersist = false;
 	}
 
@@ -197,13 +213,13 @@ public class N4jscOptions {
 		}
 
 		@Override
-		List<File> getDirs() {
-			return dirs;
+		File getDir() {
+			return dir;
 		}
 
 		@Override
-		protected void setDirs(List<File> files) {
-			dirs = files;
+		void setDir(File file) {
+			dir = file;
 		}
 
 		@Argument(metaVar = "GOAL", multiValued = false, index = 0, required = false, //
@@ -231,28 +247,28 @@ public class N4jscOptions {
 		})
 		AbstractOptions cmd = this;
 
-		@Argument(metaVar = "DIR", multiValued = true, index = 1, required = false, //
-				usage = "name of n4js project or workspace directory (default: .)", //
+		@Argument(metaVar = "DIR", index = 1, required = true, //
+				usage = "name of n4js project or workspace directory", //
 				handler = N4JSFileOptionHandler.class)
-		List<File> dirs = new ArrayList<>();
+		File dir = new File(".");
 	}
 
 	/** Options for compile related goals when given explicitly */
 	static abstract public class AbstractExplicitCompileRelatedOptions extends AbstractCompileRelatedOptions {
 		@Override
-		List<File> getDirs() {
-			return dirs;
+		File getDir() {
+			return dir;
 		}
 
 		@Override
-		protected void setDirs(List<File> files) {
-			dirs = files;
+		void setDir(File file) {
+			dir = file;
 		}
 
-		@Argument(metaVar = "DIR", multiValued = true, index = 0, required = false, //
+		@Argument(metaVar = "DIR", index = 0, required = true, //
 				usage = "name of n4js project or workspace directory", //
 				handler = N4JSFileOptionHandler.class)
-		List<File> dirs = new ArrayList<>();
+		File dir = new File(".");
 	}
 
 	/** Option for goal compile given explicitly */
@@ -297,19 +313,19 @@ public class N4jscOptions {
 	/** Option for goal watch */
 	static abstract public class SingleDirOptions extends AbstractOptions {
 		@Override
-		List<File> getDirs() {
-			return dir == null ? Collections.emptyList() : Lists.newArrayList(dir);
+		File getDir() {
+			return dir;
 		}
 
 		@Override
-		protected void setDirs(List<File> files) {
-			dir = files.isEmpty() ? null : files.get(0);
+		void setDir(File file) {
+			dir = file;
 		}
 
-		@Argument(metaVar = "DIR", index = 0, required = false, //
+		@Argument(metaVar = "DIR", index = 0, required = true, //
 				usage = "name of n4js project or workspace directory", //
 				handler = N4JSFileOptionHandler.class)
-		File dir;
+		File dir = new File(".");
 	}
 
 	/** Option for goal watch */
@@ -338,16 +354,6 @@ public class N4jscOptions {
 		}
 
 		@Override
-		List<File> getDirs() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		protected void setDirs(List<File> files) {
-			// goal lsp does not support dirs
-		}
-
-		@Override
 		public String toSettingsString() {
 			String s = super.toSettingsString();
 			s += "\n  port=" + port;
@@ -358,25 +364,25 @@ public class N4jscOptions {
 
 		@Option(name = "--port", aliases = "-p", //
 				usage = "set the port of the lsp server", //
-				handler = N4JSCmdLineParser.N4JSIntOptionHandler.class)
+				handler = N4JSIntOptionHandler.class)
 		int port = 5007;
 
 		@Option(name = "--stdio", //
 				usage = "uses stdin/stdout for communication instead of sockets", //
 				forbids = "--port", //
-				handler = N4JSCmdLineParser.N4JSBooleanOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean stdio = false;
 
 		@Option(name = "--exec", //
 				hidden = true, //
 				usage = "executes the given command string once the LSP server is listening for clients and shuts "
 						+ "down the server after the first client disconnects. Must not be used with option --stdio.", //
-				handler = N4JSCmdLineParser.N4JSStringOptionHandler.class)
+				handler = N4JSStringOptionHandler.class)
 		String exec = null;
 	}
 
 	/** This class defines option fields for command set-versions. */
-	static public class SetVersionsOptions extends SingleDirOptions {
+	static public class SetVersionsOptions extends AbstractOptions {
 		@Override
 		AbstractOptions newInstance() {
 			return new SetVersionsOptions();
@@ -384,12 +390,17 @@ public class N4jscOptions {
 
 		@Override
 		N4jscGoal getGoal() {
-			return N4jscGoal.set_version;
+			return N4jscGoal.setVersions;
 		}
+
+		@Argument(metaVar = "VERSION", index = 0, required = true, //
+				usage = "new version string to set for all n4js related dependencies", //
+				handler = N4JSStringOptionHandler.class)
+		String setVersion;
 	}
 
 	/** This class defines option fields for command init. */
-	static public class InitOptions extends SingleDirOptions {
+	static public class InitOptions extends AbstractOptions {
 		@Override
 		AbstractOptions newInstance() {
 			return new InitOptions();
@@ -402,7 +413,7 @@ public class N4jscOptions {
 	}
 
 	/** This class defines option fields for command init. */
-	static public class VersionOptions extends SingleDirOptions {
+	static public class VersionOptions extends AbstractOptions {
 		@Override
 		AbstractOptions newInstance() {
 			return new VersionOptions();
@@ -411,11 +422,6 @@ public class N4jscOptions {
 		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.version;
-		}
-
-		@Override
-		List<File> getDirs() {
-			return Collections.emptyList();
 		}
 	}
 
@@ -474,24 +480,19 @@ public class N4jscOptions {
 
 	/** Post-processing of parsed arguments dirs */
 	protected void interpretAndAdjustDirs() {
-		if (getDirs().isEmpty()) {
-			options.setDirs(Lists.newArrayList(new File(".")));
+		File file = getDir();
 
-		}
-
-		List<File> canonicalFiles = new ArrayList<>();
-		for (File file : getDirs()) {
+		if (getDir() != null) {
 			try {
 				File canonicalFile = file.getCanonicalFile();
 				if (N4JSGlobals.PACKAGE_JSON.equals(canonicalFile.getName())) {
 					canonicalFile = canonicalFile.getParentFile();
+					options.setDir(canonicalFile);
 				}
-				canonicalFiles.add(canonicalFile);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
-		options.setDirs(canonicalFiles);
 	}
 
 	/** Post-processing of parsed option version */
@@ -511,7 +512,7 @@ public class N4jscOptions {
 	}
 
 	/** @return list of all user defined options */
-	public Map<String, N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
+	public Map<String, ParsedOption> getDefinedOptions() {
 		return parser.definedOptions;
 	}
 
@@ -521,17 +522,8 @@ public class N4jscOptions {
 	}
 
 	/** @return given project directory(s) */
-	public List<File> getDirs() {
-		return options.getDirs();
-	}
-
-	/** @return given project directory or null */
 	public File getDir() {
-		List<File> dirs = getDirs();
-		if (dirs == null || dirs.isEmpty()) {
-			return null;
-		}
-		return dirs.get(0);
+		return options.getDir();
 	}
 
 	/** @return true iff {@code --help} */
@@ -631,7 +623,7 @@ public class N4jscOptions {
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
-		out.println(getUsage());
+		out.println(getUsage(this));
 
 		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(this.options.newInstance());
 
@@ -642,18 +634,12 @@ public class N4jscOptions {
 		Locale.setDefault(curLocale);
 	}
 
-	private String getUsage() {
-		String goal = options.isImplicitGoal() ? "[GOAL]" : getGoal().name();
-		String usage = String.format(USAGE_TEMPLATE, goal);
-		return usage;
-	}
-
 	/** @return a string that lists all relevant settings of n4jsc.jar */
 	public String toSettingsString() {
 		String s = "N4jsc.options=";
 		s += "\n  Current execution directory=" + new File(".").toPath().toAbsolutePath();
 		s += "\n  goal=" + getGoal();
-		s += "\n  srcFiles=" + options.getDirs().stream().map(f -> f.getAbsolutePath()).reduce((a, b) -> a + ", " + b);
+		s += "\n  dir=" + options.getDir();
 		s += "\n  showSetup=" + options.showSetup;
 		s += "\n  verbose=" + options.verbose;
 		s += options.toSettingsString();
@@ -664,7 +650,7 @@ public class N4jscOptions {
 	public List<String> toArgs() {
 		List<String> args = new ArrayList<>();
 		args.add(getGoal().name());
-		for (N4JSCmdLineParser.ParsedOption po : getDefinedOptions().values()) {
+		for (ParsedOption po : getDefinedOptions().values()) {
 			NamedOptionDef od = po.optionDef;
 			String value = po.givenValue;
 			args.add(od.name());
@@ -675,7 +661,9 @@ public class N4jscOptions {
 				args.add(value);
 			}
 		}
-		args.addAll(getDirs().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList()));
+		if (getDir() != null) {
+			args.add(getDir().toString());
+		}
 
 		return args;
 	}

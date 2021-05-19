@@ -99,7 +99,7 @@ public class N4jscMain {
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			N4jscConsole.println(N4jscOptions.USAGE_TEMPLATE);
+			N4jscConsole.println(N4jscOptions.USAGE);
 			System.exit(e.getExitCode());
 		}
 
@@ -140,9 +140,14 @@ public class N4jscMain {
 		case watch:
 			return backend.goalWatch(options);
 
-		default:
-			throw new N4jscException(N4jscExitCode.ARGUMENT_GOAL_INVALID);
+		case init:
+			return backend.goalInit(options);
+
+		case setVersions:
+			return backend.goalSetVersions(options);
 		}
+
+		throw new N4jscException(N4jscExitCode.ARGUMENT_GOAL_INVALID);
 	}
 
 	private static void writePerformanceReportIfRequested(N4jscOptions options) throws N4jscException {

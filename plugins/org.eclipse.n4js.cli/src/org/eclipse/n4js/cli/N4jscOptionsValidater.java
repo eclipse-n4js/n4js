@@ -51,7 +51,7 @@ public class N4jscOptionsValidater {
 		case init:
 			break;
 
-		case set_version:
+		case setVersions:
 			break;
 
 		default:
@@ -72,7 +72,7 @@ public class N4jscOptionsValidater {
 			throw new N4jscException(N4jscExitCode.OPTION_INVALID, msg);
 		}
 
-		if (!options.getDirs().isEmpty()) {
+		if (options.getDir() != null) {
 			String msg = "Goal LSP does not expect superfluous directory argument";
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
@@ -92,31 +92,24 @@ public class N4jscOptionsValidater {
 
 	/** Make sure the srcFiles are valid */
 	private static void validateFilesAndDirectories(N4jscOptions options) throws N4jscException {
-		if (options.getDirs().isEmpty()) {
+		if (options.getDir() == null) {
 			String msg = "n4js directory(s) missing";
-			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
-		}
-		if (options.getDirs().size() > 1) {
-			String msg = "Multiple project directories not supported.";
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
 		}
 
 		StringJoiner notExisting = new StringJoiner(",");
 		StringJoiner neitherFileNorDir = new StringJoiner(",");
-		for (File dir : options.getDirs()) {
-			if (!dir.exists()) {
-				notExisting.add(dir.toString());
-			} else if (dir.isDirectory()) {
-				continue;
-			} else if (dir.isFile() && N4JSGlobals.PACKAGE_JSON.equals(dir.getName())) {
-				continue;
-			} else {
-				neitherFileNorDir.add(dir.toString());
-			}
+		File dir = options.getDir();
+		if (!dir.exists()) {
+			notExisting.add(dir.toString());
 		}
 		if (!notExisting.toString().isEmpty()) {
 			String msg = "directory(s) do not exist: " + notExisting.toString();
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, msg);
+		}
+
+		if (!dir.isDirectory() && !(dir.isFile() && N4JSGlobals.PACKAGE_JSON.equals(dir.getName()))) {
+			neitherFileNorDir.add(dir.toString());
 		}
 		if (!neitherFileNorDir.toString().isEmpty()) {
 			String msg = "directory(s) are neither directory nor a package.json file: " + neitherFileNorDir.toString();
