@@ -88,6 +88,7 @@ import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelp
 import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 import org.eclipse.n4js.xtext.ide.server.util.ParamHelper;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
+import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.xtext.ide.server.ICapabilitiesContributor;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
@@ -106,7 +107,6 @@ import org.eclipse.xtext.ide.server.signatureHelp.ISignatureHelpService;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Objects;
@@ -777,8 +777,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		@Override
 		public ResourceSet newLiveScopeResourceSet(URI uri) {
 			XtextResourceSet resourceSet = resourceSetProvider.get();
-			ResourceDescriptionsData index = resourceTaskManager.createLiveScopeIndex();
-			ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(resourceSet, index);
+			XChunkedResourceDescriptions index = resourceTaskManager.createLiveScopeIndex();
+			index.setResourceSet(resourceSet);
 			return resourceSet;
 		}
 
