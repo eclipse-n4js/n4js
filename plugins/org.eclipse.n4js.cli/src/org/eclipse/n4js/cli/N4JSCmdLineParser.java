@@ -32,7 +32,6 @@ import org.kohsuke.args4j.spi.Setter;
 import org.kohsuke.args4j.spi.StringOptionHandler;
 import org.kohsuke.args4j.spi.SubCommand;
 import org.kohsuke.args4j.spi.SubCommandHandler;
-import org.kohsuke.args4j.spi.SubCommands;
 
 /**
  * This class enhances kohsuke's library:
@@ -121,13 +120,11 @@ public class N4JSCmdLineParser extends CmdLineParser {
 	/** Patched {@link SubCommandHandler} */
 	static public class N4JSSubCommandHandler extends SubCommandHandler {
 		final private N4JSCmdLineParser clp;
-		private final SubCommands commands;
 
 		/** Constructor */
 		public N4JSSubCommandHandler(CmdLineParser parser, OptionDef option, Setter<Object> setter) {
 			super(parser, option, setter);
 			clp = (N4JSCmdLineParser) parser;
-			commands = setter.asAnnotatedElement().getAnnotation(SubCommands.class);
 		}
 
 		@Override
