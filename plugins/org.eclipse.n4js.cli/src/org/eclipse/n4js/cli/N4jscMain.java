@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -31,8 +32,15 @@ public class N4jscMain {
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
+		main(null, args);
+	}
 
+	/** Entry point of n4jsc compiler from tests to modify the working directory */
+	public static void main(Path workDir, String[] args) {
 		final N4jscOptions options = getOptions(args);
+		if (workDir != null) {
+			options.workingDir = workDir;
+		}
 
 		if (options.isVerbose()) {
 			Logger.getRootLogger().setLevel(Level.DEBUG);
@@ -78,6 +86,7 @@ public class N4jscMain {
 			}
 			System.exit(e.getExitCode());
 		}
+
 	}
 
 	private static N4jscOptions getOptions(String[] args) {

@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.cli.helper;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
@@ -55,13 +54,13 @@ public class InProcessExecuter {
 	 * Calls main entry point of N4jsc with the given args. Checks that the given exit code equals the actual exit code
 	 * of the invocation. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
-	protected CliCompileResult n4jsc(File workspaceRoot, String[] args, CliCompileResult cliResult) {
+	protected CliCompileResult n4jsc(Path workDir, String[] args, CliCompileResult cliResult) {
 		Stopwatch sw = Stopwatch.createStarted();
 
 		try {
 			setRedirections();
-			cliResult.workingDir = workspaceRoot.toString();
-			N4jscMain.main(args);
+			cliResult.workingDir = workDir.toString();
+			N4jscMain.main(workDir, args);
 
 			cliResult.exitCode = 0;
 
@@ -94,7 +93,7 @@ public class InProcessExecuter {
 				Map<String, String> projectMap = new TreeMap<>();
 				for (ProjectConfigSnapshot pConfig : projects) {
 					Path projectPath = URIUtils.toPath(pConfig.getPath());
-					Path relativeProjectPath = workspaceRoot.toPath().relativize(projectPath);
+					Path relativeProjectPath = workDir.relativize(projectPath);
 					projectMap.put(pConfig.getName(), relativeProjectPath.toString());
 				}
 				cliResult.projects = projectMap;

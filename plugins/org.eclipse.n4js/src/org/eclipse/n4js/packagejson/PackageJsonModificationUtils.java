@@ -200,9 +200,12 @@ public class PackageJsonModificationUtils {
 	/**
 	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(Path, Set, String)}, but for all
 	 * <code>package.json</code> files in the entire folder tree below the given root folder.
+	 *
+	 * @return list of all modified package.json files
 	 */
-	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<N4JSProjectName> projectNames,
+	public static List<Path> setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<N4JSProjectName> projectNames,
 			String versionConstraintToSet) throws IOException {
+
 		List<Path> packageJsonFiles = new LinkedList<>();
 		EnumSet<FileVisitOption> options = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
 		Files.walkFileTree(root, options, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
@@ -222,16 +225,24 @@ public class PackageJsonModificationUtils {
 				return FileVisitResult.CONTINUE;
 			}
 		});
+
+		List<Path> modifiedFiles = new LinkedList<>();
 		for (Path file : packageJsonFiles) {
-			setVersionOfDependenciesInPackageJsonFile(file, projectNames, versionConstraintToSet);
+			boolean modified = setVersionOfDependenciesInPackageJsonFile(file, projectNames, versionConstraintToSet);
+			if (modified) {
+				modifiedFiles.add(file);
+			}
 		}
+		return modifiedFiles;
 	}
 
 	/**
 	 * Same as {@link #setVersionOfDependenciesInPackageJsonString(String, Set, String)}, but changes a
 	 * <code>package.json</code> file on disk.
+	 *
+	 * @return true iff the package.json file was modified
 	 */
-	public static void setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
+	public static boolean setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
 			Set<N4JSProjectName> projectNames, String versionConstraintToSet) throws IOException {
 		String packageJsonStr = Files.readString(packageJsonFile);
 		Optional<String> result = setVersionOfDependenciesInPackageJsonString(packageJsonStr, projectNames,
@@ -239,6 +250,7 @@ public class PackageJsonModificationUtils {
 		if (result.isPresent()) {
 			Files.writeString(packageJsonFile, result.get(), StandardOpenOption.TRUNCATE_EXISTING);
 		}
+		return result.isPresent();
 	}
 
 	/**

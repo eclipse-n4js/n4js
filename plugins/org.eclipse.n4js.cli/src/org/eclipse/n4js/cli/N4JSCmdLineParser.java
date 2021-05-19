@@ -13,9 +13,9 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -46,17 +46,23 @@ public class N4JSCmdLineParser extends CmdLineParser {
 
 	/** Constructor */
 	public N4JSCmdLineParser(Object bean) {
-		this(bean, new LinkedHashMap<>());
+		this(bean, new LinkedHashMap<>(), new ArrayList<>());
 	}
 
 	/** Constructor */
-	public N4JSCmdLineParser(Object bean, Map<String, ParsedOption> definedOptions) {
+	public N4JSCmdLineParser(Object bean, LinkedHashMap<String, ParsedOption<NamedOptionDef>> definedOptions,
+			List<ParsedOption<OptionDef>> definedArguments) {
+
 		super(bean);
 		this.definedOptions = definedOptions;
+		this.definedArguments = definedArguments;
 	}
 
 	/** All user given options */
-	final Map<String, ParsedOption> definedOptions;
+	final LinkedHashMap<String, ParsedOption<NamedOptionDef>> definedOptions;
+
+	/** All user given arguments */
+	final List<ParsedOption<OptionDef>> definedArguments;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -102,20 +108,32 @@ public class N4JSCmdLineParser extends CmdLineParser {
 
 	private void addDefinedOption(OptionDef optionDef, String defaultValue, String givenValue) {
 		if (optionDef instanceof NamedOptionDef) {
+			ParsedOption<NamedOptionDef> parsedOption = new ParsedOption<>((NamedOptionDef) optionDef, defaultValue,
+					givenValue);
 			NamedOptionDef nod = (NamedOptionDef) optionDef;
-			ParsedOption parsedOption = new ParsedOption(nod, defaultValue, givenValue);
 			definedOptions.put(nod.name(), parsedOption);
+		} else {
+			ParsedOption<OptionDef> parsedOption = new ParsedOption<>(optionDef, defaultValue, givenValue);
+			definedArguments.add(parsedOption);
 		}
 	}
 
 	/** Patched {@link SubCommandHandler} */
 	static public class N4JSSubCommandHandler extends SubCommandHandler {
+		final private N4JSCmdLineParser clp;
 		private final SubCommands commands;
 
 		/** Constructor */
 		public N4JSSubCommandHandler(CmdLineParser parser, OptionDef option, Setter<Object> setter) {
 			super(parser, option, setter);
+			clp = (N4JSCmdLineParser) parser;
 			commands = setter.asAnnotatedElement().getAnnotation(SubCommands.class);
+		}
+
+		@Override
+		protected Object subCommand(SubCommand c, final Parameters params) throws CmdLineException {
+			clp.addDefinedOption(option, this.printDefaultValue(), params.getParameter(0));
+			return super.subCommand(c, params);
 		}
 
 		@Override
@@ -123,34 +141,11 @@ public class N4JSCmdLineParser extends CmdLineParser {
 			return 0;
 		}
 
-		/** @return the default sub command */
-		protected Object defaultSubCommand(final Parameters params) throws CmdLineException {
-			SubCommand defaultSubCommand = commands.value()[0];
-			Object subCmd = instantiate(defaultSubCommand);
-			CmdLineParser p = configureParser(subCmd, defaultSubCommand);
-			p.parseArgument(new AbstractList<String>() {
-				@Override
-				public String get(int index) {
-					try {
-						return params.getParameter(index);
-					} catch (CmdLineException e) {
-						// invalid index was accessed.
-						throw new IndexOutOfBoundsException();
-					}
-				}
-
-				@Override
-				public int size() {
-					return params.size();
-				}
-			});
-			return subCmd;
-		}
-
 		@Override
 		protected CmdLineParser configureParser(Object subCmd, SubCommand c) {
 			// owner.getArguments().clear(); // very dirty hack to avoid complaints about missing dir argument
-			return new N4JSCmdLineParser(subCmd, ((N4JSCmdLineParser) owner).definedOptions);
+			N4JSCmdLineParser n4jsCmdLineParser = (N4JSCmdLineParser) owner;
+			return new N4JSCmdLineParser(subCmd, n4jsCmdLineParser.definedOptions, n4jsCmdLineParser.definedArguments);
 		}
 
 		@Override
@@ -167,16 +162,16 @@ public class N4JSCmdLineParser extends CmdLineParser {
 	}
 
 	/** Data class to hold information about user given command line options */
-	static public class ParsedOption {
+	static public class ParsedOption<T extends OptionDef> {
 		/** Option the user gave */
-		public final NamedOptionDef optionDef;
+		public final T optionDef;
 		/** Default value of that option */
 		public final String defaultValue;
 		/** User given value for that option */
 		public final String givenValue;
 
 		/** Constructor */
-		public ParsedOption(NamedOptionDef optionDef, String defaultValue, String givenValue) {
+		public ParsedOption(T optionDef, String defaultValue, String givenValue) {
 			this.optionDef = optionDef;
 			this.defaultValue = defaultValue;
 			this.givenValue = givenValue;

@@ -12,9 +12,11 @@ package org.eclipse.n4js.cli;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
+import org.eclipse.n4js.utils.Strings;
 
 /**
  * Performs the n4jsc goal set-versions
@@ -27,8 +29,20 @@ public class N4jscSetVersions {
 		String newVersionString = options.getSetVersions();
 
 		try {
-			PackageJsonModificationUtils.setVersionOfDependenciesInAllPackageJsonFiles(workingDirectory,
-					N4JSGlobals.ALL_N4JS_LIBS, newVersionString);
+			List<Path> modifiedFiles = PackageJsonModificationUtils.setVersionOfDependenciesInAllPackageJsonFiles(
+					workingDirectory, N4JSGlobals.ALL_N4JS_LIBS, newVersionString);
+
+			String msg = "";
+			if (modifiedFiles.isEmpty()) {
+				msg += "Modified version string of dependencies to:" + "\n - ";
+				msg += Strings.join("\n - ", N4JSGlobals.ALL_N4JS_LIBS);
+				msg += "\n" + "in the following files:";
+				msg += Strings.join("\n - ", modifiedFiles);
+			} else {
+				msg += "No files were modified in " + options.getWorkingDirectory();
+			}
+
+			N4jscConsole.println(msg);
 			return N4jscExitState.SUCCESS;
 		} catch (IOException e) {
 			return new N4jscExitState(N4jscExitCode.SET_VERSIONS_ERROR, e.getMessage());

@@ -31,6 +31,7 @@ import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.NamedOptionDef;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.OptionDef;
 import org.kohsuke.args4j.spi.SubCommand;
 import org.kohsuke.args4j.spi.SubCommands;
 
@@ -59,7 +60,7 @@ public class N4jscOptions {
 
 	/** @return the usage string respecting the goal specified in the given options */
 	public static String getUsage(N4jscOptions options) {
-		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
+		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().goalName();
 		String dir = options.options.getDir() == null ? "" : " [DIR]";
 		String usage = String.format(USAGE_TEMPLATE, goal, dir);
 		return usage;
@@ -432,6 +433,9 @@ public class N4jscOptions {
 	/** Internal data store of options */
 	protected AbstractOptions options;
 
+	/** Working directory */
+	protected Path workingDir = new File(".").getAbsoluteFile().toPath();
+
 	/** Constructor */
 	public N4jscOptions() {
 		options = new ImplicitCompileOptions();
@@ -463,7 +467,7 @@ public class N4jscOptions {
 	protected void integrateEnvironment() {
 		if (options instanceof AbstractCompileRelatedOptions) {
 			// check for performance data collection system environment variable
-			Map<String, ParsedOption> opts = getDefinedOptions();
+			Map<String, ParsedOption<NamedOptionDef>> opts = getDefinedOptions();
 			if (!opts.containsKey("--performanceReport") && System.getenv(N4JSC_PERFORMANCE_REPORT_ENV) != null) {
 				String rawPath = System.getenv(N4JSC_PERFORMANCE_REPORT_ENV);
 				File performanceReportFile = new File(rawPath);
@@ -512,8 +516,13 @@ public class N4jscOptions {
 		}
 	}
 
+	/** @return list of all user defined arguments */
+	public List<ParsedOption<OptionDef>> getDefinedArguments() {
+		return parser.definedArguments;
+	}
+
 	/** @return list of all user defined options */
-	public Map<String, ParsedOption> getDefinedOptions() {
+	public Map<String, ParsedOption<NamedOptionDef>> getDefinedOptions() {
 		return parser.definedOptions;
 	}
 
@@ -620,7 +629,7 @@ public class N4jscOptions {
 
 	/** @return true iff either option {@code performanceKey} or {@code performanceReport} was given */
 	public boolean isDefinedPerformanceOption() {
-		Map<String, ParsedOption> opts = getDefinedOptions();
+		Map<String, ParsedOption<NamedOptionDef>> opts = getDefinedOptions();
 		if (opts.containsKey("--performanceKey") || opts.containsKey("--performanceReport")) {
 			return true;
 		}
@@ -629,7 +638,7 @@ public class N4jscOptions {
 
 	/** @return the working directory of n4jsc.jar */
 	public Path getWorkingDirectory() {
-		return new File(".").getAbsoluteFile().toPath();
+		return workingDir;
 	}
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
@@ -649,7 +658,7 @@ public class N4jscOptions {
 	public String toSettingsString() {
 		String s = "N4jsc.options=";
 		s += "\n  Current execution directory=" + new File(".").toPath().toAbsolutePath();
-		s += "\n  goal=" + getGoal();
+		s += "\n  goal=" + getGoal().goalName();
 		s += "\n  dir=" + options.getDir();
 		s += "\n  showSetup=" + options.showSetup;
 		s += "\n  verbose=" + options.verbose;
@@ -657,11 +666,21 @@ public class N4jscOptions {
 		return s;
 	}
 
-	/** @return array of the goal followed by all options followed by all directory arguments */
+	/** @return array all arguments followed by all options */
 	public List<String> toArgs() {
 		List<String> args = new ArrayList<>();
-		args.add(getGoal().name());
-		for (ParsedOption po : getDefinedOptions().values()) {
+
+		for (ParsedOption<OptionDef> pa : getDefinedArguments()) {
+			String value = pa.givenValue;
+			if (value != null) {
+				if (value.contains(" ")) {
+					value = "\"" + value + "\"";
+				}
+				args.add(value);
+			}
+		}
+
+		for (ParsedOption<NamedOptionDef> po : getDefinedOptions().values()) {
 			NamedOptionDef od = po.optionDef;
 			String value = po.givenValue;
 			args.add(od.name());
@@ -671,9 +690,6 @@ public class N4jscOptions {
 				}
 				args.add(value);
 			}
-		}
-		if (getDir() != null) {
-			args.add(getDir().toString());
 		}
 
 		return args;

@@ -79,7 +79,7 @@ public class CliTools {
 	 */
 	public void callN4jscFrontendInprocess(String[] options, boolean removeUsage, CliCompileResult result) {
 		InProcessExecuter inProcessExecuter = new InProcessExecuter(false, inheritIO);
-		inProcessExecuter.n4jsc(new File("").getAbsoluteFile(), options, result);
+		inProcessExecuter.n4jsc(new File("").getAbsoluteFile().toPath(), options, result);
 		trimOutputs(result, removeUsage);
 		checkForFailure("n4jsc (front-end only, in process)", result, ignoreFailure);
 	}
@@ -93,17 +93,16 @@ public class CliTools {
 	public void callN4jscInprocess(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		String[] args = options.toArgs().toArray(String[]::new);
 		InProcessExecuter inProcessExecuter = new InProcessExecuter(true, inheritIO);
-		inProcessExecuter.n4jsc(options.getDir(), args, result);
+		inProcessExecuter.n4jsc(options.getWorkingDirectory(), args, result);
 		trimOutputs(result, removeUsage);
 		checkForFailure("n4jsc (with backend, in process)", result, ignoreFailure);
 	}
 
 	/** Runs n4jsc.jar in a separate process and updates the {@code cliResult}. Respects given environment variables. */
 	public void callN4jscExprocess(N4jscOptions options, boolean removeUsage, CliCompileProcessResult cliResult) {
-		File dir = options.getDir();
-		File fileArg = dir == null ? new File("").getAbsoluteFile() : dir;
+		Path workDir = options.getWorkingDirectory();
 		ProcessResult n4jscResult = withoutCorruptingGlobalState(
-				() -> getExProcessExecuter().n4jscRun(fileArg.toPath(), environment, options));
+				() -> getExProcessExecuter().n4jscRun(workDir, environment, options));
 
 		cliResult.workingDir = n4jscResult.getWorkingDir();
 		cliResult.command = n4jscResult.getCommand();
@@ -113,7 +112,7 @@ public class CliTools {
 		cliResult.errOut = n4jscResult.getErrOut();
 
 		// save transpiled files
-		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(fileArg.toPath());
+		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workDir);
 
 		trimOutputs(cliResult, removeUsage);
 		checkForFailure("n4jsc (ex process)", cliResult, ignoreFailure);

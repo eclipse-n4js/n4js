@@ -12,14 +12,18 @@ package org.eclipse.n4js.cli;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.n4js.cli.N4JSCmdLineParser.ParsedOption;
+import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.NamedOptionDef;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.OptionDef;
 
 import com.google.common.base.Objects;
 
@@ -140,9 +144,10 @@ public class N4jscTestOptions extends N4jscOptions {
 	}
 
 	/** @return a new instance of {@link N4jscTestOptions} with goal set-versions */
-	static public N4jscTestOptions SET_VERSIONS() {
+	static public N4jscTestOptions SET_VERSIONS(String setVersions) {
 		N4jscTestOptions instance = new N4jscTestOptions();
 		instance.options = new SetVersionsOptions();
+		instance.setDefinedOption(() -> ((SetVersionsOptions) instance.options).setVersion = setVersions);
 		return instance;
 	}
 
@@ -153,7 +158,9 @@ public class N4jscTestOptions extends N4jscOptions {
 		return instance;
 	}
 
-	private final Map<String, N4JSCmdLineParser.ParsedOption> definedOptions = new LinkedHashMap<>();
+	private final LinkedHashMap<String, ParsedOption<NamedOptionDef>> definedOptions = new LinkedHashMap<>();
+
+	private final List<ParsedOption<OptionDef>> definedArguments = new ArrayList<>();
 
 	/** Set goal to compile */
 	public N4jscTestOptions f(File... files) {
@@ -163,8 +170,10 @@ public class N4jscTestOptions extends N4jscOptions {
 	/** Set goal to compile */
 	public N4jscTestOptions f(List<File> files) {
 		if (!files.isEmpty()) {
-			options.setDir(files.get(0));
-			interpretAndAdjustDirs();
+			setDefinedOption(() -> {
+				options.setDir(files.get(0));
+				interpretAndAdjustDirs();
+			});
 		}
 		return this;
 	}
@@ -260,19 +269,44 @@ public class N4jscTestOptions extends N4jscOptions {
 		return this;
 	}
 
+	/** Sets the working directory */
+	public N4jscTestOptions setWorkingDirectory(Path directory) {
+		setDefinedOption(() -> this.workingDir = directory);
+		return this;
+	}
+
 	@Override
-	public Map<String, N4JSCmdLineParser.ParsedOption> getDefinedOptions() {
+	public Map<String, ParsedOption<NamedOptionDef>> getDefinedOptions() {
 		return definedOptions;
+	}
+
+	@Override
+	public List<ParsedOption<OptionDef>> getDefinedArguments() {
+		if (!(options instanceof ImplicitCompileOptions)) {
+			try {
+				Field fieldCmd = ImplicitCompileOptions.class.getDeclaredField("cmd");
+				Argument argumentAnnotation = fieldCmd.getAnnotationsByType(Argument.class)[0];
+				OptionDef od = new OptionDef(argumentAnnotation, argumentAnnotation.multiValued());
+				ParsedOption<OptionDef> goal = new ParsedOption<>(od, null, options.getGoal().goalName());
+				List<ParsedOption<OptionDef>> extArguments = new ArrayList<>();
+				extArguments.add(goal);
+				extArguments.addAll(definedArguments);
+				return extArguments;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return definedArguments;
 	}
 
 	/**
 	 * Since the options are not read by a parser (instead just set in this class), the definedOptions need to be
 	 * reconstructed using the actual option variables and annotations.
 	 */
-	private boolean setDefinedOption(Runnable setter) {
-		int definedOptionsCount = definedOptions.size();
-
+	private void setDefinedOption(Runnable setter) {
 		Map<Field, Object> optionFieldValues = new LinkedHashMap<>();
+		Map<Field, Object> argumentFieldValues = new LinkedHashMap<>();
+
 		try {
 			List<Field> fields = new ArrayList<>();
 			Class<?> optionClass = options.getClass();
@@ -284,10 +318,11 @@ public class N4jscTestOptions extends N4jscOptions {
 			for (Field field : fields) {
 				Object currentValue = field.get(options);
 				if (currentValue != null && currentValue != Boolean.FALSE) {
-					Option annotationOption = field.getAnnotation(Option.class);
-					if (annotationOption != null) {
-
+					if (field.getAnnotation(Option.class) != null) {
 						optionFieldValues.put(field, currentValue);
+					}
+					if (field.getAnnotation(Argument.class) != null) {
+						argumentFieldValues.put(field, currentValue);
 					}
 				}
 			}
@@ -299,17 +334,30 @@ public class N4jscTestOptions extends N4jscOptions {
 				if (currentValue != null && currentValue != Boolean.FALSE) {
 					Option annotationOption = field.getAnnotation(Option.class);
 					if (annotationOption != null) {
-
 						Object lastValue = optionFieldValues.get(field);
 						if (!Objects.equal(lastValue, currentValue)) {
 							NamedOptionDef nod = new NamedOptionDef(annotationOption);
 							String lastValueStr = lastValue == null ? "" : String.valueOf(lastValue);
 							String currentValueStr = currentValue == Boolean.TRUE ? null : String.valueOf(currentValue);
 
-							N4JSCmdLineParser.ParsedOption pOption = new N4JSCmdLineParser.ParsedOption(
-									nod, lastValueStr, currentValueStr);
+							ParsedOption<NamedOptionDef> pOption = new ParsedOption<>(nod, lastValueStr,
+									currentValueStr);
 
 							definedOptions.put(nod.name(), pOption);
+						}
+					}
+
+					Argument annotationArgument = field.getAnnotation(Argument.class);
+					if (annotationArgument != null) {
+						Object lastValue = argumentFieldValues.get(field);
+						if (!Objects.equal(lastValue, currentValue)) {
+							OptionDef od = new OptionDef(annotationArgument, annotationArgument.multiValued());
+							String lastValueStr = lastValue == null ? "" : String.valueOf(lastValue);
+							String currentValueStr = currentValue == Boolean.TRUE ? null : String.valueOf(currentValue);
+
+							ParsedOption<OptionDef> pArgument = new ParsedOption<>(od, lastValueStr, currentValueStr);
+
+							definedArguments.add(pArgument);
 						}
 					}
 				}
@@ -318,7 +366,5 @@ public class N4jscTestOptions extends N4jscOptions {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return definedOptionsCount < definedOptions.size();
 	}
 }
