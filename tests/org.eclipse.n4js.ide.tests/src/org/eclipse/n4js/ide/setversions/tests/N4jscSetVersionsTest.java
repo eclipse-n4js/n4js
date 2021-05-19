@@ -55,7 +55,35 @@ public class N4jscSetVersionsTest extends AbstractCliCompileTest {
 	@Test
 	public void testSetVersions() {
 		CliCompileResult cliResult = n4jsc(SET_VERSIONS("1.2.3").setWorkingDirectory(proot.toPath()), SUCCESS);
-		assertEquals("", cliResult.getStdOut());
+		assertEquals("Modified version string of dependencies to:\n"
+				+ " - n4js-cli\n"
+				+ " - n4js-mangelhaft-cli\n"
+				+ " - n4js-runtime\n"
+				+ " - n4js-runtime-ecma402\n"
+				+ " - n4js-runtime-es2015\n"
+				+ " - n4js-runtime-esnext\n"
+				+ " - n4js-runtime-fetch\n"
+				+ " - n4js-runtime-html5\n"
+				+ " - n4js-runtime-node\n"
+				+ " - n4js-runtime-node-tests\n"
+				+ " - n4js-runtime-v8\n"
+				+ " - org.eclipse.n4js.mangelhaft\n"
+				+ " - org.eclipse.n4js.mangelhaft.assert\n"
+				+ " - org.eclipse.n4js.mangelhaft.assert.test\n"
+				+ " - org.eclipse.n4js.mangelhaft.reporter.console\n"
+				+ " - org.eclipse.n4js.mangelhaft.reporter.ide\n"
+				+ " - org.eclipse.n4js.mangelhaft.reporter.ide.test\n"
+				+ " - org.eclipse.n4js.mangelhaft.reporter.xunit\n"
+				+ " - org.eclipse.n4js.mangelhaft.test\n"
+				+ "in the following files:\n"
+				+ " - .../PSingle/package.json\n"
+				+ " - .../P4/package.json\n"
+				+ " - .../P3/package.json\n"
+				+ " - .../P2/package.json\n"
+				+ " - .../TestCleanPrj1/package.json\n"
+				+ " - .../P1/package.json\n"
+				+ " - .../TestCleanPrj2/package.json\n"
+				+ " - .../Test01/package.json", cliResult.getStdOut());
 	}
 
 }

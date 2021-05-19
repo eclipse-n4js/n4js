@@ -34,12 +34,12 @@ public class N4jscSetVersions {
 
 			String msg = "";
 			if (modifiedFiles.isEmpty()) {
+				msg += "No files were modified in " + options.getWorkingDirectory();
+			} else {
 				msg += "Modified version string of dependencies to:" + "\n - ";
 				msg += Strings.join("\n - ", N4JSGlobals.ALL_N4JS_LIBS);
-				msg += "\n" + "in the following files:";
+				msg += "\n" + "in the following files:" + "\n - ";
 				msg += Strings.join("\n - ", modifiedFiles);
-			} else {
-				msg += "No files were modified in " + options.getWorkingDirectory();
 			}
 
 			N4jscConsole.println(msg);
