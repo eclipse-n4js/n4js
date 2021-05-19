@@ -186,6 +186,30 @@ public final class N4JSGlobals {
 	public static final String TEST_CATALOG = "test-catalog.json";
 
 	/**
+	 * All project names of n4js libraries.
+	 */
+	public static final Set<N4JSProjectName> ALL_N4JS_LIBS = ImmutableSet.of(
+			new N4JSProjectName("n4js-cli"),
+			new N4JSProjectName("n4js-mangelhaft-cli"),
+			new N4JSProjectName("n4js-runtime"),
+			new N4JSProjectName("n4js-runtime-ecma402"),
+			new N4JSProjectName("n4js-runtime-es2015"),
+			new N4JSProjectName("n4js-runtime-esnext"),
+			new N4JSProjectName("n4js-runtime-fetch"),
+			new N4JSProjectName("n4js-runtime-html5"),
+			new N4JSProjectName("n4js-runtime-node"),
+			new N4JSProjectName("n4js-runtime-node-tests"),
+			new N4JSProjectName("n4js-runtime-v8"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft.assert"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft.assert.test"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.console"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.ide"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.ide.test"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.xunit"),
+			new N4JSProjectName("org.eclipse.n4js.mangelhaft.test"));
+
+	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.
 	 *
 	 * @see N4JSQualifiedNameConverter#DELIMITER

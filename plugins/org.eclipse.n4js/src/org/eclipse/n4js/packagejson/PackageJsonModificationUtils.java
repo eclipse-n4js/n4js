@@ -32,6 +32,7 @@ import java.util.Stack;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
@@ -200,7 +201,7 @@ public class PackageJsonModificationUtils {
 	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(Path, Set, String)}, but for all
 	 * <code>package.json</code> files in the entire folder tree below the given root folder.
 	 */
-	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<String> projectNames,
+	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<N4JSProjectName> projectNames,
 			String versionConstraintToSet) throws IOException {
 		List<Path> packageJsonFiles = new LinkedList<>();
 		EnumSet<FileVisitOption> options = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
@@ -231,7 +232,7 @@ public class PackageJsonModificationUtils {
 	 * <code>package.json</code> file on disk.
 	 */
 	public static void setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
-			Set<String> projectNames, String versionConstraintToSet) throws IOException {
+			Set<N4JSProjectName> projectNames, String versionConstraintToSet) throws IOException {
 		String packageJsonStr = Files.readString(packageJsonFile);
 		Optional<String> result = setVersionOfDependenciesInPackageJsonString(packageJsonStr, projectNames,
 				versionConstraintToSet);
@@ -252,7 +253,7 @@ public class PackageJsonModificationUtils {
 	 *             in case of parse errors.
 	 */
 	public static Optional<String> setVersionOfDependenciesInPackageJsonString(String packageJson,
-			Set<String> projectNames, String versionConstraintToSet) {
+			Set<N4JSProjectName> projectNames, String versionConstraintToSet) {
 		List<DependencyWithRegion> deps = findDependenciesWithRegion(packageJson);
 		if (deps.isEmpty()) {
 			return Optional.absent();
@@ -271,7 +272,7 @@ public class PackageJsonModificationUtils {
 	}
 
 	private static class DependencyWithRegion {
-		public final String projectName;
+		public final N4JSProjectName projectName;
 		@SuppressWarnings("unused")
 		public final String versionConstraint;
 		/** Zero-based offset of the version constraint in the original JSON input string. */
@@ -279,7 +280,7 @@ public class PackageJsonModificationUtils {
 		/** Length of the version constraint. */
 		public final int length;
 
-		public DependencyWithRegion(String projectName, String versionConstraint, int offset, int length) {
+		public DependencyWithRegion(N4JSProjectName projectName, String versionConstraint, int offset, int length) {
 			this.projectName = projectName;
 			this.versionConstraint = versionConstraint;
 			this.offset = offset;
@@ -322,7 +323,7 @@ public class PackageJsonModificationUtils {
 						&& propertyPath.size() == 1
 						&& ("dependencies".equals(propertyPath.peek()) || "devDependencies".equals(propertyPath.peek()))
 						&& parser.getCurrentName() != null) {
-					String projectName = parser.getCurrentName();
+					N4JSProjectName projectName = new N4JSProjectName(parser.getCurrentName());
 					long offs = parser.getTokenLocation().getCharOffset();
 					long len = parser.getTextLength() + 2;
 					String versionConstraint = jsonStr.substring((int) offs, (int) (offs + len));

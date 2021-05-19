@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -576,6 +577,11 @@ public class N4jscOptions {
 		return (options instanceof AbstractCompileRelatedOptions) && ((AbstractCompileRelatedOptions) options).clean;
 	}
 
+	/** @return argument of setVersions */
+	public String getSetVersions() {
+		return ((SetVersionsOptions) options).setVersion;
+	}
+
 	/** @return true iff {@code --noPersist} */
 	public boolean isNoPersist() {
 		return (options instanceof AbstractCompileRelatedOptions)
@@ -619,6 +625,11 @@ public class N4jscOptions {
 			return true;
 		}
 		return false;
+	}
+
+	/** @return the working directory of n4jsc.jar */
+	public Path getWorkingDirectory() {
+		return new File(".").getAbsoluteFile().toPath();
 	}
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
