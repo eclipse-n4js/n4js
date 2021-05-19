@@ -116,7 +116,13 @@ public class ResourceTaskContext {
 	/** Maps project names to URIs of all resources contained in the project (from the last build). */
 	ImmutableSetMultimap<String, URI> project2BuiltURIs;
 
-	/** Most recent workspace configuration. */
+	/**
+	 * Most recent workspace configuration.
+	 * <p>
+	 * WARNING: this will be <code>null</code> if {@link #mainResource} is not located in a valid workspace or source
+	 * folder. In particular, it will be <code>null</code> if {@code #mainResource} is a newly created and still empty
+	 * project description file.
+	 */
 	WorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
@@ -244,7 +250,7 @@ public class ResourceTaskContext {
 
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 
-		updateProjectDescriptionOnResourceSet();
+		updateProjectDescriptionOnResourceSet(result);
 		// IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
 		// result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
 
@@ -374,7 +380,8 @@ public class ResourceTaskContext {
 			return; // temporarily opened files do not contribute to the parent's shared dirty state index
 		}
 		IResourceDescription newDesc = createResourceDescription();
-		ProjectConfigSnapshot project = workspaceConfig.findProjectContaining(mainURI); // FIXME cache this value!
+		// FIXME cache the following value!
+		ProjectConfigSnapshot project = workspaceConfig != null ? workspaceConfig.findProjectContaining(mainURI) : null;
 		if (project != null) {
 			indexSnapshot.addDescription(project.getName(), newDesc);
 		}
@@ -411,9 +418,8 @@ public class ResourceTaskContext {
 		List<IResourceDescription.Delta> allDeltas = createDeltas(changedDescs, removedURIs);
 		for (IResourceDescription.Delta delta : allDeltas) {
 			URI deltaURI = delta.getUri();
-			ProjectConfigSnapshot project = delta.getNew() != null
-					? newWorkspaceConfig.findProjectContaining(deltaURI)
-					: oldWorkspaceConfig.findProjectContaining(deltaURI);
+			WorkspaceConfigSnapshot wcs = delta.getNew() != null ? newWorkspaceConfig : oldWorkspaceConfig;
+			ProjectConfigSnapshot project = wcs != null ? wcs.findProjectContaining(deltaURI) : null;
 			if (project != null) {
 				indexSnapshot.register(project.getName(), delta);
 			}
@@ -423,10 +429,11 @@ public class ResourceTaskContext {
 
 		workspaceConfig = newWorkspaceConfig;
 
-		boolean workspaceConfigChanged = !workspaceConfig.equals(oldWorkspaceConfig);
+		boolean workspaceConfigChanged = workspaceConfig != null ? !workspaceConfig.equals(oldWorkspaceConfig)
+				: oldWorkspaceConfig != null;
 		if (workspaceConfigChanged) {
 			WorkspaceConfigAdapter.installWorkspaceConfig(mainResourceSet, workspaceConfig);
-			updateProjectDescriptionOnResourceSet();
+			updateProjectDescriptionOnResourceSet(mainResourceSet);
 		}
 
 		// refresh if I am affected by the changes
@@ -447,14 +454,15 @@ public class ResourceTaskContext {
 
 	/**
 	 * Creates a new {@link ProjectDescription} for the project containing the {@link #mainResource} and attaches it to
-	 * the {@link #mainResourceSet}, replacing an already existing project description (if any).
+	 * the given resource set, replacing an already existing project description (if any).
 	 */
-	protected void updateProjectDescriptionOnResourceSet() {
-		ProjectDescription.removeFromEmfObject(mainResourceSet);
-		ProjectConfigSnapshot projectConfig = workspaceConfig.findProjectContaining(mainURI);
+	protected void updateProjectDescriptionOnResourceSet(ResourceSet resourceSet) {
+		ProjectDescription.removeFromEmfObject(resourceSet);
+		ProjectConfigSnapshot projectConfig = workspaceConfig != null ? workspaceConfig.findProjectContaining(mainURI)
+				: null;
 		if (projectConfig != null) {
 			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-			projectDescription.attachToEmfObject(mainResourceSet);
+			projectDescription.attachToEmfObject(resourceSet);
 		}
 	}
 
