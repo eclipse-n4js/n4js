@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.imports;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +52,9 @@ import org.eclipse.xtext.scoping.IScopeProvider;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -145,7 +146,13 @@ public class ReferenceResolutionFinder {
 
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		List<IEObjectDescription> candidates = collectAllElements(scope, acceptor);
+		boolean needCollisionCheck = !isUnresolvedReference;
+
+		List<IEObjectDescription> candidates = new ArrayList<>(512);
+		Multimap<QualifiedName, IEObjectDescription> candidatesPerName = needCollisionCheck ? ArrayListMultimap.create()
+				: null;
+		collectAllElements(scope, candidates, candidatesPerName, acceptor);
+
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
@@ -160,10 +167,15 @@ public class ReferenceResolutionFinder {
 				// note: must go on with resolution computation even if 'candidateProject' is 'null', because this will
 				// happen in some valid cases (e.g. built-in types)
 
-				final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
-						: Optional.of(scope);
+				final Optional<IScope> scopeForCollisionCheck = needCollisionCheck
+						? Optional.of(scope)
+						: Optional.absent();
+				final Multimap<QualifiedName, IEObjectDescription> allElementsForCollisionCheck = needCollisionCheck
+						? candidatesPerName
+						: ArrayListMultimap.create();
 				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
-						requireFullMatch, candidate, candidateProject, scopeForCollisionCheck, conflictChecker);
+						requireFullMatch, candidate, candidateProject, scopeForCollisionCheck,
+						allElementsForCollisionCheck, conflictChecker);
 				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 					acceptor.accept(resolution);
 				}
@@ -172,21 +184,31 @@ public class ReferenceResolutionFinder {
 	}
 
 	/**
+	 * @param addHere
+	 *            elements will be added here. This is required even if <code>addHereByName</code> is given, to preserve
+	 *            the correct order of elements.
+	 * @param addHereByName
+	 *            iff non-<code>null</code>, elements will also be added here, indexed by name.
 	 * @param acceptor
 	 *            no resolutions will be passed to the acceptor by this method, only used for cancellation handling.
 	 */
-	private List<IEObjectDescription> collectAllElements(IScope scope, IResolutionAcceptor acceptor) {
+	private void collectAllElements(IScope scope, List<IEObjectDescription> addHere,
+			Multimap<QualifiedName, IEObjectDescription> addHereByName, IResolutionAcceptor acceptor) {
 		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
 			if (!acceptor.canAcceptMoreProposals()) {
-				return Collections.emptyList();
+				return;
 			}
-			List<IEObjectDescription> result = new ArrayList<>(42);
+			// note: even if we compute the Multimap, the separate list is necessary to retain the order (which is
+			// necessary for correct shadowing)
 			Iterator<IEObjectDescription> iter = scope.getAllElements().iterator();
 			// note: checking #canAcceptMoreProposals() in next line is required to quickly react to cancellation
 			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
-				result.add(iter.next());
+				IEObjectDescription curr = iter.next();
+				addHere.add(curr);
+				if (addHereByName != null) {
+					addHereByName.put(curr.getName(), curr);
+				}
 			}
-			return result;
 		}
 	}
 
@@ -214,11 +236,14 @@ public class ReferenceResolutionFinder {
 	 */
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
 			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
-			Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
+			Optional<IScope> scopeForCollisionCheck,
+			Multimap<QualifiedName, IEObjectDescription> allElementsForCollisionCheck,
+			Predicate<String> conflictChecker) {
 
 		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, candidateProjectOrNull,
-					scopeForCollisionCheck, text, requireFullMatch, parseTreeNode, conflictChecker);
+					scopeForCollisionCheck, allElementsForCollisionCheck, text, requireFullMatch, parseTreeNode,
+					conflictChecker);
 
 			if (!rrc.isValid) {
 				return null;
@@ -349,6 +374,7 @@ public class ReferenceResolutionFinder {
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
 				Optional<IScope> scopeForCollisionCheck,
+				Multimap<QualifiedName, IEObjectDescription> allElementsForCollisionCheck,
 				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
 
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
@@ -365,7 +391,8 @@ public class ReferenceResolutionFinder {
 				this.parentImportModuleName = getParentImportModuleName();
 			}
 			try (Measurement m = contentAssistDataCollectors.dcDetectProposalConflicts().getMeasurement()) {
-				this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
+				this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck,
+						allElementsForCollisionCheck);
 			}
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate2().getMeasurement()) {
 				this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
@@ -419,19 +446,28 @@ public class ReferenceResolutionFinder {
 			return qName;
 		}
 
-		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
+		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck,
+				Multimap<QualifiedName, IEObjectDescription> allElementsForCollisionCheck) {
 			if (scopeForCollisionCheck.isPresent()) {
 				IScope scope = scopeForCollisionCheck.get();
-				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+				IEObjectDescription candidateViaScope = getCandidateViaScope(scope, allElementsForCollisionCheck);
 				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
 				return candidateViaScope;
 			}
 			return null;
 		}
 
-		private IEObjectDescription getCandidateViaScope(IScope scope) {
-			// performance issue: scope.getElements
-			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(QualifiedName.create(shortName)));
+		private IEObjectDescription getCandidateViaScope(IScope scope,
+				Multimap<QualifiedName, IEObjectDescription> allElements) {
+
+			QualifiedName shortNameQN = QualifiedName.create(shortName);
+			// because 'scope.getElements()' is slow-ish, we use this guard:
+			if (!allElements.containsKey(shortNameQN)) {
+				return null;
+			}
+			// FIXME reconsider using the following (otherwise change the map to a set!!!):
+			// List<IEObjectDescription> elements = Lists.newArrayList(allElements.get(shortNameQN));
+			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(shortNameQN));
 			if (elements.isEmpty()) {
 				return null;
 			}
