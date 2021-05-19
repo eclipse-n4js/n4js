@@ -46,7 +46,7 @@ abstract public class AbstractCliTest<ArgType> {
 
 	/**
 	 * Calls main entry point of N4jsc with the given args. Checks that the actual exit code of the invocation the given
-	 * exit code, but no other assertions are performed. Removes {@link N4jscOptions#USAGE_TEMPLATE} text if desired.
+	 * exit code, but no other assertions are performed. Removes {@link N4jscOptions#USAGE} text if desired.
 	 */
 	protected CliCompileResult n4jsc(ArgType args, int expectedExitCode, boolean removeUsage) {
 		CliCompileResult cliResult = createResult();

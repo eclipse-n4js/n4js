@@ -13,7 +13,6 @@ package org.eclipse.n4js.cli.helper;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -94,15 +93,15 @@ public class CliTools {
 	public void callN4jscInprocess(N4jscOptions options, boolean removeUsage, CliCompileResult result) {
 		String[] args = options.toArgs().toArray(String[]::new);
 		InProcessExecuter inProcessExecuter = new InProcessExecuter(true, inheritIO);
-		inProcessExecuter.n4jsc(options.getDirs().get(0), args, result);
+		inProcessExecuter.n4jsc(options.getDir(), args, result);
 		trimOutputs(result, removeUsage);
 		checkForFailure("n4jsc (with backend, in process)", result, ignoreFailure);
 	}
 
 	/** Runs n4jsc.jar in a separate process and updates the {@code cliResult}. Respects given environment variables. */
 	public void callN4jscExprocess(N4jscOptions options, boolean removeUsage, CliCompileProcessResult cliResult) {
-		List<File> srcFiles = options.getDirs();
-		File fileArg = srcFiles.isEmpty() ? new File("").getAbsoluteFile() : srcFiles.get(0);
+		File dir = options.getDir();
+		File fileArg = dir == null ? new File("").getAbsoluteFile() : dir;
 		ProcessResult n4jscResult = withoutCorruptingGlobalState(
 				() -> getExProcessExecuter().n4jscRun(fileArg.toPath(), environment, options));
 
@@ -238,8 +237,8 @@ public class CliTools {
 		result.errOut = result.errOut.replace(workingDirAbsolute, RELATIVE_PATH);
 
 		if (removeUsage) {
-			result.stdOut = result.stdOut.replace(N4jscOptions.USAGE_TEMPLATE, "");
-			result.errOut = result.errOut.replace(N4jscOptions.USAGE_TEMPLATE, "");
+			result.stdOut = result.stdOut.replace(N4jscOptions.USAGE, "");
+			result.errOut = result.errOut.replace(N4jscOptions.USAGE, "");
 		}
 
 		result.stdOut = result.stdOut.trim();

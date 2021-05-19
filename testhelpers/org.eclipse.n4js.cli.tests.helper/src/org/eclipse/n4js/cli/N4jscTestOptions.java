@@ -162,8 +162,10 @@ public class N4jscTestOptions extends N4jscOptions {
 
 	/** Set goal to compile */
 	public N4jscTestOptions f(List<File> files) {
-		options.setDirs(files);
-		interpretAndAdjustDirs();
+		if (!files.isEmpty()) {
+			options.setDir(files.get(0));
+			interpretAndAdjustDirs();
+		}
 		return this;
 	}
 
