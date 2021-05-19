@@ -30,14 +30,20 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void testNoArgsImplicitGoal() {
 		String args[] = {};
-		n4jsc(args);
+		CliCompileResult result = n4jsc(args, 10);
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  Argument \"DIR\" is required",
+				result.getStdOut());
 	}
 
 	/**  */
 	@Test
 	public void testNoArgs() {
 		String args[] = { "compile" };
-		n4jsc(args);
+		CliCompileResult result = n4jsc(args, 10);
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  Argument \"DIR\" is required",
+				result.getStdOut());
 	}
 
 	/**  */
@@ -46,7 +52,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = { "compile", "test" };
 		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: .../test",
+				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: test",
 				result.getStdOut());
 	}
 
@@ -56,7 +62,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		String args[] = { "test" };
 		CliCompileResult result = n4jsc(args, 12);
 		assertEquals(result.toString(),
-				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: .../test",
+				"ERROR-12 (Invalid dir(s)):  directory(s) do not exist: test",
 				result.getStdOut());
 	}
 

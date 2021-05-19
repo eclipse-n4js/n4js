@@ -53,7 +53,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
-	public void testAnotherGoalWithOptionHelp() {
+	public void testLspOptionHelp() {
 		String args[] = { "lsp", "--help" };
 		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
@@ -64,7 +64,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getUsageExpectationCompile() {
-		return "Usage: n4jsc [GOAL] [DIR] [OPTION(s)]\n"
+		return "Usage: n4jsc [GOAL] DIR [OPTION(s)]\n"
 				+ " GOAL              : Goals of n4jsc (default: compile)\n"
 				+ "   compile             Compile src folders\n"
 				+ "   clean               Clean output folders and type index\n"
@@ -72,7 +72,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				+ "   set-versions        Set versions of n4js-related dependencies\n"
 				+ "   init                Create an empty n4js project\n"
 				+ "   version             Print version of this tool\n"
-				+ " DIR               : name of n4js project or workspace directory (default: .)\n"
+				+ " DIR               : name of n4js project or workspace directory\n"
 				+ " --clean (-c)      : clean output folders at start (default: false)\n"
 				+ " --help (-h)       : prints help and exits (default: false)\n"
 				+ " --maxErrs N       : set the maximum number of errors to print (default: 0)\n"
@@ -86,7 +86,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getUsageExpectationLSP() {
-		return "Usage: n4jsc lsp [DIR] [OPTION(s)]\n"
+		return "Usage: n4jsc lsp [OPTION(s)]\n"
 				+ " --help (-h)    : prints help and exits (default: false)\n"
 				+ " --port (-p) N  : set the port of the lsp server (default: 5007)\n"
 				+ " --showSetup    : prints n4jsc setup (default: false)\n"
@@ -105,7 +105,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				"N4jsc.options=\n"
 						+ "  Current execution directory=.../.\n"
 						+ "  goal=lsp\n"
-						+ "  srcFiles=Optional.empty\n"
+						+ "  dir=null\n"
 						+ "  showSetup=true\n"
 						+ "  verbose=false\n"
 						+ "  performanceReport=performance-report.txt\n"
