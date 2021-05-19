@@ -64,7 +64,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getUsageExpectationCompile() {
-		return "Usage: n4jsc [GOAL] DIR [OPTION(s)]\n"
+		return "Usage: n4jsc [GOAL] [DIR] [OPTION(s)]\n"
 				+ " GOAL              : Goals of n4jsc (default: compile)\n"
 				+ "   compile             Compile src folders\n"
 				+ "   clean               Clean output folders and type index\n"
@@ -72,7 +72,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				+ "   set-versions        Set versions of n4js-related dependencies\n"
 				+ "   init                Create an empty n4js project\n"
 				+ "   version             Print version of this tool\n"
-				+ " DIR               : name of n4js project or workspace directory\n"
+				+ " DIR               : name of n4js project or workspace directory (default: .)\n"
 				+ " --clean (-c)      : clean output folders at start (default: false)\n"
 				+ " --help (-h)       : prints help and exits (default: false)\n"
 				+ " --maxErrs N       : set the maximum number of errors to print (default: 0)\n"

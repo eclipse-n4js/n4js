@@ -30,20 +30,14 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void testNoArgsImplicitGoal() {
 		String args[] = {};
-		CliCompileResult result = n4jsc(args, 10);
-		assertEquals(result.toString(),
-				"ERROR-10 (Invalid command line string):  Argument \"DIR\" is required",
-				result.getStdOut());
+		n4jsc(args);
 	}
 
 	/**  */
 	@Test
 	public void testNoArgs() {
 		String args[] = { "compile" };
-		CliCompileResult result = n4jsc(args, 10);
-		assertEquals(result.toString(),
-				"ERROR-10 (Invalid command line string):  Argument \"DIR\" is required",
-				result.getStdOut());
+		n4jsc(args);
 	}
 
 	/**  */

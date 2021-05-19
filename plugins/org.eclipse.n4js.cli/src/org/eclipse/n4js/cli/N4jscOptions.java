@@ -59,7 +59,7 @@ public class N4jscOptions {
 	/** @return the usage string respecting the goal specified in the given options */
 	public static String getUsage(N4jscOptions options) {
 		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
-		String dir = options.options.getDir() == null ? "" : " DIR";
+		String dir = options.options.getDir() == null ? "" : " [DIR]";
 		String usage = String.format(USAGE_TEMPLATE, goal, dir);
 		return usage;
 	}
@@ -247,7 +247,7 @@ public class N4jscOptions {
 		})
 		AbstractOptions cmd = this;
 
-		@Argument(metaVar = "DIR", index = 1, required = true, //
+		@Argument(metaVar = "DIR", index = 1, required = false, //
 				usage = "name of n4js project or workspace directory", //
 				handler = N4JSFileOptionHandler.class)
 		File dir = new File(".");
@@ -265,7 +265,7 @@ public class N4jscOptions {
 			dir = file;
 		}
 
-		@Argument(metaVar = "DIR", index = 0, required = true, //
+		@Argument(metaVar = "DIR", index = 0, required = false, //
 				usage = "name of n4js project or workspace directory", //
 				handler = N4JSFileOptionHandler.class)
 		File dir = new File(".");
@@ -322,7 +322,7 @@ public class N4jscOptions {
 			dir = file;
 		}
 
-		@Argument(metaVar = "DIR", index = 0, required = true, //
+		@Argument(metaVar = "DIR", index = 0, required = false, //
 				usage = "name of n4js project or workspace directory", //
 				handler = N4JSFileOptionHandler.class)
 		File dir = new File(".");
