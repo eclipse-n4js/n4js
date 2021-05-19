@@ -38,10 +38,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.SetMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -111,17 +108,14 @@ public class ResourceTaskManager {
 	 *
 	 * This looks like being the same as the the ConcurrentIndex structure?
 	 */
-	/** The persisted state index, not taking into account dirty state from existing resource task contexts. */
-	protected final ResourceDescriptionsData persistedIndex = new ResourceDescriptionsData(Collections.emptyList());
-	// contained instances of ResourceDescriptionsData are shared and must not be changed!
+	/**
+	 * The persisted state index, not taking into account dirty state from existing resource task contexts.
+	 * <p>
+	 * Contained instances of {@link ResourceDescriptionsData} are shared across threads and must not be changed!
+	 */
 	protected final XChunkedResourceDescriptions persistedIndexNEW = new XChunkedResourceDescriptions();
 	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
 	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
-	/** Tracks URIs per project. Derived from persisted state but applies equally to the dirty state. */
-	protected SetMultimap<String, URI> project2BuiltURIs = HashMultimap.create();
-	/** Immutable copy of {@link #project2BuiltURIs}. */
-	protected ImmutableSetMultimap<String, URI> project2BuiltURIsImmutable = ImmutableSetMultimap
-			.copyOf(project2BuiltURIs);
 	/** Most recent workspace configuration. */
 	protected WorkspaceConfigSnapshot workspaceConfig = null;
 
@@ -383,7 +377,7 @@ public class ResourceTaskManager {
 	protected synchronized ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = resourceTaskContextProvider.get();
 		XChunkedResourceDescriptions index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		rtc.initialize(this, uri, isTemporary, index, project2BuiltURIsImmutable, workspaceConfig);
+		rtc.initialize(this, uri, isTemporary, index, workspaceConfig);
 		return rtc;
 	}
 
@@ -474,13 +468,6 @@ public class ResourceTaskManager {
 
 		WorkspaceConfigSnapshot oldWC = workspaceConfig;
 
-		for (String removedProject : removedProjects) {
-			persistedIndexNEW.removeContainer(removedProject);
-		}
-		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			persistedIndexNEW.setContainer(entry.getKey(), entry.getValue());
-		}
-
 		// compute "flat" modification info (not per project but on a global URI->description basis)
 		List<IResourceDescription> changed = new ArrayList<>();
 		Set<URI> removed = new HashSet<>();
@@ -488,8 +475,10 @@ public class ResourceTaskManager {
 			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			Set<URI> oldURIsOfProject = new HashSet<>(project2BuiltURIs.get(projectName));
-			removed.addAll(oldURIsOfProject);
+			ResourceDescriptionsData oldData = persistedIndexNEW.getContainer(projectName);
+			if (oldData != null) {
+				removed.addAll(oldData.getAllURIs());
+			}
 
 			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
 				URI descURI = desc.getURI();
@@ -499,18 +488,13 @@ public class ResourceTaskManager {
 		}
 
 		// update my internal state
-		changed.stream().forEachOrdered(desc -> persistedIndex.addDescription(desc.getURI(), desc));
-		removed.stream().forEachOrdered(persistedIndex::removeDescription);
-		for (String removedProjectName : removedProjects) {
-			project2BuiltURIs.removeAll(removedProjectName);
+		for (String removedProject : removedProjects) {
+			persistedIndexNEW.removeContainer(removedProject);
 		}
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String projectName = entry.getKey();
-			ResourceDescriptionsData newData = entry.getValue();
-			project2BuiltURIs.removeAll(projectName);
-			project2BuiltURIs.putAll(projectName, newData.getAllURIs());
+			persistedIndexNEW.setContainer(entry.getKey(), entry.getValue());
 		}
-		project2BuiltURIsImmutable = ImmutableSetMultimap.copyOf(project2BuiltURIs);
+
 		workspaceConfig = newWorkspaceConfig;
 
 		// from this point forward: ignore changes/removals related to existing resource task contexts
@@ -521,12 +505,10 @@ public class ResourceTaskManager {
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
-		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		for (URI currURI : uri2RTCsOnQueue.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
-				rtc.onPersistedStateChanged(changed, removed,
-						capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
+				rtc.onPersistedStateChanged(changed, removed, capturedWorkspaceConfig, ci);
 			});
 		}
 	}
@@ -549,9 +531,9 @@ public class ResourceTaskManager {
 			dirtyIndex.removeDescription(uri);
 		}
 		// update dirty state instance in each resource task context (except the one that caused the change)
-		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
-		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
+		// FIXME consider looking up the project name before calling #getResourceDescription() in next line:
+		IResourceDescription replacementDesc = newDesc == null ? persistedIndexNEW.getResourceDescription(uri) : null;
 		for (Entry<URI, ResourceTaskContext> currEntry : uri2RTCsOnQueue.entrySet()) {
 			URI currURI = currEntry.getKey();
 			ResourceTaskContext currRTC = currEntry.getValue();
@@ -566,10 +548,10 @@ public class ResourceTaskManager {
 					// happens in case a resource context was disposed
 					if (replacementDesc != null) {
 						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
-								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
+								capturedWorkspaceConfig, ci);
 					} else {
 						rtc.onPersistedStateChanged(Collections.emptyList(), Collections.singleton(uri),
-								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
+								capturedWorkspaceConfig, ci);
 					}
 				}
 				return null;

@@ -52,7 +52,6 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
-import com.google.common.collect.ImmutableSetMultimap;
 import com.google.inject.Inject;
 
 /**
@@ -112,9 +111,6 @@ public class ResourceTaskContext {
 	 * persisted state (as provided by the LSP builder).
 	 */
 	private XChunkedResourceDescriptions indexSnapshot;
-
-	/** Maps project names to URIs of all resources contained in the project (from the last build). */
-	ImmutableSetMultimap<String, URI> project2BuiltURIs;
 
 	/**
 	 * Most recent workspace configuration.
@@ -231,14 +227,12 @@ public class ResourceTaskContext {
 			URI uri,
 			boolean isTemporary,
 			XChunkedResourceDescriptions index,
-			ImmutableSetMultimap<String, URI> project2builtURIs,
 			WorkspaceConfigSnapshot workspaceConfig) {
 
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
 		this.indexSnapshot = index;
-		this.project2BuiltURIs = project2builtURIs;
 		this.workspaceConfig = workspaceConfig;
 		this.mainResourceSet = createResourceSet();
 		this.alive = true;
@@ -251,8 +245,6 @@ public class ResourceTaskContext {
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 
 		updateProjectDescriptionOnResourceSet(result);
-		// IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
-		// result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
 
 		return result;
 	}
@@ -393,23 +385,20 @@ public class ResourceTaskContext {
 	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2BuiltURIs,
-				workspaceConfig, cancelIndicator);
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), workspaceConfig, cancelIndicator);
 	}
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in a non-opened file OR after an open file was closed.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
-			WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
+			Set<URI> removedURIs, WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
+		updateIndex(changedDescs, removedURIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newProject2builtURIs, WorkspaceConfigSnapshot newWorkspaceConfig,
-			CancelIndicator cancelIndicator) {
+			WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
 
 		WorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 
@@ -424,8 +413,6 @@ public class ResourceTaskContext {
 				indexSnapshot.register(project.getName(), delta);
 			}
 		}
-
-		project2BuiltURIs = newProject2builtURIs;
 
 		workspaceConfig = newWorkspaceConfig;
 
