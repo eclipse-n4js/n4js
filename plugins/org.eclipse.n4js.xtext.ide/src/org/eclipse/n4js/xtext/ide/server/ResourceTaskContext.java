@@ -43,7 +43,8 @@ import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.impl.ProjectDescription;
+import org.eclipse.xtext.resource.containers.DelegatingIAllContainerAdapter;
+import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -82,9 +83,6 @@ public class ResourceTaskContext {
 	private IExternalContentSupport externalContentSupport;
 
 	@Inject
-	private XIProjectDescriptionFactory projectDescriptionFactory;
-
-	@Inject
 	private IResourceServiceProvider.Registry resourceServiceProviderRegistry;
 
 	@Inject
@@ -110,7 +108,7 @@ public class ResourceTaskContext {
 	 * file of this context) this state will represent the dirty state and for all other files it will represent the
 	 * persisted state (as provided by the LSP builder).
 	 */
-	private XChunkedResourceDescriptions indexSnapshot;
+	/* package */ XChunkedResourceDescriptions indexSnapshot;
 
 	/**
 	 * Most recent workspace configuration.
@@ -119,7 +117,7 @@ public class ResourceTaskContext {
 	 * folder. In particular, it will be <code>null</code> if {@code #mainResource} is a newly created and still empty
 	 * project description file.
 	 */
-	WorkspaceConfigSnapshot workspaceConfig;
+	/* package */ WorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
 	private XtextResourceSet mainResourceSet;
@@ -244,7 +242,8 @@ public class ResourceTaskContext {
 
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
 
-		updateProjectDescriptionOnResourceSet(result);
+		IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
+		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
 
 		return result;
 	}
@@ -420,7 +419,6 @@ public class ResourceTaskContext {
 				: oldWorkspaceConfig != null;
 		if (workspaceConfigChanged) {
 			WorkspaceConfigAdapter.installWorkspaceConfig(mainResourceSet, workspaceConfig);
-			updateProjectDescriptionOnResourceSet(mainResourceSet);
 		}
 
 		// refresh if I am affected by the changes
@@ -436,20 +434,6 @@ public class ResourceTaskContext {
 
 		if (isAffected) {
 			refreshContext(cancelIndicator);
-		}
-	}
-
-	/**
-	 * Creates a new {@link ProjectDescription} for the project containing the {@link #mainResource} and attaches it to
-	 * the given resource set, replacing an already existing project description (if any).
-	 */
-	protected void updateProjectDescriptionOnResourceSet(ResourceSet resourceSet) {
-		ProjectDescription.removeFromEmfObject(resourceSet);
-		ProjectConfigSnapshot projectConfig = workspaceConfig != null ? workspaceConfig.findProjectContaining(mainURI)
-				: null;
-		if (projectConfig != null) {
-			ProjectDescription projectDescription = projectDescriptionFactory.getProjectDescription(projectConfig);
-			projectDescription.attachToEmfObject(resourceSet);
 		}
 	}
 
