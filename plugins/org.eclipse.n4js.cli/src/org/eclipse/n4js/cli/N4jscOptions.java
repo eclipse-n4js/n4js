@@ -492,8 +492,8 @@ public class N4jscOptions {
 				File canonicalFile = file.getCanonicalFile();
 				if (N4JSGlobals.PACKAGE_JSON.equals(canonicalFile.getName())) {
 					canonicalFile = canonicalFile.getParentFile();
-					options.setDir(canonicalFile);
 				}
+				options.setDir(canonicalFile);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
