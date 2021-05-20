@@ -188,13 +188,13 @@ public class N4jscCompiler {
 	}
 
 	private void printCompileResults(Stopwatch elapsedTime) {
-		long trsnp = callback.getTranspilationsCount();
+		long trsnp = callback.getGeneratedCount();
 		long deltd = callback.getDeletionsCount();
 		long errs = callback.getErrorsCount();
 		long wrns = callback.getWarningsCount();
 		String durationStr = elapsedTime.toString();
 		String msg = String.format(
-				"Compile results - Transpiled: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
+				"Compile results - Generated: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
 				trsnp, deltd, errs, wrns, durationStr);
 		N4jscConsole.println(msg);
 	}
