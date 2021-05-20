@@ -140,7 +140,6 @@ public class N4JSCmdLineParser extends CmdLineParser {
 
 		@Override
 		protected CmdLineParser configureParser(Object subCmd, SubCommand c) {
-			// owner.getArguments().clear(); // very dirty hack to avoid complaints about missing dir argument
 			N4JSCmdLineParser n4jsCmdLineParser = (N4JSCmdLineParser) owner;
 			return new N4JSCmdLineParser(subCmd, n4jsCmdLineParser.definedOptions, n4jsCmdLineParser.definedArguments);
 		}

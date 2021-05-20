@@ -33,18 +33,20 @@ public class N4jscSetVersions {
 			List<Path> modifiedFiles = PackageJsonModificationUtils.setVersionOfDependenciesInAllPackageJsonFiles(
 					workingDirectory, N4JSGlobals.ALL_N4JS_LIBS, newVersionString);
 
-			String msg = "";
-			if (modifiedFiles.isEmpty()) {
-				msg += "No files were modified in " + options.getWorkingDirectory();
-			} else {
-				Collections.sort(modifiedFiles);
-				msg += "Modified version string of dependencies to:" + "\n - ";
-				msg += Strings.join("\n - ", N4JSGlobals.ALL_N4JS_LIBS);
-				msg += "\n" + "in the following files:" + "\n - ";
-				msg += Strings.join("\n - ", modifiedFiles);
+			if (options.isVerbose()) {
+				String msg = "";
+				if (modifiedFiles.isEmpty()) {
+					msg += "No files were modified in " + options.getWorkingDirectory();
+				} else {
+					Collections.sort(modifiedFiles);
+					msg += "Modified version string of dependencies to:" + "\n - ";
+					msg += Strings.join("\n - ", N4JSGlobals.ALL_N4JS_LIBS);
+					msg += "\n" + "in the following files:" + "\n - ";
+					msg += Strings.join("\n - ", modifiedFiles);
+				}
+				N4jscConsole.println(msg);
 			}
 
-			N4jscConsole.println(msg);
 			return N4jscExitState.SUCCESS;
 		} catch (IOException e) {
 			return new N4jscExitState(N4jscExitCode.SET_VERSIONS_ERROR, e.getMessage());
