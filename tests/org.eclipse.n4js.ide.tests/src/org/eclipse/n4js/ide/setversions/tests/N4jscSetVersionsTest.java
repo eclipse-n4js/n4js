@@ -76,14 +76,14 @@ public class N4jscSetVersionsTest extends AbstractCliCompileTest {
 				+ " - org.eclipse.n4js.mangelhaft.reporter.xunit\n"
 				+ " - org.eclipse.n4js.mangelhaft.test\n"
 				+ "in the following files:\n"
-				+ " - .../PSingle/package.json\n"
-				+ " - .../P4/package.json\n"
-				+ " - .../P3/package.json\n"
-				+ " - .../P2/package.json\n"
-				+ " - .../TestCleanPrj1/package.json\n"
 				+ " - .../P1/package.json\n"
-				+ " - .../TestCleanPrj2/package.json\n"
-				+ " - .../Test01/package.json", cliResult.getStdOut());
+				+ " - .../P2/package.json\n"
+				+ " - .../P3/package.json\n"
+				+ " - .../P4/package.json\n"
+				+ " - .../PSingle/package.json\n"
+				+ " - .../Test01/package.json\n"
+				+ " - .../TestCleanPrj1/package.json\n"
+				+ " - .../TestCleanPrj2/package.json", cliResult.getStdOut());
 	}
 
 }

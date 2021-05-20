@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
@@ -36,6 +37,7 @@ public class N4jscSetVersions {
 			if (modifiedFiles.isEmpty()) {
 				msg += "No files were modified in " + options.getWorkingDirectory();
 			} else {
+				Collections.sort(modifiedFiles);
 				msg += "Modified version string of dependencies to:" + "\n - ";
 				msg += Strings.join("\n - ", N4JSGlobals.ALL_N4JS_LIBS);
 				msg += "\n" + "in the following files:" + "\n - ";

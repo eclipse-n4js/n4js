@@ -112,7 +112,8 @@ public class CliTools {
 		cliResult.errOut = n4jscResult.getErrOut();
 
 		// save transpiled files
-		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(workDir);
+		Path projectDir = options.getDir() == null ? workDir : options.getDir().toPath();
+		cliResult.transpiledFiles = GeneratedJSFilesCounter.getTranspiledFiles(projectDir);
 
 		trimOutputs(cliResult, removeUsage);
 		checkForFailure("n4jsc (ex process)", cliResult, ignoreFailure);
