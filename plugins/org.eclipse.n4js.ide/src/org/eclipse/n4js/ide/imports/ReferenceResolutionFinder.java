@@ -80,6 +80,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class ReferenceResolutionFinder {
 
+	public static boolean USE_NEW_APPROACH = true;
+
 	@Inject
 	private IScopeProvider scopeProvider;
 
@@ -461,9 +463,11 @@ public class ReferenceResolutionFinder {
 				Multimap<QualifiedName, IEObjectDescription> allElements) {
 
 			QualifiedName shortNameQN = QualifiedName.create(shortName);
-			// because 'scope.getElements()' is slow-ish, we use this guard:
-			if (!allElements.containsKey(shortNameQN)) {
-				return null;
+			if (USE_NEW_APPROACH) {
+				// because 'scope.getElements()' is slow-ish, we use this guard:
+				if (!allElements.containsKey(shortNameQN)) {
+					return null;
+				}
 			}
 			// FIXME reconsider using the following (otherwise change the map to a set!!!):
 			// List<IEObjectDescription> elements = Lists.newArrayList(allElements.get(shortNameQN));
