@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -31,8 +32,15 @@ public class N4jscMain {
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
+		main(null, args);
+	}
 
+	/** Entry point of n4jsc compiler from tests to modify the working directory */
+	public static void main(Path workDir, String[] args) {
 		final N4jscOptions options = getOptions(args);
+		if (workDir != null) {
+			options.workingDir = workDir;
+		}
 
 		if (options.isVerbose()) {
 			Logger.getRootLogger().setLevel(Level.DEBUG);
@@ -78,6 +86,7 @@ public class N4jscMain {
 			}
 			System.exit(e.getExitCode());
 		}
+
 	}
 
 	private static N4jscOptions getOptions(String[] args) {
@@ -107,14 +116,19 @@ public class N4jscMain {
 	}
 
 	/** @return a {@link N4jscExitState} for graceful termination of n4jsc */
+	@SuppressWarnings("resource")
 	private static N4jscExitState performGoal(N4jscOptions options) throws Exception {
 		N4jscBackend backend = N4jscFactory.createBackend();
 
-		switch (options.getGoal()) {
-		case help:
+		// Option --help behaves as a goal wrt. exiting after the version was shown.
+		// However, since the output of --help is respecting the goal, --help itself
+		// is still an option (instead of being a goal).
+		if (options.isHelp()) {
 			options.printUsage(N4jscConsole.getPrintStream());
 			return N4jscExitState.SUCCESS;
+		}
 
+		switch (options.getGoal()) {
 		case version:
 			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion()
 					+ " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
@@ -135,9 +149,14 @@ public class N4jscMain {
 		case watch:
 			return backend.goalWatch(options);
 
-		default:
-			throw new N4jscException(N4jscExitCode.ARGUMENT_GOAL_INVALID);
+		case init:
+			return backend.goalInit(options);
+
+		case setVersions:
+			return backend.goalSetVersions(options);
 		}
+
+		throw new N4jscException(N4jscExitCode.ARGUMENT_GOAL_INVALID);
 	}
 
 	private static void writePerformanceReportIfRequested(N4jscOptions options) throws N4jscException {

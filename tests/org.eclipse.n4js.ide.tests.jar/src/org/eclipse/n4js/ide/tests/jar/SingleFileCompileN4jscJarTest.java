@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.tests.jar;
 
 import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
-import static org.eclipse.n4js.cli.N4jscTestOptions.HELP;
+import static org.eclipse.n4js.cli.N4jscTestOptions.IMPLICIT_COMPILE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -40,7 +40,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 	/** Test help command */
 	@Test
 	public void testHelp() throws Exception {
-		CliCompileResult cliResult = n4jsc(HELP());
+		CliCompileResult cliResult = n4jsc(IMPLICIT_COMPILE().help());
 		assertEquals(cliResult.toString(), 0, cliResult.getExitCode());
 	}
 

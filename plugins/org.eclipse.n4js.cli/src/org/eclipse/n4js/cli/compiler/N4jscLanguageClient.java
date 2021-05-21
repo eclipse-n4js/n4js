@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.cli.compiler;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
@@ -37,7 +39,7 @@ import com.google.inject.Singleton;
 public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements AfterBuildListener {
 
 	private Multimap<String, Diagnostic> diagnostics;
-	private long trnspCount = 0;
+	private long genCount = 0;
 	private long delCount = 0;
 	private long errCount = 0;
 	private long wrnCount = 0;
@@ -77,10 +79,12 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 	public synchronized void afterBuild(XBuildRequest request, XBuildResult result) {
 		// build is done, print all received diagnostics sorted by their file location
 		if (diagnostics != null) {
-			diagnostics.asMap().forEach((uri, list) -> {
-				N4jscConsole.println(issueSerializer.uri(uri));
-				list.forEach(diag -> N4jscConsole.println(issueSerializer.diagnostics(diag)));
-			});
+			for (Map.Entry<String, Collection<Diagnostic>> entry : diagnostics.asMap().entrySet()) {
+				N4jscConsole.println(issueSerializer.uri(entry.getKey()));
+				for (Diagnostic diag : entry.getValue()) {
+					N4jscConsole.println(issueSerializer.diagnostics(diag));
+				}
+			}
 			diagnostics = null;
 		}
 	}
@@ -102,7 +106,7 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 
 	@Override
 	public void afterGenerate(URI source, URI generated) {
-		trnspCount++;
+		genCount++;
 	}
 
 	/**
@@ -126,14 +130,14 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 		return delCount;
 	}
 
-	/** @return number of files that were generated/transpiled */
-	public long getTranspilationsCount() {
-		return trnspCount;
+	/** @return number of files that were generated */
+	public long getGeneratedCount() {
+		return genCount;
 	}
 
 	/** Resets counters of transpiled and deleted files, and errors and warnings */
 	public void resetCounters() {
-		trnspCount = 0;
+		genCount = 0;
 		delCount = 0;
 		errCount = 0;
 		wrnCount = 0;

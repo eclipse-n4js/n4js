@@ -143,7 +143,7 @@ public class N4jscCompiler {
 	private void warnIfNoProjectsFound() {
 		Set<? extends ProjectConfigSnapshot> projects = workspaceManager.getProjectConfigs();
 		if (projects.isEmpty()) {
-			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
+			N4jscConsole.println("No projects found at the given location: " + options.getDir());
 		}
 	}
 
@@ -157,7 +157,7 @@ public class N4jscCompiler {
 			String prjNameWithPadding = "%-" + maxPrjNameLength + "s";
 
 			if (!projects.isEmpty()) {
-				Path workspace = options.getDirs().get(0).toPath();
+				Path workspace = options.getDir().toPath();
 
 				SortedMap<String, String> projectNameList = new TreeMap<>();
 				for (ProjectConfigSnapshot prj : projects) {
@@ -188,13 +188,13 @@ public class N4jscCompiler {
 	}
 
 	private void printCompileResults(Stopwatch elapsedTime) {
-		long trsnp = callback.getTranspilationsCount();
+		long trsnp = callback.getGeneratedCount();
 		long deltd = callback.getDeletionsCount();
 		long errs = callback.getErrorsCount();
 		long wrns = callback.getWarningsCount();
 		String durationStr = elapsedTime.toString();
 		String msg = String.format(
-				"Compile results - Transpiled: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
+				"Compile results - Generated: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
 				trsnp, deltd, errs, wrns, durationStr);
 		N4jscConsole.println(msg);
 	}

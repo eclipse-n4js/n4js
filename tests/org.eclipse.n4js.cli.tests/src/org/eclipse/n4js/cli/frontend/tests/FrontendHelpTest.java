@@ -45,65 +45,55 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
-	public void testGoalHelp() {
-		String args[] = { "help" };
-		CliCompileResult result = n4jsc(args, 0, false);
-		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
-	}
-
-	/**  */
-	@Test
 	public void testOptionHelp() {
 		String args[] = { "--help" };
 		CliCompileResult result = n4jsc(args, 0, false);
-		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getUsageExpectationCompile(), result.getStdOut());
 	}
 
 	/**  */
 	@Test
-	public void testAnotherGoalWithOptionHelp() {
+	public void testLspOptionHelp() {
 		String args[] = { "lsp", "--help" };
 		CliCompileResult result = n4jsc(args, 0, false);
-		assertEquals(result.toString(), getUsageExpectation(), result.getStdOut());
+		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
 	}
 
 	private String getVersionExpectation() {
 		return N4JSLanguageUtils.DEFAULT_LANGUAGE_VERSION + " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")";
 	}
 
-	private String getUsageExpectation() {
-		return "Usage: n4jsc [GOAL] DIR [OPTION(s)]\n" +
-				" GOAL                           : Goals are:\n" +
-				"                                  	 compile  Compiles src folders\n" +
-				"                                  	 clean    Cleans output folders and type\n" +
-				"                                  index\n" +
-				"                                  	 lsp      Starts LSP server\n" +
-				"                                  	 watch    Starts compiler daemon that\n" +
-				"                                  watches the given directory\n" +
-				"                                  	 api      Generates API documentation from\n" +
-				"                                  n4js files\n" +
-				"                                  	 (default: compile)\n" +
-				" DIR                            : name of n4js project or workspace directory\n" +
-				" --clean (-c)                   : [compile|lsp] output folders are cleaned at\n" +
-				"                                  start. (default: false)\n" +
-				" --help (-h)                    : prints help and exits (default: false)\n" +
-				" --maxErrs N                    : [compile] set the maximum number of errors to\n" +
-				"                                  print (default: 0)\n" +
-				" --maxWarns N                   : [compile] set the maximum number of warnings\n" +
-				"                                  to print (default: 0)\n" +
-				" --noPersist (-np)              : [compile|lsp] disable persisting of type\n" +
-				"                                  index to disk. (default: false)\n" +
-				" --noTests                      : [compile] don't process test folders\n" +
-				"                                  (default: false)\n" +
-				" --port (-p) N                  : [lsp] set the port of the lsp server\n" +
-				"                                  (default: 5007)\n" +
-				" --showSetup                    : prints n4jsc setup (default: false)\n" +
-				" --stdio                        : [lsp] uses stdin/stdout for communication\n" +
-				"                                  instead of sockets (default: false)\n" +
-				" --testOnly                     : [compile] only transpile contents of test\n" +
-				"                                  folders (default: false)\n" +
-				" --verbose                      : enables verbose output (default: false)\n" +
-				" --version (-v)                 : prints version and exits (default: false)";
+	private String getUsageExpectationCompile() {
+		return "Usage: n4jsc [GOAL] [DIR] [OPTION(s)]\n"
+				+ " GOAL              : Goals of n4jsc (default: compile)\n"
+				+ "   compile             Compile src folders\n"
+				+ "   clean               Clean output folders and type index\n"
+				+ "   lsp                 Start LSP server\n"
+				+ "   set-versions        Set versions of n4js-related dependencies\n"
+				+ "   init                Create an empty n4js project\n"
+				+ "   version             Print version of this tool\n"
+				+ " DIR               : name of n4js project or workspace directory (default: .)\n"
+				+ " --clean (-c)      : clean output folders at start (default: false)\n"
+				+ " --help (-h)       : prints help and exits (default: false)\n"
+				+ " --maxErrs N       : set the maximum number of errors to print (default: 0)\n"
+				+ " --maxWarns N      : set the maximum number of warnings to print (default: 0)\n"
+				+ " --noPersist (-np) : disable persisting of type index to disk. (default: false)\n"
+				+ " --noTests         : don't process test folders (default: false)\n"
+				+ " --showSetup       : prints n4jsc setup (default: false)\n"
+				+ " --testOnly        : only transpile test folders (default: false)\n"
+				+ " --verbose         : enables verbose output (default: false)\n"
+				+ " --version (-v)    : prints version and exits (default: false)";
+	}
+
+	private String getUsageExpectationLSP() {
+		return "Usage: n4jsc lsp [OPTION(s)]\n"
+				+ " --help (-h)    : prints help and exits (default: false)\n"
+				+ " --port (-p) N  : set the port of the lsp server (default: 5007)\n"
+				+ " --showSetup    : prints n4jsc setup (default: false)\n"
+				+ " --stdio        : uses stdin/stdout for communication instead of sockets\n"
+				+ "                  (default: false)\n"
+				+ " --verbose      : enables verbose output (default: false)\n"
+				+ " --version (-v) : prints version and exits (default: false)";
 	}
 
 	/**  */
@@ -112,17 +102,23 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 		String args[] = { "lsp", "--showSetup" };
 		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(),
-				"N4jsc.options=\n" +
-						"  goal=lsp\n" +
-						"  showSetup=true\n" +
-						"  verbose=false\n" +
-						"  maxErrs=0\n" +
-						"  maxWarns=0\n" +
-						"  testOnly=false\n" +
-						"  noTests=false\n" +
-						"  port=5007\n" +
-						"  srcFiles=Optional.empty\n" +
-						"  Current execution directory=.../.",
+				"N4jsc.options=\n"
+						+ "  Current execution directory=.../.\n"
+						+ "  goal=lsp\n"
+						+ "  dir=null\n"
+						+ "  showSetup=true\n"
+						+ "  verbose=false\n"
+						+ "  performanceReport=performance-report.txt\n"
+						+ "  performanceKey=Build\n"
+						+ "  showSetup=true\n"
+						+ "  verbose=false\n"
+						+ "  log=false\n"
+						+ "  logFile=n4jsc.log\n"
+						+ "  version=false\n"
+						+ "  help=false\n"
+						+ "  port=5007\n"
+						+ "  stdio=false\n"
+						+ "  exec=null",
 				result.getStdOut());
 	}
 

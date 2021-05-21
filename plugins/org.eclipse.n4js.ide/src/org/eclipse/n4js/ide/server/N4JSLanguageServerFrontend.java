@@ -28,6 +28,6 @@ public class N4JSLanguageServerFrontend extends LanguageServerFrontend {
 
 	@Override
 	protected void logWelcomeMessage() {
-		lspLogger.log("Connected to N4JS LSP server (" + N4JSLanguageUtils.getLanguageVersion() + ")");
+		lspLogger.log("n4jsc version " + N4JSLanguageUtils.getLanguageVersion());
 	}
 }

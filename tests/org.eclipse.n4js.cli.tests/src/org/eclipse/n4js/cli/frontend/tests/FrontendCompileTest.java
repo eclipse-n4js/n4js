@@ -30,20 +30,14 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void testNoArgsImplicitGoal() {
 		String args[] = {};
-		CliCompileResult result = n4jsc(args, 12);
-		assertEquals(result.toString(),
-				"ERROR-12 (Invalid dir(s)):  n4js directory(s) missing",
-				result.getStdOut());
+		n4jsc(args);
 	}
 
 	/**  */
 	@Test
 	public void testNoArgs() {
 		String args[] = { "compile" };
-		CliCompileResult result = n4jsc(args, 12);
-		assertEquals(result.toString(),
-				"ERROR-12 (Invalid dir(s)):  n4js directory(s) missing",
-				result.getStdOut());
+		n4jsc(args);
 	}
 
 	/**  */
@@ -175,9 +169,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkNoTestsWrongGoal() {
 		String args[] = { "lsp", ".", "--noTests" };
-		CliCompileResult result = n4jsc(args, 13);
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-13 (Invalid option):  Given option --noTests requires goal(s) compile, but goal lsp was given.",
+				"ERROR-10 (Invalid command line string):  No argument is allowed: .",
 				result.getStdOut());
 	}
 
@@ -193,9 +187,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkTestOnlyWrongGoal() {
 		String args[] = { "lsp", ".", "--testOnly" };
-		CliCompileResult result = n4jsc(args, 13);
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-13 (Invalid option):  Given option --testOnly requires goal(s) compile, but goal lsp was given.",
+				"ERROR-10 (Invalid command line string):  No argument is allowed: .",
 				result.getStdOut());
 	}
 
@@ -232,9 +226,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxErrsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxErrs", "1" };
-		CliCompileResult result = n4jsc(args, 13);
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-13 (Invalid option):  Given option --maxErrs requires goal(s) compile, but goal lsp was given.",
+				"ERROR-10 (Invalid command line string):  No argument is allowed: .",
 				result.getStdOut());
 	}
 
@@ -260,9 +254,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	@Test
 	public void checkMaxWarnsWrongGoal() {
 		String args[] = { "lsp", ".", "--maxWarns", "1" };
-		CliCompileResult result = n4jsc(args, 13);
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-13 (Invalid option):  Given option --maxWarns requires goal(s) compile, but goal lsp was given.",
+				"ERROR-10 (Invalid command line string):  No argument is allowed: .",
 				result.getStdOut());
 	}
 
@@ -276,11 +270,11 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
-	public void checkCleanWrongGoal() {
-		String args[] = { "help", ".", "--clean" };
-		CliCompileResult result = n4jsc(args, 13);
+	public void checkOptionWrongGoal() {
+		String args[] = { "lsp", "--noTests" };
+		CliCompileResult result = n4jsc(args, 10);
 		assertEquals(result.toString(),
-				"ERROR-13 (Invalid option):  Given option --clean requires goal(s) compile, lsp, but goal help was given.",
+				"ERROR-10 (Invalid command line string):  \"--noTests\" is not a valid option",
 				result.getStdOut());
 	}
 
