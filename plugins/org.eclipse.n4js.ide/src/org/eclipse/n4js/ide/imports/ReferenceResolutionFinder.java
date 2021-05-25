@@ -29,6 +29,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
+import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -38,6 +39,7 @@ import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -207,7 +209,7 @@ public class ReferenceResolutionFinder {
 			// note: checking #canAcceptMoreProposals() in next line is required to quickly react to cancellation
 			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
 				IEObjectDescription curr = iter.next();
-				if (!N4JSLanguageUtils.isActualElementInScope(curr)) {
+				if (!isRelevantDescription(curr)) {
 					continue;
 				}
 				addHere.add(curr);
@@ -476,7 +478,7 @@ public class ReferenceResolutionFinder {
 			// FIXME reconsider using the following (otherwise change the map to a set!!!):
 			// List<IEObjectDescription> elements = Lists.newArrayList(allElements.get(shortNameQN));
 			List<IEObjectDescription> elements = Lists.newArrayList(Iterables.filter(
-					scope.getElements(shortNameQN), N4JSLanguageUtils::isActualElementInScope));
+					scope.getElements(shortNameQN), ReferenceResolutionFinder::isRelevantDescription));
 			if (elements.isEmpty()) {
 				return null;
 			}
@@ -730,6 +732,21 @@ public class ReferenceResolutionFinder {
 		public boolean isNamespace() {
 			return accessType == CandidateAccessType.namespace;
 		}
+	}
+
+	/**
+	 * Returns <code>true</code> iff the given description is relevant for the purpose of reference resolution finding
+	 * in this class.
+	 * <p>
+	 * In principle, this is the case iff {@link N4JSLanguageUtils#isActualElementInScope(IEObjectDescription)} returns
+	 * <code>true</code>. However, because some special handling exists above for certain subclasses of
+	 * {@link IEObjectDescriptionWithError} we have to return <code>true</code> for those subclasses as well.
+	 */
+	private static boolean isRelevantDescription(IEObjectDescription desc) {
+		return desc instanceof PlainAccessOfAliasedImportDescription
+				|| desc instanceof PlainAccessOfNamespacedImportDescription
+				|| desc instanceof WrongTypingStrategyDescription
+				|| N4JSLanguageUtils.isActualElementInScope(desc);
 	}
 
 	private static N4JSProjectName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {
