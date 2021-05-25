@@ -111,6 +111,10 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
+import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
+import org.eclipse.xtext.scoping.IScope
 
 /**
  * Intended for small, static utility methods that
@@ -238,6 +242,19 @@ public class N4JSLanguageUtils {
 
 		// default: process file
 		return false;
+	}
+
+	/**
+	 * Some {@link IEObjectDescription}s returned by our {@link IScope scope} implementations do not represent actual,
+	 * valid elements in the scope but are used only for error reporting, etc. This methods returns <code>true</code>
+	 * iff the given description represents an actual, existing element.
+	 */
+	def static boolean isActualElementInScope(IEObjectDescription desc) {
+		if (desc instanceof IEObjectDescriptionWithError
+			|| desc instanceof UnresolvableObjectDescription) {
+			return false;
+		}
+		return true;
 	}
 
 	static enum EnumKind {

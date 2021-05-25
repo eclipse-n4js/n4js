@@ -53,6 +53,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -206,6 +207,9 @@ public class ReferenceResolutionFinder {
 			// note: checking #canAcceptMoreProposals() in next line is required to quickly react to cancellation
 			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
 				IEObjectDescription curr = iter.next();
+				if (!N4JSLanguageUtils.isActualElementInScope(curr)) {
+					continue;
+				}
 				addHere.add(curr);
 				if (addHereByName != null) {
 					addHereByName.put(curr.getName(), curr);
@@ -471,7 +475,8 @@ public class ReferenceResolutionFinder {
 			}
 			// FIXME reconsider using the following (otherwise change the map to a set!!!):
 			// List<IEObjectDescription> elements = Lists.newArrayList(allElements.get(shortNameQN));
-			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(shortNameQN));
+			List<IEObjectDescription> elements = Lists.newArrayList(Iterables.filter(
+					scope.getElements(shortNameQN), N4JSLanguageUtils::isActualElementInScope));
 			if (elements.isEmpty()) {
 				return null;
 			}
