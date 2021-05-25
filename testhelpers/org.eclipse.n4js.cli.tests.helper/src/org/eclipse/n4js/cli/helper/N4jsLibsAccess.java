@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -153,10 +152,10 @@ public class N4jsLibsAccess {
 	public static Map<N4JSProjectName, Path> findAllN4jsLibs() {
 		Path location = findN4jsLibsLocation();
 		try {
-			return Files.list(location)
+			Map<N4JSProjectName, Path> libsLocations = Files.list(location)
 					.filter(p -> isNpmPackage(p))
-					.collect(Collectors.toMap(p -> new N4JSProjectName(p.getFileName().toString()),
-							Function.identity()));
+					.collect(Collectors.toMap(p -> new N4JSProjectName(p.getFileName().toString()), p -> p));
+			return libsLocations;
 		} catch (IOException e) {
 			throw new IllegalStateException("cannot obtain list of n4js-libs: " + e.getMessage(), e);
 		}

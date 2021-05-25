@@ -13,20 +13,30 @@ package org.eclipse.n4js.packagejson;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Stack;
 
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -188,52 +198,153 @@ public class PackageJsonModificationUtils {
 	}
 
 	/**
-	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(Path, Set, JsonElement)}, but for all package.json
-	 * files in the entire folder tree below the given root folder.
+	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(Path, Set, String)}, but for all
+	 * <code>package.json</code> files in the entire folder tree below the given root folder.
+	 *
+	 * @return list of all modified package.json files
 	 */
-	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path rootFolder,
-			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
-		List<Path> packageJsonFiles = Files.walk(rootFolder, FileVisitOption.FOLLOW_LINKS)
-				.filter(p -> UtilN4.PACKAGE_JSON.equals(p.getFileName().toString()))
-				.collect(Collectors.toList());
-		for (Path packageJsonFile : packageJsonFiles) {
-			setVersionOfDependenciesInPackageJsonFile(packageJsonFile, namesOfDependencies, versionToSet);
+	public static List<Path> setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<N4JSProjectName> projectNames,
+			String versionConstraintToSet) throws IOException {
+
+		List<Path> packageJsonFiles = new LinkedList<>();
+		EnumSet<FileVisitOption> options = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+		Files.walkFileTree(root, options, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+				if (dir.endsWith("node_modules") || dir.endsWith(".git")) {
+					return FileVisitResult.SKIP_SUBTREE;
+				}
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				if (file.endsWith("package.json")) {
+					packageJsonFiles.add(file);
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
+
+		List<Path> modifiedFiles = new LinkedList<>();
+		for (Path file : packageJsonFiles) {
+			boolean modified = setVersionOfDependenciesInPackageJsonFile(file, projectNames, versionConstraintToSet);
+			if (modified) {
+				modifiedFiles.add(file);
+			}
 		}
+		return modifiedFiles;
 	}
 
 	/**
-	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(JsonElement, Set, JsonElement)}, but changes a
+	 * Same as {@link #setVersionOfDependenciesInPackageJsonString(String, Set, String)}, but changes a
 	 * <code>package.json</code> file on disk.
+	 *
+	 * @return true iff the package.json file was modified
 	 */
-	public static void setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
-			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
-		JsonElement root = JsonUtils.loadJson(packageJsonFile);
-		boolean changed = setVersionOfDependenciesInPackageJsonFile(root, namesOfDependencies, versionToSet);
-		if (changed) {
-			JsonUtils.saveJson(packageJsonFile, root);
+	public static boolean setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
+			Set<N4JSProjectName> projectNames, String versionConstraintToSet) throws IOException {
+		String packageJsonStr = Files.readString(packageJsonFile);
+		Optional<String> result = setVersionOfDependenciesInPackageJsonString(packageJsonStr, projectNames,
+				versionConstraintToSet);
+		if (result.isPresent()) {
+			Files.writeString(packageJsonFile, result.get(), StandardOpenOption.TRUNCATE_EXISTING);
 		}
+		return result.isPresent();
 	}
 
 	/**
 	 * Changes the version of all dependencies and devDependencies to packages with a name contained in
-	 * {@code namesOfDependencies} to the given version. Names given in the set that are not among the dependencies in
-	 * the package.json file will be ignored; dependencies in the package.json file that are not denoted by the names in
-	 * the set will remain unchanged.
+	 * {@code projectNames} to the given version. Names given in the set that are not among the dependencies in the
+	 * package.json file will be ignored (i.e. this method won't add any dependencies); dependencies in the package.json
+	 * file that are not denoted by the names in the set will remain unchanged.
+	 *
+	 * @return the <code>package.json</code> string after all replacements were done, or {@link Optional#absent()
+	 *         absent} in case the JSON string was successfully parsed, but this operation did not lead to any changes.
+	 * @throws IllegalArgumentException
+	 *             in case of parse errors.
 	 */
-	public static boolean setVersionOfDependenciesInPackageJsonFile(JsonElement root, Set<String> namesOfDependencies,
-			JsonElement versionToSet) {
-		if (namesOfDependencies.isEmpty()) {
-			return false;
+	public static Optional<String> setVersionOfDependenciesInPackageJsonString(String packageJson,
+			Set<N4JSProjectName> projectNames, String versionConstraintToSet) {
+		List<DependencyWithRegion> deps = findDependenciesWithRegion(packageJson);
+		if (deps.isEmpty()) {
+			return Optional.absent();
 		}
-		boolean changed = false;
-		JsonElement deps = JsonUtils.getDeep(root, UtilN4.PACKAGE_JSON__DEPENDENCIES);
-		if (deps != null && deps.isJsonObject()) {
-			changed |= JsonUtils.changeProperties((JsonObject) deps, namesOfDependencies, versionToSet);
+		StringBuilder result = null;
+		Collections.sort(deps, (dep1, dep2) -> Integer.compare(dep2.offset, dep1.offset));
+		for (DependencyWithRegion dep : deps) {
+			if (projectNames.contains(dep.projectName)) {
+				if (result == null) {
+					result = new StringBuilder(packageJson);
+				}
+				result.replace(dep.offset + 1, dep.offset + dep.length - 1, versionConstraintToSet);
+			}
 		}
-		JsonElement devDeps = JsonUtils.getDeep(root, UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES);
-		if (devDeps != null && devDeps.isJsonObject()) {
-			changed |= JsonUtils.changeProperties((JsonObject) devDeps, namesOfDependencies, versionToSet);
+		return result != null ? Optional.of(result.toString()) : Optional.absent();
+	}
+
+	private static class DependencyWithRegion {
+		public final N4JSProjectName projectName;
+		@SuppressWarnings("unused")
+		public final String versionConstraint;
+		/** Zero-based offset of the version constraint in the original JSON input string. */
+		public final int offset;
+		/** Length of the version constraint. */
+		public final int length;
+
+		public DependencyWithRegion(N4JSProjectName projectName, String versionConstraint, int offset, int length) {
+			this.projectName = projectName;
+			this.versionConstraint = versionConstraint;
+			this.offset = offset;
+			this.length = length;
 		}
-		return changed;
+	}
+
+	/**
+	 * Given a <code>package.json</code> as string, this method returns all dependencies and devDependencies, including
+	 * their version constraint and the text region of the version constraint.
+	 *
+	 * @throw {@link IllegalArgumentException} in case of parse errors.
+	 */
+	/*
+	 * Unfortunately, we cannot use GSON for implementing this method. Since Jackson was already among the dependencies
+	 * of N4JS (at time of writing), we can use that. To avoid confusion with GSON, we use fully qualified names when
+	 * referring to the types of Jackson in this method.
+	 */
+	private static List<DependencyWithRegion> findDependenciesWithRegion(String jsonStr) {
+		List<DependencyWithRegion> result = new ArrayList<>();
+		com.fasterxml.jackson.core.JsonFactory factory = new com.fasterxml.jackson.core.JsonFactory();
+		try (com.fasterxml.jackson.core.JsonParser parser = factory.createParser(jsonStr)) {
+			com.fasterxml.jackson.core.JsonToken token = parser.nextToken();
+			if (token != com.fasterxml.jackson.core.JsonToken.START_OBJECT) {
+				throw new IllegalArgumentException("expected a JSON object at top level");
+			}
+
+			Stack<String> propertyPath = new Stack<>(); // may contain 'null' values
+
+			while ((token = parser.nextToken()) != null) {
+				if (token == com.fasterxml.jackson.core.JsonToken.START_ARRAY
+						|| token == com.fasterxml.jackson.core.JsonToken.START_OBJECT) {
+					propertyPath.push(parser.getCurrentName());
+				} else if (token == com.fasterxml.jackson.core.JsonToken.END_ARRAY
+						|| token == com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+					if (!propertyPath.isEmpty()) {
+						propertyPath.pop();
+					}
+				} else if (token == com.fasterxml.jackson.core.JsonToken.VALUE_STRING
+						&& propertyPath.size() == 1
+						&& ("dependencies".equals(propertyPath.peek()) || "devDependencies".equals(propertyPath.peek()))
+						&& parser.getCurrentName() != null) {
+					N4JSProjectName projectName = new N4JSProjectName(parser.getCurrentName());
+					long offs = parser.getTokenLocation().getCharOffset();
+					long len = parser.getTextLength() + 2;
+					String versionConstraint = jsonStr.substring((int) offs, (int) (offs + len));
+					result.add(new DependencyWithRegion(projectName, versionConstraint, (int) offs, (int) len));
+				}
+			}
+		} catch (IOException e) { // includes JsonParseException
+			throw new IllegalArgumentException("failed to parse JSON: " + e.getMessage(), e);
+		}
+		return result;
 	}
 }
