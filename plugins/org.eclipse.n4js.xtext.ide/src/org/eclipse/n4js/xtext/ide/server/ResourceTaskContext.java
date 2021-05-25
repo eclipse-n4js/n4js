@@ -365,7 +365,6 @@ public class ResourceTaskContext {
 			return; // temporarily opened files do not contribute to the parent's shared dirty state index
 		}
 		IResourceDescription newDesc = createResourceDescription();
-		// FIXME cache the following value!
 		ProjectConfigSnapshot project = workspaceConfig != null ? workspaceConfig.findProjectContaining(mainURI) : null;
 		if (project != null) {
 			indexSnapshot.addDescription(project.getName(), newDesc);
