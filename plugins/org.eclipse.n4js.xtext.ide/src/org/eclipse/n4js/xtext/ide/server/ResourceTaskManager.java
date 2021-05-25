@@ -28,16 +28,20 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.CancelIndicatorUtil;
+import org.eclipse.n4js.xtext.ide.server.util.WorkspaceConfigAllContainerState;
 import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.containers.DelegatingIAllContainerAdapter;
+import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -410,8 +414,7 @@ public class ResourceTaskManager {
 	 */
 	public XtextResourceSet createTemporaryResourceSet() {
 		XChunkedResourceDescriptions index = createPersistedStateIndex();
-		XtextResourceSet result = createResourceSet(workspaceConfig, index);
-		return result;
+		return createResourceSet(workspaceConfig, index, Optional.absent());
 	}
 
 	/**
@@ -424,10 +427,14 @@ public class ResourceTaskManager {
 	 * </ol>
 	 */
 	protected XtextResourceSet createResourceSet(WorkspaceConfigSnapshot currWorkspaceConfig,
-			XChunkedResourceDescriptions currResourceDescriptions) {
+			XChunkedResourceDescriptions currResourceDescriptions, Optional<ResourceTaskContext> rtc) {
 		XtextResourceSet result = resourceSetProvider.get();
 		WorkspaceConfigAdapter.installWorkspaceConfig(result, currWorkspaceConfig);
 		currResourceDescriptions.setResourceSet(result); // installs 'currResourceDescriptions' as adapter on 'result'
+		IAllContainersState allContainersState = rtc.isPresent()
+				? new ResourceTaskContextAllContainerState(result, rtc.get())
+				: new WorkspaceConfigAllContainerState(result);
+		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
 		return result;
 	}
 

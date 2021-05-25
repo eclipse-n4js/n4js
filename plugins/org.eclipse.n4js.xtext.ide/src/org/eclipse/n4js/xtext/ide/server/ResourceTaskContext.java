@@ -43,8 +43,6 @@ import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.containers.DelegatingIAllContainerAdapter;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -53,6 +51,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
@@ -238,13 +237,8 @@ public class ResourceTaskContext {
 
 	/** Returns a newly created and fully configured resource set. */
 	protected XtextResourceSet createResourceSet() {
-		XtextResourceSet result = parent.createResourceSet(workspaceConfig, indexSnapshot);
-
+		XtextResourceSet result = parent.createResourceSet(workspaceConfig, indexSnapshot, Optional.of(this));
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
-
-		IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
-		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
-
 		return result;
 	}
 
