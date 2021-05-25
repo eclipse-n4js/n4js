@@ -77,4 +77,9 @@ public class N4jscConsole {
 
 		return ac;
 	}
+
+	/** Reads a string terminated with a new-line from the console */
+	public static String readLine() {
+		return System.console().readLine();
+	}
 }

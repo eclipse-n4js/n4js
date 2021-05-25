@@ -371,7 +371,7 @@ public class N4jscOptions {
 
 		@Option(name = "--stdio", //
 				usage = "uses stdin/stdout for communication instead of sockets", //
-				forbids = "--port", //
+				forbids = { "--port", "--exec" }, //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean stdio = false;
 
@@ -379,6 +379,7 @@ public class N4jscOptions {
 				hidden = true, //
 				usage = "executes the given command string once the LSP server is listening for clients and shuts "
 						+ "down the server after the first client disconnects. Must not be used with option --stdio.", //
+				forbids = "--stdio", //
 				handler = N4JSStringOptionHandler.class)
 		String exec = null;
 	}
@@ -412,6 +413,24 @@ public class N4jscOptions {
 		N4jscGoal getGoal() {
 			return N4jscGoal.init;
 		}
+
+		@Option(name = "--yes", aliases = "-y", //
+				usage = "skips the questionnaire", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean yes = false;
+
+		@Option(name = "--scope", //
+				usage = "creates a scoped project. uses the parent directory as the scope name", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean scope = false;
+
+		@Option(name = "--workspaces", aliases = "-w", //
+				usage = "creates the new project inside the given workspaces directory. "
+						+ "Will also create a new workspace if not existing already."
+						+ "In case the current working directory is inside an existing workspaces directory,"
+						+ "this option will be activated implicitly using the cwd.", //
+				handler = N4JSFileOptionHandler.class)
+		File workspaces;
 	}
 
 	/** This class defines option fields for command init. */
@@ -621,7 +640,7 @@ public class N4jscOptions {
 		return ((LSPOptions) options).stdio;
 	}
 
-	/** @return the user command as provided via option {@code --exec} or <code>null</code> if not given. */
+	/** @return the user command if given via {@code --exec}. {@code null} otherwise. */
 	public String getExec() {
 		Preconditions.checkState(options instanceof LSPOptions);
 		return ((LSPOptions) options).exec;
@@ -634,6 +653,24 @@ public class N4jscOptions {
 			return true;
 		}
 		return false;
+	}
+
+	/** @return true iff {@code --yes} */
+	public boolean isYes() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).yes;
+	}
+
+	/** @return true iff {@code --scope} */
+	public boolean isScope() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).scope;
+	}
+
+	/** @return workspaces if given via {@code --workspaces}. {@code null} otherwise. */
+	public File getWorkspaces() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).workspaces;
 	}
 
 	/** @return the working directory of n4jsc.jar */

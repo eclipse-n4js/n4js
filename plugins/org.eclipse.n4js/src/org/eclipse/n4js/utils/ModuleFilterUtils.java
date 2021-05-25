@@ -43,7 +43,7 @@ public class ModuleFilterUtils {
 		for (ModuleFilterSpecifier spec : filterSpecifiers) {
 			String prjRelativeLocation = getProjectRelativeLocation(project, location, spec);
 			if (prjRelativeLocation != null) {
-				boolean isContained = locationMatchesGlobSpecifier(spec, prjRelativeLocation);
+				boolean isContained = locationMatchesModuleFilterSpecifier(spec, prjRelativeLocation);
 				if (isContained) {
 					return true;
 				}
@@ -57,7 +57,7 @@ public class ModuleFilterUtils {
 			ModuleFilterSpecifier spec) {
 		String prjRelativeLocation = getProjectRelativeLocation(project, location, spec);
 		if (prjRelativeLocation != null) {
-			return locationMatchesGlobSpecifier(spec, prjRelativeLocation);
+			return locationMatchesModuleFilterSpecifier(spec, prjRelativeLocation);
 		}
 		return false;
 	}
@@ -97,17 +97,20 @@ public class ModuleFilterUtils {
 		return null;
 	}
 
+	private static boolean locationMatchesModuleFilterSpecifier(ModuleFilterSpecifier spec,
+			String prjRelativeLocation) {
+		return locationMatchesGlobSpecifier(spec.getSpecifierWithWildcard(), Paths.get(prjRelativeLocation));
+	}
+
 	/** @return true iff the given location is matched the given GLOB specifier. */
-	private static boolean locationMatchesGlobSpecifier(ModuleFilterSpecifier spec, String prjRelativeLocation) {
-		String pathsToFind = spec.getSpecifierWithWildcard();
-		if (pathsToFind == null) {
+	public static boolean locationMatchesGlobSpecifier(String globSpecifier, Path prjRelativeLocation) {
+		if (globSpecifier == null) {
 			return false;
 		}
-		boolean matches = prjRelativeLocation.startsWith(pathsToFind);
+		boolean matches = prjRelativeLocation.startsWith(globSpecifier);
 		if (!matches) {
-			PathMatcher pathMatcher = createPathMatcher(pathsToFind);
-			java.nio.file.Path path = Paths.get(prjRelativeLocation);
-			matches = pathMatcher.matches(path);
+			PathMatcher pathMatcher = createPathMatcher(globSpecifier);
+			matches = pathMatcher.matches(prjRelativeLocation);
 		}
 		return matches;
 	}
