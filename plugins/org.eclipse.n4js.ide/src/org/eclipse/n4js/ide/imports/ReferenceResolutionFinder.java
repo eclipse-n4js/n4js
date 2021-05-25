@@ -81,8 +81,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class ReferenceResolutionFinder {
 
-	public static boolean USE_NEW_APPROACH = true;
-
 	@Inject
 	private IScopeProvider scopeProvider;
 
@@ -461,12 +459,10 @@ public class ReferenceResolutionFinder {
 
 		private IEObjectDescription getCandidateViaScope(IScope scope, Set<QualifiedName> allElementNames) {
 			QualifiedName shortNameQN = QualifiedName.create(shortName);
-			if (USE_NEW_APPROACH) {
-				// because 'scope.getElements()' is slow-ish and we are invoked for each element in
-				// 'scope.getAllElements()' (see #collectAllElements() above), we use this guard:
-				if (!allElementNames.contains(shortNameQN)) {
-					return null;
-				}
+			// because 'scope.getElements()' is slow-ish and we are invoked for every element in
+			// 'scope.getAllElements()' (see #collectAllElements() above), we use this guard:
+			if (!allElementNames.contains(shortNameQN)) {
+				return null;
 			}
 			List<IEObjectDescription> elements = Lists.newArrayList(Iterables.filter(
 					scope.getElements(shortNameQN), ReferenceResolutionFinder::isRelevantDescription));
