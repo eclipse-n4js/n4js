@@ -453,7 +453,6 @@ public class ResourceTaskManager {
 	public synchronized XChunkedResourceDescriptions createLiveScopeIndex() {
 		XChunkedResourceDescriptions result = createPersistedStateIndex();
 		for (IResourceDescription desc : dirtyIndex.getAllResourceDescriptions()) {
-			// FIXME: store contents of 'dirtyIndex' by project, to avoid the following look up:
 			ProjectConfigSnapshot project = workspaceConfig.findProjectContaining(desc.getURI());
 			if (project != null) {
 				result.addDescription(project.getName(), desc);
@@ -539,8 +538,7 @@ public class ResourceTaskManager {
 		}
 		// update dirty state instance in each resource task context (except the one that caused the change)
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
-		// FIXME consider looking up the project name before calling #getResourceDescription() in next line:
-		IResourceDescription replacementDesc = newDesc == null ? persistedIndexNEW.getResourceDescription(uri) : null;
+		IResourceDescription replacementDesc = newDesc == null ? getPersistedIndexDescription(uri) : null;
 		for (Entry<URI, ResourceTaskContext> currEntry : uri2RTCsOnQueue.entrySet()) {
 			URI currURI = currEntry.getKey();
 			ResourceTaskContext currRTC = currEntry.getValue();
@@ -564,6 +562,17 @@ public class ResourceTaskManager {
 				return null;
 			});
 		}
+	}
+
+	private IResourceDescription getPersistedIndexDescription(URI uri) {
+		ProjectConfigSnapshot project = workspaceConfig.findProjectContaining(uri);
+		if (project != null) {
+			ResourceDescriptionsData container = persistedIndexNEW.getContainer(project.getName());
+			if (container != null) {
+				return container.getResourceDescription(uri);
+			}
+		}
+		return persistedIndexNEW.getResourceDescription(uri);
 	}
 
 	/** Adds a {@link IResourceTaskListener listener}. */
