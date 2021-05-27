@@ -47,6 +47,7 @@ public class N4jscInit {
 		InitConfiguration config = new InitConfiguration();
 		if (options.isYes()) {
 			config.packageJson = PackageJsonContents.defaults(options);
+			config.yarnPackageJson = YarnPackageJsonContents.defaults();
 		} else if (options.getAnswers() != null) {
 			useAnswers(options, config);
 		} else {
@@ -57,7 +58,6 @@ public class N4jscInit {
 	}
 
 	private static void useAnswers(N4jscOptions options, InitConfiguration config) {
-
 		String[] answers = { "", "", "", "", "", "", "" };
 		String[] userAnswers = options.getAnswers().split("(?<=[^\\\\]|^),");
 		System.arraycopy(userAnswers, 0, answers, 0, userAnswers.length);
@@ -114,7 +114,6 @@ public class N4jscInit {
 		setInitType(options, config, userInput);
 
 		PackageJsonContents defaults = config.packageJson;
-		N4jscConsole.println("Define properties:");
 		N4jscConsole.print(String.format("name: (%s) ", defaults.name));
 		userInput = N4jscConsole.readLine();
 		if (!userInput.isBlank()) {
@@ -229,7 +228,7 @@ public class N4jscInit {
 				if (!workspaceMatch(workspacesProperty, config.yarnRoot, config.projectRoot)) {
 					throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
 							"Creating a new project inside a yarn project requires either to explicitly pass option --workspaces or "
-									+ "the current working directory to be inside a valid workspaces directory of the yarn project.");
+									+ "the current working directory to be inside a new project folder of a valid workspaces directory of the yarn project.");
 				}
 
 				initProject(config);
@@ -238,6 +237,9 @@ public class N4jscInit {
 
 				config.workspacesDir = config.yarnRoot.resolve(workspacesOption);
 				config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
+				for (int i = 0; config.projectRoot.toFile().exists(); i++) {
+					config.projectRoot = Path.of(config.projectRoot.toString() + "_" + i);
+				}
 				if (!workspaceMatch(workspacesProperty, cwd, config.projectRoot)) {
 					try {
 						PackageJsonModificationUtils.addToWorkspaces(parentPackageJson, workspacesOption + "/*");

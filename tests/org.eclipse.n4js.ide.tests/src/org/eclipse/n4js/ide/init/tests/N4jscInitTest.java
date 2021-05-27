@@ -68,7 +68,8 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "", FileUtils.serializeFileTree(cwd));
 
 		npmInstall(cwd.toPath());
-		n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
+		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
+		assertEquals(0, result.getTranspiledFilesCount());
 	}
 
 	/** fail due to existing package.json file */
@@ -112,8 +113,28 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		npmInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
 		assertEquals(1, result.getTranspiledFilesCount());
-		ProcessResult resultNodejs = runNodejs(cwd.toPath(), Path.of("."));
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("."));
 		assertEquals("Hello World", resultNodejs.getStdOut());
+	}
+
+	/** test hello world test example */
+	@Test
+	public void helloWorldTested() throws Exception {
+		String answers = "t";
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
+		n4jsc(options, SUCCESS);
+
+		npmInstall(cwd.toPath());
+
+		ProcessResult resultBuild = npmRun(cwd.toPath(), "run", "build");
+		assertTrue(resultBuild.getStdOut().contains("Transpiled: 4"));
+
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("."));
+		assertEquals("Hello World", resultNodejs.getStdOut());
+
+		ProcessResult resultTest = npmRun(cwd.toPath(), "run", "test");
+		assertTrue(resultTest.getStdOut().contains(
+				"Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0"));
 	}
 
 	/** test another project name */
@@ -121,10 +142,64 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	public void otherName() throws Exception {
 		String answers = ",otherName";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
-		n4jsc(options, SUCCESS);
+		CliCompileResult result = n4jsc(options, SUCCESS);
+		assertEquals(1, result.getTranspiledFilesCount());
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertTrue(packagejsonContents.contains("  \"name\": \"otherName\",\n"));
+	}
+
+	/** test also create yarn */
+	@Test
+	public void yarn() throws Exception {
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ packages\n"
+				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+
+		yarnInstall(cwd.toPath());
+		n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
+	}
+
+	/** test yarn hello world */
+	@Test
+	public void yarnHelloWorld() throws Exception {
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath())
+				.workspaces(new File("packages"))
+				.answers("e");
+		n4jsc(options, SUCCESS);
+
+		yarnInstall(cwd.toPath());
+		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
+		assertEquals(1, result.getTranspiledFilesCount());
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/TestInit2"));
+		assertEquals("Hello World", resultNodejs.getStdOut());
+	}
+
+	/** test yarn hello world test */
+	@Test
+	public void yarnHelloWorldTested() throws Exception {
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath())
+				.workspaces(new File("packages"))
+				.answers("t");
+		n4jsc(options, SUCCESS);
+
+		yarnInstall(cwd.toPath());
+
+		ProcessResult resultBuild = yarnRun(cwd.toPath(), "run", "build");
+		assertTrue(resultBuild.getStdOut().contains("Transpiled: 4"));
+
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/TestInit2"));
+		assertEquals("Hello World", resultNodejs.getStdOut());
+
+		ProcessResult resultTest = yarnRun(cwd.toPath(), "run", "test");
+		assertTrue(resultTest.getStdOut().contains(
+				"Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0"));
 	}
 
 }
