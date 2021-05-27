@@ -74,7 +74,8 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				+ "   version             Print version of this tool\n"
 				+ " DIR               : name of n4js project or workspace directory (default: .)\n"
 				+ " --clean (-c)      : clean output folders at start (default: false)\n"
-				+ " --help (-h)       : prints help and exits (default: false)\n"
+				+ " --help (-h)       : prints help and exits. Define a goal for goal-specific\n"
+				+ "                     help. (default: false)\n"
 				+ " --maxErrs N       : set the maximum number of errors to print (default: 0)\n"
 				+ " --maxWarns N      : set the maximum number of warnings to print (default: 0)\n"
 				+ " --noPersist (-np) : disable persisting of type index to disk. (default: false)\n"
@@ -87,7 +88,8 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	private String getUsageExpectationLSP() {
 		return "Usage: n4jsc lsp [OPTION(s)]\n"
-				+ " --help (-h)    : prints help and exits (default: false)\n"
+				+ " --help (-h)    : prints help and exits. Define a goal for goal-specific help.\n"
+				+ "                  (default: false)\n"
 				+ " --port (-p) N  : set the port of the lsp server (default: 5007)\n"
 				+ " --showSetup    : prints n4jsc setup (default: false)\n"
 				+ " --stdio        : uses stdin/stdout for communication instead of sockets\n"
