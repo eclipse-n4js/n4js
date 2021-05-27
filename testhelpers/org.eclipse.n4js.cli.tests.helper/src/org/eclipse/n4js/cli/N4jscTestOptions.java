@@ -247,6 +247,12 @@ public class N4jscTestOptions extends N4jscOptions {
 	}
 
 	/** Sets option */
+	public N4jscTestOptions answers(String answers) {
+		setDefinedOption(() -> ((InitOptions) options).answers = answers);
+		return this;
+	}
+
+	/** Sets option */
 	public N4jscTestOptions scope() {
 		setDefinedOption(() -> ((InitOptions) options).scope = true);
 		return this;

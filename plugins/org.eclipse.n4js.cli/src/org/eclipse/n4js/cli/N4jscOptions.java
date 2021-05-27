@@ -135,7 +135,7 @@ public class N4jscOptions {
 				help = true)
 		boolean version = false;
 
-		@Option(name = "--help", aliases = "-h", usage = "prints help and exits", //
+		@Option(name = "--help", aliases = "-h", usage = "prints help and exits. Define a goal for goal-specific help.", //
 				handler = N4JSBooleanOptionHandler.class, //
 				help = true)
 		boolean help = false;

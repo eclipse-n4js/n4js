@@ -422,7 +422,7 @@ public abstract class FileUtils {
 	private static String serializeFileTree(File root, int indentLevel) {
 		String indentStr = "                                           ".substring(0, Math.max(0, indentLevel - 1) * 2);
 		if (root.isFile()) {
-			indentStr = (indentLevel > 0) ? "- " : "";
+			indentStr += (indentLevel > 0) ? "- " : "";
 			return indentStr + root.getName() + "\n";
 		}
 		if (root.isDirectory()) {
@@ -431,7 +431,7 @@ public abstract class FileUtils {
 			for (int i = 0; i < childFildes.length; i++) {
 				subtree += serializeFileTree(childFildes[i], indentLevel + 1);
 			}
-			indentStr = (indentLevel > 0) ? "+ " : "";
+			indentStr += (indentLevel > 0) ? "+ " : "";
 			return indentStr + root.getName() + "\n" + subtree;
 		}
 		return "";

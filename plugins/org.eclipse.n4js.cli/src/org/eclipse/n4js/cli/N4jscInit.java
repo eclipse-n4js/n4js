@@ -67,52 +67,82 @@ public class N4jscInit {
 				config.packageJson = PackageJsonContents.defaults(options);
 				break;
 			}
-			customize(config);
+			customize(options, config);
 		}
 		initProject(options, config);
 		return N4jscExitState.SUCCESS;
 	}
 
-	private static void customize(InitConfiguration config) {
+	private static void customize(N4jscOptions options, InitConfiguration config) {
 		PackageJsonContents defaults = config.packageJson;
-		N4jscConsole.println("Define properties:");
-		N4jscConsole.print(String.format("name: (%s) ", defaults.name));
-		String userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.name = userInput;
-		}
 
-		N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
-		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.version = userInput;
-		}
+		if (options.getAnswers() != null) {
+			String[] answers = new String[6];
+			String[] userAnswers = options.getAnswers().split("(?<=[^\\\\]|^),");
+			System.arraycopy(userAnswers, 0, answers, 0, userAnswers.length);
 
-		N4jscConsole.print(String.format("main module: (%s) ", Strings.nullToEmpty(defaults.main)));
-		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			Pair<URI, URI> moduleNames = interpretModuleNames(userInput);
-			defaults.main = moduleNames.getKey().toFileString();
-			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
-			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
-		}
+			if (answers[0] != null) {
+				defaults.name = answers[0];
+			}
+			if (answers[1] != null) {
+				defaults.version = answers[1];
+			}
+			if (answers[2] != null) {
+				Pair<URI, URI> moduleNames = interpretModuleNames(answers[2]);
+				defaults.main = moduleNames.getKey().toFileString();
+				defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+				config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
+			}
+			if (answers[3] != null) {
+				defaults.author = answers[3];
+			}
+			if (answers[4] != null) {
+				defaults.license = answers[4];
+			}
+			if (answers[5] != null) {
+				defaults.description = answers[5];
+			}
 
-		N4jscConsole.print(String.format("author: (%s) ", Strings.nullToEmpty(defaults.author)));
-		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.author = userInput;
-		}
+		} else {
+			N4jscConsole.println("Define properties:");
+			N4jscConsole.print(String.format("name: (%s) ", defaults.name));
+			String userInput = N4jscConsole.readLine();
+			if (!userInput.isBlank()) {
+				defaults.name = userInput;
+			}
 
-		N4jscConsole.print(String.format("license: (%s) ", Strings.nullToEmpty(defaults.license)));
-		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.license = userInput;
-		}
+			N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
+			userInput = N4jscConsole.readLine();
+			if (!userInput.isBlank()) {
+				defaults.version = userInput;
+			}
 
-		N4jscConsole.print(String.format("description: (%s) ", Strings.nullToEmpty(defaults.description)));
-		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.description = userInput;
+			N4jscConsole.print(String.format("main module: (%s) ", Strings.nullToEmpty(defaults.main)));
+			userInput = N4jscConsole.readLine();
+			if (!userInput.isBlank()) {
+				Pair<URI, URI> moduleNames = interpretModuleNames(userInput);
+				defaults.main = moduleNames.getKey().toFileString();
+				defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+				config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
+			}
+
+			N4jscConsole.print(String.format("author: (%s) ", Strings.nullToEmpty(defaults.author)));
+			userInput = N4jscConsole.readLine();
+			if (!userInput.isBlank()) {
+				defaults.author = userInput;
+			}
+
+			N4jscConsole.print(String.format("license: (%s) ", Strings.nullToEmpty(defaults.license)));
+			userInput = N4jscConsole.readLine();
+			if (!userInput.isBlank()) {
+				defaults.license = userInput;
+			}
+
+			N4jscConsole.print(String.format("description: (%s) ", Strings.nullToEmpty(defaults.description)));
+			userInput = N4jscConsole.readLine();
+			if (!userInput.isBlank()) {
+				defaults.description = userInput;
+			}
 		}
 	}
 
@@ -224,6 +254,11 @@ public class N4jscInit {
 		if (!candidate.exists()) {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
 					"Inconsistent state: " + candidate.toString() + " should exist but it does not.");
+		}
+
+		if (candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
+			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+					"Current working directory must not contain a package.json file.");
 		}
 
 		try (JsonReader jReader = new JsonReader(new FileReader(candidate))) {
