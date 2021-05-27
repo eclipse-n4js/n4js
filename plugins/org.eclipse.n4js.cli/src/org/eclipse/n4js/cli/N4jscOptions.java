@@ -414,12 +414,17 @@ public class N4jscOptions {
 			return N4jscGoal.init;
 		}
 
-		@Option(name = "--yes", aliases = "-y", //
+		@Option(name = "--yes", aliases = "-y", forbids = "--answers", //
 				usage = "skips the questionnaire", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean yes = false;
 
-		@Option(name = "--scope", //
+		@Option(name = "--answers", aliases = "-a", forbids = "--yes", //
+				usage = "comma separated string of answers for the questionnaire. Can be incomplete.", //
+				handler = N4JSFileOptionHandler.class)
+		String answers;
+
+		@Option(name = "--scope", aliases = "-s", //
 				usage = "creates a scoped project. uses the parent directory as the scope name", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean scope = false;
@@ -659,6 +664,12 @@ public class N4jscOptions {
 	public boolean isYes() {
 		Preconditions.checkState(options instanceof InitOptions);
 		return ((InitOptions) options).yes;
+	}
+
+	/** @return true iff {@code --answers} */
+	public String getAnswers() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).answers;
 	}
 
 	/** @return true iff {@code --scope} */

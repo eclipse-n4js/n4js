@@ -414,4 +414,27 @@ public abstract class FileUtils {
 		return normalized;
 	}
 
+	/** @return a serialized file tree starting from the given root. */
+	public static String serializeFileTree(File root) {
+		return serializeFileTree(root, 0);
+	}
+
+	private static String serializeFileTree(File root, int indentLevel) {
+		String indentStr = "                                           ".substring(0, Math.max(0, indentLevel - 1) * 2);
+		if (root.isFile()) {
+			indentStr = (indentLevel > 0) ? "- " : "";
+			return indentStr + root.getName() + "\n";
+		}
+		if (root.isDirectory()) {
+			String subtree = "";
+			File[] childFildes = root.listFiles();
+			for (int i = 0; i < childFildes.length; i++) {
+				subtree += serializeFileTree(childFildes[i], indentLevel + 1);
+			}
+			indentStr = (indentLevel > 0) ? "+ " : "";
+			return indentStr + root.getName() + "\n" + subtree;
+		}
+		return "";
+	}
+
 }
