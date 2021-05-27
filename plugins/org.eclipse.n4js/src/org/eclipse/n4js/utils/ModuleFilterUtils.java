@@ -107,7 +107,7 @@ public class ModuleFilterUtils {
 		if (globSpecifier == null) {
 			return false;
 		}
-		boolean matches = prjRelativeLocation.startsWith(globSpecifier);
+		boolean matches = prjRelativeLocation.toString().startsWith(globSpecifier);
 		if (!matches) {
 			PathMatcher pathMatcher = createPathMatcher(globSpecifier);
 			matches = pathMatcher.matches(prjRelativeLocation);
