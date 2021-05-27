@@ -153,7 +153,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(packagejsonContents.contains("  \"name\": \"otherName\",\n"));
 	}
 
-	/** test another project name */
+	/** test for a custom main module */
 	@Test
 	public void mainModule1Compile() throws Exception {
 		String answers = ",,,index.js";
@@ -201,7 +201,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals(1, result.getTranspiledFilesCount());
 	}
 
-	/** test another project name */
+	/** test for a custom main module */
 	@Test
 	public void mainModule2() throws Exception {
 		String answers = ",,,index.n4js";
@@ -219,7 +219,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "", FileUtils.serializeFileTree(cwd));
 	}
 
-	/** test another project name */
+	/** test for a custom main module */
 	@Test
 	public void mainModule3() throws Exception {
 		String answers = ",,,index.jsx";
@@ -237,7 +237,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "", FileUtils.serializeFileTree(cwd));
 	}
 
-	/** test another project name */
+	/** test for a custom main module */
 	@Test
 	public void mainModule4() throws Exception {
 		String answers = ",,,index.n4jsx";
