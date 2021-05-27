@@ -163,7 +163,7 @@ public class N4jscInit {
 		}
 
 		int lastDotIdx = userInput.lastIndexOf(".");
-		int endIdx = lastDotIdx < 1 ? userInput.length() : lastDotIdx - 1;
+		int endIdx = lastDotIdx < 1 ? userInput.length() : lastDotIdx;
 		String fName = userInput.substring(0, endIdx);
 		String fExtension = endIdx + 1 < userInput.length() ? userInput.substring(endIdx + 1) : "";
 
@@ -237,7 +237,7 @@ public class N4jscInit {
 
 				config.workspacesDir = config.yarnRoot.resolve(workspacesOption);
 				config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
-				for (int i = 0; config.projectRoot.toFile().exists(); i++) {
+				for (int i = 0; config.projectRoot.resolve(N4JSGlobals.PACKAGE_JSON).toFile().exists(); i++) {
 					config.projectRoot = Path.of(config.projectRoot.toString() + "_" + i);
 				}
 				if (!workspaceMatch(workspacesProperty, cwd, config.projectRoot)) {

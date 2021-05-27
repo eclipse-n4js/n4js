@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.init.tests;
 import static org.eclipse.n4js.N4JSGlobals.PACKAGE_JSON;
 import static org.eclipse.n4js.cli.N4jscExitCode.INIT_ERROR_WORKING_DIR;
 import static org.eclipse.n4js.cli.N4jscExitCode.SUCCESS;
+import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.IMPLICIT_COMPILE;
 import static org.eclipse.n4js.cli.N4jscTestOptions.INIT;
 import static org.junit.Assert.assertEquals;
@@ -143,10 +144,115 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		String answers = ",otherName";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		CliCompileResult result = n4jsc(options, SUCCESS);
-		assertEquals(1, result.getTranspiledFilesCount());
+
+		npmInstall(cwd.toPath());
+		result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), VALIDATION_ERRORS);
+		assertEquals(0, result.getTranspiledFilesCount()); // there are no files to transpile
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertTrue(packagejsonContents.contains("  \"name\": \"otherName\",\n"));
+	}
+
+	/** test another project name */
+	@Test
+	public void mainModule1Compile() throws Exception {
+		String answers = ",,,index.js";
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
+		n4jsc(options, SUCCESS);
+
+		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertEquals("{\n"
+				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"version\": \"0.0.1\",\n"
+				+ "  \"main\": \"src-gen/index.js\",\n"
+				+ "  \"scripts\": {\n"
+				+ "    \"build\": \"n4jsc compile . --clean || true\"\n"
+				+ "  },\n"
+				+ "  \"dependencies\": {\n"
+				+ "    \"n4js-runtime\": \"\",\n"
+				+ "    \"n4js-runtime-es2015\": \"\"\n"
+				+ "  },\n"
+				+ "  \"devDependencies\": {\n"
+				+ "    \"n4js-cli\": \"\"\n"
+				+ "  },\n"
+				+ "  \"n4js\": {\n"
+				+ "    \"projectType\": \"library\",\n"
+				+ "    \"mainModule\": \"index\",\n"
+				+ "    \"output\": \"src-gen\",\n"
+				+ "    \"sources\": {\n"
+				+ "      \"source\": [\n"
+				+ "        \"src\"\n"
+				+ "      ]\n"
+				+ "    },\n"
+				+ "    \"requiredRuntimeLibraries\": [\n"
+				+ "      \"n4js-runtime-es2015\"\n"
+				+ "    ]\n"
+				+ "  }\n"
+				+ "}", packagejsonContents);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ src\n"
+				+ "  - index.n4js\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+
+		npmInstall(cwd.toPath());
+		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
+		assertEquals(1, result.getTranspiledFilesCount());
+	}
+
+	/** test another project name */
+	@Test
+	public void mainModule2() throws Exception {
+		String answers = ",,,index.n4js";
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
+		n4jsc(options, SUCCESS);
+
+		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertTrue(packagejsonContents.contains("  \"main\": \"src-gen/index.js\",\n"));
+		assertTrue(packagejsonContents.contains("    \"mainModule\": \"index\",\n"));
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ src\n"
+				+ "  - index.n4js\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+	}
+
+	/** test another project name */
+	@Test
+	public void mainModule3() throws Exception {
+		String answers = ",,,index.jsx";
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
+		n4jsc(options, SUCCESS);
+
+		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertTrue(packagejsonContents.contains("  \"main\": \"src-gen/index.jsx\",\n"));
+		assertTrue(packagejsonContents.contains("    \"mainModule\": \"index\",\n"));
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ src\n"
+				+ "  - index.n4jsx\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+	}
+
+	/** test another project name */
+	@Test
+	public void mainModule4() throws Exception {
+		String answers = ",,,index.n4jsx";
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
+		n4jsc(options, SUCCESS);
+
+		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertTrue(packagejsonContents.contains("  \"main\": \"src-gen/index.jsx\",\n"));
+		assertTrue(packagejsonContents.contains("    \"mainModule\": \"index\",\n"));
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ src\n"
+				+ "  - index.n4jsx\n"
+				+ "", FileUtils.serializeFileTree(cwd));
 	}
 
 	/** test also create yarn */
@@ -200,6 +306,115 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		ProcessResult resultTest = yarnRun(cwd.toPath(), "run", "test");
 		assertTrue(resultTest.getStdOut().contains(
 				"Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0"));
+	}
+
+	/** test yarn implicit */
+	@Test
+	public void yarnImplicit() throws Exception {
+		// create environment
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ packages\n"
+				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+
+		// test
+		File newProject = new File(cwd, "packages/newProject");
+		options = INIT().yes().setWorkingDirectory(newProject.toPath());
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ packages\n"
+				+ "  + newProject\n"
+				+ "    - package.json\n"
+				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+	}
+
+	/** test yarn at wrong location */
+	@Test
+	public void yarnWrongLocation1() throws Exception {
+		// create environment
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ packages\n"
+				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+
+		// test
+		File newProject = new File(cwd, "packages");
+		options = INIT().yes().setWorkingDirectory(newProject.toPath());
+		CliCompileResult result = n4jsc(options, INIT_ERROR_WORKING_DIR);
+
+		assertEquals(
+				"ERROR-410 (Error: Unsupported working directory):  "
+						+ "Creating a new project inside a yarn project requires either to explicitly pass option --workspaces or "
+						+ "the current working directory to be inside a new project folder of a valid workspaces directory of the yarn project.",
+				result.getStdOut());
+	}
+
+	/** test yarn at wrong location */
+	@Test
+	public void yarnWrongLocation2() throws Exception {
+		// create environment
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ packages\n"
+				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+
+		// test
+		options = INIT().yes().setWorkingDirectory(cwd.toPath()).workspaces(new File("packages"));
+		CliCompileResult result = n4jsc(options, INIT_ERROR_WORKING_DIR);
+
+		assertEquals(
+				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file.",
+				result.getStdOut());
+	}
+
+	/** test yarn implicit */
+	@Test
+	public void yarnAddWorkspaces() throws Exception {
+		// create environment
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ packages\n"
+				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+
+		// test
+		File newProject = new File(cwd, "packages2/newProject");
+		newProject.mkdirs();
+		options = INIT().yes().setWorkingDirectory(newProject.toPath()).workspaces(new File("packages2"));
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ packages\n"
+				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "+ packages2\n"
+				+ "  + newProject\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
 	}
 
 }
