@@ -21,10 +21,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.eclipse.n4js.cli.N4jscTestOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -100,9 +102,23 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(packagejsonContents.contains("  \"name\": \"@TestInit/scopedProject\",\n"));
 	}
 
-	/** --answers test. */
+	/** test hello world example */
 	@Test
-	public void optionsAnswers() throws Exception {
+	public void helloWorld() throws Exception {
+		String answers = "e";
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
+		n4jsc(options, SUCCESS);
+
+		npmInstall(cwd.toPath());
+		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
+		assertEquals(1, result.getTranspiledFilesCount());
+		ProcessResult resultNodejs = runNodejs(cwd.toPath(), Path.of("."));
+		assertEquals("Hello World", resultNodejs.getStdOut());
+	}
+
+	/** test another project name */
+	@Test
+	public void otherName() throws Exception {
 		String answers = ",otherName";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
