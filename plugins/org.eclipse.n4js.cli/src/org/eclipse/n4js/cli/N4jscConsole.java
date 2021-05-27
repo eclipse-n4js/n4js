@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.cli;
 
+import java.io.Console;
 import java.io.PrintStream;
 import java.util.Stack;
 
@@ -80,6 +81,10 @@ public class N4jscConsole {
 
 	/** Reads a string terminated with a new-line from the console */
 	public static String readLine() {
-		return System.console().readLine();
+		Console console = System.console();
+		if (console == null) {
+			throw new RuntimeException("No console available");
+		}
+		return console.readLine();
 	}
 }

@@ -387,10 +387,10 @@ public class PackageJsonModificationUtils {
 			return false;
 		}
 		ElementWithRegion workspacesEntry = workspacesEntries.get(0);
-		String newValue = workspacesEntry.value + ", " + additionalWorkspaces;
+		String newValue = workspacesEntry.value + ", \"" + additionalWorkspaces + "\"";
 		StringBuilder newPackageJsonStr = new StringBuilder(packageJsonStr);
-		int startIdx = workspacesEntry.offset + 1;
-		int endIdx = workspacesEntry.offset + workspacesEntry.length - 1;
+		int startIdx = workspacesEntry.offset;
+		int endIdx = workspacesEntry.offset + workspacesEntry.length;
 		newPackageJsonStr.replace(startIdx, endIdx, newValue);
 		try (FileWriter fw = new FileWriter(packageJson, false)) {
 			fw.write(newPackageJsonStr.toString());

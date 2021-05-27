@@ -20,11 +20,14 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
+import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -40,24 +43,110 @@ import com.google.gson.stream.JsonReader;
 public class N4jscInit {
 
 	/** Starts the compiler for goal INIT in a blocking fashion */
-	public static N4jscExitState start(N4jscOptions options) {
-		PackageJsonContents defaults = PackageJsonContents.defaults(options);
-		if (!options.isYes()) {
-			customize(defaults);
+	public static N4jscExitState start(N4jscOptions options) throws N4jscException {
+		InitConfiguration config = new InitConfiguration();
+		if (options.isYes()) {
+			config.packageJson = PackageJsonContents.defaults(options);
+		} else {
+			N4jscConsole.println("Add 'Hello World' example (type 'e') including a test example (type 't')? (no)");
+			String userInput = N4jscConsole.readLine();
+			switch (userInput) {
+			case "e":
+				config.yarnPackageJson = YarnPackageJsonContents.defaults();
+				config.packageJson = PackageJsonContents.defaults(options).helloWorld();
+				config.files.add(new FileHelloWorld());
+				break;
+			case "t":
+				config.yarnPackageJson = YarnPackageJsonContents.defaults().defaultsTested();
+				config.packageJson = PackageJsonContents.defaults(options).helloWorld().helloWorldTests();
+				config.files.add(new FileHelloWorld());
+				config.files.add(new FileHelloWorldTest());
+				break;
+			default:
+				config.yarnPackageJson = YarnPackageJsonContents.defaults();
+				config.packageJson = PackageJsonContents.defaults(options);
+				break;
+			}
+			customize(config);
 		}
+		initProject(options, config);
 		return N4jscExitState.SUCCESS;
 	}
 
-	private static void customize(PackageJsonContents defaults) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonObject jsonObj = (JsonObject) gson.toJsonTree(defaults);
-		for (String name : jsonObj.keySet()) {
-			N4jscConsole.print(name + ": ");
-			String userInput = N4jscConsole.readLine();
-			if (!userInput.isBlank()) {
-				jsonObj.addProperty(name, userInput);
-			}
+	private static void customize(InitConfiguration config) {
+		PackageJsonContents defaults = config.packageJson;
+		N4jscConsole.println("Define properties:");
+		N4jscConsole.print(String.format("name: (%s) ", defaults.name));
+		String userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.name = userInput;
 		}
+
+		N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.version = userInput;
+		}
+
+		N4jscConsole.print(String.format("main module: (%s) ", Strings.nullToEmpty(defaults.main)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			Pair<URI, URI> moduleNames = interpretModuleNames(userInput);
+			defaults.main = moduleNames.getKey().toFileString();
+			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
+		}
+
+		N4jscConsole.print(String.format("author: (%s) ", Strings.nullToEmpty(defaults.author)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.author = userInput;
+		}
+
+		N4jscConsole.print(String.format("license: (%s) ", Strings.nullToEmpty(defaults.license)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.license = userInput;
+		}
+
+		N4jscConsole.print(String.format("description: (%s) ", Strings.nullToEmpty(defaults.description)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.description = userInput;
+		}
+	}
+
+	static Pair<URI, URI> interpretModuleNames(String userInput) {
+		if (userInput.startsWith("src/")) {
+			userInput = userInput.substring("src/".length());
+		}
+		if (userInput.startsWith("src-gen/")) {
+			userInput = userInput.substring("src-gen/".length());
+		}
+
+		int lastDotIdx = userInput.lastIndexOf(".");
+		int endIdx = lastDotIdx < 1 ? userInput.length() : lastDotIdx - 1;
+		String fName = userInput.substring(0, endIdx);
+		String fExtension = endIdx + 1 < userInput.length() ? userInput.substring(endIdx + 1) : "";
+
+		String jsExtension;
+		String n4jsExtension;
+		switch (fExtension) {
+		case "jsx":
+		case "n4jsx":
+			jsExtension = "jsx";
+			n4jsExtension = "n4jsx";
+			break;
+		case "js":
+		case "n4js":
+		default:
+			jsExtension = "js";
+			n4jsExtension = "n4js";
+		}
+
+		return Pair.of(
+				URI.createFileURI("src-gen/" + fName + "." + jsExtension),
+				URI.createFileURI(fName + "." + n4jsExtension));
 	}
 
 	static N4jscExitState initProject(N4jscOptions options, InitConfiguration config) throws N4jscException {
@@ -76,6 +165,15 @@ public class N4jscInit {
 				config.workspacesDir = cwd.resolve(workspacesOption);
 				config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
 				initYarnProject(config);
+
+				// FIXME: GH-2143
+				String folder = (config.yarnRoot.endsWith(".") ? config.yarnRoot.getParent() : config.yarnRoot)
+						.getFileName().toString();
+				if (config.packageJson.name.equals(folder)) {
+					config.packageJson.name = config.packageJson.name + "2";
+					config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
+				}
+
 				initProject(config);
 			}
 
@@ -84,8 +182,11 @@ public class N4jscInit {
 			config.yarnRoot = parentPackageJson.getParentFile().toPath();
 			List<String> workspacesProperty = getYarnWorkspaces(parentPackageJson);
 			if (workspacesOption == null) {
-				config.workspacesDir = cwd;
-				config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
+				config.projectRoot = cwd;
+				config.workspacesDir = config.projectRoot.getParent();
+				if (options.isScope()) {
+					config.workspacesDir = config.workspacesDir.getParent();
+				}
 				if (!workspaceMatch(workspacesProperty, config.yarnRoot, config.projectRoot)) {
 					throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
 							"Creating a new project inside a yarn project requires either to explicitly pass option --workspaces or "
@@ -110,7 +211,8 @@ public class N4jscInit {
 			}
 		}
 
-		N4jscConsole.println("Init done. Please run 'npm install' to install dependencies.");
+		String cmd = (workingDirState == WorkingDirState.InEmptyFolder) && (workspacesOption == null) ? "npm" : "yarn";
+		N4jscConsole.println("Init done. Please run '" + cmd + " install' to install dependencies.");
 		return N4jscExitState.SUCCESS;
 	}
 
@@ -193,11 +295,9 @@ public class N4jscInit {
 						workspacesEntries.add(workspaceEntry.getAsString());
 					}
 				}
-
-				return workspacesEntries;
 			}
 
-			return null;
+			return workspacesEntries;
 		} catch (Exception e) {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, e);
 		}
@@ -216,15 +316,15 @@ public class N4jscInit {
 
 	static N4jscExitState initYarnProject(InitConfiguration config) throws N4jscException {
 		config.workspacesDir.toFile().mkdirs();
-		YarnPackageJsonContents yarnPackageJsonContents = YarnPackageJsonContents.defaults();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String yarnJsonString = gson.toJson(yarnPackageJsonContents);
+		String yarnJsonString = gson.toJson(config.yarnPackageJson);
 		try (FileWriter fw = new FileWriter(config.yarnRoot.resolve(N4JSGlobals.PACKAGE_JSON).toFile())) {
 			fw.write(yarnJsonString);
 		} catch (IOException e) {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, e);
 		}
 
+		config.packageJson.inYarnProject();
 		return N4jscExitState.SUCCESS;
 	}
 
@@ -251,31 +351,8 @@ public class N4jscInit {
 		InEmptyFolder, InYarnProjectRoot, InYarnProjectSubdir
 	}
 
-	public static void main(String[] args) throws N4jscException {
-
-		getPackageJsonContents();
-
-	}
-
-	static LinkedHashMap<String, String> getFurtherQuestions() {
-		return new LinkedHashMap<>() {
-			{
-				put("Add 'Hello World' example with test? (no)", "");
-			}
-		};
-	}
-
-	static void getPackageJsonContents() throws N4jscException {
-
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-		N4jscOptions options = new N4jscOptions();
-		options.read("init");
-
-		PackageJsonContents pckJson = PackageJsonContents.defaults(options);
-		String jsonString = gson.toJson(pckJson);
-		System.out.println(jsonString);
-	}
+	static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
+	static final String NPM_RUN_TEST = "n4js-mangelhaft";
 
 	static class InitConfiguration {
 		Path yarnRoot;
@@ -283,7 +360,7 @@ public class N4jscInit {
 		Path projectRoot;
 		YarnPackageJsonContents yarnPackageJson;
 		PackageJsonContents packageJson;
-		Collection<ExampleFile> files;
+		Collection<ExampleFile> files = new ArrayList<>();
 	}
 
 	static class YarnPackageJsonContents {
@@ -294,9 +371,9 @@ public class N4jscInit {
 				put("n4js-cli", "");
 			}
 		};
-		LinkedHashMap<String, String> script = new LinkedHashMap<>() {
+		LinkedHashMap<String, String> scripts = new LinkedHashMap<>() {
 			{
-				put("build", "n4jsc compile . --clean");
+				put("build", NPM_RUN_BUILD);
 			}
 		};
 		String[] workspaces = { "packages/*" };
@@ -306,13 +383,12 @@ public class N4jscInit {
 			return pjc;
 		}
 
-		static YarnPackageJsonContents defaultsTested() {
-			YarnPackageJsonContents pjc = new YarnPackageJsonContents();
-			pjc.script.put("test", "mangelhaft-cli");
-			pjc.devDependencies.put("n4js-mangelhaft-cli", "");
-			pjc.devDependencies.put("org.eclipse.n4js.mangelhaft", "");
-			pjc.devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
-			return pjc;
+		YarnPackageJsonContents defaultsTested() {
+			scripts.put("test", NPM_RUN_TEST);
+			devDependencies.put("n4js-mangelhaft-cli", "");
+			devDependencies.put("org.eclipse.n4js.mangelhaft", "");
+			devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
+			return this;
 		}
 	}
 
@@ -321,15 +397,16 @@ public class N4jscInit {
 		String version = "0.0.1";
 		String description;
 		String main;
-		LinkedHashMap<String, String> script = new LinkedHashMap<>() {
+		LinkedHashMap<String, String> scripts = new LinkedHashMap<>() {
 			{
-				put("build", "n4jsc compile . --clean");
+				put("build", NPM_RUN_BUILD);
 			}
 		};
 		String author;
 		String license;
 		LinkedHashMap<String, String> dependencies = new LinkedHashMap<>() {
 			{
+				put("n4js-runtime", "");
 				put("n4js-runtime-es2015", "");
 			}
 		};
@@ -346,22 +423,26 @@ public class N4jscInit {
 			return pjc;
 		}
 
-		static PackageJsonContents helloWorld(N4jscOptions options) {
-			PackageJsonContents helloWorld = defaults(options);
-			helloWorld.main = "src-gen/HelloWorldModule.js";
-			helloWorld.n4js.mainModule = "HelloWorldModule";
-			return helloWorld;
+		PackageJsonContents helloWorld() {
+			main = "src-gen/HelloWorld.js";
+			n4js.mainModule = "HelloWorld";
+			return this;
 		}
 
-		static PackageJsonContents helloWorldTested(N4jscOptions options) {
-			PackageJsonContents helloWorld = helloWorld(options);
-			helloWorld.script.put("test", "mangelhaft-cli");
-			helloWorld.devDependencies.put("n4js-mangelhaft-cli", "");
-			helloWorld.devDependencies.put("org.eclipse.n4js.mangelhaft", "");
-			helloWorld.devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
-			helloWorld.n4js.sources.test = new String[] { "tests" };
-			return helloWorld;
+		PackageJsonContents helloWorldTests() {
+			scripts.put("test", NPM_RUN_TEST);
+			devDependencies.put("n4js-mangelhaft-cli", "");
+			devDependencies.put("org.eclipse.n4js.mangelhaft", "");
+			devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
+			n4js.sources.test = new String[] { "tests" };
+			return this;
 		}
+
+		PackageJsonContents inYarnProject() {
+			scripts = null;
+			return this;
+		}
+
 	}
 
 	static class PropertyN4JS {
@@ -380,9 +461,14 @@ public class N4jscInit {
 
 	private static String defPackageName(N4jscOptions options) {
 		Path workDir = options.getWorkingDirectory();
-		String defPackageName = workDir.getName(workDir.getNameCount() - 1).toString();
+		int idx = workDir.getNameCount() - 1;
+		String defPackageName = workDir.getName(idx).toString();
+		if (".".equals(defPackageName)) {
+			idx--;
+			defPackageName = workDir.getName(idx).toString();
+		}
 		if (options.isScope()) {
-			defPackageName = "@" + workDir.getName(workDir.getNameCount() - 2).toString() + "/" + defPackageName;
+			defPackageName = "@" + workDir.getName(idx - 1).toString() + "/" + defPackageName;
 		}
 		return defPackageName;
 	}
@@ -394,6 +480,11 @@ public class N4jscInit {
 
 		void writeToDisk(Path targetDir) throws IOException {
 			File file = targetDir.resolve(getPath()).toFile();
+			if (file.exists()) {
+				file.delete();
+			}
+			file.getParentFile().mkdirs();
+			file.createNewFile();
 			String contents = String.join(System.lineSeparator(), getContents());
 			try (FileWriter fw = new FileWriter(file)) {
 				fw.write(contents);
@@ -404,17 +495,18 @@ public class N4jscInit {
 	static class FileHelloWorld extends ExampleFile {
 		@Override
 		Path getPath() {
-			return Path.of("src/HelloWorldModule.n4js");
+			return Path.of("src/HelloWorld.n4js");
 		}
 
 		@Override
 		String[] getContents() {
 			return new String[] {
 					"export public class WorldClass {",
-					"  greeting : String = 'Hello World';",
+					"  greeting : string = 'Hello World';",
 					"}",
 					"",
-					"console.log(new WorldClass().greeting);"
+					"console.log(new WorldClass().greeting);",
+					""
 			};
 		}
 	}
@@ -428,17 +520,43 @@ public class N4jscInit {
 		@Override
 		String[] getContents() {
 			return new String[] {
-					"import { WorldClass } from \"HelloWorldModule\";",
+					"import { WorldClass } from \"HelloWorld\";",
+					"import { Assert } from \"org/eclipse/n4js/mangelhaft/assert/Assert\";",
 					"",
-					"class TestModule {",
+					"export public class TestModule {",
 					"  @Test",
 					"  helloWorldTest() : void {",
-					"    val helloWorld = new HelloWorld()",
-					"    assertEquals('Hello World', helloWorld.greeting)",
+					"    let helloWorld = new WorldClass()",
+					"    Assert.equal('Hello World', helloWorld.greeting)",
 					"  }",
 					"}",
+					""
+			};
+		}
+	}
+
+	static class IndexFile extends ExampleFile {
+		final String name;
+
+		IndexFile(String name) {
+			this.name = name;
+		}
+
+		@Override
+		Path getPath() {
+			return Path.of("src/" + name);
+		}
+
+		@Override
+		String[] getContents() {
+			return new String[] {
 					"",
-					"console.log(new WorldClass().greeting);" };
+					"export public class MyClass {",
+					"  pi : number = 3.14;",
+					"  foo() : void {",
+					"  }",
+					"}",
+					"" };
 		}
 	}
 }
