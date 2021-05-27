@@ -72,7 +72,7 @@ public class InstallCompileRunN4jscExternalImportsTest extends AbstractCliCompil
 				+ "react-dom is not undefined true\n"
 				+ "imports from libs are different true";
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileToRun);
+		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

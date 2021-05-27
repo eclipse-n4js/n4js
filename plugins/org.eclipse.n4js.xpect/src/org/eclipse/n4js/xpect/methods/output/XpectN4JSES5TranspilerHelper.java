@@ -156,7 +156,7 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	private String doExecute(Path workingDir, Path fileToRun, boolean decorateStdStreams, String... options) {
-		ProcessResult processResult = new CliTools().runNodejs(workingDir, fileToRun, options);
+		ProcessResult processResult = new CliTools().nodejsRun(workingDir, fileToRun, options);
 		StringBuffer output = new StringBuffer();
 		output.append(processResult.getStdOut().trim());
 		String errOut = processResult.getErrOut().trim();

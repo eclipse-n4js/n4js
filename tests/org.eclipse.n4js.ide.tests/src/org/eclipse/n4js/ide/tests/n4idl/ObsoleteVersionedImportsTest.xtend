@@ -73,7 +73,7 @@ public class ObsoleteVersionedImportsTest extends AbstractCliCompileTest {
 		T#2: undefined
 		Q#1: undefined''';
 
-		val nodejsResult = runNodejs(workspace.toPath(), Path.of(fileToRun));
+		val nodejsResult = nodejsRun(workspace.toPath(), Path.of(fileToRun));
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 }
