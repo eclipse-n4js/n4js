@@ -421,7 +421,7 @@ public class N4jscOptions {
 
 		@Option(name = "--answers", aliases = "-a", forbids = "--yes", //
 				usage = "comma separated string of answers for the questionnaire. Can be incomplete.", //
-				handler = N4JSFileOptionHandler.class)
+				handler = N4JSStringOptionHandler.class)
 		String answers;
 
 		@Option(name = "--scope", aliases = "-s", //

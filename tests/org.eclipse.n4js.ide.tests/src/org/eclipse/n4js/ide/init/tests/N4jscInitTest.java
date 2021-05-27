@@ -103,7 +103,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** --answers test. */
 	@Test
 	public void optionsAnswers() throws Exception {
-		String answers = "otherName";
+		String answers = ",otherName";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
 

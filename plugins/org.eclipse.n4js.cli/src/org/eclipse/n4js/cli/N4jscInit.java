@@ -47,102 +47,111 @@ public class N4jscInit {
 		InitConfiguration config = new InitConfiguration();
 		if (options.isYes()) {
 			config.packageJson = PackageJsonContents.defaults(options);
+		} else if (options.getAnswers() != null) {
+			useAnswers(options, config);
 		} else {
-			N4jscConsole.println("Add 'Hello World' example (type 'e') including a test example (type 't')? (no)");
-			String userInput = N4jscConsole.readLine();
-			switch (userInput) {
-			case "e":
-				config.yarnPackageJson = YarnPackageJsonContents.defaults();
-				config.packageJson = PackageJsonContents.defaults(options).helloWorld();
-				config.files.add(new FileHelloWorld());
-				break;
-			case "t":
-				config.yarnPackageJson = YarnPackageJsonContents.defaults().defaultsTested();
-				config.packageJson = PackageJsonContents.defaults(options).helloWorld().helloWorldTests();
-				config.files.add(new FileHelloWorld());
-				config.files.add(new FileHelloWorldTest());
-				break;
-			default:
-				config.yarnPackageJson = YarnPackageJsonContents.defaults();
-				config.packageJson = PackageJsonContents.defaults(options);
-				break;
-			}
 			customize(options, config);
 		}
 		initProject(options, config);
 		return N4jscExitState.SUCCESS;
 	}
 
-	private static void customize(N4jscOptions options, InitConfiguration config) {
+	private static void useAnswers(N4jscOptions options, InitConfiguration config) {
+
+		String[] answers = { "", "", "", "", "", "", "" };
+		String[] userAnswers = options.getAnswers().split("(?<=[^\\\\]|^),");
+		System.arraycopy(userAnswers, 0, answers, 0, userAnswers.length);
+
+		setInitType(options, config, answers[0]);
 		PackageJsonContents defaults = config.packageJson;
 
-		if (options.getAnswers() != null) {
-			String[] answers = new String[6];
-			String[] userAnswers = options.getAnswers().split("(?<=[^\\\\]|^),");
-			System.arraycopy(userAnswers, 0, answers, 0, userAnswers.length);
+		if (!answers[1].isEmpty()) {
+			defaults.name = answers[1];
+		}
+		if (!answers[2].isEmpty()) {
+			defaults.version = answers[2];
+		}
+		if (!answers[3].isEmpty()) {
+			Pair<URI, URI> moduleNames = interpretModuleNames(answers[3]);
+			defaults.main = moduleNames.getKey().toFileString();
+			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
+		}
+		if (!answers[4].isEmpty()) {
+			defaults.author = answers[4];
+		}
+		if (!answers[5].isEmpty()) {
+			defaults.license = answers[5];
+		}
+		if (!answers[6].isEmpty()) {
+			defaults.description = answers[6];
+		}
+	}
 
-			if (answers[0] != null) {
-				defaults.name = answers[0];
-			}
-			if (answers[1] != null) {
-				defaults.version = answers[1];
-			}
-			if (answers[2] != null) {
-				Pair<URI, URI> moduleNames = interpretModuleNames(answers[2]);
-				defaults.main = moduleNames.getKey().toFileString();
-				defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
-				config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
-			}
-			if (answers[3] != null) {
-				defaults.author = answers[3];
-			}
-			if (answers[4] != null) {
-				defaults.license = answers[4];
-			}
-			if (answers[5] != null) {
-				defaults.description = answers[5];
-			}
+	private static void setInitType(N4jscOptions options, InitConfiguration config, String initType) {
+		switch (Strings.nullToEmpty(initType)) {
+		case "e":
+			config.yarnPackageJson = YarnPackageJsonContents.defaults();
+			config.packageJson = PackageJsonContents.defaults(options).helloWorld();
+			config.files.add(new FileHelloWorld());
+			break;
+		case "t":
+			config.yarnPackageJson = YarnPackageJsonContents.defaults().defaultsTested();
+			config.packageJson = PackageJsonContents.defaults(options).helloWorld().helloWorldTests();
+			config.files.add(new FileHelloWorld());
+			config.files.add(new FileHelloWorldTest());
+			break;
+		default:
+			config.yarnPackageJson = YarnPackageJsonContents.defaults();
+			config.packageJson = PackageJsonContents.defaults(options);
+			break;
+		}
+	}
 
-		} else {
-			N4jscConsole.println("Define properties:");
-			N4jscConsole.print(String.format("name: (%s) ", defaults.name));
-			String userInput = N4jscConsole.readLine();
-			if (!userInput.isBlank()) {
-				defaults.name = userInput;
-			}
+	private static void customize(N4jscOptions options, InitConfiguration config) {
+		N4jscConsole.print("Add 'Hello World' example (type 'e') including a test example (type 't')? (no) ");
+		String userInput = N4jscConsole.readLine();
+		setInitType(options, config, userInput);
 
-			N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
-			userInput = N4jscConsole.readLine();
-			if (!userInput.isBlank()) {
-				defaults.version = userInput;
-			}
+		PackageJsonContents defaults = config.packageJson;
+		N4jscConsole.println("Define properties:");
+		N4jscConsole.print(String.format("name: (%s) ", defaults.name));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.name = userInput;
+		}
 
-			N4jscConsole.print(String.format("main module: (%s) ", Strings.nullToEmpty(defaults.main)));
-			userInput = N4jscConsole.readLine();
-			if (!userInput.isBlank()) {
-				Pair<URI, URI> moduleNames = interpretModuleNames(userInput);
-				defaults.main = moduleNames.getKey().toFileString();
-				defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
-				config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
-			}
+		N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.version = userInput;
+		}
 
-			N4jscConsole.print(String.format("author: (%s) ", Strings.nullToEmpty(defaults.author)));
-			userInput = N4jscConsole.readLine();
-			if (!userInput.isBlank()) {
-				defaults.author = userInput;
-			}
+		N4jscConsole.print(String.format("main module: (%s) ", Strings.nullToEmpty(defaults.main)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			Pair<URI, URI> moduleNames = interpretModuleNames(userInput);
+			defaults.main = moduleNames.getKey().toFileString();
+			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
+		}
 
-			N4jscConsole.print(String.format("license: (%s) ", Strings.nullToEmpty(defaults.license)));
-			userInput = N4jscConsole.readLine();
-			if (!userInput.isBlank()) {
-				defaults.license = userInput;
-			}
+		N4jscConsole.print(String.format("author: (%s) ", Strings.nullToEmpty(defaults.author)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.author = userInput;
+		}
 
-			N4jscConsole.print(String.format("description: (%s) ", Strings.nullToEmpty(defaults.description)));
-			userInput = N4jscConsole.readLine();
-			if (!userInput.isBlank()) {
-				defaults.description = userInput;
-			}
+		N4jscConsole.print(String.format("license: (%s) ", Strings.nullToEmpty(defaults.license)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.license = userInput;
+		}
+
+		N4jscConsole.print(String.format("description: (%s) ", Strings.nullToEmpty(defaults.description)));
+		userInput = N4jscConsole.readLine();
+		if (!userInput.isBlank()) {
+			defaults.description = userInput;
 		}
 	}
 
