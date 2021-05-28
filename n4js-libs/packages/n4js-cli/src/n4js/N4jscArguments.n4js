@@ -21,8 +21,10 @@ export public class N4jscArguments {
     vmArgs: string[] = [];
     n4jscJar: string = N4JSC_JAR;
     goal: string;
-    /** working directory */
+    /** argument: target directory */
     dir: string;
+    /** argument: new version string */
+    newVersion: string;
     n4jscOptions: string[] = [];
 
     static fromParameters(goal: Goal, dir: string, options: ~Options+, vmOptions: ~VmOptions+, log: {function(string)})
@@ -120,15 +122,16 @@ export public class N4jscArguments {
         if (allOptions && allOptions.length > 0) {
             let index = 0;
             // parse goal
+            args.goal = null;
             if (Goal.literals.indexOf(allOptions[index]) >= 0) {
                 args.goal = allOptions[index];
                 index++;
-            } else {
-                args.goal = Goal.compile;
             }
             // parse dir
             if (allOptions[index] && !allOptions[index].startsWith("-")) {
-                if (args.goal != Goal.lsp) {
+                if (args.goal == Goal.setversions) {
+                    args.newVersion = allOptions[index];
+                } else if (args.goal != Goal.lsp) {
                     // ignore directory argument when goal is LSP to support search for n4js-cli.config in LSP case
                     args.dir = allOptions[index];
                 }
