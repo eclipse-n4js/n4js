@@ -60,7 +60,7 @@ public class N4jscOptions {
 
 	/** @return the usage string respecting the goal specified in the given options */
 	public static String getUsage(N4jscOptions options) {
-		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().goalName();
+		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
 		String dir = options.options.getDir() == null ? "" : " [DIR]";
 		String usage = String.format(USAGE_TEMPLATE, goal, dir);
 		return usage;
@@ -243,7 +243,7 @@ public class N4jscOptions {
 				// not implemented:
 				// @SubCommand(name = "watch", impl = WatchOptions.class),
 				// @SubCommand(name = "api", impl = APIOptions.class),
-				@SubCommand(name = "set-versions", impl = SetVersionsOptions.class),
+				@SubCommand(name = "setversions", impl = SetVersionsOptions.class),
 				@SubCommand(name = "init", impl = InitOptions.class),
 				@SubCommand(name = "version", impl = VersionOptions.class)
 		})
@@ -393,7 +393,7 @@ public class N4jscOptions {
 
 		@Override
 		N4jscGoal getGoal() {
-			return N4jscGoal.setVersions;
+			return N4jscGoal.setversions;
 		}
 
 		@Argument(metaVar = "VERSION", index = 0, required = true, //
@@ -424,12 +424,17 @@ public class N4jscOptions {
 				handler = N4JSStringOptionHandler.class)
 		String answers;
 
-		@Option(name = "--scope", aliases = "-s", //
+		@Option(name = "--scope", aliases = "-s", forbids = "--n4js", //
 				usage = "creates a scoped project. uses the parent directory as the scope name", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean scope = false;
 
-		@Option(name = "--workspaces", aliases = "-w", //
+		@Option(name = "--n4js", aliases = "-n", forbids = { "--scope", "--workspaces" }, //
+				usage = "extends an existing npm project in the current working directory with n4js entries", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean n4js = false;
+
+		@Option(name = "--workspaces", aliases = "-w", forbids = "--n4js", //
 				usage = "creates the new project inside the given workspaces directory. "
 						+ "Will also create a new workspace if not existing already."
 						+ "In case the current working directory is inside an existing workspaces directory,"
@@ -706,7 +711,7 @@ public class N4jscOptions {
 	public String toSettingsString() {
 		String s = "N4jsc.options=";
 		s += "\n  Current execution directory=" + new File(".").toPath().toAbsolutePath();
-		s += "\n  goal=" + getGoal().goalName();
+		s += "\n  goal=" + getGoal().name();
 		s += "\n  dir=" + options.getDir();
 		s += "\n  showSetup=" + options.showSetup;
 		s += "\n  verbose=" + options.verbose;

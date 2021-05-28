@@ -121,8 +121,8 @@ public class N4jscTestOptions extends N4jscOptions {
 		return instance;
 	}
 
-	/** @return a new instance of {@link N4jscTestOptions} with goal set-versions */
-	static public N4jscTestOptions SET_VERSIONS(String setVersions) {
+	/** @return a new instance of {@link N4jscTestOptions} with goal setversions */
+	static public N4jscTestOptions SETVERSIONS(String setVersions) {
 		N4jscTestOptions instance = new N4jscTestOptions();
 		instance.options = new SetVersionsOptions();
 		instance.setDefinedOption(() -> ((SetVersionsOptions) instance.options).setVersion = setVersions);
@@ -282,7 +282,7 @@ public class N4jscTestOptions extends N4jscOptions {
 				Field fieldCmd = ImplicitCompileOptions.class.getDeclaredField("cmd");
 				Argument argumentAnnotation = fieldCmd.getAnnotationsByType(Argument.class)[0];
 				OptionDef od = new OptionDef(argumentAnnotation, argumentAnnotation.multiValued());
-				ParsedOption<OptionDef> goal = new ParsedOption<>(od, null, options.getGoal().goalName());
+				ParsedOption<OptionDef> goal = new ParsedOption<>(od, null, options.getGoal().name());
 				List<ParsedOption<OptionDef>> extArguments = new ArrayList<>();
 				extArguments.add(goal);
 				extArguments.addAll(definedArguments);

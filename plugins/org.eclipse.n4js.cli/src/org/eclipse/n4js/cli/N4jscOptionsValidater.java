@@ -51,7 +51,7 @@ public class N4jscOptionsValidater {
 		case init:
 			break;
 
-		case setVersions:
+		case setversions:
 			break;
 
 		default:
