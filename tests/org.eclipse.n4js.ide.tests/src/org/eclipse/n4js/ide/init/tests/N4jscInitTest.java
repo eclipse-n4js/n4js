@@ -330,9 +330,9 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("TestInit\n"
 				+ "- package.json\n"
 				+ "+ packages\n"
-				+ "  + newProject\n"
-				+ "    - package.json\n"
 				+ "  + TestInit2\n"
+				+ "    - package.json\n"
+				+ "  + newProject\n"
 				+ "    - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
 	}

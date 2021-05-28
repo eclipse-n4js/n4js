@@ -26,6 +26,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -428,6 +430,7 @@ public abstract class FileUtils {
 		if (root.isDirectory()) {
 			String subtree = "";
 			File[] childFildes = root.listFiles();
+			Arrays.sort(childFildes, Comparator.comparing(File::isDirectory).thenComparing(File::getName));
 			for (int i = 0; i < childFildes.length; i++) {
 				subtree += serializeFileTree(childFildes[i], indentLevel + 1);
 			}
