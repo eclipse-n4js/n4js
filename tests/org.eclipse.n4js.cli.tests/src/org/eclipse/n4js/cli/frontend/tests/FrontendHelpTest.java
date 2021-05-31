@@ -69,7 +69,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				+ "   compile             Compile src folders\n"
 				+ "   clean               Clean output folders and type index\n"
 				+ "   lsp                 Start LSP server\n"
-				+ "   set-versions        Set versions of n4js-related dependencies\n"
+				+ "   setversions         Set versions of n4js-related dependencies\n"
 				+ "   init                Create an empty n4js project\n"
 				+ "   version             Print version of this tool\n"
 				+ " DIR               : name of n4js project or workspace directory (default: .)\n"
