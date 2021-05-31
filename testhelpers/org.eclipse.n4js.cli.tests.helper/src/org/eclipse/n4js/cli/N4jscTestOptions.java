@@ -264,6 +264,12 @@ public class N4jscTestOptions extends N4jscOptions {
 		return this;
 	}
 
+	/** Sets option */
+	public N4jscTestOptions n4js() {
+		setDefinedOption(() -> ((InitOptions) options).n4js = true);
+		return this;
+	}
+
 	/** Sets the working directory */
 	public N4jscTestOptions setWorkingDirectory(Path directory) {
 		setDefinedOption(() -> this.workingDir = directory.toAbsolutePath());

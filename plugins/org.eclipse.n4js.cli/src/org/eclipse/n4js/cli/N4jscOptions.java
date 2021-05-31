@@ -689,6 +689,12 @@ public class N4jscOptions {
 		return ((InitOptions) options).workspaces;
 	}
 
+	/** @return true iff {@code --n4js} */
+	public boolean isN4JS() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).n4js;
+	}
+
 	/** @return the working directory of n4jsc.jar */
 	public Path getWorkingDirectory() {
 		return workingDir;

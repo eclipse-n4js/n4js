@@ -17,19 +17,22 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -44,51 +47,26 @@ public class N4jscInit {
 
 	/** Starts the compiler for goal INIT in a blocking fashion */
 	public static N4jscExitState start(N4jscOptions options) throws N4jscException {
-		InitConfiguration config = new InitConfiguration();
+		InitConfiguration config;
 		if (options.isYes()) {
-			config.packageJson = PackageJsonContents.defaults(options);
-			config.yarnPackageJson = YarnPackageJsonContents.defaults();
+			config = getDefaultConfiguration(options, null);
 		} else if (options.getAnswers() != null) {
-			useAnswers(options, config);
+			String[] answers = { "", "", "", "", "", "", "" };
+			String[] userAnswers = options.getAnswers().split("(?<=[^\\\\]|^),");
+			System.arraycopy(userAnswers, 0, answers, 0, userAnswers.length);
+			config = getCustomizedConfiguration(options, answers);
 		} else {
-			customize(options, config);
+			String[] answers = inputUserAnswers(options);
+			config = getCustomizedConfiguration(options, answers);
 		}
-		initProject(options, config);
+		initProjects(options, config);
 		return N4jscExitState.SUCCESS;
 	}
 
-	private static void useAnswers(N4jscOptions options, InitConfiguration config) {
-		String[] answers = { "", "", "", "", "", "", "" };
-		String[] userAnswers = options.getAnswers().split("(?<=[^\\\\]|^),");
-		System.arraycopy(userAnswers, 0, answers, 0, userAnswers.length);
+	private static InitConfiguration getDefaultConfiguration(N4jscOptions options, String initType)
+			throws N4jscException {
 
-		setInitType(options, config, answers[0]);
-		PackageJsonContents defaults = config.packageJson;
-
-		if (!answers[1].isEmpty()) {
-			defaults.name = answers[1];
-		}
-		if (!answers[2].isEmpty()) {
-			defaults.version = answers[2];
-		}
-		if (!answers[3].isEmpty()) {
-			Pair<URI, URI> moduleNames = interpretModuleNames(answers[3]);
-			defaults.main = moduleNames.getKey().toFileString();
-			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
-			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
-		}
-		if (!answers[4].isEmpty()) {
-			defaults.author = answers[4];
-		}
-		if (!answers[5].isEmpty()) {
-			defaults.license = answers[5];
-		}
-		if (!answers[6].isEmpty()) {
-			defaults.description = answers[6];
-		}
-	}
-
-	private static void setInitType(N4jscOptions options, InitConfiguration config, String initType) {
+		InitConfiguration config = new InitConfiguration();
 		switch (Strings.nullToEmpty(initType)) {
 		case "e":
 			config.yarnPackageJson = YarnPackageJsonContents.defaults();
@@ -106,52 +84,82 @@ public class N4jscInit {
 			config.packageJson = PackageJsonContents.defaults(options);
 			break;
 		}
+		return config;
 	}
 
-	private static void customize(N4jscOptions options, InitConfiguration config) {
+	private static String[] inputUserAnswers(N4jscOptions options) throws N4jscException {
+		String[] answers = new String[7];
+
 		N4jscConsole.print("Add 'Hello World' example (type 'e') including a test example (type 't')? (no) ");
 		String userInput = N4jscConsole.readLine();
-		setInitType(options, config, userInput);
+		answers[0] = userInput.isBlank() ? "" : userInput;
+		PackageJsonContents defaults = getDefaultConfiguration(options, userInput).packageJson;
 
-		PackageJsonContents defaults = config.packageJson;
-		N4jscConsole.print(String.format("name: (%s) ", defaults.name));
-		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.name = userInput;
+		if (!options.isN4JS()) {
+			// in case of extending an already existing project to n4js, the name is not changed
+			N4jscConsole.print(String.format("name: (%s) ", defaults.name));
+			userInput = N4jscConsole.readLine();
+			answers[1] = userInput.isBlank() ? defaults.name : userInput;
 		}
 
 		N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
 		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.version = userInput;
-		}
+		answers[2] = userInput.isBlank() ? defaults.version : userInput;
 
 		N4jscConsole.print(String.format("main module: (%s) ", Strings.nullToEmpty(defaults.main)));
 		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			Pair<URI, URI> moduleNames = interpretModuleNames(userInput);
-			defaults.main = moduleNames.getKey().toFileString();
-			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
-			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
-		}
+		answers[3] = userInput.isBlank() ? defaults.main : userInput;
 
 		N4jscConsole.print(String.format("author: (%s) ", Strings.nullToEmpty(defaults.author)));
 		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.author = userInput;
-		}
+		answers[4] = userInput.isBlank() ? defaults.author : userInput;
 
 		N4jscConsole.print(String.format("license: (%s) ", Strings.nullToEmpty(defaults.license)));
 		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.license = userInput;
-		}
+		answers[5] = userInput.isBlank() ? defaults.license : userInput;
 
 		N4jscConsole.print(String.format("description: (%s) ", Strings.nullToEmpty(defaults.description)));
 		userInput = N4jscConsole.readLine();
-		if (!userInput.isBlank()) {
-			defaults.description = userInput;
+		answers[6] = userInput.isBlank() ? defaults.description : userInput;
+
+		return answers;
+	}
+
+	private static InitConfiguration getCustomizedConfiguration(N4jscOptions options, String[] answers)
+			throws N4jscException {
+
+		InitConfiguration config = getDefaultConfiguration(options, answers[0]);
+		PackageJsonContents defaults = config.packageJson;
+
+		if (!answers[1].isEmpty() && !options.isN4JS()) {
+			defaults.name = answers[1];
+			defaults.userModifications.add("name");
 		}
+		if (!answers[2].isEmpty()) {
+			defaults.version = answers[2];
+			defaults.userModifications.add("version");
+		}
+		if (!answers[3].isEmpty()) {
+			Pair<URI, URI> moduleNames = interpretModuleNames(answers[3]);
+			defaults.main = moduleNames.getKey().toFileString();
+			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
+			defaults.userModifications.add("main");
+			defaults.userModifications.add("n4js");
+		}
+		if (!answers[4].isEmpty()) {
+			defaults.author = answers[4];
+			defaults.userModifications.add("author");
+		}
+		if (!answers[5].isEmpty()) {
+			defaults.license = answers[5];
+			defaults.userModifications.add("license");
+		}
+		if (!answers[6].isEmpty()) {
+			defaults.description = answers[6];
+			defaults.userModifications.add("description");
+		}
+		return config;
 	}
 
 	static Pair<URI, URI> interpretModuleNames(String userInput) {
@@ -187,18 +195,25 @@ public class N4jscInit {
 				URI.createFileURI(fName + "." + n4jsExtension));
 	}
 
-	static N4jscExitState initProject(N4jscOptions options, InitConfiguration config) throws N4jscException {
+	static N4jscExitState initProjects(N4jscOptions options, InitConfiguration config) throws N4jscException {
 		Path cwd = options.getWorkingDirectory();
 		File parentPackageJson = getParentPackageJson(options);
 		WorkingDirState workingDirState = getWorkingDirState(options, parentPackageJson);
-
 		String workspacesOption = options.getWorkspaces() == null ? null : options.getWorkspaces().toString();
-		if (workingDirState == WorkingDirState.InEmptyFolder) {
+
+		switch (workingDirState) {
+		case InExistingProject:
+			config.projectRoot = cwd;
+			config.packageJson.userModifications.add("n4js");
+
+			break;
+		case InEmptyFolder:
+
 			if (workspacesOption == null) {
 				config.projectRoot = cwd;
-				initProject(config);
 
 			} else {
+
 				config.yarnRoot = cwd;
 				config.workspacesDir = cwd.resolve(workspacesOption);
 				config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
@@ -211,12 +226,11 @@ public class N4jscInit {
 					config.packageJson.name = config.packageJson.name + "2";
 					config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
 				}
-
-				initProject(config);
 			}
 
-		} else {
+			break;
 
+		default:
 			config.yarnRoot = parentPackageJson.getParentFile().toPath();
 			List<String> workspacesProperty = getYarnWorkspaces(parentPackageJson);
 			if (workspacesOption == null) {
@@ -230,8 +244,6 @@ public class N4jscInit {
 							"Creating a new project inside a yarn project requires either to explicitly pass option --workspaces or "
 									+ "the current working directory to be inside a new project folder of a valid workspaces directory of the yarn project.");
 				}
-
-				initProject(config);
 
 			} else {
 
@@ -247,27 +259,32 @@ public class N4jscInit {
 						throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, e);
 					}
 				}
-
-				initProject(config);
 			}
 		}
 
+		initProject(options, config);
 		String cmd = (workingDirState == WorkingDirState.InEmptyFolder) && (workspacesOption == null) ? "npm" : "yarn";
 		N4jscConsole.println("Init done. Please run '" + cmd + " install' to install dependencies.");
 		return N4jscExitState.SUCCESS;
 	}
 
 	static WorkingDirState getWorkingDirState(N4jscOptions options, File candidate) throws N4jscException {
-		if (candidate == null) {
+		if (options.isN4JS()) {
+			if (candidate != null && candidate.exists()
+					&& candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
+
+				return WorkingDirState.InExistingProject;
+			} else {
+				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+						"Given option --n4js requires a package.json file to be in the current working directory.");
+			}
+		}
+
+		if (candidate == null || !candidate.exists()) {
 			return WorkingDirState.InEmptyFolder;
 		}
 
-		if (!candidate.exists()) {
-			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-					"Inconsistent state: " + candidate.toString() + " should exist but it does not.");
-		}
-
-		if (candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
+		if (!options.isN4JS() && candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
 					"Current working directory must not contain a package.json file.");
 		}
@@ -362,7 +379,7 @@ public class N4jscInit {
 
 	static N4jscExitState initYarnProject(InitConfiguration config) throws N4jscException {
 		config.workspacesDir.toFile().mkdirs();
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = JsonUtils.createGson();
 		String yarnJsonString = gson.toJson(config.yarnPackageJson);
 		try (FileWriter fw = new FileWriter(config.yarnRoot.resolve(N4JSGlobals.PACKAGE_JSON).toFile())) {
 			fw.write(yarnJsonString);
@@ -374,15 +391,11 @@ public class N4jscInit {
 		return N4jscExitState.SUCCESS;
 	}
 
-	static N4jscExitState initProject(InitConfiguration config)
+	static N4jscExitState initProject(N4jscOptions options, InitConfiguration config)
 			throws N4jscException {
 
-		config.projectRoot.toFile().mkdirs();
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String packageJsonString = gson.toJson(config.packageJson);
-		try (FileWriter fw = new FileWriter(config.projectRoot.resolve(N4JSGlobals.PACKAGE_JSON).toFile())) {
-			fw.write(packageJsonString);
-
+		try {
+			config.packageJson.write(options, config.projectRoot);
 			for (ExampleFile exampleFile : config.files) {
 				exampleFile.writeToDisk(config.projectRoot);
 			}
@@ -394,7 +407,7 @@ public class N4jscInit {
 	}
 
 	enum WorkingDirState {
-		InEmptyFolder, InYarnProjectRoot, InYarnProjectSubdir
+		InEmptyFolder, InYarnProjectRoot, InYarnProjectSubdir, InExistingProject
 	}
 
 	static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
@@ -463,10 +476,24 @@ public class N4jscInit {
 		};
 		PropertyN4JS n4js = new PropertyN4JS();
 
-		static PackageJsonContents defaults(N4jscOptions options) {
-			PackageJsonContents pjc = new PackageJsonContents();
-			pjc.name = defPackageName(options);
-			return pjc;
+		transient Set<String> userModifications = new HashSet<>();
+
+		static PackageJsonContents defaults(N4jscOptions options) throws N4jscException {
+			PackageJsonContents pjc;
+			if (options.isN4JS()) {
+				File pckjson = options.getWorkingDirectory().resolve(N4JSGlobals.PACKAGE_JSON).toFile();
+				try (JsonReader reader = new JsonReader(new FileReader(pckjson));) {
+					Gson gson = JsonUtils.createGson();
+					pjc = gson.fromJson(reader, PackageJsonContents.class);
+					return pjc;
+				} catch (Exception e) {
+					throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, "Error when reading " + pckjson, e);
+				}
+			} else {
+				pjc = new PackageJsonContents();
+				pjc.name = defaultPackageName(options);
+				return pjc;
+			}
 		}
 
 		PackageJsonContents helloWorld() {
@@ -489,6 +516,28 @@ public class N4jscInit {
 			return this;
 		}
 
+		void write(N4jscOptions options, Path target) throws IOException {
+			File pckjson = target.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
+			if (options.isN4JS()) {
+				Gson gson = JsonUtils.createGson();
+				JsonElement jsonRoot = gson.toJsonTree(this, PackageJsonContents.class);
+				Set<Entry<String, JsonElement>> allElements = jsonRoot.getAsJsonObject().entrySet();
+				Set<Entry<String, JsonElement>> modifiedElements = new HashSet<>();
+				for (Entry<String, JsonElement> element : allElements) {
+					if (userModifications.contains(element.getKey())) {
+						modifiedElements.add(element);
+					}
+				}
+				PackageJsonModificationUtils.setProperties(pckjson, modifiedElements);
+			} else {
+				target.toFile().mkdirs();
+				Gson gson = JsonUtils.createGson();
+				String packageJsonString = gson.toJson(this);
+				try (FileWriter fw = new FileWriter(pckjson)) {
+					fw.write(packageJsonString);
+				}
+			}
+		}
 	}
 
 	static class PropertyN4JS {
@@ -505,7 +554,7 @@ public class N4jscInit {
 
 	}
 
-	private static String defPackageName(N4jscOptions options) {
+	private static String defaultPackageName(N4jscOptions options) {
 		Path workDir = options.getWorkingDirectory();
 		int idx = workDir.getNameCount() - 1;
 		String defPackageName = workDir.getName(idx).toString();

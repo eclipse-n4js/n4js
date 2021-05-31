@@ -27,9 +27,12 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.JsonUtils;
@@ -45,6 +48,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -396,5 +401,45 @@ public class PackageJsonModificationUtils {
 			fw.write(newPackageJsonStr.toString());
 		}
 		return true;
+	}
+
+	/**
+	 * Adds/replaces all given json elements in the given file.
+	 *
+	 * @param packageJson
+	 *            file to be modified
+	 * @param elements
+	 *            to be added or replaced into the given file
+	 */
+	public static void setProperties(File packageJson, Set<Entry<String, JsonElement>> elements) throws IOException {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String packageJsonStr = Files.readString(packageJson.toPath());
+		StringBuilder newPackageJsonStr = new StringBuilder(packageJsonStr);
+		String indent = "  ";
+		String NL = System.lineSeparator();
+
+		Pattern insertAtEndPositionPattern = Pattern.compile("(?=\\s*\\}\\s*$)");
+
+		for (Entry<String, JsonElement> element : elements) {
+			List<ElementWithRegion> elementWithRegion = findElementsWithRegion(packageJsonStr, element.getKey());
+			String newValue = gson.toJson(element.getValue());
+			if (elementWithRegion.isEmpty()) {
+				newValue = newValue.replace(NL, NL + indent);
+				String newProperty = "," + NL + indent + "\"" + element.getKey() + "\" : " + newValue;
+				Matcher matcher = insertAtEndPositionPattern.matcher(newPackageJsonStr.toString());
+				matcher.find();
+				int idx = matcher.start();
+				newPackageJsonStr.insert(idx, newProperty);
+
+			} else {
+				ElementWithRegion workspacesEntry = elementWithRegion.get(0); // replaces only first occurrence
+				int startIdx = workspacesEntry.offset;
+				int endIdx = workspacesEntry.offset + workspacesEntry.length;
+				newPackageJsonStr.replace(startIdx, endIdx, newValue);
+			}
+		}
+		try (FileWriter fw = new FileWriter(packageJson, false)) {
+			fw.write(newPackageJsonStr.toString());
+		}
 	}
 }

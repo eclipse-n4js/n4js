@@ -211,7 +211,7 @@ public class JsonUtils {
 	 */
 	public static void saveJson(Path path, JsonElement jsonElement, String indent)
 			throws FileNotFoundException, IOException {
-		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+		Gson gson = createGson();
 		try (
 				@SuppressWarnings("resource")
 				JsonWriter jsonWriter = gson.newJsonWriter(
@@ -219,5 +219,10 @@ public class JsonUtils {
 			jsonWriter.setIndent(indent != null ? indent : "");
 			gson.toJson(jsonElement, jsonWriter);
 		}
+	}
+
+	/** Creates configured {@link Gson} instance */
+	public static Gson createGson() {
+		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 	}
 }

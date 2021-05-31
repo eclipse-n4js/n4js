@@ -417,4 +417,113 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "", FileUtils.serializeFileTree(cwd));
 	}
 
+	/** Basic extend existing project test. */
+	@Test
+	public void extendExisting() throws Exception {
+		npmRun(cwd.toPath(), "init", "--yes");
+
+		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertEquals("{\n"
+				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"version\": \"1.0.0\",\n"
+				+ "  \"description\": \"\",\n"
+				+ "  \"main\": \"index.js\",\n"
+				+ "  \"scripts\": {\n"
+				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
+				+ "  },\n"
+				+ "  \"keywords\": [],\n"
+				+ "  \"author\": \"\",\n"
+				+ "  \"license\": \"ISC\"\n"
+				+ "}\n"
+				+ "", packagejsonContents);
+
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().n4js();
+		n4jsc(options, SUCCESS);
+
+		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertEquals("{\n"
+				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"version\": \"1.0.0\",\n"
+				+ "  \"description\": \"\",\n"
+				+ "  \"main\": \"index.js\",\n"
+				+ "  \"scripts\": {\n"
+				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
+				+ "  },\n"
+				+ "  \"keywords\": [],\n"
+				+ "  \"author\": \"\",\n"
+				+ "  \"license\": \"ISC\",\n"
+				+ "  \"n4js\" : {\n"
+				+ "    \"projectType\": \"library\",\n"
+				+ "    \"output\": \"src-gen\",\n"
+				+ "    \"sources\": {\n"
+				+ "      \"source\": [\n"
+				+ "        \"src\"\n"
+				+ "      ]\n"
+				+ "    },\n"
+				+ "    \"requiredRuntimeLibraries\": [\n"
+				+ "      \"n4js-runtime-es2015\"\n"
+				+ "    ]\n"
+				+ "  }\n"
+				+ "}\n"
+				+ "", packagejsonContentsExt);
+	}
+
+	/** Extend existing project test and modify main module. */
+	@Test
+	public void extendExistingModifyMain() throws Exception {
+		npmRun(cwd.toPath(), "init", "--yes");
+
+		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertEquals("{\n"
+				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"version\": \"1.0.0\",\n"
+				+ "  \"description\": \"\",\n"
+				+ "  \"main\": \"index.js\",\n"
+				+ "  \"scripts\": {\n"
+				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
+				+ "  },\n"
+				+ "  \"keywords\": [],\n"
+				+ "  \"author\": \"\",\n"
+				+ "  \"license\": \"ISC\"\n"
+				+ "}\n"
+				+ "", packagejsonContents);
+
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(",,,index.js").n4js();
+		n4jsc(options, SUCCESS);
+
+		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
+		assertEquals("{\n"
+				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"version\": \"1.0.0\",\n"
+				+ "  \"description\": \"\",\n"
+				+ "  \"main\": \"index.js\",\n"
+				+ "  \"scripts\": {\n"
+				+ "    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n"
+				+ "  },\n"
+				+ "  \"keywords\": [],\n"
+				+ "  \"author\": \"\",\n"
+				+ "  \"license\": \"ISC\",\n"
+				+ "  \"main\" : \"src-gen/index.js\",\n"
+				+ "  \"n4js\" : {\n"
+				+ "    \"projectType\": \"library\",\n"
+				+ "    \"mainModule\": \"index\",\n"
+				+ "    \"output\": \"src-gen\",\n"
+				+ "    \"sources\": {\n"
+				+ "      \"source\": [\n"
+				+ "        \"src\"\n"
+				+ "      ]\n"
+				+ "    },\n"
+				+ "    \"requiredRuntimeLibraries\": [\n"
+				+ "      \"n4js-runtime-es2015\"\n"
+				+ "    ]\n"
+				+ "  }\n"
+				+ "}\n"
+				+ "", packagejsonContentsExt);
+
+		assertEquals("TestInit\n"
+				+ "- package.json\n"
+				+ "+ src\n"
+				+ "  - index.n4js\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+	}
 }
