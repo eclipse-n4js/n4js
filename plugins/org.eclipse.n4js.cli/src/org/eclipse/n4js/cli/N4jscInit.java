@@ -286,7 +286,8 @@ public class N4jscInit {
 
 		if (!options.isN4JS() && candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-					"Current working directory must not contain a package.json file.");
+					"Current working directory must not contain a package.json file. "
+							+ "In case you like to add the n4js property to an existing project, use option --n4js");
 		}
 
 		try (JsonReader jReader = new JsonReader(new FileReader(candidate))) {
