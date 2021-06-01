@@ -83,7 +83,8 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		CliCompileResult result = n4jsc(options, INIT_ERROR_WORKING_DIR);
 
 		assertEquals(
-				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file.",
+				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file. "
+						+ "In case you like to add the n4js property to an existing project, use option --n4js",
 				result.getStdOut());
 	}
 
@@ -384,7 +385,8 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		CliCompileResult result = n4jsc(options, INIT_ERROR_WORKING_DIR);
 
 		assertEquals(
-				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file.",
+				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file. "
+						+ "In case you like to add the n4js property to an existing project, use option --n4js",
 				result.getStdOut());
 	}
 
