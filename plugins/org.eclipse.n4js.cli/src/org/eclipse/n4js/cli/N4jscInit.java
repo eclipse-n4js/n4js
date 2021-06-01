@@ -163,7 +163,7 @@ public class N4jscInit {
 		return config;
 	}
 
-	static Pair<URI, URI> interpretModuleNames(String userInput) {
+	private static Pair<URI, URI> interpretModuleNames(String userInput) {
 		if (userInput.startsWith("src/")) {
 			userInput = userInput.substring("src/".length());
 		}
@@ -196,7 +196,7 @@ public class N4jscInit {
 				URI.createFileURI(fName + "." + n4jsExtension));
 	}
 
-	static N4jscExitState initProjects(N4jscOptions options, InitConfiguration config) throws N4jscException {
+	private static N4jscExitState initProjects(N4jscOptions options, InitConfiguration config) throws N4jscException {
 		Path cwd = options.getWorkingDirectory();
 		File parentPackageJson = getParentPackageJson(options);
 		WorkingDirState workingDirState = getWorkingDirState(options, parentPackageJson);
@@ -269,7 +269,7 @@ public class N4jscInit {
 		return N4jscExitState.SUCCESS;
 	}
 
-	static WorkingDirState getWorkingDirState(N4jscOptions options, File candidate) throws N4jscException {
+	private static WorkingDirState getWorkingDirState(N4jscOptions options, File candidate) throws N4jscException {
 		if (options.isN4JS()) {
 			if (candidate != null && candidate.exists()
 					&& candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
@@ -315,7 +315,7 @@ public class N4jscInit {
 		}
 	}
 
-	static File getParentPackageJson(N4jscOptions options) {
+	private static File getParentPackageJson(N4jscOptions options) {
 		Path cwd = options.getWorkingDirectory();
 		File candidate = cwd.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 		while (!candidate.exists() && cwd.getParent() != null) {
@@ -328,11 +328,7 @@ public class N4jscInit {
 		return candidate;
 	}
 
-	static Path getYarnRootFolder(N4jscOptions options) {
-		return getParentPackageJson(options).toPath();
-	}
-
-	static List<String> getYarnWorkspaces(File candidate) throws N4jscException {
+	private static List<String> getYarnWorkspaces(File candidate) throws N4jscException {
 		try (JsonReader jReader = new JsonReader(new FileReader(candidate))) {
 			JsonElement packageJsonCandidate = new JsonParser().parse(jReader);
 			JsonObject packageJson = (JsonObject) packageJsonCandidate;
@@ -368,7 +364,7 @@ public class N4jscInit {
 		}
 	}
 
-	static boolean workspaceMatch(List<String> globs, Path root, Path newProjectLocation) {
+	private static boolean workspaceMatch(List<String> globs, Path root, Path newProjectLocation) {
 		Path relProjectLocation = root.relativize(newProjectLocation);
 		for (String glob : globs) {
 			boolean matches = ModuleFilterUtils.locationMatchesGlobSpecifier(glob, relProjectLocation);
@@ -379,7 +375,7 @@ public class N4jscInit {
 		return false;
 	}
 
-	static N4jscExitState initYarnProject(InitConfiguration config) throws N4jscException {
+	private static N4jscExitState initYarnProject(InitConfiguration config) throws N4jscException {
 		config.workspacesDir.toFile().mkdirs();
 		Gson gson = JsonUtils.createGson();
 		String yarnJsonString = gson.toJson(config.yarnPackageJson);
@@ -393,7 +389,7 @@ public class N4jscInit {
 		return N4jscExitState.SUCCESS;
 	}
 
-	static N4jscExitState initProject(N4jscOptions options, InitConfiguration config)
+	private static N4jscExitState initProject(N4jscOptions options, InitConfiguration config)
 			throws N4jscException {
 
 		try {
@@ -412,10 +408,10 @@ public class N4jscInit {
 		InEmptyFolder, InYarnProjectRoot, InYarnProjectSubdir, InExistingProject
 	}
 
-	static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
-	static final String NPM_RUN_TEST = "n4js-mangelhaft";
+	private static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
+	private static final String NPM_RUN_TEST = "n4js-mangelhaft";
 
-	static class InitConfiguration {
+	private static class InitConfiguration {
 		Path yarnRoot;
 		Path workspacesDir;
 		Path projectRoot;
@@ -424,7 +420,7 @@ public class N4jscInit {
 		Collection<ExampleFile> files = new ArrayList<>();
 	}
 
-	static class YarnPackageJsonContents {
+	private static class YarnPackageJsonContents {
 		@SerializedName("private")
 		boolean _private = true;
 		LinkedHashMap<String, String> devDependencies = new LinkedHashMap<>() {
@@ -437,6 +433,7 @@ public class N4jscInit {
 				put("build", NPM_RUN_BUILD);
 			}
 		};
+		@SuppressWarnings("unused") // used by Gson
 		String[] workspaces = { "packages/*" };
 
 		static YarnPackageJsonContents defaults() {
@@ -453,7 +450,7 @@ public class N4jscInit {
 		}
 	}
 
-	static class PackageJsonContents {
+	private static class PackageJsonContents {
 		String name;
 		String version = "0.0.1";
 		String description;
@@ -465,6 +462,7 @@ public class N4jscInit {
 		};
 		String author;
 		String license;
+		@SuppressWarnings("unused") // used by Gson
 		LinkedHashMap<String, String> dependencies = new LinkedHashMap<>() {
 			{
 				put("n4js-runtime", "");
@@ -542,7 +540,8 @@ public class N4jscInit {
 		}
 	}
 
-	static class PropertyN4JS {
+	@SuppressWarnings("unused") // used by Gson
+	private static class PropertyN4JS {
 		String projectType = "library";
 		String mainModule;
 		String output = "src-gen";
@@ -550,10 +549,10 @@ public class N4jscInit {
 		String[] requiredRuntimeLibraries = { "n4js-runtime-es2015" };
 	}
 
-	static class PropertySources {
+	@SuppressWarnings("unused") // used by Gson
+	private static class PropertySources {
 		String[] source = { "src" };
 		String[] test;
-
 	}
 
 	private static String defaultPackageName(N4jscOptions options) {
@@ -570,7 +569,7 @@ public class N4jscInit {
 		return defPackageName;
 	}
 
-	static abstract class ExampleFile {
+	private static abstract class ExampleFile {
 		abstract Path getPath();
 
 		abstract String[] getContents();
@@ -589,7 +588,7 @@ public class N4jscInit {
 		}
 	}
 
-	static class FileHelloWorld extends ExampleFile {
+	private static class FileHelloWorld extends ExampleFile {
 		@Override
 		Path getPath() {
 			return Path.of("src/HelloWorld.n4js");
@@ -608,7 +607,7 @@ public class N4jscInit {
 		}
 	}
 
-	static class FileHelloWorldTest extends ExampleFile {
+	private static class FileHelloWorldTest extends ExampleFile {
 		@Override
 		Path getPath() {
 			return Path.of("tests/HelloWorldTest.n4js");
@@ -632,7 +631,7 @@ public class N4jscInit {
 		}
 	}
 
-	static class IndexFile extends ExampleFile {
+	private static class IndexFile extends ExampleFile {
 		final String name;
 
 		IndexFile(String name) {

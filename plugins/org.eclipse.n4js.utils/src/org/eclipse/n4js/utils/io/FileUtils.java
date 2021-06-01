@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.base.StandardSystemProperty;
+import com.google.common.base.Strings;
 
 /**
  * Convenient methods for {@code java.io.File}s.
@@ -422,7 +423,7 @@ public abstract class FileUtils {
 	}
 
 	private static String serializeFileTree(File root, int indentLevel) {
-		String indentStr = "                                           ".substring(0, Math.max(0, indentLevel - 1) * 2);
+		String indentStr = Strings.repeat(" ", Math.max(0, indentLevel - 1) * 2);
 		if (root.isFile()) {
 			indentStr += (indentLevel > 0) ? "- " : "";
 			return indentStr + root.getName() + "\n";
