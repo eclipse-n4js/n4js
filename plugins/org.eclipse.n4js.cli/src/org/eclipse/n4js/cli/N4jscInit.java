@@ -31,6 +31,7 @@ import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -139,7 +140,7 @@ public class N4jscInit {
 			defaults.version = answers[2];
 			defaults.userModifications.add("version");
 		}
-		if (!Strings.isNullOrEmpty(answers[3])) {
+		if (!Strings.isNullOrEmpty(answers[3]) && !Objects.equal(answers[3], defaults.main)) {
 			Pair<URI, URI> moduleNames = interpretModuleNames(answers[3]);
 			defaults.main = moduleNames.getKey().toFileString();
 			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
