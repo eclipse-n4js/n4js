@@ -60,7 +60,7 @@ public class N4jscOptions {
 
 	/** @return the usage string respecting the goal specified in the given options */
 	public static String getUsage(N4jscOptions options) {
-		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().goalName();
+		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
 		String dir = options.options.getDir() == null ? "" : " [DIR]";
 		String usage = String.format(USAGE_TEMPLATE, goal, dir);
 		return usage;
@@ -135,7 +135,7 @@ public class N4jscOptions {
 				help = true)
 		boolean version = false;
 
-		@Option(name = "--help", aliases = "-h", usage = "prints help and exits", //
+		@Option(name = "--help", aliases = "-h", usage = "prints help and exits. Define a goal for goal-specific help.", //
 				handler = N4JSBooleanOptionHandler.class, //
 				help = true)
 		boolean help = false;
@@ -243,7 +243,7 @@ public class N4jscOptions {
 				// not implemented:
 				// @SubCommand(name = "watch", impl = WatchOptions.class),
 				// @SubCommand(name = "api", impl = APIOptions.class),
-				@SubCommand(name = "set-versions", impl = SetVersionsOptions.class),
+				@SubCommand(name = "setversions", impl = SetVersionsOptions.class),
 				@SubCommand(name = "init", impl = InitOptions.class),
 				@SubCommand(name = "version", impl = VersionOptions.class)
 		})
@@ -371,7 +371,7 @@ public class N4jscOptions {
 
 		@Option(name = "--stdio", //
 				usage = "uses stdin/stdout for communication instead of sockets", //
-				forbids = "--port", //
+				forbids = { "--port", "--exec" }, //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean stdio = false;
 
@@ -379,6 +379,7 @@ public class N4jscOptions {
 				hidden = true, //
 				usage = "executes the given command string once the LSP server is listening for clients and shuts "
 						+ "down the server after the first client disconnects. Must not be used with option --stdio.", //
+				forbids = "--stdio", //
 				handler = N4JSStringOptionHandler.class)
 		String exec = null;
 	}
@@ -392,7 +393,7 @@ public class N4jscOptions {
 
 		@Override
 		N4jscGoal getGoal() {
-			return N4jscGoal.setVersions;
+			return N4jscGoal.setversions;
 		}
 
 		@Argument(metaVar = "VERSION", index = 0, required = true, //
@@ -412,6 +413,34 @@ public class N4jscOptions {
 		N4jscGoal getGoal() {
 			return N4jscGoal.init;
 		}
+
+		@Option(name = "--yes", aliases = "-y", forbids = "--answers", //
+				usage = "skips the questionnaire", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean yes = false;
+
+		@Option(name = "--answers", aliases = "-a", forbids = "--yes", //
+				usage = "comma separated string of answers for the questionnaire. Can be incomplete.", //
+				handler = N4JSStringOptionHandler.class)
+		String answers;
+
+		@Option(name = "--scope", aliases = "-s", forbids = "--n4js", //
+				usage = "creates a scoped project. uses the parent directory as the scope name", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean scope = false;
+
+		@Option(name = "--n4js", aliases = "-n", forbids = { "--scope", "--workspaces" }, //
+				usage = "extends an existing npm project in the current working directory with n4js entries", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean n4js = false;
+
+		@Option(name = "--workspaces", aliases = "-w", forbids = "--n4js", //
+				usage = "creates the new project inside the given workspaces directory. "
+						+ "Will also create a new workspace if not existing already."
+						+ "In case the current working directory is inside an existing workspaces directory,"
+						+ "this option will be activated implicitly using the cwd.", //
+				handler = N4JSFileOptionHandler.class)
+		File workspaces;
 	}
 
 	/** This class defines option fields for command init. */
@@ -621,7 +650,7 @@ public class N4jscOptions {
 		return ((LSPOptions) options).stdio;
 	}
 
-	/** @return the user command as provided via option {@code --exec} or <code>null</code> if not given. */
+	/** @return the user command if given via {@code --exec}. {@code null} otherwise. */
 	public String getExec() {
 		Preconditions.checkState(options instanceof LSPOptions);
 		return ((LSPOptions) options).exec;
@@ -634,6 +663,36 @@ public class N4jscOptions {
 			return true;
 		}
 		return false;
+	}
+
+	/** @return true iff {@code --yes} */
+	public boolean isYes() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).yes;
+	}
+
+	/** @return true iff {@code --answers} */
+	public String getAnswers() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).answers;
+	}
+
+	/** @return true iff {@code --scope} */
+	public boolean isScope() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).scope;
+	}
+
+	/** @return workspaces if given via {@code --workspaces}. {@code null} otherwise. */
+	public File getWorkspaces() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).workspaces;
+	}
+
+	/** @return true iff {@code --n4js} */
+	public boolean isN4JS() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).n4js;
 	}
 
 	/** @return the working directory of n4jsc.jar */
@@ -658,7 +717,7 @@ public class N4jscOptions {
 	public String toSettingsString() {
 		String s = "N4jsc.options=";
 		s += "\n  Current execution directory=" + new File(".").toPath().toAbsolutePath();
-		s += "\n  goal=" + getGoal().goalName();
+		s += "\n  goal=" + getGoal().name();
 		s += "\n  dir=" + options.getDir();
 		s += "\n  showSetup=" + options.showSetup;
 		s += "\n  verbose=" + options.verbose;

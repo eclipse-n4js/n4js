@@ -1761,8 +1761,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return runInNodejs(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
 	}
 
-	/** Delegates to {@link CliTools#runNodejs(Path, Path, String...)}. */
+	/** Delegates to {@link CliTools#nodejsRun(Path, Path, String...)}. */
 	protected ProcessResult runInNodejs(File workingDir, FileURI fileToRun, String... options) {
-		return new CliTools().runNodejs(workingDir.toPath(), fileToRun.toPath(), options);
+		return new CliTools().nodejsRun(workingDir.toPath(), fileToRun.toPath(), options);
 	}
 }

@@ -29,22 +29,5 @@ public enum N4jscGoal {
 	/** Creates an N4JS project */
 	init,
 	/** Sets version strings of all N4JS related packages to the given version */
-	setVersions("set-versions")
-
-	;
-
-	final String goalName;
-
-	N4jscGoal() {
-		this(null);
-	}
-
-	N4jscGoal(String goalName) {
-		this.goalName = goalName;
-	}
-
-	/** @return the name of the goal */
-	public String goalName() {
-		return goalName == null ? name() : goalName;
-	}
+	setversions
 }

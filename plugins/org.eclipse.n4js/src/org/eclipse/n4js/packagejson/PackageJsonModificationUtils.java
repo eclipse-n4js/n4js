@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
@@ -25,12 +27,16 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.JsonUtils;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -38,8 +44,12 @@ import org.eclipse.xtext.xbase.lib.Pair;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -266,14 +276,14 @@ public class PackageJsonModificationUtils {
 	 */
 	public static Optional<String> setVersionOfDependenciesInPackageJsonString(String packageJson,
 			Set<N4JSProjectName> projectNames, String versionConstraintToSet) {
-		List<DependencyWithRegion> deps = findDependenciesWithRegion(packageJson);
+		List<ElementWithRegion> deps = findDependenciesWithRegion(packageJson);
 		if (deps.isEmpty()) {
 			return Optional.absent();
 		}
 		StringBuilder result = null;
 		Collections.sort(deps, (dep1, dep2) -> Integer.compare(dep2.offset, dep1.offset));
-		for (DependencyWithRegion dep : deps) {
-			if (projectNames.contains(dep.projectName)) {
+		for (ElementWithRegion dep : deps) {
+			if (projectNames.contains(new N4JSProjectName(dep.elementName))) {
 				if (result == null) {
 					result = new StringBuilder(packageJson);
 				}
@@ -283,18 +293,26 @@ public class PackageJsonModificationUtils {
 		return result != null ? Optional.of(result.toString()) : Optional.absent();
 	}
 
-	private static class DependencyWithRegion {
-		public final N4JSProjectName projectName;
+	private static class ElementWithRegion {
+		/** Parent property names */
 		@SuppressWarnings("unused")
-		public final String versionConstraint;
+		public final Stack<String> propertyPath;
+		/**
+		 * Name of the json element. Can be null. Derived from
+		 * {@link com.fasterxml.jackson.core.JsonParser#getCurrentName()}
+		 */
+		public final String elementName;
+		/** Value of the parsed element */
+		public final String value;
 		/** Zero-based offset of the version constraint in the original JSON input string. */
 		public final int offset;
 		/** Length of the version constraint. */
 		public final int length;
 
-		public DependencyWithRegion(N4JSProjectName projectName, String versionConstraint, int offset, int length) {
-			this.projectName = projectName;
-			this.versionConstraint = versionConstraint;
+		public ElementWithRegion(Stack<String> propertyPath, String elementName, String value, int offset, int length) {
+			this.propertyPath = propertyPath;
+			this.elementName = elementName;
+			this.value = value;
 			this.offset = offset;
 			this.length = length;
 		}
@@ -306,13 +324,23 @@ public class PackageJsonModificationUtils {
 	 *
 	 * @throw {@link IllegalArgumentException} in case of parse errors.
 	 */
+	private static List<ElementWithRegion> findDependenciesWithRegion(String jsonStr) {
+		return findElementsWithRegion(jsonStr, "dependencies", "devDependencies");
+	}
+
 	/*
 	 * Unfortunately, we cannot use GSON for implementing this method. Since Jackson was already among the dependencies
 	 * of N4JS (at time of writing), we can use that. To avoid confusion with GSON, we use fully qualified names when
 	 * referring to the types of Jackson in this method.
 	 */
-	private static List<DependencyWithRegion> findDependenciesWithRegion(String jsonStr) {
-		List<DependencyWithRegion> result = new ArrayList<>();
+	private static List<ElementWithRegion> findElementsWithRegion(String jsonStr, String... parentPropertyPaths) {
+		Multimap<Integer, String> parents = HashMultimap.create();
+		for (String parentPropertyPath : parentPropertyPaths) {
+			int depth = parentPropertyPath.split("/").length;
+			parents.put(depth, parentPropertyPath);
+		}
+
+		List<ElementWithRegion> result = new ArrayList<>();
 		com.fasterxml.jackson.core.JsonFactory factory = new com.fasterxml.jackson.core.JsonFactory();
 		try (com.fasterxml.jackson.core.JsonParser parser = factory.createParser(jsonStr)) {
 			com.fasterxml.jackson.core.JsonToken token = parser.nextToken();
@@ -332,19 +360,86 @@ public class PackageJsonModificationUtils {
 						propertyPath.pop();
 					}
 				} else if (token == com.fasterxml.jackson.core.JsonToken.VALUE_STRING
-						&& propertyPath.size() == 1
-						&& ("dependencies".equals(propertyPath.peek()) || "devDependencies".equals(propertyPath.peek()))
-						&& parser.getCurrentName() != null) {
-					N4JSProjectName projectName = new N4JSProjectName(parser.getCurrentName());
+						&& parents.containsKey(propertyPath.size())
+						&& parents.get(propertyPath.size()).contains(Strings.join("/", propertyPath))) {
+					String elementName = parser.getCurrentName();
 					long offs = parser.getTokenLocation().getCharOffset();
 					long len = parser.getTextLength() + 2;
-					String versionConstraint = jsonStr.substring((int) offs, (int) (offs + len));
-					result.add(new DependencyWithRegion(projectName, versionConstraint, (int) offs, (int) len));
+					String valueRaw = jsonStr.substring((int) offs, (int) (offs + len));
+					result.add(new ElementWithRegion(propertyPath, elementName, valueRaw, (int) offs, (int) len));
 				}
 			}
 		} catch (IOException e) { // includes JsonParseException
 			throw new IllegalArgumentException("failed to parse JSON: " + e.getMessage(), e);
 		}
 		return result;
+	}
+
+	/**
+	 * Adds the given String to the 'workspaces' property of a package.json file of a yarn project. The 'workspaces'
+	 * property is not created if it does not exist.
+	 *
+	 * @param packageJson
+	 *            The file that is modified.
+	 * @param additionalWorkspaces
+	 *            String that is added to the 'workspaces' property.
+	 */
+	public static boolean addToWorkspaces(File packageJson, String additionalWorkspaces) throws IOException {
+		String packageJsonStr = Files.readString(packageJson.toPath());
+		List<ElementWithRegion> workspacesEntries = findElementsWithRegion(packageJsonStr,
+				"workspaces", "workspaces/packages");
+		if (workspacesEntries.isEmpty()) {
+			return false;
+		}
+		ElementWithRegion workspacesEntry = workspacesEntries.get(0);
+		String newValue = workspacesEntry.value + ", \"" + additionalWorkspaces + "\"";
+		StringBuilder newPackageJsonStr = new StringBuilder(packageJsonStr);
+		int startIdx = workspacesEntry.offset;
+		int endIdx = workspacesEntry.offset + workspacesEntry.length;
+		newPackageJsonStr.replace(startIdx, endIdx, newValue);
+		try (FileWriter fw = new FileWriter(packageJson, false)) {
+			fw.write(newPackageJsonStr.toString());
+		}
+		return true;
+	}
+
+	/**
+	 * Adds/replaces all given json elements in the given file.
+	 *
+	 * @param packageJson
+	 *            file to be modified
+	 * @param elements
+	 *            to be added or replaced into the given file
+	 */
+	public static void setProperties(File packageJson, Set<Entry<String, JsonElement>> elements) throws IOException {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String packageJsonStr = Files.readString(packageJson.toPath());
+		StringBuilder newPackageJsonStr = new StringBuilder(packageJsonStr);
+		String indent = "  ";
+		String NL = System.lineSeparator();
+
+		Pattern insertAtEndPositionPattern = Pattern.compile("(?=\\s*\\}\\s*$)");
+
+		for (Entry<String, JsonElement> element : elements) {
+			List<ElementWithRegion> elementWithRegion = findElementsWithRegion(packageJsonStr, element.getKey());
+			String newValue = gson.toJson(element.getValue());
+			if (elementWithRegion.isEmpty()) {
+				newValue = newValue.replace(NL, NL + indent);
+				String newProperty = "," + NL + indent + "\"" + element.getKey() + "\" : " + newValue;
+				Matcher matcher = insertAtEndPositionPattern.matcher(newPackageJsonStr.toString());
+				matcher.find();
+				int idx = matcher.start();
+				newPackageJsonStr.insert(idx, newProperty);
+
+			} else {
+				ElementWithRegion workspacesEntry = elementWithRegion.get(0); // replaces only first occurrence
+				int startIdx = workspacesEntry.offset;
+				int endIdx = workspacesEntry.offset + workspacesEntry.length;
+				newPackageJsonStr.replace(startIdx, endIdx, newValue);
+			}
+		}
+		try (FileWriter fw = new FileWriter(packageJson, false)) {
+			fw.write(newPackageJsonStr.toString());
+		}
 	}
 }

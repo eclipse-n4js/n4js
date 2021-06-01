@@ -76,7 +76,7 @@ public class N4jscBasicTest extends AbstractCliCompileTest {
 
 		Path fileA = proot.toPath().resolve("P1/src-gen/A.js");
 
-		ProcessResult nodejsResult = runNodejs(workspace.toPath(), fileA);
+		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileA);
 		assertEquals(nodejsResult.toString(), "A", nodejsResult.getStdOut());
 	}
 
