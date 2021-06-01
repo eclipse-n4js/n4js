@@ -21,7 +21,7 @@ import static org.junit.Assert.*
 import org.junit.Ignore
 
 /**
- * Test two cases of projects with the same same within a yarn setup
+ * Test two cases of projects with the same project name within a yarn setup
  */
 class YarnProjectDuplicateNames extends AbstractIncrementalBuilderTest {
 
