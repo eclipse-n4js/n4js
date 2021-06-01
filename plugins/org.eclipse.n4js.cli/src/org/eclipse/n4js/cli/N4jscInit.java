@@ -131,15 +131,15 @@ public class N4jscInit {
 		InitConfiguration config = getDefaultConfiguration(options, answers[0]);
 		PackageJsonContents defaults = config.packageJson;
 
-		if (!answers[1].isEmpty() && !options.isN4JS()) {
+		if (!Strings.isNullOrEmpty(answers[1]) && !options.isN4JS()) {
 			defaults.name = answers[1];
 			defaults.userModifications.add("name");
 		}
-		if (!answers[2].isEmpty()) {
+		if (!Strings.isNullOrEmpty(answers[2])) {
 			defaults.version = answers[2];
 			defaults.userModifications.add("version");
 		}
-		if (!answers[3].isEmpty()) {
+		if (!Strings.isNullOrEmpty(answers[3])) {
 			Pair<URI, URI> moduleNames = interpretModuleNames(answers[3]);
 			defaults.main = moduleNames.getKey().toFileString();
 			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
@@ -147,15 +147,15 @@ public class N4jscInit {
 			defaults.userModifications.add("main");
 			defaults.userModifications.add("n4js");
 		}
-		if (!answers[4].isEmpty()) {
+		if (!Strings.isNullOrEmpty(answers[4])) {
 			defaults.author = answers[4];
 			defaults.userModifications.add("author");
 		}
-		if (!answers[5].isEmpty()) {
+		if (!Strings.isNullOrEmpty(answers[5])) {
 			defaults.license = answers[5];
 			defaults.userModifications.add("license");
 		}
-		if (!answers[6].isEmpty()) {
+		if (!Strings.isNullOrEmpty(answers[6])) {
 			defaults.description = answers[6];
 			defaults.userModifications.add("description");
 		}
