@@ -11,7 +11,7 @@
 package org.eclipse.n4js.ide.setversions.tests;
 
 import static org.eclipse.n4js.cli.N4jscExitCode.SUCCESS;
-import static org.eclipse.n4js.cli.N4jscTestOptions.SET_VERSIONS;
+import static org.eclipse.n4js.cli.N4jscTestOptions.SETVERSIONS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -61,7 +61,7 @@ public class N4jscSetVersionsTest extends AbstractCliCompileTest {
 	/** Basic compile test. */
 	@Test
 	public void testSetVersions() throws Exception {
-		N4jscTestOptions options = SET_VERSIONS("1.2.3").setWorkingDirectory(proot.toPath()).verbose();
+		N4jscTestOptions options = SETVERSIONS("1.2.3").setWorkingDirectory(proot.toPath()).verbose();
 		CliCompileResult cliResult = n4jsc(options, SUCCESS);
 		assertTrue(cliResult.getStdOut().contains(
 				"Modified version string of dependencies to:\n"

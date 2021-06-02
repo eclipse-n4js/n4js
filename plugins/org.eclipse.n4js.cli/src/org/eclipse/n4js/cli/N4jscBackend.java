@@ -47,7 +47,7 @@ public class N4jscBackend {
 
 	/** Runs the cli goal {@code init} with the given options */
 	public N4jscExitState goalInit(N4jscOptions options) throws Exception {
-		throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+		return N4jscInit.start(options);
 	}
 
 	/** Runs the cli goal {@code set-versions} with the given options */

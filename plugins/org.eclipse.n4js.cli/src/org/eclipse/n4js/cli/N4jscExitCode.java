@@ -65,6 +65,11 @@ public enum N4jscExitCode {
 	/** Error while modifying n4js related package.json files */
 	SET_VERSIONS_ERROR(310, "Error while modifying n4js related package.json files"),
 
+	// Errors on N4jsc goal init
+
+	/** Error: Unsupported working directory */
+	INIT_ERROR_WORKING_DIR(410, "Error: Unsupported working directory"),
+
 	;
 
 	private static final Map<Integer, N4jscExitCode> lookup = new HashMap<>();

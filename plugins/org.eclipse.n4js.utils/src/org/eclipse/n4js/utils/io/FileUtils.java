@@ -26,12 +26,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.base.StandardSystemProperty;
+import com.google.common.base.Strings;
 
 /**
  * Convenient methods for {@code java.io.File}s.
@@ -412,6 +415,30 @@ public abstract class FileUtils {
 			normalized = ".";
 		}
 		return normalized;
+	}
+
+	/** @return a serialized file tree starting from the given root. */
+	public static String serializeFileTree(File root) {
+		return serializeFileTree(root, 0);
+	}
+
+	private static String serializeFileTree(File root, int indentLevel) {
+		String indentStr = Strings.repeat(" ", Math.max(0, indentLevel - 1) * 2);
+		if (root.isFile()) {
+			indentStr += (indentLevel > 0) ? "- " : "";
+			return indentStr + root.getName() + "\n";
+		}
+		if (root.isDirectory()) {
+			String subtree = "";
+			File[] childFildes = root.listFiles();
+			Arrays.sort(childFildes, Comparator.comparing(File::isDirectory).thenComparing(File::getName));
+			for (int i = 0; i < childFildes.length; i++) {
+				subtree += serializeFileTree(childFildes[i], indentLevel + 1);
+			}
+			indentStr += (indentLevel > 0) ? "+ " : "";
+			return indentStr + root.getName() + "\n" + subtree;
+		}
+		return "";
 	}
 
 }

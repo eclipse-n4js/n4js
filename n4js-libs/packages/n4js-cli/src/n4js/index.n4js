@@ -31,7 +31,9 @@ export public enum Goal {
     clean,
     lsp,
     api,
-    watch
+    watch,
+    setversions,
+    init
 }
 
 export public class Options {
@@ -48,8 +50,12 @@ export public class Options {
     public maxErrs?: int;
     public maxWarns?: int;
     public port?: int;
-    /** Test catalog (JSON) to be used. If file path, will be written on --compile. */
-    public testCatalog?: string;
+    /** Options of goal init */
+    public yes?: boolean;
+    public answers?: string;
+    public scope?: boolean;
+    public workspaces?: string;
+    public n4js?: boolean;
 }
 
 export public class VmOptions {

@@ -169,7 +169,7 @@ public class CliTools {
 	}
 
 	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
-	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
+	public ProcessResult nodejsRun(Path workingDir, Path runFile, String... options) {
 		return withoutCorruptingGlobalState(() -> {
 			return getExProcessExecuter().runNodejs(workingDir, environment, runFile, options);
 		});
@@ -178,17 +178,17 @@ public class CliTools {
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmInstall(Path workingDir, String... options) {
 		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
-		return runNpm(workingDir, installOptions);
+		return npmRun(workingDir, installOptions);
 	}
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmList(Path workingDir, String... options) {
 		String[] listOptions = Lists.asList("list", options).toArray(String[]::new);
-		return runNpm(workingDir, listOptions);
+		return npmRun(workingDir, listOptions);
 	}
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
-	public ProcessResult runNpm(Path workingDir, String... options) {
+	public ProcessResult npmRun(Path workingDir, String... options) {
 		return withoutCorruptingGlobalState(() -> {
 			return getExProcessExecuter().npmRun(workingDir, environment, options);
 		});
@@ -197,11 +197,11 @@ public class CliTools {
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
 	public ProcessResult yarnInstall(Path workingDir, String... options) {
 		String[] installOptions = Lists.asList("install", options).toArray(String[]::new);
-		return runYarn(workingDir, installOptions);
+		return yarnRun(workingDir, installOptions);
 	}
 
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
-	public ProcessResult runYarn(Path workingDir, String... options) {
+	public ProcessResult yarnRun(Path workingDir, String... options) {
 		return withoutCorruptingGlobalState(() -> {
 			return getExProcessExecuter().yarnRun(workingDir, environment, options);
 		});

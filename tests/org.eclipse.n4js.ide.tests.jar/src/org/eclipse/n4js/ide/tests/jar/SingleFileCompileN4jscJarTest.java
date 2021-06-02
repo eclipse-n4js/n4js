@@ -66,7 +66,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 
 		Path fileA = project.resolve("src-gen/A.js");
 
-		ProcessResult nodejsResult = runNodejs(workspace, fileA);
+		ProcessResult nodejsResult = nodejsRun(workspace, fileA);
 		assertEquals(nodejsResult.toString(), "Arrghtutut§", nodejsResult.getStdOut());
 	}
 

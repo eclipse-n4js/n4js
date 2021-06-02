@@ -114,8 +114,13 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	}
 
 	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
-	public ProcessResult runNodejs(Path workingDir, Path runFile, String... options) {
-		return cliTools.runNodejs(workingDir, runFile, options);
+	public ProcessResult nodejsRun(Path workingDir, Path runFile, String... options) {
+		return cliTools.nodejsRun(workingDir, runFile, options);
+	}
+
+	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
+	public ProcessResult npmRun(Path workingDir, String... options) {
+		return cliTools.npmRun(workingDir, options);
 	}
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
@@ -131,6 +136,11 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
 	public ProcessResult yarnInstall(Path workingDir, String... options) {
 		return cliTools.yarnInstall(workingDir, options);
+	}
+
+	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
+	public ProcessResult yarnRun(Path workingDir, String... options) {
+		return cliTools.yarnRun(workingDir, options);
 	}
 
 	/**

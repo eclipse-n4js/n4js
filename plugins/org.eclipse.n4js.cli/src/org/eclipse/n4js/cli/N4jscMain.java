@@ -152,7 +152,7 @@ public class N4jscMain {
 		case init:
 			return backend.goalInit(options);
 
-		case setVersions:
+		case setversions:
 			return backend.goalSetVersions(options);
 		}
 
