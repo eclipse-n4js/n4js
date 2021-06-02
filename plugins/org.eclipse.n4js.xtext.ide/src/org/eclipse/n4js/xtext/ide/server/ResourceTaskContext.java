@@ -25,8 +25,10 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.ResourceLocator;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
+import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.n4js.xtext.resource.IWorkspaceAwareResourceDescriptionManager;
 import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
@@ -41,9 +43,6 @@ import org.eclipse.xtext.resource.IResourceDescription.Manager.AllChangeAware;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.containers.DelegatingIAllContainerAdapter;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -52,7 +51,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
-import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
@@ -108,13 +107,16 @@ public class ResourceTaskContext {
 	 * file of this context) this state will represent the dirty state and for all other files it will represent the
 	 * persisted state (as provided by the LSP builder).
 	 */
-	private ResourceDescriptionsData indexSnapshot;
+	/* package */ XChunkedResourceDescriptions indexSnapshot;
 
-	/** Maps project names to URIs of all resources contained in the project (from the last build). */
-	ImmutableSetMultimap<String, URI> project2BuiltURIs;
-
-	/** Most recent workspace configuration. */
-	WorkspaceConfigSnapshot workspaceConfig;
+	/**
+	 * Most recent workspace configuration.
+	 * <p>
+	 * WARNING: this will be <code>null</code> if {@link #mainResource} is not located in a valid workspace or source
+	 * folder. In particular, it will be <code>null</code> if {@code #mainResource} is a newly created and still empty
+	 * project description file.
+	 */
+	/* package */ WorkspaceConfigSnapshot workspaceConfig;
 
 	/** The resource set used for the current resource and any other resources required for resolution. */
 	private XtextResourceSet mainResourceSet;
@@ -221,15 +223,13 @@ public class ResourceTaskContext {
 			ResourceTaskManager parent,
 			URI uri,
 			boolean isTemporary,
-			ResourceDescriptionsData index,
-			ImmutableSetMultimap<String, URI> project2builtURIs,
+			XChunkedResourceDescriptions index,
 			WorkspaceConfigSnapshot workspaceConfig) {
 
 		this.parent = parent;
 		this.mainURI = uri;
 		this.temporary = isTemporary;
 		this.indexSnapshot = index;
-		this.project2BuiltURIs = project2builtURIs;
 		this.workspaceConfig = workspaceConfig;
 		this.mainResourceSet = createResourceSet();
 		this.alive = true;
@@ -237,13 +237,8 @@ public class ResourceTaskContext {
 
 	/** Returns a newly created and fully configured resource set. */
 	protected XtextResourceSet createResourceSet() {
-		XtextResourceSet result = parent.createResourceSet(workspaceConfig, indexSnapshot);
-
+		XtextResourceSet result = parent.createResourceSet(workspaceConfig, indexSnapshot, Optional.of(this));
 		externalContentSupport.configureResourceSet(result, new ResourceTaskContentProvider());
-
-		IAllContainersState allContainersState = new ResourceTaskContextAllContainerState(this);
-		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
-
 		return result;
 	}
 
@@ -370,7 +365,10 @@ public class ResourceTaskContext {
 			return; // temporarily opened files do not contribute to the parent's shared dirty state index
 		}
 		IResourceDescription newDesc = createResourceDescription();
-		indexSnapshot.addDescription(mainURI, newDesc);
+		ProjectConfigSnapshot project = workspaceConfig != null ? workspaceConfig.findProjectContaining(mainURI) : null;
+		if (project != null) {
+			indexSnapshot.addDescription(project.getName(), newDesc);
+		}
 		parent.updateSharedDirtyState(newDesc.getURI(), newDesc);
 	}
 
@@ -379,37 +377,39 @@ public class ResourceTaskContext {
 	 * {@link ResourceTaskContext}). Will never be invoked for {@link #isTemporary() temporary} contexts.
 	 */
 	protected void onDirtyStateChanged(IResourceDescription changedDesc, CancelIndicator cancelIndicator) {
-		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), project2BuiltURIs,
-				workspaceConfig, cancelIndicator);
+		updateIndex(Collections.singletonList(changedDesc), Collections.emptySet(), workspaceConfig, cancelIndicator);
 	}
 
 	/**
 	 * Invoked by {@link #parent} when a change happened in a non-opened file OR after an open file was closed.
 	 */
 	protected void onPersistedStateChanged(Collection<? extends IResourceDescription> changedDescs,
-			Set<URI> removedURIs, ImmutableSetMultimap<String, URI> newProject2builtURIs,
-			WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
-		updateIndex(changedDescs, removedURIs, newProject2builtURIs, newWorkspaceConfig, cancelIndicator);
+			Set<URI> removedURIs, WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
+		updateIndex(changedDescs, removedURIs, newWorkspaceConfig, cancelIndicator);
 	}
 
 	/** Update this context's internal index and trigger a refresh if required. */
 	protected void updateIndex(Collection<? extends IResourceDescription> changedDescs, Set<URI> removedURIs,
-			ImmutableSetMultimap<String, URI> newProject2builtURIs, WorkspaceConfigSnapshot newWorkspaceConfig,
-			CancelIndicator cancelIndicator) {
+			WorkspaceConfigSnapshot newWorkspaceConfig, CancelIndicator cancelIndicator) {
+
+		WorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 
 		// update my cached state
 
 		List<IResourceDescription.Delta> allDeltas = createDeltas(changedDescs, removedURIs);
 		for (IResourceDescription.Delta delta : allDeltas) {
-			indexSnapshot.register(delta);
+			URI deltaURI = delta.getUri();
+			WorkspaceConfigSnapshot wcs = delta.getNew() != null ? newWorkspaceConfig : oldWorkspaceConfig;
+			ProjectConfigSnapshot project = wcs != null ? wcs.findProjectContaining(deltaURI) : null;
+			if (project != null) {
+				indexSnapshot.register(project.getName(), delta);
+			}
 		}
 
-		project2BuiltURIs = newProject2builtURIs;
-
-		WorkspaceConfigSnapshot oldWorkspaceConfig = workspaceConfig;
 		workspaceConfig = newWorkspaceConfig;
 
-		boolean workspaceConfigChanged = !workspaceConfig.equals(oldWorkspaceConfig);
+		boolean workspaceConfigChanged = workspaceConfig != null ? !workspaceConfig.equals(oldWorkspaceConfig)
+				: oldWorkspaceConfig != null;
 		if (workspaceConfigChanged) {
 			WorkspaceConfigAdapter.installWorkspaceConfig(mainResourceSet, workspaceConfig);
 		}

@@ -124,8 +124,8 @@ public abstract class AbstractStructuredIdeTest<T> extends AbstractIdeTest {
 	 * For further details mind the {@link Documentation documentation} of {@link #getDefaultTestWorkspace()} or
 	 * {@link #getDefaultTestProject()} respectively.
 	 */
-	protected void testInDefaultWorkspace(String content, T t) {
-		String nameWithSelector = DEFAULT_MODULE_NAME + TestWorkspaceManager.MODULE_SELECTOR;
+	protected void testInDefaultWorkspace(String moduleName, String content, T t) {
+		String nameWithSelector = moduleName + TestWorkspaceManager.MODULE_SELECTOR;
 		Pair<String, String> moduleContents = Pair.of(nameWithSelector, content);
 
 		boolean moduleAdded = false;

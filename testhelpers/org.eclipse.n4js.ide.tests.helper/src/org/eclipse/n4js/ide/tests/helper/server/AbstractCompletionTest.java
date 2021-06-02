@@ -26,6 +26,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest.N4JSTestCompletionConfiguration;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.utils.Strings;
@@ -69,7 +70,15 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	 * results.
 	 */
 	protected void testAtCursor(String codeWithCursor, String expectedProposals) {
-		doTestWithCursor(codeWithCursor, expectedProposals, null, null);
+		doTestWithCursor(codeWithCursor, false, expectedProposals, null, null);
+	}
+
+	/**
+	 * Same as {@link #testAtCursor(String, String)}, but using an N4JSX file for testing the given
+	 * {@code codeWithCursor}.
+	 */
+	protected void testAtCursorInN4JSX(String codeWithCursor, String expectedProposals) {
+		doTestWithCursor(codeWithCursor, true, expectedProposals, null, null);
 	}
 
 	/**
@@ -77,7 +86,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	 * results.
 	 */
 	protected void testAtCursorPartially(String codeWithCursor, String partialExpectedProposals) {
-		doTestWithCursor(codeWithCursor, null, partialExpectedProposals, null);
+		doTestWithCursor(codeWithCursor, false, null, partialExpectedProposals, null);
 	}
 
 	/**
@@ -87,20 +96,25 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	 */
 	protected void testAtCursorWithApply(String codeWithCursor, String expectedProposals,
 			String expectedCodeAfterApply) {
-		doTestWithCursor(codeWithCursor, expectedProposals, null, expectedCodeAfterApply);
+		doTestWithCursor(codeWithCursor, false, expectedProposals, null, expectedCodeAfterApply);
 	}
 
-	private void doTestWithCursor(String codeWithCursor, String expectedProposals, String partialExpectedProposals,
-			String expectedCodeAfterApply) {
+	private void doTestWithCursor(String codeWithCursor, boolean useN4JSX, String expectedProposals,
+			String partialExpectedProposals, String expectedCodeAfterApply) {
+		String moduleName = DEFAULT_MODULE_NAME;
+		if (useN4JSX) {
+			moduleName += "." + N4JSGlobals.N4JSX_FILE_EXTENSION;
+		}
 		ContentAndPosition contentAndPosition = getContentAndPosition(codeWithCursor);
-		N4JSTestCompletionConfiguration tcc = createTestCompletionConfiguration(contentAndPosition, expectedProposals,
-				partialExpectedProposals, expectedCodeAfterApply);
-		super.testInDefaultWorkspace(contentAndPosition.content, tcc);
+		N4JSTestCompletionConfiguration tcc = createTestCompletionConfiguration(moduleName, contentAndPosition,
+				expectedProposals, partialExpectedProposals, expectedCodeAfterApply);
+		super.testInDefaultWorkspace(moduleName, contentAndPosition.content, tcc);
 	}
 
 	/** @return {@link TestCompletionConfiguration} for a given code with cursor symbol */
-	protected N4JSTestCompletionConfiguration createTestCompletionConfiguration(ContentAndPosition contentAndPosition,
-			String expectedProposals, String partialExpectedProposals, String codeAfterApply) {
+	protected N4JSTestCompletionConfiguration createTestCompletionConfiguration(String moduleName,
+			ContentAndPosition contentAndPosition, String expectedProposals, String partialExpectedProposals,
+			String codeAfterApply) {
 
 		N4JSTestCompletionConfiguration tcc = new N4JSTestCompletionConfiguration();
 		tcc.setModel(contentAndPosition.content);
@@ -116,6 +130,8 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 			});
 		}
 		tcc.setExpectedCodeAfterApply(codeAfterApply);
+
+		tcc.setFilePath(moduleName);
 
 		return tcc;
 	}

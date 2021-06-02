@@ -124,7 +124,8 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 	 *            expected source code after organize imports was performed.
 	 */
 	protected void test(CharSequence code, List<String> expectedIssues, CharSequence expectedCode) {
-		testInDefaultWorkspace(code.toString(), new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
+		testInDefaultWorkspace(DEFAULT_MODULE_NAME, code.toString(),
+				new TestOrganizeImportsConfiguration(expectedIssues, expectedCode));
 	}
 
 	@Override

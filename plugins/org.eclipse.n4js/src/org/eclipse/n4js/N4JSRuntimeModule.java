@@ -69,6 +69,7 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
+import org.eclipse.n4js.xtext.resource.containers.XStateBasedContainerManager;
 import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
@@ -91,6 +92,7 @@ import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenHelper;
 import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.resource.DescriptionUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
+import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -228,6 +230,11 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends IResourceDescription.Manager> bindIResourceDescriptionManager() {
 		return N4JSResourceDescriptionManager.class;
+	}
+
+	@Override
+	public Class<? extends IContainer.Manager> bindIContainer$Manager() {
+		return XStateBasedContainerManager.class;
 	}
 
 	/**

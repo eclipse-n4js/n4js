@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.imports;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +29,7 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
+import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
@@ -53,6 +53,7 @@ import org.eclipse.xtext.scoping.IScopeProvider;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -145,7 +146,12 @@ public class ReferenceResolutionFinder {
 
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		List<IEObjectDescription> candidates = collectAllElements(scope, acceptor);
+		boolean needCollisionCheck = !isUnresolvedReference;
+
+		List<IEObjectDescription> candidates = new ArrayList<>(512);
+		Set<QualifiedName> candidateNames = needCollisionCheck ? new HashSet<>() : null;
+		collectAllElements(scope, candidates, candidateNames, acceptor);
+
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
@@ -160,10 +166,15 @@ public class ReferenceResolutionFinder {
 				// note: must go on with resolution computation even if 'candidateProject' is 'null', because this will
 				// happen in some valid cases (e.g. built-in types)
 
-				final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
-						: Optional.of(scope);
+				final Optional<IScope> scopeForCollisionCheck = needCollisionCheck
+						? Optional.of(scope)
+						: Optional.absent();
+				final Optional<Set<QualifiedName>> allElementsForCollisionCheck = needCollisionCheck
+						? Optional.of(candidateNames)
+						: Optional.absent();
 				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
-						requireFullMatch, candidate, candidateProject, scopeForCollisionCheck, conflictChecker);
+						requireFullMatch, candidate, candidateProject, scopeForCollisionCheck,
+						allElementsForCollisionCheck, conflictChecker);
 				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 					acceptor.accept(resolution);
 				}
@@ -172,21 +183,31 @@ public class ReferenceResolutionFinder {
 	}
 
 	/**
+	 * @param addHere
+	 *            elements will be added here.
+	 * @param addHereNames
+	 *            iff non-<code>null</code>, names of all elements will be added here.
 	 * @param acceptor
 	 *            no resolutions will be passed to the acceptor by this method, only used for cancellation handling.
 	 */
-	private List<IEObjectDescription> collectAllElements(IScope scope, IResolutionAcceptor acceptor) {
+	private void collectAllElements(IScope scope, List<IEObjectDescription> addHere, Set<QualifiedName> addHereNames,
+			IResolutionAcceptor acceptor) {
 		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
 			if (!acceptor.canAcceptMoreProposals()) {
-				return Collections.emptyList();
+				return;
 			}
-			List<IEObjectDescription> result = new ArrayList<>(42);
 			Iterator<IEObjectDescription> iter = scope.getAllElements().iterator();
 			// note: checking #canAcceptMoreProposals() in next line is required to quickly react to cancellation
 			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
-				result.add(iter.next());
+				IEObjectDescription curr = iter.next();
+				if (!isRelevantDescription(curr)) {
+					continue;
+				}
+				addHere.add(curr);
+				if (addHereNames != null) {
+					addHereNames.add(curr.getName());
+				}
 			}
-			return result;
 		}
 	}
 
@@ -214,11 +235,13 @@ public class ReferenceResolutionFinder {
 	 */
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
 			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
-			Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
+			Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
+			Predicate<String> conflictChecker) {
 
 		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, candidateProjectOrNull,
-					scopeForCollisionCheck, text, requireFullMatch, parseTreeNode, conflictChecker);
+					scopeForCollisionCheck, allElementNamesForCollisionCheck, text, requireFullMatch, parseTreeNode,
+					conflictChecker);
 
 			if (!rrc.isValid) {
 				return null;
@@ -348,7 +371,7 @@ public class ReferenceResolutionFinder {
 		final NameAndAlias addedImportNameAndAlias;
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
-				Optional<IScope> scopeForCollisionCheck,
+				Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
 				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
 
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
@@ -365,7 +388,8 @@ public class ReferenceResolutionFinder {
 				this.parentImportModuleName = getParentImportModuleName();
 			}
 			try (Measurement m = contentAssistDataCollectors.dcDetectProposalConflicts().getMeasurement()) {
-				this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
+				this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck,
+						allElementNamesForCollisionCheck);
 			}
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate2().getMeasurement()) {
 				this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
@@ -419,19 +443,27 @@ public class ReferenceResolutionFinder {
 			return qName;
 		}
 
-		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
+		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck,
+				Optional<Set<QualifiedName>> allElementNamesForCollisionCheck) {
 			if (scopeForCollisionCheck.isPresent()) {
 				IScope scope = scopeForCollisionCheck.get();
-				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+				Set<QualifiedName> allElementNames = allElementNamesForCollisionCheck.get();
+				IEObjectDescription candidateViaScope = getCandidateViaScope(scope, allElementNames);
 				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
 				return candidateViaScope;
 			}
 			return null;
 		}
 
-		private IEObjectDescription getCandidateViaScope(IScope scope) {
-			// performance issue: scope.getElements
-			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(QualifiedName.create(shortName)));
+		private IEObjectDescription getCandidateViaScope(IScope scope, Set<QualifiedName> allElementNames) {
+			QualifiedName shortNameQN = QualifiedName.create(shortName);
+			// because 'scope.getElements()' is slow-ish and we are invoked for every element in
+			// 'scope.getAllElements()' (see #collectAllElements() above), we use this guard:
+			if (!allElementNames.contains(shortNameQN)) {
+				return null;
+			}
+			List<IEObjectDescription> elements = Lists.newArrayList(Iterables.filter(
+					scope.getElements(shortNameQN), ReferenceResolutionFinder::isRelevantDescription));
 			if (elements.isEmpty()) {
 				return null;
 			}
@@ -685,6 +717,23 @@ public class ReferenceResolutionFinder {
 		public boolean isNamespace() {
 			return accessType == CandidateAccessType.namespace;
 		}
+	}
+
+	/**
+	 * Returns <code>true</code> iff the given description is relevant for the purpose of reference resolution finding
+	 * in this class. All other descriptions will be ignored.
+	 */
+	private static boolean isRelevantDescription(IEObjectDescription desc) {
+		if (desc instanceof PlainAccessOfAliasedImportDescription
+				|| desc instanceof PlainAccessOfNamespacedImportDescription
+				|| desc instanceof WrongTypingStrategyDescription) {
+			// for these subclasses of IEObjectDescriptionWithError method #isActualElementInScope() would return
+			// 'false'; but because some special handling exists in the above code for these classes, we actually have
+			// to treat them as relevant, i.e. return 'true' for them:
+			return true;
+		}
+		// standard case:
+		return N4JSLanguageUtils.isActualElementInScope(desc);
 	}
 
 	private static N4JSProjectName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {

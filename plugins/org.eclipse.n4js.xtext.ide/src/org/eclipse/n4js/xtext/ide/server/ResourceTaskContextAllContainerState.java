@@ -10,56 +10,34 @@
  */
 package org.eclipse.n4js.xtext.ide.server;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-
-import com.google.common.collect.ImmutableList;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.xtext.ide.server.util.WorkspaceConfigAllContainerState;
+import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
 
 /**
- * Provides visibility information across projects within the resource set of a resource task context.
+ * Same as {@link WorkspaceConfigAllContainerState}, but provides a minor optimization by obtaining the workspace
+ * configuration and resource descriptions directly from the resource task context instead of searching through all
+ * adapters of the context resource set.
  */
-public class ResourceTaskContextAllContainerState implements IAllContainersState {
+public class ResourceTaskContextAllContainerState extends WorkspaceConfigAllContainerState {
 
 	/** The resource task context this container state was created for. */
 	protected final ResourceTaskContext resourceTaskContext;
 
 	/** See {@link ResourceTaskContextAllContainerState}. */
-	public ResourceTaskContextAllContainerState(ResourceTaskContext resourceTaskContext) {
+	public ResourceTaskContextAllContainerState(ResourceSet resourceSet, ResourceTaskContext resourceTaskContext) {
+		super(resourceSet);
 		this.resourceTaskContext = resourceTaskContext;
 	}
 
 	@Override
-	public boolean isEmpty(String containerHandle) {
-		return resourceTaskContext.project2BuiltURIs.get(containerHandle).isEmpty();
+	protected WorkspaceConfigSnapshot getWorkspaceConfig() {
+		return resourceTaskContext.workspaceConfig;
 	}
 
 	@Override
-	public List<String> getVisibleContainerHandles(String projectName) {
-		ProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectByName(projectName);
-		if (project == null) {
-			return Collections.singletonList(projectName);
-		}
-		Set<String> visible = project.getDependencies();
-		Set<String> visibleAndSelf = new HashSet<>(visible);
-		visibleAndSelf.add(projectName);
-		return ImmutableList.copyOf(visibleAndSelf);
-	}
-
-	@Override
-	public Collection<URI> getContainedURIs(String containerHandle) {
-		return resourceTaskContext.project2BuiltURIs.get(containerHandle);
-	}
-
-	@Override
-	public String getContainerHandle(URI uri) {
-		ProjectConfigSnapshot project = resourceTaskContext.workspaceConfig.findProjectContaining(uri);
-		return project != null ? project.getName() : null;
+	protected ChunkedResourceDescriptions getChunkedResourceDescriptions() {
+		return resourceTaskContext.indexSnapshot;
 	}
 }

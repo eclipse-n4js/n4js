@@ -28,19 +28,21 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.CancelIndicatorUtil;
+import org.eclipse.n4js.xtext.ide.server.util.WorkspaceConfigAllContainerState;
+import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.containers.DelegatingIAllContainerAdapter;
+import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.SetMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -110,15 +112,14 @@ public class ResourceTaskManager {
 	 *
 	 * This looks like being the same as the the ConcurrentIndex structure?
 	 */
-	/** The persisted state index, not taking into account dirty state from existing resource task contexts. */
-	protected final ResourceDescriptionsData persistedIndex = new ResourceDescriptionsData(Collections.emptyList());
+	/**
+	 * The persisted state index, not taking into account dirty state from existing resource task contexts.
+	 * <p>
+	 * Contained instances of {@link ResourceDescriptionsData} are shared across threads and must not be changed!
+	 */
+	protected final XChunkedResourceDescriptions persistedIndex = new XChunkedResourceDescriptions();
 	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
 	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
-	/** Tracks URIs per project. Derived from persisted state but applies equally to the dirty state. */
-	protected SetMultimap<String, URI> project2BuiltURIs = HashMultimap.create();
-	/** Immutable copy of {@link #project2BuiltURIs}. */
-	protected ImmutableSetMultimap<String, URI> project2BuiltURIsImmutable = ImmutableSetMultimap
-			.copyOf(project2BuiltURIs);
 	/** Most recent workspace configuration. */
 	protected WorkspaceConfigSnapshot workspaceConfig = null;
 
@@ -379,8 +380,8 @@ public class ResourceTaskManager {
 	 */
 	protected synchronized ResourceTaskContext doCreateContext(URI uri, boolean isTemporary) {
 		ResourceTaskContext rtc = resourceTaskContextProvider.get();
-		ResourceDescriptionsData index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
-		rtc.initialize(this, uri, isTemporary, index, project2BuiltURIsImmutable, workspaceConfig);
+		XChunkedResourceDescriptions index = isTemporary ? createPersistedStateIndex() : createLiveScopeIndex();
+		rtc.initialize(this, uri, isTemporary, index, workspaceConfig);
 		return rtc;
 	}
 
@@ -412,9 +413,8 @@ public class ResourceTaskManager {
 	 * updates of the workspace state on disk.
 	 */
 	public XtextResourceSet createTemporaryResourceSet() {
-		ResourceDescriptionsData index = createPersistedStateIndex();
-		XtextResourceSet result = createResourceSet(workspaceConfig, index);
-		return result;
+		XChunkedResourceDescriptions index = createPersistedStateIndex();
+		return createResourceSet(workspaceConfig, index, Optional.absent());
 	}
 
 	/**
@@ -427,10 +427,14 @@ public class ResourceTaskManager {
 	 * </ol>
 	 */
 	protected XtextResourceSet createResourceSet(WorkspaceConfigSnapshot currWorkspaceConfig,
-			ResourceDescriptionsData currResourceDescriptions) {
+			XChunkedResourceDescriptions currResourceDescriptions, Optional<ResourceTaskContext> rtc) {
 		XtextResourceSet result = resourceSetProvider.get();
 		WorkspaceConfigAdapter.installWorkspaceConfig(result, currWorkspaceConfig);
-		ResourceDescriptionsData.ResourceSetAdapter.installResourceDescriptionsData(result, currResourceDescriptions);
+		currResourceDescriptions.setResourceSet(result); // installs 'currResourceDescriptions' as adapter on 'result'
+		IAllContainersState allContainersState = rtc.isPresent()
+				? new ResourceTaskContextAllContainerState(result, rtc.get())
+				: new WorkspaceConfigAllContainerState(result);
+		result.eAdapters().add(new DelegatingIAllContainerAdapter(allContainersState));
 		return result;
 	}
 
@@ -441,15 +445,18 @@ public class ResourceTaskManager {
 	 * do apply sane shadowing semantics.
 	 */
 	/** Creates an index not containing any dirty state information. */
-	protected synchronized ResourceDescriptionsData createPersistedStateIndex() {
-		return persistedIndex.copy();
+	protected synchronized XChunkedResourceDescriptions createPersistedStateIndex() {
+		return persistedIndex.createDeepCopy();
 	}
 
 	/** Creates an index containing the persisted state shadowed by the dirty state of all non-temporary contexts. */
-	public synchronized ResourceDescriptionsData createLiveScopeIndex() {
-		ResourceDescriptionsData result = createPersistedStateIndex();
+	public synchronized XChunkedResourceDescriptions createLiveScopeIndex() {
+		XChunkedResourceDescriptions result = createPersistedStateIndex();
 		for (IResourceDescription desc : dirtyIndex.getAllResourceDescriptions()) {
-			result.addDescription(desc.getURI(), desc);
+			ProjectConfigSnapshot project = workspaceConfig.findProjectContaining(desc.getURI());
+			if (project != null) {
+				result.addDescription(project.getName(), desc);
+			}
 		}
 		return result;
 	}
@@ -474,8 +481,10 @@ public class ResourceTaskManager {
 			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			Set<URI> oldURIsOfProject = new HashSet<>(project2BuiltURIs.get(projectName));
-			removed.addAll(oldURIsOfProject);
+			ResourceDescriptionsData oldData = persistedIndex.getContainer(projectName);
+			if (oldData != null) {
+				removed.addAll(oldData.getAllURIs());
+			}
 
 			for (IResourceDescription desc : newData.getAllResourceDescriptions()) {
 				URI descURI = desc.getURI();
@@ -485,18 +494,13 @@ public class ResourceTaskManager {
 		}
 
 		// update my internal state
-		changed.stream().forEachOrdered(desc -> persistedIndex.addDescription(desc.getURI(), desc));
-		removed.stream().forEachOrdered(persistedIndex::removeDescription);
-		for (String removedProjectName : removedProjects) {
-			project2BuiltURIs.removeAll(removedProjectName);
+		for (String removedProject : removedProjects) {
+			persistedIndex.removeContainer(removedProject);
 		}
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			String projectName = entry.getKey();
-			ResourceDescriptionsData newData = entry.getValue();
-			project2BuiltURIs.removeAll(projectName);
-			project2BuiltURIs.putAll(projectName, newData.getAllURIs());
+			persistedIndex.setContainer(entry.getKey(), entry.getValue());
 		}
-		project2BuiltURIsImmutable = ImmutableSetMultimap.copyOf(project2BuiltURIs);
+
 		workspaceConfig = newWorkspaceConfig;
 
 		// from this point forward: ignore changes/removals related to existing resource task contexts
@@ -507,12 +511,10 @@ public class ResourceTaskManager {
 		if (Iterables.isEmpty(changed) && removed.isEmpty() && workspaceConfig.equals(oldWC)) {
 			return;
 		}
-		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
 		for (URI currURI : uri2RTCsOnQueue.keySet()) {
 			runInExistingContextVoid(currURI, "updatePersistedState of existing context", (rtc, ci) -> {
-				rtc.onPersistedStateChanged(changed, removed,
-						capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
+				rtc.onPersistedStateChanged(changed, removed, capturedWorkspaceConfig, ci);
 			});
 		}
 	}
@@ -535,9 +537,8 @@ public class ResourceTaskManager {
 			dirtyIndex.removeDescription(uri);
 		}
 		// update dirty state instance in each resource task context (except the one that caused the change)
-		ImmutableSetMultimap<String, URI> capturedProject2BuiltURIsImmutable = project2BuiltURIsImmutable;
 		WorkspaceConfigSnapshot capturedWorkspaceConfig = workspaceConfig;
-		IResourceDescription replacementDesc = newDesc == null ? persistedIndex.getResourceDescription(uri) : null;
+		IResourceDescription replacementDesc = newDesc == null ? getPersistedIndexDescription(uri) : null;
 		for (Entry<URI, ResourceTaskContext> currEntry : uri2RTCsOnQueue.entrySet()) {
 			URI currURI = currEntry.getKey();
 			ResourceTaskContext currRTC = currEntry.getValue();
@@ -552,15 +553,26 @@ public class ResourceTaskManager {
 					// happens in case a resource context was disposed
 					if (replacementDesc != null) {
 						rtc.onPersistedStateChanged(Collections.singleton(replacementDesc), Collections.emptySet(),
-								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
+								capturedWorkspaceConfig, ci);
 					} else {
 						rtc.onPersistedStateChanged(Collections.emptyList(), Collections.singleton(uri),
-								capturedProject2BuiltURIsImmutable, capturedWorkspaceConfig, ci);
+								capturedWorkspaceConfig, ci);
 					}
 				}
 				return null;
 			});
 		}
+	}
+
+	private IResourceDescription getPersistedIndexDescription(URI uri) {
+		ProjectConfigSnapshot project = workspaceConfig.findProjectContaining(uri);
+		if (project != null) {
+			ResourceDescriptionsData container = persistedIndex.getContainer(project.getName());
+			if (container != null) {
+				return container.getResourceDescription(uri);
+			}
+		}
+		return persistedIndex.getResourceDescription(uri);
 	}
 
 	/** Adds a {@link IResourceTaskListener listener}. */
