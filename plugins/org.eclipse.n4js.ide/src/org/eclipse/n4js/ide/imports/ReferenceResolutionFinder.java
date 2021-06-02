@@ -39,7 +39,6 @@ import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
-import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -185,10 +184,9 @@ public class ReferenceResolutionFinder {
 
 	/**
 	 * @param addHere
-	 *            elements will be added here. This is required even if <code>addHereByName</code> is given, to preserve
-	 *            the correct order of elements.
+	 *            elements will be added here.
 	 * @param addHereNames
-	 *            iff non-<code>null</code>, elements will also be added here, indexed by name.
+	 *            iff non-<code>null</code>, names of all elements will be added here.
 	 * @param acceptor
 	 *            no resolutions will be passed to the acceptor by this method, only used for cancellation handling.
 	 */
@@ -723,17 +721,19 @@ public class ReferenceResolutionFinder {
 
 	/**
 	 * Returns <code>true</code> iff the given description is relevant for the purpose of reference resolution finding
-	 * in this class.
-	 * <p>
-	 * In principle, this is the case iff {@link N4JSLanguageUtils#isActualElementInScope(IEObjectDescription)} returns
-	 * <code>true</code>. However, because some special handling exists above for certain subclasses of
-	 * {@link IEObjectDescriptionWithError} we have to return <code>true</code> for those subclasses as well.
+	 * in this class. All other descriptions will be ignored.
 	 */
 	private static boolean isRelevantDescription(IEObjectDescription desc) {
-		return desc instanceof PlainAccessOfAliasedImportDescription
+		if (desc instanceof PlainAccessOfAliasedImportDescription
 				|| desc instanceof PlainAccessOfNamespacedImportDescription
-				|| desc instanceof WrongTypingStrategyDescription
-				|| N4JSLanguageUtils.isActualElementInScope(desc);
+				|| desc instanceof WrongTypingStrategyDescription) {
+			// for these subclasses of IEObjectDescriptionWithError method #isActualElementInScope() would return
+			// 'false'; but because some special handling exists in the above code for these classes, we actually have
+			// to treat them as relevant, i.e. return 'true' for them:
+			return true;
+		}
+		// standard case:
+		return N4JSLanguageUtils.isActualElementInScope(desc);
 	}
 
 	private static N4JSProjectName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {

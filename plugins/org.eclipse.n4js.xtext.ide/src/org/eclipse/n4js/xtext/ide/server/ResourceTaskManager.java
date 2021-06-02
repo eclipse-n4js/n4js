@@ -117,7 +117,7 @@ public class ResourceTaskManager {
 	 * <p>
 	 * Contained instances of {@link ResourceDescriptionsData} are shared across threads and must not be changed!
 	 */
-	protected final XChunkedResourceDescriptions persistedIndexNEW = new XChunkedResourceDescriptions();
+	protected final XChunkedResourceDescriptions persistedIndex = new XChunkedResourceDescriptions();
 	/** The dirty state index. Contains an entry for each URI with an existing resource task context. */
 	protected final ResourceDescriptionsData dirtyIndex = new ResourceDescriptionsData(Collections.emptyList());
 	/** Most recent workspace configuration. */
@@ -446,7 +446,7 @@ public class ResourceTaskManager {
 	 */
 	/** Creates an index not containing any dirty state information. */
 	protected synchronized XChunkedResourceDescriptions createPersistedStateIndex() {
-		return persistedIndexNEW.createDeepCopy();
+		return persistedIndex.createDeepCopy();
 	}
 
 	/** Creates an index containing the persisted state shadowed by the dirty state of all non-temporary contexts. */
@@ -481,7 +481,7 @@ public class ResourceTaskManager {
 			String projectName = entry.getKey();
 			ResourceDescriptionsData newData = entry.getValue();
 
-			ResourceDescriptionsData oldData = persistedIndexNEW.getContainer(projectName);
+			ResourceDescriptionsData oldData = persistedIndex.getContainer(projectName);
 			if (oldData != null) {
 				removed.addAll(oldData.getAllURIs());
 			}
@@ -495,10 +495,10 @@ public class ResourceTaskManager {
 
 		// update my internal state
 		for (String removedProject : removedProjects) {
-			persistedIndexNEW.removeContainer(removedProject);
+			persistedIndex.removeContainer(removedProject);
 		}
 		for (Entry<String, ? extends ResourceDescriptionsData> entry : changedDescriptions.entrySet()) {
-			persistedIndexNEW.setContainer(entry.getKey(), entry.getValue());
+			persistedIndex.setContainer(entry.getKey(), entry.getValue());
 		}
 
 		workspaceConfig = newWorkspaceConfig;
@@ -567,12 +567,12 @@ public class ResourceTaskManager {
 	private IResourceDescription getPersistedIndexDescription(URI uri) {
 		ProjectConfigSnapshot project = workspaceConfig.findProjectContaining(uri);
 		if (project != null) {
-			ResourceDescriptionsData container = persistedIndexNEW.getContainer(project.getName());
+			ResourceDescriptionsData container = persistedIndex.getContainer(project.getName());
 			if (container != null) {
 				return container.getResourceDescription(uri);
 			}
 		}
-		return persistedIndexNEW.getResourceDescription(uri);
+		return persistedIndex.getResourceDescription(uri);
 	}
 
 	/** Adds a {@link IResourceTaskListener listener}. */

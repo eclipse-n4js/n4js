@@ -246,7 +246,7 @@ public class N4JSLanguageUtils {
 
 	/**
 	 * Some {@link IEObjectDescription}s returned by our {@link IScope scope} implementations do not represent actual,
-	 * valid elements in the scope but are used only for error reporting, etc. This methods returns <code>true</code>
+	 * valid elements in the scope but are used only for error reporting, etc. This method returns <code>true</code>
 	 * iff the given description represents an actual, existing element.
 	 */
 	def static boolean isActualElementInScope(IEObjectDescription desc) {
