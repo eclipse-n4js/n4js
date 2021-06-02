@@ -302,4 +302,49 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''');
 	}
 
+	@Test
+	def void testUnresolvedReferenceDoesNotCauseAliasImport_inN4JS() {
+		testAtCursor('''
+			A1<|>;
+			// the fact we have the following unresolved reference to the proposed element "A1" in the source code
+			// should not cause an alias import to be created:
+			A1;
+		''',
+		'''
+			(A1, Class, MA, , , 00000, , , , ([0:0 - 0:2], A1), [([0:0 - 0:0], import {A1} from "MA";
+			)], [], , )
+		''')
+	}
+
+	@Test
+	def void testUnresolvedReferenceDoesNotCauseAliasImport_inN4JSX() {
+		testAtCursorInN4JSX('''
+			<A1<|>
+			/>;
+			// the fact we have the following unresolved reference to the proposed element "A1" in the source code
+			// should not cause an alias import to be created:
+			<A1/>;
+		''', '''
+			(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";
+			)], [], , )
+		''');
+	}
+
+	/**
+	 * Similar to {@link #testUnresolvedReferenceDoesNotCauseAliasImport_inN4JSX}, but the unresolved reference
+	 * is not located elsewhere in the source code but right where the content assist is triggered.
+	 */
+	@Test
+	def void testExistingJSXTagDoesNotCauseAliasImport() {
+		// the important point in this test code is that one of the proposals (i.e. "A1") is already completely given
+		// in the source code, which causes the JSX support in scoping to create a UnresolvableObjectDescription which
+		// must not trigger creation of an alias import:
+		testAtCursorInN4JSX('''
+			<A1<|>
+			/>;
+		''', '''
+			(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";
+			)], [], , )
+		''');
+	}
 }
