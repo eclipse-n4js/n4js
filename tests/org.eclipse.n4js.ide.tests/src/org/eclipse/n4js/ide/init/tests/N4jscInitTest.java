@@ -130,7 +130,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		ProcessResult resultBuild = npmRun(cwd.toPath(), "run", "build");
 		assertTrue(resultBuild.getStdOut().contains("Errors: 0"));
-		assertTrue(resultBuild.getStdOut().contains("Transpiled: 4"));
+		assertTrue(resultBuild.getStdOut().contains("Generated: 4"));
 
 		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("."));
 		assertEquals("Hello World", resultNodejs.getStdOut());
@@ -301,7 +301,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		ProcessResult resultBuild = yarnRun(cwd.toPath(), "run", "build");
 		assertTrue(resultBuild.getStdOut().contains("Errors: 0"));
-		assertTrue(resultBuild.getStdOut().contains("Transpiled: 4"));
+		assertTrue(resultBuild.getStdOut().contains("Generated: 4"));
 
 		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/TestInit2"));
 		assertEquals("Hello World", resultNodejs.getStdOut());
