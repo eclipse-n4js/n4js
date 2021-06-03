@@ -30,6 +30,7 @@ import org.eclipse.n4js.ide.server.N4JSStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceConfigFactory;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
+import org.eclipse.n4js.ide.server.WorkspaceFrontendDEBUG;
 import org.eclipse.n4js.ide.server.build.N4JSBuildOrderInfoComputer;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
 import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
@@ -51,6 +52,7 @@ import org.eclipse.n4js.xtext.ide.server.DebugService;
 import org.eclipse.n4js.xtext.ide.server.LanguageServerFrontend;
 import org.eclipse.n4js.xtext.ide.server.QueuedExecutorService;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
+import org.eclipse.n4js.xtext.ide.server.WorkspaceFrontend;
 import org.eclipse.n4js.xtext.ide.server.XExecutableCommandRegistry;
 import org.eclipse.n4js.xtext.ide.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.xtext.ide.server.XIWorkspaceConfigFactory;
@@ -288,5 +290,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {
 		return HeadlessExtensionRegistrationHelper.class;
+	}
+
+	public Class<? extends WorkspaceFrontend> bindWorkspaceFrontend() {
+		return WorkspaceFrontendDEBUG.class;
 	}
 }

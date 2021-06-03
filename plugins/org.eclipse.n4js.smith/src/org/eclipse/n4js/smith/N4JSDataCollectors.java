@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 public final class N4JSDataCollectors {
 
 	public static final DataCollector dcOpenSymbol = create("Open Symbol");
+	public static final DataCollector dcOpenSymbol_getSignificantTextRegion = create("Open Symbol", dcOpenSymbol);
 
 	public static final DataCollector dcN4JSResource = create("N4JSResource");
 
