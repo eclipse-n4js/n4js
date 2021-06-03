@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -23,9 +26,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.smith.CollectedDataAccess;
 import org.eclipse.n4js.smith.DataCollectorUtils;
 import org.eclipse.n4js.smith.DataSeries;
@@ -37,6 +43,7 @@ import org.eclipse.n4js.xtext.ide.server.WorkspaceFrontend;
 import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
+import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -62,7 +69,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class WorkspaceFrontendDEBUG extends WorkspaceFrontend {
 
-	public static int DEBUG__APPROACH = 0;
+	public static int DEBUG__APPROACH = 3;
 
 	@Inject
 	private ResourceTaskManager resourceTaskManager;
@@ -74,8 +81,9 @@ public class WorkspaceFrontendDEBUG extends WorkspaceFrontend {
 
 		N4JSDataCollectors.dcOpenSymbol.resetData();
 		N4JSDataCollectors.dcOpenSymbol.setPaused(false);
+		List<? extends SymbolInformation> result;
 		try (Measurement m = N4JSDataCollectors.dcOpenSymbol.getMeasurement()) {
-			return /* workspaceSymbolService. */ getSymbols(params.getQuery(), null, liveScopeIndex,
+			result = /* workspaceSymbolService. */ getSymbols(params.getQuery(), null, liveScopeIndex,
 					CancelIndicator.NullImpl); // cancelIndicator);
 		} finally {
 			N4JSDataCollectors.dcOpenSymbol.setPaused(true);
@@ -83,6 +91,38 @@ public class WorkspaceFrontendDEBUG extends WorkspaceFrontend {
 			String collectorStr = DataCollectorUtils.dataToString(dataSeries, " ");
 			System.out.println(collectorStr);
 		}
+
+		// write to file for result comparison
+		StringBuilder sb = new StringBuilder();
+		for (SymbolInformation si : result) {
+			sb.append(si.getName());
+			sb.append(' ');
+			sb.append(si.getContainerName());
+			sb.append(' ');
+			sb.append(si.getLocation().getRange().getStart().getLine());
+			sb.append(':');
+			sb.append(si.getLocation().getRange().getStart().getCharacter());
+			if (si.getLocation().getUri().endsWith(".js")) {
+				sb.append("-...");
+			} else if (si.getLocation().getUri().endsWith("/package.json")) {
+				sb.append("-...");
+			} else {
+				sb.append('-');
+				sb.append(si.getLocation().getRange().getEnd().getLine());
+				sb.append(':');
+				sb.append(si.getLocation().getRange().getEnd().getCharacter());
+			}
+			sb.append(' ');
+			sb.append(si.getLocation().getUri());
+			sb.append('\n');
+		}
+		try {
+			Files.writeString(Path.of("/Users/mark-oliver.reiser/Desktop/allSymbols.txt"), sb.toString());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		return result;
 	}
 
 	// from org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService
@@ -123,6 +163,18 @@ public class WorkspaceFrontendDEBUG extends WorkspaceFrontend {
 					}
 				}
 			};
+		} else if (DEBUG__APPROACH == 3) {
+			resourceSet = null;
+			resourceAccess = new IResourceAccess() {
+				@Override
+				public <R> R readOnly(URI targetURI, IUnitOfWork<R, ResourceSet> work) {
+					try {
+						return work.exec(null);
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+			};
 		} else {
 			throw new IllegalStateException("invalid DEBUG__APPROACH: " + DEBUG__APPROACH);
 		}
@@ -134,12 +186,12 @@ public class WorkspaceFrontendDEBUG extends WorkspaceFrontend {
 			// if (!uri.toString().endsWith(".n4js")) {
 			// continue;
 			// }
-			if (uri.toString().contains("/node_modules/")) {
-				continue;
-			}
-			if (++n > 1000) {
-				break;
-			}
+			// if (uri.toString().contains("/node_modules/")) {
+			// continue;
+			// }
+			// if (++n > 1000) {
+			// break;
+			// }
 
 			if (DEBUG__APPROACH == 2) {
 				workspaceAccess.loadModuleFromIndex(resourceSet, resourceDescription, false);
@@ -204,6 +256,9 @@ public class WorkspaceFrontendDEBUG extends WorkspaceFrontend {
 	@Inject
 	private DocumentExtensions documentExtensions;
 
+	@Inject
+	private UriExtensions uriExtensions;
+
 	private void createSymbol(
 			IEObjectDescription description,
 			IResourceAccess resourceAccess,
@@ -226,6 +281,16 @@ public class WorkspaceFrontendDEBUG extends WorkspaceFrontend {
 			IEObjectDescription description,
 			IResourceAccess resourceAccess,
 			Consumer<Location> acceptor) {
+		if (DEBUG__APPROACH == 3) {
+			String uriStr = uriExtensions.toUriString(description.getEObjectURI().trimFragment());
+			N4JSResourceDescriptionStrategy.Location loc = N4JSResourceDescriptionStrategy.getLocation(description);
+			Range rangeLSP = loc != null
+					? new Range(new Position(loc.startLine, loc.startColumn), new Position(loc.endLine, loc.endColumn))
+					: new Range(new Position(0, 0), new Position(0, 0));
+			Location locLSP = new Location(uriStr, rangeLSP);
+			acceptor.accept(locLSP);
+			return;
+		}
 		doRead(resourceAccess, description.getEObjectURI(), obj -> {
 			Location location = getSymbolLocation(obj);
 			if (location != null) {

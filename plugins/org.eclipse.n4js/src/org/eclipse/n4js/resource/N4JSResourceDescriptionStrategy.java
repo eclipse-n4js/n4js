@@ -14,9 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TConstableElement;
 import org.eclipse.n4js.ts.types.TMember;
@@ -27,10 +29,16 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.ILocationInFileProvider;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.util.IAcceptor;
+import org.eclipse.xtext.util.ITextRegion;
+import org.eclipse.xtext.util.LineAndColumn;
 
 import com.google.common.collect.ForwardingMap;
 import com.google.inject.Inject;
@@ -41,6 +49,65 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy {
+
+	public static class Location {
+		/** Zero-based. */
+		public final int startLine;
+		/** Zero-based. */
+		public final int startColumn;
+		/** Zero-based. */
+		public final int endLine;
+		/** Zero-based. */
+		public final int endColumn;
+
+		public Location(int startLine, int startColumn, int endLine, int endColumn) {
+			this.startLine = startLine;
+			this.startColumn = startColumn;
+			this.endLine = endLine;
+			this.endColumn = endColumn;
+		}
+
+		@Override
+		public String toString() {
+			return toString(startLine, startColumn, endLine, endColumn);
+		}
+
+		public static String toString(int startLine, int startColumn, int endLine, int endColumn) {
+			return startLine + ":" + startColumn + "-" + endLine + ":" + endColumn;
+		}
+
+		public static Location fromString(String str) {
+			int firstColon = -1;
+			int dash = -1;
+			int secondColon = -1;
+			int len = str.length();
+			for (int i = 0; i < len; i++) {
+				char ch = str.charAt(i);
+				if (ch == '-' && dash == -1) {
+					dash = i;
+				} else if (ch == ':') {
+					if (dash == -1) {
+						firstColon = i;
+					} else {
+						secondColon = i;
+						break;
+					}
+				}
+			}
+			if (firstColon < 0 || dash < 0 || secondColon < 0) {
+				throw new NumberFormatException("invalid format of location string: " + str);
+			}
+			int startLine = Integer.parseInt(str.substring(0, firstColon));
+			int startColumn = Integer.parseInt(str.substring(firstColon + 1, dash));
+			int endLine = Integer.parseInt(str.substring(dash + 1, secondColon));
+			int endColumn = Integer.parseInt(str.substring(secondColon + 1));
+			return new Location(startLine, startColumn, endLine, endColumn);
+		}
+
+	}
+
+	public static final String LOCATION_KEY = "LOCATION";
+	public static final Location LOCATION_DEFAULT = null;
 
 	/**
 	 * User data to store the {@link TModule#isMainModule() mainModule} property of a {@link TModule} in the index
@@ -133,6 +200,9 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
 
+	@Inject
+	private ILocationInFileProvider locationInFileProvider;
+
 	@Override
 	public boolean createEObjectDescriptions(final EObject eObject, IAcceptor<IEObjectDescription> acceptor) {
 		if (getQualifiedNameProvider() == null)
@@ -149,6 +219,14 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		}
 		// export is only possible for top-level elements
 		return false;
+	}
+
+	public static Location getLocation(IEObjectDescription description) {
+		String userData = description.getUserData(LOCATION_KEY);
+		if (userData == null) {
+			return LOCATION_DEFAULT;
+		}
+		return Location.fromString(userData);
 	}
 
 	/** @return the whether the given description is the main module. */
@@ -274,6 +352,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (module.isPreLinkingPhase()) {
 			return UserDataMapper.createTimestampUserData(module);
 		}
+		Location location = computeLocation(module);
 		return new ForwardingMap<>() {
 
 			private Map<String, String> delegate;
@@ -283,6 +362,9 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				if (delegate == null) {
 					try {
 						delegate = UserDataMapper.createUserData(module);
+						if (location != null) {
+							delegate.put(LOCATION_KEY, location.toString());
+						}
 						N4JSResource resource = (N4JSResource) module.eResource();
 						UserDataMapper.writeDependenciesToUserData(resource, delegate);
 					} catch (Exception e) {
@@ -306,6 +388,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
 			if (qualifiedName != null) { // e.g. non-exported declared functions will return null for FQN
 				Map<String, String> userData = new HashMap<>();
+				addLocationUserData(userData, type);
 				addAccessModifierUserData(userData, type.getTypeAccessModifier());
 				addVersionableVersion(userData, type);
 
@@ -324,6 +407,31 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				acceptor.accept(eod);
 			}
 		}
+	}
+
+	private void addLocationUserData(Map<String, String> userData, IdentifiableElement elem) {
+		Location location = computeLocation(elem);
+		if (location != null) {
+			userData.put(LOCATION_KEY, location.toString());
+		}
+	}
+
+	private Location computeLocation(EObject obj) {
+		ITextRegion region = locationInFileProvider.getSignificantTextRegion(obj);
+		int offset = region.getOffset();
+		int length = region.getLength();
+		Resource resource = obj.eResource();
+		if (resource instanceof XtextResource) {
+			ICompositeNode rootNode = ((XtextResource) resource).getParseResult().getRootNode();
+			LineAndColumn start = NodeModelUtils.getLineAndColumn(rootNode, offset);
+			LineAndColumn end = length > 0 ? NodeModelUtils.getLineAndColumn(rootNode, offset + length) : start;
+			if (start != null && end != null) {
+				return new Location(
+						start.getLine() - 1, start.getColumn() - 1,
+						end.getLine() - 1, end.getColumn() - 1);
+			}
+		}
+		return null;
 	}
 
 	/** Supplies the given userData map with the user data value for the access modifier. */
@@ -358,6 +466,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(variable);
 		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
 			Map<String, String> userData = new HashMap<>();
+			addLocationUserData(userData, variable);
 			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
 			addConstUserData(userData, variable);
 
