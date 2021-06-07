@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
@@ -55,6 +56,12 @@ public class UtilN4 {
 	/** Default string used for indentation of a single level. */
 	public static final String DEFAULT_INDENTATION_STR = "    ";
 
+	/**
+	 * The maximum memory usage measured with method {@link #measureUsedMemory(boolean)} since the JVM was started.
+	 * Client code may reset this to 0 in order to start over.
+	 */
+	public static final AtomicLong MAX_USED_MEMORY_IN_BYTES = new AtomicLong(0L);
+
 	private static Logger logger = Logger.getLogger(UtilN4.class);
 
 	private static final Iterable<Pair<String, String>> CHARS_TO_ESCAPED_CHARS = ImmutableList
@@ -83,6 +90,25 @@ public class UtilN4 {
 			return s.get();
 		}
 	};
+
+	/**
+	 * Simple utility method for measuring memory usage. Keeps track of the maximum usage measured in
+	 * {@link #MAX_USED_MEMORY_IN_BYTES}.
+	 *
+	 * @return the currently used memory in bytes.
+	 */
+	public static final long measureUsedMemory(boolean logToStdOut) {
+		Runtime runtime = Runtime.getRuntime();
+		runtime.gc();
+		long usedBytes = runtime.totalMemory() - runtime.freeMemory();
+		long maxBytes = MAX_USED_MEMORY_IN_BYTES.updateAndGet(oldValue -> Math.max(oldValue, usedBytes));
+		if (logToStdOut) {
+			long usedMeBiBytes = usedBytes / (1024L * 1024L);
+			long maxMeBiBytes = maxBytes / (1024L * 1024L);
+			System.out.println("used memory: " + usedMeBiBytes + "MiB (max: " + maxMeBiBytes + "MiB)");
+		}
+		return usedBytes;
+	}
 
 	/**
 	 * Finds and returns the first cycle in the directed graph defined by the given edge relation
