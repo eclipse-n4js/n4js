@@ -29,8 +29,8 @@ import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
 import org.eclipse.n4js.ide.server.N4JSStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceConfigFactory;
+import org.eclipse.n4js.ide.server.N4JSWorkspaceFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
-import org.eclipse.n4js.ide.server.WorkspaceFrontendDEBUG;
 import org.eclipse.n4js.ide.server.build.N4JSBuildOrderInfoComputer;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
 import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
@@ -41,7 +41,9 @@ import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
 import org.eclipse.n4js.ide.server.rename.N4JSRenameService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
+import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolService;
 import org.eclipse.n4js.ide.server.symbol.N4JSHierarchicalDocumentSymbolService;
+import org.eclipse.n4js.ide.server.symbol.N4JSWorkspaceSymbolService;
 import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvider;
 import org.eclipse.n4js.ide.server.util.N4JSServerIncidentLogger;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -68,7 +70,6 @@ import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
 import org.eclipse.n4js.xtext.ide.server.issues.WorkspaceValidateListener;
-import org.eclipse.n4js.xtext.ide.server.symbol.XDocumentSymbolService;
 import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.xtext.ide.server.util.XOperationCanceledManager;
@@ -93,6 +94,7 @@ import org.eclipse.xtext.ide.server.rename.IRenameService2;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolMapper;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
+import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
@@ -128,6 +130,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends LanguageServerFrontend> bindLanguageServerFrontend() {
 		return N4JSLanguageServerFrontend.class;
+	}
+
+	public Class<? extends WorkspaceFrontend> bindWorkspaceFrontend() {
+		return N4JSWorkspaceFrontend.class;
 	}
 
 	public Class<? extends BuilderFrontend> bindBuilderFrontend() {
@@ -227,8 +233,12 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSRenameService.class;
 	}
 
+	public Class<? extends WorkspaceSymbolService> bindWorkspaceSymbolService() {
+		return N4JSWorkspaceSymbolService.class;
+	}
+
 	public Class<? extends DocumentSymbolService> bindDocumentSymbolService() {
-		return XDocumentSymbolService.class;
+		return N4JSDocumentSymbolService.class;
 	}
 
 	public Class<? extends IPrefixMatcher> bindIPrefixMatcher() {
@@ -290,9 +300,5 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {
 		return HeadlessExtensionRegistrationHelper.class;
-	}
-
-	public Class<? extends WorkspaceFrontend> bindWorkspaceFrontend() {
-		return WorkspaceFrontendDEBUG.class;
 	}
 }

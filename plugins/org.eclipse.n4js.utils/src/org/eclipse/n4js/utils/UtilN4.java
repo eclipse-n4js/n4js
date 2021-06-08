@@ -270,6 +270,36 @@ public class UtilN4 {
 	}
 
 	/**
+	 * Tells whether the given candidate string matches the given query according to the filtering logic applied by
+	 * VSCode during client-side filtering of completion proposals, document symbols, etc.
+	 * <p>
+	 * The algorithm applied by VS Code seems to be:
+	 *
+	 * <pre>
+	 * check that characters in query string are contained in symbol name ...
+	 * - in the order they appear in the query string
+	 * - the query string must be exhausted, i.e. *all* characters of the query string must be contained in the symbol name
+	 * - if a character is contained in the query string N times, it must be contained in the symbol name N times
+	 * - case is ignored
+	 * </pre>
+	 */
+	public static boolean isMatchAccordingToVSCode(String candidate, String query) {
+		int ic = 0;
+		int iq = 0;
+		while (ic < candidate.length() && iq < query.length()) {
+			char cc = candidate.charAt(ic);
+			char cq = candidate.charAt(iq);
+			if (Character.toLowerCase(cc) == Character.toLowerCase(cq)) {
+				// character matches, so consume this character in the query string:
+				iq++;
+			}
+			ic++;
+		}
+		// we have a match iff the query string was exhausted:
+		return iq == query.length();
+	}
+
+	/**
 	 * Fills a string buffer with spaces until it has at least the given length. Not very efficient, basically used for
 	 * debug output.
 	 */
