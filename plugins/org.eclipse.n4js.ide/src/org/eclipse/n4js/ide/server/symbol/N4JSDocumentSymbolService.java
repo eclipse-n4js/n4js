@@ -48,14 +48,17 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 		}
 
 		String name = getSymbolName(description);
+		if (name == null) {
+			return false;
+		}
 
 		// Note: filtering of completion proposals and document symbols is performed on the client side, whereas
 		// filtering of workspace symbols is performed on the server side (by this method). To have consistent
 		// filtering across these use cases (at least in VS Code), we here mimic VS Code's filtering logic.
 		// FIXME deactivated for now, because it leads to too many matches and therefore the transmission delay!
-		// return name != null && UtilN4.isMatchAccordingToVSCode(name, query);
+		// return UtilN4.isMatchAccordingToVSCode(name, query);
 
-		return name != null && name.contains(query);
+		return name.toLowerCase().contains(query.toLowerCase());
 	}
 
 	@Override
