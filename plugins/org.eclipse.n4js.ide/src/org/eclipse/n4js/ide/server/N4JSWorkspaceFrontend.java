@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -58,8 +59,18 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 		// resource access that will never load the resource:
 		IResourceAccess resourceAccess = nonLoadingResourceAccess;
 		XChunkedResourceDescriptions liveScopeIndex = resourceTaskManager.createLiveScopeIndex();
-		List<? extends SymbolInformation> symbols = workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess,
-				liveScopeIndex, cancelIndicator);
-		return symbols;
+		try {
+			List<? extends SymbolInformation> symbols = workspaceSymbolService.getSymbols(params.getQuery(),
+					resourceAccess, liveScopeIndex, cancelIndicator);
+			return symbols;
+		} catch (Throwable th) {
+			// It seems that if this request fails (even if due to a cancellation), then some LSP clients (e.g. VS Code)
+			// will never try a 'workspace/symbols' request again, effectively turning off operation "open workspace
+			// symbol". We don't want that, so we return an empty list here:
+			return Collections.emptyList();
+			// FIXME #1 why is this special handling required here, but not in case of other requests?
+			// (could this be related to the use of #submitAndCancelPrevious() in the super class???)
+			// FIXME #2 report the error via the LspLogger!!!! (if it isn't a cancellation)
+		}
 	}
 }
