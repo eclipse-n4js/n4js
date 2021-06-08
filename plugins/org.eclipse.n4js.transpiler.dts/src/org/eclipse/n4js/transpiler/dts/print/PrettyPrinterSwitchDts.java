@@ -26,7 +26,6 @@ import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
-import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
@@ -34,7 +33,6 @@ import org.eclipse.n4js.n4JS.ExportedVariableBinding;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
@@ -44,7 +42,11 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.N4EnumDeclaration;
+import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
+import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
@@ -55,7 +57,6 @@ import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Statement;
-import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableBinding;
@@ -66,7 +67,6 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.Script_IM;
-import org.eclipse.n4js.transpiler.im.Snippet;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -230,38 +230,133 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
+		writeIf("export ", original.isExported());
+		writeIf("default ", original.isExportedAsDefault());
+		processModifiers(original.getDeclaredModifiers(), " ");
 		write("class ");
 		write(original.getName());
+		if (!original.getTypeVars().isEmpty()) {
+			write("<");
+			for (int i = 0; i < original.getTypeVars().size(); i++) {
+				if (i > 0) {
+					write(", ");
+				}
+				N4TypeVariable typeVar = original.getTypeVars().get(i);
+				process(typeVar);
+			}
+			write(">");
+		}
 		write(' ');
+
 		final TypeReferenceNode<ParameterizedTypeRef> superClassRef = original.getSuperClassRef();
 		final Expression superClassExpression = original.getSuperClassExpression();
 		if (superClassRef != null) {
-			// We cannot support this, because we cannot look up the symbol table entry for the TypeRef returned by
-			// #getSuperClassRef() from within the PrettyPrinterSwitch and we do not want to introduce a new entity
-			// N4ClassDeclaration_IM in IM.xcore only for this purpose. However, there is a simple work-around: the
-			// transpiler can simply create a superClassExpression with an IdentifierRef_IM pointing to the desired
-			// symbol table entry of the super class.
-			// throw new IllegalStateException("property superClassRef in N4ClassDeclaration is not supported in "
-			// + PrettyPrinterSwitchDts.class.getSimpleName());
-			// TODO
+			write("extends ");
+			process(superClassRef);
+			write(' ');
 		} else if (superClassExpression != null) {
 			write("extends ");
 			process(superClassExpression);
 			write(' ');
 		}
+
+		if (!original.getImplementedInterfaceRefs().isEmpty()) {
+			write("implements ");
+			for (int i = 0; i < original.getImplementedInterfaceRefs().size(); i++) {
+				if (i > 0) {
+					write(", ");
+				}
+				TypeReferenceNode<ParameterizedTypeRef> superInterfRef = original.getImplementedInterfaceRefs().get(i);
+				process(superInterfRef);
+			}
+			write(' ');
+		}
+
 		processBlockLike(original.getOwnedMembersRaw(), '{', null, null, '}');
 		return DONE;
 	}
 
-	// NOTE: no case method for N4FieldDeclaration, because field declarations are not natively supported by ES6 classes
+	@Override
+	public Boolean caseN4InterfaceDeclaration(N4InterfaceDeclaration original) {
+		writeIf("export ", original.isExported());
+		writeIf("default ", original.isExportedAsDefault());
+		processModifiers(original.getDeclaredModifiers(), " ");
+		write("interface ");
+		write(original.getName());
+		if (!original.getTypeVars().isEmpty()) {
+			write("<");
+			for (int i = 0; i < original.getTypeVars().size(); i++) {
+				if (i > 0) {
+					write(", ");
+				}
+				N4TypeVariable typeVar = original.getTypeVars().get(i);
+				process(typeVar);
+			}
+			write(">");
+		}
+		write(' ');
+
+		if (!original.getSuperInterfaceRefs().isEmpty()) {
+			write("extends ");
+			for (int i = 0; i < original.getSuperInterfaceRefs().size(); i++) {
+				if (i > 0) {
+					write(", ");
+				}
+				TypeReferenceNode<ParameterizedTypeRef> superInterfRef = original.getSuperInterfaceRefs().get(i);
+				process(superInterfRef);
+			}
+			write(' ');
+		}
+
+		// Workaround since TypeScript interfaces do not support static methods
+
+		List<N4MemberDeclaration> staticMembers = new ArrayList<>();
+		List<N4MemberDeclaration> nonStaticMembers = new ArrayList<>();
+		for (N4MemberDeclaration member : original.getOwnedMembersRaw()) {
+			if (member.isStatic()) {
+				staticMembers.add(member);
+			} else {
+				nonStaticMembers.add(member);
+			}
+		}
+		processBlockLike(nonStaticMembers, '{', null, null, '}');
+
+		if (!staticMembers.isEmpty()) {
+			writeIf("export ", original.isExported());
+			write("namespace ");
+			write(original.getName());
+
+			// TODO rewrite static methods to functions
+			processBlockLike(staticMembers, '{', null, null, '}');
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseN4EnumDeclaration(N4EnumDeclaration original) {
+		writeIf("export ", original.isExported());
+		writeIf("default ", original.isExportedAsDefault());
+		processModifiers(original.getDeclaredModifiers(), " ");
+		write("enum ");
+		write(original.getName());
+
+		processBlockLike(original.getLiterals(), '{', null, null, '}');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseN4FieldDeclaration(N4FieldDeclaration original) {
+		processAnnotations(original.getAnnotations());
+		processModifiers(original.getDeclaredModifiers(), " ");
+		processPropertyName(original);
+		processDeclaredTypeRef(original, " ");
+		return DONE;
+	}
 
 	@Override
 	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		// note: parser does not allow field accessors to be declared "async", so we ignore original.isAsync() here.
-		if (original.isStatic()) {
-			write("static ");
-		}
+		processModifiers(original.getDeclaredModifiers(), " ");
 		write("get ");
 		processPropertyName(original);
 		write("() ");
@@ -273,10 +368,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	@Override
 	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		// note: parser does not allow field accessors to be declared "async", so we ignore original.isAsync() here.
-		if (original.isStatic()) {
-			write("static ");
-		}
+		processModifiers(original.getDeclaredModifiers(), " ");
 		write("set ");
 		processPropertyName(original);
 		write('(');
@@ -289,9 +381,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	@Override
 	public Boolean caseN4MethodDeclaration(N4MethodDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		if (original.isStatic()) {
-			write("static ");
-		}
+		processModifiers(original.getDeclaredModifiers(), " ");
 		if (original.isAsync()) {
 			write("async ");
 		}
@@ -462,6 +552,12 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
+	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
+		caseVariableDeclaration(original);
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseVariableDeclaration(VariableDeclaration original) {
 		processAnnotations(original.getAnnotations());
 		write(original.getName());
@@ -470,12 +566,6 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 			write(" = ");
 			process(original.getExpression());
 		}
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
-		caseVariableDeclaration(original);
 		return DONE;
 	}
 
@@ -495,26 +585,6 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		return DONE;
 	}
 
-	@Override
-	public Boolean caseEmptyStatement(EmptyStatement original) {
-		write(';');
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExpressionStatement(ExpressionStatement original) {
-		process(original.getExpression());
-		if (!(original.getExpression() instanceof Snippet))
-			write(';');
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseThisLiteral(ThisLiteral original) {
-		write("this");
-		return DONE;
-	}
-
 	// ###############################################################################################################
 	// UTILITY AND CONVENIENCE METHODS
 
@@ -531,6 +601,12 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 			out.append(csq);
 		} catch (IOException e) {
 			throw new WrappedException(e);
+		}
+	}
+
+	private void writeIf(CharSequence csq, boolean condition) {
+		if (condition) {
+			write(csq);
 		}
 	}
 
@@ -653,11 +729,25 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
+	private void processModifiers(EList<N4Modifier> modifiers, String suffix) {
+		processModifiers(modifiers);
+		if (!modifiers.isEmpty()) {
+			write(suffix);
+		}
 	}
 
-	@SuppressWarnings("unused")
+	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
+		TypeRef declaredTypeRef = funDef.getDeclaredReturnTypeRef();
+		if (declaredTypeRef == null)
+			declaredTypeRef = funDef.getDeclaredReturnTypeRefInAST();
+		if (declaredTypeRef == null)
+			return;
+
+		write(" : ");
+		process(declaredTypeRef);
+		write(suffix);
+	}
+
 	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {
 		TypeRef declaredTypeRef = elem.getDeclaredTypeRef();
 		if (declaredTypeRef == null)
@@ -665,12 +755,9 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		if (declaredTypeRef == null)
 			return;
 
-		// In case of plain-JS output no types will be written
-		throw new IllegalStateException("Type reference still left in code. typeRef=" + declaredTypeRef);
-
-		// write(" : ");
-		// process(declaredTypeRef);
-		// write(suffix);
+		write(" : ");
+		process(declaredTypeRef);
+		write(suffix);
 	}
 
 	private void processTypeParams(EList<N4TypeVariable> typeParams) {
