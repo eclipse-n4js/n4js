@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -126,8 +125,8 @@ public class LspServer {
 					gsonBuilder.registerTypeAdapterFactory(new ExecuteCommandParamsTypeAdapter.Factory(languageServer));
 				})
 				.wrapMessages(debugService.getTracingMessageWrapper())
-				// Use this for tracing LSP messages:
-				.traceMessages(new PrintWriter(System.out))
+		// Use this for tracing LSP messages:
+		// .traceMessages(new PrintWriter(System.out))
 		// NOTES:
 		// 1) see class PatchedTracingMessageConsumer for further configuration options for tracing
 		// 2) consider activating logging of resource tasks via ResourceTaskManager#LOG_RESOURCE_TASK_EXECUTION
