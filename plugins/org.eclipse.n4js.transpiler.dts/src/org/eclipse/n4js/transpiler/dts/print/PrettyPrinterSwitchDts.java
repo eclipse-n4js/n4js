@@ -229,8 +229,6 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
-		writeIf("export ", original.isExported());
-		writeIf("default ", original.isExportedAsDefault());
 		processModifiers(original.getDeclaredModifiers(), " ");
 		write("class ");
 		write(original.getName());
@@ -277,8 +275,6 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4InterfaceDeclaration(N4InterfaceDeclaration original) {
-		writeIf("export ", original.isExported());
-		writeIf("default ", original.isExportedAsDefault());
 		processModifiers(original.getDeclaredModifiers(), " ");
 		write("interface ");
 		write(original.getName());
@@ -333,8 +329,6 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4EnumDeclaration(N4EnumDeclaration original) {
-		writeIf("export ", original.isExported());
-		writeIf("default ", original.isExportedAsDefault());
 		processModifiers(original.getDeclaredModifiers(), " ");
 		write("enum ");
 		write(original.getName());

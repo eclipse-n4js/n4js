@@ -39,6 +39,7 @@ public class Project {
 	String mainModule = null;
 	String outputFolder = "src-gen";
 	String projectDescriptionContent = null;
+	boolean generateDts = false;
 
 	/**
 	 * Same as {@link #Project(String, String, String, ProjectType)}, but with
@@ -149,6 +150,23 @@ public class Project {
 	}
 
 	/**
+	 * @return true iff "generator"/"d.ts" is set to true.
+	 */
+	public def boolean isGenerateDts() {
+		return generateDts;
+	}
+
+	/**
+	 * Sets the output folder.
+	 * 
+	 * @param outputFolder the output folder to set
+	 */
+	public def Project setGenerateDts(boolean generateDts) {
+		this.generateDts = generateDts;
+		return this;
+	}
+
+	/**
 	 * Sets the content of the project description file 'package.json'
 	 * 
 	 * @param projectDescriptionContent content of package.json
@@ -246,22 +264,27 @@ public class Project {
 					«IF !outputFolder.nullOrEmpty
 					»,"output": "«outputFolder»"
 					«ENDIF»
+					«IF generateDts»
+					,"generator": {
+						"d.ts": true
+					}"
+					«ENDIF»
 					«IF !folders.nullOrEmpty
-				»,"sources": {
-								"source": [
-									«FOR sourceFolder : folders.filter[isSourceFolder] SEPARATOR ','»
-										"«sourceFolder.name»"
-									«ENDFOR»
-								]
-						}
+					»,"sources": {
+						"source": [
+							«FOR sourceFolder : folders.filter[isSourceFolder] SEPARATOR ','»
+								"«sourceFolder.name»"
+							«ENDFOR»
+						]
+					}
 					«ENDIF»
 				},
 				"dependencies": {
-						«IF !projectDependencies.nullOrEmpty»
-							«FOR dep : projectDependencies SEPARATOR ','»
-								"«dep»": "*"
-							«ENDFOR»
-						«ENDIF»
+					«IF !projectDependencies.nullOrEmpty»
+						«FOR dep : projectDependencies SEPARATOR ','»
+							"«dep»": "*"
+						«ENDFOR»
+					«ENDIF»
 				}
 			}
 		«ENDIF»
