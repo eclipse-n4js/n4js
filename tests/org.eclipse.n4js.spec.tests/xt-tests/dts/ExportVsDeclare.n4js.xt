@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+// non-exported elements must be prefixed with keyword 'declare'
+
+
+var varD;
+export var varE;
+
+let letD;
+export let letE;
+
+const constD = 42;
+export const constE = 42;
+
+
+class ClsD {}
+export class ClsE {}
+
+interface IfcD {}
+export interface IfcE {}
+
+enum EnumD { L }
+export enum EnumE { L }
+
+type AliD = ClsD;
+export type AliE = ClsE;
+
+
+/* XPECT generated_dts ---
+declare var varD;
+export var varE;
+declare let letD;
+export let letE;
+declare const constD;
+export const constE;
+declare class ClsD {}
+export class ClsE {}
+declare interface IfcD {}
+export interface IfcE {}
+declare enum EnumD{
+	L
+}
+export enum EnumE{
+	L
+}
+type AliD = ClsD;
+export type AliE = ClsE;
+--- */

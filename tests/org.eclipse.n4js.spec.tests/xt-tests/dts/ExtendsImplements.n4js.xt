@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest END_SETUP */
+
+
+interface Ifc {}
+interface Ifc1 extends Ifc {}
+interface Ifc2 extends Ifc {}
+
+class Cls implements Ifc {}
+class SubCls extends Cls implements Ifc1, Ifc2 {}
+
+
+/* XPECT generated_dts ---
+declare interface Ifc {}
+declare interface Ifc1 extends Ifc {}
+declare interface Ifc2 extends Ifc {}
+declare class Cls implements Ifc {}
+declare class SubCls extends Cls implements Ifc1, Ifc2 {}
+--- */
