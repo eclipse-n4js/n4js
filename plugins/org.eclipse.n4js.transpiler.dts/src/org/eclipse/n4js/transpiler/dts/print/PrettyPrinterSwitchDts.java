@@ -69,7 +69,6 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -650,6 +649,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void processIfNonNull(EObject elemInIM) {
 		if (elemInIM != null) {
 			doSwitch(elemInIM);
@@ -736,28 +736,30 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
-		TypeRef declaredTypeRef = funDef.getDeclaredReturnTypeRef();
-		if (declaredTypeRef == null)
-			declaredTypeRef = funDef.getDeclaredReturnTypeRefInAST();
-		if (declaredTypeRef == null)
-			return;
-
-		write(" : ");
-		process(declaredTypeRef);
-		write(suffix);
+		// TypeRef declaredTypeRef = funDef.getDeclaredReturnTypeRef();
+		// if (declaredTypeRef == null)
+		// declaredTypeRef = funDef.getDeclaredReturnTypeRefInAST();
+		// if (declaredTypeRef == null)
+		// return;
+		//
+		// write(" : ");
+		// process(declaredTypeRef);
+		// write(suffix);
 	}
 
+	@SuppressWarnings("unused")
 	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {
-		TypeRef declaredTypeRef = elem.getDeclaredTypeRef();
-		if (declaredTypeRef == null)
-			declaredTypeRef = elem.getDeclaredTypeRefInAST();
-		if (declaredTypeRef == null)
-			return;
-
-		write(" : ");
-		process(declaredTypeRef);
-		write(suffix);
+		// TypeRef declaredTypeRef = elem.getDeclaredTypeRef();
+		// if (declaredTypeRef == null)
+		// declaredTypeRef = elem.getDeclaredTypeRefInAST();
+		// if (declaredTypeRef == null)
+		// return;
+		//
+		// write(" : ");
+		// process(declaredTypeRef);
+		// write(suffix);
 	}
 
 	private void processTypeParams(EList<N4TypeVariable> typeParams) {
