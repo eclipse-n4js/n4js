@@ -110,7 +110,14 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "source" inside "sources". */
 	SOURCE("source", "List of source folders", JSONArray.class, N4JS, SOURCES),
 	/** Key of package.json property "test" inside "sources". */
-	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES);
+	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES),
+
+	/** Key of package.json property "generator". */
+	GENERATOR("generator", "", JSONObject.class, N4JS),
+	/** Key of package.json property "generator"/"d.ts". */
+	GENERATOR_DTS("d.ts", "", JSONBooleanLiteral.class, N4JS, GENERATOR),
+
+	;
 
 	/** section of the property within the package.json as a path of parents starting at the top level */
 	final public PackageJsonProperties[] parents;

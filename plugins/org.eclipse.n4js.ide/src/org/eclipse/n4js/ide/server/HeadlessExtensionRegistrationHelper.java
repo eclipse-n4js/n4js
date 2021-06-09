@@ -76,6 +76,11 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 				N4JSGlobals.JSX_FILE_EXTENSION, N4IDLGlobals.N4IDL_FILE_EXTENSION);
 		registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 
+		// Register d.ts subgenerator
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JSD_FILE_EXTENSION);
+
 		// Register ECMAScript subgenerator
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JS_FILE_EXTENSION);
@@ -83,10 +88,6 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JSX_FILE_EXTENSION);
 
 		subGeneratorRegistry.register(n4idlSubGenerator, N4IDLGlobals.N4IDL_FILE_EXTENSION);
-
-		// Register d.ts subgenerator
-		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
-		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
 
 		// register N4JS-specific package.json behavior with JSONExtensionRegistry
 		registerJSONLanguageExtension();

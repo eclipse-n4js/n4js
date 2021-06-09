@@ -390,7 +390,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 
 	/** Answers: Is this compiler activated for the input at hand? */
 	def boolean isActive(Resource input) {
-		Boolean.valueOf(preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.IS_ACTIVE, getDefaultDescriptor()))
+		return Boolean.valueOf(preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.IS_ACTIVE, getDefaultDescriptor()))
 	}
 
 	/** Checking the availability of a static polyfill, which will override the compilation of this module.

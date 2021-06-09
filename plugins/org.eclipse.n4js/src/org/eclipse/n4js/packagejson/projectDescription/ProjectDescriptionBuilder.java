@@ -43,6 +43,7 @@ public class ProjectDescriptionBuilder {
 	private boolean nestedNodeModulesFolder;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
+	private boolean isGeneratorEnabledDts;
 	private final List<String> workspaces = new ArrayList<>();
 
 	public ProjectDescriptionBuilder() {
@@ -53,7 +54,8 @@ public class ProjectDescriptionBuilder {
 		return new ProjectDescription(name, vendorId, vendorName, version, type, mainModule,
 				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
 				implementationId, implementedProjects, outputPath, sourceContainers, moduleFilters, testedProjects,
-				definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, workspaces);
+				definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts,
+				workspaces);
 	}
 
 	public String getName() {
@@ -239,6 +241,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setYarnWorkspaceRoot(boolean yarnWorkspaceRoot) {
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
+		return this;
+	}
+
+	public boolean isGeneratorEnabledDts() {
+		return isGeneratorEnabledDts;
+	}
+
+	public ProjectDescriptionBuilder setGeneratorEnabledDts(boolean isGeneratorEnabledDts) {
+		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
 		return this;
 	}
 
