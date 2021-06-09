@@ -41,6 +41,7 @@ import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -422,6 +423,18 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 	 * @generated
 	 */
 	@Override
+	public TypeReferenceNode<?> getDeclaredTypeRefNode() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public LocalArgumentsVariable getLocalArgumentsVariable() {
 		LocalArgumentsVariable __lok = this.get_lok();
 		boolean _tripleEquals = (__lok == null);
@@ -730,6 +743,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE: return N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}
@@ -777,6 +791,8 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 				return getName();
 			case N4JSPackage.N4_FIELD_ACCESSOR___HAS_COMPUTED_PROPERTY_NAME:
 				return hasComputedPropertyName();
+			case N4JSPackage.N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE:
+				return getDeclaredTypeRefNode();
 			case N4JSPackage.N4_FIELD_ACCESSOR___GET_LOCAL_ARGUMENTS_VARIABLE:
 				return getLocalArgumentsVariable();
 			case N4JSPackage.N4_FIELD_ACCESSOR___IS_RETURN_VALUE_OPTIONAL:

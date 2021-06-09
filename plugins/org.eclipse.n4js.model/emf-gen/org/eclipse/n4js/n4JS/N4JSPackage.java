@@ -1177,13 +1177,22 @@ public interface N4JSPackage extends EPackage {
 	int TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST = 1;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE = 2;
+
+	/**
 	 * The number of operations of the '<em>Type Providing Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_PROVIDING_ELEMENT_OPERATION_COUNT = 2;
+	int TYPE_PROVIDING_ELEMENT_OPERATION_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.TypedElementImpl <em>Typed Element</em>}' class.
@@ -1212,6 +1221,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPED_ELEMENT_FEATURE_COUNT = TYPE_PROVIDING_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPED_ELEMENT___GET_DECLARED_TYPE_REF_NODE = TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -1332,6 +1350,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int VARIABLE_FEATURE_COUNT = TYPED_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE___GET_DECLARED_TYPE_REF_NODE = TYPED_ELEMENT___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -2290,13 +2317,22 @@ public interface N4JSPackage extends EPackage {
 	int FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR = FUNCTION_OR_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___GET_NAME = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 3;
+	int FIELD_ACCESSOR___GET_NAME = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -2305,7 +2341,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___HAS_COMPUTED_PROPERTY_NAME = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 4;
+	int FIELD_ACCESSOR___HAS_COMPUTED_PROPERTY_NAME = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -2314,7 +2350,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___IS_VALID_NAME = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 5;
+	int FIELD_ACCESSOR___IS_VALID_NAME = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -2323,7 +2359,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 6;
+	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -2332,7 +2368,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 7;
+	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Defined Accessor</em>' operation.
@@ -2341,7 +2377,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 8;
+	int FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -2350,7 +2386,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___IS_OPTIONAL = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 9;
+	int FIELD_ACCESSOR___IS_OPTIONAL = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 10;
 
 	/**
 	 * The number of operations of the '<em>Field Accessor</em>' class.
@@ -2359,7 +2395,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR_OPERATION_COUNT = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 10;
+	int FIELD_ACCESSOR_OPERATION_COUNT = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl <em>Function Declaration</em>}' class.
@@ -3275,6 +3311,15 @@ public interface N4JSPackage extends EPackage {
 	int LOCAL_ARGUMENTS_VARIABLE_FEATURE_COUNT = VARIABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCAL_ARGUMENTS_VARIABLE___GET_DECLARED_TYPE_REF_NODE = VARIABLE___GET_DECLARED_TYPE_REF_NODE;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3438,13 +3483,22 @@ public interface N4JSPackage extends EPackage {
 	int FORMAL_PARAMETER___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FORMAL_PARAMETER___GET_DECLARED_TYPE_REF_NODE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER___GET_DECLARED_TYPE_REF = ANNOTABLE_ELEMENT_OPERATION_COUNT + 2;
+	int FORMAL_PARAMETER___GET_DECLARED_TYPE_REF = ANNOTABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -3453,7 +3507,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int FORMAL_PARAMETER___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -3462,7 +3516,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER___GET_CONTAINING_MODULE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int FORMAL_PARAMETER___GET_CONTAINING_MODULE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -3471,7 +3525,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER___GET_NAME = ANNOTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int FORMAL_PARAMETER___GET_NAME = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -3480,7 +3534,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER___IS_CONST = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int FORMAL_PARAMETER___IS_CONST = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>Formal Parameter</em>' class.
@@ -3489,7 +3543,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int FORMAL_PARAMETER_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.StatementImpl <em>Statement</em>}' class.
@@ -4203,13 +4257,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 4;
+	int VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -4218,7 +4281,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 5;
+	int VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4227,7 +4290,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 6;
+	int VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -4236,7 +4299,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 7;
+	int VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -4245,7 +4308,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 9;
+	int VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 10;
 
 	/**
 	 * The number of operations of the '<em>Variable Declaration</em>' class.
@@ -4254,7 +4317,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 10;
+	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl <em>Exported Variable Declaration</em>}' class.
@@ -4355,6 +4418,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORTED_VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS = VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE = VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -5520,6 +5592,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int CATCH_VARIABLE_FEATURE_COUNT = VARIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATCH_VARIABLE___GET_DECLARED_TYPE_REF_NODE = VARIABLE___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -6774,13 +6855,22 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_NAME_VALUE_PAIR___GET_ANNOTATIONS = ANNOTABLE_PROPERTY_ASSIGNMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF_NODE = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 2;
+	int PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -6789,7 +6879,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 3;
+	int PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Defined Member</em>' operation.
@@ -6798,7 +6888,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR___GET_DEFINED_MEMBER = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 4;
+	int PROPERTY_NAME_VALUE_PAIR___GET_DEFINED_MEMBER = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -6807,7 +6897,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 5;
+	int PROPERTY_NAME_VALUE_PAIR___IS_VALID_NAME = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Property Name Value Pair</em>' class.
@@ -6816,7 +6906,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_NAME_VALUE_PAIR_OPERATION_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 6;
+	int PROPERTY_NAME_VALUE_PAIR_OPERATION_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairSingleNameImpl <em>Property Name Value Pair Single Name</em>}' class.
@@ -6926,6 +7016,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_ANNOTATIONS = PROPERTY_NAME_VALUE_PAIR___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_DECLARED_TYPE_REF_NODE = PROPERTY_NAME_VALUE_PAIR___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -7425,6 +7524,15 @@ public interface N4JSPackage extends EPackage {
 	int GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7633,6 +7741,15 @@ public interface N4JSPackage extends EPackage {
 	int SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7839,6 +7956,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -8074,6 +8200,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -13319,13 +13454,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION___IS_EXTERNAL = N4_TYPE_DECLARATION___IS_EXTERNAL;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF_NODE = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
+	int N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF = N4_TYPE_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -13334,7 +13478,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = N4_TYPE_DECLARATION_OPERATION_COUNT + 3;
+	int N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = N4_TYPE_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type As Type Alias</em>' operation.
@@ -13343,7 +13487,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = N4_TYPE_DECLARATION_OPERATION_COUNT + 4;
+	int N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = N4_TYPE_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>N4 Type Alias Declaration</em>' class.
@@ -13352,7 +13496,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 5;
+	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ModifiableElementImpl <em>Modifiable Element</em>}' class.
@@ -14044,13 +14188,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_FIELD_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 2;
+	int N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -14059,7 +14212,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 3;
+	int N4_FIELD_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -14068,7 +14221,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___GET_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 4;
+	int N4_FIELD_DECLARATION___GET_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -14077,7 +14230,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 5;
+	int N4_FIELD_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -14086,7 +14239,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 7;
+	int N4_FIELD_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -14095,7 +14248,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___IS_CONST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_FIELD_DECLARATION___IS_CONST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -14104,7 +14257,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___IS_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_FIELD_DECLARATION___IS_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Valid</em>' operation.
@@ -14113,7 +14266,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___IS_VALID = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 10;
+	int N4_FIELD_DECLARATION___IS_VALID = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -14122,7 +14275,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_FIELD_DECLARATION___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>N4 Field Declaration</em>' class.
@@ -14131,7 +14284,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 12;
+	int N4_FIELD_DECLARATION_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.MethodDeclarationImpl <em>Method Declaration</em>}' class.
@@ -15001,13 +15154,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 8;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___GET_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_FIELD_ACCESSOR___GET_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -15016,7 +15178,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___HAS_COMPUTED_PROPERTY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_FIELD_ACCESSOR___HAS_COMPUTED_PROPERTY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -15025,7 +15187,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -15034,7 +15196,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 12;
+	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Defined Accessor</em>' operation.
@@ -15043,7 +15205,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 13;
+	int N4_FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -15052,7 +15214,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___IS_OPTIONAL = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 14;
+	int N4_FIELD_ACCESSOR___IS_OPTIONAL = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -15061,7 +15223,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 15;
+	int N4_FIELD_ACCESSOR___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -15070,7 +15232,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 16;
+	int N4_FIELD_ACCESSOR___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 17;
 
 	/**
 	 * The number of operations of the '<em>N4 Field Accessor</em>' class.
@@ -15079,7 +15241,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 17;
+	int N4_FIELD_ACCESSOR_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 18;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4GetterDeclarationImpl <em>N4 Getter Declaration</em>}' class.
@@ -15234,6 +15396,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -15550,6 +15721,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -16596,6 +16776,15 @@ public interface N4JSPackage extends EPackage {
 	int MIGRATION_CONTEXT_VARIABLE_FEATURE_COUNT = VARIABLE_FEATURE_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIGRATION_CONTEXT_VARIABLE___GET_DECLARED_TYPE_REF_NODE = VARIABLE___GET_DECLARED_TYPE_REF_NODE;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17417,6 +17606,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeProvidingElement__GetDeclaredTypeRefInAST();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.TypeProvidingElement#getDeclaredTypeRefNode() <em>Get Declared Type Ref Node</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.TypeProvidingElement#getDeclaredTypeRefNode()
+	 * @generated
+	 */
+	EOperation getTypeProvidingElement__GetDeclaredTypeRefNode();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.TypedElement <em>Typed Element</em>}'.
@@ -23564,6 +23763,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST = eINSTANCE.getTypeProvidingElement__GetDeclaredTypeRefInAST();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Type Ref Node</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE = eINSTANCE.getTypeProvidingElement__GetDeclaredTypeRefNode();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.TypedElementImpl <em>Typed Element</em>}' class.

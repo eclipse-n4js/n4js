@@ -15,15 +15,16 @@ import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifie
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.Annotation;
-import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -36,13 +37,13 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
-import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
+import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -50,6 +51,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
@@ -69,12 +71,12 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 
 /**
  * Traverses an intermediate model and serializes it to a {@link LineColTrackingAppendable}. Client code should only use
@@ -86,35 +88,43 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	 * Appends the given transpiler state's intermediate model to the given {@link LineColTrackingAppendable}.
 	 */
 	public static void append(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble) {
-		final PrettyPrinterSwitchDts theSwitch = new PrettyPrinterSwitchDts(out, optPreamble);
+		final PrettyPrinterSwitchDts theSwitch = new PrettyPrinterSwitchDts(out, state, optPreamble);
 		theSwitch.doSwitch(state.im);
 	}
 
 	/** Value to be returned from case-methods to indicate that processing is completed and should not be continued. */
 	private static final Boolean DONE = Boolean.TRUE;
 
+	private static final Set<N4Modifier> ACCESSIBILITY_MODIFIERS = Sets.newHashSet(
+			N4Modifier.PRIVATE,
+			N4Modifier.PROTECTED,
+			N4Modifier.PROJECT,
+			N4Modifier.PUBLIC);
+
 	private final LineColTrackingAppendable out;
 	private final Optional<String> optPreamble;
+	private final PrettyPrinterTypeRef prettyPrinterTypeRef;
 
-	private PrettyPrinterSwitchDts(LineColTrackingAppendable out, Optional<String> optPreamble) {
+	private PrettyPrinterSwitchDts(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble) {
 		this.out = out;
 		this.optPreamble = optPreamble;
+		this.prettyPrinterTypeRef = new PrettyPrinterTypeRef(this, state);
 	}
 
 	@Override
 	protected Boolean doSwitch(EClass eClass, EObject eObject) {
 		// here we can check for entities of IM.xcore that do not have a super-class in n4js.xcore
-		// if (eClass == ImPackage.eINSTANCE.getSnippet()) {
-		// return caseSnippet((Snippet) eObject);
-		// }
+		if (eObject instanceof TypeReferenceNode<?>) {
+			prettyPrinterTypeRef.processTypeRefNode((TypeReferenceNode<?>) eObject, "");
+			return DONE;
+		}
 		return super.doSwitch(eClass, eObject);
 	}
 
 	@Override
 	public Boolean defaultCase(EObject object) {
-		// throw new IllegalStateException(
-		// "PrettyPrinterSwitch missing a case for objects of type " + object.eClass().getName());
-		return DONE;
+		throw new IllegalStateException(
+				"PrettyPrinterSwitch missing a case for objects of type " + object.eClass().getName());
 	}
 
 	@Override
@@ -230,9 +240,8 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
-		writeIf("export ", original.isExported());
-		writeIf("default ", original.isExportedAsDefault());
-		processModifiers(original.getDeclaredModifiers(), " ");
+		writeIf("declare ", !original.isExported());
+		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("class ");
 		write(original.getName());
 		if (!original.getTypeVars().isEmpty()) {
@@ -255,9 +264,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 			process(superClassRef);
 			write(' ');
 		} else if (superClassExpression != null) {
-			write("extends ");
-			process(superClassExpression);
-			write(' ');
+			// TODO show error
 		}
 
 		if (!original.getImplementedInterfaceRefs().isEmpty()) {
@@ -278,9 +285,8 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4InterfaceDeclaration(N4InterfaceDeclaration original) {
-		writeIf("export ", original.isExported());
-		writeIf("default ", original.isExportedAsDefault());
-		processModifiers(original.getDeclaredModifiers(), " ");
+		writeIf("declare ", !original.isExported());
+		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("interface ");
 		write(original.getName());
 		if (!original.getTypeVars().isEmpty()) {
@@ -322,11 +328,11 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		processBlockLike(nonStaticMembers, '{', null, null, '}');
 
 		if (!staticMembers.isEmpty()) {
-			writeIf("export ", original.isExported());
+			write("export ");
 			write("namespace ");
 			write(original.getName());
 
-			// TODO rewrite static methods to functions
+			// TODO rewrite static methods to exported(!) functions
 			processBlockLike(staticMembers, '{', null, null, '}');
 		}
 		return DONE;
@@ -334,9 +340,8 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4EnumDeclaration(N4EnumDeclaration original) {
-		writeIf("export ", original.isExported());
-		writeIf("default ", original.isExportedAsDefault());
-		processModifiers(original.getDeclaredModifiers(), " ");
+		writeIf("declare ", !original.isExported());
+		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("enum ");
 		write(original.getName());
 
@@ -345,43 +350,63 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
+	public Boolean caseN4EnumLiteral(N4EnumLiteral literal) {
+		write(literal.getName());
+		// TODO value!
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseN4TypeAliasDeclaration(N4TypeAliasDeclaration alias) {
+		write("type ");
+		write(alias.getName());
+		write(" = ");
+		process(alias.getDeclaredTypeRefNode());
+		write(";");
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseN4FieldDeclaration(N4FieldDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), " ");
+		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		processPropertyName(original);
 		processDeclaredTypeRef(original, " ");
+		write(";");
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), " ");
+		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		write("get ");
 		processPropertyName(original);
 		write("() ");
 		processDeclaredTypeRef(original, " ");
-		process(original.getBody());
+		// process(original.getBody());
+		write(";");
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), " ");
+		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		write("set ");
 		processPropertyName(original);
 		write('(');
 		process(original.getFpar());
 		write(") ");
-		process(original.getBody());
+		// process(original.getBody());
+		write(";");
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4MethodDeclaration(N4MethodDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), " ");
+		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		if (original.isAsync()) {
 			write("async ");
 		}
@@ -397,7 +422,8 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		process(original.getFpars(), ", ");
 		write(") ");
 		processReturnTypeRef(original, " ");
-		process(original.getBody());
+		// process(original.getBody());
+		write(";");
 		return DONE;
 	}
 
@@ -410,10 +436,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	@Override
 	public Boolean caseFunctionDeclaration(FunctionDeclaration original) {
 		processAnnotations(original.getAnnotations());
-		if (!original.getDeclaredModifiers().isEmpty()) {
-			processModifiers(original.getDeclaredModifiers());
-			write(' ');
-		}
+		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		if (original.isAsync()) {
 			write("async ");
 		}
@@ -431,55 +454,6 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		write(") ");
 		processReturnTypeRef(original, " ");
 		process(original.getBody());
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseFunctionExpression(FunctionExpression original) {
-		processAnnotations(original.getAnnotations());
-		if (original.isAsync()) {
-			write("async ");
-		}
-		write("function");
-		if (!original.getTypeVars().isEmpty()) {
-			write(' ');
-			processTypeParams(original.getTypeVars());
-		}
-		if (original.isGenerator()) {
-			write(" *");
-		}
-		if (original.getName() != null) {
-			write(' ');
-			write(original.getName());
-		}
-		write('(');
-		process(original.getFpars(), ", ");
-		write(") ");
-		processReturnTypeRef(original, " ");
-		process(original.getBody());
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseArrowFunction(ArrowFunction original) {
-		if (original.isAsync()) {
-			write("async");
-		}
-		write('(');
-		process(original.getFpars(), ", ");
-		write(')');
-		processReturnTypeRef(original, "");
-		write("=>");
-		if (original.isHasBracesAroundBody()) {
-			process(original.getBody());
-		} else {
-			if (!original.isSingleExprImplicitReturn()) {
-				throw new IllegalStateException(
-						"arrow function without braces must be a valid single-expression arrow function");
-			}
-			final Expression singleExpr = original.getSingleExpression();
-			process(singleExpr);
-		}
 		return DONE;
 	}
 
@@ -512,6 +486,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseVariableStatement(VariableStatement original) {
+		writeIf("declare ", !(original instanceof ExportedVariableStatement));
 		write(keyword(original.getVarStmtKeyword()));
 		write(' ');
 		process(original.getVarDeclsOrBindings(), ", ");
@@ -530,10 +505,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
 		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
 		// emitted there; so, no need to emit "export" in this method!
-		if (!original.getDeclaredModifiers().isEmpty()) {
-			processModifiers(original.getDeclaredModifiers());
-			write(' ');
-		}
+		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		caseVariableStatement(original);
 		return DONE;
 	}
@@ -562,10 +534,10 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		processAnnotations(original.getAnnotations());
 		write(original.getName());
 		processDeclaredTypeRef(original, "");
-		if (original.getExpression() != null) {
-			write(" = ");
-			process(original.getExpression());
-		}
+		// if (original.getExpression() != null) {
+		// write(" = ");
+		// process(original.getExpression());
+		// }
 		return DONE;
 	}
 
@@ -585,10 +557,16 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		return DONE;
 	}
 
+	@Override
+	public Boolean caseN4TypeVariable(N4TypeVariable typeVar) {
+		write(typeVar.getName());
+		return DONE;
+	}
+
 	// ###############################################################################################################
 	// UTILITY AND CONVENIENCE METHODS
 
-	private void write(char c) {
+	/* package */ void write(char c) {
 		try {
 			out.append(c);
 		} catch (IOException e) {
@@ -596,7 +574,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		}
 	}
 
-	private void write(CharSequence csq) {
+	/* package */ void write(CharSequence csq) {
 		try {
 			out.append(csq);
 		} catch (IOException e) {
@@ -719,45 +697,48 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		}
 	}
 
-	private void processModifiers(EList<N4Modifier> modifiers) {
+	private boolean processModifiers(List<N4Modifier> modifiers, Set<N4Modifier> ignoredModifiers) {
 		final int len = modifiers.size();
+		boolean didEmitSomething = false;
 		for (int idx = 0; idx < len; idx++) {
-			if (idx > 0) {
+			N4Modifier m = modifiers.get(idx);
+			if (ignoredModifiers != null && ignoredModifiers.contains(m)) {
+				continue;
+			}
+			if (m == N4Modifier.PROJECT) {
+				m = N4Modifier.PUBLIC;
+			}
+			if (didEmitSomething) {
 				write(' ');
 			}
-			write(modifiers.get(idx).getName());
+			write(m.getName());
+			didEmitSomething = true;
 		}
+		return didEmitSomething;
 	}
 
-	private void processModifiers(EList<N4Modifier> modifiers, String suffix) {
-		processModifiers(modifiers);
-		if (!modifiers.isEmpty()) {
+	private boolean processModifiers(List<N4Modifier> modifiers, Set<N4Modifier> ignoredModifiers, String suffix) {
+		boolean didEmitSomething = processModifiers(modifiers, ignoredModifiers);
+		if (didEmitSomething) {
 			write(suffix);
 		}
+		return didEmitSomething;
 	}
 
 	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
-		TypeRef declaredTypeRef = funDef.getDeclaredReturnTypeRef();
-		if (declaredTypeRef == null)
-			declaredTypeRef = funDef.getDeclaredReturnTypeRefInAST();
-		if (declaredTypeRef == null)
-			return;
-
-		write(" : ");
-		process(declaredTypeRef);
-		write(suffix);
+		TypeReferenceNode<?> declaredReturnTypeRefNode = funDef.getDeclaredReturnTypeRefNode();
+		if (declaredReturnTypeRefNode != null) {
+			write(": ");
+			prettyPrinterTypeRef.processTypeRefNode(declaredReturnTypeRefNode, suffix);
+		}
 	}
 
 	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {
-		TypeRef declaredTypeRef = elem.getDeclaredTypeRef();
-		if (declaredTypeRef == null)
-			declaredTypeRef = elem.getDeclaredTypeRefInAST();
-		if (declaredTypeRef == null)
-			return;
-
-		write(" : ");
-		process(declaredTypeRef);
-		write(suffix);
+		TypeReferenceNode<?> declaredTypeRefNode = elem.getDeclaredTypeRefNode();
+		if (declaredTypeRefNode != null) {
+			write(": ");
+			prettyPrinterTypeRef.processTypeRefNode(declaredTypeRefNode, suffix);
+		}
 	}
 
 	private void processTypeParams(EList<N4TypeVariable> typeParams) {

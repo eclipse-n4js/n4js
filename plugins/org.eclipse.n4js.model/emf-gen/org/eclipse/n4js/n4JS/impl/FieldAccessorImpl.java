@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -250,6 +251,18 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 * @generated
 	 */
 	@Override
+	public TypeReferenceNode<?> getDeclaredTypeRefNode() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.FIELD_ACCESSOR__DECLARED_NAME:
@@ -395,6 +408,7 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}
@@ -437,6 +451,8 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 				return hasComputedPropertyName();
 			case N4JSPackage.FIELD_ACCESSOR___IS_VALID_NAME:
 				return isValidName();
+			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE:
+				return getDeclaredTypeRefNode();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

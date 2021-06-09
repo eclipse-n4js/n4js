@@ -2290,6 +2290,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = N4JSPackage.N4_GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = N4JSPackage.N4_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2640,6 +2649,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = N4JSPackage.N4_SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.

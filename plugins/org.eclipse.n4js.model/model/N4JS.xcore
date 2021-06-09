@@ -321,6 +321,7 @@ class TypeReferenceNode<T extends TypeRef> {
 interface TypeProvidingElement {
 	op TypeRef getDeclaredTypeRef()
 	op TypeRef getDeclaredTypeRefInAST()
+	op TypeReferenceNode<?> getDeclaredTypeRefNode()
 }
 
 /* A typed element, such as Variable, a Member or a NameValuePair, may provide a declared type.

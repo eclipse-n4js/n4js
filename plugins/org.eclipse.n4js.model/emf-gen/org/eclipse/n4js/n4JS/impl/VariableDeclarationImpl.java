@@ -562,6 +562,7 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF;
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE: return N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}

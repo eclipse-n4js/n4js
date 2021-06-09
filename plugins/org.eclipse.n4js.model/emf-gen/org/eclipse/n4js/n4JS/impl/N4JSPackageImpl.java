@@ -2256,6 +2256,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTypeProvidingElement__GetDeclaredTypeRefNode() {
+		return typeProvidingElementEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTypedElement() {
 		return typedElementEClass;
 	}
@@ -7807,6 +7817,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		typeProvidingElementEClass = createEClass(TYPE_PROVIDING_ELEMENT);
 		createEOperation(typeProvidingElementEClass, TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF);
 		createEOperation(typeProvidingElementEClass, TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST);
+		createEOperation(typeProvidingElementEClass, TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE);
 
 		typedElementEClass = createEClass(TYPED_ELEMENT);
 		createEReference(typedElementEClass, TYPED_ELEMENT__DECLARED_TYPE_REF_NODE);
@@ -8909,9 +8920,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getTypeProvidingElement__GetDeclaredTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		EOperation op = initEOperation(getTypeProvidingElement__GetDeclaredTypeRefNode(), null, "getDeclaredTypeRefNode", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		g1 = createEGenericType(this.getTypeReferenceNode());
+		EGenericType g2 = createEGenericType();
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
 		initEClass(typedElementEClass, TypedElement.class, "TypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		g1 = createEGenericType(this.getTypeReferenceNode());
-		EGenericType g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
 		g1.getETypeArguments().add(g2);
 		initEReference(getTypedElement_DeclaredTypeRefNode(), g1, null, "declaredTypeRefNode", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
