@@ -270,21 +270,21 @@ public class Project {
 					}"
 					«ENDIF»
 					«IF !folders.nullOrEmpty
-					»,"sources": {
-						"source": [
-							«FOR sourceFolder : folders.filter[isSourceFolder] SEPARATOR ','»
-								"«sourceFolder.name»"
-							«ENDFOR»
-						]
-					}
+				»,"sources": {
+								"source": [
+									«FOR sourceFolder : folders.filter[isSourceFolder] SEPARATOR ','»
+										"«sourceFolder.name»"
+									«ENDFOR»
+								]
+						}
 					«ENDIF»
 				},
 				"dependencies": {
-					«IF !projectDependencies.nullOrEmpty»
-						«FOR dep : projectDependencies SEPARATOR ','»
-							"«dep»": "*"
-						«ENDFOR»
-					«ENDIF»
+						«IF !projectDependencies.nullOrEmpty»
+							«FOR dep : projectDependencies SEPARATOR ','»
+								"«dep»": "*"
+							«ENDFOR»
+						«ENDIF»
 				}
 			}
 		«ENDIF»
