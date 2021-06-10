@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
@@ -97,11 +96,6 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	private Provider<ArrowFunction_Part2_Transformation> arrowFunction_Part2_TransformationProvider;
 	@Inject
 	private Provider<JSXTransformation> jsxTransformationProvider;
-
-	@Override
-	protected Optional<String> getPreamble() {
-		return Optional.of(N4JSGlobals.OUTPUT_FILE_PREAMBLE);
-	}
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in

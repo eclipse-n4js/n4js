@@ -628,6 +628,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void processIfNonNull(EObject elemInIM) {
 		if (elemInIM != null) {
 			doSwitch(elemInIM);

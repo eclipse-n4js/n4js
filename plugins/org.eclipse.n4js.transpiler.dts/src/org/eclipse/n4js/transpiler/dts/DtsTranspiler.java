@@ -12,7 +12,6 @@ package org.eclipse.n4js.transpiler.dts;
 
 import java.io.Writer;
 
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
@@ -21,25 +20,14 @@ import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterSwitchDts;
-import org.eclipse.n4js.transpiler.dts.transform.InterfaceDeclarationTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 
 import com.google.common.base.Optional;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * Transpiles N4JS to d.ts.
  */
 public class DtsTranspiler extends AbstractTranspiler {
-
-	@Inject
-	private Provider<InterfaceDeclarationTransformation> interfaceDeclarationTransformationProvider;
-
-	@Override
-	protected Optional<String> getPreamble() {
-		return Optional.of(N4JSGlobals.OUTPUT_FILE_PREAMBLE);
-	}
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in

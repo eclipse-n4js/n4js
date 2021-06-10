@@ -13,6 +13,7 @@ package org.eclipse.n4js.transpiler;
 import java.io.Writer;
 import java.nio.file.Path;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -72,7 +73,9 @@ public abstract class AbstractTranspiler {
 	 * Returns an optional preamble that will be prepended to the output code in each output file. Use '\n' as line
 	 * separator. See {@link PrettyPrinter#print(TranspilerState, Writer, Optional, Optional)} for details.
 	 */
-	protected abstract Optional<String> getPreamble();
+	protected Optional<String> getPreamble() {
+		return Optional.of(N4JSGlobals.OUTPUT_FILE_PREAMBLE);
+	}
 
 	/**
 	 * To customize the transpilation process, subclasses should here provide the concrete AST transformations to be

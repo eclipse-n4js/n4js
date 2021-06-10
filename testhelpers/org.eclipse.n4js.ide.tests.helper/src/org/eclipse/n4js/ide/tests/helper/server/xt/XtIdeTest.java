@@ -517,7 +517,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * <pre>
 	 * // XPECT generated_dts ---
-	 * &lt;expected .d.ts code&gt;
+	 * &lt;CONTENT OF GENERATED D.TS FILE&gt;
 	 * // ---
 	 * </pre>
 	 */
@@ -527,13 +527,17 @@ public class XtIdeTest extends AbstractIdeTest {
 		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
 		int idxEnd = moduleName.lastIndexOf(".");
 		String genDtsFileName = moduleName.substring(idxStart, idxEnd) + ".d.ts";
-		FileURI genDtsFileURI = getFileURIFromModuleName(genDtsFileName);
-		String genDtsCode = Files.readString(genDtsFileURI.toPath());
+		try {
+			FileURI genDtsFileURI = getFileURIFromModuleName(genDtsFileName);
+			String genDtsCode = Files.readString(genDtsFileURI.toPath());
+			assertTrue(genDtsCode.startsWith(N4JSGlobals.OUTPUT_FILE_PREAMBLE));
+			String genDtsCodeTrimmed = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
 
-		assertTrue(genDtsCode.startsWith(N4JSGlobals.OUTPUT_FILE_PREAMBLE));
-		String genDtsCodeTrimmed = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
-
-		assertEquals(data.expectation, genDtsCodeTrimmed);
+			assertEquals(data.expectation, genDtsCodeTrimmed);
+		} catch (IllegalStateException e) {
+			System.out.println("Could not find file " + genDtsFileName + "\nDid you set: ENABLE_DTS in SETUP section?");
+			throw e;
+		}
 	}
 
 	/**

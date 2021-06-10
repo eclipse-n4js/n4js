@@ -50,6 +50,7 @@ Contributors:
 		<module>org.eclipse.n4js.semver.ide</module>
 		<!-- transpiler -->
 		<module>org.eclipse.n4js.transpiler</module>
+		<module>org.eclipse.n4js.transpiler.dts</module>
 		<module>org.eclipse.n4js.transpiler.es</module>
 		<!-- jsdoc -->
 		<module>org.eclipse.n4js.jsdoc</module>

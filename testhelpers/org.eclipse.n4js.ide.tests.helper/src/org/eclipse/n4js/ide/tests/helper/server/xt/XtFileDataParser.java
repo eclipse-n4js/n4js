@@ -56,7 +56,7 @@ public class XtFileDataParser {
 		XtWorkspace workspace = setupParseResult.workspace;
 		if (workspace == null) {
 			File xtFileStripped = XtFileData.stripXtExtension(xtFile);
-			workspace = createDefaultWorkspace(xtFileStripped.getName(), xtFileContent);
+			workspace = createDefaultWorkspace(xtFileStripped.getName(), xtFileContent, setupParseResult);
 		}
 
 		List<XtMethodData> startupMethodData = getDefaultStartupMethodData();
@@ -86,7 +86,8 @@ public class XtFileDataParser {
 		return xtFileContent.substring(idxStart, idxEnd + XT_SETUP_END.length());
 	}
 
-	static XtWorkspace createDefaultWorkspace(String fileName, String xtFileContent) {
+	static XtWorkspace createDefaultWorkspace(String fileName, String xtFileContent,
+			XtSetupParseResult setupParseResult) {
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 		String moduleName = fileName.substring(0, fileName.length() - 1 - extension.length());
 
@@ -96,9 +97,11 @@ public class XtFileDataParser {
 		srcFolder.addModule(xtFileModule);
 		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR_NAME);
 		project.addSourceFolder(srcFolder);
+		project.setGenerateDts(setupParseResult.generateDts);
 		XtWorkspace workspace = new XtWorkspace();
 		workspace.addProject(project);
 		workspace.moduleNameOfXtFile = fileName;
+
 		return workspace;
 	}
 

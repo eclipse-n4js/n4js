@@ -51,6 +51,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final boolean nestedNodeModulesFolder;
 	private final boolean n4jsNature;
 	private final boolean yarnWorkspaceRoot;
+	private final boolean isGeneratorEnabledDts;
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
@@ -61,7 +62,8 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> implementedProjects, String outputPath,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
-			boolean n4jsNature, boolean yarnWorkspaceRoot, Iterable<String> workspaces) {
+			boolean n4jsNature, boolean yarnWorkspaceRoot,
+			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
 		this.name = name;
 		this.vendorId = vendorId;
 		this.vendorName = vendorName;
@@ -83,6 +85,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.nestedNodeModulesFolder = nestedNodeModulesFolder;
 		this.n4jsNature = n4jsNature;
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
+		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
 		this.workspaces = ImmutableList.copyOf(workspaces);
 	}
 
@@ -108,6 +111,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.nestedNodeModulesFolder = template.nestedNodeModulesFolder;
 		this.n4jsNature = template.n4jsNature;
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
+		this.isGeneratorEnabledDts = template.isGeneratorEnabledDts;
 		this.workspaces = template.workspaces;
 	}
 
@@ -245,6 +249,13 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	/**
+	 * Tells whether the generator creates d.ts files.
+	 */
+	public boolean isGeneratorEnabledDts() {
+		return isGeneratorEnabledDts;
+	}
+
+	/**
 	 * Value of top-level property "workspaces" in package.json, used by yarn to denote the contained projects.
 	 */
 	public List<String> getWorkspaces() {
@@ -275,6 +286,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				nestedNodeModulesFolder,
 				n4jsNature,
 				yarnWorkspaceRoot,
+				isGeneratorEnabledDts,
 				workspaces);
 	}
 
@@ -302,6 +314,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& nestedNodeModulesFolder == other.nestedNodeModulesFolder
 				&& n4jsNature == other.n4jsNature
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
+				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
 				&& Objects.equals(workspaces, other.workspaces);
 	}
 
