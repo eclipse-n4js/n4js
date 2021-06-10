@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.n4js.ide
 Bundle-Version: 0.0.1.qualifier
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ts,
- org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.json,
  org.eclipse.n4js.jsdoc2spec,
@@ -30,7 +29,8 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.semver.model,
  org.eclipse.n4js.smith,
  org.eclipse.n4js.transpiler,
- org.eclipse.n4js.transpiler.dts
+ org.eclipse.n4js.transpiler.dts,
+ org.eclipse.n4js.transpiler.es
 Export-Package: org.eclipse.n4js.ide,
  org.eclipse.n4js.ide.client,
  org.eclipse.n4js.ide.contentassist.antlr,
