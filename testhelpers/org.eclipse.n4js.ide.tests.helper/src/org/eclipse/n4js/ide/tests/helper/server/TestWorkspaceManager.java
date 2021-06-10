@@ -295,6 +295,9 @@ public class TestWorkspaceManager {
 	 * </pre>
 	 *
 	 * this method will return the file URI of the <code>package.json</code> file of the project with the given name.
+	 *
+	 * @throws IllegalStateException
+	 *             when no module or multiple modules are found for the given name, or some other error occurred.
 	 */
 	public FileURI getFileURIFromModuleName(String moduleName) {
 		// special case for package.json files:
@@ -311,23 +314,23 @@ public class TestWorkspaceManager {
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
 
+		List<Path> allMatches;
 		try {
-			List<Path> allMatches = Files
+			allMatches = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
 					.collect(Collectors.toList());
-
-			if (allMatches.isEmpty()) {
-				throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
-			}
-			if (allMatches.size() > 1) {
-				throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
-			}
-
-			return new FileURI(allMatches.get(0).toFile());
-
 		} catch (IOException e) {
 			throw new IllegalStateException("Error when searching for module " + moduleNameWithExtension, e);
 		}
+
+		if (allMatches.isEmpty()) {
+			throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
+		}
+		if (allMatches.size() > 1) {
+			throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
+		}
+
+		return new FileURI(allMatches.get(0).toFile());
 	}
 
 	/** Tells whether the test workspace has already been created. */
