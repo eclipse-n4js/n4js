@@ -28,6 +28,10 @@ const constD = 42;
 export const constE = 42;
 
 
+function fnD() {}
+export function fnE() {}
+
+
 class ClsD {}
 export class ClsE {}
 
@@ -48,6 +52,8 @@ declare let letD;
 export let letE;
 declare const constD;
 export const constE;
+declare function fnD(): void;
+export function fnE(): void;
 declare class ClsD {}
 export class ClsE {}
 declare interface IfcD {}

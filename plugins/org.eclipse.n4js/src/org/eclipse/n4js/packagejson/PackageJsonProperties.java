@@ -173,6 +173,9 @@ public enum PackageJsonProperties {
 
 	/** @return the result of {@link Enum#valueOf(Class, String)} or null. Does not throw an {@link Exception}. */
 	static public PackageJsonProperties valueOfNameValuePairOrNull(NameValuePair nvPair) {
+		if (nvPair.getName() == null || nvPair.getValue() == null) {
+			return null; // syntax error in JSON file
+		}
 		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(nvPair.getName());
 		if (typeMap != null) {
 			Class<? extends JSONValue> valueClass = nvPair.getValue().getClass();

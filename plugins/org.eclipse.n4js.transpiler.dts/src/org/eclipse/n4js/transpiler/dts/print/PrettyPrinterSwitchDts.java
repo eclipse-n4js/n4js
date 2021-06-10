@@ -423,7 +423,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		write(")");
 		processReturnTypeRef(original);
 		// process(original.getBody());
-		write(";");
+		write(';');
 		return DONE;
 	}
 
@@ -435,6 +435,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseFunctionDeclaration(FunctionDeclaration original) {
+		writeIf("declare ", !original.isExported());
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		if (original.isAsync()) {
@@ -454,6 +455,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		write(")");
 		processReturnTypeRef(original);
 		// process(original.getBody());
+		write(';');
 		return DONE;
 	}
 
@@ -735,6 +737,9 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		if (declaredReturnTypeRefNode != null) {
 			write(": ");
 			prettyPrinterTypeRef.processTypeRefNode(declaredReturnTypeRefNode, suffix);
+		} else {
+			// implicit return type in TypeScript is 'any', so we have to explictly emit 'void' here:
+			write(": void");
 		}
 	}
 
