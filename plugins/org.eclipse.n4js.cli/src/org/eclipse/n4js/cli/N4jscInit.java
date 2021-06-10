@@ -206,6 +206,8 @@ public class N4jscInit {
 		case InExistingProject:
 			config.projectRoot = cwd;
 			config.packageJson.userModifications.add("n4js");
+			config.packageJson.userModifications.add("dependencies");
+			config.packageJson.userModifications.add("devDependencies");
 
 			break;
 		case InEmptyFolder:
@@ -528,7 +530,7 @@ public class N4jscInit {
 						modifiedElements.add(element);
 					}
 				}
-				PackageJsonModificationUtils.setProperties(pckjson, modifiedElements);
+				PackageJsonModificationUtils.addProperties(pckjson, modifiedElements);
 			} else {
 				target.toFile().mkdirs();
 				Gson gson = JsonUtils.createGson();
