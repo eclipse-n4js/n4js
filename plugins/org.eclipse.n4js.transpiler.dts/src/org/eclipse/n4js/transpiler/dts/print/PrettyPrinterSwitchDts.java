@@ -371,7 +371,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		processPropertyName(original);
-		processDeclaredTypeRef(original, " ");
+		processDeclaredTypeRef(original);
 		write(";");
 		return DONE;
 	}
@@ -383,7 +383,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		write("get ");
 		processPropertyName(original);
 		write("() ");
-		processDeclaredTypeRef(original, " ");
+		processDeclaredTypeRef(original);
 		// process(original.getBody());
 		write(";");
 		return DONE;
@@ -420,8 +420,8 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		processPropertyName(original);
 		write('(');
 		process(original.getFpars(), ", ");
-		write(") ");
-		processReturnTypeRef(original, " ");
+		write(")");
+		processReturnTypeRef(original);
 		// process(original.getBody());
 		write(";");
 		return DONE;
@@ -451,9 +451,9 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		write(original.getName());
 		write('(');
 		process(original.getFpars(), ", ");
-		write(") ");
-		processReturnTypeRef(original, " ");
-		process(original.getBody());
+		write(")");
+		processReturnTypeRef(original);
+		// process(original.getBody());
 		return DONE;
 	}
 
@@ -470,7 +470,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 			write("...");
 		}
 		write(original.getName());
-		processDeclaredTypeRef(original, "");
+		processDeclaredTypeRef(original);
 		if (original.getInitializer() != null) {
 			write("=");
 			process(original.getInitializer());
@@ -533,7 +533,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	public Boolean caseVariableDeclaration(VariableDeclaration original) {
 		processAnnotations(original.getAnnotations());
 		write(original.getName());
-		processDeclaredTypeRef(original, "");
+		processDeclaredTypeRef(original);
 		// if (original.getExpression() != null) {
 		// write(" = ");
 		// process(original.getExpression());
@@ -726,12 +726,20 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		return didEmitSomething;
 	}
 
+	private void processReturnTypeRef(FunctionDefinition funDef) {
+		processReturnTypeRef(funDef, "");
+	}
+
 	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
 		TypeReferenceNode<?> declaredReturnTypeRefNode = funDef.getDeclaredReturnTypeRefNode();
 		if (declaredReturnTypeRefNode != null) {
 			write(": ");
 			prettyPrinterTypeRef.processTypeRefNode(declaredReturnTypeRefNode, suffix);
 		}
+	}
+
+	private void processDeclaredTypeRef(TypeProvidingElement elem) {
+		processDeclaredTypeRef(elem, "");
 	}
 
 	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {

@@ -532,7 +532,7 @@ public class XtIdeTest extends AbstractIdeTest {
 			genDtsFileURI = getFileURIFromModuleName(genDtsFileName);
 		} catch (IllegalStateException e) {
 			throw new RuntimeException(
-					"Could not find file " + genDtsFileName + "\nDid you set: ENABLE_DTS in SETUP section?", e);
+					"Could not find file " + genDtsFileName + "\nDid you set: GENERATE_DTS in SETUP section?", e);
 		}
 
 		String genDtsCode = Files.readString(genDtsFileURI.toPath());
