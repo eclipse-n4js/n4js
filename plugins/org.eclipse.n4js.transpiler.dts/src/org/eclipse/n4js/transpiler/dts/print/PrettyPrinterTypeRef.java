@@ -60,6 +60,15 @@ public class PrettyPrinterTypeRef {
 	/** Emit a type reference. */
 	public void processTypeRefNode(TypeReferenceNode<?> typeRefNode, String suffix) {
 		TypeRef typeRef = state.info.getOriginalProcessedTypeRef(typeRefNode);
+		if (typeRef.isAliasResolved()) {
+			TypeRef originalAliasTypeRef = typeRef.getOriginalAliasTypeRef();
+			if (originalAliasTypeRef != null) {
+				// if type aliases are used in the n4js[d] source code, we want the alias to show up in the .d.ts
+				// output, so we have to use the original alias type reference instead of the resolved alias type
+				// reference here:
+				typeRef = originalAliasTypeRef;
+			}
+		}
 		processTypeRef(typeRef, suffix);
 	}
 

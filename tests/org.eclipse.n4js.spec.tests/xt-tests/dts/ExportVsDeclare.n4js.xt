@@ -64,6 +64,6 @@ declare enum EnumD{
 export enum EnumE{
 	L
 }
-type AliD = ClsD;
+declare type AliD = ClsD;
 export type AliE = ClsE;
 --- */

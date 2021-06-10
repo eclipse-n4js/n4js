@@ -358,6 +358,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4TypeAliasDeclaration(N4TypeAliasDeclaration alias) {
+		writeIf("declare ", !alias.isExported());
 		write("type ");
 		write(alias.getName());
 		write(" = ");
