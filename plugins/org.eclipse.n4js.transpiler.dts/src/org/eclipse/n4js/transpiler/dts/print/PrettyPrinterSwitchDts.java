@@ -58,6 +58,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -76,6 +77,7 @@ import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 /**
@@ -133,10 +135,25 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 		processHashbang(original_IM.getHashbang());
 		processPreamble();
 		processAnnotations(original_IM.getAnnotations());
-		process(original_IM.getScriptElements(), () -> {
+
+		Iterable<ScriptElement> topLevelElementsExceptStatements = Iterables.filter(original_IM.getScriptElements(),
+				elem -> !isPureStatement(elem));
+		process(topLevelElementsExceptStatements, () -> {
 			newLine();
 		});
+
 		return DONE;
+	}
+
+	private boolean isPureStatement(EObject obj) {
+		if (obj instanceof Statement) {
+			if (obj instanceof VariableStatement
+					|| obj instanceof FunctionDeclaration) {
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override
