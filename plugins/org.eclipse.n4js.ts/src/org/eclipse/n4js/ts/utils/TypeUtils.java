@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -1167,32 +1168,69 @@ public class TypeUtils {
 	 * Returns all type variables referenced by the given object or its contents.
 	 */
 	public static Set<TypeVariable> getReferencedTypeVars(EObject obj) {
-		return collectReferencedTypeVars(obj, true, new LinkedHashSet<>(), null);
+		Set<TypeVariable> result = new LinkedHashSet<>();
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, ptr -> {
+			Type declType = ptr.getDeclaredType();
+			if (declType instanceof TypeVariable) {
+				result.add((TypeVariable) declType);
+			}
+			return true;
+		}, null);
+		return result;
 	}
 
-	private static Set<TypeVariable> collectReferencedTypeVars(EObject obj, boolean includeChildren,
-			Set<TypeVariable> addHere, RecursionGuard<IdentifiableElement> guard) {
-		final Type declType = obj instanceof TypeRef ? ((TypeRef) obj).getDeclaredType() : null;
-		if (declType instanceof TypeVariable) {
-			addHere.add((TypeVariable) declType);
-		}
-		if (obj instanceof StructuralTypeRef) {
+	/**
+	 * Returns all {@link ParameterizedTypeRef#getDeclaredType() declared types} referenced by the given object or its
+	 * contents.
+	 */
+	public static Set<Type> getReferencedDeclaredTypes(EObject obj) {
+		Set<Type> result = new LinkedHashSet<>();
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, ptr -> {
+			Type declType = ptr.getDeclaredType();
+			if (declType != null) {
+				result.add(declType);
+			}
+			return true;
+		}, null);
+		return result;
+	}
+
+	/**
+	 * Invokes the given operation for all {@link TypeRef}s among the given objects and its contents, taking into
+	 * account references to structural types, which may not actually be EMF containment references.
+	 * <p>
+	 * The traversal is aborted early as soon as the given operation returns <code>false</code>.
+	 *
+	 * @return <code>true</code> iff the given operation returned <code>true</code> for all
+	 *         {@code ParameterizedTypeRef}s or there were no {@code ParameterizedTypeRef}s
+	 */
+	public static <T extends TypeRef> boolean forAllTypeRefs(EObject obj, Class<T> typeRefKind, boolean includeChildren,
+			Predicate<T> operation, RecursionGuard<IdentifiableElement> guard) {
+		if (typeRefKind.isInstance(obj)) {
+			if (!operation.test(typeRefKind.cast(obj))) {
+				return false;
+			}
+		} else if (obj instanceof StructuralTypeRef) {
 			for (TStructMember m : ((StructuralTypeRef) obj).getStructuralMembers()) {
 				if (guard == null) {
 					guard = new RecursionGuard<>();
 				}
 				if (guard.tryNext(m)) {
-					collectReferencedTypeVars(m, true, addHere, guard);
+					if (!forAllTypeRefs(m, typeRefKind, true, operation, guard)) {
+						return false;
+					}
 				}
 			}
 		}
 		if (includeChildren) {
 			final Iterator<EObject> iter = obj.eAllContents();
 			while (iter.hasNext()) {
-				collectReferencedTypeVars(iter.next(), false, addHere, guard);
+				if (!forAllTypeRefs(iter.next(), typeRefKind, false, operation, guard)) {
+					return false;
+				}
 			}
 		}
-		return addHere;
+		return true;
 	}
 
 	/**

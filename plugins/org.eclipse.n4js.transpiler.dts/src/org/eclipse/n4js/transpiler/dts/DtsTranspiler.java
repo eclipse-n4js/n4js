@@ -20,14 +20,20 @@ import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterSwitchDts;
+import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Transpiles N4JS to d.ts.
  */
 public class DtsTranspiler extends AbstractTranspiler {
+
+	@Inject
+	private Provider<InferredTypesTransformation> inferredTypesTransformation;
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in
@@ -36,7 +42,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
-				// interfaceDeclarationTransformationProvider.get(),
+				inferredTypesTransformation.get(),
 		};
 	}
 

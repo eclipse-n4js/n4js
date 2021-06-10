@@ -9,19 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
-   GENERATE_DTS
-   END_SETUP
- */
+export class SomeClass {}
 
-
-type Alias = string;
-let x: Alias;
-let fn: (Alias)=>Alias;
-
-
-/* XPECT generated_dts ---
-declare type Alias = string;
-declare let x: Alias;
-declare let fn: (_par_0: Alias)=>Alias;
---- */
+export function someClassProvider(): SomeClass {
+	return null;
+}

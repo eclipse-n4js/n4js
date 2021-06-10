@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.transpiler.TranspilerState;
+import org.eclipse.n4js.transpiler.dts.utils.DtsUtils;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
@@ -40,8 +41,6 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
-
-import com.google.common.base.Strings;
 
 /**
  * Emits an N4JS type reference to TypeScript.
@@ -147,12 +146,15 @@ public class PrettyPrinterTypeRef {
 				&& typeRef.getDeclaredType() == RuleEnvironmentExtensions.objectType(state.G);
 
 		if (!omitDeclaredType) {
-			// FIXME is there a better way? (maybe via a symbol table entry as in #caseIdentifierRef())
-			String declTypeText = typeRef.getDeclaredTypeAsText();
-			if (Strings.isNullOrEmpty(declTypeText)) {
-				throw new IllegalStateException("declared type of parameterized type reference is null or empty");
+			// FIXME is there a better way? (maybe via a symbol table entry as in
+			// PrettyPrinterSwitch#caseIdentifierRef())
+			String name = DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(typeRef, state);
+			if (name != null) {
+				write(name);
+			} else {
+				// method InferredTypesTransformation#hideTypeIfUnavailable() should have removed this type!
+				throw new IllegalStateException("parameterized type reference with unavailable declared type");
 			}
-			write(declTypeText);
 		}
 
 		if (isStruct) {

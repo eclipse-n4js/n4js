@@ -46,12 +46,12 @@ export type AliE = ClsE;
 
 
 /* XPECT generated_dts ---
-declare var varD;
-export var varE;
-declare let letD;
-export let letE;
-declare const constD;
-export const constE;
+declare var varD: any;
+export var varE: any;
+declare let letD: any;
+export let letE: any;
+declare const constD: number;
+export const constE: number;
 declare function fnD(): void;
 export function fnE(): void;
 declare class ClsD {}
