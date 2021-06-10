@@ -52,6 +52,6 @@ public interface TypeProvidingElement extends EObject {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeReferenceNode<?> getDeclaredTypeRefNode();
+	TypeReferenceNode<TypeRef> getDeclaredTypeRefNode();
 
 } // TypeProvidingElement

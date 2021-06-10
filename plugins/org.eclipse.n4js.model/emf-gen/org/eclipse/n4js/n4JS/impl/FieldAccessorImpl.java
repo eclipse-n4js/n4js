@@ -172,7 +172,9 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 */
 	@Override
 	public TypeRef getDeclaredTypeRef() {
-		return null;
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -182,7 +184,21 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 */
 	@Override
 	public TypeRef getDeclaredTypeRefInAST() {
-		return null;
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeReferenceNode<TypeRef> getDeclaredTypeRefNode() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -240,18 +256,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 */
 	@Override
 	public boolean isValidName() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeReferenceNode<?> getDeclaredTypeRefNode() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -441,6 +445,8 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 				return getDeclaredTypeRef();
 			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST:
 				return getDeclaredTypeRefInAST();
+			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE:
+				return getDeclaredTypeRefNode();
 			case N4JSPackage.FIELD_ACCESSOR___GET_DEFINED_ACCESSOR:
 				return getDefinedAccessor();
 			case N4JSPackage.FIELD_ACCESSOR___IS_OPTIONAL:
@@ -451,8 +457,6 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 				return hasComputedPropertyName();
 			case N4JSPackage.FIELD_ACCESSOR___IS_VALID_NAME:
 				return isValidName();
-			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE:
-				return getDeclaredTypeRefNode();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -321,7 +321,7 @@ class TypeReferenceNode<T extends TypeRef> {
 interface TypeProvidingElement {
 	op TypeRef getDeclaredTypeRef()
 	op TypeRef getDeclaredTypeRefInAST()
-	op TypeReferenceNode<?> getDeclaredTypeRefNode()
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode()
 }
 
 /* A typed element, such as Variable, a Member or a NameValuePair, may provide a declared type.
@@ -640,15 +640,19 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
 
 	boolean declaredOptional
 
-	op TypeRef getDeclaredTypeRef() {
-		return null;
-	}
 	/*
-     * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
+     * The declared type of the field accessor (resolved), which is either the return type of the getter or the type of the formal parameter in case of a setter.
      */
-	op TypeRef getDeclaredTypeRefInAST() {
-		return null;
-	}
+	op TypeRef getDeclaredTypeRef()
+	/*
+     * The declared type of the field accessor (from the AST), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+     */
+	op TypeRef getDeclaredTypeRefInAST()
+	/*
+     * The declared type of the field accessor (as node), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+     */
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode()
+
 	/*
 	 * Returns the defined FieldAccessor in the TModule, either a TGetter or a TSetter.
 	 */
@@ -1409,6 +1413,9 @@ abstract class SetterDeclaration extends FieldAccessor {
 	}
 	op TypeRef getDeclaredTypeRef() {
 		return fpar?.declaredTypeRefNode?.typeRef;
+	}
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode() {
+		return fpar?.declaredTypeRefNode;
 	}
 	/*
 	 * Returns the declared type of the formal parameter

@@ -2317,15 +2317,6 @@ public interface N4JSPackage extends EPackage {
 	int FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR = FUNCTION_OR_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 2;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2371,13 +2362,22 @@ public interface N4JSPackage extends EPackage {
 	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 8;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 9;
+
+	/**
 	 * The operation id for the '<em>Get Defined Accessor</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 9;
+	int FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -2386,7 +2386,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR___IS_OPTIONAL = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 10;
+	int FIELD_ACCESSOR___IS_OPTIONAL = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 11;
 
 	/**
 	 * The number of operations of the '<em>Field Accessor</em>' class.
@@ -2395,7 +2395,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FIELD_ACCESSOR_OPERATION_COUNT = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 11;
+	int FIELD_ACCESSOR_OPERATION_COUNT = FUNCTION_OR_FIELD_ACCESSOR_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.FunctionDeclarationImpl <em>Function Declaration</em>}' class.
@@ -7524,15 +7524,6 @@ public interface N4JSPackage extends EPackage {
 	int GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7558,6 +7549,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int GETTER_DECLARATION___IS_VALID_NAME = FIELD_ACCESSOR___IS_VALID_NAME;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -7741,15 +7741,6 @@ public interface N4JSPackage extends EPackage {
 	int SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7804,13 +7795,22 @@ public interface N4JSPackage extends EPackage {
 	int SETTER_DECLARATION___GET_DECLARED_TYPE_REF = FIELD_ACCESSOR_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = FIELD_ACCESSOR_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = FIELD_ACCESSOR_OPERATION_COUNT + 2;
+	int SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = FIELD_ACCESSOR_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Setter Declaration</em>' class.
@@ -7819,7 +7819,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SETTER_DECLARATION_OPERATION_COUNT = FIELD_ACCESSOR_OPERATION_COUNT + 3;
+	int SETTER_DECLARATION_OPERATION_COUNT = FIELD_ACCESSOR_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.PropertyGetterDeclarationImpl <em>Property Getter Declaration</em>}' class.
@@ -7958,15 +7958,6 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROPERTY_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7983,6 +7974,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -8202,15 +8202,6 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROPERTY_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8254,6 +8245,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_SETTER_DECLARATION___GET_DECLARED_TYPE_REF = SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -15154,15 +15154,6 @@ public interface N4JSPackage extends EPackage {
 	int N4_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 8;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15199,13 +15190,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 14;
+
+	/**
 	 * The operation id for the '<em>Get Defined Accessor</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 14;
+	int N4_FIELD_ACCESSOR___GET_DEFINED_ACCESSOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -15214,7 +15214,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___IS_OPTIONAL = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 15;
+	int N4_FIELD_ACCESSOR___IS_OPTIONAL = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -15223,7 +15223,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 16;
+	int N4_FIELD_ACCESSOR___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -15232,7 +15232,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 17;
+	int N4_FIELD_ACCESSOR___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 18;
 
 	/**
 	 * The number of operations of the '<em>N4 Field Accessor</em>' class.
@@ -15241,7 +15241,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 18;
+	int N4_FIELD_ACCESSOR_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 19;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4GetterDeclarationImpl <em>N4 Getter Declaration</em>}' class.
@@ -15398,15 +15398,6 @@ public interface N4JSPackage extends EPackage {
 	int N4_GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = GETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15423,6 +15414,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -15723,15 +15723,6 @@ public interface N4JSPackage extends EPackage {
 	int N4_SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = SETTER_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
 
 	/**
-	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
-
-	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15775,6 +15766,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF = SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -18223,6 +18223,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getFieldAccessor__GetDeclaredTypeRefInAST();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.FieldAccessor#getDeclaredTypeRefNode() <em>Get Declared Type Ref Node</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.FieldAccessor#getDeclaredTypeRefNode()
+	 * @generated
+	 */
+	EOperation getFieldAccessor__GetDeclaredTypeRefNode();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.FieldAccessor#getDefinedAccessor() <em>Get Defined Accessor</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -20121,6 +20131,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getSetterDeclaration__GetDeclaredTypeRef();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.SetterDeclaration#getDeclaredTypeRefNode() <em>Get Declared Type Ref Node</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.SetterDeclaration#getDeclaredTypeRefNode()
+	 * @generated
+	 */
+	EOperation getSetterDeclaration__GetDeclaredTypeRefNode();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.SetterDeclaration#getDeclaredTypeRefInAST() <em>Get Declared Type Ref In AST</em>}' operation.
@@ -24281,6 +24301,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST = eINSTANCE.getFieldAccessor__GetDeclaredTypeRefInAST();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Declared Type Ref Node</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE = eINSTANCE.getFieldAccessor__GetDeclaredTypeRefNode();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Defined Accessor</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -25861,6 +25889,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation SETTER_DECLARATION___GET_DECLARED_TYPE_REF = eINSTANCE.getSetterDeclaration__GetDeclaredTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Type Ref Node</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = eINSTANCE.getSetterDeclaration__GetDeclaredTypeRefNode();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Declared Type Ref In AST</b></em>' operation.
