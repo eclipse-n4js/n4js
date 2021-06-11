@@ -49,7 +49,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -411,8 +410,8 @@ public class PackageJsonModificationUtils {
 	 * @param elements
 	 *            to be added or replaced into the given file
 	 */
-	public static void setProperties(File packageJson, Set<Entry<String, JsonElement>> elements) throws IOException {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	public static void addProperties(File packageJson, Set<Entry<String, JsonElement>> elements) throws IOException {
+		Gson gson = JsonUtils.createGson();
 		String packageJsonStr = Files.readString(packageJson.toPath());
 		StringBuilder newPackageJsonStr = new StringBuilder(packageJsonStr);
 		String indent = "  ";
@@ -421,9 +420,9 @@ public class PackageJsonModificationUtils {
 		Pattern insertAtEndPositionPattern = Pattern.compile("(?=\\s*\\}\\s*$)");
 
 		for (Entry<String, JsonElement> element : elements) {
-			List<ElementWithRegion> elementWithRegion = findElementsWithRegion(packageJsonStr, element.getKey());
+			List<ElementWithRegion> elementsWithRegion = findElementsWithRegion(packageJsonStr, element.getKey());
 			String newValue = gson.toJson(element.getValue());
-			if (elementWithRegion.isEmpty()) {
+			if (elementsWithRegion.isEmpty()) {
 				newValue = newValue.replace(NL, NL + indent);
 				String newProperty = "," + NL + indent + "\"" + element.getKey() + "\" : " + newValue;
 				Matcher matcher = insertAtEndPositionPattern.matcher(newPackageJsonStr.toString());
@@ -432,10 +431,24 @@ public class PackageJsonModificationUtils {
 				newPackageJsonStr.insert(idx, newProperty);
 
 			} else {
-				ElementWithRegion workspacesEntry = elementWithRegion.get(0); // replaces only first occurrence
-				int startIdx = workspacesEntry.offset;
-				int endIdx = workspacesEntry.offset + workspacesEntry.length;
-				newPackageJsonStr.replace(startIdx, endIdx, newValue);
+				ElementWithRegion eWithRegion = elementsWithRegion.get(0); // replaces only first occurrence
+				int startIdx = eWithRegion.offset;
+				int endIdx = startIdx + eWithRegion.length;
+				String comma = eWithRegion.length > 0 ? ",\n" : "";
+				if (element.getValue() instanceof JsonArray) {
+					// adds the element(s) to the array
+					JsonArray addArray = (JsonArray) element.getValue();
+					newValue = Strings.join(", ", addArray);
+					newPackageJsonStr.replace(endIdx, endIdx, comma + newValue);
+				} else if (element.getValue() instanceof JsonObject) {
+					// adds the element(s) to the object
+					JsonObject addObject = (JsonObject) element.getValue();
+					newValue = Strings.join(",\n", addObject);
+					newPackageJsonStr.replace(endIdx, endIdx, comma + newValue);
+				} else {
+					// replaces the element
+					newPackageJsonStr.replace(startIdx, endIdx, newValue);
+				}
 			}
 		}
 		try (FileWriter fw = new FileWriter(packageJson, false)) {

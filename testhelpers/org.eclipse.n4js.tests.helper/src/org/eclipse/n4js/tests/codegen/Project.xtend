@@ -33,6 +33,7 @@ public class Project {
 	final String vendorName;
 	final LinkedHashSet<Folder> folders = newLinkedHashSet();
 	final Set<String> projectDependencies = newLinkedHashSet();
+	final Map<String, String> scripts = newLinkedHashMap();
 	final Map<String, Project> nodeModuleProjects = newHashMap();
 	ProjectType projectType;
 	String projectVersion = "1.0.0";
@@ -226,6 +227,10 @@ public class Project {
 		projectDependencies.add(Objects.requireNonNull(projectDependency));
 		return this;
 	}
+	
+	public def void addScript(String name, String script) {
+		scripts.put(name, script);
+	}
 
 	/**
 	 * Returns a list of project dependencies of this project.
@@ -254,6 +259,13 @@ public class Project {
 			{
 				"name": "«projectName»",
 				"version": "«projectVersion»",
+				«IF !scripts.empty»
+				"scripts": {
+					«FOR script : scripts.entrySet SEPARATOR ','»
+						"«script.key»": "«script.value»"
+					«ENDFOR»
+				},
+				«ENDIF»
 				"n4js": {
 					"vendorId": "«vendorId»",
 					"vendorName": "«vendorName»",
@@ -267,7 +279,7 @@ public class Project {
 					«IF generateDts»
 					,"generator": {
 						"d.ts": true
-					}"
+					}
 					«ENDIF»
 					«IF !folders.nullOrEmpty
 				»,"sources": {
