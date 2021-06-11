@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -58,6 +59,11 @@ import com.google.inject.Inject;
  * Class that provides / delegates of xt methods
  */
 public class XtIdeTest extends AbstractIdeTest {
+
+	static final File TSC_PROVIDER = new File("test-tscProvider");
+
+	static final File TSC2 = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/.bin/tsc");
+	static final File TSC = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/typescript/lib/tsc");
 
 	static final XtMethodPattern PATTERN_PREDS = XtMethodPattern.builder().keyword("preds")
 			.textOpt("type", (Object[]) ControlFlowType.values())
@@ -540,15 +546,32 @@ public class XtIdeTest extends AbstractIdeTest {
 			assertEquals(data.expectation, genDtsCodeTrimmed);
 
 			CliTools cliTools = new CliTools();
-			ProcessResult result = cliTools.npmRun(getProjectRoot().toPath(), "add", "typescript@4.3.2");
-			assertEquals(0, result.getExitCode());
-			result = cliTools.npmRun(getProjectRoot().toPath(), "run", "tsc");
+			ensureTSC(cliTools);
+
+			ProcessResult result = cliTools.nodejsRun(getProjectRoot().toPath(), TSC2.getAbsoluteFile().toPath());
+
 			assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
 
 		} catch (IllegalStateException e) {
 			throw new RuntimeException(
 					"Could not find file " + genDtsFileName + "\nDid you set: GENERATE_DTS in SETUP section?", e);
 		}
+	}
+
+	private void ensureTSC(CliTools cliTools) {
+		if (TSC_PROVIDER.isDirectory()) {
+			return;
+		}
+
+		if (TSC_PROVIDER.exists()) {
+			TSC_PROVIDER.delete();
+		}
+		TSC_PROVIDER.mkdirs();
+
+		// npm install --prefix . typescript@4.3.2
+		ProcessResult result = cliTools.npmRun(TSC_PROVIDER.toPath(), "install", "--prefix", ".", "typescript@4.3.2");
+
+		assertEquals(0, result.getExitCode());
 	}
 
 	/**

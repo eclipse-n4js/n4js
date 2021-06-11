@@ -113,9 +113,9 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 		cliTools.setEnvironmentVariable(name, value);
 	}
 
-	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
-	public ProcessResult nodejsRun(Path workingDir, Path runFile, String... options) {
-		return cliTools.nodejsRun(workingDir, runFile, options);
+	/** see {@link TestProcessExecuter#runNodejsESM(Path, Map, Path, String[])} */
+	public ProcessResult nodejsRunESM(Path workingDir, Path runFile, String... options) {
+		return cliTools.nodejsRunESM(workingDir, runFile, options);
 	}
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */

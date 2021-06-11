@@ -97,10 +97,7 @@ public class XtFileDataParser {
 		srcFolder.addModule(xtFileModule);
 		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR_NAME);
 		project.addSourceFolder(srcFolder);
-		if (setupParseResult.generateDts) {
-			project.setGenerateDts(true);
-			project.addScript("tsc", "tsc || true");
-		}
+		project.setGenerateDts(setupParseResult.generateDts);
 
 		XtWorkspace workspace = new XtWorkspace();
 		workspace.addProject(project);

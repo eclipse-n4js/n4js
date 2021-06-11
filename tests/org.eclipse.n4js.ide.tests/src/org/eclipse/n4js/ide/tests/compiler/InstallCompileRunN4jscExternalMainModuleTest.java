@@ -72,7 +72,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends AbstractCliCom
 		expectedString += "next imported\n";
 		expectedString += "body-parser imported";
 
-		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileToRun);
+		ProcessResult nodejsResult = nodejsRunESM(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

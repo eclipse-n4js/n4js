@@ -1676,7 +1676,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Runs the given file (with its parent folder as working directory) in node.js and asserts the output. */
 	protected void assertOutput(FileURI fileToRun, CharSequence expectedOutput) {
-		ProcessResult result = runInNodejs(fileToRun);
+		ProcessResult result = runInNodejsESM(fileToRun);
 		assertNull("exception while running: " + fileToRun, result.getException());
 		assertEquals("unexpected exit code from running: " + fileToRun, 0, result.getExitCode());
 		assertEquals("unexpected output from running: " + fileToRun,
@@ -1754,15 +1754,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Same as {@link #runInNodejs(File, FileURI, String...)}, using the given file's grand-parent folder as working
+	 * Same as {@link #runInNodejsESM(File, FileURI, String...)}, using the given file's grand-parent folder as working
 	 * directory (assuming the file is located in the root of a project's output folder).
 	 */
-	protected ProcessResult runInNodejs(FileURI fileToRun, String... options) {
-		return runInNodejs(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
+	protected ProcessResult runInNodejsESM(FileURI fileToRun, String... options) {
+		return runInNodejsESM(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
 	}
 
-	/** Delegates to {@link CliTools#nodejsRun(Path, Path, String...)}. */
-	protected ProcessResult runInNodejs(File workingDir, FileURI fileToRun, String... options) {
-		return new CliTools().nodejsRun(workingDir.toPath(), fileToRun.toPath(), options);
+	/** Delegates to {@link CliTools#nodejsRunESM(Path, Path, String...)}. */
+	protected ProcessResult runInNodejsESM(File workingDir, FileURI fileToRun, String... options) {
+		return new CliTools().nodejsRunESM(workingDir.toPath(), fileToRun.toPath(), options);
 	}
 }
