@@ -28,6 +28,10 @@ class Workspace {
 	def addProject(Project project) {
 		this.projects.add(project);
 	}
+
+	def clearProjects() {
+		this.projects.clear();
+	}
 	
 	def List<Project> getProjects() {
 		return this.projects;

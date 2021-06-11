@@ -104,6 +104,12 @@ public class XtIdeTest extends AbstractIdeTest {
 	XtResourceEObjectAccessor eobjProvider;
 	Set<String> suppressedIssues;
 
+	@Override
+	public File getProjectRoot() {
+		String projectName = xtData.workspace.getProjects().get(0).getName();
+		return testWorkspaceManager.getProjectRoot(projectName);
+	}
+
 	/**
 	 * Call this before calling any other methods of {@link XtIdeTest}.
 	 */

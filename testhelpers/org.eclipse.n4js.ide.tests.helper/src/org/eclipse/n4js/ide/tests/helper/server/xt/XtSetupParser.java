@@ -20,12 +20,14 @@ import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
+import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder.OtherFileBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.YarnProjectBuilder;
+import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -217,6 +219,16 @@ public class XtSetupParser {
 		}
 
 		XtWorkspace xtWorkspace = builder.build(new XtWorkspace());
+		if (xtWorkspace.getProjects().size() == 1 && xtWorkspace.getProjects().get(0) instanceof YarnWorkspaceProject &&
+				((YarnWorkspaceProject) xtWorkspace.getProjects().get(0)).getMemberProjects().size() == 1) {
+
+			YarnWorkspaceProject yarnWorkspaceProject = (YarnWorkspaceProject) xtWorkspace.getProjects().get(0);
+			if (yarnWorkspaceProject.getMemberProjects().size() == 1) {
+				Project project = yarnWorkspaceProject.getMemberProjects().iterator().next();
+				xtWorkspace.clearProjects();
+				xtWorkspace.addProject(project);
+			}
+		}
 		xtWorkspace.moduleNameOfXtFile = ((BuilderInfo) builder.builderInfo).moduleNameOfXtFile;
 		return xtWorkspace;
 	}
