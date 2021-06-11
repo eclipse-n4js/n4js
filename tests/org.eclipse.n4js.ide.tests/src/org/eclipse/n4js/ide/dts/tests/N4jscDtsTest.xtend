@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.dts.tests
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
 import static org.junit.Assert.assertEquals
+import org.eclipse.n4js.N4JSGlobals
 
 /**
  */
@@ -55,7 +56,7 @@ class N4jscDtsTest extends AbstractIdeTest {
 
 		shutdownLspServer();
 		
-		val tsconfigUri = getFileURIFromModuleName("ts.config");
+		val tsconfigUri = getFileURIFromModuleName(N4JSGlobals.TS_CONFIG);
 		val contents = getContentOfFileOnDisk(tsconfigUri);
 		assertEquals('''
 		{
