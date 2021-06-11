@@ -68,7 +68,7 @@ class N4jscDtsTest extends AbstractIdeTest {
 		        "noImplicitAny": false,
 		    }
 		}
-		''', contents);
+		'''.toString, contents);
 	}
 
 }

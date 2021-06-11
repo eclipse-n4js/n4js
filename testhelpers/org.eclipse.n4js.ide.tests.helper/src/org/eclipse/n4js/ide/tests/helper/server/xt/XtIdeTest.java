@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -31,6 +32,8 @@ import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
@@ -534,6 +537,13 @@ public class XtIdeTest extends AbstractIdeTest {
 			String genDtsCodeTrimmed = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
 
 			assertEquals(data.expectation, genDtsCodeTrimmed);
+
+			CliTools cliTools = new CliTools();
+			ProcessResult result = cliTools.npmRun(getProjectRoot().toPath(), "add", "typescript@4.3.2");
+			assertEquals(0, result.getExitCode());
+			result = cliTools.npmRun(getProjectRoot().toPath(), "run", "tsc");
+			assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
+
 		} catch (IllegalStateException e) {
 			System.out.println("Could not find file " + genDtsFileName + "\nDid you set: ENABLE_DTS in SETUP section?");
 			throw e;

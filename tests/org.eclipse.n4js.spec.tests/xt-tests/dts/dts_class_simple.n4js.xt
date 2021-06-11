@@ -15,19 +15,10 @@
  */
 
 
-export default public class C {
-	field: number;
-	m(s: String) : void {
-		return;
-	}
+export default class C {
 }
 
 
 /* XPECT generated_dts ---
-export default public class C {
-	field
-	m(s) {
-		
-	}
-}
+export default class C {}
 --- */

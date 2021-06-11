@@ -11,5 +11,8 @@
         "xpect-tests"
       ]
     }
+  },
+  "dependencies": {
+    "typescript": "^4.3.2"
   }
 }

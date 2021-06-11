@@ -186,9 +186,9 @@ public final class N4JSGlobals {
 	public static final String TEST_CATALOG = "test-catalog.json";
 
 	/**
-	 * The name of the ts.config file.
+	 * The name of the tsconfig.json file.
 	 */
-	public static final String TS_CONFIG = "ts.config";
+	public static final String TS_CONFIG = "tsconfig.json";
 
 	/**
 	 * All project names of n4js libraries.
