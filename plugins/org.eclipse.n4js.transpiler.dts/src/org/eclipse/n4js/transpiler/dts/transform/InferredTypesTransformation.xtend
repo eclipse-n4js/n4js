@@ -26,7 +26,6 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts
 
 /**
  * Makes the inferred type of
@@ -34,7 +33,7 @@ import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts
  * <li>variables on top level, and
  * <li>fields of classes and interfaces
  * </ol>
- * explicit in the intermediate model, so that {@link PrettyPrinterSwitchDts} can handle them.
+ * explicit in the intermediate model, so that {@code PrettyPrinterSwitchDts} can handle them.
  */
 class InferredTypesTransformation extends Transformation {
 
