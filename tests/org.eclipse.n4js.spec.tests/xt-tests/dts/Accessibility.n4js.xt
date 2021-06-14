@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
    GENERATE_DTS
    END_SETUP
  */
@@ -32,9 +32,9 @@ export class Cls1 {}
 export class Cls2 {}
 export class Cls3 {}
 declare class Cls {
-	public field1;
-	public field2;
-	protected field3;
-	private field4;
+	public field1: any;
+	public field2: any;
+	protected field3: any;
+	private field4: any;
 }
 --- */
