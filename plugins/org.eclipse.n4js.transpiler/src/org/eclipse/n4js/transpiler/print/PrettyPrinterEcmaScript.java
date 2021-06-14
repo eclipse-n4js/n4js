@@ -45,13 +45,13 @@ import com.google.common.base.Strings;
  * Traverses an intermediate model and serializes it to a {@link SourceMapAwareAppendable}. Client code should only use
  * the static method {@link #append(SourceMapAwareAppendable, TranspilerState, Optional)}.
  */
-/* package */ final class PrettyPrinterSwitch extends N4JSSwitch<Boolean> {
+/* package */ final class PrettyPrinterEcmaScript extends N4JSSwitch<Boolean> {
 
 	/**
 	 * Appends the given transpiler state's intermediate model to the given {@link SourceMapAwareAppendable}.
 	 */
 	public static void append(SourceMapAwareAppendable out, TranspilerState state, Optional<String> optPreamble) {
-		final PrettyPrinterSwitch theSwitch = new PrettyPrinterSwitch(out, optPreamble);
+		final PrettyPrinterEcmaScript theSwitch = new PrettyPrinterEcmaScript(out, optPreamble);
 		theSwitch.doSwitch(state.im);
 	}
 
@@ -61,7 +61,7 @@ import com.google.common.base.Strings;
 	private final SourceMapAwareAppendable out;
 	private final Optional<String> optPreamble;
 
-	private PrettyPrinterSwitch(SourceMapAwareAppendable out, Optional<String> optPreamble) {
+	private PrettyPrinterEcmaScript(SourceMapAwareAppendable out, Optional<String> optPreamble) {
 		this.out = out;
 		this.optPreamble = optPreamble;
 	}
@@ -217,7 +217,7 @@ import com.google.common.base.Strings;
 			// transpiler can simply create a superClassExpression with an IdentifierRef_IM pointing to the desired
 			// symbol table entry of the super class.
 			throw new IllegalStateException("property superClassRef in N4ClassDeclaration is not supported in "
-					+ PrettyPrinterSwitch.class.getSimpleName());
+					+ PrettyPrinterEcmaScript.class.getSimpleName());
 		} else if (superClassExpression != null) {
 			write("extends ");
 			process(superClassExpression);

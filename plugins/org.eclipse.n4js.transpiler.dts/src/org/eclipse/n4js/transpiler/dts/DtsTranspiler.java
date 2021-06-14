@@ -19,7 +19,7 @@ import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
-import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterSwitchDts;
+import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts;
 import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 
@@ -66,6 +66,6 @@ public class DtsTranspiler extends AbstractTranspiler {
 			Optional<SourceMapInfo> optSourceMapInfo) {
 
 		final LineColTrackingAppendable out = new LineColTrackingAppendable(outCode, "\t");
-		PrettyPrinterSwitchDts.append(out, state, optPreamble);
+		PrettyPrinterDts.append(out, state, optPreamble);
 	}
 }

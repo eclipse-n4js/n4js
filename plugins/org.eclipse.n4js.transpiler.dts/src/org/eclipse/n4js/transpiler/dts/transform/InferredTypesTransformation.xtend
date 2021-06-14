@@ -16,7 +16,6 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterSwitchDts
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -27,6 +26,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts
 
 /**
  * Makes the inferred type of

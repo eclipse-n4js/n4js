@@ -47,11 +47,11 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
  */
 /* package */ class PrettyPrinterTypeRef {
 
-	private final PrettyPrinterSwitchDts delegate;
+	private final PrettyPrinterDts delegate;
 	private final TranspilerState state;
 
 	/** Creates a new {@link PrettyPrinterTypeRef}. */
-	public PrettyPrinterTypeRef(PrettyPrinterSwitchDts delegate, TranspilerState state) {
+	public PrettyPrinterTypeRef(PrettyPrinterDts delegate, TranspilerState state) {
 		this.delegate = delegate;
 		this.state = state;
 	}

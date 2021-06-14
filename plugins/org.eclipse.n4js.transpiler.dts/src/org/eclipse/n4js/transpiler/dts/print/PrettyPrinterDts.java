@@ -84,13 +84,13 @@ import com.google.common.collect.Sets;
  * Traverses an intermediate model and serializes it to a {@link LineColTrackingAppendable}. Client code should only use
  * the static method {@link #append(LineColTrackingAppendable, TranspilerState, Optional)}.
  */
-public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
+public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	/**
 	 * Appends the given transpiler state's intermediate model to the given {@link LineColTrackingAppendable}.
 	 */
 	public static void append(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble) {
-		final PrettyPrinterSwitchDts theSwitch = new PrettyPrinterSwitchDts(out, state, optPreamble);
+		final PrettyPrinterDts theSwitch = new PrettyPrinterDts(out, state, optPreamble);
 		theSwitch.doSwitch(state.im);
 	}
 
@@ -107,7 +107,7 @@ public final class PrettyPrinterSwitchDts extends N4JSSwitch<Boolean> {
 	private final Optional<String> optPreamble;
 	private final PrettyPrinterTypeRef prettyPrinterTypeRef;
 
-	private PrettyPrinterSwitchDts(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble) {
+	private PrettyPrinterDts(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble) {
 		this.out = out;
 		this.optPreamble = optPreamble;
 		this.prettyPrinterTypeRef = new PrettyPrinterTypeRef(this, state);
