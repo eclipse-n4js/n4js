@@ -68,6 +68,7 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.parser.conversion.ValueConverterUtils;
+import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
@@ -82,15 +83,16 @@ import com.google.common.collect.Sets;
 
 /**
  * Traverses an intermediate model and serializes it to a {@link LineColTrackingAppendable}. Client code should only use
- * the static method {@link #append(LineColTrackingAppendable, TranspilerState, Optional)}.
+ * the static method {@link #append(LineColTrackingAppendable, TranspilerState, Optional, N4JSDocumentationProvider)}.
  */
 public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	/**
 	 * Appends the given transpiler state's intermediate model to the given {@link LineColTrackingAppendable}.
 	 */
-	public static void append(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble) {
-		final PrettyPrinterDts theSwitch = new PrettyPrinterDts(out, state, optPreamble);
+	public static void append(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble,
+			N4JSDocumentationProvider documentationProvider) {
+		final PrettyPrinterDts theSwitch = new PrettyPrinterDts(out, state, optPreamble, documentationProvider);
 		theSwitch.doSwitch(state.im);
 	}
 
@@ -105,12 +107,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	private final LineColTrackingAppendable out;
 	private final Optional<String> optPreamble;
+	private final TranspilerState state;
 	private final PrettyPrinterTypeRef prettyPrinterTypeRef;
+	private final N4JSDocumentationProvider documentationProvider;
 
-	private PrettyPrinterDts(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble) {
+	private PrettyPrinterDts(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble,
+			N4JSDocumentationProvider documentationProvider) {
 		this.out = out;
 		this.optPreamble = optPreamble;
+		this.state = state;
 		this.prettyPrinterTypeRef = new PrettyPrinterTypeRef(this, state);
+		this.documentationProvider = documentationProvider;
 	}
 
 	@Override
@@ -257,6 +264,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
+		writeJsdoc(original);
 		writeIf("declare ", !original.isExported());
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("class ");
@@ -302,6 +310,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4InterfaceDeclaration(N4InterfaceDeclaration original) {
+		writeJsdoc(original);
 		writeIf("declare ", !original.isExported());
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("interface ");
@@ -357,6 +366,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4EnumDeclaration(N4EnumDeclaration original) {
+		writeJsdoc(original);
 		writeIf("declare ", !original.isExported());
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("enum ");
@@ -375,6 +385,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4TypeAliasDeclaration(N4TypeAliasDeclaration alias) {
+		writeJsdoc(alias);
 		writeIf("declare ", !alias.isExported());
 		write("type ");
 		write(alias.getName());
@@ -386,6 +397,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4FieldDeclaration(N4FieldDeclaration original) {
+		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		processPropertyName(original);
@@ -396,6 +408,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
+		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		write("get ");
@@ -409,6 +422,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
+		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		write("set ");
@@ -423,6 +437,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4MethodDeclaration(N4MethodDeclaration original) {
+		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
 		if (original.isAsync()) {
@@ -453,6 +468,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseFunctionDeclaration(FunctionDeclaration original) {
+		writeJsdoc(original);
 		writeIf("declare ", !original.isExported());
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
@@ -585,6 +601,18 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	// ###############################################################################################################
 	// UTILITY AND CONVENIENCE METHODS
+
+	private void writeJsdoc(EObject original) {
+		EObject originalASTNode = state.tracer.getOriginalASTNode(original);
+		if (originalASTNode != null) {
+			String documentation = documentationProvider.findComment(originalASTNode);
+			if (documentation != null) {
+				// documentation = documentation.replaceAll("\\*/", "*\\\\/");
+				write(documentation);
+				newLine();
+			}
+		}
+	}
 
 	/* package */ void write(char c) {
 		try {
