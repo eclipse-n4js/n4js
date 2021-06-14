@@ -45,7 +45,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 /**
  * Emits an N4JS type reference to TypeScript.
  */
-public class PrettyPrinterTypeRef {
+/* package */ class PrettyPrinterTypeRef {
 
 	private final PrettyPrinterSwitchDts delegate;
 	private final TranspilerState state;
