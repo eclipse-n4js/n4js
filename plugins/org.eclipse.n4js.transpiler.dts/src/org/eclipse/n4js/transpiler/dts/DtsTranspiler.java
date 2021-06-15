@@ -25,6 +25,7 @@ import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.TrimForDtsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
+import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 
 import com.google.common.base.Optional;
@@ -36,6 +37,8 @@ import com.google.inject.Provider;
  */
 public class DtsTranspiler extends AbstractTranspiler {
 
+	@Inject
+	private Provider<StaticPolyfillTransformation> staticPolyfillTransformationProvider;
 	@Inject
 	private Provider<InferredTypesTransformation> inferredTypesTransformationProvider;
 	@Inject
@@ -55,6 +58,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
+				staticPolyfillTransformationProvider.get(),
 				inferredTypesTransformationProvider.get(),
 				trimDtsTransformationProvider.get(),
 				sanitizeImportsTransformationProvider.get(),
