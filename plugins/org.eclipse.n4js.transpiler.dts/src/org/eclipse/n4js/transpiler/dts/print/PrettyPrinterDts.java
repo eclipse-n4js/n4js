@@ -55,11 +55,13 @@ import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.Statement;
+import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableBinding;
@@ -168,6 +170,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (original.getReexportedFrom() != null) {
 			throwUnsupportedSyntax();
 		}
+		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		write("export ");
 		final List<ExportSpecifier> namedExports = original.getNamedExports();
@@ -264,8 +267,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
-		writeJsdoc(original);
-		writeIf("declare ", !original.isExported());
+		if (!original.isExported()) {
+			writeJsdoc(original); // already written in #caseExportDeclaration()
+			write("declare ");
+		}
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("class ");
 		write(original.getName());
@@ -310,8 +315,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4InterfaceDeclaration(N4InterfaceDeclaration original) {
-		writeJsdoc(original);
-		writeIf("declare ", !original.isExported());
+		if (!original.isExported()) {
+			writeJsdoc(original); // already written in #caseExportDeclaration()
+			write("declare ");
+		}
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("interface ");
 		write(original.getName());
@@ -357,6 +364,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write("export ");
 			write("namespace ");
 			write(original.getName());
+			write(' ');
 
 			// TODO rewrite static methods to exported(!) functions
 			processBlockLike(staticMembers, '{', null, null, '}');
@@ -366,27 +374,43 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4EnumDeclaration(N4EnumDeclaration original) {
-		writeJsdoc(original);
-		writeIf("declare ", !original.isExported());
+		if (!original.isExported()) {
+			writeJsdoc(original); // already written in #caseExportDeclaration()
+			write("declare ");
+		}
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		write("enum ");
 		write(original.getName());
+		write(' ');
 
-		processBlockLike(original.getLiterals(), '{', null, null, '}');
+		processBlockLike(original.getLiterals(), '{', ",", null, '}');
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4EnumLiteral(N4EnumLiteral literal) {
+		writeJsdoc(literal);
 		write(literal.getName());
-		// TODO value!
+		Expression expression = literal.getValueExpression();
+		if (expression != null) {
+			if (expression instanceof StringLiteral) {
+				String string = ((StringLiteral) expression).getValueAsString();
+				writeIf(" = \"" + string + "\"", string != null);
+			}
+			if (expression instanceof NumericLiteral) {
+				String string = ((NumericLiteral) expression).getValueAsString();
+				writeIf(" = " + string, string != null);
+			}
+		}
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4TypeAliasDeclaration(N4TypeAliasDeclaration alias) {
-		writeJsdoc(alias);
-		writeIf("declare ", !alias.isExported());
+		if (!alias.isExported()) {
+			writeJsdoc(alias); // already written in #caseExportDeclaration()
+			write("declare ");
+		}
 		write("type ");
 		write(alias.getName());
 		write(" = ");
@@ -468,8 +492,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseFunctionDeclaration(FunctionDeclaration original) {
-		writeJsdoc(original);
-		writeIf("declare ", !original.isExported());
+		if (!original.isExported()) {
+			writeJsdoc(original); // already written in #caseExportDeclaration()
+			write("declare ");
+		}
 		processAnnotations(original.getAnnotations());
 		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
 		if (original.isAsync()) {
@@ -607,7 +633,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (originalASTNode != null) {
 			String documentation = documentationProvider.findComment(originalASTNode);
 			if (documentation != null) {
-				// documentation = documentation.replaceAll("\\*/", "*\\\\/");
+				documentation = documentation.replaceAll("\n\t+", "\n");
+				documentation = documentation.replaceAll("\n\s+\\*", "\n \\*");
 				write(documentation);
 				newLine();
 			}

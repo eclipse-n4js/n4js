@@ -29,12 +29,26 @@ interface I {
 	method(): void {}
 }
 
+/**
+ *  Doc for exported interface Ie
+ *  in multiple lines
+ */
+export interface Ie {
+	// no props
+}
+
 /** Doc for class C */
 class C {}
+
+/** Doc for exported class Ce */
+export class Ce {}
 
 
 /** Doc for function F */
 function F() {}
+
+/** Doc for exported function Fe */
+export function Fe() {}
 
 
 /* XPECT generated_dts ---
@@ -52,8 +66,17 @@ declare interface I {
 	/** Doc for method I.method *\/
 	method(): void;
 }
+/**
+ *  Doc for exported interface Ie
+ *  in multiple lines
+ *\/
+export interface Ie {}
 /** Doc for class C *\/
 declare class C {}
+/** Doc for exported class Ce *\/
+export class Ce {}
 /** Doc for function F *\/
 declare function F(): void;
+/** Doc for exported function Fe *\/
+export function Fe(): void;
 --- */
