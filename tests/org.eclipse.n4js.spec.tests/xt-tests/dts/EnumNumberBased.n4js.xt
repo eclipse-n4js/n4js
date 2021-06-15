@@ -34,4 +34,9 @@ export enum SomeWeekdays {
 	/** Day after first day *\/
 	Tuesday = 2
 }
+export namespace SomeWeekdays {
+	export const literals: Array<SomeWeekdays>;
+	export function findLiteralByName(name: string): SomeWeekdays;
+	export function findLiteralByValue (value: string): SomeWeekdays;
+}
 --- */

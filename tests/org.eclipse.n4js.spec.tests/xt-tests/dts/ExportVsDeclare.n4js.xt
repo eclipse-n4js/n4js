@@ -61,9 +61,21 @@ export interface IfcE {}
 declare enum EnumD {
 	L
 }
+declare namespace EnumD {
+	export const literals: Array<EnumD>;
+	export function findLiteralByName(name: string): EnumD;
+	export function findLiteralByValue (value: string): EnumD;
+}
+
 export enum EnumE {
 	L
 }
+export namespace EnumE {
+	export const literals: Array<EnumE>;
+	export function findLiteralByName(name: string): EnumE;
+	export function findLiteralByValue (value: string): EnumE;
+}
+
 declare type AliD = ClsD;
 export type AliE = ClsE;
 --- */

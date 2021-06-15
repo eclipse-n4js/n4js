@@ -384,6 +384,32 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		write(' ');
 
 		processBlockLike(original.getLiterals(), '{', ",", null, '}');
+		newLine();
+
+		// Workaround since TypeScript enums do not support static methods
+
+		if (!original.isExported()) {
+			write("declare ");
+		} else {
+			write("export ");
+		}
+		write("namespace ");
+		write(original.getName());
+		write(" {");
+		out.indent();
+		newLine();
+
+		write("export const literals: Array<" + original.getName() + ">;");
+		newLine();
+		write("export function findLiteralByName(name: string): " + original.getName() + ";");
+		newLine();
+		write("export function findLiteralByValue (value: string): " + original.getName() + ";");
+
+		out.undent();
+		newLine();
+		write('}');
+		newLine();
+
 		return DONE;
 	}
 
