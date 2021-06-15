@@ -48,8 +48,6 @@ export class ClassWithFields {
 
 
 /* XPECT generated_dts ---
-import {someClassProvider} from 'Other'
-
 declare class Cls {}
 declare function foo1(): string;
 declare function foo2(): Object;

@@ -21,6 +21,9 @@ import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts;
 import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.TrimForDtsTransformation;
+import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
+import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 
 import com.google.common.base.Optional;
@@ -33,7 +36,13 @@ import com.google.inject.Provider;
 public class DtsTranspiler extends AbstractTranspiler {
 
 	@Inject
-	private Provider<InferredTypesTransformation> inferredTypesTransformation;
+	private Provider<InferredTypesTransformation> inferredTypesTransformationProvider;
+	@Inject
+	private Provider<TrimForDtsTransformation> trimDtsTransformationProvider;
+	@Inject
+	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
+	@Inject
+	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformationProvider;
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in
@@ -42,7 +51,10 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
-				inferredTypesTransformation.get(),
+				inferredTypesTransformationProvider.get(),
+				trimDtsTransformationProvider.get(),
+				sanitizeImportsTransformationProvider.get(),
+				moduleSpecifierTransformationProvider.get()
 		};
 	}
 
