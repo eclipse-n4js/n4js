@@ -12,11 +12,13 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.Location;
@@ -42,9 +45,12 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodPattern.Match;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xpect.runner.Xpect;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
@@ -108,6 +114,34 @@ public class XtIdeTest extends AbstractIdeTest {
 	public File getProjectRoot() {
 		String projectName = xtData.workspace.getProjects().get(0).getName();
 		return testWorkspaceManager.getProjectRoot(projectName);
+	}
+
+	/**
+	 * Returns the root folder of the project containing the given file or <code>null</code>.
+	 * <p>
+	 * For this method, it is sufficient if the given file is located somewhere inside a project; strict
+	 * {@link SourceFolderSnapshot#contains(URI) containment in a source folder} is *not* required.
+	 */
+	public File getProjectRootContaining(File file) {
+		Path filePath = file.toPath();
+		Path resultPath = null;
+		List<Project> projectsToCheck = new ArrayList<>(xtData.workspace.getProjects());
+		while (!projectsToCheck.isEmpty()) {
+			Project project = projectsToCheck.remove(0);
+			if (project instanceof YarnWorkspaceProject) {
+				projectsToCheck.addAll(((YarnWorkspaceProject) project).getMemberProjects());
+			}
+			File projectRoot = getProjectRoot(project.getName());
+			if (projectRoot != null) {
+				Path projectRootPath = projectRoot.toPath();
+				if (filePath.startsWith(projectRootPath)) {
+					if (resultPath == null || projectRootPath.getNameCount() > resultPath.getNameCount()) {
+						resultPath = projectRootPath;
+					}
+				}
+			}
+		}
+		return resultPath != null ? resultPath.toFile() : null;
 	}
 
 	/**
@@ -554,7 +588,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			CliTools cliTools = new CliTools();
 			ensureTSC(cliTools);
 
-			ProcessResult result = cliTools.nodejsRun(getProjectRoot().toPath(), TSC2.getAbsoluteFile().toPath());
+			File workingDir = getProjectRootContaining(genDtsFileURI.toFile());
+			assertNotNull("cannot find containing project of generated .d.ts file", workingDir);
+			ProcessResult result = cliTools.nodejsRun(workingDir.toPath(), TSC2.getAbsoluteFile().toPath());
 
 			assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
 
