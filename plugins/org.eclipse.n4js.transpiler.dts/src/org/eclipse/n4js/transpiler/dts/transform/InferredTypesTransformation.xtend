@@ -131,6 +131,14 @@ class InferredTypesTransformation extends Transformation {
 	def private boolean makeDeclTypeAvailable(ParameterizedTypeRef ptr) {
 		val isAlreadyAvailable = DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(ptr, state) !== null;
 		if (isAlreadyAvailable) {
+			// the element is already available, but we have to make sure its import won't be removed as unused
+			// even if all other usages will be removed (e.g. if they are in expressions/statements):
+			val declType = ptr.declaredType;
+			val ste = if (declType !== null) getSymbolTableEntryOriginal(declType, false);
+			val importSpecifier = ste?.importSpecifier;
+			if (importSpecifier !== null) {
+				state.info.markAsRetainedIfUnused(importSpecifier);
+			}
 			return true;
 		}
 		val declType = ptr.declaredType;
