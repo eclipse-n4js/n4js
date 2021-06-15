@@ -38,6 +38,12 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 
 	private static final Logger logger = Logger.getLogger(N4JSDocumentationProvider.class);
 
+	/** Overwritten to set visibility to public */
+	@Override
+	public String findComment(EObject o) {
+		return super.findComment(o);
+	}
+
 	/**
 	 * Returns documentation nodes for N4JS AST and type elements (in which case the method returns the nodes of the
 	 * corresponding AST element). If the AST element has no documentation nodes itself, but is an exportable element,

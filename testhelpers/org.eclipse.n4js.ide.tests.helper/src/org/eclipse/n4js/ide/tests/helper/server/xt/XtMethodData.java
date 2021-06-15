@@ -35,8 +35,10 @@ public class XtMethodData implements Serializable, Comparable<XtMethodData> {
 	final public String args;
 	/** Test number. Tests with same names are grouped. */
 	final public int count;
-	/** Test expectation. Stated after the test divider ({@code -->} or {@code ---}). */
+	/** Similar to {@link #expectationRaw}, but comment artifacts (i.e. ' * ') removed. */
 	final public String expectation;
+	/** Raw test expectation. Stated after the test divider ({@code -->} or {@code ---}). */
+	final public String expectationRaw;
 	/** End offset of test location in file */
 	final public int offset;
 	/** True iff this test is expected to fail */
@@ -46,20 +48,20 @@ public class XtMethodData implements Serializable, Comparable<XtMethodData> {
 
 	/** Constructor */
 	public XtMethodData(String name) {
-		this("", "", name, "", 0, "", 0, false, false);
+		this("", "", name, "", 0, "", "", 0, false, false);
 	}
 
 	/** Constructor */
 	public XtMethodData(String fileName, String comment, String name, String args, int count, String expectation,
-			int offset,
-			boolean isFixme, boolean isIgnore) {
+			String expectationRaw, int offset, boolean isFixme, boolean isIgnore) {
 
 		this.fileName = fileName;
 		this.comment = comment.trim();
 		this.name = name;
 		this.args = args;
 		this.count = count;
-		this.expectation = expectation.trim();
+		this.expectation = expectation;
+		this.expectationRaw = expectationRaw;
 		this.offset = offset;
 		this.isFixme = isFixme;
 		this.isIgnore = isIgnore;
@@ -103,6 +105,16 @@ public class XtMethodData implements Serializable, Comparable<XtMethodData> {
 			return XtFileDataParser.XtMethodIterator.XT_IGNORE.trim();
 		}
 		return "";
+	}
+
+	/** @return the expectation string but removes all occurrences of {@code \} in {@code *\/} */
+	public String getUnescapeExpectation() {
+		return expectation.replaceAll("\\*\\\\/", "\\*/");
+	}
+
+	/** @return the expectation string but removes all occurrences of {@code \} in {@code *\/} */
+	public String getUnescapeExpectationRaw() {
+		return expectationRaw.replaceAll("\\*\\\\/", "\\*/");
 	}
 
 	@Override

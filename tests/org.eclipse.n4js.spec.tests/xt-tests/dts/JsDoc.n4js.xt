@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+/**
+ *  Doc for interface I
+ *  in multiple lines
+ */
+interface I {
+	/** Doc for field I.field */
+	field: number;
+	/** Doc for getter I.g */
+	get g(): number { return 0; }
+	/** Doc for setter I.s */
+	set s(value: number) {}
+	/** Doc for method I.method */
+	method(): void {}
+}
+
+/** Doc for class C */
+class C {}
+
+
+/** Doc for function F */
+function F() {}
+
+
+/* XPECT generated_dts ---
+/**
+ *  Doc for interface I
+ *  in multiple lines
+ *\/
+declare interface I {
+	/** Doc for field I.field *\/
+	field: number;
+	/** Doc for getter I.g *\/
+	get g() : number;
+	/** Doc for setter I.s *\/
+	set s(value: number) ;
+	/** Doc for method I.method *\/
+	method(): void;
+}
+/** Doc for class C *\/
+declare class C {}
+/** Doc for function F *\/
+declare function F(): void;
+--- */

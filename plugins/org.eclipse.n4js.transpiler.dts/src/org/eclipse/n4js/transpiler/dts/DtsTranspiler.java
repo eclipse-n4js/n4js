@@ -16,6 +16,7 @@ import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
@@ -43,6 +44,9 @@ public class DtsTranspiler extends AbstractTranspiler {
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
 	@Inject
 	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformationProvider;
+
+	@Inject
+	private N4JSDocumentationProvider documentationProvider;
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in
@@ -78,6 +82,6 @@ public class DtsTranspiler extends AbstractTranspiler {
 			Optional<SourceMapInfo> optSourceMapInfo) {
 
 		final LineColTrackingAppendable out = new LineColTrackingAppendable(outCode, "\t");
-		PrettyPrinterDts.append(out, state, optPreamble);
+		PrettyPrinterDts.append(out, state, optPreamble, documentationProvider);
 	}
 }

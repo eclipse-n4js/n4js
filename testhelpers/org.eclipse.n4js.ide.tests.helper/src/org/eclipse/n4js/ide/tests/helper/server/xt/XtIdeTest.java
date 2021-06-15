@@ -583,7 +583,7 @@ public class XtIdeTest extends AbstractIdeTest {
 			assertTrue(genDtsCode.startsWith(N4JSGlobals.OUTPUT_FILE_PREAMBLE));
 			String genDtsCodeTrimmed = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
 
-			assertEquals(data.expectation, genDtsCodeTrimmed);
+			assertEquals(data.getUnescapeExpectationRaw(), genDtsCodeTrimmed);
 
 			CliTools cliTools = new CliTools();
 			ensureTSC(cliTools);
@@ -601,7 +601,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	private void ensureTSC(CliTools cliTools) {
-		if (TSC_PROVIDER.isDirectory()) {
+		if (TSC_PROVIDER.isDirectory() && TSC2.isFile()) {
 			return;
 		}
 
