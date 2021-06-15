@@ -9,8 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export class SomeClass {}
+export public class ClassTransitiveExported {}
+class ClassTransitiveNotExported {}
 
-export function someClassProvider(): SomeClass {
-	return null;
-}
+export public function supplyClassTransitiveExported(): ClassTransitiveExported { return null; }
+export public function supplyClassTransitiveNotExported(): ClassTransitiveNotExported { return null; }

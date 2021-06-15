@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+
+	Workspace {
+		Project "ProjectOtherTransitive" {
+			Folder "src" {
+				File "OtherTransitive.n4js" { from="./InferredTypes2_OtherTransitive.n4js" }
+			}
+			GENERATE_DTS
+		}
+		Project "ProjectOtherDirect" {
+			Folder "src" {
+				File "OtherDirect.n4js" { from="./InferredTypes2_OtherDirect.n4js" }
+			}
+			DEPENDS_ON "ProjectOtherTransitive"
+			GENERATE_DTS
+		}
+		Project "ProjectMain" {
+			Folder "src" {
+				ThisFile {}
+			}
+			DEPENDS_ON "ProjectOtherDirect"
+			GENERATE_DTS
+		}
+	}
+
+END_SETUP */
+
+import {supplyClassDirectExported} from "OtherDirect"
+import {supplyClassDirectNotExported} from "OtherDirect"
+import {supplyClassTransitiveExported1} from "OtherDirect"
+import {supplyClassTransitiveExported2} from "OtherDirect"
+import {supplyClassTransitiveNotExported} from "OtherDirect"
+
+export let v1 = supplyClassDirectExported();
+export let v2 = supplyClassDirectNotExported();
+export let v3 = supplyClassTransitiveExported1();
+export let v4 = supplyClassTransitiveExported2();
+export let v5 = supplyClassTransitiveNotExported();
+
+export class ClassWithFields {
+	public f1 = supplyClassDirectExported();
+	public f2 = supplyClassDirectNotExported();
+	public f3 = supplyClassTransitiveExported1();
+	public f4 = supplyClassTransitiveExported2();
+	public f5 = supplyClassTransitiveNotExported();
+}
+
+
+/* XPECT generated_dts ---
+import {ClassDirectExported} from 'ProjectOtherDirect/src-gen/OtherDirect'
+
+export let v1: ClassDirectExported;
+export let v2: any;
+export let v3: any;
+export let v4: any;
+export let v5: any;
+export class ClassWithFields {
+	public f1: ClassDirectExported;
+	public f2: any;
+	public f3: any;
+	public f4: any;
+	public f5: any;
+}
+--- */

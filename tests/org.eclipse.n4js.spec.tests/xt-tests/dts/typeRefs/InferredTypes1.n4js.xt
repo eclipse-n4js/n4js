@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+class Cls {}
+
+function supplyString(): string { return null; }
+function supplyObject(): Object { return null; }
+function supplyCls(): Cls { return null; }
+
+export let x1 = supplyString();
+export let x2 = supplyObject();
+export let x3 = supplyCls();
+
+export class ClassWithFields {
+	public f1 = supplyString();
+	public f2 = supplyObject();
+	public f3 = supplyCls();
+}
+
+
+/* XPECT generated_dts ---
+declare class Cls {}
+declare function supplyString(): string;
+declare function supplyObject(): Object;
+declare function supplyCls(): Cls;
+export let x1: string;
+export let x2: Object;
+export let x3: Cls;
+export class ClassWithFields {
+	public f1: string;
+	public f2: Object;
+	public f3: Cls;
+}
+--- */
