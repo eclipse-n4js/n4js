@@ -11,7 +11,9 @@
 package org.eclipse.n4js.tests.codegen;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Builder for {@link Workspace}
@@ -56,7 +58,7 @@ public class WorkspaceBuilder {
 		/** Builds the {@link YarnWorkspaceProject} */
 		@Override
 		public Project build() {
-			YarnWorkspaceProject project = new YarnWorkspaceProject(name, vendor, vendorName);
+			YarnWorkspaceProject project = new YarnWorkspaceProject(name, vendorId, vendorName);
 			for (FolderBuilder folderBuilder : folders.values()) {
 				project.addSourceFolder(folderBuilder.build());
 			}
@@ -69,9 +71,11 @@ public class WorkspaceBuilder {
 
 	/** Builder for {@link Project} */
 	public class ProjectBuilder extends NamedEntityBuilder {
-		String vendor = "VENDOR";
+		String vendorId = "VENDOR";
 		String vendorName = "VENDOR_NAME";
 		Map<String, FolderBuilder> folders = new LinkedHashMap<>();
+		Set<String> projectDependencies = new LinkedHashSet<>();
+		boolean generateDts = false;
 
 		ProjectBuilder(String name) {
 			super(name);
@@ -92,12 +96,26 @@ public class WorkspaceBuilder {
 			return folderBuilder;
 		}
 
+		/** Adds a dependency to the project with the given name. */
+		public void addProjectDependency(String projectName) {
+			projectDependencies.add(projectName);
+		}
+
+		/** Set the flag for {@link Project#setGenerateDts(boolean) .d.ts generation}. */
+		public void setGenerateDts(boolean generateDts) {
+			this.generateDts = generateDts;
+		}
+
 		/** Builds the {@link Project} */
 		public Project build() {
-			Project project = new Project(name, vendor, vendorName);
+			Project project = new Project(name, vendorId, vendorName);
 			for (FolderBuilder folderBuilder : folders.values()) {
 				project.addSourceFolder(folderBuilder.build());
 			}
+			for (String projectName : projectDependencies) {
+				project.addProjectDependency(projectName);
+			}
+			project.setGenerateDts(generateDts);
 			return project;
 		}
 

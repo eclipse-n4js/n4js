@@ -37,6 +37,11 @@ import com.google.common.base.Preconditions;
  */
 public class XtSetupParser {
 
+	/** Keyword for activating {@link Project#isGenerateDts() .d.ts generation}. */
+	public static final String GENERATE_DTS = "GENERATE_DTS";
+	/** Keyword for adding a dependency to a project. Expects to be followed by a name in quotes. */
+	public static final String DEPENDS_ON = "DEPENDS_ON";
+
 	static final String ERROR = "Xt setup parse error: ";
 
 	static class TokenStream implements Iterator<String> {
@@ -134,7 +139,7 @@ public class XtSetupParser {
 
 		while (tokens.hasNext()) {
 			switch (tokens.next()) {
-			case "GENERATE_DTS":
+			case GENERATE_DTS:
 				result.generateDts = true;
 				break;
 			case "IssueConfiguration":
@@ -148,6 +153,7 @@ public class XtSetupParser {
 				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
 				break;
 			case XtFileDataParser.XT_SETUP_END:
+				applyTopLevelGenerateDtsToAllProjects(result.workspace, result.generateDts);
 				return result;
 			default:
 				Preconditions.checkState(false,
@@ -268,6 +274,21 @@ public class XtSetupParser {
 					parseFile(tokens, xtFile, xtFileContent, true, folderBuilder);
 					break;
 				}
+				case GENERATE_DTS: {
+					prjBuilder.setGenerateDts(true);
+					break;
+				}
+				case DEPENDS_ON: {
+					String arg = tokens.expectNameInQuotes();
+					// for consistency with TestWorkspaceManager#CFG_DEPENDENCIES we support a comma-separated list:
+					String[] names = arg.split(",");
+					for (String name : names) {
+						Preconditions.checkState(!name.isEmpty(), ERROR + "Empty project name: " + DEPENDS_ON + " "
+								+ tokens.lookLast() + " in file " + xtFile.getPath());
+						prjBuilder.addProjectDependency(name);
+					}
+					break;
+				}
 				case "}":
 					break LOOP;
 				default:
@@ -361,4 +382,14 @@ public class XtSetupParser {
 		}
 	}
 
+	private static void applyTopLevelGenerateDtsToAllProjects(Workspace workspace, boolean topLevelGenerateDts) {
+		if (workspace == null || !topLevelGenerateDts) {
+			return; // nothing to apply in this case
+		}
+		for (Project project : workspace.getAllProjects()) {
+			if (!(project instanceof YarnWorkspaceProject)) {
+				project.setGenerateDts(true);
+			}
+		}
+	}
 }

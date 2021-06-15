@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.tests.codegen
 
-import java.util.List
-import java.nio.file.Path
 import java.io.File
-import org.eclipse.xpect.setup.XpectSetupComponent
-import java.util.Objects
 import java.io.IOException
+import java.nio.file.Path
+import java.util.List
+import java.util.Objects
 import org.eclipse.n4js.utils.io.FileDeleter
+import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * Generates code for a workspace.
@@ -32,26 +32,37 @@ class Workspace {
 	def clearProjects() {
 		this.projects.clear();
 	}
-	
+
 	def List<Project> getProjects() {
 		return this.projects;
 	}
-	
+
+	/**
+	 * Similar to {@link #getProjects()}, but also includes the member projects of {@link YarnWorkspaceProject}s.
+	 */
+	def Iterable<Project> getAllProjects() {
+		return this.projects.flatMap[p|
+			if (p instanceof YarnWorkspaceProject)
+				#[p] + p.memberProjects
+			else
+				#[p]
+		];
+	}
+
 	public def File create(Path parentDirectoryPath) {
 		var File wsDirectory = Objects.requireNonNull(parentDirectoryPath).toFile
 		if (!wsDirectory.exists)
 			throw new IOException("'" + wsDirectory + "' does not exist")
 		if (!wsDirectory.directory)
 			throw new IOException("'" + wsDirectory + "' is not a directory");
-			
+
 		if (wsDirectory.exists)
 			FileDeleter.delete(wsDirectory);
 		wsDirectory.mkdirs();
-		
-		
+
 		for (project : projects)
 			project.create(wsDirectory.toPath());
-		
+
 		return wsDirectory;
 	}
 }
