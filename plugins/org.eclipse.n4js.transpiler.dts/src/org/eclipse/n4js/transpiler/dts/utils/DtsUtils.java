@@ -47,6 +47,7 @@ public class DtsUtils {
 		}
 		SymbolTableEntryOriginal ste = state.steCache.mapOriginal.get(declType);
 		if (ste != null) {
+			// the type reference points to a type contained in or already imported into the current module
 			return ste.getName();
 		}
 		return null;

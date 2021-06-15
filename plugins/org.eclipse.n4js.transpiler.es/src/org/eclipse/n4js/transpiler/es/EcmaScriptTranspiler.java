@@ -34,6 +34,7 @@ import org.eclipse.n4js.transpiler.es.transform.ExpressionTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.JSXTransformation;
 import org.eclipse.n4js.transpiler.es.transform.MemberPatchingTransformation;
+import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
@@ -85,6 +86,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
 	@Inject
+	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformationProvider;
+	@Inject
 	private Provider<ModuleWrappingTransformation> moduleWrappingTransformationProvider;
 	@Inject
 	private Provider<BlockTransformation> blockTransformationProvider;
@@ -128,6 +131,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				simplifyTransformation.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),
+				moduleSpecifierTransformationProvider.get(),
 				moduleWrappingTransformationProvider.get()
 		};
 	}

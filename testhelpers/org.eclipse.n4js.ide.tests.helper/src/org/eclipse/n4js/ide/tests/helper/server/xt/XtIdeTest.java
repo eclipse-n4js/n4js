@@ -46,7 +46,6 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.tests.codegen.Project;
-import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -125,12 +124,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	public File getProjectRootContaining(File file) {
 		Path filePath = file.toPath();
 		Path resultPath = null;
-		List<Project> projectsToCheck = new ArrayList<>(xtData.workspace.getProjects());
-		while (!projectsToCheck.isEmpty()) {
-			Project project = projectsToCheck.remove(0);
-			if (project instanceof YarnWorkspaceProject) {
-				projectsToCheck.addAll(((YarnWorkspaceProject) project).getMemberProjects());
-			}
+		for (Project project : xtData.workspace.getAllProjects()) {
 			File projectRoot = getProjectRoot(project.getName());
 			if (projectRoot != null) {
 				Path projectRootPath = projectRoot.toPath();
@@ -595,8 +589,8 @@ public class XtIdeTest extends AbstractIdeTest {
 			assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
 
 		} catch (IllegalStateException e) {
-			throw new RuntimeException(
-					"Could not find file " + genDtsFileName + "\nDid you set: GENERATE_DTS in SETUP section?", e);
+			throw new RuntimeException("Could not find file " + genDtsFileName + "\nDid you set: "
+					+ XtSetupParser.GENERATE_DTS + " in SETUP section?", e);
 		}
 	}
 

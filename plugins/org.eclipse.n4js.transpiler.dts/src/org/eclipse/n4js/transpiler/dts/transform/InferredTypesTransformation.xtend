@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.dts.transform
 
 import com.google.inject.Inject
+import java.util.ArrayList
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.TypedElement
@@ -22,6 +23,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.workspace.WorkspaceAccess
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -40,6 +42,9 @@ class InferredTypesTransformation extends Transformation {
 	@Inject
 	private N4JSTypeSystem ts;
 
+	@Inject
+	private WorkspaceAccess workspaceAccess;
+
 	override assertPreConditions() {
 	}
 
@@ -51,7 +56,7 @@ class InferredTypesTransformation extends Transformation {
 	}
 
 	override transform() {
-		for (rootElemRaw : state.im.scriptElements) {
+		for (rootElemRaw : new ArrayList(state.im.scriptElements)) {
 			val rootElem = if (rootElemRaw instanceof ExportDeclaration) rootElemRaw.exportedElement else rootElemRaw;
 
 			// obtain those typed elements, that may have an inferred type
@@ -80,7 +85,7 @@ class InferredTypesTransformation extends Transformation {
 			makeInferredTypeExplicit(elemInIM);
 		}
 
-		hideTypeIfUnavailable(elemInIM);
+		makeTypeAvailableOrReplaceByAny(elemInIM);
 	}
 
 	def private void makeInferredTypeExplicit(TypedElement elemInIM) {
@@ -103,19 +108,48 @@ class InferredTypesTransformation extends Transformation {
 		}
 	}
 
-	def private void hideTypeIfUnavailable(TypedElement elem) {
+	def private void makeTypeAvailableOrReplaceByAny(TypedElement elem) {
 		val typeRefNode = elem.declaredTypeRefNode;
 		if (typeRefNode !== null) {
 			val typeRef = state.info.getOriginalProcessedTypeRef(typeRefNode);
-			if (typeRef !== null && !isAvailable(typeRef)) {
+			if (typeRef !== null && !makeDeclTypeAvailable(typeRef)) {
+				// it was not possible to make all declared types referenced by 'typeRef' available
+				// --> so replace this entire type reference by 'any':
 				state.info.setOriginalProcessedTypeRef(typeRefNode, state.G.anyTypeRef);
 			}
 		}
 	}
 
-	def private boolean isAvailable(TypeRef typeRef) {
-		return TypeUtils.forAllTypeRefs(typeRef, ParameterizedTypeRef, true, [ ptr |
-			return DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(ptr, state) !== null;
+	/** Returns <code>false</code> if one of the referred declared types could not be made available. */
+	def private boolean makeDeclTypeAvailable(TypeRef typeRef) {
+		return TypeUtils.forAllTypeRefs(typeRef, ParameterizedTypeRef, true, true, [ ptr |
+			return makeDeclTypeAvailable(ptr);
 		], null);
+	}
+
+	/** Returns <code>false</code> if the declared type could not be made available. */
+	def private boolean makeDeclTypeAvailable(ParameterizedTypeRef ptr) {
+		val isAlreadyAvailable = DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(ptr, state) !== null;
+		if (isAlreadyAvailable) {
+			return true;
+		}
+		val declType = ptr.declaredType;
+		if (declType.exported) {
+			// no need to check accessibility modifiers in addition to #isExported(), because on TypeScript-side we bump up the accessibility
+			val declTypeProject = workspaceAccess.findProjectContaining(declType);
+			if (declTypeProject !== null) {
+				if (declTypeProject === state.project
+					|| state.project.dependencies.contains(declTypeProject.name)) {
+					// the type reference points to an exported type in the same project or a project we directly depend on
+					// --> we can add an import for this type
+					val ste = addNamedImport(declType, null);
+					// we cannot add an actual reference to the newly created import, so we have to tell SanitizeImportTransformation
+					// to never remove it:
+					state.info.markAsRetainedIfUnused(ste.importSpecifier);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

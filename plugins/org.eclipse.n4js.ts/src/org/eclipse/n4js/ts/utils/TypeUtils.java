@@ -1169,7 +1169,7 @@ public class TypeUtils {
 	 */
 	public static Set<TypeVariable> getReferencedTypeVars(EObject obj) {
 		Set<TypeVariable> result = new LinkedHashSet<>();
-		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, ptr -> {
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, ptr -> {
 			Type declType = ptr.getDeclaredType();
 			if (declType instanceof TypeVariable) {
 				result.add((TypeVariable) declType);
@@ -1185,7 +1185,7 @@ public class TypeUtils {
 	 */
 	public static Set<Type> getReferencedDeclaredTypes(EObject obj) {
 		Set<Type> result = new LinkedHashSet<>();
-		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, ptr -> {
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, ptr -> {
 			Type declType = ptr.getDeclaredType();
 			if (declType != null) {
 				result.add(declType);
@@ -1197,7 +1197,7 @@ public class TypeUtils {
 
 	/**
 	 * Invokes the given operation for all {@link TypeRef}s among the given objects and its contents, taking into
-	 * account references to structural types, which may not actually be EMF containment references.
+	 * account references to function and structural types, which may not actually be EMF containment references.
 	 * <p>
 	 * The traversal is aborted early as soon as the given operation returns <code>false</code>.
 	 *
@@ -1205,10 +1205,23 @@ public class TypeUtils {
 	 *         {@code ParameterizedTypeRef}s or there were no {@code ParameterizedTypeRef}s
 	 */
 	public static <T extends TypeRef> boolean forAllTypeRefs(EObject obj, Class<T> typeRefKind, boolean includeChildren,
-			Predicate<T> operation, RecursionGuard<IdentifiableElement> guard) {
+			boolean followFunctionTypeRefs, Predicate<T> operation, RecursionGuard<IdentifiableElement> guard) {
+		// invoke operation (if applicable)
 		if (typeRefKind.isInstance(obj)) {
 			if (!operation.test(typeRefKind.cast(obj))) {
 				return false;
+			}
+		}
+		// follow cross-references
+		if (followFunctionTypeRefs && obj instanceof FunctionTypeRef) {
+			TFunction f = ((FunctionTypeRef) obj).getFunctionType();
+			if (guard == null) {
+				guard = new RecursionGuard<>();
+			}
+			if (guard.tryNext(f)) {
+				if (!forAllTypeRefs(f, typeRefKind, true, followFunctionTypeRefs, operation, guard)) {
+					return false;
+				}
 			}
 		} else if (obj instanceof StructuralTypeRef) {
 			for (TStructMember m : ((StructuralTypeRef) obj).getStructuralMembers()) {
@@ -1216,16 +1229,17 @@ public class TypeUtils {
 					guard = new RecursionGuard<>();
 				}
 				if (guard.tryNext(m)) {
-					if (!forAllTypeRefs(m, typeRefKind, true, operation, guard)) {
+					if (!forAllTypeRefs(m, typeRefKind, true, followFunctionTypeRefs, operation, guard)) {
 						return false;
 					}
 				}
 			}
 		}
+		// continue with contents
 		if (includeChildren) {
 			final Iterator<EObject> iter = obj.eAllContents();
 			while (iter.hasNext()) {
-				if (!forAllTypeRefs(iter.next(), typeRefKind, false, operation, guard)) {
+				if (!forAllTypeRefs(iter.next(), typeRefKind, false, followFunctionTypeRefs, operation, guard)) {
 					return false;
 				}
 			}

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
@@ -58,7 +59,10 @@ public class InformationRegistry {
 		consumedFromInterface,
 
 		/** Tag for members which are to be hidden from reflection. */
-		hiddenFromReflection
+		hiddenFromReflection,
+
+		/** Tag for imports which are never to be removed, even if they are unused. */
+		retainedIfUnused
 	}
 
 	/** Tells if the given member was consumed from an interface. */
@@ -79,6 +83,16 @@ public class InformationRegistry {
 	/** Marks given member as to be hidden from reflection. */
 	public void markAsHiddenFromReflection(N4MemberDeclaration element) {
 		tag(Tag.hiddenFromReflection, element);
+	}
+
+	/** Tells whether the given import is to be retained even if it is unused. */
+	public boolean isRetainedIfUnused(ImportSpecifier element) {
+		return isTaggedAs(Tag.retainedIfUnused, element);
+	}
+
+	/** Marks given import as to be retained even if it is unused. */
+	public void markAsRetainedIfUnused(ImportSpecifier element) {
+		tag(Tag.retainedIfUnused, element);
 	}
 
 	private boolean isTaggedAs(Tag tag, EObject element) {
