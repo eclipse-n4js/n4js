@@ -28,10 +28,12 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
+import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TGetter;
@@ -151,6 +153,11 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 			String name = DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(typeRef, state);
 			if (name != null) {
 				write(name);
+				if (!typeRef.getTypeArgs().isEmpty()) {
+					write('<');
+					process(typeRef.getTypeArgs(), this::processTypeArgument, ", ");
+					write('>');
+				}
 			} else {
 				// method InferredTypesTransformation#hideTypeIfUnavailable() should have removed this type!
 				throw new IllegalStateException("parameterized type reference with unavailable declared type");
@@ -162,6 +169,21 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 			write("{");
 			process(members, this::processTMember, "; "); // ',' would also be allowed as separator
 			write("}");
+		}
+	}
+
+	private void processTypeArgument(TypeArgument typeArg) {
+		if (typeArg instanceof Wildcard) {
+			Wildcard wildcard = (Wildcard) typeArg;
+			TypeRef upperBound = wildcard.getDeclaredOrImplicitUpperBound();
+			if (upperBound != null) {
+				write(upperBound.getTypeRefAsString());
+			} else {
+				TypeRef lowerBound = wildcard.getDeclaredLowerBound();
+				write(lowerBound.getTypeRefAsString());
+			}
+		} else {
+			write(typeArg.getTypeRefAsString());
 		}
 	}
 
