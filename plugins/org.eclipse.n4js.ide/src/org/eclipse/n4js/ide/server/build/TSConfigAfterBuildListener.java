@@ -67,7 +67,7 @@ public class TSConfigAfterBuildListener implements AfterBuildListener {
 				+ "        \"target\": \"es5\",\n"
 				+ "        \"lib\": [\"es2019\", \"es2020\"],\n"
 				+ "        \"module\": \"commonjs\",\n"
-				+ "        \"noImplicitAny\": false,\n"
+				+ "        \"noImplicitAny\": false\n"
 				+ "    }\n"
 				+ "}\n"
 				+ "";
