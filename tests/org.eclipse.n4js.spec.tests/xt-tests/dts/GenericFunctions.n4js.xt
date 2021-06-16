@@ -26,5 +26,5 @@ function <T> f(t: T) {}
  *  Doc for interface I
  *  in multiple lines
  *\/
-declare function <T> f(t: T): void;
+declare function f<T>(t: T): void;
 --- */

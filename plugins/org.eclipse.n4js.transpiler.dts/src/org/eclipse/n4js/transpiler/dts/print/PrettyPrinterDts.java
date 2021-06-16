@@ -478,14 +478,13 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (original.isAsync()) {
 			write("async ");
 		}
-		if (!original.getTypeVars().isEmpty()) {
-			processTypeParams(original.getTypeVars());
-			write(' ');
-		}
 		if (original.isGenerator()) {
 			write("* ");
 		}
 		processPropertyName(original);
+		if (!original.getTypeVars().isEmpty()) {
+			processTypeParams(original.getTypeVars());
+		}
 		write('(');
 		process(original.getFpars(), ", ");
 		write(")");
@@ -513,14 +512,13 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write("async ");
 		}
 		write("function ");
-		if (!original.getTypeVars().isEmpty()) {
-			processTypeParams(original.getTypeVars());
-			write(' ');
-		}
 		if (original.isGenerator()) {
 			write("* ");
 		}
 		write(original.getName());
+		if (!original.getTypeVars().isEmpty()) {
+			processTypeParams(original.getTypeVars());
+		}
 		write('(');
 		process(original.getFpars(), ", ");
 		write(")");
