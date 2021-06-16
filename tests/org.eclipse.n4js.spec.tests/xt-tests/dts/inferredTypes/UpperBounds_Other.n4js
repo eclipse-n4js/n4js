@@ -9,12 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+export public class ClassExported {}
+class ClassNotExported {}
 
-export public class C<? extends D> {
-	
-}
-
-
-export public class D {
-	
-}
+export public class GenClassOfClassExported<T extends ClassExported> {}
+export public class GenClassOfClassNotExported<T extends ClassNotExported> {}

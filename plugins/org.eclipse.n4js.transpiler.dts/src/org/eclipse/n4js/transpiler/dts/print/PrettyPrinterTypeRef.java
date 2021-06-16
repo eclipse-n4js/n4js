@@ -179,10 +179,11 @@ import com.google.common.collect.Lists;
 			return;
 		}
 
+		Type declType = typeRef.getDeclaredType();
 		boolean hasStructMembers = typeRef instanceof ParameterizedTypeRefStructural
 				&& !typeRef.getStructuralMembers().isEmpty();
 		boolean showDeclaredType = !hasStructMembers
-				|| typeRef.getDeclaredType() != RuleEnvironmentExtensions.objectType(state.G);
+				|| declType != RuleEnvironmentExtensions.objectType(state.G);
 
 		if (showDeclaredType && hasStructMembers) {
 			write('(');
@@ -191,14 +192,12 @@ import com.google.common.collect.Lists;
 		if (showDeclaredType) {
 			// FIXME is there a better way? (maybe via a symbol table entry as in
 			// PrettyPrinterSwitch#caseIdentifierRef())
-			String name = DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(typeRef, state);
+			String name = declType != null ? DtsUtils.getNameOfTypeIfLocallyAvailable(declType, state) : null;
 			if (name != null) {
 				write(name);
 				processTypeArguments(typeRef);
 			} else {
-				// method InferredTypesTransformation#hideTypeIfUnavailable() should have removed this type!
-				throw new IllegalStateException(
-						"parameterized type reference with unavailable declared type: " + typeRef.getTypeRefAsString());
+				write("any");
 			}
 		}
 

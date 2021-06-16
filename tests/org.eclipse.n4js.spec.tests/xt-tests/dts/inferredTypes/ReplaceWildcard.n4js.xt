@@ -15,7 +15,7 @@
 		Project "XtTestProject" {
 			Folder "src" {
 				ThisFile {}
-				File "ReplaceWildcard2.n4js" { from="./ReplaceWildcard2.n4js" }
+				File "Other.n4js" { from="./ReplaceWildcard_Other.n4js" }
 			}
 		}
 	}
@@ -24,12 +24,13 @@
    END_SETUP
  */
 
-import {C} from "ReplaceWildcard2";
+import {C} from "Other";
 
 const c: C<?> = null
 
 /* XPECT generated_dts ---
-import {C} from './ReplaceWildcard2'
+import {D} from './Other'
+import {C} from './Other'
 
 declare const c: C<D>;
 --- */
