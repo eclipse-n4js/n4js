@@ -63,6 +63,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
+import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -104,17 +105,16 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.xtext.scoping.IScope
 
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import org.eclipse.xtext.resource.IEObjectDescription
-import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
-import org.eclipse.xtext.scoping.IScope
 
 /**
  * Intended for small, static utility methods that
@@ -343,6 +343,44 @@ public class N4JSLanguageUtils {
 		return null;
 	}
 
+	/**
+	 * Returns <code>true</code> iff the given type reference points to the expected special return type of the given
+	 * asynchronous and/or generator function OR the given function is neither asynchronous nor a generator.
+	 * <p>
+	 * WARNING: returns <code>false</code> for subtypes of the expected special return types!
+	 */
+	def static boolean hasExpectedSpecialReturnType(TypeRef typeRef, FunctionDefinition funDef, BuiltInTypeScope scope) {
+		val expectedType = getExpectedSpecialReturnType(funDef, scope);
+		return expectedType === null || typeRef.declaredType === expectedType;
+	}
+
+	/**
+	 * If the given function is an asynchronous and/or generator function, this method returns the expected special return type;
+	 * otherwise <code>null</code> is returned.
+	 */
+	def static Type getExpectedSpecialReturnType(FunctionDefinition funDef, BuiltInTypeScope scope) {
+		return getExpectedSpecialReturnType(funDef.async, funDef.generator, scope);
+	}
+
+	/**
+	 * Returns the expected special return type of an asynchronous and/or generator function, or <code>null</code> if both
+	 * 'isAsync' and 'isGenerator' are <code>false</code>.
+	 */
+	def static Type getExpectedSpecialReturnType(boolean isAsync, boolean isGenerator, BuiltInTypeScope scope) {
+		if (isGenerator) {
+			if (isAsync) {
+				return scope.asyncGeneratorType;
+			} else {
+				return scope.generatorType;
+			}
+		} else {
+			if (isAsync) {
+				return scope.promiseType;
+			} else {
+				return null;
+			}
+		}
+	}
 
 	/** See {@link N4JSASTUtils#isASTNode(EObject)}. */
 	def static boolean isASTNode(EObject obj) {

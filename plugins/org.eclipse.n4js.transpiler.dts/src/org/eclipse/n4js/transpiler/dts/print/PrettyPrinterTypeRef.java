@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils;
@@ -36,6 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -44,6 +46,7 @@ import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 import com.google.common.collect.Lists;
 
@@ -59,6 +62,36 @@ import com.google.common.collect.Lists;
 	public PrettyPrinterTypeRef(PrettyPrinterDts delegate, TranspilerState state) {
 		this.delegate = delegate;
 		this.state = state;
+	}
+
+	public void processReturnType(FunctionDefinition funDef, String suffix) {
+		TypeReferenceNode<?> declaredReturnTypeRefNode = funDef.getDeclaredReturnTypeRefNode();
+		TypeRef returnTypeRef = declaredReturnTypeRefNode != null
+				? state.info.getOriginalProcessedTypeRef(declaredReturnTypeRefNode)
+				: null;
+
+		if (returnTypeRef == null) {
+			// implicit return type in TypeScript is 'any', so we have to explicitly emit 'void' here:
+			returnTypeRef = RuleEnvironmentExtensions.voidTypeRef(state.G);
+		}
+
+		// handle outer return type of asynchronous and/or generator functions
+		if ((funDef.isGenerator() || funDef.isAsync())
+				&& !N4JSLanguageUtils.hasExpectedSpecialReturnType(returnTypeRef, funDef, state.builtInTypeScope)) {
+			EObject astNode = state.tracer.getOriginalASTNode(funDef);
+			TFunction tFunction = astNode instanceof FunctionDefinition
+					? ((FunctionDefinition) astNode).getDefinedFunction()
+					: null;
+			TypeRef outerReturnTypeRef = tFunction != null ? tFunction.getReturnTypeRef() : null;
+			if (outerReturnTypeRef != null) {
+				returnTypeRef = outerReturnTypeRef;
+			} else {
+				throw new IllegalStateException("TODO");
+			}
+		}
+
+		write(": ");
+		processTypeRef(returnTypeRef, suffix);
 	}
 
 	/** Emit a type reference. */
@@ -164,7 +197,8 @@ import com.google.common.collect.Lists;
 				processTypeArguments(typeRef);
 			} else {
 				// method InferredTypesTransformation#hideTypeIfUnavailable() should have removed this type!
-				throw new IllegalStateException("parameterized type reference with unavailable declared type");
+				throw new IllegalStateException(
+						"parameterized type reference with unavailable declared type: " + typeRef.getTypeRefAsString());
 			}
 		}
 
@@ -206,14 +240,22 @@ import com.google.common.collect.Lists;
 			Wildcard wildcard = (Wildcard) typeArg;
 			TypeRef upperBound = wildcard.getDeclaredOrImplicitUpperBound();
 			if (upperBound != null) {
-				processTypeRef(upperBound);
+				processTypeArgument(upperBound);
 			} else {
 				write("any"); // TypeScript does not support lower bounds
 			}
-		} else {
-			TypeRef typeRef = (TypeRef) typeArg; // Wildcard is the only other subtype of TypeArgument
-			processTypeRef(typeRef);
+			return;
 		}
+
+		TypeRef typeRef = (TypeRef) typeArg;
+
+		// type 'undefined' used as type argument in N4JS, corresponds to 'void' in TypeScript:
+		if (typeRef.getDeclaredType() == RuleEnvironmentExtensions.undefinedType(state.G)) {
+			write("void");
+			return;
+		}
+
+		processTypeRef(typeRef);
 	}
 
 	private void processTFormalParameters(Iterable<? extends TFormalParameter> fpars) {

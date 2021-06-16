@@ -31,6 +31,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -121,10 +122,7 @@ package abstract class AbstractProcessor {
 					val innerReturnTypeRefResolved = tsh.resolveTypeAliases(G, innerReturnTypeRef);
 					val innerReturnTypeRefResolvedUB = ts.upperBoundWithReopenAndResolve(G, innerReturnTypeRefResolved);
 					val scope = G.builtInTypeScope;
-					val needsRewrite =
-						(isAsync && !isGenerator && !TypeUtils.isPromise(innerReturnTypeRefResolvedUB, scope)) ||
-						(!isAsync && isGenerator && !TypeUtils.isGenerator(innerReturnTypeRefResolvedUB, scope)) ||
-						(isAsync && isGenerator && !TypeUtils.isAsyncGenerator(innerReturnTypeRefResolvedUB, scope));
+					val needsRewrite = !N4JSLanguageUtils.hasExpectedSpecialReturnType(innerReturnTypeRefResolvedUB, funDef, scope);
 					if (needsRewrite) {
 						val outerReturnTypeRef = if (!isGenerator) {
 							TypeUtils.createPromiseTypeRef(scope, innerReturnTypeRef, null);

@@ -12,11 +12,9 @@ package org.eclipse.n4js.transpiler.dts.utils;
 
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.types.BuiltInType;
-import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 
 /**
@@ -38,9 +36,7 @@ public class DtsUtils {
 			return declTypeText;
 		}
 		Type declType = typeRef.getDeclaredType();
-		if (declType instanceof BuiltInType
-				|| declType instanceof PrimitiveType
-				|| declType instanceof VirtualBaseType) {
+		if (N4Scheme.isFromResourceWithN4Scheme(declType)) {
 			// simple case: the type reference points to a built-in type
 			// -> can simply use its name in output code, because they are global and available everywhere
 			if (declType == RuleEnvironmentExtensions.intType(state.G)) {

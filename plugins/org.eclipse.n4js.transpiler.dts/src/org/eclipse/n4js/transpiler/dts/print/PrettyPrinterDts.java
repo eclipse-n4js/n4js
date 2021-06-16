@@ -477,10 +477,12 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processAnnotations(original.getAnnotations());
 		processMemberModifiers(original);
 		if (original.isAsync()) {
-			write("async ");
+			// in TypeScript, the 'async' keyword is not allowed in .d.ts files
+			// write("async ");
 		}
 		if (original.isGenerator()) {
-			write("* ");
+			// in TypeScript, the '*' is not allowed in .d.ts files
+			// write("* ");
 		}
 		processPropertyName(original);
 		if (!original.getTypeVars().isEmpty()) {
@@ -510,11 +512,13 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processAnnotations(original.getAnnotations());
 		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		if (original.isAsync()) {
-			write("async ");
+			// in TypeScript, the 'async' keyword is not allowed in .d.ts files
+			// write("async ");
 		}
 		write("function ");
 		if (original.isGenerator()) {
-			write("* ");
+			// in TypeScript, the '*' is not allowed in .d.ts files
+			// write("* ");
 		}
 		write(original.getName());
 		if (!original.getTypeVars().isEmpty()) {
@@ -834,14 +838,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (funDef instanceof N4MethodDeclaration && ((N4MethodDeclaration) funDef).isConstructor()) {
 			return;
 		}
-		TypeReferenceNode<?> declaredReturnTypeRefNode = funDef.getDeclaredReturnTypeRefNode();
-		if (declaredReturnTypeRefNode != null) {
-			write(": ");
-			prettyPrinterTypeRef.processTypeRefNode(declaredReturnTypeRefNode, suffix);
-		} else {
-			// implicit return type in TypeScript is 'any', so we have to explicitly emit 'void' here:
-			write(": void");
-		}
+		prettyPrinterTypeRef.processReturnType(funDef, suffix);
 	}
 
 	private void processDeclaredTypeRef(TypeProvidingElement elem) {
