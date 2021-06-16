@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+/**
+ * Comment on enum Options
+ */
+@StringBased
+export public enum Options {
+    /**
+     * Enable tag on localhost.
+     */
+    tag,
+    /**
+     * Enable strict API definitions, i.e. throw on deprecated server responses.
+     * Used for testing.
+     */
+    strictAPI: "strict-api"
+}
+
+
+
+/* XPECT generated_dts ---
+/**
+ * Comment on enum Options
+ *\/
+export enum Options {
+	/**
+	 * Enable tag on localhost.
+	 *\/
+	tag,
+	/**
+	 * Enable strict API definitions, i.e. throw on deprecated server responses.
+	 * Used for testing.
+	 *\/
+	strictAPI = "strict-api"
+}
+export namespace Options {
+	export const literals: Array<Options>;
+	export function findLiteralByName(name: string): Options;
+	export function findLiteralByValue (value: string): Options;
+}
+--- */
