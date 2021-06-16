@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -35,6 +34,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.CliTools.CliException;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
@@ -43,6 +43,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodPattern.Match;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -51,6 +52,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -555,11 +557,21 @@ public class XtIdeTest extends AbstractIdeTest {
 			CliTools cliTools = new CliTools();
 			ensureTSC(cliTools);
 
-			File workingDir = getProjectRootContaining(genDtsFileURI.toFile());
-			assertNotNull("cannot find containing project of generated .d.ts file", workingDir);
-			ProcessResult result = cliTools.nodejsRun(workingDir.toPath(), TSC2.getAbsoluteFile().toPath());
+			List<Project> allProjectsWithGenerateDts = FluentIterable.from(xtData.workspace.getAllProjects())
+					.filter(Project::isGenerateDts)
+					.toList();
+			assertFalse("no projects found with .d.ts generation turned on", allProjectsWithGenerateDts.isEmpty());
 
-			assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
+			for (Project project : allProjectsWithGenerateDts) {
+				File workingDir = getProjectRoot(project.getName());
+				ProcessResult result;
+				try {
+					result = cliTools.nodejsRun(workingDir.toPath(), TSC2.getAbsoluteFile().toPath());
+				} catch (CliException e) {
+					throw new AssertionError("error while running tsc in working directory: " + workingDir, e);
+				}
+				assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
+			}
 
 		} catch (IllegalStateException e) {
 			throw new RuntimeException("Could not find file " + genDtsFileName + "\nDid you set: "
