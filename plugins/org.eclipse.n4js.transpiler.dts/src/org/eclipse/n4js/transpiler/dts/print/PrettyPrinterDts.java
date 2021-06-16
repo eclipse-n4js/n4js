@@ -843,12 +843,16 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (typeParams.isEmpty())
 			return;
 
-		// In case of plain-JS output no types will be written
-		throw new IllegalStateException("Type reference still left in code. typeParams=" + typeParams);
+		processBlockLike(typeParams, '<', ",", null, '>', false);
 	}
 
 	private void processBlock(Collection<? extends Statement> statements) {
 		processBlockLike(statements, '{', null, null, '}');
+	}
+
+	private void processBlockLike(Collection<? extends EObject> elemsInIM, char open, String lineEnd,
+			String lastLineEnd, char close) {
+		processBlockLike(elemsInIM, open, lineEnd, lastLineEnd, close, true);
 	}
 
 	/**
@@ -856,7 +860,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	 * opening and closing the code section.
 	 */
 	private void processBlockLike(Collection<? extends EObject> elemsInIM, char open, String lineEnd,
-			String lastLineEnd, char close) {
+			String lastLineEnd, char close, boolean newLines) {
 		if (elemsInIM.isEmpty()) {
 			write(open);
 			write(close);
@@ -864,16 +868,22 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		}
 		write(open);
 		out.indent();
-		newLine();
+		if (newLines) {
+			newLine();
+		}
 		process(elemsInIM, () -> {
 			if (lineEnd != null)
 				write(lineEnd);
-			newLine();
+			if (newLines) {
+				newLine();
+			}
 		});
 		if (lastLineEnd != null)
 			write(lineEnd);
 		out.undent();
-		newLine();
+		if (newLines) {
+			newLine();
+		}
 		write(close);
 	}
 
