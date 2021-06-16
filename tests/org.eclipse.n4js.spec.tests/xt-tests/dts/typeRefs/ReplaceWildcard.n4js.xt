@@ -10,23 +10,26 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+
+	Workspace {
+		Project "XtTestProject" {
+			Folder "src" {
+				ThisFile {}
+				File "ReplaceWildcard2.n4js" { from="./ReplaceWildcard2.n4js" }
+			}
+		}
+	}
+
    GENERATE_DTS
    END_SETUP
  */
 
+import {C} from "ReplaceWildcard2";
 
-function f1(t: Array<number>) {}
-function f2(t: Array<? extends String>) {}
-function f3(t: Array<? super String>) {}
-function f4(t: Array<?>) {}
-function f5(t: Array<any>) {}
-
-
+const c: C<?> = null
 
 /* XPECT generated_dts ---
-declare function f1(t: Array<number>): void;
-declare function f2(t: Array<String>): void;
-declare function f3(t: Array<any>): void;
-declare function f4(t: Array<any>): void;
-declare function f5(t: Array<any>): void;
+import {C} from './ReplaceWildcard2'
+
+declare const c: C<D>;
 --- */

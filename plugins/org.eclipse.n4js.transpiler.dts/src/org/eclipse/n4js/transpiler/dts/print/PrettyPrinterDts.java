@@ -764,7 +764,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (kind == PropertyNameKind.COMPUTED) {
 			// computed property names:
 			write('[');
-			process(name.getExpression());
+			write(name.getComputedName());
 			write(']');
 		} else {
 			// all other cases than computed property names: IDENTIFIER, STRING, NUMBER
