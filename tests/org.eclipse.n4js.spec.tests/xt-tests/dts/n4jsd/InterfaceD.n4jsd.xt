@@ -15,38 +15,23 @@
  */
 
 
-export class Cls1 {}
-export public class Cls2 {}
-export project class Cls3 {}
-
-class Cls {
-	public field1;
-	project field2;
-	protected field3;
-	private field4;
+export external interface I1 {
+	field: number;
 }
-
-interface I {
-	public field1;
-	project field2;
-	protected field3;
-	// private field4; // invalid
+export external class C1 {
+	field: number;
 }
+export external function f1()
+
+
 
 
 /* XPECT generated_dts ---
-export class Cls1 {}
-export class Cls2 {}
-export class Cls3 {}
-declare class Cls {
-	public field1: any;
-	public field2: any;
-	protected field3: any;
-	private field4: any;
+export interface I1 {
+	field: number;
 }
-declare interface I {
-	field1: any;
-	field2: any;
-	field3: any;
+export class C1 {
+	field: number;
 }
+export function f1(): void;
 --- */

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -256,7 +257,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			writeJsdoc(original); // already written in #caseExportDeclaration()
 			write("declare ");
 		}
-		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
+		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		write("class ");
 		write(original.getName());
 		if (!original.getTypeVars().isEmpty()) {
@@ -304,7 +305,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			writeJsdoc(original); // already written in #caseExportDeclaration()
 			write("declare ");
 		}
-		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
+		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		write("interface ");
 		write(original.getName());
 		if (!original.getTypeVars().isEmpty()) {
@@ -363,7 +364,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			writeJsdoc(original); // already written in #caseExportDeclaration()
 			write("declare ");
 		}
-		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
+		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		write("enum ");
 		write(original.getName());
 		write(' ');
@@ -434,7 +435,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4FieldDeclaration(N4FieldDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
+		processMemberModifiers(original);
 		processPropertyName(original);
 		processDeclaredTypeRef(original);
 		write(";");
@@ -445,7 +446,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
+		processMemberModifiers(original);
 		write("get ");
 		processPropertyName(original);
 		write("() ");
@@ -459,7 +460,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
+		processMemberModifiers(original);
 		write("set ");
 		processPropertyName(original);
 		write('(');
@@ -474,7 +475,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4MethodDeclaration(N4MethodDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), Collections.emptySet(), " ");
+		processMemberModifiers(original);
 		if (original.isAsync()) {
 			// in TypeScript, the 'async' keyword is not allowed in .d.ts files
 			// write("async ");
@@ -509,7 +510,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write("declare ");
 		}
 		processAnnotations(original.getAnnotations());
-		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
+		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		if (original.isAsync()) {
 			// in TypeScript, the 'async' keyword is not allowed in .d.ts files
 			// write("async ");
@@ -580,7 +581,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
 		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
 		// emitted there; so, no need to emit "export" in this method!
-		processModifiers(original.getDeclaredModifiers(), ACCESSIBILITY_MODIFIERS, " ");
+		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		caseVariableStatement(original);
 		return DONE;
 	}
@@ -815,11 +816,28 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		return didEmitSomething;
 	}
 
+	private boolean processMemberModifiers(N4MemberDeclaration member) {
+		List<N4Modifier> modifiers = member.getDeclaredModifiers();
+		Set<N4Modifier> ignore = member.getOwner() instanceof N4InterfaceDeclaration ? ACCESSIBILITY_MODIFIERS
+				: Collections.emptySet();
+		return processModifiers(modifiers, ignore, " ");
+	}
+
+	private boolean processTopLevelElementModifiers(List<N4Modifier> modifiers) {
+		Set<N4Modifier> ignore = new HashSet<>();
+		ignore.add(N4Modifier.EXTERNAL);
+		ignore.addAll(ACCESSIBILITY_MODIFIERS);
+		return processModifiers(modifiers, ignore, " ");
+	}
+
 	private void processReturnTypeRef(FunctionDefinition funDef) {
 		processReturnTypeRef(funDef, "");
 	}
 
 	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
+		if (funDef instanceof N4MethodDeclaration && ((N4MethodDeclaration) funDef).isConstructor()) {
+			return;
+		}
 		prettyPrinterTypeRef.processReturnType(funDef, suffix);
 	}
 
