@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+export public async function foo1() {
+}
+export public async function foo2(): Promise<undefined,any> {
+}
+
+export public async function foo3() {
+	return 42;
+}
+export public async function foo4(): number {
+	return 42;
+}
+export public async function foo5(): Promise<number,any> {
+	return 42;
+}
+
+
+/* XPECT generated_dts ---
+export function foo1(): Promise<void>;
+export function foo2(): Promise<void>;
+export function foo3(): Promise<any>;
+export function foo4(): Promise<number>;
+export function foo5(): Promise<number>;
+--- */

@@ -26,6 +26,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
@@ -64,6 +65,11 @@ public class TranspilerState {
 	 * {@link RuleEnvironmentExtensions#wrap(RuleEnvironment)}.
 	 */
 	public final RuleEnvironment G;
+
+	/**
+	 * The {@link BuiltInTypeScope} for obtaining built-in types.
+	 */
+	public final BuiltInTypeScope builtInTypeScope;
 
 	/**
 	 * A {@link MemberCollector member collector} created with the {@link #resource resource to transpile} as context.
@@ -117,6 +123,7 @@ public class TranspilerState {
 		this.project = project;
 		this.options = options;
 		this.G = RuleEnvironmentExtensions.newRuleEnvironment(resource);
+		this.builtInTypeScope = RuleEnvironmentExtensions.getBuiltInTypeScope(this.G);
 		this.memberCollector = memberCollector;
 		this.im = im;
 		this.tracer = tracer;

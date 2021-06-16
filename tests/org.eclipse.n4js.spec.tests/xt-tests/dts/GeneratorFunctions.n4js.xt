@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+
+export public function *foo01() {
+}
+export public function *foo02() {
+	yield "hello";
+}
+export public function *foo03() {
+	return 42;
+}
+export public function *foo04() {
+	yield "hello";
+	return 42;
+}
+
+export public function *foo11(): void {
+}
+export public function *foo12(): string {
+	yield "hello";
+}
+export public function *foo13(): string {
+	return 42;
+}
+export public function *foo14(): string {
+	yield "hello";
+	return 42;
+}
+
+export public async function *foo21(): void {
+}
+export public async function *foo22(): string {
+	yield "hello";
+}
+export public async function *foo23(): string {
+	return 42;
+}
+export public async function *foo24(): string {
+	yield "hello";
+	return 42;
+}
+
+export public function *foo31(): Generator<string, number, boolean> {
+	yield "hello";
+	return 42;
+}
+
+export public async function *foo41(): AsyncGenerator<string, number, boolean> {
+	yield "hello";
+	return 42;
+}
+
+
+/* XPECT generated_dts ---
+export function foo01(): Generator<void, void, any>;
+export function foo02(): Generator<any, void, any>;
+export function foo03(): Generator<void, any, any>;
+export function foo04(): Generator<any, any, any>;
+export function foo11(): Generator<void, void, any>;
+export function foo12(): Generator<string, void, any>;
+export function foo13(): Generator<string, any, any>;
+export function foo14(): Generator<string, any, any>;
+export function foo21(): AsyncGenerator<void, void, any>;
+export function foo22(): AsyncGenerator<string, void, any>;
+export function foo23(): AsyncGenerator<string, any, any>;
+export function foo24(): AsyncGenerator<string, any, any>;
+export function foo31(): Generator<string, number, boolean>;
+export function foo41(): AsyncGenerator<string, number, boolean>;
+--- */
