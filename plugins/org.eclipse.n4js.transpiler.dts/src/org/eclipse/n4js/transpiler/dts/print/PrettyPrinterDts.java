@@ -632,6 +632,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4TypeVariable(N4TypeVariable typeVar) {
+		// note: TypeScript does not support upper/lower bounds
 		write(typeVar.getName());
 		return DONE;
 	}
@@ -840,11 +841,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	private void processTypeParams(EList<N4TypeVariable> typeParams) {
-		if (typeParams.isEmpty())
-			return;
-
-		// In case of plain-JS output no types will be written
-		throw new IllegalStateException("Type reference still left in code. typeParams=" + typeParams);
+		process(typeParams, ", ");
 	}
 
 	private void processBlock(Collection<? extends Statement> statements) {

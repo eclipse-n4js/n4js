@@ -141,11 +141,16 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 			return;
 		}
 
-		boolean isStruct = typeRef instanceof ParameterizedTypeRefStructural;
-		boolean omitDeclaredType = isStruct
-				&& typeRef.getDeclaredType() == RuleEnvironmentExtensions.objectType(state.G);
+		boolean hasStructMembers = typeRef instanceof ParameterizedTypeRefStructural
+				&& !typeRef.getStructuralMembers().isEmpty();
+		boolean showDeclaredType = !hasStructMembers
+				|| typeRef.getDeclaredType() != RuleEnvironmentExtensions.objectType(state.G);
 
-		if (!omitDeclaredType) {
+		if (showDeclaredType && hasStructMembers) {
+			write('(');
+		}
+
+		if (showDeclaredType) {
 			// FIXME is there a better way? (maybe via a symbol table entry as in
 			// PrettyPrinterSwitch#caseIdentifierRef())
 			String name = DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(typeRef, state);
@@ -157,11 +162,18 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 			}
 		}
 
-		if (isStruct) {
+		if (hasStructMembers) {
 			List<TStructMember> members = typeRef.getStructuralMembers();
+			if (showDeclaredType) {
+				write(" & ");
+			}
 			write("{");
 			process(members, this::processTMember, "; "); // ',' would also be allowed as separator
 			write("}");
+		}
+
+		if (showDeclaredType && hasStructMembers) {
+			write(')');
 		}
 	}
 
