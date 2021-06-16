@@ -828,6 +828,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
+		if (funDef instanceof N4MethodDeclaration && ((N4MethodDeclaration) funDef).isConstructor()) {
+			return;
+		}
 		TypeReferenceNode<?> declaredReturnTypeRefNode = funDef.getDeclaredReturnTypeRefNode();
 		if (declaredReturnTypeRefNode != null) {
 			write(": ");
