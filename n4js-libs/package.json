@@ -10,6 +10,8 @@
 		"minimist": "~1.2.2",
 		"kind-of": "~6.0.3",
 		"dot-prop": "~5.2.0",
+		"normalize-url": "~4.5.1",
+		"trim-newlines": "~3.0.1",
 		"underscore": "^1.12.1"
 	},
 	"scripts": {
