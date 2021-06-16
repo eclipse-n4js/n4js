@@ -839,7 +839,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write(": ");
 			prettyPrinterTypeRef.processTypeRefNode(declaredReturnTypeRefNode, suffix);
 		} else {
-			// implicit return type in TypeScript is 'any', so we have to explictly emit 'void' here:
+			// implicit return type in TypeScript is 'any', so we have to explicitly emit 'void' here:
 			write(": void");
 		}
 	}

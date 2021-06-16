@@ -32,6 +32,9 @@ public class DtsUtils {
 		String declTypeText = typeRef.getDeclaredTypeAsText();
 		if (declTypeText != null) {
 			// simple case: the type reference comes directly from the AST
+			if ("int".equals(declTypeText)) {
+				return "number";
+			}
 			return declTypeText;
 		}
 		Type declType = typeRef.getDeclaredType();
