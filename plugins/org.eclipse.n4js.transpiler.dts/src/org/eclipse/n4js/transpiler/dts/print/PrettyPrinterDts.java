@@ -435,7 +435,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4FieldDeclaration(N4FieldDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processPropertyModifiers(original);
+		processMemberModifiers(original);
 		processPropertyName(original);
 		processDeclaredTypeRef(original);
 		write(";");
@@ -446,7 +446,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processPropertyModifiers(original);
+		processMemberModifiers(original);
 		write("get ");
 		processPropertyName(original);
 		write("() ");
@@ -460,7 +460,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processPropertyModifiers(original);
+		processMemberModifiers(original);
 		write("set ");
 		processPropertyName(original);
 		write('(');
@@ -475,7 +475,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseN4MethodDeclaration(N4MethodDeclaration original) {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
-		processPropertyModifiers(original);
+		processMemberModifiers(original);
 		if (original.isAsync()) {
 			write("async ");
 		}
@@ -812,7 +812,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		return didEmitSomething;
 	}
 
-	private boolean processPropertyModifiers(N4MemberDeclaration member) {
+	private boolean processMemberModifiers(N4MemberDeclaration member) {
 		List<N4Modifier> modifiers = member.getDeclaredModifiers();
 		Set<N4Modifier> ignore = member.getOwner() instanceof N4InterfaceDeclaration ? ACCESSIBILITY_MODIFIERS
 				: Collections.emptySet();
