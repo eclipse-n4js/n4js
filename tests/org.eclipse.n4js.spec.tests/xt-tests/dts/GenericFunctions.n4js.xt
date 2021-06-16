@@ -14,17 +14,19 @@
    END_SETUP
  */
 
-/**
- *  Doc for interface I
- *  in multiple lines
- */
+
 function <T> f(t: T) {}
+
+class C<A> {
+	m1(a: A): A { return null; }
+	<T> m2(t: T) {}
+}
 
 
 /* XPECT generated_dts ---
-/**
- *  Doc for interface I
- *  in multiple lines
- *\/
 declare function f<T>(t: T): void;
+declare class C<A> {
+	m1(a: A): A;
+	m2<T>(t: T): void;
+}
 --- */
