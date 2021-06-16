@@ -42,7 +42,10 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TTypedElement;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+
+import com.google.common.collect.Lists;
 
 /**
  * Emits an N4JS type reference to TypeScript.
@@ -158,11 +161,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 			String name = DtsUtils.getNameOfDeclaredTypeIfLocallyAvailable(typeRef, state);
 			if (name != null) {
 				write(name);
-				if (!typeRef.getTypeArgs().isEmpty()) {
-					write('<');
-					process(typeRef.getTypeArgs(), this::processTypeArgument, ", ");
-					write('>');
-				}
+				processTypeArguments(typeRef);
 			} else {
 				// method InferredTypesTransformation#hideTypeIfUnavailable() should have removed this type!
 				throw new IllegalStateException("parameterized type reference with unavailable declared type");
@@ -184,18 +183,36 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 		}
 	}
 
+	private void processTypeArguments(ParameterizedTypeRef typeRef) {
+		List<TypeArgument> typeArgs = typeRef.getTypeArgs();
+		if (typeArgs.isEmpty()) {
+			return;
+		}
+
+		// special handling for certain types
+		Type declType = typeRef.getDeclaredType();
+		if (declType == RuleEnvironmentExtensions.promiseType(state.G) && typeArgs.size() > 1) {
+			// Promise in N4JS has more than one type parameter, whereas in TypeScript it has only one
+			typeArgs = Lists.newArrayList(typeArgs.get(0));
+		}
+
+		write('<');
+		process(typeArgs, this::processTypeArgument, ", ");
+		write('>');
+	}
+
 	private void processTypeArgument(TypeArgument typeArg) {
 		if (typeArg instanceof Wildcard) {
 			Wildcard wildcard = (Wildcard) typeArg;
 			TypeRef upperBound = wildcard.getDeclaredOrImplicitUpperBound();
 			if (upperBound != null) {
-				write(upperBound.getTypeRefAsString());
+				processTypeRef(upperBound);
 			} else {
-				TypeRef lowerBound = wildcard.getDeclaredLowerBound();
-				write(lowerBound.getTypeRefAsString());
+				write("any"); // TypeScript does not support lower bounds
 			}
 		} else {
-			write(typeArg.getTypeRefAsString());
+			TypeRef typeRef = (TypeRef) typeArg; // Wildcard is the only other subtype of TypeArgument
+			processTypeRef(typeRef);
 		}
 	}
 
