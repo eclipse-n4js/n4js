@@ -24,6 +24,7 @@ Export-Package: org.eclipse.n4js.n4idl.transpiler.utils,
  org.eclipse.n4js.transpiler.im,
  org.eclipse.n4js.transpiler.im.impl,
  org.eclipse.n4js.transpiler.im.util,
+ org.eclipse.n4js.transpiler.print,
  org.eclipse.n4js.transpiler.sourcemap,
  org.eclipse.n4js.transpiler.utils
 Automatic-Module-Name: org.eclipse.n4js.transpiler

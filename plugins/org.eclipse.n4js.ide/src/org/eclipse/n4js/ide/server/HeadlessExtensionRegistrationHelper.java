@@ -19,6 +19,7 @@ import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.resource.PackageJsonResourceDescriptionExtension;
+import org.eclipse.n4js.transpiler.dts.DtsSubGenerator;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
@@ -42,6 +43,9 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 
 	@Inject
 	private EcmaScriptSubGenerator ecmaScriptSubGenerator;
+
+	@Inject
+	private DtsSubGenerator dtsSubGenerator;
 
 	@Inject
 	private N4IDLSubGenerator n4idlSubGenerator;
@@ -72,11 +76,17 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 				N4JSGlobals.JSX_FILE_EXTENSION, N4IDLGlobals.N4IDL_FILE_EXTENSION);
 		registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 
+		// Register d.ts subgenerator
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSGlobals.N4JSD_FILE_EXTENSION);
+
 		// Register ECMAScript subgenerator
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JSX_FILE_EXTENSION);
+
 		subGeneratorRegistry.register(n4idlSubGenerator, N4IDLGlobals.N4IDL_FILE_EXTENSION);
 
 		// register N4JS-specific package.json behavior with JSONExtensionRegistry

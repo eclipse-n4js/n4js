@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asBooleanOrFalse;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
@@ -207,6 +208,12 @@ public class PackageJsonHelper {
 				break;
 			case DEFINES_PACKAGE:
 				target.setDefinesPackage(asStringOrNull(value));
+				break;
+			case GENERATOR:
+				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
+				break;
+			case GENERATOR_DTS:
+				target.setGeneratorEnabledDts(asBooleanOrFalse(value));
 				break;
 			default:
 				break;

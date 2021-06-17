@@ -20,7 +20,7 @@ import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
  * <b>NOTE: this class only supports pure <code>'\n'</code> line endings; it ignores <code>'\r'</code> (i.e. treats it
  * as an ordinary, printable character).</b>
  */
-/* package */ class LineColTrackingAppendable implements Appendable {
+public class LineColTrackingAppendable implements Appendable {
 
 	private final Appendable out;
 	private final CharSequence indent;

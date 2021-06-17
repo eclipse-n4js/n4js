@@ -95,7 +95,7 @@ public class SubGeneratorRegistry {
 	}
 
 	/**
-	 * Read information from extensions defined in plugin.xml files
+	 * Read information from extensions defined in plugin.xml files TODO: mm: Necessary?
 	 */
 	private synchronized void initialize() {
 		if (isInitialized) {
