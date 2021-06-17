@@ -547,7 +547,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		}
 		write(original.getName());
 		processDeclaredTypeRef(original);
-		if (original.getInitializer() != null) {
+		if (original.isVariadic()) {
+			// in TypeScript, the type of a rest parameter must explicitly be declared as an array
+			write("[]");
+		} else if (original.getInitializer() != null) {
 			write("=");
 			process(original.getInitializer());
 		}
@@ -767,9 +770,19 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		final PropertyNameKind kind = name.getKind();
 		if (kind == PropertyNameKind.COMPUTED) {
 			// computed property names:
-			write('[');
-			write(name.getComputedName());
-			write(']');
+			// (we cannot simply emit the expression enclosed in '[' and ']', as we do in PrettyPrinterEcmaScript,
+			// because expressions are trimmed in the .d.ts case and not supported by this class; therefore we emit the
+			// computed name)
+			String computedName = name.getComputedName();
+			if (computedName != null) {
+				if (name.isComputedSymbol() && computedName.startsWith(N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX)) {
+					write("[Symbol.");
+					write(computedName.substring(1));
+					write(']');
+				} else {
+					writeQuotedIfNonIdentifier(computedName);
+				}
+			}
 		} else {
 			// all other cases than computed property names: IDENTIFIER, STRING, NUMBER
 			final String propName = name.getName();

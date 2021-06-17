@@ -12,6 +12,7 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
@@ -64,6 +65,7 @@ class ComputedNameProcessor {
 				// cache the computed name in the LiteralOrComputedPropertyName AST node
 				EcoreUtilN4.doWithDeliver(false, [
 					nameDecl.computedName = name;
+					nameDecl.computedSymbol = value instanceof CompileTimeValue.ValueSymbol;
 				], nameDecl);
 				// set the computed name in the types model element
 				val owner = nameDecl.eContainer;

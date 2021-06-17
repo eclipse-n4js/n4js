@@ -40,6 +40,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.LiteralOrComputedPropertyNameImpl#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.LiteralOrComputedPropertyNameImpl#getLiteralName <em>Literal Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.LiteralOrComputedPropertyNameImpl#getComputedName <em>Computed Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.LiteralOrComputedPropertyNameImpl#isComputedSymbol <em>Computed Symbol</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.LiteralOrComputedPropertyNameImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  *
@@ -105,6 +106,26 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * @ordered
 	 */
 	protected String computedName = COMPUTED_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isComputedSymbol() <em>Computed Symbol</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isComputedSymbol()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean COMPUTED_SYMBOL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isComputedSymbol() <em>Computed Symbol</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isComputedSymbol()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean computedSymbol = COMPUTED_SYMBOL_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
@@ -210,6 +231,29 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 	 * @generated
 	 */
 	@Override
+	public boolean isComputedSymbol() {
+		return computedSymbol;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setComputedSymbol(boolean newComputedSymbol) {
+		boolean oldComputedSymbol = computedSymbol;
+		computedSymbol = newComputedSymbol;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_SYMBOL, oldComputedSymbol, computedSymbol));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Expression getExpression() {
 		return expression;
 	}
@@ -305,6 +349,8 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 				return getLiteralName();
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_NAME:
 				return getComputedName();
+			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_SYMBOL:
+				return isComputedSymbol();
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__EXPRESSION:
 				return getExpression();
 		}
@@ -327,6 +373,9 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 				return;
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_NAME:
 				setComputedName((String)newValue);
+				return;
+			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_SYMBOL:
+				setComputedSymbol((Boolean)newValue);
 				return;
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__EXPRESSION:
 				setExpression((Expression)newValue);
@@ -352,6 +401,9 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_NAME:
 				setComputedName(COMPUTED_NAME_EDEFAULT);
 				return;
+			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_SYMBOL:
+				setComputedSymbol(COMPUTED_SYMBOL_EDEFAULT);
+				return;
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__EXPRESSION:
 				setExpression((Expression)null);
 				return;
@@ -373,6 +425,8 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 				return LITERAL_NAME_EDEFAULT == null ? literalName != null : !LITERAL_NAME_EDEFAULT.equals(literalName);
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_NAME:
 				return COMPUTED_NAME_EDEFAULT == null ? computedName != null : !COMPUTED_NAME_EDEFAULT.equals(computedName);
+			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_SYMBOL:
+				return computedSymbol != COMPUTED_SYMBOL_EDEFAULT;
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME__EXPRESSION:
 				return expression != null;
 		}
@@ -411,6 +465,8 @@ public class LiteralOrComputedPropertyNameImpl extends ProxyResolvingEObjectImpl
 		result.append(literalName);
 		result.append(", computedName: ");
 		result.append(computedName);
+		result.append(", computedSymbol: ");
+		result.append(computedSymbol);
 		result.append(')');
 		return result.toString();
 	}
