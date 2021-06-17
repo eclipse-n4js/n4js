@@ -10,16 +10,20 @@
  */
 package org.eclipse.n4js.transpiler.dts.print;
 
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._N4FieldDecl;
 import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifier;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
@@ -43,8 +47,10 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
+import org.eclipse.n4js.n4JS.N4FieldAccessor;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -295,8 +301,49 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write(' ');
 		}
 
-		processBlockLike(original.getOwnedMembersRaw(), '{', null, null, '}');
+		// Workaround since TypeScript classes do not support const fields
+		createNamespaceForConstsOfClass(original);
+
 		return DONE;
+	}
+
+	private void createNamespaceForConstsOfClass(N4ClassDeclaration original) {
+		List<N4MemberDeclaration> constMembers = new ArrayList<>();
+		List<N4MemberDeclaration> nonConstMembers = new ArrayList<>();
+		for (N4MemberDeclaration member : original.getOwnedMembersRaw()) {
+			if (member instanceof N4FieldDeclaration && ((N4FieldDeclaration) member).isConst()) {
+				constMembers.add(member);
+			} else {
+				nonConstMembers.add(member);
+			}
+		}
+		processBlockLike(nonConstMembers, '{', null, null, '}');
+
+		if (!constMembers.isEmpty()) {
+			newLine();
+			if (!original.isExported()) {
+				write("declare ");
+			} else {
+				write("export ");
+			}
+			write("namespace ");
+			write(original.getName());
+			write(' ');
+
+			processBlockLike(constMembers, '{', null, null, '}', true, this::processConstFieldsOfClass);
+		}
+	}
+
+	private void processConstFieldsOfClass(EObject eObject) {
+		N4FieldDeclaration field = (N4FieldDeclaration) eObject;
+		N4ClassDeclaration parent = (N4ClassDeclaration) field.getOwner();
+		writeJsdoc(field);
+		processAnnotations(field.getAnnotations());
+		writeIf("export ", parent.isExported());
+		write("const ");
+		processPropertyName(field);
+		processDeclaredTypeRef(field);
+		write(';');
 	}
 
 	@Override
@@ -333,13 +380,33 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write(' ');
 		}
 
-		// Workaround since TypeScript interfaces do not support static methods
+		// Workaround since TypeScript interfaces do not support static members
+		createNamespaceForStaticsOfInterface(original);
 
+		return DONE;
+	}
+
+	private void createNamespaceForStaticsOfInterface(N4ClassifierDeclaration classifier) {
 		List<N4MemberDeclaration> staticMembers = new ArrayList<>();
 		List<N4MemberDeclaration> nonStaticMembers = new ArrayList<>();
-		for (N4MemberDeclaration member : original.getOwnedMembersRaw()) {
+		Map<String, N4FieldAccessor> getterSetterNames = new HashMap<>();
+		for (N4MemberDeclaration member : new ArrayList<>(classifier.getOwnedMembersRaw())) {
 			if (member.isStatic()) {
-				staticMembers.add(member);
+				if (member instanceof N4FieldAccessor) {
+					if (!getterSetterNames.containsKey(member.getName())) {
+						staticMembers.add(member);
+					} else {
+						N4FieldAccessor accessor = getterSetterNames.get(member.getName());
+						staticMembers.remove(accessor);
+						N4FieldDeclaration fieldForGSPair = _N4FieldDecl(true, accessor.getName(), null);
+						fieldForGSPair.setOwner(classifier);
+						fieldForGSPair.setDeclaredTypeRefNode(accessor.getDeclaredTypeRefNode());
+						staticMembers.add(fieldForGSPair);
+					}
+					getterSetterNames.put(member.getName(), (N4FieldAccessor) member);
+				} else {
+					staticMembers.add(member);
+				}
 			} else {
 				nonStaticMembers.add(member);
 			}
@@ -347,15 +414,69 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processBlockLike(nonStaticMembers, '{', null, null, '}');
 
 		if (!staticMembers.isEmpty()) {
-			write("export ");
+			newLine();
+			if (!classifier.isExported()) {
+				write("declare ");
+			} else {
+				write("export ");
+			}
 			write("namespace ");
-			write(original.getName());
+			write(classifier.getName());
 			write(' ');
 
-			// TODO rewrite static methods to exported(!) functions
-			processBlockLike(staticMembers, '{', null, null, '}');
+			processBlockLike(staticMembers, '{', null, null, '}', true, this::processStaticsOfInterface);
 		}
-		return DONE;
+	}
+
+	private void processStaticsOfInterface(EObject eObject) {
+		N4MemberDeclaration member = (N4MemberDeclaration) eObject;
+		N4InterfaceDeclaration parent = (N4InterfaceDeclaration) member.getOwner();
+		writeJsdoc(member);
+		processAnnotations(member.getAnnotations());
+		writeIf("export ", parent.isExported());
+		if (member instanceof N4FieldDeclaration) {
+			N4FieldDeclaration field = (N4FieldDeclaration) member;
+			if (field.isConst()) {
+				write("const ");
+			} else if (field.isStatic()) {
+				write("let ");
+			}
+			processPropertyName(field);
+			processDeclaredTypeRef(field);
+			write(';');
+
+		} else if (member instanceof N4FieldAccessor) {
+			N4FieldAccessor accessor = (N4FieldAccessor) member;
+			write("let ");
+			processPropertyName(accessor);
+			processDeclaredTypeRef(accessor);
+			String kind = member instanceof N4GetterDeclaration ? "getter" : "setter";
+			write(';');
+			write(" // Attention: Use as " + kind + " only!");
+
+		} else if (member instanceof N4MethodDeclaration) {
+			N4MethodDeclaration method = (N4MethodDeclaration) member;
+			write("function ");
+			// processMemberModifiers(original);
+			if (method.isAsync()) {
+				// in TypeScript, the 'async' keyword is not allowed in .d.ts files
+				// write("async ");
+			}
+			if (method.isGenerator()) {
+				// in TypeScript, the '*' is not allowed in .d.ts files
+				// write("* ");
+			}
+			processPropertyName(method);
+			if (!method.getTypeVars().isEmpty()) {
+				processTypeParams(method.getTypeVars());
+			}
+			write('(');
+			process(method.getFpars(), ", ");
+			write(")");
+			processReturnTypeRef(method);
+			// process(original.getBody());
+			write(';');
+		}
 	}
 
 	@Override
@@ -449,7 +570,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processMemberModifiers(original);
 		write("get ");
 		processPropertyName(original);
-		write("() ");
+		write("()");
 		processDeclaredTypeRef(original);
 		// process(original.getBody());
 		write(";");
@@ -465,7 +586,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processPropertyName(original);
 		write('(');
 		process(original.getFpar());
-		write(") ");
+		write(")");
 		// process(original.getBody());
 		write(";");
 		return DONE;
@@ -709,9 +830,13 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	private void process(Iterable<? extends EObject> elemsInIM, Runnable separator) {
+		process(elemsInIM, this::process, separator);
+	}
+
+	private void process(Iterable<? extends EObject> elemsInIM, Consumer<EObject> process, Runnable separator) {
 		final Iterator<? extends EObject> iter = elemsInIM.iterator();
 		while (iter.hasNext()) {
-			process(iter.next());
+			process.accept(iter.next());
 			if (separator != null && iter.hasNext()) {
 				separator.run();
 			}
@@ -869,12 +994,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processBlockLike(elemsInIM, open, lineEnd, lastLineEnd, close, true);
 	}
 
+	private void processBlockLike(Collection<? extends EObject> elemsInIM, char open, String lineEnd,
+			String lastLineEnd, char close, boolean newLines) {
+		processBlockLike(elemsInIM, open, lineEnd, lastLineEnd, close, newLines, this::process);
+	}
+
 	/**
 	 * Process and indent the given elements in the same way as blocks are indented but using the given characters for
 	 * opening and closing the code section.
 	 */
 	private void processBlockLike(Collection<? extends EObject> elemsInIM, char open, String lineEnd,
-			String lastLineEnd, char close, boolean newLines) {
+			String lastLineEnd, char close, boolean newLines, Consumer<EObject> process) {
 		if (elemsInIM.isEmpty()) {
 			write(open);
 			write(close);
@@ -885,15 +1015,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (newLines) {
 			newLine();
 		}
-		process(elemsInIM, () -> {
-			if (lineEnd != null)
+		process(elemsInIM, process, () -> {
+			if (lineEnd != null) {
 				write(lineEnd);
+			}
 			if (newLines) {
 				newLine();
 			}
 		});
-		if (lastLineEnd != null)
+		if (lastLineEnd != null) {
 			write(lineEnd);
+		}
 		out.undent();
 		if (newLines) {
 			newLine();

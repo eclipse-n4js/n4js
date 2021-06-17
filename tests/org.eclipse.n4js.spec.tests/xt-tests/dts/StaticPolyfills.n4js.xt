@@ -41,12 +41,12 @@ export public class SomeClass {
 /* XPECT generated_dts ---
 export class SomeClass {
 	public field: string;
-	public get getter() : string;
-	public set setter(value: string) ;
+	public get getter(): string;
+	public set setter(value: string);
 	public method(): void;
 	public fieldFilled: number;
-	public get getterFilled() : number;
-	public set setterFilled(value: number) ;
+	public get getterFilled(): number;
+	public set setterFilled(value: number);
 	public methodFilled(): void;
 }
 --- */

@@ -26,9 +26,11 @@ external class C {
 external interface I {
 	static field1: any;
 	const field2: any;
-	static f(): void;
-    static get g(): number;
-    static set s(v: number);
+	static f(): void {}
+    static get a(): number {return 0;}
+    static set a(v: number) {};
+    static get g(): number {return 0;}
+    static set s(v: number) {}
 }
 
 
@@ -36,8 +38,8 @@ external interface I {
 declare class C {
 	static field1: any;
 	static f(): void;
-    static get g(): number;
-    static set s(v: number);
+	static get g(): number;
+	static set s(v: number);
 }
 declare namespace C {
 	const field2: any;
@@ -47,8 +49,9 @@ declare namespace I {
 	let field1: any;
 	const field2: any;
 	function f(): void;
-    let g: number; // Problem: static getter transformed to let: Assumption: getter/setter-pair
-    let s: number; // Problem: static setter transformed to let: Assumption: getter/setter-pair
+	let a: number;
+	let g: number; // Attention: Use as getter only!
+	let s: number; // Attention: Use as setter only!
 }
 
 
