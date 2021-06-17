@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+
+	Workspace {
+		Project "ProjectOther" {
+			Folder "src" {
+				File "Other.n4js" { from="./UpperBounds_Other.n4js" }
+			}
+			GENERATE_DTS
+		}
+		Project "ProjectMain" {
+			Folder "src" {
+				ThisFile {}
+			}
+			DEPENDS_ON "ProjectOther"
+			GENERATE_DTS
+		}
+	}
+
+END_SETUP */
+
+
+import {GenClassOfClassExported} from "Other"
+import {GenClassOfClassNotExported} from "Other"
+
+export let v1: GenClassOfClassExported<?>;
+export let v2: GenClassOfClassNotExported<?>;
+
+export class ClassWithFields {
+	public f1: GenClassOfClassExported<?>;
+	public f2: GenClassOfClassNotExported<?>;
+}
+
+
+/* XPECT generated_dts ---
+import {ClassExported} from 'ProjectOther/src-gen/Other'
+import {GenClassOfClassExported} from 'ProjectOther/src-gen/Other'
+import {GenClassOfClassNotExported} from 'ProjectOther/src-gen/Other'
+
+export let v1: GenClassOfClassExported<ClassExported>;
+export let v2: GenClassOfClassNotExported<any>;
+export class ClassWithFields {
+	public f1: GenClassOfClassExported<ClassExported>;
+	public f2: GenClassOfClassNotExported<any>;
+}
+--- */
