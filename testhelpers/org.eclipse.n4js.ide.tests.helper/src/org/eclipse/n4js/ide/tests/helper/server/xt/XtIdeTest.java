@@ -181,7 +181,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * Delegates xt methods found in xt files to their implementations
 	 */
-	public void invokeTestMethod(XtMethodData testMethodData) throws Throwable {
+	public void invokeTestMethod(XtMethodData testMethodData) throws Exception {
 		switch (testMethodData.name) {
 		// 1st pass test methods
 		case "nowarnings": {
