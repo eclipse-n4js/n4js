@@ -6474,13 +6474,22 @@ public interface N4JSPackage extends EPackage {
 	int LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_NAME = 2;
 
 	/**
+	 * The feature id for the '<em><b>Computed Symbol</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_SYMBOL = 3;
+
+	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LITERAL_OR_COMPUTED_PROPERTY_NAME__EXPRESSION = 3;
+	int LITERAL_OR_COMPUTED_PROPERTY_NAME__EXPRESSION = 4;
 
 	/**
 	 * The number of structural features of the '<em>Literal Or Computed Property Name</em>' class.
@@ -6489,7 +6498,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LITERAL_OR_COMPUTED_PROPERTY_NAME_FEATURE_COUNT = 4;
+	int LITERAL_OR_COMPUTED_PROPERTY_NAME_FEATURE_COUNT = 5;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -19855,6 +19864,17 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getLiteralOrComputedPropertyName_ComputedName();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#isComputedSymbol <em>Computed Symbol</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Computed Symbol</em>'.
+	 * @see org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#isComputedSymbol()
+	 * @see #getLiteralOrComputedPropertyName()
+	 * @generated
+	 */
+	EAttribute getLiteralOrComputedPropertyName_ComputedSymbol();
+
+	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#getExpression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -25659,6 +25679,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_NAME = eINSTANCE.getLiteralOrComputedPropertyName_ComputedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Computed Symbol</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LITERAL_OR_COMPUTED_PROPERTY_NAME__COMPUTED_SYMBOL = eINSTANCE.getLiteralOrComputedPropertyName_ComputedSymbol();
 
 		/**
 		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
