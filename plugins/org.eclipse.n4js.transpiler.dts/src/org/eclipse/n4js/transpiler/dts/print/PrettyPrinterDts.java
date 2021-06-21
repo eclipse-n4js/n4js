@@ -670,6 +670,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processDeclaredTypeRef(original);
 		if (original.isVariadic()) {
 			// in TypeScript, the type of a rest parameter must explicitly be declared as an array
+			if (original.getDeclaredTypeRefNode() == null) {
+				write(": any");
+			}
 			write("[]");
 		} else if (original.getInitializer() != null) {
 			write("=");
