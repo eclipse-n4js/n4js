@@ -30,6 +30,9 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ArrayBindingPattern;
+import org.eclipse.n4js.n4JS.BindingElement;
+import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -63,6 +66,7 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NumericLiteral;
+import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
@@ -605,7 +609,11 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			// in TypeScript, the '*' is not allowed in .d.ts files
 			// write("* ");
 		}
-		processPropertyName(original);
+		if (original.getDeclaredName() != null) {
+			processPropertyName(original);
+		} else {
+			// deal with e.g.: class C { (i: number); }
+		}
 		if (!original.getTypeVars().isEmpty()) {
 			processTypeParams(original.getTypeVars());
 		}
@@ -757,14 +765,49 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
-		caseExportedVariableBinding(original);
+		if (original.getPattern() != null) {
+			process(original.getPattern());
+		} else if (original.getVariableDeclarations() != null) {
+			process(original.getVariableDeclarations(), ", ");
+		}
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4TypeVariable(N4TypeVariable typeVar) {
-		// note: TypeScript does not support upper/lower bounds
 		write(typeVar.getName());
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseArrayBindingPattern(ArrayBindingPattern pattern) {
+		processBlockLike(pattern.getElements(), '[', ", ", null, ']', false);
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseBindingElement(BindingElement elem) {
+		if (elem.getVarDecl() != null) {
+			process(elem.getVarDecl());
+		} else if (elem.getNestedPattern() != null) {
+			process(elem.getNestedPattern());
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseObjectBindingPattern(ObjectBindingPattern pattern) {
+		processBlockLike(pattern.getProperties(), '{', ", ", null, '}');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseBindingProperty(BindingProperty prop) {
+		if (prop.getDeclaredName() != null) {
+			process(prop.getDeclaredName());
+		} else if (prop.getName() != null) {
+			write(prop.getName());
+		}
 		return DONE;
 	}
 

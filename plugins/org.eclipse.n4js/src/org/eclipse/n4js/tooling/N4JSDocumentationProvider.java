@@ -88,7 +88,9 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 				// backward search for first non-hidden element, over-stepping if it is a LeafNodeWithSyntaxError from
 				// ASI.
 				ICompositeNode ptNodeOfASTNode = NodeModelUtils.getNode(astNode);
+
 				LeafNode lNode = ptNodeOfASTNode != null ? searchLeafNodeDocumentation(ptNodeOfASTNode) : null;
+
 				if (lNode != null) {
 					return Collections.<INode> singletonList(lNode);
 				}
@@ -127,26 +129,28 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 */
 	private LeafNode searchLeafNodeDocumentation(ICompositeNode ptNodeOfASTNode) {
 
-		BidiTreeIterator<INode> rootIterator = ptNodeOfASTNode.getRootNode().getAsTreeIterable().iterator();
+		ICompositeNode rootNode = ptNodeOfASTNode.getRootNode();
+		BidiTreeIterator<INode> rootIterator = rootNode.getAsTreeIterable().iterator();
 
 		// First linearly search the current node, then go back until a documentation or a non-hidden node is
 		// encountered.
 		// First search:
 		int counter = 0;
-		boolean found = false; // flag for finding right position in iterator.
-		while (rootIterator.hasNext()) {
-			INode next = rootIterator.next();
-			counter++;
-			dump(counter, next);
-			if (next == ptNodeOfASTNode) {
-				found = true;
-				break;
-			}
-		}
-		if (!found) {
-			throw new IllegalStateException(
-					"Node model broken. Unable to find the current node in the node model by traversing from root.");
-		}
+		// FIXME: Re-Enable following integrity check. Is it necessary at all?
+		// boolean found = false; // flag for finding right position in iterator.
+		// while (rootIterator.hasNext()) {
+		// INode next = rootIterator.next();
+		// counter++;
+		// dump(counter, next);
+		// if (next == ptNodeOfASTNode) {
+		// found = true;
+		// break;
+		// }
+		// }
+		// if (!found) {
+		// throw new IllegalStateException(
+		// "Node model broken. Unable to find the current node in the node model by traversing from root.");
+		// }
 
 		// Second search:
 		// go back until we find a LeafNodeWithSyntaxErrors or a different non-hidden leaf.
