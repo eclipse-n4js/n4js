@@ -27,6 +27,7 @@ import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSetMultimap;
 
 /**
  * Global hook for static information about the current setup. Contains file extensions, library names, and other
@@ -143,6 +144,11 @@ public final class N4JSGlobals {
 	public static final N4JSProjectName N4JS_RUNTIME_NODE = new N4JSProjectName("n4js-runtime-node");
 
 	/**
+	 * Runtime for HTML5 DOM definitions, i.e. <code>window</code>, <code>document</code>, etc.
+	 */
+	public static final N4JSProjectName N4JS_RUNTIME_HTML5 = new N4JSProjectName("n4js-runtime-html5");
+
+	/**
 	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
 	 */
 	public static final Set<ProjectType> PROJECT_TYPES_REQUIRING_N4JS_RUNTIME = ImmutableSet.of(
@@ -196,13 +202,13 @@ public final class N4JSGlobals {
 	public static final Set<N4JSProjectName> ALL_N4JS_LIBS = ImmutableSet.of(
 			new N4JSProjectName("n4js-cli"),
 			new N4JSProjectName("n4js-mangelhaft-cli"),
-			new N4JSProjectName("n4js-runtime"),
+			N4JS_RUNTIME,
 			new N4JSProjectName("n4js-runtime-ecma402"),
 			new N4JSProjectName("n4js-runtime-es2015"),
 			new N4JSProjectName("n4js-runtime-esnext"),
 			new N4JSProjectName("n4js-runtime-fetch"),
-			new N4JSProjectName("n4js-runtime-html5"),
-			new N4JSProjectName("n4js-runtime-node"),
+			N4JS_RUNTIME_HTML5,
+			N4JS_RUNTIME_NODE,
 			new N4JSProjectName("n4js-runtime-node-tests"),
 			new N4JSProjectName("n4js-runtime-v8"),
 			new N4JSProjectName("org.eclipse.n4js.mangelhaft"),
@@ -213,6 +219,14 @@ public final class N4JSGlobals {
 			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.ide.test"),
 			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.xunit"),
 			new N4JSProjectName("org.eclipse.n4js.mangelhaft.test"));
+
+	/**
+	 * The values of this map define TypeScript libraries to be included in the "lib" property of an auto-generated
+	 * <code>tsconfig.json</code> file whenever the corresponding N4JS runtime library is declared as required runtime
+	 * library in the containing project's <code>package.json</code> file.
+	 */
+	public static final ImmutableSetMultimap<N4JSProjectName, String> N4JS_DTS_LIB_CORRESPONDENCE = ImmutableSetMultimap
+			.of(N4JS_RUNTIME_HTML5, "dom");
 
 	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.

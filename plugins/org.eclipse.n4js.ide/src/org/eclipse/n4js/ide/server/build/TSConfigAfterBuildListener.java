@@ -19,12 +19,15 @@ import java.util.Objects;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
@@ -65,7 +68,7 @@ public class TSConfigAfterBuildListener implements AfterBuildListener {
 				+ "    \"exclude\": [\"node_modules\"],\n"
 				+ "    \"compilerOptions\": {\n"
 				+ "        \"target\": \"es5\",\n"
-				+ "        \"lib\": [\"es2019\", \"es2020\"],\n"
+				+ "        \"lib\": " + createLibValue() + ",\n"
 				+ "        \"module\": \"commonjs\",\n"
 				+ "        \"noImplicitAny\": false\n"
 				+ "    }\n"
@@ -73,6 +76,23 @@ public class TSConfigAfterBuildListener implements AfterBuildListener {
 				+ "";
 
 		Files.writeString(tsconfig.toPath(), defaultTSConfig);
+	}
+
+	private String createLibValue() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append("\"es2019\", \"es2020\"");
+		for (ProjectReference requiredLibRef : projectConfig.getProjectDescription().getRequiredRuntimeLibraries()) {
+			N4JSProjectName requiredLibName = requiredLibRef.getN4JSProjectName();
+			ImmutableSet<String> dtsLibNames = N4JSGlobals.N4JS_DTS_LIB_CORRESPONDENCE.get(requiredLibName);
+			for (String dtsLibName : dtsLibNames) {
+				sb.append(", \"");
+				sb.append(dtsLibName);
+				sb.append('"');
+			}
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 
 	private String createIncludePath() {
