@@ -233,7 +233,16 @@ import com.google.common.collect.Lists;
 		}
 	}
 
+	/** <code>Iterable2&lt;string,number></code> is exported as <code>[string, number]</code>. */
+	private void processIterableN(ParameterizedTypeRef typeRef) {
+		processTypeArguments(typeRef, "[", "]");
+	}
+
 	private void processTypeArguments(ParameterizedTypeRef typeRef) {
+		processTypeArguments(typeRef, "<", ">");
+	}
+
+	private void processTypeArguments(ParameterizedTypeRef typeRef, String prefix, String suffix) {
 		List<TypeArgument> typeArgs = typeRef.getTypeArgs();
 		if (typeArgs.isEmpty()) {
 			return;
@@ -246,9 +255,9 @@ import com.google.common.collect.Lists;
 			typeArgs = Lists.newArrayList(typeArgs.get(0));
 		}
 
-		write('<');
+		write(prefix);
 		process(typeArgs, this::processTypeArgument, ", ");
-		write('>');
+		write(suffix);
 	}
 
 	private void processTypeArgument(TypeArgument typeArg) {
