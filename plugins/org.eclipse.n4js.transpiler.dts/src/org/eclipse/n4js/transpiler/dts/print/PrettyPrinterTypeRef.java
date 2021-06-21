@@ -157,7 +157,20 @@ import com.google.common.collect.Lists;
 					+ typeRef.getClass().getSimpleName());
 		}
 		List<TypeRef> typeRefs = typeRef.getTypeRefs();
-		process(typeRefs, this::processTypeRef, " " + op + " ");
+		process(typeRefs, this::processMemberTypeRef, " " + op + " ");
+	}
+
+	/** Process the member of a composed type reference. */
+	private void processMemberTypeRef(TypeRef memberTypeRef) {
+		boolean requiresParentheses = memberTypeRef instanceof ComposedTypeRef
+				|| memberTypeRef instanceof FunctionTypeExprOrRef;
+		if (requiresParentheses) {
+			write('(');
+		}
+		processTypeRef(memberTypeRef);
+		if (requiresParentheses) {
+			write(')');
+		}
 	}
 
 	private void processFunctionTypeExprOrRef(FunctionTypeExprOrRef typeRef) {
@@ -176,6 +189,10 @@ import com.google.common.collect.Lists;
 	private void processParameterizedTypeRef(ParameterizedTypeRef typeRef) {
 		if (typeRef instanceof FunctionTypeRef) {
 			processFunctionTypeExprOrRef((FunctionTypeRef) typeRef);
+			return;
+		}
+		if (RuleEnvironmentExtensions.isIterableN(state.G, typeRef)) {
+			processIterableN(typeRef);
 			return;
 		}
 
