@@ -161,6 +161,16 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	public static final QualifiedName QN_FUNCTION = QualifiedName.create("Function");
 
 	/**
+	 * The built-in name {@code Iterator}
+	 */
+	public static final QualifiedName QN_ITERATOR = QualifiedName.create("Iterator");
+
+	/**
+	 * The built-in name {@code IteratorEntry}
+	 */
+	public static final QualifiedName QN_ITERATOR_ENTRY = QualifiedName.create("IteratorEntry");
+
+	/**
 	 * The built-in name {@code Iterable}
 	 */
 	public static final QualifiedName QN_ITERABLE = QualifiedName.create("Iterable");
@@ -400,6 +410,20 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public final TObjectPrototype getFunctionType() {
 		return getEObjectOrProxy(QN_FUNCTION);
+	}
+
+	/**
+	 * Returns the built-in type "Iterator".
+	 */
+	public final TInterface getIteratorType() {
+		return getEObjectOrProxy(QN_ITERATOR);
+	}
+
+	/**
+	 * Returns the built-in type "IteratorEntry".
+	 */
+	public final TInterface getIteratorEntryType() {
+		return getEObjectOrProxy(QN_ITERATOR_ENTRY);
 	}
 
 	/**

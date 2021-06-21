@@ -31,6 +31,8 @@ public class DtsUtils {
 			// -> can simply use its name in output code, because they are global and available everywhere
 			if (type == RuleEnvironmentExtensions.intType(state.G)) {
 				type = RuleEnvironmentExtensions.numberType(state.G);
+			} else if (type == RuleEnvironmentExtensions.iteratorEntryType(state.G)) {
+				return "IteratorReturnResult";
 			}
 			return type.getName();
 		}
