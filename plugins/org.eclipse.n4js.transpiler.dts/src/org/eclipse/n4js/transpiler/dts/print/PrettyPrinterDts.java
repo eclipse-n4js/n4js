@@ -76,6 +76,7 @@ import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
@@ -717,8 +718,27 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
 		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
 		// emitted there; so, no need to emit "export" in this method!
-		processTopLevelElementModifiers(original.getDeclaredModifiers());
-		caseVariableStatement(original);
+		if (original.isExportedAsDefault()) {
+			EList<VariableDeclarationOrBinding> declsOrBindings = original.getVarDeclsOrBindings();
+			// the default export does only support a single element. Hence, only the first entry is used.
+			if (!declsOrBindings.isEmpty()) {
+				VariableDeclarationOrBinding declOrBinding = declsOrBindings.get(0);
+				EList<VariableDeclaration> declarations = declOrBinding.getVariableDeclarations();
+				if (!declarations.isEmpty()) {
+					VariableDeclaration declaration = declarations.get(0);
+					write(declaration.getName());
+				}
+			}
+			write(';');
+			newLine();
+
+			write("declare ");
+			caseVariableStatement(original);
+
+		} else {
+			processTopLevelElementModifiers(original.getDeclaredModifiers());
+			caseVariableStatement(original);
+		}
 		return DONE;
 	}
 
