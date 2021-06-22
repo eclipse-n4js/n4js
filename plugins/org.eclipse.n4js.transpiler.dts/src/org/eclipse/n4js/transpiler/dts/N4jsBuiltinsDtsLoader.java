@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 /**
  * Utility to copy the d.ts version of n4js built-in types (and others from n4js libs) into the output folder of every
@@ -39,7 +38,7 @@ public class N4jsBuiltinsDtsLoader {
 				return;
 			}
 			Path target = new File(outputFolder, FILE_NAME).toPath();
-			Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(in, target);
 		}
 	}
 
