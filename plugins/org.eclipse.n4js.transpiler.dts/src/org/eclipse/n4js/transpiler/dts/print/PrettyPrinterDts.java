@@ -91,6 +91,7 @@ import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
@@ -116,6 +117,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			N4Modifier.PROTECTED,
 			N4Modifier.PROJECT,
 			N4Modifier.PUBLIC);
+
+	private static final Set<String> GLOBALLY_AVAILABLE = ImmutableSet.of("Set", "Iterator");
 
 	private final LineColTrackingAppendable out;
 	private final Optional<String> optPreamble;
@@ -206,6 +209,14 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseImportDeclaration(ImportDeclaration original) {
+		String moduleSpecifier = original.getModuleSpecifierAsText() != null
+				? original.getModuleSpecifierAsText()
+				: original.getModule().getQualifiedName();
+
+		if (GLOBALLY_AVAILABLE.contains(moduleSpecifier)) {
+			return DONE;
+		}
+
 		processAnnotations(original.getAnnotations());
 		write("import ");
 		// 1) import specifiers
@@ -231,9 +242,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write(" from ");
 		}
 		// 3) module specifier
-		String moduleSpecifier = original.getModuleSpecifierAsText() != null
-				? original.getModuleSpecifierAsText()
-				: original.getModule().getQualifiedName();
 		write(quote(moduleSpecifier));
 		// 4) empty line after block of imports
 		boolean isLastImport = !(EcoreUtil2.getNextSibling(original) instanceof ImportDeclaration);

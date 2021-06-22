@@ -53,8 +53,10 @@ public class DTSAfterBuildListener implements AfterBuildListener {
 	@Override
 	public void afterBuild(XBuildRequest request, XBuildResult result) {
 		try {
-			ensureTSConfig();
-			ensureN4jsBuiltins();
+			if (request.canGenerate()) {
+				ensureTSConfig();
+				ensureN4jsBuiltins();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
