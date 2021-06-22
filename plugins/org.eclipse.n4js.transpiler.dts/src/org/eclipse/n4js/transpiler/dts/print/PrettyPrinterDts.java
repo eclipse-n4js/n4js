@@ -808,7 +808,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	@Override
 	public Boolean caseBindingElement(BindingElement elem) {
 		if (elem.getVarDecl() != null) {
-			process(elem.getVarDecl());
+			write(elem.getVarDecl().getName());
 		} else if (elem.getNestedPattern() != null) {
 			process(elem.getNestedPattern());
 		}
