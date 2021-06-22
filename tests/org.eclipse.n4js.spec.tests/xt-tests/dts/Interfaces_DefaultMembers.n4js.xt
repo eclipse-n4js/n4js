@@ -15,23 +15,28 @@
  */
 
 
-export external interface I1 {
-	public field: number;
+export public interface I {
+	field = "default value";
+	get getter(): number { return 0; }
+	set setter(value: number) {}
+	method() {}
 }
-export external class C1 {
-	field: number;
-}
-export external function f1()
 
+export class C implements I {}
 
 
 
 /* XPECT generated_dts ---
-export interface I1 {
-	field: number;
+export interface I {
+	field: string;
+	get getter(): number;
+	set setter(value: number);
+	method(): void;
 }
-export class C1 {
-	field: number;
+export class C implements I {
+	public field: string;
+	public method(): void;
+	public get getter(): number;
+	public set setter(value: number);
 }
-export function f1(): void;
 --- */

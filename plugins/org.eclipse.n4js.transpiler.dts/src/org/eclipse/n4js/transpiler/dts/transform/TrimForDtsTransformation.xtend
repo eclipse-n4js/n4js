@@ -15,10 +15,15 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.ModifierUtils
 import org.eclipse.n4js.n4JS.N4EnumLiteral
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.ts.types.MemberAccessModifier
+import org.eclipse.n4js.ts.types.TypeAccessModifier
 
 /**
  * Removes everything from the IM that is not required for .d.ts export.
@@ -41,6 +46,14 @@ class TrimForDtsTransformation extends Transformation {
 
 		val toBeRemoved2 = collectNodes(state.im, false, Expression, Block).filter[!isValueOfEnum(it)];
 		toBeRemoved2.forEach[remove(it)];
+
+		// remove all non-public members from interfaces
+		val toBeRemoved3 = collectNodes(state.im, false, N4InterfaceDeclaration)
+			.flatMap[ownedMembers]
+			.filter[!static]
+			.filter[!isPublicMember(it)]
+			.toList;
+		toBeRemoved3.forEach[remove(it)];
 	}
 
 	def private boolean isPureStatement(EObject obj) {
@@ -58,5 +71,20 @@ class TrimForDtsTransformation extends Transformation {
 		val parent = obj?.eContainer();
 		return parent instanceof N4EnumLiteral
 			&& obj === (parent as N4EnumLiteral).valueExpression;
+	}
+
+	// TODO GH-2153 use reusable utility method for computing actual accessibility
+	def private boolean isPublicMember(N4MemberDeclaration memberDecl) {
+		val declaredModifier = ModifierUtils.convertToMemberAccessModifier(memberDecl.declaredModifiers, memberDecl.allAnnotations);
+		if (declaredModifier === MemberAccessModifier.UNDEFINED) {
+			val parentDecl = memberDecl.eContainer;
+			if (parentDecl instanceof N4InterfaceDeclaration) {
+				val parentDeclModifier = ModifierUtils.convertToTypeAccessModifier(parentDecl.declaredModifiers, parentDecl.allAnnotations);
+				if (parentDeclModifier === TypeAccessModifier.PUBLIC) {
+					return true;
+				}
+			}
+		}
+		return declaredModifier === MemberAccessModifier.PUBLIC;
 	}
 }
