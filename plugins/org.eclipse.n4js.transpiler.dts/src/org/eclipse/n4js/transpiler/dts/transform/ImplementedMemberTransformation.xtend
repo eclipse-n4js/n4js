@@ -146,10 +146,11 @@ class ImplementedMemberTransformation extends Transformation {
 	}
 
 	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TSetter setterToAdd) {
-		val setterNew = _N4GetterDecl(_LiteralOrComputedPropertyName(setterToAdd.name), null);
+		val fpar = _Fpar("value");
+		val setterNew = _N4SetterDecl(_LiteralOrComputedPropertyName(setterToAdd.name), fpar, null);
 		classDecl.ownedMembersRaw += setterNew;
 
-		setDeclaredTypeRef(setterNew, setterToAdd.typeRef);
+		setDeclaredTypeRef(fpar, setterToAdd.typeRef);
 
 		return setterNew;
 	}

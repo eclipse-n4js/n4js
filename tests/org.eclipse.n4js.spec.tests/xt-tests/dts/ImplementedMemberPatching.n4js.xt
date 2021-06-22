@@ -96,8 +96,8 @@ declare abstract class C01 implements I3 {
 	public methodDef(p: string): number;
 	public abstract get getter(): number;
 	public get getterDef(): number;
-	public abstract get setter(): string;
-	public get setterDef(): string;
+	public abstract set setter(value: string);
+	public set setterDef(value: string);
 }
 declare class C02 extends C01 {
 	public field: string;
@@ -123,8 +123,8 @@ declare abstract class C22 extends C21 implements I3 {
 	public methodDef(p: string): number;
 	public abstract get getter(): number;
 	public get getterDef(): number;
-	public abstract get setter(): string;
-	public get setterDef(): string;
+	public abstract set setter(value: string);
+	public set setterDef(value: string);
 }
 declare abstract class C31 {
 	public field: string;
@@ -144,8 +144,8 @@ declare abstract class C41 implements I3 {
 	public methodDef(p: string): number;
 	public abstract get getter(): number;
 	public get getterDef(): number;
-	public abstract get setter(): string;
-	public get setterDef(): string;
+	public abstract set setter(value: string);
+	public set setterDef(value: string);
 }
 declare abstract class C42 extends C41 implements I3 {}
 --- */

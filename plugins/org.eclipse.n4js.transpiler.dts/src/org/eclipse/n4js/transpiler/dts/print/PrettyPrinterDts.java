@@ -675,6 +675,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write("...");
 		}
 		write(original.getName());
+		if (original.isHasInitializerAssignment() && !original.isVariadic()) {
+			write('?');
+		}
 		if (original.getDeclaredTypeRefNode() != null) {
 			processDeclaredTypeRef(original);
 		} else {
@@ -684,8 +687,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			// in TypeScript, the type of a rest parameter must explicitly be declared as an array
 			write("[]");
 		} else if (original.getInitializer() != null) {
-			write("=");
-			process(original.getInitializer());
+			// not allowed in .d.ts; covered by '?' above
+			// write("=");
+			// process(original.getInitializer());
 		}
 		return DONE;
 	}
