@@ -77,7 +77,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 				cancelIndicator);
 
 		if (getProjectConfig().getProjectDescription().isGeneratorEnabledDts()) {
-			request.addAfterBuildListener(new TSConfigAfterBuildListener(getProjectConfig()));
+			request.addAfterBuildListener(new DTSAfterBuildListener(getProjectConfig()));
 		}
 		return request;
 	}

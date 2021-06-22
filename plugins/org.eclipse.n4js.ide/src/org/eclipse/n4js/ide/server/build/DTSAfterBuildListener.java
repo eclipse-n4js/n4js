@@ -20,8 +20,10 @@ import java.util.Objects;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
+import org.eclipse.n4js.transpiler.dts.N4jsBuiltinsDtsLoader;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
@@ -32,15 +34,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 /**
- * Executed after a single project was build. Ensures that there exists a ts.config file in the project folder and that
- * this file contains correct information.
+ * Executed after a single project was build. Ensures that there exists
+ * <ul>
+ * <li/>a ts.config file in the project folder and that this file contains correct information.
+ * <li/>a n4jsbuiltins.d.ts in the root of the src-gen folder
+ * </ul>
  */
-public class TSConfigAfterBuildListener implements AfterBuildListener {
+public class DTSAfterBuildListener implements AfterBuildListener {
 	final N4JSProjectConfigSnapshot projectConfig;
 	final File tsconfig;
 
 	/** Constructor */
-	public TSConfigAfterBuildListener(N4JSProjectConfigSnapshot projectConfig) {
+	public DTSAfterBuildListener(N4JSProjectConfigSnapshot projectConfig) {
 		this.projectConfig = projectConfig;
 		tsconfig = projectConfig.getPathAsFileURI().toPath().resolve(N4JSGlobals.TS_CONFIG).toFile();
 	}
@@ -49,6 +54,7 @@ public class TSConfigAfterBuildListener implements AfterBuildListener {
 	public void afterBuild(XBuildRequest request, XBuildResult result) {
 		try {
 			ensureTSConfig();
+			ensureN4jsBuiltins();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -116,5 +122,10 @@ public class TSConfigAfterBuildListener implements AfterBuildListener {
 		Map<String, JsonElement> elements = new HashMap<>();
 		elements.put("include", addToArray);
 		PackageJsonModificationUtils.addProperties(tsconfig, elements.entrySet());
+	}
+
+	private void ensureN4jsBuiltins() throws IOException {
+		FileURI outputPath = projectConfig.getPathAsFileURI().appendPath(projectConfig.getOutputPath());
+		N4jsBuiltinsDtsLoader.ensure(outputPath.toFile());
 	}
 }
