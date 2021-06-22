@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.transpiler.dts.print;
 
+import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifier;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -328,13 +330,13 @@ import com.google.common.collect.Lists;
 	}
 
 	private void processTField(TField field) {
-		write(field.getName());
+		writeQuotedIfNonIdentifier(field.getName());
 		processDeclaredTypeRef(field, "");
 	}
 
 	private void processTGetter(TGetter getter) {
 		write("get ");
-		write(getter.getName());
+		writeQuotedIfNonIdentifier(getter.getName());
 		write("(): ");
 		TypeRef typeRef = getter.getTypeRef();
 		if (typeRef != null) {
@@ -346,14 +348,14 @@ import com.google.common.collect.Lists;
 
 	private void processTSetter(TSetter setter) {
 		write("set ");
-		write(setter.getName());
+		writeQuotedIfNonIdentifier(setter.getName());
 		write("(");
 		processTFormalParameters(Collections.singletonList(setter.getFpar()));
 		write(")");
 	}
 
 	private void processTMethod(TMethod method) {
-		write(method.getName());
+		writeQuotedIfNonIdentifier(method.getName());
 		write("(");
 		processTFormalParameters(method.getFpars());
 		write("): ");
@@ -394,5 +396,15 @@ import com.google.common.collect.Lists;
 
 	private void write(CharSequence csq) {
 		delegate.write(csq);
+	}
+
+	private void writeQuotedIfNonIdentifier(String csq) {
+		if (!isLegalIdentifier(csq)) {
+			write("'");
+			write(csq);
+			write("'");
+		} else {
+			write(csq);
+		}
 	}
 }
