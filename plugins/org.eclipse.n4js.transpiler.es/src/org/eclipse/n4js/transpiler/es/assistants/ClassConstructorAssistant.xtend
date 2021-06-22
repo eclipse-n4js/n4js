@@ -455,6 +455,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		return state.info.isConsumedFromInterface(memberDecl);
 	}
 
+	// TODO GH-2153 use reusable utility method for computing actual accessibility
 	def private boolean isPublic(N4MemberDeclaration memberDecl) {
 		// no need to bother with default accessibility, here, because 'public' is never the default
 		// (not ideal; would be better if the utility method handled default accessibility)

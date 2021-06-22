@@ -15,36 +15,38 @@
  */
 
 
-export class Cls1 {}
-export public class Cls2 {}
-export project class Cls3 {}
-
-class Cls {
-	public field1;
-	project field2;
-	protected field3;
-	private field4;
+interface I {
+	protected method();
 }
 
-interface I {
-	public field1;
-	project field2;
-	protected field3;
-	// private field4; // invalid
+abstract class C implements I {
+}
+
+class D extends C {
+	@Override
+	protected method() {}
 }
 
 
 /* XPECT generated_dts ---
-export class Cls1 {}
-export class Cls2 {}
-export class Cls3 {}
-declare class Cls {
-	public field1: any;
-	public field2: any;
-	protected field3: any;
-	private field4: any;
-}
-declare interface I {
-	field1: any;
+declare interface I {}
+declare abstract class C implements I {}
+declare class D extends C {
+	protected method(): void;
 }
 --- */
+
+
+/*
+NOTE: this is the .d.ts code we do *not* want to see (would lead to validation errors in TypeScript):
+
+declare interface I {
+	method(): void;
+}
+declare abstract class C implements I {
+	public abstract method(): void;
+}
+declare class D extends C {
+	protected method(): void;
+}
+*/
