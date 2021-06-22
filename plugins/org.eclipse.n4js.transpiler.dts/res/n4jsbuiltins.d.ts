@@ -1,8 +1,24 @@
 
+
+// Merged from primitives_js.n4ts
+
 declare type pathSelector<T> = string;
 declare type i18nKey = string;
 declare type typeName<T> = string;
 
+
+// Merged from n4js-runtime-es2015
+
+/**
+ * Use this interface type to denote common ES2015 work-around cases
+ * used to make Iterators compatible with for..of loops.
+ *
+ * Dirty, but properly represents the ES2015 work-around.
+ */
+declare type IteratorExt<T> = Iterator<T> & Iterable<T>;
+
+
+// Merged from builtin_n4.n4ts
 
 /**
  * Work-around:
