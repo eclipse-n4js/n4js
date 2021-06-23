@@ -162,6 +162,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processPreamble();
 		processAnnotations(original_IM.getAnnotations());
 
+		write("import 'n4js-runtime'");
+		newLine();
+
 		process(original_IM.getScriptElements(), () -> {
 			newLine();
 		});

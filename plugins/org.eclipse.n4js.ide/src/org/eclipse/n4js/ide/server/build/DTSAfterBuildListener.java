@@ -20,10 +20,8 @@ import java.util.Objects;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
-import org.eclipse.n4js.transpiler.dts.N4jsBuiltinsDtsLoader;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
@@ -37,7 +35,6 @@ import com.google.gson.JsonElement;
  * Executed after a single project was build. Ensures that there exists
  * <ul>
  * <li/>a ts.config file in the project folder and that this file contains correct information.
- * <li/>a n4jsbuiltins.d.ts in the root of the src-gen folder
  * </ul>
  */
 public class DTSAfterBuildListener implements AfterBuildListener {
@@ -55,7 +52,6 @@ public class DTSAfterBuildListener implements AfterBuildListener {
 		try {
 			if (request.canGenerate()) {
 				ensureTSConfig();
-				ensureN4jsBuiltins();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,8 +122,4 @@ public class DTSAfterBuildListener implements AfterBuildListener {
 		PackageJsonModificationUtils.addProperties(tsconfig, elements.entrySet());
 	}
 
-	private void ensureN4jsBuiltins() throws IOException {
-		FileURI outputPath = projectConfig.getPathAsFileURI().appendPath(projectConfig.getOutputPath());
-		N4jsBuiltinsDtsLoader.ensure(outputPath.toFile());
-	}
 }
