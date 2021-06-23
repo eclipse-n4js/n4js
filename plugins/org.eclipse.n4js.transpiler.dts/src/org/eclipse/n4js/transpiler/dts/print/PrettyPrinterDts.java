@@ -118,7 +118,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			N4Modifier.PROJECT,
 			N4Modifier.PUBLIC);
 
-	private static final Set<String> GLOBALLY_AVAILABLE = ImmutableSet.of("Set", "Iterator");
+	private static final Set<String> GLOBALLY_AVAILABLE = ImmutableSet.of("Set", "Iterator", "url", "URLSearchParams");
 
 	private final LineColTrackingAppendable out;
 	private final Optional<String> optPreamble;
