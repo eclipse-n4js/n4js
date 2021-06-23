@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+// all the below members will be omitted, because their name is
+// not valid for a variable:
+
+external class C {
+	const default: any;
+	const continue: any;
+	const finally: any;
+}
+external interface I {
+	const break: any;
+	static case(): void {}
+    static get null(): number {return 0;}
+    static set null(v: number) {};
+    static get false(): number {return 0;}
+    static set false(v: number) {}
+}
+
+
+/* XPECT generated_dts ---
+declare class C {}
+declare interface I {}
+--- */
