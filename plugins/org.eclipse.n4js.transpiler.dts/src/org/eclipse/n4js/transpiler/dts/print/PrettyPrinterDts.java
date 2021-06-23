@@ -86,6 +86,9 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -808,6 +811,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	@Override
 	public Boolean caseN4TypeVariable(N4TypeVariable typeVar) {
 		write(typeVar.getName());
+		TypeReferenceNode<TypeRef> ub = typeVar.getDeclaredUpperBoundNode();
+		if (ub != null) {
+			Type n4EnumType = RuleEnvironmentExtensions.n4EnumType(state.G);
+			TypeRef ubTypeRef = state.info.getOriginalProcessedTypeRef(ub);
+			if (ubTypeRef.getDeclaredType() != n4EnumType) {
+				// FIXME reconsider this hack for N4Enum as upper bound
+				return DONE;
+			}
+			write(" extends ");
+			prettyPrinterTypeRef.processTypeRefNode(ub, "");
+		}
 		return DONE;
 	}
 
