@@ -193,10 +193,6 @@ import com.google.common.collect.Lists;
 			processFunctionTypeExprOrRef((FunctionTypeRef) typeRef);
 			return;
 		}
-		if (RuleEnvironmentExtensions.isIterableN(state.G, typeRef)) {
-			processIterableN(typeRef);
-			return;
-		}
 
 		Type declType = typeRef.getDeclaredType();
 		boolean hasStructMembers = typeRef instanceof ParameterizedTypeRefStructural
@@ -235,11 +231,6 @@ import com.google.common.collect.Lists;
 		if (showDeclaredType && hasStructMembers) {
 			write(')');
 		}
-	}
-
-	/** <code>Iterable2&lt;string,number></code> is exported as <code>[string, number]</code>. */
-	private void processIterableN(ParameterizedTypeRef typeRef) {
-		processTypeArguments(typeRef, "[", "]");
 	}
 
 	private void processTypeArguments(ParameterizedTypeRef typeRef) {
