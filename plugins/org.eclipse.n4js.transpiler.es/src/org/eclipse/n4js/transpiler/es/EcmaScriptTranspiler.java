@@ -10,10 +10,8 @@
  */
 package org.eclipse.n4js.transpiler.es;
 
-import java.io.IOException;
 import java.io.Writer;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
@@ -42,8 +40,6 @@ import org.eclipse.n4js.transpiler.es.transform.SimplifyTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
-import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -142,52 +138,9 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Override
 	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
 			Optional<SourceMapInfo> optSourceMapInfo) {
-		if (!requiresTranspilation(resource)) {
-			copyWithoutTranspilation(resource, outCode);
-		} else {
-			try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement()) {
-				super.transpile(resource, options, outCode, optSourceMapInfo);
-			}
+		try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement()) {
+			super.transpile(resource, options, outCode, optSourceMapInfo);
 		}
-	}
-
-	/**
-	 * Take the content of resource and copy it over to the output folder without any transformation.
-	 *
-	 * @param resource
-	 *            JS-code snippet which will be treated as text.
-	 * @param outCode
-	 *            writer to output to.
-	 */
-	private void copyWithoutTranspilation(N4JSResource resource, Writer outCode) {
-		// get script
-		EObject script = resource.getContents().get(0);
-
-		// obtain text
-		CharSequence scriptAsText = NodeModelUtils.getNode(script).getRootNode().getText();
-
-		// write
-		String decorated = scriptAsText.toString();
-		try {
-
-			outCode.write(decorated);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Depending on the file-extension, determines if the given resource requires actual transpilation as opposed to
-	 * simply copying the source file to the output folder.
-	 *
-	 * @param eResource
-	 *            N4JS resource to check.
-	 * @return true if the code requires transpilation.
-	 */
-	private boolean requiresTranspilation(N4JSResource eResource) {
-		ResourceType resourceType = ResourceType.getResourceType(eResource);
-		return !(resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX));
 	}
 
 }

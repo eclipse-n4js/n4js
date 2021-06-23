@@ -10,6 +10,14 @@
  */
 package org.eclipse.n4js;
 
+import static org.eclipse.n4js.N4JSGlobals.JSX_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.N4IDL_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.N4JSX_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.TS_FILE_EXTENSION;
+
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
@@ -22,6 +30,8 @@ import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.ISetup;
+import org.eclipse.xtext.resource.IResourceFactory;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -99,27 +109,26 @@ public class N4JSStandaloneSetup implements ISetup {
 		EPackage.Registry.INSTANCE.put(TypesPackage.eINSTANCE.getNsURI(), TypesPackage.eINSTANCE);
 		EPackage.Registry.INSTANCE.put(XMLTypePackage.eINSTANCE.getNsURI(), XMLTypePackage.eINSTANCE);
 
-		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector
-				.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
-		org.eclipse.xtext.resource.IResourceServiceProvider serviceProvider = injector
+		IResourceFactory resourceFactory = injector.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
+		IResourceServiceProvider serviceProvider = injector
 				.getInstance(org.eclipse.xtext.resource.IResourceServiceProvider.class);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4js", resourceFactory);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4js",
+
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(N4JS_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(N4JS_FILE_EXTENSION, serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(N4JSX_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(N4JSX_FILE_EXTENSION,
 				serviceProvider);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsx", resourceFactory);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsx",
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(JS_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(JS_FILE_EXTENSION, serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(JSX_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(JSX_FILE_EXTENSION, serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(N4JSD_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(N4JSD_FILE_EXTENSION,
 				serviceProvider);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("js", resourceFactory);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("js",
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(N4IDL_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(N4IDL_FILE_EXTENSION,
 				serviceProvider);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("jsx", resourceFactory);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("jsx",
-				serviceProvider);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsd", resourceFactory);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4jsd",
-				serviceProvider);
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("n4idl", resourceFactory);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("n4idl",
-				serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(TS_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(TS_FILE_EXTENSION, serviceProvider);
 	}
 }

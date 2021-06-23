@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.ts.utils.N4TSGlobals;
@@ -48,6 +49,13 @@ public final class N4JSGlobals {
 	 * Files extension of JSX source files (<b>not</b> including the separator dot).
 	 */
 	public static final String JSX_FILE_EXTENSION = "jsx";
+
+	/**
+	 * Files extension of TS files (<b>not</b> including the separator dot).
+	 * <p>
+	 * Note that the extension is currently not possible due to {@link URI#fileExtension()}.
+	 */
+	public static final String TS_FILE_EXTENSION = "ts";
 
 	/**
 	 * Files extension of N4JSX source files (<b>not</b> including the separator dot).

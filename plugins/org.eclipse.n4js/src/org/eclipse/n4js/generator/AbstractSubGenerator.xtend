@@ -11,6 +11,7 @@
 package org.eclipse.n4js.generator
 
 import com.google.inject.Inject
+import java.io.StringWriter
 import java.nio.file.Path
 import java.nio.file.Paths
 import org.eclipse.emf.common.EMFPlugin
@@ -26,6 +27,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.FolderContainmentHelper
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceNameComputer
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
@@ -37,6 +39,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGenerator2
 import org.eclipse.xtext.generator.IGeneratorContext
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.util.UriExtensions
@@ -116,6 +119,11 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * </ul>
 	 */
 	override doGenerate(Resource input, IFileSystemAccess fsa) {
+		if (justCopy(input)) {
+			copyWithoutTranspilation(input, fsa);
+			return;
+		}
+		
 		val ws = workspaceAccess.getWorkspaceConfig(input);
 
 		try {
@@ -428,5 +436,42 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 */
 	override boolean isApplicableTo(Resource input) {
 		return shouldBeCompiled(input, null);
+	}
+	
+	/**
+	 * Depending on the file-extension, determines if the given resource requires actual transpilation as opposed to
+	 * simply copying the source file to the output folder.
+	 *
+	 * @param eResource
+	 *            N4JS resource to check.
+	 * @return true if the code requires transpilation.
+	 */
+	def protected boolean justCopy(Resource eResource) {
+		val resourceType = ResourceType.getResourceType(eResource);
+		return !(resourceType.equals(ResourceType.N4JS) || resourceType.equals(ResourceType.N4JSX)
+				|| resourceType.equals(ResourceType.N4JSD) || resourceType.equals(ResourceType.N4IDL));
+	}
+
+	/**
+	 * Take the content of resource and copy it over to the output folder without any transformation.
+	 *
+	 * @param resource
+	 *            JS-code snippet which will be treated as text.
+	 * @param fsa
+	 *            file system access
+	 */
+	def protected void copyWithoutTranspilation(Resource resource, IFileSystemAccess fsa) {
+		val outCode = new StringWriter();
+		// get script
+		val script = resource.getContents().get(0);
+
+		// obtain text
+		val scriptAsText = NodeModelUtils.getNode(script).getRootNode().getText();
+
+		// write
+		val decorated = scriptAsText.toString();
+		outCode.write(decorated);
+		val filename = resourceNameComputer.generateFileDescriptor(resource, resource.getURI().fileExtension());
+		fsa.generateFile(filename, compilerID, outCode.toString());
 	}
 }
