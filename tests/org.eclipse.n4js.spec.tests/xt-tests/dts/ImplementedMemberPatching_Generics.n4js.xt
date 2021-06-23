@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+interface I<T> {
+	public field: T;
+	public get getter(): T;
+	public set setter(value: T);
+	public method(p: T): T;
+}
+
+interface J extends I<string> {}
+
+abstract class C implements J {}
+
+abstract class G<T2> implements I<T2> {}
+
+
+/* XPECT generated_dts ---
+declare interface I<T> {
+	field: T;
+	get getter(): T;
+	set setter(value: T);
+	method(p: T): T;
+}
+declare interface J extends I<string> {}
+declare abstract class C implements J {
+	public field: string;
+	public abstract method(p: string): string;
+	public abstract get getter(): string;
+	public abstract set setter(value: string);
+}
+declare abstract class G<T2> implements I<T2> {
+	public field: T2;
+	public abstract method(p: T2): T2;
+	public abstract get getter(): T2;
+	public abstract set setter(value: T2);
+}
+--- */
