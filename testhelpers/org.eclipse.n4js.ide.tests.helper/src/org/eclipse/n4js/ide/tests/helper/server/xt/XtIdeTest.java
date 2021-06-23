@@ -550,7 +550,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			FileURI genDtsFileURI = getFileURIFromModuleName(genDtsFileName);
 			String genDtsCode = Files.readString(genDtsFileURI.toPath());
 			assertTrue(genDtsCode.startsWith(N4JSGlobals.OUTPUT_FILE_PREAMBLE));
-			String genDtsCodeTrimmed = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
+			String genDtsCodeTrimmedPreamble = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
+			assertTrue(genDtsCodeTrimmedPreamble.startsWith("import 'n4js-runtime'"));
+			String genDtsCodeTrimmed = genDtsCodeTrimmedPreamble.substring("import 'n4js-runtime'".length()).trim();
 
 			assertEquals(data.getUnescapeExpectationRaw(), genDtsCodeTrimmed);
 
