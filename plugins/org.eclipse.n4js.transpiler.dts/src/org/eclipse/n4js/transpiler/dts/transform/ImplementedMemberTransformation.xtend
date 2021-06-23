@@ -11,10 +11,12 @@
 package org.eclipse.n4js.transpiler.dts.transform
 
 import com.google.inject.Inject
+import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4Modifier
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -28,12 +30,18 @@ import org.eclipse.n4js.ts.types.TMemberWithAccessModifier
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TTypedElement
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.NonSymetricMemberKey
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * To each class declaration in the intermediate module, this transformation adds a member declaration
@@ -50,6 +58,12 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  * </ol>
  */
 class ImplementedMemberTransformation extends Transformation {
+
+	@Inject
+	private N4JSTypeSystem ts;
+
+	@Inject
+	private TypeSystemHelper tsh;
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
@@ -106,8 +120,17 @@ class ImplementedMemberTransformation extends Transformation {
 			}
 		}
 
+		if (membersToAmend.empty) {
+			return;
+		}
+
+		// for adjusting the types of members coming from interfaces, we prepare a rule environment
+		// with all implicit type variable bindings of tClass
+		val G_tClass = state.G.wrap;
+		tClass.superClassifierRefs.forEach[tsh.addSubstitutions(G_tClass, it)];
+
 		for (TMember memberToAmend : membersToAmend.values) {
-			val memberNew = addMember(classDecl, memberToAmend as TMemberWithAccessModifier);
+			val memberNew = addMember(classDecl, memberToAmend as TMemberWithAccessModifier, G_tClass);
 
 			memberNew.declaredModifiers += N4Modifier.PUBLIC;
 			val hasDefaultImpl = switch (memberToAmend) {
@@ -127,72 +150,106 @@ class ImplementedMemberTransformation extends Transformation {
 		}
 	}
 
-	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TField fieldToAdd) {
+	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TField fieldToAdd, RuleEnvironment G_tClass) {
 		val fieldNew = _N4FieldDecl(false, fieldToAdd.name, null);
 		classDecl.ownedMembersRaw += fieldNew;
 
-		setDeclaredTypeRef(fieldNew, fieldToAdd);
+		setDeclaredTypeRef(fieldNew, fieldToAdd, G_tClass);
 
 		return fieldNew;
 	}
 
-	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TGetter getterToAdd) {
+	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TGetter getterToAdd, RuleEnvironment G_tClass) {
 		val getterNew = _N4GetterDecl(_LiteralOrComputedPropertyName(getterToAdd.name), null);
 		classDecl.ownedMembersRaw += getterNew;
 
-		setDeclaredTypeRef(getterNew, getterToAdd.typeRef);
+		setDeclaredTypeRef(getterNew, getterToAdd.typeRef, G_tClass);
 
 		return getterNew;
 	}
 
-	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TSetter setterToAdd) {
+	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TSetter setterToAdd, RuleEnvironment G_tClass) {
 		val fpar = _Fpar("value");
 		val setterNew = _N4SetterDecl(_LiteralOrComputedPropertyName(setterToAdd.name), fpar, null);
 		classDecl.ownedMembersRaw += setterNew;
 
-		setDeclaredTypeRef(fpar, setterToAdd.typeRef);
+		setDeclaredTypeRef(fpar, setterToAdd.typeRef, G_tClass);
 
 		return setterNew;
 	}
 
-	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TMethod methodToAdd) {
+	private def dispatch N4MemberDeclaration addMember(N4ClassDeclaration classDecl, TMethod methodToAdd, RuleEnvironment G_tClass) {
 		val methodNew = _N4MethodDecl(methodToAdd.name);
 		classDecl.ownedMembersRaw += methodNew;
 
-		for (TFormalParameter fpar : methodToAdd.fpars) {
-			addFormalParameter(methodNew, fpar);
+		for (TypeVariable typeParam : methodToAdd.typeVars) {
+			addTypeParameter(methodNew, typeParam, G_tClass);
 		}
 
-		val returnTypeRef = methodToAdd.returnTypeRef;
-		if (returnTypeRef !== null) {
-			val typeRefNode = _TypeReferenceNode(null);
-			methodNew.declaredReturnTypeRefNode = typeRefNode;
-			val returnTypeRefCpy = TypeUtils.copy(returnTypeRef);
-			state.info.setOriginalProcessedTypeRef(typeRefNode, returnTypeRefCpy);
+		for (TFormalParameter fpar : methodToAdd.fpars) {
+			addFormalParameter(methodNew, fpar, G_tClass);
 		}
+
+		setReturnTypeRef(methodNew, methodToAdd.returnTypeRef, G_tClass);
 
 		return methodNew;
 	}
 
-	private def void addFormalParameter(N4MethodDeclaration methodDecl, TFormalParameter fparToAdd) {
+	private def void addTypeParameter(N4MethodDeclaration methodDecl, TypeVariable typeParamToAdd, RuleEnvironment G_tClass) {
+		val typeParamNew = _N4TypeVariable(typeParamToAdd.name, typeParamToAdd.isDeclaredCovariant, typeParamToAdd.isDeclaredContravariant);
+		methodDecl.typeVars += typeParamNew;
+
+		setDeclaredUpperBound(typeParamNew, typeParamToAdd.declaredUpperBound, G_tClass);
+	}
+
+	private def void addFormalParameter(N4MethodDeclaration methodDecl, TFormalParameter fparToAdd, RuleEnvironment G_tClass) {
 		val fparNew = _Fpar(fparToAdd.name, fparToAdd.variadic);
 		fparNew.hasInitializerAssignment = fparToAdd.optional;
 		methodDecl.fpars += fparNew;
 
-		setDeclaredTypeRef(fparNew, fparToAdd);
+		setDeclaredTypeRef(fparNew, fparToAdd, G_tClass);
 	}
 
-	private def void setDeclaredTypeRef(TypedElement elementInIM, TTypedElement elementInTModule) {
+	private def void setDeclaredTypeRef(TypedElement elementInIM, TTypedElement elementInTModule, RuleEnvironment G_tClass) {
 		val typeRef = elementInTModule.typeRef;
-		setDeclaredTypeRef(elementInIM, typeRef);
+		setDeclaredTypeRef(elementInIM, typeRef, G_tClass);
 	}
 
-	private def void setDeclaredTypeRef(TypedElement elementInIM, TypeRef typeRef) {
+	private def void setDeclaredTypeRef(TypedElement elementInIM, TypeRef typeRef, RuleEnvironment G_tClass) {
 		if (typeRef !== null) {
+			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
+			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
+
 			val typeRefNode = _TypeReferenceNode(null);
 			elementInIM.declaredTypeRefNode = typeRefNode;
-			val typeRefCpy = TypeUtils.copy(typeRef);
-			state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefCpy);
+
+			state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefSubstCpy);
+		}
+	}
+
+	// FIXME avoid code duplication with previous method
+	private def void setReturnTypeRef(FunctionDefinition funDef, TypeRef typeRef, RuleEnvironment G_tClass) {
+		if (typeRef !== null) {
+			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
+			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
+
+			val typeRefNode = _TypeReferenceNode(null);
+			funDef.declaredReturnTypeRefNode = typeRefNode;
+
+			state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefSubstCpy);
+		}
+	}
+
+	// FIXME avoid code duplication with previous method
+	private def void setDeclaredUpperBound(N4TypeVariable typeParam, TypeRef typeRef, RuleEnvironment G_tClass) {
+		if (typeRef !== null) {
+			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
+			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
+
+			val typeRefNode = _TypeReferenceNode(null);
+			typeParam.declaredUpperBoundNode = typeRefNode;
+
+			state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefSubstCpy);
 		}
 	}
 }

@@ -804,6 +804,14 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
+	public static def _N4TypeVariable(String name, boolean covariant, boolean contravariant) {
+		val result = N4JSFactory.eINSTANCE.createN4TypeVariable;
+		result.name = name;
+		result.declaredCovariant = covariant;
+		result.declaredContravariant = contravariant;
+		return result;
+	}
+
 	public static def _LiteralOrComputedPropertyName(String name) {
 		val result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName;
 		result.kind = PropertyNameKind.STRING;
