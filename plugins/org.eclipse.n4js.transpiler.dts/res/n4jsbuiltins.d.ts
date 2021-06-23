@@ -414,3 +414,15 @@ declare class N4StringBasedEnum {
      */
     public static get literals(): Array<N4StringBasedEnum>
 }
+
+
+declare interface Iterable2<T1, T2> extends Iterable<T1|T2> {}
+declare interface Iterable3<T1, T2, T3> extends Iterable2<T1,T2|T3> {}
+declare interface Iterable4<T1, T2, T3, T4> extends Iterable3<T1,T2, T3|T4> {}
+declare interface Iterable5<T1, T2, T3, T4, T5> extends Iterable4<T1,T2,T3,T4|T5> {}
+declare interface Iterable6<T1, T2, T3, T4, T5, T6> extends Iterable5<T1,T2,T3,T4,T5|T6> {}
+declare interface Iterable7<T1, T2, T3, T4, T5, T6, T7> extends Iterable6<T1,T2,T3,T4,T5,T6|T7> {}
+declare interface Iterable8<T1, T2, T3, T4, T5, T6, T7, T8> extends Iterable7<T1,T2,T3,T4,T5,T6,T7|T8> {}
+declare interface Iterable9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Iterable8<T1,T2,T3,T4,T5,T6,T7,T8|T9> {}
+
+
