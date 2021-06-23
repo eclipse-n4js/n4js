@@ -43,7 +43,8 @@
         "src/n4js"
       ],
       "external": [
-        "src/js"
+        "src/js",
+        "src/d.ts"
       ]
     },
     "requiredRuntimeLibraries": [
