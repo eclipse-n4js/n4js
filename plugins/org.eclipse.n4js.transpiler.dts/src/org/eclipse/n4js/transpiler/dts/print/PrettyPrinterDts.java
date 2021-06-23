@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ArrayBindingPattern;
 import org.eclipse.n4js.n4JS.BindingElement;
@@ -328,6 +329,11 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		List<N4MemberDeclaration> nonConstMembers = new ArrayList<>();
 		for (N4MemberDeclaration member : original.getOwnedMembersRaw()) {
 			if (member instanceof N4FieldDeclaration && ((N4FieldDeclaration) member).isConst()) {
+				if (N4JSLanguageConstants.RESERVED_WORDS.contains(member.getName())) {
+					// reserved words are allowed as name of a member but not of variables,
+					// so we can't rewrite the member in this case to a namespace
+					continue;
+				}
 				constMembers.add(member);
 			} else {
 				nonConstMembers.add(member);
@@ -408,6 +414,11 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		Map<String, N4FieldAccessor> getterSetterNames = new HashMap<>();
 		for (N4MemberDeclaration member : new ArrayList<>(classifier.getOwnedMembersRaw())) {
 			if (member.isStatic()) {
+				if (N4JSLanguageConstants.RESERVED_WORDS.contains(member.getName())) {
+					// reserved words are allowed as name of a member but not of variables,
+					// so we can't rewrite the member in this case to a namespace
+					continue;
+				}
 				if (member instanceof N4FieldAccessor) {
 					if (!getterSetterNames.containsKey(member.getName())) {
 						staticMembers.add(member);
@@ -690,10 +701,24 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (original.isHasInitializerAssignment() && !original.isVariadic()) {
 			write('?');
 		}
-		if (original.getDeclaredTypeRefNode() != null) {
-			processDeclaredTypeRef(original);
+
+		write(": ");
+		TypeReferenceNode<TypeRef> declaredTypeRefNode = original.getDeclaredTypeRefNode();
+		TypeRef declaredTypeRef = declaredTypeRefNode != null
+				? state.info.getOriginalProcessedTypeRef(declaredTypeRefNode)
+				: null;
+		if (declaredTypeRef != null) {
+			boolean requiresParens = original.isVariadic()
+					&& !(declaredTypeRef instanceof ParameterizedTypeRef);
+			if (requiresParens) {
+				write('(');
+			}
+			prettyPrinterTypeRef.processTypeRefNode(declaredTypeRefNode, "");
+			if (requiresParens) {
+				write(')');
+			}
 		} else {
-			write(": any");
+			write("any");
 		}
 		if (original.isVariadic()) {
 			// in TypeScript, the type of a rest parameter must explicitly be declared as an array
@@ -815,7 +840,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (ub != null) {
 			Type n4EnumType = RuleEnvironmentExtensions.n4EnumType(state.G);
 			TypeRef ubTypeRef = state.info.getOriginalProcessedTypeRef(ub);
-			if (ubTypeRef.getDeclaredType() != n4EnumType) {
+			if (ubTypeRef.getDeclaredType() == n4EnumType) {
 				// FIXME reconsider this hack for N4Enum as upper bound
 				return DONE;
 			}
