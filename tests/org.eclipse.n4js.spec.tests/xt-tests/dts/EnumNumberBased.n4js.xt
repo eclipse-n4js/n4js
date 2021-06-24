@@ -19,24 +19,19 @@
 @NumberBased
 export public enum SomeWeekdays {
     /** First day of a week */
-    Monday: 1,
+    Monday,
     /** Day after first day */
-    Tuesday: 2
+    Tuesday: 0
 }
 
 
 
 /* XPECT generated_dts ---
 /** Some days of a week *\/
-export enum SomeWeekdays {
+export const enum SomeWeekdays {
 	/** First day of a week *\/
 	Monday = 1,
 	/** Day after first day *\/
-	Tuesday = 2
-}
-export namespace SomeWeekdays {
-	export const literals: Array<SomeWeekdays>;
-	export function findLiteralByName(name: string): SomeWeekdays;
-	export function findLiteralByValue (value: string): SomeWeekdays;
+	Tuesday = 0
 }
 --- */

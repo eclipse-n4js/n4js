@@ -36,20 +36,15 @@ export public enum Options {
 /**
  * Comment on enum Options
  *\/
-export enum Options {
+export const enum Options {
 	/**
 	 * Enable tag on localhost.
 	 *\/
-	tag,
+	tag = "tag",
 	/**
 	 * Enable strict API definitions, i.e. throw on deprecated server responses.
 	 * Used for testing.
 	 *\/
 	strictAPI = "strict-api"
-}
-export namespace Options {
-	export const literals: Array<Options>;
-	export function findLiteralByName(name: string): Options;
-	export function findLiteralByValue (value: string): Options;
 }
 --- */
