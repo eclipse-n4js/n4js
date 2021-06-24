@@ -21,6 +21,7 @@ import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts;
+import org.eclipse.n4js.transpiler.dts.transform.CutOffTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.EnumAddMissingInitializersTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ImplementedMemberTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
@@ -42,6 +43,8 @@ public class DtsTranspiler extends AbstractTranspiler {
 
 	@Inject
 	private Provider<StaticPolyfillTransformation> staticPolyfillTransformationProvider;
+	@Inject
+	private Provider<CutOffTransformation> cutOffTransformation;
 	@Inject
 	private Provider<ImplementedMemberTransformation> implementedMemberTransformationProvider;
 	@Inject
@@ -68,6 +71,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
 				staticPolyfillTransformationProvider.get(),
+				cutOffTransformation.get(),
 				implementedMemberTransformationProvider.get(),
 				inferredTypesTransformationProvider.get(),
 				trimDtsTransformationProvider.get(),

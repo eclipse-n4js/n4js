@@ -34,6 +34,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -101,6 +102,11 @@ public class TranspilerState {
 	public final STECache steCache;
 
 	/**
+	 * The workspace access for finding containing projects, etc.
+	 */
+	public final WorkspaceAccess workspaceAccess;
+
+	/**
 	 * Cache for temporary variable statements. Never use directly; use method
 	 * {@link TranspilerStateOperations#addOrGetTemporaryVariable(TranspilerState, String, EObject)
 	 * #addOrGetTemporaryVariable()} instead.
@@ -118,7 +124,8 @@ public class TranspilerState {
 	 * Creates a new transpiler state.
 	 */
 	public TranspilerState(N4JSResource resource, N4JSProjectConfigSnapshot project, GeneratorOption[] options,
-			MemberCollector memberCollector, Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info) {
+			MemberCollector memberCollector, Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info,
+			WorkspaceAccess workspaceAccess) {
 		this.resource = resource;
 		this.project = project;
 		this.options = options;
@@ -129,6 +136,7 @@ public class TranspilerState {
 		this.tracer = tracer;
 		this.info = info;
 		this.steCache = steCache;
+		this.workspaceAccess = workspaceAccess;
 		// check
 		if (this.steCache.im != this.im)
 			throw new IllegalStateException(

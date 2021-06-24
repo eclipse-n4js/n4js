@@ -131,7 +131,8 @@ public class PreparationStep {
 		final InformationRegistry info = new InformationRegistry();
 		final STECache steCache = createIM(script, tracer, info);
 
-		return new TranspilerState(resource, project, options, memberCollector, steCache.im, steCache, tracer, info);
+		return new TranspilerState(resource, project, options, memberCollector, steCache.im, steCache, tracer, info,
+				workspaceAccess);
 	}
 
 	private STECache createIM(Script script, Tracer tracer, InformationRegistry info) {

@@ -205,14 +205,18 @@ import com.google.common.collect.Lists;
 		}
 
 		if (showDeclaredType) {
-			// FIXME is there a better way? (maybe via a symbol table entry as in
-			// PrettyPrinterSwitch#caseIdentifierRef())
-			String referenceStr = declType != null
-					? DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, state)
-					: null;
-			if (referenceStr != null) {
-				write(referenceStr);
-				processTypeArguments(typeRef);
+			if (DtsUtils.isDtsExportableDependency(declType, state)) {
+				// FIXME is there a better way? (maybe via a symbol table entry as in
+				// PrettyPrinterSwitch#caseIdentifierRef())
+				String referenceStr = declType != null
+						? DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, state)
+						: null;
+				if (referenceStr != null) {
+					write(referenceStr);
+					processTypeArguments(typeRef);
+				} else {
+					write("any");
+				}
 			} else {
 				write("any");
 			}

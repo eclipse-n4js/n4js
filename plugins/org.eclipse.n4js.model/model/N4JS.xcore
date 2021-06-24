@@ -2131,7 +2131,8 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 		return definedType as TClass;
 	}
 	op ParameterizedTypeRefNodeIterable getSuperClassifierRefs() {
-		return #[superClassRef] + implementedInterfaceRefs;
+		val _superClassRef = superClassRef;
+		return if (_superClassRef !== null) #[_superClassRef] + implementedInterfaceRefs else implementedInterfaceRefs;
 	}
 	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return implementedInterfaceRefs;
