@@ -30,17 +30,12 @@ const c1 = {
 };
 
 /* XPECT generated_dts ---
-declare enum PropNames {
+declare const enum PropNames {
 	field = "-field",
 	field_valid = "field",
 	method = "-method",
 	getter = "-getter",
 	setter = "-setter"
-}
-declare namespace PropNames {
-	export const literals: Array<PropNames>;
-	export function findLiteralByName(name: string): PropNames;
-	export function findLiteralByValue (value: string): PropNames;
 }
 
 declare class C {

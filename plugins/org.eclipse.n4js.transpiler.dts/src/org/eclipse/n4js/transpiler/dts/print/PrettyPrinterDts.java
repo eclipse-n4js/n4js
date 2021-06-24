@@ -92,6 +92,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;
@@ -516,6 +517,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			writeJsdoc(original); // already written in #caseExportDeclaration()
 			write("declare ");
 		}
+
+		EnumKind enumKind = N4JSLanguageUtils.getEnumKind(original);
+		boolean literalBased = enumKind != EnumKind.Normal;
+		writeIf("const ", literalBased);
 		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		write("enum ");
 		write(original.getName());
@@ -524,29 +529,31 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processBlockLike(original.getLiterals(), '{', ",", null, '}');
 		newLine();
 
-		// Workaround since TypeScript enums do not support static methods
+		if (!literalBased) {
+			// Workaround since TypeScript enums do not support static methods
 
-		if (!original.isExported()) {
-			write("declare ");
-		} else {
-			write("export ");
+			if (!original.isExported()) {
+				write("declare ");
+			} else {
+				write("export ");
+			}
+			write("namespace ");
+			write(original.getName());
+			write(" {");
+			out.indent();
+			newLine();
+
+			write("export const literals: Array<" + original.getName() + ">;");
+			newLine();
+			write("export function findLiteralByName(name: string): " + original.getName() + ";");
+			newLine();
+			write("export function findLiteralByValue (value: string): " + original.getName() + ";");
+
+			out.undent();
+			newLine();
+			write('}');
+			newLine();
 		}
-		write("namespace ");
-		write(original.getName());
-		write(" {");
-		out.indent();
-		newLine();
-
-		write("export const literals: Array<" + original.getName() + ">;");
-		newLine();
-		write("export function findLiteralByName(name: string): " + original.getName() + ";");
-		newLine();
-		write("export function findLiteralByValue (value: string): " + original.getName() + ";");
-
-		out.undent();
-		newLine();
-		write('}');
-		newLine();
 
 		return DONE;
 	}
