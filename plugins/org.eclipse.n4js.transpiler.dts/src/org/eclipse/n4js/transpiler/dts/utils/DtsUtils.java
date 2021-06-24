@@ -53,6 +53,9 @@ public class DtsUtils {
 	 * to .d.ts. Iff this returns <code>false</code>, the .d.ts export will be cut off at this reference.
 	 */
 	public static boolean isDtsExportableReference(Resource resource, TranspilerState state) {
+		if (true) { // FIXME TEMPORARILY DISABLED
+			return true;
+		}
 		if (N4Scheme.isResourceWithN4Scheme(resource)) {
 			return true;
 		}
