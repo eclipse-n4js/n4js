@@ -16,7 +16,6 @@ import static org.eclipse.n4js.N4JSGlobals.N4IDL_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
-import static org.eclipse.n4js.N4JSGlobals.TS_FILE_EXTENSION;
 
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
@@ -78,13 +77,12 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 				N4IDL_FILE_EXTENSION);
 		registerTypableFiles(N4JSD_FILE_EXTENSION, N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION,
 				JSX_FILE_EXTENSION, N4IDL_FILE_EXTENSION);
-		registerRawFiles(JS_FILE_EXTENSION, JSX_FILE_EXTENSION, TS_FILE_EXTENSION);
+		registerRawFiles(JS_FILE_EXTENSION, JSX_FILE_EXTENSION);
 
 		// Register d.ts subgenerator
 		subGeneratorRegistry.register(dtsSubGenerator, N4JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(dtsSubGenerator, N4JSX_FILE_EXTENSION);
 		subGeneratorRegistry.register(dtsSubGenerator, N4JSD_FILE_EXTENSION);
-		subGeneratorRegistry.register(dtsSubGenerator, TS_FILE_EXTENSION);
 
 		// Register ECMAScript subgenerator
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JS_FILE_EXTENSION);

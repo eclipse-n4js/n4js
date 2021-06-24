@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ArrayBindingPattern;
@@ -162,7 +163,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processPreamble();
 		processAnnotations(original_IM.getAnnotations());
 
-		write("import 'n4js-runtime'");
+		write(N4JSGlobals.IMPORT_N4JSGLOBALS);
 		newLine();
 
 		process(original_IM.getScriptElements(), () -> {

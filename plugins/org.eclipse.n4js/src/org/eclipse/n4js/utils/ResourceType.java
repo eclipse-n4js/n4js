@@ -35,8 +35,6 @@ public enum ResourceType {
 	XT,
 	/** Raw file has extension <code>.n4idl</code> or <code>.n4idl.xt</code> */
 	N4IDL,
-	/** Raw file has extension <code>.ts</code> or <code>.d.ts</code> */
-	TS,
 
 	/** Not recognized, e.g. <code>.exe</code> or invalid data, e.g. <code>null</code>. */
 	UNKOWN;
@@ -48,7 +46,6 @@ public enum ResourceType {
 	private final static String EXT_N4JSD = N4JSGlobals.N4JSD_FILE_EXTENSION;
 	private final static String EXT_XT = N4JSGlobals.XT_FILE_EXTENSION;
 	private final static String EXT_N4IDL = N4JSGlobals.N4IDL_FILE_EXTENSION;
-	private final static String EXT_TS = N4JSGlobals.TS_FILE_EXTENSION;
 
 	/**
 	 * Based on {@link URI} of the provided {@link EObject eObject} determines type of the resource. Delegates to
@@ -135,8 +132,6 @@ public enum ResourceType {
 			return XT;
 		case EXT_N4IDL:
 			return N4IDL;
-		case EXT_TS:
-			return TS;
 		default:
 			return UNKOWN;
 		}

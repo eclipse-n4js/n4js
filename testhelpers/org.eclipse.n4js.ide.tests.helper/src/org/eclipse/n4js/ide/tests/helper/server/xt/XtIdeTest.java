@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
+import static org.eclipse.n4js.N4JSGlobals.IMPORT_N4JSGLOBALS;
+import static org.eclipse.n4js.N4JSGlobals.OUTPUT_FILE_PREAMBLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -549,10 +551,10 @@ public class XtIdeTest extends AbstractIdeTest {
 		try {
 			FileURI genDtsFileURI = getFileURIFromModuleName(genDtsFileName);
 			String genDtsCode = Files.readString(genDtsFileURI.toPath());
-			assertTrue(genDtsCode.startsWith(N4JSGlobals.OUTPUT_FILE_PREAMBLE));
-			String genDtsCodeTrimmedPreamble = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
-			assertTrue(genDtsCodeTrimmedPreamble.startsWith("import 'n4js-runtime'"));
-			String genDtsCodeTrimmed = genDtsCodeTrimmedPreamble.substring("import 'n4js-runtime'".length()).trim();
+			assertTrue(genDtsCode.startsWith(OUTPUT_FILE_PREAMBLE));
+			String genDtsCodeTrimmedPreamble = genDtsCode.substring(OUTPUT_FILE_PREAMBLE.length()).trim();
+			assertTrue(genDtsCodeTrimmedPreamble.startsWith(IMPORT_N4JSGLOBALS));
+			String genDtsCodeTrimmed = genDtsCodeTrimmedPreamble.substring(IMPORT_N4JSGLOBALS.length()).trim();
 
 			assertEquals(data.getUnescapeExpectationRaw(), genDtsCodeTrimmed);
 

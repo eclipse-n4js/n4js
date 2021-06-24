@@ -219,8 +219,7 @@ public class N4JSLanguageUtils {
 		val ResourceType resourceType = ResourceType.getResourceType(resourceURI);
 
 		if (resourceType === ResourceType.JS
-			|| resourceType === ResourceType.JSX
-			|| resourceType === ResourceType.TS) {
+			|| resourceType === ResourceType.JSX) {
 
 			return OPAQUE_JS_MODULES; // JavaScript modules are not processed iff OPAQUE_JS_MODULES is true
 
