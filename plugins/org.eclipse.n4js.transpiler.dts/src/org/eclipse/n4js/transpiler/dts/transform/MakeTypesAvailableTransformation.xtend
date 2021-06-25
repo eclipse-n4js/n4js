@@ -20,6 +20,8 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.workspace.WorkspaceAccess
+import java.util.Set
+import java.util.HashSet
 
 /**
  * For all types referenced from a type reference in the intermediate model, this transformation is responsible for
@@ -49,11 +51,15 @@ class MakeTypesAvailableTransformation extends Transformation {
 	def private void makeAllTypesAvailable(TypeReferenceNode<?> typeRefNode) {
 		val typeRef = state.info.getOriginalProcessedTypeRef(typeRefNode);
 		if (typeRef !== null) {
-			makeAllTypesAvailable(typeRef);
+			makeAllTypesAvailable(typeRef, new HashSet());
 		}
 	}
 
-	def private void makeAllTypesAvailable(TypeRef typeRef) {
+	def private void makeAllTypesAvailable(TypeRef typeRef, Set<TypeRef> visited) {
+		if (visited.contains(typeRef)) {
+			return; // FIXME infinite recursion???
+		}
+		visited.add(typeRef);
 		TypeUtils.forAllTypeRefs(typeRef, ParameterizedTypeRef, true, true, [ ptr |
 			val declType = ptr.declaredType;
 			if (declType !== null) {
@@ -63,7 +69,7 @@ class MakeTypesAvailableTransformation extends Transformation {
 				if (typeArg instanceof Wildcard) {
 					val upperBound = typeArg.getDeclaredOrImplicitUpperBound();
 					if (upperBound !== null) {
-						makeAllTypesAvailable(upperBound); // FIXME infinite recursion???
+						makeAllTypesAvailable(upperBound, visited);
 					}
 				}
 			}
