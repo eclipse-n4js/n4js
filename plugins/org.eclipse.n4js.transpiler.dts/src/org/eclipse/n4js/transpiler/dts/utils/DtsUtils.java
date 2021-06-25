@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.transpiler.dts.utils;
 
+import java.util.Set;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
@@ -23,10 +25,18 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
  * Some utilities for .d.ts export.
  */
 public class DtsUtils {
+
+	/**
+	 * White list for 3rd party libraries with an <code>@n4jsd</code> project that is compatible with their
+	 * <code>@types</code> project. References to such projects will be exported to .d.ts.
+	 */
+	private static final Set<String> DTS_EXPORTABLE_THIRD_PARTY_LIBS = ImmutableSet.of(/* "immutable" */);
 
 	/** @see #isDtsExportableReference(Resource, TranspilerState) */
 	public static boolean isDtsExportableDependency(Type type, TranspilerState state) {
@@ -43,12 +53,18 @@ public class DtsUtils {
 	 * to .d.ts. Iff this returns <code>false</code>, the .d.ts export will be cut off at this reference.
 	 */
 	public static boolean isDtsExportableReference(Resource resource, TranspilerState state) {
+		if (true) { // FIXME TEMPORARILY DISABLED
+			return true;
+		}
 		if (N4Scheme.isResourceWithN4Scheme(resource)) {
 			return true;
 		}
 		N4JSProjectConfigSnapshot project = resource != null
 				? state.workspaceAccess.findProjectContaining(resource)
 				: null;
+		if (project != null && DTS_EXPORTABLE_THIRD_PARTY_LIBS.contains(project.getName())) {
+			return true;
+		}
 		ProjectDescription pd = project != null
 				? project.getProjectDescription()
 				: null;
