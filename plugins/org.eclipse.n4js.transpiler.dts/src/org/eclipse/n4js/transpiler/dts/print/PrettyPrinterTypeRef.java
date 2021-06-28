@@ -275,8 +275,12 @@ import com.google.common.collect.Lists;
 
 		// type 'undefined' used as type argument in N4JS, corresponds to 'void' in TypeScript:
 		if (typeRef.getDeclaredType() == RuleEnvironmentExtensions.undefinedType(state.G)) {
-			write("void");
-			return;
+			// DISABLED (it leads to compile problems if an upper bound is in effect, because 'void' won't be a subtype
+			// of the upper bound, but 'undefined' will be; since we cannot easily find out whether an upper bound is in
+			// effect at this point in the code, we disable this special replacement with 'void' for now:
+
+			// write("void");
+			// return;
 		}
 
 		processTypeRef(typeRef);
