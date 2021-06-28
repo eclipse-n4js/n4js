@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+export public class C {
+	public fieldC: string;
+}
+export public class D extends C {}
+
+export public class G<T_G extends C> {
+	public fieldG: T_G;
+}
+
+export public type Alias<T_A extends C> = G<T_A>;
+
+export let v: Alias<D>;
+
+export public interface TestIfc {
+	public m(p: Alias<D>): Alias<D>;
+}
+export public class TestCls implements TestIfc {
+	@Override
+	public m(p: Alias<D>): Alias<D> { return null; }
+}
+
+
+/* XPECT generated_dts ---
+export class C {
+	public fieldC: string;
+}
+export class D extends C {}
+export class G<T_G extends C> {
+	public fieldG: T_G;
+}
+export type Alias<T_A extends C> = G<T_A>;
+export let v: Alias<D>;
+export interface TestIfc {
+	m(p: Alias<D>): Alias<D>;
+}
+export class TestCls implements TestIfc {
+	public m(p: Alias<D>): Alias<D>;
+}
+--- */

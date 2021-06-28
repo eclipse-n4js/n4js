@@ -591,6 +591,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		}
 		write("type ");
 		write(alias.getName());
+		if (!alias.getTypeVars().isEmpty()) {
+			write("<");
+			for (int i = 0; i < alias.getTypeVars().size(); i++) {
+				if (i > 0) {
+					write(", ");
+				}
+				N4TypeVariable typeVar = alias.getTypeVars().get(i);
+				process(typeVar);
+			}
+			write(">");
+		}
 		write(" = ");
 		process(alias.getDeclaredTypeRefNode());
 		write(";");
