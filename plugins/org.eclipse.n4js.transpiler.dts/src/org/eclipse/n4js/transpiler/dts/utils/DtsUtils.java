@@ -105,6 +105,9 @@ public class DtsUtils {
 				String namespaceName = ((NamespaceImportSpecifier) importSpec).getAlias();
 				return namespaceName + "." + ste.getName();
 			}
+			if ("n4js-runtime-ecma402".equals(type.getContainingModule().getProjectName())) {
+				return "Intl." + ste.getName();
+			}
 			return ste.getName();
 		}
 		return null;
