@@ -7,10 +7,9 @@
  *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
- */@@Global
-@@ProvidedByRuntime
+ */
+@@Global @@ProvidedByRuntime
 
-import {CollatorOptions} from "IntlClasses";
 
 @Final
 @Polyfill export external public class String extends String {

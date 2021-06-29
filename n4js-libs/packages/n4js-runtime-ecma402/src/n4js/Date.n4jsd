@@ -10,7 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {DateTimeFormatOptions} from "IntlClasses";
 
 @Final
 @Polyfill export external public class Date extends Date {

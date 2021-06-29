@@ -8,13 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
- 
-@@Global
-@@ProvidedByRuntime
+@@Global @@ProvidedByRuntime
 
-import {Collator as _Collator} from "IntlClasses";
-import {DateTimeFormat as _DateTimeFormat} from "IntlClasses";
-import {NumberFormat as _NumberFormat} from "IntlClasses";
 
 /**
  * Name space for the  ECMAScript Internationalization API (ECMA-402).
@@ -35,17 +30,17 @@ export external public class Intl {
 	 * The ECMA-402 Collator class, modelled as constant field since nested class declarations
 	 * or class epxressions are not suported yet. 
 	 */
-	public const Collator: constructor{_Collator};
+	public const Collator: constructor{Collator};
 	
 	/**
 	 * The ECMA-402 NumberFormat class, modelled as constant field since nested class declarations
 	 * or class epxressions are not suported yet.
 	 */
-	public const NumberFormat: constructor{_NumberFormat};
+	public const NumberFormat: constructor{NumberFormat};
 	
 	/**
 	 * The ECMA-402 DateTimeFormat class, modelled as constant field since nested class declarations
 	 * or class epxressions are not suported yet.
 	 */
-	public const DateTimeFormat: constructor{_DateTimeFormat};
+	public const DateTimeFormat: constructor{DateTimeFormat};
 }
