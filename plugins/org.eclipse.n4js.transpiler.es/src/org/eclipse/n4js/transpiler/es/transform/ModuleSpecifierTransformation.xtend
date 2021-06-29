@@ -132,7 +132,7 @@ class ModuleSpecifierTransformation extends Transformation {
 		return result;
 	}
 
-	def private String createAbsoluteModuleSpecifier(N4JSProjectConfigSnapshot targetProject, TModule targetModule) {
+	def protected String createAbsoluteModuleSpecifier(N4JSProjectConfigSnapshot targetProject, TModule targetModule) {
 		val sb = new StringBuilder();
 
 		// first segment is the project name
@@ -164,7 +164,7 @@ class ModuleSpecifierTransformation extends Transformation {
 		return sb.toString();
 	}
 
-	def private N4JSProjectName getActualProjectName(N4JSProjectConfigSnapshot project) {
+	def protected N4JSProjectName getActualProjectName(N4JSProjectConfigSnapshot project) {
 		if (project.type === ProjectType.DEFINITION) {
 			val definedProjectName = project.definesPackage;
 			if (definedProjectName !== null && !definedProjectName.isEmpty) {
