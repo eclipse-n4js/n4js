@@ -13,6 +13,7 @@ package org.eclipse.n4js.transpiler.dts.utils;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
@@ -24,6 +25,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -87,8 +89,13 @@ public class DtsUtils {
 	 * of a namespace and "." as separator.
 	 */
 	public static String getReferenceToTypeIfLocallyAvailable(Type type, TranspilerState state) {
-		if (N4Scheme.isFromResourceWithN4Scheme(type)) {
-			// simple case: the type reference points to a built-in type
+		boolean isBuiltInOrGlobal = N4Scheme.isFromResourceWithN4Scheme(type);
+		if (!isBuiltInOrGlobal) {
+			TModule module = EcoreUtil2.getContainerOfType(type, TModule.class);
+			isBuiltInOrGlobal = module != null && AnnotationDefinition.GLOBAL.hasAnnotation(module);
+		}
+		if (isBuiltInOrGlobal) {
+			// simple case: the type reference points to a built-in type OR a type from a global module
 			// -> can simply use its name in output code, because they are global and available everywhere
 			if (type == RuleEnvironmentExtensions.intType(state.G)) {
 				type = RuleEnvironmentExtensions.numberType(state.G);

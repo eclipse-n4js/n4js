@@ -126,6 +126,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			N4Modifier.PROJECT,
 			N4Modifier.PUBLIC);
 
+	// FIXME this is probably obsolete, since types from globally available modules are covered in
+	// DtsUtils#getReferenceToTypeIfLocallyAvailable(Type, TranspilerState)
 	private static final Set<String> GLOBALLY_AVAILABLE = ImmutableSet.of("Set", "Iterator", "url", "URLSearchParams");
 
 	private final LineColTrackingAppendable out;
