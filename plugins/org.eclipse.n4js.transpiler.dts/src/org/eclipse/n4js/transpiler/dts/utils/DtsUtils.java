@@ -102,6 +102,11 @@ public class DtsUtils {
 			} else if (type == RuleEnvironmentExtensions.iteratorEntryType(state.G)) {
 				return "IteratorReturnResult";
 			}
+			if (type.getContainingModule() != null
+					&& "IntlClasses".equals(type.getContainingModule().getSimpleName())
+					&& "n4js-runtime-ecma402".equals(type.getContainingModule().getProjectName())) {
+				return "Intl." + type.getName();
+			}
 			return type.getName();
 		}
 		SymbolTableEntryOriginal ste = state.steCache.mapOriginal.get(type);
@@ -111,9 +116,6 @@ public class DtsUtils {
 			if (importSpec instanceof NamespaceImportSpecifier) {
 				String namespaceName = ((NamespaceImportSpecifier) importSpec).getAlias();
 				return namespaceName + "." + ste.getName();
-			}
-			if ("n4js-runtime-ecma402".equals(type.getContainingModule().getProjectName())) {
-				return "Intl." + ste.getName();
 			}
 			return ste.getName();
 		}
