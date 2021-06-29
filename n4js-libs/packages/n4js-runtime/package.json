@@ -17,7 +17,8 @@
   "main": "./src-gen/index.js",
   "files": [
     "src",
-    "src-gen"
+    "src-gen",
+    "n4jsglobals.d.ts"
   ],
   "dependencies": {
     "esm": "3.2.25",
