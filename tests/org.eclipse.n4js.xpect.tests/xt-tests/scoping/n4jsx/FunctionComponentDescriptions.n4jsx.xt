@@ -38,8 +38,8 @@ class ~Props {
 	public myProp: string;
 }
 
-	/* XPECT scope at 'React.<|>Element'  ---
-Component, ComponentProps, Element, Fragment, PropConstraint, PropType,
+	/* XPECT scope at 'React.<|>ReactElement'  ---
+Component, ComponentProps, ReactElement, Fragment, PropConstraint, PropType,
 PropTypes, PureComponent, cloneElement, createElement, isValidElement,
 renderToStaticMarkup, renderToString
 --- */
