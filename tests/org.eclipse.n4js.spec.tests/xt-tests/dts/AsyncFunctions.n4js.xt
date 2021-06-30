@@ -32,8 +32,8 @@ export public async function foo5(): Promise<number,any> {
 
 
 /* XPECT generated_dts ---
-export function foo1(): Promise<void>;
-export function foo2(): Promise<void>;
+export function foo1(): Promise<undefined>;
+export function foo2(): Promise<undefined>;
 export function foo3(): Promise<any>;
 export function foo4(): Promise<number>;
 export function foo5(): Promise<number>;
