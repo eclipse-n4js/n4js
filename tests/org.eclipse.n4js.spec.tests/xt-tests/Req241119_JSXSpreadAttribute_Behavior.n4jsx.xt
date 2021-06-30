@@ -35,7 +35,7 @@ interface ~BigLabelProps extends React.ComponentProps {
 }
 
 class BigLabel extends React.Component<BigLabelProps, Object> {
-    @Override public render(): React.Element {
+    @Override public render(): React.ReactElement {
         return <h1></h1>
     }
 }
@@ -50,7 +50,7 @@ class Box extends React.Component<BoxProps, Object> {
 		p1: 10,
 		p2: "Some text"
 	};
-    @Override public render(): React.Element {
+    @Override public render(): React.ReactElement {
         return <div>
 		// XPECT errors --> "Attribute p1 has wrong type because int not subtype of string." at "this.obj"
             <BigLabel {...this.obj} />
@@ -62,7 +62,7 @@ class Box2 extends React.Component<BoxProps, Object> {
 	private obj = {
 		p1: "Hi"
 	};
-    @Override public render(): React.Element {
+    @Override public render(): React.ReactElement {
         return <div>
 		// XPECT errors --> "Non-optional property p2 should be specified." at "BigLabel"
             <BigLabel {...this.obj} />
@@ -74,7 +74,7 @@ class Box3 extends React.Component<BoxProps, Object> {
 	private obj = {
 		p1: "Hi"
 	};
-    @Override public render(): React.Element {
+    @Override public render(): React.ReactElement {
         return <div>
 		// XPECT noerrors -->
             <BigLabel {...this.obj} p2="Some text" />
@@ -91,7 +91,7 @@ class Box4 extends React.Component<Box4Props, Object> {
 	private obj = {
 		p1: "Hi"
 	};
-    @Override public render(): React.Element {
+    @Override public render(): React.ReactElement {
         return <div>
 			// XPECT noerrors -->
             <BigLabel {...this.props} />
@@ -104,7 +104,7 @@ class Box5 extends React.Component<BoxProps, Object> {
 		get p1():string {return "Hi";},
 		p2: "Some text"
 	};
-    @Override public render(): React.Element {
+    @Override public render(): React.ReactElement {
         return <div>
 		// XPECT noerrors -->
             <BigLabel {...this.obj} />
@@ -127,7 +127,7 @@ class Box6 extends React.Component<Box6Props, Object> {
 		p2: "Some text"
 	};
 	*/
-    @Override public render(): React.Element {
+    @Override public render(): React.ReactElement {
         return <div>
 		//It is OK to provide more properties than needed in spread operator XPECT noerrors -->
             <BigLabel {...this.props} />
@@ -141,7 +141,7 @@ interface P<T> extends React.ComponentProps {
 }
 class C extends React.PureComponent<P<int>, undefined> {
     @Override
-    public render(): React.Element {
+    public render(): React.ReactElement {
         return null;
     }
 }
@@ -149,7 +149,7 @@ class C extends React.PureComponent<P<int>, undefined> {
 // XPECT noerrors -->
 <C t={5} />
 
-function D(props: P<int>): React.Element {
+function D(props: P<int>): React.ReactElement {
 	return <div/>;
 }
 

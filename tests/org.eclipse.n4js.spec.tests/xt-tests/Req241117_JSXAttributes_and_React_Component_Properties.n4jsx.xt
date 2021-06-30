@@ -36,7 +36,7 @@ class MyProps implements React.ComponentProps  {
 	private z: string;
 }
 
-function MyReactFuncComponent(props: ~MyProps): React.Element {
+function MyReactFuncComponent(props: ~MyProps): React.ReactElement {
 	return (
 		<div>{props.x}</div>,
 		<div>{props.y}</div>
@@ -49,7 +49,7 @@ function MyReactFuncComponent(props: ~MyProps): React.Element {
 // XPECT errors --> "field z is not available for structurally referenced type ~MyProps." at "z"
 <MyReactFuncComponent a={2} x={1} y="Hello" z="I am private property"/>
 
-function MyOtherReactFuncComponent(props: ~React.ComponentProps with {a: int, b?: string}): React.Element {
+function MyOtherReactFuncComponent(props: ~React.ComponentProps with {a: int, b?: string}): React.ReactElement {
 	return (
 		<div>{props.a}</div>,
 		<div>{props.b}</div>
@@ -61,7 +61,7 @@ function MyOtherReactFuncComponent(props: ~React.ComponentProps with {a: int, b?
 <MyOtherReactFuncComponent a={5}/>;
 
 
-const MyThirdrReactFuncComponent = (props: ~MyProps): React.Element =>  {
+const MyThirdrReactFuncComponent = (props: ~MyProps): React.ReactElement =>  {
 	return (
 		<div>{props.x}</div>,
 		<div>{props.y}</div>

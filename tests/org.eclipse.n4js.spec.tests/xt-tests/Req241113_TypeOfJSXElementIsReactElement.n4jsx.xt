@@ -30,20 +30,20 @@
 
 import * as React from "react/index"
 
-function MyReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
+function MyReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.ReactElement {
 	return (<div></div>);
 }
 
-// XPECT type of '<MyReactFuncComponent myProp="Hello"/>' --> Element
+// XPECT type of '<MyReactFuncComponent myProp="Hello"/>' --> ReactElement
 var a = <MyReactFuncComponent myProp="Hello"/>;
 
 
 class C extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		return <button/>
 	}
 }
 
-// XPECT type of 'b' --> Element
+// XPECT type of 'b' --> ReactElement
 var b = <C prop={5}/>

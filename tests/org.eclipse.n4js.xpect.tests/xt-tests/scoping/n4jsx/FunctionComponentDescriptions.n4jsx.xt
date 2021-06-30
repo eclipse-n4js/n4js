@@ -43,12 +43,12 @@ Component, ComponentProps, Element, Fragment, PropConstraint, PropType,
 PropTypes, PureComponent, cloneElement, createElement, isValidElement,
 renderToStaticMarkup, renderToString
 --- */
-export public function NamedFnComponent(props: Props): React.Element {
+export public function NamedFnComponent(props: Props): React.ReactElement {
 	return (<div>{props.myProp}</div>);
 }
 
 
-export public const AnonymusFnComponent = (props: ~Props): React.Element =>  {
+export public const AnonymusFnComponent = (props: ~Props): React.ReactElement =>  {
 	return (
 		<div>{props.myProp}</div>
 	);

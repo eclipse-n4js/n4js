@@ -45,12 +45,12 @@ class ~Props {
 	public myProp: string;
 }
 
-export public function NamedFnComponent(props: Props): React.Element {
+export public function NamedFnComponent(props: Props): React.ReactElement {
 	return (<div>{props.myProp}</div>);
 }
 
 
-export public const AnonymusFnComponent = (props: ~Props): React.Element =>  {
+export public const AnonymusFnComponent = (props: ~Props): React.ReactElement =>  {
 	return (
 		<div>{props.myProp}</div>
 	);
