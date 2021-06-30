@@ -124,24 +124,27 @@ import com.google.common.collect.Lists;
 			}
 		}
 
-		if (typeRef instanceof ComposedTypeRef) {
+		if (!DtsUtils.isSupportedTypeRef(typeRef)) {
+			// unsupported type reference
+			write("any");
+		} else if (typeRef instanceof ComposedTypeRef) {
 			processComposedTypeRef((ComposedTypeRef) typeRef);
 		} else if (typeRef instanceof FunctionTypeExprOrRef) {
 			processFunctionTypeExprOrRef((FunctionTypeExprOrRef) typeRef);
 		} else if (typeRef instanceof ParameterizedTypeRef) {
 			processParameterizedTypeRef((ParameterizedTypeRef) typeRef);
 		} else if (typeRef instanceof ExistentialTypeRef) {
-			// TODO
-			write("any");
+			// should have been covered by case "unsupported type reference" above!
+			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
 		} else if (typeRef instanceof ThisTypeRef) {
-			// TODO
-			write("any");
+			// should have been covered by case "unsupported type reference" above!
+			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
 		} else if (typeRef instanceof TypeTypeRef) {
-			// TODO
-			write("any");
+			// should have been covered by case "unsupported type reference" above!
+			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
 		} else if (typeRef instanceof UnknownTypeRef) {
-			// TODO
-			write("any");
+			// should have been covered by case "unsupported type reference" above!
+			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
 		} else {
 			throw new IllegalStateException("unknown subclass of " + ComposedTypeRef.class.getSimpleName() + ": "
 					+ typeRef.getClass().getSimpleName());

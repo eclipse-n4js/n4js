@@ -46,6 +46,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TModule;
@@ -177,6 +178,11 @@ public abstract class TranspilerComponent {
 	@SuppressWarnings("javadoc")
 	protected void replace(VariableBinding varBinding, VariableDeclaration... varDecls) {
 		TranspilerStateOperations.replace(state, varBinding, varDecls);
+	}
+
+	@SuppressWarnings("javadoc")
+	protected void replace(TypeRef typeRef, TypeRef replacement) {
+		TranspilerStateOperations.replace(state, typeRef, replacement);
 	}
 
 	@SuppressWarnings("javadoc")

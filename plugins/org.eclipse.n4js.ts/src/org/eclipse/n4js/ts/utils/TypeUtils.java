@@ -28,6 +28,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -1169,7 +1170,7 @@ public class TypeUtils {
 	 */
 	public static Set<TypeVariable> getReferencedTypeVars(EObject obj) {
 		Set<TypeVariable> result = new LinkedHashSet<>();
-		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, ptr -> {
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, null, ptr -> {
 			Type declType = ptr.getDeclaredType();
 			if (declType instanceof TypeVariable) {
 				result.add((TypeVariable) declType);
@@ -1185,7 +1186,7 @@ public class TypeUtils {
 	 */
 	public static Set<Type> getReferencedDeclaredTypes(EObject obj) {
 		Set<Type> result = new LinkedHashSet<>();
-		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, ptr -> {
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, null, ptr -> {
 			Type declType = ptr.getDeclaredType();
 			if (declType != null) {
 				result.add(declType);
@@ -1201,11 +1202,22 @@ public class TypeUtils {
 	 * <p>
 	 * The traversal is aborted early as soon as the given operation returns <code>false</code>.
 	 *
+	 * @param ignore
+	 *            iff this predicate is non-<code>null</code> and returns <code>true</code>, the given object and all
+	 *            its children will be ignored, i.e. 'operation' won't be invoked even if the object is of type
+	 *            'typeRefKind'.
 	 * @return <code>true</code> iff the given operation returned <code>true</code> for all
 	 *         {@code ParameterizedTypeRef}s or there were no {@code ParameterizedTypeRef}s
 	 */
-	public static <T extends TypeRef> boolean forAllTypeRefs(EObject obj, Class<T> typeRefKind, boolean includeChildren,
-			boolean followFunctionTypeRefs, Predicate<T> operation, RecursionGuard<IdentifiableElement> guard) {
+	public static <T extends TypeRef> boolean forAllTypeRefs(EObject obj, Class<T> typeRefKind,
+			boolean includeChildren, boolean followFunctionTypeRefs,
+			Predicate<EObject> ignore, Predicate<T> operation,
+			RecursionGuard<IdentifiableElement> guard) {
+
+		// check if the current object is being ignored
+		if (ignore != null && ignore.test(obj)) {
+			return true;
+		}
 		// invoke operation (if applicable)
 		if (typeRefKind.isInstance(obj)) {
 			if (!operation.test(typeRefKind.cast(obj))) {
@@ -1219,7 +1231,7 @@ public class TypeUtils {
 				guard = new RecursionGuard<>();
 			}
 			if (guard.tryNext(f)) {
-				if (!forAllTypeRefs(f, typeRefKind, true, followFunctionTypeRefs, operation, guard)) {
+				if (!forAllTypeRefs(f, typeRefKind, true, followFunctionTypeRefs, ignore, operation, guard)) {
 					return false;
 				}
 			}
@@ -1229,7 +1241,7 @@ public class TypeUtils {
 					guard = new RecursionGuard<>();
 				}
 				if (guard.tryNext(m)) {
-					if (!forAllTypeRefs(m, typeRefKind, true, followFunctionTypeRefs, operation, guard)) {
+					if (!forAllTypeRefs(m, typeRefKind, true, followFunctionTypeRefs, ignore, operation, guard)) {
 						return false;
 					}
 				}
@@ -1237,9 +1249,15 @@ public class TypeUtils {
 		}
 		// continue with contents
 		if (includeChildren) {
-			final Iterator<EObject> iter = obj.eAllContents();
+			final TreeIterator<EObject> iter = obj.eAllContents();
 			while (iter.hasNext()) {
-				if (!forAllTypeRefs(iter.next(), typeRefKind, false, followFunctionTypeRefs, operation, guard)) {
+				EObject curr = iter.next();
+				if (ignore != null && ignore.test(curr)) {
+					iter.prune();
+					continue;
+				}
+				if (!forAllTypeRefs(curr, typeRefKind, false, followFunctionTypeRefs, ignore, operation,
+						guard)) {
 					return false;
 				}
 			}

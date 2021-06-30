@@ -22,8 +22,13 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks
+import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
+import org.eclipse.n4js.transpiler.utils.TranspilerUtils
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TypeAccessModifier
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 
 /**
  * Removes everything from the IM that is not required for .d.ts export.
@@ -54,6 +59,19 @@ class TrimForDtsTransformation extends Transformation {
 			.filter[!isPublicMember(it)]
 			.toList;
 		toBeRemoved3.forEach[remove(it)];
+
+		// remove all unsupported type references
+		// (the pretty printer would replace them with 'any' anyway, but we need to remove them to
+		// let SanitizeImportsTransformation the references are no longer used)
+		val toBeRemoved4 = collectNodes(state.im, true, TypeRef)
+			.filter[!DtsUtils.isSupportedTypeRef(it)]
+			.toList;
+		val anySTE = getSymbolTableEntryOriginal(RuleEnvironmentExtensions.anyType(state.G), true);
+		toBeRemoved4.forEach[ typeRef |
+			if (TranspilerUtils.isIntermediateModelElement(typeRef)) { // this check is required, because we might have already removed a parent reference of 'typeRef' from the IM
+				replace(typeRef, TranspilerBuilderBlocks._ParameterizedTypeRef(anySTE));
+			}
+		];
 	}
 
 	def private boolean isPureStatement(EObject obj) {

@@ -11,6 +11,9 @@
 package org.eclipse.n4js.transpiler.dts.transform
 
 import com.google.inject.Inject
+import java.util.HashSet
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
@@ -20,8 +23,6 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.workspace.WorkspaceAccess
-import java.util.Set
-import java.util.HashSet
 
 /**
  * For all types referenced from a type reference in the intermediate model, this transformation is responsible for
@@ -60,7 +61,7 @@ class MakeTypesAvailableTransformation extends Transformation {
 			return; // FIXME infinite recursion???
 		}
 		visited.add(typeRef);
-		TypeUtils.forAllTypeRefs(typeRef, ParameterizedTypeRef, true, true, [ ptr |
+		TypeUtils.forAllTypeRefs(typeRef, ParameterizedTypeRef, true, true, [mustBeIgnored], [ ptr |
 			val declType = ptr.declaredType;
 			if (declType !== null) {
 				makeTypeAvailable(declType);
@@ -113,5 +114,12 @@ class MakeTypesAvailableTransformation extends Transformation {
 		}
 		// we tried our best, but this type cannot be made available
 		// --> the PrettyPrinterTypeRef will replace it with 'any'
+	}
+
+	def private boolean mustBeIgnored(EObject obj) {
+		if (obj instanceof TypeRef) {
+			return !DtsUtils.isSupportedTypeRef(obj);
+		}
+		return false;
 	}
 }

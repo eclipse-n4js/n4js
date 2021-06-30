@@ -21,6 +21,11 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
@@ -48,6 +53,21 @@ public class DtsUtils {
 	/** @see #isDtsExportableReference(Resource, TranspilerState) */
 	public static boolean isDtsExportableDependency(TModule module, TranspilerState state) {
 		return isDtsExportableReference(module != null ? module.eResource() : null, state);
+	}
+
+	/**
+	 * Tells whether the given type reference is supported by the .d.ts export. Otherwise, the type reference will be
+	 * replaced by 'any'.
+	 */
+	public static boolean isSupportedTypeRef(TypeRef typeRef) {
+		// these are the so far unsupported type references
+		if (typeRef instanceof ExistentialTypeRef
+				|| typeRef instanceof ThisTypeRef
+				|| typeRef instanceof TypeTypeRef
+				|| typeRef instanceof UnknownTypeRef) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
