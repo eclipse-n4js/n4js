@@ -616,6 +616,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processAnnotations(original.getAnnotations());
 		processMemberModifiers(original);
 		processPropertyName(original);
+		if (original.isDeclaredOptional()) {
+			write('?');
+		}
 		processDeclaredTypeRef(original);
 		write(";");
 		return DONE;
@@ -668,6 +671,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		} else {
 			// deal with e.g.: class C { (i: number); }
 		}
+		// methods can be optional in TypeScript
+		// if (original.isDeclaredOptional()) {
+		// write('?');
+		// }
 		if (!original.getTypeVars().isEmpty()) {
 			processTypeParams(original.getTypeVars());
 		}

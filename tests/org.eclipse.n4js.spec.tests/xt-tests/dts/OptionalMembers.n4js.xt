@@ -16,9 +16,13 @@
 
 
 export default class C {
+	optionalField?: number;
+	// in TypeScript methods can be optional too
 }
 
 
 /* XPECT generated_dts ---
-export default class C {}
+export default class C {
+	optionalField?: number;
+}
 --- */
