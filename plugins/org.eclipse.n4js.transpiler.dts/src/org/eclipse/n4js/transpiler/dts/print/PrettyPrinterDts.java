@@ -926,7 +926,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	private void writeJsdoc(EObject original) {
 		EObject originalASTNode = state.tracer.getOriginalASTNode(original);
 		if (originalASTNode != null) {
-			String documentation = documentationProvider.findComment(originalASTNode);
+			String documentation = documentationProvider.findComment(originalASTNode, false);
 			if (documentation != null) {
 				documentation = documentation.replaceAll("\n\t+", "\n");
 				documentation = documentation.replaceAll("\n\\s+\\*", "\n \\*");
