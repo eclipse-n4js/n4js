@@ -38,10 +38,14 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 
 	private static final Logger logger = Logger.getLogger(N4JSDocumentationProvider.class);
 
-	/** Overwritten to set visibility to public */
-	@Override
-	public String findComment(EObject o) {
-		return super.findComment(o);
+	/** Same as {@link #findComment(EObject)} but with parameter {@code enableSpecialASIFix} */
+	public String findComment(EObject o, boolean enableSpecialASIFix) {
+		String returnValue = null;
+		List<INode> documentationNodes = getDocumentationNodes(o, enableSpecialASIFix);
+		if (!documentationNodes.isEmpty()) {
+			return documentationNodes.get(0).getText();
+		}
+		return returnValue;
 	}
 
 	/**
@@ -51,6 +55,14 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 */
 	@Override
 	public List<INode> getDocumentationNodes(EObject object) {
+		return getDocumentationNodes(object, true);
+	}
+
+	/**
+	 * Same as {@link #getDocumentationNodes(EObject)} but with parameter {@code enableSpecialASIFix} to disable special
+	 * fix for ASI
+	 */
+	public List<INode> getDocumentationNodes(EObject object, boolean enableSpecialASIFix) {
 		EObject astNode = N4JSASTUtils.getCorrespondingASTNode(object);
 		// TODO GH-1958 approach for documentation look-up in case of hash mismatch:
 		// if (astNode != null && astNode.eIsProxy()) {
@@ -83,7 +95,7 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 					nodes = super.getDocumentationNodes(astNode.eContainer());
 				}
 			}
-			if (nodes.isEmpty()) {
+			if (enableSpecialASIFix && nodes.isEmpty()) {
 				// failure case, was ASI grabbing the doc?
 				// backward search for first non-hidden element, over-stepping if it is a LeafNodeWithSyntaxError from
 				// ASI.
@@ -101,6 +113,8 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	}
 
 	/**
+	 * <b>Attention</b>: This fix impacts performance for very long statements / files
+	 * <p>
 	 * This is a fix for shadowed jsdoc-style documentation. Example:
 	 *
 	 * <pre>
@@ -128,29 +142,30 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 *         {@code null} if no jsdoc-style documentation could be found.
 	 */
 	private LeafNode searchLeafNodeDocumentation(ICompositeNode ptNodeOfASTNode) {
-
-		ICompositeNode rootNode = ptNodeOfASTNode.getRootNode();
-		BidiTreeIterator<INode> rootIterator = rootNode.getAsTreeIterable().iterator();
+		ICompositeNode parent = ptNodeOfASTNode;
+		for (int i = 0; i < 3 && parent.getParent() != null; i++) {
+			parent = parent.getParent();
+		}
+		BidiTreeIterator<INode> rootIterator = parent.getAsTreeIterable().iterator();
 
 		// First linearly search the current node, then go back until a documentation or a non-hidden node is
 		// encountered.
 		// First search:
 		int counter = 0;
-		// FIXME: Re-Enable following integrity check. Is it necessary at all?
-		// boolean found = false; // flag for finding right position in iterator.
-		// while (rootIterator.hasNext()) {
-		// INode next = rootIterator.next();
-		// counter++;
-		// dump(counter, next);
-		// if (next == ptNodeOfASTNode) {
-		// found = true;
-		// break;
-		// }
-		// }
-		// if (!found) {
-		// throw new IllegalStateException(
-		// "Node model broken. Unable to find the current node in the node model by traversing from root.");
-		// }
+		boolean found = false; // flag for finding right position in iterator.
+		while (rootIterator.hasNext()) {
+			INode next = rootIterator.next();
+			counter++;
+			dump(counter, next);
+			if (next == ptNodeOfASTNode) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			throw new IllegalStateException(
+					"Node model broken. Unable to find the current node in the node model by traversing from root.");
+		}
 
 		// Second search:
 		// go back until we find a LeafNodeWithSyntaxErrors or a different non-hidden leaf.
