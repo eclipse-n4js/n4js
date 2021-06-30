@@ -3,8 +3,8 @@
 	"version": "0.0.1",
 	"dependencies": {
 		"n4js-runtime": "*",
-		"react": "17.0.1",
-		"@n4jsd/react": "17.0.1"
+		"react": "*",
+		"@n4jsd/react": "*"
 	},
 	"n4js": {
 		"projectType": "library",
