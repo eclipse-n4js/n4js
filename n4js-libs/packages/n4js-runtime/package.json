@@ -15,6 +15,7 @@
     "node": ">= 8.0.0"
   },
   "main": "./src-gen/index.js",
+  "types": "./n4jsglobals.d.ts",
   "files": [
     "src",
     "src-gen",

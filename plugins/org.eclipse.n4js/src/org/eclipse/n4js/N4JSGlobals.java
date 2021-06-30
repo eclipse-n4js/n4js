@@ -299,7 +299,7 @@ public final class N4JSGlobals {
 	/**
 	 * Mandatory import for every generated d.ts file used by the d.ts generator.
 	 */
-	public static final String IMPORT_N4JSGLOBALS = "import 'n4js-runtime/n4jsglobals'";
+	public static final String IMPORT_N4JSGLOBALS = "import 'n4js-runtime'";
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.
