@@ -84,7 +84,7 @@ class MakeTypesAvailableTransformation extends Transformation {
 			// cut off at this reference and thus we need not (and cannot) make this type available
 			return;
 		}
-		val isAlreadyAvailable = DtsUtils.getReferenceToTypeIfLocallyAvailable(type, state) !== null;
+		val isAlreadyAvailable = DtsUtils.getReferenceToTypeIfLocallyAvailable(type, null, state) !== null;
 		if (isAlreadyAvailable) {
 			// the type is already available, but we have to make sure its import (if any) won't be removed as unused
 			// even if all other usages will be removed (e.g. if they are in expressions/statements):

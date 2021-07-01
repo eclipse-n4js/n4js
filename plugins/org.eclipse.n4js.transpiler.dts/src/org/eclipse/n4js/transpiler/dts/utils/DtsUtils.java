@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.xtext.EcoreUtil2;
@@ -108,7 +109,9 @@ public class DtsUtils {
 	 * The returned string is usually simply the local name of the given type, but includes, if required, also the name
 	 * of a namespace and "." as separator.
 	 */
-	public static String getReferenceToTypeIfLocallyAvailable(Type type, TranspilerState state) {
+	public static String getReferenceToTypeIfLocallyAvailable(Type type, TypingStrategy typingStrategy,
+			TranspilerState state) {
+
 		boolean isBuiltInOrGlobal = N4Scheme.isFromResourceWithN4Scheme(type);
 		if (!isBuiltInOrGlobal) {
 			TModule module = EcoreUtil2.getContainerOfType(type, TModule.class);
@@ -131,13 +134,20 @@ public class DtsUtils {
 		}
 		SymbolTableEntryOriginal ste = state.steCache.mapOriginal.get(type);
 		if (ste != null) {
+			String typeRefName = "";
+
 			// the type reference points to a type contained in or already imported into the current module
 			ImportSpecifier importSpec = ste.getImportSpecifier();
 			if (importSpec instanceof NamespaceImportSpecifier) {
 				String namespaceName = ((NamespaceImportSpecifier) importSpec).getAlias();
-				return namespaceName + "." + ste.getName();
+				typeRefName = namespaceName + "." + ste.getName();
+			} else {
+				typeRefName = ste.getName();
 			}
-			return ste.getName();
+			if (typingStrategy == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS) {
+				typeRefName = "Readonly<" + typeRefName + ">";
+			}
+			return typeRefName;
 		}
 		return null;
 	}

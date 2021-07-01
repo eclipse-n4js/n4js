@@ -212,7 +212,8 @@ import com.google.common.collect.Lists;
 				// FIXME is there a better way? (maybe via a symbol table entry as in
 				// PrettyPrinterSwitch#caseIdentifierRef())
 				String referenceStr = declType != null
-						? DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, state)
+						? DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, typeRef.getDefinedTypingStrategy(),
+								state)
 						: null;
 				if (referenceStr != null) {
 					write(referenceStr);
