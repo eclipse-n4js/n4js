@@ -144,9 +144,6 @@ public class DtsUtils {
 			} else {
 				typeRefName = ste.getName();
 			}
-			if (typingStrategy == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS) {
-				typeRefName = "Readonly<" + typeRefName + ">";
-			}
 			return typeRefName;
 		}
 		return null;

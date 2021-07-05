@@ -47,6 +47,7 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
@@ -211,15 +212,27 @@ import com.google.common.collect.Lists;
 			if (DtsUtils.isDtsExportableDependency(declType, state)) {
 				// FIXME is there a better way? (maybe via a symbol table entry as in
 				// PrettyPrinterSwitch#caseIdentifierRef())
+
 				String referenceStr = declType != null
 						? DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, typeRef.getDefinedTypingStrategy(),
 								state)
 						: null;
-				if (referenceStr != null) {
-					write(referenceStr);
-					processTypeArguments(typeRef);
-				} else {
+
+				if (referenceStr == null) {
 					write("any");
+				} else {
+
+					boolean structRead = typeRef
+							.getDefinedTypingStrategy() == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS;
+					if (structRead) {
+						write("Readonly<");
+						write(referenceStr);
+						processTypeArguments(typeRef);
+						write(">");
+					} else {
+						write(referenceStr);
+						processTypeArguments(typeRef);
+					}
 				}
 			} else {
 				write("any");
