@@ -94,7 +94,7 @@ class MakeTypesAvailableTransformation extends Transformation {
 			// even if all other usages will be removed (e.g. if they are in expressions/statements):
 			val ste = getSymbolTableEntryOriginal(type, false);
 			if (ste !== null) {
-				recordReferenceToElement(typeRefNode, ste);
+				recordReferenceToType(typeRefNode, ste);
 			}
 			return;
 		}
@@ -108,7 +108,7 @@ class MakeTypesAvailableTransformation extends Transformation {
 					// the type reference points to an exported type in the same project or a project we directly depend on
 					// --> we can add an import for this type
 					val ste = addNamedImport(type, null); // FIXME use alias if name already in use!
-					recordReferenceToElement(typeRefNode, ste);
+					recordReferenceToType(typeRefNode, ste);
 					return;
 				}
 			}

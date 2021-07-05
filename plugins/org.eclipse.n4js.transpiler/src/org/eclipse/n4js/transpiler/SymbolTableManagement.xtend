@@ -395,12 +395,12 @@ class SymbolTableManagement {
 
 	/**
 	 * Records in property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences} that the given type reference node refers
-	 * to the element represented by the given symbol table entry.
+	 * to the type represented by the given symbol table entry.
 	 */
-	def static public void recordReferenceToElement(TranspilerState state, TypeReferenceNode_IM<?> typeRefNode, SymbolTableEntryOriginal ste) {
-		// 1) record the reference to the element represented by 'ste' itself
+	def static public void recordReferenceToType(TranspilerState state, TypeReferenceNode_IM<?> typeRefNode, SymbolTableEntryOriginal ste) {
+		// 1) record the reference to the type represented by 'ste' itself
 		typeRefNode.addRewiredTarget(ste);
-		// 2) record the reference to the namespace iff the element represented by 'ste' was imported via a namespace import
+		// 2) record the reference to the namespace iff the type represented by 'ste' was imported via a namespace import
 		val importSpec = ste.importSpecifier;
 		if (importSpec instanceof NamespaceImportSpecifier) {
 			val namespaceType = state.info.getOriginalDefinedType(importSpec);

@@ -304,8 +304,8 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
-	protected void recordReferenceToElement(TypeReferenceNode_IM<?> typeRefNode, SymbolTableEntryOriginal ste) {
-		SymbolTableManagement.recordReferenceToElement(state, typeRefNode, ste);
+	protected void recordReferenceToType(TypeReferenceNode_IM<?> typeRefNode, SymbolTableEntryOriginal ste) {
+		SymbolTableManagement.recordReferenceToType(state, typeRefNode, ste);
 	}
 
 	@SuppressWarnings("javadoc")
