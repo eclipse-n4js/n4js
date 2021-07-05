@@ -15,19 +15,19 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
-import org.eclipse.n4js.n4JS.N4TypeDeclaration;
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant;
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TEnum;
@@ -47,7 +47,7 @@ public class InformationRegistry {
 
 	private final HashMultimap<Tag, EObject> hmTagged = HashMultimap.create();
 	private final Map<ImportDeclaration, TModule> importedModules = new HashMap<>();
-	private final Map<N4TypeDeclaration, Type> originalDefinedTypes = new HashMap<>();
+	private final Map<TypeDefiningElement, Type> originalDefinedTypes = new HashMap<>();
 	private final Map<N4MemberDeclaration, TMember> originalDefinedMembers = new HashMap<>();
 	private final Map<TypeReferenceNode<?>, TypeRef> originalProcessedTypeRefs = new HashMap<>();
 	private final Map<TClassifier, ConcreteMembersOrderedForTranspiler> cachedCMOFTs = new HashMap<>();
@@ -60,9 +60,6 @@ public class InformationRegistry {
 
 		/** Tag for members which are to be hidden from reflection. */
 		hiddenFromReflection,
-
-		/** Tag for imports which are never to be removed, even if they are unused. */
-		retainedIfUnused
 	}
 
 	/** Tells if the given member was consumed from an interface. */
@@ -83,16 +80,6 @@ public class InformationRegistry {
 	/** Marks given member as to be hidden from reflection. */
 	public void markAsHiddenFromReflection(N4MemberDeclaration element) {
 		tag(Tag.hiddenFromReflection, element);
-	}
-
-	/** Tells whether the given import is to be retained even if it is unused. */
-	public boolean isRetainedIfUnused(ImportSpecifier element) {
-		return isTaggedAs(Tag.retainedIfUnused, element);
-	}
-
-	/** Marks given import as to be retained even if it is unused. */
-	public void markAsRetainedIfUnused(ImportSpecifier element) {
-		tag(Tag.retainedIfUnused, element);
 	}
 
 	private boolean isTaggedAs(Tag tag, EObject element) {
@@ -146,33 +133,35 @@ public class InformationRegistry {
 		importedModules.put(importDeclInIM, module);
 	}
 
-	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(N4TypeDeclaration)}. */
+	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(TypeDefiningElement)}. */
 	public TEnum getOriginalDefinedType(N4EnumDeclaration elementInIM) {
-		return (TEnum) getOriginalDefinedType((N4TypeDeclaration) elementInIM);
+		return (TEnum) getOriginalDefinedType((TypeDefiningElement) elementInIM);
 	}
 
-	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(N4TypeDeclaration)}. */
+	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(TypeDefiningElement)}. */
 	public TClassifier getOriginalDefinedType(N4ClassifierDeclaration elementInIM) {
-		return (TClassifier) getOriginalDefinedType((N4TypeDeclaration) elementInIM);
+		return (TClassifier) getOriginalDefinedType((TypeDefiningElement) elementInIM);
 	}
 
-	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(N4TypeDeclaration)}. */
+	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(TypeDefiningElement)}. */
 	public TClass getOriginalDefinedType(N4ClassDeclaration elementInIM) {
-		return (TClass) getOriginalDefinedType((N4TypeDeclaration) elementInIM);
+		return (TClass) getOriginalDefinedType((TypeDefiningElement) elementInIM);
 	}
 
-	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(N4TypeDeclaration)}. */
+	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(TypeDefiningElement)}. */
 	public TInterface getOriginalDefinedType(N4InterfaceDeclaration elementInIM) {
-		return (TInterface) getOriginalDefinedType((N4TypeDeclaration) elementInIM);
+		return (TInterface) getOriginalDefinedType((TypeDefiningElement) elementInIM);
+	}
+
+	/** Convenience method for type-safe usage of {@link #getOriginalDefinedType(TypeDefiningElement)}. */
+	public ModuleNamespaceVirtualType getOriginalDefinedType(NamespaceImportSpecifier elementInIM) {
+		return (ModuleNamespaceVirtualType) getOriginalDefinedType((TypeDefiningElement) elementInIM);
 	}
 
 	/**
 	 * Returns the original TModule element, i.e. defined type, of the given type declaration in the intermediate model.
-	 * <p>
-	 * Currently, we only use this for N4TypeDeclarations - i.e. classes, interfaces and enums - but in the future other
-	 * subclasses of {@link TypeDefiningElement} may be allowed as well.
 	 */
-	public Type getOriginalDefinedType(N4TypeDeclaration elementInIM) {
+	public Type getOriginalDefinedType(TypeDefiningElement elementInIM) {
 		TranspilerUtils.assertIntermediateModelElement(elementInIM);
 		return originalDefinedTypes.get(elementInIM);
 	}
@@ -180,16 +169,16 @@ public class InformationRegistry {
 	/**
 	 * Sets the <em>original defined type</em> of the given type declaration in the intermediate model.
 	 */
-	public void setOriginalDefinedType(N4TypeDeclaration elementInIM, Type originalDefinedType) {
+	public void setOriginalDefinedType(TypeDefiningElement elementInIM, Type originalDefinedType) {
 		TranspilerUtils.assertIntermediateModelElement(elementInIM);
 		setOriginalDefinedType_internal(elementInIM, originalDefinedType);
 	}
 
 	/**
-	 * As {@link #setOriginalDefinedType(N4TypeDeclaration, Type)}, but does not assert that <code>elementInIM</code> is
-	 * actually contained in the intermediate model. Should only be called from {@link PreparationStep}.
+	 * As {@link #setOriginalDefinedType(TypeDefiningElement, Type)}, but does not assert that <code>elementInIM</code>
+	 * is actually contained in the intermediate model. Should only be called from {@link PreparationStep}.
 	 */
-	public void setOriginalDefinedType_internal(N4TypeDeclaration elementInIM, Type originalDefinedType) {
+	public void setOriginalDefinedType_internal(TypeDefiningElement elementInIM, Type originalDefinedType) {
 		originalDefinedTypes.put(elementInIM, originalDefinedType);
 	}
 

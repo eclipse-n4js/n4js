@@ -25,6 +25,7 @@
 
 package org.eclipse.n4js.transpiler.im
 
+import org.eclipse.emf.common.util.ECollections
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportSpecifier
@@ -199,14 +200,6 @@ class SymbolTableEntryInternal extends SymbolTableEntry {
 }
 
 
-class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T> {
-
-	op TypeRef getTypeRef() {
-		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
-	}
-}
-
-
 /*
  * An element of the intermediate model that refers to some other element. The other element may either be an element
  * within the same resource (AST or TModule) OR an element in a remote resource (TModule). The reference is not pointing
@@ -228,6 +221,37 @@ abstract class ReferencingElement_IM {
 		return null;
 	}
 }
+
+/*
+ * Like {@link ReferencingElement_IM}, but may refer to <em>several</em> other elements.
+ */
+abstract class ManyReferencingElement_IM {
+
+	contains PlainReference[] rewiredReferences
+
+	op SymbolTableEntry[] getRewiredTargets() {
+		return ECollections.newBasicEList(rewiredReferences.map[rewiredTarget]);
+	}
+	op void addRewiredTarget(SymbolTableEntry ste) {
+		for (ref : rewiredReferences) {
+			if (ref.rewiredTarget === ste) {
+				return;
+			}
+		}
+		rewiredReferences += ImFactory.eINSTANCE.createPlainReference() => [
+			rewiredTarget = ste;
+		];
+	}
+	op void removeRewiredTarget(SymbolTableEntry ste) {
+		rewiredReferences.removeIf[rewiredTarget === ste];
+	}
+}
+
+/*
+ * A reference that does not represent an intermediate model element itself.
+ * Used only in {@link ManyReferencingElement_IM} to implement many-valued references.
+ */
+class PlainReference extends ReferencingElement_IM {}
 
 /** Base superclass for Expression-usable ReferencingElement_IM */
 abstract class ReferencingElementExpression_IM extends ReferencingElement_IM, Expression { }
@@ -287,6 +311,24 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
 	/* overridden attribute access to always return null */
 	op  IdentifiableElement getProperty() { return null; }
 	op void setProperty(IdentifiableElement ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedPropertyAccessExpression_IM cannot accept properties. Use #property_IM."); }
+}
+
+/*
+ * SymbolTable-aware replacement for {@link TypeReferenceNode}.
+ * Original properties {@link TypeReferenceNode.typeRefInAST} and {@link TypeReferenceNode.cachedProcessedTypeRef} are always {@code null}.
+ */
+class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
+
+	op TypeRef getTypeRef() {
+		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
+	}
+	op TypeRef getCachedProcessedTypeRef() {
+		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
+	}
+// cannot add the following fail-fast check, because EMF's tree iterator, etc. will invoke this getter:
+//	op T getTypeRefInAST() {
+//		throw new IllegalStateException("attempt to access a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
+//	}
 }
 
 /*

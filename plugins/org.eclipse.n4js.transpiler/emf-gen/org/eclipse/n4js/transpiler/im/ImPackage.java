@@ -478,52 +478,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getTypeReferenceNode_IM()
 	 * @generated
 	 */
-	int TYPE_REFERENCE_NODE_IM = 6;
-
-	/**
-	 * The feature id for the '<em><b>Cached Processed Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM__CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Type Ref In AST</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM__TYPE_REF_IN_AST = N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST;
-
-	/**
-	 * The number of structural features of the '<em>Type Reference Node IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM_FEATURE_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 0;
-
-	/**
-	 * The number of operations of the '<em>Type Reference Node IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM_OPERATION_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 1;
+	int TYPE_REFERENCE_NODE_IM = 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElement_IMImpl <em>Referencing Element IM</em>}' class.
@@ -533,7 +488,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getReferencingElement_IM()
 	 * @generated
 	 */
-	int REFERENCING_ELEMENT_IM = 7;
+	int REFERENCING_ELEMENT_IM = 6;
 
 	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
@@ -572,6 +527,116 @@ public interface ImPackage extends EPackage {
 	int REFERENCING_ELEMENT_IM_OPERATION_COUNT = 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl <em>Many Referencing Element IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getManyReferencingElement_IM()
+	 * @generated
+	 */
+	int MANY_REFERENCING_ELEMENT_IM = 7;
+
+	/**
+	 * The feature id for the '<em><b>Rewired References</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM__REWIRED_REFERENCES = 0;
+
+	/**
+	 * The number of structural features of the '<em>Many Referencing Element IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM_FEATURE_COUNT = 1;
+
+	/**
+	 * The operation id for the '<em>Get Rewired Targets</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM___GET_REWIRED_TARGETS = 0;
+
+	/**
+	 * The operation id for the '<em>Add Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM___ADD_REWIRED_TARGET__SYMBOLTABLEENTRY = 1;
+
+	/**
+	 * The operation id for the '<em>Remove Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY = 2;
+
+	/**
+	 * The number of operations of the '<em>Many Referencing Element IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM_OPERATION_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl <em>Plain Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getPlainReference()
+	 * @generated
+	 */
+	int PLAIN_REFERENCE = 8;
+
+	/**
+	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE__REWIRED_TARGET = REFERENCING_ELEMENT_IM__REWIRED_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Plain Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE_FEATURE_COUNT = REFERENCING_ELEMENT_IM_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = REFERENCING_ELEMENT_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
+
+	/**
+	 * The number of operations of the '<em>Plain Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE_OPERATION_COUNT = REFERENCING_ELEMENT_IM_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElementExpression_IMImpl <em>Referencing Element Expression IM</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -579,7 +644,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getReferencingElementExpression_IM()
 	 * @generated
 	 */
-	int REFERENCING_ELEMENT_EXPRESSION_IM = 8;
+	int REFERENCING_ELEMENT_EXPRESSION_IM = 9;
 
 	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
@@ -634,7 +699,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getIdentifierRef_IM()
 	 * @generated
 	 */
-	int IDENTIFIER_REF_IM = 9;
+	int IDENTIFIER_REF_IM = 10;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -779,7 +844,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedPropertyAccessExpression_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 10;
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 11;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' containment reference.
@@ -962,6 +1027,96 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM_OPERATION_COUNT = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_OPERATION_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Cached Processed Type Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM__CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Type Ref In AST</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM__TYPE_REF_IN_AST = N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST;
+
+	/**
+	 * The feature id for the '<em><b>Rewired References</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Type Reference Node IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM_FEATURE_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Rewired Targets</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM___GET_REWIRED_TARGETS = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Add Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM___ADD_REWIRED_TARGET__SYMBOLTABLEENTRY = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Remove Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Cached Processed Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 4;
+
+	/**
+	 * The number of operations of the '<em>Type Reference Node IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM_OPERATION_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 5;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRef_IMImpl <em>Parameterized Type Ref IM</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -969,7 +1124,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRef_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_IM = 11;
+	int PARAMETERIZED_TYPE_REF_IM = 13;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1393,7 +1548,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRefStructural_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 12;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 14;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1871,7 +2026,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getSnippet()
 	 * @generated
 	 */
-	int SNIPPET = 13;
+	int SNIPPET = 15;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -1917,7 +2072,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingMember()
 	 * @generated
 	 */
-	int DELEGATING_MEMBER = 14;
+	int DELEGATING_MEMBER = 16;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -2107,7 +2262,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingGetterDeclaration()
 	 * @generated
 	 */
-	int DELEGATING_GETTER_DECLARATION = 15;
+	int DELEGATING_GETTER_DECLARATION = 17;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -2468,7 +2623,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingSetterDeclaration()
 	 * @generated
 	 */
-	int DELEGATING_SETTER_DECLARATION = 16;
+	int DELEGATING_SETTER_DECLARATION = 18;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -2829,7 +2984,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getDelegatingMethodDeclaration()
 	 * @generated
 	 */
-	int DELEGATING_METHOD_DECLARATION = 17;
+	int DELEGATING_METHOD_DECLARATION = 19;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -3235,7 +3390,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getStringLiteralForSTE()
 	 * @generated
 	 */
-	int STRING_LITERAL_FOR_STE = 18;
+	int STRING_LITERAL_FOR_STE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -3317,7 +3472,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRef_IM()
 	 * @generated
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM = 19;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_IM = 21;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3768,7 +3923,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRefStructural_IM()
 	 * @generated
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 20;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 22;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -4273,7 +4428,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedIdentifierRef_IM()
 	 * @generated
 	 */
-	int VERSIONED_IDENTIFIER_REF_IM = 21;
+	int VERSIONED_IDENTIFIER_REF_IM = 23;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -4445,7 +4600,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedNamedImportSpecifier_IM()
 	 * @generated
 	 */
-	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM = 22;
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM = 24;
 
 	/**
 	 * The feature id for the '<em><b>Flagged Used In Code</b></em>' attribute.
@@ -4724,6 +4879,16 @@ public interface ImPackage extends EPackage {
 	EOperation getTypeReferenceNode_IM__GetTypeRef();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCachedProcessedTypeRef() <em>Get Cached Processed Type Ref</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Cached Processed Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCachedProcessedTypeRef()
+	 * @generated
+	 */
+	EOperation getTypeReferenceNode_IM__GetCachedProcessedTypeRef();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ReferencingElement_IM <em>Referencing Element IM</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4753,6 +4918,67 @@ public interface ImPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getReferencingElement_IM__GetOriginalTargetOfRewiredTarget();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM <em>Many Referencing Element IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Many Referencing Element IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM
+	 * @generated
+	 */
+	EClass getManyReferencingElement_IM();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredReferences <em>Rewired References</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Rewired References</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredReferences()
+	 * @see #getManyReferencingElement_IM()
+	 * @generated
+	 */
+	EReference getManyReferencingElement_IM_RewiredReferences();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredTargets() <em>Get Rewired Targets</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Rewired Targets</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredTargets()
+	 * @generated
+	 */
+	EOperation getManyReferencingElement_IM__GetRewiredTargets();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#addRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry) <em>Add Rewired Target</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Add Rewired Target</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#addRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry)
+	 * @generated
+	 */
+	EOperation getManyReferencingElement_IM__AddRewiredTarget__SymbolTableEntry();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#removeRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry) <em>Remove Rewired Target</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Remove Rewired Target</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#removeRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry)
+	 * @generated
+	 */
+	EOperation getManyReferencingElement_IM__RemoveRewiredTarget__SymbolTableEntry();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.PlainReference <em>Plain Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Plain Reference</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.PlainReference
+	 * @generated
+	 */
+	EClass getPlainReference();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM <em>Referencing Element Expression IM</em>}'.
@@ -5371,6 +5597,14 @@ public interface ImPackage extends EPackage {
 		EOperation TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = eINSTANCE.getTypeReferenceNode_IM__GetTypeRef();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Cached Processed Type Ref</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF = eINSTANCE.getTypeReferenceNode_IM__GetCachedProcessedTypeRef();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElement_IMImpl <em>Referencing Element IM</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5395,6 +5629,58 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation REFERENCING_ELEMENT_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = eINSTANCE.getReferencingElement_IM__GetOriginalTargetOfRewiredTarget();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl <em>Many Referencing Element IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getManyReferencingElement_IM()
+		 * @generated
+		 */
+		EClass MANY_REFERENCING_ELEMENT_IM = eINSTANCE.getManyReferencingElement_IM();
+
+		/**
+		 * The meta object literal for the '<em><b>Rewired References</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MANY_REFERENCING_ELEMENT_IM__REWIRED_REFERENCES = eINSTANCE.getManyReferencingElement_IM_RewiredReferences();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Rewired Targets</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MANY_REFERENCING_ELEMENT_IM___GET_REWIRED_TARGETS = eINSTANCE.getManyReferencingElement_IM__GetRewiredTargets();
+
+		/**
+		 * The meta object literal for the '<em><b>Add Rewired Target</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MANY_REFERENCING_ELEMENT_IM___ADD_REWIRED_TARGET__SYMBOLTABLEENTRY = eINSTANCE.getManyReferencingElement_IM__AddRewiredTarget__SymbolTableEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Remove Rewired Target</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MANY_REFERENCING_ELEMENT_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY = eINSTANCE.getManyReferencingElement_IM__RemoveRewiredTarget__SymbolTableEntry();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl <em>Plain Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getPlainReference()
+		 * @generated
+		 */
+		EClass PLAIN_REFERENCE = eINSTANCE.getPlainReference();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElementExpression_IMImpl <em>Referencing Element Expression IM</em>}' class.

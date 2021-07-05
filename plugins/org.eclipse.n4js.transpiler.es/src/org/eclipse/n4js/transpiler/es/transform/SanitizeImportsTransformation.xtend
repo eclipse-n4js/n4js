@@ -135,9 +135,7 @@ class SanitizeImportsTransformation extends Transformation {
 
 
 	def private boolean isUsed(ImportSpecifier importSpec) {
-		if (state.info.isRetainedIfUnused(importSpec)) {
-			return true;
-		} else if(importSpec.flaggedUsedInCode===false) {
+		if(importSpec.flaggedUsedInCode===false) {
 			// was already unused in original N4JS code (and we expect transformations to update this flag if they
 			// add new usages of an existing import)
 			// -> therefore simply return false (i.e. unused)

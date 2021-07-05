@@ -26,6 +26,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
@@ -389,6 +390,27 @@ class SymbolTableManagement {
 						  // due to the following limit-condition
 				.limit(importspec.importedTypeVersions.size)
 				.collect(Collectors.toList);
+	}
+
+
+	/**
+	 * Records in property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences} that the given type reference node refers
+	 * to the element represented by the given symbol table entry.
+	 */
+	def static public void recordReferenceToElement(TranspilerState state, TypeReferenceNode_IM<?> typeRefNode, SymbolTableEntryOriginal ste) {
+		// 1) record the reference to the element represented by 'ste' itself
+		typeRefNode.addRewiredTarget(ste);
+		// 2) record the reference to the namespace iff the element represented by 'ste' was imported via a namespace import
+		val importSpec = ste.importSpecifier;
+		if (importSpec instanceof NamespaceImportSpecifier) {
+			val namespaceType = state.info.getOriginalDefinedType(importSpec);
+			if (namespaceType !== null) {
+				val namespaceSTE = getSymbolTableEntryOriginal(state, namespaceType, false);
+				if (namespaceSTE !== null) {
+					typeRefNode.addRewiredTarget(namespaceSTE);
+				}
+			}
+		}
 	}
 
 

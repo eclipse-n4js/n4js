@@ -19,12 +19,17 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * A representation of the model object '<em><b>Type Reference Node IM</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * SymbolTable-aware replacement for {@link TypeReferenceNode}.
+ * Original properties {@link TypeReferenceNode.typeRefInAST} and {@link TypeReferenceNode.cachedProcessedTypeRef} are always {@code null}.
+ * <!-- end-model-doc -->
+ *
  *
  * @see org.eclipse.n4js.transpiler.im.ImPackage#getTypeReferenceNode_IM()
  * @model
  * @generated
  */
-public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T> {
+public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -33,4 +38,12 @@ public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNo
 	 * @generated
 	 */
 	TypeRef getTypeRef();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeRef getCachedProcessedTypeRef();
 } // TypeReferenceNode_IM

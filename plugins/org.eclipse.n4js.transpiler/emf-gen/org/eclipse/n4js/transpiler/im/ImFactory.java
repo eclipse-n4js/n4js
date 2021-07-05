@@ -85,6 +85,15 @@ public interface ImFactory extends EFactory {
 	<T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM();
 
 	/**
+	 * Returns a new object of class '<em>Plain Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Plain Reference</em>'.
+	 * @generated
+	 */
+	PlainReference createPlainReference();
+
+	/**
 	 * Returns a new object of class '<em>Identifier Ref IM</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

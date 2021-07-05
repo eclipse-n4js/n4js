@@ -169,16 +169,22 @@ public class ImSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ImPackage.TYPE_REFERENCE_NODE_IM: {
-				TypeReferenceNode_IM<?> typeReferenceNode_IM = (TypeReferenceNode_IM<?>)theEObject;
-				T1 result = caseTypeReferenceNode_IM(typeReferenceNode_IM);
-				if (result == null) result = caseTypeReferenceNode(typeReferenceNode_IM);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ImPackage.REFERENCING_ELEMENT_IM: {
 				ReferencingElement_IM referencingElement_IM = (ReferencingElement_IM)theEObject;
 				T1 result = caseReferencingElement_IM(referencingElement_IM);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ImPackage.MANY_REFERENCING_ELEMENT_IM: {
+				ManyReferencingElement_IM manyReferencingElement_IM = (ManyReferencingElement_IM)theEObject;
+				T1 result = caseManyReferencingElement_IM(manyReferencingElement_IM);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ImPackage.PLAIN_REFERENCE: {
+				PlainReference plainReference = (PlainReference)theEObject;
+				T1 result = casePlainReference(plainReference);
+				if (result == null) result = caseReferencingElement_IM(plainReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -219,6 +225,14 @@ public class ImSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseExpression(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseTypableElement(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseControlFlowElement(parameterizedPropertyAccessExpression_IM);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ImPackage.TYPE_REFERENCE_NODE_IM: {
+				TypeReferenceNode_IM<?> typeReferenceNode_IM = (TypeReferenceNode_IM<?>)theEObject;
+				T1 result = caseTypeReferenceNode_IM(typeReferenceNode_IM);
+				if (result == null) result = caseTypeReferenceNode(typeReferenceNode_IM);
+				if (result == null) result = caseManyReferencingElement_IM(typeReferenceNode_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -533,6 +547,36 @@ public class ImSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseReferencingElement_IM(ReferencingElement_IM object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Many Referencing Element IM</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Many Referencing Element IM</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseManyReferencingElement_IM(ManyReferencingElement_IM object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Plain Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Plain Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 casePlainReference(PlainReference object) {
 		return null;
 	}
 

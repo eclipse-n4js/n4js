@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
@@ -45,18 +46,21 @@ class MakeTypesAvailableTransformation extends Transformation {
 
 	override transform() {
 		collectNodes(state.im, TypeReferenceNode, false).forEach[ typeRefNode |
-			makeAllTypesAvailable(typeRefNode)
+			// if you get a ClassCastException here, it means that not all TypeReferenceNodes were
+			// converted to TypeReferenceNode_IMs, which is an error
+			val typeRefNodeCasted = typeRefNode as TypeReferenceNode_IM<?>;
+			makeAllTypesAvailable(typeRefNodeCasted)
 		];
 	}
 
-	def private void makeAllTypesAvailable(TypeReferenceNode<?> typeRefNode) {
+	def private void makeAllTypesAvailable(TypeReferenceNode_IM<?> typeRefNode) {
 		val typeRef = state.info.getOriginalProcessedTypeRef(typeRefNode);
 		if (typeRef !== null) {
-			makeAllTypesAvailable(typeRef, new HashSet());
+			makeAllTypesAvailable(typeRefNode, typeRef, new HashSet());
 		}
 	}
 
-	def private void makeAllTypesAvailable(TypeRef typeRef, Set<TypeRef> visited) {
+	def private void makeAllTypesAvailable(TypeReferenceNode_IM<?> typeRefNode, TypeRef typeRef, Set<TypeRef> visited) {
 		if (visited.contains(typeRef)) {
 			return; // FIXME infinite recursion???
 		}
@@ -64,13 +68,13 @@ class MakeTypesAvailableTransformation extends Transformation {
 		TypeUtils.forAllTypeRefs(typeRef, ParameterizedTypeRef, true, true, [mustBeIgnored], [ ptr |
 			val declType = ptr.declaredType;
 			if (declType !== null) {
-				makeTypeAvailable(declType);
+				makeTypeAvailable(typeRefNode, declType);
 			}
 			for (typeArg : ptr.typeArgs) {
 				if (typeArg instanceof Wildcard) {
 					val upperBound = typeArg.getDeclaredOrImplicitUpperBound();
 					if (upperBound !== null) {
-						makeAllTypesAvailable(upperBound, visited);
+						makeAllTypesAvailable(typeRefNode, upperBound, visited);
 					}
 				}
 			}
@@ -78,7 +82,7 @@ class MakeTypesAvailableTransformation extends Transformation {
 		], null);
 	}
 
-	def private void makeTypeAvailable(Type type) {
+	def private void makeTypeAvailable(TypeReferenceNode_IM<?> typeRefNode, Type type) {
 		if (!DtsUtils.isDtsExportableDependency(type, state)) {
 			// the type is from a project not available on the .d.ts side, so the .d.ts export will be
 			// cut off at this reference and thus we need not (and cannot) make this type available
@@ -89,9 +93,8 @@ class MakeTypesAvailableTransformation extends Transformation {
 			// the type is already available, but we have to make sure its import (if any) won't be removed as unused
 			// even if all other usages will be removed (e.g. if they are in expressions/statements):
 			val ste = getSymbolTableEntryOriginal(type, false);
-			val importSpecifier = ste?.importSpecifier;
-			if (importSpecifier !== null) {
-				state.info.markAsRetainedIfUnused(importSpecifier);
+			if (ste !== null) {
+				recordReferenceToElement(typeRefNode, ste);
 			}
 			return;
 		}
@@ -105,9 +108,7 @@ class MakeTypesAvailableTransformation extends Transformation {
 					// the type reference points to an exported type in the same project or a project we directly depend on
 					// --> we can add an import for this type
 					val ste = addNamedImport(type, null); // FIXME use alias if name already in use!
-					// we cannot add an actual reference to the newly created import, so we have to tell SanitizeImportTransformation
-					// to never remove it:
-					state.info.markAsRetainedIfUnused(ste.importSpecifier);
+					recordReferenceToElement(typeRefNode, ste);
 					return;
 				}
 			}

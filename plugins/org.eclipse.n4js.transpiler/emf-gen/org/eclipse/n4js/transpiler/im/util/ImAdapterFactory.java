@@ -152,12 +152,16 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 				return createSymbolTableEntryInternalAdapter();
 			}
 			@Override
-			public <T extends TypeRef> Adapter caseTypeReferenceNode_IM(TypeReferenceNode_IM<T> object) {
-				return createTypeReferenceNode_IMAdapter();
-			}
-			@Override
 			public Adapter caseReferencingElement_IM(ReferencingElement_IM object) {
 				return createReferencingElement_IMAdapter();
+			}
+			@Override
+			public Adapter caseManyReferencingElement_IM(ManyReferencingElement_IM object) {
+				return createManyReferencingElement_IMAdapter();
+			}
+			@Override
+			public Adapter casePlainReference(PlainReference object) {
+				return createPlainReferenceAdapter();
 			}
 			@Override
 			public Adapter caseReferencingElementExpression_IM(ReferencingElementExpression_IM object) {
@@ -170,6 +174,10 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseParameterizedPropertyAccessExpression_IM(ParameterizedPropertyAccessExpression_IM object) {
 				return createParameterizedPropertyAccessExpression_IMAdapter();
+			}
+			@Override
+			public <T extends TypeRef> Adapter caseTypeReferenceNode_IM(TypeReferenceNode_IM<T> object) {
+				return createTypeReferenceNode_IMAdapter();
 			}
 			@Override
 			public Adapter caseParameterizedTypeRef_IM(ParameterizedTypeRef_IM object) {
@@ -236,10 +244,6 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 				return createScriptAdapter();
 			}
 			@Override
-			public <T extends TypeRef> Adapter caseTypeReferenceNode(TypeReferenceNode<T> object) {
-				return createTypeReferenceNodeAdapter();
-			}
-			@Override
 			public Adapter caseTypableElement(TypableElement object) {
 				return createTypableElementAdapter();
 			}
@@ -278,6 +282,10 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression object) {
 				return createParameterizedPropertyAccessExpressionAdapter();
+			}
+			@Override
+			public <T extends TypeRef> Adapter caseTypeReferenceNode(TypeReferenceNode<T> object) {
+				return createTypeReferenceNodeAdapter();
 			}
 			@Override
 			public Adapter caseTypeArgument(TypeArgument object) {
@@ -552,6 +560,34 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createReferencingElement_IMAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM <em>Many Referencing Element IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM
+	 * @generated
+	 */
+	public Adapter createManyReferencingElement_IMAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.PlainReference <em>Plain Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.transpiler.im.PlainReference
+	 * @generated
+	 */
+	public Adapter createPlainReferenceAdapter() {
 		return null;
 	}
 

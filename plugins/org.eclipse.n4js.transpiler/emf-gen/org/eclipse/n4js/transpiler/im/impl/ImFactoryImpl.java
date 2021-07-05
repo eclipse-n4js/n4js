@@ -70,9 +70,10 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL: return createSymbolTableEntryOriginal();
 			case ImPackage.SYMBOL_TABLE_ENTRY_IM_ONLY: return createSymbolTableEntryIMOnly();
 			case ImPackage.SYMBOL_TABLE_ENTRY_INTERNAL: return createSymbolTableEntryInternal();
-			case ImPackage.TYPE_REFERENCE_NODE_IM: return createTypeReferenceNode_IM();
+			case ImPackage.PLAIN_REFERENCE: return createPlainReference();
 			case ImPackage.IDENTIFIER_REF_IM: return createIdentifierRef_IM();
 			case ImPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM: return createParameterizedPropertyAccessExpression_IM();
+			case ImPackage.TYPE_REFERENCE_NODE_IM: return createTypeReferenceNode_IM();
 			case ImPackage.PARAMETERIZED_TYPE_REF_IM: return createParameterizedTypeRef_IM();
 			case ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: return createParameterizedTypeRefStructural_IM();
 			case ImPackage.SNIPPET: return createSnippet();
@@ -153,6 +154,17 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	public <T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM() {
 		TypeReferenceNode_IMImpl<T> typeReferenceNode_IM = new TypeReferenceNode_IMImpl<T>();
 		return typeReferenceNode_IM;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public PlainReference createPlainReference() {
+		PlainReferenceImpl plainReference = new PlainReferenceImpl();
+		return plainReference;
 	}
 
 	/**

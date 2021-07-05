@@ -43,6 +43,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
 import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
@@ -300,6 +301,11 @@ public abstract class TranspilerComponent {
 	protected Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(
 			VersionedNamedImportSpecifier_IM importspec) {
 		return SymbolTableManagement.findSymbolTableEntriesForVersionedTypeImport(state, importspec);
+	}
+
+	@SuppressWarnings("javadoc")
+	protected void recordReferenceToElement(TypeReferenceNode_IM<?> typeRefNode, SymbolTableEntryOriginal ste) {
+		SymbolTableManagement.recordReferenceToElement(state, typeRefNode, ste);
 	}
 
 	@SuppressWarnings("javadoc")

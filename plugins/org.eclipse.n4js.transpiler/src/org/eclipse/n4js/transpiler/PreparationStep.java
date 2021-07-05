@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
@@ -217,6 +218,12 @@ public class PreparationStep {
 		protected EObject createCopy(EObject eObject) {
 			final EObject copy = super.createCopy(eObject);
 			tracer.setOriginalASTNode_internal(copy, eObject);
+
+			if (copy instanceof TypeDefiningElement) {
+				info.setOriginalDefinedType_internal((TypeDefiningElement) copy,
+						((TypeDefiningElement) eObject).getDefinedType());
+			}
+
 			if (copy instanceof Script_IM) {
 				initializeScript_IM((Script_IM) copy);
 			} else if (copy instanceof ImportDeclaration) {
@@ -224,17 +231,18 @@ public class PreparationStep {
 						((ImportDeclaration) eObject).getModule());
 			} else if (copy instanceof ImportSpecifier) {
 				// remember which TModule elements were imported via ImportSpecifiers
-				if (copy instanceof NamedImportSpecifier)
+				if (copy instanceof NamedImportSpecifier) {
 					// cast to IM-specific class is safe due to ECLASS_REPLACEMENT
 					handleCopyNamedImportSpecifier((NamedImportSpecifier) eObject);
-				else if (copy instanceof NamespaceImportSpecifier)
+				} else if (copy instanceof NamespaceImportSpecifier) {
+					// note: update of info registry done above by "if (copy instanceof TypeDefiningElement) {}"
 					importedModules.put(((ImportDeclaration) eObject.eContainer()).getModule(),
 							(NamespaceImportSpecifier) eObject);
-				else
+				} else {
 					throw new IllegalStateException("unsupported sub-class of ImportSpecifier: " + copy.eClass());
+				}
 			} else if (copy instanceof N4TypeDeclaration) {
-				info.setOriginalDefinedType_internal((N4TypeDeclaration) copy,
-						((N4TypeDeclaration) eObject).getDefinedType());
+				// note: update of info registry done above by "if (copy instanceof TypeDefiningElement) {}"
 			} else if (copy instanceof N4MemberDeclaration) {
 				info.setOriginalDefinedMember_internal((N4MemberDeclaration) copy,
 						((N4MemberDeclaration) eObject).getDefinedTypeElement());
