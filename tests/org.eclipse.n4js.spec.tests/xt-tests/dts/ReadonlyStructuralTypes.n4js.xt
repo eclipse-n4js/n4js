@@ -18,13 +18,21 @@
 export public class C {
 	public field: string;
 }
+export public class L<T> {
+	public t: T;
+}
 
 export const A: ~r~C = null;
+export const B: ~r~L<string> = null;
 
 
 /* XPECT generated_dts ---
 export class C {
 	public field: string;
 }
+export class L<T> {
+	public t: T;
+}
 export const A: Readonly<C>;
+export const B: Readonly<L<string>>;
 --- */
