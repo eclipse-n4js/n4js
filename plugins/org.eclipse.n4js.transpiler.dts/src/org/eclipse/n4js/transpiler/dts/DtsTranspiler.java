@@ -27,6 +27,7 @@ import org.eclipse.n4js.transpiler.dts.transform.ImplementedMemberTransformation
 import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.MakeTypesAvailableTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ModuleSpecifierTransformationDts;
+import org.eclipse.n4js.transpiler.dts.transform.ReturnTypeTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.TrimForDtsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
@@ -49,6 +50,8 @@ public class DtsTranspiler extends AbstractTranspiler {
 	private Provider<ImplementedMemberTransformation> implementedMemberTransformationProvider;
 	@Inject
 	private Provider<InferredTypesTransformation> inferredTypesTransformationProvider;
+	@Inject
+	private Provider<ReturnTypeTransformation> returnTypeTransformationProvider;
 	@Inject
 	private Provider<TrimForDtsTransformation> trimDtsTransformationProvider;
 	@Inject
@@ -74,6 +77,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 				cutOffTransformation.get(),
 				implementedMemberTransformationProvider.get(),
 				inferredTypesTransformationProvider.get(),
+				returnTypeTransformationProvider.get(),
 				trimDtsTransformationProvider.get(),
 				makeTypesAvailableTransformationProvider.get(),
 				sanitizeImportsTransformationProvider.get(),

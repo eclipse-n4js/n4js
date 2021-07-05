@@ -414,6 +414,16 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getTypeReferenceNode_IM_TypeRefAsCode() {
+		return (EAttribute)typeReferenceNode_IMEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getTypeReferenceNode_IM__GetTypeRef() {
 		return typeReferenceNode_IMEClass.getEOperations().get(0);
 	}
@@ -991,6 +1001,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		createEOperation(parameterizedPropertyAccessExpression_IMEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM___SET_PROPERTY__IDENTIFIABLEELEMENT);
 
 		typeReferenceNode_IMEClass = createEClass(TYPE_REFERENCE_NODE_IM);
+		createEAttribute(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE);
 		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_TYPE_REF);
 		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF);
 
@@ -1182,6 +1193,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		addEParameter(op, theTypesPackage.getIdentifiableElement(), "ix", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(typeReferenceNode_IMEClass, TypeReferenceNode_IM.class, "TypeReferenceNode_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTypeReferenceNode_IM_TypeRefAsCode(), theEcorePackage.getEString(), "typeRefAsCode", null, 0, 1, TypeReferenceNode_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTypeReferenceNode_IM__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

@@ -1054,13 +1054,22 @@ public interface ImPackage extends EPackage {
 	int TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Type Ref As Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Type Reference Node IM</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REFERENCE_NODE_IM_FEATURE_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 1;
+	int TYPE_REFERENCE_NODE_IM_FEATURE_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Rewired Targets</em>' operation.
@@ -4869,6 +4878,17 @@ public interface ImPackage extends EPackage {
 	EClass getTypeReferenceNode_IM();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode <em>Type Ref As Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type Ref As Code</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode()
+	 * @see #getTypeReferenceNode_IM()
+	 * @generated
+	 */
+	EAttribute getTypeReferenceNode_IM_TypeRefAsCode();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef() <em>Get Type Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5587,6 +5607,14 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TYPE_REFERENCE_NODE_IM = eINSTANCE.getTypeReferenceNode_IM();
+
+		/**
+		 * The meta object literal for the '<em><b>Type Ref As Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE = eINSTANCE.getTypeReferenceNode_IM_TypeRefAsCode();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.

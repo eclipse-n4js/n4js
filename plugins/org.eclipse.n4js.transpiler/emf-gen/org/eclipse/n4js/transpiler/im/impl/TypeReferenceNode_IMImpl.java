@@ -13,11 +13,13 @@ package org.eclipse.n4js.transpiler.im.impl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.function.Predicate;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
@@ -46,6 +48,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl#getRewiredReferences <em>Rewired References</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl#getTypeRefAsCode <em>Type Ref As Code</em>}</li>
  * </ul>
  *
  * @generated
@@ -60,6 +63,24 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 	 * @ordered
 	 */
 	protected EList<PlainReference> rewiredReferences;
+	/**
+	 * The default value of the '{@link #getTypeRefAsCode() <em>Type Ref As Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypeRefAsCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TYPE_REF_AS_CODE_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getTypeRefAsCode() <em>Type Ref As Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypeRefAsCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected String typeRefAsCode = TYPE_REF_AS_CODE_EDEFAULT;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -90,6 +111,29 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 			rewiredReferences = new EObjectContainmentEList<PlainReference>(PlainReference.class, this, ImPackage.TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES);
 		}
 		return rewiredReferences;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getTypeRefAsCode() {
+		return typeRefAsCode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setTypeRefAsCode(String newTypeRefAsCode) {
+		String oldTypeRefAsCode = typeRefAsCode;
+		typeRefAsCode = newTypeRefAsCode;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE, oldTypeRefAsCode, typeRefAsCode));
 	}
 
 	/**
@@ -193,6 +237,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 		switch (featureID) {
 			case ImPackage.TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES:
 				return getRewiredReferences();
+			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
+				return getTypeRefAsCode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -210,6 +256,9 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 				getRewiredReferences().clear();
 				getRewiredReferences().addAll((Collection<? extends PlainReference>)newValue);
 				return;
+			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
+				setTypeRefAsCode((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -225,6 +274,9 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 			case ImPackage.TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES:
 				getRewiredReferences().clear();
 				return;
+			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
+				setTypeRefAsCode(TYPE_REF_AS_CODE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -239,6 +291,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 		switch (featureID) {
 			case ImPackage.TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES:
 				return rewiredReferences != null && !rewiredReferences.isEmpty();
+			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
+				return TYPE_REF_AS_CODE_EDEFAULT == null ? typeRefAsCode != null : !TYPE_REF_AS_CODE_EDEFAULT.equals(typeRefAsCode);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -321,6 +375,22 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 				return null;
 		}
 		return super.eInvoke(operationID, arguments);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (typeRefAsCode: ");
+		result.append(typeRefAsCode);
+		result.append(')');
+		return result.toString();
 	}
 
 } //TypeReferenceNode_IMImpl

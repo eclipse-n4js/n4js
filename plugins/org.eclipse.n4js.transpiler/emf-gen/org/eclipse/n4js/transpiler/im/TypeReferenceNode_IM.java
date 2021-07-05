@@ -24,12 +24,40 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * Original properties {@link TypeReferenceNode.typeRefInAST} and {@link TypeReferenceNode.cachedProcessedTypeRef} are always {@code null}.
  * <!-- end-model-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode <em>Type Ref As Code</em>}</li>
+ * </ul>
  *
  * @see org.eclipse.n4js.transpiler.im.ImPackage#getTypeReferenceNode_IM()
  * @model
  * @generated
  */
 public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
+
+	/**
+	 * Returns the value of the '<em><b>Type Ref As Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Type Ref As Code</em>' attribute.
+	 * @see #setTypeRefAsCode(String)
+	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getTypeReferenceNode_IM_TypeRefAsCode()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getTypeRefAsCode();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode <em>Type Ref As Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Type Ref As Code</em>' attribute.
+	 * @see #getTypeRefAsCode()
+	 * @generated
+	 */
+	void setTypeRefAsCode(String value);
 
 	/**
 	 * <!-- begin-user-doc -->

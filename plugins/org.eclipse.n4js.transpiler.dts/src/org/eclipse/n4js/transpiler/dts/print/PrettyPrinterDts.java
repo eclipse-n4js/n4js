@@ -87,6 +87,7 @@ import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils;
 import org.eclipse.n4js.transpiler.im.Script_IM;
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -133,7 +134,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	private final LineColTrackingAppendable out;
 	private final Optional<String> optPreamble;
 	private final TranspilerState state;
-	private final PrettyPrinterTypeRef prettyPrinterTypeRef;
 	private final N4JSDocumentationProvider documentationProvider;
 
 	private PrettyPrinterDts(LineColTrackingAppendable out, TranspilerState state, Optional<String> optPreamble,
@@ -141,7 +141,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		this.out = out;
 		this.optPreamble = optPreamble;
 		this.state = state;
-		this.prettyPrinterTypeRef = new PrettyPrinterTypeRef(this, state);
 		this.documentationProvider = documentationProvider;
 	}
 
@@ -149,7 +148,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	protected Boolean doSwitch(EClass eClass, EObject eObject) {
 		// here we can check for entities of IM.xcore that do not have a super-class in n4js.xcore
 		if (eObject instanceof TypeReferenceNode<?>) {
-			prettyPrinterTypeRef.processTypeRefNode((TypeReferenceNode<?>) eObject, "");
+			processTypeRefNode((TypeReferenceNode<?>) eObject);
 			return DONE;
 		}
 		return super.doSwitch(eClass, eObject);
@@ -751,7 +750,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			if (requiresParens) {
 				write('(');
 			}
-			prettyPrinterTypeRef.processTypeRefNode(declaredTypeRefNode, "");
+			processTypeRefNode(declaredTypeRefNode);
 			if (requiresParens) {
 				write(')');
 			}
@@ -883,7 +882,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 				return DONE;
 			}
 			write(" extends ");
-			prettyPrinterTypeRef.processTypeRefNode(ub, "");
+			processTypeRefNode(ub);
 		}
 		return DONE;
 	}
@@ -1125,26 +1124,34 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	private void processReturnTypeRef(FunctionDefinition funDef) {
-		processReturnTypeRef(funDef, "");
-	}
-
-	private void processReturnTypeRef(FunctionDefinition funDef, String suffix) {
 		if (funDef instanceof N4MethodDeclaration && ((N4MethodDeclaration) funDef).isConstructor()) {
 			return;
 		}
-		prettyPrinterTypeRef.processReturnType(funDef, suffix);
+		write(": ");
+		processTypeRefNode(funDef.getDeclaredReturnTypeRefNode());
 	}
 
 	private void processDeclaredTypeRef(TypeProvidingElement elem) {
-		processDeclaredTypeRef(elem, "");
-	}
-
-	private void processDeclaredTypeRef(TypeProvidingElement elem, String suffix) {
 		TypeReferenceNode<?> declaredTypeRefNode = elem.getDeclaredTypeRefNode();
 		if (declaredTypeRefNode != null) {
 			write(": ");
-			prettyPrinterTypeRef.processTypeRefNode(declaredTypeRefNode, suffix);
+			processTypeRefNode(declaredTypeRefNode);
 		}
+	}
+
+	private void processTypeRefNode(TypeReferenceNode<?> typeRefNode) {
+		if (typeRefNode == null) {
+			return; // do not emit suffx in this case
+		}
+		if (!(typeRefNode instanceof TypeReferenceNode_IM<?>)) {
+			throw new IllegalStateException("");
+		}
+		String code = ((TypeReferenceNode_IM<?>) typeRefNode).getTypeRefAsCode();
+		if (code == null) {
+			throw new IllegalStateException(
+					"encountered a TypeReferenceNode_IM without 'typeRefAsCode' (transformations are expected to either remove this node or set the code string)");
+		}
+		write(code);
 	}
 
 	private void processTypeParams(EList<N4TypeVariable> typeParams) {

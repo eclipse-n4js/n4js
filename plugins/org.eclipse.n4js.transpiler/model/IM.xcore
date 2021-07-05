@@ -319,6 +319,8 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
  */
 class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
 
+	String typeRefAsCode
+
 	op TypeRef getTypeRef() {
 		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
 	}

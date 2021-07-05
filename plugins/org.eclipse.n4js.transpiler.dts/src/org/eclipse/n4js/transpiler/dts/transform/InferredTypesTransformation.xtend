@@ -29,7 +29,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  * <li>variables on top level, and
  * <li>fields of classes and interfaces
  * </ol>
- * explicit in the intermediate model, so that {@code PrettyPrinterSwitchDts} can handle them.
+ * explicit in the intermediate model, so that {@code PrettyPrinterDts} can handle them.
  */
 class InferredTypesTransformation extends Transformation {
 
