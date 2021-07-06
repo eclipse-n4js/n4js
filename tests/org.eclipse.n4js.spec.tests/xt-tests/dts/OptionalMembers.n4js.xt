@@ -18,11 +18,14 @@
 export default class C {
 	optionalField?: number;
 	// in TypeScript methods can be optional too
+	get optionalGetter?() : number { return 0; }
+	set optionalSetter?(value : number) { }
 }
 
 
-/* XPECT generated_dts ---
-export default class C {
+/* XPECT generated_dts ---export default class C {
 	optionalField?: number;
+	// get optionalGetter? (): number;// optional getter omitted
+	// set optionalSetter? (value: number);// optional setter omitted
 }
 --- */

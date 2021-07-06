@@ -626,30 +626,50 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
+		if (original.isOptional()) {
+			// omit optional getters since these do not exist in TypeScript
+			write("// ");
+		}
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		processMemberModifiers(original);
 		write("get ");
 		processPropertyName(original);
+		if (original.isOptional()) {
+			write("? ");
+		}
 		write("()");
 		processDeclaredTypeRef(original);
 		// process(original.getBody());
 		write(";");
+		if (original.isOptional()) {
+			write("// optional getter omitted");
+		}
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
+		if (original.isOptional()) {
+			// omit optional setters since these do not exist in TypeScript
+			write("// ");
+		}
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		processMemberModifiers(original);
 		write("set ");
 		processPropertyName(original);
+		if (original.isOptional()) {
+			write("? ");
+		}
 		write('(');
 		process(original.getFpar());
 		write(")");
 		// process(original.getBody());
 		write(";");
+		if (original.isOptional()) {
+			write("// optional setter omitted");
+		}
 		return DONE;
 	}
 

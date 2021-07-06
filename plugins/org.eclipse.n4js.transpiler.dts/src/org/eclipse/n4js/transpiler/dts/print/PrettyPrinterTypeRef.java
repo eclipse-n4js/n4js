@@ -213,18 +213,16 @@ import com.google.common.collect.Lists;
 				// FIXME is there a better way? (maybe via a symbol table entry as in
 				// PrettyPrinterSwitch#caseIdentifierRef())
 
+				TypingStrategy definedTypingStrategy = typeRef.getDefinedTypingStrategy();
 				String referenceStr = declType != null
-						? DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, typeRef.getDefinedTypingStrategy(),
-								state)
+						? DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, definedTypingStrategy, state)
 						: null;
 
 				if (referenceStr == null) {
 					write("any");
 				} else {
 
-					boolean structRead = typeRef
-							.getDefinedTypingStrategy() == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS;
-					if (structRead) {
+					if (definedTypingStrategy == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS) {
 						write("Readonly<");
 						write(referenceStr);
 						processTypeArguments(typeRef);
