@@ -13,17 +13,20 @@ package org.eclipse.n4js.transpiler.dts.transform
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.Collections
-import java.util.HashSet
 import java.util.List
-import java.util.Set
 import java.util.function.Consumer
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -43,24 +46,26 @@ import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.workspace.WorkspaceAccess
+import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifier
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
- * For all types referenced from a type reference in the intermediate model, this transformation is responsible for
- * making them available in the current module (if not available already) by adding an additional import.
+ * FIXME GH-2150
  */
 class MakeTypesAvailableTransformation extends Transformation {
 
-	private StringBuilder sb = null;
+	private TypeReferenceNode_IM<?> currTypeRefNode = null;
+	private StringBuilder currStringBuilder = null;
 
 	@Inject
 	private WorkspaceAccess workspaceAccess;
@@ -76,27 +81,24 @@ class MakeTypesAvailableTransformation extends Transformation {
 	}
 
 	override transform() {
-
-
-collectNodes(state.im, TypeReferenceNode, false).forEach[ typeRefNode |
-	// if you get a ClassCastException here, it means that not all TypeReferenceNodes were
-	// converted to TypeReferenceNode_IMs, which is an error
-	val typeRefNodeCasted = typeRefNode as TypeReferenceNode_IM<?>;
-	makeAllTypesAvailable(typeRefNodeCasted)
-];
-
-
 		collectNodes(state.im, TypeReferenceNode, false).forEach[ typeRefNode |
 			// if you get a ClassCastException here, it means that not all TypeReferenceNodes were
 			// converted to TypeReferenceNode_IMs, which is an error
 			val typeRefNodeCasted = typeRefNode as TypeReferenceNode_IM<?>;
 
 			try {
-				sb = new StringBuilder();
+				currTypeRefNode = typeRefNodeCasted;
+				currStringBuilder = new StringBuilder();
 				convertTypeRefNode(typeRefNodeCasted);
-				typeRefNodeCasted.typeRefAsCode = if (sb.length > 0) sb.toString();
+				if (currStringBuilder.length === 0) {
+					// we expect #convertTypeRefNode() to always produce some output code
+					// (if the type reference cannot be converted to TypeScript, 'any' or something similar should be emitted)
+					throw new IllegalStateException("converting the type reference of a TypeReferenceNode produced empty output code");
+				}
+				typeRefNodeCasted.codeToEmit = currStringBuilder.toString();
 			} finally {
-				sb = null;
+				currTypeRefNode = null;
+				currStringBuilder = null;
 			}
 		];
 	}
@@ -150,31 +152,36 @@ collectNodes(state.im, TypeReferenceNode, false).forEach[ typeRefNode |
 			}
 		}
 
-		if (!DtsUtils.isSupportedTypeRef(typeRef)) {
-			// unsupported type reference
-			write("any");
-		} else if (typeRef instanceof ComposedTypeRef) {
+		if (typeRef instanceof ComposedTypeRef) {
 			convertComposedTypeRef(typeRef);
 		} else if (typeRef instanceof FunctionTypeExprOrRef) {
 			convertFunctionTypeExprOrRef(typeRef);
 		} else if (typeRef instanceof ParameterizedTypeRef) {
 			convertParameterizedTypeRef(typeRef);
 		} else if (typeRef instanceof ExistentialTypeRef) {
-			// should have been covered by case "unsupported type reference" above!
-			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
+			write("any"); // unsupported type reference
 		} else if (typeRef instanceof ThisTypeRef) {
-			// should have been covered by case "unsupported type reference" above!
-			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
+			write("any"); // unsupported type reference
 		} else if (typeRef instanceof TypeTypeRef) {
-			// should have been covered by case "unsupported type reference" above!
-			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
+			write("any"); // unsupported type reference
 		} else if (typeRef instanceof UnknownTypeRef) {
-			// should have been covered by case "unsupported type reference" above!
-			throw new IllegalStateException("code not adjusted after DtsUtils#isSupportedTypeRef() was changed");
+			write("any"); // unsupported type reference
 		} else {
 			throw new IllegalStateException("unknown subclass of " + ComposedTypeRef.simpleName + ": " + typeRef.getClass.simpleName);
 		}
 	}
+
+// FIXME remove this
+def public static boolean isSupportedTypeRef(TypeRef typeRef) {
+	// these are the so far unsupported type references
+	if (typeRef instanceof ExistentialTypeRef
+			|| typeRef instanceof ThisTypeRef
+			|| typeRef instanceof TypeTypeRef
+			|| typeRef instanceof UnknownTypeRef) {
+		return false;
+	}
+	return true;
+}
 
 	def private void convertComposedTypeRef(ComposedTypeRef typeRef) {
 		var char op;
@@ -233,18 +240,12 @@ collectNodes(state.im, TypeReferenceNode, false).forEach[ typeRefNode |
 		}
 
 		if (showDeclaredType) {
-			if (DtsUtils.isDtsExportableDependency(declType, state)) {
-				// FIXME is there a better way? (maybe via a symbol table entry as in
-				// PrettyPrinterSwitch#caseIdentifierRef())
-				val referenceStr = if (declType !== null) {
-					DtsUtils.getReferenceToTypeIfLocallyAvailable(declType, typeRef.getDefinedTypingStrategy(), state)
-				};
-				if (referenceStr !== null) {
-					write(referenceStr);
-					convertTypeArguments(typeRef);
-				} else {
-					write("any");
-				}
+			val referenceStr = if (declType !== null) {
+				getReferenceToType(declType, typeRef.getDefinedTypingStrategy(), state)
+			};
+			if (referenceStr !== null) {
+				write(referenceStr);
+				convertTypeArguments(typeRef);
 			} else {
 				write("any");
 			}
@@ -396,7 +397,7 @@ collectNodes(state.im, TypeReferenceNode, false).forEach[ typeRefNode |
 	}
 
 	def private void write(CharSequence csq) {
-		sb.append(csq);
+		currStringBuilder.append(csq);
 	}
 
 	def private void writeQuotedIfNonIdentifier(String csq) {
@@ -410,77 +411,92 @@ collectNodes(state.im, TypeReferenceNode, false).forEach[ typeRefNode |
 	}
 
 
-
-// -----
-
-	def private void makeAllTypesAvailable(TypeReferenceNode_IM<?> typeRefNode) {
-		val typeRef = state.info.getOriginalProcessedTypeRef(typeRefNode);
-		if (typeRef !== null) {
-			makeAllTypesAvailable(typeRefNode, typeRef, new HashSet());
-		}
-	}
-
-	def private void makeAllTypesAvailable(TypeReferenceNode_IM<?> typeRefNode, TypeRef typeRef, Set<TypeRef> visited) {
-		if (visited.contains(typeRef)) {
-			return; // FIXME infinite recursion???
-		}
-		visited.add(typeRef);
-		TypeUtils.forAllTypeRefs(typeRef, ParameterizedTypeRef, true, true, [mustBeIgnored], [ ptr |
-			val declType = ptr.declaredType;
-			if (declType !== null) {
-				makeTypeAvailable(typeRefNode, declType);
-			}
-			for (typeArg : ptr.typeArgs) {
-				if (typeArg instanceof Wildcard) {
-					val upperBound = typeArg.getDeclaredOrImplicitUpperBound();
-					if (upperBound !== null) {
-						makeAllTypesAvailable(typeRefNode, upperBound, visited);
-					}
-				}
-			}
-			return true; // always continue
-		], null);
-	}
-
-	def private void makeTypeAvailable(TypeReferenceNode_IM<?> typeRefNode, Type type) {
+	/**
+	 * Returns the textual reference that can be used in the local file to refer to the given type (adding an import for
+	 * the given type, if necessary), or <code>null</code> if the type cannot be referred to from the local file.
+	 * <p>
+	 * The returned string is usually simply the local name of the given type, but includes, if required, also the name
+	 * of a namespace and "." as separator.
+	 */
+	def private String getReferenceToType(Type type, TypingStrategy typingStrategy, TranspilerState state) {
 		if (!DtsUtils.isDtsExportableDependency(type, state)) {
-			// the type is from a project not available on the .d.ts side, so the .d.ts export will be
-			// cut off at this reference and thus we need not (and cannot) make this type available
-			return;
+			// the type is from a project not available on the .d.ts side, so we cut off the .d.ts export at this reference
+			return null;
 		}
-		val isAlreadyAvailable = DtsUtils.getReferenceToTypeIfLocallyAvailable(type, null, state) !== null;
-		if (isAlreadyAvailable) {
-			// the type is already available, but we have to make sure its import (if any) won't be removed as unused
-			// even if all other usages will be removed (e.g. if they are in expressions/statements):
-			val ste = getSymbolTableEntryOriginal(type, false);
-			if (ste !== null) {
-				recordReferenceToType(typeRefNode, ste);
+
+		val isBuiltInOrGlobal = isBuiltInOrGlobal(type);
+		if (isBuiltInOrGlobal) {
+			// simple case: the type reference points to a built-in type OR a type from a global module
+			// -> can simply use its name in output code, because they are global and available everywhere
+			if (type == state.G.intType) {
+				return "number";
+			} else if (type == state.G.iteratorEntryType) {
+				return "IteratorReturnResult";
 			}
-			return;
+			val containingModule = type.containingModule;
+			if (containingModule !== null
+					&& containingModule.simpleName == "IntlClasses"
+					&& containingModule.projectName == N4JSGlobals.N4JS_RUNTIME_ECMA402.rawName) {
+				return "Intl." + type.name;
+			}
+			return type.getName();
 		}
-		// the type is not yet available
-		if (type.exported) {
-			// no need to check accessibility modifiers in addition to #isExported(), because on TypeScript-side we bump up the accessibility
-			val declTypeProject = workspaceAccess.findProjectContaining(type);
-			if (declTypeProject !== null) {
-				if (declTypeProject === state.project
-					|| state.project.dependencies.contains(declTypeProject.name)) {
-					// the type reference points to an exported type in the same project or a project we directly depend on
-					// --> we can add an import for this type
-					val ste = addNamedImport(type, null); // FIXME use alias if name already in use!
-					recordReferenceToType(typeRefNode, ste);
-					return;
-				}
+
+		var ste = state.steCache.mapOriginal.get(type);
+
+		// is the type already available?
+		if (ste === null) {
+			// no, so try to import it!
+
+			if (type.exported && isFromSameProjectOrDirectDependency(type)) {
+				// note: no need to check accessibility modifiers in addition to #isExported(), because on TypeScript-side we bump up the accessibility
+
+				// we can add an import for this type
+				ste = addNamedImport(type, null); // FIXME use alias if name already in use!
 			}
 		}
-		// we tried our best, but this type cannot be made available
-		// --> the PrettyPrinterTypeRef will replace it with 'any'
+
+		// is the type now available?
+		if (ste !== null) {
+			// yes, so ...
+
+			// 1) record that 'currTypeRefNode' is actually referring to 'type'
+			recordReferenceToType(currTypeRefNode, ste);
+
+			// 2) compute output code that correctly refers to 'type' from within current file (depending on how the type was imported)
+			var referenceStr = "";
+			val importSpec = ste.getImportSpecifier();
+			if (importSpec instanceof NamespaceImportSpecifier) {
+				val namespaceName = importSpec.getAlias();
+				referenceStr = namespaceName + "." + ste.getName();
+			} else {
+				referenceStr = ste.getName();
+			}
+
+			if (typingStrategy == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS) {
+				referenceStr = "Readonly<" + referenceStr + ">";
+			}
+
+			return referenceStr;
+		}
+
+		// we tried our best, but this type is not available in the current file AND cannot be made available
+		return null;
 	}
 
-	def private boolean mustBeIgnored(EObject obj) {
-		if (obj instanceof TypeRef) {
-			return !DtsUtils.isSupportedTypeRef(obj);
+	/** Tells whether the given type is located in the local project or a project we directly depend on. */
+	def private boolean isFromSameProjectOrDirectDependency(Type type) {
+		val containingProject = workspaceAccess.findProjectContaining(type);
+		return containingProject !== null
+			&& (containingProject === state.project
+				|| state.project.dependencies.contains(containingProject.name));
+	}
+
+	def private static boolean isBuiltInOrGlobal(Type type) {
+		if (N4Scheme.isFromResourceWithN4Scheme(type)) {
+			return true;
 		}
-		return false;
+		val module = EcoreUtil2.getContainerOfType(type, TModule);
+		return module !== null && AnnotationDefinition.GLOBAL.hasAnnotation(module);
 	}
 }

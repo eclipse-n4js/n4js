@@ -48,7 +48,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl#getRewiredReferences <em>Rewired References</em>}</li>
- *   <li>{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl#getTypeRefAsCode <em>Type Ref As Code</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl#getCodeToEmit <em>Code To Emit</em>}</li>
  * </ul>
  *
  * @generated
@@ -64,23 +64,23 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 	 */
 	protected EList<PlainReference> rewiredReferences;
 	/**
-	 * The default value of the '{@link #getTypeRefAsCode() <em>Type Ref As Code</em>}' attribute.
+	 * The default value of the '{@link #getCodeToEmit() <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTypeRefAsCode()
+	 * @see #getCodeToEmit()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TYPE_REF_AS_CODE_EDEFAULT = null;
+	protected static final String CODE_TO_EMIT_EDEFAULT = null;
 	/**
-	 * The cached value of the '{@link #getTypeRefAsCode() <em>Type Ref As Code</em>}' attribute.
+	 * The cached value of the '{@link #getCodeToEmit() <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTypeRefAsCode()
+	 * @see #getCodeToEmit()
 	 * @generated
 	 * @ordered
 	 */
-	protected String typeRefAsCode = TYPE_REF_AS_CODE_EDEFAULT;
+	protected String codeToEmit = CODE_TO_EMIT_EDEFAULT;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -119,8 +119,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsCode() {
-		return typeRefAsCode;
+	public String getCodeToEmit() {
+		return codeToEmit;
 	}
 
 	/**
@@ -129,11 +129,11 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 	 * @generated
 	 */
 	@Override
-	public void setTypeRefAsCode(String newTypeRefAsCode) {
-		String oldTypeRefAsCode = typeRefAsCode;
-		typeRefAsCode = newTypeRefAsCode;
+	public void setCodeToEmit(String newCodeToEmit) {
+		String oldCodeToEmit = codeToEmit;
+		codeToEmit = newCodeToEmit;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE, oldTypeRefAsCode, typeRefAsCode));
+			eNotify(new ENotificationImpl(this, Notification.SET, ImPackage.TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT, oldCodeToEmit, codeToEmit));
 	}
 
 	/**
@@ -237,8 +237,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 		switch (featureID) {
 			case ImPackage.TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES:
 				return getRewiredReferences();
-			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
-				return getTypeRefAsCode();
+			case ImPackage.TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT:
+				return getCodeToEmit();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -256,8 +256,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 				getRewiredReferences().clear();
 				getRewiredReferences().addAll((Collection<? extends PlainReference>)newValue);
 				return;
-			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
-				setTypeRefAsCode((String)newValue);
+			case ImPackage.TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT:
+				setCodeToEmit((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -274,8 +274,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 			case ImPackage.TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES:
 				getRewiredReferences().clear();
 				return;
-			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
-				setTypeRefAsCode(TYPE_REF_AS_CODE_EDEFAULT);
+			case ImPackage.TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT:
+				setCodeToEmit(CODE_TO_EMIT_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -291,8 +291,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 		switch (featureID) {
 			case ImPackage.TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES:
 				return rewiredReferences != null && !rewiredReferences.isEmpty();
-			case ImPackage.TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE:
-				return TYPE_REF_AS_CODE_EDEFAULT == null ? typeRefAsCode != null : !TYPE_REF_AS_CODE_EDEFAULT.equals(typeRefAsCode);
+			case ImPackage.TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT:
+				return CODE_TO_EMIT_EDEFAULT == null ? codeToEmit != null : !CODE_TO_EMIT_EDEFAULT.equals(codeToEmit);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -387,8 +387,8 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (typeRefAsCode: ");
-		result.append(typeRefAsCode);
+		result.append(" (codeToEmit: ");
+		result.append(codeToEmit);
 		result.append(')');
 		return result.toString();
 	}

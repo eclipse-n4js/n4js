@@ -866,9 +866,9 @@ public class TranspilerBuilderBlocks
 		return _ExprStmnt(_Snippet(code));
 	}
 
-	public static def Snippet _Snippet(String code) {
+	public static def Snippet _Snippet(String codeToEmit) {
 		val result = ImFactory.eINSTANCE.createSnippet;
-		result.code = code;
+		result.codeToEmit = codeToEmit;
 		return result;
 	}
 }

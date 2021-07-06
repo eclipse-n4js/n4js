@@ -1146,7 +1146,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (!(typeRefNode instanceof TypeReferenceNode_IM<?>)) {
 			throw new IllegalStateException("");
 		}
-		String code = ((TypeReferenceNode_IM<?>) typeRefNode).getTypeRefAsCode();
+		String code = ((TypeReferenceNode_IM<?>) typeRefNode).getCodeToEmit();
 		if (code == null) {
 			throw new IllegalStateException(
 					"encountered a TypeReferenceNode_IM without 'typeRefAsCode' (transformations are expected to either remove this node or set the code string)");

@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode <em>Type Ref As Code</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCodeToEmit <em>Code To Emit</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.transpiler.im.ImPackage#getTypeReferenceNode_IM()
@@ -38,26 +38,26 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
 
 	/**
-	 * Returns the value of the '<em><b>Type Ref As Code</b></em>' attribute.
+	 * Returns the value of the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Type Ref As Code</em>' attribute.
-	 * @see #setTypeRefAsCode(String)
-	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getTypeReferenceNode_IM_TypeRefAsCode()
+	 * @return the value of the '<em>Code To Emit</em>' attribute.
+	 * @see #setCodeToEmit(String)
+	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getTypeReferenceNode_IM_CodeToEmit()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getTypeRefAsCode();
+	String getCodeToEmit();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode <em>Type Ref As Code</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCodeToEmit <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type Ref As Code</em>' attribute.
-	 * @see #getTypeRefAsCode()
+	 * @param value the new value of the '<em>Code To Emit</em>' attribute.
+	 * @see #getCodeToEmit()
 	 * @generated
 	 */
-	void setTypeRefAsCode(String value);
+	void setCodeToEmit(String value);
 
 	/**
 	 * <!-- begin-user-doc -->

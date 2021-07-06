@@ -29,31 +29,31 @@ import org.eclipse.n4js.transpiler.im.Snippet;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.transpiler.im.impl.SnippetImpl#getCode <em>Code</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.impl.SnippetImpl#getCodeToEmit <em>Code To Emit</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class SnippetImpl extends ExpressionImpl implements Snippet {
 	/**
-	 * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
+	 * The default value of the '{@link #getCodeToEmit() <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCode()
+	 * @see #getCodeToEmit()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String CODE_EDEFAULT = null;
+	protected static final String CODE_TO_EMIT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getCode() <em>Code</em>}' attribute.
+	 * The cached value of the '{@link #getCodeToEmit() <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCode()
+	 * @see #getCodeToEmit()
 	 * @generated
 	 * @ordered
 	 */
-	protected String code = CODE_EDEFAULT;
+	protected String codeToEmit = CODE_TO_EMIT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -80,8 +80,8 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	 * @generated
 	 */
 	@Override
-	public String getCode() {
-		return code;
+	public String getCodeToEmit() {
+		return codeToEmit;
 	}
 
 	/**
@@ -90,11 +90,11 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	 * @generated
 	 */
 	@Override
-	public void setCode(String newCode) {
-		String oldCode = code;
-		code = newCode;
+	public void setCodeToEmit(String newCodeToEmit) {
+		String oldCodeToEmit = codeToEmit;
+		codeToEmit = newCodeToEmit;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ImPackage.SNIPPET__CODE, oldCode, code));
+			eNotify(new ENotificationImpl(this, Notification.SET, ImPackage.SNIPPET__CODE_TO_EMIT, oldCodeToEmit, codeToEmit));
 	}
 
 	/**
@@ -105,8 +105,8 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ImPackage.SNIPPET__CODE:
-				return getCode();
+			case ImPackage.SNIPPET__CODE_TO_EMIT:
+				return getCodeToEmit();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -119,8 +119,8 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ImPackage.SNIPPET__CODE:
-				setCode((String)newValue);
+			case ImPackage.SNIPPET__CODE_TO_EMIT:
+				setCodeToEmit((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,8 +134,8 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ImPackage.SNIPPET__CODE:
-				setCode(CODE_EDEFAULT);
+			case ImPackage.SNIPPET__CODE_TO_EMIT:
+				setCodeToEmit(CODE_TO_EMIT_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -149,8 +149,8 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ImPackage.SNIPPET__CODE:
-				return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
+			case ImPackage.SNIPPET__CODE_TO_EMIT:
+				return CODE_TO_EMIT_EDEFAULT == null ? codeToEmit != null : !CODE_TO_EMIT_EDEFAULT.equals(codeToEmit);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -165,8 +165,8 @@ public class SnippetImpl extends ExpressionImpl implements Snippet {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (code: ");
-		result.append(code);
+		result.append(" (codeToEmit: ");
+		result.append(codeToEmit);
 		result.append(')');
 		return result.toString();
 	}

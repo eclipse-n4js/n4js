@@ -1180,7 +1180,7 @@ import com.google.common.base.Strings;
 	}
 
 	public Boolean caseSnippet(Snippet original) {
-		String code = original.getCode();
+		String code = original.getCodeToEmit();
 		if (code.endsWith("\n"))
 			code = code.substring(0, code.length() - 1);
 		write(code);

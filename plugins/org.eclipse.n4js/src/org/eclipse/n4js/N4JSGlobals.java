@@ -139,6 +139,11 @@ public final class N4JSGlobals {
 	public static final N4JSProjectName N4JS_RUNTIME = new N4JSProjectName("n4js-runtime");
 
 	/**
+	 * Runtime for ECMA 402.
+	 */
+	public static final N4JSProjectName N4JS_RUNTIME_ECMA402 = new N4JSProjectName("n4js-runtime-ecma402");
+
+	/**
 	 * Runtime for node.js
 	 */
 	public static final N4JSProjectName N4JS_RUNTIME_NODE = new N4JSProjectName("n4js-runtime-node");
@@ -203,7 +208,7 @@ public final class N4JSGlobals {
 			new N4JSProjectName("n4js-cli"),
 			new N4JSProjectName("n4js-mangelhaft-cli"),
 			N4JS_RUNTIME,
-			new N4JSProjectName("n4js-runtime-ecma402"),
+			N4JS_RUNTIME_ECMA402,
 			new N4JSProjectName("n4js-runtime-es2015"),
 			new N4JSProjectName("n4js-runtime-esnext"),
 			new N4JSProjectName("n4js-runtime-fetch"),

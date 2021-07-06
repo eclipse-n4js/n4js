@@ -319,7 +319,7 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
  */
 class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
 
-	String typeRefAsCode
+	String codeToEmit
 
 	op TypeRef getTypeRef() {
 		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
@@ -374,7 +374,7 @@ class ParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, Paramet
  * A pre-formatted code snippet that will be emitted to the target code as is.
  */
 class Snippet extends Expression {
-	String code
+	String codeToEmit
 }
 
 

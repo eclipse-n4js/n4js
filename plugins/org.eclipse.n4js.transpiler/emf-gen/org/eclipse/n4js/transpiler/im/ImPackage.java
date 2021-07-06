@@ -1054,13 +1054,13 @@ public interface ImPackage extends EPackage {
 	int TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Type Ref As Code</b></em>' attribute.
+	 * The feature id for the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 1;
+	int TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Type Reference Node IM</em>' class.
@@ -2038,13 +2038,13 @@ public interface ImPackage extends EPackage {
 	int SNIPPET = 15;
 
 	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * The feature id for the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SNIPPET__CODE = N4JSPackage.EXPRESSION_FEATURE_COUNT + 0;
+	int SNIPPET__CODE_TO_EMIT = N4JSPackage.EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Snippet</em>' class.
@@ -4878,15 +4878,15 @@ public interface ImPackage extends EPackage {
 	EClass getTypeReferenceNode_IM();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode <em>Type Ref As Code</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCodeToEmit <em>Code To Emit</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type Ref As Code</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRefAsCode()
+	 * @return the meta object for the attribute '<em>Code To Emit</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCodeToEmit()
 	 * @see #getTypeReferenceNode_IM()
 	 * @generated
 	 */
-	EAttribute getTypeReferenceNode_IM_TypeRefAsCode();
+	EAttribute getTypeReferenceNode_IM_CodeToEmit();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef() <em>Get Type Ref</em>}' operation.
@@ -5253,15 +5253,15 @@ public interface ImPackage extends EPackage {
 	EClass getSnippet();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.Snippet#getCode <em>Code</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.Snippet#getCodeToEmit <em>Code To Emit</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Code</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.Snippet#getCode()
+	 * @return the meta object for the attribute '<em>Code To Emit</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.Snippet#getCodeToEmit()
 	 * @see #getSnippet()
 	 * @generated
 	 */
-	EAttribute getSnippet_Code();
+	EAttribute getSnippet_CodeToEmit();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.DelegatingMember <em>Delegating Member</em>}'.
@@ -5609,12 +5609,12 @@ public interface ImPackage extends EPackage {
 		EClass TYPE_REFERENCE_NODE_IM = eINSTANCE.getTypeReferenceNode_IM();
 
 		/**
-		 * The meta object literal for the '<em><b>Type Ref As Code</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Code To Emit</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE = eINSTANCE.getTypeReferenceNode_IM_TypeRefAsCode();
+		EAttribute TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT = eINSTANCE.getTypeReferenceNode_IM_CodeToEmit();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
@@ -5923,12 +5923,12 @@ public interface ImPackage extends EPackage {
 		EClass SNIPPET = eINSTANCE.getSnippet();
 
 		/**
-		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Code To Emit</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SNIPPET__CODE = eINSTANCE.getSnippet_Code();
+		EAttribute SNIPPET__CODE_TO_EMIT = eINSTANCE.getSnippet_CodeToEmit();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.DelegatingMemberImpl <em>Delegating Member</em>}' class.

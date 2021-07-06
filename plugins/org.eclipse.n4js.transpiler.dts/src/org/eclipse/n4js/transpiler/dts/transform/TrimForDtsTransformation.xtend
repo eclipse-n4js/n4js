@@ -23,7 +23,6 @@ import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks
-import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.MemberAccessModifier
@@ -60,11 +59,15 @@ class TrimForDtsTransformation extends Transformation {
 			.toList;
 		toBeRemoved3.forEach[remove(it)];
 
+val x = "FIXME";
+// FIXME (1) consider removal of this!!!!
+// FIXME (2) then consider removing the no-longer-required utility method #replace(TypeRef, TypeRef)
+// FIXME (3) then remove unused classes from IM.xcore
 		// remove all unsupported type references
 		// (the pretty printer would replace them with 'any' anyway, but we need to remove them to
 		// let SanitizeImportsTransformation the references are no longer used)
 		val toBeRemoved4 = collectNodes(state.im, true, TypeRef)
-			.filter[!DtsUtils.isSupportedTypeRef(it)]
+			.filter[!MakeTypesAvailableTransformation.isSupportedTypeRef(it)]
 			.toList;
 		val anySTE = getSymbolTableEntryOriginal(RuleEnvironmentExtensions.anyType(state.G), true);
 		toBeRemoved4.forEach[ typeRef |

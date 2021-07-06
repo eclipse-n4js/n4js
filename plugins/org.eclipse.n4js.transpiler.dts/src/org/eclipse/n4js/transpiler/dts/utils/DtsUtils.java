@@ -13,25 +13,13 @@ package org.eclipse.n4js.transpiler.dts.utils;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.transpiler.TranspilerState;
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
-import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
-import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -54,21 +42,6 @@ public class DtsUtils {
 	/** @see #isDtsExportableReference(Resource, TranspilerState) */
 	public static boolean isDtsExportableDependency(TModule module, TranspilerState state) {
 		return isDtsExportableReference(module != null ? module.eResource() : null, state);
-	}
-
-	/**
-	 * Tells whether the given type reference is supported by the .d.ts export. Otherwise, the type reference will be
-	 * replaced by 'any'.
-	 */
-	public static boolean isSupportedTypeRef(TypeRef typeRef) {
-		// these are the so far unsupported type references
-		if (typeRef instanceof ExistentialTypeRef
-				|| typeRef instanceof ThisTypeRef
-				|| typeRef instanceof TypeTypeRef
-				|| typeRef instanceof UnknownTypeRef) {
-			return false;
-		}
-		return true;
 	}
 
 	/**
@@ -100,55 +73,5 @@ public class DtsUtils {
 		ProjectType type = pd.getType();
 		return type == ProjectType.RUNTIME_ENVIRONMENT
 				|| type == ProjectType.RUNTIME_LIBRARY;
-	}
-
-	/**
-	 * Returns the textual reference that can be used in the local file to refer to the given type, or <code>null</code>
-	 * if the type cannot be referred to without adding new imports, etc.
-	 * <p>
-	 * The returned string is usually simply the local name of the given type, but includes, if required, also the name
-	 * of a namespace and "." as separator.
-	 */
-	public static String getReferenceToTypeIfLocallyAvailable(Type type, TypingStrategy typingStrategy,
-			TranspilerState state) {
-
-		boolean isBuiltInOrGlobal = N4Scheme.isFromResourceWithN4Scheme(type);
-		if (!isBuiltInOrGlobal) {
-			TModule module = EcoreUtil2.getContainerOfType(type, TModule.class);
-			isBuiltInOrGlobal = module != null && AnnotationDefinition.GLOBAL.hasAnnotation(module);
-		}
-		if (isBuiltInOrGlobal) {
-			// simple case: the type reference points to a built-in type OR a type from a global module
-			// -> can simply use its name in output code, because they are global and available everywhere
-			if (type == RuleEnvironmentExtensions.intType(state.G)) {
-				type = RuleEnvironmentExtensions.numberType(state.G);
-			} else if (type == RuleEnvironmentExtensions.iteratorEntryType(state.G)) {
-				return "IteratorReturnResult";
-			}
-			if (type.getContainingModule() != null
-					&& "IntlClasses".equals(type.getContainingModule().getSimpleName())
-					&& "n4js-runtime-ecma402".equals(type.getContainingModule().getProjectName())) {
-				return "Intl." + type.getName();
-			}
-			return type.getName();
-		}
-		SymbolTableEntryOriginal ste = state.steCache.mapOriginal.get(type);
-		if (ste != null) {
-			String typeRefName = "";
-
-			// the type reference points to a type contained in or already imported into the current module
-			ImportSpecifier importSpec = ste.getImportSpecifier();
-			if (importSpec instanceof NamespaceImportSpecifier) {
-				String namespaceName = ((NamespaceImportSpecifier) importSpec).getAlias();
-				typeRefName = namespaceName + "." + ste.getName();
-			} else {
-				typeRefName = ste.getName();
-			}
-			if (typingStrategy == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS) {
-				typeRefName = "Readonly<" + typeRefName + ">";
-			}
-			return typeRefName;
-		}
-		return null;
 	}
 }

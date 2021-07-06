@@ -414,7 +414,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTypeReferenceNode_IM_TypeRefAsCode() {
+	public EAttribute getTypeReferenceNode_IM_CodeToEmit() {
 		return (EAttribute)typeReferenceNode_IMEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -755,11 +755,12 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSnippet_Code() {
+	public EAttribute getSnippet_CodeToEmit() {
 		return (EAttribute)snippetEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1001,7 +1002,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		createEOperation(parameterizedPropertyAccessExpression_IMEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM___SET_PROPERTY__IDENTIFIABLEELEMENT);
 
 		typeReferenceNode_IMEClass = createEClass(TYPE_REFERENCE_NODE_IM);
-		createEAttribute(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM__TYPE_REF_AS_CODE);
+		createEAttribute(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT);
 		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_TYPE_REF);
 		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF);
 
@@ -1018,7 +1019,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		createEOperation(parameterizedTypeRefStructural_IMEClass, PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE__TYPE);
 
 		snippetEClass = createEClass(SNIPPET);
-		createEAttribute(snippetEClass, SNIPPET__CODE);
+		createEAttribute(snippetEClass, SNIPPET__CODE_TO_EMIT);
 
 		delegatingMemberEClass = createEClass(DELEGATING_MEMBER);
 		createEReference(delegatingMemberEClass, DELEGATING_MEMBER__DELEGATION_BASE_TYPE);
@@ -1193,7 +1194,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		addEParameter(op, theTypesPackage.getIdentifiableElement(), "ix", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(typeReferenceNode_IMEClass, TypeReferenceNode_IM.class, "TypeReferenceNode_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTypeReferenceNode_IM_TypeRefAsCode(), theEcorePackage.getEString(), "typeRefAsCode", null, 0, 1, TypeReferenceNode_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTypeReferenceNode_IM_CodeToEmit(), theEcorePackage.getEString(), "codeToEmit", null, 0, 1, TypeReferenceNode_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTypeReferenceNode_IM__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -1224,7 +1225,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		addEParameter(op, theTypesPackage.getType(), "ix", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(snippetEClass, Snippet.class, "Snippet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getSnippet_Code(), theEcorePackage.getEString(), "code", null, 0, 1, Snippet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSnippet_CodeToEmit(), theEcorePackage.getEString(), "codeToEmit", null, 0, 1, Snippet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(delegatingMemberEClass, DelegatingMember.class, "DelegatingMember", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDelegatingMember_DelegationBaseType(), this.getSymbolTableEntryOriginal(), null, "delegationBaseType", null, 0, 1, DelegatingMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
