@@ -171,18 +171,6 @@ class MakeTypesAvailableTransformation extends Transformation {
 		}
 	}
 
-// FIXME remove this
-def public static boolean isSupportedTypeRef(TypeRef typeRef) {
-	// these are the so far unsupported type references
-	if (typeRef instanceof ExistentialTypeRef
-			|| typeRef instanceof ThisTypeRef
-			|| typeRef instanceof TypeTypeRef
-			|| typeRef instanceof UnknownTypeRef) {
-		return false;
-	}
-	return true;
-}
-
 	def private void convertComposedTypeRef(ComposedTypeRef typeRef) {
 		var char op;
 		if (typeRef instanceof UnionTypeExpression) {
@@ -442,7 +430,7 @@ def public static boolean isSupportedTypeRef(TypeRef typeRef) {
 			return type.getName();
 		}
 
-		var ste = state.steCache.mapOriginal.get(type);
+		var ste = getSymbolTableEntryOriginal(type, false);
 
 		// is the type already available?
 		if (ste === null) {
@@ -451,8 +439,17 @@ def public static boolean isSupportedTypeRef(TypeRef typeRef) {
 			if (type.exported && isFromSameProjectOrDirectDependency(type)) {
 				// note: no need to check accessibility modifiers in addition to #isExported(), because on TypeScript-side we bump up the accessibility
 
-				// we can add an import for this type
-				ste = addNamedImport(type, null); // FIXME use alias if name already in use!
+				// do we already have a namespace import for the type's containing module?
+				val module = type.containingModule;
+				val steNamespace = if (module !== null) state.steCache.mapImportedModule_2_STE.get(module);
+				if (steNamespace !== null) {
+					// yes, so access this type via that namespace
+					ste = createSymbolTableEntryOriginal(type);
+					ste.importSpecifier = steNamespace.importSpecifier;
+				} else {
+					// no, so add a new named import for this type
+					ste = addNamedImport(type, null); // FIXME use alias if name already in use!
+				}
 			}
 		}
 

@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.NameAndAccess
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TModule
 
 /**
  */
@@ -51,9 +52,23 @@ class SymbolTableManagement {
 		if(originalTarget instanceof NamedElement) {
 			newEntry.elementsOfThisName += originalTarget as NamedElement;
 		}
+
+		// if a namespace import exists for the module containing 'originalTarget', we use it for this new STE
+		newEntry.importSpecifier = getExistingNamespaceImportSpecifierForModule(state, originalTarget.containingModule);
+
 		state.addOriginal(newEntry)
 
 		return newEntry;
+	}
+
+	def private static NamespaceImportSpecifier getExistingNamespaceImportSpecifierForModule(TranspilerState state, TModule module) {
+		if (module !== null) {
+			val importSpec = state.steCache.mapImportedModule_2_STE.get(module)?.importSpecifier;
+			if (importSpec instanceof NamespaceImportSpecifier) {
+				return importSpec;
+			}
+		}
+		return null;
 	}
 
 	/** add a {@link SymbolTableEntryOriginal} */
@@ -69,6 +84,13 @@ class SymbolTableManagement {
 			throw new IllegalStateException(
 					"It is not allowed to register more then one STEOriginal for the same original Target. Already had: "
 							+ old);
+		val originalTarget = steOriginal.originalTarget;
+		if (originalTarget instanceof ModuleNamespaceVirtualType) {
+			val namespaceModule = originalTarget.module;
+			if (namespaceModule !== null) {
+				steCache.mapImportedModule_2_STE.put(namespaceModule, steOriginal);
+			}
+		}
 		steCache.im.getSymbolTable().getEntries().add(steOriginal);
 		steCache.inverseMap(steOriginal);
 	}

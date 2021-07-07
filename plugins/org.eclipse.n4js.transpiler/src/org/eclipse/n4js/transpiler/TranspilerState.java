@@ -28,6 +28,8 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
@@ -162,7 +164,14 @@ public class TranspilerState {
 		/** Map name to internal STE */
 		public final HashMap<String, SymbolTableEntryInternal> mapInternal = new HashMap<>();
 
-		// inverse maps:
+		// derived maps:
+
+		/**
+		 * For each namespace import, this maps the imported module to the STE of the import's
+		 * {@link ModuleNamespaceVirtualType}.
+		 */
+		public final HashMap<TModule, SymbolTableEntryOriginal> mapImportedModule_2_STE = new HashMap<>();
+
 		/** Map named element back to STE, inverse of ste.elementsOfThisName */
 		public final HashMap<NamedElement, SymbolTableEntry> mapNamedElement_2_STE = new HashMap<>();
 

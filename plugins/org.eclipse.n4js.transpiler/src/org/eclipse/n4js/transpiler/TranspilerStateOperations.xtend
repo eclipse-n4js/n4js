@@ -49,7 +49,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
@@ -321,10 +320,6 @@ class TranspilerStateOperations {
 		return varStmnt
 	}
 
-
-	def public static void replace(TranspilerState state, TypeRef typeRef, TypeRef replacement) {
-		state.replaceWithoutRewire(typeRef, replacement);
-	}
 
 	def public static void replace(TranspilerState state, Statement stmnt, ReturnStatement returnStmnt) {
 		state.replaceWithoutRewire(stmnt, returnStmnt);

@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.Variable;
@@ -272,6 +273,15 @@ public class PreparationStep {
 		}
 
 		@Override
+		protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
+			if (eReference == N4JSPackage.Literals.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST) {
+				// should always be 'null' in the intermediate model
+			} else {
+				super.copyContainment(eReference, eObject, copyEObject);
+			}
+		}
+
+		@Override
 		protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
 			final boolean needsRewiring = Arrays.contains(REWIRED_REFERENCES, eReference);
 			if (needsRewiring) {
@@ -315,24 +325,37 @@ public class PreparationStep {
 					}
 				}
 			}
+			// ... and for imports that were not referenced yet (e.g. because they are used in type references only)
+			for (ScriptElement topLevelElem : script.getScriptElements()) {
+				if (topLevelElem instanceof ImportDeclaration) {
+					for (ImportSpecifier importSpec : ((ImportDeclaration) topLevelElem).getImportSpecifiers()) {
+						if (importSpec instanceof NamedImportSpecifier) {
+							TExportableElement importedElement = getActualImportedElement(
+									(NamedImportSpecifier) importSpec);
+							getSymbolTableEntry(importedElement, true);
+						} else if (importSpec instanceof NamespaceImportSpecifier) {
+							Type namespaceType = ((NamespaceImportSpecifier) importSpec).getDefinedType();
+							getSymbolTableEntry(namespaceType, true);
+						}
+					}
+				}
+			}
 		}
 
 		/**
 		 * Handler for when a {@link NamedImportSpecifier} is encountered in the copying process.
 		 */
 		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
-			TExportableElement importedElement = namedImportSpecifier.getImportedElement();
+			TExportableElement importedElement = getActualImportedElement(namedImportSpecifier);
 
 			if (importedElement instanceof Type) {
-				// add all versions of the type to the importedElements map.
-				Iterable<? extends Type> versions = versionHelper.findTypeVersions((Type) importedElement);
-				versions.forEach(v -> {
-					importedElements.put(v, namedImportSpecifier);
-				});
+				// add all versions of the type to the importedElements map
+				for (Type typeVersion : versionHelper.findTypeVersions((Type) importedElement)) {
+					importedElements.put(typeVersion, namedImportSpecifier);
+				}
 			} else {
 				// for non-type imports, there is no versions
-				importedElements.put(importedElement,
-						namedImportSpecifier);
+				importedElements.put(importedElement, namedImportSpecifier);
 			}
 		}
 
@@ -414,16 +437,9 @@ public class PreparationStep {
 				entry.getElementsOfThisName().add((Variable) copy);
 			} else {
 				final EObject astElement = getASTElementIfInSameResource(elem);
-				if (astElement instanceof ImportSpecifier) {
-					// special case of exported imports
+				if (astElement instanceof NamedElement) {
 					final EObject copy = getCopyOf(astElement);
-					entry.setImportSpecifier((ImportSpecifier) copy);
-				} else {
-					// standard case:
-					if (astElement instanceof NamedElement) {
-						final EObject copy = getCopyOf(astElement);
-						entry.getElementsOfThisName().add((NamedElement) copy);
-					}
+					entry.getElementsOfThisName().add((NamedElement) copy);
 				}
 			}
 			final ImportSpecifier impSpec = getImportSpecifierForImportedElement(elem);
@@ -472,9 +488,16 @@ public class PreparationStep {
 			ImportSpecifier impSpec = importedElements.get(element);
 			if (impSpec == null) {
 				// case #2: namespace import
-				final TModule module = EcoreUtil2.getContainerOfType(element, TModule.class);
-				if (module != null) {
-					impSpec = importedModules.get(module);
+				if (element instanceof ModuleNamespaceVirtualType) {
+					final EObject astElement = getASTElementIfInSameResource(element);
+					if (astElement instanceof NamespaceImportSpecifier) {
+						impSpec = (NamespaceImportSpecifier) astElement;
+					}
+				} else {
+					final TModule module = EcoreUtil2.getContainerOfType(element, TModule.class);
+					if (module != null) {
+						impSpec = importedModules.get(module);
+					}
 				}
 			}
 			return impSpec;
@@ -526,5 +549,11 @@ public class PreparationStep {
 		if (nodeInOriginalAST instanceof ParameterizedTypeRef)
 			return ((ParameterizedTypeRef) nodeInOriginalAST).getDeclaredType();
 		throw new IllegalArgumentException("not an AST node that requires rewiring: " + nodeInOriginalAST);
+	}
+
+	private static TExportableElement getActualImportedElement(NamedImportSpecifier namedImportSpecifier) {
+		return namedImportSpecifier.isDeclaredDynamic()
+				? namedImportSpecifier.getDefinedDynamicElement()
+				: namedImportSpecifier.getImportedElement();
 	}
 }
