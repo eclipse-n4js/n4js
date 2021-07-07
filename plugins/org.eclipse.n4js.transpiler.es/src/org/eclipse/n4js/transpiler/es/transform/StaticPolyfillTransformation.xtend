@@ -104,7 +104,6 @@ class StaticPolyfillTransformation extends Transformation {
 	def private void insertImplementedInterface(N4ClassDefinition classFilled, TInterface ifcToBeInserted,
 		Set<TInterface> currentIfcs) {
 		if(!currentIfcs.contains(ifcToBeInserted)) { // avoid duplicates!
-			// TODO this code does not seem to support generics!
 			classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceNode(state, TypeUtils.createTypeRef(ifcToBeInserted));
 		}
 	}

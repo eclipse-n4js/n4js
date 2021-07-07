@@ -13,7 +13,9 @@ package org.eclipse.n4js.transpiler.dts.transform
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.Collections
+import java.util.HashMap
 import java.util.List
+import java.util.Map
 import java.util.function.Consumer
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
@@ -70,6 +72,8 @@ class ConvertTypeReferencesTransformation extends Transformation {
 
 	private TypeReferenceNode_IM<?> currTypeRefNode = null;
 	private StringBuilder currStringBuilder = null;
+
+	private final Map<Type, String> referenceCache = new HashMap();
 
 	@Inject
 	private WorkspaceAccess workspaceAccess;
@@ -233,11 +237,20 @@ class ConvertTypeReferencesTransformation extends Transformation {
 
 		if (showDeclaredType) {
 			val referenceStr = if (declType !== null) {
-				getReferenceToType(declType, typeRef.getDefinedTypingStrategy(), state)
+				getReferenceToType(declType, state)
 			};
 			if (referenceStr !== null) {
+				val wrapInReadonly = typeRef.getDefinedTypingStrategy() == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS;
+				if (wrapInReadonly) {
+					write("Readonly<");
+				}
+
 				write(referenceStr);
 				convertTypeArguments(typeRef);
+
+				if (wrapInReadonly) {
+					write(">");
+				}
 			} else {
 				write("any");
 			}
@@ -410,55 +423,67 @@ class ConvertTypeReferencesTransformation extends Transformation {
 	 * The returned string is usually simply the local name of the given type, but includes, if required, also the name
 	 * of a namespace and "." as separator.
 	 */
-	def private String getReferenceToType(Type type, TypingStrategy typingStrategy, TranspilerState state) {
-		if (!DtsUtils.isDtsExportableDependency(type, state)) {
-			// the type is from a project not available on the .d.ts side, so we cut off the .d.ts export at this reference
+	def private String getReferenceToType(Type type, TranspilerState state) {
+		// note: map 'referenceCache' may contain 'null' as value!
+		if (referenceCache.containsKey(type)) {
+			return referenceCache.get(type);
+		}
+		val reference = computeReferenceToType(type, state);
+		referenceCache.put(type, reference);
+		return reference;
+	}
+
+	def private String computeReferenceToType(Type type, TranspilerState state) {
+		val isLocal = isFromSameFileOrStaticPolyfill(type);
+
+		if (!isLocal) {
+
+			if (!DtsUtils.isDtsExportableDependency(type, state)) {
+				// the type is from a project not available on the .d.ts side, so we cut off the .d.ts export at this reference
+				return null;
+			}
+
+			val isBuiltInOrGlobal = isBuiltInOrGlobal(type);
+			if (isBuiltInOrGlobal) {
+				// simple case: the type reference points to a built-in type OR a type from a global module
+				// -> can simply use its name in output code, because they are global and available everywhere
+				if (type == state.G.intType) {
+					return "number";
+				} else if (type == state.G.iteratorEntryType) {
+					return "IteratorReturnResult";
+				}
+				val containingModule = type.containingModule;
+				if (containingModule !== null
+						&& containingModule.simpleName == "IntlClasses"
+						&& containingModule.projectName == N4JSGlobals.N4JS_RUNTIME_ECMA402.rawName) {
+					return "Intl." + type.name;
+				}
+				return type.name;
+			}
+
+		}
+
+		val ste = getSymbolTableEntryOriginal(type, true);
+		if (ste === null) {
 			return null;
 		}
 
-		val isBuiltInOrGlobal = isBuiltInOrGlobal(type);
-		if (isBuiltInOrGlobal) {
-			// simple case: the type reference points to a built-in type OR a type from a global module
-			// -> can simply use its name in output code, because they are global and available everywhere
-			if (type == state.G.intType) {
-				return "number";
-			} else if (type == state.G.iteratorEntryType) {
-				return "IteratorReturnResult";
-			}
-			val containingModule = type.containingModule;
-			if (containingModule !== null
-					&& containingModule.simpleName == "IntlClasses"
-					&& containingModule.projectName == N4JSGlobals.N4JS_RUNTIME_ECMA402.rawName) {
-				return "Intl." + type.name;
-			}
-			return type.getName();
-		}
-
-		var ste = getSymbolTableEntryOriginal(type, false);
-
 		// is the type already available?
-		if (ste === null) {
+		var isAvailable = isLocal || ste.importSpecifier !== null;
+		if (!isAvailable) {
 			// no, so try to import it!
 
 			if (type.exported && isFromSameProjectOrDirectDependency(type)) {
 				// note: no need to check accessibility modifiers in addition to #isExported(), because on TypeScript-side we bump up the accessibility
 
-				// do we already have a namespace import for the type's containing module?
-				val module = type.containingModule;
-				val steNamespace = if (module !== null) state.steCache.mapImportedModule_2_STE.get(module);
-				if (steNamespace !== null) {
-					// yes, so access this type via that namespace
-					ste = createSymbolTableEntryOriginal(type);
-					ste.importSpecifier = steNamespace.importSpecifier;
-				} else {
-					// no, so add a new named import for this type
-					ste = addNamedImport(type, null); // FIXME use alias if name already in use!
-				}
+				// add a new named import for this type
+				addNamedImport(ste, null); // FIXME use alias if name already in use!
+				isAvailable = ste.importSpecifier !== null;
 			}
 		}
 
 		// is the type now available?
-		if (ste !== null) {
+		if (isAvailable) {
 			// yes, so ...
 
 			// 1) record that 'currTypeRefNode' is actually referring to 'type'
@@ -474,15 +499,26 @@ class ConvertTypeReferencesTransformation extends Transformation {
 				referenceStr = ste.getName();
 			}
 
-			if (typingStrategy == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS) {
-				referenceStr = "Readonly<" + referenceStr + ">";
-			}
-
 			return referenceStr;
 		}
 
 		// we tried our best, but this type is not available in the current file AND cannot be made available
 		return null;
+	}
+
+	def private boolean isFromSameFileOrStaticPolyfill(Type type) {
+		val typeResource = type.eResource;
+		if (typeResource === state.resource) {
+			return true;
+		}
+		val module = state.resource.module;
+		if (module !== null && module.isStaticPolyfillAware) {
+			val typeModule = type.containingModule;
+			return typeModule !== null
+				&& typeModule.isStaticPolyfillModule
+				&& typeModule.qualifiedName == module.qualifiedName;
+		}
+		return false;
 	}
 
 	/** Tells whether the given type is located in the local project or a project we directly depend on. */

@@ -84,7 +84,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 			if (thisTarget instanceof N4ClassDeclaration) {
 				val clazz = thisTarget.definedTypeAsClass;
 				if (clazz !== null && clazz.isStaticPolyfill()) {
-					val actualClazz = clazz.superClassRef.declaredType;
+					val actualClazz = clazz.superClassRef?.declaredType;
 					if (actualClazz !== null) {
 						thisTargetDefType = actualClazz;
 					}

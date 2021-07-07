@@ -10,29 +10,27 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
-   GENERATE_DTS
-   END_SETUP
- */
+
+	Workspace {
+		Project "TestProject" {
+			Folder "src" {
+				File "Other.n4js" { from="./UseExistingNamespaceImport_Other.n4js" }
+				ThisFile {}
+			}
+		}
+	}
+	GENERATE_DTS
+
+END_SETUP */
 
 
-export public class C {
-	public field: string;
-}
-export public class G<T> {
-	public field: T;
-}
+import * as NS from "Other"
 
-export const A: ~r~C = null;
-export const B: ~r~G<string> = null;
+export public let x = NS.foo();
 
 
 /* XPECT generated_dts ---
-export class C {
-	public field: string;
-}
-export class G<T> {
-	public field: T;
-}
-export const A: Readonly<C>;
-export const B: Readonly<G<string>>;
+import * as NS from './Other'
+
+export let x: NS.ClsOther;
 --- */
