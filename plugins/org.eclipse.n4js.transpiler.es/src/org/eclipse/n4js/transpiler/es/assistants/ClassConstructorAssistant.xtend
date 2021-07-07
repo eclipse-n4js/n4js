@@ -128,7 +128,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 			if (templateCtor !== null) {
 				for (templateFpar : templateCtor.fpars) {
 					val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(templateFpar);
-					val newFpar = _Fpar(templateFpar.name, templateFpar.variadic, null, isSpecFpar);
+					val newFpar = _Fpar(templateFpar.name, templateFpar.variadic, isSpecFpar);
 					ctorDecl.fpars += newFpar;
 					
 					if (isSpecFpar && specFpar === null) {

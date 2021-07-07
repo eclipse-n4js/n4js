@@ -92,14 +92,6 @@ public class PreparationStep {
 					ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
 			.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
 					ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
-			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
-					ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
-			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
-					ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
-			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRef(),
-					ImPackage.eINSTANCE.getVersionedParameterizedTypeRef_IM())
-			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural(),
-					ImPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural_IM())
 			.build();
 
 	private static final EReference[] REWIRED_REFERENCES = {

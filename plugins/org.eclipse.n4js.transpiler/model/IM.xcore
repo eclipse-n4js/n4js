@@ -40,14 +40,9 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.VersionedIdentifierRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TExportableElement
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.versions.VersionableUtils
 
 
@@ -333,42 +328,6 @@ class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, Many
 //	}
 }
 
-/*
- * SymbolTable-aware replacement for {@link ParameterizedTypeRef}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class ParameterizedTypeRef_IM extends ParameterizedTypeRef, ReferencingElement_IM {
-
-	op SymbolTableEntry getDeclaredType_IM() {
-		return rewiredTarget;
-	}
-	op void setDeclaredType_IM(SymbolTableEntry target) {
-		rewiredTarget = target;
-	}
-
-	/* overridden attribute access to always return null */
-	op  Type getDeclaredType() { return null; }
-	op void setDeclaredType(Type ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM."); }
-}
-
-/*
- * SymbolTable-aware replacement for {@link ParameterizedTypeRefStructural}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class ParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, ParameterizedTypeRefStructural, ReferencingElement_IM {
-
-	op SymbolTableEntry getDeclaredType_IM() {
-		return rewiredTarget;
-	}
-	op void setDeclaredType_IM(SymbolTableEntry target) {
-		rewiredTarget = target;
-	}
-
-	/* overridden attribute access to always return null */
-	op  Type getDeclaredType() { return null; }
-	op void setDeclaredType(Type ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM."); }
-}
-
 
 /*
  * A pre-formatted code snippet that will be emitted to the target code as is.
@@ -433,18 +392,6 @@ class StringLiteralForSTE extends StringLiteral {
 // ****************************************************************************************************
 // N4IDL related model elements
 // ****************************************************************************************************
-
-/*
- * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRef}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class VersionedParameterizedTypeRef_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRef {}
-
-/*
- * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class VersionedParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRefStructural {}
 
 /*
  * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.

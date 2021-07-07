@@ -84,9 +84,8 @@ class InferredTypesTransformation extends Transformation {
 					typeRefCpy.declaredTypeAsText = null;
 				}
 
-				val typeRefNode = _TypeReferenceNode(null);
+				val typeRefNode = _TypeReferenceNode(state, typeRefCpy);
 				elemInIM.declaredTypeRefNode = typeRefNode;
-				state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefCpy);
 			}
 		} else if (elemInAST !== null) {
 			throw new IllegalStateException("expected original AST node of typed element to be a typable element, but was: " + elemInAST.eClass.name);

@@ -11,26 +11,36 @@
 package org.eclipse.n4js.transpiler.im.impl;
 
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
+
 import java.util.function.Predicate;
+
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
+
 import org.eclipse.n4js.transpiler.im.ImFactory;
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.PlainReference;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
+
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 /**

@@ -42,9 +42,7 @@ class ReturnTypeTransformation extends Transformation {
 			// return type already provided explicitly, so nothing to do here
 			return;
 		}
-
-		val typeRefNode = _TypeReferenceNode(null);
+		val typeRefNode = _TypeReferenceNode(state, state.G.voidTypeRef);
 		funDef.declaredReturnTypeRefNode = typeRefNode;
-		state.info.setOriginalProcessedTypeRef(typeRefNode, state.G.voidTypeRef);
 	}
 }

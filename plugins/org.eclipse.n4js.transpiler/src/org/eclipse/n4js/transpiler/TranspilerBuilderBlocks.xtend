@@ -90,7 +90,6 @@ import org.eclipse.n4js.postprocessing.ComputedNameProcessor
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
-import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.Snippet
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
@@ -657,21 +656,18 @@ public class TranspilerBuilderBlocks
 	}
 
 	public static def FormalParameter _Fpar() {
-		return _Fpar(null, false, null, false);
+		return _Fpar(null, false, false);
 	}
 	public static def FormalParameter _Fpar(String name) {
-		return _Fpar(name, false, null, false);
+		return _Fpar(name, false, false);
 	}
 	public static def FormalParameter _Fpar(String name, boolean variadic) {
-		return _Fpar(name, variadic, null, false);
+		return _Fpar(name, variadic, false);
 	}
-	public static def FormalParameter _Fpar(String name, boolean variadic, TypeRef typeRef, boolean isSpecFpar) {
+	public static def FormalParameter _Fpar(String name, boolean variadic, boolean isSpecFpar) {
 		val result = N4JSFactory.eINSTANCE.createFormalParameter;
 		result.name = name;
 		result.variadic = variadic;
-		if (typeRef !== null) {
-			result.declaredTypeRefNode = _TypeReferenceNode(typeRef);
-		}
 		if(isSpecFpar) {
 			result.annotations += _Annotation(AnnotationDefinition.SPEC);
 		}
@@ -834,9 +830,11 @@ public class TranspilerBuilderBlocks
 	// ############################################################################################
 	// IM.xcore
 
-	public static def <T extends TypeRef> TypeReferenceNode_IM<T> _TypeReferenceNode(T typeRef) {
-		val result = ImFactory.eINSTANCE.createTypeReferenceNode_IM();
-		result.typeRefInAST = TypeUtils.copyIfContained(typeRef);
+	public static def <T extends TypeRef> TypeReferenceNode_IM<T> _TypeReferenceNode(TranspilerState state, TypeRef typeRef) {
+		val TypeReferenceNode_IM<T> result = ImFactory.eINSTANCE.createTypeReferenceNode_IM();
+		if (typeRef !== null) {
+			state.info.setOriginalProcessedTypeRef_internal(result, TypeUtils.copyIfContained(typeRef));
+		}
 		return result;
 	}
 
@@ -845,15 +843,6 @@ public class TranspilerBuilderBlocks
 			throw new IllegalArgumentException("when creating an IdentifierRef_IM: symbol table entry may not be null");
 		}
 		val result = ImFactory.eINSTANCE.createIdentifierRef_IM;
-		result.rewiredTarget = symbolTableEntry;
-		return result;
-	}
-
-	public static def ParameterizedTypeRef_IM _ParameterizedTypeRef(SymbolTableEntry symbolTableEntry) {
-		if(symbolTableEntry===null) {
-			throw new IllegalArgumentException("when creating an ParameterizedTypeRef_IM: symbol table entry may not be null");
-		}
-		val result = ImFactory.eINSTANCE.createParameterizedTypeRef_IM;
 		result.rewiredTarget = symbolTableEntry;
 		return result;
 	}

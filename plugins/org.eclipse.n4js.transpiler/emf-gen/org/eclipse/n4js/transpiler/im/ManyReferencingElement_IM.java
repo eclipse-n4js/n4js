@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -34,7 +35,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface ManyReferencingElement_IM extends EObject {
-
 	/**
 	 * Returns the value of the '<em><b>Rewired References</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.transpiler.im.PlainReference}.
@@ -70,4 +70,5 @@ public interface ManyReferencingElement_IM extends EObject {
 	 * @generated
 	 */
 	void removeRewiredTarget(SymbolTableEntry ste);
+
 } // ManyReferencingElement_IM

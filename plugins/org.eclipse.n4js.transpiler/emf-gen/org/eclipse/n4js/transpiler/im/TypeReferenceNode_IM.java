@@ -36,7 +36,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * @generated
  */
 public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
-
 	/**
 	 * Returns the value of the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -74,4 +73,5 @@ public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNo
 	 * @generated
 	 */
 	TypeRef getCachedProcessedTypeRef();
+
 } // TypeReferenceNode_IM

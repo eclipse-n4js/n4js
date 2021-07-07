@@ -219,11 +219,8 @@ class ImplementedMemberTransformation extends Transformation {
 		if (typeRef !== null) {
 			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
 			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
-
-			val typeRefNode = _TypeReferenceNode(null);
+			val typeRefNode = _TypeReferenceNode(state, typeRefSubstCpy);
 			elementInIM.declaredTypeRefNode = typeRefNode;
-
-			state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefSubstCpy);
 		}
 	}
 
@@ -232,11 +229,8 @@ class ImplementedMemberTransformation extends Transformation {
 		if (typeRef !== null) {
 			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
 			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
-
-			val typeRefNode = _TypeReferenceNode(null);
+			val typeRefNode = _TypeReferenceNode(state, typeRefSubstCpy);
 			funDef.declaredReturnTypeRefNode = typeRefNode;
-
-			state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefSubstCpy);
 		}
 	}
 
@@ -245,11 +239,8 @@ class ImplementedMemberTransformation extends Transformation {
 		if (typeRef !== null) {
 			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
 			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
-
-			val typeRefNode = _TypeReferenceNode(null);
+			val typeRefNode = _TypeReferenceNode(state, typeRefSubstCpy);
 			typeParam.declaredUpperBoundNode = typeRefNode;
-
-			state.info.setOriginalProcessedTypeRef(typeRefNode, typeRefSubstCpy);
 		}
 	}
 }

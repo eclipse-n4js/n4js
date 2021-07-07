@@ -11,20 +11,30 @@
 package org.eclipse.n4js.transpiler.im.impl;
 
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
+
 import java.util.function.Predicate;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
+
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+
 import org.eclipse.n4js.n4JS.impl.TypeReferenceNodeImpl;
 
 import org.eclipse.n4js.transpiler.im.ImFactory;
@@ -35,8 +45,11 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
+
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 /**
@@ -63,6 +76,7 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 	 * @ordered
 	 */
 	protected EList<PlainReference> rewiredReferences;
+
 	/**
 	 * The default value of the '{@link #getCodeToEmit() <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -72,6 +86,7 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 	 * @ordered
 	 */
 	protected static final String CODE_TO_EMIT_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getCodeToEmit() <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -81,6 +96,7 @@ public class TypeReferenceNode_IMImpl<T extends TypeRef> extends TypeReferenceNo
 	 * @ordered
 	 */
 	protected String codeToEmit = CODE_TO_EMIT_EDEFAULT;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

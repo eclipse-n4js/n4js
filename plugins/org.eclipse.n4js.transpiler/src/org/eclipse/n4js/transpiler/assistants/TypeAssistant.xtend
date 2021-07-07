@@ -24,7 +24,6 @@ import org.eclipse.n4js.transpiler.AbstractTranspiler
 import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
-import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -57,16 +56,16 @@ class TypeAssistant extends TransformationAssistant {
 			val allClassifierDecls = collectNodes(state.im, N4ClassifierDeclaration, false);
 			assertTrue("all classifier declarations must have an original defined type",
 				allClassifierDecls.forall[state.info.getOriginalDefinedType(it)!==null]);
-			assertTrue("all class declarations must have a superClassRef pointing to a STE with an original target (if non-null)",
-				allClassifierDecls.filter(N4ClassDeclaration).map[superClassRef].filterNull.filter(ParameterizedTypeRef_IM)
+			assertTrue("all class declarations must have a superClassRef pointing to a TClass or TObjectPrototype (if non-null)",
+				allClassifierDecls.filter(N4ClassDeclaration).map[superClassRef].filterNull
 				.forall[
-					val originalDeclType = originalTargetOfRewiredTarget;
+					val originalDeclType = state.info.getOriginalProcessedTypeRef(it)?.declaredType;
 					return originalDeclType instanceof TClass || originalDeclType instanceof TObjectPrototype;
 				]);
-			assertTrue("all classifier declarations must have all implementedOrExtendedInterfaceRefs pointing to a STE with an original target",
-				allClassifierDecls.map[implementedOrExtendedInterfaceRefs].flatten.filter(ParameterizedTypeRef_IM)
+			assertTrue("all classifier declarations must have all implementedOrExtendedInterfaceRefs pointing to a TInterface",
+				allClassifierDecls.map[implementedOrExtendedInterfaceRefs].flatten
 				.forall[
-					val originalDeclType = originalTargetOfRewiredTarget;
+					val originalDeclType = state.info.getOriginalProcessedTypeRef(it)?.declaredType;
 					return originalDeclType instanceof TInterface;
 				]);
 			
@@ -74,26 +73,20 @@ class TypeAssistant extends TransformationAssistant {
 	}
 
 	/**
-	 * Same as {@link InformationRegistry#getOriginalProcessedTypeRef(TypeReferenceNode)}, but will return
-	 * the 'typeRefInAST' contained in the given type reference node as a fall back.
+	 * Same as {@link InformationRegistry#getOriginalProcessedTypeRef(TypeReferenceNode)}.
 	 */
 	def public TypeRef getOriginalOrContainedTypeRef(TypeReferenceNode<?> typeRefNodeInIM) {
-		var originalTypeRef = state.info.getOriginalProcessedTypeRef(typeRefNodeInIM);
+		val originalTypeRef = state.info.getOriginalProcessedTypeRef(typeRefNodeInIM);
 		if (originalTypeRef !== null) {
 			return originalTypeRef;
 		}
-		return typeRefNodeInIM.typeRefInAST;
+		// note: typeRefNodeInIM.getTypeRefInAST() will always be 'null', so no point in using that
+		return null;
 	}
 
 	// keep aligned to following method!
 	def public SymbolTableEntryOriginal getOriginalDeclaredTypeSTE(TypeReferenceNode<?> typeRefNodeInIM) {
 		val typeRef = getOriginalOrContainedTypeRef(typeRefNodeInIM);
-		if (typeRef instanceof ParameterizedTypeRef_IM) {
-			val rewiredTarget = typeRef.rewiredTarget;
-			if (rewiredTarget instanceof SymbolTableEntryOriginal) {
-				return rewiredTarget;
-			}
-		}
 		val declType = typeRef?.declaredType;
 		if (declType !== null) {
 			return getSymbolTableEntryOriginal(declType, true);
@@ -104,12 +97,6 @@ class TypeAssistant extends TransformationAssistant {
 	// keep aligned to previous method!
 	def public Type getOriginalDeclaredType(TypeReferenceNode<?> typeRefNodeInIM) {
 		val typeRef = getOriginalOrContainedTypeRef(typeRefNodeInIM);
-		if (typeRef instanceof ParameterizedTypeRef_IM) {
-			val originalTarget = typeRef.originalTargetOfRewiredTarget as Type;
-			if (originalTarget !== null) {
-				return originalTarget;
-			}
-		}
 		return typeRef?.declaredType;
 	}
 

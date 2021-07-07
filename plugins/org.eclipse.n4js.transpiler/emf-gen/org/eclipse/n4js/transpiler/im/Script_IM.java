@@ -32,10 +32,6 @@ public interface Script_IM extends Script {
 	/**
 	 * Returns the value of the '<em><b>Symbol Table</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Symbol Table</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Symbol Table</em>' containment reference.
 	 * @see #setSymbolTable(SymbolTable)
