@@ -60,9 +60,13 @@ import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifie
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
- * FIXME GH-2150
+ * For each type reference in the intermediate model, this transformation will
+ * <ol>
+ * <li>produce a string representation and store it in property {@link TypeReferenceNode_IM#getCodeToEmit() codeToEmit}, and
+ * <li>record all types actually referenced by that string in property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences}.
+ * </ol>
  */
-class MakeTypesAvailableTransformation extends Transformation {
+class ConvertTypeReferencesTransformation extends Transformation {
 
 	private TypeReferenceNode_IM<?> currTypeRefNode = null;
 	private StringBuilder currStringBuilder = null;

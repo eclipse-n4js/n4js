@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.im;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -40,6 +41,15 @@ public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNo
 	 * Returns the value of the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The code to emit for the type reference represented by this node. This will be <code>null</code> initially
+	 * and transformations are responsible for either setting this to a non-<code>null</code> value or removing
+	 * this entire {@code TypeReferenceNode_IM} from the intermediate model.
+	 * <p>
+	 * When changing this value, property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences} should
+	 * be updated accordingly, to ensure that functionality such as removal of unused imports can properly consider
+	 * the types being referenced from within this string.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Code To Emit</em>' attribute.
 	 * @see #setCodeToEmit(String)
 	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getTypeReferenceNode_IM_CodeToEmit()
@@ -57,6 +67,17 @@ public interface TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNo
 	 * @generated
 	 */
 	void setCodeToEmit(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The symbol table entries of the types actually being referenced from within the string {@link TypeReferenceNode_IM#getCodeToEmit() codeToEmit}.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<PlainReference> getRewiredReferences();
 
 	/**
 	 * <!-- begin-user-doc -->

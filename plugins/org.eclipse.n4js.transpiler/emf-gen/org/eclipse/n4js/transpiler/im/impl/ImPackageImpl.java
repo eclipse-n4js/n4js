@@ -668,7 +668,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeReferenceNode_IM__GetTypeRef() {
+	public EOperation getTypeReferenceNode_IM__GetRewiredReferences() {
 		return typeReferenceNode_IMEClass.getEOperations().get(0);
 	}
 
@@ -678,8 +678,18 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeReferenceNode_IM__GetCachedProcessedTypeRef() {
+	public EOperation getTypeReferenceNode_IM__GetTypeRef() {
 		return typeReferenceNode_IMEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypeReferenceNode_IM__GetCachedProcessedTypeRef() {
+		return typeReferenceNode_IMEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -942,6 +952,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 
 		typeReferenceNode_IMEClass = createEClass(TYPE_REFERENCE_NODE_IM);
 		createEAttribute(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT);
+		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_REWIRED_REFERENCES);
 		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_TYPE_REF);
 		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF);
 
@@ -1111,6 +1122,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 
 		initEClass(typeReferenceNode_IMEClass, TypeReferenceNode_IM.class, "TypeReferenceNode_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTypeReferenceNode_IM_CodeToEmit(), theEcorePackage.getEString(), "codeToEmit", null, 0, 1, TypeReferenceNode_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTypeReferenceNode_IM__GetRewiredReferences(), this.getPlainReference(), "getRewiredReferences", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTypeReferenceNode_IM__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

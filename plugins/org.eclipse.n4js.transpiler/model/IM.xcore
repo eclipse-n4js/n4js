@@ -314,7 +314,21 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
  */
 class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
 
+	/*
+	 * The code to emit for the type reference represented by this node. This will be <code>null</code> initially
+	 * and transformations are responsible for either setting this to a non-<code>null</code> value or removing
+	 * this entire {@code TypeReferenceNode_IM} from the intermediate model.
+	 * <p>
+	 * When changing this value, property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences} should
+	 * be updated accordingly, to ensure that functionality such as removal of unused imports can properly consider
+	 * the types being referenced from within this string.
+	 */
 	String codeToEmit
+
+	/*
+	 * The symbol table entries of the types actually being referenced from within the string {@link TypeReferenceNode_IM#getCodeToEmit() codeToEmit}.
+	 */
+	op PlainReference[] getRewiredReferences()
 
 	op TypeRef getTypeRef() {
 		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");

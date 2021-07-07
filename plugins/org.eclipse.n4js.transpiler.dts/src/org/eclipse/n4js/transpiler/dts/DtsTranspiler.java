@@ -21,11 +21,11 @@ import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts;
+import org.eclipse.n4js.transpiler.dts.transform.ConvertTypeReferencesTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.CutOffTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.EnumAddMissingInitializersTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ImplementedMemberTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
-import org.eclipse.n4js.transpiler.dts.transform.MakeTypesAvailableTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ModuleSpecifierTransformationDts;
 import org.eclipse.n4js.transpiler.dts.transform.ReturnTypeTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.TrimForDtsTransformation;
@@ -55,7 +55,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<TrimForDtsTransformation> trimDtsTransformationProvider;
 	@Inject
-	private Provider<MakeTypesAvailableTransformation> makeTypesAvailableTransformationProvider;
+	private Provider<ConvertTypeReferencesTransformation> convertTypeReferencesTransformationProvider;
 	@Inject
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
 	@Inject
@@ -79,7 +79,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 				inferredTypesTransformationProvider.get(),
 				returnTypeTransformationProvider.get(),
 				trimDtsTransformationProvider.get(),
-				makeTypesAvailableTransformationProvider.get(),
+				convertTypeReferencesTransformationProvider.get(),
 				sanitizeImportsTransformationProvider.get(),
 				moduleSpecifierTransformationProviderDts.get(),
 				enumAddMissingInitializersTransformation.get()

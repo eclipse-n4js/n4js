@@ -1099,13 +1099,22 @@ public interface ImPackage extends EPackage {
 	int TYPE_REFERENCE_NODE_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get Rewired References</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REFERENCE_NODE_IM___GET_REWIRED_REFERENCES = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 3;
+	int TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Cached Processed Type Ref</em>' operation.
@@ -1114,7 +1123,7 @@ public interface ImPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 4;
+	int TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Type Reference Node IM</em>' class.
@@ -1123,7 +1132,7 @@ public interface ImPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REFERENCE_NODE_IM_OPERATION_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 5;
+	int TYPE_REFERENCE_NODE_IM_OPERATION_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.SnippetImpl <em>Snippet</em>}' class.
@@ -3265,6 +3274,16 @@ public interface ImPackage extends EPackage {
 	EAttribute getTypeReferenceNode_IM_CodeToEmit();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getRewiredReferences() <em>Get Rewired References</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Rewired References</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getRewiredReferences()
+	 * @generated
+	 */
+	EOperation getTypeReferenceNode_IM__GetRewiredReferences();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef() <em>Get Type Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3833,6 +3852,14 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT = eINSTANCE.getTypeReferenceNode_IM_CodeToEmit();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Rewired References</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REFERENCE_NODE_IM___GET_REWIRED_REFERENCES = eINSTANCE.getTypeReferenceNode_IM__GetRewiredReferences();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
