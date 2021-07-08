@@ -23,8 +23,8 @@ import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.n4js.xtext.ide.server.QueuedExecutorService;
 import org.eclipse.n4js.xtext.ide.server.util.ParamHelper;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -34,7 +34,6 @@ import com.google.inject.Singleton;
  * Facade for all builder-related functionality in the LSP server. From outside the builder-related classes, all use of
  * the LSP builder should go through this class.
  */
-@SuppressWarnings("deprecation")
 @Singleton
 public class BuilderFrontend {
 
@@ -210,7 +209,7 @@ public class BuilderFrontend {
 	/**
 	 * Returns the workspace issues known for the given URI.
 	 */
-	public CompletableFuture<ImmutableList<? extends LSPIssue>> asyncGetValidationIssues(URI uri) {
+	public CompletableFuture<ImmutableList<? extends Issue>> asyncGetValidationIssues(URI uri) {
 		return queuedExecutorService.submit(XWorkspaceManager.class, "getValidationIssues",
 				cancelIndicator -> workspaceManager.getValidationIssues(uri));
 	}

@@ -16,6 +16,7 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
+import java.io.Externalizable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,9 +43,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.QueuedExecutorService;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.xtext.build.Source2GeneratedMapping;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
@@ -52,9 +53,13 @@ import org.eclipse.xtext.resource.persistence.SerializableEObjectDescription;
 import org.eclipse.xtext.resource.persistence.SerializableReferenceDescription;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
 import org.eclipse.xtext.util.Tuples;
+import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -67,7 +72,7 @@ import com.google.inject.Singleton;
  * compiler process. The first byte in the written binary file indicates the version of the file. The file format is
  * documented per version.
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings("restriction")
 @Singleton
 public class ProjectStatePersister {
 	private static final Logger LOG = LogManager.getLogger(ProjectStatePersister.class);
@@ -86,7 +91,7 @@ public class ProjectStatePersister {
 	 * - #vs times:
 	 * 	- source URI
 	 * 	- Number #vi of issues of source
-	 * 	- #vi times a validation issue as per {@link LSPIssue#writeExternal(DataOutput) LSPIssue.writeExternal}
+	 * 	- #vi times a validation issue as per {@link #writeValidationIssue(Issue, DataOutput) LSPIssue.writeExternal}
 	 * - Number #d of dependencies of this project
 	 * - #d times:
 	 * 	- project name of dependency
@@ -99,6 +104,9 @@ public class ProjectStatePersister {
 
 	/** The current version of the persistence format. Increment to support backwards compatible deserialization. */
 	private static final int CURRENT_VERSION = VERSION_3;
+
+	/** Used to serialize a null string value. */
+	private static final String EMPTY_STRING = "";
 
 	@Inject
 	private QueuedExecutorService queuedExecutorService;
@@ -295,14 +303,50 @@ public class ProjectStatePersister {
 		int numberSources = allSources.size();
 		output.writeInt(numberSources);
 		for (URI source : allSources) {
-			Collection<? extends LSPIssue> issues = state.getValidationIssues().get(source);
+			Collection<? extends Issue> issues = state.getValidationIssues().get(source);
 
 			output.writeUTF(uriTransformer.serialize(baseURI, source));
 
 			int numberIssues = issues.size();
 			output.writeInt(numberIssues);
-			for (LSPIssue issue : issues) {
-				issue.writeExternal(output);
+			for (Issue issue : issues) {
+				writeValidationIssue(issue, output);
+			}
+		}
+	}
+
+	/**
+	 * @see Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
+	public void writeValidationIssue(Issue issue, DataOutput out) throws IOException {
+		out.writeInt(issue.getOffset());
+		out.writeInt(issue.getLength());
+		out.writeInt(issue.getColumn());
+		out.writeInt(issue.getColumnEnd());
+		out.writeInt(issue.getLineNumber());
+		out.writeInt(issue.getLineNumberEnd());
+		out.writeUTF(Strings.nullToEmpty(issue.getCode()));
+		out.writeUTF(Strings.nullToEmpty(issue.getMessage()));
+
+		URI uriToProblem = issue.getUriToProblem();
+		String uriToProblemStr = uriToProblem == null ? EMPTY_STRING : uriToProblem.toString();
+		out.writeUTF(uriToProblemStr);
+
+		Severity severity = issue.getSeverity();
+		int severityKey = severity == null ? 0 : severity.ordinal() + 1;
+		out.writeInt(severityKey);
+
+		CheckType checkType = issue.getType();
+		int checkTypeKey = checkType == null ? 0 : checkType.ordinal() + 1;
+		out.writeInt(checkTypeKey);
+
+		String[] data = issue.getData();
+		if (data == null) {
+			out.writeInt(0);
+		} else {
+			out.writeInt(data.length);
+			for (String s : data) {
+				out.writeUTF(s);
 			}
 		}
 	}
@@ -378,7 +422,7 @@ public class ProjectStatePersister {
 
 			ImmutableMap<URI, HashedFileContent> fingerprints = readFingerprints(input);
 
-			ImmutableListMultimap<URI, LSPIssue> validationIssues = readValidationIssues(baseURI, input);
+			ImmutableListMultimap<URI, Issue> validationIssues = readValidationIssues(baseURI, input);
 
 			ImmutableMap<String, Boolean> dependencies = readDependencies(input);
 
@@ -510,23 +554,80 @@ public class ProjectStatePersister {
 		return fingerprints.build();
 	}
 
-	private ImmutableListMultimap<URI, LSPIssue> readValidationIssues(URI baseURI, DataInput input)
+	private ImmutableListMultimap<URI, Issue> readValidationIssues(URI baseURI, DataInput input)
 			throws IOException {
 
 		int numberOfSources = input.readInt();
-		ImmutableListMultimap.Builder<URI, LSPIssue> validationIssues = ImmutableListMultimap.builder();
+		ImmutableListMultimap.Builder<URI, Issue> validationIssues = ImmutableListMultimap.builder();
 		while (numberOfSources > 0) {
 			numberOfSources--;
 			URI source = uriTransformer.deserialize(baseURI, input.readUTF());
 			int numberOfIssues = input.readInt();
 			while (numberOfIssues > 0) {
 				numberOfIssues--;
-				LSPIssue issue = new LSPIssue();
-				issue.readExternal(input);
+				IssueImpl issue = new IssueImpl();
+				readValidationIssue(input, issue);
 				validationIssues.put(source, issue);
 			}
 		}
 		return validationIssues.build();
+	}
+
+	/**
+	 * @see Externalizable#readExternal(java.io.ObjectInput)
+	 */
+	public void readValidationIssue(DataInput in, IssueImpl issue) throws IOException {
+		issue.setOffset(in.readInt());
+		issue.setLength(in.readInt());
+		issue.setColumn(in.readInt());
+		issue.setColumnEnd(in.readInt());
+		issue.setLineNumber(in.readInt());
+		issue.setLineNumberEnd(in.readInt());
+		issue.setCode(in.readUTF());
+		issue.setMessage(in.readUTF());
+
+		String uriToProblemStr = in.readUTF();
+		URI uriToProblem = EMPTY_STRING.equals(uriToProblemStr) ? null : URI.createURI(uriToProblemStr);
+		issue.setUriToProblem(uriToProblem);
+
+		int severityKey = in.readInt();
+		Severity severity = severityFromKey(severityKey);
+		issue.setSeverity(severity);
+
+		int checkTypeKey = in.readInt();
+		CheckType checkType = checkTypeFromKey(checkTypeKey);
+		issue.setType(checkType);
+
+		int dataLength = in.readInt();
+		if (dataLength > 0) {
+			String[] data = new String[dataLength];
+			for (int i = 0; i < dataLength; i++) {
+				data[i] = in.readUTF();
+			}
+			issue.setData(data);
+		}
+	}
+
+	private static final Severity[] severities = Severity.values();
+
+	private static Severity severityFromKey(int severityKey) {
+		switch (severityKey) {
+		case 0:
+			return null;
+		default:
+			return severities[severityKey - 1];
+		}
+	}
+
+	private static final CheckType[] checkTypes = CheckType.values();
+
+	private static CheckType checkTypeFromKey(int checkTypeKey) {
+		switch (checkTypeKey) {
+		case 0:
+			return null;
+		default:
+			return checkTypes[checkTypeKey - 1];
+		}
 	}
 
 	private ImmutableMap<String, Boolean> readDependencies(DataInput input) throws IOException {

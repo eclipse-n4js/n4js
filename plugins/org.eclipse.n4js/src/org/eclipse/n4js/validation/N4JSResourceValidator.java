@@ -28,7 +28,6 @@ import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -36,6 +35,7 @@ import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.eclipse.xtext.validation.ResourceValidatorImpl;
 
 import com.google.inject.Inject;
@@ -49,7 +49,6 @@ import com.google.inject.Inject;
  * It will not create issues for resources which are contained in folders that are filtered by module filters in the
  * manifest.
  */
-@SuppressWarnings("deprecation")
 public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Inject
@@ -192,7 +191,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	}
 
 	private static Issue createFileIssue(Resource res, String message, String issueCode) {
-		final Issue.IssueImpl issue = new LSPIssue();
+		final IssueImpl issue = new IssueImpl();
 		issue.setCode(issueCode);
 		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
 		issue.setMessage(message);

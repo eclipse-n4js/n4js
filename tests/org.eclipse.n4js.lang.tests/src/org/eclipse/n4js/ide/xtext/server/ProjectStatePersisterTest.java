@@ -32,7 +32,6 @@ import org.eclipse.n4js.xtext.ide.server.build.ImmutableProjectState;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister.URITransformer;
 import org.eclipse.n4js.xtext.ide.server.build.XSource2GeneratedMapping;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.builder.builderState.BuilderStateFactory;
 import org.eclipse.xtext.builder.builderState.impl.EObjectDescriptionImpl;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
@@ -42,6 +41,8 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.resource.persistence.SerializableResourceDescription;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -54,7 +55,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 
 /** */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings("restriction")
 public class ProjectStatePersisterTest {
 
 	static final URI BASE_URI = new FileURI(new File(".").getAbsoluteFile()).toURI();
@@ -80,7 +81,7 @@ public class ProjectStatePersisterTest {
 	}
 
 	ImmutableProjectState createProjectState(ResourceDescriptionsData index, XSource2GeneratedMapping fileMappings,
-			Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, LSPIssue> validationIssues,
+			Map<URI, HashedFileContent> fileHashs, ListMultimap<URI, Issue> validationIssues,
 			Map<String, Boolean> dependencies) {
 
 		index = (index != null) ? index
@@ -228,15 +229,15 @@ public class ProjectStatePersisterTest {
 		URI source1 = URI.createURI("some:/source1");
 		URI source2 = URI.createURI("some:/source2");
 
-		LSPIssue src1Issue1 = new LSPIssue();
-		LSPIssue src2Issue1 = new LSPIssue();
-		LSPIssue src2Issue2 = new LSPIssue();
+		IssueImpl src1Issue1 = new IssueImpl();
+		IssueImpl src2Issue1 = new IssueImpl();
+		IssueImpl src2Issue2 = new IssueImpl();
 		setValues(src1Issue1, "src1Issue1", 1, 1, Severity.ERROR);
 		setValues(src2Issue1, "src2Issue1", 2, 1, Severity.WARNING);
 		setValues(src2Issue2, "src2Issue2", 2, 2, Severity.INFO);
 
 		// first set values of issues; then add issues to hash map
-		ListMultimap<URI, LSPIssue> issueMap = ArrayListMultimap.create();
+		ListMultimap<URI, Issue> issueMap = ArrayListMultimap.create();
 		issueMap.put(source1, src1Issue1);
 		issueMap.put(source2, src2Issue1);
 		issueMap.put(source2, src2Issue2);
@@ -269,7 +270,7 @@ public class ProjectStatePersisterTest {
 		Assert.assertEquals(dependencies.entrySet(), pState.getDependencies().entrySet());
 	}
 
-	private void setValues(LSPIssue issue, String varName, int srcNo, int issueNo, Severity severity) {
+	private void setValues(IssueImpl issue, String varName, int srcNo, int issueNo, Severity severity) {
 		int prefix = srcNo * 100 + issueNo * 10;
 		issue.setCode(varName + ".code");
 		issue.setColumn(prefix++);
