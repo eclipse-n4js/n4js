@@ -1315,7 +1315,7 @@ public class InternalJSONParser extends AbstractInternalAntlrParser {
                     						if (current==null) {
                     							current = createModelElement(grammarAccess.getJSONBooleanLiteralRule());
                     						}
-                    						setWithLastConsumed(current, "booleanValue", true, "true");
+                    						setWithLastConsumed(current, "booleanValue", lv_booleanValue_1_0 != null, "true");
                     					
 
                     }
