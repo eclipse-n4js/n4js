@@ -10,12 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es;
 
-import java.io.Writer;
-
-import org.eclipse.n4js.generator.GeneratorOption;
-import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
@@ -41,7 +35,6 @@ import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -132,15 +125,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 		};
 	}
 
-	/**
-	 * General entry-point. Overridden to handle plain-JS-wrapping without transforming.
-	 */
 	@Override
-	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
-			Optional<SourceMapInfo> optSourceMapInfo) {
-		try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement()) {
-			super.transpile(resource, options, outCode, optSourceMapInfo);
-		}
+	protected boolean isPerformanceDataCollectionActive() {
+		return true;
 	}
-
 }

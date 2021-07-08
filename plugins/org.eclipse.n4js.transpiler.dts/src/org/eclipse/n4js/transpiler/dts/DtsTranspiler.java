@@ -87,7 +87,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 	}
 
 	/**
-	 * General entry-point. Overridden to handle plain-JS-wrapping without transforming.
+	 * General entry-point. Overridden to start .d.ts-specific performance data collector.
 	 */
 	@Override
 	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
