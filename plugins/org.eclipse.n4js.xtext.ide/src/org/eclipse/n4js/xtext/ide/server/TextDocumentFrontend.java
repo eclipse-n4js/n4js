@@ -25,44 +25,45 @@ import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
 import org.eclipse.lsp4j.CodeLensParams;
-import org.eclipse.lsp4j.ColoringInformation;
-import org.eclipse.lsp4j.ColoringParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.DocumentFormattingParams;
 import org.eclipse.lsp4j.DocumentHighlight;
+import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentOnTypeFormattingParams;
 import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.HoverParams;
+import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
+import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentItem;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.lsp4j.services.LanguageClientExtensions;
 import org.eclipse.lsp4j.services.TextDocumentService;
-import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager.IResourceTaskListener;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex.IIndexListener;
 import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
@@ -73,16 +74,13 @@ import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
-import org.eclipse.xtext.ide.server.codeActions.ICodeActionService;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensResolver;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensService;
-import org.eclipse.xtext.ide.server.coloring.IColoringService;
 import org.eclipse.xtext.ide.server.formatting.FormattingService;
 import org.eclipse.xtext.ide.server.hover.IHoverService;
 import org.eclipse.xtext.ide.server.occurrences.IDocumentHighlightService;
 import org.eclipse.xtext.ide.server.rename.IRenameService2;
-import org.eclipse.xtext.ide.server.semanticHighlight.SemanticHighlightingRegistry;
 import org.eclipse.xtext.ide.server.signatureHelp.ISignatureHelpService;
 import org.eclipse.xtext.ide.server.symbol.DocumentSymbolService;
 import org.eclipse.xtext.ide.server.symbol.HierarchicalDocumentSymbolService;
@@ -91,7 +89,6 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -101,8 +98,7 @@ import com.google.inject.Singleton;
  */
 @SuppressWarnings({ "restriction", "deprecation" })
 @Singleton
-public class TextDocumentFrontend implements TextDocumentService, IIndexListener,
-		IResourceTaskListener {
+public class TextDocumentFrontend implements TextDocumentService, IIndexListener {
 
 	@Inject
 	private ResourceTaskManager resourceTaskManager;
@@ -116,11 +112,6 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	@Inject
 	private ConcurrentIndex index;
 
-	@Inject
-	private SemanticHighlightingRegistry semanticHighlightingRegistry;
-
-	private LanguageClient client;
-
 	private boolean hierarchicalSymbols;
 
 	private IResourceAccess resourceAccess;
@@ -128,8 +119,8 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	private ILanguageServerAccess access;
 
 	/** Sets connection to client */
-	public void connect(LanguageClient _client) {
-		this.client = _client;
+	public void connect(@SuppressWarnings("unused") LanguageClient client) {
+		// nothing to do
 	}
 
 	/** Sets non-injectable fields */
@@ -143,7 +134,6 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Resets non-injectable fields */
 	public void disconnect() {
-		this.client = null;
 		this.resourceAccess = null;
 		this.access = null;
 		index.removeListener(this);
@@ -196,7 +186,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
-			TextDocumentPositionParams params) {
+			DefinitionParams params) {
 		URI uri = paramHelper.getURI(params);
 		// LSP clients will usually use this request for open files only, but that is not strictly required by the LSP
 		// specification, so we use "runInExistingOrTemporary..." here:
@@ -207,7 +197,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Compute the definition. Executed in a read request. */
 	protected Either<List<? extends Location>, List<? extends LocationLink>> definition(ResourceTaskContext rtc,
-			TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+			DefinitionParams params, CancelIndicator cancelIndicator) {
 		URI uri = rtc.getURI();
 		DocumentSymbolService documentSymbolService = getService(uri, DocumentSymbolService.class);
 		if (documentSymbolService == null) {
@@ -243,7 +233,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
-			TextDocumentPositionParams params) {
+			ImplementationParams params) {
 
 		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "implementation", (rtc, ci) -> {
@@ -254,7 +244,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	/** Compute the implementation locations. */
 	@SuppressWarnings("unused")
 	protected Either<List<? extends Location>, List<? extends LocationLink>> implementation(ResourceTaskContext rtc,
-			TextDocumentPositionParams position, CancelIndicator cancelIndicator) {
+			ImplementationParams position, CancelIndicator cancelIndicator) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -283,7 +273,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
-	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
+	public CompletableFuture<Hover> hover(HoverParams params) {
 		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "hover", (rtc, ci) -> {
 			return hover(rtc, params, ci);
@@ -291,7 +281,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Compute the hover. Executed in a read request. */
-	protected Hover hover(ResourceTaskContext rtc, TextDocumentPositionParams params,
+	protected Hover hover(ResourceTaskContext rtc, HoverParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = rtc.getURI();
 		IHoverService hoverService = getService(uri, IHoverService.class);
@@ -309,7 +299,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
-	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
+	public CompletableFuture<SignatureHelp> signatureHelp(SignatureHelpParams params) {
 		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "signatureHelp", (rtc, ci) -> {
 			return signatureHelp(rtc, params, ci);
@@ -317,7 +307,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	/** Compute the signature help. Executed in a read request. */
-	protected SignatureHelp signatureHelp(ResourceTaskContext rtc, TextDocumentPositionParams params,
+	protected SignatureHelp signatureHelp(ResourceTaskContext rtc, SignatureHelpParams params,
 			CancelIndicator cancelIndicator) {
 		URI uri = rtc.getURI();
 		ISignatureHelpService helper = getService(uri, ISignatureHelpService.class);
@@ -330,7 +320,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
-	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams params) {
+	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(DocumentHighlightParams params) {
 		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "documentHighlight", (rtc, ci) -> {
 			return documentHighlight(rtc, params, ci);
@@ -339,7 +329,8 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Compute the document highlights. Executed in a read request. */
 	protected List<? extends DocumentHighlight> documentHighlight(ResourceTaskContext rtc,
-			TextDocumentPositionParams params, CancelIndicator cancelIndicator) {
+			DocumentHighlightParams params, CancelIndicator cancelIndicator) {
+
 		URI uri = rtc.getURI();
 		IDocumentHighlightService service = getService(uri, IDocumentHighlightService.class);
 		if (service == null) {
@@ -363,28 +354,18 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 			CancelIndicator cancelIndicator) {
 		URI uri = rtc.getURI();
 		IResourceServiceProvider serviceProvider = getResourceServiceProvider(uri);
-		ICodeActionService service = getService(serviceProvider, ICodeActionService.class);
 		ICodeActionService2 service2 = getService(serviceProvider, ICodeActionService2.class);
-		if (service == null && service2 == null) {
+		if (service2 == null) {
 			return Collections.emptyList();
 		}
 		XtextResource res = rtc.getResource();
 		XDocument doc = rtc.getDocument();
 
 		List<Either<Command, CodeAction>> result = new ArrayList<>();
-		if (service != null) {
-			List<Either<Command, CodeAction>> actions = service.getCodeActions(doc, res, params,
-					cancelIndicator);
-			if (actions != null) {
-				result.addAll(actions);
-			}
-		}
-		if (service2 != null) {
-			ICodeActionService2.Options options = toOptions(params, doc, res, cancelIndicator);
-			List<Either<Command, CodeAction>> actions = service2.getCodeActions(options);
-			if (actions != null) {
-				result.addAll(actions);
-			}
+		ICodeActionService2.Options options = toOptions(params, doc, res, cancelIndicator);
+		List<Either<Command, CodeAction>> actions = service2.getCodeActions(options);
+		if (actions != null) {
+			result.addAll(actions);
 		}
 		return result;
 	}
@@ -514,7 +495,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	}
 
 	@Override
-	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(TextDocumentPositionParams params) {
+	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
 		URI uri = paramHelper.getURI(params);
 		return resourceTaskManager.runInExistingContext(uri, "prepareRename", (rtc, ci) -> {
 			return prepareRename(rtc, params, ci);
@@ -523,8 +504,8 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 
 	/** Prepare the rename operation. Executed in a read request. */
 	protected Either<Range, PrepareRenameResult> prepareRename(ResourceTaskContext rtc,
-			TextDocumentPositionParams params,
-			CancelIndicator cancelIndicator) {
+			PrepareRenameParams params, CancelIndicator cancelIndicator) {
+
 		URI uri = rtc.getURI();
 		IRenameService2 renameService = getService(uri, IRenameService2.class);
 		if (renameService == null) {
@@ -668,29 +649,4 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 				removedProjects);
 	}
 
-	@Override
-	public void didRefreshContext(ResourceTaskContext rtc, CancelIndicator ci) {
-		if (client instanceof LanguageClientExtensions) {
-
-			LanguageClientExtensions clientExtensions = (LanguageClientExtensions) client;
-			XtextResource resource = rtc.getResource();
-			IResourceServiceProvider resourceServiceProvider = resource.getResourceServiceProvider();
-			IColoringService coloringService = resourceServiceProvider.get(IColoringService.class);
-
-			if (coloringService != null) {
-				XDocument doc = rtc.getDocument();
-				List<? extends ColoringInformation> colInfos = coloringService.getColoring(resource, doc);
-
-				if (!IterableExtensions.isNullOrEmpty(colInfos)) {
-					String uri = resource.getURI().toString();
-					ColoringParams colParams = new ColoringParams(uri, colInfos);
-					clientExtensions.updateColoring(colParams);
-				}
-			}
-		}
-
-		ILanguageServerAccess.Context ctx = new ILanguageServerAccess.Context(rtc.getResource(), rtc.getDocument(),
-				true, ci);
-		semanticHighlightingRegistry.update(ctx);
-	}
 }

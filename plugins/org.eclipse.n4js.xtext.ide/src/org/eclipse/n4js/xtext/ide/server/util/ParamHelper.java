@@ -20,6 +20,7 @@ import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.DocumentFormattingParams;
 import org.eclipse.lsp4j.DocumentOnTypeFormattingParams;
+import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.ReferenceParams;
@@ -39,6 +40,11 @@ public class ParamHelper {
 
 	@Inject
 	private UriExtensions uriExtensions;
+
+	/** Extracts the URI from the given LSP parameter object. May return <code>null</code>. */
+	public URI getURI(DocumentRangeFormattingParams params) {
+		return params != null ? getURI(params.getTextDocument()) : null;
+	}
 
 	/** Extracts the URI from the given LSP parameter object. May return <code>null</code>. */
 	public URI getURI(DidOpenTextDocumentParams params) {
@@ -101,7 +107,7 @@ public class ParamHelper {
 
 	/** Extracts the URI from the given LSP parameter object. May return <code>null</code>. */
 	public URI getURI(DocumentOnTypeFormattingParams params) {
-		return getURI((DocumentFormattingParams) params);
+		return params != null ? getURI(params.getTextDocument()) : null;
 	}
 
 	/** Extracts the URI from the given LSP parameter object. May return <code>null</code>. */
