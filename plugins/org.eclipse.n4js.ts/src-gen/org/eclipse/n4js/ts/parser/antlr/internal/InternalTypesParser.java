@@ -1448,7 +1448,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTypeRefRule());
                       					}
-                      					setWithLastConsumed(current, "followedByQuestionMark", true, "?");
+                      					setWithLastConsumed(current, "followedByQuestionMark", lv_followedByQuestionMark_1_0 != null, "?");
                       				
                     }
 
@@ -3841,7 +3841,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTObjectPrototypeRule());
                       					}
-                      					setWithLastConsumed(current, "declaredProvidedByRuntime", true, "providedByRuntime");
+                      					setWithLastConsumed(current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
                       				
                     }
 
@@ -3878,7 +3878,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTObjectPrototypeRule());
                       					}
-                      					setWithLastConsumed(current, "declaredFinal", true, "final");
+                      					setWithLastConsumed(current, "declaredFinal", lv_declaredFinal_2_0 != null, "final");
                       				
                     }
 
@@ -4740,7 +4740,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTClassRule());
                       					}
-                      					setWithLastConsumed(current, "declaredProvidedByRuntime", true, "providedByRuntime");
+                      					setWithLastConsumed(current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
                       				
                     }
 
@@ -4777,7 +4777,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTClassRule());
                       					}
-                      					setWithLastConsumed(current, "declaredAbstract", true, "abstract");
+                      					setWithLastConsumed(current, "declaredAbstract", lv_declaredAbstract_2_0 != null, "abstract");
                       				
                     }
 
@@ -4814,7 +4814,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTClassRule());
                       					}
-                      					setWithLastConsumed(current, "declaredFinal", true, "final");
+                      					setWithLastConsumed(current, "declaredFinal", lv_declaredFinal_3_0 != null, "final");
                       				
                     }
 
@@ -5413,7 +5413,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTInterfaceRule());
                       					}
-                      					setWithLastConsumed(current, "declaredProvidedByRuntime", true, "providedByRuntime");
+                      					setWithLastConsumed(current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
                       				
                     }
 
@@ -6847,7 +6847,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getTMethodRule());
                       								}
-                      								setWithLastConsumed(current, "declaredAbstract", true, "abstract");
+                      								setWithLastConsumed(current, "declaredAbstract", lv_declaredAbstract_1_0 != null, "abstract");
                       							
                     }
 
@@ -6879,7 +6879,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getTMethodRule());
                       								}
-                      								setWithLastConsumed(current, "declaredStatic", true, "static");
+                      								setWithLastConsumed(current, "declaredStatic", lv_declaredStatic_2_0 != null, "static");
                       							
                     }
 
@@ -6923,7 +6923,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getTMethodRule());
                       							}
-                      							setWithLastConsumed(current, "declaredAsync", true, "async");
+                      							setWithLastConsumed(current, "declaredAsync", lv_declaredAsync_3_0 != null, "async");
                       						
                     }
 
@@ -7324,7 +7324,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTFieldRule());
                       						}
-                      						setWithLastConsumed(current, "declaredStatic", true, "static");
+                      						setWithLastConsumed(current, "declaredStatic", lv_declaredStatic_1_0 != null, "static");
                       					
                     }
 
@@ -7356,7 +7356,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTFieldRule());
                       						}
-                      						setWithLastConsumed(current, "const", true, "const");
+                      						setWithLastConsumed(current, "const", lv_const_2_0 != null, "const");
                       					
                     }
 
@@ -7388,7 +7388,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTFieldRule());
                       						}
-                      						setWithLastConsumed(current, "declaredFinal", true, "final");
+                      						setWithLastConsumed(current, "declaredFinal", lv_declaredFinal_3_0 != null, "final");
                       					
                     }
 
@@ -7531,7 +7531,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTFieldRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_6_0 != null, "?");
                       				
                     }
 
@@ -7751,7 +7751,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getTGetterRule());
                       								}
-                      								setWithLastConsumed(current, "declaredAbstract", true, "abstract");
+                      								setWithLastConsumed(current, "declaredAbstract", lv_declaredAbstract_1_0 != null, "abstract");
                       							
                     }
 
@@ -7783,7 +7783,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getTGetterRule());
                       								}
-                      								setWithLastConsumed(current, "declaredStatic", true, "static");
+                      								setWithLastConsumed(current, "declaredStatic", lv_declaredStatic_2_0 != null, "static");
                       							
                     }
 
@@ -7938,7 +7938,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTGetterRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_6_0 != null, "?");
                       				
                     }
 
@@ -8147,7 +8147,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getTSetterRule());
                       								}
-                      								setWithLastConsumed(current, "declaredAbstract", true, "abstract");
+                      								setWithLastConsumed(current, "declaredAbstract", lv_declaredAbstract_1_0 != null, "abstract");
                       							
                     }
 
@@ -8179,7 +8179,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getTSetterRule());
                       								}
-                      								setWithLastConsumed(current, "declaredStatic", true, "static");
+                      								setWithLastConsumed(current, "declaredStatic", lv_declaredStatic_2_0 != null, "static");
                       							
                     }
 
@@ -8334,7 +8334,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTSetterRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_6_0 != null, "?");
                       				
                     }
 
@@ -8545,7 +8545,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTFunctionRule());
                       					}
-                      					setWithLastConsumed(current, "declaredProvidedByRuntime", true, "providedByRuntime");
+                      					setWithLastConsumed(current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
                       				
                     }
 
@@ -8825,7 +8825,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTEnumRule());
                       					}
-                      					setWithLastConsumed(current, "declaredProvidedByRuntime", true, "providedByRuntime");
+                      					setWithLastConsumed(current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
                       				
                     }
 
@@ -9374,7 +9374,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                       						}
-                      						setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                      						setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_2_0 != null, "[");
                       					
                     }
 
@@ -9437,7 +9437,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     	      								if (current==null) {
                     	      									current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                     	      								}
-                    	      								setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                    	      								setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_5_0 != null, "[");
                     	      							
                     	    }
 
@@ -9553,7 +9553,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                       						}
-                      						setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                      						setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_11_0 != null, "[");
                       					
                     }
 
@@ -9616,7 +9616,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     	      								if (current==null) {
                     	      									current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                     	      								}
-                    	      								setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                    	      								setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_14_0 != null, "[");
                     	      							
                     	    }
 
@@ -9719,7 +9719,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     	      								if (current==null) {
                     	      									current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                     	      								}
-                    	      								setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                    	      								setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_18_0 != null, "[");
                     	      							
                     	    }
 
@@ -10079,7 +10079,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTypeRefWithModifiersRule());
                       					}
-                      					setWithLastConsumed(current, "followedByQuestionMark", true, "?");
+                      					setWithLastConsumed(current, "followedByQuestionMark", lv_followedByQuestionMark_1_0 != null, "?");
                       				
                     }
 
@@ -10397,7 +10397,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getTypeRefWithoutModifiersRule());
                               						}
-                              						setWithLastConsumed(current, "dynamic", true, "+");
+                              						setWithLastConsumed(current, "dynamic", lv_dynamic_2_0 != null, "+");
                               					
                             }
 
@@ -12195,7 +12195,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTAnonymousFormalParameterRule());
                       					}
-                      					setWithLastConsumed(current, "variadic", true, "...");
+                      					setWithLastConsumed(current, "variadic", lv_variadic_0_0 != null, "...");
                       				
                     }
 
@@ -12464,7 +12464,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTFormalParameterRule());
                       					}
-                      					setWithLastConsumed(current, "variadic", true, "...");
+                      					setWithLastConsumed(current, "variadic", lv_variadic_0_0 != null, "...");
                       				
                     }
 
@@ -12617,7 +12617,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getDefaultFormalParameterRule());
                       					}
-                      					setWithLastConsumed(current, "hasInitializerAssignment", true, "=");
+                      					setWithLastConsumed(current, "hasInitializerAssignment", lv_hasInitializerAssignment_0_0 != null, "=");
                       				
                     }
 
@@ -13921,7 +13921,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
               					if (current==null) {
               						current = createModelElement(grammarAccess.getIterableTypeExpressionRule());
               					}
-              					setWithLastConsumed(current, "iterableTypeExpression", true, "[");
+              					setWithLastConsumed(current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
               				
             }
 
@@ -15576,7 +15576,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTStructFieldRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_1_0 != null, "?");
                       				
                     }
 
@@ -15803,7 +15803,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTStructGetterRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_3_0 != null, "?");
                       				
                     }
 
@@ -16042,7 +16042,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTStructSetterRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_3_0 != null, "?");
                       				
                     }
 
@@ -16465,7 +16465,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTypeTypeRefRule());
                       						}
-                      						setWithLastConsumed(current, "constructorRef", true, "constructor");
+                      						setWithLastConsumed(current, "constructorRef", lv_constructorRef_2_0 != null, "constructor");
                       					
                     }
 
@@ -17281,7 +17281,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getWildcardNewNotationRule());
                       						}
-                      						setWithLastConsumed(current, "usingInOutNotation", true, "out");
+                      						setWithLastConsumed(current, "usingInOutNotation", lv_usingInOutNotation_0_0 != null, "out");
                       					
                     }
 
@@ -17354,7 +17354,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getWildcardNewNotationRule());
                       						}
-                      						setWithLastConsumed(current, "usingInOutNotation", true, "in");
+                      						setWithLastConsumed(current, "usingInOutNotation", lv_usingInOutNotation_2_0 != null, "in");
                       					
                     }
 
@@ -17521,7 +17521,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTypeExpressionsTypeVariableRule());
                       						}
-                      						setWithLastConsumed(current, "declaredCovariant", true, "out");
+                      						setWithLastConsumed(current, "declaredCovariant", lv_declaredCovariant_0_0 != null, "out");
                       					
                     }
 
@@ -17553,7 +17553,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTypeExpressionsTypeVariableRule());
                       						}
-                      						setWithLastConsumed(current, "declaredContravariant", true, "in");
+                      						setWithLastConsumed(current, "declaredContravariant", lv_declaredContravariant_1_0 != null, "in");
                       					
                     }
 
