@@ -20,12 +20,38 @@ export default class C {
 	// in TypeScript methods can be optional too
 	get optionalGetter?() : number { return 0; }
 	set optionalSetter?(value : number) { }
+
+	/**
+	 * Some super useful
+	 * JSDoc spanning
+	 * several lines.
+	 */
+	get optionalGetterWithJSDoc?() : number { return 0; }
+	/**
+	 * Even more super useful
+	 * JSDoc spanning
+	 * several lines.
+	 */
+	set optionalSetterWithJSDoc?(value : number) { }
 }
 
 
-/* XPECT generated_dts ---export default class C {
+/* XPECT generated_dts ---
+export default class C {
 	optionalField?: number;
-	// get optionalGetter? (): number;// optional getter omitted
-	// set optionalSetter? (value: number);// optional setter omitted
+	// get optionalGetter?(): number; // optional getter omitted
+	// set optionalSetter?(value: number); // optional setter omitted
+	// /**
+	//  * Some super useful
+	//  * JSDoc spanning
+	//  * several lines.
+	//  *\/
+	// get optionalGetterWithJSDoc?(): number; // optional getter omitted
+	// /**
+	//  * Even more super useful
+	//  * JSDoc spanning
+	//  * several lines.
+	//  *\/
+	// set optionalSetterWithJSDoc?(value: number); // optional setter omitted
 }
 --- */

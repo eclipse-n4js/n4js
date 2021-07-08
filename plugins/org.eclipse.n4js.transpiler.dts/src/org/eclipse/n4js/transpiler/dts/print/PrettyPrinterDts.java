@@ -625,8 +625,10 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4GetterDeclaration(N4GetterDeclaration original) {
-		if (original.isOptional()) {
+		boolean isOptional = original.isOptional();
+		if (isOptional) {
 			// omit optional getters since these do not exist in TypeScript
+			out.startCommentingOut();
 			write("// ");
 		}
 		writeJsdoc(original);
@@ -634,23 +636,26 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processMemberModifiers(original);
 		write("get ");
 		processPropertyName(original);
-		if (original.isOptional()) {
-			write("? ");
+		if (isOptional) {
+			write("?");
 		}
 		write("()");
 		processDeclaredTypeRef(original);
 		// process(original.getBody());
 		write(";");
-		if (original.isOptional()) {
-			write("// optional getter omitted");
+		if (isOptional) {
+			write(" // optional getter omitted");
+			out.endCommentingOut();
 		}
 		return DONE;
 	}
 
 	@Override
 	public Boolean caseN4SetterDeclaration(N4SetterDeclaration original) {
-		if (original.isOptional()) {
+		boolean isOptional = original.isOptional();
+		if (isOptional) {
 			// omit optional setters since these do not exist in TypeScript
+			out.startCommentingOut();
 			write("// ");
 		}
 		writeJsdoc(original);
@@ -658,16 +663,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		processMemberModifiers(original);
 		write("set ");
 		processPropertyName(original);
-		if (original.isOptional()) {
-			write("? ");
+		if (isOptional) {
+			write("?");
 		}
 		write('(');
 		process(original.getFpar());
 		write(")");
 		// process(original.getBody());
 		write(";");
-		if (original.isOptional()) {
-			write("// optional setter omitted");
+		if (isOptional) {
+			write(" // optional setter omitted");
+			out.endCommentingOut();
 		}
 		return DONE;
 	}
