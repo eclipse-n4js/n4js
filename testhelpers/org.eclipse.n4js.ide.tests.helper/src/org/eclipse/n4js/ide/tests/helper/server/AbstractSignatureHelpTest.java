@@ -17,8 +17,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.testing.SignatureHelpConfiguration;
 
@@ -36,11 +36,11 @@ abstract public class AbstractSignatureHelpTest extends AbstractStructuredIdeTes
 	protected void performTest(Project project, String moduleName, SignatureHelpConfiguration shc)
 			throws InterruptedException, ExecutionException {
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
+		SignatureHelpParams signatureHelpParams = new SignatureHelpParams();
 		String completeFileUri = getFileURIFromModuleName(shc.getFilePath()).toString();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
-		textDocumentPositionParams.setPosition(new Position(shc.getLine(), shc.getColumn()));
-		CompletableFuture<SignatureHelp> signatureHelpFuture = languageServer.signatureHelp(textDocumentPositionParams);
+		signatureHelpParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
+		signatureHelpParams.setPosition(new Position(shc.getLine(), shc.getColumn()));
+		CompletableFuture<SignatureHelp> signatureHelpFuture = languageServer.signatureHelp(signatureHelpParams);
 
 		SignatureHelp signatureHelp = signatureHelpFuture.get();
 		if (shc.getAssertSignatureHelp() != null) {

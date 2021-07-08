@@ -16,9 +16,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.xtext.testing.HoverTestConfiguration;
 
@@ -26,7 +26,6 @@ import org.eclipse.xtext.testing.HoverTestConfiguration;
  * Abstract test class for hover protocol tests
  */
 abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverTestConfiguration> {
-
 
 	/** Call this method in a test */
 	protected void testAtCursor(String content, String expectation) throws Exception {
@@ -44,11 +43,11 @@ abstract public class AbstractHoverTest extends AbstractStructuredIdeTest<HoverT
 	protected void performTest(Project project, String moduleName, HoverTestConfiguration htc)
 			throws InterruptedException, ExecutionException {
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
+		HoverParams hoverParams = new HoverParams();
 		String completeFileUri = getFileURIFromModuleName(htc.getFilePath()).toString();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
-		textDocumentPositionParams.setPosition(new Position(htc.getLine(), htc.getColumn()));
-		CompletableFuture<Hover> hoverFuture = languageServer.hover(textDocumentPositionParams);
+		hoverParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
+		hoverParams.setPosition(new Position(htc.getLine(), htc.getColumn()));
+		CompletableFuture<Hover> hoverFuture = languageServer.hover(hoverParams);
 
 		Hover hover = hoverFuture.get();
 		if (htc.getAssertHover() != null) {

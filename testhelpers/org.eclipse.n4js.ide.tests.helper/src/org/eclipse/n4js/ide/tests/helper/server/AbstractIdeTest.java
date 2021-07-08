@@ -51,6 +51,7 @@ import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
@@ -77,7 +78,6 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
@@ -1477,7 +1477,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected List<Diagnostic> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
 		Stream<Diagnostic> issuesInFile = languageClient.getIssues(fileURI).stream();
 		if (!withIgnoredIssues) {
-			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
+			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode().getLeft()));
 		}
 		return issuesInFile.collect(Collectors.toList());
 	}
@@ -1649,11 +1649,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> callDefinition(
 			String completeFileUri, int line, int column) {
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
-		textDocumentPositionParams.setPosition(new Position(line, column));
+		DefinitionParams definitionParams = new DefinitionParams();
+		definitionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
+		definitionParams.setPosition(new Position(line, column));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = languageServer
-				.definition(textDocumentPositionParams);
+				.definition(definitionParams);
 
 		return future;
 	}

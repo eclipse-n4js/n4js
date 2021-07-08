@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.MarkedString;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.jsdoc2spec.adoc.Html2ADocConverter;
@@ -37,6 +38,7 @@ import com.google.inject.Inject;
 /**
  * Subclass of {@link HoverService} to show signature information
  */
+@SuppressWarnings("deprecation") // due to MarkedString
 public class N4JSHoverService extends HoverService {
 
 	private static final String MARKUP_KIND_MARKDOWN = "markdown";
@@ -53,7 +55,7 @@ public class N4JSHoverService extends HoverService {
 	final private Html2ADocConverter html2adocConverter = new Html2ADocConverter();
 
 	@Override
-	protected List<Either<String, MarkedString>> getContents(HoverContext ctx) {
+	protected Hover hover(HoverContext ctx) {
 		List<Either<String, MarkedString>> contents = new LinkedList<>();
 		EObject element = ctx.getElement();
 		EObject idRef = getIdentifierRefOrElement(ctx);
@@ -74,7 +76,7 @@ public class N4JSHoverService extends HoverService {
 			contents.add(Either.forRight(mdDocumentation));
 		}
 
-		return contents;
+		return new Hover(contents);
 	}
 
 	private EObject getIdentifierRefOrElement(HoverContext ctx) {

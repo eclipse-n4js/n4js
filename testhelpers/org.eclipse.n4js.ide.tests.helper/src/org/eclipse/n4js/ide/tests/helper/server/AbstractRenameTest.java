@@ -23,11 +23,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -192,10 +192,10 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 
 		String sourceBefore = config.projectsModulesSourcesBefore.get(pos.projectName).get(pos.moduleName);
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(uriStr));
-		textDocumentPositionParams.setPosition(new Position(pos.line, pos.column));
-		Either<Range, PrepareRenameResult> result1 = languageServer.prepareRename(textDocumentPositionParams).get();
+		PrepareRenameParams prepareRenameParams = new PrepareRenameParams();
+		prepareRenameParams.setTextDocument(new TextDocumentIdentifier(uriStr));
+		prepareRenameParams.setPosition(new Position(pos.line, pos.column));
+		Either<Range, PrepareRenameResult> result1 = languageServer.prepareRename(prepareRenameParams).get();
 		if (result1 == null || (result1.getLeft() == null && result1.getRight() == null)) {
 			fail("element cannot be renamed", sourceBefore, pos);
 		}

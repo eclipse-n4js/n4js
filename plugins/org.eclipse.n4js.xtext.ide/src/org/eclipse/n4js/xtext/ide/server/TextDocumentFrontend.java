@@ -244,7 +244,7 @@ public class TextDocumentFrontend implements TextDocumentService, IIndexListener
 	/** Compute the implementation locations. */
 	@SuppressWarnings("unused")
 	protected Either<List<? extends Location>, List<? extends LocationLink>> implementation(ResourceTaskContext rtc,
-			ImplementationParams position, CancelIndicator cancelIndicator) {
+			ImplementationParams params, CancelIndicator cancelIndicator) {
 		throw new UnsupportedOperationException();
 	}
 
