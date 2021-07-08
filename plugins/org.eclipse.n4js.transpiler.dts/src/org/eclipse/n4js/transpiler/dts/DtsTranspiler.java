@@ -21,7 +21,6 @@ import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts;
-import org.eclipse.n4js.transpiler.dts.transform.ConvertTypeReferencesTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.CutOffTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.EnumAddMissingInitializersTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ImplementedMemberTransformation;
@@ -29,6 +28,7 @@ import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ModuleSpecifierTransformationDts;
 import org.eclipse.n4js.transpiler.dts.transform.ReturnTypeTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.TrimForDtsTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.TypeReferenceTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
@@ -55,7 +55,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<TrimForDtsTransformation> trimDtsTransformationProvider;
 	@Inject
-	private Provider<ConvertTypeReferencesTransformation> convertTypeReferencesTransformationProvider;
+	private Provider<TypeReferenceTransformation> typeReferenceTransformationProvider;
 	@Inject
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
 	@Inject
@@ -79,7 +79,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 				inferredTypesTransformationProvider.get(),
 				returnTypeTransformationProvider.get(),
 				trimDtsTransformationProvider.get(),
-				convertTypeReferencesTransformationProvider.get(),
+				typeReferenceTransformationProvider.get(),
 				sanitizeImportsTransformationProvider.get(),
 				moduleSpecifierTransformationProviderDts.get(),
 				enumAddMissingInitializersTransformation.get()

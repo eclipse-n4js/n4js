@@ -62,13 +62,13 @@ import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifie
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
- * For each type reference in the intermediate model, this transformation will
+ * For each {@link TypeReferenceNode_IM} in the intermediate model, this transformation will
  * <ol>
  * <li>produce a string representation and store it in property {@link TypeReferenceNode_IM#getCodeToEmit() codeToEmit}, and
  * <li>record all types actually referenced by that string in property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences}.
  * </ol>
  */
-class ConvertTypeReferencesTransformation extends Transformation {
+class TypeReferenceTransformation extends Transformation {
 
 	private TypeReferenceNode_IM<?> currTypeRefNode = null;
 	private StringBuilder currStringBuilder = null;
