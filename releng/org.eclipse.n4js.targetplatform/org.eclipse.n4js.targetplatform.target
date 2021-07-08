@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_2021_06" sequenceNumber="161">
+<target name="Generated target-platform N4JS:N4JS_2021_06" sequenceNumber="162">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xtext.testing" version="2.25.0.v20210301-0843"/>
@@ -64,6 +64,7 @@
       <unit id="org.eclipse.jgit.gpg.bc" version="5.12.0.202106070339-r"/>
       <unit id="org.eclipse.jgit.http.apache" version="5.12.0.202106070339-r"/>
       <unit id="org.eclipse.jgit.ssh.apache" version="5.12.0.202106070339-r"/>
+      <unit id="org.eclipse.jgit.ssh.jsch" version="5.12.0.202106070339-r"/>
       <unit id="org.kohsuke.args4j" version="2.33.0.v20160323-2218"/>
       <repository location="http://download.eclipse.org/egit/updates-5.12"/>
     </location>

@@ -218,7 +218,7 @@ public class ProjectDescriptionLoader {
 			String jsonString = Files.readString(path, StandardCharsets.UTF_8);
 			try {
 				JSONDocument doc = JSONFactory.eINSTANCE.createJSONDocument();
-				JsonElement jsonElement = new JsonParser().parse(jsonString);
+				JsonElement jsonElement = JsonParser.parseString(jsonString);
 				doc.setContent(copy(jsonElement));
 				return doc;
 			} catch (JsonParseException e) {

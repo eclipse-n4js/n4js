@@ -27,7 +27,7 @@ public abstract class ForwardingEObjectDescription extends org.eclipse.xtext.res
 
 	@Override
 	public final IEObjectDescription delegate() {
-		return (IEObjectDescription) super.delegate();
+		return super.delegate();
 	}
 
 }
