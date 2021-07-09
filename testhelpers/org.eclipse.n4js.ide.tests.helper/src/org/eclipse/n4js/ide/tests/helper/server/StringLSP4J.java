@@ -46,6 +46,7 @@ import org.eclipse.n4js.utils.Strings;
 /**
  * Utility to serialize LSP4J JSON results to be used in test expectations
  */
+@SuppressWarnings("deprecation")
 public class StringLSP4J {
 	final File root;
 
