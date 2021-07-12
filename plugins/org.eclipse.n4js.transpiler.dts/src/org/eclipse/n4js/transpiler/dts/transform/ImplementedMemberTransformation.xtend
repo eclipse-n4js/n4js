@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.MemberAccessModifier
@@ -217,30 +218,32 @@ class ImplementedMemberTransformation extends Transformation {
 
 	private def void setDeclaredTypeRef(TypedElement elementInIM, TypeRef typeRef, RuleEnvironment G_tClass) {
 		if (typeRef !== null) {
-			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
-			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
-			val typeRefNode = _TypeReferenceNode(state, typeRefSubstCpy);
-			elementInIM.declaredTypeRefNode = typeRefNode;
+			elementInIM.declaredTypeRefNode = createLocalizedTypeRefNodeFor(typeRef, G_tClass);
 		}
 	}
 
-	// FIXME avoid code duplication with previous method
 	private def void setReturnTypeRef(FunctionDefinition funDef, TypeRef typeRef, RuleEnvironment G_tClass) {
 		if (typeRef !== null) {
-			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
-			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
-			val typeRefNode = _TypeReferenceNode(state, typeRefSubstCpy);
-			funDef.declaredReturnTypeRefNode = typeRefNode;
+			funDef.declaredReturnTypeRefNode = createLocalizedTypeRefNodeFor(typeRef, G_tClass);
 		}
 	}
 
-	// FIXME avoid code duplication with previous method
 	private def void setDeclaredUpperBound(N4TypeVariable typeParam, TypeRef typeRef, RuleEnvironment G_tClass) {
 		if (typeRef !== null) {
-			val typeRefSubst = ts.substTypeVariables(G_tClass, typeRef);
-			val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
-			val typeRefNode = _TypeReferenceNode(state, typeRefSubstCpy);
-			typeParam.declaredUpperBoundNode = typeRefNode;
+			typeParam.declaredUpperBoundNode = createLocalizedTypeRefNodeFor(typeRef, G_tClass);
 		}
+	}
+
+	/**
+	 * Converts the given type reference to the context defined by rule environment 'ruleEnvForSubstituion'
+	 * (which will usually contain type variable bindings representing the context inside the class declaration
+	 * passed to method {@link #addMissingImplementedMembers(N4ClassDeclaration)}) and creates a new
+	 * {@link TypeReferenceNode_IM} for it.
+	 */
+	private def TypeReferenceNode_IM<TypeRef> createLocalizedTypeRefNodeFor(TypeRef typeRef, RuleEnvironment ruleEnvForSubstituion) {
+		val typeRefSubst = ts.substTypeVariables(ruleEnvForSubstituion, typeRef);
+		val typeRefSubstCpy = if (typeRefSubst === typeRef) TypeUtils.copy(typeRefSubst) else typeRefSubst;
+		val typeRefNode = _TypeReferenceNode(state, typeRefSubstCpy);
+		return typeRefNode;
 	}
 }
