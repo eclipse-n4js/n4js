@@ -277,7 +277,7 @@ public class StringLSP4J {
 		String str = "CODE:";
 
 		str += Strings.join(", ",
-				diagnostic.getCode(),
+				diagnostic.getCode().getLeft(),
 				diagnostic.getSeverity(),
 				diagnostic.getSource(),
 				toString(diagnostic.getRange()),

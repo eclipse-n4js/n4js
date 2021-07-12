@@ -76,7 +76,7 @@ public class N4JSHoverService extends HoverService {
 			contents.add(Either.forRight(mdDocumentation));
 		}
 
-		return new Hover(contents);
+		return new Hover(contents, getRange(ctx));
 	}
 
 	private EObject getIdentifierRefOrElement(HoverContext ctx) {
