@@ -16,7 +16,6 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -79,11 +78,6 @@ class InferredTypesTransformation extends Transformation {
 			val typeRef = ts.type(state.G, elemInAST);
 			if (typeRef !== null) {
 				val typeRefCpy = TypeUtils.copy(typeRef);
-				if (typeRefCpy instanceof ParameterizedTypeRef) {
-					// FIXME explain why this is done:
-					typeRefCpy.declaredTypeAsText = null;
-				}
-
 				val typeRefNode = _TypeReferenceNode(state, typeRefCpy);
 				elemInIM.declaredTypeRefNode = typeRefNode;
 			}
