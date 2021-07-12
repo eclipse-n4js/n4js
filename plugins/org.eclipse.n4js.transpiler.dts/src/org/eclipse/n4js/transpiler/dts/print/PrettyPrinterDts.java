@@ -307,7 +307,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			process(superClassRef);
 			write(' ');
 		} else if (superClassExpression != null) {
-			// TODO show error
+			throw new IllegalStateException("in " + PrettyPrinterDts.class.getSimpleName()
+					+ " property 'superClassExpression' of class declarations is expected to be 'null', but was: "
+					+ superClassExpression);
 		}
 
 		if (!original.getImplementedInterfaceRefs().isEmpty()) {
