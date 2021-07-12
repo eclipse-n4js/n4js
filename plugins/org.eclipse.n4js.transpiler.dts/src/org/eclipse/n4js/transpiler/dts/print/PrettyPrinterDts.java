@@ -32,15 +32,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.Annotation;
-import org.eclipse.n4js.n4JS.ArrayBindingPattern;
-import org.eclipse.n4js.n4JS.BindingElement;
-import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableBinding;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -68,7 +64,6 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NumericLiteral;
-import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
@@ -76,7 +71,6 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
@@ -870,26 +864,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
-	public Boolean caseVariableBinding(VariableBinding original) {
-		process(original.getPattern());
-		if (original.getExpression() != null) {
-			write(" = ");
-			process(original.getExpression());
-		}
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
-		if (original.getPattern() != null) {
-			process(original.getPattern());
-		} else if (original.getAllVariableDeclarations() != null) {
-			process(original.getAllVariableDeclarations(), ", ");
-		}
-		return DONE;
-	}
-
-	@Override
 	public Boolean caseN4TypeVariable(N4TypeVariable typeVar) {
 		write(typeVar.getName());
 		TypeReferenceNode<TypeRef> ub = typeVar.getDeclaredUpperBoundNode();
@@ -902,38 +876,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			}
 			write(" extends ");
 			processTypeRefNode(ub);
-		}
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseArrayBindingPattern(ArrayBindingPattern pattern) {
-		processBlockLike(pattern.getElements(), '[', ", ", null, ']', false);
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseBindingElement(BindingElement elem) {
-		if (elem.getVarDecl() != null) {
-			write(elem.getVarDecl().getName());
-		} else if (elem.getNestedPattern() != null) {
-			process(elem.getNestedPattern());
-		}
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseObjectBindingPattern(ObjectBindingPattern pattern) {
-		processBlockLike(pattern.getProperties(), '{', ", ", null, '}');
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseBindingProperty(BindingProperty prop) {
-		if (prop.getDeclaredName() != null) {
-			process(prop.getDeclaredName());
-		} else if (prop.getName() != null) {
-			write(prop.getName());
 		}
 		return DONE;
 	}
