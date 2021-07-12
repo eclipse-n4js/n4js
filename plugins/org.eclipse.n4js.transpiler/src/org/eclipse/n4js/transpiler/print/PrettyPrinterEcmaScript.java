@@ -465,7 +465,7 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
-		// caseExportedVariableBinding(original); // FIXME
+		caseVariableBinding(original);
 		return DONE;
 	}
 
