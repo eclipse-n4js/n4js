@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  org.apache.commons.logging;resolution:=optional,
  org.eclipse.equinox.common;resolution:=optional,
  com.google.gson;visibility:=reexport,
- com.fasterxml.jackson.core.jackson-core
+ com.fasterxml.jackson.core.jackson-core,
+ com.google.guava
 Export-Package: org.eclipse.n4js.fileextensions,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.utils.beans,
