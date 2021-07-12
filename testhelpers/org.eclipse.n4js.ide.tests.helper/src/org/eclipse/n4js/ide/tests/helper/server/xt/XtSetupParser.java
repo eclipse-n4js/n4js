@@ -112,6 +112,7 @@ public class XtSetupParser {
 	static public class XtSetupParseResult {
 		String runner;
 		XtWorkspace workspace;
+		boolean generateDts = false;
 		final Set<String> enabledIssues = new HashSet<>();
 		final Set<String> disabledIssues = new HashSet<>();
 	}
@@ -131,6 +132,9 @@ public class XtSetupParser {
 
 		while (tokens.hasNext()) {
 			switch (tokens.next()) {
+			case "GENERATE_DTS":
+				result.generateDts = true;
+				break;
 			case "IssueConfiguration":
 				tokens.expect("{");
 				parseIssueConfiguration(tokens, xtFile, result);

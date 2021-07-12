@@ -80,6 +80,19 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	}
 
 	@Override
+	protected XBuildRequest newBuildRequest(IBuildRequestFactory buildRequestFactory, Set<URI> changedFiles,
+			Set<URI> deletedFiles, List<Delta> externalDeltas, CancelIndicator cancelIndicator) {
+
+		XBuildRequest request = super.newBuildRequest(buildRequestFactory, changedFiles, deletedFiles, externalDeltas,
+				cancelIndicator);
+
+		if (getProjectConfig().getProjectDescription().isGeneratorEnabledDts()) {
+			request.addAfterBuildListener(new TSConfigAfterBuildListener(getProjectConfig()));
+		}
+		return request;
+	}
+
+	@Override
 	protected boolean handleProjectAdditionRemovalSinceProjectStateWasComputed(ResourceChangeSet result,
 			ImmutableProjectState projectState) {
 
