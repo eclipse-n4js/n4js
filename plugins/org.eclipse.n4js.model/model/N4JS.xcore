@@ -905,7 +905,7 @@ abstract class VariableDeclarationContainer {
 	VariableStatementKeyword varStmtKeyword
 
 	op VariableDeclaration[] getVarDecl() {
-		varDeclsOrBindings.map[it.getVariableDeclarations()].flatten.toEList
+		varDeclsOrBindings.map[it.getAllVariableDeclarations()].flatten.toEList
 	}
 	op boolean isBlockScoped() {
 		switch(varStmtKeyword) {
@@ -931,7 +931,7 @@ class ExportedVariableStatement extends VariableStatement, ExportableElement, An
 
 abstract class VariableDeclarationOrBinding extends ControlFlowElement {
 
-	op VariableDeclaration[] getVariableDeclarations() {
+	op VariableDeclaration[] getAllVariableDeclarations() {
 		switch(this) {
 		VariableDeclaration: #[this as VariableDeclaration].toEList
 		VariableBinding: eAllContents.filter(VariableDeclaration).toEList

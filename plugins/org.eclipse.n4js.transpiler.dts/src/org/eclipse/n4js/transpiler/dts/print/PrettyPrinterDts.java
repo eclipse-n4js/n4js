@@ -819,7 +819,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			// the default export does only support a single element. Hence, only the first entry is used.
 			if (!declsOrBindings.isEmpty()) {
 				VariableDeclarationOrBinding declOrBinding = declsOrBindings.get(0);
-				EList<VariableDeclaration> declarations = declOrBinding.getVariableDeclarations();
+				EList<VariableDeclaration> declarations = declOrBinding.getAllVariableDeclarations();
 				if (!declarations.isEmpty()) {
 					VariableDeclaration declaration = declarations.get(0);
 					write(declaration.getName());
@@ -883,8 +883,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
 		if (original.getPattern() != null) {
 			process(original.getPattern());
-		} else if (original.getVariableDeclarations() != null) {
-			process(original.getVariableDeclarations(), ", ");
+		} else if (original.getAllVariableDeclarations() != null) {
+			process(original.getAllVariableDeclarations(), ", ");
 		}
 		return DONE;
 	}

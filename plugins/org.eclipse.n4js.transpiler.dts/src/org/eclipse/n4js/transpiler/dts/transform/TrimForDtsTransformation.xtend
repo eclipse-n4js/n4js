@@ -20,6 +20,9 @@ import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.VariableBinding
+import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.MemberAccessModifier
@@ -54,6 +57,10 @@ class TrimForDtsTransformation extends Transformation {
 			.filter[!isPublicMember(it)]
 			.toList;
 		toBeRemoved3.forEach[remove(it)];
+
+		// remove all destructuring patterns (and turn them into plain variable declarations)
+		collectNodes(state.im, false, VariableStatement)
+			.forEach[convertDestructuringToOrdinaryVariableDeclarations];
 	}
 
 	def private boolean isPureStatement(EObject obj) {
@@ -86,5 +93,33 @@ class TrimForDtsTransformation extends Transformation {
 			}
 		}
 		return declaredModifier === MemberAccessModifier.PUBLIC;
+	}
+
+	def private void convertDestructuringToOrdinaryVariableDeclarations(VariableStatement varStmnt) {
+		val varDeclsToBeMoved = <VariableDeclaration>newArrayList;
+		val varBindingToBeRemoved = <VariableBinding>newArrayList;
+		for (root : varStmnt.varDeclsOrBindings) {
+			if (root instanceof VariableDeclaration) {
+				// root is a variable declaration
+				// --> need not be moved
+			} else if (root instanceof VariableBinding) {
+				// root is a VariableBinding
+				// --> all contained variable declarations must be moved to the root level
+				varDeclsToBeMoved += root.allVariableDeclarations;
+				varBindingToBeRemoved += root;
+			} else {
+				throw new UnsupportedOperationException("unsupported subclass of " + VariableDeclarationOrBinding.simpleName + ": " + root.eClass.name);
+			}
+		}
+
+		// move all variable declarations in 'varDeclsToBeMoved' to the root level
+		for (varDecl : varDeclsToBeMoved) {
+			varStmnt.varDeclsOrBindings += varDecl; // will be automatically removed from old location by EMF
+		}
+
+		// remove all variable bindings
+		for (varBinding : varBindingToBeRemoved) {
+			remove(varBinding);
+		}
 	}
 }

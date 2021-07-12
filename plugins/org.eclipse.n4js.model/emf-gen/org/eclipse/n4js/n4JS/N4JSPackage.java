@@ -4002,13 +4002,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT = CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Variable Declarations</em>' operation.
+	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS = CONTROL_FLOW_ELEMENT_OPERATION_COUNT + 0;
+	int VARIABLE_DECLARATION_OR_BINDING___GET_ALL_VARIABLE_DECLARATIONS = CONTROL_FLOW_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Expression</em>' operation.
@@ -4066,13 +4066,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_BINDING_FEATURE_COUNT = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Get Variable Declarations</em>' operation.
+	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_BINDING___GET_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS;
+	int VARIABLE_BINDING___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION_OR_BINDING___GET_ALL_VARIABLE_DECLARATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Expression</em>' operation.
@@ -4139,13 +4139,13 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTED_VARIABLE_BINDING_FEATURE_COUNT = VARIABLE_BINDING_FEATURE_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Get Variable Declarations</em>' operation.
+	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING___GET_VARIABLE_DECLARATIONS = VARIABLE_BINDING___GET_VARIABLE_DECLARATIONS;
+	int EXPORTED_VARIABLE_BINDING___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_BINDING___GET_ALL_VARIABLE_DECLARATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Expression</em>' operation.
@@ -4221,13 +4221,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION_FEATURE_COUNT = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 4;
 
 	/**
-	 * The operation id for the '<em>Get Variable Declarations</em>' operation.
+	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS;
+	int VARIABLE_DECLARATION___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION_OR_BINDING___GET_ALL_VARIABLE_DECLARATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Expression</em>' operation.
@@ -4384,13 +4384,13 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTED_VARIABLE_DECLARATION_FEATURE_COUNT = VARIABLE_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Get Variable Declarations</em>' operation.
+	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION___GET_VARIABLE_DECLARATIONS;
+	int EXPORTED_VARIABLE_DECLARATION___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION___GET_ALL_VARIABLE_DECLARATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Expression</em>' operation.
@@ -18735,14 +18735,14 @@ public interface N4JSPackage extends EPackage {
 	EClass getVariableDeclarationOrBinding();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclarationOrBinding#getVariableDeclarations() <em>Get Variable Declarations</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclarationOrBinding#getAllVariableDeclarations() <em>Get All Variable Declarations</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Variable Declarations</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.VariableDeclarationOrBinding#getVariableDeclarations()
+	 * @return the meta object for the '<em>Get All Variable Declarations</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.VariableDeclarationOrBinding#getAllVariableDeclarations()
 	 * @generated
 	 */
-	EOperation getVariableDeclarationOrBinding__GetVariableDeclarations();
+	EOperation getVariableDeclarationOrBinding__GetAllVariableDeclarations();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclarationOrBinding#getExpression() <em>Get Expression</em>}' operation.
@@ -24735,12 +24735,12 @@ public interface N4JSPackage extends EPackage {
 		EClass VARIABLE_DECLARATION_OR_BINDING = eINSTANCE.getVariableDeclarationOrBinding();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Variable Declarations</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get All Variable Declarations</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS = eINSTANCE.getVariableDeclarationOrBinding__GetVariableDeclarations();
+		EOperation VARIABLE_DECLARATION_OR_BINDING___GET_ALL_VARIABLE_DECLARATIONS = eINSTANCE.getVariableDeclarationOrBinding__GetAllVariableDeclarations();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Expression</b></em>' operation.

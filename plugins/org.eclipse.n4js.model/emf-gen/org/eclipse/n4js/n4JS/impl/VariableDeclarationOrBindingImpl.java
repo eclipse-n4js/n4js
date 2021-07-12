@@ -60,7 +60,7 @@ public abstract class VariableDeclarationOrBindingImpl extends ProxyResolvingEOb
 	 * @generated
 	 */
 	@Override
-	public EList<VariableDeclaration> getVariableDeclarations() {
+	public EList<VariableDeclaration> getAllVariableDeclarations() {
 		EList<VariableDeclaration> _switchResult = null;
 		boolean _matched = false;
 		if (this instanceof VariableDeclaration) {
@@ -99,8 +99,8 @@ public abstract class VariableDeclarationOrBindingImpl extends ProxyResolvingEOb
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS:
-				return getVariableDeclarations();
+			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING___GET_ALL_VARIABLE_DECLARATIONS:
+				return getAllVariableDeclarations();
 			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING___GET_EXPRESSION:
 				return getExpression();
 		}

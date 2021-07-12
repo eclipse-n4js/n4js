@@ -56,7 +56,7 @@ class InferredTypesTransformation extends Transformation {
 			// obtain those typed elements, that may have an inferred type
 			// (e.g. variables and fields, but not getters, setters, fpars)
 			val typedElems = switch (rootElem) {
-				VariableStatement: rootElem.varDecl // FIXME what about VariableBindings?
+				VariableStatement: rootElem.varDecl // note: returns also variable declarations that are arbitrarily nested in a destructure pattern
 				N4ClassifierDeclaration: rootElem.ownedFields
 			};
 

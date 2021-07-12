@@ -3346,7 +3346,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getVariableDeclarationOrBinding__GetVariableDeclarations() {
+	public EOperation getVariableDeclarationOrBinding__GetAllVariableDeclarations() {
 		return variableDeclarationOrBindingEClass.getEOperations().get(0);
 	}
 
@@ -7985,7 +7985,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(exportedVariableStatementEClass, EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL);
 
 		variableDeclarationOrBindingEClass = createEClass(VARIABLE_DECLARATION_OR_BINDING);
-		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS);
+		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_ALL_VARIABLE_DECLARATIONS);
 		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_EXPRESSION);
 
 		variableBindingEClass = createEClass(VARIABLE_BINDING);
@@ -9160,7 +9160,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(variableDeclarationOrBindingEClass, VariableDeclarationOrBinding.class, "VariableDeclarationOrBinding", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEOperation(getVariableDeclarationOrBinding__GetVariableDeclarations(), this.getVariableDeclaration(), "getVariableDeclarations", 0, -1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getVariableDeclarationOrBinding__GetAllVariableDeclarations(), this.getVariableDeclaration(), "getAllVariableDeclarations", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getVariableDeclarationOrBinding__GetExpression(), this.getExpression(), "getExpression", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
