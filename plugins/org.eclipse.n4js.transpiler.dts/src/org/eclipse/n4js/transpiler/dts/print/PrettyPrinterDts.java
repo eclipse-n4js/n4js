@@ -100,7 +100,6 @@ import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
@@ -126,10 +125,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			N4Modifier.PROTECTED,
 			N4Modifier.PROJECT,
 			N4Modifier.PUBLIC);
-
-	// FIXME this is probably obsolete, since types from globally available modules are covered in
-	// DtsUtils#getReferenceToTypeIfLocallyAvailable(Type, TranspilerState)
-	private static final Set<String> GLOBALLY_AVAILABLE = ImmutableSet.of("Set", "Iterator", "url", "URLSearchParams");
 
 	private final LineColTrackingAppendable out;
 	private final Optional<String> optPreamble;
@@ -229,10 +224,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
 				? original.getModuleSpecifierAsText()
 				: original.getModule().getQualifiedName();
-
-		if (GLOBALLY_AVAILABLE.contains(moduleSpecifier)) {
-			return DONE;
-		}
 
 		processAnnotations(original.getAnnotations());
 		write("import ");
