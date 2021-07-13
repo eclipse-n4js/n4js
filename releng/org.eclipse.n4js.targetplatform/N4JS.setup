@@ -380,7 +380,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/4.20"/>
         <repository
-            url="http://download.eclipse.org/egit/updates-5.12"/>
+            url="http://download.eclipse.org/egit/updates-5.7"/>
         <repository
             url="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.20.v20190813"/>
         <repository
