@@ -59,6 +59,8 @@ import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
@@ -77,6 +79,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.json.JsonRpcMethod;
@@ -379,7 +382,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Deprecated
-	private URI deprecatedToBaseDir(InitializeParams params) {
+	private URI deprecatedToBaseDir1(InitializeParams params) {
 		String rootPath = params.getRootPath();
 		if (rootPath != null) {
 			return uriExtensions.toUri(uriExtensions.toUriString(URI.createFileURI(rootPath)));
@@ -387,15 +390,30 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return null;
 	}
 
-	/**
-	 * Compute the base directory.
-	 */
-	protected URI getBaseDir(InitializeParams params) {
+	@Deprecated
+	private URI deprecatedToBaseDir2(InitializeParams params) {
 		String rootUri = params.getRootUri();
 		if (rootUri != null) {
 			return uriExtensions.toUri(rootUri);
 		}
-		return deprecatedToBaseDir(params);
+		return deprecatedToBaseDir1(params);
+	}
+
+	/**
+	 * Compute the base directory.
+	 */
+	protected URI getBaseDir(InitializeParams params) {
+		List<WorkspaceFolder> workspaceFolders = params.getWorkspaceFolders();
+		if (workspaceFolders != null && !workspaceFolders.isEmpty()) {
+			// TODO: Support multiple workspace folders
+			WorkspaceFolder workspaceFolder = workspaceFolders.get(0);
+			if (workspaceFolders.size() > 1) {
+				client.logMessage(new MessageParams(MessageType.Error,
+						"Multiple workspace folders not supported. Using only " + workspaceFolder.getUri()));
+			}
+			return uriExtensions.toUri(workspaceFolder.getUri());
+		}
+		return deprecatedToBaseDir2(params);
 	}
 
 	@SuppressWarnings("hiding")

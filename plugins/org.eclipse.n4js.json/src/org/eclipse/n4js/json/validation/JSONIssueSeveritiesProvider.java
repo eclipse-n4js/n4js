@@ -23,7 +23,6 @@ import com.google.inject.Inject;
  * Customization to create {@link JSONIssueSeverities} in
  * {@link JSONIssueSeveritiesProvider#getIssueSeverities(Resource)}.
  */
-@SuppressWarnings("restriction")
 public class JSONIssueSeveritiesProvider extends IssueSeveritiesProvider {
 	@SuppressWarnings("javadoc")
 	@Inject
