@@ -20,5 +20,5 @@ const [A, B] = "".split(";");
 
 
 /* XPECT generated_dts ---
-declare const [A, B];
+declare const A: string, B: string;
 --- */
