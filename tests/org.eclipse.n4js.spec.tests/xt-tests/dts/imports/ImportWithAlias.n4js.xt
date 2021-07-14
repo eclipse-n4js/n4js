@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest
+
+	Workspace {
+		Project "XtTestProject" {
+			Folder "src" {
+				File "Other.n4js" { from="./ImportWithAlias_Other.n4js" }
+				ThisFile {}
+			}
+			File "package.json" { from="../../../package_xt-tests_withGenerateDTS.json" }
+		}
+	}
+
+	GENERATE_DTS
+
+END_SETUP */
+
+
+import {F} from "Other"
+
+export const C = F();
+
+
+class Cls {
+	// provoke name conflict in d.ts
+}
+
+
+/* XPECT generated_dts ---
+import {Cls as Cls2} from './Other'
+
+export const C: Cls2;
+declare class Cls {}
+--- */

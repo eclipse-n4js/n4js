@@ -10,23 +10,27 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform
 
+import com.google.common.base.Strings
 import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.Collections
 import java.util.HashMap
 import java.util.List
 import java.util.Map
+import java.util.Objects
 import java.util.function.Consumer
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -476,8 +480,21 @@ class TypeReferenceTransformation extends Transformation {
 			if (type.exported && isFromSameProjectOrDirectDependency(type)) {
 				// note: no need to check accessibility modifiers in addition to #isExported(), because on TypeScript-side we bump up the accessibility
 
+				val alias = hasNameConflict(ste, ste.name)? findConflictFreeName(ste) : null;
+
 				// add a new named import for this type
-				addNamedImport(ste, null); // FIXME use alias if name already in use!
+				addNamedImport(ste, alias);
+				
+				
+				for (idElem : state.steCache.mapOriginal.keySet) {
+					idElem.name
+				}
+
+				val is = ste.importSpecifier;
+				ste.name = switch (is) {
+					NamedImportSpecifier: Strings.isNullOrEmpty(is.alias) ? is.importedElementAsText : is.alias
+					NamespaceImportSpecifier: is.alias
+				}
 				isAvailable = ste.importSpecifier !== null;
 			}
 		}
@@ -504,6 +521,20 @@ class TypeReferenceTransformation extends Transformation {
 
 		// we tried our best, but this type is not available in the current file AND cannot be made available
 		return null;
+	}
+	
+	def private boolean hasNameConflict(SymbolTableEntryOriginal ste, String name) {
+		return state.steCache.mapOriginal.keySet.exists[
+			it != ste.originalTarget && Objects.equals(it.name, name)
+		];
+	}
+	
+	def private String findConflictFreeName(SymbolTableEntryOriginal ste) {
+		var i = 2;
+		while (hasNameConflict(ste, ste.name + i)) {
+			i++;
+		}
+		return ste.name + i;
 	}
 
 	def private boolean isFromSameFileOrStaticPolyfill(Type type) {
