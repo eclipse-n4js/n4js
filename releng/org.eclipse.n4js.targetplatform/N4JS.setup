@@ -293,7 +293,7 @@
     <requirement
         name="org.eclipse.lsp4j.sdk.feature.group"/>
     <repository
-        url="http://download.eclipse.org/lsp4j/updates/releases/0.10.0"/>
+        url="http://download.eclipse.org/lsp4j/updates/releases/0.12.0"/>
   </setupTask>
   <setupTask
       xsi:type="git:GitCloneTask"
@@ -411,7 +411,7 @@
         <repository
             url="http://download.eclipse.org/usssdk/drops/release/1.2.2"/>
         <repository
-            url="http://download.eclipse.org/lsp4j/updates/releases/0.10.0"/>
+            url="http://download.eclipse.org/lsp4j/updates/releases/0.12.0"/>
       </repositoryList>
     </targlet>
   </setupTask>

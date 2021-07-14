@@ -608,24 +608,22 @@ public class ProjectStatePersister {
 		}
 	}
 
-	private static final Severity[] severities = Severity.values();
-
 	private static Severity severityFromKey(int severityKey) {
 		switch (severityKey) {
 		case 0:
 			return null;
 		default:
+			Severity[] severities = Severity.values();
 			return severities[severityKey - 1];
 		}
 	}
-
-	private static final CheckType[] checkTypes = CheckType.values();
 
 	private static CheckType checkTypeFromKey(int checkTypeKey) {
 		switch (checkTypeKey) {
 		case 0:
 			return null;
 		default:
+			CheckType[] checkTypes = CheckType.values();
 			return checkTypes[checkTypeKey - 1];
 		}
 	}
