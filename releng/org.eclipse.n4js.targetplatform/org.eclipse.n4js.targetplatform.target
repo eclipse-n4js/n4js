@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_2021_06" sequenceNumber="162">
+<target name="Generated target-platform N4JS:N4JS_2021_06" sequenceNumber="163">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.xtext.testing" version="2.25.0.v20210301-0843"/>
-      <unit id="org.eclipse.xtext.ui.codetemplates.ui" version="2.25.0.v20210301-0928"/>
-      <unit id="org.eclipse.xtext.xbase" version="2.25.0.v20210301-0909"/>
-      <unit id="org.eclipse.xtext.xtext.generator" version="2.25.0.v20210301-0843"/>
-      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.25.0"/>
+      <unit id="org.eclipse.xtext.testing" version="2.26.0.v20210527-0816"/>
+      <unit id="org.eclipse.xtext.ui.codetemplates.ui" version="2.26.0.v20210527-0847"/>
+      <unit id="org.eclipse.xtext.xbase" version="2.26.0.v20210527-0827"/>
+      <unit id="org.eclipse.xtext.xtext.generator" version="2.26.0.v20210527-0816"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/milestones"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="javaewah" version="1.1.7.v20200107-0831"/>
+      <unit id="net.i2p.crypto.eddsa" version="0.3.0.v20181102-1323"/>
+      <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
+      <unit id="org.apache.sshd.osgi" version="2.2.0.v20190425-2127"/>
+      <unit id="org.apache.sshd.sftp" version="2.2.0.v20190425-2127"/>
+      <unit id="org.eclipse.egit.core" version="5.7.0.202003110725-r"/>
+      <unit id="org.eclipse.jgit" version="5.7.0.202003110725-r"/>
+      <unit id="org.eclipse.jgit.http.apache" version="5.7.0.202003110725-r"/>
+      <unit id="org.eclipse.jgit.ssh.apache" version="5.7.0.202003110725-r"/>
+      <unit id="org.kohsuke.args4j" version="2.33.0.v20160323-2218"/>
+      <repository location="http://download.eclipse.org/egit/updates-5.7"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="com.google.gson" version="2.8.6.v20201231-1626"/>
-      <unit id="com.jcraft.jsch" version="0.1.55.v20190404-1902"/>
       <unit id="javax.inject" version="1.0.0.v20091030"/>
       <unit id="org.apache.ant" version="1.10.10.v20210426-1926"/>
       <unit id="org.apache.batik.i18n" version="1.14.0.v20210324-0332"/>
@@ -20,17 +32,16 @@
       <unit id="org.apache.commons.logging" version="1.2.0.v20180409-1502"/>
       <unit id="org.apache.httpcomponents.httpclient" version="4.5.13.v20210128-2225"/>
       <unit id="org.apache.httpcomponents.httpcore" version="4.4.14.v20210128-2225"/>
-      <unit id="org.apache.sshd.osgi" version="2.6.0.v20210201-2003"/>
       <unit id="org.apache.xmlgraphics" version="2.6.0.v20210409-0748"/>
       <unit id="org.bouncycastle.bcpg" version="1.65.0.v20200527-1955"/>
       <unit id="org.bouncycastle.bcprov" version="1.65.1.v20200529-1514"/>
-      <unit id="org.eclipse.core.net" version="1.3.1100.v20210424-0724"/>
       <unit id="org.eclipse.e4.core.di.extensions.supplier" version="0.16.0.v20210412-1358"/>
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1200.v20210527-0259"/>
       <unit id="org.eclipse.equinox.p2.metadata.repository" version="1.4.0.v20210315-2228"/>
       <unit id="org.eclipse.equinox.p2.repository" version="2.5.100.v20210329-1206"/>
       <unit id="org.eclipse.jdt.ui" version="3.23.0.v20210530-1810"/>
       <unit id="org.eclipse.jface.notifications" version="0.3.0.v20210218-1820"/>
+      <unit id="org.eclipse.jsch.core" version="1.3.900.v20200422-1935"/>
       <unit id="org.eclipse.osgi.util" version="3.6.0.v20210212-1137"/>
       <unit id="org.junit" version="4.13.0.v20200204-1500"/>
       <unit id="org.objectweb.asm" version="9.1.0.v20210209-1849"/>
@@ -51,19 +62,8 @@
       <unit id="com.fasterxml.jackson.core.jackson-core" version="2.12.1.v20210128-1726"/>
       <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.12.1.v20210128-1726"/>
       <unit id="com.google.guava" version="27.1.0.v20190517-1946"/>
-      <unit id="com.google.inject" version="3.0.0.v201605172100"/>
       <unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="javaewah" version="1.1.7.v20200107-0831"/>
-      <unit id="net.i2p.crypto.eddsa" version="0.3.0.v20181102-1323"/>
-      <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
-      <unit id="org.apache.sshd.sftp" version="2.2.0.v20190425-2127"/>
-      <unit id="org.eclipse.egit.core" version="5.7.0.202003110725-r"/>
-      <unit id="org.eclipse.jgit" version="5.7.0.202003110725-r"/>
-      <unit id="org.kohsuke.args4j" version="2.33.0.v20160323-2218"/>
-      <repository location="http://download.eclipse.org/egit/updates-5.7"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.lsp4j" version="0.10.0.v20201105-1103"/>
