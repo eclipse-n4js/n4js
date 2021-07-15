@@ -21,6 +21,9 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.n4JS.FunctionDeclaration
+import com.google.common.collect.Iterables
+import java.util.Collections
 
 /**
  * Makes the inferred type of
@@ -54,10 +57,17 @@ class InferredTypesTransformation extends Transformation {
 			val rootElem = if (rootElemRaw instanceof ExportDeclaration) rootElemRaw.exportedElement else rootElemRaw;
 
 			// obtain those typed elements, that may have an inferred type
-			// (e.g. variables and fields, but not getters, setters, fpars)
+			// (e.g. variables and fields, but not getters, setters)
 			val typedElems = switch (rootElem) {
 				VariableStatement: rootElem.varDecl // note: returns also variable declarations that are arbitrarily nested in a destructure pattern
-				N4ClassifierDeclaration: rootElem.ownedFields
+				N4ClassifierDeclaration: {
+					Iterables.concat(
+						rootElem.ownedFields,
+						rootElem.ownedMethods.flatMap[fpars],
+						rootElem.ownedCtor === null ? Collections.emptyList : rootElem.ownedCtor.fpars
+					);
+				}
+				FunctionDeclaration: rootElem.fpars
 			};
 
 			if (typedElems !== null) {

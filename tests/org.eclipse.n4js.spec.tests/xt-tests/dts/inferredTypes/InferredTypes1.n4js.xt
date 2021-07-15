@@ -20,15 +20,18 @@ class Cls {}
 function supplyString(): string { return null; }
 function supplyObject(): Object { return null; }
 function supplyCls(): Cls { return null; }
+function paramString(p = ""): void { }
 
 export let x1 = supplyString();
 export let x2 = supplyObject();
 export let x3 = supplyCls();
 
 export class ClassWithFields {
+    constructor(p = 2) { }
 	public f1 = supplyString();
 	public f2 = supplyObject();
 	public f3 = supplyCls();
+	paramString(p = ""): void { }
 }
 
 
@@ -37,12 +40,15 @@ declare class Cls {}
 declare function supplyString(): string;
 declare function supplyObject(): Object;
 declare function supplyCls(): Cls;
+declare function paramString(p?: string): void;
 export let x1: string;
 export let x2: Object;
 export let x3: Cls;
 export class ClassWithFields {
+	constructor(p?: number);
 	public f1: string;
 	public f2: Object;
 	public f3: Cls;
+	paramString(p?: string): void;
 }
 --- */
