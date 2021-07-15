@@ -319,6 +319,23 @@ public class ContainerTypesHelper {
 		}
 
 		/**
+		 * Returns all inherited members from all super classes and interfaces transitively.
+		 */
+		public MemberList<TMember> allInheritedMembers(TClass clazz) {
+			MemberList<TMember> allInheritedMembers = new MemberList<>();
+
+			allInheritedMembers.addAll(inheritedMembers(clazz));
+
+			Iterable<ParameterizedTypeRef> interfaces = clazz.getImplementedInterfaceRefs();
+			for (ParameterizedTypeRef interfaceTypeRef : interfaces) {
+
+				allInheritedMembers.addAll(members((ContainerType<?>) interfaceTypeRef.getDeclaredType(),
+						m -> m.getContainingType() != clazz)); // avoid problems with cycles
+			}
+			return allInheritedMembers;
+		}
+
+		/**
 		 * Returns all members of (directly) implemented interfaces that are candidates for being consumed by an
 		 * implementing class. This list does not contain any duplicates. Note that the members may not actually be
 		 * consumed by the class, as they may either already be defined in a super class (in which case they do not get

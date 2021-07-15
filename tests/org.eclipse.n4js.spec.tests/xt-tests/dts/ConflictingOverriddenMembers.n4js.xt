@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.TEMP_DtsXtTest 
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+class Omit1_A {
+    a: string;
+}
+class Omit1_B extends Omit1_A {
+    @Override
+    set a(val : string) {} // should be omitted
+    @Override
+    get a() : string {return "";} // should be omitted
+}
+
+class Omit2_A {
+    set a(val : string) {}
+    get a() : string {return "";}
+}
+class Omit2_B extends Omit2_A {
+    @Override
+    a: string; // should be omitted
+}
+
+class FieldToGetter1_A {
+    set a(val : string) {}
+}
+class FieldToGetter1_B extends FieldToGetter1_A {
+    @Override
+    a: string; // should be converted to getter
+}
+
+class FieldToSetter1_A {
+    get a() : string {return "";}
+}
+class FieldToSetter1_B extends FieldToSetter1_A {
+    @Override
+    a: string; // should be converted to setter
+}
+
+
+/* XPECT generated_dts ---
+declare class Omit1_A {
+	a: string;
+}
+declare class Omit1_B extends Omit1_A {}
+declare class Omit2_A {
+	set a(val: string);
+	get a(): string;
+}
+declare class Omit2_B extends Omit2_A {}
+declare class FieldToGetter1_A {
+	set a(val: string);
+}
+declare class FieldToGetter1_B extends FieldToGetter1_A {
+	get a(): string;
+}
+declare class FieldToSetter1_A {
+	get a(): string;
+}
+declare class FieldToSetter1_B extends FieldToSetter1_A {
+	set a(value: string);
+}
+--- */
