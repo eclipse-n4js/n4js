@@ -77,6 +77,10 @@ import com.google.inject.Singleton;
 public class ProjectStatePersister {
 	private static final Logger LOG = LogManager.getLogger(ProjectStatePersister.class);
 
+	private static final Severity[] SEVERITIES = Severity.values();
+
+	private static final CheckType[] CHECK_TYPES = CheckType.values();
+
 	/**
 	 * After the version, the stream contains a zipped, data stream of the following shape:
 	 *
@@ -613,8 +617,7 @@ public class ProjectStatePersister {
 		case 0:
 			return null;
 		default:
-			Severity[] severities = Severity.values();
-			return severities[severityKey - 1];
+			return SEVERITIES[severityKey - 1];
 		}
 	}
 
@@ -623,8 +626,7 @@ public class ProjectStatePersister {
 		case 0:
 			return null;
 		default:
-			CheckType[] checkTypes = CheckType.values();
-			return checkTypes[checkTypeKey - 1];
+			return CHECK_TYPES[checkTypeKey - 1];
 		}
 	}
 
