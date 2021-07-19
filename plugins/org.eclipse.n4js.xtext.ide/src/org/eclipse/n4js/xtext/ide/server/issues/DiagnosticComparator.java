@@ -37,10 +37,10 @@ public class DiagnosticComparator implements Comparator<Diagnostic> {
 						d1.getSeverity() != null ? d1.getSeverity() : DiagnosticSeverity.Hint,
 						d2.getSeverity() != null ? d2.getSeverity() : DiagnosticSeverity.Hint)
 				.compare(
-						d1.getCode() != null ? d1.getCode().getLeft() != null ? d1.getCode().getLeft()
-								: d1.getCode().getRight().intValue() : "",
-						d2.getCode() != null ? d2.getCode().getLeft() != null ? d1.getCode().getLeft()
-								: d1.getCode().getRight().intValue() : "")
+						d1.getCode() != null ? (d1.getCode().getLeft() != null ? d1.getCode().getLeft()
+								: (d1.getCode().getRight() != null ? d1.getCode().getRight().intValue() : 0)) : "",
+						d2.getCode() != null ? (d2.getCode().getLeft() != null ? d1.getCode().getLeft()
+								: (d1.getCode().getRight() != null ? d1.getCode().getRight().intValue() : 0)) : "")
 				.compare(
 						d1.getMessage() != null ? d1.getMessage() : "",
 						d2.getMessage() != null ? d2.getMessage() : "")
