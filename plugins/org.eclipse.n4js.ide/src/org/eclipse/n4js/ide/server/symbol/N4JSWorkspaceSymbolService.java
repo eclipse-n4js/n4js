@@ -26,11 +26,13 @@ import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Customized to always use the {@link N4JSDocumentSymbolService} when collecting workspace symbols, not the
  * language-specific {@link DocumentSymbolService} returned by the {@link IResourceServiceProvider}.
  */
+@Singleton
 @SuppressWarnings("restriction")
 public class N4JSWorkspaceSymbolService extends WorkspaceSymbolService {
 

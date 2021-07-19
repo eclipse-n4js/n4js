@@ -17,6 +17,7 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.symbol.XDocumentSymbolService;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -29,8 +30,8 @@ import com.google.inject.Singleton;
 
 /**
  * Custom N4JS implementation of {@link XDocumentSymbolService} taking advantage of additional location information in
- * the user data of {@link IEObjectDescription}s, thus avoiding to load resources or deserializing TModules obtaining
- * symbol information. See {@link #getSymbolLocation(IEObjectDescription)}.
+ * the user data of {@link IEObjectDescription}s, thus avoiding to load resources or deserializing TModules when
+ * obtaining symbol information. See {@link #getSymbolLocation(IEObjectDescription)}.
  */
 @Singleton
 @SuppressWarnings("restriction")
@@ -56,9 +57,9 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 		// filtering of workspace symbols is performed on the server side (by this method). To have consistent
 		// filtering across these use cases (at least in VS Code), we here mimic VS Code's filtering logic.
 		// FIXME deactivated for now, because it leads to too many matches and therefore the transmission delay!
-		// return UtilN4.isMatchAccordingToVSCode(name, query);
+		return UtilN4.isMatchAccordingToVSCode(name, query);
 
-		return name.toLowerCase().contains(query.toLowerCase());
+		// return name.toLowerCase().contains(query.toLowerCase());
 	}
 
 	@Override
