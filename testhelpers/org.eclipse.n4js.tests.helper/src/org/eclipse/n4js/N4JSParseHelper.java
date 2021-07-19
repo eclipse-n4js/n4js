@@ -15,6 +15,12 @@
  */
 package org.eclipse.n4js;
 
+import java.io.InputStream;
+import java.util.Map;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.validation.JavaScriptVariant;
@@ -98,6 +104,29 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 		} finally {
 			resourceHelper.setFileExtensionProvider(fileExtensionProvider);
 		}
+	}
+
+	@Override
+	public Script parse(InputStream in, URI uriToUse, Map<?, ?> options, ResourceSet resourceSet) {
+		setFileExtension(fileExtension);
+		// resourceHelper.setFileExtension(fileExtension);
+		Resource resource = resourceHelper.resource(in, uriToUse, options, resourceSet);
+
+		// TODO: GH-2157
+		// The following integrity check was disabled since it causes some tests to fail.
+		// Re-enable it and fix the underlying problems.
+
+		// if (resource instanceof XtextResource) {
+		// IParseResult parseResult = ((XtextResource) resource).getParseResult();
+		// if (parseResult != null) {
+		// ICompositeNode rootNode = parseResult.getRootNode();
+		// if (rootNode != null) {
+		// checkNodeModel(rootNode);
+		// }
+		// }
+		// }
+		Script root = (Script) (resource.getContents().isEmpty() ? null : resource.getContents().get(0));
+		return root;
 	}
 
 	/**

@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.lsp4j.CallHierarchyCall;
-import org.eclipse.lsp4j.CallHierarchyParams;
+import org.eclipse.lsp4j.CallHierarchyIncomingCall;
+import org.eclipse.lsp4j.CallHierarchyIncomingCallsParams;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCall;
+import org.eclipse.lsp4j.CallHierarchyOutgoingCallsParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
@@ -27,6 +29,8 @@ import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.DeclarationParams;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
@@ -37,6 +41,7 @@ import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.DocumentColorParams;
 import org.eclipse.lsp4j.DocumentFormattingParams;
 import org.eclipse.lsp4j.DocumentHighlight;
+import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentLink;
 import org.eclipse.lsp4j.DocumentLinkParams;
 import org.eclipse.lsp4j.DocumentOnTypeFormattingParams;
@@ -47,9 +52,12 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FoldingRange;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.HoverParams;
+import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
+import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
@@ -58,9 +66,10 @@ import org.eclipse.lsp4j.ResolveTypeHierarchyItemParams;
 import org.eclipse.lsp4j.SelectionRange;
 import org.eclipse.lsp4j.SelectionRangeParams;
 import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.TypeHierarchyItem;
 import org.eclipse.lsp4j.TypeHierarchyParams;
 import org.eclipse.lsp4j.WillSaveTextDocumentParams;
@@ -214,37 +223,37 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	}
 
 	@Override
-	public CompletableFuture<Hover> hover(TextDocumentPositionParams position) {
-		return textDocumentFrontend.hover(position);
+	public CompletableFuture<Hover> hover(HoverParams params) {
+		return textDocumentFrontend.hover(params);
 	}
 
 	@Override
-	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams position) {
-		return textDocumentFrontend.signatureHelp(position);
+	public CompletableFuture<SignatureHelp> signatureHelp(SignatureHelpParams params) {
+		return textDocumentFrontend.signatureHelp(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> declaration(
-			TextDocumentPositionParams params) {
+			DeclarationParams params) {
 		return textDocumentFrontend.declaration(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
-			TextDocumentPositionParams position) {
-		return textDocumentFrontend.definition(position);
+			DefinitionParams params) {
+		return textDocumentFrontend.definition(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(
-			TextDocumentPositionParams position) {
-		return textDocumentFrontend.typeDefinition(position);
+			TypeDefinitionParams params) {
+		return textDocumentFrontend.typeDefinition(params);
 	}
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
-			TextDocumentPositionParams position) {
-		return textDocumentFrontend.implementation(position);
+			ImplementationParams params) {
+		return textDocumentFrontend.implementation(params);
 	}
 
 	@Override
@@ -253,8 +262,8 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	}
 
 	@Override
-	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams position) {
-		return textDocumentFrontend.documentHighlight(position);
+	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(DocumentHighlightParams params) {
+		return textDocumentFrontend.documentHighlight(params);
 	}
 
 	@Override
@@ -324,7 +333,7 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 	}
 
 	@Override
-	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(TextDocumentPositionParams params) {
+	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
 		return textDocumentFrontend.prepareRename(params);
 	}
 
@@ -342,8 +351,16 @@ public class LanguageServerFrontend implements TextDocumentService, WorkspaceSer
 
 	@Override
 	@Beta
-	public CompletableFuture<List<CallHierarchyCall>> callHierarchy(CallHierarchyParams params) {
-		return textDocumentFrontend.callHierarchy(params);
+	public CompletableFuture<List<CallHierarchyIncomingCall>> callHierarchyIncomingCalls(
+			CallHierarchyIncomingCallsParams params) {
+		return textDocumentFrontend.callHierarchyIncomingCalls(params);
+	}
+
+	@Override
+	@Beta
+	public CompletableFuture<List<CallHierarchyOutgoingCall>> callHierarchyOutgoingCalls(
+			CallHierarchyOutgoingCallsParams params) {
+		return textDocumentFrontend.callHierarchyOutgoingCalls(params);
 	}
 
 	@Override

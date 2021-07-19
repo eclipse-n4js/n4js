@@ -129,7 +129,7 @@ class JSONHierarchicalSymbolServiceTest extends AbstractLanguageServerTest {
 			    range: «range.toExpectation»
 			    selectionRange: «selectionRange.toExpectation»
 			    details: «detail»
-			    deprecated: «deprecated»
+			    deprecated: «DocumentSymbolSuppressDeprecationUtil.getDeprecated(it)»
 			    «IF !children.nullOrEmpty»
 			        children: [
 			            «FOR child : children SEPARATOR'\n'»

@@ -477,7 +477,7 @@ ruleTypeRef returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTypeRefRule());
 					}
-					setWithLastConsumed($current, "followedByQuestionMark", true, "?");
+					setWithLastConsumed($current, "followedByQuestionMark", lv_followedByQuestionMark_1_0 != null, "?");
 				}
 			)
 		)?
@@ -1236,7 +1236,7 @@ ruleTObjectPrototype returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTObjectPrototypeRule());
 					}
-					setWithLastConsumed($current, "declaredProvidedByRuntime", true, "providedByRuntime");
+					setWithLastConsumed($current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
 				}
 			)
 		)?
@@ -1250,7 +1250,7 @@ ruleTObjectPrototype returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTObjectPrototypeRule());
 					}
-					setWithLastConsumed($current, "declaredFinal", true, "final");
+					setWithLastConsumed($current, "declaredFinal", lv_declaredFinal_2_0 != null, "final");
 				}
 			)
 		)?
@@ -1584,7 +1584,7 @@ ruleTClass returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTClassRule());
 					}
-					setWithLastConsumed($current, "declaredProvidedByRuntime", true, "providedByRuntime");
+					setWithLastConsumed($current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
 				}
 			)
 		)?
@@ -1598,7 +1598,7 @@ ruleTClass returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTClassRule());
 					}
-					setWithLastConsumed($current, "declaredAbstract", true, "abstract");
+					setWithLastConsumed($current, "declaredAbstract", lv_declaredAbstract_2_0 != null, "abstract");
 				}
 			)
 		)?
@@ -1612,7 +1612,7 @@ ruleTClass returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTClassRule());
 					}
-					setWithLastConsumed($current, "declaredFinal", true, "final");
+					setWithLastConsumed($current, "declaredFinal", lv_declaredFinal_3_0 != null, "final");
 				}
 			)
 		)?
@@ -1849,7 +1849,7 @@ ruleTInterface returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTInterfaceRule());
 					}
-					setWithLastConsumed($current, "declaredProvidedByRuntime", true, "providedByRuntime");
+					setWithLastConsumed($current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
 				}
 			)
 		)?
@@ -2530,7 +2530,7 @@ ruleTMethod returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getTMethodRule());
 								}
-								setWithLastConsumed($current, "declaredAbstract", true, "abstract");
+								setWithLastConsumed($current, "declaredAbstract", lv_declaredAbstract_1_0 != null, "abstract");
 							}
 						)
 					)
@@ -2545,7 +2545,7 @@ ruleTMethod returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getTMethodRule());
 								}
-								setWithLastConsumed($current, "declaredStatic", true, "static");
+								setWithLastConsumed($current, "declaredStatic", lv_declaredStatic_2_0 != null, "static");
 							}
 						)
 					)
@@ -2560,7 +2560,7 @@ ruleTMethod returns [EObject current=null]
 							if ($current==null) {
 								$current = createModelElement(grammarAccess.getTMethodRule());
 							}
-							setWithLastConsumed($current, "declaredAsync", true, "async");
+							setWithLastConsumed($current, "declaredAsync", lv_declaredAsync_3_0 != null, "async");
 						}
 					)
 				)?
@@ -2700,7 +2700,7 @@ ruleTField returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTFieldRule());
 						}
-						setWithLastConsumed($current, "declaredStatic", true, "static");
+						setWithLastConsumed($current, "declaredStatic", lv_declaredStatic_1_0 != null, "static");
 					}
 				)
 			)
@@ -2715,7 +2715,7 @@ ruleTField returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTFieldRule());
 						}
-						setWithLastConsumed($current, "const", true, "const");
+						setWithLastConsumed($current, "const", lv_const_2_0 != null, "const");
 					}
 				)
 			)
@@ -2730,7 +2730,7 @@ ruleTField returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTFieldRule());
 						}
-						setWithLastConsumed($current, "declaredFinal", true, "final");
+						setWithLastConsumed($current, "declaredFinal", lv_declaredFinal_3_0 != null, "final");
 					}
 				)
 			)
@@ -2786,7 +2786,7 @@ ruleTField returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTFieldRule());
 					}
-					setWithLastConsumed($current, "optional", true, "?");
+					setWithLastConsumed($current, "optional", lv_optional_6_0 != null, "?");
 				}
 			)
 		)?
@@ -2893,7 +2893,7 @@ ruleTGetter returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getTGetterRule());
 								}
-								setWithLastConsumed($current, "declaredAbstract", true, "abstract");
+								setWithLastConsumed($current, "declaredAbstract", lv_declaredAbstract_1_0 != null, "abstract");
 							}
 						)
 					)
@@ -2908,7 +2908,7 @@ ruleTGetter returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getTGetterRule());
 								}
-								setWithLastConsumed($current, "declaredStatic", true, "static");
+								setWithLastConsumed($current, "declaredStatic", lv_declaredStatic_2_0 != null, "static");
 							}
 						)
 					)
@@ -2970,7 +2970,7 @@ ruleTGetter returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTGetterRule());
 					}
-					setWithLastConsumed($current, "optional", true, "?");
+					setWithLastConsumed($current, "optional", lv_optional_6_0 != null, "?");
 				}
 			)
 		)?
@@ -3079,7 +3079,7 @@ ruleTSetter returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getTSetterRule());
 								}
-								setWithLastConsumed($current, "declaredAbstract", true, "abstract");
+								setWithLastConsumed($current, "declaredAbstract", lv_declaredAbstract_1_0 != null, "abstract");
 							}
 						)
 					)
@@ -3094,7 +3094,7 @@ ruleTSetter returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getTSetterRule());
 								}
-								setWithLastConsumed($current, "declaredStatic", true, "static");
+								setWithLastConsumed($current, "declaredStatic", lv_declaredStatic_2_0 != null, "static");
 							}
 						)
 					)
@@ -3156,7 +3156,7 @@ ruleTSetter returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTSetterRule());
 					}
-					setWithLastConsumed($current, "optional", true, "?");
+					setWithLastConsumed($current, "optional", lv_optional_6_0 != null, "?");
 				}
 			)
 		)?
@@ -3235,7 +3235,7 @@ ruleTFunction returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTFunctionRule());
 					}
-					setWithLastConsumed($current, "declaredProvidedByRuntime", true, "providedByRuntime");
+					setWithLastConsumed($current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
 				}
 			)
 		)?
@@ -3345,7 +3345,7 @@ ruleTEnum returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTEnumRule());
 					}
-					setWithLastConsumed($current, "declaredProvidedByRuntime", true, "providedByRuntime");
+					setWithLastConsumed($current, "declaredProvidedByRuntime", lv_declaredProvidedByRuntime_1_0 != null, "providedByRuntime");
 				}
 			)
 		)?
@@ -3515,7 +3515,7 @@ ruleArrayTypeExpression returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
 						}
-						setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+						setWithLastConsumed($current, "arrayTypeExpression", lv_arrayTypeExpression_2_0 != null, "[");
 					}
 				)
 			)
@@ -3553,7 +3553,7 @@ ruleArrayTypeExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
 								}
-								setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+								setWithLastConsumed($current, "arrayTypeExpression", lv_arrayTypeExpression_5_0 != null, "[");
 							}
 						)
 					)
@@ -3610,7 +3610,7 @@ ruleArrayTypeExpression returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
 						}
-						setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+						setWithLastConsumed($current, "arrayTypeExpression", lv_arrayTypeExpression_11_0 != null, "[");
 					}
 				)
 			)
@@ -3648,7 +3648,7 @@ ruleArrayTypeExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
 								}
-								setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+								setWithLastConsumed($current, "arrayTypeExpression", lv_arrayTypeExpression_14_0 != null, "[");
 							}
 						)
 					)
@@ -3699,7 +3699,7 @@ ruleArrayTypeExpression returns [EObject current=null]
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
 								}
-								setWithLastConsumed($current, "arrayTypeExpression", true, "[");
+								setWithLastConsumed($current, "arrayTypeExpression", lv_arrayTypeExpression_18_0 != null, "[");
 							}
 						)
 					)
@@ -3826,7 +3826,7 @@ ruleTypeRefWithModifiers returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTypeRefWithModifiersRule());
 					}
-					setWithLastConsumed($current, "followedByQuestionMark", true, "?");
+					setWithLastConsumed($current, "followedByQuestionMark", lv_followedByQuestionMark_1_0 != null, "?");
 				}
 			)
 		)?
@@ -3883,7 +3883,7 @@ ruleTypeRefWithoutModifiers returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTypeRefWithoutModifiersRule());
 						}
-						setWithLastConsumed($current, "dynamic", true, "+");
+						setWithLastConsumed($current, "dynamic", lv_dynamic_2_0 != null, "+");
 					}
 				)
 			)?
@@ -4493,7 +4493,7 @@ ruleTAnonymousFormalParameter returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTAnonymousFormalParameterRule());
 					}
-					setWithLastConsumed($current, "variadic", true, "...");
+					setWithLastConsumed($current, "variadic", lv_variadic_0_0 != null, "...");
 				}
 			)
 		)?
@@ -4605,7 +4605,7 @@ ruleTFormalParameter returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTFormalParameterRule());
 					}
-					setWithLastConsumed($current, "variadic", true, "...");
+					setWithLastConsumed($current, "variadic", lv_variadic_0_0 != null, "...");
 				}
 			)
 		)?
@@ -4673,7 +4673,7 @@ ruleDefaultFormalParameter[EObject in_current]  returns [EObject current=in_curr
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getDefaultFormalParameterRule());
 					}
-					setWithLastConsumed($current, "hasInitializerAssignment", true, "=");
+					setWithLastConsumed($current, "hasInitializerAssignment", lv_hasInitializerAssignment_0_0 != null, "=");
 				}
 			)
 		)
@@ -5138,7 +5138,7 @@ ruleIterableTypeExpression returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getIterableTypeExpressionRule());
 					}
-					setWithLastConsumed($current, "iterableTypeExpression", true, "[");
+					setWithLastConsumed($current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
 				}
 			)
 		)
@@ -5807,7 +5807,7 @@ ruleTStructField returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTStructFieldRule());
 					}
-					setWithLastConsumed($current, "optional", true, "?");
+					setWithLastConsumed($current, "optional", lv_optional_1_0 != null, "?");
 				}
 			)
 		)?
@@ -5898,7 +5898,7 @@ ruleTStructGetter returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTStructGetterRule());
 					}
-					setWithLastConsumed($current, "optional", true, "?");
+					setWithLastConsumed($current, "optional", lv_optional_3_0 != null, "?");
 				}
 			)
 		)?
@@ -5997,7 +5997,7 @@ ruleTStructSetter returns [EObject current=null]
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getTStructSetterRule());
 					}
-					setWithLastConsumed($current, "optional", true, "?");
+					setWithLastConsumed($current, "optional", lv_optional_3_0 != null, "?");
 				}
 			)
 		)?
@@ -6131,7 +6131,7 @@ ruleTypeTypeRef returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTypeTypeRefRule());
 						}
-						setWithLastConsumed($current, "constructorRef", true, "constructor");
+						setWithLastConsumed($current, "constructorRef", lv_constructorRef_2_0 != null, "constructor");
 					}
 				)
 			)
@@ -6396,7 +6396,7 @@ ruleWildcardNewNotation returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getWildcardNewNotationRule());
 						}
-						setWithLastConsumed($current, "usingInOutNotation", true, "out");
+						setWithLastConsumed($current, "usingInOutNotation", lv_usingInOutNotation_0_0 != null, "out");
 					}
 				)
 			)
@@ -6432,7 +6432,7 @@ ruleWildcardNewNotation returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getWildcardNewNotationRule());
 						}
-						setWithLastConsumed($current, "usingInOutNotation", true, "in");
+						setWithLastConsumed($current, "usingInOutNotation", lv_usingInOutNotation_2_0 != null, "in");
 					}
 				)
 			)
@@ -6486,7 +6486,7 @@ superTypeVariable returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTypeExpressionsTypeVariableRule());
 						}
-						setWithLastConsumed($current, "declaredCovariant", true, "out");
+						setWithLastConsumed($current, "declaredCovariant", lv_declaredCovariant_0_0 != null, "out");
 					}
 				)
 			)
@@ -6501,7 +6501,7 @@ superTypeVariable returns [EObject current=null]
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getTypeExpressionsTypeVariableRule());
 						}
-						setWithLastConsumed($current, "declaredContravariant", true, "in");
+						setWithLastConsumed($current, "declaredContravariant", lv_declaredContravariant_1_0 != null, "in");
 					}
 				)
 			)

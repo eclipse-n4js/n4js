@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.ide.server.XIWorkspaceConfigFactory;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -28,6 +27,7 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
@@ -54,7 +54,6 @@ import com.google.inject.Singleton;
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings({ "deprecation" })
 @Singleton
 public class XWorkspaceManager {
 
@@ -325,7 +324,7 @@ public class XWorkspaceManager {
 	/**
 	 * Returns the workspace issues known for the given URI.
 	 */
-	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+	public ImmutableList<? extends Issue> getValidationIssues(URI uri) {
 		ProjectBuilder projectBuilder = getProjectBuilder(uri);
 		if (projectBuilder != null) {
 			return projectBuilder.getValidationIssues(uri);

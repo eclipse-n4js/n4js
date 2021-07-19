@@ -18,9 +18,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.ide.server.UriExtensions;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,7 +28,6 @@ import com.google.inject.Singleton;
 /**
  *
  */
-@SuppressWarnings("deprecation")
 @Singleton
 public class PublishingIssueAcceptor implements IssueAcceptor {
 
@@ -36,7 +35,7 @@ public class PublishingIssueAcceptor implements IssueAcceptor {
 	private UriExtensions uriExtensions;
 
 	@Inject
-	private LSPIssueToLSPDiagnosticConverter diagnosticIssueConverter;
+	private IssueToDiagnosticConverter diagnosticIssueConverter;
 
 	private LanguageClient client;
 
@@ -54,7 +53,7 @@ public class PublishingIssueAcceptor implements IssueAcceptor {
 
 	/** Converts given issues to {@link Diagnostic}s and sends them to LSP client */
 	@Override
-	public void accept(URI uri, List<? extends LSPIssue> issues) {
+	public void accept(URI uri, List<? extends Issue> issues) {
 		if (client != null) {
 			PublishDiagnosticsParams publishDiagnosticsParams = new PublishDiagnosticsParams();
 			publishDiagnosticsParams.setUri(uriExtensions.toUriString(uri));
@@ -67,13 +66,13 @@ public class PublishingIssueAcceptor implements IssueAcceptor {
 	/**
 	 * Convert the given issues to diagnostics. Does not return any issue with severity {@link Severity#IGNORE ignore}.
 	 */
-	protected List<Diagnostic> toDiagnostics(List<? extends LSPIssue> issues) {
+	protected List<Diagnostic> toDiagnostics(List<? extends Issue> issues) {
 		if (issues.isEmpty()) {
 			return Collections.emptyList();
 		}
 
 		List<Diagnostic> result = new ArrayList<>();
-		for (LSPIssue issue : issues) {
+		for (Issue issue : issues) {
 			if (issue.getSeverity() != Severity.IGNORE) {
 				result.add(diagnosticIssueConverter.toDiagnostic(issue));
 			}

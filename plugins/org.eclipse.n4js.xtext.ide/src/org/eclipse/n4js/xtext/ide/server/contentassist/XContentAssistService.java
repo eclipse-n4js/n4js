@@ -12,6 +12,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
 import org.eclipse.xtext.ide.editor.contentassist.IIdeContentProposalAcceptor;
@@ -117,7 +118,7 @@ public class XContentAssistService {
 			prefix = "";
 		}
 		Position prefixPosition = document.getPosition(caretOffset - prefix.length());
-		result.setTextEdit(new TextEdit(new Range(prefixPosition, caretPosition), entry.getProposal()));
+		result.setTextEdit(Either.forLeft(new TextEdit(new Range(prefixPosition, caretPosition), entry.getProposal())));
 		if (!entry.getTextReplacements().isEmpty()) {
 			if (result.getAdditionalTextEdits() == null) {
 				result.setAdditionalTextEdits(new ArrayList<>(entry.getTextReplacements().size()));

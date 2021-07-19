@@ -11,8 +11,8 @@
 package org.eclipse.n4js.ide.tests.rename
 
 import org.eclipse.lsp4j.Position
+import org.eclipse.lsp4j.PrepareRenameParams
 import org.eclipse.lsp4j.TextDocumentIdentifier
-import org.eclipse.lsp4j.TextDocumentPositionParams
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
 
@@ -70,10 +70,10 @@ class RenameDisallowedTest extends AbstractIdeTest {
 			joinServerRequests();
 		}
 		val fileURI = getFileURIFromModuleName(moduleName);
-		val textDocumentPositionParams = new TextDocumentPositionParams();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(fileURI.toString()));
-		textDocumentPositionParams.setPosition(new Position(line, column));
-		val result = languageServer.prepareRename(textDocumentPositionParams).get();
+		val prepareRenameParams = new PrepareRenameParams();
+		prepareRenameParams.setTextDocument(new TextDocumentIdentifier(fileURI.toString()));
+		prepareRenameParams.setPosition(new Position(line, column));
+		val result = languageServer.prepareRename(prepareRenameParams).get();
 		assertTrue("expected rename to be disallowed but it is allowed",
 			result === null || (result.getLeft() === null && result.getRight() === null)
 		);

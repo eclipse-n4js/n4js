@@ -423,7 +423,7 @@ ruleURLSemver returns [EObject current=null]
 					set(
 						$current,
 						"withSemverTag",
-						true,
+						lv_withSemverTag_1_0 != null,
 						"org.eclipse.n4js.semver.Semver.SEMVER_TAG");
 					afterParserOrEnumRuleCall();
 				}
@@ -878,7 +878,7 @@ ruleSimpleVersion returns [EObject current=null]
 					setWithLastConsumed(
 						$current,
 						"withLetterV",
-						true,
+						lv_withLetterV_2_0 != null,
 						"org.eclipse.n4js.semver.Semver.LETTER_V");
 				}
 			)
@@ -1066,7 +1066,7 @@ ruleVersionPart returns [EObject current=null]
 					set(
 						$current,
 						"wildcard",
-						true,
+						lv_wildcard_0_0 != null,
 						"org.eclipse.n4js.semver.Semver.WILDCARD");
 					afterParserOrEnumRuleCall();
 				}

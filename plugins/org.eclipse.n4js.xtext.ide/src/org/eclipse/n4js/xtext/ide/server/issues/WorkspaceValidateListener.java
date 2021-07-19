@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
@@ -26,7 +25,6 @@ import com.google.inject.Singleton;
  * not currently open in an editor.
  */
 @Singleton
-@SuppressWarnings("deprecation")
 public class WorkspaceValidateListener implements AfterValidateListener {
 
 	private final IssueAcceptor acceptor;
@@ -42,7 +40,7 @@ public class WorkspaceValidateListener implements AfterValidateListener {
 
 	@Override
 	public void afterValidate(URI source, List<? extends Issue> issues) {
-		acceptor.accept(source, LSPIssue.cast(issues));
+		acceptor.accept(source, issues);
 	}
 
 }
