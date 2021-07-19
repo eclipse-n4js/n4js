@@ -19,9 +19,11 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.ide.server.WorkspaceFrontend;
+import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
@@ -35,10 +37,16 @@ import com.google.inject.Inject;
 public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 
 	@Inject
+	private LspLogger lspLogger;
+
+	@Inject
 	private ResourceTaskManager resourceTaskManager;
 
 	@Inject
 	private WorkspaceSymbolService workspaceSymbolService;
+
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	private static final IResourceAccess nonLoadingResourceAccess = new IResourceAccess() {
 		@Override
@@ -66,11 +74,11 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 		} catch (Throwable th) {
 			// It seems that if this request fails (even if due to a cancellation), then some LSP clients (e.g. VS Code)
 			// will never try a 'workspace/symbols' request again, effectively turning off operation "open workspace
-			// symbol". We don't want that, so we return an empty list here:
+			// symbol". We don't want that, so we always return an empty list here:
+			if (!operationCanceledManager.isOperationCanceledException(th)) {
+				lspLogger.error("error while computing workspace symbols", th);
+			}
 			return Collections.emptyList();
-			// FIXME #1 why is this special handling required here, but not in case of other requests?
-			// (could this be related to the use of #submitAndCancelPrevious() in the super class???)
-			// FIXME #2 report the error via the LspLogger!!!! (if it isn't a cancellation)
 		}
 	}
 }

@@ -277,10 +277,10 @@ public class UtilN4 {
 	 *
 	 * <pre>
 	 * check that characters in query string are contained in symbol name ...
-	 * - in the order they appear in the query string
-	 * - the query string must be exhausted, i.e. *all* characters of the query string must be contained in the symbol name
-	 * - if a character is contained in the query string N times, it must be contained in the symbol name N times
-	 * - case is ignored
+	 * - in the order they appear in the query string,
+	 * - the query string must be exhausted, i.e. *all* characters of the query string must be contained in the symbol name,
+	 * - if a character is contained in the query string N times, it must be contained in the symbol name N times,
+	 * - case is ignored.
 	 * </pre>
 	 */
 	public static boolean isMatchAccordingToVSCode(String candidate, String query) {
@@ -288,7 +288,7 @@ public class UtilN4 {
 		int iq = 0;
 		while (ic < candidate.length() && iq < query.length()) {
 			char cc = candidate.charAt(ic);
-			char cq = candidate.charAt(iq);
+			char cq = query.charAt(iq);
 			if (Character.toLowerCase(cc) == Character.toLowerCase(cq)) {
 				// character matches, so consume this character in the query string:
 				iq++;

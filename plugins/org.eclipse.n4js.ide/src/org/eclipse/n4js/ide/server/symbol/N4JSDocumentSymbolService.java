@@ -56,10 +56,7 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 		// Note: filtering of completion proposals and document symbols is performed on the client side, whereas
 		// filtering of workspace symbols is performed on the server side (by this method). To have consistent
 		// filtering across these use cases (at least in VS Code), we here mimic VS Code's filtering logic.
-		// FIXME deactivated for now, because it leads to too many matches and therefore the transmission delay!
 		return UtilN4.isMatchAccordingToVSCode(name, query);
-
-		// return name.toLowerCase().contains(query.toLowerCase());
 	}
 
 	@Override
