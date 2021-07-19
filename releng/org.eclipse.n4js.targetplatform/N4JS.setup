@@ -491,8 +491,8 @@
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
-  <stream name="GH-2156"
-      label="GH-2156 (2021_06)"/>    <!-- label! -->
+  <stream name="master"
+      label="master (2021_06)"/>    <!-- label! -->
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
