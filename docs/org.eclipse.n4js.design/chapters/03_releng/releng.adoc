@@ -355,3 +355,6 @@ Notes on the pipeline steps:
 - `cut -d, -f1,2` removes all columns after column two
 - `sed 's/"//g'` removes all `"`
 - `rev | sed 's/@/,/' | rev` replaces the last `@` of the line by a `,`
+
+
+This procedure can also be used for other npm-based JavaScript projects of N4JS: `@n4js-tools/n4jsd-generator` and `n4js-vscode-extension`.
