@@ -109,9 +109,7 @@ clearOutput();
 	}
 
 	def private void assertHoverResult(String expectedLanguage, String expectedText, Hover actualResult) {
-		val success = actualResult.contents.getLeft.filter[isRight].exists[
-			getRight.language == expectedLanguage && getRight.value == expectedText
-		];
+		val success = HoverSuppressDeprecationUtil.assertHoverResult(expectedLanguage, expectedText, actualResult);
 		if (!success) {
 			Assert.fail(
 				'''expected a hover with language="«expectedLanguage»" and value="«expectedText»", but got:\n'''
