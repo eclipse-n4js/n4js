@@ -193,8 +193,7 @@ public class JsonUtils {
 	 */
 	public static JsonElement loadJson(Path path) throws FileNotFoundException, IOException {
 		try (BufferedReader in = Files.newBufferedReader(path)) {
-			JsonParser parser = new JsonParser();
-			return parser.parse(in);
+			return JsonParser.parseReader(in);
 		}
 	}
 

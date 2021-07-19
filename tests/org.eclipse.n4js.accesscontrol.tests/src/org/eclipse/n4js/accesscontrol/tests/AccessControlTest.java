@@ -41,7 +41,7 @@ import org.eclipse.n4js.tests.codegen.Member;
 import org.eclipse.n4js.tests.issues.IssueExpectations;
 import org.eclipse.n4js.utils.SimpleParserException;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.xtext.ide.server.issues.LSPIssueToLSPDiagnosticConverter;
+import org.eclipse.n4js.xtext.ide.server.issues.IssueToDiagnosticConverter;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -652,7 +652,7 @@ public class AccessControlTest {
 			}
 		}
 
-		LSPIssueToLSPDiagnosticConverter converter = new LSPIssueToLSPDiagnosticConverter();
+		IssueToDiagnosticConverter converter = new IssueToDiagnosticConverter();
 		List<Issue> issues = new ArrayList<>();
 		for (Map.Entry<String, Diagnostic> uriDiagnostic : compileResult.getIssues().entries()) {
 			URI uri = URI.createURI(uriDiagnostic.getKey());

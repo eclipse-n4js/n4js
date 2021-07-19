@@ -14,12 +14,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.xtext.validation.Issue;
 
 /**
  * An issue acceptor that will only forward issues for matching URIs to its delegate.
  */
-@SuppressWarnings("deprecation")
 public class FilteringIssueAcceptor implements IssueAcceptor {
 
 	private final IssueAcceptor delegate;
@@ -31,7 +30,7 @@ public class FilteringIssueAcceptor implements IssueAcceptor {
 	}
 
 	@Override
-	public void accept(URI uri, List<? extends LSPIssue> issues) {
+	public void accept(URI uri, List<? extends Issue> issues) {
 		if (filter.test(uri)) {
 			delegate.accept(uri, issues);
 		}

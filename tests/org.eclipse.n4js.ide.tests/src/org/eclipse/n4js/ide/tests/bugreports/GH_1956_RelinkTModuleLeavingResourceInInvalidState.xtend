@@ -10,12 +10,13 @@
  */
 package org.eclipse.n4js.ide.tests.bugreports
 
+import org.eclipse.lsp4j.DefinitionParams
 import org.eclipse.lsp4j.Hover
+import org.eclipse.lsp4j.HoverParams
 import org.eclipse.lsp4j.Location
 import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.TextDocumentIdentifier
-import org.eclipse.lsp4j.TextDocumentPositionParams
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Assert
 import org.junit.Test
@@ -59,7 +60,7 @@ class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest
 		// NOTE: even with notification the bug would occur, because this is only a change inside a comment and
 		// therefore resource "A" in resource set of editor "Main" won't be affected and thus won't be updated!
 
-		val h1 = languageServer.hover(textDocPos("Main", 1, 8));
+		val h1 = languageServer.hover(textDocPosHoverParams("Main", 1, 8));
 		joinServerRequests();
 // for the time being, we still have to log relink-failure due to hash mismatch as error, thus next line is commented out:
 //		assertNoErrorsInLogOrOutput(); // logged two exceptions
@@ -67,11 +68,11 @@ class GH_1956_RelinkTModuleLeavingResourceInInvalidState extends AbstractIdeTest
 clearLogMessages();
 clearOutput();
 
-		val h2 = languageServer.hover(textDocPos("Main", 0, 12));
+		val h2 = languageServer.hover(textDocPosHoverParams("Main", 0, 12));
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // logged hundreds of exceptions (via post-processing)
 
-		val d = languageServer.definition(textDocPos("Main", 0, 12));
+		val d = languageServer.definition(textDocPosDefinitionParams("Main", 0, 12));
 		joinServerRequests();
 		assertNoErrorsInLogOrOutput(); // logged hundreds of exceptions (via a different call path)
 
@@ -82,8 +83,16 @@ clearOutput();
 	}
 
 	/** Line/column is zero-based. */
-	def private TextDocumentPositionParams textDocPos(String moduleName, int line, int column) {
-		return new TextDocumentPositionParams(
+	def private HoverParams textDocPosHoverParams(String moduleName, int line, int column) {
+		return new HoverParams(
+			new TextDocumentIdentifier(getFileURIFromModuleName(moduleName).toString),
+			new Position(line, column)
+		);
+	}
+
+	/** Line/column is zero-based. */
+	def private DefinitionParams textDocPosDefinitionParams(String moduleName, int line, int column) {
+		return new DefinitionParams(
 			new TextDocumentIdentifier(getFileURIFromModuleName(moduleName).toString),
 			new Position(line, column)
 		);
@@ -100,9 +109,7 @@ clearOutput();
 	}
 
 	def private void assertHoverResult(String expectedLanguage, String expectedText, Hover actualResult) {
-		val success = actualResult.contents.getLeft.filter[isRight].exists[
-			getRight.language == expectedLanguage && getRight.value == expectedText
-		];
+		val success = HoverSuppressDeprecationUtil.assertHoverResult(expectedLanguage, expectedText, actualResult);
 		if (!success) {
 			Assert.fail(
 				'''expected a hover with language="«expectedLanguage»" and value="«expectedText»", but got:\n'''

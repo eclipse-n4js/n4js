@@ -24,7 +24,6 @@ import com.google.inject.Inject;
 /**
  * Wraps the access to the preference store (or any other configured values provider).
  */
-@SuppressWarnings("restriction")
 public class N4JSPreferenceAccess {
 	@Inject
 	private IPreferenceValuesProvider valuesProvider;

@@ -27,7 +27,6 @@ import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.n4js.xtext.resource.IWorkspaceAwareResourceDescriptionManager;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -59,7 +58,7 @@ import com.google.inject.Inject;
  * necessary information and data structures for performing such task. In particular, this includes EMF resources for
  * files required by the main resource.
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings("restriction")
 public class ResourceTaskContext {
 
 	/*
@@ -326,7 +325,7 @@ public class ResourceTaskContext {
 	 * Triggers {@link #resolveResource(CancelIndicator) resolution} and {@link #validateResource(CancelIndicator)
 	 * validation} of this context's main resource.
 	 */
-	public List<? extends LSPIssue> resolveAndValidateResource(CancelIndicator cancelIndicator) {
+	public List<? extends Issue> resolveAndValidateResource(CancelIndicator cancelIndicator) {
 		resolveResource(cancelIndicator);
 		return validateResource(cancelIndicator);
 	}
@@ -344,7 +343,7 @@ public class ResourceTaskContext {
 	/**
 	 * Validate this context's main resource and send an issue update.
 	 */
-	public List<? extends LSPIssue> validateResource(CancelIndicator cancelIndicator) {
+	public List<? extends Issue> validateResource(CancelIndicator cancelIndicator) {
 		// validate
 		IResourceServiceProvider resourceServiceProvider = resourceServiceProviderRegistry
 				.getResourceServiceProvider(mainURI);
@@ -352,11 +351,10 @@ public class ResourceTaskContext {
 		List<Issue> issues = resourceValidator.validate(mainResource, CheckMode.ALL, cancelIndicator);
 		operationCanceledManager.checkCanceled(cancelIndicator); // #validate() sometimes returns null when canceled!
 
-		List<? extends LSPIssue> castedIssues = LSPIssue.cast(issues);
 		if (!isTemporary()) {
-			issuePublisher.accept(mainResource.getURI(), castedIssues);
+			issuePublisher.accept(mainResource.getURI(), issues);
 		}
-		return castedIssues;
+		return issues;
 	}
 
 	/** Send dirty state index update to parent. Ignored for {@link #isTemporary() temporary} contexts. */

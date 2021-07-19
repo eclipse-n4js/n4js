@@ -20,7 +20,6 @@ import com.google.inject.Inject;
  *
  * Extracted to separate module to contain access restriction warning.
  */
-@SuppressWarnings("restriction")
 public class FormattingUserPreferenceHelper {
 	@Inject
 	private N4JSSimpleFormattingPreferenceProvider formattingPreferenceProvider;

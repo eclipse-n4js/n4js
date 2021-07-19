@@ -75,13 +75,13 @@ terminal fragment DOUBLE_STRING_CHAR:
 // does not include '\u2028' | '\u2029' as a subtle difference between JSON and ECMAScript (cf. overridden rule)  
 @Override 
 terminal fragment LINE_TERMINATOR_FRAGMENT:
-	'\u000A' | '\u000D'
+	'\n' | '\r'
 ;
 
 // does not include '\u2028' | '\u2029' as a subtle difference to ECMAScript (cf. overridden rule)
 @Override 
 terminal fragment LINE_TERMINATOR_SEQUENCE_FRAGMENT:
-	'\u000A' | '\u000D' '\u000A'?
+	'\n' | '\r' '\n'?
 ;
 terminal DOUBLE returns ecore::EBigDecimal:
 	DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?

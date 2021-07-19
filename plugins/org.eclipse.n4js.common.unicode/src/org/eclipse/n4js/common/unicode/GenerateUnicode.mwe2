@@ -44,7 +44,6 @@ Workflow {
 		language = XtextGeneratorLanguage {
 			name = "org.eclipse.n4js.common.unicode.Unicode"
 			grammarUri = "platform:/resource/${runtimeProjectName}/grammar-gen/org/eclipse/n4js/common/unicode/Unicode.xtext"
-			generateXtendStubs = false
 
 			// Java API to access grammar elements (required by several other fragments)
 			fragment = grammarAccess.GrammarAccessFragment2 {}

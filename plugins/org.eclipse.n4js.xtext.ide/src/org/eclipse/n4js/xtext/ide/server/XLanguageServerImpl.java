@@ -34,6 +34,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
@@ -42,6 +43,7 @@ import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.DocumentFormattingParams;
 import org.eclipse.lsp4j.DocumentHighlight;
+import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentOnTypeFormattingParams;
 import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
@@ -50,28 +52,34 @@ import org.eclipse.lsp4j.ExecuteCommandCapabilities;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.HoverParams;
+import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InitializedParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.RenameParams;
-import org.eclipse.lsp4j.SemanticHighlightingServerCapabilities;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpOptions;
+import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.TypeDefinitionParams;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.json.JsonRpcMethod;
@@ -94,15 +102,12 @@ import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerExtension;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.UriExtensions;
-import org.eclipse.xtext.ide.server.codeActions.ICodeActionService;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensResolver;
 import org.eclipse.xtext.ide.server.codelens.ICodeLensService;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.hover.IHoverService;
-import org.eclipse.xtext.ide.server.rename.IRenameService;
 import org.eclipse.xtext.ide.server.rename.IRenameService2;
-import org.eclipse.xtext.ide.server.semanticHighlight.SemanticHighlightingRegistry;
 import org.eclipse.xtext.ide.server.signatureHelp.ISignatureHelpService;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
@@ -151,9 +156,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Inject
 	private ExecutableCommandRegistry commandRegistry;
-
-	@Inject
-	private SemanticHighlightingRegistry semanticHighlightingRegistry;
 
 	@Inject
 	private ILanguageServerShutdownAndExitHandler shutdownAndExitHandler;
@@ -290,8 +292,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			serverCapabilities.setCodeLensProvider(codeLensOptions);
 		}
 		boolean supportsCodeActions = allLanguages.stream()
-				.anyMatch((serviceProvider) -> serviceProvider.get(ICodeActionService.class) != null
-						|| serviceProvider.get(ICodeActionService2.class) != null);
+				.anyMatch((serviceProvider) -> serviceProvider.get(ICodeActionService2.class) != null);
 		if (supportsCodeActions) {
 			Optional<List<String>> supportedKinds = getSupportedCodeActionKinds();
 			if (supportedKinds.isPresent()) {
@@ -336,8 +337,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			serverCapabilities.setRenameProvider(Either.<Boolean, RenameOptions> forRight(renameOptions));
 		} else {
 			serverCapabilities.setRenameProvider(Either.forLeft(allLanguages.stream()
-					.anyMatch((serviceProvider) -> serviceProvider.get(IRenameService.class) != null
-							|| serviceProvider.get(IRenameService2.class) != null)));
+					.anyMatch((serviceProvider) -> serviceProvider.get(IRenameService2.class) != null)));
 		}
 		WorkspaceClientCapabilities workspace = null;
 		if (clientCapabilities != null) {
@@ -353,9 +353,8 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 			executeCommandOptions.setCommands(commandRegistry.getCommands());
 			serverCapabilities.setExecuteCommandProvider(executeCommandOptions);
 		}
-		semanticHighlightingRegistry.initialize(allLanguages, clientCapabilities, client);
-		serverCapabilities.setSemanticHighlighting(new SemanticHighlightingServerCapabilities(
-				semanticHighlightingRegistry.getAllScopes()));
+
+		// serverCapabilities.setSemanticTokensProvider(new SemanticTokensWithRegistrationOptions()); // TODO
 
 		for (IResourceServiceProvider language : allLanguages) {
 			ICapabilitiesContributor capabilitiesContributor = language.get(ICapabilitiesContributor.class);
@@ -383,7 +382,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Deprecated
-	private URI deprecatedToBaseDir(InitializeParams params) {
+	private URI deprecatedToBaseDir1(InitializeParams params) {
 		String rootPath = params.getRootPath();
 		if (rootPath != null) {
 			return uriExtensions.toUri(uriExtensions.toUriString(URI.createFileURI(rootPath)));
@@ -391,15 +390,30 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		return null;
 	}
 
-	/**
-	 * Compute the base directory.
-	 */
-	protected URI getBaseDir(InitializeParams params) {
+	@Deprecated
+	private URI deprecatedToBaseDir2(InitializeParams params) {
 		String rootUri = params.getRootUri();
 		if (rootUri != null) {
 			return uriExtensions.toUri(rootUri);
 		}
-		return deprecatedToBaseDir(params);
+		return deprecatedToBaseDir1(params);
+	}
+
+	/**
+	 * Compute the base directory.
+	 */
+	protected URI getBaseDir(InitializeParams params) {
+		List<WorkspaceFolder> workspaceFolders = params.getWorkspaceFolders();
+		if (workspaceFolders != null && !workspaceFolders.isEmpty()) {
+			// TODO: Support multiple workspace folders
+			WorkspaceFolder workspaceFolder = workspaceFolders.get(0);
+			if (workspaceFolders.size() > 1) {
+				client.logMessage(new MessageParams(MessageType.Error,
+						"Multiple workspace folders not supported. Using only " + workspaceFolder.getUri()));
+			}
+			return uriExtensions.toUri(workspaceFolder.getUri());
+		}
+		return deprecatedToBaseDir2(params);
 	}
 
 	@SuppressWarnings("hiding")
@@ -520,7 +534,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
-			TextDocumentPositionParams params) {
+			DefinitionParams params) {
 		if (!isSupported(paramHelper.getURI(params))) {
 			return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
 		}
@@ -529,7 +543,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(
-			TextDocumentPositionParams params) {
+			TypeDefinitionParams params) {
 		if (!isSupported(paramHelper.getURI(params))) {
 			return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
 		}
@@ -538,7 +552,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 
 	@Override
 	public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(
-			TextDocumentPositionParams params) {
+			ImplementationParams params) {
 		if (!isSupported(paramHelper.getURI(params))) {
 			return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
 		}
@@ -568,7 +582,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public CompletableFuture<Hover> hover(TextDocumentPositionParams params) {
+	public CompletableFuture<Hover> hover(HoverParams params) {
 		if (!isSupported(paramHelper.getURI(params))) {
 			return CompletableFuture.completedFuture(IHoverService.EMPTY_HOVER);
 		}
@@ -581,7 +595,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams params) {
+	public CompletableFuture<SignatureHelp> signatureHelp(SignatureHelpParams params) {
 		if (!isSupported(paramHelper.getURI(params))) {
 			return CompletableFuture.completedFuture(ISignatureHelpService.EMPTY);
 		}
@@ -589,7 +603,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams params) {
+	public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(DocumentHighlightParams params) {
 		if (!isSupported(paramHelper.getURI(params))) {
 			return CompletableFuture.completedFuture(Collections.emptyList());
 		}
@@ -630,7 +644,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if (!isSupported(paramHelper.getURI(params))) {
 			return CompletableFuture.completedFuture(Collections.emptyList());
 		}
-		return lsFrontend.formatting(params);
+		return lsFrontend.rangeFormatting(params);
 	}
 
 	@Override
@@ -655,7 +669,7 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 	}
 
 	@Override
-	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(TextDocumentPositionParams params) {
+	public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
 		if (!isSupported(paramHelper.getURI(params))) {
 			// LSP specification: "If null is returned then it is deemed that a ‘textDocument/rename’ request
 			// is not valid at the given position."
