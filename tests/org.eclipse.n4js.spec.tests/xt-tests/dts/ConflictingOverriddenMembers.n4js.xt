@@ -16,13 +16,13 @@
 
 
 class Omit1_A {
-    a: string;
+    public a: string;
 }
 class Omit1_B extends Omit1_A {
     @Override
-    set a(val : string) {} // should be omitted
+    public set a(val : string) {} // should be omitted
     @Override
-    get a() : string {return "";} // should be omitted
+    public get a() : string {return "";} // should be omitted
 }
 
 class Omit2_A {
@@ -35,6 +35,9 @@ class Omit2_B extends Omit2_A {
 }
 
 class FieldToGetter1_A {
+	/**
+	 * Some JSDoc 
+	 */
     set a(val : string) {}
 }
 class FieldToGetter1_B extends FieldToGetter1_A {
@@ -43,17 +46,17 @@ class FieldToGetter1_B extends FieldToGetter1_A {
 }
 
 class FieldToSetter1_A {
-    get a() : string {return "";}
+    public get a() : string {return "";}
 }
 class FieldToSetter1_B extends FieldToSetter1_A {
     @Override
-    a: string; // should be converted to setter
+    public a: string; // should be converted to setter
 }
 
 
 /* XPECT generated_dts ---
 declare class Omit1_A {
-	a: string;
+	public a: string;
 }
 declare class Omit1_B extends Omit1_A {}
 declare class Omit2_A {
@@ -62,15 +65,18 @@ declare class Omit2_A {
 }
 declare class Omit2_B extends Omit2_A {}
 declare class FieldToGetter1_A {
+	/**
+	 * Some JSDoc 
+	 *\/
 	set a(val: string);
 }
 declare class FieldToGetter1_B extends FieldToGetter1_A {
 	get a(): string;
 }
 declare class FieldToSetter1_A {
-	get a(): string;
+	public get a(): string;
 }
 declare class FieldToSetter1_B extends FieldToSetter1_A {
-	set a(value: string);
+	public set a(value: string);
 }
 --- */
