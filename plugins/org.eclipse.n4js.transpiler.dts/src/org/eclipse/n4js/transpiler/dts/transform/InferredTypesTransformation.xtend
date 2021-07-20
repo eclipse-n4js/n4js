@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform
 
+import com.google.common.collect.Iterables
 import com.google.inject.Inject
+import java.util.Collections
 import org.eclipse.n4js.n4JS.ExportDeclaration
+import org.eclipse.n4js.n4JS.FormalParameter
+import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.n4JS.VariableStatement
@@ -21,9 +25,8 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.n4JS.FunctionDeclaration
-import com.google.common.collect.Iterables
-import java.util.Collections
+
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  * Makes the inferred type of
@@ -83,6 +86,17 @@ class InferredTypesTransformation extends Transformation {
 			// type already provided explicitly, so nothing to do here
 			return;
 		}
+
+		// special handling for variadic fpars without declared type:
+		// the type system always gives us the fpar's actual type that here includes the implicit array (i.e. Array<any>),
+		// but this would be inconsistent with the meaning of an explicitly declared type, so we simply use 'any' here ...
+		if (elemInIM instanceof FormalParameter) {
+			if (elemInIM.variadic) {
+				elemInIM.declaredTypeRefNode = _TypeReferenceNode(state, state.G.anyTypeRef);
+				return;
+			}
+		}
+
 		val elemInAST = state.tracer.getOriginalASTNode(elemInIM);
 		if (elemInAST instanceof TypableElement) {
 			val typeRef = ts.type(state.G, elemInAST);

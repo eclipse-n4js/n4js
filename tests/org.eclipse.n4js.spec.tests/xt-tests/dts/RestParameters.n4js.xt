@@ -17,6 +17,9 @@
 
 function foo(...more: string) {}
 
+function bar1(...more: any) {}
+function bar2(...more) {}
+
 class Cls {
 	method(...more: number) {}
 }
@@ -24,6 +27,8 @@ class Cls {
 
 /* XPECT generated_dts ---
 declare function foo(...more: string[]): void;
+declare function bar1(...more: any[]): void;
+declare function bar2(...more: any[]): void;
 declare class Cls {
 	method(...more: number[]): void;
 }
