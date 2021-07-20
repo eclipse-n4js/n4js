@@ -49,45 +49,45 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<DestructuringTransformation> destructuringTransformation;
 	@Inject
-	private Provider<MemberPatchingTransformation> memberPatchingTransformationProvider;
+	private Provider<MemberPatchingTransformation> memberPatchingTransformation;
 	@Inject
-	private Provider<ApiImplStubGenerationTransformation> apiImplStubGenerationTransformationProvider;
+	private Provider<ApiImplStubGenerationTransformation> apiImplStubGenerationTransformation;
 	@Inject
-	private Provider<StaticPolyfillTransformation> staticPolyfillTransformationProvider;
+	private Provider<StaticPolyfillTransformation> staticPolyfillTransformation;
 	@Inject
-	private Provider<TemplateStringTransformation> templateStringTransformationProvider;
+	private Provider<TemplateStringTransformation> templateStringTransformation;
 	@Inject
-	private Provider<ExpressionTransformation> expressionTransformationProvider;
+	private Provider<ExpressionTransformation> expressionTransformation;
 	@Inject
-	private Provider<EnumAccessTransformation> enumAccessTransformationProvider;
+	private Provider<EnumAccessTransformation> enumAccessTransformation;
 	@Inject
 	private Provider<DependencyInjectionTransformation> dependencyInjectionTransformation;
 	@Inject
-	private Provider<ClassDeclarationTransformation> classDeclarationTransformationProvider;
+	private Provider<ClassDeclarationTransformation> classDeclarationTransformation;
 	@Inject
-	private Provider<InterfaceDeclarationTransformation> interfaceDeclarationTransformationProvider;
+	private Provider<InterfaceDeclarationTransformation> interfaceDeclarationTransformation;
 	@Inject
-	private Provider<EnumDeclarationTransformation> enumDeclarationTransformationProvider;
+	private Provider<EnumDeclarationTransformation> enumDeclarationTransformation;
 	@Inject
 	private Provider<SimplifyTransformation> simplifyTransformation;
 	@Inject
 	private Provider<TrimTransformation> trimTransformation;
 	@Inject
-	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
+	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformation;
 	@Inject
-	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformationProvider;
+	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformation;
 	@Inject
-	private Provider<ModuleWrappingTransformation> moduleWrappingTransformationProvider;
+	private Provider<ModuleWrappingTransformation> moduleWrappingTransformation;
 	@Inject
-	private Provider<BlockTransformation> blockTransformationProvider;
+	private Provider<BlockTransformation> blockTransformation;
 	@Inject
-	private Provider<RestParameterTransformation> restParameterTransformationProvider;
+	private Provider<RestParameterTransformation> restParameterTransformation;
 	@Inject
-	private Provider<ArrowFunction_Part1_Transformation> arrowFunction_Part1_TransformationProvider;
+	private Provider<ArrowFunction_Part1_Transformation> arrowFunction_Part1_Transformation;
 	@Inject
-	private Provider<ArrowFunction_Part2_Transformation> arrowFunction_Part2_TransformationProvider;
+	private Provider<ArrowFunction_Part2_Transformation> arrowFunction_Part2_Transformation;
 	@Inject
-	private Provider<JSXTransformation> jsxTransformationProvider;
+	private Provider<JSXTransformation> jsxTransformation;
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in
@@ -101,27 +101,27 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
-				jsxTransformationProvider.get(),
-				staticPolyfillTransformationProvider.get(),
-				memberPatchingTransformationProvider.get(),
-				apiImplStubGenerationTransformationProvider.get(),
+				jsxTransformation.get(),
+				staticPolyfillTransformation.get(),
+				memberPatchingTransformation.get(),
+				apiImplStubGenerationTransformation.get(),
 				destructuringTransformation.get(),
-				templateStringTransformationProvider.get(),
-				expressionTransformationProvider.get(),
-				enumAccessTransformationProvider.get(),
+				templateStringTransformation.get(),
+				expressionTransformation.get(),
+				enumAccessTransformation.get(),
 				dependencyInjectionTransformation.get(),
-				enumDeclarationTransformationProvider.get(),
-				classDeclarationTransformationProvider.get(),
-				interfaceDeclarationTransformationProvider.get(),
-				arrowFunction_Part1_TransformationProvider.get(),
-				blockTransformationProvider.get(),
-				restParameterTransformationProvider.get(),
-				arrowFunction_Part2_TransformationProvider.get(),
+				enumDeclarationTransformation.get(),
+				classDeclarationTransformation.get(),
+				interfaceDeclarationTransformation.get(),
+				arrowFunction_Part1_Transformation.get(),
+				blockTransformation.get(),
+				restParameterTransformation.get(),
+				arrowFunction_Part2_Transformation.get(),
 				simplifyTransformation.get(),
 				trimTransformation.get(),
-				sanitizeImportsTransformationProvider.get(),
-				moduleSpecifierTransformationProvider.get(),
-				moduleWrappingTransformationProvider.get()
+				sanitizeImportsTransformation.get(),
+				moduleSpecifierTransformation.get(),
+				moduleWrappingTransformation.get()
 		};
 	}
 

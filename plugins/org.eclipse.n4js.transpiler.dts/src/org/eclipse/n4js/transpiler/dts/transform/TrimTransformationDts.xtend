@@ -31,7 +31,7 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier
 /**
  * Removes everything from the IM that is not required for .d.ts export.
  */
-class TrimForDtsTransformation extends Transformation {
+class TrimTransformationDts extends Transformation {
 
 	override assertPreConditions() {
 	}

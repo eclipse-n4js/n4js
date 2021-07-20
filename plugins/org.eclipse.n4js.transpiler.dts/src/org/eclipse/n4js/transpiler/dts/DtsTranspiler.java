@@ -28,7 +28,7 @@ import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ModuleSpecifierTransformationDts;
 import org.eclipse.n4js.transpiler.dts.transform.OverriddenAccessorsTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ReturnTypeTransformation;
-import org.eclipse.n4js.transpiler.dts.transform.TrimForDtsTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.TrimTransformationDts;
 import org.eclipse.n4js.transpiler.dts.transform.TypeReferenceTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
@@ -44,23 +44,23 @@ import com.google.inject.Provider;
 public class DtsTranspiler extends AbstractTranspiler {
 
 	@Inject
-	private Provider<StaticPolyfillTransformation> staticPolyfillTransformationProvider;
+	private Provider<StaticPolyfillTransformation> staticPolyfillTransformation;
 	@Inject
 	private Provider<CutOffTransformation> cutOffTransformation;
 	@Inject
-	private Provider<ImplementedMemberTransformation> implementedMemberTransformationProvider;
+	private Provider<ImplementedMemberTransformation> implementedMemberTransformation;
 	@Inject
-	private Provider<InferredTypesTransformation> inferredTypesTransformationProvider;
+	private Provider<InferredTypesTransformation> inferredTypesTransformation;
 	@Inject
-	private Provider<ReturnTypeTransformation> returnTypeTransformationProvider;
+	private Provider<ReturnTypeTransformation> returnTypeTransformation;
 	@Inject
-	private Provider<TrimForDtsTransformation> trimDtsTransformationProvider;
+	private Provider<TrimTransformationDts> trimTransformationDts;
 	@Inject
-	private Provider<TypeReferenceTransformation> typeReferenceTransformationProvider;
+	private Provider<TypeReferenceTransformation> typeReferenceTransformation;
 	@Inject
-	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
+	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformation;
 	@Inject
-	private Provider<ModuleSpecifierTransformationDts> moduleSpecifierTransformationProviderDts;
+	private Provider<ModuleSpecifierTransformationDts> moduleSpecifierTransformationDts;
 	@Inject
 	private Provider<EnumAddMissingInitializersTransformation> enumAddMissingInitializersTransformation;
 	@Inject
@@ -76,16 +76,16 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
-				staticPolyfillTransformationProvider.get(),
+				staticPolyfillTransformation.get(),
 				cutOffTransformation.get(),
 				overriddenAccessorsTransformation.get(),
-				implementedMemberTransformationProvider.get(),
-				inferredTypesTransformationProvider.get(),
-				returnTypeTransformationProvider.get(),
-				trimDtsTransformationProvider.get(),
-				typeReferenceTransformationProvider.get(),
-				sanitizeImportsTransformationProvider.get(),
-				moduleSpecifierTransformationProviderDts.get(),
+				implementedMemberTransformation.get(),
+				inferredTypesTransformation.get(),
+				returnTypeTransformation.get(),
+				trimTransformationDts.get(),
+				typeReferenceTransformation.get(),
+				sanitizeImportsTransformation.get(),
+				moduleSpecifierTransformationDts.get(),
 				enumAddMissingInitializersTransformation.get()
 		};
 	}
