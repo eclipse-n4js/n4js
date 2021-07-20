@@ -50,6 +50,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy {
 
+	/**
+	 * Source code location information attached to each {@link IEObjectDescription}. See
+	 * {@link N4JSResourceDescriptionStrategy#getLocation(IEObjectDescription)}.
+	 */
 	public static class Location {
 		/** Zero-based. */
 		public final int startLine;
@@ -60,6 +64,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		/** Zero-based. */
 		public final int endColumn;
 
+		/** Creates a new {@link Location}. */
 		public Location(int startLine, int startColumn, int endLine, int endColumn) {
 			this.startLine = startLine;
 			this.startColumn = startColumn;
@@ -72,10 +77,12 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			return toString(startLine, startColumn, endLine, endColumn);
 		}
 
+		/** Converts this location to string format. */
 		public static String toString(int startLine, int startColumn, int endLine, int endColumn) {
 			return startLine + ":" + startColumn + "-" + endLine + ":" + endColumn;
 		}
 
+		/** Parses a string returned by {@link #toString(int, int, int, int)} back to a {@link Location} instance. */
 		public static Location fromString(String str) {
 			int firstColon = -1;
 			int dash = -1;
@@ -106,8 +113,11 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	}
 
-	public static final String LOCATION_KEY = "LOCATION";
-	public static final Location LOCATION_DEFAULT = null;
+	/**
+	 * User data key to store the {@link Location source code location} of an element.
+	 */
+	private static final String LOCATION_KEY = "LOCATION";
+	private static final Location LOCATION_DEFAULT = null;
 
 	/**
 	 * User data to store the {@link TModule#isMainModule() mainModule} property of a {@link TModule} in the index
@@ -221,6 +231,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		return false;
 	}
 
+	/** @return the source code location of the element represented by the given {@link IEObjectDescription}. */
 	public static Location getLocation(IEObjectDescription description) {
 		String userData = description.getUserData(LOCATION_KEY);
 		if (userData == null) {
