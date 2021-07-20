@@ -45,12 +45,28 @@ class FieldToGetter1_B extends FieldToGetter1_A {
     a: string; // should be converted to getter
 }
 
+class FieldToGetter2_A {
+    set a(val : string) {}
+}
+class FieldToGetter2_B extends FieldToGetter2_A {
+    @Override
+    a = ""; // should be converted to getter
+}
+
 class FieldToSetter1_A {
     public get a() : string {return "";}
 }
 class FieldToSetter1_B extends FieldToSetter1_A {
     @Override
     public a: string; // should be converted to setter
+}
+
+class FieldToSetter2_A {
+    public get a() : string {return "";}
+}
+class FieldToSetter2_B extends FieldToSetter2_A {
+    @Override
+    public a = ""; // should be converted to setter
 }
 
 
@@ -73,10 +89,22 @@ declare class FieldToGetter1_A {
 declare class FieldToGetter1_B extends FieldToGetter1_A {
 	get a(): string;
 }
+declare class FieldToGetter2_A {
+	set a(val: string);
+}
+declare class FieldToGetter2_B extends FieldToGetter2_A {
+	get a(): string;
+}
 declare class FieldToSetter1_A {
 	public get a(): string;
 }
 declare class FieldToSetter1_B extends FieldToSetter1_A {
+	public set a(value: string);
+}
+declare class FieldToSetter2_A {
+	public get a(): string;
+}
+declare class FieldToSetter2_B extends FieldToSetter2_A {
 	public set a(value: string);
 }
 --- */

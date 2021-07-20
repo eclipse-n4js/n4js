@@ -78,12 +78,12 @@ public class DtsTranspiler extends AbstractTranspiler {
 		return new Transformation[] {
 				staticPolyfillTransformation.get(),
 				cutOffTransformation.get(),
-				overriddenAccessorsTransformation.get(),
 				implementedMemberTransformation.get(),
 				inferredTypesTransformation.get(),
 				returnTypeTransformation.get(),
 				trimTransformationDts.get(),
 				typeReferenceTransformation.get(),
+				overriddenAccessorsTransformation.get(),
 				sanitizeImportsTransformation.get(),
 				moduleSpecifierTransformationDts.get(),
 				enumAddMissingInitializersTransformation.get()
