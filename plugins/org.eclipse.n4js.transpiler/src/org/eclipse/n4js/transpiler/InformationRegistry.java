@@ -59,7 +59,7 @@ public class InformationRegistry {
 		consumedFromInterface,
 
 		/** Tag for members which are to be hidden from reflection. */
-		hiddenFromReflection,
+		hiddenFromReflection
 	}
 
 	/** Tells if the given member was consumed from an interface. */

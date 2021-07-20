@@ -130,7 +130,10 @@ class TypeReferenceTransformation extends Transformation {
 				val tFunction = if (astNode instanceof FunctionDefinition) astNode.definedFunction;
 				val outerReturnTypeRef = tFunction?.returnTypeRef;
 				if (outerReturnTypeRef === null) {
-					// FIXME we should not have to rely on the TModule here!
+					// If you get an exception here: a transformation might have created an async and/or generator FunctionDefinition
+					// without the expected Promise<...> / [Async]Generator<...> return type (therefore the above call to method
+					// #hasExpectedSpecialReturnType() returned false); automatically deriving the outer from an inner return type
+					// is not supported for FunctionDefinitions created by transformations!
 					throw new IllegalStateException("unable to obtain outer return type of generator/async function from TModule");
 				}
 				typeRef = outerReturnTypeRef;
