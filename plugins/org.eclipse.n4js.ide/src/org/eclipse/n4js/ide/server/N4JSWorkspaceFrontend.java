@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.server;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -62,6 +63,10 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 
 	@Override
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
+		if (params.getPartialResultToken() != null) {
+			logPartialResultTokenReminder();
+		}
+
 		// in case of N4JS, all required information is contained in the IEObjectDescriptions, so we do not actually
 		// need to access the resource; to make 100% sure resources aren't accessed accidentally, we pass on a special
 		// resource access that will never load the resource:
@@ -79,6 +84,16 @@ public class N4JSWorkspaceFrontend extends WorkspaceFrontend {
 				lspLogger.error("error while computing workspace symbols", th);
 			}
 			return Collections.emptyList();
+		}
+	}
+
+	private long timeOfLastPartialResultTokenReminder = 0;
+
+	private void logPartialResultTokenReminder() {
+		long now = System.currentTimeMillis();
+		if (now - timeOfLastPartialResultTokenReminder > TimeUnit.MINUTES.toMillis(30)) {
+			timeOfLastPartialResultTokenReminder = now;
+			lspLogger.info("partialResultToken now available (see GH-2161) - please report this!");
 		}
 	}
 }
