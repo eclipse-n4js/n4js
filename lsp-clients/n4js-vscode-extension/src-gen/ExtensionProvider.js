@@ -236,7 +236,7 @@ function onN4jscliConfigChange(vscode, vscodeLC, context, outputChannel) {
 	return null;
 }
 function requestUserReload(vscode, vscodeLC, context, outputChannel) {
-	vscode.window.showInformationMessage("The config file .n4js-cli.config changed. A reload of the N4JS Extension is necessary for changes to take effect.", "Reload Extension").then(async function(value) {
+	vscode.window.showInformationMessage("The config file n4js-cli.config changed. A reload of the N4JS Extension is necessary for changes to take effect.", "Reload Extension").then(async function(value) {
 		if (value == "Reload Extension") {
 			await reload(vscode, vscodeLC, context, outputChannel);
 		}
