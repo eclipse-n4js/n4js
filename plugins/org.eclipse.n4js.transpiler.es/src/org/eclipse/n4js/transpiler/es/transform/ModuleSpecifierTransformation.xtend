@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
@@ -133,6 +134,11 @@ class ModuleSpecifierTransformation extends Transformation {
 	}
 
 	def protected String createAbsoluteModuleSpecifier(N4JSProjectConfigSnapshot targetProject, TModule targetModule) {
+		if (N4JSLanguageUtils.isMainModule(targetProject, targetModule)) {
+			// 'targetModule' is the main module of 'targetProject', so we can use a project import:
+			return getActualProjectName(targetProject).toString();
+		}
+
 		val sb = new StringBuilder();
 
 		// first segment is the project name

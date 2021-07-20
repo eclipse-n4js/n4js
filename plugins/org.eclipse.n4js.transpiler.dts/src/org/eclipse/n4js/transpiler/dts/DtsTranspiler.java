@@ -25,11 +25,11 @@ import org.eclipse.n4js.transpiler.dts.transform.CutOffTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.EnumAddMissingInitializersTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ImplementedMemberTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
-import org.eclipse.n4js.transpiler.dts.transform.ModuleSpecifierTransformationDts;
 import org.eclipse.n4js.transpiler.dts.transform.OverriddenAccessorsTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ReturnTypeTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.TrimTransformationDts;
 import org.eclipse.n4js.transpiler.dts.transform.TypeReferenceTransformation;
+import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
@@ -60,7 +60,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformation;
 	@Inject
-	private Provider<ModuleSpecifierTransformationDts> moduleSpecifierTransformationDts;
+	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformation;
 	@Inject
 	private Provider<EnumAddMissingInitializersTransformation> enumAddMissingInitializersTransformation;
 	@Inject
@@ -85,7 +85,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 				trimTransformationDts.get(),
 				typeReferenceTransformation.get(),
 				sanitizeImportsTransformation.get(),
-				moduleSpecifierTransformationDts.get(),
+				moduleSpecifierTransformation.get(),
 				enumAddMissingInitializersTransformation.get()
 		};
 	}
