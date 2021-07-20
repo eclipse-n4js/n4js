@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ImmutableDataClass;
@@ -171,6 +173,17 @@ public class ProjectDescription extends ImmutableDataClass {
 		return type;
 	}
 
+	/**
+	 * Returns the project's main module as an N4JS module specifier (not as a path) or <code>null</code> if the project
+	 * does not have a main module.
+	 * <p>
+	 * Usually this will return the value of the N4JS-specific <code>package.json</code>-property
+	 * {@link PackageJsonProperties#MAIN_MODULE mainModule}, but in case only node's top-level property
+	 * {@link PackageJsonProperties#MAIN main} is defined in the project's <code>package.json</code> file, then this
+	 * method will return a value derived from that top-level property 'main' (for details, see method
+	 * {@link PackageJsonHelper#adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder, boolean, String, String)
+	 * #adjustProjectDescriptionAfterConversion()}).
+	 */
 	public String getMainModule() {
 		return mainModule;
 	}

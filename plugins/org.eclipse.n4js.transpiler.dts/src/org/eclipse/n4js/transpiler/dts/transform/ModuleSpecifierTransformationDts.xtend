@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.dts.transform
 
 import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 
 /**
@@ -21,18 +22,10 @@ class ModuleSpecifierTransformationDts extends ModuleSpecifierTransformation {
 
 	override protected String createAbsoluteModuleSpecifier(N4JSProjectConfigSnapshot targetProject, TModule targetModule) {
 		// FIXME GH-2150 check if the following can/should be moved to the super class (and also used by EcmaScriptTranspiler)
-		if (isMainModule(targetProject, targetModule)) {
+		if (N4JSLanguageUtils.isMainModule(targetProject, targetModule)) {
 			// 'targetModule' is the main module of 'targetProject', so we can use a project import:
 			return getActualProjectName(targetProject).toString();
 		}
 		return super.createAbsoluteModuleSpecifier(targetProject, targetModule);
-	}
-
-	// FIXME GH-2150 this should be double-checked (could project.mainModule return a path that is not normalized?)
-	// and then moved somewhere else so that it is globally available as a utility
-	// (then also ReferenceResolutionFinder.ReferenceResolutionCandidate#getImportName() should use this utility!!!)
-	def private boolean isMainModule(N4JSProjectConfigSnapshot project, TModule module) {
-		val qn = module.qualifiedName;
-		return project.mainModule == qn;
 	}
 }

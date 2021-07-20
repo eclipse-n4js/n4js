@@ -59,6 +59,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
@@ -104,6 +105,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
@@ -199,6 +201,17 @@ public class N4JSLanguageUtils {
 			throw new RuntimeException("properties file " + LANGUAGE_VERSION_PROPERTIES_FILE_NAME + " does not contain property " + propertyId);
 		}
 		return value;
+	}
+
+	/** Tells whether the given module is the {@link ProjectDescription#getMainModule() main module} of the given project. */
+	def public static boolean isMainModule(N4JSProjectConfigSnapshot project, TModule module) {
+		val qn = module.qualifiedName;
+		return isMainModule(project, qn);
+	}
+
+	/** Tells whether the module with the given qualified name is the {@link ProjectDescription#getMainModule() main module} of the given project. */
+	def public static boolean isMainModule(N4JSProjectConfigSnapshot project, String moduleQualifiedName) {
+		return project.mainModule == moduleQualifiedName;
 	}
 
 	/** Convenience method for {@link #isOpaqueModule(ProjectType, URI)}. */
