@@ -871,7 +871,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			Type n4EnumType = RuleEnvironmentExtensions.n4EnumType(state.G);
 			TypeRef ubTypeRef = state.info.getOriginalProcessedTypeRef(ub);
 			if (ubTypeRef.getDeclaredType() == n4EnumType) {
-				// FIXME reconsider this hack for N4Enum as upper bound
+				// TODO IDE-3526 reconsider handling of N4Enum as upper bound
 				return DONE;
 			}
 			write(" extends ");
