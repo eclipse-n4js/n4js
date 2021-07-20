@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.ide.server.ResourceChangeSet;
@@ -59,7 +60,16 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 		writeTestCatalog();
 
+		onBuildDone();
+
 		return buildResult;
+	}
+
+	/**
+	 * This is a suitable place for measuring memory consumption with method {@link UtilN4#measureUsedMemory(boolean)}.
+	 */
+	private void onBuildDone() {
+		// UtilN4.measureUsedMemory(true);
 	}
 
 	@Override
