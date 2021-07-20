@@ -38,7 +38,7 @@ class CutOffTransformation extends Transformation {
 		for (superTypeRefNode : classifierDecl.superClassifierRefs) {
 			val superTypeRef = state.info.getOriginalProcessedTypeRef(superTypeRefNode);
 			val superDeclType = superTypeRef?.declaredType;
-			if (!DtsUtils.isDtsExportableDependency(superDeclType, state)) {
+			if (!DtsUtils.isDtsExportableReference(superDeclType, state)) {
 				toBeRemoved += superTypeRefNode;
 			}
 		}

@@ -445,7 +445,7 @@ class TypeReferenceTransformation extends Transformation {
 
 		if (!isLocal) {
 
-			if (!DtsUtils.isDtsExportableDependency(type, state)) {
+			if (!DtsUtils.isDtsExportableReference(type, state)) {
 				// the type is from a project not available on the .d.ts side, so we cut off the .d.ts export at this reference
 				return null;
 			}

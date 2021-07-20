@@ -79,13 +79,11 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.transpiler.TranspilerState;
-import org.eclipse.n4js.transpiler.dts.utils.DtsUtils;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -210,11 +208,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseImportDeclaration(ImportDeclaration original) {
-		TModule tModule = state.info.getImportedModule(original);
-		if (!DtsUtils.isDtsExportableDependency(tModule, state)) {
-			return DONE;
-		}
-
 		String moduleSpecifier = original.getModuleSpecifierAsText() != null
 				? original.getModuleSpecifierAsText()
 				: original.getModule().getQualifiedName();
