@@ -1629,7 +1629,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getExportDeclarationImplRule());
                       							}
-                      							setWithLastConsumed(current, "wildcardExport", true, "*");
+                      							setWithLastConsumed(current, "wildcardExport", lv_wildcardExport_1_0 != null, "*");
                     }
                     }
                     }
@@ -1754,7 +1754,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getExportDeclarationImplRule());
                       							}
-                      							setWithLastConsumed(current, "defaultExport", true, "default");
+                      							setWithLastConsumed(current, "defaultExport", lv_defaultExport_8_0 != null, "default");
                     }
                     }
                     }
@@ -3335,7 +3335,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getImportDeclarationImplRule());
                       						}
-                      						setWithLastConsumed(current, "importFrom", true, "from");
+                      						setWithLastConsumed(current, "importFrom", lv_importFrom_2_0 != null, "from");
                     }
                     }
                     }
@@ -3749,7 +3749,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getNamedImportSpecifierRule());
                               						}
-                              						setWithLastConsumed(current, "declaredDynamic", true, "+");
+                              						setWithLastConsumed(current, "declaredDynamic", lv_declaredDynamic_1_0 != null, "+");
                             }
                             }
                             }
@@ -3823,7 +3823,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getNamedImportSpecifierRule());
                               						}
-                              						setWithLastConsumed(current, "declaredDynamic", true, "+");
+                              						setWithLastConsumed(current, "declaredDynamic", lv_declaredDynamic_5_0 != null, "+");
                             }
                             }
                             }
@@ -3915,7 +3915,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getDefaultImportSpecifierRule());
                       					}
-                      					setWithLastConsumed(current, "declaredDynamic", true, "+");
+                      					setWithLastConsumed(current, "declaredDynamic", lv_declaredDynamic_1_0 != null, "+");
                     }
                     }
                     }
@@ -4025,7 +4025,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getNamespaceImportSpecifierRule());
                       					}
-                      					setWithLastConsumed(current, "declaredDynamic", true, "+");
+                      					setWithLastConsumed(current, "declaredDynamic", lv_declaredDynamic_4_0 != null, "+");
                     }
                     }
                     }
@@ -4402,7 +4402,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getAsyncNoTrailingLineBreakRule());
                       					}
-                      					setWithLastConsumed(current, "declaredAsync", true, "async");
+                      					setWithLastConsumed(current, "declaredAsync", lv_declaredAsync_0_0 != null, "async");
                     }
                     }
                     }
@@ -4594,7 +4594,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -4715,7 +4715,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -4836,7 +4836,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -4957,7 +4957,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -5078,7 +5078,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -5199,7 +5199,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -5320,7 +5320,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -5441,7 +5441,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getFunctionImplWithoutKeywordRule());
                       						}
-                      						setWithLastConsumed(current, "generator", true, "*");
+                      						setWithLastConsumed(current, "generator", lv_generator_0_0 != null, "*");
                     }
                     }
                     }
@@ -6642,7 +6642,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               							if (current==null) {
               								current = createModelElement(grammarAccess.getAsyncFunctionExpressionRule());
               							}
-              							setWithLastConsumed(current, "declaredAsync", true, "async");
+              							setWithLastConsumed(current, "declaredAsync", lv_declaredAsync_0_0 != null, "async");
             }
             }
             }
@@ -6864,7 +6864,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       											if (current==null) {
                       												current = createModelElement(grammarAccess.getArrowExpressionRule());
                       											}
-                      											setWithLastConsumed(current, "declaredAsync", true, "async");
+                      											setWithLastConsumed(current, "declaredAsync", lv_declaredAsync_2_0 != null, "async");
                     }
                     }
                     }
@@ -6977,7 +6977,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getArrowExpressionRule());
                       							}
-                      							setWithLastConsumed(current, "hasBracesAroundBody", true, "{");
+                      							setWithLastConsumed(current, "hasBracesAroundBody", lv_hasBracesAroundBody_8_0 != null, "{");
                     }
                     }
                     }
@@ -7195,7 +7195,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       											if (current==null) {
                       												current = createModelElement(grammarAccess.getArrowExpressionRule());
                       											}
-                      											setWithLastConsumed(current, "declaredAsync", true, "async");
+                      											setWithLastConsumed(current, "declaredAsync", lv_declaredAsync_2_0 != null, "async");
                     }
                     }
                     }
@@ -7308,7 +7308,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getArrowExpressionRule());
                       							}
-                      							setWithLastConsumed(current, "hasBracesAroundBody", true, "{");
+                      							setWithLastConsumed(current, "hasBracesAroundBody", lv_hasBracesAroundBody_8_0 != null, "{");
                     }
                     }
                     }
@@ -7525,7 +7525,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       											if (current==null) {
                       												current = createModelElement(grammarAccess.getArrowExpressionRule());
                       											}
-                      											setWithLastConsumed(current, "declaredAsync", true, "async");
+                      											setWithLastConsumed(current, "declaredAsync", lv_declaredAsync_2_0 != null, "async");
                     }
                     }
                     }
@@ -7638,7 +7638,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getArrowExpressionRule());
                       							}
-                      							setWithLastConsumed(current, "hasBracesAroundBody", true, "{");
+                      							setWithLastConsumed(current, "hasBracesAroundBody", lv_hasBracesAroundBody_8_0 != null, "{");
                     }
                     }
                     }
@@ -7855,7 +7855,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       											if (current==null) {
                       												current = createModelElement(grammarAccess.getArrowExpressionRule());
                       											}
-                      											setWithLastConsumed(current, "declaredAsync", true, "async");
+                      											setWithLastConsumed(current, "declaredAsync", lv_declaredAsync_2_0 != null, "async");
                     }
                     }
                     }
@@ -7968,7 +7968,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getArrowExpressionRule());
                       							}
-                      							setWithLastConsumed(current, "hasBracesAroundBody", true, "{");
+                      							setWithLastConsumed(current, "hasBracesAroundBody", lv_hasBracesAroundBody_8_0 != null, "{");
                     }
                     }
                     }
@@ -9214,7 +9214,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getN4TypeVariableRule());
                       						}
-                      						setWithLastConsumed(current, "declaredCovariant", true, "out");
+                      						setWithLastConsumed(current, "declaredCovariant", lv_declaredCovariant_0_0 != null, "out");
                     }
                     }
                     }
@@ -9232,7 +9232,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getN4TypeVariableRule());
                       						}
-                      						setWithLastConsumed(current, "declaredContravariant", true, "in");
+                      						setWithLastConsumed(current, "declaredContravariant", lv_declaredContravariant_1_0 != null, "in");
                     }
                     }
                     }
@@ -9535,7 +9535,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getBindingElementFragmentRule());
                               							}
-                              							setWithLastConsumed(current, "variadic", true, "...");
+                              							setWithLastConsumed(current, "variadic", lv_variadic_2_0 != null, "...");
                             }
                             }
                             }
@@ -9610,7 +9610,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getBindingElementFragmentRule());
                       						}
-                      						setWithLastConsumed(current, "hasInitializerAssignment", true, "=");
+                      						setWithLastConsumed(current, "hasInitializerAssignment", lv_hasInitializerAssignment_5_0 != null, "=");
                     }
                     }
                     }
@@ -9775,7 +9775,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getBindingElementFragmentRule());
                               							}
-                              							setWithLastConsumed(current, "variadic", true, "...");
+                              							setWithLastConsumed(current, "variadic", lv_variadic_2_0 != null, "...");
                             }
                             }
                             }
@@ -9850,7 +9850,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getBindingElementFragmentRule());
                       						}
-                      						setWithLastConsumed(current, "hasInitializerAssignment", true, "=");
+                      						setWithLastConsumed(current, "hasInitializerAssignment", lv_hasInitializerAssignment_5_0 != null, "=");
                     }
                     }
                     }
@@ -15346,7 +15346,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getForStatementRule());
                       					}
-                      					setWithLastConsumed(current, "await", true, "await");
+                      					setWithLastConsumed(current, "await", lv_await_2_0 != null, "await");
                     }
                     }
                     }
@@ -15395,7 +15395,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getForStatementRule());
                       								}
-                      								setWithLastConsumed(current, "forIn", true, "in");
+                      								setWithLastConsumed(current, "forIn", lv_forIn_5_0 != null, "in");
                     }
                     }
                     }
@@ -15516,7 +15516,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forIn", true, "in");
+                                              													setWithLastConsumed(current, "forIn", lv_forIn_10_0 != null, "in");
                                             }
                                             }
                                             }
@@ -15534,7 +15534,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forOf", true, "of");
+                                              													setWithLastConsumed(current, "forOf", lv_forOf_11_0 != null, "of");
                                             }
                                             }
                                             }
@@ -15754,7 +15754,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forIn", true, "in");
+                                              													setWithLastConsumed(current, "forIn", lv_forIn_20_0 != null, "in");
                                             }
                                             }
                                             }
@@ -15805,7 +15805,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forOf", true, "of");
+                                              													setWithLastConsumed(current, "forOf", lv_forOf_22_0 != null, "of");
                                             }
                                             }
                                             }
@@ -15989,7 +15989,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       											if (current==null) {
                                       												current = createModelElement(grammarAccess.getForStatementRule());
                                       											}
-                                      											setWithLastConsumed(current, "forIn", true, "in");
+                                      											setWithLastConsumed(current, "forIn", lv_forIn_29_0 != null, "in");
                                     }
                                     }
                                     }
@@ -16040,7 +16040,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       											if (current==null) {
                                       												current = createModelElement(grammarAccess.getForStatementRule());
                                       											}
-                                      											setWithLastConsumed(current, "forOf", true, "of");
+                                      											setWithLastConsumed(current, "forOf", lv_forOf_31_0 != null, "of");
                                     }
                                     }
                                     }
@@ -16275,7 +16275,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getForStatementRule());
                       					}
-                      					setWithLastConsumed(current, "await", true, "await");
+                      					setWithLastConsumed(current, "await", lv_await_2_0 != null, "await");
                     }
                     }
                     }
@@ -16324,7 +16324,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								if (current==null) {
                       									current = createModelElement(grammarAccess.getForStatementRule());
                       								}
-                      								setWithLastConsumed(current, "forIn", true, "in");
+                      								setWithLastConsumed(current, "forIn", lv_forIn_5_0 != null, "in");
                     }
                     }
                     }
@@ -16445,7 +16445,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forIn", true, "in");
+                                              													setWithLastConsumed(current, "forIn", lv_forIn_10_0 != null, "in");
                                             }
                                             }
                                             }
@@ -16463,7 +16463,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forOf", true, "of");
+                                              													setWithLastConsumed(current, "forOf", lv_forOf_11_0 != null, "of");
                                             }
                                             }
                                             }
@@ -16683,7 +16683,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forIn", true, "in");
+                                              													setWithLastConsumed(current, "forIn", lv_forIn_20_0 != null, "in");
                                             }
                                             }
                                             }
@@ -16734,7 +16734,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                               													if (current==null) {
                                               														current = createModelElement(grammarAccess.getForStatementRule());
                                               													}
-                                              													setWithLastConsumed(current, "forOf", true, "of");
+                                              													setWithLastConsumed(current, "forOf", lv_forOf_22_0 != null, "of");
                                             }
                                             }
                                             }
@@ -16918,7 +16918,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       											if (current==null) {
                                       												current = createModelElement(grammarAccess.getForStatementRule());
                                       											}
-                                      											setWithLastConsumed(current, "forIn", true, "in");
+                                      											setWithLastConsumed(current, "forIn", lv_forIn_29_0 != null, "in");
                                     }
                                     }
                                     }
@@ -16969,7 +16969,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       											if (current==null) {
                                       												current = createModelElement(grammarAccess.getForStatementRule());
                                       											}
-                                      											setWithLastConsumed(current, "forOf", true, "of");
+                                      											setWithLastConsumed(current, "forOf", lv_forOf_31_0 != null, "of");
                                     }
                                     }
                                     }
@@ -21420,7 +21420,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getArrayLiteralRule());
                               							}
-                              							setWithLastConsumed(current, "trailingComma", true, ",");
+                              							setWithLastConsumed(current, "trailingComma", lv_trailingComma_7_0 != null, ",");
                             }
                             }
                             }
@@ -21669,7 +21669,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getArrayLiteralRule());
                               							}
-                              							setWithLastConsumed(current, "trailingComma", true, ",");
+                              							setWithLastConsumed(current, "trailingComma", lv_trailingComma_7_0 != null, ",");
                             }
                             }
                             }
@@ -21849,7 +21849,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getArrayElementRule());
                       					}
-                      					setWithLastConsumed(current, "spread", true, "...");
+                      					setWithLastConsumed(current, "spread", lv_spread_1_0 != null, "...");
                     }
                     }
                     }
@@ -21923,7 +21923,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getArrayElementRule());
                       					}
-                      					setWithLastConsumed(current, "spread", true, "...");
+                      					setWithLastConsumed(current, "spread", lv_spread_1_0 != null, "...");
                     }
                     }
                     }
@@ -22844,7 +22844,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getAnnotatedPropertyAssignmentRule());
                               							}
-                              							setWithLastConsumed(current, "declaredOptional", true, "?");
+                              							setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_12_0 != null, "?");
                             }
                             }
                             }
@@ -22998,7 +22998,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											if (current==null) {
                               												current = createModelElement(grammarAccess.getAnnotatedPropertyAssignmentRule());
                               											}
-                              											setWithLastConsumed(current, "generator", true, "*");
+                              											setWithLastConsumed(current, "generator", lv_generator_20_0 != null, "*");
                             }
                             }
                             }
@@ -23474,7 +23474,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getAnnotatedPropertyAssignmentRule());
                               							}
-                              							setWithLastConsumed(current, "declaredOptional", true, "?");
+                              							setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_12_0 != null, "?");
                             }
                             }
                             }
@@ -23628,7 +23628,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											if (current==null) {
                               												current = createModelElement(grammarAccess.getAnnotatedPropertyAssignmentRule());
                               											}
-                              											setWithLastConsumed(current, "generator", true, "*");
+                              											setWithLastConsumed(current, "generator", lv_generator_20_0 != null, "*");
                             }
                             }
                             }
@@ -24000,7 +24000,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									if (current==null) {
                       										current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
                       									}
-                      									setWithLastConsumed(current, "generator", true, "*");
+                      									setWithLastConsumed(current, "generator", lv_generator_4_0 != null, "*");
                     }
                     }
                     }
@@ -24240,7 +24240,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									if (current==null) {
                       										current = createModelElement(grammarAccess.getPropertyMethodDeclarationRule());
                       									}
-                      									setWithLastConsumed(current, "generator", true, "*");
+                      									setWithLastConsumed(current, "generator", lv_generator_4_0 != null, "*");
                     }
                     }
                     }
@@ -24474,7 +24474,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getPropertyNameValuePairRule());
                       							}
-                      							setWithLastConsumed(current, "declaredOptional", true, "?");
+                      							setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_3_0 != null, "?");
                     }
                     }
                     }
@@ -24609,7 +24609,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getPropertyNameValuePairRule());
                       							}
-                      							setWithLastConsumed(current, "declaredOptional", true, "?");
+                      							setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_3_0 != null, "?");
                     }
                     }
                     }
@@ -25302,7 +25302,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getPropertySetterDeclarationRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_3_0 != null, "?");
                     }
                     }
                     }
@@ -25441,7 +25441,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getPropertySetterDeclarationRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_3_0 != null, "?");
                     }
                     }
                     }
@@ -25724,7 +25724,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
                       					}
-                      					setWithLastConsumed(current, "optionalChaining", true, "?.");
+                      					setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_2_0 != null, "?.");
                     }
                     }
                     }
@@ -25821,7 +25821,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getParameterizedCallExpressionRule());
                       					}
-                      					setWithLastConsumed(current, "optionalChaining", true, "?.");
+                      					setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_2_0 != null, "?.");
                     }
                     }
                     }
@@ -26506,7 +26506,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getLeftHandSideExpressionRule());
                               						}
-                              						setWithLastConsumed(current, "optionalChaining", true, "?.");
+                              						setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_2_0 != null, "?.");
                             }
                             }
                             }
@@ -26591,7 +26591,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	              								if (current==null) {
                     	              									current = createModelElement(grammarAccess.getLeftHandSideExpressionRule());
                     	              								}
-                    	              								setWithLastConsumed(current, "optionalChaining", true, "?.");
+                    	              								setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_5_0 != null, "?.");
                     	            }
                     	            }
                     	            }
@@ -26696,7 +26696,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	              									if (current==null) {
                     	              										current = createModelElement(grammarAccess.getLeftHandSideExpressionRule());
                     	              									}
-                    	              									setWithLastConsumed(current, "optionalChaining", true, "?.");
+                    	              									setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_12_0 != null, "?.");
                     	            }
                     	            }
                     	            }
@@ -26807,7 +26807,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getLeftHandSideExpressionRule());
                               						}
-                              						setWithLastConsumed(current, "optionalChaining", true, "?.");
+                              						setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_2_0 != null, "?.");
                             }
                             }
                             }
@@ -26892,7 +26892,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	              								if (current==null) {
                     	              									current = createModelElement(grammarAccess.getLeftHandSideExpressionRule());
                     	              								}
-                    	              								setWithLastConsumed(current, "optionalChaining", true, "?.");
+                    	              								setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_5_0 != null, "?.");
                     	            }
                     	            }
                     	            }
@@ -26997,7 +26997,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	              									if (current==null) {
                     	              										current = createModelElement(grammarAccess.getLeftHandSideExpressionRule());
                     	              									}
-                    	              									setWithLastConsumed(current, "optionalChaining", true, "?.");
+                    	              									setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_12_0 != null, "?.");
                     	            }
                     	            }
                     	            }
@@ -27387,7 +27387,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getArgumentRule());
                       					}
-                      					setWithLastConsumed(current, "spread", true, "...");
+                      					setWithLastConsumed(current, "spread", lv_spread_0_0 != null, "...");
                     }
                     }
                     }
@@ -27454,7 +27454,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getArgumentRule());
                       					}
-                      					setWithLastConsumed(current, "spread", true, "...");
+                      					setWithLastConsumed(current, "spread", lv_spread_0_0 != null, "...");
                     }
                     }
                     }
@@ -27666,7 +27666,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getMemberExpressionRule());
                               							}
-                              							setWithLastConsumed(current, "withArgs", true, "(");
+                              							setWithLastConsumed(current, "withArgs", lv_withArgs_8_0 != null, "(");
                             }
                             }
                             }
@@ -27887,7 +27887,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             	              									if (current==null) {
                             	              										current = createModelElement(grammarAccess.getMemberExpressionRule());
                             	              									}
-                            	              									setWithLastConsumed(current, "optionalChaining", true, "?.");
+                            	              									setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_16_0 != null, "?.");
                             	            }
                             	            }
                             	            }
@@ -28130,7 +28130,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	              								if (current==null) {
                     	              									current = createModelElement(grammarAccess.getMemberExpressionRule());
                     	              								}
-                    	              								setWithLastConsumed(current, "optionalChaining", true, "?.");
+                    	              								setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_24_0 != null, "?.");
                     	            }
                     	            }
                     	            }
@@ -28326,7 +28326,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getMemberExpressionRule());
                               							}
-                              							setWithLastConsumed(current, "withArgs", true, "(");
+                              							setWithLastConsumed(current, "withArgs", lv_withArgs_8_0 != null, "(");
                             }
                             }
                             }
@@ -28547,7 +28547,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             	              									if (current==null) {
                             	              										current = createModelElement(grammarAccess.getMemberExpressionRule());
                             	              									}
-                            	              									setWithLastConsumed(current, "optionalChaining", true, "?.");
+                            	              									setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_16_0 != null, "?.");
                             	            }
                             	            }
                             	            }
@@ -28790,7 +28790,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	              								if (current==null) {
                     	              									current = createModelElement(grammarAccess.getMemberExpressionRule());
                     	              								}
-                    	              								setWithLastConsumed(current, "optionalChaining", true, "?.");
+                    	              								setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_24_0 != null, "?.");
                     	            }
                     	            }
                     	            }
@@ -28869,7 +28869,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getIndexedAccessExpressionTailRule());
                       					}
-                      					setWithLastConsumed(current, "optionalChaining", true, "?.");
+                      					setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_0_0 != null, "?.");
                     }
                     }
                     }
@@ -28946,7 +28946,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getIndexedAccessExpressionTailRule());
                       					}
-                      					setWithLastConsumed(current, "optionalChaining", true, "?.");
+                      					setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_0_0 != null, "?.");
                     }
                     }
                     }
@@ -29040,7 +29040,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getParameterizedPropertyAccessExpressionTailRule());
                       						}
-                      						setWithLastConsumed(current, "optionalChaining", true, "?.");
+                      						setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_1_0 != null, "?.");
                     }
                     }
                     }
@@ -29149,7 +29149,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getParameterizedPropertyAccessExpressionTailRule());
                       						}
-                      						setWithLastConsumed(current, "optionalChaining", true, "?.");
+                      						setWithLastConsumed(current, "optionalChaining", lv_optionalChaining_1_0 != null, "?.");
                     }
                     }
                     }
@@ -35873,7 +35873,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getYieldExpressionRule());
                       					}
-                      					setWithLastConsumed(current, "many", true, "*");
+                      					setWithLastConsumed(current, "many", lv_many_2_0 != null, "*");
                     }
                     }
                     }
@@ -35961,7 +35961,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getYieldExpressionRule());
                       					}
-                      					setWithLastConsumed(current, "many", true, "*");
+                      					setWithLastConsumed(current, "many", lv_many_2_0 != null, "*");
                     }
                     }
                     }
@@ -38517,7 +38517,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getBooleanLiteralRule());
                       						}
-                      						setWithLastConsumed(current, "true", true, "true");
+                      						setWithLastConsumed(current, "true", lv_true_1_0 != null, "true");
                     }
                     }
                     }
@@ -44089,7 +44089,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
                               							}
-                              							setWithLastConsumed(current, "declaredOptional", true, "?");
+                              							setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_10_0 != null, "?");
                             }
                             }
                             }
@@ -44272,7 +44272,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											if (current==null) {
                               												current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
                               											}
-                              											setWithLastConsumed(current, "generator", true, "*");
+                              											setWithLastConsumed(current, "generator", lv_generator_19_0 != null, "*");
                             }
                             }
                             }
@@ -44688,7 +44688,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               							if (current==null) {
                               								current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
                               							}
-                              							setWithLastConsumed(current, "declaredOptional", true, "?");
+                              							setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_10_0 != null, "?");
                             }
                             }
                             }
@@ -44871,7 +44871,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               											if (current==null) {
                               												current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
                               											}
-                              											setWithLastConsumed(current, "generator", true, "*");
+                              											setWithLastConsumed(current, "generator", lv_generator_19_0 != null, "*");
                             }
                             }
                             }
@@ -45121,7 +45121,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getFieldDeclarationImplRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_2_0 != null, "?");
                     }
                     }
                     }
@@ -45297,7 +45297,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getFieldDeclarationImplRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_2_0 != null, "?");
                     }
                     }
                     }
@@ -45649,7 +45649,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									if (current==null) {
                       										current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
                       									}
-                      									setWithLastConsumed(current, "generator", true, "*");
+                      									setWithLastConsumed(current, "generator", lv_generator_4_0 != null, "*");
                     }
                     }
                     }
@@ -45894,7 +45894,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									if (current==null) {
                       										current = createModelElement(grammarAccess.getN4MethodDeclarationRule());
                       									}
-                      									setWithLastConsumed(current, "generator", true, "*");
+                      									setWithLastConsumed(current, "generator", lv_generator_4_0 != null, "*");
                     }
                     }
                     }
@@ -46806,7 +46806,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getGetterHeaderRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_2_0 != null, "?");
                     }
                     }
                     }
@@ -46914,7 +46914,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getGetterHeaderRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_2_0 != null, "?");
                     }
                     }
                     }
@@ -47098,7 +47098,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getN4SetterDeclarationRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_4_0 != null, "?");
                     }
                     }
                     }
@@ -47299,7 +47299,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getN4SetterDeclarationRule());
                       					}
-                      					setWithLastConsumed(current, "declaredOptional", true, "?");
+                      					setWithLastConsumed(current, "declaredOptional", lv_declaredOptional_4_0 != null, "?");
                     }
                     }
                     }
@@ -48892,7 +48892,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getBindingRestElementRule());
                       					}
-                      					setWithLastConsumed(current, "rest", true, "...");
+                      					setWithLastConsumed(current, "rest", lv_rest_0_0 != null, "...");
                     }
                     }
                     }
@@ -48951,7 +48951,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getBindingRestElementRule());
                       					}
-                      					setWithLastConsumed(current, "rest", true, "...");
+                      					setWithLastConsumed(current, "rest", lv_rest_0_0 != null, "...");
                     }
                     }
                     }
@@ -51746,7 +51746,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                       						}
-                      						setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                      						setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_2_0 != null, "[");
                     }
                     }
                     }
@@ -51788,7 +51788,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      								if (current==null) {
                     	      									current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                     	      								}
-                    	      								setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                    	      								setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_5_0 != null, "[");
                     	    }
                     	    }
                     	    }
@@ -51856,7 +51856,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                       						}
-                      						setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                      						setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_11_0 != null, "[");
                     }
                     }
                     }
@@ -51898,7 +51898,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      								if (current==null) {
                     	      									current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                     	      								}
-                    	      								setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                    	      								setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_14_0 != null, "[");
                     	    }
                     	    }
                     	    }
@@ -51964,7 +51964,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      								if (current==null) {
                     	      									current = createModelElement(grammarAccess.getArrayTypeExpressionRule());
                     	      								}
-                    	      								setWithLastConsumed(current, "arrayTypeExpression", true, "[");
+                    	      								setWithLastConsumed(current, "arrayTypeExpression", lv_arrayTypeExpression_18_0 != null, "[");
                     	    }
                     	    }
                     	    }
@@ -52181,7 +52181,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTypeRefWithModifiersRule());
                       					}
-                      					setWithLastConsumed(current, "followedByQuestionMark", true, "?");
+                      					setWithLastConsumed(current, "followedByQuestionMark", lv_followedByQuestionMark_1_0 != null, "?");
                     }
                     }
                     }
@@ -52416,7 +52416,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               						if (current==null) {
                               							current = createModelElement(grammarAccess.getTypeRefWithoutModifiersRule());
                               						}
-                              						setWithLastConsumed(current, "dynamic", true, "+");
+                              						setWithLastConsumed(current, "dynamic", lv_dynamic_2_0 != null, "+");
                             }
                             }
                             }
@@ -53558,7 +53558,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTAnonymousFormalParameterRule());
                       					}
-                      					setWithLastConsumed(current, "variadic", true, "...");
+                      					setWithLastConsumed(current, "variadic", lv_variadic_0_0 != null, "...");
                     }
                     }
                     }
@@ -53693,7 +53693,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getDefaultFormalParameterRule());
                       					}
-                      					setWithLastConsumed(current, "hasInitializerAssignment", true, "=");
+                      					setWithLastConsumed(current, "hasInitializerAssignment", lv_hasInitializerAssignment_0_0 != null, "=");
                     }
                     }
                     }
@@ -54506,7 +54506,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					if (current==null) {
               						current = createModelElement(grammarAccess.getIterableTypeExpressionRule());
               					}
-              					setWithLastConsumed(current, "iterableTypeExpression", true, "[");
+              					setWithLastConsumed(current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
             }
             }
             }
@@ -55471,7 +55471,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTStructFieldRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_1_0 != null, "?");
                     }
                     }
                     }
@@ -55608,7 +55608,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTStructGetterRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_3_0 != null, "?");
                     }
                     }
                     }
@@ -55753,7 +55753,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getTStructSetterRule());
                       					}
-                      					setWithLastConsumed(current, "optional", true, "?");
+                      					setWithLastConsumed(current, "optional", lv_optional_3_0 != null, "?");
                     }
                     }
                     }
@@ -56015,7 +56015,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTypeTypeRefRule());
                       						}
-                      						setWithLastConsumed(current, "constructorRef", true, "constructor");
+                      						setWithLastConsumed(current, "constructorRef", lv_constructorRef_2_0 != null, "constructor");
                     }
                     }
                     }
@@ -56550,7 +56550,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getWildcardNewNotationRule());
                       						}
-                      						setWithLastConsumed(current, "usingInOutNotation", true, "out");
+                      						setWithLastConsumed(current, "usingInOutNotation", lv_usingInOutNotation_0_0 != null, "out");
                     }
                     }
                     }
@@ -56592,7 +56592,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getWildcardNewNotationRule());
                       						}
-                      						setWithLastConsumed(current, "usingInOutNotation", true, "in");
+                      						setWithLastConsumed(current, "usingInOutNotation", lv_usingInOutNotation_2_0 != null, "in");
                     }
                     }
                     }
@@ -56693,7 +56693,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTypeVariableRule());
                       						}
-                      						setWithLastConsumed(current, "declaredCovariant", true, "out");
+                      						setWithLastConsumed(current, "declaredCovariant", lv_declaredCovariant_0_0 != null, "out");
                     }
                     }
                     }
@@ -56711,7 +56711,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getTypeVariableRule());
                       						}
-                      						setWithLastConsumed(current, "declaredContravariant", true, "in");
+                      						setWithLastConsumed(current, "declaredContravariant", lv_declaredContravariant_1_0 != null, "in");
                     }
                     }
                     }

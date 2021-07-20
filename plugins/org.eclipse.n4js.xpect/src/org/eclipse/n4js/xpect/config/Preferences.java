@@ -13,17 +13,16 @@ package org.eclipse.n4js.xpect.config;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.setup.XpectSetupRoot;
 import org.eclipse.xtext.preferences.ITypedPreferenceValues;
 import org.eclipse.xtext.preferences.PreferenceKey;
 import org.eclipse.xtext.preferences.TypedPreferenceKey;
-import org.eclipse.xpect.XpectImport;
-import org.eclipse.xpect.setup.XpectSetupRoot;
 
 /**
  * Preferences Container for Xpect-Setup sections.
  *
  */
-@SuppressWarnings("restriction")
 @XpectSetupRoot
 @XpectImport(Preference.class)
 public class Preferences implements ITypedPreferenceValues {

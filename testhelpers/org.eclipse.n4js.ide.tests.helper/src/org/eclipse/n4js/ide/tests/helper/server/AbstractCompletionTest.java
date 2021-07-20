@@ -208,7 +208,7 @@ abstract public class AbstractCompletionTest extends AbstractStructuredIdeTest<N
 	private String applyCompletionItem(String oldContent, Position pos, CompletionItem item) {
 		String content = oldContent;
 
-		TextEdit mainEdit = item.getTextEdit();
+		TextEdit mainEdit = item.getTextEdit().getLeft();
 		if (mainEdit != null) {
 			content = applyTextEdits(content, Collections.singleton(mainEdit));
 		} else {

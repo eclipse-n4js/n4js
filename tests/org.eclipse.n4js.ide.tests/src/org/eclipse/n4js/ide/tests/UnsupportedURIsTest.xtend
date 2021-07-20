@@ -17,12 +17,12 @@ import org.eclipse.lsp4j.DidChangeTextDocumentParams
 import org.eclipse.lsp4j.DidCloseTextDocumentParams
 import org.eclipse.lsp4j.DidOpenTextDocumentParams
 import org.eclipse.lsp4j.Hover
+import org.eclipse.lsp4j.HoverParams
 import org.eclipse.lsp4j.Position
 import org.eclipse.lsp4j.Range
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent
 import org.eclipse.lsp4j.TextDocumentIdentifier
 import org.eclipse.lsp4j.TextDocumentItem
-import org.eclipse.lsp4j.TextDocumentPositionParams
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.eclipse.xtext.ide.server.hover.IHoverService
@@ -125,7 +125,7 @@ class UnsupportedURIsTest extends AbstractIdeTest {
 
 	def private CompletableFuture<Hover> hover(URI uri, int line, int column) {
 		return languageServer.hover(
-			new TextDocumentPositionParams(
+			new HoverParams(
 				new TextDocumentIdentifier(uri.toString()),
 				new Position(line, column)));
 	}

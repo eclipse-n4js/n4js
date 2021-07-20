@@ -215,7 +215,7 @@ class GH_2004_ReviewImportedNamesComputationTest extends AbstractIdeTest {
 	 */
 	def private void assertIsAffectedBug(String moduleName, String desiredIssueStr) {
 		val allIssues = HashMultimap.create(getIssues());
-		allIssues.entries.removeIf[N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS.contains(value.code)];
+		allIssues.entries.removeIf[N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS.contains(value.code.getLeft)];
 		val moduleURI = getFileURIFromModuleName(moduleName);
 		if (allIssues.size() === 1
 			&& allIssues.entries.head.key == moduleURI

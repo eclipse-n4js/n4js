@@ -294,7 +294,7 @@ public class N4jscInit {
 		}
 
 		try (JsonReader jReader = new JsonReader(new FileReader(candidate))) {
-			JsonElement packageJsonCandidate = new JsonParser().parse(jReader);
+			JsonElement packageJsonCandidate = JsonParser.parseReader(jReader);
 			if (!packageJsonCandidate.isJsonObject()) {
 				return WorkingDirState.InEmptyFolder;
 			}
@@ -332,7 +332,7 @@ public class N4jscInit {
 
 	private static List<String> getYarnWorkspaces(File candidate) throws N4jscException {
 		try (JsonReader jReader = new JsonReader(new FileReader(candidate))) {
-			JsonElement packageJsonCandidate = new JsonParser().parse(jReader);
+			JsonElement packageJsonCandidate = JsonParser.parseReader(jReader);
 			JsonObject packageJson = (JsonObject) packageJsonCandidate;
 			JsonElement workspacesElement = packageJson.get(PackageJsonProperties.WORKSPACES_ARRAY.name);
 

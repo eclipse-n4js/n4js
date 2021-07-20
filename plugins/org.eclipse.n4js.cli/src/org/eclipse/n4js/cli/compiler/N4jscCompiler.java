@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.compiler;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -20,6 +21,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializedParams;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
@@ -80,7 +82,7 @@ public class N4jscCompiler {
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, "No base directory");
 		}
 
-		params.setRootUri(baseDir.toURI().toString());
+		params.setWorkspaceFolders(Collections.singletonList(new WorkspaceFolder(baseDir.toURI().toString())));
 		languageServer.initialize(params).get();
 		warnIfNoProjectsFound();
 		verbosePrintAllProjects();

@@ -28,7 +28,6 @@ import com.google.inject.Inject;
  * Customization to create {@link SemverIssueSeverities} in
  * {@link SemverIssueSeveritiesProvider#getIssueSeverities(Resource)}.
  */
-@SuppressWarnings("restriction")
 public class SemverIssueSeveritiesProvider extends IssueSeveritiesProvider {
 	@SuppressWarnings("javadoc")
 	@Inject

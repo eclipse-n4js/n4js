@@ -1671,7 +1671,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       						setWithLastConsumed(
                       							current,
                       							"not",
-                      							true,
+                      							lv_not_2_0 != null,
                       							"org.eclipse.n4js.regex.RegularExpression.NOT_WORD_BOUNDARY");
                       					
                     }
@@ -1861,7 +1861,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               								if (current==null) {
                               									current = createModelElement(grammarAccess.getAbstractLookAheadRule());
                               								}
-                              								setWithLastConsumed(current, "not", true, "(?!");
+                              								setWithLastConsumed(current, "not", lv_not_2_0 != null, "(?!");
                               							
                             }
 
@@ -1951,7 +1951,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                               								if (current==null) {
                               									current = createModelElement(grammarAccess.getAbstractLookAheadRule());
                               								}
-                              								setWithLastConsumed(current, "not", true, "(?<!");
+                              								setWithLastConsumed(current, "not", lv_not_5_0 != null, "(?<!");
                               							
                             }
 
@@ -4011,7 +4011,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getCharacterClassRule());
                       						}
-                      						setWithLastConsumed(current, "negated", true, "^");
+                      						setWithLastConsumed(current, "negated", lv_negated_2_0 != null, "^");
                       					
                     }
 
@@ -5785,7 +5785,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getGroupRule());
                       						}
-                      						setWithLastConsumed(current, "nonCapturing", true, "(?:");
+                      						setWithLastConsumed(current, "nonCapturing", lv_nonCapturing_2_0 != null, "(?:");
                       					
                     }
 
@@ -5820,7 +5820,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       							if (current==null) {
                       								current = createModelElement(grammarAccess.getGroupRule());
                       							}
-                      							setWithLastConsumed(current, "named", true, "(?<");
+                      							setWithLastConsumed(current, "named", lv_named_3_0 != null, "(?<");
                       						
                     }
 
@@ -6789,7 +6789,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getSimpleQuantifierRule());
                       					}
-                      					setWithLastConsumed(current, "nonGreedy", true, "?");
+                      					setWithLastConsumed(current, "nonGreedy", lv_nonGreedy_1_0 != null, "?");
                       				
                     }
 
@@ -7032,7 +7032,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getExactQuantifierRule());
                       						}
-                      						setWithLastConsumed(current, "unboundedMax", true, ",");
+                      						setWithLastConsumed(current, "unboundedMax", lv_unboundedMax_5_0 != null, ",");
                       					
                     }
 
@@ -7078,7 +7078,7 @@ public class InternalRegularExpressionParser extends AbstractInternalAntlrParser
                       					if (current==null) {
                       						current = createModelElement(grammarAccess.getExactQuantifierRule());
                       					}
-                      					setWithLastConsumed(current, "nonGreedy", true, "?");
+                      					setWithLastConsumed(current, "nonGreedy", lv_nonGreedy_7_0 != null, "?");
                       				
                     }
 

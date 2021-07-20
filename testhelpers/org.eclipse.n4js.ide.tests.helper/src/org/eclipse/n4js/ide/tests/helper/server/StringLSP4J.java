@@ -24,6 +24,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticRelatedInformation;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.InsertReplaceEdit;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MarkedString;
@@ -46,6 +47,7 @@ import org.eclipse.n4js.utils.Strings;
 /**
  * Utility to serialize LSP4J JSON results to be used in test expectations
  */
+@SuppressWarnings("deprecation")
 public class StringLSP4J {
 	final File root;
 
@@ -154,6 +156,24 @@ public class StringLSP4J {
 			Two<Integer, Integer> right = documentation.getRight();
 			return "(" + right.getFirst() + "," + right.getSecond() + ")";
 		}
+	}
+
+	/** @return string for given element */
+	public String toString9(Either<TextEdit, InsertReplaceEdit> documentation) {
+		if (documentation == null) {
+			return "";
+		}
+		if (documentation.isLeft()) {
+			return toString(documentation.getLeft());
+		} else {
+			return toString(documentation.getRight());
+		}
+	}
+
+	/** @return string for given element */
+	public String toString(InsertReplaceEdit irEdit) {
+		return "(" + irEdit.getNewText() + " at " + toString(irEdit.getInsert()) + "/" + toString(irEdit.getReplace())
+				+ ")";
 	}
 
 	/** @return string for given element */
@@ -276,7 +296,7 @@ public class StringLSP4J {
 		String str = "CODE:";
 
 		str += Strings.join(", ",
-				diagnostic.getCode(),
+				diagnostic.getCode().getLeft(),
 				diagnostic.getSeverity(),
 				diagnostic.getSource(),
 				toString(diagnostic.getRange()),
@@ -406,7 +426,7 @@ public class StringLSP4J {
 				item.getFilterText(),
 				item.getInsertText(),
 				item.getInsertTextFormat(),
-				toString(item.getTextEdit()),
+				toString9(item.getTextEdit()),
 				Strings.toString(this::toString, item.getAdditionalTextEdits()),
 				Strings.toString(item.getCommitCharacters()),
 				toString(item.getCommand()),

@@ -20,7 +20,6 @@ import org.eclipse.xtext.validation.SeverityConverter;
 
 /**
  */
-@SuppressWarnings("restriction")
 public class N4JSIssueSeverities extends IssueSeverities {
 	@SuppressWarnings("javadoc")
 	protected final Map<String, PreferenceKey> configurableIssueCodes;

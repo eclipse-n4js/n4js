@@ -55,13 +55,6 @@ public class LazyTokenStream extends XtextTokenStream {
 		}
 	}
 
-	void basicConsume() {
-		if (p < tokens.size()) {
-			p++;
-			p = skipOffTokenChannels(p); // leave p on valid token
-		}
-	}
-
 	@Override
 	public int LA(int i) {
 		Token lookaheadToken = LT(i);
@@ -97,27 +90,15 @@ public class LazyTokenStream extends XtextTokenStream {
 		return result;
 	}
 
-	int basicMark() {
-		if (p == -1) {
-			fillBuffer();
-		}
-		lastMarker = index();
-		return lastMarker;
-	}
-
 	@Override
 	public void seek(int index) {
-		basicSeek(index);
+		super.seek(index);
 	}
 
 	@Override
 	public void rewind(int marker) {
 		markerCount--;
-		basicSeek(marker);
-	}
-
-	void basicSeek(int index) {
-		p = index;
+		super.seek(marker);
 	}
 
 	@Override
