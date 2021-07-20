@@ -142,7 +142,7 @@ class OverriddenAccessorsTransformation extends Transformation {
 			val steo = state.steCache.mapNamedElement_2_STE.get(clazz) as SymbolTableEntryOriginal;
 			if (steo.getOriginalTarget() instanceof TClass) {
 				val type = steo.getOriginalTarget() as TClass;
-				val inheritedMembers = memberCollector.allInheritedMembers(type);
+				val inheritedMembers = memberCollector.inheritedMembers(type);
 				val overriddenMembers = IterableExtensions.filter(inheritedMembers,
 					[it.getName() == member.getName()]);
 
