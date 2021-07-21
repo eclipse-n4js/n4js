@@ -93,6 +93,14 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
+	public void testLspOptionHelpVersionWrongOrder() {
+		String args[] = { "--help", "lsp", "--version" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
 	public void testHelpArgumentLsp() {
 		String args[] = { "help", "lsp" };
 		CliCompileResult result = n4jsc(args, 0, false);
