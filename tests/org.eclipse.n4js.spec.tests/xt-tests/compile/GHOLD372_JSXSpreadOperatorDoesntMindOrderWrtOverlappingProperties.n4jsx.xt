@@ -40,7 +40,7 @@ d3[foo] == 0
 
 import * as React from "react"
 
-var zzzz: React.Element; // Avoid unused import warnings
+var zzzz: React.ReactElement; // Avoid unused import warnings
 zzzz;
 
 let r1 : ~Object+ = <div { ...{foo: 0}} foo={1}/>;

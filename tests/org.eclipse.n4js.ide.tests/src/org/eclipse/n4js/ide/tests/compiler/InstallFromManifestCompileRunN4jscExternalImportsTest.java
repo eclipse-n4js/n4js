@@ -72,7 +72,7 @@ public class InstallFromManifestCompileRunN4jscExternalImportsTest extends Abstr
 		expectedString += "P2\n";
 		expectedString += "React is not undefined true";
 
-		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileToRun);
+		ProcessResult nodejsResult = nodejsRunESM(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

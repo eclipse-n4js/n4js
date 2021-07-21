@@ -9,12 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export external public abstract class Element {
+export external public abstract class ReactElement {
     private constructor();
 };
 
 export external public interface ~ComponentProps {
-    public children?: Array<Element>;
+    public children?: Array<ReactElement>;
     public ref?: {function(Object /* node */): void};
     public key?: string;
 }
@@ -25,7 +25,7 @@ export external public abstract class Component<PropsT extends ComponentProps, S
     public context: Object+;
     public get refs(): Object+;
     public static name: Object+;
-    public abstract render(): Element;
+    public abstract render(): ReactElement;
     @CovariantConstructor
     public constructor(props: PropsT);
     protected static defaultProps: Object;
@@ -48,21 +48,21 @@ export external public abstract class PureComponent<PropsT extends ComponentProp
 
 // mor TODO IDE-2323
 //    public static <PropsT extends ComponentProps> createElement(
-//        type: union{string, {function(PropsT?): Element}, constructor{Component<PropsT, ?>}},
-//        props: PropsT?, ...children: union{string, Element, Array<Element>}): Element;
+//        type: union{string, {function(PropsT?): ReactElement}, constructor{Component<PropsT, ?>}},
+//        props: PropsT?, ...children: union{string, ReactElement, Array<ReactElement>}): ReactElement;
 export external public function createElement(
-    type: union{string, {function(Object =): Element}, constructor{Component}},
+    type: union{string, {function(Object =): ReactElement}, constructor{Component}},
     props: Object =,
-    ...children: union{string, Element, Array<Element>}): Element;
+    ...children: union{string, ReactElement, Array<ReactElement>}): ReactElement;
 
 export external public function cloneElement(
-    Element: Element,
+    ReactElement: ReactElement,
     props: Object =,
-    ...children: union{string, Element, Array<Element>}): Element;
+    ...children: union{string, ReactElement, Array<ReactElement>}): ReactElement;
 
 export external public function isValidElement(object: Object): boolean;
-export external public function renderToString(Element: Element): string;
-export external public function renderToStaticMarkup(Element: Element): string;
+export external public function renderToString(ReactElement: ReactElement): string;
+export external public function renderToStaticMarkup(ReactElement: ReactElement): string;
 
 export external public interface ~PropConstraint {
     public get isRequired(): PropConstraint;
@@ -77,7 +77,7 @@ export external public class ~PropTypes {
     public const object: PropType;
     public const string: PropType;
     public const node: PropType;
-    public const Element: PropType;
+    public const ReactElement: PropType;
     public static instanceOf(comp: Object): PropConstraint;
     public static oneOf(...values: any): PropConstraint;
     public static oneOfType(...constraints: PropConstraint): PropConstraint;
@@ -89,5 +89,5 @@ export external public class ~PropTypes {
 @Final
 export external public class Fragment extends Component<ComponentProps, Object> {
     @Override
-    public render(): Element;
+    public render(): ReactElement;
 }

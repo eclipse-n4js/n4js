@@ -16,18 +16,58 @@ import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
-import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterSwitchDts;
+import org.eclipse.n4js.transpiler.dts.print.PrettyPrinterDts;
+import org.eclipse.n4js.transpiler.dts.transform.CutOffTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.EnumAddMissingInitializersTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.ImplementedMemberTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.OverriddenAccessorsTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.ReturnTypeTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.TrimTransformationDts;
+import org.eclipse.n4js.transpiler.dts.transform.TypeReferenceTransformation;
+import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
+import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
+import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Transpiles N4JS to d.ts.
  */
 public class DtsTranspiler extends AbstractTranspiler {
+
+	@Inject
+	private Provider<StaticPolyfillTransformation> staticPolyfillTransformation;
+	@Inject
+	private Provider<CutOffTransformation> cutOffTransformation;
+	@Inject
+	private Provider<ImplementedMemberTransformation> implementedMemberTransformation;
+	@Inject
+	private Provider<EnumAddMissingInitializersTransformation> enumAddMissingInitializersTransformation;
+	@Inject
+	private Provider<ReturnTypeTransformation> returnTypeTransformation;
+	@Inject
+	private Provider<InferredTypesTransformation> inferredTypesTransformation;
+	@Inject
+	private Provider<OverriddenAccessorsTransformation> overriddenAccessorsTransformation;
+	@Inject
+	private Provider<TrimTransformationDts> trimTransformationDts;
+	@Inject
+	private Provider<TypeReferenceTransformation> typeReferenceTransformation;
+	@Inject
+	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformation;
+	@Inject
+	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformation;
+
+	@Inject
+	private N4JSDocumentationProvider documentationProvider;
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in
@@ -36,12 +76,25 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
-				// interfaceDeclarationTransformationProvider.get(),
+				// ---- preparatory transformations (e.g. getting rid of certain language features)
+				staticPolyfillTransformation.get(),
+				// ---- main transformations related to individual language features
+				cutOffTransformation.get(),
+				implementedMemberTransformation.get(),
+				enumAddMissingInitializersTransformation.get(),
+				returnTypeTransformation.get(),
+				inferredTypesTransformation.get(), // technical transformation moved here only due to requirement
+				overriddenAccessorsTransformation.get(),
+				// ---- clean up / generic / technical transformations
+				trimTransformationDts.get(),
+				typeReferenceTransformation.get(),
+				sanitizeImportsTransformation.get(),
+				moduleSpecifierTransformation.get()
 		};
 	}
 
 	/**
-	 * General entry-point. Overridden to handle plain-JS-wrapping without transforming.
+	 * General entry-point. Overridden to start .d.ts-specific performance data collector.
 	 */
 	@Override
 	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
@@ -60,6 +113,6 @@ public class DtsTranspiler extends AbstractTranspiler {
 			Optional<SourceMapInfo> optSourceMapInfo) {
 
 		final LineColTrackingAppendable out = new LineColTrackingAppendable(outCode, "\t");
-		PrettyPrinterSwitchDts.append(out, state, optPreamble);
+		PrettyPrinterDts.append(out, state, optPreamble, documentationProvider);
 	}
 }

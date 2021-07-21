@@ -25,8 +25,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -1167,32 +1169,100 @@ public class TypeUtils {
 	 * Returns all type variables referenced by the given object or its contents.
 	 */
 	public static Set<TypeVariable> getReferencedTypeVars(EObject obj) {
-		return collectReferencedTypeVars(obj, true, new LinkedHashSet<>(), null);
+		Set<TypeVariable> result = new LinkedHashSet<>();
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, null, ptr -> {
+			Type declType = ptr.getDeclaredType();
+			if (declType instanceof TypeVariable) {
+				result.add((TypeVariable) declType);
+			}
+			return true;
+		}, null);
+		return result;
 	}
 
-	private static Set<TypeVariable> collectReferencedTypeVars(EObject obj, boolean includeChildren,
-			Set<TypeVariable> addHere, RecursionGuard<IdentifiableElement> guard) {
-		final Type declType = obj instanceof TypeRef ? ((TypeRef) obj).getDeclaredType() : null;
-		if (declType instanceof TypeVariable) {
-			addHere.add((TypeVariable) declType);
+	/**
+	 * Returns all {@link ParameterizedTypeRef#getDeclaredType() declared types} referenced by the given object or its
+	 * contents.
+	 */
+	public static Set<Type> getReferencedDeclaredTypes(EObject obj) {
+		Set<Type> result = new LinkedHashSet<>();
+		forAllTypeRefs(obj, ParameterizedTypeRef.class, true, false, null, ptr -> {
+			Type declType = ptr.getDeclaredType();
+			if (declType != null) {
+				result.add(declType);
+			}
+			return true;
+		}, null);
+		return result;
+	}
+
+	/**
+	 * Invokes the given operation for all {@link TypeRef}s among the given objects and its contents, taking into
+	 * account references to function and structural types, which may not actually be EMF containment references.
+	 * <p>
+	 * The traversal is aborted early as soon as the given operation returns <code>false</code>.
+	 *
+	 * @param ignore
+	 *            iff this predicate is non-<code>null</code> and returns <code>true</code>, the given object and all
+	 *            its children will be ignored, i.e. 'operation' won't be invoked even if the object is of type
+	 *            'typeRefKind'.
+	 * @return <code>true</code> iff the given operation returned <code>true</code> for all
+	 *         {@code ParameterizedTypeRef}s or there were no {@code ParameterizedTypeRef}s
+	 */
+	public static <T extends TypeRef> boolean forAllTypeRefs(EObject obj, Class<T> typeRefKind,
+			boolean includeChildren, boolean followFunctionTypeRefs,
+			Predicate<EObject> ignore, Predicate<T> operation,
+			RecursionGuard<IdentifiableElement> guard) {
+
+		// check if the current object is being ignored
+		if (ignore != null && ignore.test(obj)) {
+			return true;
 		}
-		if (obj instanceof StructuralTypeRef) {
+		// invoke operation (if applicable)
+		if (typeRefKind.isInstance(obj)) {
+			if (!operation.test(typeRefKind.cast(obj))) {
+				return false;
+			}
+		}
+		// follow cross-references
+		if (followFunctionTypeRefs && obj instanceof FunctionTypeRef) {
+			TFunction f = ((FunctionTypeRef) obj).getFunctionType();
+			if (guard == null) {
+				guard = new RecursionGuard<>();
+			}
+			if (guard.tryNext(f)) {
+				if (!forAllTypeRefs(f, typeRefKind, true, followFunctionTypeRefs, ignore, operation, guard)) {
+					return false;
+				}
+			}
+		} else if (obj instanceof StructuralTypeRef) {
 			for (TStructMember m : ((StructuralTypeRef) obj).getStructuralMembers()) {
 				if (guard == null) {
 					guard = new RecursionGuard<>();
 				}
 				if (guard.tryNext(m)) {
-					collectReferencedTypeVars(m, true, addHere, guard);
+					if (!forAllTypeRefs(m, typeRefKind, true, followFunctionTypeRefs, ignore, operation, guard)) {
+						return false;
+					}
 				}
 			}
 		}
+		// continue with contents
 		if (includeChildren) {
-			final Iterator<EObject> iter = obj.eAllContents();
+			final TreeIterator<EObject> iter = obj.eAllContents();
 			while (iter.hasNext()) {
-				collectReferencedTypeVars(iter.next(), false, addHere, guard);
+				EObject curr = iter.next();
+				if (ignore != null && ignore.test(curr)) {
+					iter.prune();
+					continue;
+				}
+				if (!forAllTypeRefs(curr, typeRefKind, false, followFunctionTypeRefs, ignore, operation,
+						guard)) {
+					return false;
+				}
 			}
 		}
-		return addHere;
+		return true;
 	}
 
 	/**

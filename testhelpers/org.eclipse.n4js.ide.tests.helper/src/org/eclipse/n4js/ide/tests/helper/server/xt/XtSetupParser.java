@@ -20,12 +20,14 @@ import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
+import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.ProjectBuilder.FolderBuilder.OtherFileBuilder;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder.YarnProjectBuilder;
+import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -34,6 +36,11 @@ import com.google.common.base.Preconditions;
  * Parses the configuration in the Xt setup section of an .xt file.
  */
 public class XtSetupParser {
+
+	/** Keyword for activating {@link Project#isGenerateDts() .d.ts generation}. */
+	public static final String GENERATE_DTS = "GENERATE_DTS";
+	/** Keyword for adding a dependency to a project. Expects to be followed by a name in quotes. */
+	public static final String DEPENDS_ON = "DEPENDS_ON";
 
 	static final String ERROR = "Xt setup parse error: ";
 
@@ -132,7 +139,7 @@ public class XtSetupParser {
 
 		while (tokens.hasNext()) {
 			switch (tokens.next()) {
-			case "GENERATE_DTS":
+			case GENERATE_DTS:
 				result.generateDts = true;
 				break;
 			case "IssueConfiguration":
@@ -146,6 +153,7 @@ public class XtSetupParser {
 				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
 				break;
 			case XtFileDataParser.XT_SETUP_END:
+				applyTopLevelGenerateDtsToAllProjects(result.workspace, result.generateDts);
 				return result;
 			default:
 				Preconditions.checkState(false,
@@ -217,6 +225,16 @@ public class XtSetupParser {
 		}
 
 		XtWorkspace xtWorkspace = builder.build(new XtWorkspace());
+		if (xtWorkspace.getProjects().size() == 1 && xtWorkspace.getProjects().get(0) instanceof YarnWorkspaceProject &&
+				((YarnWorkspaceProject) xtWorkspace.getProjects().get(0)).getMemberProjects().size() == 1) {
+
+			YarnWorkspaceProject yarnWorkspaceProject = (YarnWorkspaceProject) xtWorkspace.getProjects().get(0);
+			if (yarnWorkspaceProject.getMemberProjects().size() == 1) {
+				Project project = yarnWorkspaceProject.getMemberProjects().iterator().next();
+				xtWorkspace.clearProjects();
+				xtWorkspace.addProject(project);
+			}
+		}
 		xtWorkspace.moduleNameOfXtFile = ((BuilderInfo) builder.builderInfo).moduleNameOfXtFile;
 		return xtWorkspace;
 	}
@@ -254,6 +272,21 @@ public class XtSetupParser {
 				case "ThisFile": {
 					FolderBuilder folderBuilder = prjBuilder.getOrAddFolder(path);
 					parseFile(tokens, xtFile, xtFileContent, true, folderBuilder);
+					break;
+				}
+				case GENERATE_DTS: {
+					prjBuilder.setGenerateDts(true);
+					break;
+				}
+				case DEPENDS_ON: {
+					String arg = tokens.expectNameInQuotes();
+					// for consistency with TestWorkspaceManager#CFG_DEPENDENCIES we support a comma-separated list:
+					String[] names = arg.split(",");
+					for (String name : names) {
+						Preconditions.checkState(!name.isEmpty(), ERROR + "Empty project name: " + DEPENDS_ON + " "
+								+ tokens.lookLast() + " in file " + xtFile.getPath());
+						prjBuilder.addProjectDependency(name);
+					}
 					break;
 				}
 				case "}":
@@ -331,7 +364,8 @@ public class XtSetupParser {
 		Preconditions.checkState(content != null,
 				ERROR + "Missing content of file " + name + " in file " + xtFile.getPath());
 
-		int idx = name.lastIndexOf(".", name.lastIndexOf('/') + 1);
+		String lastSegment = name.substring(name.lastIndexOf('/') + 1);
+		int idx = lastSegment.lastIndexOf('.');
 		String nameWithoutExtension = idx >= 0 ? name.substring(0, idx) : name;
 		String extension = idx >= 0 ? name.substring(idx + 1) : null;
 		boolean isModule = extension != null && N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
@@ -348,4 +382,14 @@ public class XtSetupParser {
 		}
 	}
 
+	private static void applyTopLevelGenerateDtsToAllProjects(Workspace workspace, boolean topLevelGenerateDts) {
+		if (workspace == null || !topLevelGenerateDts) {
+			return; // nothing to apply in this case
+		}
+		for (Project project : workspace.getAllProjects()) {
+			if (!(project instanceof YarnWorkspaceProject)) {
+				project.setGenerateDts(true);
+			}
+		}
+	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#getLiteralName <em>Literal Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#getComputedName <em>Computed Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#isComputedSymbol <em>Computed Symbol</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#getExpression <em>Expression</em>}</li>
  * </ul>
  *
@@ -111,6 +112,32 @@ public interface LiteralOrComputedPropertyName extends EObject {
 	 * @generated
 	 */
 	void setComputedName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Computed Symbol</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Iff this is a computed property name and the expression is one of the special cases that can be evaluated at
+	 * compile time, then this will tell whether the expression evaluated to a symbol.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Computed Symbol</em>' attribute.
+	 * @see #setComputedSymbol(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getLiteralOrComputedPropertyName_ComputedSymbol()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	boolean isComputedSymbol();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName#isComputedSymbol <em>Computed Symbol</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Computed Symbol</em>' attribute.
+	 * @see #isComputedSymbol()
+	 * @generated
+	 */
+	void setComputedSymbol(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.

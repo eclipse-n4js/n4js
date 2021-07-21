@@ -20,8 +20,10 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
@@ -86,8 +88,9 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 		XBuildRequest request = super.newBuildRequest(buildRequestFactory, changedFiles, deletedFiles, externalDeltas,
 				cancelIndicator);
 
-		if (getProjectConfig().getProjectDescription().isGeneratorEnabledDts()) {
-			request.addAfterBuildListener(new TSConfigAfterBuildListener(getProjectConfig()));
+		ProjectDescription pd = getProjectConfig().getProjectDescription();
+		if (N4JSLanguageUtils.isDtsGenerationActive(pd)) {
+			request.addAfterBuildListener(new DtsAfterBuildListener(getProjectConfig()));
 		}
 		return request;
 	}

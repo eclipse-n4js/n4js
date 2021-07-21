@@ -15,11 +15,12 @@ import java.io.Reader;
 
 import org.antlr.runtime.TokenSource;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.xtext.parser.IParseResult;
-import org.eclipse.xtext.parser.antlr.XtextTokenStream;
-
 import org.eclipse.n4js.parser.antlr.N4JSParser;
 import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.parser.antlr.XtextTokenStream;
 
 /**
  * <p>
@@ -55,7 +56,7 @@ public class N4JSSemicolonInjectingParser extends N4JSParser {
 	 */
 	@Override
 	public IParseResult doParse(Reader reader) {
-		try {
+		try (Measurement m = N4JSDataCollectors.dcParser.getMeasurement()) {
 			return parse(getDefaultRuleName(), new AntlrStreamWithToString(reader));
 		} catch (IOException e) {
 			throw new WrappedException(e);

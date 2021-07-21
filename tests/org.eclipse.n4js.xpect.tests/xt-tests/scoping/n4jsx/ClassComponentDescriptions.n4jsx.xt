@@ -36,21 +36,21 @@ import * as React from "react"
 
 export public class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
 	@Override
-	public render() : React.Element{
+	public render() : React.ReactElement{
 		return (<div>{this.props.whatTextShouldIShow}</div>);
 	}
 }
 
 
 /* XPECT scope at 'React.<|>Component'  ---
-Component, ComponentProps, Element, Fragment, PropConstraint, PropType, PropTypes,
+Component, ComponentProps, ReactElement, Fragment, PropConstraint, PropType, PropTypes,
 PureComponent, cloneElement, createElement, isValidElement, renderToStaticMarkup,
 renderToString
 --- */
 export public class MyComponent extends React.Component<~React.ComponentProps with {aProp: string}, String> {
 
 	@Override
-	public render() : React.Element{
+	public render() : React.ReactElement{
 		const constText = "some text";
 		/* XPECT scope at 'Lower<|>Component' ---
 		Array, AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError,
@@ -64,7 +64,7 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 		String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError, URIError,
 		__proto__, arguments, console, constText, constructor,
 		decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty,
-		index.Component, index.ComponentProps, index.Element, index.Fragment, index.PropConstraint,
+		index.Component, index.ComponentProps, index.ReactElement, index.Fragment, index.PropConstraint,
 		index.PropType, index.PropTypes, index.PureComponent, index.cloneElement, index.createElement,
 		index.isValidElement, index.renderToStaticMarkup, index.renderToString, isFinite, isNaN,
 		isPrototypeOf, null, parseFloat, parseInt, propertyIsEnumerable,

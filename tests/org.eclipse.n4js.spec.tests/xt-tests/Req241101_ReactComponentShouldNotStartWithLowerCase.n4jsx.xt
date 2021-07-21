@@ -29,7 +29,7 @@
 
 import * as React from "react"
 
-function myReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
+function myReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.ReactElement {
 	return (<div>{props.myProp}</div>);
 }
 // XPECT errors --> "React functional component myReactFuncComponent cannot start with lower case." at "myReactFuncComponent"
@@ -39,7 +39,7 @@ function myReactFuncComponent(props: ~React.ComponentProps with {myProp: string}
 // XPECT warnings --> "Class names should start with upper case letter." at "c"
 class c extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		return <button/>
 	}
 }

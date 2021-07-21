@@ -321,6 +321,7 @@ class TypeReferenceNode<T extends TypeRef> {
 interface TypeProvidingElement {
 	op TypeRef getDeclaredTypeRef()
 	op TypeRef getDeclaredTypeRefInAST()
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode()
 }
 
 /* A typed element, such as Variable, a Member or a NameValuePair, may provide a declared type.
@@ -639,15 +640,19 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
 
 	boolean declaredOptional
 
-	op TypeRef getDeclaredTypeRef() {
-		return null;
-	}
 	/*
-     * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
+     * The declared type of the field accessor (resolved), which is either the return type of the getter or the type of the formal parameter in case of a setter.
      */
-	op TypeRef getDeclaredTypeRefInAST() {
-		return null;
-	}
+	op TypeRef getDeclaredTypeRef()
+	/*
+     * The declared type of the field accessor (from the AST), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+     */
+	op TypeRef getDeclaredTypeRefInAST()
+	/*
+     * The declared type of the field accessor (as node), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+     */
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode()
+
 	/*
 	 * Returns the defined FieldAccessor in the TModule, either a TGetter or a TSetter.
 	 */
@@ -900,7 +905,7 @@ abstract class VariableDeclarationContainer {
 	VariableStatementKeyword varStmtKeyword
 
 	op VariableDeclaration[] getVarDecl() {
-		varDeclsOrBindings.map[it.getVariableDeclarations()].flatten.toEList
+		varDeclsOrBindings.map[it.getAllVariableDeclarations()].flatten.toEList
 	}
 	op boolean isBlockScoped() {
 		switch(varStmtKeyword) {
@@ -926,7 +931,7 @@ class ExportedVariableStatement extends VariableStatement, ExportableElement, An
 
 abstract class VariableDeclarationOrBinding extends ControlFlowElement {
 
-	op VariableDeclaration[] getVariableDeclarations() {
+	op VariableDeclaration[] getAllVariableDeclarations() {
 		switch(this) {
 		VariableDeclaration: #[this as VariableDeclaration].toEList
 		VariableBinding: eAllContents.filter(VariableDeclaration).toEList
@@ -1271,6 +1276,11 @@ class LiteralOrComputedPropertyName {
 	 * @see ComputedNameProcessor
 	 */
 	transient String computedName
+	/*
+	 * Iff this is a computed property name and the expression is one of the special cases that can be evaluated at
+	 * compile time, then this will tell whether the expression evaluated to a symbol.
+	 */
+	transient boolean computedSymbol
 	/* The expression provided in the source code for computing the property name, or <code>null</code>. */
 	contains Expression expression
 
@@ -1408,6 +1418,9 @@ abstract class SetterDeclaration extends FieldAccessor {
 	}
 	op TypeRef getDeclaredTypeRef() {
 		return fpar?.declaredTypeRefNode?.typeRef;
+	}
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode() {
+		return fpar?.declaredTypeRefNode;
 	}
 	/*
 	 * Returns the declared type of the formal parameter
@@ -2118,7 +2131,8 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 		return definedType as TClass;
 	}
 	op ParameterizedTypeRefNodeIterable getSuperClassifierRefs() {
-		return #[superClassRef] + implementedInterfaceRefs;
+		val _superClassRef = superClassRef;
+		return if (_superClassRef !== null) #[_superClassRef] + implementedInterfaceRefs else implementedInterfaceRefs;
 	}
 	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return implementedInterfaceRefs;

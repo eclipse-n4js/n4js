@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Folder;
@@ -33,6 +35,7 @@ import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
@@ -217,6 +220,35 @@ public class TestWorkspaceManager {
 		return projectFolder;
 	}
 
+	/**
+	 * For this method, it is sufficient if the given file is located somewhere inside a project; strict
+	 * {@link SourceFolderSnapshot#contains(URI) containment in a source folder} is *not* required.
+	 *
+	 * @return the root folder of the project containing the given file or <code>null</code>.
+	 */
+	public File getProjectRootContaining(File file) {
+		List<Project> allProjects = new ArrayList<>();
+		if (createdProject instanceof YarnWorkspaceProject) {
+			allProjects.addAll(((YarnWorkspaceProject) createdProject).getMemberProjects());
+		} else {
+			allProjects.add(createdProject);
+		}
+		Path filePath = file.toPath();
+		Path resultPath = null;
+		for (Project project : allProjects) {
+			File projectRoot = getProjectRoot(project.getName());
+			if (projectRoot != null) {
+				Path projectRootPath = projectRoot.toPath();
+				if (filePath.startsWith(projectRootPath)) {
+					if (resultPath == null || projectRootPath.getNameCount() > resultPath.getNameCount()) {
+						resultPath = projectRootPath;
+					}
+				}
+			}
+		}
+		return resultPath != null ? resultPath.toFile() : null;
+	}
+
 	private File getProjectRootFailSafe(String projectName) {
 		if (!isCreated()) {
 			return null;
@@ -295,6 +327,9 @@ public class TestWorkspaceManager {
 	 * </pre>
 	 *
 	 * this method will return the file URI of the <code>package.json</code> file of the project with the given name.
+	 *
+	 * @throws IllegalStateException
+	 *             when no module or multiple modules are found for the given name, or some other error occurred.
 	 */
 	public FileURI getFileURIFromModuleName(String moduleName) {
 		// special case for package.json files:
@@ -311,23 +346,23 @@ public class TestWorkspaceManager {
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
 
+		List<Path> allMatches;
 		try {
-			List<Path> allMatches = Files
+			allMatches = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
 					.collect(Collectors.toList());
-
-			if (allMatches.isEmpty()) {
-				throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
-			}
-			if (allMatches.size() > 1) {
-				throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
-			}
-
-			return new FileURI(allMatches.get(0).toFile());
-
 		} catch (IOException e) {
 			throw new IllegalStateException("Error when searching for module " + moduleNameWithExtension, e);
 		}
+
+		if (allMatches.isEmpty()) {
+			throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
+		}
+		if (allMatches.size() > 1) {
+			throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
+		}
+
+		return new FileURI(allMatches.get(0).toFile());
 	}
 
 	/** Tells whether the test workspace has already been created. */

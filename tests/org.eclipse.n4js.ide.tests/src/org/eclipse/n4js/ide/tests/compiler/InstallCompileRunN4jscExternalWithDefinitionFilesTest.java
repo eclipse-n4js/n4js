@@ -67,7 +67,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
 
-		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileToRun);
+		ProcessResult nodejsResult = nodejsRunESM(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), EXPECTED, nodejsResult.getStdOut());
 	}
 
@@ -86,7 +86,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends Abstr
 		CliCompileResult cliResult = n4jsc(options);
 		assertEquals(cliResult.toString(), 1, cliResult.getTranspiledFilesCount(project));
 
-		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileToRun);
+		ProcessResult nodejsResult = nodejsRunESM(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), EXPECTED, nodejsResult.getStdOut());
 	}
 

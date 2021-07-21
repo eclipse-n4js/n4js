@@ -61,7 +61,7 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Abs
 
 		String expectedString = "Application was created!";
 
-		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileToRun);
+		ProcessResult nodejsResult = nodejsRunESM(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

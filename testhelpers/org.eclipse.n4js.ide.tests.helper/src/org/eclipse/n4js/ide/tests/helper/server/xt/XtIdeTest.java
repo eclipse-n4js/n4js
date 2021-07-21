@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
+import static org.eclipse.n4js.N4JSGlobals.IMPORT_N4JSGLOBALS;
+import static org.eclipse.n4js.N4JSGlobals.OUTPUT_FILE_PREAMBLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.CliTools.CliException;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
@@ -41,6 +45,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodPattern.Match;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -49,6 +54,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -58,6 +64,11 @@ import com.google.inject.Inject;
  * Class that provides / delegates of xt methods
  */
 public class XtIdeTest extends AbstractIdeTest {
+
+	static final File TSC_PROVIDER = new File("test-tscProvider");
+
+	static final File TSC2 = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/.bin/tsc");
+	static final File TSC = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/typescript/lib/tsc");
 
 	static final XtMethodPattern PATTERN_PREDS = XtMethodPattern.builder().keyword("preds")
 			.textOpt("type", (Object[]) ControlFlowType.values())
@@ -97,6 +108,12 @@ public class XtIdeTest extends AbstractIdeTest {
 	XtextResource resource;
 	XtResourceEObjectAccessor eobjProvider;
 	Set<String> suppressedIssues;
+
+	@Override
+	public File getProjectRoot() {
+		String projectName = xtData.workspace.getProjects().get(0).getName();
+		return testWorkspaceManager.getProjectRoot(projectName);
+	}
 
 	/**
 	 * Call this before calling any other methods of {@link XtIdeTest}.
@@ -520,7 +537,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 *
 	 * <pre>
 	 * // XPECT generated_dts ---
-	 * &lt;CONTENT OF GENERATED D.TS FILE&gt;
+	 * &lt;EXPECTED CONTENT OF GENERATED D.TS FILE&gt;
 	 * // ---
 	 * </pre>
 	 */
@@ -530,24 +547,56 @@ public class XtIdeTest extends AbstractIdeTest {
 		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
 		int idxEnd = moduleName.lastIndexOf(".");
 		String genDtsFileName = moduleName.substring(idxStart, idxEnd) + ".d.ts";
+
 		try {
 			FileURI genDtsFileURI = getFileURIFromModuleName(genDtsFileName);
 			String genDtsCode = Files.readString(genDtsFileURI.toPath());
-			assertTrue(genDtsCode.startsWith(N4JSGlobals.OUTPUT_FILE_PREAMBLE));
-			String genDtsCodeTrimmed = genDtsCode.substring(N4JSGlobals.OUTPUT_FILE_PREAMBLE.length()).trim();
+			assertTrue(genDtsCode.startsWith(OUTPUT_FILE_PREAMBLE));
+			String genDtsCodeTrimmedPreamble = genDtsCode.substring(OUTPUT_FILE_PREAMBLE.length()).trim();
+			assertTrue(genDtsCodeTrimmedPreamble.startsWith(IMPORT_N4JSGLOBALS));
+			String genDtsCodeTrimmed = genDtsCodeTrimmedPreamble.substring(IMPORT_N4JSGLOBALS.length()).trim();
 
-			assertEquals(data.expectation, genDtsCodeTrimmed);
+			assertEquals(data.getUnescapeExpectationRaw(), genDtsCodeTrimmed);
 
 			CliTools cliTools = new CliTools();
-			ProcessResult result = cliTools.npmRun(getProjectRoot().toPath(), "add", "typescript@4.3.2");
-			assertEquals(0, result.getExitCode());
-			result = cliTools.npmRun(getProjectRoot().toPath(), "run", "tsc");
-			assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
+			ensureTSC(cliTools);
+
+			List<Project> allProjectsWithGenerateDts = FluentIterable.from(xtData.workspace.getAllProjects())
+					.filter(Project::isGenerateDts)
+					.toList();
+			assertFalse("no projects found with .d.ts generation turned on", allProjectsWithGenerateDts.isEmpty());
+
+			for (Project project : allProjectsWithGenerateDts) {
+				File workingDir = getProjectRoot(project.getName());
+				ProcessResult result;
+				try {
+					result = cliTools.nodejsRun(workingDir.toPath(), TSC2.getAbsoluteFile().toPath());
+				} catch (CliException e) {
+					throw new AssertionError("error while running tsc in working directory: " + workingDir, e);
+				}
+				assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
+			}
 
 		} catch (IllegalStateException e) {
-			System.out.println("Could not find file " + genDtsFileName + "\nDid you set: ENABLE_DTS in SETUP section?");
-			throw e;
+			throw new RuntimeException("Could not find file " + genDtsFileName + "\nDid you set: "
+					+ XtSetupParser.GENERATE_DTS + " in SETUP section?", e);
 		}
+	}
+
+	private void ensureTSC(CliTools cliTools) {
+		if (TSC_PROVIDER.isDirectory() && TSC2.isFile()) {
+			return;
+		}
+
+		if (TSC_PROVIDER.exists()) {
+			TSC_PROVIDER.delete();
+		}
+		TSC_PROVIDER.mkdirs();
+
+		// npm install --prefix . typescript@4.3.2
+		ProcessResult result = cliTools.npmRun(TSC_PROVIDER.toPath(), "install", "--prefix", ".", "typescript@4.3.2");
+
+		assertEquals(0, result.getExitCode());
 	}
 
 	/**

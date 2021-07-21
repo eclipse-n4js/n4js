@@ -90,6 +90,9 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 		if (tMember != null && tMember.getContainingModule().isStaticPolyfillAware()) {
 			TClassifier tClassFilled = (TClassifier) tMember.getContainingType();
 			N4ClassDeclaration filler = staticPolyfillHelper.getStaticPolyfill(tClassFilled);
+			if (filler == null) {
+				return null; // filler is not yet created
+			}
 			// Search for the polyfill's member
 			String name = tMember.getName();
 			EClass memberKind;

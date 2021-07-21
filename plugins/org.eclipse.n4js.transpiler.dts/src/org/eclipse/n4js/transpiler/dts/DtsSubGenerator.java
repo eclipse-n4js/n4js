@@ -22,8 +22,10 @@ import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.xtext.generator.IFileSystemAccess;
@@ -94,7 +96,8 @@ public class DtsSubGenerator extends AbstractSubGenerator {
 		N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(input);
 		N4JSProjectConfigSnapshot project = ws.findProjectContaining(input.getURI());
 		if (project != null) {
-			return project.getProjectDescription().isGeneratorEnabledDts();
+			ProjectDescription pd = project.getProjectDescription();
+			return N4JSLanguageUtils.isDtsGenerationActive(pd);
 		}
 		return false;
 	}

@@ -267,7 +267,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 
 				// need "if inactive" in next line, because reentrant invocations can happen due to
 				// references across different resource sets
-				try (Measurement m = N4JSDataCollectors.dcAstPostprocess.getMeasurementIfInactive()) {
+				try (Measurement m = N4JSDataCollectors.dcAstPostProcess.getMeasurementIfInactive()) {
 					PostProcessingEntryTracker.setEntryResource(this);
 
 					// main post-processing

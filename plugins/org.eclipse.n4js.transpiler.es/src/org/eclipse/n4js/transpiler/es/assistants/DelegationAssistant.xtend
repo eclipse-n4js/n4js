@@ -96,7 +96,7 @@ class DelegationAssistant extends TransformationAssistant {
 			val tSuper = getDirectSuperTypeBequestingMember(origin, target);
 			// we know the STE of tSuper must already exist, because it is a direct super type and must therefore be
 			// referenced in the declaration of classifier origin
-			result.delegationBaseType = getSymbolTableEntryOriginal(tSuper, false);
+			result.delegationBaseType = getSymbolTableEntryOriginal(tSuper, true);
 			result.delegationSuperClassSteps = 0;
 		} else if(origin instanceof TClass) {
 			// we are in a class and the target may either be in a class or an interface
@@ -106,13 +106,13 @@ class DelegationAssistant extends TransformationAssistant {
 				// (note: this includes the case the 'target' is contained in an interface and one of our ancestor
 				// classes implements that interface)
 				val tSuper = origin.superClassRef.declaredType as TClass;
-				result.delegationBaseType = getSymbolTableEntryOriginal(tSuper, false);
+				result.delegationBaseType = getSymbolTableEntryOriginal(tSuper, true);
 				result.delegationSuperClassSteps = origin.getDistanceToAncestorClass(tAncestor) - 1;
 			} else if(tAncestor!==null) {
 				// we are consuming 'target' from one of our directly implemented interfaces or its extended interfaces
 				// (similar as case "origin instanceof TInterface" above)
 				val tSuper = getDirectSuperTypeBequestingMember(origin, target);
-				result.delegationBaseType = getSymbolTableEntryOriginal(tSuper, false);
+				result.delegationBaseType = getSymbolTableEntryOriginal(tSuper, true);
 				result.delegationSuperClassSteps = 0;
 			} else {
 				throw new IllegalStateException("cannot find target (probably not an inherited member)");

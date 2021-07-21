@@ -31,7 +31,7 @@ import * as React from "react/index"
 
 class C extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		return <button/>
 	}
 }

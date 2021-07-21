@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.emf.ecore.EFactory;
+
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 /**
@@ -76,13 +77,13 @@ public interface ImFactory extends EFactory {
 	SymbolTableEntryInternal createSymbolTableEntryInternal();
 
 	/**
-	 * Returns a new object of class '<em>Type Reference Node IM</em>'.
+	 * Returns a new object of class '<em>Plain Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Type Reference Node IM</em>'.
+	 * @return a new object of class '<em>Plain Reference</em>'.
 	 * @generated
 	 */
-	<T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM();
+	PlainReference createPlainReference();
 
 	/**
 	 * Returns a new object of class '<em>Identifier Ref IM</em>'.
@@ -103,22 +104,13 @@ public interface ImFactory extends EFactory {
 	ParameterizedPropertyAccessExpression_IM createParameterizedPropertyAccessExpression_IM();
 
 	/**
-	 * Returns a new object of class '<em>Parameterized Type Ref IM</em>'.
+	 * Returns a new object of class '<em>Type Reference Node IM</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Parameterized Type Ref IM</em>'.
+	 * @return a new object of class '<em>Type Reference Node IM</em>'.
 	 * @generated
 	 */
-	ParameterizedTypeRef_IM createParameterizedTypeRef_IM();
-
-	/**
-	 * Returns a new object of class '<em>Parameterized Type Ref Structural IM</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Parameterized Type Ref Structural IM</em>'.
-	 * @generated
-	 */
-	ParameterizedTypeRefStructural_IM createParameterizedTypeRefStructural_IM();
+	<T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM();
 
 	/**
 	 * Returns a new object of class '<em>Snippet</em>'.
@@ -164,24 +156,6 @@ public interface ImFactory extends EFactory {
 	 * @generated
 	 */
 	StringLiteralForSTE createStringLiteralForSTE();
-
-	/**
-	 * Returns a new object of class '<em>Versioned Parameterized Type Ref IM</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Parameterized Type Ref IM</em>'.
-	 * @generated
-	 */
-	VersionedParameterizedTypeRef_IM createVersionedParameterizedTypeRef_IM();
-
-	/**
-	 * Returns a new object of class '<em>Versioned Parameterized Type Ref Structural IM</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Parameterized Type Ref Structural IM</em>'.
-	 * @generated
-	 */
-	VersionedParameterizedTypeRefStructural_IM createVersionedParameterizedTypeRefStructural_IM();
 
 	/**
 	 * Returns a new object of class '<em>Versioned Identifier Ref IM</em>'.

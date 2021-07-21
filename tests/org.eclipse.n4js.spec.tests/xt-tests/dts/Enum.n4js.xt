@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+enum SomeColors {
+    Yellow,
+    Blue,
+    Purple
+}
+
+
+
+/* XPECT generated_dts ---
+declare enum SomeColors {
+	Yellow,
+	Blue,
+	Purple
+}
+declare namespace SomeColors {
+	export const literals: Array<SomeColors>;
+	export function findLiteralByName(name: string): SomeColors;
+	export function findLiteralByValue (value: string): SomeColors;
+}
+--- */

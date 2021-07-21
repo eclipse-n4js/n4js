@@ -26,13 +26,17 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -66,6 +70,11 @@ public class TranspilerState {
 	public final RuleEnvironment G;
 
 	/**
+	 * The {@link BuiltInTypeScope} for obtaining built-in types.
+	 */
+	public final BuiltInTypeScope builtInTypeScope;
+
+	/**
 	 * A {@link MemberCollector member collector} created with the {@link #resource resource to transpile} as context.
 	 */
 	public final MemberCollector memberCollector;
@@ -95,6 +104,11 @@ public class TranspilerState {
 	public final STECache steCache;
 
 	/**
+	 * The workspace access for finding containing projects, etc.
+	 */
+	public final WorkspaceAccess workspaceAccess;
+
+	/**
 	 * Cache for temporary variable statements. Never use directly; use method
 	 * {@link TranspilerStateOperations#addOrGetTemporaryVariable(TranspilerState, String, EObject)
 	 * #addOrGetTemporaryVariable()} instead.
@@ -112,16 +126,19 @@ public class TranspilerState {
 	 * Creates a new transpiler state.
 	 */
 	public TranspilerState(N4JSResource resource, N4JSProjectConfigSnapshot project, GeneratorOption[] options,
-			MemberCollector memberCollector, Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info) {
+			MemberCollector memberCollector, Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info,
+			WorkspaceAccess workspaceAccess) {
 		this.resource = resource;
 		this.project = project;
 		this.options = options;
 		this.G = RuleEnvironmentExtensions.newRuleEnvironment(resource);
+		this.builtInTypeScope = RuleEnvironmentExtensions.getBuiltInTypeScope(this.G);
 		this.memberCollector = memberCollector;
 		this.im = im;
 		this.tracer = tracer;
 		this.info = info;
 		this.steCache = steCache;
+		this.workspaceAccess = workspaceAccess;
 		// check
 		if (this.steCache.im != this.im)
 			throw new IllegalStateException(
@@ -147,7 +164,14 @@ public class TranspilerState {
 		/** Map name to internal STE */
 		public final HashMap<String, SymbolTableEntryInternal> mapInternal = new HashMap<>();
 
-		// inverse maps:
+		// derived maps:
+
+		/**
+		 * For each namespace import, this maps the imported module to the STE of the import's
+		 * {@link ModuleNamespaceVirtualType}.
+		 */
+		public final HashMap<TModule, SymbolTableEntryOriginal> mapImportedModule_2_STE = new HashMap<>();
+
 		/** Map named element back to STE, inverse of ste.elementsOfThisName */
 		public final HashMap<NamedElement, SymbolTableEntry> mapNamedElement_2_STE = new HashMap<>();
 

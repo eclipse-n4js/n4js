@@ -36,7 +36,7 @@ export public let simpleSelfClosing = <div/>;
 
 /* XPECT scope at '<<|>div'  ---
 index.Component, index.ComponentProps,
-index.Element, index.PropConstraint, index.PropType,
+index.ReactElement, index.PropConstraint, index.PropType,
 index.PropTypes, index.PureComponent, index.cloneElement,
 index.createElement, index.isValidElement, index.renderToStaticMarkup,
 index.renderToString, null, Number, parseFloat, parseInt, propertyIsEnumerable, propsA,

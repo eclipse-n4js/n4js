@@ -9,6 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+@@Global
+@@ProvidedByRuntime
+
 /**
  * Options used do define collator format.
  * 

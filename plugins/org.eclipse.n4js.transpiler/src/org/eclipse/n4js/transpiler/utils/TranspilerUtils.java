@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.transpiler.utils;
 
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._NumericLiteral;
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks._StringLiteral;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,17 +20,23 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
+import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -201,5 +210,31 @@ public class TranspilerUtils {
 			}
 		}
 		return expr != null && !N4JSLanguageUtils.isUndefinedLiteral(G, expr);
+	}
+
+	/**
+	 * Assumes the given literal belongs to an enum that is either <code>@NumberBased</code> or
+	 * <code>@StringBased</code>.
+	 */
+	public static Literal enumLiteralToNumericOrStringLiteral(TEnumLiteral enumLiteral) {
+		TEnum tEnum = (TEnum) enumLiteral.eContainer();
+		EnumKind enumKind = N4JSLanguageUtils.getEnumKind(tEnum);
+		switch (enumKind) {
+		case NumberBased:
+			return enumLiteralToNumericLiteral(enumLiteral);
+		case StringBased:
+			return enumLiteralToStringLiteral(enumLiteral);
+		case Normal:
+		default:
+			throw new IllegalStateException("expected given enum literal to belong to a number-/string-based enum");
+		}
+	}
+
+	private static NumericLiteral enumLiteralToNumericLiteral(TEnumLiteral enumLiteral) {
+		return _NumericLiteral(enumLiteral == null ? null : enumLiteral.getValueNumber());
+	}
+
+	private static StringLiteral enumLiteralToStringLiteral(TEnumLiteral enumLiteral) {
+		return _StringLiteral(enumLiteral == null ? null : enumLiteral.getValueString());
 	}
 }

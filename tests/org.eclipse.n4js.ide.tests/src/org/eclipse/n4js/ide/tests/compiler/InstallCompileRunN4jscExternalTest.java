@@ -73,7 +73,7 @@ public class InstallCompileRunN4jscExternalTest extends AbstractCliCompileTest {
 		expectedString += "limit, logger, methodOverride, multipart, query, request, response, responseTime, ";
 		expectedString += "session, static, staticCache, timeout, urlencoded, vhost";
 
-		ProcessResult nodejsResult = nodejsRun(workspace.toPath(), fileToRun);
+		ProcessResult nodejsResult = nodejsRunESM(workspace.toPath(), fileToRun);
 		assertEquals(nodejsResult.toString(), expectedString, nodejsResult.getStdOut());
 	}
 

@@ -57,7 +57,7 @@ public class PrettyPrinter {
 		final boolean emitSourceMaps = optSourceMapInfo.isPresent();
 		final SourceMapAwareAppendable out = new SourceMapAwareAppendable(outCode, INDENT, emitSourceMaps);
 
-		PrettyPrinterSwitch.append(out, state, optPreamble);
+		PrettyPrinterEcmaScript.append(out, state, optPreamble);
 
 		if (emitSourceMaps) {
 			final SourceMapInfo sourceMapInfo = optSourceMapInfo.get();

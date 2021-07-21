@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TField;
@@ -31,8 +31,6 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.util.AccessorTuple;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
-import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 
 /**
  */
@@ -51,15 +49,14 @@ public class ConcreteMembersOrderedForTranspiler {
 	/**
 	 * Returns a tuple of collections used by transpiler to generate interface or class members.
 	 */
-	public static ConcreteMembersOrderedForTranspiler create(ContainerTypesHelper containerTypesHelper,
-			TClassifier type, Script context) {
+	public static ConcreteMembersOrderedForTranspiler create(TranspilerState state, TClassifier type) {
 
-		MemberCollector collector = containerTypesHelper.fromContext(context);
-
-		List<TMember> concreteInheritedMembers = (type instanceof TClass) ? collector.inheritedMembers((TClass) type)
+		List<TMember> concreteInheritedMembers = (type instanceof TClass)
+				? state.memberCollector.inheritedMembers((TClass) type)
 				: emptyList();
 
-		List<TMember> ownedAndMixedInConcreteMembers = collector.computeOwnedAndMixedInConcreteMembers(type);
+		List<TMember> ownedAndMixedInConcreteMembers = state.memberCollector
+				.computeOwnedAndMixedInConcreteMembers(type);
 
 		List<AccessorTuple> concreteAccessorTuples = getConcreteFieldAccessors(ownedAndMixedInConcreteMembers,
 				concreteInheritedMembers);

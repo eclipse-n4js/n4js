@@ -58,6 +58,9 @@ public interface FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEle
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The declared type of the field accessor (resolved), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
@@ -67,12 +70,23 @@ public interface FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEle
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
+	 * The declared type of the field accessor (from the AST), which is either the return type of the getter or the type of the formal parameter in case of a setter.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	TypeRef getDeclaredTypeRefInAST();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The declared type of the field accessor (as node), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeReferenceNode<TypeRef> getDeclaredTypeRefNode();
 
 	/**
 	 * <!-- begin-user-doc -->

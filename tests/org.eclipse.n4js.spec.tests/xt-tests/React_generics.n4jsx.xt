@@ -35,7 +35,7 @@ interface ~MyProps extends React.ComponentProps  {
 
 class MyComponent<PropsT extends MyProps, StateT extends Object> extends React.Component<PropsT, StateT> {
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		return null;
 	}
 }

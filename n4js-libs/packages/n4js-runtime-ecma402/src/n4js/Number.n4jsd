@@ -10,7 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {NumberFormatOptions} from "IntlClasses";
 
 @Final
 @Polyfill export external public class Number extends Number {
