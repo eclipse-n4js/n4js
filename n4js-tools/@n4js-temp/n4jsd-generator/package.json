@@ -9,6 +9,7 @@
     "dts2n4jsd": "./bin/dts2n4jsd.js"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "build": "./npm-build.sh",
     "test": "./node_modules/.bin/n4js-mangelhaft"
   },
@@ -26,6 +27,9 @@
     "n4js-mangelhaft-cli": "^0.24.19",
     "org.eclipse.n4js.mangelhaft": "^0.24.19",
     "org.eclipse.n4js.mangelhaft.assert": "^0.24.19"
+  },
+  "resolutions": {
+    "underscore": "^1.12.1"
   },
   "n4js": {
     "projectType": "library",
