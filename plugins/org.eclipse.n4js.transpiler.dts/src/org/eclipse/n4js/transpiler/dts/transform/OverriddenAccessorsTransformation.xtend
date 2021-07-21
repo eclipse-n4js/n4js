@@ -30,6 +30,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import java.util.HashMap
 
 /**
  * Transformer to deal with the inability of JavaScript to overwrite class fields by getter/setter pairs and vice versa
@@ -65,6 +66,7 @@ class OverriddenAccessorsTransformation extends Transformation {
 			if (rootElem instanceof N4ClassDeclaration) {
 				val removeMembers = new ArrayList();
 				val addMembers = new ArrayList();
+				val addMembersToOriginal = new HashMap();
 				
 				for (field : rootElem.ownedFields) {
 					if (isOverriding(field)) {
@@ -72,21 +74,28 @@ class OverriddenAccessorsTransformation extends Transformation {
 						if (overriddenMembers.isEmpty) {
 							// cannot happen since field has no errors and @Override annotation
 						} else if (overriddenMembers.size == 1) {
+							val origAstNodeField = state.tracer.getOriginalASTNode(field);
 							val overriddenMember = overriddenMembers.get(0);
 							if (overriddenMember instanceof TGetter) {
 								// consequently there is no setter defined --> add setter instead of field
 								removeMembers.add(field);
 								val fPar = _Fpar("value");
 								fPar.declaredTypeRefNode = field.declaredTypeRefNode;
-								val getter = _N4SetterDecl(field.declaredName, fPar, null);
-								addMembers.add(getter);
+								val setter = _N4SetterDecl(field.declaredName, fPar, null);
+								setter.declaredModifiers += field.declaredModifiers;
+								addMembers.add(setter);
+								addMembersToOriginal.put(setter, origAstNodeField);
 								
 							} else if (overriddenMember instanceof TSetter) {
 								// consequently there is no getter defined --> add getter instead of field
 								removeMembers.add(field);
 								val getter = _N4GetterDecl(field.declaredName, null);
 								getter.declaredTypeRefNode = field.declaredTypeRefNode;
+								getter.declaredModifiers += field.declaredModifiers;
 								addMembers.add(getter);
+								
+								state.tracer.getOriginalASTNode(field);
+								addMembersToOriginal.put(getter, origAstNodeField);
 							}
 							
 						} else if (overriddenMembers.size == 2) {
@@ -113,6 +122,11 @@ class OverriddenAccessorsTransformation extends Transformation {
 	
 				rootElem.ownedMembersRaw.removeAll(removeMembers);
 				rootElem.ownedMembersRaw.addAll(addMembers);
+				for (addMember : addMembers) {
+					// will cause JSDoc to appear at the getter
+					val origAstNodeField = addMembersToOriginal.get(addMember);
+					state.tracer.setOriginalASTNode(addMember, origAstNodeField);
+				}
 			}
 		}
 	}
@@ -128,7 +142,7 @@ class OverriddenAccessorsTransformation extends Transformation {
 			val steo = state.steCache.mapNamedElement_2_STE.get(clazz) as SymbolTableEntryOriginal;
 			if (steo.getOriginalTarget() instanceof TClass) {
 				val type = steo.getOriginalTarget() as TClass;
-				val inheritedMembers = memberCollector.allInheritedMembers(type);
+				val inheritedMembers = memberCollector.inheritedMembers(type);
 				val overriddenMembers = IterableExtensions.filter(inheritedMembers,
 					[it.getName() == member.getName()]);
 
