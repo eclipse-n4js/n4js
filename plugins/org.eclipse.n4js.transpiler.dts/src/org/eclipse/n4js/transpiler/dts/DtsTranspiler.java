@@ -50,9 +50,13 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<ImplementedMemberTransformation> implementedMemberTransformation;
 	@Inject
-	private Provider<InferredTypesTransformation> inferredTypesTransformation;
+	private Provider<EnumAddMissingInitializersTransformation> enumAddMissingInitializersTransformation;
 	@Inject
 	private Provider<ReturnTypeTransformation> returnTypeTransformation;
+	@Inject
+	private Provider<InferredTypesTransformation> inferredTypesTransformation;
+	@Inject
+	private Provider<OverriddenAccessorsTransformation> overriddenAccessorsTransformation;
 	@Inject
 	private Provider<TrimTransformationDts> trimTransformationDts;
 	@Inject
@@ -61,10 +65,6 @@ public class DtsTranspiler extends AbstractTranspiler {
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformation;
 	@Inject
 	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformation;
-	@Inject
-	private Provider<EnumAddMissingInitializersTransformation> enumAddMissingInitializersTransformation;
-	@Inject
-	private Provider<OverriddenAccessorsTransformation> overriddenAccessorsTransformation;
 
 	@Inject
 	private N4JSDocumentationProvider documentationProvider;
@@ -79,14 +79,14 @@ public class DtsTranspiler extends AbstractTranspiler {
 				staticPolyfillTransformation.get(),
 				cutOffTransformation.get(),
 				implementedMemberTransformation.get(),
-				inferredTypesTransformation.get(),
+				enumAddMissingInitializersTransformation.get(),
 				returnTypeTransformation.get(),
+				inferredTypesTransformation.get(),
+				overriddenAccessorsTransformation.get(),
 				trimTransformationDts.get(),
 				typeReferenceTransformation.get(),
-				overriddenAccessorsTransformation.get(),
 				sanitizeImportsTransformation.get(),
-				moduleSpecifierTransformation.get(),
-				enumAddMissingInitializersTransformation.get()
+				moduleSpecifierTransformation.get()
 		};
 	}
 

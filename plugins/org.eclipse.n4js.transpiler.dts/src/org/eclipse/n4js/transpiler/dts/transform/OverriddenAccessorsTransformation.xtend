@@ -31,10 +31,18 @@ import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 import java.util.HashMap
+import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 
 /**
- * Transformer to deal with the inability of JavaScript to overwrite class fields by getter/setter pairs and vice versa
+ * Transformer to deal with the inability of JavaScript to overwrite class fields by getter/setter pairs and vice versa.
+ * <p>
+ * Dependencies:
+ * <ul>
+ * <li>requires {@link InferredTypesTransformation} to run before, because the fields being converted to getters/setters
+ *     by this transformation might have an inferred type that must be available in the IM at time of conversion.
+ * </ul>
  */
+@RequiresBefore(InferredTypesTransformation)
 class OverriddenAccessorsTransformation extends Transformation {
 
 	@Inject
