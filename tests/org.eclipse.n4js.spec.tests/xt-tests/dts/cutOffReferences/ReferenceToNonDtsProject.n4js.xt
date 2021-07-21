@@ -50,8 +50,7 @@ export public function fn2(p: ClassWithoutDts): ClassWithoutDts { return null; }
 export public class Cls1 extends ClassWithDts {}
 export public class Cls2 extends ClassWithoutDts {}
 
-// disabled until DtsUtils#isDtsExportableReference is enabled
-/* XPECT FIXME generated_dts ---
+/* XPECT generated_dts ---
 import {ClassWithDts} from 'ProjectOtherWithDts/src-gen/OtherWithDts'
 
 export let v1: ClassWithDts;
