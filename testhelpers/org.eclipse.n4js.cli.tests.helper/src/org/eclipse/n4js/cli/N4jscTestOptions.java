@@ -236,7 +236,6 @@ public class N4jscTestOptions extends N4jscOptions {
 	/** Sets option */
 	public N4jscTestOptions version() {
 		setDefinedOption(() -> options.version = true);
-		interpretAndAdjustVersionOption();
 		return this;
 	}
 

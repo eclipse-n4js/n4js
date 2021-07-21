@@ -21,6 +21,17 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
+	public void testTwoGoals() {
+		String args[] = { "version", "help" };
+		CliCompileResult result = n4jsc(args, 10, false);
+		assertEquals(result.toString(),
+				"ERROR-10 (Invalid command line string):  No argument is allowed: help\n"
+						+ "Usage: n4jsc [GOAL] [DIR] [OPTION(s)]",
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
 	public void testGoalVersion() {
 		String args[] = { "version" };
 		CliCompileResult result = n4jsc(args, 0, false);
@@ -29,7 +40,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
-	public void testOptionVersion() {
+	public void testOptionVersionAsGoal() {
 		String args[] = { "--version" };
 		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
@@ -38,9 +49,21 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	/**  */
 	@Test
 	public void testAnotherGoalWithOptionVersion() {
-		String args[] = { "lsp", "--version" };
+		String args[] = { "help", "--version" };
 		CliCompileResult result = n4jsc(args, 0, false);
-		assertEquals(result.toString(), getVersionExpectation(), result.getStdOut());
+		assertEquals(result.toString(),
+				getVersionExpectation() + "\n" + getUsageExpectationImplicitCompile(),
+				result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void testAnotherGoalWithOptionVersionWrongOrder() {
+		String args[] = { "--help", "lsp", "--version" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(),
+				getVersionExpectation() + "\n" + getUsageExpectationLSP(),
+				result.getStdOut());
 	}
 
 	/**  */
@@ -87,14 +110,6 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	@Test
 	public void testLspOptionHelpWrongOrder() {
 		String args[] = { "--help", "lsp" };
-		CliCompileResult result = n4jsc(args, 0, false);
-		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
-	}
-
-	/**  */
-	@Test
-	public void testLspOptionHelpVersionWrongOrder() {
-		String args[] = { "--help", "lsp", "--version" };
 		CliCompileResult result = n4jsc(args, 0, false);
 		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
 	}

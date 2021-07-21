@@ -447,6 +447,11 @@ public class N4jscOptions {
 
 	/** This class defines option fields for command init. */
 	static public class VersionOptions extends AbstractOptions {
+		/** Constructor */
+		public VersionOptions() {
+			this.version = true;
+		}
+
 		@Override
 		AbstractOptions printUsageDefaultInstance() {
 			return new VersionOptions();
@@ -458,12 +463,7 @@ public class N4jscOptions {
 		}
 	}
 
-	/**
-	 * This class defines option fields for command help.
-	 * <p>
-	 * <b> Implementation note: </b><br/>
-	 * The goal 'help' behaves as if instead of the goal 'help' the option '--help' was given.
-	 */
+	/** This class defines option fields for command help. */
 	static public class HelpOptions extends AbstractOptions {
 		/** Constructor */
 		public HelpOptions() {
@@ -547,7 +547,6 @@ public class N4jscOptions {
 	protected void interpretAndAdjust() {
 		// note: contents of this methods are split-up since they are individually called from N4jscTestOptions
 		interpretAndAdjustDirs();
-		interpretAndAdjustVersionOption();
 	}
 
 	/** Post-processing of parsed arguments dirs */
@@ -564,22 +563,6 @@ public class N4jscOptions {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		}
-	}
-
-	/** Post-processing of parsed option version */
-	protected void interpretAndAdjustVersionOption() {
-		if (options.version) {
-			VersionOptions newOptions = new VersionOptions();
-			newOptions.help = options.help;
-			newOptions.log = options.log;
-			newOptions.showSetup = options.showSetup;
-			newOptions.verbose = options.verbose;
-			newOptions.version = options.version;
-			newOptions.logFile = options.logFile;
-			newOptions.performanceKey = options.performanceKey;
-			newOptions.performanceReport = options.performanceReport;
-			options = newOptions;
 		}
 	}
 
@@ -606,6 +589,11 @@ public class N4jscOptions {
 	/** @return true iff {@code --help} */
 	public boolean isHelp() {
 		return options.help;
+	}
+
+	/** @return true iff {@code --version} */
+	public boolean isVersion() {
+		return options.version;
 	}
 
 	/** @return true iff {@code --showSetup} */
