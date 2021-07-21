@@ -37,8 +37,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
-import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -66,11 +64,6 @@ class ImplementedMemberTransformation extends Transformation {
 	@Inject
 	private TypeSystemHelper tsh;
 
-	@Inject
-	private ContainerTypesHelper containerTypesHelper;
-
-	private MemberCollector memberCollector;
-
 	override assertPreConditions() {
 	}
 
@@ -78,8 +71,6 @@ class ImplementedMemberTransformation extends Transformation {
 	}
 
 	override analyze() {
-		// prepare a member collector for later use
-		memberCollector = containerTypesHelper.fromContext(state.resource);
 	}
 
 	override transform() {
@@ -95,7 +86,7 @@ class ImplementedMemberTransformation extends Transformation {
 		val tSuperClass = tClass.superClass;
 
 		val membersFromSuperClass = if (tSuperClass !== null) {
-			memberCollector.allMembers(tSuperClass, false, true, true)
+			state.memberCollector.allMembers(tSuperClass, false, true, true)
 		} else {
 			#[]
 		};
@@ -105,7 +96,7 @@ class ImplementedMemberTransformation extends Transformation {
 			.map[NonSymetricMemberKey.of(it)]
 			.toSet;
 
-		val membersFromInterfaces = memberCollector.membersOfImplementedInterfacesForConsumption(tClass)
+		val membersFromInterfaces = state.memberCollector.membersOfImplementedInterfacesForConsumption(tClass)
 			.filter[!static]
 			.filter[memberAccessModifier === MemberAccessModifier.PUBLIC] // non public interface members are not exported to .d.ts (cf. TrimForDtsTransformation)
 			.toList;

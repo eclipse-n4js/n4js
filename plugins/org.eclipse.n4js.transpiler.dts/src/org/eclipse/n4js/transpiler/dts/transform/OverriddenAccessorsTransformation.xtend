@@ -11,27 +11,24 @@
 package org.eclipse.n4js.transpiler.dts.transform
 
 import com.google.common.collect.Lists
-import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.Collections
+import java.util.HashMap
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TSetter
-import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import java.util.HashMap
-import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 
 /**
  * Transformer to deal with the inability of JavaScript to overwrite class fields by getter/setter pairs and vice versa.
@@ -45,12 +42,6 @@ import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 @RequiresBefore(InferredTypesTransformation)
 class OverriddenAccessorsTransformation extends Transformation {
 
-	@Inject
-	private ContainerTypesHelper containerTypesHelper;
-
-	private MemberCollector memberCollector;
-	
-
 	override assertPreConditions() {
 	}
 
@@ -58,8 +49,6 @@ class OverriddenAccessorsTransformation extends Transformation {
 	}
 
 	override analyze() {
-		// prepare a member collector for later use
-		memberCollector = containerTypesHelper.fromContext(state.resource);
 	}
 
 	override transform() {
@@ -150,7 +139,7 @@ class OverriddenAccessorsTransformation extends Transformation {
 			val steo = state.steCache.mapNamedElement_2_STE.get(clazz) as SymbolTableEntryOriginal;
 			if (steo.getOriginalTarget() instanceof TClass) {
 				val type = steo.getOriginalTarget() as TClass;
-				val inheritedMembers = memberCollector.inheritedMembers(type);
+				val inheritedMembers = state.memberCollector.inheritedMembers(type);
 				val overriddenMembers = IterableExtensions.filter(inheritedMembers,
 					[it.getName() == member.getName()]);
 

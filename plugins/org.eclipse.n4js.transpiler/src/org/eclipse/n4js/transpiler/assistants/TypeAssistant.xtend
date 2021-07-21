@@ -32,7 +32,6 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
@@ -44,7 +43,6 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
  */
 class TypeAssistant extends TransformationAssistant {
 
-	@Inject private ContainerTypesHelper containerTypesHelper;
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
@@ -173,8 +171,7 @@ class TypeAssistant extends TransformationAssistant {
 		if(cachedCMOFT!==null) {
 			return cachedCMOFT;
 		} else {
-			val newCMOFT = ConcreteMembersOrderedForTranspiler.create(
-				containerTypesHelper, classifier, state.resource.script);
+			val newCMOFT = ConcreteMembersOrderedForTranspiler.create(state, classifier);
 			state.info.cacheCMOFT(classifier, newCMOFT);
 			return newCMOFT;
 		}
