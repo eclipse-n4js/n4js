@@ -101,10 +101,12 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
+				// ---- preparatory transformations (e.g. getting rid of certain language features)
 				jsxTransformation.get(),
 				staticPolyfillTransformation.get(),
+				// ---- main transformations related to individual language features
 				memberPatchingTransformation.get(),
-				apiImplStubGenerationTransformation.get(),
+				apiImplStubGenerationTransformation.get(), // preparatory transformation moved here due to requirement
 				destructuringTransformation.get(),
 				templateStringTransformation.get(),
 				expressionTransformation.get(),
@@ -117,6 +119,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				blockTransformation.get(),
 				restParameterTransformation.get(),
 				arrowFunction_Part2_Transformation.get(),
+				// ---- clean up / generic / technical transformations
 				simplifyTransformation.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformation.get(),

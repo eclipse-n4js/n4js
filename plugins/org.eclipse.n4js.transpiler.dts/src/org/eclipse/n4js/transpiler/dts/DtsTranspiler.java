@@ -76,13 +76,16 @@ public class DtsTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
+				// ---- preparatory transformations (e.g. getting rid of certain language features)
 				staticPolyfillTransformation.get(),
+				// ---- main transformations related to individual language features
 				cutOffTransformation.get(),
 				implementedMemberTransformation.get(),
 				enumAddMissingInitializersTransformation.get(),
 				returnTypeTransformation.get(),
-				inferredTypesTransformation.get(),
+				inferredTypesTransformation.get(), // technical transformation moved here only due to requirement
 				overriddenAccessorsTransformation.get(),
+				// ---- clean up / generic / technical transformations
 				trimTransformationDts.get(),
 				typeReferenceTransformation.get(),
 				sanitizeImportsTransformation.get(),
