@@ -37,12 +37,12 @@ import com.google.gson.JsonElement;
  * <li/>a ts.config file in the project folder and that this file contains correct information.
  * </ul>
  */
-public class DTSAfterBuildListener implements AfterBuildListener {
+public class DtsAfterBuildListener implements AfterBuildListener {
 	final N4JSProjectConfigSnapshot projectConfig;
 	final File tsconfig;
 
 	/** Constructor */
-	public DTSAfterBuildListener(N4JSProjectConfigSnapshot projectConfig) {
+	public DtsAfterBuildListener(N4JSProjectConfigSnapshot projectConfig) {
 		this.projectConfig = projectConfig;
 		tsconfig = projectConfig.getPathAsFileURI().toPath().resolve(N4JSGlobals.TS_CONFIG).toFile();
 	}

@@ -90,7 +90,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 		ProjectDescription pd = getProjectConfig().getProjectDescription();
 		if (N4JSLanguageUtils.isDtsGenerationActive(pd)) {
-			request.addAfterBuildListener(new DTSAfterBuildListener(getProjectConfig()));
+			request.addAfterBuildListener(new DtsAfterBuildListener(getProjectConfig()));
 		}
 		return request;
 	}
