@@ -48,7 +48,31 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	public void testOptionHelp() {
 		String args[] = { "--help" };
 		CliCompileResult result = n4jsc(args, 0, false);
-		assertEquals(result.toString(), getUsageExpectationCompile(), result.getStdOut());
+		assertEquals(result.toString(), getUsageExpectationImplicitCompile(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void testHelp() {
+		String args[] = { "help" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(), getUsageExpectationImplicitCompile(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void testCompileOptionHelp() {
+		String args[] = { "compile", "--help" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(), getUsageExpectationExplicitCompile(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void testHelpArgumentCompile() {
+		String args[] = { "help", "compile" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(), getUsageExpectationExplicitCompile(), result.getStdOut());
 	}
 
 	/**  */
@@ -59,11 +83,27 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
 	}
 
+	/**  */
+	@Test
+	public void testLspOptionHelpWrongOrder() {
+		String args[] = { "--help", "lsp" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
+	public void testHelpArgumentLsp() {
+		String args[] = { "help", "lsp" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(), getUsageExpectationLSP(), result.getStdOut());
+	}
+
 	private String getVersionExpectation() {
 		return N4JSLanguageUtils.DEFAULT_LANGUAGE_VERSION + " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")";
 	}
 
-	private String getUsageExpectationCompile() {
+	private String getUsageExpectationImplicitCompile() {
 		return "Usage: n4jsc [GOAL] [DIR] [OPTION(s)]\n"
 				+ " GOAL              : Goals of n4jsc (default: compile)\n"
 				+ "   compile             Compile src folders\n"
@@ -71,7 +111,24 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				+ "   lsp                 Start LSP server\n"
 				+ "   setversions         Set versions of n4js-related dependencies\n"
 				+ "   init                Create an empty n4js project\n"
+				+ "   help                Show help\n"
 				+ "   version             Print version of this tool\n"
+				+ " DIR               : name of n4js project or workspace directory (default: .)\n"
+				+ " --clean (-c)      : clean output folders at start (default: false)\n"
+				+ " --help (-h)       : prints help and exits. Define a goal for goal-specific\n"
+				+ "                     help. (default: false)\n"
+				+ " --maxErrs N       : set the maximum number of errors to print (default: 0)\n"
+				+ " --maxWarns N      : set the maximum number of warnings to print (default: 0)\n"
+				+ " --noPersist (-np) : disable persisting of type index to disk. (default: false)\n"
+				+ " --noTests         : don't process test folders (default: false)\n"
+				+ " --showSetup       : prints n4jsc setup (default: false)\n"
+				+ " --testOnly        : only transpile test folders (default: false)\n"
+				+ " --verbose         : enables verbose output (default: false)\n"
+				+ " --version (-v)    : prints version and exits (default: false)";
+	}
+
+	private String getUsageExpectationExplicitCompile() {
+		return "Usage: n4jsc compile [DIR] [OPTION(s)]\n"
 				+ " DIR               : name of n4js project or workspace directory (default: .)\n"
 				+ " --clean (-c)      : clean output folders at start (default: false)\n"
 				+ " --help (-h)       : prints help and exits. Define a goal for goal-specific\n"

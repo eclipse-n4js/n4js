@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli;
+package org.eclipse.n4js.cli.init;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,6 +25,11 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4jscConsole;
+import org.eclipse.n4js.cli.N4jscException;
+import org.eclipse.n4js.cli.N4jscExitCode;
+import org.eclipse.n4js.cli.N4jscExitState;
+import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.JsonUtils;

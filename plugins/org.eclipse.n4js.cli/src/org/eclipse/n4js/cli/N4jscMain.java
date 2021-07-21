@@ -141,6 +141,7 @@ public class N4jscMain {
 			return backend.goalClean(options);
 
 		case compile:
+		case compileImplicit:
 			return backend.goalCompile(options);
 
 		case api:
@@ -151,6 +152,10 @@ public class N4jscMain {
 
 		case init:
 			return backend.goalInit(options);
+
+		case help:
+			// done already above;
+			break;
 
 		case setversions:
 			return backend.goalSetVersions(options);

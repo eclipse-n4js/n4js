@@ -56,12 +56,12 @@ public class N4jscOptions {
 	/** Usage information template. */
 	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s%s [OPTION(s)]";
 	/** Usage information. */
-	public static final String USAGE = getUsage(new N4jscOptions());
+	public static final String USAGE = getUsage(new ImplicitCompileOptions());
 
 	/** @return the usage string respecting the goal specified in the given options */
-	public static String getUsage(N4jscOptions options) {
-		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
-		String dir = options.options.getDir() == null ? "" : " [DIR]";
+	public static String getUsage(AbstractOptions options) {
+		String goal = options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
+		String dir = options.getDir() == null ? "" : " [DIR]";
 		String usage = String.format(USAGE_TEMPLATE, goal, dir);
 		return usage;
 	}
@@ -70,7 +70,7 @@ public class N4jscOptions {
 
 		abstract N4jscGoal getGoal();
 
-		abstract AbstractOptions newInstance();
+		abstract AbstractOptions printUsageDefaultInstance();
 
 		void setDir(@SuppressWarnings("unused") File file) {
 			// if necessary, overwrite this
@@ -200,7 +200,7 @@ public class N4jscOptions {
 	 */
 	static public class ImplicitCompileOptions extends AbstractCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new ImplicitCompileOptions();
 		}
 
@@ -234,6 +234,7 @@ public class N4jscOptions {
 						// " Generate API documentation from n4js files" + "\n" +
 						"  Set versions of n4js-related dependencies" + "\n" +
 						"  Create an empty n4js project" + "\n" +
+						"  Show help" + "\n" +
 						"  Print version of this tool", //
 				handler = N4JSSubCommandHandler.class)
 		@SubCommands({
@@ -245,6 +246,7 @@ public class N4jscOptions {
 				// @SubCommand(name = "api", impl = APIOptions.class),
 				@SubCommand(name = "setversions", impl = SetVersionsOptions.class),
 				@SubCommand(name = "init", impl = InitOptions.class),
+				@SubCommand(name = "help", impl = HelpOptions.class),
 				@SubCommand(name = "version", impl = VersionOptions.class)
 		})
 		AbstractOptions cmd = this;
@@ -276,7 +278,7 @@ public class N4jscOptions {
 	/** Option for goal compile given explicitly */
 	static public class ExplicitCompileOptions extends AbstractExplicitCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new ExplicitCompileOptions();
 		}
 
@@ -289,7 +291,7 @@ public class N4jscOptions {
 	/** Option for goal clean */
 	static public class CleanOptions extends AbstractExplicitCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new CleanOptions();
 		}
 
@@ -302,7 +304,7 @@ public class N4jscOptions {
 	/** Option for goal api */
 	static public class APIOptions extends AbstractExplicitCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new APIOptions();
 		}
 
@@ -333,7 +335,7 @@ public class N4jscOptions {
 	/** Option for goal watch */
 	static public class WatchOptions extends SingleDirOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new WatchOptions();
 		}
 
@@ -346,7 +348,7 @@ public class N4jscOptions {
 	/** Option for goal LSP */
 	static public class LSPOptions extends AbstractOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new LSPOptions();
 		}
 
@@ -387,7 +389,7 @@ public class N4jscOptions {
 	/** This class defines option fields for command set-versions. */
 	static public class SetVersionsOptions extends AbstractOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new SetVersionsOptions();
 		}
 
@@ -405,7 +407,7 @@ public class N4jscOptions {
 	/** This class defines option fields for command init. */
 	static public class InitOptions extends AbstractOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new InitOptions();
 		}
 
@@ -446,7 +448,7 @@ public class N4jscOptions {
 	/** This class defines option fields for command init. */
 	static public class VersionOptions extends AbstractOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new VersionOptions();
 		}
 
@@ -454,6 +456,42 @@ public class N4jscOptions {
 		N4jscGoal getGoal() {
 			return N4jscGoal.version;
 		}
+	}
+
+	/**
+	 * This class defines option fields for command help.
+	 * <p>
+	 * <b> Implementation note: </b><br/>
+	 * The goal 'help' behaves as if instead of the goal 'help' the option '--help' was given.
+	 */
+	static public class HelpOptions extends AbstractOptions {
+		/** Constructor */
+		public HelpOptions() {
+			this.help = true;
+		}
+
+		@Override
+		AbstractOptions printUsageDefaultInstance() {
+			try {
+				return getGoal().optionsClass.getDeclaredConstructor().newInstance();
+			} catch (Exception e) {
+				return new ImplicitCompileOptions().printUsageDefaultInstance();
+			}
+		}
+
+		@Override
+		N4jscGoal getGoal() {
+			try {
+				return N4jscGoal.valueOf(goal);
+			} catch (Exception e) {
+				return N4jscGoal.compileImplicit;
+			}
+		}
+
+		@Argument(metaVar = "GOAL", index = 0, required = false, //
+				usage = "goal name to show help for", //
+				handler = N4JSStringOptionHandler.class)
+		String goal;
 	}
 
 	/** Internal parser */
@@ -702,9 +740,9 @@ public class N4jscOptions {
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
-		out.println(getUsage(this));
-
-		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(this.options.newInstance());
+		AbstractOptions usageDefaultOptions = this.options.printUsageDefaultInstance();
+		out.println(getUsage(usageDefaultOptions));
+		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(usageDefaultOptions);
 
 		// switch to English locale because args4j will use the user locale for some words like "Vorgabe"
 		Locale curLocale = Locale.getDefault();

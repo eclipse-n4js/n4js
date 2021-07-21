@@ -10,24 +10,47 @@
  */
 package org.eclipse.n4js.cli;
 
+import org.eclipse.n4js.cli.N4jscOptions.APIOptions;
+import org.eclipse.n4js.cli.N4jscOptions.AbstractOptions;
+import org.eclipse.n4js.cli.N4jscOptions.CleanOptions;
+import org.eclipse.n4js.cli.N4jscOptions.ExplicitCompileOptions;
+import org.eclipse.n4js.cli.N4jscOptions.HelpOptions;
+import org.eclipse.n4js.cli.N4jscOptions.ImplicitCompileOptions;
+import org.eclipse.n4js.cli.N4jscOptions.InitOptions;
+import org.eclipse.n4js.cli.N4jscOptions.LSPOptions;
+import org.eclipse.n4js.cli.N4jscOptions.SetVersionsOptions;
+import org.eclipse.n4js.cli.N4jscOptions.VersionOptions;
+import org.eclipse.n4js.cli.N4jscOptions.WatchOptions;
+
 /**
  * Goals (a.k.a. commands) of the n4jsc.jar
  */
 public enum N4jscGoal {
 	/** Prints version */
-	version,
-	/** Compiles with given options */
-	compile,
+	version(VersionOptions.class),
+	/** Compiles with given options. Goal 'compile' was given explicitly */
+	compile(ExplicitCompileOptions.class),
+	/** Compiles with given options. No goal was given */
+	compileImplicit(ImplicitCompileOptions.class),
 	/** Cleans with given options */
-	clean,
+	clean(CleanOptions.class),
 	/** Starts LSP server */
-	lsp,
+	lsp(LSPOptions.class),
 	/** Starts compiler daemon that watches the given folder(s) */
-	watch,
+	watch(WatchOptions.class),
 	/** Generates API documentation from n4js files */
-	api,
+	api(APIOptions.class),
 	/** Creates an N4JS project */
-	init,
+	init(InitOptions.class),
+	/** Shows help */
+	help(HelpOptions.class),
 	/** Sets version strings of all N4JS related packages to the given version */
-	setversions
+	setversions(SetVersionsOptions.class);
+
+	final Class<AbstractOptions> optionsClass;
+
+	@SuppressWarnings("unchecked")
+	N4jscGoal(Class<? extends AbstractOptions> optionsClass) {
+		this.optionsClass = (Class<AbstractOptions>) optionsClass;
+	}
 }
