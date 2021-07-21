@@ -170,6 +170,24 @@ public final class N4JSGlobals {
 			ProjectType.VALIDATION);
 
 	/**
+	 * Project types for which .d.ts generation will always be inactive, even if
+	 *
+	 * <pre>
+	 * "generator": {
+	 *     "d.ts": true
+	 * }
+	 * </pre>
+	 *
+	 * is given in the package.json file.
+	 */
+	public static final Set<ProjectType> PROJECT_TYPES_WITHOUT_DTS_GENERATION = ImmutableSet.of(
+			ProjectType.PLAINJS,
+			ProjectType.DEFINITION,
+			ProjectType.VALIDATION,
+			ProjectType.RUNTIME_ENVIRONMENT,
+			ProjectType.RUNTIME_LIBRARY);
+
+	/**
 	 * The name of an npm command.
 	 */
 	public static final String NPM = "npm";

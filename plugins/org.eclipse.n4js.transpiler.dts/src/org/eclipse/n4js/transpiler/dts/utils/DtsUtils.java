@@ -16,6 +16,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 
 /**
@@ -43,7 +44,7 @@ public class DtsUtils {
 		ProjectDescription pd = project != null ? project.getProjectDescription() : null;
 		return pd != null
 				&& pd.hasN4JSNature()
-				&& (pd.isGeneratorEnabledDts() || isDefinition(pd) || isRuntime(pd));
+				&& (N4JSLanguageUtils.isDtsGenerationActive(pd) || isDefinition(pd) || isRuntime(pd));
 	}
 
 	private static boolean isDefinition(ProjectDescription pd) {

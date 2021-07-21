@@ -19,6 +19,7 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ImmutableDataClass;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -262,7 +263,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	/**
-	 * Tells whether the generator creates d.ts files.
+	 * IMPORTANT: most clients should use {@link N4JSLanguageUtils#isDtsGenerationActive(ProjectDescription)} instead!
 	 */
 	public boolean isGeneratorEnabledDts() {
 		return isGeneratorEnabledDts;
