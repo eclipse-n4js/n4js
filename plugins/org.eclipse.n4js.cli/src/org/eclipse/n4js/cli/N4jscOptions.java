@@ -60,7 +60,7 @@ public class N4jscOptions {
 
 	/** @return the usage string respecting the goal specified in the given options */
 	public static String getUsage(AbstractOptions options) {
-		String goal = options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
+		String goal = options.isImplicitGoal() ? "[GOAL]" : options.getGoal().realName;
 		String dir = options.getDir() == null ? "" : " [DIR]";
 		String usage = String.format(USAGE_TEMPLATE, goal, dir);
 		return usage;
@@ -244,7 +244,7 @@ public class N4jscOptions {
 				// not implemented:
 				// @SubCommand(name = "watch", impl = WatchOptions.class),
 				// @SubCommand(name = "api", impl = APIOptions.class),
-				@SubCommand(name = "setversions", impl = SetVersionsOptions.class),
+				@SubCommand(name = "set-versions", impl = SetVersionsOptions.class),
 				@SubCommand(name = "init", impl = InitOptions.class),
 				@SubCommand(name = "help", impl = HelpOptions.class),
 				@SubCommand(name = "version", impl = VersionOptions.class)
@@ -743,7 +743,7 @@ public class N4jscOptions {
 	public String toSettingsString() {
 		String s = "N4jsc.options=";
 		s += "\n  Current execution directory=" + new File(".").toPath().toAbsolutePath();
-		s += "\n  goal=" + getGoal().name();
+		s += "\n  goal=" + getGoal().realName;
 		s += "\n  dir=" + options.getDir();
 		s += "\n  showSetup=" + options.showSetup;
 		s += "\n  verbose=" + options.verbose;

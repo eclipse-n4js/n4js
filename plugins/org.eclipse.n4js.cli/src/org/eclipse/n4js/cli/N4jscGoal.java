@@ -45,12 +45,18 @@ public enum N4jscGoal {
 	/** Shows help */
 	help(HelpOptions.class),
 	/** Sets version strings of all N4JS related packages to the given version */
-	setversions(SetVersionsOptions.class);
+	setversions("set-versions", SetVersionsOptions.class);
 
+	final String realName;
 	final Class<AbstractOptions> optionsClass;
 
-	@SuppressWarnings("unchecked")
 	N4jscGoal(Class<? extends AbstractOptions> optionsClass) {
+		this(null, optionsClass);
+	}
+
+	@SuppressWarnings("unchecked")
+	N4jscGoal(String realName, Class<? extends AbstractOptions> optionsClass) {
+		this.realName = realName == null ? name() : realName;
 		this.optionsClass = (Class<AbstractOptions>) optionsClass;
 	}
 }
