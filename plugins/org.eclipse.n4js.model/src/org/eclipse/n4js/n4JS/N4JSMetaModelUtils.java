@@ -50,6 +50,16 @@ import com.google.common.collect.ListMultimap;
 public class N4JSMetaModelUtils {
 
 	/**
+	 * The {@link EPackage}s used by the core N4JS language implementation, not including those of the more exotic
+	 * meta-models such as <code>IM.xcore</code>, <code>Semver.xcore</code>, <code>JSON.xcore</code>, or
+	 * <code>Validation.xcore</code>.
+	 */
+	public static final List<EPackage> N4JS_EPACKAGES = ImmutableList.of(
+			N4JSPackage.eINSTANCE,
+			TypesPackage.eINSTANCE,
+			TypeRefsPackage.eINSTANCE);
+
+	/**
 	 * Maps {@link EClass}es of {@link N4JSPackage} to their containment {@link EReference}s of type
 	 * {@link TypeReferenceNode}, including both owned and inherited references. The references may be single- or
 	 * many-valued.
@@ -58,6 +68,11 @@ public class N4JSMetaModelUtils {
 	 * instead.
 	 */
 	public static final ListMultimap<EClass, EReference> containersOfTypeReferenceNodes;
+
+	private static final Collection<EClass> ECLASSES_CONTRIBUTING_CONTENT_ASSIST_PROPOSALS = ImmutableList.of(
+			TypesPackage.Literals.IDENTIFIABLE_ELEMENT);
+
+	private static final Set<EClass> cachedAllEClassesContributingContentAssistProposals;
 
 	static {
 		ListMultimap<EClass, EReference> eClassToOwnedRefs = ArrayListMultimap.create();
@@ -73,6 +88,29 @@ public class N4JSMetaModelUtils {
 					IterableExtensions.flatMap(eClass.getEAllSuperTypes(), eClassToOwnedRefs::get)));
 		}
 		containersOfTypeReferenceNodes = ImmutableListMultimap.copyOf(map2);
+
+		ImmutableSet.Builder<EClass> resultBuilder = ImmutableSet.builder();
+		for (EPackage ePkg : N4JS_EPACKAGES) {
+			for (EClassifier eClassifier : ePkg.getEClassifiers()) {
+				if (eClassifier instanceof EClass) {
+					EClass eClass = (EClass) eClassifier;
+					for (EClass eClassSuper : ECLASSES_CONTRIBUTING_CONTENT_ASSIST_PROPOSALS) {
+						if (eClassSuper.isSuperTypeOf(eClass)) {
+							resultBuilder.add(eClass);
+							break;
+						}
+					}
+				}
+			}
+		}
+		cachedAllEClassesContributingContentAssistProposals = resultBuilder.build();
+	}
+
+	/**
+	 * Tells whether objects of the given type may appear as an entry in list of content assist proposals.
+	 */
+	public static boolean isContributingContentAssistProposals(EClassifier eClassifier) {
+		return cachedAllEClassesContributingContentAssistProposals.contains(eClassifier);
 	}
 
 	/**

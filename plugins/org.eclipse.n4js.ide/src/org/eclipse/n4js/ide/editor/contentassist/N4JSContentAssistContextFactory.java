@@ -10,12 +10,24 @@
  */
 package org.eclipse.n4js.ide.editor.contentassist;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.PartialContentAssistContextFactory;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
 /**
@@ -35,10 +47,35 @@ public class N4JSContentAssistContextFactory extends PartialContentAssistContext
 	private ContentAssistDataCollectors dataCollectors;
 
 	@Override
+	@SuppressWarnings("hiding")
+	protected Multimap<EObject, AbstractElement> computeCurrentModel(EObject currentModel, INode lastCompleteNode,
+			Collection<AbstractElement> followElements) {
+		// processing only the "promising" follow elements means we are losing keywords and some other "exotic"
+		// proposals, but saves ~600ms in important use cases (e.g. in case of content assist on top level with at least
+		// one character of prefix)
+		List<AbstractElement> promisingFollowElements = followElements.stream()
+				.filter(this::isPromisingFollowElement).collect(Collectors.toList());
+		return super.computeCurrentModel(currentModel, lastCompleteNode, promisingFollowElements);
+	}
+
+	private boolean isPromisingFollowElement(AbstractElement element) {
+		if (element instanceof Assignment) {
+			AbstractElement terminal = ((Assignment) element).getTerminal();
+			if (terminal instanceof CrossReference) {
+				org.eclipse.xtext.TypeRef type = ((CrossReference) terminal).getType();
+				EClassifier classifier = type != null ? type.getClassifier() : null;
+				if (classifier != null) {
+					return N4JSMetaModelUtils.isContributingContentAssistProposals(classifier);
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
 	protected ContentAssistContext[] doCreateContexts(int offset) {
 		try (Measurement m = dataCollectors.dcCreateContexts().getMeasurement()) {
 			return super.doCreateContexts(offset);
 		}
 	}
-
 }
