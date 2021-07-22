@@ -14,13 +14,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.PartialContentAssistContextFactory;
@@ -50,14 +53,18 @@ public class N4JSContentAssistContextFactory extends PartialContentAssistContext
 	@SuppressWarnings("hiding")
 	protected Multimap<EObject, AbstractElement> computeCurrentModel(EObject currentModel, INode lastCompleteNode,
 			Collection<AbstractElement> followElements) {
-		// processing only the "promising" follow elements means we are losing keywords and some other "exotic"
-		// proposals, but saves ~600ms in important use cases (e.g. in case of content assist on top level with at least
-		// one character of prefix)
 		List<AbstractElement> promisingFollowElements = followElements.stream()
 				.filter(this::isPromisingFollowElement).collect(Collectors.toList());
 		return super.computeCurrentModel(currentModel, lastCompleteNode, promisingFollowElements);
 	}
 
+	/**
+	 * GH-2167: always processing all follow elements leads to ~600ms being spent in method
+	 * {@link ContentAssistContextFactory#canBeCalledAfter(AbstractRule, EObject, String, EObject) #canBeCalledAfter()}
+	 * in some important use cases (e.g. in case of content assist on top level with a prefix of at least 1 character).
+	 * By only including assignments with a cross-reference to certain {@link EClass}es this delay can be avoided almost
+	 * entirely.
+	 */
 	private boolean isPromisingFollowElement(AbstractElement element) {
 		if (element instanceof Assignment) {
 			AbstractElement terminal = ((Assignment) element).getTerminal();
@@ -68,6 +75,11 @@ public class N4JSContentAssistContextFactory extends PartialContentAssistContext
 					return N4JSMetaModelUtils.isContributingContentAssistProposals(classifier);
 				}
 			}
+		} else if (element instanceof Keyword) {
+			// The cost for enabling all keywords would be ~220ms (in the investigated use cases; could be even higher
+			// in some cases; will certainly be lower in other cases). As a compromise, we could use a list of keywords
+			// we want to include, but for now we simply disable them all:
+			return false;
 		}
 		return false;
 	}
