@@ -84,7 +84,7 @@ public class N4jscCompiler {
 
 		params.setWorkspaceFolders(Collections.singletonList(new WorkspaceFolder(baseDir.toURI().toString())));
 		languageServer.initialize(params).get();
-		warnIfNoProjectsFound();
+		throwIfNoProjectsFound();
 		verbosePrintAllProjects();
 
 		switch (options.getGoal()) {
@@ -142,10 +142,11 @@ public class N4jscCompiler {
 		buildRequestFactory.setAfterBuildListener(callback);
 	}
 
-	private void warnIfNoProjectsFound() {
+	private void throwIfNoProjectsFound() throws N4jscException {
 		Set<? extends ProjectConfigSnapshot> projects = workspaceManager.getProjectConfigs();
 		if (projects.isEmpty()) {
-			N4jscConsole.println("No projects found at the given location: " + options.getDir());
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID,
+					"No projects found at the given location: " + options.getDir());
 		}
 	}
 
