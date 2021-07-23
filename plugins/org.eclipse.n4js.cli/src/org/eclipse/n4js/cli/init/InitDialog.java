@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli.init;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
+import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscOptions.InitOptions;
 import org.eclipse.n4js.cli.init.InitResources.FileHelloWorld;
@@ -63,9 +64,9 @@ public class InitDialog {
 			idx++;
 			this.description = answers.length > idx && !answers[idx].isBlank() ? answers[idx] : null;
 			idx++;
-			this.addHelloWorld = answers.length > idx && ("y".equals(answers[idx]) || "yes".equals(answers[idx]));
+			this.addHelloWorld = answers.length > idx && isYes(answers[idx]);
 			idx++;
-			this.addHelloWorldTest = answers.length > idx && ("y".equals(answers[idx]) || "yes".equals(answers[idx]));
+			this.addHelloWorldTest = answers.length > idx && isYes(answers[idx]);
 			idx++;
 			this.nameYarnProject = answers.length > idx && !answers[idx].isBlank() ? answers[idx] : null;
 		}
@@ -90,8 +91,18 @@ public class InitDialog {
 		} else {
 			UserAnswers answers = inputUserAnswers(options, config, workingDirState);
 			customizeConfiguration(options, config, answers);
+
+			N4jscConsole.print("Create the following project? (yes)" + System.lineSeparator() + config.toString());
+			String userInput = N4jscConsole.readLine();
+			if (!isYes(userInput)) {
+				throw new N4jscException(N4jscExitCode.USER_CANCELLED, "Goal init aborted.");
+			}
 		}
 		return config;
+	}
+
+	static boolean isYes(String input) {
+		return "y".equals(input) || "yes".equals(input);
 	}
 
 	static InitConfiguration getDefaultConfiguration(N4jscOptions options, WorkingDirState workingDirState)
@@ -142,10 +153,10 @@ public class InitDialog {
 
 		N4jscConsole.print("Add 'Hello World' example? (type 'y' for yes) (no) ");
 		userInput = N4jscConsole.readLine();
-		answers.addHelloWorld = Objects.equal("y", userInput) || Objects.equal("yes", userInput);
+		answers.addHelloWorld = isYes(userInput);
 		if (answers.addHelloWorld) {
 			N4jscConsole.print("Add Test for 'Hello World' example? (type 'y' for yes) (no) ");
-			answers.addHelloWorldTest = Objects.equal("y", userInput) || Objects.equal("yes", userInput);
+			answers.addHelloWorldTest = isYes(userInput);
 			addExamples(config, answers);
 		}
 

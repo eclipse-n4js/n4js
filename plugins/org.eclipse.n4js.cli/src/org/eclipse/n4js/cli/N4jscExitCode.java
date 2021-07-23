@@ -34,8 +34,11 @@ public enum N4jscExitCode {
 	/** Feature is not implemented */
 	NOT_IMPLEMENTED(2, "Feature is not implemented"),
 
+	/** User cancelled process */
+	USER_CANCELLED(3, "User cancelled process"),
+
 	/** Errors during validation */
-	VALIDATION_ERRORS(3, "Errors during validation"),
+	VALIDATION_ERRORS(4, "Errors during validation"),
 
 	// Errors on N4jsc frontend
 
