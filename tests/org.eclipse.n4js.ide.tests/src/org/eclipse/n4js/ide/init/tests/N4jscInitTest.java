@@ -91,24 +91,25 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** --scope test. */
 	@Test
 	public void optionsYesScope() throws Exception {
-		File subfolder = new File(cwd, "scopedProject");
+		File subfolder = new File(cwd, "@myScope/scopedProject");
 		subfolder.mkdir();
 		N4jscTestOptions options = INIT().setWorkingDirectory(subfolder.toPath()).yes().scope();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
-				+ "+ scopedProject\n"
-				+ "  - package.json\n"
+				+ "+ @myScope\n"
+				+ "  + scopedProject\n"
+				+ "    - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
 
 		String packagejsonContents = Files.readString(subfolder.toPath().resolve(PACKAGE_JSON));
-		assertTrue(packagejsonContents.contains("  \"name\": \"@TestInit/scopedProject\",\n"));
+		assertTrue(packagejsonContents.contains("\"name\": \"@myScope/scopedProject\""));
 	}
 
 	/** test hello world example */
 	@Test
 	public void helloWorld() throws Exception {
-		String answers = "e";
+		String answers = ",,,,,,yes";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
 
@@ -122,7 +123,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** test hello world test example */
 	@Test
 	public void helloWorldTested() throws Exception {
-		String answers = "t";
+		String answers = ",,,,,,yes,yes";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
 
@@ -143,7 +144,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** test another project name */
 	@Test
 	public void otherName() throws Exception {
-		String answers = ",otherName";
+		String answers = "otherName";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		CliCompileResult result = n4jsc(options, SUCCESS);
 
@@ -158,7 +159,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** test for a custom main module */
 	@Test
 	public void mainModule1Compile() throws Exception {
-		String answers = ",,,index.js";
+		String answers = ",,index.js";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
 
@@ -168,6 +169,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "  \"version\": \"0.0.1\",\n"
 				+ "  \"main\": \"src-gen/index.js\",\n"
 				+ "  \"scripts\": {\n"
+				+ "    \"n4jsc\": \"n4jsc\",\n"
 				+ "    \"build\": \"n4jsc compile . --clean || true\"\n"
 				+ "  },\n"
 				+ "  \"dependencies\": {\n"
@@ -279,7 +281,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	public void yarnHelloWorld() throws Exception {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath())
 				.workspaces()
-				.answers("e");
+				.answers(",,,,,,yes");
 		n4jsc(options, SUCCESS);
 
 		yarnInstall(cwd.toPath());
@@ -294,7 +296,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	public void yarnHelloWorldTested() throws Exception {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath())
 				.workspaces()
-				.answers("t");
+				.answers(",,,,,,yes,yes");
 		n4jsc(options, SUCCESS);
 
 		yarnInstall(cwd.toPath());

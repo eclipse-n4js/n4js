@@ -30,6 +30,7 @@ import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.JsonUtils;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -42,6 +43,7 @@ import com.google.gson.stream.JsonReader;
  *
  */
 public class InitResources {
+	private static final String NPM_RUN_N4JSC = "n4jsc";
 	private static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
 	private static final String NPM_RUN_TEST = "n4js-mangelhaft";
 
@@ -57,6 +59,7 @@ public class InitResources {
 		};
 		LinkedHashMap<String, String> scripts = new LinkedHashMap<>() {
 			{
+				put("n4jsc", NPM_RUN_N4JSC);
 				put("build", NPM_RUN_BUILD);
 			}
 		};
@@ -147,6 +150,7 @@ public class InitResources {
 		String main;
 		LinkedHashMap<String, String> scripts = new LinkedHashMap<>() {
 			{
+				put("n4jsc", NPM_RUN_N4JSC);
 				put("build", NPM_RUN_BUILD);
 			}
 		};
@@ -259,7 +263,8 @@ public class InitResources {
 			defPackageName = workDir.getName(idx).toString();
 		}
 		if (options.isScope()) {
-			defPackageName = "@" + workDir.getName(idx - 1).toString() + "/" + defPackageName;
+			Preconditions.checkState(workDir.getName(idx - 1).toString().startsWith("@")); // ensured before
+			defPackageName = workDir.getName(idx - 1).toString() + "/" + defPackageName;
 		}
 		return defPackageName;
 	}

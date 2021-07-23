@@ -17,6 +17,7 @@ import java.util.Collection;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.init.InitResources.ExampleFile;
+import org.eclipse.n4js.cli.init.InitResources.FileHelloWorldTest;
 import org.eclipse.n4js.cli.init.InitResources.PackageJsonContents;
 import org.eclipse.n4js.cli.init.InitResources.YarnPackageJsonContents;
 import org.eclipse.n4js.utils.JsonUtils;
@@ -36,6 +37,23 @@ public class InitConfiguration {
 	YarnPackageJsonContents yarnPackageJson;
 	PackageJsonContents packageJson;
 	Collection<ExampleFile> files = new ArrayList<>();
+
+	/** @return true iff the example test is created */
+	public boolean hasScript(String name) {
+		if (isWorkspaces()) {
+			return yarnPackageJson.scripts.containsKey(name);
+		} else {
+			return packageJson.scripts.containsKey(name);
+		}
+	}
+
+	/** @return true iff the example test is created */
+	public boolean hasTest() {
+		if (isWorkspaces()) {
+			return yarnPackageJson.scripts.containsKey("");
+		}
+		return files.stream().anyMatch(f -> new FileHelloWorldTest().getName().equals(f.getName()));
+	}
 
 	/** @return true iff this configuration is related to a yarn workspace */
 	public boolean isWorkspaces() {
@@ -83,11 +101,11 @@ public class InitConfiguration {
 	@Override
 	public String toString() {
 		if (packageJson.exists) {
-			toStringToN4JS();
+			return toStringToN4JS();
 		}
 
 		if (isWorkspaces()) {
-			toStringYarn();
+			return toStringYarn();
 		}
 		return toStringSingleProject();
 	}
@@ -105,17 +123,18 @@ public class InitConfiguration {
 	private String toStringSingleProject() {
 		String str = "";
 
-		str += "File tree" + NL;
+		str += "FILE TREE" + NL;
 		str += projectRoot + NL;
 		for (ExampleFile eFile : files) {
 			str += " ├── " + eFile.getDir() + NL;
 			str += " │  └── " + eFile.getName() + NL;
 		}
 		str += " └── package.json" + NL;
+		str += NL;
 
 		Gson gson = JsonUtils.createGson();
-		str += packageJson.exists ? (packageJson.hasModifications() ? "modified " : "unmodified") : "";
-		str += "contents of package.json" + NL;
+		str += packageJson.exists ? (packageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED") : "";
+		str += "CONTENTS OF package.json" + NL;
 		str += gson.toJson(packageJson) + NL;
 
 		return str;
@@ -124,23 +143,26 @@ public class InitConfiguration {
 	private String toStringYarn() {
 		String str = "";
 
-		str += "File tree" + NL;
+		str += "FILE TREE" + NL;
 		str += yarnRoot + NL;
-		str += " ├── " + workspacesDir.relativize(yarnRoot) + NL;
-		str += " │  └── " + projectRoot.relativize(workspacesDir) + NL;
+		str += " ├── " + yarnRoot.relativize(workspacesDir) + NL;
+		str += " │  └── " + workspacesDir.relativize(projectRoot) + NL;
 		for (ExampleFile eFile : files) {
 			str += " │     ├── " + eFile.getDir() + NL;
 			str += " │     │  └── " + eFile.getName() + NL;
 		}
 		str += " │     └── package.json" + NL;
 		str += " └── package.json" + NL;
+		str += NL;
 
 		Gson gson = JsonUtils.createGson();
-		str += packageJson.exists ? (packageJson.hasModifications() ? "modified " : "unmodified") : "";
-		str += "contents of package.json at" + projectRoot.relativize(yarnRoot) + NL;
+		str += packageJson.exists ? (packageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED") : "";
+		str += "CONTENTS OF package.json at" + yarnRoot.relativize(projectRoot) + NL;
+		str += NL;
+
 		str += gson.toJson(packageJson) + NL;
-		str += yarnPackageJson.exists ? (yarnPackageJson.hasModifications() ? "modified " : "unmodified") : "";
-		str += "contents of package.json at" + yarnRoot + NL;
+		str += yarnPackageJson.exists ? (yarnPackageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED") : "";
+		str += "CONTENTS OF package.json at" + yarnRoot + NL;
 		str += gson.toJson(yarnPackageJson) + NL;
 
 		return str;

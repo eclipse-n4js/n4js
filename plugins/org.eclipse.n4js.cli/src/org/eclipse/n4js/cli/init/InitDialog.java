@@ -31,6 +31,7 @@ import com.google.common.base.Strings;
  * This class implements the dialog with the user and similar features.
  */
 public class InitDialog {
+	static final String NL = System.lineSeparator();
 
 	/**
 	 * Indices defined in help, see {@link InitOptions#answers}
@@ -70,6 +71,21 @@ public class InitDialog {
 			idx++;
 			this.nameYarnProject = answers.length > idx && !answers[idx].isBlank() ? answers[idx] : null;
 		}
+
+		@Override
+		public String toString() {
+			String str = "";
+			str += nameProject == null ? "" : "nameProject=" + nameProject + NL;
+			str += version == null ? "" : "version=" + version + NL;
+			str += main_module == null ? "" : "main module=" + main_module + NL;
+			str += author == null ? "" : "author=" + author + NL;
+			str += license == null ? "" : "license=" + license + NL;
+			str += description == null ? "" : "description=" + description + NL;
+			str += addHelloWorld ? "addHelloWorld=yes" + NL : "";
+			str += addHelloWorldTest ? "addHelloWorldTest=yes" + NL : "";
+			str += nameYarnProject == null ? "" : "yarn project name=" + nameYarnProject + NL;
+			return str;
+		}
 	}
 
 	/**
@@ -87,12 +103,13 @@ public class InitDialog {
 			// nothing to do
 		} else if (options.getAnswers() != null) {
 			UserAnswers answers = new UserAnswers(options.getAnswers());
+			N4jscConsole.print("Parsed answers: " + NL + answers.toString());
 			customizeConfiguration(options, config, answers);
 		} else {
 			UserAnswers answers = inputUserAnswers(options, config, workingDirState);
 			customizeConfiguration(options, config, answers);
 
-			N4jscConsole.print("Create the following project? (yes)" + System.lineSeparator() + config.toString());
+			N4jscConsole.print("Create the following project? (yes)" + NL + config.toString());
 			String userInput = N4jscConsole.readLine();
 			if (!isYes(userInput)) {
 				throw new N4jscException(N4jscExitCode.USER_CANCELLED, "Goal init aborted.");
@@ -118,11 +135,11 @@ public class InitDialog {
 		}
 
 		if (options.isN4JS()) {
+			config.packageJson = PackageJsonContents.read(options);
 			config.packageJson.userModifications.add("n4js");
 			config.packageJson.userModifications.add("dependencies");
 			config.packageJson.userModifications.add("devDependencies");
 
-			config.packageJson = PackageJsonContents.read(options);
 		} else {
 			config.packageJson = PackageJsonContents.defaults(options);
 		}
@@ -191,7 +208,9 @@ public class InitDialog {
 
 				if (answers.addHelloWorldTest) {
 					config.packageJson = config.packageJson.helloWorldTests();
-					config.yarnPackageJson = config.yarnPackageJson.defaultsTested();
+					if (config.yarnPackageJson != null) {
+						config.yarnPackageJson = config.yarnPackageJson.defaultsTested();
+					}
 					config.files.add(new FileHelloWorldTest());
 				}
 			}

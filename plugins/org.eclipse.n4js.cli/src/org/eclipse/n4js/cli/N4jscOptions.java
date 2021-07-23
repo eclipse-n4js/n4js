@@ -447,7 +447,7 @@ public class N4jscOptions {
 						+ "Will also create a new workspace if not existing already."
 						+ "In case the current working directory is inside an existing workspaces directory,"
 						+ "this option will be activated implicitly.", //
-				handler = N4JSFileOptionHandler.class)
+				handler = N4JSBooleanOptionHandler.class)
 		boolean workspaces;
 	}
 

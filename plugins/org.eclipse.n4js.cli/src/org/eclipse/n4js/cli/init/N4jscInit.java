@@ -11,6 +11,7 @@
 package org.eclipse.n4js.cli.init;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.eclipse.n4js.cli.N4jscConsole.println;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscExitState;
@@ -54,7 +54,14 @@ public class N4jscInit {
 		initProject(options, config);
 
 		String cmd = config.isWorkspaces() ? "yarn" : "npm";
-		N4jscConsole.println("Init done. Please run '" + cmd + " install' to install dependencies.");
+		println("Init done. Please run '" + cmd + " install' to install dependencies.");
+		println("");
+		println("The following scripts are available:");
+		println("   '" + cmd + " run n4jsc [-- args]' -  run n4jsc with arguments. E.g. 'npm run n4jsc -- --help'");
+		println("   '" + cmd + " run build'           -  build this project with N4JS compiler.");
+		if (config.hasScript("test")) {
+			println("   '" + cmd + " run test'            -  execute project tests.");
+		}
 
 		return N4jscExitState.SUCCESS;
 	}
@@ -210,6 +217,7 @@ public class N4jscInit {
 					break;
 				}
 				default:
+					checkState(false); // ensured before
 					break;
 				}
 			} else {
@@ -220,9 +228,17 @@ public class N4jscInit {
 
 		} else {
 			if (options.isWorkspaces()) {
-				// in an existing valid workspaces project directory a new project is initialized
-				checkState(workingDirState == WorkingDirState.InYarnProjectEmptyPackage); // ensured before
-				setConfigDirs(config, cwd.resolve(parentPackageJson.getParentFile().toPath()), cwd);
+				if (workingDirState == WorkingDirState.InEmptyFolder) {
+					// in the cwd both a new yarn project and a new package project are initialized
+					Path yarnRoot = cwd;
+					Path projectRoot = yarnRoot.resolve("packages").resolve(config.packageJson.name);
+					setConfigDirs(config, yarnRoot, projectRoot);
+				} else if (workingDirState == WorkingDirState.InYarnProjectEmptyPackage) {
+					// in an existing valid workspaces project directory a new project is initialized
+					setConfigDirs(config, cwd.resolve(parentPackageJson.getParentFile().toPath()), cwd);
+				} else {
+					checkState(false); // ensured before
+				}
 			} else {
 				// in the cwd a new project is initialized
 				checkState(workingDirState == WorkingDirState.InEmptyFolder); // ensured before
