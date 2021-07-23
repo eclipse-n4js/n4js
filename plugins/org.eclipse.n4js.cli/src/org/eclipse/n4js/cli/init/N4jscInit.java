@@ -10,40 +10,30 @@
  */
 package org.eclipse.n4js.cli.init;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscExitState;
 import org.eclipse.n4js.cli.N4jscOptions;
-import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
+import org.eclipse.n4js.cli.init.InitResources.ExampleFile;
+import org.eclipse.n4js.cli.init.InitResources.YarnPackageJsonContents;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
-import org.eclipse.xtext.xbase.lib.Pair;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 
 /**
@@ -53,273 +43,20 @@ public class N4jscInit {
 
 	/** Starts the compiler for goal INIT in a blocking fashion */
 	public static N4jscExitState start(N4jscOptions options) throws N4jscException {
-		InitConfiguration config;
-		if (options.isYes()) {
-			config = getDefaultConfiguration(options, null);
-		} else if (options.getAnswers() != null) {
-			String[] answers = { "", "", "", "", "", "", "" };
-			String[] userAnswers = options.getAnswers().split("(?<=[^\\\\]|^),");
-			System.arraycopy(userAnswers, 0, answers, 0, userAnswers.length);
-			config = getCustomizedConfiguration(options, answers);
-		} else {
-			String[] answers = inputUserAnswers(options);
-			config = getCustomizedConfiguration(options, answers);
-		}
-		initProjects(options, config);
-		return N4jscExitState.SUCCESS;
-	}
-
-	private static InitConfiguration getDefaultConfiguration(N4jscOptions options, String initType)
-			throws N4jscException {
-
-		InitConfiguration config = new InitConfiguration();
-		switch (Strings.nullToEmpty(initType)) {
-		case "e":
-			config.yarnPackageJson = YarnPackageJsonContents.defaults();
-			config.packageJson = PackageJsonContents.defaults(options).helloWorld();
-			config.files.add(new FileHelloWorld());
-			break;
-		case "t":
-			config.yarnPackageJson = YarnPackageJsonContents.defaults().defaultsTested();
-			config.packageJson = PackageJsonContents.defaults(options).helloWorld().helloWorldTests();
-			config.files.add(new FileHelloWorld());
-			config.files.add(new FileHelloWorldTest());
-			break;
-		default:
-			config.yarnPackageJson = YarnPackageJsonContents.defaults();
-			config.packageJson = PackageJsonContents.defaults(options);
-			break;
-		}
-		return config;
-	}
-
-	private static String[] inputUserAnswers(N4jscOptions options) throws N4jscException {
-		String[] answers = new String[7];
-
-		N4jscConsole.print("Add 'Hello World' example (type 'e') including a test example (type 't')? (no) ");
-		String userInput = N4jscConsole.readLine();
-		answers[0] = userInput.isBlank() ? "" : userInput;
-		PackageJsonContents defaults = getDefaultConfiguration(options, userInput).packageJson;
-
-		if (!options.isN4JS()) {
-			// in case of extending an already existing project to n4js, the name is not changed
-			N4jscConsole.print(String.format("name: (%s) ", defaults.name));
-			userInput = N4jscConsole.readLine();
-			answers[1] = userInput.isBlank() ? defaults.name : userInput;
-		}
-
-		N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
-		userInput = N4jscConsole.readLine();
-		answers[2] = userInput.isBlank() ? defaults.version : userInput;
-
-		N4jscConsole.print(String.format("main module: (%s) ", Strings.nullToEmpty(defaults.main)));
-		userInput = N4jscConsole.readLine();
-		answers[3] = userInput.isBlank() ? defaults.main : userInput;
-
-		N4jscConsole.print(String.format("author: (%s) ", Strings.nullToEmpty(defaults.author)));
-		userInput = N4jscConsole.readLine();
-		answers[4] = userInput.isBlank() ? defaults.author : userInput;
-
-		N4jscConsole.print(String.format("license: (%s) ", Strings.nullToEmpty(defaults.license)));
-		userInput = N4jscConsole.readLine();
-		answers[5] = userInput.isBlank() ? defaults.license : userInput;
-
-		N4jscConsole.print(String.format("description: (%s) ", Strings.nullToEmpty(defaults.description)));
-		userInput = N4jscConsole.readLine();
-		answers[6] = userInput.isBlank() ? defaults.description : userInput;
-
-		return answers;
-	}
-
-	private static InitConfiguration getCustomizedConfiguration(N4jscOptions options, String[] answers)
-			throws N4jscException {
-
-		InitConfiguration config = getDefaultConfiguration(options, answers[0]);
-		PackageJsonContents defaults = config.packageJson;
-
-		if (!Strings.isNullOrEmpty(answers[1]) && !options.isN4JS()) {
-			defaults.name = answers[1];
-			defaults.userModifications.add("name");
-		}
-		if (!Strings.isNullOrEmpty(answers[2])) {
-			defaults.version = answers[2];
-			defaults.userModifications.add("version");
-		}
-		if (!Strings.isNullOrEmpty(answers[3]) && !Objects.equal(answers[3], defaults.main)) {
-			Pair<URI, URI> moduleNames = interpretModuleNames(answers[3]);
-			defaults.main = moduleNames.getKey().toFileString();
-			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
-			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
-			defaults.userModifications.add("main");
-			defaults.userModifications.add("n4js");
-		}
-		if (!Strings.isNullOrEmpty(answers[4])) {
-			defaults.author = answers[4];
-			defaults.userModifications.add("author");
-		}
-		if (!Strings.isNullOrEmpty(answers[5])) {
-			defaults.license = answers[5];
-			defaults.userModifications.add("license");
-		}
-		if (!Strings.isNullOrEmpty(answers[6])) {
-			defaults.description = answers[6];
-			defaults.userModifications.add("description");
-		}
-		return config;
-	}
-
-	private static Pair<URI, URI> interpretModuleNames(String userInput) {
-		if (userInput.startsWith("src/")) {
-			userInput = userInput.substring("src/".length());
-		}
-		if (userInput.startsWith("src-gen/")) {
-			userInput = userInput.substring("src-gen/".length());
-		}
-
-		int lastDotIdx = userInput.lastIndexOf(".");
-		int endIdx = lastDotIdx < 1 ? userInput.length() : lastDotIdx;
-		String fName = userInput.substring(0, endIdx);
-		String fExtension = endIdx + 1 < userInput.length() ? userInput.substring(endIdx + 1) : "";
-
-		String jsExtension;
-		String n4jsExtension;
-		switch (fExtension) {
-		case "jsx":
-		case "n4jsx":
-			jsExtension = "jsx";
-			n4jsExtension = "n4jsx";
-			break;
-		case "js":
-		case "n4js":
-		default:
-			jsExtension = "js";
-			n4jsExtension = "n4js";
-		}
-
-		return Pair.of(
-				URI.createFileURI("src-gen/" + fName + "." + jsExtension),
-				URI.createFileURI(fName + "." + n4jsExtension));
-	}
-
-	private static N4jscExitState initProjects(N4jscOptions options, InitConfiguration config) throws N4jscException {
-		Path cwd = options.getWorkingDirectory();
 		File parentPackageJson = getParentPackageJson(options);
-		WorkingDirState workingDirState = getWorkingDirState(options, parentPackageJson);
-		String workspacesOption = options.getWorkspaces() == null ? null : options.getWorkspaces().toString();
+		WorkingDirState workingDirState = checkAndGetWorkingDirState(options, parentPackageJson);
+		InitConfiguration config = InitDialog.getInitConfiguration(options, workingDirState);
+		setDirectories(options, config, parentPackageJson, workingDirState);
 
-		switch (workingDirState) {
-		case InExistingProject:
-			config.projectRoot = cwd;
-			config.packageJson.userModifications.add("n4js");
-			config.packageJson.userModifications.add("dependencies");
-			config.packageJson.userModifications.add("devDependencies");
-
-			break;
-		case InEmptyFolder:
-
-			if (workspacesOption == null) {
-				config.projectRoot = cwd;
-
-			} else {
-
-				config.yarnRoot = cwd;
-				config.workspacesDir = cwd.resolve(workspacesOption);
-				config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
-				initYarnProject(config);
-
-				// FIXME: GH-2143
-				String folder = (config.yarnRoot.endsWith(".") ? config.yarnRoot.getParent() : config.yarnRoot)
-						.getFileName().toString();
-				if (config.packageJson.name.equals(folder)) {
-					config.packageJson.name = config.packageJson.name + "2";
-					config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
-				}
-			}
-
-			break;
-
-		default:
-			config.yarnRoot = parentPackageJson.getParentFile().toPath();
-			List<String> workspacesProperty = getYarnWorkspaces(parentPackageJson);
-			if (workspacesOption == null) {
-				config.projectRoot = cwd;
-				config.workspacesDir = config.projectRoot.getParent();
-				if (options.isScope()) {
-					config.workspacesDir = config.workspacesDir.getParent();
-				}
-				if (!workspaceMatch(workspacesProperty, config.yarnRoot, config.projectRoot)) {
-					throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-							"Creating a new project inside a yarn project requires either to explicitly pass option --workspaces or "
-									+ "the current working directory to be inside a new project folder of a valid workspaces directory of the yarn project.");
-				}
-
-			} else {
-
-				config.workspacesDir = config.yarnRoot.resolve(workspacesOption);
-				config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
-				for (int i = 0; config.projectRoot.resolve(N4JSGlobals.PACKAGE_JSON).toFile().exists(); i++) {
-					config.projectRoot = Path.of(config.projectRoot.toString() + "_" + i);
-				}
-				if (!workspaceMatch(workspacesProperty, cwd, config.projectRoot)) {
-					try {
-						PackageJsonModificationUtils.addToWorkspaces(parentPackageJson, workspacesOption + "/*");
-					} catch (IOException e) {
-						throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, e);
-					}
-				}
-			}
+		if (config.isWorkspaces()) {
+			initYarnProject(config);
 		}
-
 		initProject(options, config);
-		String cmd = (workingDirState == WorkingDirState.InEmptyFolder) && (workspacesOption == null) ? "npm" : "yarn";
+
+		String cmd = config.isWorkspaces() ? "yarn" : "npm";
 		N4jscConsole.println("Init done. Please run '" + cmd + " install' to install dependencies.");
+
 		return N4jscExitState.SUCCESS;
-	}
-
-	private static WorkingDirState getWorkingDirState(N4jscOptions options, File candidate) throws N4jscException {
-		if (options.isN4JS()) {
-			if (candidate != null && candidate.exists()
-					&& candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
-
-				return WorkingDirState.InExistingProject;
-			} else {
-				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-						"Given option --n4js requires a package.json file to be in the current working directory.");
-			}
-		}
-
-		if (candidate == null || !candidate.exists()) {
-			return WorkingDirState.InEmptyFolder;
-		}
-
-		if (!options.isN4JS() && candidate.getParentFile().equals(options.getWorkingDirectory().toFile())) {
-			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-					"Current working directory must not contain a package.json file. "
-							+ "In case you like to add the n4js property to an existing project, use option --n4js");
-		}
-
-		try (JsonReader jReader = new JsonReader(new FileReader(candidate))) {
-			JsonElement packageJsonCandidate = JsonParser.parseReader(jReader);
-			if (!packageJsonCandidate.isJsonObject()) {
-				return WorkingDirState.InEmptyFolder;
-			}
-			JsonObject packageJson = (JsonObject) packageJsonCandidate;
-			boolean isYarnProject = packageJson.has(PackageJsonProperties.WORKSPACES_ARRAY.name);
-			if (!isYarnProject) {
-				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-						"Current working directory is inside the non-yarn project of " + candidate);
-			}
-
-			Path candidateWorkDir = candidate.getParentFile().toPath();
-			if (candidateWorkDir.equals(options.getWorkingDirectory())) {
-				return WorkingDirState.InYarnProjectRoot;
-			} else {
-				return WorkingDirState.InYarnProjectSubdir;
-			}
-		} catch (Exception e) {
-			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-					"Working directory must be either empty or inside a yarn project.", e);
-		}
 	}
 
 	private static File getParentPackageJson(N4jscOptions options) {
@@ -335,43 +72,184 @@ public class N4jscInit {
 		return candidate;
 	}
 
-	private static List<String> getYarnWorkspaces(File candidate) throws N4jscException {
-		try (JsonReader jReader = new JsonReader(new FileReader(candidate))) {
-			JsonElement packageJsonCandidate = JsonParser.parseReader(jReader);
-			JsonObject packageJson = (JsonObject) packageJsonCandidate;
-			JsonElement workspacesElement = packageJson.get(PackageJsonProperties.WORKSPACES_ARRAY.name);
+	private static WorkingDirState checkAndGetWorkingDirState(N4jscOptions options, File parentPackageJson)
+			throws N4jscException {
 
-			List<String> workspacesEntries = new ArrayList<>();
-			if (workspacesElement.isJsonArray()) {
-				JsonArray workspacesArray = (JsonArray) workspacesElement;
-				for (JsonElement workspaceEntry : workspacesArray) {
-					workspacesEntries.add(workspaceEntry.getAsString());
-				}
+		Path cwd = options.getWorkingDirectory();
+		boolean cwdHasPackageJson = parentPackageJson != null && parentPackageJson.exists()
+				&& parentPackageJson.getParentFile().equals(cwd.toFile());
 
-			} else if (workspacesElement.isJsonObject()) {
-				JsonObject workspacesObject = (JsonObject) workspacesElement;
+		if (options.isN4JS()) {
+			if (cwdHasPackageJson) {
+				return WorkingDirState.InExistingProject;
+			} else {
+				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+						"Given option --n4js requires a package.json file to be in the current working directory.");
+			}
+		}
 
-				List<JsonArray> arrays = new ArrayList<>();
-				if (workspacesObject.has(PackageJsonProperties.PACKAGES.name)) {
-					arrays.add(workspacesObject.getAsJsonArray(PackageJsonProperties.PACKAGES.name));
-				}
-				if (workspacesObject.has(PackageJsonProperties.NOHOIST.name)) {
-					arrays.add(workspacesObject.getAsJsonArray(PackageJsonProperties.NOHOIST.name));
-				}
-				for (JsonArray array : arrays) {
-					for (JsonElement workspaceEntry : array) {
-						workspacesEntries.add(workspaceEntry.getAsString());
-					}
-				}
+		if (!options.isCreate()) {
+			if (cwdHasPackageJson) {
+				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+						"Current working directory must not contain a package.json file. "
+								+ "In case you like to add the n4js property to an existing project, use option --n4js");
 			}
 
-			return workspacesEntries;
+			if (options.isScope() && !cwd.getParent().toFile().getName().startsWith("@")) {
+				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+						"When creating a scoped package the parent directory of current working directory must start with '@'.");
+			}
+		}
+
+		if (parentPackageJson == null || !parentPackageJson.exists()) {
+			return WorkingDirState.InEmptyFolder;
+		}
+
+		// there is a package.json file in the parent directory of cwd
+
+		try (JsonReader jReader = new JsonReader(new FileReader(parentPackageJson))) {
+			JsonElement packageJsonCandidate = JsonParser.parseReader(jReader);
+			if (!packageJsonCandidate.isJsonObject()) {
+				return WorkingDirState.InEmptyFolder;
+			}
+
+			JsonObject packageJson = (JsonObject) packageJsonCandidate;
+			boolean isYarnProject = packageJson.has(PackageJsonProperties.WORKSPACES_ARRAY.name);
+			if (!isYarnProject) {
+				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+						"Current working directory is inside the non-yarn project of " + parentPackageJson);
+			}
+		} catch (N4jscException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, e);
+			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+					"Working directory must be either empty or inside a yarn project.", e);
+		}
+
+		// cwd is somewhere inside a yarn project
+
+		if (!options.isWorkspaces()) {
+			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+					"Creating a new project inside an existing yarn project requires option '--workspaces' to be set.");
+		}
+
+		Path candidateWorkDir = parentPackageJson.getParentFile().toPath();
+		if (candidateWorkDir.equals(cwd)) {
+			return WorkingDirState.InYarnProjectRoot;
+		}
+
+		YarnPackageJsonContents yarnPackageJson = YarnPackageJsonContents.read(parentPackageJson.toPath());
+		Path yarnRoot = parentPackageJson.getParentFile().toPath();
+		boolean isCwdWorkspaceMatch = workspaceMatch(yarnPackageJson.workspaces, yarnRoot, cwd);
+		if (!options.isCreate() && !isCwdWorkspaceMatch) {
+			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
+					"Creating a new project inside a yarn project requires the current working directory to "
+							+ "be inside a new project folder of a valid workspaces directory of the yarn project."
+							+ "Alternatively add option '--create' to create a new project directory.");
+		}
+
+		if (isCwdWorkspaceMatch) {
+			return WorkingDirState.InYarnProjectEmptyPackage;
+		}
+
+		boolean isCwdWorkspaceParent = workspaceMatch(yarnPackageJson.workspaces, yarnRoot, cwd.resolve("test"));
+		if (isCwdWorkspaceParent) {
+			return WorkingDirState.InYarnProjectWorkspaces;
+		}
+
+		return WorkingDirState.InYarnProject;
+
+	}
+
+	private static N4jscExitState setDirectories(N4jscOptions options, InitConfiguration config, File parentPackageJson,
+			WorkingDirState workingDirState) throws N4jscException {
+
+		Path cwd = options.getWorkingDirectory();
+
+		if (options.isN4JS()) {
+			checkState(workingDirState == WorkingDirState.InExistingProject); // ensured before
+			config.projectRoot = cwd;
+
+		} else if (options.isCreate()) {
+			if (options.isWorkspaces()) {
+				// a new yarn workspace is created in the cwd along with a single project
+				checkState(workingDirState != WorkingDirState.InExistingProject); // ensured before
+
+				switch (workingDirState) {
+				case InEmptyFolder: {
+					Path yarnRoot = cwd.resolve(config.yarnPackageJson.name);
+					Path projectRoot = yarnRoot.resolve("packages").resolve(config.packageJson.name);
+					setConfigDirs(config, yarnRoot, projectRoot);
+					break;
+				}
+				case InExistingProject:
+					checkState(false); // ensured before
+					break;
+				case InYarnProjectRoot: {
+					String workspacesDir = config.getWorkspacesDirectory();
+					Path projectRoot = cwd.resolve(workspacesDir).resolve(config.packageJson.name);
+					setConfigDirs(config, cwd, projectRoot);
+					break;
+				}
+				case InYarnProjectWorkspaces: {
+					Path yarnRoot = parentPackageJson.getParentFile().toPath();
+					Path projectRoot = cwd.resolve(config.packageJson.name);
+					setConfigDirs(config, yarnRoot, projectRoot);
+					break;
+				}
+				case InYarnProjectEmptyPackage: {
+					Path yarnRoot = parentPackageJson.getParentFile().toPath();
+					setConfigDirs(config, yarnRoot, cwd);
+					break;
+				}
+				case InYarnProject: {
+					String workspacesDir = config.getWorkspacesDirectory();
+					Path yarnRoot = parentPackageJson.getParentFile().toPath();
+					Path projectRoot = yarnRoot.resolve(workspacesDir).resolve(config.packageJson.name);
+					setConfigDirs(config, yarnRoot, projectRoot);
+					break;
+				}
+				default:
+					break;
+				}
+			} else {
+				// a single project is created in a new folder in the cwd
+				checkState(workingDirState == WorkingDirState.InEmptyFolder); // ensured before
+				config.projectRoot = cwd.resolve(config.packageJson.name);
+			}
+
+		} else {
+			if (options.isWorkspaces()) {
+				// in an existing valid workspaces project directory a new project is initialized
+				checkState(workingDirState == WorkingDirState.InYarnProjectEmptyPackage); // ensured before
+				setConfigDirs(config, cwd.resolve(parentPackageJson.getParentFile().toPath()), cwd);
+			} else {
+				// in the cwd a new project is initialized
+				checkState(workingDirState == WorkingDirState.InEmptyFolder); // ensured before
+				config.projectRoot = cwd;
+			}
+
+		}
+
+		return N4jscExitState.SUCCESS;
+	}
+
+	private static void setConfigDirs(InitConfiguration config, Path yarnRootDir, Path projectDir) {
+		Path packagesDir = projectDir.getParent();
+		packagesDir = packagesDir.toFile().getName().startsWith("@") ? packagesDir.getParent() : packagesDir;
+
+		config.yarnRoot = yarnRootDir;
+		config.workspacesDir = packagesDir;
+		config.projectRoot = projectDir;
+
+		// FIXME: GH-2143
+		if (config.packageJson.name.equals(config.yarnRoot.getFileName().toString())) {
+			config.packageJson.name = config.packageJson.name + "2";
+			config.projectRoot = config.workspacesDir.resolve(config.packageJson.name);
 		}
 	}
 
-	private static boolean workspaceMatch(List<String> globs, Path root, Path newProjectLocation) {
+	private static boolean workspaceMatch(String[] globs, Path root, Path newProjectLocation) {
 		Path relProjectLocation = root.relativize(newProjectLocation);
 		for (String glob : globs) {
 			boolean matches = ModuleFilterUtils.locationMatchesGlobSpecifier(glob, relProjectLocation);
@@ -412,254 +290,7 @@ public class N4jscInit {
 	}
 
 	enum WorkingDirState {
-		InEmptyFolder, InYarnProjectRoot, InYarnProjectSubdir, InExistingProject
+		InEmptyFolder, InYarnProjectRoot, InYarnProjectWorkspaces, InYarnProjectEmptyPackage, InYarnProject, InExistingProject
 	}
 
-	private static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
-	private static final String NPM_RUN_TEST = "n4js-mangelhaft";
-
-	private static class InitConfiguration {
-		Path yarnRoot;
-		Path workspacesDir;
-		Path projectRoot;
-		YarnPackageJsonContents yarnPackageJson;
-		PackageJsonContents packageJson;
-		Collection<ExampleFile> files = new ArrayList<>();
-	}
-
-	private static class YarnPackageJsonContents {
-		@SerializedName("private")
-		boolean _private = true;
-		LinkedHashMap<String, String> devDependencies = new LinkedHashMap<>() {
-			{
-				put("n4js-cli", "");
-			}
-		};
-		LinkedHashMap<String, String> scripts = new LinkedHashMap<>() {
-			{
-				put("build", NPM_RUN_BUILD);
-			}
-		};
-		@SuppressWarnings("unused") // used by Gson
-		String[] workspaces = { "packages/*" };
-
-		static YarnPackageJsonContents defaults() {
-			YarnPackageJsonContents pjc = new YarnPackageJsonContents();
-			return pjc;
-		}
-
-		YarnPackageJsonContents defaultsTested() {
-			scripts.put("test", NPM_RUN_TEST);
-			devDependencies.put("n4js-mangelhaft-cli", "");
-			devDependencies.put("org.eclipse.n4js.mangelhaft", "");
-			devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
-			return this;
-		}
-	}
-
-	private static class PackageJsonContents {
-		String name;
-		String version = "0.0.1";
-		String description;
-		String main;
-		LinkedHashMap<String, String> scripts = new LinkedHashMap<>() {
-			{
-				put("build", NPM_RUN_BUILD);
-			}
-		};
-		String author;
-		String license;
-		@SuppressWarnings("unused") // used by Gson
-		LinkedHashMap<String, String> dependencies = new LinkedHashMap<>() {
-			{
-				put("n4js-runtime", "");
-				put("n4js-runtime-es2015", "");
-			}
-		};
-		LinkedHashMap<String, String> devDependencies = new LinkedHashMap<>() {
-			{
-				put("n4js-cli", "");
-			}
-		};
-		PropertyN4JS n4js = new PropertyN4JS();
-
-		transient Set<String> userModifications = new HashSet<>();
-
-		static PackageJsonContents defaults(N4jscOptions options) throws N4jscException {
-			PackageJsonContents pjc;
-			if (options.isN4JS()) {
-				File pckjson = options.getWorkingDirectory().resolve(N4JSGlobals.PACKAGE_JSON).toFile();
-				try (JsonReader reader = new JsonReader(new FileReader(pckjson));) {
-					Gson gson = JsonUtils.createGson();
-					pjc = gson.fromJson(reader, PackageJsonContents.class);
-					return pjc;
-				} catch (Exception e) {
-					throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, "Error when reading " + pckjson, e);
-				}
-			} else {
-				pjc = new PackageJsonContents();
-				pjc.name = defaultPackageName(options);
-				return pjc;
-			}
-		}
-
-		PackageJsonContents helloWorld() {
-			main = "src-gen/HelloWorld.js";
-			n4js.mainModule = "HelloWorld";
-			return this;
-		}
-
-		PackageJsonContents helloWorldTests() {
-			scripts.put("test", NPM_RUN_TEST);
-			devDependencies.put("n4js-mangelhaft-cli", "");
-			devDependencies.put("org.eclipse.n4js.mangelhaft", "");
-			devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
-			n4js.sources.test = new String[] { "tests" };
-			return this;
-		}
-
-		PackageJsonContents inYarnProject() {
-			scripts = null;
-			return this;
-		}
-
-		void write(N4jscOptions options, Path target) throws IOException {
-			File pckjson = target.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
-			if (options.isN4JS()) {
-				Gson gson = JsonUtils.createGson();
-				JsonElement jsonRoot = gson.toJsonTree(this, PackageJsonContents.class);
-				Set<Entry<String, JsonElement>> allElements = jsonRoot.getAsJsonObject().entrySet();
-				Set<Entry<String, JsonElement>> modifiedElements = new HashSet<>();
-				for (Entry<String, JsonElement> element : allElements) {
-					if (userModifications.contains(element.getKey())) {
-						modifiedElements.add(element);
-					}
-				}
-				PackageJsonModificationUtils.addProperties(pckjson, modifiedElements);
-			} else {
-				target.toFile().mkdirs();
-				Gson gson = JsonUtils.createGson();
-				String packageJsonString = gson.toJson(this);
-				try (FileWriter fw = new FileWriter(pckjson)) {
-					fw.write(packageJsonString);
-				}
-			}
-		}
-	}
-
-	@SuppressWarnings("unused") // used by Gson
-	private static class PropertyN4JS {
-		String projectType = "library";
-		String mainModule;
-		String output = "src-gen";
-		PropertySources sources = new PropertySources();
-		String[] requiredRuntimeLibraries = { "n4js-runtime-es2015" };
-	}
-
-	@SuppressWarnings("unused") // used by Gson
-	private static class PropertySources {
-		String[] source = { "src" };
-		String[] test;
-	}
-
-	private static String defaultPackageName(N4jscOptions options) {
-		Path workDir = options.getWorkingDirectory();
-		int idx = workDir.getNameCount() - 1;
-		String defPackageName = workDir.getName(idx).toString();
-		if (".".equals(defPackageName)) {
-			idx--;
-			defPackageName = workDir.getName(idx).toString();
-		}
-		if (options.isScope()) {
-			defPackageName = "@" + workDir.getName(idx - 1).toString() + "/" + defPackageName;
-		}
-		return defPackageName;
-	}
-
-	private static abstract class ExampleFile {
-		abstract Path getPath();
-
-		abstract String[] getContents();
-
-		void writeToDisk(Path targetDir) throws IOException {
-			File file = targetDir.resolve(getPath()).toFile();
-			if (file.exists()) {
-				file.delete();
-			}
-			file.getParentFile().mkdirs();
-			file.createNewFile();
-			String contents = String.join(System.lineSeparator(), getContents());
-			try (FileWriter fw = new FileWriter(file)) {
-				fw.write(contents);
-			}
-		}
-	}
-
-	private static class FileHelloWorld extends ExampleFile {
-		@Override
-		Path getPath() {
-			return Path.of("src/HelloWorld.n4js");
-		}
-
-		@Override
-		String[] getContents() {
-			return new String[] {
-					"export public class WorldClass {",
-					"  greeting : string = 'Hello World';",
-					"}",
-					"",
-					"console.log(new WorldClass().greeting);",
-					""
-			};
-		}
-	}
-
-	private static class FileHelloWorldTest extends ExampleFile {
-		@Override
-		Path getPath() {
-			return Path.of("tests/HelloWorldTest.n4js");
-		}
-
-		@Override
-		String[] getContents() {
-			return new String[] {
-					"import { WorldClass } from \"HelloWorld\";",
-					"import { Assert } from \"org/eclipse/n4js/mangelhaft/assert/Assert\";",
-					"",
-					"export public class TestModule {",
-					"  @Test",
-					"  helloWorldTest() : void {",
-					"    let helloWorld = new WorldClass()",
-					"    Assert.equal('Hello World', helloWorld.greeting)",
-					"  }",
-					"}",
-					""
-			};
-		}
-	}
-
-	private static class IndexFile extends ExampleFile {
-		final String name;
-
-		IndexFile(String name) {
-			this.name = name;
-		}
-
-		@Override
-		Path getPath() {
-			return Path.of("src/" + name);
-		}
-
-		@Override
-		String[] getContents() {
-			return new String[] {
-					"",
-					"export public class MyClass {",
-					"  pi : number = 3.14;",
-					"  foo() : void {",
-					"  }",
-					"}",
-					"" };
-		}
-	}
 }

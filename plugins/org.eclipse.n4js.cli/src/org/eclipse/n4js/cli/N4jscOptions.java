@@ -422,7 +422,8 @@ public class N4jscOptions {
 		boolean yes = false;
 
 		@Option(name = "--answers", aliases = "-a", forbids = "--yes", //
-				usage = "comma separated string of answers for the questionnaire. Can be incomplete.", //
+				usage = "comma separated string of answers for the questionnaire. Can be incomplete. Pattern:" //
+						+ "<0:name>,<1:version>,<2:main module>,<3:author>,<4:license>,<5:description>,<6:add example?>,<7:add test?>,<8:yarn project name>", //
 				handler = N4JSStringOptionHandler.class)
 		String answers;
 
@@ -431,18 +432,23 @@ public class N4jscOptions {
 				handler = N4JSBooleanOptionHandler.class)
 		boolean scope = false;
 
-		@Option(name = "--n4js", aliases = "-n", forbids = { "--scope", "--workspaces" }, //
+		@Option(name = "--n4js", aliases = "-n", forbids = { "--scope", "--workspaces", "--create" }, //
 				usage = "extends an existing npm project in the current working directory with n4js entries", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean n4js = false;
+
+		@Option(name = "--create", aliases = "-c", forbids = { "--n4js" }, //
+				usage = "instead of using the current working directory the new project directory is created", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean create = false;
 
 		@Option(name = "--workspaces", aliases = "-w", forbids = "--n4js", //
 				usage = "creates the new project inside the given workspaces directory. "
 						+ "Will also create a new workspace if not existing already."
 						+ "In case the current working directory is inside an existing workspaces directory,"
-						+ "this option will be activated implicitly using the cwd.", //
+						+ "this option will be activated implicitly.", //
 				handler = N4JSFileOptionHandler.class)
-		File workspaces;
+		boolean workspaces;
 	}
 
 	/** This class defines option fields for command init. */
@@ -501,7 +507,7 @@ public class N4jscOptions {
 	protected AbstractOptions options;
 
 	/** Working directory */
-	protected Path workingDir = new File(".").getAbsoluteFile().toPath();
+	protected Path workingDir = new File(".").getAbsoluteFile().toPath().getParent();
 
 	/** Constructor */
 	public N4jscOptions() {
@@ -703,14 +709,20 @@ public class N4jscOptions {
 		return ((InitOptions) options).answers;
 	}
 
+	/** @return true iff {@code --create} */
+	public boolean isCreate() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).create;
+	}
+
 	/** @return true iff {@code --scope} */
 	public boolean isScope() {
 		Preconditions.checkState(options instanceof InitOptions);
 		return ((InitOptions) options).scope;
 	}
 
-	/** @return workspaces if given via {@code --workspaces}. {@code null} otherwise. */
-	public File getWorkspaces() {
+	/** @return true iff {@code --workspaces} */
+	public boolean isWorkspaces() {
 		Preconditions.checkState(options instanceof InitOptions);
 		return ((InitOptions) options).workspaces;
 	}

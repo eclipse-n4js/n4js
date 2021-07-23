@@ -260,7 +260,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** test also create yarn */
 	@Test
 	public void yarn() throws Exception {
-		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
@@ -278,7 +278,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	@Test
 	public void yarnHelloWorld() throws Exception {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath())
-				.workspaces(new File("packages"))
+				.workspaces()
 				.answers("e");
 		n4jsc(options, SUCCESS);
 
@@ -293,7 +293,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	@Test
 	public void yarnHelloWorldTested() throws Exception {
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath())
-				.workspaces(new File("packages"))
+				.workspaces()
 				.answers("t");
 		n4jsc(options, SUCCESS);
 
@@ -315,7 +315,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	@Test
 	public void yarnImplicit() throws Exception {
 		// create environment
-		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
@@ -344,7 +344,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	@Test
 	public void yarnWrongLocation1() throws Exception {
 		// create environment
-		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
@@ -370,7 +370,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	@Test
 	public void yarnWrongLocation2() throws Exception {
 		// create environment
-		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
@@ -381,7 +381,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "", FileUtils.serializeFileTree(cwd));
 
 		// test
-		options = INIT().yes().setWorkingDirectory(cwd.toPath()).workspaces(new File("packages"));
+		options = INIT().yes().setWorkingDirectory(cwd.toPath()).workspaces();
 		CliCompileResult result = n4jsc(options, INIT_ERROR_WORKING_DIR);
 
 		assertEquals(
@@ -394,7 +394,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	@Test
 	public void yarnAddWorkspaces() throws Exception {
 		// create environment
-		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces(new File("packages"));
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
@@ -407,7 +407,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		// test
 		File newProject = new File(cwd, "packages2/newProject");
 		newProject.mkdirs();
-		options = INIT().yes().setWorkingDirectory(newProject.toPath()).workspaces(new File("packages2"));
+		options = INIT().yes().setWorkingDirectory(newProject.toPath()).workspaces();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"

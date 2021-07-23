@@ -258,8 +258,8 @@ public class N4jscTestOptions extends N4jscOptions {
 	}
 
 	/** Sets option */
-	public N4jscTestOptions workspaces(File workspaces) {
-		setDefinedOption(() -> ((InitOptions) options).workspaces = workspaces);
+	public N4jscTestOptions workspaces() {
+		setDefinedOption(() -> ((InitOptions) options).workspaces = true);
 		return this;
 	}
 
