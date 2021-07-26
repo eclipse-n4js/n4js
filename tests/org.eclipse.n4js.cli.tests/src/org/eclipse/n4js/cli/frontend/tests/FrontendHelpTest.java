@@ -25,8 +25,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 		String args[] = { "version", "help" };
 		CliCompileResult result = n4jsc(args, 10, false);
 		assertEquals(result.toString(),
-				"ERROR-10 (Invalid command line string):  No argument is allowed: help\n"
-						+ "Usage: n4jsc [GOAL] [DIR] [OPTION(s)]",
+				"ERROR-10 (Invalid command line string):  No argument is allowed: help",
 				result.getStdOut());
 	}
 
@@ -132,7 +131,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				+ "   compile             Compile src folders\n"
 				+ "   clean               Clean output folders and type index\n"
 				+ "   lsp                 Start LSP server\n"
-				+ "   setversions         Set versions of n4js-related dependencies\n"
+				+ "   set-versions        Set versions of n4js-related dependencies\n"
 				+ "   init                Create an empty n4js project\n"
 				+ "   help                Show help\n"
 				+ "   version             Print version of this tool\n"

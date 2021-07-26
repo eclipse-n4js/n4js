@@ -83,8 +83,9 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		CliCompileResult result = n4jsc(options, INIT_ERROR_WORKING_DIR);
 
 		assertEquals(
-				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file. "
-						+ "In case you like to add the n4js property to an existing project, use option --n4js",
+				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file. Note:\n"
+						+ "  In case you like to add the n4js property to an existing project, use option --n4js\n"
+						+ "  In case you like to add a project to an existing workspace project, use options -w -c",
 				result.getStdOut());
 	}
 
@@ -104,6 +105,23 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContents = Files.readString(subfolder.toPath().resolve(PACKAGE_JSON));
 		assertTrue(packagejsonContents.contains("\"name\": \"@myScope/scopedProject\""));
+	}
+
+	/** --scope test. */
+	@Test
+	public void optionsYesScopeCreate() throws Exception {
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().scope().create();
+		n4jsc(options, SUCCESS);
+
+		assertEquals("TestInit\n"
+				+ "+ @scope\n"
+				+ "  + my-project\n"
+				+ "    - package.json\n"
+				+ "", FileUtils.serializeFileTree(cwd));
+
+		File subfolder = new File(cwd, "@scope/my-project");
+		String packagejsonContents = Files.readString(subfolder.toPath().resolve(PACKAGE_JSON));
+		assertTrue(packagejsonContents.contains("\"name\": \"@scope/my-project\""));
 	}
 
 	/** test hello world example */
@@ -268,7 +286,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("TestInit\n"
 				+ "- package.json\n"
 				+ "+ packages\n"
-				+ "  + TestInit2\n"
+				+ "  + my-project\n"
 				+ "    - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
 
@@ -287,7 +305,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		yarnInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
 		assertEquals(1, result.getTranspiledFilesCount());
-		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/TestInit2"));
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/my-project"));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 	}
 
@@ -305,7 +323,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(resultBuild.getStdOut().contains("Errors: 0"));
 		assertTrue(resultBuild.getStdOut().contains("Generated: 4"));
 
-		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/TestInit2"));
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/my-project"));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 
 		ProcessResult resultTest = yarnRun(cwd.toPath(), "run", "test");
@@ -313,32 +331,36 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				"Testing completed: [32mSUCCESSES[39m: 1, [31mFAILURES[39m: 0, [31mERRORS[39m: 0, [36mSKIPPED[39m: 0"));
 	}
 
-	/** test yarn implicit */
+	/** test yarn create */
 	@Test
-	public void yarnImplicit() throws Exception {
+	public void yarnCreate() throws Exception {
 		// create environment
-		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces().create();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + TestInit2\n"
-				+ "    - package.json\n"
+				+ "+ yarn-project\n"
+				+ "  - package.json\n"
+				+ "  + packages\n"
+				+ "    + my-project\n"
+				+ "      - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
+	}
 
-		// test
-		File newProject = new File(cwd, "packages/newProject");
-		options = INIT().yes().setWorkingDirectory(newProject.toPath());
+	/** test yarn create with scope project */
+	@Test
+	public void yarnCreateScope() throws Exception {
+		// create environment
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces().scope().create();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"
-				+ "- package.json\n"
-				+ "+ packages\n"
-				+ "  + TestInit2\n"
-				+ "    - package.json\n"
-				+ "  + newProject\n"
-				+ "    - package.json\n"
+				+ "+ yarn-project\n"
+				+ "  - package.json\n"
+				+ "  + packages\n"
+				+ "    + @scope\n"
+				+ "      + my-project\n"
+				+ "        - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
 	}
 
@@ -352,7 +374,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("TestInit\n"
 				+ "- package.json\n"
 				+ "+ packages\n"
-				+ "  + TestInit2\n"
+				+ "  + my-project\n"
 				+ "    - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
 
@@ -377,7 +399,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("TestInit\n"
 				+ "- package.json\n"
 				+ "+ packages\n"
-				+ "  + TestInit2\n"
+				+ "  + my-project\n"
 				+ "    - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
 
@@ -386,14 +408,15 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		CliCompileResult result = n4jsc(options, INIT_ERROR_WORKING_DIR);
 
 		assertEquals(
-				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file. "
-						+ "In case you like to add the n4js property to an existing project, use option --n4js",
+				"ERROR-410 (Error: Unsupported working directory):  Current working directory must not contain a package.json file. Note:\n"
+						+ "  In case you like to add the n4js property to an existing project, use option --n4js\n"
+						+ "  In case you like to add a project to an existing workspace project, use options -w -c",
 				result.getStdOut());
 	}
 
 	/** test yarn implicit */
 	@Test
-	public void yarnAddWorkspaces() throws Exception {
+	public void yarnAddProject() throws Exception {
 		// create environment
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).yes().workspaces();
 		n4jsc(options, SUCCESS);
@@ -401,7 +424,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("TestInit\n"
 				+ "- package.json\n"
 				+ "+ packages\n"
-				+ "  + TestInit2\n"
+				+ "  + my-project\n"
 				+ "    - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
 
@@ -414,7 +437,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("TestInit\n"
 				+ "- package.json\n"
 				+ "+ packages\n"
-				+ "  + TestInit2\n"
+				+ "  + my-project\n"
 				+ "    - package.json\n"
 				+ "  + newProject\n"
 				+ "    - package.json\n"

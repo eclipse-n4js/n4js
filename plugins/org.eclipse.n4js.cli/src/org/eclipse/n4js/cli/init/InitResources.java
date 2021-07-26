@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscOptions;
@@ -30,7 +31,6 @@ import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.JsonUtils;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -43,13 +43,18 @@ import com.google.gson.stream.JsonReader;
  *
  */
 public class InitResources {
+	private static final String CREATE_NAME_YARN_PROJECT = "yarn-project";
+	private static final String CREATE_NAME_SCOPE = "@scope";
+	private static final String CREATE_NAME_PROJECT = "my-project";
+	private static final String CREATE_NAME_SCOPE_PROJECT = CREATE_NAME_SCOPE + "/" + CREATE_NAME_PROJECT;
+
 	private static final String NPM_RUN_N4JSC = "n4jsc";
 	private static final String NPM_RUN_BUILD = "n4jsc compile . --clean || true";
 	private static final String NPM_RUN_TEST = "n4js-mangelhaft";
 
 	static class YarnPackageJsonContents {
 		transient boolean exists = false;
-		transient String name = "yarn-project";
+		transient String name = CREATE_NAME_YARN_PROJECT;
 		@SerializedName("private")
 		boolean _private = true;
 		LinkedHashMap<String, String> devDependencies = new LinkedHashMap<>() {
@@ -205,11 +210,6 @@ public class InitResources {
 			return this;
 		}
 
-		// PackageJsonContents inYarnProject() {
-		// scripts = null;
-		// return this;
-		// }
-
 		void write(N4jscOptions options, Path target) throws IOException {
 			File pckjson = target.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 			if (options.isN4JS()) {
@@ -225,6 +225,9 @@ public class InitResources {
 				PackageJsonModificationUtils.addProperties(pckjson, modifiedElements);
 			} else {
 				target.toFile().mkdirs();
+				if (pckjson.isFile()) {
+					N4jscConsole.println("Overwriting " + pckjson.toString());
+				}
 				Gson gson = JsonUtils.createGson();
 				String packageJsonString = gson.toJson(this);
 				try (FileWriter fw = new FileWriter(pckjson)) {
@@ -255,16 +258,37 @@ public class InitResources {
 	}
 
 	static String defaultPackageName(N4jscOptions options) {
-		Path workDir = options.getWorkingDirectory();
-		int idx = workDir.getNameCount() - 1;
-		String defPackageName = workDir.getName(idx).toString();
-		if (".".equals(defPackageName)) {
-			idx--;
-			defPackageName = workDir.getName(idx).toString();
+		File workDir = options.getWorkingDirectory().toFile();
+		if (".".equals(workDir.getName()) && workDir.getParentFile() != null) {
+			workDir = workDir.getParentFile();
 		}
-		if (options.isScope()) {
-			Preconditions.checkState(workDir.getName(idx - 1).toString().startsWith("@")); // ensured before
-			defPackageName = workDir.getName(idx - 1).toString() + "/" + defPackageName;
+
+		File parent = workDir.getParentFile();
+
+		String defPackageName = workDir.getName().toString();
+		if (options.isWorkspaces()) {
+			if (options.isScope()) {
+				defPackageName = CREATE_NAME_SCOPE_PROJECT;
+			} else {
+				defPackageName = CREATE_NAME_PROJECT;
+			}
+
+		} else {
+			if (options.isScope()) {
+				if (options.isCreate()) {
+					defPackageName = CREATE_NAME_SCOPE_PROJECT;
+				} else {
+					String scopeName = parent == null ? CREATE_NAME_SCOPE : parent.getName();
+					String prjName = workDir.getName();
+					defPackageName = scopeName + "/" + prjName;
+				}
+			} else {
+				if (options.isCreate()) {
+					defPackageName = CREATE_NAME_PROJECT;
+				} else {
+					defPackageName = workDir.getName();
+				}
+			}
 		}
 		return defPackageName;
 	}
@@ -283,6 +307,7 @@ public class InitResources {
 		void writeToDisk(Path targetDir) throws IOException {
 			File file = targetDir.resolve(getPath()).toFile();
 			if (file.exists()) {
+				N4jscConsole.println("Overwriting " + file.toString());
 				file.delete();
 			}
 			file.getParentFile().mkdirs();

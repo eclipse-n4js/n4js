@@ -116,6 +116,7 @@ public class N4jscInit {
 				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
 						"Current working directory must not contain a package.json file. Note:" + NL
 								+ "  In case you like to add the n4js property to an existing project, use option --n4js"
+								+ NL
 								+ "  In case you like to add a project to an existing workspace project, use options -w -c");
 			}
 
@@ -303,7 +304,6 @@ public class N4jscInit {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, e);
 		}
 
-		// config.packageJson.inYarnProject();
 		return N4jscExitState.SUCCESS;
 	}
 
