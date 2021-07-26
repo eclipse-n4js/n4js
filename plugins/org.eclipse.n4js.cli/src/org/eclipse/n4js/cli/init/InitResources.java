@@ -205,10 +205,10 @@ public class InitResources {
 			return this;
 		}
 
-		PackageJsonContents inYarnProject() {
-			scripts = null;
-			return this;
-		}
+		// PackageJsonContents inYarnProject() {
+		// scripts = null;
+		// return this;
+		// }
 
 		void write(N4jscOptions options, Path target) throws IOException {
 			File pckjson = target.resolve(N4JSGlobals.PACKAGE_JSON).toFile();

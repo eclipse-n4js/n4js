@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.init;
 
 import static com.google.common.base.Preconditions.checkState;
 import static org.eclipse.n4js.cli.N4jscConsole.println;
+import static org.eclipse.n4js.cli.init.InitDialog.NL;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscExitState;
@@ -30,6 +32,7 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -45,8 +48,20 @@ public class N4jscInit {
 	public static N4jscExitState start(N4jscOptions options) throws N4jscException {
 		File parentPackageJson = getParentPackageJson(options);
 		WorkingDirState workingDirState = checkAndGetWorkingDirState(options, parentPackageJson);
-		InitConfiguration config = InitDialog.getInitConfiguration(options, workingDirState);
+		InitConfiguration config = InitDialog.getInitConfiguration(options, parentPackageJson, workingDirState);
 		setDirectories(options, config, parentPackageJson, workingDirState);
+
+		if (!options.isYes() && options.getAnswers() == null) {
+			String verb1 = options.isN4JS() ? "MODIFICATIONS" : "CONFIGURATION";
+			String verb2 = options.isN4JS() ? "Modify" : "Create";
+			N4jscConsole.print(NL);
+			N4jscConsole.print("PENDING PROJECT " + verb1 + NL + NL + config.toString());
+			N4jscConsole.print(NL + verb2 + " this project? (yes) ");
+			String userInput = N4jscConsole.readLine();
+			if (!Strings.nullToEmpty(userInput).isBlank() && !InitDialog.isYes(userInput)) {
+				throw new N4jscException(N4jscExitCode.USER_CANCELLED, "User said '" + userInput + "'");
+			}
+		}
 
 		if (config.isWorkspaces()) {
 			initYarnProject(config);
@@ -54,13 +69,14 @@ public class N4jscInit {
 		initProject(options, config);
 
 		String cmd = config.isWorkspaces() ? "yarn" : "npm";
+		println("");
 		println("Init done. Please run '" + cmd + " install' to install dependencies.");
 		println("");
 		println("The following scripts are available:");
-		println("   '" + cmd + " run n4jsc [-- args]' -  run n4jsc with arguments. E.g. 'npm run n4jsc -- --help'");
-		println("   '" + cmd + " run build'           -  build this project with N4JS compiler.");
+		println("  '" + cmd + " run n4jsc [-- args]' -  run n4jsc with arguments. E.g. 'npm run n4jsc -- --help'");
+		println("  '" + cmd + " run build'           -  build this project with N4JS compiler.");
 		if (config.hasScript("test")) {
-			println("   '" + cmd + " run test'            -  execute project tests.");
+			println("  '" + cmd + " run test'            -  execute project tests.");
 		}
 
 		return N4jscExitState.SUCCESS;
@@ -98,8 +114,9 @@ public class N4jscInit {
 		if (!options.isCreate()) {
 			if (cwdHasPackageJson) {
 				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-						"Current working directory must not contain a package.json file. "
-								+ "In case you like to add the n4js property to an existing project, use option --n4js");
+						"Current working directory must not contain a package.json file. Note:" + NL
+								+ "  In case you like to add the n4js property to an existing project, use option --n4js"
+								+ "  In case you like to add a project to an existing workspace project, use options -w -c");
 			}
 
 			if (options.isScope() && !cwd.getParent().toFile().getName().startsWith("@")) {
@@ -145,7 +162,7 @@ public class N4jscInit {
 			return WorkingDirState.InYarnProjectRoot;
 		}
 
-		YarnPackageJsonContents yarnPackageJson = YarnPackageJsonContents.read(parentPackageJson.toPath());
+		YarnPackageJsonContents yarnPackageJson = YarnPackageJsonContents.read(candidateWorkDir);
 		Path yarnRoot = parentPackageJson.getParentFile().toPath();
 		boolean isCwdWorkspaceMatch = workspaceMatch(yarnPackageJson.workspaces, yarnRoot, cwd);
 		if (!options.isCreate() && !isCwdWorkspaceMatch) {
@@ -286,7 +303,7 @@ public class N4jscInit {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR, e);
 		}
 
-		config.packageJson.inYarnProject();
+		// config.packageJson.inYarnProject();
 		return N4jscExitState.SUCCESS;
 	}
 

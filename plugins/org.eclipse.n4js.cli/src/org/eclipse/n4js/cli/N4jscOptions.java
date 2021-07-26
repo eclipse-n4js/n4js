@@ -417,18 +417,23 @@ public class N4jscOptions {
 		}
 
 		@Option(name = "--yes", aliases = "-y", forbids = "--answers", //
-				usage = "skips the questionnaire", //
+				usage = "skips the questionnaire. Equivalent to '-a ,,,,,no'", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean yes = false;
 
-		@Option(name = "--answers", aliases = "-a", forbids = "--yes", //
-				usage = "comma separated string of answers for the questionnaire. Can be incomplete. Pattern:" //
-						+ "<0:name>,<1:version>,<2:main module>,<3:author>,<4:license>,<5:description>,<6:add example?>,<7:add test?>,<8:yarn project name>", //
+		@Option(name = "--answers", aliases = "-a", forbids = "--yes", metaVar = "CSV", //
+				usage = "comma separated string list of answers for the questionnaire. Can be incomplete.\n"
+						+ "List:\n" //
+						+ "  <0:name>,<1:version>,<2:main module>,<3:author>,\n"
+						+ "  <4:license>,<5:description>,<6:add example?>,\n"
+						+ "  <7:add test?>,<8:yarn project name>\n"
+						+ "Example:\n"
+						+ "  '-a \",,my-index.js,,,yes\"'", //
 				handler = N4JSStringOptionHandler.class)
 		String answers;
 
 		@Option(name = "--scope", aliases = "-s", forbids = "--n4js", //
-				usage = "creates a scoped project. uses the parent directory as the scope name", //
+				usage = "creates a scoped project. Uses the parent directory as the scope name", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean scope = false;
 
@@ -438,15 +443,13 @@ public class N4jscOptions {
 		boolean n4js = false;
 
 		@Option(name = "--create", aliases = "-c", forbids = { "--n4js" }, //
-				usage = "instead of using the current working directory the new project directory is created", //
+				usage = "instead of using the current working directory a new project directory (subfolder) is created", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean create = false;
 
 		@Option(name = "--workspaces", aliases = "-w", forbids = "--n4js", //
-				usage = "creates the new project inside the given workspaces directory. "
-						+ "Will also create a new workspace if not existing already."
-						+ "In case the current working directory is inside an existing workspaces directory,"
-						+ "this option will be activated implicitly.", //
+				usage = "creates the new project inside a workspaces directory. "
+						+ "Will also create a new workspace project if not existing already.", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean workspaces;
 	}

@@ -208,7 +208,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** test for a custom main module */
 	@Test
 	public void mainModule2() throws Exception {
-		String answers = ",,,index.n4js";
+		String answers = ",,index.n4js";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
 
@@ -226,7 +226,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** test for a custom main module */
 	@Test
 	public void mainModule3() throws Exception {
-		String answers = ",,,index.jsx";
+		String answers = ",,index.jsx";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
 
@@ -244,7 +244,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	/** test for a custom main module */
 	@Test
 	public void mainModule4() throws Exception {
-		String answers = ",,,index.n4jsx";
+		String answers = ",,index.n4jsx";
 		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(answers);
 		n4jsc(options, SUCCESS);
 
@@ -363,8 +363,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		assertEquals(
 				"ERROR-410 (Error: Unsupported working directory):  "
-						+ "Creating a new project inside a yarn project requires either to explicitly pass option --workspaces or "
-						+ "the current working directory to be inside a new project folder of a valid workspaces directory of the yarn project.",
+						+ "Creating a new project inside an existing yarn project requires option '--workspaces' to be set.",
 				result.getStdOut());
 	}
 
@@ -407,7 +406,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "", FileUtils.serializeFileTree(cwd));
 
 		// test
-		File newProject = new File(cwd, "packages2/newProject");
+		File newProject = new File(cwd, "packages/newProject");
 		newProject.mkdirs();
 		options = INIT().yes().setWorkingDirectory(newProject.toPath()).workspaces();
 		n4jsc(options, SUCCESS);
@@ -417,7 +416,6 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "+ packages\n"
 				+ "  + TestInit2\n"
 				+ "    - package.json\n"
-				+ "+ packages2\n"
 				+ "  + newProject\n"
 				+ "    - package.json\n"
 				+ "", FileUtils.serializeFileTree(cwd));
@@ -501,7 +499,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 				+ "}\n"
 				+ "", packagejsonContents);
 
-		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(",,,index.js").n4js();
+		N4jscTestOptions options = INIT().setWorkingDirectory(cwd.toPath()).answers(",,index.js").n4js();
 		n4jsc(options, SUCCESS);
 
 		assertEquals("TestInit\n"

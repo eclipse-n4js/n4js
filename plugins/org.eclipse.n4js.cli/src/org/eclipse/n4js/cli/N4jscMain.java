@@ -108,7 +108,6 @@ public class N4jscMain {
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			N4jscConsole.println(N4jscOptions.USAGE);
 			System.exit(e.getExitCode());
 		}
 

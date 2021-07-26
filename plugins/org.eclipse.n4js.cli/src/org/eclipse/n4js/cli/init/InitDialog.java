@@ -10,10 +10,11 @@
  */
 package org.eclipse.n4js.cli.init;
 
+import java.io.File;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
-import org.eclipse.n4js.cli.N4jscExitCode;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.N4jscOptions.InitOptions;
 import org.eclipse.n4js.cli.init.InitResources.FileHelloWorld;
@@ -51,7 +52,10 @@ public class InitDialog {
 		}
 
 		UserAnswers(String userAnswers) {
-			String[] answers = userAnswers.split("(?<=[^\\\\]|^),");
+			String[] answers = userAnswers.split("(?<=[^\\\\]|^),"); // escaped commas are ignored
+			for (int i = 0; i < answers.length; i++) {
+				answers[i] = answers[i].replace("\\,", ","); // remove escape symbol
+			}
 			int idx = 0;
 			this.nameProject = answers.length > idx && !answers[idx].isBlank() ? answers[idx] : null;
 			idx++;
@@ -95,25 +99,21 @@ public class InitDialog {
 	 *
 	 * @return a complete configuration of the new project
 	 */
-	public static InitConfiguration getInitConfiguration(N4jscOptions options, WorkingDirState workingDirState)
-			throws N4jscException {
+	public static InitConfiguration getInitConfiguration(N4jscOptions options, File parentPackageJson,
+			WorkingDirState workingDirState) throws N4jscException {
 
-		InitConfiguration config = getDefaultConfiguration(options, workingDirState);
+		InitConfiguration config = getDefaultConfiguration(options, parentPackageJson, workingDirState);
 		if (options.isYes()) {
 			// nothing to do
 		} else if (options.getAnswers() != null) {
 			UserAnswers answers = new UserAnswers(options.getAnswers());
-			N4jscConsole.print("Parsed answers: " + NL + answers.toString());
+			String str = "Parsed answers: " + NL + answers.toString();
+			str = str.replace(NL, NL + "  ");
+			N4jscConsole.print(str);
 			customizeConfiguration(options, config, answers);
 		} else {
 			UserAnswers answers = inputUserAnswers(options, config, workingDirState);
 			customizeConfiguration(options, config, answers);
-
-			N4jscConsole.print("Create the following project? (yes)" + NL + config.toString());
-			String userInput = N4jscConsole.readLine();
-			if (!isYes(userInput)) {
-				throw new N4jscException(N4jscExitCode.USER_CANCELLED, "Goal init aborted.");
-			}
 		}
 		return config;
 	}
@@ -122,15 +122,15 @@ public class InitDialog {
 		return "y".equals(input) || "yes".equals(input);
 	}
 
-	static InitConfiguration getDefaultConfiguration(N4jscOptions options, WorkingDirState workingDirState)
-			throws N4jscException {
+	static InitConfiguration getDefaultConfiguration(N4jscOptions options, File parentPackageJson,
+			WorkingDirState workingDirState) throws N4jscException {
 
 		InitConfiguration config = new InitConfiguration();
 		if (options.isWorkspaces()) {
 			if (workingDirState == WorkingDirState.InEmptyFolder) {
 				config.yarnPackageJson = YarnPackageJsonContents.defaults();
 			} else {
-				config.yarnPackageJson = YarnPackageJsonContents.read(null);
+				config.yarnPackageJson = YarnPackageJsonContents.read(parentPackageJson.toPath().getParent());
 			}
 		}
 
@@ -173,8 +173,8 @@ public class InitDialog {
 		answers.addHelloWorld = isYes(userInput);
 		if (answers.addHelloWorld) {
 			N4jscConsole.print("Add Test for 'Hello World' example? (type 'y' for yes) (no) ");
+			userInput = N4jscConsole.readLine();
 			answers.addHelloWorldTest = isYes(userInput);
-			addExamples(config, answers);
 		}
 
 		N4jscConsole.print(String.format("version: (%s) ", Strings.nullToEmpty(defaults.version)));
@@ -224,34 +224,34 @@ public class InitDialog {
 			config.yarnPackageJson.name = answers.nameYarnProject;
 		}
 
-		PackageJsonContents defaults = config.packageJson;
+		PackageJsonContents packjson = config.packageJson;
 		if (!Strings.isNullOrEmpty(answers.nameProject) && !options.isN4JS()) {
-			defaults.name = answers.nameProject;
-			defaults.userModifications.add("name");
+			packjson.name = answers.nameProject;
+			packjson.userModifications.add("name");
 		}
 		if (!Strings.isNullOrEmpty(answers.version)) {
-			defaults.version = answers.version;
-			defaults.userModifications.add("version");
+			packjson.version = answers.version;
+			packjson.userModifications.add("version");
 		}
-		if (!Strings.isNullOrEmpty(answers.main_module) && !Objects.equal(answers.main_module, defaults.main)) {
+		if (!Strings.isNullOrEmpty(answers.main_module) && !Objects.equal(answers.main_module, packjson.main)) {
 			Pair<URI, URI> moduleNames = interpretModuleNames(answers.main_module);
-			defaults.main = moduleNames.getKey().toFileString();
-			defaults.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+			packjson.main = moduleNames.getKey().toFileString();
+			packjson.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
 			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
-			defaults.userModifications.add("main");
-			defaults.userModifications.add("n4js");
+			packjson.userModifications.add("main");
+			packjson.userModifications.add("n4js");
 		}
 		if (!Strings.isNullOrEmpty(answers.author)) {
-			defaults.author = answers.author;
-			defaults.userModifications.add("author");
+			packjson.author = answers.author;
+			packjson.userModifications.add("author");
 		}
 		if (!Strings.isNullOrEmpty(answers.license)) {
-			defaults.license = answers.license;
-			defaults.userModifications.add("license");
+			packjson.license = answers.license;
+			packjson.userModifications.add("license");
 		}
 		if (!Strings.isNullOrEmpty(answers.description)) {
-			defaults.description = answers.description;
-			defaults.userModifications.add("description");
+			packjson.description = answers.description;
+			packjson.userModifications.add("description");
 		}
 	}
 

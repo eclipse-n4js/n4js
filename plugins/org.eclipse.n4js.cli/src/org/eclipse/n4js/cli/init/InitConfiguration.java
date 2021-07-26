@@ -114,7 +114,7 @@ public class InitConfiguration {
 		String str = "";
 
 		Gson gson = JsonUtils.createGson();
-		str += "modified contents of package.json" + NL;
+		str += "MODIFIED CONTENTS OF package.json" + NL;
 		str += gson.toJson(packageJson) + NL;
 
 		return str;
@@ -123,8 +123,7 @@ public class InitConfiguration {
 	private String toStringSingleProject() {
 		String str = "";
 
-		str += "FILE TREE" + NL;
-		str += projectRoot + NL;
+		str += "FILE TREE AT " + projectRoot + NL;
 		for (ExampleFile eFile : files) {
 			str += " ├── " + eFile.getDir() + NL;
 			str += " │  └── " + eFile.getName() + NL;
@@ -133,8 +132,8 @@ public class InitConfiguration {
 		str += NL;
 
 		Gson gson = JsonUtils.createGson();
-		str += packageJson.exists ? (packageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED") : "";
-		str += "CONTENTS OF package.json" + NL;
+		str += packageJson.exists ? (packageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED ") : "";
+		str += "CONTENTS OF package.json";
 		str += gson.toJson(packageJson) + NL;
 
 		return str;
@@ -143,8 +142,7 @@ public class InitConfiguration {
 	private String toStringYarn() {
 		String str = "";
 
-		str += "FILE TREE" + NL;
-		str += yarnRoot + NL;
+		str += "FILE TREE AT " + yarnRoot + NL;
 		str += " ├── " + yarnRoot.relativize(workspacesDir) + NL;
 		str += " │  └── " + workspacesDir.relativize(projectRoot) + NL;
 		for (ExampleFile eFile : files) {
@@ -156,13 +154,13 @@ public class InitConfiguration {
 		str += NL;
 
 		Gson gson = JsonUtils.createGson();
-		str += packageJson.exists ? (packageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED") : "";
-		str += "CONTENTS OF package.json at" + yarnRoot.relativize(projectRoot) + NL;
-		str += NL;
-
+		str += packageJson.exists ? (packageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED ") : "";
+		str += "CONTENTS OF package.json at " + yarnRoot.relativize(projectRoot) + NL;
 		str += gson.toJson(packageJson) + NL;
-		str += yarnPackageJson.exists ? (yarnPackageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED") : "";
-		str += "CONTENTS OF package.json at" + yarnRoot + NL;
+
+		str += NL;
+		str += yarnPackageJson.exists ? (yarnPackageJson.hasModifications() ? "MODIFIED " : "UNMODIFIED ") : "";
+		str += "CONTENTS OF package.json at " + yarnRoot + NL;
 		str += gson.toJson(yarnPackageJson) + NL;
 
 		return str;
