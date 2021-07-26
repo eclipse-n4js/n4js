@@ -652,6 +652,26 @@ class RuleEnvironmentExtensions {
 		G.migrationContextType.createTypeRef;
 	}
 
+	/* Returns built-in type {@code Iterator<T>} */
+	public def static iteratorType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.iteratorType
+	}
+
+	/* Returns newly created reference to built-in type {@code Iterator<T>} */
+	public def static iteratorTypeRef(RuleEnvironment G, TypeArgument typeArg) {
+		createTypeRef(G.iteratorType, typeArg);
+	}
+
+	/* Returns built-in type {@code IteratorEntry<T>} */
+	public def static iteratorEntryType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.iteratorEntryType
+	}
+
+	/* Returns newly created reference to built-in type {@code IteratorEntry<T>} */
+	public def static iteratorEntryTypeRef(RuleEnvironment G, TypeArgument typeArg) {
+		createTypeRef(G.iteratorEntryType, typeArg);
+	}
+
 	/* Returns built-in type {@code Iterable<T>} */
 	public def static iterableType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.iterableType

@@ -134,7 +134,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		npmInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
 		assertEquals(1, result.getTranspiledFilesCount());
-		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("."));
+		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("."));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 	}
 
@@ -151,7 +151,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(resultBuild.getStdOut().contains("Errors: 0"));
 		assertTrue(resultBuild.getStdOut().contains("Generated: 4"));
 
-		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("."));
+		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("."));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 
 		ProcessResult resultTest = npmRun(cwd.toPath(), "run", "test");
@@ -305,7 +305,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		yarnInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
 		assertEquals(1, result.getTranspiledFilesCount());
-		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/my-project"));
+		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("packages/my-project"));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 	}
 
@@ -323,7 +323,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(resultBuild.getStdOut().contains("Errors: 0"));
 		assertTrue(resultBuild.getStdOut().contains("Generated: 4"));
 
-		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/my-project"));
+		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("packages/my-project"));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 
 		ProcessResult resultTest = yarnRun(cwd.toPath(), "run", "test");

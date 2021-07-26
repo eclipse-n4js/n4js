@@ -25,7 +25,7 @@ import org.eclipse.n4js.n4JS.Expression;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.transpiler.im.Snippet#getCode <em>Code</em>}</li>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.Snippet#getCodeToEmit <em>Code To Emit</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.transpiler.im.ImPackage#getSnippet()
@@ -34,29 +34,25 @@ import org.eclipse.n4js.n4JS.Expression;
  */
 public interface Snippet extends Expression {
 	/**
-	 * Returns the value of the '<em><b>Code</b></em>' attribute.
+	 * Returns the value of the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Code</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Code</em>' attribute.
-	 * @see #setCode(String)
-	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getSnippet_Code()
+	 * @return the value of the '<em>Code To Emit</em>' attribute.
+	 * @see #setCodeToEmit(String)
+	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getSnippet_CodeToEmit()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getCode();
+	String getCodeToEmit();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.Snippet#getCode <em>Code</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.Snippet#getCodeToEmit <em>Code To Emit</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Code</em>' attribute.
-	 * @see #getCode()
+	 * @param value the new value of the '<em>Code To Emit</em>' attribute.
+	 * @see #getCodeToEmit()
 	 * @generated
 	 */
-	void setCode(String value);
+	void setCodeToEmit(String value);
 
 } // Snippet

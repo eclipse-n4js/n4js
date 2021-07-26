@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -171,7 +172,9 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 */
 	@Override
 	public TypeRef getDeclaredTypeRef() {
-		return null;
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -181,7 +184,21 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 	 */
 	@Override
 	public TypeRef getDeclaredTypeRefInAST() {
-		return null;
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeReferenceNode<TypeRef> getDeclaredTypeRefNode() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -395,6 +412,7 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF;
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE: return N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}
@@ -427,6 +445,8 @@ public abstract class FieldAccessorImpl extends FunctionOrFieldAccessorImpl impl
 				return getDeclaredTypeRef();
 			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_IN_AST:
 				return getDeclaredTypeRefInAST();
+			case N4JSPackage.FIELD_ACCESSOR___GET_DECLARED_TYPE_REF_NODE:
+				return getDeclaredTypeRefNode();
 			case N4JSPackage.FIELD_ACCESSOR___GET_DEFINED_ACCESSOR:
 				return getDefinedAccessor();
 			case N4JSPackage.FIELD_ACCESSOR___IS_OPTIONAL:

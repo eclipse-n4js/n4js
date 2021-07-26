@@ -38,7 +38,7 @@ interface ~Props extends React.ComponentProps  {
 class Concrete extends React.PureComponent<Props, Object> {
 
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		return (<div/>);
 	}
 }

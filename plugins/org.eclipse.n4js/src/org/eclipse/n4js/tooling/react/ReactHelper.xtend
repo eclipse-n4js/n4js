@@ -38,7 +38,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
- * This helper provides utilities for looking up React definitions such as React.Component or React.Element or
+ * This helper provides utilities for looking up React definitions such as React.Component or React.ReactElement or
  * for calculating types related to React (e.g. of props property) etc.
  */
 class ReactHelper {
@@ -49,7 +49,7 @@ class ReactHelper {
 
 	public final static String REACT_PROJECT_ID = "react"
 	public final static String REACT_COMPONENT = "Component"
-	public final static String REACT_ELEMENT = "Element"
+	public final static String REACT_ELEMENT = "ReactElement"
 	public final static String REACT_FRAGMENT_NAME = "Fragment";
 
 	public final static String REACT_NAMESPACE_NAME = REACT_PROJECT_ID.toFirstUpper;

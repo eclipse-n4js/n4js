@@ -66,7 +66,7 @@ class N4jscDtsTest extends AbstractIdeTest {
 		        "target": "es5",
 		        "lib": ["es2019", "es2020"],
 		        "module": "commonjs",
-		        "noImplicitAny": false,
+		        "noImplicitAny": false
 		    }
 		}
 		'''.toString, contents);

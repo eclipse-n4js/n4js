@@ -1,0 +1,151 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+interface I1 {
+	public field: string;
+	public get getter(): number
+	public set setter(value: string);
+	public method(p: string): number;
+
+	public fieldDef: string = "default value"
+	public get getterDef(): number { return 0; }
+	public set setterDef(value: string) {}
+	public methodDef(p: string): number { return 0; }
+}
+interface I2a extends I1 {}
+interface I2b extends I1 {}
+interface I3 extends I2a, I2b {}
+
+
+abstract class C01 implements I3 {}
+class C02 extends C01 {
+	@Override public field: string;
+	@Override public get getter(): number { return 42; }
+	@Override public set setter(value: string) {}
+	@Override public method(p: string): number { return 42; }
+}
+
+
+abstract class C11 implements I3 {
+	@Override public field: string;
+	@Override public get getter(): number { return 42; }
+	@Override public set setter(value: string) {}
+	@Override public method(p: string): number { return 42; }
+	@Override public fieldDef: string;
+	@Override public get getterDef(): number { return 42; }
+	@Override public set setterDef(value: string) {}
+	@Override public methodDef(p: string): number { return 42; }
+}
+
+
+abstract class C21 {}
+abstract class C22 extends C21 implements I3 {}
+
+
+abstract class C31 {
+	public field: string;
+	public get getter(): number { return 42; }
+	public set setter(value: string) {}
+	public method(p: string): number { return 42; }
+	public fieldDef: string;
+	public get getterDef(): number { return 42; }
+	public set setterDef(value: string) {}
+	public methodDef(p: string): number { return 42; }
+}
+abstract class C32 extends C31 implements I3 {}
+
+
+abstract class C41 implements I3 {}
+abstract class C42 extends C41 implements I3 {}
+
+
+
+
+/* XPECT generated_dts ---
+declare interface I1 {
+	field: string;
+	get getter(): number;
+	set setter(value: string);
+	method(p: string): number;
+	fieldDef: string;
+	get getterDef(): number;
+	set setterDef(value: string);
+	methodDef(p: string): number;
+}
+declare interface I2a extends I1 {}
+declare interface I2b extends I1 {}
+declare interface I3 extends I2a, I2b {}
+declare abstract class C01 implements I3 {
+	public field: string;
+	public fieldDef: string;
+	public abstract method(p: string): number;
+	public methodDef(p: string): number;
+	public abstract get getter(): number;
+	public get getterDef(): number;
+	public abstract set setter(value: string);
+	public set setterDef(value: string);
+}
+declare class C02 extends C01 {
+	public field: string;
+	public get getter(): number;
+	public set setter(value: string);
+	public method(p: string): number;
+}
+declare abstract class C11 implements I3 {
+	public field: string;
+	public get getter(): number;
+	public set setter(value: string);
+	public method(p: string): number;
+	public fieldDef: string;
+	public get getterDef(): number;
+	public set setterDef(value: string);
+	public methodDef(p: string): number;
+}
+declare abstract class C21 {}
+declare abstract class C22 extends C21 implements I3 {
+	public field: string;
+	public fieldDef: string;
+	public abstract method(p: string): number;
+	public methodDef(p: string): number;
+	public abstract get getter(): number;
+	public get getterDef(): number;
+	public abstract set setter(value: string);
+	public set setterDef(value: string);
+}
+declare abstract class C31 {
+	public field: string;
+	public get getter(): number;
+	public set setter(value: string);
+	public method(p: string): number;
+	public fieldDef: string;
+	public get getterDef(): number;
+	public set setterDef(value: string);
+	public methodDef(p: string): number;
+}
+declare abstract class C32 extends C31 implements I3 {}
+declare abstract class C41 implements I3 {
+	public field: string;
+	public fieldDef: string;
+	public abstract method(p: string): number;
+	public methodDef(p: string): number;
+	public abstract get getter(): number;
+	public get getterDef(): number;
+	public abstract set setter(value: string);
+	public set setterDef(value: string);
+}
+declare abstract class C42 extends C41 implements I3 {}
+--- */

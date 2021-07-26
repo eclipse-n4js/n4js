@@ -241,7 +241,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 			args.add("/" + outputFilePath.get() + "/");
 		}
 
-		ProcessResult result = new CliTools().nodejsRun(workingDir.toPath(),
+		ProcessResult result = new CliTools().nodejsRunESM(workingDir.toPath(),
 				Path.of("../../node_modules/n4js-mangelhaft-cli/bin/n4js-mangelhaft-cli.js"),
 				args.toArray(String[]::new));
 

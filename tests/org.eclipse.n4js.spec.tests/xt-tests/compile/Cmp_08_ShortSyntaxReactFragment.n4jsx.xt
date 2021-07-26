@@ -65,7 +65,7 @@ nested
 import * as React from "react";
 import { replacer } from "replacer";
 
-var zzzz: React.Element; // Avoid unused import warnings
+var zzzz: React.ReactElement; // Avoid unused import warnings
 zzzz;
 
 

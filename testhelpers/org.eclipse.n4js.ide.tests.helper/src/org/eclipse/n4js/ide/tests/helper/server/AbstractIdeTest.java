@@ -107,6 +107,7 @@ import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -346,6 +347,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** @return the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
 		return testWorkspaceManager.getProjectRoot(projectName);
+	}
+
+	/**
+	 * For this method, it is sufficient if the given file is located somewhere inside a project; strict
+	 * {@link SourceFolderSnapshot#contains(URI) containment in a source folder} is *not* required.
+	 *
+	 * @return the root folder of the project containing the given file or <code>null</code>.
+	 */
+	public File getProjectRootContaining(File file) {
+		return testWorkspaceManager.getProjectRootContaining(file);
 	}
 
 	/**
@@ -1676,7 +1687,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Runs the given file (with its parent folder as working directory) in node.js and asserts the output. */
 	protected void assertOutput(FileURI fileToRun, CharSequence expectedOutput) {
-		ProcessResult result = runInNodejs(fileToRun);
+		ProcessResult result = runInNodejsESM(fileToRun);
 		assertNull("exception while running: " + fileToRun, result.getException());
 		assertEquals("unexpected exit code from running: " + fileToRun, 0, result.getExitCode());
 		assertEquals("unexpected output from running: " + fileToRun,
@@ -1754,15 +1765,15 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	}
 
 	/**
-	 * Same as {@link #runInNodejs(File, FileURI, String...)}, using the given file's grand-parent folder as working
+	 * Same as {@link #runInNodejsESM(File, FileURI, String...)}, using the given file's grand-parent folder as working
 	 * directory (assuming the file is located in the root of a project's output folder).
 	 */
-	protected ProcessResult runInNodejs(FileURI fileToRun, String... options) {
-		return runInNodejs(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
+	protected ProcessResult runInNodejsESM(FileURI fileToRun, String... options) {
+		return runInNodejsESM(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
 	}
 
-	/** Delegates to {@link CliTools#nodejsRun(Path, Path, String...)}. */
-	protected ProcessResult runInNodejs(File workingDir, FileURI fileToRun, String... options) {
-		return new CliTools().nodejsRun(workingDir.toPath(), fileToRun.toPath(), options);
+	/** Delegates to {@link CliTools#nodejsRunESM(Path, Path, String...)}. */
+	protected ProcessResult runInNodejsESM(File workingDir, FileURI fileToRun, String... options) {
+		return new CliTools().nodejsRunESM(workingDir.toPath(), fileToRun.toPath(), options);
 	}
 }

@@ -38,16 +38,16 @@ React;
 const c1 = </>;
 
 // React fragment without children XPECT noerrors
-// The type of React fragment is React.Element XPECT type of '<></>' --> Element
+// The type of React fragment is React.ReactElement XPECT type of '<></>' --> ReactElement
 const c2 = <></>;
 
 export public class Comp extends React.Component<React.ComponentProps, Object> {
   @Override
-  public render(): React.Element {
+  public render(): React.ReactElement {
   	  const x = 42;
   	  // React fragment with children XPECT noerrors
 	  return (
-	    // The type of React fragment is React.Element XPECT type of '<>' --> Element
+	    // The type of React fragment is React.ReactElement XPECT type of '<>' --> ReactElement
 	  	<>
     	   <div>{"This is div 1"}</div>
     	   <div>{"This is div 2"}</div>

@@ -26,10 +26,12 @@ import org.eclipse.n4js.n4JS.LabelRef;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.BadEscapementException;
 import org.eclipse.n4js.parser.conversion.N4JSValueConverterException;
 import org.eclipse.n4js.parser.conversion.N4JSValueConverterWithValueException;
-import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.BadEscapementException;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
@@ -92,7 +94,13 @@ public class N4JSLinker extends LazyLinker {
 
 			@Override
 			public void process(N4JSResource resource) throws Exception {
-				// actual linking
+				try (Measurement m = N4JSDataCollectors.dcPreProcess.getMeasurement()) {
+					doProcess(resource);
+				}
+			}
+
+			private void doProcess(N4JSResource resource) throws Exception {
+				// install lazy linking proxies
 				resource.clearLazyProxyInformation();
 				clearReferences(model);
 				installProxies(resource, model, producer);

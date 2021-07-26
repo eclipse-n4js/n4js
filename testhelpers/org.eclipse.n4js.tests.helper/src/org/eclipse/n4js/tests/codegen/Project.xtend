@@ -158,9 +158,7 @@ public class Project {
 	}
 
 	/**
-	 * Sets the output folder.
-	 * 
-	 * @param outputFolder the output folder to set
+	 * Turns on/off generation of .d.ts files.
 	 */
 	public def Project setGenerateDts(boolean generateDts) {
 		this.generateDts = generateDts;

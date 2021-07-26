@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	Workspace {
+		Project "TestProject" {
+			Folder "src" {
+				File "Other.n4js" { from="./NamespaceAccess_Other.n4js" }
+				ThisFile {}
+			}
+		}
+	}
+	GENERATE_DTS
+
+END_SETUP */
+
+
+import * as NS from "Other"
+
+export public let x: NS.SomeClass;
+
+export public function foo(p: NS.SomeClass): NS.SomeClass {
+	return null;
+}
+
+export public class Cls extends NS.SomeClass {}
+
+
+/* XPECT generated_dts ---
+import * as NS from './Other'
+
+export let x: NS.SomeClass;
+export function foo(p: NS.SomeClass): NS.SomeClass;
+export class Cls extends NS.SomeClass {}
+--- */

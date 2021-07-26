@@ -349,6 +349,7 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF;
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}

@@ -751,6 +751,7 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 			switch (baseOperationID) {
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF: return N4JSPackage.FORMAL_PARAMETER___GET_DECLARED_TYPE_REF;
 				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST: return N4JSPackage.FORMAL_PARAMETER___GET_DECLARED_TYPE_REF_IN_AST;
+				case N4JSPackage.TYPE_PROVIDING_ELEMENT___GET_DECLARED_TYPE_REF_NODE: return N4JSPackage.FORMAL_PARAMETER___GET_DECLARED_TYPE_REF_NODE;
 				default: return -1;
 			}
 		}

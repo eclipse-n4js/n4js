@@ -39,6 +39,16 @@ public enum ResourceType {
 	/** Not recognized, e.g. <code>.exe</code> or invalid data, e.g. <code>null</code>. */
 	UNKOWN;
 
+	/** Tells whether this is one of the plain Javascript resource types. */
+	public boolean isPlainJS() {
+		return this == JS || this == JSX;
+	}
+
+	/** Tells whether this is one of the N4JS-related resource types. */
+	public boolean isN4JS() {
+		return this == N4JS || this == N4JSX || this == N4JSD || this == N4IDL;
+	}
+
 	private final static String EXT_JS = N4JSGlobals.JS_FILE_EXTENSION;
 	private final static String EXT_JSX = N4JSGlobals.JSX_FILE_EXTENSION;
 	private final static String EXT_N4JS = N4JSGlobals.N4JS_FILE_EXTENSION;

@@ -185,7 +185,7 @@ class NpmScopesIdeTest extends ConvertedIdeTest {
 	}
 
 	def private void assertCorrectOutput(CharSequence expectedOutput) {
-		val result = runInNodejs(clientProject.toFile, clientModuleOutputFile);
+		val result = runInNodejsESM(clientProject.toFile, clientModuleOutputFile);
 		val actualOutput = result.stdOut.trim;
 		val expectedOutputTrimmed = expectedOutput.toString.trim;
 		assertEquals("incorrect output when running " + clientModule.name, expectedOutputTrimmed, actualOutput);

@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+export let [ a1, a2, a3 = "default value", a4: string ] = [ 1, 2, "", undefined ];
+
+export let {prop1: b1, b2, prop3: b3 = "default value"} = { prop1: 1, b2: 1, prop3: "" };
+
+export let [c1, {prop1:c2, c3, prop3: [c4, c5]}] = [ 1, { prop1: 1, c3: 1, Iterable<int> prop3: [1,2] } ];  // unfortunately we have to declare the type of prop3 explicitly, but this is not a problem of the .d.ts export
+
+export let {prop1: d1, d2, prop3: [d3, d4]} = { prop1: 1, d2: 1, Iterable<int> prop3: [1,2] };  // unfortunately we have to declare the type of prop3 explicitly, but this is not a problem of the .d.ts export
+
+
+/* XPECT generated_dts ---
+export let a1: number, a2: number, a3: string, a4: string;
+export let b1: number, b2: number, b3: string;
+export let c1: number, c2: number, c3: number, c4: number, c5: number;
+export let d1: number, d2: number, d3: number, d4: number;
+--- */

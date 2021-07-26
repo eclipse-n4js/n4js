@@ -46,7 +46,7 @@ public enum PackageJsonProperties {
 	DEPENDENCIES(UtilN4.PACKAGE_JSON__DEPENDENCIES, "Dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "devDependences". */
 	DEV_DEPENDENCIES(UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES, "Development dependencies of this npm", JSONObject.class),
-	/** Key of package.json property "main". */
+	/** Key of node's standard, top-level package.json property "main". Do not confuse with {@link #MAIN_MODULE}. */
 	MAIN("main", "Main module. Path is relative to package root"),
 
 	// Yarn properties
@@ -83,7 +83,7 @@ public enum PackageJsonProperties {
 	SOURCES(UtilN4.PACKAGE_JSON__SOURCES, "Source folders", JSONObject.class, N4JS),
 	/** Key of package.json property "moduleFilters". */
 	MODULE_FILTERS("moduleFilters", "", JSONObject.class, N4JS),
-	/** Key of package.json property "mainModule". */
+	/** Key of the N4JS-specific package.json property "mainModule". Do not confuse with {@link #MAIN}. */
 	MAIN_MODULE("mainModule", "Main module specifier. Starts from source folder(s)", "index", N4JS),
 	/** Key of package.json property "testedProjects". */
 	TESTED_PROJECTS("testedProjects", "Projects that are tested by this project", JSONArray.class, N4JS),
@@ -173,6 +173,9 @@ public enum PackageJsonProperties {
 
 	/** @return the result of {@link Enum#valueOf(Class, String)} or null. Does not throw an {@link Exception}. */
 	static public PackageJsonProperties valueOfNameValuePairOrNull(NameValuePair nvPair) {
+		if (nvPair.getName() == null || nvPair.getValue() == null) {
+			return null; // syntax error in JSON file
+		}
 		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(nvPair.getName());
 		if (typeMap != null) {
 			Class<? extends JSONValue> valueClass = nvPair.getValue().getClass();

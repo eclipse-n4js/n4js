@@ -15,8 +15,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -471,61 +471,6 @@ public interface ImPackage extends EPackage {
 	int SYMBOL_TABLE_ENTRY_INTERNAL_OPERATION_COUNT = SYMBOL_TABLE_ENTRY_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl <em>Type Reference Node IM</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl
-	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getTypeReferenceNode_IM()
-	 * @generated
-	 */
-	int TYPE_REFERENCE_NODE_IM = 6;
-
-	/**
-	 * The feature id for the '<em><b>Cached Processed Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM__CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Type Ref In AST</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM__TYPE_REF_IN_AST = N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST;
-
-	/**
-	 * The number of structural features of the '<em>Type Reference Node IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM_FEATURE_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 0;
-
-	/**
-	 * The number of operations of the '<em>Type Reference Node IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REFERENCE_NODE_IM_OPERATION_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElement_IMImpl <em>Referencing Element IM</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -533,7 +478,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getReferencingElement_IM()
 	 * @generated
 	 */
-	int REFERENCING_ELEMENT_IM = 7;
+	int REFERENCING_ELEMENT_IM = 6;
 
 	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
@@ -572,6 +517,116 @@ public interface ImPackage extends EPackage {
 	int REFERENCING_ELEMENT_IM_OPERATION_COUNT = 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl <em>Many Referencing Element IM</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getManyReferencingElement_IM()
+	 * @generated
+	 */
+	int MANY_REFERENCING_ELEMENT_IM = 7;
+
+	/**
+	 * The feature id for the '<em><b>Rewired References</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM__REWIRED_REFERENCES = 0;
+
+	/**
+	 * The number of structural features of the '<em>Many Referencing Element IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM_FEATURE_COUNT = 1;
+
+	/**
+	 * The operation id for the '<em>Get Rewired Targets</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM___GET_REWIRED_TARGETS = 0;
+
+	/**
+	 * The operation id for the '<em>Add Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM___ADD_REWIRED_TARGET__SYMBOLTABLEENTRY = 1;
+
+	/**
+	 * The operation id for the '<em>Remove Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY = 2;
+
+	/**
+	 * The number of operations of the '<em>Many Referencing Element IM</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MANY_REFERENCING_ELEMENT_IM_OPERATION_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl <em>Plain Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getPlainReference()
+	 * @generated
+	 */
+	int PLAIN_REFERENCE = 8;
+
+	/**
+	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE__REWIRED_TARGET = REFERENCING_ELEMENT_IM__REWIRED_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Plain Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE_FEATURE_COUNT = REFERENCING_ELEMENT_IM_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = REFERENCING_ELEMENT_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
+
+	/**
+	 * The number of operations of the '<em>Plain Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLAIN_REFERENCE_OPERATION_COUNT = REFERENCING_ELEMENT_IM_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElementExpression_IMImpl <em>Referencing Element Expression IM</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -579,7 +634,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getReferencingElementExpression_IM()
 	 * @generated
 	 */
-	int REFERENCING_ELEMENT_EXPRESSION_IM = 8;
+	int REFERENCING_ELEMENT_EXPRESSION_IM = 9;
 
 	/**
 	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
@@ -634,7 +689,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getIdentifierRef_IM()
 	 * @generated
 	 */
-	int IDENTIFIER_REF_IM = 9;
+	int IDENTIFIER_REF_IM = 10;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -779,7 +834,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedPropertyAccessExpression_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 10;
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 11;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' containment reference.
@@ -962,906 +1017,122 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM_OPERATION_COUNT = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_OPERATION_COUNT + 6;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRef_IMImpl <em>Parameterized Type Ref IM</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl <em>Type Reference Node IM</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRef_IMImpl
-	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRef_IM()
+	 * @see org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl
+	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getTypeReferenceNode_IM()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_IM = 11;
+	int TYPE_REFERENCE_NODE_IM = 12;
 
 	/**
-	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
+	 * The feature id for the '<em><b>Cached Processed Type Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK = TypeRefsPackage.PARAMETERIZED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+	int TYPE_REFERENCE_NODE_IM__CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE__CACHED_PROCESSED_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * The feature id for the '<em><b>Type Ref In AST</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+	int TYPE_REFERENCE_NODE_IM__TYPE_REF_IN_AST = N4JSPackage.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST;
 
 	/**
-	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
+	 * The feature id for the '<em><b>Rewired References</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__DYNAMIC = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DYNAMIC;
+	int TYPE_REFERENCE_NODE_IM__REWIRED_REFERENCES = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
+	 * The feature id for the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
+	int TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * The number of structural features of the '<em>Type Reference Node IM</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
+	int TYPE_REFERENCE_NODE_IM_FEATURE_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The operation id for the '<em>Get Rewired Targets</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS = TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS;
+	int TYPE_REFERENCE_NODE_IM___GET_REWIRED_TARGETS = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
+	 * The operation id for the '<em>Add Rewired Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
+	int TYPE_REFERENCE_NODE_IM___ADD_REWIRED_TARGET__SYMBOLTABLEENTRY = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * The operation id for the '<em>Remove Rewired Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
+	int TYPE_REFERENCE_NODE_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The operation id for the '<em>Get Rewired References</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE = TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int TYPE_REFERENCE_NODE_IM___GET_REWIRED_REFERENCES = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
+	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY;
+	int TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
+	 * The operation id for the '<em>Get Cached Processed Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY;
+	int TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
+	 * The number of operations of the '<em>Type Reference Node IM</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET = TypeRefsPackage.PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Parameterized Type Ref IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT = TypeRefsPackage.PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Is Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_ALIAS_UNRESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_ALIAS_RESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Final By Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_FINAL_BY_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Is Unknown</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
-
-	/**
-	 * The operation id for the '<em>Is Dynamic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_DYNAMIC;
-
-	/**
-	 * The operation id for the '<em>Is Existential</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_EXISTENTIAL;
-
-	/**
-	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_DECLARED_UPPER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___TO_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Top Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_TOP_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Bottom Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_BOTTOM_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get Structural Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_STRUCTURAL_MEMBERS = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
-
-	/**
-	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_VERSION = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_VERSION;
-
-	/**
-	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___INTERNAL_GET_TYPE_REF_AS_STRING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Parameterized</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_GENERIC = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Is Raw</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_RAW = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = TypeRefsPackage.PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM = TypeRefsPackage.PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = TypeRefsPackage.PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 2;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 3;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE = TypeRefsPackage.PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 4;
-
-	/**
-	 * The number of operations of the '<em>Parameterized Type Ref IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT = TypeRefsPackage.PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 5;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRefStructural_IMImpl <em>Parameterized Type Ref Structural IM</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRefStructural_IMImpl
-	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRefStructural_IM()
-	 * @generated
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 12;
-
-	/**
-	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
-
-	/**
-	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ORIGINAL_ALIAS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
-
-	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
-
-	/**
-	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NAMESPACE = PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE;
-
-	/**
-	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DEFINED_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET;
-
-	/**
-	 * The feature id for the '<em><b>Ast Structural Members</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Structural Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__STRUCTURAL_TYPE = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Gen Structural Members</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__GEN_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Postponed Substitutions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__POSTPONED_SUBSTITUTIONS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of structural features of the '<em>Parameterized Type Ref Structural IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 4;
-
-	/**
-	 * The operation id for the '<em>Is Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_UNRESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_RESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Final By Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_FINAL_BY_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Is Unknown</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_UNKNOWN = PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN;
-
-	/**
-	 * The operation id for the '<em>Is Dynamic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_DYNAMIC = PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC;
-
-	/**
-	 * The operation id for the '<em>Is Existential</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_EXISTENTIAL = PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL;
-
-	/**
-	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_UPPER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___TO_STRING = PARAMETERIZED_TYPE_REF_IM___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Top Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TOP_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Bottom Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_VERSION = PARAMETERIZED_TYPE_REF_IM___GET_VERSION;
-
-	/**
-	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Parameterized</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_PARAMETERIZED = PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_GENERIC = PARAMETERIZED_TYPE_REF_IM___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Is Raw</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_USE_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
-
-	/**
-	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 3;
-
-	/**
-	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 4;
-
-	/**
-	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_TYPING_STRATEGY__TYPINGSTRATEGY = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 5;
-
-	/**
-	 * The operation id for the '<em>Get Structural Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 6;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 7;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE_IM = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 8;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 9;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 10;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE__TYPE = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 11;
-
-	/**
-	 * The number of operations of the '<em>Parameterized Type Ref Structural IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 12;
+	int TYPE_REFERENCE_NODE_IM_OPERATION_COUNT = N4JSPackage.TYPE_REFERENCE_NODE_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.SnippetImpl <em>Snippet</em>}' class.
@@ -1874,13 +1145,13 @@ public interface ImPackage extends EPackage {
 	int SNIPPET = 13;
 
 	/**
-	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * The feature id for the '<em><b>Code To Emit</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SNIPPET__CODE = N4JSPackage.EXPRESSION_FEATURE_COUNT + 0;
+	int SNIPPET__CODE_TO_EMIT = N4JSPackage.EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Snippet</em>' class.
@@ -2308,6 +1579,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME = N4JSPackage.N4_GETTER_DECLARATION___HAS_COMPUTED_PROPERTY_NAME;
 
 	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = N4JSPackage.N4_GETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
+
+	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2685,6 +1965,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -3292,962 +2581,6 @@ public interface ImPackage extends EPackage {
 	int STRING_LITERAL_FOR_STE_OPERATION_COUNT = N4JSPackage.STRING_LITERAL_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl <em>Versioned Parameterized Type Ref IM</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl
-	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRef_IM()
-	 * @generated
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM = 19;
-
-	/**
-	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
-
-	/**
-	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
-
-	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
-
-	/**
-	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE = PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE;
-
-	/**
-	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET;
-
-	/**
-	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM__REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Versioned Parameterized Type Ref IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Is Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Final By Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Is Unknown</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN = PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN;
-
-	/**
-	 * The operation id for the '<em>Is Dynamic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC = PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC;
-
-	/**
-	 * The operation id for the '<em>Is Existential</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL = PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL;
-
-	/**
-	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___TO_STRING = PARAMETERIZED_TYPE_REF_IM___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Top Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Bottom Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get Structural Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM___GET_STRUCTURAL_MEMBERS;
-
-	/**
-	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_TYPING_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___INTERNAL_GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Parameterized</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED = PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_GENERIC = PARAMETERIZED_TYPE_REF_IM___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Is Raw</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE;
-
-	/**
-	 * The operation id for the '<em>Has Requested Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___HAS_REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_REQUESTED_VERSION_OR_ZERO = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM___GET_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Versioned Parameterized Type Ref IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl <em>Versioned Parameterized Type Ref Structural IM</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl
-	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRefStructural_IM()
-	 * @generated
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = 20;
-
-	/**
-	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF_IM__FOLLOWED_BY_QUESTION_MARK;
-
-	/**
-	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ORIGINAL_ALIAS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM__ORIGINAL_ALIAS_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DYNAMIC = PARAMETERIZED_TYPE_REF_IM__DYNAMIC;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF_IM__DECLARED_TYPE_AS_TEXT;
-
-	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM__TYPE_ARGS;
-
-	/**
-	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF_IM__ITERABLE_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NAMESPACE = PARAMETERIZED_TYPE_REF_IM__AST_NAMESPACE;
-
-	/**
-	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__DEFINED_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM__DEFINED_TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Rewired Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM__REWIRED_TARGET;
-
-	/**
-	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Ast Structural Members</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Structural Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__STRUCTURAL_TYPE = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Gen Structural Members</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__GEN_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Postponed Substitutions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__POSTPONED_SUBSTITUTIONS = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 4;
-
-	/**
-	 * The number of structural features of the '<em>Versioned Parameterized Type Ref Structural IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_IM_FEATURE_COUNT + 5;
-
-	/**
-	 * The operation id for the '<em>Is Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_REF = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_UNRESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_UNRESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ALIAS_RESOLVED = PARAMETERIZED_TYPE_REF_IM___IS_ALIAS_RESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Final By Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_FINAL_BY_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_FINAL_BY_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF_IM___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Is Unknown</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_UNKNOWN = PARAMETERIZED_TYPE_REF_IM___IS_UNKNOWN;
-
-	/**
-	 * The operation id for the '<em>Is Dynamic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_DYNAMIC = PARAMETERIZED_TYPE_REF_IM___IS_DYNAMIC;
-
-	/**
-	 * The operation id for the '<em>Is Existential</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_EXISTENTIAL = PARAMETERIZED_TYPE_REF_IM___IS_EXISTENTIAL;
-
-	/**
-	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_UPPER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_UPPER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_LOWER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_ARGS;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF_IM___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___TO_STRING = PARAMETERIZED_TYPE_REF_IM___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Top Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TOP_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_TOP_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Bottom Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF_IM___GET_MODIFIERS_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Parameterized</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_PARAMETERIZED = PARAMETERIZED_TYPE_REF_IM___IS_PARAMETERIZED;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_GENERIC = PARAMETERIZED_TYPE_REF_IM___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Is Raw</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_RAW = PARAMETERIZED_TYPE_REF_IM___IS_RAW;
-
-	/**
-	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_USE_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_USE_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF_IM___IS_DEF_SITE_STRUCTURAL_TYPING;
-
-	/**
-	 * The operation id for the '<em>Get Original Target Of Rewired Target</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = PARAMETERIZED_TYPE_REF_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE_IM = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type IM</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY;
-
-	/**
-	 * The operation id for the '<em>Get Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE;
-
-	/**
-	 * The operation id for the '<em>Set Declared Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE__TYPE = PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE;
-
-	/**
-	 * The operation id for the '<em>Has Requested Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___HAS_REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_REQUESTED_VERSION_OR_ZERO = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_VERSION = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 2;
-
-	/**
-	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 6;
-
-	/**
-	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 7;
-
-	/**
-	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_TYPING_STRATEGY__TYPINGSTRATEGY = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 8;
-
-	/**
-	 * The operation id for the '<em>Get Structural Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 9;
-
-	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 10;
-
-	/**
-	 * The number of operations of the '<em>Versioned Parameterized Type Ref Structural IM</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_IM_OPERATION_COUNT + 11;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedIdentifierRef_IMImpl <em>Versioned Identifier Ref IM</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4255,7 +2588,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedIdentifierRef_IM()
 	 * @generated
 	 */
-	int VERSIONED_IDENTIFIER_REF_IM = 21;
+	int VERSIONED_IDENTIFIER_REF_IM = 19;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -4427,7 +2760,7 @@ public interface ImPackage extends EPackage {
 	 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedNamedImportSpecifier_IM()
 	 * @generated
 	 */
-	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM = 22;
+	int VERSIONED_NAMED_IMPORT_SPECIFIER_IM = 20;
 
 	/**
 	 * The feature id for the '<em><b>Flagged Used In Code</b></em>' attribute.
@@ -4686,26 +3019,6 @@ public interface ImPackage extends EPackage {
 	EClass getSymbolTableEntryInternal();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM <em>Type Reference Node IM</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Type Reference Node IM</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
-	 * @generated
-	 */
-	EClass getTypeReferenceNode_IM();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef() <em>Get Type Ref</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Ref</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef()
-	 * @generated
-	 */
-	EOperation getTypeReferenceNode_IM__GetTypeRef();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ReferencingElement_IM <em>Referencing Element IM</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4735,6 +3048,67 @@ public interface ImPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getReferencingElement_IM__GetOriginalTargetOfRewiredTarget();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM <em>Many Referencing Element IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Many Referencing Element IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM
+	 * @generated
+	 */
+	EClass getManyReferencingElement_IM();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredReferences <em>Rewired References</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Rewired References</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredReferences()
+	 * @see #getManyReferencingElement_IM()
+	 * @generated
+	 */
+	EReference getManyReferencingElement_IM_RewiredReferences();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredTargets() <em>Get Rewired Targets</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Rewired Targets</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#getRewiredTargets()
+	 * @generated
+	 */
+	EOperation getManyReferencingElement_IM__GetRewiredTargets();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#addRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry) <em>Add Rewired Target</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Add Rewired Target</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#addRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry)
+	 * @generated
+	 */
+	EOperation getManyReferencingElement_IM__AddRewiredTarget__SymbolTableEntry();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#removeRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry) <em>Remove Rewired Target</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Remove Rewired Target</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM#removeRewiredTarget(org.eclipse.n4js.transpiler.im.SymbolTableEntry)
+	 * @generated
+	 */
+	EOperation getManyReferencingElement_IM__RemoveRewiredTarget__SymbolTableEntry();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.PlainReference <em>Plain Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Plain Reference</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.PlainReference
+	 * @generated
+	 */
+	EClass getPlainReference();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM <em>Referencing Element Expression IM</em>}'.
@@ -4879,104 +3253,55 @@ public interface ImPackage extends EPackage {
 	EOperation getParameterizedPropertyAccessExpression_IM__SetProperty__IdentifiableElement();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM <em>Parameterized Type Ref IM</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM <em>Type Reference Node IM</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Parameterized Type Ref IM</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
+	 * @return the meta object for class '<em>Type Reference Node IM</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 	 * @generated
 	 */
-	EClass getParameterizedTypeRef_IM();
+	EClass getTypeReferenceNode_IM();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#getDeclaredType_IM() <em>Get Declared Type IM</em>}' operation.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCodeToEmit <em>Code To Emit</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type IM</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#getDeclaredType_IM()
+	 * @return the meta object for the attribute '<em>Code To Emit</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCodeToEmit()
+	 * @see #getTypeReferenceNode_IM()
 	 * @generated
 	 */
-	EOperation getParameterizedTypeRef_IM__GetDeclaredType_IM();
+	EAttribute getTypeReferenceNode_IM_CodeToEmit();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#setDeclaredType_IM(org.eclipse.n4js.transpiler.im.SymbolTableEntry) <em>Set Declared Type IM</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getRewiredReferences() <em>Get Rewired References</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Declared Type IM</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#setDeclaredType_IM(org.eclipse.n4js.transpiler.im.SymbolTableEntry)
+	 * @return the meta object for the '<em>Get Rewired References</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getRewiredReferences()
 	 * @generated
 	 */
-	EOperation getParameterizedTypeRef_IM__SetDeclaredType_IM__SymbolTableEntry();
+	EOperation getTypeReferenceNode_IM__GetRewiredReferences();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#getDeclaredType() <em>Get Declared Type</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef() <em>Get Type Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#getDeclaredType()
+	 * @return the meta object for the '<em>Get Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getTypeRef()
 	 * @generated
 	 */
-	EOperation getParameterizedTypeRef_IM__GetDeclaredType();
+	EOperation getTypeReferenceNode_IM__GetTypeRef();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#setDeclaredType(org.eclipse.n4js.ts.types.Type) <em>Set Declared Type</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCachedProcessedTypeRef() <em>Get Cached Processed Type Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Declared Type</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM#setDeclaredType(org.eclipse.n4js.ts.types.Type)
+	 * @return the meta object for the '<em>Get Cached Processed Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM#getCachedProcessedTypeRef()
 	 * @generated
 	 */
-	EOperation getParameterizedTypeRef_IM__SetDeclaredType__Type();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM <em>Parameterized Type Ref Structural IM</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Parameterized Type Ref Structural IM</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM
-	 * @generated
-	 */
-	EClass getParameterizedTypeRefStructural_IM();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#getDeclaredType_IM() <em>Get Declared Type IM</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type IM</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#getDeclaredType_IM()
-	 * @generated
-	 */
-	EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType_IM();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#setDeclaredType_IM(org.eclipse.n4js.transpiler.im.SymbolTableEntry) <em>Set Declared Type IM</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Declared Type IM</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#setDeclaredType_IM(org.eclipse.n4js.transpiler.im.SymbolTableEntry)
-	 * @generated
-	 */
-	EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType_IM__SymbolTableEntry();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#getDeclaredType() <em>Get Declared Type</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Type</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#getDeclaredType()
-	 * @generated
-	 */
-	EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#setDeclaredType(org.eclipse.n4js.ts.types.Type) <em>Set Declared Type</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Declared Type</em>' operation.
-	 * @see org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM#setDeclaredType(org.eclipse.n4js.ts.types.Type)
-	 * @generated
-	 */
-	EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType__Type();
+	EOperation getTypeReferenceNode_IM__GetCachedProcessedTypeRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.Snippet <em>Snippet</em>}'.
@@ -4989,15 +3314,15 @@ public interface ImPackage extends EPackage {
 	EClass getSnippet();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.Snippet#getCode <em>Code</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.transpiler.im.Snippet#getCodeToEmit <em>Code To Emit</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Code</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.Snippet#getCode()
+	 * @return the meta object for the attribute '<em>Code To Emit</em>'.
+	 * @see org.eclipse.n4js.transpiler.im.Snippet#getCodeToEmit()
 	 * @see #getSnippet()
 	 * @generated
 	 */
-	EAttribute getSnippet_Code();
+	EAttribute getSnippet_CodeToEmit();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.DelegatingMember <em>Delegating Member</em>}'.
@@ -5124,26 +3449,6 @@ public interface ImPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getStringLiteralForSTE__GetValueAsString();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM <em>Versioned Parameterized Type Ref IM</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Versioned Parameterized Type Ref IM</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM
-	 * @generated
-	 */
-	EClass getVersionedParameterizedTypeRef_IM();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM <em>Versioned Parameterized Type Ref Structural IM</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Versioned Parameterized Type Ref Structural IM</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM
-	 * @generated
-	 */
-	EClass getVersionedParameterizedTypeRefStructural_IM();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM <em>Versioned Identifier Ref IM</em>}'.
@@ -5335,24 +3640,6 @@ public interface ImPackage extends EPackage {
 		EClass SYMBOL_TABLE_ENTRY_INTERNAL = eINSTANCE.getSymbolTableEntryInternal();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl <em>Type Reference Node IM</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl
-		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getTypeReferenceNode_IM()
-		 * @generated
-		 */
-		EClass TYPE_REFERENCE_NODE_IM = eINSTANCE.getTypeReferenceNode_IM();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = eINSTANCE.getTypeReferenceNode_IM__GetTypeRef();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElement_IMImpl <em>Referencing Element IM</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5377,6 +3664,58 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation REFERENCING_ELEMENT_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET = eINSTANCE.getReferencingElement_IM__GetOriginalTargetOfRewiredTarget();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl <em>Many Referencing Element IM</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.ManyReferencingElement_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getManyReferencingElement_IM()
+		 * @generated
+		 */
+		EClass MANY_REFERENCING_ELEMENT_IM = eINSTANCE.getManyReferencingElement_IM();
+
+		/**
+		 * The meta object literal for the '<em><b>Rewired References</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MANY_REFERENCING_ELEMENT_IM__REWIRED_REFERENCES = eINSTANCE.getManyReferencingElement_IM_RewiredReferences();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Rewired Targets</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MANY_REFERENCING_ELEMENT_IM___GET_REWIRED_TARGETS = eINSTANCE.getManyReferencingElement_IM__GetRewiredTargets();
+
+		/**
+		 * The meta object literal for the '<em><b>Add Rewired Target</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MANY_REFERENCING_ELEMENT_IM___ADD_REWIRED_TARGET__SYMBOLTABLEENTRY = eINSTANCE.getManyReferencingElement_IM__AddRewiredTarget__SymbolTableEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Remove Rewired Target</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MANY_REFERENCING_ELEMENT_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY = eINSTANCE.getManyReferencingElement_IM__RemoveRewiredTarget__SymbolTableEntry();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl <em>Plain Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.transpiler.im.impl.PlainReferenceImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getPlainReference()
+		 * @generated
+		 */
+		EClass PLAIN_REFERENCE = eINSTANCE.getPlainReference();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElementExpression_IMImpl <em>Referencing Element Expression IM</em>}' class.
@@ -5497,88 +3836,46 @@ public interface ImPackage extends EPackage {
 		EOperation PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM___SET_PROPERTY__IDENTIFIABLEELEMENT = eINSTANCE.getParameterizedPropertyAccessExpression_IM__SetProperty__IdentifiableElement();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRef_IMImpl <em>Parameterized Type Ref IM</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl <em>Type Reference Node IM</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRef_IMImpl
-		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRef_IM()
+		 * @see org.eclipse.n4js.transpiler.im.impl.TypeReferenceNode_IMImpl
+		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getTypeReferenceNode_IM()
 		 * @generated
 		 */
-		EClass PARAMETERIZED_TYPE_REF_IM = eINSTANCE.getParameterizedTypeRef_IM();
+		EClass TYPE_REFERENCE_NODE_IM = eINSTANCE.getTypeReferenceNode_IM();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Declared Type IM</b></em>' operation.
+		 * The meta object literal for the '<em><b>Code To Emit</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM = eINSTANCE.getParameterizedTypeRef_IM__GetDeclaredType_IM();
+		EAttribute TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT = eINSTANCE.getTypeReferenceNode_IM_CodeToEmit();
 
 		/**
-		 * The meta object literal for the '<em><b>Set Declared Type IM</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Rewired References</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = eINSTANCE.getParameterizedTypeRef_IM__SetDeclaredType_IM__SymbolTableEntry();
+		EOperation TYPE_REFERENCE_NODE_IM___GET_REWIRED_REFERENCES = eINSTANCE.getTypeReferenceNode_IM__GetRewiredReferences();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Declared Type</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Type Ref</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE = eINSTANCE.getParameterizedTypeRef_IM__GetDeclaredType();
+		EOperation TYPE_REFERENCE_NODE_IM___GET_TYPE_REF = eINSTANCE.getTypeReferenceNode_IM__GetTypeRef();
 
 		/**
-		 * The meta object literal for the '<em><b>Set Declared Type</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Cached Processed Type Ref</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE = eINSTANCE.getParameterizedTypeRef_IM__SetDeclaredType__Type();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRefStructural_IMImpl <em>Parameterized Type Ref Structural IM</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.transpiler.im.impl.ParameterizedTypeRefStructural_IMImpl
-		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getParameterizedTypeRefStructural_IM()
-		 * @generated
-		 */
-		EClass PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = eINSTANCE.getParameterizedTypeRefStructural_IM();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Declared Type IM</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE_IM = eINSTANCE.getParameterizedTypeRefStructural_IM__GetDeclaredType_IM();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Declared Type IM</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY = eINSTANCE.getParameterizedTypeRefStructural_IM__SetDeclaredType_IM__SymbolTableEntry();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Declared Type</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE = eINSTANCE.getParameterizedTypeRefStructural_IM__GetDeclaredType();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Declared Type</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE__TYPE = eINSTANCE.getParameterizedTypeRefStructural_IM__SetDeclaredType__Type();
+		EOperation TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF = eINSTANCE.getTypeReferenceNode_IM__GetCachedProcessedTypeRef();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.SnippetImpl <em>Snippet</em>}' class.
@@ -5591,12 +3888,12 @@ public interface ImPackage extends EPackage {
 		EClass SNIPPET = eINSTANCE.getSnippet();
 
 		/**
-		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Code To Emit</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SNIPPET__CODE = eINSTANCE.getSnippet_Code();
+		EAttribute SNIPPET__CODE_TO_EMIT = eINSTANCE.getSnippet_CodeToEmit();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.DelegatingMemberImpl <em>Delegating Member</em>}' class.
@@ -5703,26 +4000,6 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STRING_LITERAL_FOR_STE___GET_VALUE_AS_STRING = eINSTANCE.getStringLiteralForSTE__GetValueAsString();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl <em>Versioned Parameterized Type Ref IM</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRef_IMImpl
-		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRef_IM()
-		 * @generated
-		 */
-		EClass VERSIONED_PARAMETERIZED_TYPE_REF_IM = eINSTANCE.getVersionedParameterizedTypeRef_IM();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl <em>Versioned Parameterized Type Ref Structural IM</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.transpiler.im.impl.VersionedParameterizedTypeRefStructural_IMImpl
-		 * @see org.eclipse.n4js.transpiler.im.impl.ImPackageImpl#getVersionedParameterizedTypeRefStructural_IM()
-		 * @generated
-		 */
-		EClass VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM = eINSTANCE.getVersionedParameterizedTypeRefStructural_IM();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.VersionedIdentifierRef_IMImpl <em>Versioned Identifier Ref IM</em>}' class.

@@ -84,6 +84,20 @@ public abstract class N4JSLanguageConstants {
 			valueOf(TRUE), valueOf(FALSE)));
 
 	/**
+	 * Keywords as of [ECM15] (11.6.2, pp. 165), as defined in grammar TypeExpressions.xtext, rule "ReservedWord".
+	 * <p>
+	 * WARNING: {@link #FUTURE_RESERVED_WORDS future reserved words} are not included in this set!
+	 */
+	public static final Set<String> RESERVED_WORDS = ImmutableSet.of(
+			"break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "do", "else",
+			"export", "extends", "finally", "for", "function", "if", "import", "in", "instanceof", "new", "return",
+			"super", "switch", "this", "throw", "try", "typeof", "var", "void", "while", "with", "yield",
+			// null literal
+			"null",
+			// boolean literal
+			"true", "false");
+
+	/**
 	 * Future reserved words for ECMAScript. Contains already reserved words for N4JS such as {@code enum}.
 	 * <p>
 	 * Although {@code let} should be a strict mode reserved word it does cause runtime error when using as a function
@@ -91,6 +105,21 @@ public abstract class N4JSLanguageConstants {
 	 */
 	public static final Collection<String> FUTURE_RESERVED_WORDS = unmodifiableCollection(newHashSet(
 			"let", "enum", "await"));
+
+	/**
+	 * Keywords as defined in grammar TypeExpressions.xtext, rule "N4Keyword".
+	 */
+	public static final Set<String> N4_KEYWORDS = ImmutableSet.of(
+			"get", "set", "let", "project", "external", "abstract", "static", "as", "from", "constructor", "of",
+			"target", "type", "union", "intersection", "This", "Promisify",
+			// future reserved keyword in [ECM15] only in modules, we add additional validation
+			"await",
+			// async is not a reserved keyword, i.e. it can be used as a variable name
+			"async",
+			// future reserved keywords in [ECM15], restricted via static semantic in [ECM15]
+			"implements", "interface", "private", "protected", "public", // package not used in N4JS
+			// definition-site variance
+			"out");
 
 	/** Access modifiers for the N4JS language. */
 	public static final Collection<String> ACCESS_MODIFIERS = unmodifiableCollection(newHashSet(

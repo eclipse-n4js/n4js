@@ -41,10 +41,6 @@ public interface VersionedNamedImportSpecifier_IM extends NamedImportSpecifier {
 	 * Returns the value of the '<em><b>Imported Type Versions</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Imported Type Versions</em>' reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Imported Type Versions</em>' reference list.
 	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getVersionedNamedImportSpecifier_IM_ImportedTypeVersions()

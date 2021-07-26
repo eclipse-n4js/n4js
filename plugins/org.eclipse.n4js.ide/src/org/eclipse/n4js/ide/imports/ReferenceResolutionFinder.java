@@ -675,14 +675,17 @@ public class ReferenceResolutionFinder {
 
 		/** Return fully qualified name (= module specifier + element name) of the element to be imported. */
 		private QualifiedName getImportName() {
-			QualifiedName qfn = candidate.getQualifiedName();
-			int qfnSegmentCount = qfn.getSegmentCount();
-			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
+			QualifiedName candidateModuleQN = candidate.getQualifiedName().getSegmentCount() >= 2
+					? candidate.getQualifiedName().skipLast(1)
+					: null;
+			String candidateModuleQNStr = candidateModuleQN != null
+					? qualifiedNameConverter.toString(candidateModuleQN)
+					: null;
 			ProjectType projectType = candidateProjectOrNull != null ? candidateProjectOrNull.getType() : null;
 
 			QualifiedName candidateName;
-			if (candidateProjectOrNull != null && tmodule != null
-					&& tmodule.equals(candidateProjectOrNull.getMainModule())) {
+			if (candidateProjectOrNull != null && candidateModuleQNStr != null
+					&& N4JSLanguageUtils.isMainModule(candidateProjectOrNull, candidateModuleQNStr)) {
 				// use project import when importing from a main module (e.g. index.Element -> react.Element)
 				N4JSProjectName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
 				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();

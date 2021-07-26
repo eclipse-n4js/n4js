@@ -29,7 +29,7 @@ public interface VariableDeclarationOrBinding extends ControlFlowElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	EList<VariableDeclaration> getVariableDeclarations();
+	EList<VariableDeclaration> getAllVariableDeclarations();
 
 	/**
 	 * <!-- begin-user-doc -->

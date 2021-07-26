@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest 
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+export default class C {
+	optionalField?: number;
+	// in TypeScript methods can be optional too
+	get optionalGetter?() : number { return 0; }
+	set optionalSetter?(value : number) { }
+
+	/**
+	 * Some super useful
+	 * JSDoc spanning
+	 * several lines.
+	 */
+	get optionalGetterWithJSDoc?() : number { return 0; }
+	/**
+	 * Even more super useful
+	 * JSDoc spanning
+	 * several lines.
+	 */
+	set optionalSetterWithJSDoc?(value : number) { }
+}
+
+
+/* XPECT generated_dts ---
+export default class C {
+	optionalField?: number;
+	// get optionalGetter?(): number; // optional getter omitted
+	// set optionalSetter?(value: number); // optional setter omitted
+	// /**
+	//  * Some super useful
+	//  * JSDoc spanning
+	//  * several lines.
+	//  *\/
+	// get optionalGetterWithJSDoc?(): number; // optional getter omitted
+	// /**
+	//  * Even more super useful
+	//  * JSDoc spanning
+	//  * several lines.
+	//  *\/
+	// set optionalSetterWithJSDoc?(value: number); // optional setter omitted
+}
+--- */

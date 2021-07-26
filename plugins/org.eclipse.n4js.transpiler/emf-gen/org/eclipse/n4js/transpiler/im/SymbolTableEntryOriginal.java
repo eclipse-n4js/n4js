@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
