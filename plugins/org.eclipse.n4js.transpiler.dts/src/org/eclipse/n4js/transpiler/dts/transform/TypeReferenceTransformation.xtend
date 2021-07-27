@@ -64,6 +64,8 @@ import org.eclipse.xtext.EcoreUtil2
 import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifier
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
+import org.eclipse.n4js.n4JS.FormalParameter
 
 /**
  * For each {@link TypeReferenceNode_IM} in the intermediate model, this transformation will
@@ -139,6 +141,15 @@ class TypeReferenceTransformation extends Transformation {
 				typeRef = outerReturnTypeRef;
 			}
 		}
+		
+		// special handling for constructor parameter @Spec ~i~this 
+		if (typeRefNode.eContainer instanceof FormalParameter) {
+			val fPar = typeRefNode.eContainer as FormalParameter;
+			val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(fPar);
+			if (isSpecFpar) {
+				typeRef = state.builtInTypeScope.anyTypeRef;
+			}
+		}
 
 		convertTypeRef(typeRef);
 	}
@@ -173,10 +184,10 @@ class TypeReferenceTransformation extends Transformation {
 			convertFunctionTypeExprOrRef(typeRef);
 		} else if (typeRef instanceof ParameterizedTypeRef) {
 			convertParameterizedTypeRef(typeRef);
+		} else if (typeRef instanceof ThisTypeRef) {
+			convertThisTypeRef(typeRef);
 		} else if (typeRef instanceof ExistentialTypeRef) {
 			write("any"); // unsupported type reference
-		} else if (typeRef instanceof ThisTypeRef) {
-			write("this");
 		} else if (typeRef instanceof TypeTypeRef) {
 			write("any"); // unsupported type reference
 		} else if (typeRef instanceof UnknownTypeRef) {
@@ -275,6 +286,21 @@ class TypeReferenceTransformation extends Transformation {
 
 		if (showDeclaredType && hasStructMembers) {
 			write(')');
+		}
+	}
+	
+	def private void convertThisTypeRef(ThisTypeRef typeRef) {
+		val makePartial = typeRef instanceof ThisTypeRefStructural
+			&& (typeRef as ThisTypeRefStructural).definedTypingStrategy == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+		
+		if (makePartial) {
+			write("Partial<");
+		}
+		
+		write("this");
+		
+		if (makePartial) {
+			write(">");
 		}
 	}
 
