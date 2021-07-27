@@ -12,14 +12,12 @@ package org.eclipse.n4js.transpiler.dts.transform
 
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.ts.types.TFunction
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-
 /**
- * The implicit return type is 'void' in N4JS but 'any' in TypeScript, so we have to explicitly emit 'void'
- * whenever the return type is not explicitly given.
+ * Implicit return types are made explicit.
  */
 class ReturnTypeTransformation extends Transformation {
 
@@ -42,7 +40,10 @@ class ReturnTypeTransformation extends Transformation {
 			// return type already provided explicitly, so nothing to do here
 			return;
 		}
-		val typeRefNode = _TypeReferenceNode(state, state.G.voidTypeRef);
+		
+		val elemInAST = state.tracer.getOriginalASTNode(funDef) as FunctionDefinition;
+		val tFunction = elemInAST.definedType as TFunction;
+		val typeRefNode = _TypeReferenceNode(state, tFunction.returnTypeRef);
 		funDef.declaredReturnTypeRefNode = typeRefNode;
 	}
 }

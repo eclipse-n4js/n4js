@@ -176,7 +176,7 @@ class TypeReferenceTransformation extends Transformation {
 		} else if (typeRef instanceof ExistentialTypeRef) {
 			write("any"); // unsupported type reference
 		} else if (typeRef instanceof ThisTypeRef) {
-			write("any"); // unsupported type reference
+			write("this");
 		} else if (typeRef instanceof TypeTypeRef) {
 			write("any"); // unsupported type reference
 		} else if (typeRef instanceof UnknownTypeRef) {
