@@ -38,15 +38,9 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_RESER
 
 import java.util.Collection;
 
-import org.eclipse.xtext.util.Strings;
-import org.eclipse.xtext.validation.Check;
-import org.eclipse.xtext.validation.EValidatorRegistrar;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
-import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
+import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
@@ -58,6 +52,11 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
+import org.eclipse.xtext.util.Strings;
+import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.EValidatorRegistrar;
+
+import com.google.inject.Inject;
 
 /**
  * Validation of names, cf N4JS Spec, Chapter 3.4., Constraints 3 and 4
@@ -178,7 +177,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 	private boolean holdsDoesNotEqualWithConstructor(final N4MemberDeclaration n4Member) {
 		if (n4Member.isStatic() && CONSTRUCTOR.equals(getDeclarationName(n4Member))) {
 			final String message = getMessageForCLF_NAME_CONFLICTS_WITH_CONSTRUCTOR();
-			addIssue(message, n4Member, N4JSFeatureUtils.getElementNameFeature(n4Member),
+			addIssue(message, n4Member, N4JSMetaModelUtils.getElementNameFeature(n4Member),
 					CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR);
 			return false;
 		}
@@ -194,7 +193,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 				final String message = getMessageForCLF_NAME_CONTAINS_DISCOURAGED_CHARACTER(discouragedCharacterLabel);
 				addIssue(message,
 						n4Member,
-						N4JSFeatureUtils.getElementNameFeature(n4Member),
+						N4JSMetaModelUtils.getElementNameFeature(n4Member),
 						CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
 				return false;
 			}
@@ -237,7 +236,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(
 					Strings.toFirstUpper(msg),
 					n4Member,
-					N4JSFeatureUtils.getElementNameFeature(n4Member),
+					N4JSMetaModelUtils.getElementNameFeature(n4Member),
 					CLF_NAME_DOES_NOT_START_LOWERCASE);
 			return false;
 		}
@@ -340,7 +339,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 						final String message = getMessageForCLF_NAME_DIFFERS_TYPE(
 								validatorMessageHelper.description(namedElement), name, typeName);
 						addIssue(Strings.toFirstUpper(message), namedElement,
-								N4JSFeatureUtils.getElementNameFeature(namedElement),
+								N4JSMetaModelUtils.getElementNameFeature(namedElement),
 								CLF_NAME_DIFFERS_TYPE);
 						return false;
 					}
@@ -355,7 +354,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 		if (category.contains(element.getName()) && !(element instanceof FunctionDefinition)) {
 			final String message = getMessageForCLF_NAME_RESERVED(validatorMessageHelper.description(element),
 					suffix);
-			addIssue(Strings.toFirstUpper(message), element, N4JSFeatureUtils.getElementNameFeature(element),
+			addIssue(Strings.toFirstUpper(message), element, N4JSMetaModelUtils.getElementNameFeature(element),
 					CLF_NAME_RESERVED);
 			return false;
 		}
