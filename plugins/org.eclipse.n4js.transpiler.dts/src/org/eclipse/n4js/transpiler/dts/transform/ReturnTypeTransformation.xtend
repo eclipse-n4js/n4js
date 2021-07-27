@@ -10,9 +10,10 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform
 
+import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -20,6 +21,9 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  * Implicit return types are made explicit.
  */
 class ReturnTypeTransformation extends Transformation {
+	
+	@Inject
+	private TypeAssistant typeAssistant;
 
 	override assertPreConditions() {
 	}
@@ -41,9 +45,8 @@ class ReturnTypeTransformation extends Transformation {
 			return;
 		}
 		
-		val elemInAST = state.tracer.getOriginalASTNode(funDef) as FunctionDefinition;
-		val tFunction = elemInAST.definedType as TFunction;
-		val typeRefNode = _TypeReferenceNode(state, tFunction.returnTypeRef);
+		val returnTypeRef = typeAssistant.getReturnTypeRef(state, funDef);
+		val typeRefNode = _TypeReferenceNode(state, returnTypeRef);
 		funDef.declaredReturnTypeRefNode = typeRefNode;
 	}
 }
