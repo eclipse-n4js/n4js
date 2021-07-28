@@ -99,6 +99,14 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 
 	/**  */
 	@Test
+	public void testHelpArgumentSetVersions() {
+		String args[] = { "help", "set-versions" };
+		CliCompileResult result = n4jsc(args, 0, false);
+		assertEquals(result.toString(), getUsageExpectationSetVersions(), result.getStdOut());
+	}
+
+	/**  */
+	@Test
 	public void testLspOptionHelp() {
 		String args[] = { "lsp", "--help" };
 		CliCompileResult result = n4jsc(args, 0, false);
@@ -173,6 +181,16 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 				+ " --showSetup    : prints n4jsc setup (default: false)\n"
 				+ " --stdio        : uses stdin/stdout for communication instead of sockets\n"
 				+ "                  (default: false)\n"
+				+ " --verbose      : enables verbose output (default: false)\n"
+				+ " --version (-v) : prints version and exits (default: false)";
+	}
+
+	private String getUsageExpectationSetVersions() {
+		return "Usage: n4jsc set-versions [OPTION(s)]\n"
+				+ " VERSION        : new version string to set for all n4js related dependencies\n"
+				+ " --help (-h)    : prints help and exits. Define a goal for goal-specific help.\n"
+				+ "                  (default: false)\n"
+				+ " --showSetup    : prints n4jsc setup (default: false)\n"
 				+ " --verbose      : enables verbose output (default: false)\n"
 				+ " --version (-v) : prints version and exits (default: false)";
 	}

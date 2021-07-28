@@ -59,4 +59,14 @@ public enum N4jscGoal {
 		this.realName = realName == null ? name() : realName;
 		this.optionsClass = (Class<AbstractOptions>) optionsClass;
 	}
+
+	/** Like {@link N4jscGoal#valueOf(String)} but respects {@link N4jscGoal#realName} */
+	public static N4jscGoal realValueOf(String enumName) {
+		for (N4jscGoal goal : N4jscGoal.values()) {
+			if (goal.realName.equals(enumName)) {
+				return goal;
+			}
+		}
+		throw new IllegalArgumentException("N4jscGoal enum not found for '" + enumName + "'");
+	}
 }

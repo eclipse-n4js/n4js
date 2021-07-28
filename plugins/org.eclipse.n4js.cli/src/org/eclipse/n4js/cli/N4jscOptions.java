@@ -491,7 +491,7 @@ public class N4jscOptions {
 		@Override
 		N4jscGoal getGoal() {
 			try {
-				return N4jscGoal.valueOf(goal);
+				return N4jscGoal.realValueOf(goal);
 			} catch (Exception e) {
 				return N4jscGoal.compileImplicit;
 			}
