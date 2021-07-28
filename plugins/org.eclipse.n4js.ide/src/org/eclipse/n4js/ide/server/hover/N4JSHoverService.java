@@ -25,6 +25,7 @@ import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.hover.HoverContext;
 import org.eclipse.xtext.ide.server.hover.HoverService;
+import org.eclipse.xtext.ide.server.hover.IHoverService;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -56,6 +57,10 @@ public class N4JSHoverService extends HoverService {
 
 	@Override
 	protected Hover hover(HoverContext ctx) {
+		if (ctx == null) {
+			return IHoverService.EMPTY_HOVER;
+		}
+
 		List<Either<String, MarkedString>> contents = new LinkedList<>();
 		EObject element = ctx.getElement();
 		EObject idRef = getIdentifierRefOrElement(ctx);
