@@ -22,6 +22,7 @@ import java.util.function.Consumer
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -29,6 +30,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TranspilerState
+import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
@@ -41,6 +43,7 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -79,6 +82,9 @@ class TypeReferenceTransformation extends Transformation {
 
 	private final Map<Type, String> referenceCache = new HashMap();
 
+	@Inject
+	private TypeAssistant typeAssistant;
+	
 	@Inject
 	private WorkspaceAccess workspaceAccess;
 
@@ -126,17 +132,18 @@ class TypeReferenceTransformation extends Transformation {
 			// handle outer return type of asynchronous and/or generator functions
 			if ((funDef.isGenerator() || funDef.isAsync())
 					&& !N4JSLanguageUtils.hasExpectedSpecialReturnType(typeRef, funDef, state.builtInTypeScope)) {
-				val astNode = state.tracer.getOriginalASTNode(funDef);
-				val tFunction = if (astNode instanceof FunctionDefinition) astNode.definedFunction;
-				val outerReturnTypeRef = tFunction?.returnTypeRef;
-				if (outerReturnTypeRef === null) {
-					// If you get an exception here: a transformation might have created an async and/or generator FunctionDefinition
-					// without the expected Promise<...> / [Async]Generator<...> return type (therefore the above call to method
-					// #hasExpectedSpecialReturnType() returned false); automatically deriving the outer from an inner return type
-					// is not supported for FunctionDefinitions created by transformations!
-					throw new IllegalStateException("unable to obtain outer return type of generator/async function from TModule");
-				}
+				
+				val outerReturnTypeRef = typeAssistant.getReturnTypeRef(state, funDef);
 				typeRef = outerReturnTypeRef;
+			}
+		}
+		
+		// special handling for constructor parameter @Spec ~i~this 
+		if (typeRefNode.eContainer instanceof FormalParameter) {
+			val fPar = typeRefNode.eContainer as FormalParameter;
+			val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(fPar);
+			if (isSpecFpar) {
+				typeRef = state.builtInTypeScope.anyTypeRef;
 			}
 		}
 
@@ -173,9 +180,9 @@ class TypeReferenceTransformation extends Transformation {
 			convertFunctionTypeExprOrRef(typeRef);
 		} else if (typeRef instanceof ParameterizedTypeRef) {
 			convertParameterizedTypeRef(typeRef);
-		} else if (typeRef instanceof ExistentialTypeRef) {
-			write("any"); // unsupported type reference
 		} else if (typeRef instanceof ThisTypeRef) {
+			convertThisTypeRef(typeRef);
+		} else if (typeRef instanceof ExistentialTypeRef) {
 			write("any"); // unsupported type reference
 		} else if (typeRef instanceof TypeTypeRef) {
 			write("any"); // unsupported type reference
@@ -275,6 +282,21 @@ class TypeReferenceTransformation extends Transformation {
 
 		if (showDeclaredType && hasStructMembers) {
 			write(')');
+		}
+	}
+	
+	def private void convertThisTypeRef(ThisTypeRef typeRef) {
+		val makePartial = typeRef instanceof ThisTypeRefStructural
+			&& (typeRef as ThisTypeRefStructural).definedTypingStrategy == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+		
+		if (makePartial) {
+			write("Partial<");
+		}
+		
+		write("this");
+		
+		if (makePartial) {
+			write(">");
 		}
 	}
 

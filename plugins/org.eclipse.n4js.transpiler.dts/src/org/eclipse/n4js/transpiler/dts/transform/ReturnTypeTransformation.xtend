@@ -10,18 +10,20 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform
 
+import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
-import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-
 /**
- * The implicit return type is 'void' in N4JS but 'any' in TypeScript, so we have to explicitly emit 'void'
- * whenever the return type is not explicitly given.
+ * Implicit return types are made explicit.
  */
 class ReturnTypeTransformation extends Transformation {
+	
+	@Inject
+	private TypeAssistant typeAssistant;
 
 	override assertPreConditions() {
 	}
@@ -42,7 +44,9 @@ class ReturnTypeTransformation extends Transformation {
 			// return type already provided explicitly, so nothing to do here
 			return;
 		}
-		val typeRefNode = _TypeReferenceNode(state, state.G.voidTypeRef);
+		
+		val returnTypeRef = typeAssistant.getReturnTypeRef(state, funDef);
+		val typeRefNode = _TypeReferenceNode(state, returnTypeRef);
 		funDef.declaredReturnTypeRefNode = typeRefNode;
 	}
 }
