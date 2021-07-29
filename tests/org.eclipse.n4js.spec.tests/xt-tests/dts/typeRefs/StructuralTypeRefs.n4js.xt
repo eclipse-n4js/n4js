@@ -50,7 +50,7 @@ declare class ClsStruct {
 	public field: string;
 }
 export let v1: Cls;
-export let v2: Cls;
+export let v2: StructuralFields<Cls>;
 export let v3: ClsStruct;
 export let v4: Object;
 export let v5: {fieldAdded: number; get getterAdded(): number; set setterAdded(value: number); methodAdded(): void};

@@ -441,3 +441,37 @@ declare interface Iterable8<T1, T2, T3, T4, T5, T6, T7, T8> extends Iterable7<T1
 declare interface Iterable9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Iterable8<T1,T2,T3,T4,T5,T6,T7,T8|T9> {}
 
 
+type FunctionPropertyNames<T> = { 
+    [K in keyof T]: T[K] extends Function ? K : never 
+}[keyof T];
+
+type IfEquals<X, Y, A, B> =
+    (<T>() => T extends X ? 1 : 2) extends
+    (<T>() => T extends Y ? 1 : 2) ? A : B;
+
+type WritableKeysOf<T> = {
+    [P in keyof T]: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, P, never>
+}[keyof T];
+type WritablePart<T> = Pick<T, WritableKeysOf<T>>;
+
+/**
+ * This type mimics the N4JS structural typing modifier ~~.
+ * Note that it cannot remove non-public elements due to limited expressiveness of TypeScript.
+ */
+declare type StructuralFields<T> = Omit<T, FunctionPropertyNames<T>>;
+/**
+ * This type mimics the N4JS structural typing modifier ~w~.
+ * Note that it cannot remove non-public elements due to limited expressiveness of TypeScript.
+ */
+declare type StructuralWriteOnly<T> = WritablePart<StructuralFields<T>>;
+/**
+ * This type mimics the N4JS structural typing modifier ~r~.
+ * Note that it cannot remove single setters and non-public elements due to limited expressiveness of TypeScript.
+ */
+declare type StructuralReadOnly<T> = Readonly<StructuralFields<T>>
+/**
+ * This type mimics the N4JS structural typing modifier ~i~.
+ * Note that it cannot remove non-public elements due to limited expressiveness of TypeScript.
+ */
+declare type StructuralInititializers<T> = Readonly<StructuralWriteOnly<T>>
+

@@ -254,17 +254,20 @@ class TypeReferenceTransformation extends Transformation {
 				getReferenceToType(declType, state)
 			};
 			if (referenceStr !== null) {
-				val wrapInReadonly = typeRef.getDefinedTypingStrategy() == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS;
-				if (wrapInReadonly) {
-					write("Readonly<");
+				var prependType = switch (typeRef.getDefinedTypingStrategy()) {
+					case TypingStrategy.STRUCTURAL_FIELDS: "StructuralFields<"
+					case TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS: "StructuralReadOnly<"
+					case TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS: "StructuralWriteOnly<"
+					case TypingStrategy.STRUCTURAL_FIELD_INITIALIZER: "StructuralInititializers<"
+					default: ""
 				}
+				write(prependType);
 
 				write(referenceStr);
 				convertTypeArguments(typeRef);
 
-				if (wrapInReadonly) {
-					write(">");
-				}
+				write(prependType.isNullOrEmpty ? "" : ">");
+
 			} else {
 				write("any");
 			}
