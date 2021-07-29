@@ -115,14 +115,16 @@ public class N4jscInit {
 			if (cwdHasPackageJson) {
 				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
 						"Current working directory must not contain a package.json file. Note:" + NL
-								+ "  In case you like to add the n4js property to an existing project, use option --n4js"
+								+ "  In case you like to add the n4js property to an existing project, use option --n4js."
 								+ NL
-								+ "  In case you like to add a project to an existing workspace project, use options -w -c");
+								+ "  In case you like to add a project to an existing workspace project, use options -w -c.");
 			}
 
 			if (options.isScope() && !cwd.getParent().toFile().getName().startsWith("@")) {
 				throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
-						"When creating a scoped package the parent directory of current working directory must start with '@'.");
+						"When creating a scoped package the parent directory of current working directory must start with '@'. Note:"
+								+ NL
+								+ "  In case you like to create a new project in a subfolder of the current working directory, use option -c.");
 			}
 		}
 
@@ -169,7 +171,7 @@ public class N4jscInit {
 		if (!options.isCreate() && !isCwdWorkspaceMatch) {
 			throw new N4jscException(N4jscExitCode.INIT_ERROR_WORKING_DIR,
 					"Creating a new project inside a yarn project requires the current working directory to "
-							+ "be inside a new project folder of a valid workspaces directory of the yarn project."
+							+ "be inside a new project folder of a valid workspaces directory of the yarn project. "
 							+ "Alternatively add option '--create' to create a new project directory.");
 		}
 
@@ -284,6 +286,11 @@ public class N4jscInit {
 	}
 
 	private static boolean workspaceMatch(String[] globs, Path root, Path newProjectLocation) {
+		if (newProjectLocation.getNameCount() > 1
+				&& newProjectLocation.getName(newProjectLocation.getNameCount() - 2).toString().startsWith("@")) {
+			// newProjectLocation is a scoped project
+			newProjectLocation = newProjectLocation.getParent();
+		}
 		Path relProjectLocation = root.relativize(newProjectLocation);
 		for (String glob : globs) {
 			boolean matches = ModuleFilterUtils.locationMatchesGlobSpecifier(glob, relProjectLocation);
@@ -311,6 +318,8 @@ public class N4jscInit {
 			throws N4jscException {
 
 		try {
+			config.projectRoot.resolve(config.projectFolderSrc).toFile().mkdirs();
+			config.projectRoot.resolve(config.projectFolderOutput).toFile().mkdirs();
 			config.packageJson.write(options, config.projectRoot);
 			for (ExampleFile exampleFile : config.files) {
 				exampleFile.writeToDisk(config.projectRoot);

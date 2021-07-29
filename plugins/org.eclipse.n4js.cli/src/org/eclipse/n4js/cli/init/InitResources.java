@@ -43,6 +43,11 @@ import com.google.gson.stream.JsonReader;
  *
  */
 public class InitResources {
+
+	static final String FOLDER_SRC = "src";
+	static final String FOLDER_TEST = "tests";
+	static final String FOLDER_OUTPUT = "src-gen";
+
 	private static final String CREATE_NAME_YARN_PROJECT = "yarn-project";
 	private static final String CREATE_NAME_SCOPE = "@scope";
 	private static final String CREATE_NAME_PROJECT = "my-project";
@@ -196,7 +201,7 @@ public class InitResources {
 		}
 
 		PackageJsonContents helloWorld() {
-			main = "src-gen/HelloWorld.js";
+			main = FOLDER_OUTPUT + "/HelloWorld.js";
 			n4js.mainModule = "HelloWorld";
 			return this;
 		}
@@ -206,7 +211,7 @@ public class InitResources {
 			devDependencies.put("n4js-mangelhaft-cli", "");
 			devDependencies.put("org.eclipse.n4js.mangelhaft", "");
 			devDependencies.put("org.eclipse.n4js.mangelhaft.assert", "");
-			n4js.sources.test = new String[] { "tests" };
+			n4js.sources.test = new String[] { FOLDER_TEST };
 			return this;
 		}
 
@@ -247,13 +252,13 @@ public class InitResources {
 	static class PropertyN4JS {
 		String projectType = "library";
 		String mainModule;
-		String output = "src-gen";
+		String output = FOLDER_OUTPUT;
 		PropertySources sources = new PropertySources();
 		String[] requiredRuntimeLibraries = { "n4js-runtime-es2015" };
 	}
 
 	static class PropertySources {
-		String[] source = { "src" };
+		String[] source = { FOLDER_SRC };
 		String[] test;
 	}
 
@@ -323,7 +328,7 @@ public class InitResources {
 
 		@Override
 		String getDir() {
-			return "src";
+			return FOLDER_SRC;
 		}
 
 		@Override
@@ -348,7 +353,7 @@ public class InitResources {
 
 		@Override
 		String getDir() {
-			return "tests";
+			return FOLDER_TEST;
 		}
 
 		@Override
@@ -383,7 +388,7 @@ public class InitResources {
 
 		@Override
 		String getDir() {
-			return "src";
+			return FOLDER_SRC;
 		}
 
 		@Override

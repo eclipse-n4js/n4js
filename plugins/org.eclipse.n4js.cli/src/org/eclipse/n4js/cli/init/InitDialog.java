@@ -11,6 +11,8 @@
 package org.eclipse.n4js.cli.init;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.cli.N4jscConsole;
@@ -126,6 +128,10 @@ public class InitDialog {
 			WorkingDirState workingDirState) throws N4jscException {
 
 		InitConfiguration config = new InitConfiguration();
+		config.projectFolderSrc = Path.of(InitResources.FOLDER_SRC);
+		config.projectFolderTest = Path.of(InitResources.FOLDER_TEST);
+		config.projectFolderOutput = Path.of(InitResources.FOLDER_OUTPUT);
+
 		if (options.isWorkspaces()) {
 			if (workingDirState == WorkingDirState.InEmptyFolder) {
 				config.yarnPackageJson = YarnPackageJsonContents.defaults();
@@ -163,8 +169,10 @@ public class InitDialog {
 		PackageJsonContents defaults = config.packageJson;
 		if (!options.isN4JS()) {
 			// in case of extending an already existing project to n4js, the name is not changed
-			N4jscConsole.print(String.format("name: (%s) ", defaults.name));
-			userInput = N4jscConsole.readLine();
+			userInput = readValidInput(input -> input.startsWith("@") && input.contains("/"),
+					String.format("name: (%s) ", defaults.name),
+					"Valid project names of scoped projects must start with '@' and contain a single '/'.");
+
 			answers.nameProject = userInput.isBlank() ? defaults.name : userInput;
 		}
 
@@ -198,6 +206,24 @@ public class InitDialog {
 		answers.description = userInput.isBlank() ? defaults.description : userInput;
 
 		return answers;
+	}
+
+	private static String readValidInput(Predicate<String> isValid, String inputMsg, String errorMsg) {
+		String userInput;
+		do {
+			N4jscConsole.print(inputMsg);
+			userInput = N4jscConsole.readLine();
+			if (userInput.isBlank()) {
+				break;
+			}
+			if (isValid.test(userInput)) {
+				break;
+			}
+
+			N4jscConsole.println(errorMsg);
+		} while (true);
+
+		return userInput;
 	}
 
 	static void addExamples(InitConfiguration config, UserAnswers answers) {
@@ -256,11 +282,11 @@ public class InitDialog {
 	}
 
 	static Pair<URI, URI> interpretModuleNames(String userInput) {
-		if (userInput.startsWith("src/")) {
-			userInput = userInput.substring("src/".length());
+		if (userInput.startsWith(InitResources.FOLDER_SRC + "/")) {
+			userInput = userInput.substring(InitResources.FOLDER_SRC.length() + 1); // plus slash
 		}
-		if (userInput.startsWith("src-gen/")) {
-			userInput = userInput.substring("src-gen/".length());
+		if (userInput.startsWith(InitResources.FOLDER_OUTPUT + "/")) {
+			userInput = userInput.substring(InitResources.FOLDER_OUTPUT.length() + 1); // plus slash
 		}
 
 		int lastDotIdx = userInput.lastIndexOf(".");
@@ -284,7 +310,7 @@ public class InitDialog {
 		}
 
 		return Pair.of(
-				URI.createFileURI("src-gen/" + fName + "." + jsExtension),
+				URI.createFileURI(InitResources.FOLDER_OUTPUT + "/" + fName + "." + jsExtension),
 				URI.createFileURI(fName + "." + n4jsExtension));
 	}
 }

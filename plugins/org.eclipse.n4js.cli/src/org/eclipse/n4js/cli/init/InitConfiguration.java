@@ -34,6 +34,9 @@ public class InitConfiguration {
 	Path yarnRoot;
 	Path workspacesDir;
 	Path projectRoot;
+	Path projectFolderSrc;
+	Path projectFolderTest;
+	Path projectFolderOutput;
 	YarnPackageJsonContents yarnPackageJson;
 	PackageJsonContents packageJson;
 	Collection<ExampleFile> files = new ArrayList<>();
