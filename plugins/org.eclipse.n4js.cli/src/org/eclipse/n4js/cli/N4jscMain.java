@@ -108,7 +108,6 @@ public class N4jscMain {
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			N4jscConsole.println(N4jscOptions.USAGE);
 			System.exit(e.getExitCode());
 		}
 
@@ -123,6 +122,14 @@ public class N4jscMain {
 		// Option --help behaves as a goal wrt. exiting after the version was shown.
 		// However, since the output of --help is respecting the goal, --help itself
 		// is still an option (instead of being a goal).
+		if (options.isVersion()) {
+			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion()
+					+ " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
+		}
+
+		// Option --help behaves as a goal wrt. exiting after the version was shown.
+		// However, since the output of --help is respecting the goal, --help itself
+		// is still an option (instead of being a goal).
 		if (options.isHelp()) {
 			options.printUsage(N4jscConsole.getPrintStream());
 			return N4jscExitState.SUCCESS;
@@ -130,8 +137,7 @@ public class N4jscMain {
 
 		switch (options.getGoal()) {
 		case version:
-			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion()
-					+ " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
+			// version printed already above
 			return N4jscExitState.SUCCESS;
 
 		case lsp:
@@ -141,6 +147,7 @@ public class N4jscMain {
 			return backend.goalClean(options);
 
 		case compile:
+		case compileImplicit:
 			return backend.goalCompile(options);
 
 		case api:
@@ -151,6 +158,10 @@ public class N4jscMain {
 
 		case init:
 			return backend.goalInit(options);
+
+		case help:
+			// help printed already above;
+			break;
 
 		case setversions:
 			return backend.goalSetVersions(options);

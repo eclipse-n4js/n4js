@@ -11,6 +11,7 @@
 package org.eclipse.n4js.cli;
 
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
+import org.eclipse.n4js.cli.init.N4jscInit;
 import org.eclipse.n4js.cli.lsp.LspServer;
 
 /**

@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.NamedOptionDef;
@@ -62,6 +63,15 @@ public class N4JSCmdLineParser extends CmdLineParser {
 
 	/** All user given arguments */
 	final List<ParsedOption<OptionDef>> definedArguments;
+
+	/** All args the command line parser is invoked with */
+	String[] parseArgumentArgs;
+
+	@Override
+	public void parseArgument(String... args) throws CmdLineException {
+		this.parseArgumentArgs = args;
+		super.parseArgument(args);
+	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -130,7 +140,29 @@ public class N4JSCmdLineParser extends CmdLineParser {
 		@Override
 		protected Object subCommand(SubCommand c, final Parameters params) throws CmdLineException {
 			clp.addDefinedOption(option, this.printDefaultValue(), params.getParameter(0));
-			return super.subCommand(c, params);
+			return baseSubCommand(c, params);
+		}
+
+		/**
+		 * Reason for overriding:<br>
+		 * Sub-commands also need to parse options that were stated before the goal argument. To do so, the goal
+		 * argument is removed from all original arguments. The remaining arguments are passed to the sub-command
+		 * handler.
+		 */
+		private Object baseSubCommand(SubCommand c, final Parameters params) throws CmdLineException {
+			String expandedArgs[] = clp.parseArgumentArgs;
+			if (clp.getProperties().getAtSyntax()) {
+				// TODO: expand arguments, see superclass
+				// expandedArgs = expandAtFiles(clp.parseArgumentArgs);
+			}
+
+			int parametersPos = expandedArgs.length - params.size();
+			expandedArgs = (String[]) ArrayUtils.remove(expandedArgs, parametersPos);
+
+			Object subCmd = instantiate(c);
+			CmdLineParser p = configureParser(subCmd, c);
+			p.parseArgument(expandedArgs);
+			return subCmd;
 		}
 
 		@Override
