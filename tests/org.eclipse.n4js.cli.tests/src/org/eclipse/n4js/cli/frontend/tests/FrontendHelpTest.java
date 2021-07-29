@@ -186,7 +186,7 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 	}
 
 	private String getUsageExpectationSetVersions() {
-		return "Usage: n4jsc set-versions [OPTION(s)]\n"
+		return "Usage: n4jsc set-versions VERSION [OPTION(s)]\n"
 				+ " VERSION        : new version string to set for all n4js related dependencies\n"
 				+ " --help (-h)    : prints help and exits. Define a goal for goal-specific help.\n"
 				+ "                  (default: false)\n"

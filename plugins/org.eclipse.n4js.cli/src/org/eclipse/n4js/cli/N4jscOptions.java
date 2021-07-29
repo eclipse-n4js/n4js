@@ -54,23 +54,21 @@ public class N4jscOptions {
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information template. */
-	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s%s [OPTION(s)]";
+	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s [OPTION(s)]";
 	/** Usage information. */
-	public static final String USAGE = getUsage(new ImplicitCompileOptions());
-
-	/** @return the usage string respecting the goal specified in the given options */
-	public static String getUsage(AbstractOptions options) {
-		String goal = options.isImplicitGoal() ? "[GOAL]" : options.getGoal().realName;
-		String dir = options.getDir() == null ? "" : " [DIR]";
-		String usage = String.format(USAGE_TEMPLATE, goal, dir);
-		return usage;
-	}
+	public static final String USAGE = new ImplicitCompileOptions().getUsage();
 
 	static abstract class AbstractOptions {
 
 		abstract N4jscGoal getGoal();
 
 		abstract AbstractOptions printUsageDefaultInstance();
+
+		/** @return the usage string respecting the goal specified in the given options */
+		public String getUsage() {
+			String usage = String.format(USAGE_TEMPLATE, getGoal().realName);
+			return usage;
+		}
 
 		void setDir(@SuppressWarnings("unused") File file) {
 			// if necessary, overwrite this
@@ -205,6 +203,11 @@ public class N4jscOptions {
 		}
 
 		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, "[GOAL] [DIR]");
+		}
+
+		@Override
 		N4jscGoal getGoal() {
 			return N4jscGoal.compile;
 		}
@@ -259,6 +262,11 @@ public class N4jscOptions {
 
 	/** Options for compile related goals when given explicitly */
 	static abstract public class AbstractExplicitCompileRelatedOptions extends AbstractCompileRelatedOptions {
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " [DIR]");
+		}
+
 		@Override
 		File getDir() {
 			return dir;
@@ -316,6 +324,11 @@ public class N4jscOptions {
 
 	/** Option for goal watch */
 	static abstract public class SingleDirOptions extends AbstractOptions {
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " [DIR]");
+		}
+
 		@Override
 		File getDir() {
 			return dir;
@@ -388,6 +401,11 @@ public class N4jscOptions {
 
 	/** This class defines option fields for command set-versions. */
 	static public class SetVersionsOptions extends AbstractOptions {
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " VERSION");
+		}
+
 		@Override
 		AbstractOptions printUsageDefaultInstance() {
 			return new SetVersionsOptions();
@@ -474,6 +492,11 @@ public class N4jscOptions {
 
 	/** This class defines option fields for command help. */
 	static public class HelpOptions extends AbstractOptions {
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " [GOAL]");
+		}
+
 		/** Constructor */
 		public HelpOptions() {
 			this.help = true;
@@ -743,9 +766,9 @@ public class N4jscOptions {
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
-		AbstractOptions usageDefaultOptions = this.options.printUsageDefaultInstance();
-		out.println(getUsage(usageDefaultOptions));
-		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(usageDefaultOptions);
+		AbstractOptions actualDefaultOptions = this.options.printUsageDefaultInstance();
+		out.println(actualDefaultOptions.getUsage());
+		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(actualDefaultOptions);
 
 		// switch to English locale because args4j will use the user locale for some words like "Vorgabe"
 		Locale curLocale = Locale.getDefault();
