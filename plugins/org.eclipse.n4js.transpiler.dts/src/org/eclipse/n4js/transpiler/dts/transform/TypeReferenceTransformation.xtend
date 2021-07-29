@@ -43,7 +43,6 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
-import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -254,13 +253,7 @@ class TypeReferenceTransformation extends Transformation {
 				getReferenceToType(declType, state)
 			};
 			if (referenceStr !== null) {
-				var prependType = switch (typeRef.getDefinedTypingStrategy()) {
-					case TypingStrategy.STRUCTURAL_FIELDS: "StructuralFields<"
-					case TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS: "StructuralReadOnly<"
-					case TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS: "StructuralWriteOnly<"
-					case TypingStrategy.STRUCTURAL_FIELD_INITIALIZER: "StructuralInititializers<"
-					default: ""
-				}
+				val prependType = getStructuralTypeReplacements(typeRef);
 				write(prependType);
 
 				write(referenceStr);
@@ -289,18 +282,22 @@ class TypeReferenceTransformation extends Transformation {
 	}
 	
 	def private void convertThisTypeRef(ThisTypeRef typeRef) {
-		val makePartial = typeRef instanceof ThisTypeRefStructural
-			&& (typeRef as ThisTypeRefStructural).definedTypingStrategy == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
-		
-		if (makePartial) {
-			write("Partial<");
-		}
+		val prependType = getStructuralTypeReplacements(typeRef);
+		write(prependType);
 		
 		write("this");
 		
-		if (makePartial) {
-			write(">");
-		}
+		write(prependType.isNullOrEmpty ? "" : ">");
+	}
+	
+	def private String getStructuralTypeReplacements(TypeRef typeRef) {
+		return switch (typeRef.getTypingStrategy()) {
+					case TypingStrategy.STRUCTURAL_FIELDS: "StructuralFields<"
+					case TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS: "StructuralReadOnly<"
+					case TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS: "StructuralWriteOnly<"
+					case TypingStrategy.STRUCTURAL_FIELD_INITIALIZER: "StructuralInititializers<"
+					default: ""
+				};
 	}
 
 	def private void convertTypeArguments(ParameterizedTypeRef typeRef) {

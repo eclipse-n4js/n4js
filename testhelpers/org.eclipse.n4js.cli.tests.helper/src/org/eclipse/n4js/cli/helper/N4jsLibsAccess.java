@@ -373,4 +373,13 @@ public class N4jsLibsAccess {
 		Assert.assertTrue("src-gen folder in n4js-runtime does not exist: " + n4jsRuntimeSrcGen + warning,
 				Files.isDirectory(n4jsRuntimeSrcGen));
 	}
+
+	/**
+	 * @return file {@code n4js-runtime/n4jsglobals.d.ts}
+	 */
+	public static Path getN4JSGlobalsDTS() {
+		Path n4jsRuntimePath = findN4jsLib(N4JSGlobals.N4JS_RUNTIME);
+		Path n4jsGlobalsDts = n4jsRuntimePath.resolve(N4JSGlobals.N4JS_GLOBALS_DTS);
+		return n4jsGlobalsDts;
+	}
 }
