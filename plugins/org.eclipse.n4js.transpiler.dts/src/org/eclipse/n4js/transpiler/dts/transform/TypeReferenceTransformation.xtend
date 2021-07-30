@@ -25,6 +25,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.TypeReferenceNode
@@ -59,6 +60,7 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
@@ -66,6 +68,7 @@ import org.eclipse.xtext.EcoreUtil2
 import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifier
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 
 /**
  * For each {@link TypeReferenceNode_IM} in the intermediate model, this transformation will
@@ -81,6 +84,9 @@ class TypeReferenceTransformation extends Transformation {
 
 	private final Map<Type, String> referenceCache = new HashMap();
 
+	@Inject
+	private N4JSTypeSystem ts;
+	
 	@Inject
 	private TypeAssistant typeAssistant;
 	
@@ -137,18 +143,38 @@ class TypeReferenceTransformation extends Transformation {
 			}
 		}
 		
-		// special handling for constructor parameter @Spec ~i~this 
-		if (typeRefNode.eContainer instanceof FormalParameter) {
-			val fPar = typeRefNode.eContainer as FormalParameter;
-			val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(fPar);
-			if (isSpecFpar) {
-				typeRef = state.builtInTypeScope.anyTypeRef;
+		if (typeRef instanceof ThisTypeRef) {
+			// special handling for static methods with this return type
+			if (typeRefNode.eContainer instanceof N4MethodDeclaration) {
+				val md = typeRefNode.eContainer as N4MethodDeclaration;
+				if (md.isStatic) {
+					val returnTypeRef = typeAssistant.getReturnTypeRef(state, md);
+					typeRef = ts.upperBoundWithReopen(state.G, returnTypeRef);
+					val newTypeArgs = typeRef.typeArgs.size;
+					typeRef.typeArgs.clear; // only 'any' allowed here by TypeScript
+					for (var i = 0; i<newTypeArgs; i++) {
+						typeRef.typeArgs.add(TypeRefsFactory.eINSTANCE.createWildcard);
+					}
+				}
+			}
+		
+			// special handling for constructor parameter @Spec ~i~this 
+			if (typeRefNode.eContainer instanceof FormalParameter) {
+				val fPar = typeRefNode.eContainer as FormalParameter;
+				val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(fPar);
+				if (isSpecFpar) {
+					val steFPar = state.steCache.mapNamedElement_2_STE.get(fPar);
+					if (steFPar instanceof SymbolTableEntryOriginal) {
+						val betterTypeRef = ts.tau(steFPar.originalTarget, state.G);
+						typeRef = ts.upperBoundWithReopen(state.G, betterTypeRef);
+					}
+				}
 			}
 		}
 
 		convertTypeRef(typeRef);
 	}
-
+	
 	def private void convertDeclaredTypeRef(TTypedElement elem) {
 		val declaredTypeRef = elem.getTypeRef();
 		if (declaredTypeRef !== null) {

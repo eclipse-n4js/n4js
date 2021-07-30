@@ -19,9 +19,23 @@ class C {
 	constructor(@Spec spec: ~i~this) {}
 }
 
+class D<T> {
+	constructor(@Spec spec: ~i~this) {}
+}
+
+class E<T extends C> {
+	constructor(@Spec spec: ~i~this) {}
+}
+
 
 /* XPECT generated_dts ---
 declare class C {
-	constructor(spec: any);
+	constructor(spec: StructuralInititializers<C>);
+}
+declare class D<T> {
+	constructor(spec: StructuralInititializers<D<T>>);
+}
+declare class E<T extends C> {
+	constructor(spec: StructuralInititializers<E<T>>);
 }
 --- */
