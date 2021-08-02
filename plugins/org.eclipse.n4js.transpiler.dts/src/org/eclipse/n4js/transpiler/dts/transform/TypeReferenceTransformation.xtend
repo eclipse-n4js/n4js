@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform
 
+import com.google.common.base.Preconditions
 import com.google.common.base.Strings
 import com.google.common.collect.Lists
 import com.google.inject.Inject
@@ -46,6 +47,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
@@ -61,6 +63,7 @@ import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
@@ -68,7 +71,6 @@ import org.eclipse.xtext.EcoreUtil2
 import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.isLegalIdentifier
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 
 /**
  * For each {@link TypeReferenceNode_IM} in the intermediate model, this transformation will
@@ -86,6 +88,9 @@ class TypeReferenceTransformation extends Transformation {
 
 	@Inject
 	private N4JSTypeSystem ts;
+
+	@Inject
+	private TypeSystemHelper tsh;
 	
 	@Inject
 	private TypeAssistant typeAssistant;
@@ -148,12 +153,17 @@ class TypeReferenceTransformation extends Transformation {
 			if (typeRefNode.eContainer instanceof N4MethodDeclaration) {
 				val md = typeRefNode.eContainer as N4MethodDeclaration;
 				if (md.isStatic) {
-					val returnTypeRef = typeAssistant.getReturnTypeRef(state, md);
-					typeRef = ts.upperBoundWithReopen(state.G, returnTypeRef);
-					val newTypeArgs = typeRef.typeArgs.size;
-					typeRef.typeArgs.clear; // only 'any' allowed here by TypeScript
-					for (var i = 0; i<newTypeArgs; i++) {
-						typeRef.typeArgs.add(TypeRefsFactory.eINSTANCE.createWildcard);
+					val MDOrig = state.tracer.getOriginalASTNode(md);
+					Preconditions.checkState(MDOrig !== null, "Synthetic static methods returning this types not supported");
+					
+					typeRef = tsh.bindAndSubstituteThisTypeRef(state.G, MDOrig, typeRef);
+					typeRef = ts.upperBoundWithReopen(state.G, typeRef);
+					if (!typeRef.typeArgs.isEmpty) {
+						val newTypeArgs = typeRef.typeArgs.size;
+						typeRef.typeArgs.clear; // only 'any' allowed here by TypeScript
+						for (var i = 0; i<newTypeArgs; i++) {
+							typeRef.typeArgs.add(TypeRefsFactory.eINSTANCE.createWildcard);
+						}
 					}
 				}
 			}
@@ -163,11 +173,12 @@ class TypeReferenceTransformation extends Transformation {
 				val fPar = typeRefNode.eContainer as FormalParameter;
 				val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(fPar);
 				if (isSpecFpar) {
-					val steFPar = state.steCache.mapNamedElement_2_STE.get(fPar);
-					if (steFPar instanceof SymbolTableEntryOriginal) {
-						val betterTypeRef = ts.tau(steFPar.originalTarget, state.G);
-						typeRef = ts.upperBoundWithReopen(state.G, betterTypeRef);
-					}
+					val fParOrig = state.tracer.getOriginalASTNode(fPar);
+					Preconditions.checkState(fParOrig !== null, "Synthetic constructors not supported");
+					
+					typeRef = tsh.bindAndSubstituteThisTypeRef(state.G, fParOrig, typeRef);
+					typeRef = ts.upperBoundWithReopen(state.G, typeRef);
+					typeRef = typeRef;
 				}
 			}
 		}
