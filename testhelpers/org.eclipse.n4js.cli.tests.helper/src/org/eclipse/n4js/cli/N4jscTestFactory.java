@@ -89,31 +89,43 @@ public class N4jscTestFactory extends N4jscFactory {
 	static class NoopBackend extends N4jscBackend {
 		@Override
 		public N4jscExitState goalApi(N4jscOptions options) {
-			// do nothing
+			N4jscConsole.println("Noop backend skips goal api");
 			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
 		public N4jscExitState goalClean(N4jscOptions options) {
-			// do nothing
+			N4jscConsole.println("Noop backend skips goal clean");
 			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
 		public N4jscExitState goalCompile(N4jscOptions options) {
-			// do nothing
+			N4jscConsole.println("Noop backend skips goal compile");
 			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
 		public N4jscExitState goalLsp(N4jscOptions options) {
-			// do nothing
+			N4jscConsole.println("Noop backend skips goal lsp");
 			return N4jscExitState.SUCCESS;
 		}
 
 		@Override
 		public N4jscExitState goalWatch(N4jscOptions options) {
-			// do nothing
+			N4jscConsole.println("Noop backend skips goal watch");
+			return N4jscExitState.SUCCESS;
+		}
+
+		@Override
+		public N4jscExitState goalSetVersions(N4jscOptions options) {
+			N4jscConsole.println("Noop backend skips goal set-versions");
+			return N4jscExitState.SUCCESS;
+		}
+
+		@Override
+		public N4jscExitState goalInit(N4jscOptions options) {
+			N4jscConsole.println("Noop backend skips goal init");
 			return N4jscExitState.SUCCESS;
 		}
 	}

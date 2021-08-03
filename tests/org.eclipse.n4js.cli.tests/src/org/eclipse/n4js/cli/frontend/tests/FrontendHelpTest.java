@@ -217,7 +217,8 @@ public class FrontendHelpTest extends AbstractCliFrontendTest {
 						+ "  help=false\n"
 						+ "  port=5007\n"
 						+ "  stdio=false\n"
-						+ "  exec=null",
+						+ "  exec=null\n"
+						+ "Noop backend skips goal lsp",
 				result.getStdOut());
 	}
 
