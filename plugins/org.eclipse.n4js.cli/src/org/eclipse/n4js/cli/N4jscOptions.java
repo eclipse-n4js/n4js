@@ -618,12 +618,12 @@ public class N4jscOptions {
 		return options.getDir();
 	}
 
-	/** @return true iff {@code --help} */
+	/** @return true iff {@code --help} or iff the goal is {@code help} */
 	public boolean isHelp() {
 		return options.help;
 	}
 
-	/** @return true iff {@code --version} */
+	/** @return true iff {@code --version} or iff the goal is {@code version} */
 	public boolean isVersion() {
 		return options.version;
 	}
