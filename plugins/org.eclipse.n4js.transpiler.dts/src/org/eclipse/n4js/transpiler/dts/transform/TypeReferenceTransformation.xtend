@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform
 
-import com.google.common.base.Preconditions
 import com.google.common.base.Strings
 import com.google.common.collect.Lists
 import com.google.inject.Inject
@@ -23,10 +22,8 @@ import java.util.function.Consumer
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.TypeReferenceNode
@@ -47,7 +44,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
@@ -62,8 +58,6 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
@@ -86,12 +80,6 @@ class TypeReferenceTransformation extends Transformation {
 
 	private final Map<Type, String> referenceCache = new HashMap();
 
-	@Inject
-	private N4JSTypeSystem ts;
-
-	@Inject
-	private TypeSystemHelper tsh;
-	
 	@Inject
 	private TypeAssistant typeAssistant;
 	
@@ -148,41 +136,6 @@ class TypeReferenceTransformation extends Transformation {
 			}
 		}
 		
-		if (typeRef instanceof ThisTypeRef) {
-			// special handling for static methods with this return type
-			if (typeRefNode.eContainer instanceof N4MethodDeclaration) {
-				val md = typeRefNode.eContainer as N4MethodDeclaration;
-				if (md.isStatic) {
-					val MDOrig = state.tracer.getOriginalASTNode(md);
-					Preconditions.checkState(MDOrig !== null, "Synthetic static methods returning this types not supported");
-					
-					typeRef = tsh.bindAndSubstituteThisTypeRef(state.G, MDOrig, typeRef);
-					typeRef = ts.upperBoundWithReopen(state.G, typeRef);
-					if (!typeRef.typeArgs.isEmpty) {
-						val newTypeArgs = typeRef.typeArgs.size;
-						typeRef.typeArgs.clear; // only 'any' allowed here by TypeScript
-						for (var i = 0; i<newTypeArgs; i++) {
-							typeRef.typeArgs.add(TypeRefsFactory.eINSTANCE.createWildcard);
-						}
-					}
-				}
-			}
-		
-			// special handling for constructor parameter @Spec ~i~this 
-			if (typeRefNode.eContainer instanceof FormalParameter) {
-				val fPar = typeRefNode.eContainer as FormalParameter;
-				val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(fPar);
-				if (isSpecFpar) {
-					val fParOrig = state.tracer.getOriginalASTNode(fPar);
-					Preconditions.checkState(fParOrig !== null, "Synthetic constructors not supported");
-					
-					typeRef = tsh.bindAndSubstituteThisTypeRef(state.G, fParOrig, typeRef);
-					typeRef = ts.upperBoundWithReopen(state.G, typeRef);
-					typeRef = typeRef;
-				}
-			}
-		}
-
 		convertTypeRef(typeRef);
 	}
 	

@@ -13,12 +13,16 @@ package org.eclipse.n4js.transpiler.dts.transform
 import com.google.inject.Inject
 import java.util.ArrayList
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -30,6 +34,9 @@ class ExpandThisFunctionsTransformation extends Transformation {
 
 	@Inject
 	private N4JSTypeSystem ts;
+
+	@Inject
+	private TypeSystemHelper tsh;
 
 
 	override assertPreConditions() {
@@ -51,22 +58,58 @@ class ExpandThisFunctionsTransformation extends Transformation {
 		
 		for (clazz : classes) {
 			val clazzOrig = state.tracer.getOriginalASTNode(clazz) as N4ClassDeclaration;
-			val specConstructor = findSpecConstructorInSuperclass(clazzOrig);
-			if (specConstructor !== null) {
-				addOverwritingSpecConstructor(specConstructor, clazz);
+			
+			
+			val methods = collectNodes(clazz, false, N4MethodDeclaration);
+			var N4MethodDeclaration ctor = null;
+			for (method : methods) {
+				if (method.isConstructor) {
+					ctor = method;
+				} else if (method.isStatic) {
+					// special handling for return type 'this' of static methods 
+					val retTR = state.info.getOriginalProcessedTypeRef(method.declaredReturnTypeRefNode);
+					if (retTR instanceof ThisTypeRef) {
+						val methodOrig = state.tracer.getOriginalASTNodeOfSameType(method, false);
+						var typeRef = tsh.bindAndSubstituteThisTypeRef(state.G, methodOrig, retTR);
+						typeRef = ts.upperBoundWithReopen(state.G, typeRef);
+						if (!typeRef.typeArgs.isEmpty) {
+							val newTypeArgs = typeRef.typeArgs.size;
+							typeRef.typeArgs.clear; // only 'any' allowed here by TypeScript
+							for (var i = 0; i<newTypeArgs; i++) {
+								typeRef.typeArgs.add(TypeRefsFactory.eINSTANCE.createWildcard);
+							}
+						}
+						state.info.setOriginalProcessedTypeRef(method.declaredReturnTypeRefNode, typeRef);
+					}
+				}
 			}
+			
+			if (ctor !== null) {
+				// special handling for constructor parameter @Spec ~i~this 
+				val specFPar = getSpecFPar(ctor);
+				if (specFPar !== null) {
+					val specFParOrig = state.tracer.getOriginalASTNodeOfSameType(specFPar, false);
+					if (specFParOrig !== null) {
+						var typeRef = state.info.getOriginalProcessedTypeRef(specFPar.declaredTypeRefNode);
+						typeRef = tsh.bindAndSubstituteThisTypeRef(state.G, specFParOrig, typeRef);
+						typeRef = ts.upperBoundWithReopen(state.G, typeRef);
+						state.info.setOriginalProcessedTypeRef(specFPar.declaredTypeRefNode, typeRef);
+					}
+				}
+
+			} else {
+				
+				val specConstructor = findSpecConstructorInSuperclass(clazzOrig);
+				if (specConstructor !== null) {
+					addOverwritingSpecConstructor(specConstructor, clazz);
+				}
+			}
+			
 		}
 	}
 	
-	def TMethod findSpecConstructorInSuperclass(N4ClassDeclaration clazz) {
-		var constructor = getConstructor(clazz);
-		if (constructor !== null) {
-			// there can be only one constructor
-			return null;
-		}
-		
-		
-		var curClass = clazz.definedTypeAsClass;
+	def TMethod findSpecConstructorInSuperclass(N4ClassDeclaration clazzOrig) {
+		var curClass = clazzOrig.definedTypeAsClass;
 		do {
 			if (curClass.superClass === null) {
 				return null;
@@ -92,8 +135,29 @@ class ExpandThisFunctionsTransformation extends Transformation {
 		return null;
 	}
 	
+	def FormalParameter getSpecFPar(N4MethodDeclaration method) {
+		if (method === null) {
+			return null;
+		}
+		if (!method.isConstructor) {
+			return null;
+		}
+		if (method.fpars.empty) {
+			return null;
+		}
+		for (fpar : method.fpars) {
+			if (AnnotationDefinition.SPEC.hasAnnotation(fpar)) {
+				return fpar;
+			}
+		}
+		return null;
+	}
+	
 	def boolean isSpecConstructor(TMethod method) {
 		if (method === null) {
+			return false;
+		}
+		if (!method.isConstructor) {
 			return false;
 		}
 		if (method.fpars.empty) {
