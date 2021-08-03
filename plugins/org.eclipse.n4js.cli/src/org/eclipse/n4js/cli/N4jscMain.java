@@ -119,19 +119,20 @@ public class N4jscMain {
 	private static N4jscExitState performGoal(N4jscOptions options) throws Exception {
 		N4jscBackend backend = N4jscFactory.createBackend();
 
-		// Option --help behaves as a goal wrt. exiting after the version was shown.
-		// However, since the output of --help is respecting the goal, --help itself
-		// is still an option (instead of being a goal).
 		if (options.isVersion()) {
 			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion()
 					+ " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
 		}
 
-		// Option --help behaves as a goal wrt. exiting after the version was shown.
-		// However, since the output of --help is respecting the goal, --help itself
-		// is still an option (instead of being a goal).
 		if (options.isHelp()) {
 			options.printUsage(N4jscConsole.getPrintStream());
+		}
+
+		// Option --version behaves as a goal wrt. exiting after the version was shown.
+		// Option --help behaves as a goal wrt. exiting after the help was shown.
+		// However, since the output of --help is respecting the goal, --help itself
+		// is still an option (instead of being a goal).
+		if (options.isHelp() || options.isVersion()) {
 			return N4jscExitState.SUCCESS;
 		}
 
