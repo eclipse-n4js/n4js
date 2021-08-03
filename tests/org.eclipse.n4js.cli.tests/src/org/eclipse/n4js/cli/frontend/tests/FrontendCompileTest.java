@@ -65,7 +65,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testArgsCurDirImplicitGoal() {
 		String args[] = { "." };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal compile", result.getStdOut());
 	}
 
 	/**  */
@@ -73,7 +73,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void testArgsCurDir() {
 		String args[] = { "compile", "." };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal compile", result.getStdOut());
 	}
 
 	/**  */
@@ -87,7 +87,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		CliCompileResult result = n4jsc(args, 0);
 		String stdout = result.getStdOut();
 		assertTrue(result.toString(), stdout.startsWith(
-				"Performance Data Collection is enabled.\nWriting performance report: .../"
+				"Performance Data Collection is enabled.\n"
+						+ "Noop backend skips goal compile\n"
+						+ "Writing performance report: .../"
 						+ REPORT_FILE_NAME_WITHOUT_EXTENSTION));
 	}
 
@@ -104,7 +106,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		CliCompileResult result = n4jsc(args, 0);
 		String stdout = result.getStdOut();
 		assertTrue(result.toString(), stdout.startsWith(
-				"Performance Data Collection is enabled.\nWriting performance report: .../"
+				"Performance Data Collection is enabled.\n"
+						+ "Noop backend skips goal compile\n"
+						+ "Writing performance report: .../"
 						+ REPORT_FILE_NAME_WITHOUT_EXTENSTION));
 	}
 
@@ -134,7 +138,9 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 		CliCompileResult result = n4jsc(args, 0);
 		String stdout = result.getStdOut();
 		assertTrue(result.toString(), stdout.startsWith(
-				"Performance Data Collection is enabled.\nWriting performance report: .../performance-report"));
+				"Performance Data Collection is enabled.\n"
+						+ "Noop backend skips goal compile\n"
+						+ "Writing performance report: .../performance-report"));
 	}
 
 	/**  */
@@ -162,7 +168,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkNoTestsOk() {
 		String args[] = { ".", "--noTests" };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal compile", result.getStdOut());
 	}
 
 	/**  */
@@ -180,7 +186,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkTestOnlyOk() {
 		String args[] = { ".", "--testOnly" };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal compile", result.getStdOut());
 	}
 
 	/**  */
@@ -209,7 +215,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxErrsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal compile", result.getStdOut());
 	}
 
 	/**  */
@@ -237,7 +243,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkMaxWarnsOk() {
 		String args[] = { ".", "--maxErrs", "1" };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal compile", result.getStdOut());
 	}
 
 	/**  */
@@ -265,7 +271,7 @@ public class FrontendCompileTest extends AbstractCliFrontendTest {
 	public void checkCleanOk() {
 		String args[] = { ".", "--clean" };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal compile", result.getStdOut());
 	}
 
 	/**  */

@@ -23,7 +23,7 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	public void testLspNoOpts() {
 		String args[] = { "lsp" };
 		CliCompileResult result = n4jsc(args, 0);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal lsp", result.getStdOut());
 	}
 
 	/**  */
@@ -41,7 +41,7 @@ public class FrontendLspTest extends AbstractCliFrontendTest {
 	public void testLspPortOk() {
 		String args[] = { "lsp", "--port", "9415" };
 		CliCompileResult result = n4jsc(args);
-		assertEquals(result.toString(), "", result.getStdOut());
+		assertEquals(result.toString(), "Noop backend skips goal lsp", result.getStdOut());
 	}
 
 	/**  */
