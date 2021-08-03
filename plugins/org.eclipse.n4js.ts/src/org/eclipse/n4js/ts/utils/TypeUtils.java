@@ -226,6 +226,22 @@ public class TypeUtils {
 	}
 
 	/**
+	 * Similar to utility methods [1] and [2], but if the given type is generic, then the generic type's type parameters
+	 * / type variables will be used as type arguments for the newly created ParameterizedTypeRef. The utility methods
+	 * [1] and [2] would instead either create a raw type reference or use wildcards as type arguments.
+	 * <p>
+	 * [1] {@link TypeExtensions#ref(Type, TypeArgument...)}<br>
+	 * [2] {@link TypeUtils#createTypeRef(Type, TypingStrategy, boolean, TypeArgument...)}
+	 */
+	public static TypeRef createTypeRefWithParamsAsArgs(Type type) {
+		if (type.isGeneric()) {
+			TypeRef[] typeArgs = type.getTypeVars().stream().map(tv -> TypeExtensions.ref(tv)).toArray(TypeRef[]::new);
+			return TypeExtensions.ref(type, typeArgs);
+		}
+		return TypeExtensions.ref(type);
+	}
+
+	/**
 	 * Creates a structural type reference for the given TStructuralType, e.g. <code>~Object with { ... }</code>.
 	 * <p>
 	 * For important details on structural type references, see {@link StructuralTypeRef}.

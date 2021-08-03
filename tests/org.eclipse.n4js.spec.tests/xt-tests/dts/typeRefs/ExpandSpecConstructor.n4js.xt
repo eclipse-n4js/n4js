@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+class C<T> {
+	constructor(@Spec spec: ~i~this) {}
+}
+class C2<T> extends C<T> {
+}
+class C3 extends C2<string> {
+}
+
+
+class D {
+	constructor(preParam: string, @Spec spec: ~i~this) {}
+}
+class D2 extends D {
+}
+
+
+class E {
+	constructor(@Spec spec: ~i~this, postParam: number) {}
+}
+class E2 extends E {
+}
+
+
+
+/* XPECT generated_dts ---
+declare class C<T> {
+	constructor(spec: StructuralInititializers<C<T>>);
+}
+declare class C2<T> extends C<T> {
+	constructor(spec: StructuralInititializers<C2<T>>);
+}
+declare class C3 extends C2<string> {
+	constructor(spec: StructuralInititializers<C3>);
+}
+declare class D {
+	constructor(preParam: string, spec: StructuralInititializers<D>);
+}
+declare class D2 extends D {
+	constructor(preParam: string, spec: StructuralInititializers<D2>);
+}
+declare class E {
+	constructor(spec: StructuralInititializers<E>, postParam: number);
+}
+declare class E2 extends E {
+	constructor(spec: StructuralInititializers<E2>, postParam: number);
+}
+--- */
