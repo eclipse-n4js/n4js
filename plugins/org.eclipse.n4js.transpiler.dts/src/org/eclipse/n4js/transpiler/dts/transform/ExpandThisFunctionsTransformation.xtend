@@ -31,6 +31,8 @@ import java.util.HashMap
 import java.util.HashSet
 import org.eclipse.n4js.n4JS.N4Modifier
 import com.google.common.base.Preconditions
+import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.Type
 
 /**
  * This transformation replaces some ThisTypeRefs by concrete type references
@@ -217,11 +219,7 @@ class ExpandThisFunctionsTransformation extends Transformation {
 			newConstructor.fpars += newFPar;
 			var typeRef = fpar.typeRef;
 			if (AnnotationDefinition.SPEC.hasAnnotation(fpar)) {
-				val thisTypeRef = TypeUtils.createTypeRefWithParamsAsArgs(clazzOrig.definedType);
-				val localG = state.G.wrap;
-				localG.setThisBinding(thisTypeRef);
-				typeRef = ts.substTypeVariables(localG, typeRef);
-				typeRef = ts.upperBoundWithReopen(state.G, typeRef);
+				typeRef = getConcreteTypeRef(fpar.typeRef, clazzOrig.definedType);
 			}
 			
 			newFPar.declaredTypeRefNode = _TypeReferenceNode(state, typeRef);
@@ -245,15 +243,20 @@ class ExpandThisFunctionsTransformation extends Transformation {
 		
 
 		Preconditions.checkState(method.returnTypeRef instanceof ThisTypeRef);
-		val thisTypeRef = TypeUtils.createTypeRefWithParamsAsArgs(clazzOrig.definedType);
-		val localG = state.G.wrap;
-		localG.setThisBinding(thisTypeRef);
-		var typeRef = method.returnTypeRef;
-		typeRef = ts.substTypeVariables(localG, typeRef);
-		typeRef = ts.upperBoundWithReopen(state.G, typeRef);
+		
+		val typeRef = getConcreteTypeRef(method.returnTypeRef, clazzOrig.definedType);
 		newMethod.declaredReturnTypeRefNode = _TypeReferenceNode(state, typeRef);
 		state.info.setOriginalProcessedTypeRef(newMethod.declaredReturnTypeRefNode, typeRef);
 		
 		return newMethod;
+	}
+	
+	def private TypeRef getConcreteTypeRef(TypeRef typeRef, Type targetType) {
+		val thisTypeRef = TypeUtils.createTypeRefWithParamsAsArgs(targetType);
+		val localG = state.G.wrap;
+		setThisBinding(localG, thisTypeRef);
+		var concreteTypeRef = ts.substTypeVariables(localG, typeRef);
+		concreteTypeRef = ts.upperBoundWithReopen(state.G, concreteTypeRef);
+		return concreteTypeRef;
 	}
 }
