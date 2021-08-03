@@ -33,6 +33,14 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import com.google.common.base.Preconditions
 
 /**
+ * This transformation replaces some ThisTypeRefs by concrete type references
+ * iff they occur in static methods or constructors. This is true for the following cases:
+ * <ul>
+ * <li/>replace spec parameter (this-type) of constructors by concrete type
+ * <li/>add (missing) spec constructor iff superclass defines one 
+ * <li/>replace return this-type of static methods by concrete type
+ * <li/>add method override for all static methods returning this-types to replace return type by concrete type
+ * </ul>
  */
 class ExpandThisFunctionsTransformation extends Transformation {
 
