@@ -44,7 +44,7 @@ import org.eclipse.n4js.ts.types.Type
  * <li/>add method override for all static methods returning this-types to replace return type by concrete type
  * </ul>
  */
-class ExpandThisFunctionsTransformation extends Transformation {
+class ThisTypeTransformation extends Transformation {
 
 	@Inject
 	private N4JSTypeSystem ts;
@@ -64,10 +64,10 @@ class ExpandThisFunctionsTransformation extends Transformation {
 	}
 
 	override transform() {
-		makeInferredTypesExplicit();
+		transformThisTypeRefs();
 	}
 
-	def private void makeInferredTypesExplicit() {
+	def private void transformThisTypeRefs() {
 		val classes = collectNodes(state.im, true, N4ClassDeclaration);
 		
 		for (clazz : classes) {
@@ -165,7 +165,7 @@ class ExpandThisFunctionsTransformation extends Transformation {
 	}
 	
 	def N4MethodDeclaration getConstructor(N4ClassDeclaration clazz) {
-		val methods = collectNodes(clazz, false, N4MethodDeclaration);
+		val methods = clazz.ownedMethods;
 		for (method : methods) {
 			if (method.isConstructor) {
 				return method;
@@ -219,7 +219,8 @@ class ExpandThisFunctionsTransformation extends Transformation {
 			newConstructor.fpars += newFPar;
 			var typeRef = fpar.typeRef;
 			if (AnnotationDefinition.SPEC.hasAnnotation(fpar)) {
-				typeRef = getConcreteTypeRef(fpar.typeRef, clazzOrig.definedType);
+				val thisTypeRef = TypeUtils.createTypeRefWithParamsAsArgs(clazzOrig.definedType);
+				typeRef = getConcreteTypeRef(fpar.typeRef, thisTypeRef);
 			}
 			
 			newFPar.declaredTypeRefNode = _TypeReferenceNode(state, typeRef);
@@ -244,15 +245,15 @@ class ExpandThisFunctionsTransformation extends Transformation {
 
 		Preconditions.checkState(method.returnTypeRef instanceof ThisTypeRef);
 		
-		val typeRef = getConcreteTypeRef(method.returnTypeRef, clazzOrig.definedType);
+		val thisTypeRef = TypeUtils.createTypeRef(clazzOrig.definedType, clazzOrig.typingStrategy, true);
+		val typeRef = getConcreteTypeRef(method.returnTypeRef, thisTypeRef);
 		newMethod.declaredReturnTypeRefNode = _TypeReferenceNode(state, typeRef);
 		state.info.setOriginalProcessedTypeRef(newMethod.declaredReturnTypeRefNode, typeRef);
 		
 		return newMethod;
 	}
 	
-	def private TypeRef getConcreteTypeRef(TypeRef typeRef, Type targetType) {
-		val thisTypeRef = TypeUtils.createTypeRefWithParamsAsArgs(targetType);
+	def private TypeRef getConcreteTypeRef(TypeRef typeRef, TypeRef thisTypeRef) {
 		val localG = state.G.wrap;
 		setThisBinding(localG, thisTypeRef);
 		var concreteTypeRef = ts.substTypeVariables(localG, typeRef);
