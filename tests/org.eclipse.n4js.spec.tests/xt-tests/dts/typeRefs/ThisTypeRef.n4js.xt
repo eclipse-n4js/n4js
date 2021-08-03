@@ -36,6 +36,8 @@ export class M {
 	method(): this;
 	static staticMethod(): M;
 }
-export class N extends M {}
+export class N extends M {
+	static staticMethod(): N;
+}
 export const C: N;
 --- */

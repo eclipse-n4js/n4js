@@ -27,6 +27,10 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import java.util.HashMap
+import java.util.HashSet
+import org.eclipse.n4js.n4JS.N4Modifier
+import com.google.common.base.Preconditions
 
 /**
  */
@@ -59,13 +63,14 @@ class ExpandThisFunctionsTransformation extends Transformation {
 		for (clazz : classes) {
 			val clazzOrig = state.tracer.getOriginalASTNode(clazz) as N4ClassDeclaration;
 			
-			
 			val methods = collectNodes(clazz, false, N4MethodDeclaration);
+			val methodNamesCurClass = new HashSet();
 			var N4MethodDeclaration ctor = null;
 			for (method : methods) {
 				if (method.isConstructor) {
 					ctor = method;
 				} else if (method.isStatic) {
+					methodNamesCurClass += method.name;
 					// special handling for return type 'this' of static methods 
 					val retTR = state.info.getOriginalProcessedTypeRef(method.declaredReturnTypeRefNode);
 					if (retTR instanceof ThisTypeRef) {
@@ -98,14 +103,38 @@ class ExpandThisFunctionsTransformation extends Transformation {
 				}
 
 			} else {
-				
-				val specConstructor = findSpecConstructorInSuperclass(clazzOrig);
-				if (specConstructor !== null) {
-					addOverwritingSpecConstructor(specConstructor, clazz);
+				// search spec constructor in superclass and put its signature here and replace return 'this' type by actual type
+				val specConstructorOrig = findSpecConstructorInSuperclass(clazzOrig);
+				if (specConstructorOrig !== null) {
+					addOverwritingSpecConstructor(specConstructorOrig, clazz);
 				}
 			}
 			
+			val staticMethodsReturingThisInSuperclasses = findStaticMethodsReturingThisInSuperclasses(clazzOrig);
+			for (method : staticMethodsReturingThisInSuperclasses) {
+				if (!methodNamesCurClass.contains(method.name)) {
+					// put signature here and replace return 'this' type by actual type
+					addOverwritingStaticMethod(method, clazz);
+				}
+			}
 		}
+	}
+	
+	def TMethod[] findStaticMethodsReturingThisInSuperclasses(N4ClassDeclaration clazzOrig) {
+		val name2method = new HashMap<String, TMethod>();
+		var curClass = clazzOrig.definedTypeAsClass;
+		while (curClass.superClass !== null) {
+			curClass = curClass.superClass;
+			for (member : curClass.ownedMembers) {
+				if (member instanceof TMethod) {
+					if (member.isStatic && member.returnTypeRef instanceof ThisTypeRef) {
+						name2method.putIfAbsent(member.name, member);
+					}
+				}
+			}
+		}
+
+		return name2method.values;
 	}
 	
 	def TMethod findSpecConstructorInSuperclass(N4ClassDeclaration clazzOrig) {
@@ -191,5 +220,32 @@ class ExpandThisFunctionsTransformation extends Transformation {
 			state.info.setOriginalProcessedTypeRef(newFPar.declaredTypeRefNode, typeRef);
 		}
 		return newConstructor;
+	}
+
+	def N4MethodDeclaration addOverwritingStaticMethod(TMethod method, N4ClassDeclaration clazz) {
+		val clazzOrig = state.tracer.getOriginalASTNode(clazz) as N4ClassDeclaration;
+		val newMethod = _N4MethodDecl(method.name);
+		newMethod.declaredModifiers += N4Modifier.STATIC;
+		clazz.ownedMembersRaw += newMethod;
+		for (fpar: method.fpars) {
+			val newFPar = _FormalParameter(fpar.name);
+			newMethod.fpars += newFPar;
+			var typeRef = fpar.typeRef;
+			newFPar.declaredTypeRefNode = _TypeReferenceNode(state, typeRef);
+			state.info.setOriginalProcessedTypeRef(newFPar.declaredTypeRefNode, typeRef);
+		}
+		
+
+		Preconditions.checkState(method.returnTypeRef instanceof ThisTypeRef);
+		val thisTypeRef = TypeUtils.createTypeRefWithParamsAsArgs(clazzOrig.definedType);
+		val localG = state.G.wrap;
+		localG.setThisBinding(thisTypeRef);
+		var typeRef = method.returnTypeRef;
+		typeRef = ts.substTypeVariables(localG, typeRef);
+		typeRef = ts.upperBoundWithReopen(state.G, typeRef);
+		newMethod.declaredReturnTypeRefNode = _TypeReferenceNode(state, typeRef);
+		state.info.setOriginalProcessedTypeRef(newMethod.declaredReturnTypeRefNode, typeRef);
+		
+		return newMethod;
 	}
 }
