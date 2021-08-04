@@ -206,7 +206,7 @@ const root = N4Injector.of(Root, parentinj).create(Root);
 if (process.env.N4JS_RT_strip_api_prj_suffix) {
     const objModule: Object+ = Module;
     const _resolveFilename = objModule._resolveFilename;
-    const stripApiSuffix_re = /^([^/]+)\[-.]api\//;
+    const stripApiSuffix_re = /^([^/]+)[-.]api\//;
     const stripScopedApiSuffix_re = /^([^/]+)\/([^/]+)[-.]api\//;
     objModule._resolveFilename = function(request: string, parent, isMain) {
         if (request[0] === "@") {
