@@ -10,19 +10,10 @@
  */
 import {Worker} from "Worker";
 
-@StringBased
-export external public enum ServiceWorkerState {
-    installing,
-    installed,
-    activating,
-    activated,
-    redundant
-}
-
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker
  */
 export external public interface ~ServiceWorker extends Worker {
     public get scriptURL(): string;
-    public get state(): ServiceWorkerState;
+    public get state(): string /* ServiceWorkerState */;
 }

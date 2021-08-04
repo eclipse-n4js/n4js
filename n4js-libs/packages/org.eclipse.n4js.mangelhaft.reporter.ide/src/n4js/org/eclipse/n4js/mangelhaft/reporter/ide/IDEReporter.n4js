@@ -9,7 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import {Method} from "fetch/Method";
 import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest";
 import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
 import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
@@ -33,7 +32,7 @@ export public class IDEReporter implements ITestReporter {
     @Inject
     protected spy: TestSpy;
 
-    public async send(uri: string, method: Method, headers: Headers|string[][]|Object, body: Object) {
+    public async send(uri: string, method: string /* Method */, headers: Headers|string[][]|Object, body: Object) {
         let ret: Response,
             bodyStr: string;
 
@@ -87,7 +86,7 @@ export public class IDEReporter implements ITestReporter {
         async function handleTestingStart(numAllGroups: number, sid: string, numAllTests: number) {
             sessionId = sid
             let response = await that.send(  ["/n4js/testing/sessions", sessionId, "start"].join("/")
-                        ,Method.POST
+                        , "POST"
                         , { "Content-Type": "application/vnd.n4js.start_session_req.tm+json"
                             , "Accept": "application/json"
                         }
@@ -107,7 +106,7 @@ export public class IDEReporter implements ITestReporter {
             
             await that.send(
                         ["/n4js/testing/sessions", sessionId, "tests", IDEReporter.escapeGroupName(groupName) + "%23" + testName, "start"].join("/")
-                        , Method.POST
+                        , "POST"
                         , { "Content-Type": "application/vnd.n4js.start_test_req.tm+json"
                             , "Accept": "application/json"
                         }
@@ -126,7 +125,7 @@ export public class IDEReporter implements ITestReporter {
 
             await that.send(
                         ["/n4js/testing/sessions", sessionId, "tests", IDEReporter.escapeGroupName(groupName) + "%23" + testName, "end"].join("/")
-                        , Method.POST
+                        , "POST"
                         , { "Content-Type": "application/vnd.n4js.end_test_req.tm+json"
                             , "Accept": "application/json"
                         }
@@ -150,7 +149,7 @@ export public class IDEReporter implements ITestReporter {
 
         async function handleTestingFinished(resultGroups: ResultGroups) {
             let response = await that.send(  ["/n4js/testing/sessions", sessionId, "end"].join("/")
-                        ,Method.POST
+                        , "POST"
                         , { "Content-Type": "application/vnd.n4js.end_session_req.tm+json"
                             , "Accept": "application/json"
                         }
