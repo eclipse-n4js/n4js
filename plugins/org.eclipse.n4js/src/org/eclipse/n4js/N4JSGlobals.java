@@ -205,6 +205,18 @@ public final class N4JSGlobals {
 	public static final String PACKAGE_JSON = UtilN4.PACKAGE_JSON;
 
 	/**
+	 * Projects with a name ending in one of these suffixes are assumed to be API projects as defined by the API/Impl
+	 * concept.
+	 * <p>
+	 * NOTE: normally API projects should be identified by a project type of {@link ProjectType#API API}. Use of these
+	 * suffixes is only intended in temporary work-around implementations.
+	 * <p>
+	 * IMPORTANT: in addition to the direct references to this constant, another use of these suffixes is located in
+	 * file {@code NodeTestRunner.n4js}.
+	 */
+	public static final String[] API_PROJECT_NAME_SUFFIXES = { ".api", "-api" };
+
+	/**
 	 * The name of the files storing each N4JS project's meta-information (serialized TModules, etc.).
 	 */
 	public static final String N4JS_PROJECT_STATE = ".n4js.projectstate";
