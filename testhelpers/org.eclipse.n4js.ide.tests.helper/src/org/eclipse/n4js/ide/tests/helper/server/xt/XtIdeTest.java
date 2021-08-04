@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.CliTools.CliException;
+import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
@@ -568,6 +570,11 @@ public class XtIdeTest extends AbstractIdeTest {
 
 			for (Project project : allProjectsWithGenerateDts) {
 				File workingDir = getProjectRoot(project.getName());
+
+				// copy n4jsglobals.d.ts to output dir to make d.ts globals available
+				Path n4jsGlobalsDTS = N4jsLibsAccess.getN4JSGlobalsDTS();
+				Files.copy(n4jsGlobalsDTS, workingDir.toPath().resolve("src-gen/n4jsglobals.d.ts"));
+
 				ProcessResult result;
 				try {
 					result = cliTools.nodejsRun(workingDir.toPath(), TSC2.getAbsoluteFile().toPath());

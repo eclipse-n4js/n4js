@@ -14,9 +14,15 @@
    END_SETUP
  */
 
+export public class D<T> {
+    static staticMethod() : this { return null; }
+}
+export public class E<T> extends D<T> {
+}
 
 export public class M {
     method() : this { return this; }
+    static staticMethod() : this { return null; }
 }
 export public class N extends M {
 }
@@ -25,9 +31,18 @@ export public const C = new N().method();
 
 
 /* XPECT generated_dts ---
+export class D<T> {
+	static staticMethod(): D<any>;
+}
+export class E<T> extends D<T> {
+	static staticMethod(): E<any>;
+}
 export class M {
 	method(): this;
+	static staticMethod(): M;
 }
-export class N extends M {}
+export class N extends M {
+	static staticMethod(): N;
+}
 export const C: N;
 --- */
