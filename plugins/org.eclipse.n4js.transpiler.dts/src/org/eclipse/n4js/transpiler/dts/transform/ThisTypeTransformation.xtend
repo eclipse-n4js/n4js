@@ -10,14 +10,19 @@
  */
 package org.eclipse.n4js.transpiler.dts.transform
 
+import com.google.common.base.Preconditions
 import com.google.inject.Inject
 import java.util.ArrayList
+import java.util.HashMap
+import java.util.HashSet
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -27,12 +32,6 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import java.util.HashMap
-import java.util.HashSet
-import org.eclipse.n4js.n4JS.N4Modifier
-import com.google.common.base.Preconditions
-import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.Type
 
 /**
  * This transformation replaces some ThisTypeRefs by concrete type references
