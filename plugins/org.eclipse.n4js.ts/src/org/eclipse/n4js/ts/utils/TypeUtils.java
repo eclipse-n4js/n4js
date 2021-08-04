@@ -306,7 +306,7 @@ public class TypeUtils {
 			typeRef = ref;
 		} else if (declaredType instanceof TClassifier) {
 			TClassifier tClassifier = (TClassifier) declaredType;
-			typeRef = createTypeTypeRef(createTypeRef(tClassifier, typeArgs), true);
+			typeRef = createTypeTypeRef(createTypeRef(tClassifier, TypingStrategy.DEFAULT, true, typeArgs), true);
 		} else if (declaredType instanceof TypeVariable) {
 			TypeVariable tTypeVar = (TypeVariable) declaredType;
 			typeRef = createTypeTypeRef(createTypeRef(tTypeVar), true);
