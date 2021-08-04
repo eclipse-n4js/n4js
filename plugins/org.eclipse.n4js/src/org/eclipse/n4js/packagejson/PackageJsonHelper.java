@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONValue;
@@ -285,8 +286,11 @@ public class PackageJsonHelper {
 		List<ProjectDependency> projectDependencies = target.getDependencies();
 		for (ProjectDependency dep : projectDependencies) {
 			String otherProject = dep.getProjectName();
-			if (otherProject.endsWith(".api")) {
-				projectNamesToRemove.add(otherProject.substring(0, otherProject.length() - ".api".length()));
+			for (String suffix : N4JSGlobals.API_PROJECT_NAME_SUFFIXES) {
+				if (otherProject.endsWith(suffix)) {
+					projectNamesToRemove.add(otherProject.substring(0, otherProject.length() - suffix.length()));
+					break;
+				}
 			}
 		}
 		if (!projectNamesToRemove.isEmpty()) {
