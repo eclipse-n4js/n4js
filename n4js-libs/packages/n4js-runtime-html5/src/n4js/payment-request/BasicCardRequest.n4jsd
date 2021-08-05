@@ -8,13 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {BasicCardType} from "payment-request/BasicCardType";
-import {CardNetworkId} from "payment-request/CardNetworkId";
 
 /**
  * @see https://www.w3.org/TR/payment-method-basic-card/#basiccardrequest-dictionary
  */
 export external public interface ~BasicCardRequest {
-    public get supportedNetworks?(): CardNetworkId[];
-    public get supportedTypes?(): BasicCardType[];
+    public get supportedNetworks?(): string /* CardNetworkId */[];
+    public get supportedTypes?(): string /* BasicCardType */[];
 }

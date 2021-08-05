@@ -9,7 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 import {PaymentCurrencyAmount} from "payment-request/PaymentCurrencyAmount";
-import {PaymentItemType} from "payment-request/PaymentItemType";
 
 /**
  * @see https://www.w3.org/TR/payment-request/#dom-paymentcurrencyamount
@@ -18,5 +17,5 @@ export external public interface ~PaymentItem {
     public get label(): string;
     public get amount(): PaymentCurrencyAmount;
     public get pending?(): boolean;
-    public get type?(): PaymentItemType; // Note: type member is "at risk" of being removed!
+    public get type?(): string /* PaymentItemType */; // Note: type member is "at risk" of being removed!
 }

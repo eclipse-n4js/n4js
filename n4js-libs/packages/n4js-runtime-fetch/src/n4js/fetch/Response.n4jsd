@@ -10,8 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {ResponseType} from "fetch/ResponseType";
-
 export external public class Response extends Body {
     public constructor(
             body: union{/*Blob, BufferedSource, FormData, URLSearchParams,*/ string}=,
@@ -27,7 +25,7 @@ export external public class Response extends Body {
 
     public get ok(): boolean;
 
-    @Final public type: ResponseType;
+    @Final public type: string /* ResponseType */;
 
     @Final public url: string;
     @Final public status: number;
