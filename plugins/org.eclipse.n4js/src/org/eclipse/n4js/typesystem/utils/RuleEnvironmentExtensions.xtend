@@ -255,10 +255,13 @@ class RuleEnvironmentExtensions {
 		switch (actualThisTypeRef) {
 			TypeTypeRef: // IDE-785 decompose
 				if (actualThisTypeRef.getTypeArg instanceof TypeRef) {
-					setThisBinding(G,actualThisTypeRef.getTypeArg as TypeRef)
+					val typeArg = actualThisTypeRef.getTypeArg as TypeRef;
+					sanitizeRawTypeRef(typeArg);
+					setThisBinding(G, typeArg)
 				}
-			ParameterizedTypeRef:
+			ParameterizedTypeRef:{
 				G.put(KEY__THIS_BINDING, TypeUtils.createBoundThisTypeRef(actualThisTypeRef))
+			}
 			BoundThisTypeRef:
 				G.put(KEY__THIS_BINDING, actualThisTypeRef)
 		}
