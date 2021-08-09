@@ -287,9 +287,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					&& (TypeUtils.isOrContainsRefToTypeVar(replacement)
 							|| (replacementDeclType != null && replacementDeclType.isGeneric()))) {
 
-				final TypeArgument guardTR = (replacementArg instanceof Wildcard) ? replacementArg : replacement;
-				final Pair<String, TypeArgument> guardKey = Pair.of(GUARD_SUBST_TYPE_VARS, guardTR);
-
+				final Pair<String, TypeArgument> guardKey = Pair.of(GUARD_SUBST_TYPE_VARS, replacementArg);
 				if (G.get(guardKey) == null) {
 					final RuleEnvironment G2 = wrap(G);
 					G2.put(guardKey, Boolean.TRUE);

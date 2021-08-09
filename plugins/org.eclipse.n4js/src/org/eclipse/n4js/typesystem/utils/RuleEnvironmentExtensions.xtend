@@ -255,7 +255,7 @@ class RuleEnvironmentExtensions {
 		switch (actualThisTypeRef) {
 			TypeTypeRef: // IDE-785 decompose
 				if (actualThisTypeRef.getTypeArg instanceof TypeRef) {
-					val typeArg = actualThisTypeRef.getTypeArg as TypeRef;
+					val typeArg = TypeUtils.copy(actualThisTypeRef.getTypeArg as TypeRef);
 					sanitizeRawTypeRef(typeArg);
 					setThisBinding(G, typeArg)
 				}
