@@ -10,12 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {ReferrerPolicy} from "fetch/ReferrerPolicy";
-import {RequestCache} from "fetch/RequestCache";
-import {RequestCredentials} from "fetch/RequestCredentials";
-import {RequestMode} from "fetch/RequestMode";
-import {RequestRedirect} from "fetch/RequestRedirect";
-
 export external public abstract class ~RequestInit {
     public method?: string;
     public headers?: Headers | string[][] | Object;
@@ -23,12 +17,12 @@ export external public abstract class ~RequestInit {
     public get body?(): any;
 
     public referrer?: string;
-    public referrerPolicy?: ReferrerPolicy;
-    public redirect?: RequestRedirect;
+    public referrerPolicy?: string /* ReferrerPolicy */;
+    public redirect?: string /* RequestRedirect */;
     public integrity?: string;
     public keepalive?: boolean;
     public signal?: AbortSignal;
-    public mode?: RequestMode;
-    public credentials?: RequestCredentials;
-    public cache?: RequestCache;
+    public mode?: string /* RequestMode */;
+    public credentials?: string /* RequestCredentials */;
+    public cache?: string /* RequestCache */;
 }

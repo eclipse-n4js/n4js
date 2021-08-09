@@ -25,6 +25,10 @@ public class N4jscOptionsValidater {
 	/** Entry function for validator */
 	static public N4jscExitCode validate(N4jscOptions options) throws N4jscException {
 
+		if (options.isHelp()) {
+			return N4jscExitCode.SUCCESS;
+		}
+
 		switch (options.getGoal()) {
 		case version:
 			// User asked for version. Don't bother him.
@@ -39,6 +43,7 @@ public class N4jscOptionsValidater {
 			break;
 
 		case compile:
+		case compileImplicit:
 			validateGoalCompileOptions(options);
 			break;
 
@@ -51,11 +56,13 @@ public class N4jscOptionsValidater {
 		case init:
 			break;
 
+		case help:
+			// done already above
+			break;
+
 		case setversions:
 			break;
 
-		default:
-			break;
 		}
 
 		return N4jscExitCode.SUCCESS;

@@ -27,6 +27,7 @@ import org.eclipse.n4js.transpiler.dts.transform.ImplementedMemberTransformation
 import org.eclipse.n4js.transpiler.dts.transform.InferredTypesTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.OverriddenAccessorsTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.ReturnTypeTransformation;
+import org.eclipse.n4js.transpiler.dts.transform.ThisTypeTransformation;
 import org.eclipse.n4js.transpiler.dts.transform.TrimTransformationDts;
 import org.eclipse.n4js.transpiler.dts.transform.TypeReferenceTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
@@ -53,6 +54,8 @@ public class DtsTranspiler extends AbstractTranspiler {
 	private Provider<EnumAddMissingInitializersTransformation> enumAddMissingInitializersTransformation;
 	@Inject
 	private Provider<ReturnTypeTransformation> returnTypeTransformation;
+	@Inject
+	private Provider<ThisTypeTransformation> thisTypeTransformation;
 	@Inject
 	private Provider<InferredTypesTransformation> inferredTypesTransformation;
 	@Inject
@@ -85,6 +88,7 @@ public class DtsTranspiler extends AbstractTranspiler {
 				returnTypeTransformation.get(),
 				inferredTypesTransformation.get(), // technical transformation moved here only due to requirement
 				overriddenAccessorsTransformation.get(),
+				thisTypeTransformation.get(),
 				// ---- clean up / generic / technical transformations
 				trimTransformationDts.get(),
 				typeReferenceTransformation.get(),

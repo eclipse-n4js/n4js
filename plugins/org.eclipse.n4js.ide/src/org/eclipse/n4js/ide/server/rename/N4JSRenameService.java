@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
-import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
+import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
@@ -285,7 +285,7 @@ public class N4JSRenameService extends RenameService2 {
 
 	/** Returns the {@link EStructuralFeature feature} that represents the given element's name. */
 	protected EStructuralFeature getElementNameFeature(EObject element) {
-		return N4JSFeatureUtils.getElementNameFeature(element);
+		return N4JSMetaModelUtils.getElementNameFeature(element);
 	}
 
 	private NamedImportSpecifier getImportIfReferenceToAliasOfNamedImport(XtextResource resource, int offset) {

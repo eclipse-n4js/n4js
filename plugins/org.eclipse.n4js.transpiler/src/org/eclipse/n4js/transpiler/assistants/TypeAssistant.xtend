@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.AnnotationList
 import org.eclipse.n4js.n4JS.ExportDeclaration
+import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
@@ -23,6 +24,7 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.transpiler.AbstractTranspiler
 import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TransformationAssistant
+import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler
@@ -175,5 +177,29 @@ class TypeAssistant extends TransformationAssistant {
 			state.info.cacheCMOFT(classifier, newCMOFT);
 			return newCMOFT;
 		}
+	}
+
+	/**
+	 * From a given {@link FunctionDefinition} of the IM, this methods returns the {@link TypeRef} of the return type.
+	 */
+	def public TypeRef getReturnTypeRef(TranspilerState state, FunctionDefinition funDef) {
+		val astNode = state.tracer.getOriginalASTNode(funDef);
+		if (astNode instanceof FunctionDefinition) {
+			val tFunction = astNode.getDefinedFunction();
+			if (tFunction !== null) {
+				val outerReturnTypeRef = tFunction.getReturnTypeRef();
+				if (outerReturnTypeRef === null) {
+					// If you get an exception here: a transformation might have created an async and/or generator
+					// FunctionDefinition without the expected Promise<...> / [Async]Generator<...> return type
+					// (therefore the above call to method #hasExpectedSpecialReturnType() returned false);
+					// automatically deriving the outer from an inner return type is not supported for
+					// FunctionDefinitions created by transformations!
+					throw new IllegalStateException(
+							"unable to obtain outer return type of function from TModule");
+				}
+				return outerReturnTypeRef;
+			}
+		}
+		return null;
 	}
 }

@@ -22,8 +22,14 @@ export public class G<T> {
 	public field: T;
 }
 
-export const A: ~r~C = null;
-export const B: ~r~G<string> = null;
+export const F_A: ~~C = null;
+export const F_B: ~~G<string> = null;
+export const R_A: ~r~C = null;
+export const R_B: ~r~G<string> = null;
+export const W_A: ~w~C = null;
+export const W_B: ~w~G<string> = null;
+export const I_A: ~i~C = null;
+export const I_B: ~i~G<string> = null;
 
 
 /* XPECT generated_dts ---
@@ -33,6 +39,12 @@ export class C {
 export class G<T> {
 	public field: T;
 }
-export const A: Readonly<C>;
-export const B: Readonly<G<string>>;
+export const F_A: StructuralFields<C>;
+export const F_B: StructuralFields<G<string>>;
+export const R_A: StructuralReadOnly<C>;
+export const R_B: StructuralReadOnly<G<string>>;
+export const W_A: StructuralWriteOnly<C>;
+export const W_B: StructuralWriteOnly<G<string>>;
+export const I_A: StructuralInititializers<C>;
+export const I_B: StructuralInititializers<G<string>>;
 --- */

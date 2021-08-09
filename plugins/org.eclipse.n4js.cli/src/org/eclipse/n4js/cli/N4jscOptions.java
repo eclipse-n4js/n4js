@@ -54,23 +54,21 @@ public class N4jscOptions {
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
 
 	/** Usage information template. */
-	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s%s [OPTION(s)]";
+	public static final String USAGE_TEMPLATE = "Usage: n4jsc %s [OPTION(s)]";
 	/** Usage information. */
-	public static final String USAGE = getUsage(new N4jscOptions());
-
-	/** @return the usage string respecting the goal specified in the given options */
-	public static String getUsage(N4jscOptions options) {
-		String goal = options.options.isImplicitGoal() ? "[GOAL]" : options.getGoal().name();
-		String dir = options.options.getDir() == null ? "" : " [DIR]";
-		String usage = String.format(USAGE_TEMPLATE, goal, dir);
-		return usage;
-	}
+	public static final String USAGE = new ImplicitCompileOptions().getUsage();
 
 	static abstract class AbstractOptions {
 
 		abstract N4jscGoal getGoal();
 
-		abstract AbstractOptions newInstance();
+		abstract AbstractOptions printUsageDefaultInstance();
+
+		/** @return the usage string respecting the goal specified in the given options */
+		public String getUsage() {
+			String usage = String.format(USAGE_TEMPLATE, getGoal().realName);
+			return usage;
+		}
 
 		void setDir(@SuppressWarnings("unused") File file) {
 			// if necessary, overwrite this
@@ -200,8 +198,13 @@ public class N4jscOptions {
 	 */
 	static public class ImplicitCompileOptions extends AbstractCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new ImplicitCompileOptions();
+		}
+
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, "[GOAL] [DIR]");
 		}
 
 		@Override
@@ -234,6 +237,7 @@ public class N4jscOptions {
 						// " Generate API documentation from n4js files" + "\n" +
 						"  Set versions of n4js-related dependencies" + "\n" +
 						"  Create an empty n4js project" + "\n" +
+						"  Show help" + "\n" +
 						"  Print version of this tool", //
 				handler = N4JSSubCommandHandler.class)
 		@SubCommands({
@@ -243,8 +247,9 @@ public class N4jscOptions {
 				// not implemented:
 				// @SubCommand(name = "watch", impl = WatchOptions.class),
 				// @SubCommand(name = "api", impl = APIOptions.class),
-				@SubCommand(name = "setversions", impl = SetVersionsOptions.class),
+				@SubCommand(name = "set-versions", impl = SetVersionsOptions.class),
 				@SubCommand(name = "init", impl = InitOptions.class),
+				@SubCommand(name = "help", impl = HelpOptions.class),
 				@SubCommand(name = "version", impl = VersionOptions.class)
 		})
 		AbstractOptions cmd = this;
@@ -257,6 +262,11 @@ public class N4jscOptions {
 
 	/** Options for compile related goals when given explicitly */
 	static abstract public class AbstractExplicitCompileRelatedOptions extends AbstractCompileRelatedOptions {
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " [DIR]");
+		}
+
 		@Override
 		File getDir() {
 			return dir;
@@ -276,7 +286,7 @@ public class N4jscOptions {
 	/** Option for goal compile given explicitly */
 	static public class ExplicitCompileOptions extends AbstractExplicitCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new ExplicitCompileOptions();
 		}
 
@@ -289,7 +299,7 @@ public class N4jscOptions {
 	/** Option for goal clean */
 	static public class CleanOptions extends AbstractExplicitCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new CleanOptions();
 		}
 
@@ -302,7 +312,7 @@ public class N4jscOptions {
 	/** Option for goal api */
 	static public class APIOptions extends AbstractExplicitCompileRelatedOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new APIOptions();
 		}
 
@@ -314,6 +324,11 @@ public class N4jscOptions {
 
 	/** Option for goal watch */
 	static abstract public class SingleDirOptions extends AbstractOptions {
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " [DIR]");
+		}
+
 		@Override
 		File getDir() {
 			return dir;
@@ -333,7 +348,7 @@ public class N4jscOptions {
 	/** Option for goal watch */
 	static public class WatchOptions extends SingleDirOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new WatchOptions();
 		}
 
@@ -346,7 +361,7 @@ public class N4jscOptions {
 	/** Option for goal LSP */
 	static public class LSPOptions extends AbstractOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new LSPOptions();
 		}
 
@@ -387,7 +402,12 @@ public class N4jscOptions {
 	/** This class defines option fields for command set-versions. */
 	static public class SetVersionsOptions extends AbstractOptions {
 		@Override
-		AbstractOptions newInstance() {
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " VERSION");
+		}
+
+		@Override
+		AbstractOptions printUsageDefaultInstance() {
 			return new SetVersionsOptions();
 		}
 
@@ -405,7 +425,7 @@ public class N4jscOptions {
 	/** This class defines option fields for command init. */
 	static public class InitOptions extends AbstractOptions {
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new InitOptions();
 		}
 
@@ -415,38 +435,52 @@ public class N4jscOptions {
 		}
 
 		@Option(name = "--yes", aliases = "-y", forbids = "--answers", //
-				usage = "skips the questionnaire", //
+				usage = "skips the questionnaire. Equivalent to '-a ,,,,,no'", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean yes = false;
 
-		@Option(name = "--answers", aliases = "-a", forbids = "--yes", //
-				usage = "comma separated string of answers for the questionnaire. Can be incomplete.", //
+		@Option(name = "--answers", aliases = "-a", forbids = "--yes", metaVar = "CSV", //
+				usage = "comma separated string list of answers for the questionnaire. Can be incomplete.\n"
+						+ "List:\n" //
+						+ "  <0:name>,<1:version>,<2:main module>,<3:author>,\n"
+						+ "  <4:license>,<5:description>,<6:add example?>,\n"
+						+ "  <7:add test?>,<8:yarn project name>\n"
+						+ "Example:\n"
+						+ "  '-a \",,my-index.js,,,yes\"'", //
 				handler = N4JSStringOptionHandler.class)
 		String answers;
 
 		@Option(name = "--scope", aliases = "-s", forbids = "--n4js", //
-				usage = "creates a scoped project. uses the parent directory as the scope name", //
+				usage = "creates a scoped project. Uses the parent directory as the scope name", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean scope = false;
 
-		@Option(name = "--n4js", aliases = "-n", forbids = { "--scope", "--workspaces" }, //
+		@Option(name = "--n4js", aliases = "-n", forbids = { "--scope", "--workspaces", "--create" }, //
 				usage = "extends an existing npm project in the current working directory with n4js entries", //
 				handler = N4JSBooleanOptionHandler.class)
 		boolean n4js = false;
 
+		@Option(name = "--create", aliases = "-c", forbids = { "--n4js" }, //
+				usage = "instead of using the current working directory a new project directory (subfolder) is created", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean create = false;
+
 		@Option(name = "--workspaces", aliases = "-w", forbids = "--n4js", //
-				usage = "creates the new project inside the given workspaces directory. "
-						+ "Will also create a new workspace if not existing already."
-						+ "In case the current working directory is inside an existing workspaces directory,"
-						+ "this option will be activated implicitly using the cwd.", //
-				handler = N4JSFileOptionHandler.class)
-		File workspaces;
+				usage = "creates the new project inside a workspaces directory. "
+						+ "Will also create a new workspace project if not existing already.", //
+				handler = N4JSBooleanOptionHandler.class)
+		boolean workspaces;
 	}
 
 	/** This class defines option fields for command init. */
 	static public class VersionOptions extends AbstractOptions {
+		/** Constructor */
+		public VersionOptions() {
+			this.version = true;
+		}
+
 		@Override
-		AbstractOptions newInstance() {
+		AbstractOptions printUsageDefaultInstance() {
 			return new VersionOptions();
 		}
 
@@ -456,6 +490,42 @@ public class N4jscOptions {
 		}
 	}
 
+	/** This class defines option fields for command help. */
+	static public class HelpOptions extends AbstractOptions {
+		@Override
+		public String getUsage() {
+			return String.format(USAGE_TEMPLATE, getGoal().realName + " [GOAL]");
+		}
+
+		/** Constructor */
+		public HelpOptions() {
+			this.help = true;
+		}
+
+		@Override
+		AbstractOptions printUsageDefaultInstance() {
+			try {
+				return getGoal().optionsClass.getDeclaredConstructor().newInstance();
+			} catch (Exception e) {
+				return new ImplicitCompileOptions().printUsageDefaultInstance();
+			}
+		}
+
+		@Override
+		N4jscGoal getGoal() {
+			try {
+				return N4jscGoal.realValueOf(goal);
+			} catch (Exception e) {
+				return N4jscGoal.compileImplicit;
+			}
+		}
+
+		@Argument(metaVar = "GOAL", index = 0, required = false, //
+				usage = "goal name to show help for", //
+				handler = N4JSStringOptionHandler.class)
+		String goal;
+	}
+
 	/** Internal parser */
 	protected N4JSCmdLineParser parser;
 
@@ -463,7 +533,7 @@ public class N4jscOptions {
 	protected AbstractOptions options;
 
 	/** Working directory */
-	protected Path workingDir = new File(".").getAbsoluteFile().toPath();
+	protected Path workingDir = new File(".").getAbsoluteFile().toPath().getParent();
 
 	/** Constructor */
 	public N4jscOptions() {
@@ -509,7 +579,6 @@ public class N4jscOptions {
 	protected void interpretAndAdjust() {
 		// note: contents of this methods are split-up since they are individually called from N4jscTestOptions
 		interpretAndAdjustDirs();
-		interpretAndAdjustVersionOption();
 	}
 
 	/** Post-processing of parsed arguments dirs */
@@ -526,22 +595,6 @@ public class N4jscOptions {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		}
-	}
-
-	/** Post-processing of parsed option version */
-	protected void interpretAndAdjustVersionOption() {
-		if (options.version) {
-			VersionOptions newOptions = new VersionOptions();
-			newOptions.help = options.help;
-			newOptions.log = options.log;
-			newOptions.showSetup = options.showSetup;
-			newOptions.verbose = options.verbose;
-			newOptions.version = options.version;
-			newOptions.logFile = options.logFile;
-			newOptions.performanceKey = options.performanceKey;
-			newOptions.performanceReport = options.performanceReport;
-			options = newOptions;
 		}
 	}
 
@@ -565,9 +618,14 @@ public class N4jscOptions {
 		return options.getDir();
 	}
 
-	/** @return true iff {@code --help} */
+	/** @return true iff {@code --help} or iff the goal is {@code help} */
 	public boolean isHelp() {
 		return options.help;
+	}
+
+	/** @return true iff {@code --version} or iff the goal is {@code version} */
+	public boolean isVersion() {
+		return options.version;
 	}
 
 	/** @return true iff {@code --showSetup} */
@@ -677,14 +735,20 @@ public class N4jscOptions {
 		return ((InitOptions) options).answers;
 	}
 
+	/** @return true iff {@code --create} */
+	public boolean isCreate() {
+		Preconditions.checkState(options instanceof InitOptions);
+		return ((InitOptions) options).create;
+	}
+
 	/** @return true iff {@code --scope} */
 	public boolean isScope() {
 		Preconditions.checkState(options instanceof InitOptions);
 		return ((InitOptions) options).scope;
 	}
 
-	/** @return workspaces if given via {@code --workspaces}. {@code null} otherwise. */
-	public File getWorkspaces() {
+	/** @return true iff {@code --workspaces} */
+	public boolean isWorkspaces() {
 		Preconditions.checkState(options instanceof InitOptions);
 		return ((InitOptions) options).workspaces;
 	}
@@ -702,9 +766,9 @@ public class N4jscOptions {
 
 	/** Prints out the usage of n4jsc.jar. Usage string is compiled by args4j. */
 	public void printUsage(PrintStream out) {
-		out.println(getUsage(this));
-
-		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(this.options.newInstance());
+		AbstractOptions actualDefaultOptions = this.options.printUsageDefaultInstance();
+		out.println(actualDefaultOptions.getUsage());
+		N4JSCmdLineParser parserWithDefaults = new N4JSCmdLineParser(actualDefaultOptions);
 
 		// switch to English locale because args4j will use the user locale for some words like "Vorgabe"
 		Locale curLocale = Locale.getDefault();
@@ -717,7 +781,7 @@ public class N4jscOptions {
 	public String toSettingsString() {
 		String s = "N4jsc.options=";
 		s += "\n  Current execution directory=" + new File(".").toPath().toAbsolutePath();
-		s += "\n  goal=" + getGoal().name();
+		s += "\n  goal=" + getGoal().realName;
 		s += "\n  dir=" + options.getDir();
 		s += "\n  showSetup=" + options.showSetup;
 		s += "\n  verbose=" + options.verbose;

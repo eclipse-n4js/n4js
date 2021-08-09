@@ -17,6 +17,9 @@
 
 class Cls {}
 
+function implicitReturn() { return null; }
+function implicitVoid() { }
+
 function supplyString(): string { return null; }
 function supplyObject(): Object { return null; }
 function supplyCls(): Cls { return null; }
@@ -37,6 +40,8 @@ export class ClassWithFields {
 
 /* XPECT generated_dts ---
 declare class Cls {}
+declare function implicitReturn(): any;
+declare function implicitVoid(): void;
 declare function supplyString(): string;
 declare function supplyObject(): Object;
 declare function supplyCls(): Cls;

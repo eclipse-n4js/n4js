@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
-import org.eclipse.n4js.n4JS.N4JSFeatureUtils
+import org.eclipse.n4js.n4JS.N4JSMetaModelUtils
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
@@ -478,7 +478,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 */
 	def Pair<? extends EObject, ? extends EStructuralFeature> findNameFeature(EObject eo) {
 		if (eo instanceof NamedElement) {
-			val attribute = N4JSFeatureUtils.getElementNameFeature(eo);
+			val attribute = N4JSMetaModelUtils.getElementNameFeature(eo);
 			if (attribute !== null) {
 				return eo -> attribute;
 			}

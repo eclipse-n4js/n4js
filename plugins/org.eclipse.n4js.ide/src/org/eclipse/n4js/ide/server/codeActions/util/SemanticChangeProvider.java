@@ -32,7 +32,7 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
-import org.eclipse.n4js.n4JS.N4JSFeatureUtils;
+import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
@@ -413,7 +413,7 @@ public class SemanticChangeProvider {
 			}
 
 			if (element instanceof NamedElement) {
-				EStructuralFeature attr = N4JSFeatureUtils.getElementNameFeature(element);
+				EStructuralFeature attr = N4JSMetaModelUtils.getElementNameFeature(element);
 				List<INode> nodes = NodeModelUtils.findNodesForFeature(element, attr);
 				if (nodes != null && !nodes.isEmpty()) {
 					nodes.get(0).getOffset();

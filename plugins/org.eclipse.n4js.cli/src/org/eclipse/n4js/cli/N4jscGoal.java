@@ -10,24 +10,63 @@
  */
 package org.eclipse.n4js.cli;
 
+import org.eclipse.n4js.cli.N4jscOptions.APIOptions;
+import org.eclipse.n4js.cli.N4jscOptions.AbstractOptions;
+import org.eclipse.n4js.cli.N4jscOptions.CleanOptions;
+import org.eclipse.n4js.cli.N4jscOptions.ExplicitCompileOptions;
+import org.eclipse.n4js.cli.N4jscOptions.HelpOptions;
+import org.eclipse.n4js.cli.N4jscOptions.ImplicitCompileOptions;
+import org.eclipse.n4js.cli.N4jscOptions.InitOptions;
+import org.eclipse.n4js.cli.N4jscOptions.LSPOptions;
+import org.eclipse.n4js.cli.N4jscOptions.SetVersionsOptions;
+import org.eclipse.n4js.cli.N4jscOptions.VersionOptions;
+import org.eclipse.n4js.cli.N4jscOptions.WatchOptions;
+
 /**
  * Goals (a.k.a. commands) of the n4jsc.jar
  */
 public enum N4jscGoal {
 	/** Prints version */
-	version,
-	/** Compiles with given options */
-	compile,
+	version(VersionOptions.class),
+	/** Compiles with given options. Goal 'compile' was given explicitly */
+	compile(ExplicitCompileOptions.class),
+	/** Compiles with given options. No goal was given */
+	compileImplicit(ImplicitCompileOptions.class),
 	/** Cleans with given options */
-	clean,
+	clean(CleanOptions.class),
 	/** Starts LSP server */
-	lsp,
+	lsp(LSPOptions.class),
 	/** Starts compiler daemon that watches the given folder(s) */
-	watch,
+	watch(WatchOptions.class),
 	/** Generates API documentation from n4js files */
-	api,
+	api(APIOptions.class),
 	/** Creates an N4JS project */
-	init,
+	init(InitOptions.class),
+	/** Shows help */
+	help(HelpOptions.class),
 	/** Sets version strings of all N4JS related packages to the given version */
-	setversions
+	setversions("set-versions", SetVersionsOptions.class);
+
+	final String realName;
+	final Class<AbstractOptions> optionsClass;
+
+	N4jscGoal(Class<? extends AbstractOptions> optionsClass) {
+		this(null, optionsClass);
+	}
+
+	@SuppressWarnings("unchecked")
+	N4jscGoal(String realName, Class<? extends AbstractOptions> optionsClass) {
+		this.realName = realName == null ? name() : realName;
+		this.optionsClass = (Class<AbstractOptions>) optionsClass;
+	}
+
+	/** Like {@link N4jscGoal#valueOf(String)} but respects {@link N4jscGoal#realName} */
+	public static N4jscGoal realValueOf(String enumName) {
+		for (N4jscGoal goal : N4jscGoal.values()) {
+			if (goal.realName.equals(enumName)) {
+				return goal;
+			}
+		}
+		throw new IllegalArgumentException("N4jscGoal enum not found for '" + enumName + "'");
+	}
 }

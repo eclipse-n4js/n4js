@@ -9,12 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-@StringBased
-export external public enum StorageEstimateUsageDetailKey {
-    indexedDB,
-    serviceWorkerRegistrations
-}
-
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/API/StorageEstimate
  */

@@ -9,12 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 @@ProvidedByRuntime
-import {ScreenOrientationType} from "ScreenOrientationType";
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation
  */
 export public interface ~ScreenOrientation {
-    public get type(): ScreenOrientationType;
+    public get type(): string /* ScreenOrientationType */;
     public get angle(): int;
 }

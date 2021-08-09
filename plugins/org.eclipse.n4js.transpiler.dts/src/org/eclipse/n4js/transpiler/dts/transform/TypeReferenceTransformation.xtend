@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TranspilerState
+import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
@@ -80,6 +81,9 @@ class TypeReferenceTransformation extends Transformation {
 	private final Map<Type, String> referenceCache = new HashMap();
 
 	@Inject
+	private TypeAssistant typeAssistant;
+	
+	@Inject
 	private WorkspaceAccess workspaceAccess;
 
 	override assertPreConditions() {
@@ -126,23 +130,15 @@ class TypeReferenceTransformation extends Transformation {
 			// handle outer return type of asynchronous and/or generator functions
 			if ((funDef.isGenerator() || funDef.isAsync())
 					&& !N4JSLanguageUtils.hasExpectedSpecialReturnType(typeRef, funDef, state.builtInTypeScope)) {
-				val astNode = state.tracer.getOriginalASTNode(funDef);
-				val tFunction = if (astNode instanceof FunctionDefinition) astNode.definedFunction;
-				val outerReturnTypeRef = tFunction?.returnTypeRef;
-				if (outerReturnTypeRef === null) {
-					// If you get an exception here: a transformation might have created an async and/or generator FunctionDefinition
-					// without the expected Promise<...> / [Async]Generator<...> return type (therefore the above call to method
-					// #hasExpectedSpecialReturnType() returned false); automatically deriving the outer from an inner return type
-					// is not supported for FunctionDefinitions created by transformations!
-					throw new IllegalStateException("unable to obtain outer return type of generator/async function from TModule");
-				}
+				
+				val outerReturnTypeRef = typeAssistant.getReturnTypeRef(state, funDef);
 				typeRef = outerReturnTypeRef;
 			}
 		}
-
+		
 		convertTypeRef(typeRef);
 	}
-
+	
 	def private void convertDeclaredTypeRef(TTypedElement elem) {
 		val declaredTypeRef = elem.getTypeRef();
 		if (declaredTypeRef !== null) {
@@ -173,9 +169,9 @@ class TypeReferenceTransformation extends Transformation {
 			convertFunctionTypeExprOrRef(typeRef);
 		} else if (typeRef instanceof ParameterizedTypeRef) {
 			convertParameterizedTypeRef(typeRef);
-		} else if (typeRef instanceof ExistentialTypeRef) {
-			write("any"); // unsupported type reference
 		} else if (typeRef instanceof ThisTypeRef) {
+			convertThisTypeRef(typeRef);
+		} else if (typeRef instanceof ExistentialTypeRef) {
 			write("any"); // unsupported type reference
 		} else if (typeRef instanceof TypeTypeRef) {
 			write("any"); // unsupported type reference
@@ -247,17 +243,14 @@ class TypeReferenceTransformation extends Transformation {
 				getReferenceToType(declType, state)
 			};
 			if (referenceStr !== null) {
-				val wrapInReadonly = typeRef.getDefinedTypingStrategy() == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS;
-				if (wrapInReadonly) {
-					write("Readonly<");
-				}
+				val prependType = getStructuralTypeReplacements(typeRef);
+				write(prependType);
 
 				write(referenceStr);
 				convertTypeArguments(typeRef);
 
-				if (wrapInReadonly) {
-					write(">");
-				}
+				write(prependType.isNullOrEmpty ? "" : ">");
+
 			} else {
 				write("any");
 			}
@@ -276,6 +269,25 @@ class TypeReferenceTransformation extends Transformation {
 		if (showDeclaredType && hasStructMembers) {
 			write(')');
 		}
+	}
+	
+	def private void convertThisTypeRef(ThisTypeRef typeRef) {
+		val prependType = getStructuralTypeReplacements(typeRef);
+		write(prependType);
+		
+		write("this");
+		
+		write(prependType.isNullOrEmpty ? "" : ">");
+	}
+	
+	def private String getStructuralTypeReplacements(TypeRef typeRef) {
+		return switch (typeRef.getTypingStrategy()) {
+					case TypingStrategy.STRUCTURAL_FIELDS: "StructuralFields<"
+					case TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS: "StructuralReadOnly<"
+					case TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS: "StructuralWriteOnly<"
+					case TypingStrategy.STRUCTURAL_FIELD_INITIALIZER: "StructuralInititializers<"
+					default: ""
+				};
 	}
 
 	def private void convertTypeArguments(ParameterizedTypeRef typeRef) {
