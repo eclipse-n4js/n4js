@@ -35,11 +35,35 @@ Contributors:
 
 	<modules>
 		<module>releng</module>
-		<module>plugins</module>
-		<module>testhelpers</module>
 	</modules>
 
 	<profiles>
+		<!--
+			This profile adds the plugins-folder to the build. 
+			It's always active - unless the build is started with "-DnoPlugins". 
+		-->
+		<profile>
+			<id>compilePlugins</id>
+			<activation>
+				<property><name>!noPlugins</name></property>
+			</activation> 
+			<modules>
+				<module>plugins</module>
+			</modules>
+		</profile>
+		<!--
+			This profile adds the testhelpers-folder to the build. 
+			It's always active - unless the build is started with "-DnoTesthelpers". 
+		-->
+		<profile>
+			<id>compileTesthelpers</id>
+			<activation>
+				<property><name>!noTesthelpers</name></property>
+			</activation> 
+			<modules>
+				<module>testhelpers</module>
+			</modules>
+		</profile>
 		<!--
 			This profile adds the tests-folder to the build. 
 			It's always active - unless the build is started with "-DnoTests". 

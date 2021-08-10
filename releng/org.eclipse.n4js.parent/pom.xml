@@ -520,6 +520,65 @@ Contributors:
 			</pluginRepositories>
 		</profile>
 
+
+		<!-- Check correct enabling of noPlugins profile via property. -->
+		<profile>
+			<id>noPlugins</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-noPlugins-property-for-noPlugins-profile</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireProperty>
+											<property>noPlugins</property>
+											<message>Missing 'noPlugins' property while noPlugins profile is activated. Please call maven with '-DnoPlugins' to activate profile noPlugins.</message>
+										</requireProperty>
+									</rules>
+									<fail>true</fail>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- Check correct enabling of noTesthelpers profile via property. -->
+		<profile>
+			<id>noTesthelpers</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-noTesthelpers-property-for-noTesthelpers-profile</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireProperty>
+											<property>noTesthelpers</property>
+											<message>Missing 'noTesthelpers' property while noTesthelpers profile is activated. Please call maven with '-DnoTesthelpers' to activate profile noTesthelpers.</message>
+										</requireProperty>
+									</rules>
+									<fail>true</fail>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<!-- Check correct enabling of noTests profile via property. -->
 		<profile>
 			<id>noTests</id>
@@ -530,7 +589,7 @@ Contributors:
 						<artifactId>maven-enforcer-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>enforce-noTests-property-for-notTests-profile</id>
+								<id>enforce-noTests-property-for-noTests-profile</id>
 								<goals>
 									<goal>enforce</goal>
 								</goals>
@@ -549,5 +608,35 @@ Contributors:
 				</plugins>
 			</build>
 		</profile>
+		<!-- Check correct enabling of noDocs profile via property. -->
+		<profile>
+			<id>noDocs</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-noDocs-property-for-noDocs-profile</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireProperty>
+											<property>noDocs</property>
+											<message>Missing 'noDocs' property while noDocs profile is activated. Please call maven with '-DnoDocs' to activate profile noDocs.</message>
+										</requireProperty>
+									</rules>
+									<fail>true</fail>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 </project>
