@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
 class A<T> {
-	// XPECT type of foo --> {function():this[A<T>]}
+	// XPECT type of foo --> {function():this[A<?>]}
 	static foo() : this { return null; }
 }
 

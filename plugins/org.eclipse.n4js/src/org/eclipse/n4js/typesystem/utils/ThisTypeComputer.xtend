@@ -32,6 +32,7 @@ import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
  * @see ThisTypeComputer#getThisTypeAtLocation(RuleEnvironment,EObject)
@@ -94,7 +95,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 				if (containingFunction instanceof N4MethodDeclaration &&
 						(containingFunction as N4MemberDeclaration).isStatic) {
 					if (isInReturnDeclaration_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
-						return getThisTypeAtLocation(G, thisTargetDefType.createTypeRefWithParamsAsArgs);
+						return getThisTypeAtLocation(G, thisTargetDefType.createTypeRef(TypingStrategy.DEFAULT, true));
 					} else if (isInBody_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
 						return TypeUtils.createClassifierBoundThisTypeRef(
 								TypeUtils.createTypeTypeRef(thisTargetDefType.createTypeRefWithParamsAsArgs, false));
