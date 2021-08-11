@@ -521,6 +521,14 @@ Contributors:
 		</profile>
 
 
+		<profile>
+			<id>execute-basic-tests</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+
+
 		<!-- Check correct enabling of noPlugins profile via property. -->
 		<profile>
 			<id>noPlugins</id>
