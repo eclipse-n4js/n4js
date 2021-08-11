@@ -10,13 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {ReferrerPolicy} from "fetch/ReferrerPolicy";
-import {RequestCache} from "fetch/RequestCache";
-import {RequestContext} from "fetch/RequestContext";
-import {RequestCredentials} from "fetch/RequestCredentials";
-import {RequestMode} from "fetch/RequestMode";
-import {RequestRedirect} from "fetch/RequestRedirect";
-
 export external public class Request extends Body {
     public constructor(input: union{Request, string}, init: RequestInit=);
 
@@ -24,17 +17,17 @@ export external public class Request extends Body {
     public get url(): string;
     public get headers(): Headers;
 
-    public get context(): RequestContext;
+    public get context(): string /* RequestContext */;
 
     public get referrer(): string;
-    public get mode(): RequestMode;
-    public get credentials(): RequestCredentials;
-    public get cache(): RequestCache;
+    public get mode(): string /* RequestMode */;
+    public get credentials(): string /* RequestCredentials */;
+    public get cache(): string /* RequestCache */;
 
     @Override public get bodyUsed(): boolean;
 
-    public get referrerPolicy(): ReferrerPolicy;
-    public get redirect(): RequestRedirect;
+    public get referrerPolicy(): string /* ReferrerPolicy */;
+    public get redirect(): string /* RequestRedirect */;
     public get integrity(): string;
     public get keepalive(): boolean;
     public get signal(): AbortSignal;

@@ -8,7 +8,6 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-import {PaymentShippingType} from "payment-request/PaymentShippingType";
 
 /**
  * @see https://www.w3.org/TR/payment-request/#dom-paymentoptions
@@ -18,5 +17,5 @@ export external public interface ~PaymentOptions {
     public get requestPayerEmail?(): boolean;
     public get requestPayerPhone?(): boolean;
     public get requestShipping?(): boolean;
-    public get shippingType?(): PaymentShippingType; // defaults to PaymentShippingType.shipping
+    public get shippingType?(): string /* PaymentShippingType */; // defaults to PaymentShippingType.shipping
 }

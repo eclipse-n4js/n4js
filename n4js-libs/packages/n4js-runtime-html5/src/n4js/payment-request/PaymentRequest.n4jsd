@@ -14,7 +14,6 @@ import {PaymentDetailsInit} from "payment-request/PaymentDetailsInit";
 import {PaymentDetailsUpdate} from "payment-request/PaymentDetailsUpdate";
 import {PaymentMethodData} from "payment-request/PaymentMethodData";
 import {PaymentOptions} from "payment-request/PaymentOptions";
-import {PaymentShippingType} from "payment-request/PaymentShippingType";
 
 /**
  * @see https://www.w3.org/TR/payment-request/#dom-paymentrequest
@@ -30,7 +29,7 @@ export external public class PaymentRequest implements EventTarget {
     public get id(): string;
     public get shippingAddress(): PaymentAddress;
     public get shippingOption(): string;
-    public get shippingType(): PaymentShippingType;
+    public get shippingType(): string /* PaymentShippingType */;
 
     /**
      * @see https://w3c.github.io/payment-request/#show-method

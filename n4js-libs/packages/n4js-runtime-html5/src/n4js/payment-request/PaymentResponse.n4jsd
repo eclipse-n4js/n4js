@@ -10,7 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
  
-import {PaymentComplete} from "payment-request/PaymentComplete";
 import {PaymentValidationErrors} from "payment-request/PaymentValidationErrors";
 
 /**
@@ -36,7 +35,7 @@ export external public class PaymentResponse implements EventTarget {
     /**
      * @see https://w3c.github.io/payment-request/#dom-paymentresponse-complete
      */
-    public async complete(result = PaymentComplete.unknown): void;
+    public async complete(result: string = /* PaymentComplete.unknown */): void;
     
     /**
      * @see https://w3c.github.io/payment-request/#retry-method
