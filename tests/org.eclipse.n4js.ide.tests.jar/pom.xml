@@ -88,7 +88,7 @@ Contributors:
 
 	<profiles>
 		<profile>
-			<id>execute-hlc-integration-tests</id>
+			<id>execute-jar-tests</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>

@@ -51,7 +51,7 @@ Contributors:
 				STARTING A VERDACCIO INSTANCE FOR TESTING PURPOSES
 
 				Only required for hlc integration tests. Activation of the following plugin executions is
-				controlled via '-Pexecute-hlc-integration-tests' and '-DstartAndKeepVerdaccio' (see	above).
+				controlled via '-Pexecute-jar-tests' and '-DstartAndKeepVerdaccio' (see	above).
 			-->
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>

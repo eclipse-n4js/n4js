@@ -176,7 +176,7 @@ execute-basic-tests::           run basic tests (e.g. `org.eclipse.n4js.lang.tes
 execute-ecmas-tests::           run ECMA test suite
 execute-smoke-tests::           run generated tests using corrupted source code as input
 execute-accesscontrol-tests::   run generated tests for checking accessibility of class/interface members
-execute-hlc-integration-tests:: run tests using the headless jar (in bundle `org.eclipse.n4js.ide.tests.jar`, requires docker!)
+execute-jar-tests::             run tests using the headless jar (in bundle `org.eclipse.n4js.ide.tests.jar`, requires docker and verdaccio!)
 
 Available system properties:
 
@@ -206,12 +206,12 @@ The existence of `local-snapshot-deploy-folder` will trigger a profile enabling 
 [[sec:test-verdaccio]]
 === Test Verdaccio containing n4js-libs
 
-If profile `execute-hlc-integration-tests` is active, a local verdaccio instance is started and populated with
+If profile `execute-jar-tests` is active, a local verdaccio instance is started and populated with
 freshly-compiled n4js-libs (the libraries located under top-level folder `/n4js-libs`) and is stopped before the
 end of the build. The verdaccio instance is started as a docker container called `n4js-test-verdaccio`.
 
 When giving `-DstartAndKeepVerdaccio` on the command line, such a test verdaccio will always be started/populated but
-never stopped, regardless of whether profile `execute-hlc-integration-tests` is active or not. This is useful to enforce
+never stopped, regardless of whether profile `execute-jar-tests` is active or not. This is useful to enforce
 starting of the test verdaccio (even without running integration tests) and then reusing it in subsequent builds.
 
 

@@ -79,11 +79,11 @@ Contributors:
 		</profile>
 
 		<!--
-			If build started with '-Pexecute-hlc-integration-tests', activate the
+			If build started with '-Pexecute-jar-tests', activate the
 			starting and stopping of a verdaccio instance for testing purposes.
 		-->
 		<profile>
-			<id>execute-hlc-integration-tests</id>
+			<id>execute-jar-tests</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -95,8 +95,8 @@ Contributors:
 
 		<!--
 			If build started with '-DstartAndKeepVerdaccio', then ...
-			1) enforce starting of a test verdaccio (even if '-Pexecute-hlc-integration-tests' is not given) and
-			2) suppress stopping of the test verdaccio (even if '-Pexecute-hlc-integration-tests' is given)
+			1) enforce starting of a test verdaccio (even if '-Pexecute-jar-tests' is not given) and
+			2) suppress stopping of the test verdaccio (even if '-Pexecute-jar-tests' is given)
 		-->
 		<profile>
 			<activation>
