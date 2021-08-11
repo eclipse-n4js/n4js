@@ -27,7 +27,6 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
-import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.DefinitionProjectMap;
@@ -133,7 +132,6 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 */
 	// TODO GH-1314 reconsider shadowing of projects with same name
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
-		pd = sanitizeProjectDescription(path, pd);
 		String name = pd.getName();
 		if (name2ProjectConfig.containsKey(name)) {
 			return null; // see note on shadowing in API doc of this method!
@@ -142,21 +140,6 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		name2ProjectConfig.put(newProject.getName(), newProject);
 		updateDefinitionProjects(null, pd);
 		return newProject;
-	}
-
-	/**
-	 * Opportunity to tweak values of a project description before it is used for creating the {@link N4JSProjectConfig}
-	 * instance.
-	 * <p>
-	 * By default, this enforces the name stored in the project description to be consistent with the project folder's
-	 * name.
-	 */
-	protected ProjectDescription sanitizeProjectDescription(FileURI path, ProjectDescription pd) {
-		String saneName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(path);
-		if (!saneName.equals(pd.getName())) {
-			return pd.change().setName(saneName).build();
-		}
-		return pd;
 	}
 
 	/** Creates an instance of {@link N4JSProjectConfig} without registering it. */
