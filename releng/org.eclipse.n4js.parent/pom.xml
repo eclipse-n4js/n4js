@@ -521,14 +521,6 @@ Contributors:
 		</profile>
 
 
-		<profile>
-			<id>execute-basic-tests</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-
-
 		<!-- Check correct enabling of noPlugins profile via property. -->
 		<profile>
 			<id>noPlugins</id>
@@ -635,6 +627,35 @@ Contributors:
 										<requireProperty>
 											<property>noDocs</property>
 											<message>Missing 'noDocs' property while noDocs profile is activated. Please call maven with '-DnoDocs' to activate profile noDocs.</message>
+										</requireProperty>
+									</rules>
+									<fail>true</fail>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- Check correct enabling of doNotExecuteBasicTests profile via property. -->
+		<profile>
+			<id>doNotExecuteBasicTests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-doNotExecuteBasicTests-property-for-doNotExecuteBasicTests-profile</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireProperty>
+											<property>doNotExecuteBasicTests</property>
+											<message>Missing 'doNotExecuteBasicTests' property while doNotExecuteBasicTests profile is activated. Please call maven with '-DdoNotExecuteBasicTests' to deactivate profile execute-basic-tests.</message>
 										</requireProperty>
 									</rules>
 									<fail>true</fail>

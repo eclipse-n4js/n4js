@@ -317,7 +317,7 @@ Contributors:
 		<profile>
 			<id>execute-basic-tests</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<property><name>!doNotExecuteBasicTests</name></property>
 			</activation>
 			<modules>
 
