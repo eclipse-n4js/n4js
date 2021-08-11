@@ -1,0 +1,10 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+-*@MyScope
+-- P1 [PROJECT name=FOLDER_NAME]
+
+EXPECT
+- @MyScope/P1
