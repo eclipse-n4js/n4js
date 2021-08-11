@@ -172,6 +172,7 @@ You may have to increase the memory for maven via `export MAVEN_OPTS="-Xmx2048m"
 Available optional maven profiles are:
 
 [horizontal]
+execute-basic-tests::           run basic tests (e.g. `org.eclipse.n4js.lang.tests`); active by default, use `-DdoNotExecuteBasicTests` to deactivate
 execute-ecmas-tests::           run ECMA test suite
 execute-smoke-tests::           run generated tests using corrupted source code as input
 execute-accesscontrol-tests::   run generated tests for checking accessibility of class/interface members
@@ -180,9 +181,13 @@ execute-hlc-integration-tests:: run tests using the headless jar (in bundle `org
 Available system properties:
 
 [horizontal]
-noTests::               if defined (i.e. "-DnoTests"), suppress execution of all tests
-languageVersion::       an optional version string to show in the Eclipse About dialog of IDE products (should be defined by publishing builds)
-startAndKeepVerdaccio:: if defined (i.e. "-DstartAndKeepVerdaccio"), enforce starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
+noPlugins::              if defined (i.e. "-DnoPlugins"), omit projects in folder "plugins" from maven build
+noTests::                if defined (i.e. "-DnoTests"), omit projects in folder "tests" from maven build
+noTesthelpers::          if defined (i.e. "-DnoTesthelpers"), omit projects in folder "testhelpers" from maven build
+noDocs::                 if defined (i.e. "-DnoDocs"), omit projects in folder "docs" from maven build
+doNotExecuteBasicTests:: if defined (i.e. "-DdoNotExecuteBasicTests"), deactivate profile "execute-basic-tests"
+languageVersion::        an optional version string to show in the Eclipse About dialog of IDE products (should be defined by publishing builds)
+startAndKeepVerdaccio::  if defined (i.e. "-DstartAndKeepVerdaccio"), enforce starting and suppress stopping of the test verdaccio (see <<sec:test-verdaccio>>)
 
 
 
