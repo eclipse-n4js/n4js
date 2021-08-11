@@ -201,19 +201,19 @@ public class ProjectDiscoveryHelper {
 	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Map<String, Path> allProjectDirs) {
 
+		ProjectDescription projectDescription = getCachedProjectDescription(yarnProjectRoot, pdCache);
+		if (projectDescription == null) {
+			return;
+		}
+		List<String> workspaces = projectDescription.getWorkspaces();
+
 		// add the yarn workspace root project even if it is a PLAINJS project
 		// Rationale:
 		// 1) otherwise not possible for later code to distinguish between yarn workspace and side-by-side use cases,
 		// 2) having the workspace root project or not makes a huge difference (projects exist inside projects) and it
 		// is better to always stick to one situation (otherwise many tests would have to be provided in two variants),
 		// 3) the yarn workspace root project has always been included.
-		allProjectDirs.putIfAbsent(getProjectNameFromPath(yarnProjectRoot), yarnProjectRoot);
-
-		ProjectDescription projectDescription = getCachedProjectDescription(yarnProjectRoot, pdCache);
-		final List<String> workspaces = (projectDescription == null) ? null : projectDescription.getWorkspaces();
-		if (workspaces == null) {
-			return;
-		}
+		allProjectDirs.putIfAbsent(projectDescription.getName(), yarnProjectRoot);
 
 		Map<String, Path> memberProjects = new LinkedHashMap<>();
 		for (String workspaceGlob : workspaces) {
@@ -300,9 +300,10 @@ public class ProjectDiscoveryHelper {
 						} else {
 							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 							if (pckJson.isFile()) {
+								ProjectDescription projectDescription = getCachedProjectDescription(dir, pdCache);
 								// note: add 'dir' to 'allProjectDirs' even if it is PLAINJS (will be taken care of by
 								// #removeUnnecessaryPlainjsProjects() below)
-								allProjectDirs.putIfAbsent(getProjectNameFromPath(dir), dir);
+								allProjectDirs.putIfAbsent(projectDescription.getName(), dir);
 								return FileVisitResult.SKIP_SUBTREE;
 							}
 						}
@@ -336,7 +337,7 @@ public class ProjectDiscoveryHelper {
 			}
 			ProjectType type = pd.getType();
 			if (type == ProjectType.PLAINJS) {
-				plainjsProjects.put(getProjectNameFromPath(project), project);
+				plainjsProjects.put(pd.getName(), project);
 			} else {
 				List<String> deps = pd.getProjectDependencies().stream()
 						.map(ProjectReference::getProjectName).collect(Collectors.toList());
@@ -350,7 +351,7 @@ public class ProjectDiscoveryHelper {
 	private void addIfNotPlainjs(Map<String, Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
 		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
 		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
-			addHere.putIfAbsent(getProjectNameFromPath(project), project);
+			addHere.putIfAbsent(pd.getName(), project);
 		}
 	}
 
@@ -441,18 +442,22 @@ public class ProjectDiscoveryHelper {
 			return;
 		}
 
-		String depName = getProjectNameFromPath(depLocation);
-		if (dependencies.containsKey(depName)) {
-			return;
-		}
-
 		Path packageJson = depLocation.resolve(N4JSGlobals.PACKAGE_JSON);
 		if (packageJson.toFile().isFile()) {
-			dependencies.putIfAbsent(depName, depLocation);
 
 			ProjectDescription depPD = getCachedProjectDescription(depLocation, pdCache);
-			if (depPD != null && depPD.hasN4JSNature()) {
-				workList.add(depLocation);
+
+			if (depPD != null) {
+				String depName = depPD.getName();
+				if (dependencies.containsKey(depName)) {
+					return;
+				}
+
+				dependencies.putIfAbsent(depName, depLocation);
+
+				if (depPD.hasN4JSNature()) {
+					workList.add(depLocation);
+				}
 			}
 		}
 	}
@@ -472,7 +477,4 @@ public class ProjectDiscoveryHelper {
 		return null;
 	}
 
-	private String getProjectNameFromPath(Path projectPath) {
-		return ProjectDescriptionUtils.deriveN4JSProjectNameFromPath(projectPath);
-	}
 }

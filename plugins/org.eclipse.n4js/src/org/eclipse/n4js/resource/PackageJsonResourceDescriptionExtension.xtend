@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.resource
 
-import com.google.common.base.Preconditions
 import com.google.common.collect.ImmutableMap
 import com.google.inject.Inject
 import java.util.Collection
@@ -29,7 +28,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -109,6 +108,9 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
+	private WorkspaceAccess workspaceAccess;
+
+	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
@@ -129,9 +131,12 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		if (!candidate.isPackageJSON) {
 			return false; // not responsible
 		}
+		
+		// FIXME: seems wrong
+		val x = context.exportedObjects.iterator.next.getEObjectOrProxy();
 
 		// Contains only those project IDs that were changed via its N4JS manifest.
-		val changedProjectNames = deltas.map[uri].filter[isPackageJSON].map[projectNameFromPackageJSONUri].toSet;
+		val changedProjectNames = deltas.map[uri].filter[isPackageJSON].map[workspaceAccess.findProjectByPath(x, it).name].toSet;
 
 		// Collect all referenced project IDs of the candidate.
 		val referencedProjectNames = newLinkedList;
@@ -313,23 +318,6 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 
 	private static def String asString(Iterable<? extends ProjectReference> it) {
 		it.filterNull.map[projectName].filterNull.join(SEPARATOR)
-	}
-
-	/**
-	 * Returns with the projectName of an N4JS project by appending the second segment from the end of a N4JS manifest URI argument.
-	 * This method only works for N4JS manifest URIs and throws {@link IllegalArgumentException} for all other URIs.
-	 * Since this method accepts only N4JS manifest URIs it is guaranteed to get the container project name as the second URI
-	 * segment from the end. We cannot simply grab and return with the first segment as the project name, because external
-	 * projects have a file URI with an absolute path that can be any arbitrary location on the file system.
-	 *
-	 * The ultimate solution would be to look up the container N4JS project from the nested URI argument and simply get
-	 * the project ID of the project but due to plug-in dependency issues N4JS core service is not available from here.
-	 *
-	 */
-	private static def String getProjectNameFromPackageJSONUri(URI uri) {
-		Preconditions.checkArgument(uri.isPackageJSON, '''Expected URI with «N4JSGlobals.PACKAGE_JSON» as last segment. Was: «uri»''');
-		val projectURI = uri.trimSegments(1);
-		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectURI);
 	}
 
 	private static def boolean isPackageJSON(IResourceDescription desc) {

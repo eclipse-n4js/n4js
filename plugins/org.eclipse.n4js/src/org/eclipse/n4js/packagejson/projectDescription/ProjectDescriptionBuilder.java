@@ -13,7 +13,9 @@ package org.eclipse.n4js.packagejson.projectDescription;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.workspace.locations.FileURI;
 
 import com.google.common.collect.Iterables;
 
@@ -23,6 +25,7 @@ import com.google.common.collect.Iterables;
 @SuppressWarnings("javadoc")
 public class ProjectDescriptionBuilder {
 
+	private FileURI location;
 	private String name;
 	private String vendorId;
 	private String vendorName;
@@ -51,11 +54,28 @@ public class ProjectDescriptionBuilder {
 
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
-		return new ProjectDescription(name, vendorId, vendorName, version, type, mainModule,
+		String failSafeName = (name == null || name.isBlank()) && location != null
+				? location.findProjectName().getRawName()
+				: name;
+		return new ProjectDescription(failSafeName, vendorId, vendorName, version, type, mainModule,
 				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
 				implementationId, implementedProjects, outputPath, sourceContainers, moduleFilters, testedProjects,
 				definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts,
 				workspaces);
+	}
+
+	public FileURI getLocation() {
+		return location;
+	}
+
+	public ProjectDescriptionBuilder setLocation(FileURI location) {
+		this.location = location;
+		return this;
+	}
+
+	public ProjectDescriptionBuilder setLocation(URI location) {
+		this.location = location == null ? null : new FileURI(location);
+		return this;
 	}
 
 	public String getName() {
