@@ -135,6 +135,19 @@ class TypeReferenceTransformation extends Transformation {
 				typeRef = outerReturnTypeRef;
 			}
 		}
+
+		val declType = typeRef.getDeclaredType();
+		if (state.G.isIterableN(declType)) {
+			val isImplementsInterface = typeRefNode.eContainmentFeature === N4JSPackage.Literals.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS;
+			val isExtendsInterface = typeRefNode.eContainmentFeature === N4JSPackage.Literals.N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS;
+			
+			if (isImplementsInterface || isExtendsInterface) {
+				val referenceStr = getReferenceToType(declType, state);
+				write(referenceStr);
+				convertTypeArguments(typeRef as ParameterizedTypeRef);
+				return;
+			}
+		}
 		
 		convertTypeRef(typeRef);
 	}
@@ -227,8 +240,13 @@ class TypeReferenceTransformation extends Transformation {
 			convertFunctionTypeExprOrRef(typeRef);
 			return;
 		}
-
 		val declType = typeRef.getDeclaredType();
+		
+		if (state.G.isIterableN(declType)) {
+			convertTypeArguments(typeRef, "[", "]");
+			return;
+		}
+		
 		val hasStructMembers = typeRef instanceof ParameterizedTypeRefStructural
 				&& !typeRef.getStructuralMembers().isEmpty();
 		val showDeclaredType = !hasStructMembers
@@ -240,7 +258,7 @@ class TypeReferenceTransformation extends Transformation {
 
 		if (showDeclaredType) {
 			val referenceStr = if (declType !== null) {
-				getReferenceToType(declType, state)
+				getReferenceToType(declType, state);
 			};
 			if (referenceStr !== null) {
 				val prependType = getStructuralTypeReplacements(typeRef);
