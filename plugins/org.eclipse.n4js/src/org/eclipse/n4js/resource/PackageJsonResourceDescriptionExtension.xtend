@@ -28,7 +28,6 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
-import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -108,9 +107,6 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private WorkspaceAccess workspaceAccess;
-
-	@Inject
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
     private static final Logger LOGGER = Logger.getLogger(PackageJsonResourceDescriptionExtension);
@@ -132,11 +128,13 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			return false; // not responsible
 		}
 		
-		// FIXME: seems wrong
-		val x = context.exportedObjects.iterator.next.getEObjectOrProxy();
+		val changedProjectNames = deltas
+			.filter[it.uri.isPackageJSON]
+			.map[(if (it.getNew === null) it.old else it.getNew).exportedObjects]
+			.filter[!it.empty]
+			.map[it.get(0).getProjectName]
+			.toSet;
 
-		// Contains only those project IDs that were changed via its N4JS manifest.
-		val changedProjectNames = deltas.map[uri].filter[isPackageJSON].map[workspaceAccess.findProjectByPath(x, it).name].toSet;
 
 		// Collect all referenced project IDs of the candidate.
 		val referencedProjectNames = newLinkedList;
