@@ -294,6 +294,7 @@ public class ProjectDiscoveryHelper {
 					if (pathMatcher.matches(dir)) {
 						Path dirName = dir.getName(dir.getNameCount() - 1);
 						if (dirName.toString().startsWith("@")) {
+							// note: project names must not start with '@' (unless it is a parent folder)
 							collectProjects(dir, false, pdCache, allProjectDirs);
 							return FileVisitResult.SKIP_SUBTREE;
 

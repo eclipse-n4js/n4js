@@ -18,13 +18,59 @@ import org.junit.Test
 class ProjectNameDiffersFromFolderTest extends AbstractBuildOrderTest {
 
 	@Test
-	def void testSingleDependency1() {
+	def void testDiffName() {
 		test("yarn-test-project, Not-P1", 
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				PACKAGE_JSON -> '''
 					{
 						"name": "Not-P1",
+						"version": "0.0.1",
+						"n4js": {
+							"projectType": "library",
+							"sources": {
+								"source": [
+									"src"
+								]
+							}
+						}
+					}
+				'''
+			]
+		);
+	}
+
+	@Test
+	def void testScopedProjectDiffName1() {
+		test("yarn-test-project, @OtherScope/Not-P1", 
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
+			"@MyScope/P1" -> #[
+				PACKAGE_JSON -> '''
+					{
+						"name": "@OtherScope/Not-P1",
+						"version": "0.0.1",
+						"n4js": {
+							"projectType": "library",
+							"sources": {
+								"source": [
+									"src"
+								]
+							}
+						}
+					}
+				'''
+			]
+		);
+	}
+
+	@Test
+	def void testScopedProjectDiffName2() {
+		test("yarn-test-project, @OtherScope/P1", 
+			CFG_NODE_MODULES + "n4js-runtime" -> null,
+			"MissingScope-P1" -> #[
+				PACKAGE_JSON -> '''
+					{
+						"name": "@OtherScope/P1",
 						"version": "0.0.1",
 						"n4js": {
 							"projectType": "library",
