@@ -54486,7 +54486,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     }
     public final EObject ruleArrayNTypeExpression() throws RecognitionException {
         EObject current = null;
-        Token lv_iterableTypeExpression_0_0=null;
+        Token lv_arrayNTypeExpression_0_0=null;
         Token otherlv_3=null;
         Token otherlv_5=null;
         EObject lv_typeArgs_1_0 = null;
@@ -54498,15 +54498,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             {
-            lv_iterableTypeExpression_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_204); if (state.failed) return current;
+            lv_arrayNTypeExpression_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_204); if (state.failed) return current;
             if ( state.backtracking==0 ) {
-              					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
+              					newLeafNode(lv_arrayNTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0());
             }
             if ( state.backtracking==0 ) {
               					if (current==null) {
               						current = createModelElement(grammarAccess.getArrayNTypeExpressionRule());
               					}
-              					setWithLastConsumed(current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
+              					setWithLastConsumed(current, "arrayNTypeExpression", lv_arrayNTypeExpression_0_0 != null, "[");
             }
             }
             }

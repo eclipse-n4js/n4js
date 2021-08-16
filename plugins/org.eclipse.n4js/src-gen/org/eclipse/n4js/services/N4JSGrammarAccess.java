@@ -15841,7 +15841,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//ArrayNTypeExpression returns ParameterizedTypeRef:
-	//    iterableTypeExpression?='['
+	//    arrayNTypeExpression?='['
 	//    (
 	//        typeArgs+=EmptyIterableTypeExpressionTail
 	//    |    typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'

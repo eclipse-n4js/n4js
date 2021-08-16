@@ -3146,7 +3146,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	//ArrayNTypeExpression returns ParameterizedTypeRef:
-	//    iterableTypeExpression?='['
+	//    arrayNTypeExpression?='['
 	//    (
 	//        typeArgs+=EmptyIterableTypeExpressionTail
 	//    |    typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'

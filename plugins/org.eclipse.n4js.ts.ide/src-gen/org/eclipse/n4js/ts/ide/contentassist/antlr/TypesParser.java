@@ -333,7 +333,7 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1(), "rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1");
 			builder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0_0_0(), "rule__ParameterizedTypeRefStructural__DefinedTypingStrategyAssignment_0_0_0");
 			builder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0_1_1(), "rule__ParameterizedTypeRefStructural__DefinedTypingStrategyAssignment_0_1_1");
-			builder.put(grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionAssignment_0(), "rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0");
+			builder.put(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionAssignment_0(), "rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0");
 			builder.put(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsAssignment_1_0(), "rule__ArrayNTypeExpression__TypeArgsAssignment_1_0");
 			builder.put(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsAssignment_1_1_0(), "rule__ArrayNTypeExpression__TypeArgsAssignment_1_1_0");
 			builder.put(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsAssignment_1_1_1_1(), "rule__ArrayNTypeExpression__TypeArgsAssignment_1_1_1_1");

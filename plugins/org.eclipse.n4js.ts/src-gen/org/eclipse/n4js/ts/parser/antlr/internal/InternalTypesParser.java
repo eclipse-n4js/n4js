@@ -13880,11 +13880,11 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleArrayNTypeExpression"
-    // InternalTypesParser.g:5123:1: ruleArrayNTypeExpression returns [EObject current=null] : ( ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) ) ;
+    // InternalTypesParser.g:5123:1: ruleArrayNTypeExpression returns [EObject current=null] : ( ( (lv_arrayNTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) ) ;
     public final EObject ruleArrayNTypeExpression() throws RecognitionException {
         EObject current = null;
 
-        Token lv_iterableTypeExpression_0_0=null;
+        Token lv_arrayNTypeExpression_0_0=null;
         Token otherlv_3=null;
         Token otherlv_5=null;
         EObject lv_typeArgs_1_0 = null;
@@ -13898,22 +13898,22 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalTypesParser.g:5129:2: ( ( ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) ) )
-            // InternalTypesParser.g:5130:2: ( ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) )
+            // InternalTypesParser.g:5129:2: ( ( ( (lv_arrayNTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) ) )
+            // InternalTypesParser.g:5130:2: ( ( (lv_arrayNTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) )
             {
-            // InternalTypesParser.g:5130:2: ( ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) )
-            // InternalTypesParser.g:5131:3: ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) )
+            // InternalTypesParser.g:5130:2: ( ( (lv_arrayNTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) )
+            // InternalTypesParser.g:5131:3: ( (lv_arrayNTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) )
             {
-            // InternalTypesParser.g:5131:3: ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) )
-            // InternalTypesParser.g:5132:4: (lv_iterableTypeExpression_0_0= LeftSquareBracket )
+            // InternalTypesParser.g:5131:3: ( (lv_arrayNTypeExpression_0_0= LeftSquareBracket ) )
+            // InternalTypesParser.g:5132:4: (lv_arrayNTypeExpression_0_0= LeftSquareBracket )
             {
-            // InternalTypesParser.g:5132:4: (lv_iterableTypeExpression_0_0= LeftSquareBracket )
-            // InternalTypesParser.g:5133:5: lv_iterableTypeExpression_0_0= LeftSquareBracket
+            // InternalTypesParser.g:5132:4: (lv_arrayNTypeExpression_0_0= LeftSquareBracket )
+            // InternalTypesParser.g:5133:5: lv_arrayNTypeExpression_0_0= LeftSquareBracket
             {
-            lv_iterableTypeExpression_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_90); if (state.failed) return current;
+            lv_arrayNTypeExpression_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_90); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
+              					newLeafNode(lv_arrayNTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0());
               				
             }
             if ( state.backtracking==0 ) {
@@ -13921,7 +13921,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
               					if (current==null) {
               						current = createModelElement(grammarAccess.getArrayNTypeExpressionRule());
               					}
-              					setWithLastConsumed(current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
+              					setWithLastConsumed(current, "arrayNTypeExpression", lv_arrayNTypeExpression_0_0 != null, "[");
               				
             }
 

@@ -41284,26 +41284,26 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ArrayNTypeExpression__Group__0__Impl"
-    // InternalTypesParser.g:12213:1: rule__ArrayNTypeExpression__Group__0__Impl : ( ( rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0 ) ) ;
+    // InternalTypesParser.g:12213:1: rule__ArrayNTypeExpression__Group__0__Impl : ( ( rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0 ) ) ;
     public final void rule__ArrayNTypeExpression__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalTypesParser.g:12217:1: ( ( ( rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0 ) ) )
-            // InternalTypesParser.g:12218:1: ( ( rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0 ) )
+            // InternalTypesParser.g:12217:1: ( ( ( rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0 ) ) )
+            // InternalTypesParser.g:12218:1: ( ( rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0 ) )
             {
-            // InternalTypesParser.g:12218:1: ( ( rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0 ) )
-            // InternalTypesParser.g:12219:2: ( rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0 )
+            // InternalTypesParser.g:12218:1: ( ( rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0 ) )
+            // InternalTypesParser.g:12219:2: ( rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionAssignment_0()); 
+               before(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionAssignment_0()); 
             }
-            // InternalTypesParser.g:12220:2: ( rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0 )
-            // InternalTypesParser.g:12220:3: rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0
+            // InternalTypesParser.g:12220:2: ( rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0 )
+            // InternalTypesParser.g:12220:3: rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0
             {
             pushFollow(FOLLOW_2);
-            rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0();
+            rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -41311,7 +41311,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionAssignment_0()); 
+               after(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionAssignment_0()); 
             }
 
             }
@@ -54262,9 +54262,9 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ParameterizedTypeRefStructural__DefinedTypingStrategyAssignment_0_1_1"
 
 
-    // $ANTLR start "rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0"
-    // InternalTypesParser.g:16472:1: rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0 : ( ( LeftSquareBracket ) ) ;
-    public final void rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0() throws RecognitionException {
+    // $ANTLR start "rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0"
+    // InternalTypesParser.g:16472:1: rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0 : ( ( LeftSquareBracket ) ) ;
+    public final void rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -54276,23 +54276,23 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
             // InternalTypesParser.g:16478:3: ( LeftSquareBracket )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0()); 
+               before(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0()); 
             }
             // InternalTypesParser.g:16479:3: ( LeftSquareBracket )
             // InternalTypesParser.g:16480:4: LeftSquareBracket
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0()); 
+               before(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0()); 
             }
             match(input,LeftSquareBracket,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0()); 
+               after(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0()); 
             }
 
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0()); 
+               after(grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0()); 
             }
 
             }
@@ -54312,7 +54312,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ArrayNTypeExpression__IterableTypeExpressionAssignment_0"
+    // $ANTLR end "rule__ArrayNTypeExpression__ArrayNTypeExpressionAssignment_0"
 
 
     // $ANTLR start "rule__ArrayNTypeExpression__TypeArgsAssignment_1_0"

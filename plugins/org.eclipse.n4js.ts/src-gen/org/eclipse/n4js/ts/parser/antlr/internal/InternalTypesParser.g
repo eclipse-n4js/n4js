@@ -5130,15 +5130,15 @@ ruleArrayNTypeExpression returns [EObject current=null]
 	(
 		(
 			(
-				lv_iterableTypeExpression_0_0=LeftSquareBracket
+				lv_arrayNTypeExpression_0_0=LeftSquareBracket
 				{
-					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
+					newLeafNode(lv_arrayNTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getArrayNTypeExpressionRule());
 					}
-					setWithLastConsumed($current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
+					setWithLastConsumed($current, "arrayNTypeExpression", lv_arrayNTypeExpression_0_0 != null, "[");
 				}
 			)
 		)
