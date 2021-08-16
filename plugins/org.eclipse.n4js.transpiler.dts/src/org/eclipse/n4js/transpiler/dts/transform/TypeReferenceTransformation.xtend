@@ -137,7 +137,7 @@ class TypeReferenceTransformation extends Transformation {
 		}
 
 		val declType = typeRef.getDeclaredType();
-		if (state.G.isIterableN(declType)) {
+		if (state.G.isArrayN(declType)) {
 			val isImplementsInterface = typeRefNode.eContainmentFeature === N4JSPackage.Literals.N4_CLASS_DEFINITION__IMPLEMENTED_INTERFACE_REFS;
 			val isExtendsInterface = typeRefNode.eContainmentFeature === N4JSPackage.Literals.N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS;
 			
@@ -242,7 +242,7 @@ class TypeReferenceTransformation extends Transformation {
 		}
 		val declType = typeRef.getDeclaredType();
 		
-		if (state.G.isIterableN(declType)) {
+		if (state.G.isArrayN(declType)) {
 			convertTypeArguments(typeRef, "[", "]");
 			return;
 		}

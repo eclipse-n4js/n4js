@@ -204,7 +204,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 
 		// check for correct number of type arguments
 		if (typeParameterCount !== typeArgumentCount) {
-			if (source instanceof ParameterizedTypeRef && (source as ParameterizedTypeRef).isIterableTypeExpression) {
+			if (source instanceof ParameterizedTypeRef && (source as ParameterizedTypeRef).isArrayNTypeExpression) {
 				val message = IssueCodes.
 					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
 				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX);

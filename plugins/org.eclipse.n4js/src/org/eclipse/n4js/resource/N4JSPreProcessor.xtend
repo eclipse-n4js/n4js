@@ -58,18 +58,18 @@ package final class N4JSPreProcessor {
 	def private dispatch void processNode(ParameterizedTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
 		if (typeRef.isArrayTypeExpression) {
 			typeRef.declaredType = builtInTypes.arrayType;
-		} else if (typeRef.isIterableTypeExpression) {
+		} else if (typeRef.isArrayNTypeExpression) {
 			val n = typeRef.typeArgs.size;
 			if (n < 2) {
 				typeRef.declaredType = builtInTypes.iterableType;
 			} else if (n <= BuiltInTypeScope.ITERABLE_N__MAX_LEN) {
-				typeRef.declaredType = builtInTypes.getIterableNType(n);
+				typeRef.declaredType = builtInTypes.getArrayNType(n);
 			} else {
 				// error (a validation will create an issue)
 				// NOTE: it would be nice to create an InterableN with a union as last type argument
 				// containing those element types that exceed the ITERABLE_N__MAX_LEN; however, this
 				// would require AST rewriting, which isn't allowed.
-				typeRef.declaredType = builtInTypes.getIterableNType(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
+				typeRef.declaredType = builtInTypes.getArrayNType(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
 			}
 		}
 	}

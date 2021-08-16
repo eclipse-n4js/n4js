@@ -167,7 +167,7 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 ;
 
 ArrayNTypeExpression returns ParameterizedTypeRef:
-	iterableTypeExpression?='['
+	arrayNTypeExpression?='['
 	(
 		typeArgs+=EmptyIterableTypeExpressionTail
 	|	typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
