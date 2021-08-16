@@ -35,31 +35,55 @@ Contributors:
 
 	<modules>
 		<module>releng</module>
-		<module>plugins</module>
-		<module>testhelpers</module>
 	</modules>
 
 	<profiles>
 		<!--
-			This profile adds the tests-folder to the build. 
-			It's always active - unless the build is started with "-DnoTests". 
+			This profile adds the plugins-folder to the build.
+			It's always active - unless the build is started with "-DnoPlugins".
+		-->
+		<profile>
+			<id>compilePlugins</id>
+			<activation>
+				<property><name>!noPlugins</name></property>
+			</activation>
+			<modules>
+				<module>plugins</module>
+			</modules>
+		</profile>
+		<!--
+			This profile adds the testhelpers-folder to the build.
+			It's always active - unless the build is started with "-DnoTesthelpers".
+		-->
+		<profile>
+			<id>compileTesthelpers</id>
+			<activation>
+				<property><name>!noTesthelpers</name></property>
+			</activation>
+			<modules>
+				<module>testhelpers</module>
+			</modules>
+		</profile>
+		<!--
+			This profile adds the tests-folder to the build.
+			It's always active - unless the build is started with "-DnoTests".
 		-->
 		<profile>
 			<id>compileTests</id>
 			<activation>
 				<property><name>!noTests</name></property>
-			</activation> 
+			</activation>
 			<modules>
 				<module>tests</module>
 			</modules>
 		</profile>
 
 		<!--
-			If build started with '-Pexecute-hlc-integration-tests', activate the
+			If build started with '-Pexecute-jar-tests', activate the
 			starting and stopping of a verdaccio instance for testing purposes.
 		-->
 		<profile>
-			<id>execute-hlc-integration-tests</id>
+			<id>execute-jar-tests</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -71,8 +95,8 @@ Contributors:
 
 		<!--
 			If build started with '-DstartAndKeepVerdaccio', then ...
-			1) enforce starting of a test verdaccio (even if '-Pexecute-hlc-integration-tests' is not given) and
-			2) suppress stopping of the test verdaccio (even if '-Pexecute-hlc-integration-tests' is given)
+			1) enforce starting of a test verdaccio (even if '-Pexecute-jar-tests' is not given) and
+			2) suppress stopping of the test verdaccio (even if '-Pexecute-jar-tests' is given)
 		-->
 		<profile>
 			<activation>
