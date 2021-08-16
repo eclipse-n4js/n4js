@@ -587,7 +587,7 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	transient String declaredTypeAsText
 	contains TypeArgument[] typeArgs
 	boolean arrayTypeExpression = "false"
-	boolean iterableTypeExpression = "false"
+	boolean arrayNTypeExpression = "false"
 
 	/*
 	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
