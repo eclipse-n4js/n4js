@@ -481,18 +481,18 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	/**
 	 * Returns the built-in type "ArrayN" for 2 &leq; N &leq; {@link #ITERABLE_N__MAX_LEN}.
 	 */
-	public final TInterface getArrayNType(int n) {
+	public final TClass getArrayNType(int n) {
 		if (n < 2 || n > ITERABLE_N__MAX_LEN)
 			throw new IllegalArgumentException("n must lie between 2 and " + ITERABLE_N__MAX_LEN + " (inclusive)");
 		return getEObjectOrProxy(QualifiedName.create("Array" + n));
 	}
 
-	private List<TInterface> cachedArrayNTypes = null;
+	private List<TClass> cachedArrayNTypes = null;
 
 	/**
 	 * Returns all built-in types "ArrayN" for 2 &leq; N &leq; {@link #ITERABLE_N__MAX_LEN}.
 	 */
-	public final List<TInterface> getArrayNTypes() {
+	public final List<TClass> getArrayNTypes() {
 		if (cachedArrayNTypes == null) {
 			cachedArrayNTypes = new ArrayList<>();
 			for (int n = 2; n <= ITERABLE_N__MAX_LEN; n++)
