@@ -372,8 +372,9 @@ public class TypeProcessor extends AbstractProcessor {
 				// semi-cyclic forward reference to a variable declaration in a for in/of loop:
 				// -> similar to cyclic variable declarations, we have to "guess" a type.
 				val declTypeRefNode = (node as VariableDeclaration).declaredTypeRefNode;
-				return if (declTypeRefNode !== null) {
-					declTypeRefNode.cachedProcessedTypeRef ?: tsh.resolveTypeAliases(G, declTypeRefNode.typeRefInAST)
+				val declTypeRefInAST = declTypeRefNode?.typeRefInAST;
+				return if (declTypeRefInAST !== null) {
+					declTypeRefNode.cachedProcessedTypeRef ?: tsh.resolveTypeAliases(G, declTypeRefInAST)
 				} else {
 					G.anyTypeRef
 				};

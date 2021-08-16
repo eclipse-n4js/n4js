@@ -159,7 +159,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		List<? extends TypeReferenceNode<?>> typeArgsNodes, boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
 
-		val typeArgsInAST = typeArgsNodes.map[typeRefInAST].toList;
+		val typeArgsInAST = typeArgsNodes.map[typeRefInAST].toList; // n.b.: resulting 'typeArgsInAST' may contain null values in case of syntax error (retain them to keep indices valid!)
 		val typeArgsProcessed = typeArgsNodes.map[typeRef].toList;
 		internalCheckTypeArguments(typeVars, typeArgsInAST, Optional.of(typeArgsProcessed),
 			allowAutoInference, parameterizedElement, source, feature);
