@@ -15596,7 +15596,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//PrimaryTypeExpression returns TypeRef:
 	//    ( ArrowFunctionTypeExpression
-	//    | IterableTypeExpression
+	//    | ArrayNTypeExpression
 	//    | TypeRefWithModifiers
 	//    | "(" TypeRef ")"
 	//    );
@@ -15634,7 +15634,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
 	//      ParameterizedTypeRef
-	//    | IterableTypeExpression
+	//    | ArrayNTypeExpression
 	//    | TypeTypeRef
 	//    | UnionTypeExpressionOLD
 	//    | IntersectionTypeExpressionOLD;
@@ -15840,18 +15840,18 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//IterableTypeExpression returns ParameterizedTypeRef:
+	//ArrayNTypeExpression returns ParameterizedTypeRef:
 	//    iterableTypeExpression?='['
 	//    (
 	//        typeArgs+=EmptyIterableTypeExpressionTail
 	//    |    typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
 	//    );
-	public TypeExpressionsGrammarAccess.IterableTypeExpressionElements getIterableTypeExpressionAccess() {
-		return gaTypeExpressions.getIterableTypeExpressionAccess();
+	public TypeExpressionsGrammarAccess.ArrayNTypeExpressionElements getArrayNTypeExpressionAccess() {
+		return gaTypeExpressions.getArrayNTypeExpressionAccess();
 	}
 	
-	public ParserRule getIterableTypeExpressionRule() {
-		return getIterableTypeExpressionAccess().getRule();
+	public ParserRule getArrayNTypeExpressionRule() {
+		return getArrayNTypeExpressionAccess().getRule();
 	}
 	
 	//EmptyIterableTypeExpressionTail returns Wildcard:

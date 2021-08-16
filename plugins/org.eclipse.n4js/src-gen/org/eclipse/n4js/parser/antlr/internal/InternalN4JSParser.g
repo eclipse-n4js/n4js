@@ -36394,11 +36394,11 @@ rulePrimaryTypeExpression returns [EObject current=null]
 		)
 		    |
 		{
-			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_1());
+			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_1());
 		}
-		this_IterableTypeExpression_1=ruleIterableTypeExpression
+		this_ArrayNTypeExpression_1=ruleArrayNTypeExpression
 		{
-			$current = $this_IterableTypeExpression_1.current;
+			$current = $this_ArrayNTypeExpression_1.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -36597,11 +36597,11 @@ ruleTypeRefFunctionTypeExpression returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_1());
+			newCompositeNode(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_1());
 		}
-		this_IterableTypeExpression_1=ruleIterableTypeExpression
+		this_ArrayNTypeExpression_1=ruleArrayNTypeExpression
 		{
-			$current = $this_IterableTypeExpression_1.current;
+			$current = $this_ArrayNTypeExpression_1.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -37682,15 +37682,15 @@ ruleParameterizedTypeRefStructural returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleIterableTypeExpression
-entryRuleIterableTypeExpression returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getIterableTypeExpressionRule()); }
-	iv_ruleIterableTypeExpression=ruleIterableTypeExpression
-	{ $current=$iv_ruleIterableTypeExpression.current; }
+// Entry rule entryRuleArrayNTypeExpression
+entryRuleArrayNTypeExpression returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getArrayNTypeExpressionRule()); }
+	iv_ruleArrayNTypeExpression=ruleArrayNTypeExpression
+	{ $current=$iv_ruleArrayNTypeExpression.current; }
 	EOF;
 
-// Rule IterableTypeExpression
-ruleIterableTypeExpression returns [EObject current=null]
+// Rule ArrayNTypeExpression
+ruleArrayNTypeExpression returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -37702,11 +37702,11 @@ ruleIterableTypeExpression returns [EObject current=null]
 			(
 				lv_iterableTypeExpression_0_0=LeftSquareBracket
 				{
-					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getIterableTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
+					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
 				}
 				{
 					if ($current==null) {
-						$current = createModelElement(grammarAccess.getIterableTypeExpressionRule());
+						$current = createModelElement(grammarAccess.getArrayNTypeExpressionRule());
 					}
 					setWithLastConsumed($current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
 				}
@@ -37716,12 +37716,12 @@ ruleIterableTypeExpression returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0());
 					}
 					lv_typeArgs_1_0=ruleEmptyIterableTypeExpressionTail
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+							$current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
 						}
 						add(
 							$current,
@@ -37737,12 +37737,12 @@ ruleIterableTypeExpression returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_0_0());
+							newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_0_0());
 						}
 						lv_typeArgs_2_0=ruleTypeArgument
 						{
 							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+								$current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
 							}
 							add(
 								$current,
@@ -37756,17 +37756,17 @@ ruleIterableTypeExpression returns [EObject current=null]
 				(
 					otherlv_3=Comma
 					{
-						newLeafNode(otherlv_3, grammarAccess.getIterableTypeExpressionAccess().getCommaKeyword_1_1_1_0());
+						newLeafNode(otherlv_3, grammarAccess.getArrayNTypeExpressionAccess().getCommaKeyword_1_1_1_0());
 					}
 					(
 						(
 							{
-								newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0());
+								newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0());
 							}
 							lv_typeArgs_4_0=ruleTypeArgument
 							{
 								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+									$current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
 								}
 								add(
 									$current,
@@ -37780,7 +37780,7 @@ ruleIterableTypeExpression returns [EObject current=null]
 				)*
 				otherlv_5=RightSquareBracket
 				{
-					newLeafNode(otherlv_5, grammarAccess.getIterableTypeExpressionAccess().getRightSquareBracketKeyword_1_1_2());
+					newLeafNode(otherlv_5, grammarAccess.getArrayNTypeExpressionAccess().getRightSquareBracketKeyword_1_1_2());
 				}
 			)
 		)

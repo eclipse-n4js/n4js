@@ -679,7 +679,7 @@ rulePrimaryTypeExpression:
 			ruleArrowFunctionTypeExpression
 		)
 		    |
-		ruleIterableTypeExpression
+		ruleArrayNTypeExpression
 		    |
 		ruleTypeRefWithModifiers
 		    |
@@ -728,7 +728,7 @@ ruleTypeRefFunctionTypeExpression:
 	(
 		ruleParameterizedTypeRef
 		    |
-		ruleIterableTypeExpression
+		ruleArrayNTypeExpression
 		    |
 		ruleTypeTypeRef
 		    |
@@ -937,8 +937,8 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule IterableTypeExpression
-ruleIterableTypeExpression:
+// Rule ArrayNTypeExpression
+ruleArrayNTypeExpression:
 	'['
 	(
 		ruleEmptyIterableTypeExpressionTail

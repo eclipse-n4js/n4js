@@ -136,11 +136,23 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				if (rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()) {
-					sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
+					sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()) {
-					sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_ParameterizedTypeRef_2_1_0_0(context, (ParameterizedTypeRef) semanticObject); 
+					sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_ParameterizedTypeRef_2_1_0_0(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getArrayNTypeExpressionRule()) {
+					sequence_ArrayNTypeExpression(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPrimaryTypeExpressionRule()) {
+					sequence_ArrayNTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
+					sequence_ArrayNTypeExpression_TypeArguments_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_0_4_0_0()) {
@@ -149,18 +161,6 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else if (action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_1_6_0_0()) {
 					sequence_ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0(context, (ParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getIterableTypeExpressionRule()) {
-					sequence_IterableTypeExpression(context, (ParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getPrimaryTypeExpressionRule()) {
-					sequence_IterableTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
-					sequence_IterableTypeExpression_TypeArguments_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
@@ -545,7 +545,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )
 	 *     )
 	 */
-	protected void sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
+	protected void sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -566,7 +566,27 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )
 	 *     )
 	 */
-	protected void sequence_ArrayTypeExpression_IterableTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_ParameterizedTypeRef_2_1_0_0(ISerializationContext context, ParameterizedTypeRef semanticObject) {
+	protected void sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_ParameterizedTypeRef_2_1_0_0(ISerializationContext context, ParameterizedTypeRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PrimaryTypeExpression returns ParameterizedTypeRef
+	 *
+	 * Constraint:
+	 *     (
+	 *         (iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | (typeArgs+=TypeArgument typeArgs+=TypeArgument*))) | 
+	 *         (
+	 *             declaredType=[Type|TypeReferenceName] 
+	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
+	 *             dynamic?='+'? 
+	 *             (followedByQuestionMark?='?' | followedByQuestionMark?='?')?
+	 *         )
+	 *     )
+	 */
+	protected void sequence_ArrayNTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -750,26 +770,6 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_IntersectionTypeExpression_IntersectionTypeExpressionOLD_TypeRef_TypeRefWithModifiers(ISerializationContext context, IntersectionTypeExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     PrimaryTypeExpression returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         (iterableTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | (typeArgs+=TypeArgument typeArgs+=TypeArgument*))) | 
-	 *         (
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
-	 *             dynamic?='+'? 
-	 *             (followedByQuestionMark?='?' | followedByQuestionMark?='?')?
-	 *         )
-	 *     )
-	 */
-	protected void sequence_IterableTypeExpression_TypeArguments_TypeRef_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

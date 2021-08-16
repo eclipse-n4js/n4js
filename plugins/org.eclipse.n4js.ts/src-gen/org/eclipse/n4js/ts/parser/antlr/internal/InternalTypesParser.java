@@ -9817,7 +9817,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePrimaryTypeExpression"
-    // InternalTypesParser.g:3724:1: rulePrimaryTypeExpression returns [EObject current=null] : ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) ) ;
+    // InternalTypesParser.g:3724:1: rulePrimaryTypeExpression returns [EObject current=null] : ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) ) ;
     public final EObject rulePrimaryTypeExpression() throws RecognitionException {
         EObject current = null;
 
@@ -9825,7 +9825,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         Token otherlv_5=null;
         EObject this_ArrowFunctionTypeExpression_0 = null;
 
-        EObject this_IterableTypeExpression_1 = null;
+        EObject this_ArrayNTypeExpression_1 = null;
 
         EObject this_TypeRefWithModifiers_2 = null;
 
@@ -9836,10 +9836,10 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalTypesParser.g:3730:2: ( ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) ) )
-            // InternalTypesParser.g:3731:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )
+            // InternalTypesParser.g:3730:2: ( ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) ) )
+            // InternalTypesParser.g:3731:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )
             {
-            // InternalTypesParser.g:3731:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )
+            // InternalTypesParser.g:3731:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )
             int alt77=4;
             alt77 = dfa77.predict(input);
             switch (alt77) {
@@ -9872,21 +9872,21 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalTypesParser.g:3752:3: this_IterableTypeExpression_1= ruleIterableTypeExpression
+                    // InternalTypesParser.g:3752:3: this_ArrayNTypeExpression_1= ruleArrayNTypeExpression
                     {
                     if ( state.backtracking==0 ) {
 
-                      			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_1());
+                      			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_1());
                       		
                     }
                     pushFollow(FOLLOW_2);
-                    this_IterableTypeExpression_1=ruleIterableTypeExpression();
+                    this_ArrayNTypeExpression_1=ruleArrayNTypeExpression();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      			current = this_IterableTypeExpression_1;
+                      			current = this_ArrayNTypeExpression_1;
                       			afterParserOrEnumRuleCall();
                       		
                     }
@@ -10568,13 +10568,13 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleTypeRefFunctionTypeExpression"
-    // InternalTypesParser.g:3938:1: ruleTypeRefFunctionTypeExpression returns [EObject current=null] : (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD ) ;
+    // InternalTypesParser.g:3938:1: ruleTypeRefFunctionTypeExpression returns [EObject current=null] : (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD ) ;
     public final EObject ruleTypeRefFunctionTypeExpression() throws RecognitionException {
         EObject current = null;
 
         EObject this_ParameterizedTypeRef_0 = null;
 
-        EObject this_IterableTypeExpression_1 = null;
+        EObject this_ArrayNTypeExpression_1 = null;
 
         EObject this_TypeTypeRef_2 = null;
 
@@ -10587,10 +10587,10 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalTypesParser.g:3944:2: ( (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD ) )
-            // InternalTypesParser.g:3945:2: (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD )
+            // InternalTypesParser.g:3944:2: ( (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD ) )
+            // InternalTypesParser.g:3945:2: (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD )
             {
-            // InternalTypesParser.g:3945:2: (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD )
+            // InternalTypesParser.g:3945:2: (this_ParameterizedTypeRef_0= ruleParameterizedTypeRef | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeTypeRef_2= ruleTypeTypeRef | this_UnionTypeExpressionOLD_3= ruleUnionTypeExpressionOLD | this_IntersectionTypeExpressionOLD_4= ruleIntersectionTypeExpressionOLD )
             int alt82=5;
             switch ( input.LA(1) ) {
             case Undefined:
@@ -10657,21 +10657,21 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalTypesParser.g:3955:3: this_IterableTypeExpression_1= ruleIterableTypeExpression
+                    // InternalTypesParser.g:3955:3: this_ArrayNTypeExpression_1= ruleArrayNTypeExpression
                     {
                     if ( state.backtracking==0 ) {
 
-                      			newCompositeNode(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_1());
+                      			newCompositeNode(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_1());
                       		
                     }
                     pushFollow(FOLLOW_2);
-                    this_IterableTypeExpression_1=ruleIterableTypeExpression();
+                    this_ArrayNTypeExpression_1=ruleArrayNTypeExpression();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      			current = this_IterableTypeExpression_1;
+                      			current = this_ArrayNTypeExpression_1;
                       			afterParserOrEnumRuleCall();
                       		
                     }
@@ -13839,28 +13839,28 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleParameterizedTypeRefStructural"
 
 
-    // $ANTLR start "entryRuleIterableTypeExpression"
-    // InternalTypesParser.g:5116:1: entryRuleIterableTypeExpression returns [EObject current=null] : iv_ruleIterableTypeExpression= ruleIterableTypeExpression EOF ;
-    public final EObject entryRuleIterableTypeExpression() throws RecognitionException {
+    // $ANTLR start "entryRuleArrayNTypeExpression"
+    // InternalTypesParser.g:5116:1: entryRuleArrayNTypeExpression returns [EObject current=null] : iv_ruleArrayNTypeExpression= ruleArrayNTypeExpression EOF ;
+    public final EObject entryRuleArrayNTypeExpression() throws RecognitionException {
         EObject current = null;
 
-        EObject iv_ruleIterableTypeExpression = null;
+        EObject iv_ruleArrayNTypeExpression = null;
 
 
         try {
-            // InternalTypesParser.g:5116:63: (iv_ruleIterableTypeExpression= ruleIterableTypeExpression EOF )
-            // InternalTypesParser.g:5117:2: iv_ruleIterableTypeExpression= ruleIterableTypeExpression EOF
+            // InternalTypesParser.g:5116:61: (iv_ruleArrayNTypeExpression= ruleArrayNTypeExpression EOF )
+            // InternalTypesParser.g:5117:2: iv_ruleArrayNTypeExpression= ruleArrayNTypeExpression EOF
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getIterableTypeExpressionRule()); 
+               newCompositeNode(grammarAccess.getArrayNTypeExpressionRule()); 
             }
             pushFollow(FOLLOW_1);
-            iv_ruleIterableTypeExpression=ruleIterableTypeExpression();
+            iv_ruleArrayNTypeExpression=ruleArrayNTypeExpression();
 
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleIterableTypeExpression; 
+               current =iv_ruleArrayNTypeExpression; 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return current;
 
@@ -13876,12 +13876,12 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "entryRuleIterableTypeExpression"
+    // $ANTLR end "entryRuleArrayNTypeExpression"
 
 
-    // $ANTLR start "ruleIterableTypeExpression"
-    // InternalTypesParser.g:5123:1: ruleIterableTypeExpression returns [EObject current=null] : ( ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) ) ;
-    public final EObject ruleIterableTypeExpression() throws RecognitionException {
+    // $ANTLR start "ruleArrayNTypeExpression"
+    // InternalTypesParser.g:5123:1: ruleArrayNTypeExpression returns [EObject current=null] : ( ( (lv_iterableTypeExpression_0_0= LeftSquareBracket ) ) ( ( (lv_typeArgs_1_0= ruleEmptyIterableTypeExpressionTail ) ) | ( ( (lv_typeArgs_2_0= ruleTypeArgument ) ) (otherlv_3= Comma ( (lv_typeArgs_4_0= ruleTypeArgument ) ) )* otherlv_5= RightSquareBracket ) ) ) ;
+    public final EObject ruleArrayNTypeExpression() throws RecognitionException {
         EObject current = null;
 
         Token lv_iterableTypeExpression_0_0=null;
@@ -13913,13 +13913,13 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
             lv_iterableTypeExpression_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_90); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getIterableTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
+              					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
               				
             }
             if ( state.backtracking==0 ) {
 
               					if (current==null) {
-              						current = createModelElement(grammarAccess.getIterableTypeExpressionRule());
+              						current = createModelElement(grammarAccess.getArrayNTypeExpressionRule());
               					}
               					setWithLastConsumed(current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
               				
@@ -13959,7 +13959,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
 
-                      						newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0());
+                      						newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0());
                       					
                     }
                     pushFollow(FOLLOW_2);
@@ -13970,7 +13970,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     if ( state.backtracking==0 ) {
 
                       						if (current==null) {
-                      							current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+                      							current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
                       						}
                       						add(
                       							current,
@@ -14003,7 +14003,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
 
-                      							newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_0_0());
+                      							newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_0_0());
                       						
                     }
                     pushFollow(FOLLOW_91);
@@ -14014,7 +14014,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     if ( state.backtracking==0 ) {
 
                       							if (current==null) {
-                      								current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+                      								current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
                       							}
                       							add(
                       								current,
@@ -14048,7 +14048,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     	    otherlv_3=(Token)match(input,Comma,FOLLOW_90); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
-                    	      						newLeafNode(otherlv_3, grammarAccess.getIterableTypeExpressionAccess().getCommaKeyword_1_1_1_0());
+                    	      						newLeafNode(otherlv_3, grammarAccess.getArrayNTypeExpressionAccess().getCommaKeyword_1_1_1_0());
                     	      					
                     	    }
                     	    // InternalTypesParser.g:5191:6: ( (lv_typeArgs_4_0= ruleTypeArgument ) )
@@ -14059,7 +14059,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     	    {
                     	    if ( state.backtracking==0 ) {
 
-                    	      								newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0());
+                    	      								newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0());
                     	      							
                     	    }
                     	    pushFollow(FOLLOW_91);
@@ -14070,7 +14070,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     	    if ( state.backtracking==0 ) {
 
                     	      								if (current==null) {
-                    	      									current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+                    	      									current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
                     	      								}
                     	      								add(
                     	      									current,
@@ -14098,7 +14098,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     otherlv_5=(Token)match(input,RightSquareBracket,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      					newLeafNode(otherlv_5, grammarAccess.getIterableTypeExpressionAccess().getRightSquareBracketKeyword_1_1_2());
+                      					newLeafNode(otherlv_5, grammarAccess.getArrayNTypeExpressionAccess().getRightSquareBracketKeyword_1_1_2());
                       				
                     }
 
@@ -14131,7 +14131,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "ruleIterableTypeExpression"
+    // $ANTLR end "ruleArrayNTypeExpression"
 
 
     // $ANTLR start "entryRuleEmptyIterableTypeExpressionTail"
@@ -24714,7 +24714,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
             this.transition = dfa_17;
         }
         public String getDescription() {
-            return "3731:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_1= ruleIterableTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )";
+            return "3731:2: ( ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_0= ruleArrowFunctionTypeExpression ) | this_ArrayNTypeExpression_1= ruleArrayNTypeExpression | this_TypeRefWithModifiers_2= ruleTypeRefWithModifiers | (otherlv_3= LeftParenthesis this_TypeRef_4= ruleTypeRef otherlv_5= RightParenthesis ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
