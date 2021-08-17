@@ -12,10 +12,10 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-// XPECT type of 't01' --> Iterable<?>
+// XPECT type of 't01' --> Array<?>
 let t01: [];
 
-// XPECT type of 't02' --> Iterable<string>
+// XPECT type of 't02' --> Array<string>
 let t02: [string];
 
 // XPECT type of 't03' --> Array2<string,number>

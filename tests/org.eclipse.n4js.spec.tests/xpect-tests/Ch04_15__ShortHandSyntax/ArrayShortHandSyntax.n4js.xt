@@ -71,10 +71,10 @@ let a31: string|number&int[];
 
 
 
-// XPECT type of 'a41' --> Array<Array<Iterable<?>>>
+// XPECT type of 'a41' --> Array<Array<Array<?>>>
 let a41: [][][];
 
-// XPECT type of 'a42' --> Array<Array<Iterable<string>>>
+// XPECT type of 'a42' --> Array<Array<Array<string>>>
 let a42: [string][][];
 
 // XPECT type of 'a43' --> Array<Array<Array2<string,number>>>

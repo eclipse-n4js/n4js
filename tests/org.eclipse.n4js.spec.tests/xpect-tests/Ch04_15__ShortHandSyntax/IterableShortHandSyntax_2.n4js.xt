@@ -12,6 +12,9 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-// XPECT type of 't03' --> Array2<string,number>
-let t03: [string, number];
+// XPECT type of 'c1' --> Array<string>
+const c1: [string] = null;
+
+// X-PECT type of 't03' --> Array2<string,number>
+// let t03: [string, number];
 
