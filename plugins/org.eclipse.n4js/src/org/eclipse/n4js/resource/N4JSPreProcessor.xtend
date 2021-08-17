@@ -46,14 +46,15 @@ package final class N4JSPreProcessor {
 	}
 
 	/**
-	 * Support for new array type syntax:
+	 * Support for array type syntax:
 	 * <pre>
 	 * let arr: string[];
 	 * </pre>
-	 * and tuple syntax:
+	 * and arrrayN syntax:
 	 * <pre>
 	 * let tup: [string, int];
 	 * </pre>
+	 * Note that both {@code string[]} and {@code [string]} results in an {@code Array<string>}
 	 */
 	def private dispatch void processNode(ParameterizedTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
 		if (typeRef.isArrayTypeExpression) {
@@ -61,7 +62,7 @@ package final class N4JSPreProcessor {
 		} else if (typeRef.isArrayNTypeExpression) {
 			val n = typeRef.typeArgs.size;
 			if (n < 2) {
-				typeRef.declaredType = builtInTypes.iterableType;
+				typeRef.declaredType = builtInTypes.arrayType;
 			} else if (n <= BuiltInTypeScope.ITERABLE_N__MAX_LEN) {
 				typeRef.declaredType = builtInTypes.getArrayNType(n);
 			} else {
