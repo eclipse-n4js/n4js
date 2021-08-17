@@ -12,7 +12,6 @@ package org.eclipse.n4js.workspace.utils;
 
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_PREFIX;
 import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR;
-import static org.eclipse.n4js.utils.ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR_ECLIPSE;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -34,10 +33,8 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	/**
 	 * Constructor
 	 */
-	@SuppressWarnings("deprecation")
 	public N4JSProjectName(String name) {
 		this.name = Preconditions.checkNotNull(name);
-		Preconditions.checkArgument(name.indexOf(NPM_SCOPE_SEPARATOR_ECLIPSE) < 0, name);
 		if (name.indexOf(NPM_SCOPE_SEPARATOR) >= 0) {
 			Preconditions.checkArgument(name.startsWith(NPM_SCOPE_PREFIX), name);
 		}

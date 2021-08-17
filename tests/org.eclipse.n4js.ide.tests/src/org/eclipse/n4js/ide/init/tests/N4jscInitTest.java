@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.init.tests;
 import static org.eclipse.n4js.N4JSGlobals.PACKAGE_JSON;
 import static org.eclipse.n4js.cli.N4jscExitCode.INIT_ERROR_WORKING_DIR;
 import static org.eclipse.n4js.cli.N4jscExitCode.SUCCESS;
-import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.IMPLICIT_COMPILE;
 import static org.eclipse.n4js.cli.N4jscTestOptions.INIT;
 import static org.junit.Assert.assertEquals;
@@ -187,7 +186,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		CliCompileResult result = n4jsc(options, SUCCESS);
 
 		npmInstall(cwd.toPath());
-		result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), VALIDATION_ERRORS);
+		result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
 		assertEquals(0, result.getTranspiledFilesCount()); // there are no files to transpile
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));

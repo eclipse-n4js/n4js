@@ -37,6 +37,7 @@ public class CreateProjectStructureUtils {
 		final boolean isProject;
 		final boolean isPlainJS;
 		final String yarnWorkspacesFolder;
+		final String name;
 		final String dependencies;
 		final String packagejson;
 		/**
@@ -46,7 +47,7 @@ public class CreateProjectStructureUtils {
 		final Path symLinkTarget;
 
 		Folder(Folder parent, String folderName, boolean isWorkingDir, boolean isProject, boolean isPlainJS,
-				String yarnWorkspacesFolder, String dependencies, Path symLinkTarget, String packagejson) {
+				String yarnWorkspacesFolder, String name, String dependencies, Path symLinkTarget, String packagejson) {
 
 			this.parent = parent;
 			this.folderName = folderName;
@@ -54,6 +55,7 @@ public class CreateProjectStructureUtils {
 			this.isProject = isProject;
 			this.isPlainJS = isPlainJS;
 			this.yarnWorkspacesFolder = yarnWorkspacesFolder;
+			this.name = name;
 			this.dependencies = dependencies;
 			this.symLinkTarget = symLinkTarget;
 			this.packagejson = packagejson;
@@ -75,6 +77,7 @@ public class CreateProjectStructureUtils {
 			if (isProject) {
 				str += "[PROJECT";
 				str += (yarnWorkspacesFolder == null) ? "" : " workspaces= " + yarnWorkspacesFolder + " ";
+				str += (name == null) ? "" : " name= " + name + " ";
 				str += (dependencies == null) ? "" : " dependencies= " + dependencies + " ";
 				str += (packagejson == null) ? "" : " package.json= " + packagejson + " ";
 				str += "]";
@@ -204,6 +207,7 @@ public class CreateProjectStructureUtils {
 		boolean isPlainJS = false;
 		String yarnWorkspacesFolder = null;
 		String dependencies = null;
+		String name = null;
 		Path symLinkTarget = null;
 		String packagejson = null;
 
@@ -226,6 +230,18 @@ public class CreateProjectStructureUtils {
 					if (restLine.startsWith("plainJS")) {
 						isPlainJS = true;
 						restLine = restLine.substring("plainJS".length()).trim();
+					}
+
+					if (restLine.startsWith("name")) {
+						restLine = restLine.substring("name".length()).trim();
+						if (restLine.startsWith("=")) {
+							restLine = restLine.substring(1).trim();
+							int startIndex = 0;
+							int endIndex = restLine.contains(" ") ? restLine.indexOf(" ") : restLine.length();
+							name = restLine.substring(startIndex, endIndex);
+
+							restLine = restLine.substring(endIndex).trim();
+						}
 					}
 
 					if (restLine.startsWith("workspaces")) {
@@ -264,7 +280,8 @@ public class CreateProjectStructureUtils {
 			}
 		}
 
-		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, yarnWorkspacesFolder, dependencies,
+		return new Folder(parent, folderName, isWorkingDir, isProject, isPlainJS, yarnWorkspacesFolder, name,
+				dependencies,
 				symLinkTarget, packagejson);
 	}
 
@@ -307,7 +324,7 @@ public class CreateProjectStructureUtils {
 				if (folder.parent != null && folder.parent.folderName.startsWith("@")) {
 					projectName = folder.parent.folderName + "/" + projectName;
 				}
-				contents += "\"name\": \"" + folder.folderName + "\", ";
+				contents += "\"name\": \"" + (folder.name == null ? folder.folderName : folder.name) + "\", ";
 				if (!folder.isPlainJS) {
 					contents += "\"n4js\": {\"projectType\": \"library\"}";
 				}
