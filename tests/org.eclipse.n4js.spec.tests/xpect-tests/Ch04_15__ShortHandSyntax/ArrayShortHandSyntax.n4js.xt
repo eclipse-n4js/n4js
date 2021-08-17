@@ -77,7 +77,7 @@ let a41: [][][];
 // XPECT type of 'a42' --> Array<Array<Iterable<string>>>
 let a42: [string][][];
 
-// XPECT type of 'a43' --> Array<Array<Iterable2<string,number>>>
+// XPECT type of 'a43' --> Array<Array<Array2<string,number>>>
 let a43: [string,number][][];
 
 

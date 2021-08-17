@@ -18,14 +18,14 @@ let t01: [];
 // XPECT type of 't02' --> Iterable<string>
 let t02: [string];
 
-// XPECT type of 't03' --> Iterable2<string,number>
+// XPECT type of 't03' --> Array2<string,number>
 let t03: [string, number];
 
-// XPECT type of 't04' --> Iterable9<string,number,string,number,string,number,string,number,string>
+// XPECT type of 't04' --> Array9<string,number,string,number,string,number,string,number,string>
 let t04: [string, number, string, number, string, number, string, number, string];
 
-// XPECT errors --> "The IterableN types are available for a maximum of 9 element types only (i.e. type Iterable9)." at "[string, number, string, number, string, number, string, number, string, number]"
+// XPECT errors --> "The ArrayN types are available for a maximum of 9 element types only (i.e. type Array9)." at "[string, number, string, number, string, number, string, number, string, number]"
 let t05: [string, number, string, number, string, number, string, number, string, number];
 
-// XPECT type of 't06' --> Iterable2<Iterable<string>,Array<string>>
+// XPECT type of 't06' --> Array2<Array<string>,Array<string>>
 let t06: [[string], string[]];
