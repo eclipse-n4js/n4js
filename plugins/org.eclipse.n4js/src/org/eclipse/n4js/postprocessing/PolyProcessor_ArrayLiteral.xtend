@@ -136,10 +136,10 @@ if(isValueToBeDestructured) {
 	 * Makes a best effort for building a type in case something went awry. It's only non-trivial in case we have an
 	 * expectation of IterableN.
 	 */
-	private def TypeRef buildFallbackTypeForArrayLiteral(boolean isIterableN, int resultLen,
+	private def TypeRef buildFallbackTypeForArrayLiteral(boolean isArrayN, int resultLen,
 		List<TypeRef> elemTypeRefs, List<TypeRef> expectedElemTypeRefs, RuleEnvironment G) {
 
-		if (isIterableN) {
+		if (isArrayN) {
 			val typeArgs = newArrayOfSize(resultLen);
 			for (var i = 0; i < resultLen; i++) {
 				val boolean isLastElem = i === (resultLen - 1);
@@ -194,7 +194,7 @@ if(isValueToBeDestructured) {
 				typeArgs.set(resultLen - 1, tsh.createUnionType(G, remaining));
 			}
 
-			return G.iterableNTypeRef(resultLen, typeArgs);
+			return G.arrayNTypeRef(resultLen, typeArgs);
 		} else {
 			val unionOfElemTypes = if (!elemTypeRefs.empty) tsh.createUnionType(G, elemTypeRefs) else G.anyTypeRef;
 			return G.arrayTypeRef(unionOfElemTypes);
@@ -228,13 +228,12 @@ if(isValueToBeDestructured) {
 	 * Creates temporary type (i.e. may contain inference variables):
 	 * <ul>
 	 * <li>Array<T> (where T is a new inference variable) or</li>
-	 * <li>Iterable<T> (where T is a new inference variable) or</li>
-	 * <li>IterableN<T1,T2,...,TN> (where T1,...TN are new inference variables, N>=2)</li>
+	 * <li>ArrayN<T1,T2,...,TN> (where T1,...TN are new inference variables, N>=2)</li>
 	 * </ul>
 	 */
 	private def TypeRef getResultTypeRef(RuleEnvironment G, int resultLen, TypeVariable[] resultInfVars) {
-		val isIterableN = resultLen >= 2;
-		val declaredType = if (isIterableN) G.iterableNType(resultLen) else G.arrayType;
+		val isArrayN = resultLen >= 2;
+		val declaredType = if (isArrayN) G.arrayNType(resultLen) else G.arrayType;
 		val typeArgs = resultInfVars.map[TypeUtils.createTypeRef(it)];
 		val TypeRef resultTypeRef = TypeUtils.createTypeRef(declaredType, typeArgs);
 		return resultTypeRef;
@@ -259,7 +258,7 @@ if(isValueToBeDestructured) {
 				val idxResult = Math.min(idxElem, resultLen - 1);
 				val currResultInfVar = resultInfVars.get(idxResult);
 				val currResultInfVarTypeRef = TypeUtils.createTypeRef(currResultInfVar);
-				val currExpectedTypeRef = if (currElem.spread) G.iterableTypeRef(TypeUtils.createWildcardExtends(currResultInfVarTypeRef)) else currResultInfVarTypeRef;
+				val currExpectedTypeRef = if (currElem.spread) G.arrayTypeRef(TypeUtils.createWildcardExtends(currResultInfVarTypeRef)) else currResultInfVarTypeRef;
 				val currElemTypeRef = polyProcessor.processExpr(G, currElem.expression, currExpectedTypeRef, infCtx, cache);
 				infCtx.addConstraint(currElemTypeRef, currExpectedTypeRef, Variance.CO);
 			}
@@ -284,7 +283,7 @@ if(isValueToBeDestructured) {
 		List<TypeRef> expectedElemTypeRefs, TypeRef resultTypeRef, Optional<Map<InferenceVariable, TypeRef>> solution
 	) {
 		val resultLen = getResultLength(arrLit, expectedElemTypeRefs);
-		val isIterableN = resultLen >= 2;
+		val isArrayN = resultLen >= 2;
 		if (solution.present) {
 			// success case
 			val typeRef = resultTypeRef.applySolution(G, solution.get);
@@ -292,7 +291,7 @@ if(isValueToBeDestructured) {
 		} else {
 			// failure case (unsolvable constraint system)
 			val betterElemTypeRefs = arrLit.elements.map[getFinalResultTypeOfArrayElement(G, it, Optional.absent)];
-			val typeRef = buildFallbackTypeForArrayLiteral(isIterableN, resultLen, betterElemTypeRefs, expectedElemTypeRefs, G);
+			val typeRef = buildFallbackTypeForArrayLiteral(isArrayN, resultLen, betterElemTypeRefs, expectedElemTypeRefs, G);
 			cache.storeType(arrLit, typeRef);
 		}
 		storeTypesOfArrayElements(G, cache, arrLit);
