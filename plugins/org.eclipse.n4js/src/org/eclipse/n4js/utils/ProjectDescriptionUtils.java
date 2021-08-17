@@ -209,9 +209,11 @@ public class ProjectDescriptionUtils {
 	}
 
 	/**
-	 * Given a URI as used internally to identify N4JS projects, this method returns the corresponding N4JS project name
-	 * which may or may not {@link #isProjectNameWithScope(String) include an npm scope}. The given URI may be a
-	 * {@link URI#isFile() file URI} (headless case) or a {@link URI#isPlatform() platform URI} (UI case).
+	 * This method derives a N4JS project name including its scope from a given URI (iff scope folder exists).
+	 * <p>
+	 * <b>Attention:</b> Note that project names defined in packages.json files can differ from the names of their
+	 * parent folders. This method can usually be used safely in node_modules folders since we can assume that npm and
+	 * yarn create package folders according to the package names.
 	 * <p>
 	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
 	 */

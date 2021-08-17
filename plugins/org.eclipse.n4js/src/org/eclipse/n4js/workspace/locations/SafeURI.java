@@ -253,22 +253,28 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	/**
 	 * Finds the nearest project root for the current location and attempt to derive the project name from the found
 	 * root. May return null.
+	 * <p>
+	 * <b>Attention:</b> Note that project names defined in packages.json files can differ. This method can usually be
+	 * used safely in node_modules folders.
 	 *
 	 * @return the name or null.
 	 */
-	public N4JSProjectName findProjectName() {
+	public N4JSProjectName findDerivedProjectName() {
 		U root = getProjectRoot();
 		if (root != null) {
-			return root.getProjectName();
+			return root.deriveProjectName();
 		}
 		return null;
 	}
 
 	/**
-	 * Assumes that this location is a valid project root and derives the project name from the location. root. May
-	 * return null.
+	 * Assumes that this location is a valid project root and derives the project name from the location. May return
+	 * null.
+	 * <p>
+	 * <b>Attention:</b> Note that project names defined in packages.json files can differ. This method can usually be
+	 * used safely in node_modules folders.
 	 */
-	public N4JSProjectName getProjectName() {
+	public N4JSProjectName deriveProjectName() {
 		String guess = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(this);
 		if (guess != null) {
 			return new N4JSProjectName(guess);

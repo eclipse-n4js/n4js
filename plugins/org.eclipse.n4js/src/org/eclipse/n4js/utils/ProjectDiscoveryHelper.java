@@ -206,6 +206,9 @@ public class ProjectDiscoveryHelper {
 			return;
 		}
 		List<String> workspaces = projectDescription.getWorkspaces();
+		if (workspaces == null) {
+			return;
+		}
 
 		// add the yarn workspace root project even if it is a PLAINJS project
 		// Rationale:

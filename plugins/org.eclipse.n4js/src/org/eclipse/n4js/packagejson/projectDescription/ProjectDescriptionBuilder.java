@@ -55,7 +55,7 @@ public class ProjectDescriptionBuilder {
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
 		String failSafeName = (name == null || name.isBlank()) && location != null
-				? location.findProjectName().getRawName()
+				? location.findDerivedProjectName().getRawName()
 				: name;
 		return new ProjectDescription(failSafeName, vendorId, vendorName, version, type, mainModule,
 				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
