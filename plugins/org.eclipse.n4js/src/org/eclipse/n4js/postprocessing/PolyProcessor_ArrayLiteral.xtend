@@ -64,13 +64,13 @@ package class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 		val numOfElems = arrLit.elements.size;
 
 		// we have to analyze the type expectation:
-		// 1. we have to know up-front whether we aim for an actual type of Array/Iterable or for IterableN
+		// 1. we have to know up-front whether we aim for an actual type of Array/ArrayN
 		// 2. we have to know if we have concrete expectations for the element type(s)
 		// To do so, we prepare a helper variable 'expectedElemTypeRefs'
 		val expectedElemTypeRefs = getExpectedElemTypeRefs(G, expectedTypeRef);
 
 
-// hack: faking an expectation of IterableN<...> here
+// hack: faking an expectation of ArrayN<...> here
 // TODO instead we should get such an expectation in these cases from expectedType judgment!
 val isValueToBeDestructured = DestructureUtils.isArrayOrObjectLiteralBeingDestructured(arrLit);
 if(isValueToBeDestructured) {
@@ -81,7 +81,7 @@ if(isValueToBeDestructured) {
 		// performance tweak:
 		val haveUsableExpectedType = !expectedElemTypeRefs.empty;
 		if (!haveUsableExpectedType && !TypeUtils.isInferenceVariable(expectedTypeRef)) {
-			// no type expectation or some entirely wrong type expectation (i.e. other than Array, Iterable, IterableN)
+			// no type expectation or some entirely wrong type expectation (i.e. other than Array, ArrayN)
 			// -> just derive type from elements (and do not introduce a new inference variable for this ArrayLiteral!)
 			val elemTypeRefs = newArrayList;
 			val nonNullElems = arrLit.elements.filter[expression !== null];
@@ -89,7 +89,7 @@ if(isValueToBeDestructured) {
 				var arrElemTypeRef = polyProcessor.processExpr(G, arrElem.expression, null, infCtx, cache);
 				arrElemTypeRef = ts.upperBoundWithReopen(G, arrElemTypeRef);
 				if (arrElem.spread) {
-					elemTypeRefs += extractSpreadTypeRefs(G, arrElemTypeRef); // more than one in case of IterableN; none in case of invalid value after spread operator
+					elemTypeRefs += extractSpreadTypeRefs(G, arrElemTypeRef); // more than one in case of ArrayN; none in case of invalid value after spread operator
 				} else {
 					elemTypeRefs += arrElemTypeRef;
 				}
@@ -119,7 +119,7 @@ if(isValueToBeDestructured) {
 	 * The return value is as follows:
 	 * <ul>
 	 * <li>#[ T ] for an expectedTypeRef of the form Array<T> or Iterable<T>,</li>
-	 * <li>#[ T1, T2, ..., TN ] for an expectedTypeRef of the form IterableN<T1,T2,...,TN>,</li>
+	 * <li>#[ T1, T2, ..., TN ] for an expectedTypeRef of the form ArrayN<T1,T2,...,TN>,</li>
 	 * <li>#[] for any other kind of expectedTypeRef</li>
 	 * </ul>
 	 */
@@ -203,7 +203,7 @@ if(isValueToBeDestructured) {
 
 	/**
 	 * choose correct number of type arguments in our to-be-created resultTypeRef
-	 * (always 1 for Array<T> or Iterable<T> but N for IterableN<..>, e.g. 3 for Iterable3<T1,T2,T3>)
+	 * (always 1 for Array<T> or Iterable<T> but N for ArrayN<..>, e.g. 3 for Array3<T1,T2,T3>)
 	 */
 	private def int getResultLength(ArrayLiteral arrLit, List<TypeRef> expectedElemTypeRefs) {
 		val numOfElems = arrLit.elements.size;
@@ -214,7 +214,7 @@ if(isValueToBeDestructured) {
 
 		val lenB = Math.min(
 				lenA,
-				BuiltInTypeScope.ITERABLE_N__MAX_LEN // ... and never more than the max. allowed number of type arguments for IterableN
+				BuiltInTypeScope.ITERABLE_N__MAX_LEN // ... and never more than the max. allowed number of type arguments for ArrayN
 			);
 
 		val resultLen = Math.max(
@@ -335,7 +335,7 @@ if(isValueToBeDestructured) {
 				return #[ G.stringTypeRef ]; // spreading a string yields zero or more strings
 			}
 		}
-		// case 2: Iterable or IterableN
+		// case 2: Iterable or ArrayN
 		return tsh.extractIterableElementTypes(G, typeRef)
 	}
 }
