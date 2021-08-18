@@ -96,9 +96,8 @@ public class ProjectDescriptionLoader {
 	 */
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
 		adjustMainPath(location, packageJSON);
-		String defaultProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		ProjectDescriptionBuilder pdbFromPackageJSON = packageJSON != null
-				? packageJsonHelper.convertToProjectDescription(packageJSON, true, defaultProjectName)
+				? packageJsonHelper.convertToProjectDescription(location, packageJSON, true, null)
 				: null;
 		if (pdbFromPackageJSON != null) {
 			setInformationFromFileSystem(location, pdbFromPackageJSON);

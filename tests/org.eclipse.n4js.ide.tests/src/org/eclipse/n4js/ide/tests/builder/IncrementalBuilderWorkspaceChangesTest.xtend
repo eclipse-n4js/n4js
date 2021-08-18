@@ -193,6 +193,142 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 
 		assertIssues(expectedErrorsWhenOtherProjectIsMissing);
 	}
+	
+	@Test
+	def void testChangePackageJson_changeProjectName() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			"MainProject" -> #[
+				"Main" -> '''
+					class MainClass {};
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+
+
+		val packageJsonFileURI = getPackageJsonFile("MainProject").toFileURI;
+		openFile(packageJsonFileURI);
+		changeOpenedFile(packageJsonFileURI,
+			'"name": "MainProject"' -> '''"name": "RenamedProject"'''
+		);
+		joinServerRequests();
+		
+		saveOpenedFile(packageJsonFileURI);
+		joinServerRequests();
+		
+		assertIssues(#[
+			"MainProject/package.json" -> #[
+				'''(Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "MainProject" on the file system.)'''
+			]
+		]);
+	}
+	
+	@Test
+	def void testChangePackageJson_changeProjectNameWithDepdendencyIn() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			"MainProject" -> #[
+				"Main" -> '''
+					import {OtherClass} from "Other";
+					new OtherClass().m();
+				''',
+				CFG_DEPENDENCIES -> '''
+					OtherProject
+				'''
+			],
+			"OtherProject" -> #[
+				"Other" -> '''
+					export public class OtherClass {
+						public m() {}
+					}
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+
+		assertNoIssues();
+
+		val packageJsonFileURI = getPackageJsonFile("MainProject").toFileURI;
+		openFile(packageJsonFileURI);
+		changeOpenedFile(packageJsonFileURI,
+			'"name": "MainProject"' -> '''"name": "RenamedProject"'''
+		);
+		joinServerRequests();
+		
+		saveOpenedFile(packageJsonFileURI);
+		joinServerRequests();
+		
+		assertIssues(#[
+			"MainProject/package.json" -> #[
+				'''(Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "MainProject" on the file system.)'''
+			]
+		]);
+	}
+	
+	@Test
+	def void testChangePackageJson_changeProjectNameWithDepdendencyOut() throws IOException {
+		testWorkspaceManager.createTestOnDisk(
+			"MainProject" -> #[
+				"Main" -> '''
+					import {OtherClass} from "Other";
+					new OtherClass().m();
+				''',
+				CFG_DEPENDENCIES -> '''
+					OtherProject
+				'''
+			],
+			"OtherProject" -> #[
+				"Other" -> '''
+					export public class OtherClass {
+						public m() {}
+					}
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+
+		assertNoIssues();
+
+		val packageJsonOPFileURI = getPackageJsonFile("OtherProject").toFileURI;
+		openFile(packageJsonOPFileURI);
+		changeOpenedFile(packageJsonOPFileURI,
+			'"name": "OtherProject"' -> '''"name": "RenamedProject"'''
+		);
+		joinServerRequests();
+		
+		saveOpenedFile(packageJsonOPFileURI);
+		joinServerRequests();
+		
+		assertIssues(#[
+			"OtherProject/package.json" -> #[
+				'''    (Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "OtherProject" on the file system.)'''
+			],
+			"MainProject/package.json" -> #[
+				'''    (Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)'''
+			],
+			"Main.n4js" -> #[
+				'''    (Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)''',
+				'''    (Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)'''
+			]
+		]);
+		
+
+		val packageJsonMPFileURI = getPackageJsonFile("MainProject").toFileURI;
+		openFile(packageJsonMPFileURI);
+		changeOpenedFile(packageJsonMPFileURI,
+			'"OtherProject": "*"' -> '''"RenamedProject": "*"'''
+		);
+		joinServerRequests();
+		
+		saveOpenedFile(packageJsonMPFileURI);
+		joinServerRequests();
+		
+
+		assertIssues(#[
+			"OtherProject/package.json" -> #[
+				'''(Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "OtherProject" on the file system.)'''
+			]
+		]);
+	}
 
 	@Test
 	def void testChangePackageJson_addRemoveDependency_toN4JSProject() throws IOException {

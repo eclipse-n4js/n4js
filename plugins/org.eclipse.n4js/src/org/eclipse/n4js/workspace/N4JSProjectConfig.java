@@ -83,7 +83,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		// a project is not allowed to change its name
 		String nameOld = pdOld.getName();
 		if (!Objects.equals(projectDescription.getName(), nameOld)) {
-			projectDescription = projectDescription.change().setName(nameOld).build();
+			// projectDescription = projectDescription.change().setName(nameOld).build();
 		}
 		if (projectDescription.equals(pdOld)) {
 			return; // nothing changed
@@ -315,13 +315,22 @@ public class N4JSProjectConfig implements XIProjectConfig {
 			}
 		}
 
-		// detect changes in project properties
-		boolean propertiesChanged = !addedSourceFolders.isEmpty() || !removedSourceFolders.isEmpty()
-				|| !Objects.equals(oldProjectConfig, newProjectConfig);
+		if (Objects.equals(oldProjectConfig.getName(), newProjectConfig.getName())) {
+			// detect changes in project properties
+			boolean propertiesChanged = !addedSourceFolders.isEmpty() || !removedSourceFolders.isEmpty()
+					|| !Objects.equals(oldProjectConfig, newProjectConfig);
 
-		return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
-				ImmutableList.copyOf(removedSourceFolders),
-				ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
-				propertiesChanged ? ImmutableList.of(newProjectConfig) : ImmutableList.of());
+			return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+					ImmutableList.copyOf(removedSourceFolders),
+					ImmutableList.copyOf(addedSourceFolders), ImmutableList.of(), ImmutableList.of(),
+					propertiesChanged ? ImmutableList.of(newProjectConfig) : ImmutableList.of());
+		} else {
+
+			return new WorkspaceChanges(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+					ImmutableList.copyOf(removedSourceFolders),
+					ImmutableList.copyOf(addedSourceFolders),
+					ImmutableList.of(oldProjectConfig), ImmutableList.of(newProjectConfig),
+					ImmutableList.of());
+		}
 	}
 }
