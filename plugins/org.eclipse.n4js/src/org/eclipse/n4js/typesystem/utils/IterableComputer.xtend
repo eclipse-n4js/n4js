@@ -158,7 +158,9 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		val G2 = G.wrap;
 		tsh.addSubstitutions(G2,typeRef);
 		val resultSubst = result.map[ts.substTypeVariables(G2,it)]
-				.filter(TypeRef); // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
+				.filter(TypeRef) // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
+				.map[if (it instanceof ComposedTypeRef) tsh.simplify(G, it) else it];
+
 		return resultSubst;
 	}
 
