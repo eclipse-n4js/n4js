@@ -1299,6 +1299,40 @@ class TypeVariableMapping {
 	contains TypeArgument typeArg
 }
 
+
+abstract class LiteralTypeRef extends TypeRef {
+	
+	op Object getValue()
+}
+
+class BooleanLiteralTypeRef extends LiteralTypeRef {
+	Boolean value
+
+	op String internalGetTypeRefAsString() {
+		return value.toString ?: "null";
+	}
+}
+
+class NumberLiteralTypeRef extends LiteralTypeRef {
+	BigDecimal value
+
+	op String internalGetTypeRefAsString() {
+		return value?.toString ?: "null";
+	}
+}
+
+class StringLiteralTypeRef extends LiteralTypeRef {
+	String value
+
+	op String internalGetTypeRefAsString() {
+		if (value === null) {
+			return "null";
+		}
+		return '"' + value + '"';
+	}
+}
+
+
 // ****************************************************************************************************
 // N4IDL related model elements
 // ****************************************************************************************************
