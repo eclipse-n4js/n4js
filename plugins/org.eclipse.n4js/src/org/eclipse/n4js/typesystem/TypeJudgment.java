@@ -134,11 +134,14 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
 import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -539,18 +542,26 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseBooleanLiteral(BooleanLiteral object) {
-			return booleanTypeRef(G);
+		public TypeRef caseBooleanLiteral(BooleanLiteral l) {
+			BooleanLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createBooleanLiteralTypeRef();
+			result.setValue(l.isTrue());
+			return result;
 		}
 
 		@Override
 		public TypeRef caseNumericLiteral(NumericLiteral l) {
-			return N4JSLanguageUtils.isIntLiteral(l) ? intTypeRef(G) : numberTypeRef(G);
+			// FIXME
+			// return N4JSLanguageUtils.isIntLiteral(l) ? intTypeRef(G) : numberTypeRef(G);
+			NumericLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
+			result.setValue(l.getValue());
+			return result;
 		}
 
 		@Override
-		public TypeRef caseStringLiteral(StringLiteral object) {
-			return stringTypeRef(G);
+		public TypeRef caseStringLiteral(StringLiteral l) {
+			StringLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createStringLiteralTypeRef();
+			result.setValue(l.getValue());
+			return result;
 		}
 
 		@Override
