@@ -267,7 +267,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			capturesInExpectedTypeRef.forEach[G2.addFixedCapture(it)];
 		}
 		val solution3 = new HashMap(solution2);
-		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v) else v];
+		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v, true) else v];
 		// apply solution to resultTypeRef
 		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
 		// store type of funExpr in cache ...

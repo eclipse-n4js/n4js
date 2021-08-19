@@ -67,13 +67,17 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
@@ -704,6 +708,19 @@ public class N4JSLanguageUtils {
 				&& tMember.containingType === tClassifier;
 		}
 		return false;
+	}
+
+
+	/**
+	 * Returns the "base type" for the given literal type, e.g. type string for literal type "hello".
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
+		return switch(literalTypeRef) {
+			BooleanLiteralTypeRef: G.booleanTypeRef
+			NumericLiteralTypeRef: G.numberTypeRef // FIXME what about int?
+			StringLiteralTypeRef: G.stringTypeRef
+			default: throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.simpleName)
+		};
 	}
 
 

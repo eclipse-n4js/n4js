@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
 import java.util.Map
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
@@ -250,7 +251,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 			val memberInTModule = propAssignm.definedMember;
 			if (memberInTModule !== null) {
 				val memberType = getMemberType(G, solution, quickMode, propPair);
-				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType);
+				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType, !N4JSASTUtils.isImmutable(propAssignm));
 				EcoreUtilN4.doWithDeliver(false, [
 					memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
 				], memberInTModule);

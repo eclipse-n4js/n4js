@@ -25,7 +25,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getDeclaredOrImplicitSuperType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getPredefinedTypes;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.intTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isAny;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNumeric;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNumericOperand;
@@ -345,7 +344,8 @@ import com.google.inject.Inject;
 				T = property.getDeclaredTypeRef();
 			} else if (property.getExpression() != null) {
 				final TypeRef E = ts.type(G, property.getExpression());
-				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E,
+						!N4JSASTUtils.isImmutable(property));
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -360,7 +360,8 @@ import com.google.inject.Inject;
 				T = fieldDecl.getDeclaredTypeRef();
 			} else if (fieldDecl.getExpression() != null) {
 				final TypeRef E = ts.type(G, fieldDecl.getExpression());
-				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
+				T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E,
+						!N4JSASTUtils.isImmutable(fieldDecl));
 			} else {
 				T = anyTypeRef(G);
 			}
@@ -382,7 +383,8 @@ import com.google.inject.Inject;
 					G2.put(guardKey, Boolean.TRUE);
 					// compute the value type at this location in the destructuring pattern
 					final TypeRef raw = destructureHelper.getTypeOfVariableDeclarationInDestructuringPattern(G2, vdecl);
-					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, raw);
+					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, raw,
+							!N4JSASTUtils.isImmutable(vdecl));
 				} else {
 					T = anyTypeRef(G);
 				}
@@ -398,7 +400,8 @@ import com.google.inject.Inject;
 					final TypeArgument elemType = tsh.extractIterableElementType(G2, ofPartTypeRef,
 							forOfStmnt.isAwait());
 					if (elemType != null) {
-						T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, elemType);
+						T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, elemType,
+								!N4JSASTUtils.isImmutable(vdecl));
 					} else {
 						T = unknown();
 					}
@@ -430,7 +433,8 @@ import com.google.inject.Inject;
 						// inferred type and do *not* convert it to 'any', as #sanitizeTypeOfVariableFieldProperty()
 						// in the else-block would do.
 					} else {
-						E = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, E);
+						E = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G2, E,
+								!N4JSASTUtils.isImmutable(vdecl));
 					}
 					if (E.getDeclaredType() == undefinedType(G)
 							|| E.getDeclaredType() == nullType(G)
@@ -516,7 +520,7 @@ import com.google.inject.Inject;
 				final Expression initExpr = fpar.getInitializer();
 				if (initExpr != null) {
 					final TypeRef E = ts.type(G, initExpr);
-					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E);
+					T = typeSystemHelper.sanitizeTypeOfVariableFieldPropertyParameter(G, E, true);
 				} else {
 					T = anyTypeRef(G);
 				}

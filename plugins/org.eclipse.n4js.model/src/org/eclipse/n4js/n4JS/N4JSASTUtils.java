@@ -193,6 +193,45 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Returns <code>true</code> iff the given AST node is a variable, field, or property that is immutable (e.g. const,
+	 * final).
+	 */
+	public static boolean isImmutable(EObject astNode) {
+		if (astNode instanceof PropertyNameValuePair) {
+			return isImmutable((PropertyNameValuePair) astNode);
+		} else if (astNode instanceof N4FieldDeclaration) {
+			return isImmutable((N4FieldDeclaration) astNode);
+		} else if (astNode instanceof VariableDeclaration) {
+			return isImmutable((VariableDeclaration) astNode);
+		}
+		return false;
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for properties. */
+	public static boolean isImmutable(@SuppressWarnings("unused") PropertyNameValuePair nameValuePair) {
+		return false;
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for fields. */
+	public static boolean isImmutable(N4FieldDeclaration fieldDecl) {
+		return fieldDecl.isConst() || fieldDecl.isFinal();
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for variables. */
+	public static boolean isImmutable(VariableDeclaration vdecl) {
+		return getVariableStatementKeyword(vdecl) == VariableStatementKeyword.CONST;
+	}
+
+	/**
+	 * Returns the {@link VariableStatementKeyword} of the given variable, i.e. {@code var}, {@code let}, or
+	 * {@code const}.
+	 */
+	public static VariableStatementKeyword getVariableStatementKeyword(VariableDeclaration vdecl) {
+		VariableDeclarationContainer container = getVariableDeclarationContainer(vdecl);
+		return container != null ? container.getVarStmtKeyword() : null;
+	}
+
+	/**
 	 * To get from a variable declaration to its "containing" {@link VariableDeclarationContainer} use this method.
 	 * Details on why this is required are given {@link VariableDeclarationContainer here}.
 	 */

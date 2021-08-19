@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -55,6 +56,7 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.xtext.EcoreUtil2
 
@@ -254,18 +256,22 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return true;
 	}
 
-	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw) {
+	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw, boolean mutable) {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
 		// take upper bound to get rid of wildcards, etc. (if any)
-		val typeUB = ts.upperBoundWithReopen(G, typeRaw);
-		// replace silly types
-		val declType = typeUB.declaredType
-		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
-			return G.anyTypeRef;
+		var result = ts.upperBoundWithReopen(G, typeRaw);
+		// replace literal types
+		if (mutable && result instanceof LiteralTypeRef) {
+			result = N4JSLanguageUtils.getLiteralTypeBase(G, result as LiteralTypeRef);
 		}
-		return typeUB;
+		// replace silly types
+		val declType = result.declaredType;
+		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
+			result = G.anyTypeRef;
+		}
+		return result;
 	}
 
 	public def returnStatements(FunctionDefinition definition) {

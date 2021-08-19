@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.SetterDeclaration
@@ -153,7 +154,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 					typeRef = ts.substTypeVariables(G2, typeRef);
 				}
 				val typeRefResolved = tsh.resolveTypeAliases(G, typeRef); // this runs after TypeAliasProcessor, so we need to resolve here
-				val typeRefSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, typeRefResolved);
+				val typeRefSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, typeRefResolved, !N4JSASTUtils.isImmutable(elemInAST));
 				EcoreUtilN4.doWithDeliver(false, [
 					elemInTModule.typeRef = TypeUtils.copy(typeRefSane);
 				], elemInTModule);
