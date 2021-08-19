@@ -89,26 +89,22 @@ LiteralTypeRef returns LiteralTypeRef:
 	| StringLiteralTypeRef;
 
 BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
-	{BooleanLiteralTypeRef} (value?='true' | 'false');
+	{BooleanLiteralTypeRef} (astValue?='true' | 'false');
 
 NumericLiteralTypeRef returns NumericLiteralTypeRef:
-	  value=INT
-	| value=DOUBLE
-	| value=OCTAL_INT
-	| value=LEGACY_OCTAL_INT
-	| value=HEX_INT
-	| value=BINARY_INT
-	| value=SCIENTIFIC_INT
-	| value=SIGNED_INT
-	| value=SIGNED_DOUBLE
-	| value=SIGNED_OCTAL_INT
-	| value=SIGNED_LEGACY_OCTAL_INT
-	| value=SIGNED_HEX_INT
-	| value=SIGNED_BINARY_INT
-	| value=SIGNED_SCIENTIFIC_INT;
+	('+' | negated?='-')? // FIXME try to do this via value converters
+	(
+		  astValue=INT
+		| astValue=DOUBLE
+		| astValue=OCTAL_INT
+		| astValue=LEGACY_OCTAL_INT
+		| astValue=HEX_INT
+		| astValue=BINARY_INT
+		| astValue=SCIENTIFIC_INT
+	);
 
 StringLiteralTypeRef returns StringLiteralTypeRef:
-	value=STRING;
+	astValue=STRING;
 
 
 ThisTypeRef returns ThisTypeRef:
@@ -395,21 +391,13 @@ terminal SCIENTIFIC_INT returns ecore::EBigDecimal:
 ;
 
 terminal fragment EXPONENT_PART:
-	  ('e' | 'E') SIGNED_INT_IN_EXPONENT
+	  ('e' | 'E') SIGNED_INT
 	| IDENTIFIER
 ;
 
-terminal fragment SIGNED_INT_IN_EXPONENT:
+terminal fragment SIGNED_INT:
 	('+' | '-') DECIMAL_DIGIT_FRAGMENT+ IDENTIFIER?
 ;
-
-terminal SIGNED_INT returns ecore::EBigDecimal: ('+' | '-') INT;
-terminal SIGNED_DOUBLE returns ecore::EBigDecimal: ('+' | '-') DOUBLE;
-terminal SIGNED_BINARY_INT returns ecore::EBigDecimal: ('+' | '-') BINARY_INT;
-terminal SIGNED_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') OCTAL_INT;
-terminal SIGNED_LEGACY_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') LEGACY_OCTAL_INT;
-terminal SIGNED_HEX_INT returns ecore::EBigDecimal: ('+' | '-') HEX_INT;
-terminal SIGNED_SCIENTIFIC_INT returns ecore::EBigDecimal: ('+' | '-') SCIENTIFIC_INT;
 
 /* This terminal rule is not as strict as the ECMA spec because we want to
  * provide better error messages than the lexer does.

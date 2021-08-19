@@ -4123,15 +4123,15 @@ ruleBooleanLiteralTypeRef returns [EObject current=null]
 		(
 			(
 				(
-					lv_value_1_0=True
+					lv_astValue_1_0=True
 					{
-						newLeafNode(lv_value_1_0, grammarAccess.getBooleanLiteralTypeRefAccess().getValueTrueKeyword_1_0_0());
+						newLeafNode(lv_astValue_1_0, grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0());
 					}
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getBooleanLiteralTypeRefRule());
 						}
-						setWithLastConsumed($current, "value", lv_value_1_0 != null, "true");
+						setWithLastConsumed($current, "astValue", lv_astValue_1_0 != null, "true");
 					}
 				)
 			)
@@ -4161,268 +4161,158 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 }:
 	(
 		(
+			otherlv_0=PlusSign
+			{
+				newLeafNode(otherlv_0, grammarAccess.getNumericLiteralTypeRefAccess().getPlusSignKeyword_0_0());
+			}
+			    |
 			(
-				lv_value_0_0=RULE_INT
-				{
-					newLeafNode(lv_value_0_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueINTTerminalRuleCall_0_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_negated_1_0=HyphenMinus
+					{
+						newLeafNode(lv_negated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_0_0,
-						"org.eclipse.n4js.ts.TypeExpressions.INT");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed($current, "negated", lv_negated_1_0 != null, "-");
+					}
+				)
 			)
-		)
-		    |
+		)?
 		(
 			(
-				lv_value_1_0=RULE_DOUBLE
-				{
-					newLeafNode(lv_value_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueDOUBLETerminalRuleCall_1_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_astValue_2_0=RULE_INT
+					{
+						newLeafNode(lv_astValue_2_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueINTTerminalRuleCall_1_0_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_2_0,
+							"org.eclipse.n4js.ts.TypeExpressions.INT");
+					}
+				)
 			)
-		)
-		    |
-		(
+			    |
 			(
-				lv_value_2_0=RULE_OCTAL_INT
-				{
-					newLeafNode(lv_value_2_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueOCTAL_INTTerminalRuleCall_2_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_astValue_3_0=RULE_DOUBLE
+					{
+						newLeafNode(lv_astValue_3_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueDOUBLETerminalRuleCall_1_1_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_2_0,
-						"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_3_0,
+							"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
+					}
+				)
 			)
-		)
-		    |
-		(
+			    |
 			(
-				lv_value_3_0=RULE_LEGACY_OCTAL_INT
-				{
-					newLeafNode(lv_value_3_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueLEGACY_OCTAL_INTTerminalRuleCall_3_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_astValue_4_0=RULE_OCTAL_INT
+					{
+						newLeafNode(lv_astValue_4_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueOCTAL_INTTerminalRuleCall_1_2_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_4_0,
+							"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
+					}
+				)
 			)
-		)
-		    |
-		(
+			    |
 			(
-				lv_value_4_0=RULE_HEX_INT
-				{
-					newLeafNode(lv_value_4_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueHEX_INTTerminalRuleCall_4_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_astValue_5_0=RULE_LEGACY_OCTAL_INT
+					{
+						newLeafNode(lv_astValue_5_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueLEGACY_OCTAL_INTTerminalRuleCall_1_3_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_4_0,
-						"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_5_0,
+							"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
+					}
+				)
 			)
-		)
-		    |
-		(
+			    |
 			(
-				lv_value_5_0=RULE_BINARY_INT
-				{
-					newLeafNode(lv_value_5_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueBINARY_INTTerminalRuleCall_5_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_astValue_6_0=RULE_HEX_INT
+					{
+						newLeafNode(lv_astValue_6_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueHEX_INTTerminalRuleCall_1_4_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_5_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_6_0,
+							"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
+					}
+				)
 			)
-		)
-		    |
-		(
+			    |
 			(
-				lv_value_6_0=RULE_SCIENTIFIC_INT
-				{
-					newLeafNode(lv_value_6_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSCIENTIFIC_INTTerminalRuleCall_6_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_astValue_7_0=RULE_BINARY_INT
+					{
+						newLeafNode(lv_astValue_7_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueBINARY_INTTerminalRuleCall_1_5_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_6_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_7_0,
+							"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
+					}
+				)
 			)
-		)
-		    |
-		(
+			    |
 			(
-				lv_value_7_0=RULE_SIGNED_INT
-				{
-					newLeafNode(lv_value_7_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSIGNED_INTTerminalRuleCall_7_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+				(
+					lv_astValue_8_0=RULE_SCIENTIFIC_INT
+					{
+						newLeafNode(lv_astValue_8_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueSCIENTIFIC_INTTerminalRuleCall_1_6_0());
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_7_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SIGNED_INT");
-				}
-			)
-		)
-		    |
-		(
-			(
-				lv_value_8_0=RULE_SIGNED_DOUBLE
-				{
-					newLeafNode(lv_value_8_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSIGNED_DOUBLETerminalRuleCall_8_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_8_0,
+							"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
 					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_8_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SIGNED_DOUBLE");
-				}
-			)
-		)
-		    |
-		(
-			(
-				lv_value_9_0=RULE_SIGNED_OCTAL_INT
-				{
-					newLeafNode(lv_value_9_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSIGNED_OCTAL_INTTerminalRuleCall_9_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_9_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SIGNED_OCTAL_INT");
-				}
-			)
-		)
-		    |
-		(
-			(
-				lv_value_10_0=RULE_SIGNED_LEGACY_OCTAL_INT
-				{
-					newLeafNode(lv_value_10_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSIGNED_LEGACY_OCTAL_INTTerminalRuleCall_10_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_10_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SIGNED_LEGACY_OCTAL_INT");
-				}
-			)
-		)
-		    |
-		(
-			(
-				lv_value_11_0=RULE_SIGNED_HEX_INT
-				{
-					newLeafNode(lv_value_11_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSIGNED_HEX_INTTerminalRuleCall_11_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_11_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SIGNED_HEX_INT");
-				}
-			)
-		)
-		    |
-		(
-			(
-				lv_value_12_0=RULE_SIGNED_BINARY_INT
-				{
-					newLeafNode(lv_value_12_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSIGNED_BINARY_INTTerminalRuleCall_12_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_12_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SIGNED_BINARY_INT");
-				}
-			)
-		)
-		    |
-		(
-			(
-				lv_value_13_0=RULE_SIGNED_SCIENTIFIC_INT
-				{
-					newLeafNode(lv_value_13_0, grammarAccess.getNumericLiteralTypeRefAccess().getValueSIGNED_SCIENTIFIC_INTTerminalRuleCall_13_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"value",
-						lv_value_13_0,
-						"org.eclipse.n4js.ts.TypeExpressions.SIGNED_SCIENTIFIC_INT");
-				}
+				)
 			)
 		)
 	)
@@ -4445,9 +4335,9 @@ ruleStringLiteralTypeRef returns [EObject current=null]
 }:
 	(
 		(
-			lv_value_0_0=RULE_STRING
+			lv_astValue_0_0=RULE_STRING
 			{
-				newLeafNode(lv_value_0_0, grammarAccess.getStringLiteralTypeRefAccess().getValueSTRINGTerminalRuleCall_0());
+				newLeafNode(lv_astValue_0_0, grammarAccess.getStringLiteralTypeRefAccess().getAstValueSTRINGTerminalRuleCall_0());
 			}
 			{
 				if ($current==null) {
@@ -4455,8 +4345,8 @@ ruleStringLiteralTypeRef returns [EObject current=null]
 				}
 				setWithLastConsumed(
 					$current,
-					"value",
-					lv_value_0_0,
+					"astValue",
+					lv_astValue_0_0,
 					"org.eclipse.n4js.ts.TypeExpressions.STRING");
 			}
 		)

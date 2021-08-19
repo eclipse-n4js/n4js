@@ -46,6 +46,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_N4MethodDeclaration_SemicolonKeyword_1_q;
 	protected AbstractElementAlias match_N4SetterDeclaration_SemicolonKeyword_6_q;
 	protected AbstractElementAlias match_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q;
+	protected AbstractElementAlias match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q;
 	protected AbstractElementAlias match_ObjectLiteral_CommaKeyword_2_2_q;
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a;
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_p;
@@ -72,6 +73,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_N4MethodDeclaration_SemicolonKeyword_1_q = new TokenAlias(false, true, grammarAccess.getN4MethodDeclarationAccess().getSemicolonKeyword_1());
 		match_N4SetterDeclaration_SemicolonKeyword_6_q = new TokenAlias(false, true, grammarAccess.getN4SetterDeclarationAccess().getSemicolonKeyword_6());
 		match_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q = new TokenAlias(false, true, grammarAccess.getNoLineTerminatorAccess().getNO_LINE_TERMINATORTerminalRuleCall());
+		match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q = new TokenAlias(false, true, grammarAccess.getNumericLiteralTypeRefAccess().getPlusSignKeyword_0_0());
 		match_ObjectLiteral_CommaKeyword_2_2_q = new TokenAlias(false, true, grammarAccess.getObjectLiteralAccess().getCommaKeyword_2_2());
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_4_0());
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_p = new TokenAlias(true, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_4_0());
@@ -160,6 +162,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_N4SetterDeclaration_SemicolonKeyword_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q.equals(syntax))
 				emit_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q.equals(syntax))
+				emit_NumericLiteralTypeRef_PlusSignKeyword_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ObjectLiteral_CommaKeyword_2_2_q.equals(syntax))
 				emit_ObjectLiteral_CommaKeyword_2_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a.equals(syntax))
@@ -412,6 +416,30 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+	 *     '+'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '('* (ambiguity) astValue=BINARY_INT
+	 *     (rule start) '('* (ambiguity) astValue=DOUBLE
+	 *     (rule start) '('* (ambiguity) astValue=HEX_INT
+	 *     (rule start) '('* (ambiguity) astValue=INT
+	 *     (rule start) '('* (ambiguity) astValue=LEGACY_OCTAL_INT
+	 *     (rule start) '('* (ambiguity) astValue=OCTAL_INT
+	 *     (rule start) '('* (ambiguity) astValue=SCIENTIFIC_INT
+	 *     (rule start) (ambiguity) astValue=BINARY_INT
+	 *     (rule start) (ambiguity) astValue=DOUBLE
+	 *     (rule start) (ambiguity) astValue=HEX_INT
+	 *     (rule start) (ambiguity) astValue=INT
+	 *     (rule start) (ambiguity) astValue=LEGACY_OCTAL_INT
+	 *     (rule start) (ambiguity) astValue=OCTAL_INT
+	 *     (rule start) (ambiguity) astValue=SCIENTIFIC_INT
+	 */
+	protected void emit_NumericLiteralTypeRef_PlusSignKeyword_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     ','?
 	 *
 	 * This ambiguous syntax occurs at:
@@ -428,6 +456,13 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '(' ')' '=>' returnTypeRef=PrimaryTypeExpression
 	 *     (rule start) (ambiguity) '(' typeArgs+=Wildcard
+	 *     (rule start) (ambiguity) '+'? astValue=BINARY_INT
+	 *     (rule start) (ambiguity) '+'? astValue=DOUBLE
+	 *     (rule start) (ambiguity) '+'? astValue=HEX_INT
+	 *     (rule start) (ambiguity) '+'? astValue=INT
+	 *     (rule start) (ambiguity) '+'? astValue=LEGACY_OCTAL_INT
+	 *     (rule start) (ambiguity) '+'? astValue=OCTAL_INT
+	 *     (rule start) (ambiguity) '+'? astValue=SCIENTIFIC_INT
 	 *     (rule start) (ambiguity) 'false' (rule start)
 	 *     (rule start) (ambiguity) 'intersection' '{' typeRefs+=TypeRef
 	 *     (rule start) (ambiguity) 'this' (rule start)
@@ -442,27 +477,14 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]
+	 *     (rule start) (ambiguity) astValue=STRING
+	 *     (rule start) (ambiguity) astValue?='true'
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
 	 *     (rule start) (ambiguity) iterableTypeExpression?='['
+	 *     (rule start) (ambiguity) negated?='-'
 	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
-	 *     (rule start) (ambiguity) value=BINARY_INT
-	 *     (rule start) (ambiguity) value=DOUBLE
-	 *     (rule start) (ambiguity) value=HEX_INT
-	 *     (rule start) (ambiguity) value=INT
-	 *     (rule start) (ambiguity) value=LEGACY_OCTAL_INT
-	 *     (rule start) (ambiguity) value=OCTAL_INT
-	 *     (rule start) (ambiguity) value=SCIENTIFIC_INT
-	 *     (rule start) (ambiguity) value=SIGNED_BINARY_INT
-	 *     (rule start) (ambiguity) value=SIGNED_DOUBLE
-	 *     (rule start) (ambiguity) value=SIGNED_HEX_INT
-	 *     (rule start) (ambiguity) value=SIGNED_INT
-	 *     (rule start) (ambiguity) value=SIGNED_LEGACY_OCTAL_INT
-	 *     (rule start) (ambiguity) value=SIGNED_OCTAL_INT
-	 *     (rule start) (ambiguity) value=SIGNED_SCIENTIFIC_INT
-	 *     (rule start) (ambiguity) value=STRING
-	 *     (rule start) (ambiguity) value?='true'
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}

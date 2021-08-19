@@ -11,10 +11,14 @@
 package org.eclipse.n4js.resource
 
 import com.google.inject.Singleton
+import java.math.BigDecimal
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.validation.ASTStructureValidator
 
 /**
@@ -72,5 +76,18 @@ package final class N4JSPreProcessor {
 				typeRef.declaredType = builtInTypes.getIterableNType(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
 			}
 		}
+	}
+
+	def private dispatch void processNode(BooleanLiteralTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
+		typeRef.value = typeRef.astValue as Boolean; // validity of this cast is enforced by the grammar
+	}
+
+	def private dispatch void processNode(NumericLiteralTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
+		val valueRaw = typeRef.astValue as BigDecimal; // validity of this cast is enforced by the grammar
+		typeRef.value = if (typeRef.negated) valueRaw.negate() else valueRaw;
+	}
+
+	def private dispatch void processNode(StringLiteralTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
+		typeRef.value = typeRef.astValue as String; // validity of this cast is enforced by the grammar
 	}
 }

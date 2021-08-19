@@ -21,6 +21,7 @@ import java.math.BigDecimal;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated <em>Negated</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}</li>
  * </ul>
  *
@@ -29,6 +30,28 @@ import java.math.BigDecimal;
  * @generated
  */
 public interface NumericLiteralTypeRef extends LiteralTypeRef {
+	/**
+	 * Returns the value of the '<em><b>Negated</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Negated</em>' attribute.
+	 * @see #setNegated(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getNumericLiteralTypeRef_Negated()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isNegated();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated <em>Negated</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Negated</em>' attribute.
+	 * @see #isNegated()
+	 * @generated
+	 */
+	void setNegated(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->

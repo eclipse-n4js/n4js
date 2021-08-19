@@ -487,7 +487,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeArgument returns BooleanLiteralTypeRef
 	 *
 	 * Constraint:
-	 *     value?='true'?
+	 *     astValue?='true'?
 	 */
 	protected void sequence_BooleanLiteralTypeRef(ISerializationContext context, BooleanLiteralTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -705,20 +705,16 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-	 *         value=INT | 
-	 *         value=DOUBLE | 
-	 *         value=OCTAL_INT | 
-	 *         value=LEGACY_OCTAL_INT | 
-	 *         value=HEX_INT | 
-	 *         value=BINARY_INT | 
-	 *         value=SCIENTIFIC_INT | 
-	 *         value=SIGNED_INT | 
-	 *         value=SIGNED_DOUBLE | 
-	 *         value=SIGNED_OCTAL_INT | 
-	 *         value=SIGNED_LEGACY_OCTAL_INT | 
-	 *         value=SIGNED_HEX_INT | 
-	 *         value=SIGNED_BINARY_INT | 
-	 *         value=SIGNED_SCIENTIFIC_INT
+	 *         negated?='-'? 
+	 *         (
+	 *             astValue=INT | 
+	 *             astValue=DOUBLE | 
+	 *             astValue=OCTAL_INT | 
+	 *             astValue=LEGACY_OCTAL_INT | 
+	 *             astValue=HEX_INT | 
+	 *             astValue=BINARY_INT | 
+	 *             astValue=SCIENTIFIC_INT
+	 *         )
 	 *     )
 	 */
 	protected void sequence_NumericLiteralTypeRef(ISerializationContext context, NumericLiteralTypeRef semanticObject) {
@@ -924,15 +920,15 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeArgument returns StringLiteralTypeRef
 	 *
 	 * Constraint:
-	 *     value=STRING
+	 *     astValue=STRING
 	 */
 	protected void sequence_StringLiteralTypeRef(ISerializationContext context, StringLiteralTypeRef semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, TypeRefsPackage.Literals.STRING_LITERAL_TYPE_REF__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.STRING_LITERAL_TYPE_REF__VALUE));
+			if (transientValues.isValueTransient(semanticObject, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getStringLiteralTypeRefAccess().getValueSTRINGTerminalRuleCall_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getStringLiteralTypeRefAccess().getAstValueSTRINGTerminalRuleCall_0(), semanticObject.getAstValue());
 		feeder.finish();
 	}
 	

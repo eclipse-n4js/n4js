@@ -6979,13 +6979,22 @@ public interface TypeRefsPackage extends EPackage {
 	int LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF__AST_VALUE = TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LITERAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 0;
+	int LITERAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -7284,6 +7293,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BOOLEAN_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -7602,13 +7620,31 @@ public interface TypeRefsPackage extends EPackage {
 	int NUMERIC_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Negated</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF__NEGATED = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NUMERIC_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
+	int NUMERIC_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Numeric Literal Type Ref</em>' class.
@@ -7617,7 +7653,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMERIC_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
+	int NUMERIC_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -7916,6 +7952,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STRING_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -11284,6 +11329,17 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getLiteralTypeRef();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.LiteralTypeRef#getAstValue <em>Ast Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ast Value</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.LiteralTypeRef#getAstValue()
+	 * @see #getLiteralTypeRef()
+	 * @generated
+	 */
+	EAttribute getLiteralTypeRef_AstValue();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.LiteralTypeRef#getValue() <em>Get Value</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11333,6 +11389,17 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getNumericLiteralTypeRef();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated <em>Negated</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Negated</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated()
+	 * @see #getNumericLiteralTypeRef()
+	 * @generated
+	 */
+	EAttribute getNumericLiteralTypeRef_Negated();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}'.
@@ -12858,6 +12925,14 @@ public interface TypeRefsPackage extends EPackage {
 		EClass LITERAL_TYPE_REF = eINSTANCE.getLiteralTypeRef();
 
 		/**
+		 * The meta object literal for the '<em><b>Ast Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LITERAL_TYPE_REF__AST_VALUE = eINSTANCE.getLiteralTypeRef_AstValue();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Value</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -12900,6 +12975,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass NUMERIC_LITERAL_TYPE_REF = eINSTANCE.getNumericLiteralTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Negated</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NUMERIC_LITERAL_TYPE_REF__NEGATED = eINSTANCE.getNumericLiteralTypeRef_Negated();
 
 		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.

@@ -1301,7 +1301,7 @@ class TypeVariableMapping {
 
 
 abstract class LiteralTypeRef extends TypeRef {
-	
+	Object astValue
 	op Object getValue()
 }
 
@@ -1314,6 +1314,7 @@ class BooleanLiteralTypeRef extends LiteralTypeRef {
 }
 
 class NumericLiteralTypeRef extends LiteralTypeRef {
+	boolean negated
 	BigDecimal value
 
 	op String internalGetTypeRefAsString() {

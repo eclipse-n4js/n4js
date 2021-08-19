@@ -2961,7 +2961,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
-	//    {BooleanLiteralTypeRef} (value?='true' | 'false');
+	//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
 	public TypeExpressionsGrammarAccess.BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {
 		return gaTypeExpressions.getBooleanLiteralTypeRefAccess();
 	}
@@ -2971,20 +2971,16 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	//NumericLiteralTypeRef returns NumericLiteralTypeRef:
-	//      value=INT
-	//    | value=DOUBLE
-	//    | value=OCTAL_INT
-	//    | value=LEGACY_OCTAL_INT
-	//    | value=HEX_INT
-	//    | value=BINARY_INT
-	//    | value=SCIENTIFIC_INT
-	//    | value=SIGNED_INT
-	//    | value=SIGNED_DOUBLE
-	//    | value=SIGNED_OCTAL_INT
-	//    | value=SIGNED_LEGACY_OCTAL_INT
-	//    | value=SIGNED_HEX_INT
-	//    | value=SIGNED_BINARY_INT
-	//    | value=SIGNED_SCIENTIFIC_INT;
+	//    ('+' | negated?='-')? // FIXME try to do this via value converters
+	//    (
+	//          astValue=INT
+	//        | astValue=DOUBLE
+	//        | astValue=OCTAL_INT
+	//        | astValue=LEGACY_OCTAL_INT
+	//        | astValue=HEX_INT
+	//        | astValue=BINARY_INT
+	//        | astValue=SCIENTIFIC_INT
+	//    );
 	public TypeExpressionsGrammarAccess.NumericLiteralTypeRefElements getNumericLiteralTypeRefAccess() {
 		return gaTypeExpressions.getNumericLiteralTypeRefAccess();
 	}
@@ -2994,7 +2990,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	//StringLiteralTypeRef returns StringLiteralTypeRef:
-	//    value=STRING;
+	//    astValue=STRING;
 	public TypeExpressionsGrammarAccess.StringLiteralTypeRefElements getStringLiteralTypeRefAccess() {
 		return gaTypeExpressions.getStringLiteralTypeRefAccess();
 	}
@@ -3601,53 +3597,18 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	//terminal fragment EXPONENT_PART:
-	//      ('e' | 'E') SIGNED_INT_IN_EXPONENT
+	//      ('e' | 'E') SIGNED_INT
 	//    | IDENTIFIER
 	//;
 	public TerminalRule getEXPONENT_PARTRule() {
 		return gaTypeExpressions.getEXPONENT_PARTRule();
 	}
 	
-	//terminal fragment SIGNED_INT_IN_EXPONENT:
+	//terminal fragment SIGNED_INT:
 	//    ('+' | '-') DECIMAL_DIGIT_FRAGMENT+ IDENTIFIER?
 	//;
-	public TerminalRule getSIGNED_INT_IN_EXPONENTRule() {
-		return gaTypeExpressions.getSIGNED_INT_IN_EXPONENTRule();
-	}
-	
-	//terminal SIGNED_INT returns ecore::EBigDecimal: ('+' | '-') INT;
 	public TerminalRule getSIGNED_INTRule() {
 		return gaTypeExpressions.getSIGNED_INTRule();
-	}
-	
-	//terminal SIGNED_DOUBLE returns ecore::EBigDecimal: ('+' | '-') DOUBLE;
-	public TerminalRule getSIGNED_DOUBLERule() {
-		return gaTypeExpressions.getSIGNED_DOUBLERule();
-	}
-	
-	//terminal SIGNED_BINARY_INT returns ecore::EBigDecimal: ('+' | '-') BINARY_INT;
-	public TerminalRule getSIGNED_BINARY_INTRule() {
-		return gaTypeExpressions.getSIGNED_BINARY_INTRule();
-	}
-	
-	//terminal SIGNED_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') OCTAL_INT;
-	public TerminalRule getSIGNED_OCTAL_INTRule() {
-		return gaTypeExpressions.getSIGNED_OCTAL_INTRule();
-	}
-	
-	//terminal SIGNED_LEGACY_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') LEGACY_OCTAL_INT;
-	public TerminalRule getSIGNED_LEGACY_OCTAL_INTRule() {
-		return gaTypeExpressions.getSIGNED_LEGACY_OCTAL_INTRule();
-	}
-	
-	//terminal SIGNED_HEX_INT returns ecore::EBigDecimal: ('+' | '-') HEX_INT;
-	public TerminalRule getSIGNED_HEX_INTRule() {
-		return gaTypeExpressions.getSIGNED_HEX_INTRule();
-	}
-	
-	//terminal SIGNED_SCIENTIFIC_INT returns ecore::EBigDecimal: ('+' | '-') SCIENTIFIC_INT;
-	public TerminalRule getSIGNED_SCIENTIFIC_INTRule() {
-		return gaTypeExpressions.getSIGNED_SCIENTIFIC_INTRule();
 	}
 	
 	///* This terminal rule is not as strict as the ECMA spec because we want to
