@@ -110,6 +110,9 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  An array type in the AST, i.e. something like {@code let x: string[];}. Don't confuse with {@link ParameterizedTypeRef#isArrayNTypeExpression() arrayNTypeExpression}.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Array Type Expression</em>' attribute.
 	 * @see #setArrayTypeExpression(boolean)
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayTypeExpression()
@@ -133,6 +136,9 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  An ArrayN type in the AST, i.e. something like {@code let x: [string,number];}. Don't confuse with {@link ParameterizedTypeRef#isArrayTypeExpression() arrayTypeExpression}.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Array NType Expression</em>' attribute.
 	 * @see #setArrayNTypeExpression(boolean)
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayNTypeExpression()

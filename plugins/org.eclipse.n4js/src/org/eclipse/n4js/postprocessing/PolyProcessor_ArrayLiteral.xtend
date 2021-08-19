@@ -64,7 +64,7 @@ package class PolyProcessor_ArrayLiteral extends AbstractPolyProcessor {
 		val numOfElems = arrLit.elements.size;
 
 		// we have to analyze the type expectation:
-		// 1. we have to know up-front whether we aim for an actual type of Array/ArrayN
+		// 1. we have to know up-front whether we aim for an actual type of Array/Iterable or for ArrayN/IterableN
 		// 2. we have to know if we have concrete expectations for the element type(s)
 		// To do so, we prepare a helper variable 'expectedElemTypeRefs'
 		val expectedElemTypeRefs = getExpectedElemTypeRefs(G, expectedTypeRef);
@@ -118,8 +118,8 @@ if(isValueToBeDestructured) {
 	/**
 	 * The return value is as follows:
 	 * <ul>
-	 * <li>#[ T ] for an expectedTypeRef of the form Array<T> or Iterable<T>,</li>
-	 * <li>#[ T1, T2, ..., TN ] for an expectedTypeRef of the form ArrayN<T1,T2,...,TN>,</li>
+	 * <li>#[ T ] for an expectedTypeRef of the form Array&lt;T> or Iterable&lt;T>,</li>
+	 * <li>#[ T1, T2, ..., TN ] for an expectedTypeRef of the form ArrayN&lt;T1,T2,...,TN>,</li>
 	 * <li>#[] for any other kind of expectedTypeRef</li>
 	 * </ul>
 	 */

@@ -586,7 +586,9 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
 	transient String declaredTypeAsText
 	contains TypeArgument[] typeArgs
+	/* An array type in the AST, i.e. something like {@code let x: string[];}. Don't confuse with {@link ParameterizedTypeRef#isArrayNTypeExpression() arrayNTypeExpression}. */
 	boolean arrayTypeExpression = "false"
+	/* An ArrayN type in the AST, i.e. something like {@code let x: [string,number];}. Don't confuse with {@link ParameterizedTypeRef#isArrayTypeExpression() arrayTypeExpression}. */
 	boolean arrayNTypeExpression = "false"
 
 	/*

@@ -49,57 +49,85 @@ var v04 : X = [b,c,b];
 // same length:
 
 // XPECT type of '[b,c,b]' --> Array3<B,C,B>
-var v11 : Iterable3<B,B,B> = [b,c,b];
+var v11a : Iterable3<B,B,B> = [b,c,b];
+// XPECT type of '[b,c,b]' --> Array3<B,B,B>
+var v11b : Array3<B,B,B> = [b,c,b];
 
 // XPECT errors --> "Array3<B,X,B> is not a subtype of Iterable3<B,B,B>." at "[b,x,b]"
-var v12 : Iterable3<B,B,B> = [b,x,b];
+var v12a : Iterable3<B,B,B> = [b,x,b];
+// XPECT errors --> "Array3<B,X,B> is not a subtype of Array3<B,B,B>." at "[b,x,b]"
+var v12b : Array3<B,B,B> = [b,x,b];
 
 
 // literal is longer:
 
 // case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Array3<B,C,B>
-var v13 : Iterable3<B,B,B> = [b,c,b,b,b,c,b];
+var v13a : Iterable3<B,B,B> = [b,c,b,b,b,c,b];
+// case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Array3<B,B,B>
+var v13b : Array3<B,B,B> = [b,c,b,b,b,c,b];
 
 // found during IDE-1852: XPECT FIXME noerrors
 // case NOT all remaining match XPECT type of '[b,c,b,b,b,x,b]' --> Array3<B,B,union{B,X}>
-var v14 : Iterable3<B,B,B> = [b,c,b,b,b,x,b];
+var v14a : Iterable3<B,B,B> = [b,c,b,b,b,x,b];
+// found during IDE-1852: XPECT FIXME noerrors
+// case NOT all remaining match XPECT type of '[b,c,b,b,b,x,b]' --> Array3<B,B,union{B,X}>
+var v14b : Array3<B,B,B> = [b,c,b,b,b,x,b];
 
 
 // expectation is longer:
 
 // XPECT errors --> "Array3<B,B,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,c,b]"
-var v15 : Iterable4<B,B,B,B> = [b,c,b];
+var v15a : Iterable4<B,B,B,B> = [b,c,b];
+// XPECT errors --> "Array3<B,B,B> is not a subtype of Array4<B,B,B,B>." at "[b,c,b]"
+var v15b : Array4<B,B,B,B> = [b,c,b];
 
 // XPECT errors --> "Array3<B,X,B> is not a subtype of Iterable4<B,B,B,B>." at "[b,x,b]"
-var v16 : Iterable4<B,B,B,B> = [b,x,b];
+var v16a : Iterable4<B,B,B,B> = [b,x,b];
+// XPECT errors --> "Array3<B,X,B> is not a subtype of Array4<B,B,B,B>." at "[b,x,b]"
+var v16b : Array4<B,B,B,B> = [b,x,b];
 
 
 // literal is longer than BuiltInTypeScope#ITERABLE_N__MAX_LEN (i.e. longer than 9)
 
 // XPECT type of '[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]' --> Array9<B,C,B,B,B,B,B,B,B>
-var v17 : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b];
+var v17a : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b];
+// XPECT type of '[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]' --> Array9<B,B,B,B,B,B,B,B,B>
+var v17b : Array9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b];
 
 // XPECT errors --> "Array9<B,B,B,B,B,B,B,B,union{B,X}> is not a subtype of Iterable9<B,B,B,B,B,B,B,B,B>." at "[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b]"
-var v18 : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b];
+var v18a : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b];
+// XPECT errors --> "Array9<B,B,B,B,B,B,B,B,union{B,X}> is not a subtype of Array9<B,B,B,B,B,B,B,B,B>." at "[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b]"
+var v18b : Array9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b];
 
 
 // expectation is a union of iterable types
 
 // XPECT type of '[a,b]' --> Array2<A,B>
-var v19 : union{Iterable2<A,A>,Iterable2<A,B>} = [a,b];
+var v19a : union{Iterable2<A,A>,Iterable2<A,B>} = [a,b];
+// XPECT type of '[a,b]' --> Array2<A,A>
+var v19b : union{Array2<A,A>,Array2<A,B>} = [a,b];
 
 // XPECT type of '[a,b]' --> Array2<A,B>
-var v20 : union{Iterable2<A,A>,Iterable2<A,X>} = [a,b];
+var v20a : union{Iterable2<A,A>,Iterable2<A,X>} = [a,b];
+// XPECT type of '[a,b]' --> Array2<A,A>
+var v20b : union{Array2<A,A>,Array2<A,X>} = [a,b];
 
 // found during IDE-1852: XPECT FIXME noerrors
 // XPECT type of '[a,x]' --> Array2<A,union{A,X}>
-var v21 : union{Iterable2<A,A>,Iterable2<A,X>} = [a,x];
+var v21a : union{Iterable2<A,A>,Iterable2<A,X>} = [a,x];
+// found during IDE-1852: XPECT FIXME noerrors
+// XPECT type of '[a,x]' --> Array2<A,union{A,X}>
+var v21b : union{Array2<A,A>,Array2<A,X>} = [a,x];
 
 // XPECT errors --> "Array2<A,X> is not a subtype of union{Iterable2<A,A>,Iterable2<A,B>}." at "[a,x]"
-var v22 : union{Iterable2<A,A>,Iterable2<A,B>} = [a,x];
+var v22a : union{Iterable2<A,A>,Iterable2<A,B>} = [a,x];
+// XPECT errors --> "Array2<A,X> is not a subtype of union{Array2<A,A>,Array2<A,B>}." at "[a,x]"
+var v22b : union{Array2<A,A>,Array2<A,B>} = [a,x];
 
 
 // expectation is a union containing a non-iterable type
 
 // XPECT errors --> "Array<A> is not a subtype of union{Iterable2<A,A>,X}." at "[a,b]"
-var v23 : union{Iterable2<A,A>,X} = [a,b];  // maybe in such a case, type inference of ArrayLiteral could be further improved (to get rid of error)
+var v23a : union{Iterable2<A,A>,X} = [a,b];  // maybe in such a case, type inference of ArrayLiteral could be further improved (to get rid of error)
+// XPECT errors --> "Array<A> is not a subtype of union{Array2<A,A>,X}." at "[a,b]"
+var v23b : union{Array2<A,A>,X} = [a,b];  // maybe in such a case, type inference of ArrayLiteral could be further improved (to get rid of error)
