@@ -35,7 +35,7 @@ public interface LiteralTypeRef extends TypeRef {
 	 * @return the value of the '<em>Ast Value</em>' attribute.
 	 * @see #setAstValue(Object)
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getLiteralTypeRef_AstValue()
-	 * @model unique="false"
+	 * @model unique="false" transient="true"
 	 * @generated
 	 */
 	Object getAstValue();

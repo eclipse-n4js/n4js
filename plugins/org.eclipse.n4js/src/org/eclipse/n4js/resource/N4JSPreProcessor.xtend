@@ -83,8 +83,12 @@ package final class N4JSPreProcessor {
 	}
 
 	def private dispatch void processNode(NumericLiteralTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
-		val valueRaw = typeRef.astValue as BigDecimal; // validity of this cast is enforced by the grammar
-		typeRef.value = if (typeRef.negated) valueRaw.negate() else valueRaw;
+		var valueRaw = typeRef.astValue as BigDecimal; // validity of this cast is enforced by the grammar
+		valueRaw = valueRaw.stripTrailingZeros;
+		if (typeRef.negated) {
+			valueRaw = valueRaw.negate();
+		}
+		typeRef.value = valueRaw;
 	}
 
 	def private dispatch void processNode(StringLiteralTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {

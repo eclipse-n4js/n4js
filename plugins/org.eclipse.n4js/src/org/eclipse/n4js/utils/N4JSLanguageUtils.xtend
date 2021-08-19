@@ -12,6 +12,7 @@ package org.eclipse.n4js.utils
 
 import java.io.IOException
 import java.io.InputStream
+import java.math.BigDecimal
 import java.util.Properties
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
@@ -712,17 +713,38 @@ public class N4JSLanguageUtils {
 
 
 	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts
+	 * type references of any kind and converts them only if they are {@link LiteralTypeRef}s.
+	 * <p>
+	 * Note that this does not support nesting, i.e. literal type references nested within
+	 * a type reference of another kind won't be converted!
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof LiteralTypeRef) {
+			return getLiteralTypeBase(G, typeRef);
+		}
+		return typeRef;
+	}
+
+	/**
 	 * Returns the "base type" for the given literal type, e.g. type string for literal type "hello".
 	 */
-	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
+	def public static ParameterizedTypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
 		return switch(literalTypeRef) {
 			BooleanLiteralTypeRef: G.booleanTypeRef
-			NumericLiteralTypeRef: G.numberTypeRef // FIXME what about int?
+			NumericLiteralTypeRef: if (isInt(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef
 			StringLiteralTypeRef: G.stringTypeRef
 			default: throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.simpleName)
 		};
 	}
 
+	// FIXME GH-2197 make this consistent with the #isIntLiteral() methods below!
+	def static boolean isInt(BigDecimal value) {
+		val isWholeNumber = value.stripTrailingZeros().scale() <= 0;
+		return isWholeNumber
+			&& N4JSGlobals.INT32_MAX_VALUE_BD.subtract(value).signum >= 0
+			&& value.subtract(N4JSGlobals.INT32_MIN_VALUE_BD).signum >= 0;
+	}
 
 	/**
 	 * Tells if the given numeric literal is a Javascript int32.
@@ -771,7 +793,7 @@ public class N4JSLanguageUtils {
 			if(value==2147483648L) { // <-- the one value that is in int32 range if negative, but outside if positive
 				return 2;
 			}
-			if(Integer.MIN_VALUE<=value && value<=Integer.MAX_VALUE) {
+			if(N4JSGlobals.INT32_MIN_VALUE<=value && value<=N4JSGlobals.INT32_MAX_VALUE) {
 				return 1;
 			}
 			return 0;

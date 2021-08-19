@@ -2829,7 +2829,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEReference(getTypeVariableMapping_TypeArg(), this.getTypeArgument(), null, "typeArg", null, 0, 1, TypeVariableMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(literalTypeRefEClass, LiteralTypeRef.class, "LiteralTypeRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getLiteralTypeRef_AstValue(), theEcorePackage.getEJavaObject(), "astValue", null, 0, 1, LiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLiteralTypeRef_AstValue(), theEcorePackage.getEJavaObject(), "astValue", null, 0, 1, LiteralTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getLiteralTypeRef__GetValue(), theEcorePackage.getEJavaObject(), "getValue", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

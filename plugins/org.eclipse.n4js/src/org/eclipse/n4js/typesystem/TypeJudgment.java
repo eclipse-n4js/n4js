@@ -46,6 +46,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.voidType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -83,7 +84,6 @@ import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
-import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
@@ -122,7 +122,6 @@ import org.eclipse.n4js.n4JS.TemplateSegment;
 import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.UnaryExpression;
-import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
@@ -557,7 +556,7 @@ import com.google.inject.Inject;
 			// FIXME
 			// return N4JSLanguageUtils.isIntLiteral(l) ? intTypeRef(G) : numberTypeRef(G);
 			NumericLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
-			result.setValue(l.getValue());
+			result.setValue(l.getValue().stripTrailingZeros());
 			return result;
 		}
 
@@ -1176,26 +1175,30 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseUnaryExpression(UnaryExpression e) {
-			if ((e.getOp() == UnaryOperator.NEG || e.getOp() == UnaryOperator.POS)
-					&& e.getExpression() instanceof IntLiteral) {
-				// special case:
-				// negative/positive numeric literals with radix 10 (not for hexadecimal or octal literals!)
-				// (asymmetry of int32 range is taken care of in rule 'typeNumericLiteral')
+			switch (e.getOp()) {
+			case DELETE:
+				return booleanTypeRef(G);
+			case VOID:
+				return undefinedTypeRef(G);
+			case TYPEOF:
+				return stringTypeRef(G);
+			case NOT:
+				return booleanTypeRef(G);
+			case POS:
 				return ts.type(G, e.getExpression());
-			} else {
-				// standard cases:
-				switch (e.getOp()) {
-				case DELETE:
-					return booleanTypeRef(G);
-				case VOID:
-					return undefinedTypeRef(G);
-				case TYPEOF:
-					return stringTypeRef(G);
-				case NOT:
-					return booleanTypeRef(G);
-				default: // INC, DEC, POS, NEG, INV
-					return numberTypeRef(G);
+			case NEG:
+				TypeRef exprTypeRef = ts.type(G, e.getExpression());
+				if (exprTypeRef instanceof NumericLiteralTypeRef) {
+					BigDecimal value = ((NumericLiteralTypeRef) exprTypeRef).getValue();
+					if (value != null) {
+						NumericLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
+						result.setValue(value.negate());
+						return result;
+					}
 				}
+				return exprTypeRef;
+			default: // INC, DEC, INV
+				return numberTypeRef(G);
 			}
 		}
 

@@ -154,12 +154,12 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	public String internalGetTypeRefAsString() {
 		String _elvis = null;
 		BigDecimal _value = this.getValue();
-		String _string = null;
+		String _plainString = null;
 		if (_value!=null) {
-			_string=_value.toString();
+			_plainString=_value.toPlainString();
 		}
-		if (_string != null) {
-			_elvis = _string;
+		if (_plainString != null) {
+			_elvis = _plainString;
 		} else {
 			_elvis = "null";
 		}

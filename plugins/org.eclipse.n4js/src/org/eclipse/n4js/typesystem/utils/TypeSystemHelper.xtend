@@ -29,7 +29,6 @@ import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -263,8 +262,8 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		// take upper bound to get rid of wildcards, etc. (if any)
 		var result = ts.upperBoundWithReopen(G, typeRaw);
 		// replace literal types
-		if (mutable && result instanceof LiteralTypeRef) {
-			result = N4JSLanguageUtils.getLiteralTypeBase(G, result as LiteralTypeRef);
+		if (mutable) {
+			result = N4JSLanguageUtils.getLiteralTypeBase(G, result);
 		}
 		// replace silly types
 		val declType = result.declaredType;

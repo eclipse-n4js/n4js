@@ -25,12 +25,14 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -853,6 +855,10 @@ class RuleEnvironmentExtensions {
 	public def static boolean isNumericOperand(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef===null) {
 			return false;
+		}
+		if (typeRef instanceof BooleanLiteralTypeRef
+			|| typeRef instanceof NumericLiteralTypeRef) {
+			return true;
 		}
 		if (G.predefinedTypes.builtInTypeScope.isNumericOperand(typeRef.declaredType)) {
 			return true;
