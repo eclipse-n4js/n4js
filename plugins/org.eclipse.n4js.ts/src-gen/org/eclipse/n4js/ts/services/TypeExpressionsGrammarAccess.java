@@ -296,49 +296,55 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	public class PrimaryTypeExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.PrimaryTypeExpression");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cArrowFunctionTypeExpressionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cIterableTypeExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cTypeRefWithModifiersParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
-		private final Keyword cLeftParenthesisKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
-		private final RuleCall cTypeRefParserRuleCall_3_1 = (RuleCall)cGroup_3.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_3_2 = (Keyword)cGroup_3.eContents().get(2);
+		private final RuleCall cLiteralTypeRefParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cArrowFunctionTypeExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cIterableTypeExpressionParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cTypeRefWithModifiersParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
+		private final Keyword cLeftParenthesisKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final RuleCall cTypeRefParserRuleCall_4_1 = (RuleCall)cGroup_4.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_4_2 = (Keyword)cGroup_4.eContents().get(2);
 		
 		//PrimaryTypeExpression returns TypeRef:
-		//    ( ArrowFunctionTypeExpression
+		//    ( LiteralTypeRef
+		//    | ArrowFunctionTypeExpression
 		//    | IterableTypeExpression
 		//    | TypeRefWithModifiers
 		//    | "(" TypeRef ")"
 		//    );
 		@Override public ParserRule getRule() { return rule; }
 		
-		//( ArrowFunctionTypeExpression
+		//( LiteralTypeRef
+		//| ArrowFunctionTypeExpression
 		//| IterableTypeExpression
 		//| TypeRefWithModifiers
 		//| "(" TypeRef ")"
 		//)
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
+		//LiteralTypeRef
+		public RuleCall getLiteralTypeRefParserRuleCall_0() { return cLiteralTypeRefParserRuleCall_0; }
+		
 		//ArrowFunctionTypeExpression
-		public RuleCall getArrowFunctionTypeExpressionParserRuleCall_0() { return cArrowFunctionTypeExpressionParserRuleCall_0; }
+		public RuleCall getArrowFunctionTypeExpressionParserRuleCall_1() { return cArrowFunctionTypeExpressionParserRuleCall_1; }
 		
 		//IterableTypeExpression
-		public RuleCall getIterableTypeExpressionParserRuleCall_1() { return cIterableTypeExpressionParserRuleCall_1; }
+		public RuleCall getIterableTypeExpressionParserRuleCall_2() { return cIterableTypeExpressionParserRuleCall_2; }
 		
 		//TypeRefWithModifiers
-		public RuleCall getTypeRefWithModifiersParserRuleCall_2() { return cTypeRefWithModifiersParserRuleCall_2; }
+		public RuleCall getTypeRefWithModifiersParserRuleCall_3() { return cTypeRefWithModifiersParserRuleCall_3; }
 		
 		//"(" TypeRef ")"
-		public Group getGroup_3() { return cGroup_3; }
+		public Group getGroup_4() { return cGroup_4; }
 		
 		//"("
-		public Keyword getLeftParenthesisKeyword_3_0() { return cLeftParenthesisKeyword_3_0; }
+		public Keyword getLeftParenthesisKeyword_4_0() { return cLeftParenthesisKeyword_4_0; }
 		
 		//TypeRef
-		public RuleCall getTypeRefParserRuleCall_3_1() { return cTypeRefParserRuleCall_3_1; }
+		public RuleCall getTypeRefParserRuleCall_4_1() { return cTypeRefParserRuleCall_4_1; }
 		
 		//")"
-		public Keyword getRightParenthesisKeyword_3_2() { return cRightParenthesisKeyword_3_2; }
+		public Keyword getRightParenthesisKeyword_4_2() { return cRightParenthesisKeyword_4_2; }
 	}
 	public class TypeRefWithModifiersElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
@@ -487,6 +493,228 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//WildcardOldNotation
 		public RuleCall getWildcardOldNotationParserRuleCall_2() { return cWildcardOldNotationParserRuleCall_2; }
+	}
+	public class LiteralTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.LiteralTypeRef");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cBooleanLiteralTypeRefParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cNumericLiteralTypeRefParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cStringLiteralTypeRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		
+		//LiteralTypeRef returns LiteralTypeRef:
+		//      BooleanLiteralTypeRef
+		//    | NumericLiteralTypeRef
+		//    | StringLiteralTypeRef;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//  BooleanLiteralTypeRef
+		//| NumericLiteralTypeRef
+		//| StringLiteralTypeRef
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//BooleanLiteralTypeRef
+		public RuleCall getBooleanLiteralTypeRefParserRuleCall_0() { return cBooleanLiteralTypeRefParserRuleCall_0; }
+		
+		//NumericLiteralTypeRef
+		public RuleCall getNumericLiteralTypeRefParserRuleCall_1() { return cNumericLiteralTypeRefParserRuleCall_1; }
+		
+		//StringLiteralTypeRef
+		public RuleCall getStringLiteralTypeRefParserRuleCall_2() { return cStringLiteralTypeRefParserRuleCall_2; }
+	}
+	public class BooleanLiteralTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.BooleanLiteralTypeRef");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cBooleanLiteralTypeRefAction_0 = (Action)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Assignment cValueAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
+		private final Keyword cValueTrueKeyword_1_0_0 = (Keyword)cValueAssignment_1_0.eContents().get(0);
+		private final Keyword cFalseKeyword_1_1 = (Keyword)cAlternatives_1.eContents().get(1);
+		
+		//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
+		//    {BooleanLiteralTypeRef} (value?='true' | 'false');
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{BooleanLiteralTypeRef} (value?='true' | 'false')
+		public Group getGroup() { return cGroup; }
+		
+		//{BooleanLiteralTypeRef}
+		public Action getBooleanLiteralTypeRefAction_0() { return cBooleanLiteralTypeRefAction_0; }
+		
+		//(value?='true' | 'false')
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//value?='true'
+		public Assignment getValueAssignment_1_0() { return cValueAssignment_1_0; }
+		
+		//'true'
+		public Keyword getValueTrueKeyword_1_0_0() { return cValueTrueKeyword_1_0_0; }
+		
+		//'false'
+		public Keyword getFalseKeyword_1_1() { return cFalseKeyword_1_1; }
+	}
+	public class NumericLiteralTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.NumericLiteralTypeRef");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Assignment cValueAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
+		private final RuleCall cValueINTTerminalRuleCall_0_0 = (RuleCall)cValueAssignment_0.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
+		private final RuleCall cValueDOUBLETerminalRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
+		private final Assignment cValueAssignment_2 = (Assignment)cAlternatives.eContents().get(2);
+		private final RuleCall cValueOCTAL_INTTerminalRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
+		private final Assignment cValueAssignment_3 = (Assignment)cAlternatives.eContents().get(3);
+		private final RuleCall cValueLEGACY_OCTAL_INTTerminalRuleCall_3_0 = (RuleCall)cValueAssignment_3.eContents().get(0);
+		private final Assignment cValueAssignment_4 = (Assignment)cAlternatives.eContents().get(4);
+		private final RuleCall cValueHEX_INTTerminalRuleCall_4_0 = (RuleCall)cValueAssignment_4.eContents().get(0);
+		private final Assignment cValueAssignment_5 = (Assignment)cAlternatives.eContents().get(5);
+		private final RuleCall cValueBINARY_INTTerminalRuleCall_5_0 = (RuleCall)cValueAssignment_5.eContents().get(0);
+		private final Assignment cValueAssignment_6 = (Assignment)cAlternatives.eContents().get(6);
+		private final RuleCall cValueSCIENTIFIC_INTTerminalRuleCall_6_0 = (RuleCall)cValueAssignment_6.eContents().get(0);
+		private final Assignment cValueAssignment_7 = (Assignment)cAlternatives.eContents().get(7);
+		private final RuleCall cValueSIGNED_INTTerminalRuleCall_7_0 = (RuleCall)cValueAssignment_7.eContents().get(0);
+		private final Assignment cValueAssignment_8 = (Assignment)cAlternatives.eContents().get(8);
+		private final RuleCall cValueSIGNED_DOUBLETerminalRuleCall_8_0 = (RuleCall)cValueAssignment_8.eContents().get(0);
+		private final Assignment cValueAssignment_9 = (Assignment)cAlternatives.eContents().get(9);
+		private final RuleCall cValueSIGNED_OCTAL_INTTerminalRuleCall_9_0 = (RuleCall)cValueAssignment_9.eContents().get(0);
+		private final Assignment cValueAssignment_10 = (Assignment)cAlternatives.eContents().get(10);
+		private final RuleCall cValueSIGNED_LEGACY_OCTAL_INTTerminalRuleCall_10_0 = (RuleCall)cValueAssignment_10.eContents().get(0);
+		private final Assignment cValueAssignment_11 = (Assignment)cAlternatives.eContents().get(11);
+		private final RuleCall cValueSIGNED_HEX_INTTerminalRuleCall_11_0 = (RuleCall)cValueAssignment_11.eContents().get(0);
+		private final Assignment cValueAssignment_12 = (Assignment)cAlternatives.eContents().get(12);
+		private final RuleCall cValueSIGNED_BINARY_INTTerminalRuleCall_12_0 = (RuleCall)cValueAssignment_12.eContents().get(0);
+		private final Assignment cValueAssignment_13 = (Assignment)cAlternatives.eContents().get(13);
+		private final RuleCall cValueSIGNED_SCIENTIFIC_INTTerminalRuleCall_13_0 = (RuleCall)cValueAssignment_13.eContents().get(0);
+		
+		//NumericLiteralTypeRef returns NumericLiteralTypeRef:
+		//      value=INT
+		//    | value=DOUBLE
+		//    | value=OCTAL_INT
+		//    | value=LEGACY_OCTAL_INT
+		//    | value=HEX_INT
+		//    | value=BINARY_INT
+		//    | value=SCIENTIFIC_INT
+		//    | value=SIGNED_INT
+		//    | value=SIGNED_DOUBLE
+		//    | value=SIGNED_OCTAL_INT
+		//    | value=SIGNED_LEGACY_OCTAL_INT
+		//    | value=SIGNED_HEX_INT
+		//    | value=SIGNED_BINARY_INT
+		//    | value=SIGNED_SCIENTIFIC_INT;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//  value=INT
+		//| value=DOUBLE
+		//| value=OCTAL_INT
+		//| value=LEGACY_OCTAL_INT
+		//| value=HEX_INT
+		//| value=BINARY_INT
+		//| value=SCIENTIFIC_INT
+		//| value=SIGNED_INT
+		//| value=SIGNED_DOUBLE
+		//| value=SIGNED_OCTAL_INT
+		//| value=SIGNED_LEGACY_OCTAL_INT
+		//| value=SIGNED_HEX_INT
+		//| value=SIGNED_BINARY_INT
+		//| value=SIGNED_SCIENTIFIC_INT
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//value=INT
+		public Assignment getValueAssignment_0() { return cValueAssignment_0; }
+		
+		//INT
+		public RuleCall getValueINTTerminalRuleCall_0_0() { return cValueINTTerminalRuleCall_0_0; }
+		
+		//value=DOUBLE
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
+		
+		//DOUBLE
+		public RuleCall getValueDOUBLETerminalRuleCall_1_0() { return cValueDOUBLETerminalRuleCall_1_0; }
+		
+		//value=OCTAL_INT
+		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
+		
+		//OCTAL_INT
+		public RuleCall getValueOCTAL_INTTerminalRuleCall_2_0() { return cValueOCTAL_INTTerminalRuleCall_2_0; }
+		
+		//value=LEGACY_OCTAL_INT
+		public Assignment getValueAssignment_3() { return cValueAssignment_3; }
+		
+		//LEGACY_OCTAL_INT
+		public RuleCall getValueLEGACY_OCTAL_INTTerminalRuleCall_3_0() { return cValueLEGACY_OCTAL_INTTerminalRuleCall_3_0; }
+		
+		//value=HEX_INT
+		public Assignment getValueAssignment_4() { return cValueAssignment_4; }
+		
+		//HEX_INT
+		public RuleCall getValueHEX_INTTerminalRuleCall_4_0() { return cValueHEX_INTTerminalRuleCall_4_0; }
+		
+		//value=BINARY_INT
+		public Assignment getValueAssignment_5() { return cValueAssignment_5; }
+		
+		//BINARY_INT
+		public RuleCall getValueBINARY_INTTerminalRuleCall_5_0() { return cValueBINARY_INTTerminalRuleCall_5_0; }
+		
+		//value=SCIENTIFIC_INT
+		public Assignment getValueAssignment_6() { return cValueAssignment_6; }
+		
+		//SCIENTIFIC_INT
+		public RuleCall getValueSCIENTIFIC_INTTerminalRuleCall_6_0() { return cValueSCIENTIFIC_INTTerminalRuleCall_6_0; }
+		
+		//value=SIGNED_INT
+		public Assignment getValueAssignment_7() { return cValueAssignment_7; }
+		
+		//SIGNED_INT
+		public RuleCall getValueSIGNED_INTTerminalRuleCall_7_0() { return cValueSIGNED_INTTerminalRuleCall_7_0; }
+		
+		//value=SIGNED_DOUBLE
+		public Assignment getValueAssignment_8() { return cValueAssignment_8; }
+		
+		//SIGNED_DOUBLE
+		public RuleCall getValueSIGNED_DOUBLETerminalRuleCall_8_0() { return cValueSIGNED_DOUBLETerminalRuleCall_8_0; }
+		
+		//value=SIGNED_OCTAL_INT
+		public Assignment getValueAssignment_9() { return cValueAssignment_9; }
+		
+		//SIGNED_OCTAL_INT
+		public RuleCall getValueSIGNED_OCTAL_INTTerminalRuleCall_9_0() { return cValueSIGNED_OCTAL_INTTerminalRuleCall_9_0; }
+		
+		//value=SIGNED_LEGACY_OCTAL_INT
+		public Assignment getValueAssignment_10() { return cValueAssignment_10; }
+		
+		//SIGNED_LEGACY_OCTAL_INT
+		public RuleCall getValueSIGNED_LEGACY_OCTAL_INTTerminalRuleCall_10_0() { return cValueSIGNED_LEGACY_OCTAL_INTTerminalRuleCall_10_0; }
+		
+		//value=SIGNED_HEX_INT
+		public Assignment getValueAssignment_11() { return cValueAssignment_11; }
+		
+		//SIGNED_HEX_INT
+		public RuleCall getValueSIGNED_HEX_INTTerminalRuleCall_11_0() { return cValueSIGNED_HEX_INTTerminalRuleCall_11_0; }
+		
+		//value=SIGNED_BINARY_INT
+		public Assignment getValueAssignment_12() { return cValueAssignment_12; }
+		
+		//SIGNED_BINARY_INT
+		public RuleCall getValueSIGNED_BINARY_INTTerminalRuleCall_12_0() { return cValueSIGNED_BINARY_INTTerminalRuleCall_12_0; }
+		
+		//value=SIGNED_SCIENTIFIC_INT
+		public Assignment getValueAssignment_13() { return cValueAssignment_13; }
+		
+		//SIGNED_SCIENTIFIC_INT
+		public RuleCall getValueSIGNED_SCIENTIFIC_INTTerminalRuleCall_13_0() { return cValueSIGNED_SCIENTIFIC_INTTerminalRuleCall_13_0; }
+	}
+	public class StringLiteralTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.StringLiteralTypeRef");
+		private final Assignment cValueAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cValueSTRINGTerminalRuleCall_0 = (RuleCall)cValueAssignment.eContents().get(0);
+		
+		//StringLiteralTypeRef returns StringLiteralTypeRef:
+		//    value=STRING;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//value=STRING
+		public Assignment getValueAssignment() { return cValueAssignment; }
+		
+		//STRING
+		public RuleCall getValueSTRINGTerminalRuleCall_0() { return cValueSTRINGTerminalRuleCall_0; }
 	}
 	public class ThisTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ThisTypeRef");
@@ -2505,6 +2733,10 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final TypeRefWithoutModifiersElements pTypeRefWithoutModifiers;
 	private final TypeRefFunctionTypeExpressionElements pTypeRefFunctionTypeExpression;
 	private final TypeArgInTypeTypeRefElements pTypeArgInTypeTypeRef;
+	private final LiteralTypeRefElements pLiteralTypeRef;
+	private final BooleanLiteralTypeRefElements pBooleanLiteralTypeRef;
+	private final NumericLiteralTypeRefElements pNumericLiteralTypeRef;
+	private final StringLiteralTypeRefElements pStringLiteralTypeRef;
 	private final ThisTypeRefElements pThisTypeRef;
 	private final ThisTypeRefNominalElements pThisTypeRefNominal;
 	private final ThisTypeRefStructuralElements pThisTypeRefStructural;
@@ -2550,6 +2782,25 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final N4KeywordElements pN4Keyword;
 	private final TerminalRule tIDENTIFIER;
 	private final TerminalRule tINT;
+	private final TerminalRule tDOUBLE;
+	private final TerminalRule tBINARY_INT;
+	private final TerminalRule tOCTAL_INT;
+	private final TerminalRule tLEGACY_OCTAL_INT;
+	private final TerminalRule tHEX_INT;
+	private final TerminalRule tINT_SUFFIX;
+	private final TerminalRule tSCIENTIFIC_INT;
+	private final TerminalRule tEXPONENT_PART;
+	private final TerminalRule tSIGNED_INT_IN_EXPONENT;
+	private final TerminalRule tSIGNED_INT;
+	private final TerminalRule tSIGNED_DOUBLE;
+	private final TerminalRule tSIGNED_BINARY_INT;
+	private final TerminalRule tSIGNED_OCTAL_INT;
+	private final TerminalRule tSIGNED_LEGACY_OCTAL_INT;
+	private final TerminalRule tSIGNED_HEX_INT;
+	private final TerminalRule tSIGNED_SCIENTIFIC_INT;
+	private final TerminalRule tSTRING;
+	private final TerminalRule tDOUBLE_STRING_CHAR;
+	private final TerminalRule tSINGLE_STRING_CHAR;
 	private final TerminalRule tML_COMMENT;
 	private final TerminalRule tSL_COMMENT;
 	private final TerminalRule tEOL;
@@ -2577,6 +2828,10 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pTypeRefWithoutModifiers = new TypeRefWithoutModifiersElements();
 		this.pTypeRefFunctionTypeExpression = new TypeRefFunctionTypeExpressionElements();
 		this.pTypeArgInTypeTypeRef = new TypeArgInTypeTypeRefElements();
+		this.pLiteralTypeRef = new LiteralTypeRefElements();
+		this.pBooleanLiteralTypeRef = new BooleanLiteralTypeRefElements();
+		this.pNumericLiteralTypeRef = new NumericLiteralTypeRefElements();
+		this.pStringLiteralTypeRef = new StringLiteralTypeRefElements();
 		this.pThisTypeRef = new ThisTypeRefElements();
 		this.pThisTypeRefNominal = new ThisTypeRefNominalElements();
 		this.pThisTypeRefStructural = new ThisTypeRefStructuralElements();
@@ -2622,6 +2877,25 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pN4Keyword = new N4KeywordElements();
 		this.tIDENTIFIER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.INT");
+		this.tDOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
+		this.tBINARY_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
+		this.tOCTAL_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
+		this.tLEGACY_OCTAL_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
+		this.tHEX_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
+		this.tINT_SUFFIX = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.INT_SUFFIX");
+		this.tSCIENTIFIC_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
+		this.tEXPONENT_PART = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.EXPONENT_PART");
+		this.tSIGNED_INT_IN_EXPONENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_INT_IN_EXPONENT");
+		this.tSIGNED_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_INT");
+		this.tSIGNED_DOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_DOUBLE");
+		this.tSIGNED_BINARY_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_BINARY_INT");
+		this.tSIGNED_OCTAL_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_OCTAL_INT");
+		this.tSIGNED_LEGACY_OCTAL_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_LEGACY_OCTAL_INT");
+		this.tSIGNED_HEX_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_HEX_INT");
+		this.tSIGNED_SCIENTIFIC_INT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SIGNED_SCIENTIFIC_INT");
+		this.tSTRING = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.STRING");
+		this.tDOUBLE_STRING_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.DOUBLE_STRING_CHAR");
+		this.tSINGLE_STRING_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SINGLE_STRING_CHAR");
 		this.tML_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.ML_COMMENT");
 		this.tSL_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.SL_COMMENT");
 		this.tEOL = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.EOL");
@@ -2718,7 +2992,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//PrimaryTypeExpression returns TypeRef:
-	//    ( ArrowFunctionTypeExpression
+	//    ( LiteralTypeRef
+	//    | ArrowFunctionTypeExpression
 	//    | IterableTypeExpression
 	//    | TypeRefWithModifiers
 	//    | "(" TypeRef ")"
@@ -2779,6 +3054,61 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	public ParserRule getTypeArgInTypeTypeRefRule() {
 		return getTypeArgInTypeTypeRefAccess().getRule();
+	}
+	
+	//LiteralTypeRef returns LiteralTypeRef:
+	//      BooleanLiteralTypeRef
+	//    | NumericLiteralTypeRef
+	//    | StringLiteralTypeRef;
+	public LiteralTypeRefElements getLiteralTypeRefAccess() {
+		return pLiteralTypeRef;
+	}
+	
+	public ParserRule getLiteralTypeRefRule() {
+		return getLiteralTypeRefAccess().getRule();
+	}
+	
+	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
+	//    {BooleanLiteralTypeRef} (value?='true' | 'false');
+	public BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {
+		return pBooleanLiteralTypeRef;
+	}
+	
+	public ParserRule getBooleanLiteralTypeRefRule() {
+		return getBooleanLiteralTypeRefAccess().getRule();
+	}
+	
+	//NumericLiteralTypeRef returns NumericLiteralTypeRef:
+	//      value=INT
+	//    | value=DOUBLE
+	//    | value=OCTAL_INT
+	//    | value=LEGACY_OCTAL_INT
+	//    | value=HEX_INT
+	//    | value=BINARY_INT
+	//    | value=SCIENTIFIC_INT
+	//    | value=SIGNED_INT
+	//    | value=SIGNED_DOUBLE
+	//    | value=SIGNED_OCTAL_INT
+	//    | value=SIGNED_LEGACY_OCTAL_INT
+	//    | value=SIGNED_HEX_INT
+	//    | value=SIGNED_BINARY_INT
+	//    | value=SIGNED_SCIENTIFIC_INT;
+	public NumericLiteralTypeRefElements getNumericLiteralTypeRefAccess() {
+		return pNumericLiteralTypeRef;
+	}
+	
+	public ParserRule getNumericLiteralTypeRefRule() {
+		return getNumericLiteralTypeRefAccess().getRule();
+	}
+	
+	//StringLiteralTypeRef returns StringLiteralTypeRef:
+	//    value=STRING;
+	public StringLiteralTypeRefElements getStringLiteralTypeRefAccess() {
+		return pStringLiteralTypeRef;
+	}
+	
+	public ParserRule getStringLiteralTypeRefRule() {
+		return getStringLiteralTypeRefAccess().getRule();
 	}
 	
 	//ThisTypeRef returns ThisTypeRef:
@@ -3331,10 +3661,140 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return tIDENTIFIER;
 	}
 	
-	//terminal INT returns ecore::EBigDecimal:
-	//    DECIMAL_INTEGER_LITERAL_FRAGMENT;
+	///**
+	// * The terminal rules to represent number literals are listed below.
+	// *
+	// * They implement the constraint
+	// * 'The source character immediately following a NumericLiteral must not be an IdentifierStart or DecimalDigit.'
+	// * in the value converter. That is, the terminals consume a trailing identifier and
+	// * later on, a meaningful error will be attached.
+	// */
+	//terminal INT returns ecore::EBigDecimal: DECIMAL_INTEGER_LITERAL_FRAGMENT;
 	public TerminalRule getINTRule() {
 		return tINT;
+	}
+	
+	//terminal DOUBLE returns ecore::EBigDecimal:
+	//    '.' DECIMAL_DIGIT_FRAGMENT+ EXPONENT_PART?
+	//    | DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?
+	//;
+	public TerminalRule getDOUBLERule() {
+		return tDOUBLE;
+	}
+	
+	//terminal BINARY_INT returns ecore::EBigDecimal: '0' ('b' | 'B') INT_SUFFIX;
+	public TerminalRule getBINARY_INTRule() {
+		return tBINARY_INT;
+	}
+	
+	//terminal OCTAL_INT returns ecore::EBigDecimal: '0' ('o' | 'O') INT_SUFFIX;
+	public TerminalRule getOCTAL_INTRule() {
+		return tOCTAL_INT;
+	}
+	
+	//terminal LEGACY_OCTAL_INT returns ecore::EBigDecimal: '0' DECIMAL_DIGIT_FRAGMENT INT_SUFFIX;
+	public TerminalRule getLEGACY_OCTAL_INTRule() {
+		return tLEGACY_OCTAL_INT;
+	}
+	
+	//terminal HEX_INT returns ecore::EBigDecimal: '0' ('x' | 'X') INT_SUFFIX;
+	public TerminalRule getHEX_INTRule() {
+		return tHEX_INT;
+	}
+	
+	///**
+	// * This terminal fragment includes the decimal digits '0'..'9' and also all other identifier part chars
+	// * to have a relaxed grammar and better error messages from the value converter.
+	// */
+	//terminal fragment INT_SUFFIX: IDENTIFIER_PART*;
+	public TerminalRule getINT_SUFFIXRule() {
+		return tINT_SUFFIX;
+	}
+	
+	//terminal SCIENTIFIC_INT returns ecore::EBigDecimal:
+	//    DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART
+	//;
+	public TerminalRule getSCIENTIFIC_INTRule() {
+		return tSCIENTIFIC_INT;
+	}
+	
+	//terminal fragment EXPONENT_PART:
+	//      ('e' | 'E') SIGNED_INT_IN_EXPONENT
+	//    | IDENTIFIER
+	//;
+	public TerminalRule getEXPONENT_PARTRule() {
+		return tEXPONENT_PART;
+	}
+	
+	//terminal fragment SIGNED_INT_IN_EXPONENT:
+	//    ('+' | '-') DECIMAL_DIGIT_FRAGMENT+ IDENTIFIER?
+	//;
+	public TerminalRule getSIGNED_INT_IN_EXPONENTRule() {
+		return tSIGNED_INT_IN_EXPONENT;
+	}
+	
+	//terminal SIGNED_INT returns ecore::EBigDecimal: ('+' | '-') INT;
+	public TerminalRule getSIGNED_INTRule() {
+		return tSIGNED_INT;
+	}
+	
+	//terminal SIGNED_DOUBLE returns ecore::EBigDecimal: ('+' | '-') DOUBLE;
+	public TerminalRule getSIGNED_DOUBLERule() {
+		return tSIGNED_DOUBLE;
+	}
+	
+	//terminal SIGNED_BINARY_INT returns ecore::EBigDecimal: ('+' | '-') BINARY_INT;
+	public TerminalRule getSIGNED_BINARY_INTRule() {
+		return tSIGNED_BINARY_INT;
+	}
+	
+	//terminal SIGNED_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') OCTAL_INT;
+	public TerminalRule getSIGNED_OCTAL_INTRule() {
+		return tSIGNED_OCTAL_INT;
+	}
+	
+	//terminal SIGNED_LEGACY_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') LEGACY_OCTAL_INT;
+	public TerminalRule getSIGNED_LEGACY_OCTAL_INTRule() {
+		return tSIGNED_LEGACY_OCTAL_INT;
+	}
+	
+	//terminal SIGNED_HEX_INT returns ecore::EBigDecimal: ('+' | '-') HEX_INT;
+	public TerminalRule getSIGNED_HEX_INTRule() {
+		return tSIGNED_HEX_INT;
+	}
+	
+	//terminal SIGNED_SCIENTIFIC_INT returns ecore::EBigDecimal: ('+' | '-') SCIENTIFIC_INT;
+	public TerminalRule getSIGNED_SCIENTIFIC_INTRule() {
+		return tSIGNED_SCIENTIFIC_INT;
+	}
+	
+	///* This terminal rule is not as strict as the ECMA spec because we want to
+	// * provide better error messages than the lexer does.
+	// * Therefore, an unclosed string literal is consumed to the end of line
+	// * and validated in the JSStringValueConverter afterwards.
+	// */
+	//terminal STRING:
+	//      '"' DOUBLE_STRING_CHAR* '"'?
+	//    | "'" SINGLE_STRING_CHAR* "'"?
+	//;
+	public TerminalRule getSTRINGRule() {
+		return tSTRING;
+	}
+	
+	//terminal fragment DOUBLE_STRING_CHAR:
+	//      !(LINE_TERMINATOR_FRAGMENT | '"' | '\\')
+	//    | '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+	//;
+	public TerminalRule getDOUBLE_STRING_CHARRule() {
+		return tDOUBLE_STRING_CHAR;
+	}
+	
+	//terminal fragment SINGLE_STRING_CHAR:
+	//      !(LINE_TERMINATOR_FRAGMENT | "'" | '\\')
+	//    | '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+	//;
+	public TerminalRule getSINGLE_STRING_CHARRule() {
+		return tSINGLE_STRING_CHAR;
 	}
 	
 	//terminal ML_COMMENT:

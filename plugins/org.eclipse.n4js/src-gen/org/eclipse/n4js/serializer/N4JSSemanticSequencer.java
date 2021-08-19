@@ -139,10 +139,13 @@ import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.serializer.TypeExpressionsSemanticSequencer;
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefNominal;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -1401,6 +1404,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			}
 		else if (epackage == TypeRefsPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
+			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF:
+				sequence_BooleanLiteralTypeRef(context, (BooleanLiteralTypeRef) semanticObject); 
+				return; 
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION:
 				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
@@ -1450,6 +1456,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF:
+				sequence_NumericLiteralTypeRef(context, (NumericLiteralTypeRef) semanticObject); 
+				return; 
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF:
 				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
@@ -1517,6 +1526,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
+			case TypeRefsPackage.STRING_LITERAL_TYPE_REF:
+				sequence_StringLiteralTypeRef(context, (StringLiteralTypeRef) semanticObject); 
+				return; 
 			case TypeRefsPackage.THIS_TYPE_REF_NOMINAL:
 				if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefRule()

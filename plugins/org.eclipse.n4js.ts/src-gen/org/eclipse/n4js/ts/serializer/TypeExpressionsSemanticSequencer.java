@@ -15,10 +15,13 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess;
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefNominal;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -39,7 +42,9 @@ import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Parameter;
 import org.eclipse.xtext.ParserRule;
 import org.eclipse.xtext.serializer.ISerializationContext;
+import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
 import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
+import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 
 @SuppressWarnings("all")
 public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemanticSequencer {
@@ -55,6 +60,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
 		if (epackage == TypeRefsPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
+			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF:
+				sequence_BooleanLiteralTypeRef(context, (BooleanLiteralTypeRef) semanticObject); 
+				return; 
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION:
 				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
@@ -104,6 +112,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 					return; 
 				}
 				else break;
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF:
+				sequence_NumericLiteralTypeRef(context, (NumericLiteralTypeRef) semanticObject); 
+				return; 
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF:
 				if (rule == grammarAccess.getTypeRefRule()
 						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
@@ -171,6 +182,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 					return; 
 				}
 				else break;
+			case TypeRefsPackage.STRING_LITERAL_TYPE_REF:
+				sequence_StringLiteralTypeRef(context, (StringLiteralTypeRef) semanticObject); 
+				return; 
 			case TypeRefsPackage.THIS_TYPE_REF_NOMINAL:
 				if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
 						|| rule == grammarAccess.getThisTypeRefRule()
@@ -461,6 +475,27 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
+	 *     TypeRef returns BooleanLiteralTypeRef
+	 *     TypeRef.UnionTypeExpression_1_0 returns BooleanLiteralTypeRef
+	 *     IntersectionTypeExpression returns BooleanLiteralTypeRef
+	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns BooleanLiteralTypeRef
+	 *     ArrayTypeExpression returns BooleanLiteralTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns BooleanLiteralTypeRef
+	 *     PrimaryTypeExpression returns BooleanLiteralTypeRef
+	 *     LiteralTypeRef returns BooleanLiteralTypeRef
+	 *     BooleanLiteralTypeRef returns BooleanLiteralTypeRef
+	 *     TypeArgument returns BooleanLiteralTypeRef
+	 *
+	 * Constraint:
+	 *     value?='true'?
+	 */
+	protected void sequence_BooleanLiteralTypeRef(ISerializationContext context, BooleanLiteralTypeRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     TypeRefWithoutModifiers returns FunctionTypeExpression
 	 *     FunctionTypeExpressionOLD returns FunctionTypeExpression
 	 *
@@ -657,6 +692,42 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
+	 *     TypeRef returns NumericLiteralTypeRef
+	 *     TypeRef.UnionTypeExpression_1_0 returns NumericLiteralTypeRef
+	 *     IntersectionTypeExpression returns NumericLiteralTypeRef
+	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns NumericLiteralTypeRef
+	 *     ArrayTypeExpression returns NumericLiteralTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns NumericLiteralTypeRef
+	 *     PrimaryTypeExpression returns NumericLiteralTypeRef
+	 *     LiteralTypeRef returns NumericLiteralTypeRef
+	 *     NumericLiteralTypeRef returns NumericLiteralTypeRef
+	 *     TypeArgument returns NumericLiteralTypeRef
+	 *
+	 * Constraint:
+	 *     (
+	 *         value=INT | 
+	 *         value=DOUBLE | 
+	 *         value=OCTAL_INT | 
+	 *         value=LEGACY_OCTAL_INT | 
+	 *         value=HEX_INT | 
+	 *         value=BINARY_INT | 
+	 *         value=SCIENTIFIC_INT | 
+	 *         value=SIGNED_INT | 
+	 *         value=SIGNED_DOUBLE | 
+	 *         value=SIGNED_OCTAL_INT | 
+	 *         value=SIGNED_LEGACY_OCTAL_INT | 
+	 *         value=SIGNED_HEX_INT | 
+	 *         value=SIGNED_BINARY_INT | 
+	 *         value=SIGNED_SCIENTIFIC_INT
+	 *     )
+	 */
+	protected void sequence_NumericLiteralTypeRef(ISerializationContext context, NumericLiteralTypeRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     TypeRef returns VersionedParameterizedTypeRef
 	 *     TypeRef.UnionTypeExpression_1_0 returns VersionedParameterizedTypeRef
 	 *     IntersectionTypeExpression returns VersionedParameterizedTypeRef
@@ -836,6 +907,33 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 */
 	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TypeRef returns StringLiteralTypeRef
+	 *     TypeRef.UnionTypeExpression_1_0 returns StringLiteralTypeRef
+	 *     IntersectionTypeExpression returns StringLiteralTypeRef
+	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns StringLiteralTypeRef
+	 *     ArrayTypeExpression returns StringLiteralTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns StringLiteralTypeRef
+	 *     PrimaryTypeExpression returns StringLiteralTypeRef
+	 *     LiteralTypeRef returns StringLiteralTypeRef
+	 *     StringLiteralTypeRef returns StringLiteralTypeRef
+	 *     TypeArgument returns StringLiteralTypeRef
+	 *
+	 * Constraint:
+	 *     value=STRING
+	 */
+	protected void sequence_StringLiteralTypeRef(ISerializationContext context, StringLiteralTypeRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, TypeRefsPackage.Literals.STRING_LITERAL_TYPE_REF__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.STRING_LITERAL_TYPE_REF__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getStringLiteralTypeRefAccess().getValueSTRINGTerminalRuleCall_0(), semanticObject.getValue());
+		feeder.finish();
 	}
 	
 	

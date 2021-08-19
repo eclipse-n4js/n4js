@@ -70,6 +70,9 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		private final RuleCall cArgsTAnnotationArgumentParserRuleCall_1_1_1_1_0 = (RuleCall)cArgsAssignment_1_1_1_1.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
 		
+		//// ****************************************************************************************************
+		//// Annotations
+		//// ****************************************************************************************************
 		//// cf. N4JSSpec §9
 		//TAnnotation: =>('@' name=IDENTIFIER) (=>'(' (args+=TAnnotationArgument (','args+=TAnnotationArgument)*)?  ')')?;
 		@Override public ParserRule getRule() { return rule; }
@@ -2197,8 +2200,6 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	private final TypeDefsElements pTypeDefs;
-	private final TerminalRule tSTRING;
-	private final TerminalRule tSINGLE_STRING_CHAR;
 	private final TAnnotationElements pTAnnotation;
 	private final TAnnotationArgumentElements pTAnnotationArgument;
 	private final TAnnotationStringArgumentElements pTAnnotationStringArgument;
@@ -2251,8 +2252,6 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		this.gaTypeExpressions = gaTypeExpressions;
 		this.gaUnicode = gaUnicode;
 		this.pTypeDefs = new TypeDefsElements();
-		this.tSTRING = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.Types.STRING");
-		this.tSINGLE_STRING_CHAR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.Types.SINGLE_STRING_CHAR");
 		this.pTAnnotation = new TAnnotationElements();
 		this.pTAnnotationArgument = new TAnnotationArgumentElements();
 		this.pTAnnotationStringArgument = new TAnnotationStringArgumentElements();
@@ -2339,21 +2338,6 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	//// ****************************************************************************************************
 	//// Annotations
 	//// ****************************************************************************************************
-	//terminal STRING    :
-	//    "'" SINGLE_STRING_CHAR* "'"
-	//;
-	public TerminalRule getSTRINGRule() {
-		return tSTRING;
-	}
-	
-	//terminal fragment SINGLE_STRING_CHAR:
-	//      !(LINE_TERMINATOR_FRAGMENT | "'" | '\\')
-	//    | '\\' ( LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)
-	//;
-	public TerminalRule getSINGLE_STRING_CHARRule() {
-		return tSINGLE_STRING_CHAR;
-	}
-	
 	//// cf. N4JSSpec §9
 	//TAnnotation: =>('@' name=IDENTIFIER) (=>'(' (args+=TAnnotationArgument (','args+=TAnnotationArgument)*)?  ')')?;
 	public TAnnotationElements getTAnnotationAccess() {
@@ -2900,7 +2884,8 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	//PrimaryTypeExpression returns TypeRef:
-	//    ( ArrowFunctionTypeExpression
+	//    ( LiteralTypeRef
+	//    | ArrowFunctionTypeExpression
 	//    | IterableTypeExpression
 	//    | TypeRefWithModifiers
 	//    | "(" TypeRef ")"
@@ -2961,6 +2946,61 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	
 	public ParserRule getTypeArgInTypeTypeRefRule() {
 		return getTypeArgInTypeTypeRefAccess().getRule();
+	}
+	
+	//LiteralTypeRef returns LiteralTypeRef:
+	//      BooleanLiteralTypeRef
+	//    | NumericLiteralTypeRef
+	//    | StringLiteralTypeRef;
+	public TypeExpressionsGrammarAccess.LiteralTypeRefElements getLiteralTypeRefAccess() {
+		return gaTypeExpressions.getLiteralTypeRefAccess();
+	}
+	
+	public ParserRule getLiteralTypeRefRule() {
+		return getLiteralTypeRefAccess().getRule();
+	}
+	
+	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
+	//    {BooleanLiteralTypeRef} (value?='true' | 'false');
+	public TypeExpressionsGrammarAccess.BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {
+		return gaTypeExpressions.getBooleanLiteralTypeRefAccess();
+	}
+	
+	public ParserRule getBooleanLiteralTypeRefRule() {
+		return getBooleanLiteralTypeRefAccess().getRule();
+	}
+	
+	//NumericLiteralTypeRef returns NumericLiteralTypeRef:
+	//      value=INT
+	//    | value=DOUBLE
+	//    | value=OCTAL_INT
+	//    | value=LEGACY_OCTAL_INT
+	//    | value=HEX_INT
+	//    | value=BINARY_INT
+	//    | value=SCIENTIFIC_INT
+	//    | value=SIGNED_INT
+	//    | value=SIGNED_DOUBLE
+	//    | value=SIGNED_OCTAL_INT
+	//    | value=SIGNED_LEGACY_OCTAL_INT
+	//    | value=SIGNED_HEX_INT
+	//    | value=SIGNED_BINARY_INT
+	//    | value=SIGNED_SCIENTIFIC_INT;
+	public TypeExpressionsGrammarAccess.NumericLiteralTypeRefElements getNumericLiteralTypeRefAccess() {
+		return gaTypeExpressions.getNumericLiteralTypeRefAccess();
+	}
+	
+	public ParserRule getNumericLiteralTypeRefRule() {
+		return getNumericLiteralTypeRefAccess().getRule();
+	}
+	
+	//StringLiteralTypeRef returns StringLiteralTypeRef:
+	//    value=STRING;
+	public TypeExpressionsGrammarAccess.StringLiteralTypeRefElements getStringLiteralTypeRefAccess() {
+		return gaTypeExpressions.getStringLiteralTypeRefAccess();
+	}
+	
+	public ParserRule getStringLiteralTypeRefRule() {
+		return getStringLiteralTypeRefAccess().getRule();
 	}
 	
 	//ThisTypeRef returns ThisTypeRef:
@@ -3503,10 +3543,140 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		return gaTypeExpressions.getIDENTIFIERRule();
 	}
 	
-	//terminal INT returns ecore::EBigDecimal:
-	//    DECIMAL_INTEGER_LITERAL_FRAGMENT;
+	///**
+	// * The terminal rules to represent number literals are listed below.
+	// *
+	// * They implement the constraint
+	// * 'The source character immediately following a NumericLiteral must not be an IdentifierStart or DecimalDigit.'
+	// * in the value converter. That is, the terminals consume a trailing identifier and
+	// * later on, a meaningful error will be attached.
+	// */
+	//terminal INT returns ecore::EBigDecimal: DECIMAL_INTEGER_LITERAL_FRAGMENT;
 	public TerminalRule getINTRule() {
 		return gaTypeExpressions.getINTRule();
+	}
+	
+	//terminal DOUBLE returns ecore::EBigDecimal:
+	//    '.' DECIMAL_DIGIT_FRAGMENT+ EXPONENT_PART?
+	//    | DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?
+	//;
+	public TerminalRule getDOUBLERule() {
+		return gaTypeExpressions.getDOUBLERule();
+	}
+	
+	//terminal BINARY_INT returns ecore::EBigDecimal: '0' ('b' | 'B') INT_SUFFIX;
+	public TerminalRule getBINARY_INTRule() {
+		return gaTypeExpressions.getBINARY_INTRule();
+	}
+	
+	//terminal OCTAL_INT returns ecore::EBigDecimal: '0' ('o' | 'O') INT_SUFFIX;
+	public TerminalRule getOCTAL_INTRule() {
+		return gaTypeExpressions.getOCTAL_INTRule();
+	}
+	
+	//terminal LEGACY_OCTAL_INT returns ecore::EBigDecimal: '0' DECIMAL_DIGIT_FRAGMENT INT_SUFFIX;
+	public TerminalRule getLEGACY_OCTAL_INTRule() {
+		return gaTypeExpressions.getLEGACY_OCTAL_INTRule();
+	}
+	
+	//terminal HEX_INT returns ecore::EBigDecimal: '0' ('x' | 'X') INT_SUFFIX;
+	public TerminalRule getHEX_INTRule() {
+		return gaTypeExpressions.getHEX_INTRule();
+	}
+	
+	///**
+	// * This terminal fragment includes the decimal digits '0'..'9' and also all other identifier part chars
+	// * to have a relaxed grammar and better error messages from the value converter.
+	// */
+	//terminal fragment INT_SUFFIX: IDENTIFIER_PART*;
+	public TerminalRule getINT_SUFFIXRule() {
+		return gaTypeExpressions.getINT_SUFFIXRule();
+	}
+	
+	//terminal SCIENTIFIC_INT returns ecore::EBigDecimal:
+	//    DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART
+	//;
+	public TerminalRule getSCIENTIFIC_INTRule() {
+		return gaTypeExpressions.getSCIENTIFIC_INTRule();
+	}
+	
+	//terminal fragment EXPONENT_PART:
+	//      ('e' | 'E') SIGNED_INT_IN_EXPONENT
+	//    | IDENTIFIER
+	//;
+	public TerminalRule getEXPONENT_PARTRule() {
+		return gaTypeExpressions.getEXPONENT_PARTRule();
+	}
+	
+	//terminal fragment SIGNED_INT_IN_EXPONENT:
+	//    ('+' | '-') DECIMAL_DIGIT_FRAGMENT+ IDENTIFIER?
+	//;
+	public TerminalRule getSIGNED_INT_IN_EXPONENTRule() {
+		return gaTypeExpressions.getSIGNED_INT_IN_EXPONENTRule();
+	}
+	
+	//terminal SIGNED_INT returns ecore::EBigDecimal: ('+' | '-') INT;
+	public TerminalRule getSIGNED_INTRule() {
+		return gaTypeExpressions.getSIGNED_INTRule();
+	}
+	
+	//terminal SIGNED_DOUBLE returns ecore::EBigDecimal: ('+' | '-') DOUBLE;
+	public TerminalRule getSIGNED_DOUBLERule() {
+		return gaTypeExpressions.getSIGNED_DOUBLERule();
+	}
+	
+	//terminal SIGNED_BINARY_INT returns ecore::EBigDecimal: ('+' | '-') BINARY_INT;
+	public TerminalRule getSIGNED_BINARY_INTRule() {
+		return gaTypeExpressions.getSIGNED_BINARY_INTRule();
+	}
+	
+	//terminal SIGNED_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') OCTAL_INT;
+	public TerminalRule getSIGNED_OCTAL_INTRule() {
+		return gaTypeExpressions.getSIGNED_OCTAL_INTRule();
+	}
+	
+	//terminal SIGNED_LEGACY_OCTAL_INT returns ecore::EBigDecimal: ('+' | '-') LEGACY_OCTAL_INT;
+	public TerminalRule getSIGNED_LEGACY_OCTAL_INTRule() {
+		return gaTypeExpressions.getSIGNED_LEGACY_OCTAL_INTRule();
+	}
+	
+	//terminal SIGNED_HEX_INT returns ecore::EBigDecimal: ('+' | '-') HEX_INT;
+	public TerminalRule getSIGNED_HEX_INTRule() {
+		return gaTypeExpressions.getSIGNED_HEX_INTRule();
+	}
+	
+	//terminal SIGNED_SCIENTIFIC_INT returns ecore::EBigDecimal: ('+' | '-') SCIENTIFIC_INT;
+	public TerminalRule getSIGNED_SCIENTIFIC_INTRule() {
+		return gaTypeExpressions.getSIGNED_SCIENTIFIC_INTRule();
+	}
+	
+	///* This terminal rule is not as strict as the ECMA spec because we want to
+	// * provide better error messages than the lexer does.
+	// * Therefore, an unclosed string literal is consumed to the end of line
+	// * and validated in the JSStringValueConverter afterwards.
+	// */
+	//terminal STRING:
+	//      '"' DOUBLE_STRING_CHAR* '"'?
+	//    | "'" SINGLE_STRING_CHAR* "'"?
+	//;
+	public TerminalRule getSTRINGRule() {
+		return gaTypeExpressions.getSTRINGRule();
+	}
+	
+	//terminal fragment DOUBLE_STRING_CHAR:
+	//      !(LINE_TERMINATOR_FRAGMENT | '"' | '\\')
+	//    | '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+	//;
+	public TerminalRule getDOUBLE_STRING_CHARRule() {
+		return gaTypeExpressions.getDOUBLE_STRING_CHARRule();
+	}
+	
+	//terminal fragment SINGLE_STRING_CHAR:
+	//      !(LINE_TERMINATOR_FRAGMENT | "'" | '\\')
+	//    | '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+	//;
+	public TerminalRule getSINGLE_STRING_CHARRule() {
+		return gaTypeExpressions.getSINGLE_STRING_CHARRule();
 	}
 	
 	//terminal ML_COMMENT:
