@@ -172,6 +172,22 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createTypeVariableMappingAdapter();
 			}
 			@Override
+			public Adapter caseLiteralTypeRef(LiteralTypeRef object) {
+				return createLiteralTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseBooleanLiteralTypeRef(BooleanLiteralTypeRef object) {
+				return createBooleanLiteralTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseNumberLiteralTypeRef(NumberLiteralTypeRef object) {
+				return createNumberLiteralTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseStringLiteralTypeRef(StringLiteralTypeRef object) {
+				return createStringLiteralTypeRefAdapter();
+			}
+			@Override
 			public Adapter caseVersionedReference(VersionedReference object) {
 				return createVersionedReferenceAdapter();
 			}
@@ -540,6 +556,62 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTypeVariableMappingAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.LiteralTypeRef <em>Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
+	 * @generated
+	 */
+	public Adapter createLiteralTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef <em>Boolean Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
+	 * @generated
+	 */
+	public Adapter createBooleanLiteralTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef <em>Number Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef
+	 * @generated
+	 */
+	public Adapter createNumberLiteralTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef <em>String Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
+	 * @generated
+	 */
+	public Adapter createStringLiteralTypeRefAdapter() {
 		return null;
 	}
 

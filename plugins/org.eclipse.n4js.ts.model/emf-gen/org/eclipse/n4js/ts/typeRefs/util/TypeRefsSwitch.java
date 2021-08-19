@@ -309,6 +309,45 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypeRefsPackage.LITERAL_TYPE_REF: {
+				LiteralTypeRef literalTypeRef = (LiteralTypeRef)theEObject;
+				T result = caseLiteralTypeRef(literalTypeRef);
+				if (result == null) result = caseTypeRef(literalTypeRef);
+				if (result == null) result = caseTypeArgument(literalTypeRef);
+				if (result == null) result = caseVersionable(literalTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF: {
+				BooleanLiteralTypeRef booleanLiteralTypeRef = (BooleanLiteralTypeRef)theEObject;
+				T result = caseBooleanLiteralTypeRef(booleanLiteralTypeRef);
+				if (result == null) result = caseLiteralTypeRef(booleanLiteralTypeRef);
+				if (result == null) result = caseTypeRef(booleanLiteralTypeRef);
+				if (result == null) result = caseTypeArgument(booleanLiteralTypeRef);
+				if (result == null) result = caseVersionable(booleanLiteralTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF: {
+				NumberLiteralTypeRef numberLiteralTypeRef = (NumberLiteralTypeRef)theEObject;
+				T result = caseNumberLiteralTypeRef(numberLiteralTypeRef);
+				if (result == null) result = caseLiteralTypeRef(numberLiteralTypeRef);
+				if (result == null) result = caseTypeRef(numberLiteralTypeRef);
+				if (result == null) result = caseTypeArgument(numberLiteralTypeRef);
+				if (result == null) result = caseVersionable(numberLiteralTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.STRING_LITERAL_TYPE_REF: {
+				StringLiteralTypeRef stringLiteralTypeRef = (StringLiteralTypeRef)theEObject;
+				T result = caseStringLiteralTypeRef(stringLiteralTypeRef);
+				if (result == null) result = caseLiteralTypeRef(stringLiteralTypeRef);
+				if (result == null) result = caseTypeRef(stringLiteralTypeRef);
+				if (result == null) result = caseTypeArgument(stringLiteralTypeRef);
+				if (result == null) result = caseVersionable(stringLiteralTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypeRefsPackage.VERSIONED_REFERENCE: {
 				VersionedReference versionedReference = (VersionedReference)theEObject;
 				T result = caseVersionedReference(versionedReference);
@@ -721,6 +760,66 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTypeVariableMapping(TypeVariableMapping object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Literal Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLiteralTypeRef(LiteralTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Boolean Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Boolean Literal Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseBooleanLiteralTypeRef(BooleanLiteralTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Number Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Number Literal Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNumberLiteralTypeRef(NumberLiteralTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>String Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>String Literal Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStringLiteralTypeRef(StringLiteralTypeRef object) {
 		return null;
 	}
 

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.n4js.ts.typeRefs.BaseTypeRef;
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
@@ -30,10 +31,13 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
+import org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefNominal;
@@ -231,6 +235,34 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass typeVariableMappingEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass literalTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass booleanLiteralTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass numberLiteralTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass stringLiteralTypeRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1960,6 +1992,116 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EClass getLiteralTypeRef() {
+		return literalTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getLiteralTypeRef__GetValue() {
+		return literalTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getBooleanLiteralTypeRef() {
+		return booleanLiteralTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getBooleanLiteralTypeRef_Value() {
+		return (EAttribute)booleanLiteralTypeRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getBooleanLiteralTypeRef__InternalGetTypeRefAsString() {
+		return booleanLiteralTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getNumberLiteralTypeRef() {
+		return numberLiteralTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getNumberLiteralTypeRef_Value() {
+		return (EAttribute)numberLiteralTypeRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getNumberLiteralTypeRef__InternalGetTypeRefAsString() {
+		return numberLiteralTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getStringLiteralTypeRef() {
+		return stringLiteralTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getStringLiteralTypeRef_Value() {
+		return (EAttribute)stringLiteralTypeRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getStringLiteralTypeRef__InternalGetTypeRefAsString() {
+		return stringLiteralTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getVersionedReference() {
 		return versionedReferenceEClass;
 	}
@@ -2268,6 +2410,21 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(typeVariableMappingEClass, TYPE_VARIABLE_MAPPING__TYPE_VAR);
 		createEReference(typeVariableMappingEClass, TYPE_VARIABLE_MAPPING__TYPE_ARG);
 
+		literalTypeRefEClass = createEClass(LITERAL_TYPE_REF);
+		createEOperation(literalTypeRefEClass, LITERAL_TYPE_REF___GET_VALUE);
+
+		booleanLiteralTypeRefEClass = createEClass(BOOLEAN_LITERAL_TYPE_REF);
+		createEAttribute(booleanLiteralTypeRefEClass, BOOLEAN_LITERAL_TYPE_REF__VALUE);
+		createEOperation(booleanLiteralTypeRefEClass, BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
+
+		numberLiteralTypeRefEClass = createEClass(NUMBER_LITERAL_TYPE_REF);
+		createEAttribute(numberLiteralTypeRefEClass, NUMBER_LITERAL_TYPE_REF__VALUE);
+		createEOperation(numberLiteralTypeRefEClass, NUMBER_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
+
+		stringLiteralTypeRefEClass = createEClass(STRING_LITERAL_TYPE_REF);
+		createEAttribute(stringLiteralTypeRefEClass, STRING_LITERAL_TYPE_REF__VALUE);
+		createEOperation(stringLiteralTypeRefEClass, STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
+
 		versionedReferenceEClass = createEClass(VERSIONED_REFERENCE);
 		createEAttribute(versionedReferenceEClass, VERSIONED_REFERENCE__REQUESTED_VERSION);
 		createEOperation(versionedReferenceEClass, VERSIONED_REFERENCE___HAS_REQUESTED_VERSION);
@@ -2344,6 +2501,10 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		functionTypeRefEClass.getESuperTypes().add(this.getFunctionTypeExprOrRef());
 		functionTypeExpressionEClass.getESuperTypes().add(this.getFunctionTypeExprOrRef());
 		deferredTypeRefEClass.getESuperTypes().add(this.getTypeRef());
+		literalTypeRefEClass.getESuperTypes().add(this.getTypeRef());
+		booleanLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
+		numberLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
+		stringLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
 		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getParameterizedTypeRef());
 		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getVersionedReference());
 		versionedFunctionTypeRefEClass.getESuperTypes().add(this.getVersionedParameterizedTypeRef());
@@ -2644,6 +2805,25 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEClass(typeVariableMappingEClass, TypeVariableMapping.class, "TypeVariableMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypeVariableMapping_TypeVar(), theTypesPackage.getTypeVariable(), null, "typeVar", null, 0, 1, TypeVariableMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTypeVariableMapping_TypeArg(), this.getTypeArgument(), null, "typeArg", null, 0, 1, TypeVariableMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(literalTypeRefEClass, LiteralTypeRef.class, "LiteralTypeRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getLiteralTypeRef__GetValue(), theEcorePackage.getEJavaObject(), "getValue", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(booleanLiteralTypeRefEClass, BooleanLiteralTypeRef.class, "BooleanLiteralTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBooleanLiteralTypeRef_Value(), theEcorePackage.getEBooleanObject(), "value", null, 0, 1, BooleanLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getBooleanLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(numberLiteralTypeRefEClass, NumberLiteralTypeRef.class, "NumberLiteralTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNumberLiteralTypeRef_Value(), theEcorePackage.getEBigDecimal(), "value", null, 0, 1, NumberLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getNumberLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(stringLiteralTypeRefEClass, StringLiteralTypeRef.class, "StringLiteralTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringLiteralTypeRef_Value(), theEcorePackage.getEString(), "value", null, 0, 1, StringLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getStringLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(versionedReferenceEClass, VersionedReference.class, "VersionedReference", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionedReference_RequestedVersion(), theEcorePackage.getEBigDecimal(), "requestedVersion", null, 0, 1, VersionedReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

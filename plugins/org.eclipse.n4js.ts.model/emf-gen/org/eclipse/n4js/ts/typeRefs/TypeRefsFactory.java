@@ -165,6 +165,33 @@ public interface TypeRefsFactory extends EFactory {
 	TypeVariableMapping createTypeVariableMapping();
 
 	/**
+	 * Returns a new object of class '<em>Boolean Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Boolean Literal Type Ref</em>'.
+	 * @generated
+	 */
+	BooleanLiteralTypeRef createBooleanLiteralTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>Number Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Number Literal Type Ref</em>'.
+	 * @generated
+	 */
+	NumberLiteralTypeRef createNumberLiteralTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>String Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>String Literal Type Ref</em>'.
+	 * @generated
+	 */
+	StringLiteralTypeRef createStringLiteralTypeRef();
+
+	/**
 	 * Returns a new object of class '<em>Versioned Parameterized Type Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
