@@ -53,7 +53,8 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 	public render() : React.ReactElement{
 		const constText = "some text";
 		/* XPECT scope at 'Lower<|>Component' ---
-		Array, AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError,
+		Array, Array2, Array3, Array4, Array5, Array6, Array7, Array8, Array9, 
+		AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError,
 		Function, Generator, Infinity, Iterable, Iterable2, Iterable3, Iterable4,
 		Iterable5, Iterable6, Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON,
 		LowerComponent, Math, MigrationContext, MigrationController, MyComponent, N4Accessor,

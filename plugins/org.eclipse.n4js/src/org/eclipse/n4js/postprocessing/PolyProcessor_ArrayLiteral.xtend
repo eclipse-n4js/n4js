@@ -258,7 +258,7 @@ if(isValueToBeDestructured) {
 				val idxResult = Math.min(idxElem, resultLen - 1);
 				val currResultInfVar = resultInfVars.get(idxResult);
 				val currResultInfVarTypeRef = TypeUtils.createTypeRef(currResultInfVar);
-				val currExpectedTypeRef = if (currElem.spread) G.arrayTypeRef(TypeUtils.createWildcardExtends(currResultInfVarTypeRef)) else currResultInfVarTypeRef;
+				val currExpectedTypeRef = if (currElem.spread) G.iterableTypeRef(TypeUtils.createWildcardExtends(currResultInfVarTypeRef)) else currResultInfVarTypeRef;
 				val currElemTypeRef = polyProcessor.processExpr(G, currElem.expression, currExpectedTypeRef, infCtx, cache);
 				infCtx.addConstraint(currElemTypeRef, currExpectedTypeRef, Variance.CO);
 			}

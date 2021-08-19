@@ -93,8 +93,8 @@ var v32b : Array<B> = [ b, ...myIterableOfC ];
 
 // XPECT type of '[ b, ...getArrOfC() ]' --> Array<A>
 var v33a : Array<A> = [ b, ...getArrOfC() ];
-// XPECT type of '[ b, ...myIterableOfC ]' --> Array<B>
-var v33b : Array<B> = [ b, ...myIterableOfC ];
+// XPECT type of '[ b, ...myIterableOfC ]' --> Array<A>
+var v33b : Array<A> = [ b, ...myIterableOfC ];
 
 // XPECT type of '[ b, ...getArrOfC() ]' --> Array<B>
 var v34a : Array<? extends B> = [ b, ...getArrOfC() ];
