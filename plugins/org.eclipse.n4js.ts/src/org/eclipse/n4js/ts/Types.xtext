@@ -25,15 +25,6 @@ TypeDefs:
 // Annotations
 // ****************************************************************************************************
 
-terminal STRING	:
-	"'" SINGLE_STRING_CHAR* "'"
-;
-terminal fragment SINGLE_STRING_CHAR:
-	  !(LINE_TERMINATOR_FRAGMENT | "'" | '\\')
-	| '\\' ( LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)
-;
-
-
 // cf. N4JSSpec §9
 TAnnotation: =>('@' name=IDENTIFIER) (=>'(' (args+=TAnnotationArgument (','args+=TAnnotationArgument)*)?  ')')?;
 
