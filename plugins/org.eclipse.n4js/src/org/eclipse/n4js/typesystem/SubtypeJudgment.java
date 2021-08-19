@@ -46,6 +46,7 @@ import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -214,6 +215,16 @@ import com.google.common.collect.Iterables;
 			}
 		}
 
+		if (left instanceof LiteralTypeRef) {
+			if (right instanceof LiteralTypeRef) {
+				return applyLiteralTypeRef_Both(G, (LiteralTypeRef) left, (LiteralTypeRef) right);
+			}
+			return applyLiteralTypeRef_Left(G, (LiteralTypeRef) left, right);
+		}
+		if (right instanceof LiteralTypeRef) {
+			return applyLiteralTypeRef_Right(G, left, (LiteralTypeRef) right);
+		}
+
 		// ParameterizedTypeRef
 		if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
 			return applyParameterizedTypeRef(G, (ParameterizedTypeRef) left, (ParameterizedTypeRef) right);
@@ -265,6 +276,21 @@ import com.google.common.collect.Iterables;
 				I.getTypeRefs().stream().map(
 						T -> ts.subtype(G, S, T)))
 								.trimCauses(); // legacy behavior; could improve error messages here!
+	}
+
+	private Result applyLiteralTypeRef_Left(RuleEnvironment G, LiteralTypeRef left, TypeRef right) {
+		TypeRef base = N4JSLanguageUtils.getLiteralTypeBase(G, left);
+		return requireAllSuccess(ts.subtype(G, base, right));
+	}
+
+	@SuppressWarnings("unused")
+	private Result applyLiteralTypeRef_Right(RuleEnvironment G, TypeRef left, LiteralTypeRef right) {
+		return failure();
+	}
+
+	@SuppressWarnings("unused")
+	private Result applyLiteralTypeRef_Both(RuleEnvironment G, LiteralTypeRef left, LiteralTypeRef right) {
+		return resultFromBoolean(Objects.equals(left.getValue(), right.getValue()));
 	}
 
 	private Result applyParameterizedTypeRef(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right) {
