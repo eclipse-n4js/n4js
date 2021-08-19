@@ -7574,14 +7574,14 @@ public interface TypeRefsPackage extends EPackage {
 	int BOOLEAN_LITERAL_TYPE_REF_OPERATION_COUNT = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NumberLiteralTypeRefImpl <em>Number Literal Type Ref</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl <em>Numeric Literal Type Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.NumberLiteralTypeRefImpl
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNumberLiteralTypeRef()
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNumericLiteralTypeRef()
 	 * @generated
 	 */
-	int NUMBER_LITERAL_TYPE_REF = 26;
+	int NUMERIC_LITERAL_TYPE_REF = 26;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -7590,7 +7590,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+	int NUMERIC_LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
 	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
@@ -7599,7 +7599,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+	int NUMERIC_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -7608,16 +7608,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
+	int NUMERIC_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Number Literal Type Ref</em>' class.
+	 * The number of structural features of the '<em>Numeric Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
+	int NUMERIC_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -7626,7 +7626,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -7635,7 +7635,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING = LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING;
+	int NUMERIC_LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING = LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -7644,7 +7644,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_TYPE_REF = LITERAL_TYPE_REF___IS_TYPE_REF;
+	int NUMERIC_LITERAL_TYPE_REF___IS_TYPE_REF = LITERAL_TYPE_REF___IS_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
@@ -7653,7 +7653,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED = LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED;
+	int NUMERIC_LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED = LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED;
 
 	/**
 	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
@@ -7662,7 +7662,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_ALIAS_RESOLVED = LITERAL_TYPE_REF___IS_ALIAS_RESOLVED;
+	int NUMERIC_LITERAL_TYPE_REF___IS_ALIAS_RESOLVED = LITERAL_TYPE_REF___IS_ALIAS_RESOLVED;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -7671,7 +7671,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_FINAL_BY_TYPE = LITERAL_TYPE_REF___IS_FINAL_BY_TYPE;
+	int NUMERIC_LITERAL_TYPE_REF___IS_FINAL_BY_TYPE = LITERAL_TYPE_REF___IS_FINAL_BY_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -7680,7 +7680,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_ARRAY_LIKE = LITERAL_TYPE_REF___IS_ARRAY_LIKE;
+	int NUMERIC_LITERAL_TYPE_REF___IS_ARRAY_LIKE = LITERAL_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
 	 * The operation id for the '<em>Is Unknown</em>' operation.
@@ -7689,7 +7689,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_UNKNOWN = LITERAL_TYPE_REF___IS_UNKNOWN;
+	int NUMERIC_LITERAL_TYPE_REF___IS_UNKNOWN = LITERAL_TYPE_REF___IS_UNKNOWN;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -7698,7 +7698,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_DYNAMIC = LITERAL_TYPE_REF___IS_DYNAMIC;
+	int NUMERIC_LITERAL_TYPE_REF___IS_DYNAMIC = LITERAL_TYPE_REF___IS_DYNAMIC;
 
 	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
@@ -7707,7 +7707,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_EXISTENTIAL = LITERAL_TYPE_REF___IS_EXISTENTIAL;
+	int NUMERIC_LITERAL_TYPE_REF___IS_EXISTENTIAL = LITERAL_TYPE_REF___IS_EXISTENTIAL;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -7716,7 +7716,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_GENERIC = LITERAL_TYPE_REF___IS_GENERIC;
+	int NUMERIC_LITERAL_TYPE_REF___IS_GENERIC = LITERAL_TYPE_REF___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -7725,7 +7725,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_PARAMETERIZED = LITERAL_TYPE_REF___IS_PARAMETERIZED;
+	int NUMERIC_LITERAL_TYPE_REF___IS_PARAMETERIZED = LITERAL_TYPE_REF___IS_PARAMETERIZED;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -7734,7 +7734,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_RAW = LITERAL_TYPE_REF___IS_RAW;
+	int NUMERIC_LITERAL_TYPE_REF___IS_RAW = LITERAL_TYPE_REF___IS_RAW;
 
 	/**
 	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
@@ -7743,7 +7743,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND;
 
 	/**
 	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
@@ -7752,7 +7752,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
 	 * The operation id for the '<em>Get Type Args</em>' operation.
@@ -7761,7 +7761,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_TYPE_ARGS = LITERAL_TYPE_REF___GET_TYPE_ARGS;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_ARGS = LITERAL_TYPE_REF___GET_TYPE_ARGS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -7770,7 +7770,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
@@ -7779,7 +7779,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -7788,7 +7788,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+	int NUMERIC_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -7797,7 +7797,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_TOP_TYPE = LITERAL_TYPE_REF___IS_TOP_TYPE;
+	int NUMERIC_LITERAL_TYPE_REF___IS_TOP_TYPE = LITERAL_TYPE_REF___IS_TOP_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Bottom Type</em>' operation.
@@ -7806,7 +7806,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_BOTTOM_TYPE = LITERAL_TYPE_REF___IS_BOTTOM_TYPE;
+	int NUMERIC_LITERAL_TYPE_REF___IS_BOTTOM_TYPE = LITERAL_TYPE_REF___IS_BOTTOM_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -7815,7 +7815,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_TYPING_STRATEGY = LITERAL_TYPE_REF___GET_TYPING_STRATEGY;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPING_STRATEGY = LITERAL_TYPE_REF___GET_TYPING_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -7824,7 +7824,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+	int NUMERIC_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -7833,7 +7833,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+	int NUMERIC_LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -7842,7 +7842,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+	int NUMERIC_LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -7851,7 +7851,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+	int NUMERIC_LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -7860,7 +7860,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_VERSION = LITERAL_TYPE_REF___GET_VERSION;
+	int NUMERIC_LITERAL_TYPE_REF___GET_VERSION = LITERAL_TYPE_REF___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Get Value</em>' operation.
@@ -7869,7 +7869,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___GET_VALUE = LITERAL_TYPE_REF___GET_VALUE;
+	int NUMERIC_LITERAL_TYPE_REF___GET_VALUE = LITERAL_TYPE_REF___GET_VALUE;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -7878,16 +7878,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
+	int NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
-	 * The number of operations of the '<em>Number Literal Type Ref</em>' class.
+	 * The number of operations of the '<em>Numeric Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NUMBER_LITERAL_TYPE_REF_OPERATION_COUNT = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
+	int NUMERIC_LITERAL_TYPE_REF_OPERATION_COUNT = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StringLiteralTypeRefImpl <em>String Literal Type Ref</em>}' class.
@@ -11325,35 +11325,35 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getBooleanLiteralTypeRef__InternalGetTypeRefAsString();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef <em>Number Literal Type Ref</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef <em>Numeric Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Number Literal Type Ref</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef
+	 * @return the meta object for class '<em>Numeric Literal Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 	 * @generated
 	 */
-	EClass getNumberLiteralTypeRef();
+	EClass getNumericLiteralTypeRef();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef#getValue <em>Value</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef#getValue()
-	 * @see #getNumberLiteralTypeRef()
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue()
+	 * @see #getNumericLiteralTypeRef()
 	 * @generated
 	 */
-	EAttribute getNumberLiteralTypeRef_Value();
+	EAttribute getNumericLiteralTypeRef_Value();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef#internalGetTypeRefAsString()
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString()
 	 * @generated
 	 */
-	EOperation getNumberLiteralTypeRef__InternalGetTypeRefAsString();
+	EOperation getNumericLiteralTypeRef__InternalGetTypeRefAsString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef <em>String Literal Type Ref</em>}'.
@@ -12892,14 +12892,14 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getBooleanLiteralTypeRef__InternalGetTypeRefAsString();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NumberLiteralTypeRefImpl <em>Number Literal Type Ref</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl <em>Numeric Literal Type Ref</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.NumberLiteralTypeRefImpl
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNumberLiteralTypeRef()
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNumericLiteralTypeRef()
 		 * @generated
 		 */
-		EClass NUMBER_LITERAL_TYPE_REF = eINSTANCE.getNumberLiteralTypeRef();
+		EClass NUMERIC_LITERAL_TYPE_REF = eINSTANCE.getNumericLiteralTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
@@ -12907,7 +12907,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NUMBER_LITERAL_TYPE_REF__VALUE = eINSTANCE.getNumberLiteralTypeRef_Value();
+		EAttribute NUMERIC_LITERAL_TYPE_REF__VALUE = eINSTANCE.getNumericLiteralTypeRef_Value();
 
 		/**
 		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
@@ -12915,7 +12915,7 @@ public interface TypeRefsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation NUMBER_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getNumberLiteralTypeRef__InternalGetTypeRefAsString();
+		EOperation NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getNumericLiteralTypeRef__InternalGetTypeRefAsString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StringLiteralTypeRefImpl <em>String Literal Type Ref</em>}' class.

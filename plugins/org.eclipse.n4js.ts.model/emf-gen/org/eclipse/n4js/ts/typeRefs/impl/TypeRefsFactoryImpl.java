@@ -83,7 +83,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.DEFERRED_TYPE_REF: return createDeferredTypeRef();
 			case TypeRefsPackage.TYPE_VARIABLE_MAPPING: return createTypeVariableMapping();
 			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF: return createBooleanLiteralTypeRef();
-			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF: return createNumberLiteralTypeRef();
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF: return createNumericLiteralTypeRef();
 			case TypeRefsPackage.STRING_LITERAL_TYPE_REF: return createStringLiteralTypeRef();
 			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF: return createVersionedParameterizedTypeRef();
 			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF: return createVersionedFunctionTypeRef();
@@ -309,9 +309,9 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * @generated
 	 */
 	@Override
-	public NumberLiteralTypeRef createNumberLiteralTypeRef() {
-		NumberLiteralTypeRefImpl numberLiteralTypeRef = new NumberLiteralTypeRefImpl();
-		return numberLiteralTypeRef;
+	public NumericLiteralTypeRef createNumericLiteralTypeRef() {
+		NumericLiteralTypeRefImpl numericLiteralTypeRef = new NumericLiteralTypeRefImpl();
+		return numericLiteralTypeRef;
 	}
 
 	/**

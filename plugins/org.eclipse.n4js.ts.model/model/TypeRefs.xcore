@@ -1313,7 +1313,7 @@ class BooleanLiteralTypeRef extends LiteralTypeRef {
 	}
 }
 
-class NumberLiteralTypeRef extends LiteralTypeRef {
+class NumericLiteralTypeRef extends LiteralTypeRef {
 	BigDecimal value
 
 	op String internalGetTypeRefAsString() {

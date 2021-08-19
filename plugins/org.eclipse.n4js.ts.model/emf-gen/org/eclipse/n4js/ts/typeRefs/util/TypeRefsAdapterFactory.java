@@ -180,8 +180,8 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createBooleanLiteralTypeRefAdapter();
 			}
 			@Override
-			public Adapter caseNumberLiteralTypeRef(NumberLiteralTypeRef object) {
-				return createNumberLiteralTypeRefAdapter();
+			public Adapter caseNumericLiteralTypeRef(NumericLiteralTypeRef object) {
+				return createNumericLiteralTypeRefAdapter();
 			}
 			@Override
 			public Adapter caseStringLiteralTypeRef(StringLiteralTypeRef object) {
@@ -588,16 +588,16 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef <em>Number Literal Type Ref</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef <em>Numeric Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 	 * @generated
 	 */
-	public Adapter createNumberLiteralTypeRefAdapter() {
+	public Adapter createNumericLiteralTypeRefAdapter() {
 		return null;
 	}
 

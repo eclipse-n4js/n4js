@@ -174,13 +174,13 @@ public interface TypeRefsFactory extends EFactory {
 	BooleanLiteralTypeRef createBooleanLiteralTypeRef();
 
 	/**
-	 * Returns a new object of class '<em>Number Literal Type Ref</em>'.
+	 * Returns a new object of class '<em>Numeric Literal Type Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Number Literal Type Ref</em>'.
+	 * @return a new object of class '<em>Numeric Literal Type Ref</em>'.
 	 * @generated
 	 */
-	NumberLiteralTypeRef createNumberLiteralTypeRef();
+	NumericLiteralTypeRef createNumericLiteralTypeRef();
 
 	/**
 	 * Returns a new object of class '<em>String Literal Type Ref</em>'.

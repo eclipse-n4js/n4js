@@ -22,23 +22,23 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Number Literal Type Ref</b></em>'.
+ * An implementation of the model object '<em><b>Numeric Literal Type Ref</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.NumberLiteralTypeRefImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl#getValue <em>Value</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements NumberLiteralTypeRef {
+public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements NumericLiteralTypeRef {
 	/**
 	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -64,7 +64,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected NumberLiteralTypeRefImpl() {
+	protected NumericLiteralTypeRefImpl() {
 		super();
 	}
 
@@ -75,7 +75,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return TypeRefsPackage.Literals.NUMBER_LITERAL_TYPE_REF;
+		return TypeRefsPackage.Literals.NUMERIC_LITERAL_TYPE_REF;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 		BigDecimal oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.NUMBER_LITERAL_TYPE_REF__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE, oldValue, value));
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF__VALUE:
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				return getValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -144,7 +144,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF__VALUE:
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				setValue((BigDecimal)newValue);
 				return;
 		}
@@ -159,7 +159,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF__VALUE:
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
 		}
@@ -174,7 +174,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF__VALUE:
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
 		return super.eIsSet(featureID);
@@ -188,7 +188,7 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
 				return internalGetTypeRefAsString();
 		}
 		return super.eInvoke(operationID, arguments);
@@ -210,4 +210,4 @@ public class NumberLiteralTypeRefImpl extends LiteralTypeRefImpl implements Numb
 		return result.toString();
 	}
 
-} //NumberLiteralTypeRefImpl
+} //NumericLiteralTypeRefImpl

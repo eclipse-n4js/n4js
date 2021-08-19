@@ -328,13 +328,13 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypeRefsPackage.NUMBER_LITERAL_TYPE_REF: {
-				NumberLiteralTypeRef numberLiteralTypeRef = (NumberLiteralTypeRef)theEObject;
-				T result = caseNumberLiteralTypeRef(numberLiteralTypeRef);
-				if (result == null) result = caseLiteralTypeRef(numberLiteralTypeRef);
-				if (result == null) result = caseTypeRef(numberLiteralTypeRef);
-				if (result == null) result = caseTypeArgument(numberLiteralTypeRef);
-				if (result == null) result = caseVersionable(numberLiteralTypeRef);
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF: {
+				NumericLiteralTypeRef numericLiteralTypeRef = (NumericLiteralTypeRef)theEObject;
+				T result = caseNumericLiteralTypeRef(numericLiteralTypeRef);
+				if (result == null) result = caseLiteralTypeRef(numericLiteralTypeRef);
+				if (result == null) result = caseTypeRef(numericLiteralTypeRef);
+				if (result == null) result = caseTypeArgument(numericLiteralTypeRef);
+				if (result == null) result = caseVersionable(numericLiteralTypeRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -794,17 +794,17 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Number Literal Type Ref</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Numeric Literal Type Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Number Literal Type Ref</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Numeric Literal Type Ref</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNumberLiteralTypeRef(NumberLiteralTypeRef object) {
+	public T caseNumericLiteralTypeRef(NumericLiteralTypeRef object) {
 		return null;
 	}
 

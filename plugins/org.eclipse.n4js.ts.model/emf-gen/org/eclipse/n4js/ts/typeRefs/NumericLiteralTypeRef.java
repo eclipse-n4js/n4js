@@ -14,35 +14,35 @@ import java.math.BigDecimal;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Number Literal Type Ref</b></em>'.
+ * A representation of the model object '<em><b>Numeric Literal Type Ref</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getNumberLiteralTypeRef()
+ * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getNumericLiteralTypeRef()
  * @model
  * @generated
  */
-public interface NumberLiteralTypeRef extends LiteralTypeRef {
+public interface NumericLiteralTypeRef extends LiteralTypeRef {
 	/**
 	 * Returns the value of the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Value</em>' attribute.
 	 * @see #setValue(BigDecimal)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getNumberLiteralTypeRef_Value()
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getNumericLiteralTypeRef_Value()
 	 * @model unique="false"
 	 * @generated
 	 */
 	BigDecimal getValue();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.NumberLiteralTypeRef#getValue <em>Value</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Value</em>' attribute.
@@ -59,4 +59,4 @@ public interface NumberLiteralTypeRef extends LiteralTypeRef {
 	 */
 	String internalGetTypeRefAsString();
 
-} // NumberLiteralTypeRef
+} // NumericLiteralTypeRef
