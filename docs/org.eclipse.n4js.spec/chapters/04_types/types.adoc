@@ -1398,6 +1398,20 @@ They are mainly intended for type system support of array destructuring literals
 
 NOTE: This is not documented in detail yet, because we want to gain experience with the current solution first, major refinement may be incoming.
 
+
+[[ArrayN]]
+=== ArrayN
+
+[.todo]
+Work in progress.
+
+Currently there are built-in types `Array2<T1,T2>`...`Array9<T1,...,T9>`.
+
+NOTE: This is not documented in detail yet, because we want to gain experience with the current solution first, major refinement may be incoming.
+
+
+
+
 [.language-n4js]
 == Type Modifiers
 
@@ -1407,6 +1421,7 @@ Type modifiers can not be used in type arguments.
 
 The general type modifiers $nullable$, $nonnull$ and $dynamic$ can be used for variables, attributes, method parameters and method types.
 Optional and variadic modifiers can only be applied for formal parameters.
+
 
 
 [[Type_Modifiers_Dynamic]]
@@ -3129,9 +3144,9 @@ let arr: Array<Array<Array<string>>>;
 ----
 
 
-=== IterableN Short-Hand Syntax
+=== ArrayN Short-Hand Syntax
 
-The built-in IterableN types (i.e. `Iterable2`, `Iterable3`, ... `Iterable9`, see <<IterableN>>) are
+The built-in ArrayN types (i.e. `Array2`, `Array3`, ... `Array9`, see <<ArrayN>>) are
 also provided with a short-hand syntax. For example, writing
 
 [source,n4js]
@@ -3143,7 +3158,7 @@ would be equivalent to
 
 [source,n4js]
 ----
-let i3: Iterable3<string,number,Array<string>>;
+let i3: Array3<string,number,Array<string>>;
 ----
 
 Note the following special cases:
@@ -3159,10 +3174,8 @@ which is equivalent to
 
 [source,n4js]
 ----
-let i0: Iterable<?>;
-let i1: Iterable<string>;
+let i0: Array<?>;
+let i1: Array<string>;
 let union: union{string,Array<number>}; // not: Array<union{string,number}>
 ----
 
-Further note: while this syntax is very similar to TypeScript's tuple syntax, the semantics
-of tuples and IterableN are very different.
