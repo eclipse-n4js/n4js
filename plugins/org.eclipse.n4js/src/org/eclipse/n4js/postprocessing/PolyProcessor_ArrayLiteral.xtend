@@ -33,6 +33,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -137,7 +138,9 @@ if(isValueToBeDestructured) {
 	 * expectation of IterableN.
 	 */
 	private def TypeRef buildFallbackTypeForArrayLiteral(boolean isIterableN, int resultLen,
-		List<TypeRef> elemTypeRefs, List<TypeRef> expectedElemTypeRefs, RuleEnvironment G) {
+		List<TypeRef> elemTypeRefsWithLiteralTypes, List<TypeRef> expectedElemTypeRefs, RuleEnvironment G) {
+
+		val elemTypeRefs = elemTypeRefsWithLiteralTypes.map[N4JSLanguageUtils.getLiteralTypeBase(G, it)].toList;
 
 		if (isIterableN) {
 			val typeArgs = newArrayOfSize(resultLen);
@@ -272,7 +275,7 @@ if(isValueToBeDestructured) {
 	private def void handleOnSolvedPerformanceTweak(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
 		List<TypeRef> expectedElemTypeRefs
 	) {
-		val List<TypeRef> betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
+		val betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
 		val fallbackTypeRef = buildFallbackTypeForArrayLiteral(false, 1, betterElemTypeRefs, expectedElemTypeRefs, G);
 		cache.storeType(arrLit, fallbackTypeRef);
 	}
