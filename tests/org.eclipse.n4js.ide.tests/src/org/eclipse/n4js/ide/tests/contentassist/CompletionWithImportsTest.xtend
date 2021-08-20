@@ -270,9 +270,17 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
 			(any, Keyword, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
 			(Array, Class, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
-			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
-			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
-			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
+			(Array2, Class, Array2, , , 00005, , , , ([0:8 - 0:9], Array2), [], [], , )
+			(Array3, Class, Array3, , , 00006, , , , ([0:8 - 0:9], Array3), [], [], , )
+			(Array4, Class, Array4, , , 00007, , , , ([0:8 - 0:9], Array4), [], [], , )
+			(Array5, Class, Array5, , , 00008, , , , ([0:8 - 0:9], Array5), [], [], , )
+			(Array6, Class, Array6, , , 00009, , , , ([0:8 - 0:9], Array6), [], [], , )
+			(Array7, Class, Array7, , , 00010, , , , ([0:8 - 0:9], Array7), [], [], , )
+			(Array8, Class, Array8, , , 00011, , , , ([0:8 - 0:9], Array8), [], [], , )
+			(Array9, Class, Array9, , , 00012, , , , ([0:8 - 0:9], Array9), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00013, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00014, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00015, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 
@@ -286,9 +294,17 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
 			(any, Keyword, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
 			(Array, Class, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
-			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
-			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
-			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
+			(Array2, Class, Array2, , , 00005, , , , ([0:8 - 0:9], Array2), [], [], , )
+			(Array3, Class, Array3, , , 00006, , , , ([0:8 - 0:9], Array3), [], [], , )
+			(Array4, Class, Array4, , , 00007, , , , ([0:8 - 0:9], Array4), [], [], , )
+			(Array5, Class, Array5, , , 00008, , , , ([0:8 - 0:9], Array5), [], [], , )
+			(Array6, Class, Array6, , , 00009, , , , ([0:8 - 0:9], Array6), [], [], , )
+			(Array7, Class, Array7, , , 00010, , , , ([0:8 - 0:9], Array7), [], [], , )
+			(Array8, Class, Array8, , , 00011, , , , ([0:8 - 0:9], Array8), [], [], , )
+			(Array9, Class, Array9, , , 00012, , , , ([0:8 - 0:9], Array9), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00013, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00014, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00015, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 

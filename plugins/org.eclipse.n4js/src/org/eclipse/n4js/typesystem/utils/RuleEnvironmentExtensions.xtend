@@ -723,6 +723,33 @@ class RuleEnvironmentExtensions {
 		return type!==null && G.iterableNTypes.contains(type);
 	}
 
+	/* Returns built-in type {@code ArrayN<T1...TN>} */
+	public def static arrayNType(RuleEnvironment G, int n) {
+		G.getPredefinedTypes().builtInTypeScope.getArrayNType(n)
+	}
+
+	/* Returns newly created reference to built-in type {@code ArrayN<T1...TN>} */
+	public def static arrayNTypeRef(RuleEnvironment G, int n, TypeArgument... typeArgs) {
+		createTypeRef(G.arrayNType(n), typeArgs);
+	}
+
+	/* Returns built-in type {@code ArrayN<T1...TN>} */
+	public def static arrayNTypes(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.getArrayNTypes
+	}
+
+	/**
+	 * Returns true iff <code>obj</code> is a {@link Type} or {@link TypeRef} and is or points to
+	 * one of the <code>ArrayN&lt;...></code> built-in types.
+	 */
+	public def static boolean isArrayN(RuleEnvironment G, EObject obj) {
+		val type = switch(obj) {
+			Type: obj
+			TypeRef: obj.declaredType
+		};
+		return type!==null && G.arrayNTypes.contains(type);
+	}
+
 	/* Returns built-in type {@code Promise<S,F>} */
 	public def static promiseType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.promiseType

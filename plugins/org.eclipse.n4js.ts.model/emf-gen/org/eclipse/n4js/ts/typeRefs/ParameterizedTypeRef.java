@@ -38,7 +38,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeAsText <em>Declared Type As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
@@ -110,6 +110,9 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  An array type in the AST, i.e. something like {@code let x: string[];}. Don't confuse with {@link ParameterizedTypeRef#isArrayNTypeExpression() arrayNTypeExpression}.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Array Type Expression</em>' attribute.
 	 * @see #setArrayTypeExpression(boolean)
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayTypeExpression()
@@ -129,27 +132,30 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayTypeExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * Returns the value of the '<em><b>Array NType Expression</b></em>' attribute.
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Iterable Type Expression</em>' attribute.
-	 * @see #setIterableTypeExpression(boolean)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_IterableTypeExpression()
+	 * <!-- begin-model-doc -->
+	 *  An ArrayN type in the AST, i.e. something like {@code let x: [string,number];}. Don't confuse with {@link ParameterizedTypeRef#isArrayTypeExpression() arrayTypeExpression}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Array NType Expression</em>' attribute.
+	 * @see #setArrayNTypeExpression(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayNTypeExpression()
 	 * @model default="false" unique="false"
 	 * @generated
 	 */
-	boolean isIterableTypeExpression();
+	boolean isArrayNTypeExpression();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Iterable Type Expression</em>' attribute.
-	 * @see #isIterableTypeExpression()
+	 * @param value the new value of the '<em>Array NType Expression</em>' attribute.
+	 * @see #isArrayNTypeExpression()
 	 * @generated
 	 */
-	void setIterableTypeExpression(boolean value);
+	void setArrayNTypeExpression(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Ast Namespace</b></em>' reference.

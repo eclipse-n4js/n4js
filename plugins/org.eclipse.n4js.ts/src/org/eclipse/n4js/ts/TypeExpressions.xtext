@@ -54,7 +54,7 @@ ArrayTypeExpression returns TypeRef:
 
 PrimaryTypeExpression returns TypeRef:
 	( ArrowFunctionTypeExpression
-	| IterableTypeExpression
+	| ArrayNTypeExpression
 	| TypeRefWithModifiers
 	| "(" TypeRef ")"
 	);
@@ -71,7 +71,7 @@ TypeRefWithoutModifiers returns StaticBaseTypeRef:
 
 TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
 	  ParameterizedTypeRef
-	| IterableTypeExpression
+	| ArrayNTypeExpression
 	| TypeTypeRef
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
@@ -166,8 +166,8 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 	('with' TStructMemberList)?
 ;
 
-IterableTypeExpression returns ParameterizedTypeRef:
-	iterableTypeExpression?='['
+ArrayNTypeExpression returns ParameterizedTypeRef:
+	arrayNTypeExpression?='['
 	(
 		typeArgs+=EmptyIterableTypeExpressionTail
 	|	typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'

@@ -431,6 +431,17 @@ declare class N4StringBasedEnum {
 }
 
 
+declare class Array2<T1,T2> extends Array<T1|T2> implements Iterable2<T1,T2> {}
+declare class Array3<T1,T2,T3> extends Array2<T1,T2|T3> implements Iterable3<T1,T2,T3> {}
+declare class Array4<T1,T2,T3,T4> extends Array3<T1,T2,T3|T4> implements Iterable4<T1,T2,T3,T4> {}
+declare class Array5<T1,T2,T3,T4,T5> extends Array4<T1,T2,T3,T4|T5> implements Iterable5<T1,T2,T3,T4,T5> {}
+declare class Array6<T1,T2,T3,T4,T5,T6> extends Array5<T1,T2,T3,T4,T5|T6> implements Iterable6<T1,T2,T3,T4,T5,T6> {}
+declare class Array7<T1,T2,T3,T4,T5,T6,T7> extends Array6<T1,T2,T3,T4,T5,T6|T7> implements Iterable7<T1,T2,T3,T4,T5,T6,T7> {}
+declare class Array8<T1,T2,T3,T4,T5,T6,T7,T8> extends Array7<T1,T2,T3,T4,T5,T6,T7|T8> implements Iterable8<T1,T2,T3,T4,T5,T6,T7,T8> {}
+declare class Array9<T1,T2,T3,T4,T5,T6,T7,T8,T9> extends Array8<T1,T2,T3,T4,T5,T6,T7,T8|T9> implements Iterable9<T1,T2,T3,T4,T5,T6,T7,T8,T9> {}
+
+
+
 declare interface Iterable2<T1, T2> extends Iterable<T1|T2> {}
 declare interface Iterable3<T1, T2, T3> extends Iterable2<T1,T2|T3> {}
 declare interface Iterable4<T1, T2, T3, T4> extends Iterable3<T1,T2, T3|T4> {}
