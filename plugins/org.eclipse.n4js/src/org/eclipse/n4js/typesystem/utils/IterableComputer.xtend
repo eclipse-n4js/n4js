@@ -79,6 +79,9 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		if(declType===iterableType || (includeIterableN && G.isIterableN(declType))) {
 			// simple: typeRef directly points to Iterable<> or an IterableN<>
 			result = typeRef.typeArgs.convertTypeArgsToRefs;
+		} else if(declType===G.arrayType || (includeIterableN && G.isArrayN(declType))) {
+			// simple: typeRef directly points to Array<> or an ArrayN<>
+			result = typeRef.typeArgs.convertTypeArgsToRefs;
 		} else if(declType instanceof PrimitiveType) {
 			// note: the 'elementType' property we read in the next line is also used with instances of TObjectPrototype
 			// (e.g. upper-case 'String'), but we need not and should not handle those within this block, because those
@@ -113,8 +116,9 @@ class IterableComputer extends TypeSystemHelperStrategy {
 				if(superTypeRef?.declaredType===iterableType || (includeIterableN && G.isIterableN(superTypeRef))) {
 					// next if() is important: sorts out the super-type references to IterableN-1 in IterableN
 					// (but only required if including the IterableN)
-					val isContainedInIterable = G.isIterableN(superTypeRef.eContainer);
-					if(!(includeIterableN && isContainedInIterable)) {
+					val isContainedInIterableN = G.isIterableN(superTypeRef.eContainer);
+					val isContainedInArrayN = G.isArrayN(superTypeRef.eContainer);
+					if(!(includeIterableN && (isContainedInIterableN || isContainedInArrayN))) {
 						results.add(superTypeRef.typeArgs.convertTypeArgsToRefs);
 					}
 				}
@@ -158,7 +162,9 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		val G2 = G.wrap;
 		tsh.addSubstitutions(G2,typeRef);
 		val resultSubst = result.map[ts.substTypeVariables(G2,it)]
-				.filter(TypeRef); // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
+				.filter(TypeRef) // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
+				.map[if (it instanceof ComposedTypeRef) tsh.simplify(G, it) else it];
+
 		return resultSubst;
 	}
 

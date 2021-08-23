@@ -1320,7 +1320,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 			ptr.regionFor.keyword("]").append[noSpace];
 		}
 		// Short-Hand Syntax for IterableN
-		if( ptr.isIterableTypeExpression ) {
+		if( ptr.isArrayNTypeExpression ) {
 			ptr.regionFor.keyword("[").append[noSpace];
 			ptr.regionFor.keyword("]").append[noSpace];
 		}

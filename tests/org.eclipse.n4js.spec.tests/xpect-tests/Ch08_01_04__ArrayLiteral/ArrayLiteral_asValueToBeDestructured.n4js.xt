@@ -41,5 +41,5 @@ for(var [a5,b5] of [["",42],["",42],[42,42]]) {}
 
 var a6,b6;
 var arr6 : Array<?>;
-// nesting not supported yet XPECT FIXME noerrors -->
+// nesting supported XPECT noerrors -->
 [a6,arr6,b6] = ["",[1,2,3],42];

@@ -52042,7 +52042,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Token otherlv_6=null;
         EObject this_LiteralTypeRef_0 = null;
         EObject this_ArrowFunctionTypeExpression_1 = null;
-        EObject this_IterableTypeExpression_2 = null;
+        EObject this_ArrayNTypeExpression_2 = null;
         EObject this_TypeRefWithModifiers_3 = null;
         EObject this_TypeRef_5 = null;
         	enterRule();
@@ -52086,14 +52086,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 3 :
                     {
                     if ( state.backtracking==0 ) {
-                      			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_2());
+                      			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_2());
                     }
                     pushFollow(FOLLOW_2);
-                    this_IterableTypeExpression_2=ruleIterableTypeExpression();
+                    this_ArrayNTypeExpression_2=ruleArrayNTypeExpression();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      			current = this_IterableTypeExpression_2;
+                      			current = this_ArrayNTypeExpression_2;
                       			afterParserOrEnumRuleCall();
                     }
                     }
@@ -52558,7 +52558,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleTypeRefFunctionTypeExpression() throws RecognitionException {
         EObject current = null;
         EObject this_ParameterizedTypeRef_0 = null;
-        EObject this_IterableTypeExpression_1 = null;
+        EObject this_ArrayNTypeExpression_1 = null;
         EObject this_TypeTypeRef_2 = null;
         EObject this_UnionTypeExpressionOLD_3 = null;
         EObject this_IntersectionTypeExpressionOLD_4 = null;
@@ -52625,14 +52625,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 2 :
                     {
                     if ( state.backtracking==0 ) {
-                      			newCompositeNode(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getIterableTypeExpressionParserRuleCall_1());
+                      			newCompositeNode(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_1());
                     }
                     pushFollow(FOLLOW_2);
-                    this_IterableTypeExpression_1=ruleIterableTypeExpression();
+                    this_ArrayNTypeExpression_1=ruleArrayNTypeExpression();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      			current = this_IterableTypeExpression_1;
+                      			current = this_ArrayNTypeExpression_1;
                       			afterParserOrEnumRuleCall();
                     }
                     }
@@ -55064,20 +55064,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    public final EObject entryRuleIterableTypeExpression() throws RecognitionException {
+    public final EObject entryRuleArrayNTypeExpression() throws RecognitionException {
         EObject current = null;
-        EObject iv_ruleIterableTypeExpression = null;
+        EObject iv_ruleArrayNTypeExpression = null;
         try {
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getIterableTypeExpressionRule()); 
+               newCompositeNode(grammarAccess.getArrayNTypeExpressionRule()); 
             }
             pushFollow(FOLLOW_1);
-            iv_ruleIterableTypeExpression=ruleIterableTypeExpression();
+            iv_ruleArrayNTypeExpression=ruleArrayNTypeExpression();
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleIterableTypeExpression; 
+               current =iv_ruleArrayNTypeExpression; 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return current;
             }
@@ -55090,9 +55090,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    public final EObject ruleIterableTypeExpression() throws RecognitionException {
+    public final EObject ruleArrayNTypeExpression() throws RecognitionException {
         EObject current = null;
-        Token lv_iterableTypeExpression_0_0=null;
+        Token lv_arrayNTypeExpression_0_0=null;
         Token otherlv_3=null;
         Token otherlv_5=null;
         EObject lv_typeArgs_1_0 = null;
@@ -55104,15 +55104,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             {
-            lv_iterableTypeExpression_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_205); if (state.failed) return current;
+            lv_arrayNTypeExpression_0_0=(Token)match(input,LeftSquareBracket,FOLLOW_205); if (state.failed) return current;
             if ( state.backtracking==0 ) {
-              					newLeafNode(lv_iterableTypeExpression_0_0, grammarAccess.getIterableTypeExpressionAccess().getIterableTypeExpressionLeftSquareBracketKeyword_0_0());
+              					newLeafNode(lv_arrayNTypeExpression_0_0, grammarAccess.getArrayNTypeExpressionAccess().getArrayNTypeExpressionLeftSquareBracketKeyword_0_0());
             }
             if ( state.backtracking==0 ) {
               					if (current==null) {
-              						current = createModelElement(grammarAccess.getIterableTypeExpressionRule());
+              						current = createModelElement(grammarAccess.getArrayNTypeExpressionRule());
               					}
-              					setWithLastConsumed(current, "iterableTypeExpression", lv_iterableTypeExpression_0_0 != null, "[");
+              					setWithLastConsumed(current, "arrayNTypeExpression", lv_arrayNTypeExpression_0_0 != null, "[");
             }
             }
             }
@@ -55136,7 +55136,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      						newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0());
+                      						newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsEmptyIterableTypeExpressionTailParserRuleCall_1_0_0());
                     }
                     pushFollow(FOLLOW_2);
                     lv_typeArgs_1_0=ruleEmptyIterableTypeExpressionTail();
@@ -55144,7 +55144,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
                       						if (current==null) {
-                      							current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+                      							current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
                       						}
                       						add(
                       							current,
@@ -55163,7 +55163,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     if ( state.backtracking==0 ) {
-                      							newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_0_0());
+                      							newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_0_0());
                     }
                     pushFollow(FOLLOW_102);
                     lv_typeArgs_2_0=ruleTypeArgument();
@@ -55171,7 +55171,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
                       							if (current==null) {
-                      								current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+                      								current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
                       							}
                       							add(
                       								current,
@@ -55194,12 +55194,12 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	    {
                     	    otherlv_3=(Token)match(input,Comma,FOLLOW_205); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
-                    	      						newLeafNode(otherlv_3, grammarAccess.getIterableTypeExpressionAccess().getCommaKeyword_1_1_1_0());
+                    	      						newLeafNode(otherlv_3, grammarAccess.getArrayNTypeExpressionAccess().getCommaKeyword_1_1_1_0());
                     	    }
                     	    {
                     	    {
                     	    if ( state.backtracking==0 ) {
-                    	      								newCompositeNode(grammarAccess.getIterableTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0());
+                    	      								newCompositeNode(grammarAccess.getArrayNTypeExpressionAccess().getTypeArgsTypeArgumentParserRuleCall_1_1_1_1_0());
                     	    }
                     	    pushFollow(FOLLOW_102);
                     	    lv_typeArgs_4_0=ruleTypeArgument();
@@ -55207,7 +55207,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	    if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
                     	      								if (current==null) {
-                    	      									current = createModelElementForParent(grammarAccess.getIterableTypeExpressionRule());
+                    	      									current = createModelElementForParent(grammarAccess.getArrayNTypeExpressionRule());
                     	      								}
                     	      								add(
                     	      									current,
@@ -55226,7 +55226,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     } while (true);
                     otherlv_5=(Token)match(input,RightSquareBracket,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      					newLeafNode(otherlv_5, grammarAccess.getIterableTypeExpressionAccess().getRightSquareBracketKeyword_1_1_2());
+                      					newLeafNode(otherlv_5, grammarAccess.getArrayNTypeExpressionAccess().getRightSquareBracketKeyword_1_1_2());
                     }
                     }
                     }
@@ -85909,7 +85909,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_362;
         }
         public String getDescription() {
-            return "36378:2: (this_LiteralTypeRef_0= ruleLiteralTypeRef | ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_1= ruleArrowFunctionTypeExpression ) | this_IterableTypeExpression_2= ruleIterableTypeExpression | this_TypeRefWithModifiers_3= ruleTypeRefWithModifiers | (otherlv_4= LeftParenthesis this_TypeRef_5= ruleTypeRef otherlv_6= RightParenthesis ) )";
+            return "36378:2: (this_LiteralTypeRef_0= ruleLiteralTypeRef | ( ( ( () LeftParenthesis ruleTAnonymousFormalParameterList[null] RightParenthesis EqualsSignGreaterThanSign ) )=>this_ArrowFunctionTypeExpression_1= ruleArrowFunctionTypeExpression ) | this_ArrayNTypeExpression_2= ruleArrayNTypeExpression | this_TypeRefWithModifiers_3= ruleTypeRefWithModifiers | (otherlv_4= LeftParenthesis this_TypeRef_5= ruleTypeRef otherlv_6= RightParenthesis ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
