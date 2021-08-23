@@ -24,7 +24,7 @@ function <TF> fn1(p1: TF, p2: G1<TF> | G2<TF>): Array<TF> {
 }
 let arg1: G1<B> | G2<B>;
 let result1 = fn1(new C(), arg1);
-// XPECT type of 'result' --> Array<B>
+// XPECT type of 'result1' --> Array<B>
 result1;
 
 
@@ -33,5 +33,5 @@ function <TF> fn2(p1: TF, p2: G1<TF> | G_out<TF>): Array<TF> {
 }
 let arg2: G1<B> | G_out<C>;
 let result2 = fn2(new C(), arg2);
-// XPECT type of 'result' --> Array<B>
+// XPECT type of 'result2' --> Array<B>
 result2;
