@@ -233,6 +233,14 @@ import com.google.common.collect.Sets;
 			} else if (rightsSize == 1) {
 				return reduce(left, rights.get(0), variance);
 			} else {
+				if ((variance == CO && left instanceof UnionTypeExpression)
+						|| (variance == CONTRA && left instanceof IntersectionTypeExpression)) {
+					boolean wasAdded = false;
+					for (TypeRef currLeft : ((ComposedTypeRef) left).getTypeRefs()) {
+						wasAdded |= reduce(currLeft, rights, variance, operator);
+					}
+					return wasAdded;
+				}
 				// choose the "most promising" of the disjoint constraints and continue with that (and simply ignore the
 				// other possible paths)
 				int idx = -1;
@@ -469,9 +477,6 @@ import com.google.common.collect.Sets;
 	private boolean reduceUnion(TypeRef left, UnionTypeExpression right, Variance variance) {
 		switch (variance) {
 		case CO:
-			if (left instanceof UnionTypeExpression) {
-				return reduce(right, ((UnionTypeExpression) left).getTypeRefs(), CONTRA, CONJUNCTION);
-			}
 			// ⟨ L <: union{R1,R2} ⟩ implies `L <: R1` or(!) `L <: R2`
 			// we've got a disjunction of several type bounds -> tricky case!
 			return reduce(left, right.getTypeRefs(), CO, DISJUNCTION);
@@ -492,9 +497,6 @@ import com.google.common.collect.Sets;
 			// we've got a conjunction of several type bounds -> standard case
 			return reduce(left, right.getTypeRefs(), CO, CONJUNCTION);
 		case CONTRA:
-			if (left instanceof IntersectionTypeExpression) {
-				return reduce(right, ((IntersectionTypeExpression) left).getTypeRefs(), CO, CONJUNCTION);
-			}
 			// ⟨ L :> intersection{R1,R2} ⟩ implies `L :> R1` or(!) `L :> R2`
 			// we've got a disjunction of several type bounds -> tricky case!
 			return reduce(left, right.getTypeRefs(), CONTRA, DISJUNCTION);
