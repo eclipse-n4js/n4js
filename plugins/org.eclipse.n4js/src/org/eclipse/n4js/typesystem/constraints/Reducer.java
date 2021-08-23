@@ -469,6 +469,9 @@ import com.google.common.collect.Sets;
 	private boolean reduceUnion(TypeRef left, UnionTypeExpression right, Variance variance) {
 		switch (variance) {
 		case CO:
+			if (left instanceof UnionTypeExpression) {
+				return reduce(right, ((UnionTypeExpression) left).getTypeRefs(), CONTRA, CONJUNCTION);
+			}
 			// ⟨ L <: union{R1,R2} ⟩ implies `L <: R1` or(!) `L <: R2`
 			// we've got a disjunction of several type bounds -> tricky case!
 			return reduce(left, right.getTypeRefs(), CO, DISJUNCTION);
@@ -489,6 +492,9 @@ import com.google.common.collect.Sets;
 			// we've got a conjunction of several type bounds -> standard case
 			return reduce(left, right.getTypeRefs(), CO, CONJUNCTION);
 		case CONTRA:
+			if (left instanceof IntersectionTypeExpression) {
+				return reduce(right, ((IntersectionTypeExpression) left).getTypeRefs(), CO, CONJUNCTION);
+			}
 			// ⟨ L :> intersection{R1,R2} ⟩ implies `L :> R1` or(!) `L :> R2`
 			// we've got a disjunction of several type bounds -> tricky case!
 			return reduce(left, right.getTypeRefs(), CONTRA, DISJUNCTION);
