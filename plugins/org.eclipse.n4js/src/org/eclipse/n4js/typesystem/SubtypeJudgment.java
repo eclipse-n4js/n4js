@@ -35,6 +35,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.string
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -47,6 +48,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -290,6 +292,14 @@ import com.google.common.collect.Iterables;
 
 	@SuppressWarnings("unused")
 	private Result applyLiteralTypeRef_Both(RuleEnvironment G, LiteralTypeRef left, LiteralTypeRef right) {
+		if (left instanceof NumericLiteralTypeRef && right instanceof NumericLiteralTypeRef) {
+			BigDecimal leftValue = ((NumericLiteralTypeRef) left).getValue();
+			BigDecimal rightValue = ((NumericLiteralTypeRef) right).getValue();
+			if (leftValue != null && rightValue != null) {
+				// BigDecimal#equals() does not check for numeric equality, so we have to use #compareTo():
+				return resultFromBoolean(leftValue.compareTo(rightValue) == 0);
+			}
+		}
 		return resultFromBoolean(Objects.equals(left.getValue(), right.getValue()));
 	}
 
