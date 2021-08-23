@@ -742,8 +742,8 @@ public class N4JSLanguageUtils {
 	def static boolean isInt(BigDecimal value) {
 		val isWholeNumber = value.stripTrailingZeros().scale() <= 0;
 		return isWholeNumber
-			&& N4JSGlobals.INT32_MAX_VALUE_BD.subtract(value).signum >= 0
-			&& value.subtract(N4JSGlobals.INT32_MIN_VALUE_BD).signum >= 0;
+			&& N4JSGlobals.INT32_MIN_VALUE_BD.compareTo(value) <= 0
+			&& value.compareTo(N4JSGlobals.INT32_MAX_VALUE_BD) <= 0;
 	}
 
 	/**
