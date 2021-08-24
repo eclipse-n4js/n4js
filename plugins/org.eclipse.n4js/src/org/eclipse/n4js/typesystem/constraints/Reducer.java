@@ -566,7 +566,7 @@ import com.google.common.collect.Sets;
 		final Iterator<TFormalParameter> valueParsIt = right.getFpars().iterator();
 		for (TFormalParameter keyPar : left.getFpars()) {
 			if (valueParsIt.hasNext()) {
-				wasAdded |= reduce(keyPar.getTypeRef(), valueParsIt.next().getTypeRef(),
+				wasAdded |= reduceTypeArgumentCompatibilityCheck(keyPar.getTypeRef(), valueParsIt.next().getTypeRef(),
 						variance.mult(CONTRA));
 			}
 		}
@@ -588,7 +588,8 @@ import com.google.common.collect.Sets;
 			final boolean isRetValOpt = isVoidLeft ? right.isReturnValueOptional() : left.isReturnValueOptional();
 			wasAdded |= addBound(isRetValOpt);
 		} else {
-			wasAdded |= reduce(left.getReturnTypeRef(), right.getReturnTypeRef(), variance.mult(CO));
+			wasAdded |= reduceTypeArgumentCompatibilityCheck(left.getReturnTypeRef(), right.getReturnTypeRef(),
+					variance.mult(CO));
 		}
 		// derive constraints for declared this types
 		final TypeRef leftThis = left.getDeclaredThisType();
@@ -607,7 +608,7 @@ import com.google.common.collect.Sets;
 					wasAdded |= giveUp(left, right, variance);
 				}
 			} else if (leftThis != null && rightThis != null) {
-				wasAdded |= reduce(leftThis, rightThis, variance.mult(CONTRA));
+				wasAdded |= reduceTypeArgumentCompatibilityCheck(leftThis, rightThis, variance.mult(CONTRA));
 			}
 		}
 		return wasAdded;
