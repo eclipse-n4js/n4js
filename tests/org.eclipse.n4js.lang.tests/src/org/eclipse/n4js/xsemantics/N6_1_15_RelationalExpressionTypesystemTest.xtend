@@ -43,12 +43,12 @@ class N6_1_15_RelationalExpressionTypesystemTest extends AbstractOperatorExpress
 		for (op : #["<", "<=", ">", ">="]) {
 			assertBinaryOperatorExpectedType(unrestricted, "any", "any", '''n1 «op» n2''');
 			assertBinaryOperatorExpectedType(strict, "any", "any", '''n1 «op» n2''');
-			assertBinaryOperatorExpectedType(n4js, "number", "number", '''n1 «op» n2''');
-			assertBinaryOperatorExpectedType(n4js, "string", "string", '''s1 «op» s2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "boolean", '''f1 «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''undefined «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''null «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''a «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "union{boolean,number,string}", "union{boolean,number,string}", '''n1 «op» n2''');
+			assertBinaryOperatorExpectedType(n4js, "union{boolean,number,string}", "union{boolean,number,string}", '''s1 «op» s2''');
+			assertBinaryOperatorExpectedType(n4js, "union{boolean,number,string}", "union{boolean,number,string}", '''f1 «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "union{boolean,number,string}", "union{boolean,number,string}", '''undefined «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "union{boolean,number,string}", "union{boolean,number,string}", '''null «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "union{boolean,number,string}", "union{boolean,number,string}", '''a «op» f2''');
 
 		}
 	}
