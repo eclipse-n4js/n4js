@@ -528,6 +528,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val G = propertyAccess.newRuleEnvironment;
 		val TypeRef typeRefRaw = ts.type(G, receiver);
 		// take upper bound to get rid of ExistentialTypeRefs, ThisTypeRefs, etc.
+		// (literal types are handled in dispatch method #members() of MemberScopingHelper)
 		val TypeRef typeRef = ts.upperBoundWithReopenAndResolve(G, typeRefRaw);
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
