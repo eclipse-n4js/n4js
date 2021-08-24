@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -581,6 +582,15 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseTemplateLiteral(TemplateLiteral l) {
+			List<Expression> segments = l.getSegments();
+			if (segments.size() == 1) {
+				Expression segment = segments.get(0);
+				if (segment instanceof TemplateSegment) {
+					StringLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createStringLiteralTypeRef();
+					result.setValue(((TemplateSegment) segment).getValue());
+					return result;
+				}
+			}
 			return stringTypeRef(G);
 		}
 
