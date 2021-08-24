@@ -233,6 +233,11 @@ import com.google.common.collect.Sets;
 			} else if (rightsSize == 1) {
 				return reduce(left, rights.get(0), variance);
 			} else {
+				// preparation:
+				// if the left side is a ComposedTypeRef that would lead to a conjunction, we have to tear it apart
+				// first to avoid incorrect results (for example, A|B <: [A,B,C] with operator DISJUNCTION must be
+				// handled as A <: [A,B,C] AND B <: [A,B,C], both with operator DISJUNCTION), not as A|B <: X with
+				// X being the choice of "most promising" option out of A,B,C).
 				if ((variance == CO && left instanceof UnionTypeExpression)
 						|| (variance == CONTRA && left instanceof IntersectionTypeExpression)) {
 					boolean wasAdded = false;
