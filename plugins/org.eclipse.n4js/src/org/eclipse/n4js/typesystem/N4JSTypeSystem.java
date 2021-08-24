@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -37,6 +38,7 @@ import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;
@@ -201,7 +203,7 @@ public class N4JSTypeSystem {
 	 * purpose.
 	 */
 	public TypeRef upperBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, false, false);
+		return boundJudgment.applyUpperBound(G, typeArgument, false, false, false);
 	}
 
 	/**
@@ -212,7 +214,7 @@ public class N4JSTypeSystem {
 	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
 	 */
 	public TypeRef upperBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, true, false);
+		return boundJudgment.applyUpperBound(G, typeArgument, true, false, false);
 	}
 
 	/**
@@ -221,10 +223,23 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, type variables are
 	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
-	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
+	 * or inside a {@link FunctionTypeExprOrRef} (as the type of a parameter or return type).
 	 */
 	public TypeRef upperBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyUpperBound(G, typeArgument, true, true);
+		return boundJudgment.applyUpperBound(G, typeArgument, true, true, false);
+	}
+
+	/**
+	 * Same as {@link #upperBoundWithReopen(RuleEnvironment, TypeArgument)}, but also returns the upper bound for
+	 * {@link LiteralTypeRef}s, i.e. the {@link N4JSLanguageUtils#getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)
+	 * base type} of the literal type.
+	 * <p>
+	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, literal types are
+	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
+	 * or inside a {@link FunctionTypeExprOrRef} (as the type of a parameter or return type).
+	 */
+	public TypeRef upperBoundWithReopenAndResolveLiteralTypes(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, false, true);
 	}
 
 	/**
@@ -247,7 +262,7 @@ public class N4JSTypeSystem {
 	 * purpose.
 	 */
 	public TypeRef lowerBound(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, false, false);
+		return boundJudgment.applyLowerBound(G, typeArgument, false, false, false);
 	}
 
 	/**
@@ -258,7 +273,7 @@ public class N4JSTypeSystem {
 	 * can be defined via {@link RuleEnvironmentExtensions#addFixedCapture(RuleEnvironment, ExistentialTypeRef)}.
 	 */
 	public TypeRef lowerBoundWithReopen(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, true, false);
+		return boundJudgment.applyLowerBound(G, typeArgument, true, false, false);
 	}
 
 	/**
@@ -270,7 +285,7 @@ public class N4JSTypeSystem {
 	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
 	 */
 	public TypeRef lowerBoundWithReopenAndResolve(RuleEnvironment G, TypeArgument typeArgument) {
-		return boundJudgment.applyLowerBound(G, typeArgument, true, true);
+		return boundJudgment.applyLowerBound(G, typeArgument, true, true, false);
 	}
 
 	/**

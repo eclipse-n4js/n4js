@@ -732,10 +732,18 @@ public class N4JSLanguageUtils {
 	def public static ParameterizedTypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
 		return switch(literalTypeRef) {
 			BooleanLiteralTypeRef: G.booleanTypeRef
-			NumericLiteralTypeRef: if (isInt(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef
+			NumericLiteralTypeRef: getLiteralTypeBase(G, literalTypeRef)
 			StringLiteralTypeRef: G.stringTypeRef
 			default: throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.simpleName)
 		};
+	}
+
+	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only numeric
+	 * literal type references.
+	 */
+	def public static ParameterizedTypeRef getLiteralTypeBase(RuleEnvironment G, NumericLiteralTypeRef literalTypeRef) {
+		return if (isInt(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef;
 	}
 
 	// FIXME GH-2197 make this consistent with the #isIntLiteral() methods below!

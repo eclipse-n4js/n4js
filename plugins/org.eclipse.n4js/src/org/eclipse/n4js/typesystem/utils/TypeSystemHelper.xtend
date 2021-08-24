@@ -55,7 +55,6 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
-import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.xtext.EcoreUtil2
 
@@ -260,17 +259,18 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			return G.anyTypeRef;
 		}
 		// take upper bound to get rid of wildcards, etc. (if any)
-		var result = ts.upperBoundWithReopen(G, typeRaw);
-		// replace literal types
-		if (mutable) {
-			result = N4JSLanguageUtils.getLiteralTypeBase(G, result);
-		}
+		val typeUB = if (mutable) {
+			// ... and also replace literal types
+			ts.upperBoundWithReopenAndResolveLiteralTypes(G, typeRaw)
+		} else {
+			ts.upperBoundWithReopen(G, typeRaw)
+		};
 		// replace silly types
-		val declType = result.declaredType;
+		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
-			result = G.anyTypeRef;
+			return G.anyTypeRef;
 		}
-		return result;
+		return typeUB;
 	}
 
 	public def returnStatements(FunctionDefinition definition) {
