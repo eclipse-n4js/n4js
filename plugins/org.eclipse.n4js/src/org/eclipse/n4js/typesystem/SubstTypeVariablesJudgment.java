@@ -102,6 +102,17 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			}
 		}
 
+		@Override
+		public TypeArgument doSwitch(TypeArgument typeArg) {
+
+			// because property TypeRef#originalAliasTypeRef may be used in type references of any kind,
+			// we invoke #substTypeVarsInOriginalAliasTypeRef() here before switching (otherwise we would
+			// have to add a call to #substTypeVarsInOriginalAliasTypeRef() to every case*() method):
+			typeArg = substTypeVarsInOriginalAliasTypeRef(typeArg);
+
+			return super.doSwitch(typeArg);
+		}
+
 		/** Base case. */
 		@Override
 		public TypeArgument caseTypeArgument(TypeArgument typeArg) {
@@ -328,6 +339,30 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		protected TypeRef caseParameterizedTypeRef_processStructuralMembers(StructuralTypeRef typeRef,
 				boolean alreadyCopied) {
 			return typeSystemHelper.substTypeVariablesInStructuralMembers(G, typeRef);
+		}
+
+		/**
+		 * Substitutes type variables in property {@link TypeRef#getOriginalAliasTypeRef() originalAliasTypeRef}. If not
+		 * applicable, the given type argument is returned unchanged.
+		 * <p>
+		 * Since this property is usually not used for actual type checking, this is mainly done to ensure correct
+		 * toString() behavior and hence avoid confusing error messages, etc.
+		 */
+		private TypeArgument substTypeVarsInOriginalAliasTypeRef(TypeArgument typeArg) {
+			ParameterizedTypeRef originalAliasTypeRef = typeArg.isTypeRef()
+					? ((TypeRef) typeArg).getOriginalAliasTypeRef()
+					: null;
+			if (originalAliasTypeRef != null) {
+				TypeRef originalAliasTypeRefSubst = substTypeVariables(G, originalAliasTypeRef,
+						captureContainedWildcards);
+				if (originalAliasTypeRefSubst != originalAliasTypeRef
+						&& originalAliasTypeRefSubst instanceof ParameterizedTypeRef) {
+					typeArg = TypeUtils.copyPartial(typeArg,
+							TypeRefsPackage.Literals.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF);
+					((TypeRef) typeArg).setOriginalAliasTypeRef((ParameterizedTypeRef) originalAliasTypeRefSubst);
+				}
+			}
+			return typeArg;
 		}
 	}
 }

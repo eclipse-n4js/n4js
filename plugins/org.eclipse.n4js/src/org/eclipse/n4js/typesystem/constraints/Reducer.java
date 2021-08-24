@@ -233,6 +233,19 @@ import com.google.common.collect.Sets;
 			} else if (rightsSize == 1) {
 				return reduce(left, rights.get(0), variance);
 			} else {
+				// preparation:
+				// if the left side is a ComposedTypeRef that would lead to a conjunction, we have to tear it apart
+				// first to avoid incorrect results (for example, A|B <: [A,B,C] with operator DISJUNCTION must be
+				// handled as A <: [A,B,C] AND B <: [A,B,C], both with operator DISJUNCTION), not as A|B <: X with
+				// X being the choice of "most promising" option out of A,B,C).
+				if ((variance == CO && left instanceof UnionTypeExpression)
+						|| (variance == CONTRA && left instanceof IntersectionTypeExpression)) {
+					boolean wasAdded = false;
+					for (TypeRef currLeft : ((ComposedTypeRef) left).getTypeRefs()) {
+						wasAdded |= reduce(currLeft, rights, variance, operator);
+					}
+					return wasAdded;
+				}
 				// choose the "most promising" of the disjoint constraints and continue with that (and simply ignore the
 				// other possible paths)
 				int idx = -1;
@@ -558,7 +571,7 @@ import com.google.common.collect.Sets;
 		final Iterator<TFormalParameter> valueParsIt = right.getFpars().iterator();
 		for (TFormalParameter keyPar : left.getFpars()) {
 			if (valueParsIt.hasNext()) {
-				wasAdded |= reduce(keyPar.getTypeRef(), valueParsIt.next().getTypeRef(),
+				wasAdded |= reduceTypeArgumentCompatibilityCheck(keyPar.getTypeRef(), valueParsIt.next().getTypeRef(),
 						variance.mult(CONTRA));
 			}
 		}
@@ -580,7 +593,8 @@ import com.google.common.collect.Sets;
 			final boolean isRetValOpt = isVoidLeft ? right.isReturnValueOptional() : left.isReturnValueOptional();
 			wasAdded |= addBound(isRetValOpt);
 		} else {
-			wasAdded |= reduce(left.getReturnTypeRef(), right.getReturnTypeRef(), variance.mult(CO));
+			wasAdded |= reduceTypeArgumentCompatibilityCheck(left.getReturnTypeRef(), right.getReturnTypeRef(),
+					variance.mult(CO));
 		}
 		// derive constraints for declared this types
 		final TypeRef leftThis = left.getDeclaredThisType();
@@ -599,7 +613,7 @@ import com.google.common.collect.Sets;
 					wasAdded |= giveUp(left, right, variance);
 				}
 			} else if (leftThis != null && rightThis != null) {
-				wasAdded |= reduce(leftThis, rightThis, variance.mult(CONTRA));
+				wasAdded |= reduceTypeArgumentCompatibilityCheck(leftThis, rightThis, variance.mult(CONTRA));
 			}
 		}
 		return wasAdded;
