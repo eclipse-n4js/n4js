@@ -540,7 +540,7 @@ import com.google.inject.Inject;
 		// ----------------------------------------------------------------------
 
 		@Override
-		public TypeRef caseNullLiteral(NullLiteral object) {
+		public TypeRef caseNullLiteral(NullLiteral l) {
 			return nullTypeRef(G);
 		}
 
@@ -553,8 +553,6 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseNumericLiteral(NumericLiteral l) {
-			// FIXME
-			// return N4JSLanguageUtils.isIntLiteral(l) ? intTypeRef(G) : numberTypeRef(G);
 			NumericLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
 			result.setValue(l.getValue().stripTrailingZeros());
 			return result;
@@ -568,7 +566,7 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseRegularExpressionLiteral(RegularExpressionLiteral object) {
+		public TypeRef caseRegularExpressionLiteral(RegularExpressionLiteral l) {
 			return regexpTypeRef(G);
 		}
 
@@ -582,23 +580,23 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseTemplateLiteral(TemplateLiteral object) {
+		public TypeRef caseTemplateLiteral(TemplateLiteral l) {
 			return stringTypeRef(G);
 		}
 
 		@Override
-		public TypeRef caseTemplateSegment(TemplateSegment object) {
+		public TypeRef caseTemplateSegment(TemplateSegment l) {
 			return stringTypeRef(G);
 		}
 
 		@Override
-		public TypeRef caseArrayLiteral(ArrayLiteral object) {
+		public TypeRef caseArrayLiteral(ArrayLiteral l) {
 			throw new IllegalStateException(
 					"rule caseArrayLiteral() should never be invoked (PolyComputer is responsible for typing ArrayLiterals)");
 		}
 
 		@Override
-		public TypeRef caseArrayPadding(ArrayPadding object) {
+		public TypeRef caseArrayPadding(ArrayPadding l) {
 			throw new IllegalStateException(
 					"rule caseArrayPadding() should never be invoked (PolyComputer is responsible for typing ArrayLiterals and their children)");
 		}
