@@ -567,11 +567,6 @@ import com.google.inject.Inject;
 		}
 
 		@Override
-		public TypeRef caseRegularExpressionLiteral(RegularExpressionLiteral l) {
-			return regexpTypeRef(G);
-		}
-
-		@Override
 		public TypeRef caseTaggedTemplateString(TaggedTemplateString taggedTemplate) {
 			final TypeRef tagTypeRef = ts.type(G, taggedTemplate.getTarget());
 			if (tagTypeRef instanceof FunctionTypeExprOrRef) {
@@ -597,6 +592,11 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseTemplateSegment(TemplateSegment l) {
 			return stringTypeRef(G);
+		}
+
+		@Override
+		public TypeRef caseRegularExpressionLiteral(RegularExpressionLiteral l) {
+			return regexpTypeRef(G);
 		}
 
 		@Override
