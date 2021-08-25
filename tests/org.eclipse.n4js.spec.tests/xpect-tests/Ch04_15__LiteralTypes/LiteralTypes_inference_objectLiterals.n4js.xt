@@ -19,12 +19,21 @@ let obj1: ~Object with { prop: 0 | 42 } = { prop: 42 };
 // XPECT type of '{ prop: 42 }' --> ~Object with { prop: int }
 let obj2 = { prop: 42 };
 
+
+
+// In the next test case, it would be slightly more consistent to infer 'propWithoutExpectation' to type int
+// instead of 43, because while there is a type expectation for the overall object literal, no type expectation
+// exists for this property. However, this would require additional complexity only for this corner case that
+// produces a warning anyway, so we go with keeping the literal type.
+
 // XPECT type of '{ prop: 42, propWithoutExpectation: 43 }' --> ~Object with { prop: union{0,42}; propWithoutExpectation: 43 }
 // XPECT warnings --> "propWithoutExpectation is not defined in ~Object with { prop: union{0,42} }; it will not be accessible from obj3." at "propWithoutExpectation"
 let obj3: ~Object with { prop: 0 | 42 } = { prop: 42, propWithoutExpectation: 43 };
 
 
-// Note: it would be slightly more consistent to infer 'propWithoutExpectation' to type int instead of 43,
-// because while there is a type expectation for the overall object literal, no type expectation exists for
-// this property. However, this would require additional complexity only for this corner case that produces
-// a warning anyway, so we go with keeping the literal type.
+
+// In the next test case, we want to avoid seeing the following extremely confusing error message:
+// ~Object with { prop1: "hello"; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop1 failed: "hello" is not equal to string and 1 more problems.
+
+// XPECT errors --> "~Object with { prop1: string; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop2 failed: "BAD!" is not equal to number." at "{ prop1: "hello", prop2: "BAD!" }"
+let obj4: ~Object with { prop1: string, prop2: number } = { prop1: "hello", prop2: "BAD!" };

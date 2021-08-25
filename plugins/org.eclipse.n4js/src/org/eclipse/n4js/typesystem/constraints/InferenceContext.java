@@ -345,7 +345,8 @@ public final class InferenceContext {
 	 * <li>otherwise, a map from each inference variable returned from {@link #getInferenceVariables()} to its
 	 * instantiation.
 	 * </ul>
-	 * At this time, no partial solutions are returned in case of unsolvable constraint systems.
+	 * At this time, no partial solutions are returned in case of unsolvable constraint systems, but method
+	 * {@link #isPromisingPartialSolution(InferenceVariable, TypeRef)} might be helpful in some cases.
 	 */
 	public Map<InferenceVariable, TypeRef> solve() {
 		if (isSolved) {
@@ -407,6 +408,37 @@ public final class InferenceContext {
 		}
 
 		return solution;
+	}
+
+	/**
+	 * Tells whether the given candidate type reference looks like a promising partial solution for inference variable
+	 * 'infVar' within an overall unsolvable constraint system. Must only be used with unsolvable inference contexts,
+	 * i.e. {@link #solve()} must have been called before and must have returned <code>null</code>; otherwise an
+	 * exception is thrown.
+	 * <p>
+	 * If this method does not provide any strong guarantees and should only be used for non-critical heuristics, e.g.
+	 * tweaking error messages.
+	 */
+	public boolean isPromisingPartialSolution(InferenceVariable infVar, TypeRef candidateTypeRef) {
+		if (!isSolved) {
+			throw new IllegalStateException("must not invoke #isPromisingPartialSolution() before #solve()");
+		}
+		if (solution != null) {
+			throw new IllegalStateException("method #isPromisingPartialSolution() may only be used if solution failed");
+		}
+		TypeRef[] upperBounds = currentBounds.collectUpperBounds(infVar, true, true);
+		for (TypeRef upperBound : upperBounds) {
+			if (!ts.subtypeSucceeded(G, candidateTypeRef, upperBound)) {
+				return false;
+			}
+		}
+		TypeRef[] lowerBounds = currentBounds.collectLowerBounds(infVar, true, true);
+		for (TypeRef lowerBound : lowerBounds) {
+			if (!ts.subtypeSucceeded(G, lowerBound, candidateTypeRef)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// ###############################################################################################################
