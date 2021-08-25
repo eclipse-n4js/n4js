@@ -254,13 +254,13 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return true;
 	}
 
-	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw, boolean mutable) {
+	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw, boolean resolveLiteralTypes) {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
 		// take upper bound to get rid of wildcards, etc. (if any)
-		val typeUB = if (mutable) {
-			// ... and also replace literal types
+		val typeUB = if (resolveLiteralTypes) {
+			// ... and also replace literal types by their base type
 			ts.upperBoundWithReopenAndResolveLiteralTypes(G, typeRaw)
 		} else {
 			ts.upperBoundWithReopen(G, typeRaw)

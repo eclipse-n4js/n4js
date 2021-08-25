@@ -78,7 +78,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 
 		// quick mode as a performance tweak:
 		val haveUsableExpectedType = expectedTypeRef !== null
-				&& (expectedTypeRef.useSiteStructuralTyping || expectedTypeRef.defSiteStructuralTyping); // FIXME reconsider
+				&& (expectedTypeRef.useSiteStructuralTyping || expectedTypeRef.defSiteStructuralTyping); // TODO reconsider
 		val quickMode = !haveUsableExpectedType && !TypeUtils.isInferenceVariable(expectedTypeRef);
 
 		val List<TStructMember> tMembers = newArrayList;
@@ -251,7 +251,18 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 			val memberInTModule = propAssignm.definedMember;
 			if (memberInTModule !== null) {
 				val memberType = getMemberType(G, solution, quickMode, propPair);
-				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType, !N4JSASTUtils.isImmutable(propAssignm));
+				val resolveLiteralTypes = if (quickMode) {
+					// quick mode means we do not have a type expectation, so we handle literal types exactly
+					// as when inferring the implicit type of variables with an initializer expression
+					!N4JSASTUtils.isImmutable(propAssignm)
+				} else {
+					// standard mode means we usually* have a type expectation; replacing a literal type by
+					// its base type could break the expectation
+					// (* a type expectation won't exist for "unexpected" properties, but those will show a
+					// warning anyway and are therefore a discouraged corner case)
+					false
+				};
+				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType, resolveLiteralTypes);
 				EcoreUtilN4.doWithDeliver(false, [
 					memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
 				], memberInTModule);
