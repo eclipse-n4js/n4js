@@ -3106,6 +3106,29 @@ a1 = a2;
 ----
 
 
+[.language-n4js]
+== Literal Types
+
+N4JS supports boolean, numeric, and string literal types. These types are a specialization of the primitive types
+`boolean`, `number`, and `string`, respectively, and have only a single valid value (not considering `undefined` and `null`).
+
+Together with union types, these literal types can be used, for example, to realize anonymous enumerations:
+
+[source,n4js]
+----
+function getStatus(): "on" | "off" | "unknown" {
+    // ...
+}
+----
+
+Literal types will be used as the implicitly inferred type of variables, fields, etc. only if they are immutable:
+
+[source,n4js]
+----
+const immutable = "hello"; // type of 'immutable' will be "hello" (not string)
+let mutable = "world";     // type of 'mutable' will be string (not "world")
+----
+
 
 [.language-n4js]
 == Short-Hand Syntax
