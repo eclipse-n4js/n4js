@@ -228,7 +228,7 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 		assertTypeName("\"World\"", expressions.get(1));
 		assertTypeName("\"\"", expressions.get(2));
 		assertTypeName("\"\"", expressions.get(3));
-		assertTypeName("\"Hello\nWorld\"", expressions.get(4));
+		assertTypeName("\"Hello\\nWorld\"", expressions.get(4));
 
 		// eventually:
 		assertNoValidationErrors(script);
