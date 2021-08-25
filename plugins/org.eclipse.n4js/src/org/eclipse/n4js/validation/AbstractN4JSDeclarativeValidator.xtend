@@ -65,6 +65,7 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
@@ -158,7 +159,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		List<? extends TypeReferenceNode<?>> typeArgsNodes, boolean allowAutoInference, IdentifiableElement parameterizedElement,
 		EObject source, EStructuralFeature feature) {
 
-		val typeArgsInAST = typeArgsNodes.map[typeRefInAST].toList;
+		val typeArgsInAST = typeArgsNodes.map[typeRefInAST].toList; // n.b.: resulting 'typeArgsInAST' may contain null values in case of syntax error (retain them to keep indices valid!)
 		val typeArgsProcessed = typeArgsNodes.map[typeRef].toList;
 		internalCheckTypeArguments(typeVars, typeArgsInAST, Optional.of(typeArgsProcessed),
 			allowAutoInference, parameterizedElement, source, feature);
@@ -228,7 +229,12 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 			// preparation: create resolved type arguments, if not provided by caller
 			val typeArgsResolved = new ArrayList(if (typeArgsResolvedOpt.present) typeArgsResolvedOpt.get else #[]);
 			for (var i = typeArgsResolved.size; i < typeArgumentCount; i++) {
-				typeArgsResolved.add(tsh.resolveTypeAliases(G, typeArgsInAST.get(i)));
+				val TypeArgument typeArgumentInAST = typeArgsInAST.get(i);
+				if (typeArgumentInAST !== null) {
+					typeArgsResolved.add(tsh.resolveTypeAliases(G, typeArgumentInAST));
+				} else {
+					typeArgsResolved.add(null); // syntax error; add 'null' to keep length and indices in sync between typeArgsResolved and typeArgsInAST
+				}
 			}
 			// preparation: create rule environment for type variable substitution in upper bounds
 			val G_subst = source.newRuleEnvironment;
@@ -245,41 +251,10 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 				val TypeArgument typeArgumentInAST = typeArgsInAST.get(i);
 				val TypeArgument typeArgumentResolved = typeArgsResolved.get(i);
 
-				// check consistency of use-site and definition-site variance
-				if(typeArgumentInAST instanceof Wildcard) {
-					val defSiteVariance = typeParameter.variance;
-					val useSiteVariance = if(typeArgumentInAST.declaredUpperBound!==null) {
-						Variance.CO
-					} else if(typeArgumentInAST.declaredLowerBound!==null) {
-						Variance.CONTRA
-					};
-					if(defSiteVariance!==Variance.INV && useSiteVariance!==null
-						&& useSiteVariance!==defSiteVariance) {
-						// we've got an inconsistency!
-						if(typeArgumentInAST.usingInOutNotation) {
-							val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT(
-								useSiteVariance.getDescriptiveStringNoun(true),
-								defSiteVariance.getDescriptiveStringNoun(true));
-							addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT);
-						} else {
-							val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG(
-								if(useSiteVariance===Variance.CO) "upper" else "lower",
-								defSiteVariance.getDescriptiveString(true));
-							addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG);
-						}
-					}
-				}
-
-				// check bounds
-				val isExceptionCase = TypeUtils.isVoid(typeArgumentInAST); // in this case another validation will show an error (avoid duplicate messages)
-				if(!isExceptionCase) {
-					val typeParamUB = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
-					val typeParamUBSubst = ts.substTypeVariables(G_subst, typeParamUB);
-					val typeArgSubst = ts.substTypeVariables(G_subst, typeArgumentResolved);
-					val result = ts.subtype(G_subst, typeArgSubst, typeParamUBSubst);
-					if (result.failure) {
-						createTypeError(result, typeArgumentInAST);
-					}
+				if (typeArgumentInAST !== null) {
+					internalCheckTypeArgument(typeParameter, typeArgumentInAST, typeArgumentResolved, G_subst);
+				} else {
+					// syntax error -> ignore
 				}
 			}
 		}
@@ -293,6 +268,47 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 //					"**** hopefully unnecessary use of explicit type arguments ****",
 //					source, feature, INSIGNIFICANT_INDEX, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS);
 //		}
+	}
+
+	/** Actually check a single type argument. */
+	def private void internalCheckTypeArgument(TypeVariable typeParameter, TypeArgument typeArgumentInAST, TypeArgument typeArgumentResolved, RuleEnvironment G_subst) {
+		// check consistency of use-site and definition-site variance
+		if (typeArgumentInAST instanceof Wildcard) {
+			val defSiteVariance = typeParameter.variance;
+			val useSiteVariance = if (typeArgumentInAST.declaredUpperBound !== null) {
+				Variance.CO
+			} else if (typeArgumentInAST.declaredLowerBound !== null) {
+				Variance.CONTRA
+			};
+			if (defSiteVariance !== Variance.INV
+				&& useSiteVariance !== null
+				&& useSiteVariance !== defSiteVariance) {
+				// we've got an inconsistency!
+				if (typeArgumentInAST.usingInOutNotation) {
+					val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT(
+						useSiteVariance.getDescriptiveStringNoun(true),
+						defSiteVariance.getDescriptiveStringNoun(true));
+					addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG_IN_OUT);
+				} else {
+					val message = IssueCodes.getMessageForEXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG(
+						if (useSiteVariance === Variance.CO) "upper" else "lower",
+						defSiteVariance.getDescriptiveString(true));
+					addIssue(message, typeArgumentInAST, IssueCodes.EXP_INCONSISTENT_VARIANCE_OF_TYPE_ARG);
+				}
+			}
+		}
+
+		// check bounds
+		val isExceptionCase = TypeUtils.isVoid(typeArgumentInAST); // in this case another validation will show an error (avoid duplicate messages)
+		if (!isExceptionCase) {
+			val typeParamUB = typeParameter.declaredUpperBound ?: N4JSLanguageUtils.getTypeVariableImplicitUpperBound(G_subst);
+			val typeParamUBSubst = ts.substTypeVariables(G_subst, typeParamUB);
+			val typeArgSubst = ts.substTypeVariables(G_subst, typeArgumentResolved);
+			val result = ts.subtype(G_subst, typeArgSubst, typeParamUBSubst);
+			if (result.failure) {
+				createTypeError(result, typeArgumentInAST);
+			}
+		}
 	}
 
 	/**
