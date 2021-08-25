@@ -242,6 +242,11 @@ public class N4JSTypeSystem {
 		return boundJudgment.applyUpperBound(G, typeArgument, true, false, true);
 	}
 
+	// FIXME documentation
+	public TypeRef upperBoundWithReopenAndResolveBoth(RuleEnvironment G, TypeArgument typeArgument) {
+		return boundJudgment.applyUpperBound(G, typeArgument, true, true, true);
+	}
+
 	/**
 	 * Returns the lower bound of type arguments that represent a range of types; other types are returned unchanged.
 	 * Never returns <code>null</code>.

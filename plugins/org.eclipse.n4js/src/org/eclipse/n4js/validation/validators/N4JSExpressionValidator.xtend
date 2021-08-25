@@ -77,6 +77,7 @@ import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -1366,6 +1367,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			|| (S instanceof ParameterizedTypeRef
 				&& T instanceof ParameterizedTypeRef
 				&& TypeUtils.isRawSuperType(T.declaredType, S.declaredType))
+			|| (S instanceof LiteralTypeRef)
 			;
 	}
 
@@ -1434,7 +1436,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (targetTypeRefRaw instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors
 		}
-		val targetTypeRef = ts.upperBoundWithReopenAndResolve(G, targetTypeRefRaw);
+		val targetTypeRef = ts.upperBoundWithReopenAndResolveBoth(G, targetTypeRefRaw);
 		val indexTypeRef = ts.type(G, index);
 		if (indexTypeRef instanceof UnknownTypeRef) {
 			return; // saw an UnknownTypeRef -> so we are expected to suppress all follow-up errors
