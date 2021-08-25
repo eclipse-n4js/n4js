@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
+import org.eclipse.n4js.utils.Strings;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>String Literal Type Ref</b></em>'.
@@ -111,8 +113,8 @@ public class StringLiteralTypeRefImpl extends LiteralTypeRefImpl implements Stri
 		if (_tripleEquals) {
 			return "null";
 		}
-		String _value_1 = this.getValue();
-		String _plus = ("\"" + _value_1);
+		String _escapeNonPrintable = Strings.escapeNonPrintable(this.getValue());
+		String _plus = ("\"" + _escapeNonPrintable);
 		return (_plus + "\"");
 	}
 

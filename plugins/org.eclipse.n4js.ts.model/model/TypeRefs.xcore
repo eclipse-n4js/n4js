@@ -38,6 +38,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+import org.eclipse.n4js.utils.Strings
 
 type UUID wraps UUID
 
@@ -1331,7 +1332,7 @@ class StringLiteralTypeRef extends LiteralTypeRef {
 		if (value === null) {
 			return "null";
 		}
-		return '"' + value + '"';
+		return '"' + Strings.escapeNonPrintable(value) + '"';
 	}
 }
 
