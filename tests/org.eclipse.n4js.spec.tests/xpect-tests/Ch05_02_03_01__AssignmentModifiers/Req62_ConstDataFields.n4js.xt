@@ -13,7 +13,7 @@
 
 class A {
 	// XPECT noerrors -->
-	const s1 = "Hello";
+	const s1 = "Hel" + "lo";
 
 	// XPECT errors --> "Const field s2 must be provided with an initializer." at "s2"
 	const s2;
@@ -43,7 +43,7 @@ A.s1 = "World";
 
 interface I {
 	// XPECT noerrors -->
-	const s1 = "Hello";
+	const s1 = "Hel" + "lo";
 
 	// XPECT errors --> "Const field s2 must be provided with an initializer." at "s2"
 	const s2;

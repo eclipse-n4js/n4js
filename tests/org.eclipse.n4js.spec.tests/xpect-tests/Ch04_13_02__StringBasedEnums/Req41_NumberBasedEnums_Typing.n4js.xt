@@ -46,10 +46,10 @@ x1(x);
 // XPECT noerrors -->
 x1(E.L)
 // This would be an uncheck use, that we want't to prevent.
-// XPECT errors --> "int is not a subtype of E." at "42"
+// XPECT errors --> "42 is not a subtype of E." at "42"
 x1(42)
-// XPECT errors --> "number is not a subtype of E." at "42.0"
-x1(42.0)
+// XPECT errors --> "42.1 is not a subtype of E." at "42.1"
+x1(42.1)
 
 // XPECT noerrors -->
 function x2 (arg : number){}
@@ -63,7 +63,7 @@ x2(42)
 // XPECT noerrors -->
 function x3 () : E { return E.L; }
 
-// Prohibit unchecked use XPECT errors --> "int is not a subtype of E." at "42"
+// Prohibit unchecked use XPECT errors --> "42 is not a subtype of E." at "42"
 function x4 () : E { return 42 }
 
 // XPECT noerrors -->

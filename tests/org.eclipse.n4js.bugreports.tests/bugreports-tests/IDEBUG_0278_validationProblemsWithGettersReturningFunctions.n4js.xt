@@ -28,7 +28,7 @@ class Class<T> implements Foo<{function(T):void}> {
         var t : {function(T):void} = this.bar;
     }
     g() : void {
-        // XPECT errors --> "int is not a subtype of T." at "23"
+        // XPECT errors --> "23 is not a subtype of T." at "23"
         this.bar(23);
     }
 

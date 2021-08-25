@@ -24,7 +24,7 @@ public class HoverSimpleTest extends AbstractHoverTest {
 	public void testConstNoDoc() throws Exception {
 		testAtCursor(
 			"const cnst = 'value'; cns<|>t;",
-			"[0:22 - 0:26] [[n4js] variable cnst: string]");
+			"[0:22 - 0:26] [[n4js] variable cnst: \"value\"]");
 	}
 
 	/** const */

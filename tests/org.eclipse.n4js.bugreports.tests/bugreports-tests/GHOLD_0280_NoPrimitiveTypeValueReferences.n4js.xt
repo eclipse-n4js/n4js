@@ -72,7 +72,7 @@ class GenericClass<T> {}
 }
 {
 	// XPECT noerrors
-	let number = 3.0;
+	let number = 3.1;
 	// If name isn't primitive type, referencing should be allowed XPECT noerrors
 	let a = number
 }
@@ -93,7 +93,7 @@ class GenericClass<T> {}
 }
 {
 	// XPECT noerrors
-	let int = 3.0;
+	let int = 3.1;
 	// If name isn't primitive type, referencing should be allowed XPECT noerrors
 	let a = int
 }
@@ -114,7 +114,7 @@ class GenericClass<T> {}
 }
 {
 	// XPECT noerrors
-	let symbol = 3.0;
+	let symbol = 3.1;
 	// If name isn't primitive type, referencing should be allowed XPECT noerrors
 	let a = symbol
 }
@@ -135,7 +135,7 @@ class GenericClass<T> {}
 }
 {
 	// XPECT warnings --> "Variable any is not of type any but of type number." at "any"
-	let any = 3.0;
+	let any = 3.1;
 	// If name isn't primitive type, referencing should be allowed XPECT noerrors
 	let a = any
 }

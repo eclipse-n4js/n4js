@@ -40,5 +40,5 @@ class ~Cls {
 // XPECT errors --> "~Object is not a subtype of union{Iterable<?>,string}." at "{}"
 [...{}];
 
-// XPECT errors --> "int is not a subtype of union{Iterable<?>,string}." at "42"
+// XPECT errors --> "42 is not a subtype of union{Iterable<?>,string}." at "42"
 [...42];

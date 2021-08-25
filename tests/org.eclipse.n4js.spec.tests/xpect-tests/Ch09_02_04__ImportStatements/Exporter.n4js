@@ -19,7 +19,7 @@ export function f1 () : string { return "f1-version1" }
 export var var1 = 5;
 export let let1 = 7;
 export default let let2=4;
-export const cnst8 = 8;
+export const cnst8: number = 8;
 
 
 

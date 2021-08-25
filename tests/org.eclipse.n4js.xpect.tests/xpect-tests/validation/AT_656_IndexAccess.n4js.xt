@@ -23,7 +23,7 @@ var x : any = o["something"];
 
 var ar : Array<string>;
 ar[5]="hello";
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 ar[5]=42;
 
 // XPECT noerrors -->

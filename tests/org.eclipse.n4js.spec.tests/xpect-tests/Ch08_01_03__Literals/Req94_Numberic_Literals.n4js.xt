@@ -55,5 +55,7 @@ var v30 = -10000000000;
 var v31 = 10000000000;
 
 
-// XPECT type of 'v40' --> number
+// XPECT type of 'v40' --> int
 var v40 = -(2147483648);
+// XPECT type of 'v41' --> number
+var v41 = -(2147483649);

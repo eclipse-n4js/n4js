@@ -43,9 +43,9 @@ ag20o.next(undefined);
 
 
 // call next arg not allowed
-// XPECT errors --> "string is not a subtype of undefined." at ""1""
+// XPECT errors --> ""1" is not a subtype of undefined." at ""1""
 g20o.next("1");
-// XPECT errors --> "string is not a subtype of undefined." at ""1""
+// XPECT errors --> ""1" is not a subtype of undefined." at ""1""
 ag20o.next("1");
 
 
@@ -85,9 +85,9 @@ ag20o.return(undefined);
 
 
 // call return arg not allowed
-// XPECT errors --> "string is not a subtype of undefined." at ""1""
+// XPECT errors --> ""1" is not a subtype of undefined." at ""1""
 g20o.return("1");
-// XPECT errors --> "string is not a subtype of undefined." at ""1""
+// XPECT errors --> ""1" is not a subtype of undefined." at ""1""
 ag20o.return("1");
 
 
@@ -130,9 +130,9 @@ ag21o.next(true);
 
 
 // call next arg not allowed
-// XPECT errors --> "string is not a subtype of boolean." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of boolean." at "'bad'"
 g21o.next('bad');
-// XPECT errors --> "string is not a subtype of boolean." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of boolean." at "'bad'"
 ag21o.next('bad');
 
 
@@ -165,9 +165,9 @@ ag21o.return(false);
 
 
 // call return arg not allowed
-// XPECT errors --> "string is not a subtype of boolean." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of boolean." at "'bad'"
 g21o.return('bad');
-// XPECT errors --> "string is not a subtype of boolean." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of boolean." at "'bad'"
 ag21o.return('bad');
 
 

@@ -33,9 +33,9 @@ function foo(a : A, b : A, c : I, d : R) {
 	a instanceof E;
 
 
-	// XPECT errors  --> "int is not a subtype of union{Function,type{Object},type{N4Enum}}." at "1"
+	// XPECT errors  --> "1 is not a subtype of union{Function,type{Object},type{N4Enum}}." at "1"
 	a instanceof 1;
-	// XPECT errors  --> "string is not a subtype of union{Function,type{Object},type{N4Enum}}." at ""Hello""
+	// XPECT errors  --> ""Hello" is not a subtype of union{Function,type{Object},type{N4Enum}}." at ""Hello""
 	a instanceof "Hello";
 	// XPECT errors  --> "A is not a subtype of union{Function,type{Object},type{N4Enum}}." at "b"
 	a instanceof b;

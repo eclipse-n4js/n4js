@@ -70,25 +70,25 @@ s as F;
 // XPECT warnings --> "Unnecessary cast from any to any" at "s as any"
 s as any;
 
-// XPECT errors --> "Cannot cast from string to number" at ""string" as number"
+// XPECT errors --> "Cannot cast from "string" to number" at ""string" as number"
 "string" as number;
-// XPECT errors --> "Cannot cast from int to string" at "1 as string"
+// XPECT errors --> "Cannot cast from 1 to string" at "1 as string"
 1 as string;
-// XPECT errors --> "Cannot cast from boolean to number" at "true as number"
+// XPECT errors --> "Cannot cast from true to number" at "true as number"
 true as number;
 
-// XPECT warnings --> "Unnecessary cast from string to string" at ""string" as string"
+// XPECT warnings --> "Unnecessary cast from "string" to string" at ""string" as string"
 "string" as string;
-// XPECT warnings --> "Unnecessary cast from int to number" at "1 as number"
+// XPECT warnings --> "Unnecessary cast from 1 to number" at "1 as number"
 1 as number;
-// XPECT warnings --> "Unnecessary cast from boolean to boolean" at "true as boolean"
+// XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
 true as boolean;
 
-// XPECT errors --> "Cannot cast from string to A" at ""string" as A"
+// XPECT errors --> "Cannot cast from "string" to A" at ""string" as A"
 "string" as A;
-// XPECT errors --> "Cannot cast from int to A" at "1 as A"
+// XPECT errors --> "Cannot cast from 1 to A" at "1 as A"
 1 as A;
-// XPECT errors --> "Cannot cast from int to I" at "1 as I"
+// XPECT errors --> "Cannot cast from 1 to I" at "1 as I"
 1 as I;
 
 // XPECT errors --> "Cannot cast from A to number" at "a as number"
@@ -117,7 +117,7 @@ e as string;
 
 // XPECT errors --> "Cannot cast from A to E" at "a as E"
 a as E;
-// XPECT errors --> "Cannot cast from string to E" at ""string" as E"
+// XPECT errors --> "Cannot cast from "string" to E" at ""string" as E"
 "string" as E;
 // XPECT errors --> "Cannot cast from I to E" at "i as E"
 i as E;

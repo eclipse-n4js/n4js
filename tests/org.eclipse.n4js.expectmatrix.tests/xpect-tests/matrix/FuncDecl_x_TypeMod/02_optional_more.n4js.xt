@@ -41,7 +41,7 @@ f();
 f(true);
 
 /* IDEBUG-188 argument in wrong place XPECT errors ---
-"int is not a subtype of boolean." at "5"
+"5 is not a subtype of boolean." at "5"
  --- */
 f(5);
 
@@ -55,7 +55,7 @@ g();
 // not enough arguments XPECT noerrors -->
 g(true);
 
-// argument in wrong place XPECT errors --> "int is not a subtype of boolean." at "5"
+// argument in wrong place XPECT errors --> "5 is not a subtype of boolean." at "5"
 g(5);
 
 // good arguments XPECT noerrors -->

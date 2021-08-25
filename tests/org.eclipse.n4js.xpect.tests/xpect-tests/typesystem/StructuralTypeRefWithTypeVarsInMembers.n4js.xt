@@ -39,7 +39,7 @@ var f = c1s.field;
 f.prop;
 // XPECT noerrors -->
 f.prop = "Hello prop!";
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 f.prop = 42;
 // XPECT noerrors -->
 var test02 : string = f.prop;
@@ -72,7 +72,7 @@ var m_result = m();
 m_result.prop;
 // XPECT noerrors -->
 m_result.prop = "Hello prop!";
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 m_result.prop = 42;
 // XPECT noerrors -->
 var test12 : string = m_result.prop;
@@ -93,8 +93,8 @@ var c3s : C3<string>;
 // XPECT noerrors -->
 c3s.m({prop: "Hello prop!"});
 // TODO improve typeRefAsString in StructuralTypeRef
-// XPECT FIXME errors --> "~Object with { prop: int; } is not a structural subtype of ~Object with { string prop; }: prop failed: int is not equal to string." at "{prop: 42}"
-// XPECT errors --> "~Object with { prop: int } is not a structural subtype of ~Object with { prop: T } [[T->string]]: prop failed: int is not equal to string." at "{prop: 42}"
+// XPECT FIXME errors --> "~Object with { prop: 42; } is not a structural subtype of ~Object with { prop: string }: prop failed: 42 is not equal to string." at "{prop: 42}"
+// XPECT errors --> "~Object with { prop: 42 } is not a structural subtype of ~Object with { prop: T } [[T->string]]: prop failed: 42 is not equal to string." at "{prop: 42}"
 c3s.m({prop: 42});
 
 
@@ -120,7 +120,7 @@ c4s.m().s = 42;
 // XPECT noerrors -->
 var test43 : string = c4s.m().m(42);
 // XPECT errors ---
-// "string is not a subtype of int." at ""hello""
+// ""hello" is not a subtype of int." at ""hello""
 // "string is not a subtype of int." at "c4s.m().m("hello")"
 // ---
 var test44 : int = c4s.m().m("hello");

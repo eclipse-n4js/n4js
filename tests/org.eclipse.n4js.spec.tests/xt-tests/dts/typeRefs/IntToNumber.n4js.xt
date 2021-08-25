@@ -17,9 +17,11 @@
 
 const c1: int = 1;
 const c2 = 2;
+const c3 = 2 + 1;
 
 
 /* XPECT generated_dts ---
 declare const c1: number;
-declare const c2: number;
+declare const c2: 2;
+declare const c3: number;
 --- */

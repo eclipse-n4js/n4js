@@ -26,7 +26,7 @@ class A1 {
 	set a(s : String) { this._s_a = s; }
 }
 
-// XPECT errors --> "string is not a subtype of String." at ""a""
+// XPECT errors --> ""a" is not a subtype of String." at ""a""
 new A1().a="a";
 
 
@@ -37,7 +37,7 @@ class A2 {
 	// Shadowed XPECT errors -->  "String is not a subtype of string." at "s"
  	set a(s : String) { this._s_a = s; }
 }
-// XPECT errors --> "string is not a subtype of String." at ""a""
+// XPECT errors --> ""a" is not a subtype of String." at ""a""
 new A2().a="a"
 
 class Ae1 extends A1 {
@@ -108,7 +108,7 @@ enum E {
 class C implements R, X {}
 
 class F implements R {}
-// XPECT errors --> "string is not a subtype of String." at ""hallo""
+// XPECT errors --> ""hallo" is not a subtype of String." at ""hallo""
 new F().meth01("hallo");
 // OK XPECT noerrors
 new F().meth02("hallo");

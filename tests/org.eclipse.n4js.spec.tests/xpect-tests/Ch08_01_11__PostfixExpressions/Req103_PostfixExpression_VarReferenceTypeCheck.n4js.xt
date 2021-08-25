@@ -30,7 +30,7 @@ n--;
 
 // XPECT errors ---
 //"Invalid increment operand." at ""hallo""
-//"string is not a subtype of number." at ""hallo""
+//""hallo" is not a subtype of number." at ""hallo""
 //---
 "hallo"++;
 // XPECT errors --> "Invalid increment operand." at "1"

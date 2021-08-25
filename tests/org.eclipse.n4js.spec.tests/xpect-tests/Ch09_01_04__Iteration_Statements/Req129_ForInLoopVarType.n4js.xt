@@ -60,7 +60,7 @@ function foo() {
 
 // --------------------------------------------------------------------------
 
-// XPECT errors --> "int is not a subtype of union{Object,string,ArgumentsType}." at "42"
+// XPECT errors --> "42 is not a subtype of union{Object,string,ArgumentsType}." at "42"
 for (var b in 42) {
 }
 
