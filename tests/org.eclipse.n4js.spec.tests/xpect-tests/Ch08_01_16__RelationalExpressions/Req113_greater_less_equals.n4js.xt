@@ -23,61 +23,67 @@ function funcv() { return; }
 
 var ba = new Array<boolean>();
 
-// OK
+// OK XPECT noerrors -->
 ba[1] = 1 < 2
 
-// OK
+// OK XPECT noerrors -->
 ba[2] = "b" < "a"
 
-// OK
+// OK XPECT noerrors -->
 ba[3] = true < false
 
 
 ba[4] =
-// XPECT errors ---
+// old behavior:
+// X--PECT errors ---
 //"int is not a subtype of string." at "1"
 //"string is not a subtype of int." at ""a""
 //---
+// XPECT noerrors -->
 1 < "a"
 
 
 ba[5] =
-// XPECT errors ---
+// old behavior:
+// X--PECT errors ---
 // "boolean is not a subtype of string." at "true"
 // "string is not a subtype of boolean." at ""a""
 // ---
+// XPECT noerrors -->
 true < "a"
 
 
 ba[6] =
-// XPECT errors ---
+// old behavior:
+// X--PECT errors ---
 // "boolean is not a subtype of int." at "true"
 // "int is not a subtype of boolean." at "1"
 // ---
+// XPECT noerrors -->
 1 < true
 
 
 ba[7] =
 // XPECT errors ---
-// "A is not a subtype of union{number,string,boolean}." at "new A()"
-// "type{R} is not a subtype of union{number,string,boolean}." at "R"
+// "A is not a subtype of union{boolean,number,string}." at "new A()"
+// "type{R} is not a subtype of union{boolean,number,string}." at "R"
 // ---
 new A() < R
 
 ba[8] =
-// XPECT errors --> "any is not a subtype of int." at "func()"
+// XPECT errors --> "any is not a subtype of union{boolean,number,string}." at "func()"
 1 < func()
 
 
 ba[9] =
-// XPECT errors --> "void is not a subtype of int." at "funcv()"
+// XPECT errors --> "void is not a subtype of union{boolean,number,string}." at "funcv()"
 1 < funcv()
 
 
 ba[10] =
 // XPECT errors ---
-//"any is not a subtype of union{number,string,boolean}." at "func()"
-//"any is not a subtype of union{number,string,boolean}." at "func()"
+//"any is not a subtype of union{boolean,number,string}." at "func()"
+//"any is not a subtype of union{boolean,number,string}." at "func()"
 // ---
 func() < func()
 
@@ -85,11 +91,11 @@ func() < func()
 ///////////////////////////////////////////////////////////////////////////////////
 // Assuming same behaviour for other comparisons, just one check for each symbol:
 
-// OK
+// OK XPECT noerrors -->
 ba[11] = 1 > 2
 
-// OK
+// OK XPECT noerrors -->
 ba[12] = 1 <= 2
 
-// OK
+// OK XPECT noerrors -->
 ba[13] = 1 >= 2

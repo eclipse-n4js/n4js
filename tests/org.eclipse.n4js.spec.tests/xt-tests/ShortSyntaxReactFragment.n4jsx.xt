@@ -33,7 +33,7 @@ React;
 /* unsupported self-closing React fragment XPECT errors ---
  "no viable alternative at input '/'" at "<"
  "Invalid regular expression literal" at "/>;"
- "RegExp is not a subtype of union{number,string,boolean}." at "/>;"
+ "RegExp is not a subtype of union{boolean,number,string}." at "/>;"
 --- */
 const c1 = </>;
 
