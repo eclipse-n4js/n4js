@@ -52,14 +52,14 @@ class N6_1_09_FunctionCallTypeInferenceTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testFunctionCallWithParametrizedParamType() {
-		"a.fWithParametrizedParameter('f')".assertTypeNameOfFunctionCall('"f"')
-		"a.fWithParametrizedParameter(someString)".assertTypeNameOfFunctionCall('string')
+		"a.fWithParametrizedParameter('f')".assertTypeNameOfFunctionCall("string")
+		"a.fWithParametrizedParameter(someString)".assertTypeNameOfFunctionCall("string")
 		"a.fWithParametrizedParameter(b)".assertTypeNameOfFunctionCall("B")
 	}
 
 	@Test
 	def void testFunctionCallWithTwoParametrizedParameters() {
-		"a.fWithTwoParametrizedParameters1('f', b)".assertTypeNameOfFunctionCall('"f"')
+		"a.fWithTwoParametrizedParameters1('f', b)".assertTypeNameOfFunctionCall("string")
 		"a.fWithTwoParametrizedParameters1(someString, b)".assertTypeNameOfFunctionCall("string")
 		"a.fWithTwoParametrizedParameters2('f', b)".assertTypeNameOfFunctionCall("B")
 	}
@@ -223,7 +223,7 @@ class N6_1_09_FunctionCallTypeInferenceTest extends AbstractTypesystemTest {
 	@Test
 	def void testFunctionCallWithParametrizedParamTypeUnion() {
 		// <T> T fWithTwoParametrizedParameter(T p, T p2) { return null; }
-		"a.fWithTwoParametrizedParameter('f', 1)".assertTypeNameOfFunctionCall('union{1,"f"}')
+		"a.fWithTwoParametrizedParameter('f', 1)".assertTypeNameOfFunctionCall("union{int,string}")
 		"a.fWithTwoParametrizedParameter(someString, someInt)".assertTypeNameOfFunctionCall("union{int,string}")
 	}
 

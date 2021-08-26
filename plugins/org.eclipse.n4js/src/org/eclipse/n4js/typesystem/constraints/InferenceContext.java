@@ -42,6 +42,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.CharDiscreteDomain;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -410,6 +411,7 @@ public final class InferenceContext {
 		return solution;
 	}
 
+	// FIXME reconsider implementation of this method
 	/**
 	 * Tells whether the given candidate type reference looks like a promising partial solution for inference variable
 	 * 'infVar' within an overall unsolvable constraint system. Must only be used with unsolvable inference contexts,
@@ -523,14 +525,33 @@ public final class InferenceContext {
 		if (lowerBounds.length > 0 && !preferUpperOverLower) {
 			// take upper bound of all lower bounds
 			// (if we have a type bound `α :> ? extends A` this will give us A as a lower bound for α)
+			final TypeRef[] lowerBoundsWithoutLiteralTypes = new TypeRef[lowerBounds.length];
+			boolean foundLiteralType = false;
 			for (int i = 0; i < lowerBounds.length; i++) {
-				lowerBounds[i] = ts.upperBound(G, lowerBounds[i]);
+				TypeRef curr = ts.upperBound(G, lowerBounds[i]);
+				TypeRef currBase = N4JSLanguageUtils.getLiteralTypeBase(G, curr);
+				lowerBounds[i] = curr;
+				lowerBoundsWithoutLiteralTypes[i] = currBase;
+				foundLiteralType |= currBase != curr;
 			}
-			final TypeRef result = tsh.createUnionType(G, lowerBounds);
+			final TypeRef result;
+			if (foundLiteralType) {
+				TypeRef resultWithoutLiteralTypes = tsh.createUnionType(G, lowerBoundsWithoutLiteralTypes);
+				final TypeRef[] upperBounds = upperBoundsPreview != null ? upperBoundsPreview
+						: currentBounds.collectUpperBounds(infVar, true, true);
+				if (isSubtypeOfAll(resultWithoutLiteralTypes, upperBounds)) {
+					result = resultWithoutLiteralTypes;
+				} else {
+					result = tsh.createUnionType(G, lowerBounds);
+				}
+			} else {
+				result = tsh.createUnionType(G, lowerBounds);
+			}
 			assert TypeUtils.isProper(result) : "not a proper LUB: " + str(result);
 			return result;
 		} else {
-			final TypeRef[] upperBounds = currentBounds.collectUpperBounds(infVar, true, true);
+			final TypeRef[] upperBounds = upperBoundsPreview != null ? upperBoundsPreview
+					: currentBounds.collectUpperBounds(infVar, true, true);
 			if (upperBounds.length > 0) {
 				// take lower bound of all upper bounds
 				for (int i = 0; i < upperBounds.length; i++) {
@@ -683,6 +704,15 @@ public final class InferenceContext {
 						return false;
 					}
 				}
+			}
+		}
+		return true;
+	}
+
+	private boolean isSubtypeOfAll(TypeRef left, TypeRef... rights) {
+		for (TypeRef right : rights) {
+			if (!ts.subtypeSucceeded(G, left, right)) {
+				return false;
 			}
 		}
 		return true;

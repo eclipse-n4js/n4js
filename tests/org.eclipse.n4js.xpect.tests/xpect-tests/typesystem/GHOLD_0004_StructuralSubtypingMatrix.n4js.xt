@@ -171,7 +171,7 @@ class ~SA { public f : string}
 	{
 		/* ~Object with additional members !<: ~Primitive XPECT issues ---
 			"Structural type operator ~ does not have any effect on primitive types." at "~int"
-			"~Object with { f: "" } is not a subtype of ~int." at "{ f: "" }"
+			"~Object with { f: string } is not a subtype of ~int." at "{ f: "" }"
 		--- */
 		let i : ~int = { f: "" }
 	}
