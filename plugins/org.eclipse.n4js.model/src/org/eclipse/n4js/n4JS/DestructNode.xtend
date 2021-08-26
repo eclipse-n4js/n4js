@@ -208,7 +208,9 @@ public class DestructNode {
 			val valueToBeDestructured = if (stmnt.forOf) {
 					stmnt.expression
 				} else if (stmnt.forIn) {
-					N4JSFactory.eINSTANCE.createStringLiteral
+					N4JSFactory.eINSTANCE.createStringLiteral() => [
+						value = ""
+					]
 				} else {
 					// impossible because #isDestructuringForStatement() returned true
 					throw new IllegalStateException
