@@ -1020,7 +1020,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private def boolean isNotExtendable(Type t) {
-		t instanceof PrimitiveType || t instanceof TEnum || t instanceof BuiltInType || t instanceof TFunction
+		t === null || t instanceof PrimitiveType || t instanceof TEnum || t instanceof BuiltInType || t instanceof TFunction
 	}
 
 	private def boolean hasInterface(Set<Type> types) {
@@ -1039,7 +1039,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def String warningNameOf(TypeRef typeRef) {
 
-		if (typeRef instanceof TypeTypeRef) {
+		if (typeRef instanceof TypeTypeRef
+			|| typeRef instanceof LiteralTypeRef) {
 			typeRef.typeRefAsString
 		} else {
 			val typeS = typeRef.computeDeclaredTypeS

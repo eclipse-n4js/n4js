@@ -1193,7 +1193,7 @@ import com.google.inject.Inject;
 			case NOT:
 				return booleanTypeRef(G);
 			case POS:
-				return ts.type(G, e.getExpression());
+				return numberTypeRef(G);
 			case NEG:
 				TypeRef exprTypeRef = ts.type(G, e.getExpression());
 				if (exprTypeRef instanceof NumericLiteralTypeRef) {
@@ -1204,7 +1204,7 @@ import com.google.inject.Inject;
 						return result;
 					}
 				}
-				return exprTypeRef;
+				return numberTypeRef(G);
 			default: // INC, DEC, INV
 				return numberTypeRef(G);
 			}
