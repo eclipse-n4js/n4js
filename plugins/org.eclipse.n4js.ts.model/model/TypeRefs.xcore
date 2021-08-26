@@ -1321,7 +1321,7 @@ class NumericLiteralTypeRef extends LiteralTypeRef {
 	BigDecimal value
 
 	op String internalGetTypeRefAsString() {
-		return value?.toPlainString ?: "null";
+		return value?.stripTrailingZeros?.toPlainString ?: "null";
 	}
 }
 

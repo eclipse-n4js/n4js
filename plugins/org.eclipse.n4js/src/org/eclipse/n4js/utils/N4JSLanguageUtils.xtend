@@ -748,7 +748,11 @@ public class N4JSLanguageUtils {
 
 	// FIXME GH-2197 make this consistent with the #isIntLiteral() methods below!
 	def static boolean isInt(BigDecimal value) {
-		val isWholeNumber = value.stripTrailingZeros().scale() <= 0;
+		// note: normally the correct way of telling whether a BigDecimal is a whole number would be:
+		// boolean isWholeNumber = value.stripTrailingZeros().scale() <= 0;
+		// However, we here want BigDecimals like 0.0, 1.00, -42.0 to *NOT* be treated as a whole numbers,
+		// so we instead go with:
+		val isWholeNumber = value.scale() <= 0;
 		return isWholeNumber
 			&& N4JSGlobals.INT32_MIN_VALUE_BD.compareTo(value) <= 0
 			&& value.compareTo(N4JSGlobals.INT32_MAX_VALUE_BD) <= 0;

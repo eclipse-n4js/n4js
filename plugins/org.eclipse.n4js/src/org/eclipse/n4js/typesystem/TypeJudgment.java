@@ -123,6 +123,7 @@ import org.eclipse.n4js.n4JS.TemplateSegment;
 import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.UnaryExpression;
+import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
@@ -555,7 +556,7 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseNumericLiteral(NumericLiteral l) {
 			NumericLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
-			result.setValue(l.getValue().stripTrailingZeros());
+			result.setValue(l.getValue());
 			return result;
 		}
 
@@ -1193,15 +1194,18 @@ import com.google.inject.Inject;
 			case NOT:
 				return booleanTypeRef(G);
 			case POS:
-				return numberTypeRef(G);
 			case NEG:
 				TypeRef exprTypeRef = ts.type(G, e.getExpression());
 				if (exprTypeRef instanceof NumericLiteralTypeRef) {
 					BigDecimal value = ((NumericLiteralTypeRef) exprTypeRef).getValue();
 					if (value != null) {
-						NumericLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
-						result.setValue(value.negate());
-						return result;
+						if (e.getOp() == UnaryOperator.NEG) {
+							NumericLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
+							result.setValue(value.negate());
+							return result;
+						} else {
+							return exprTypeRef;
+						}
 					}
 				}
 				return numberTypeRef(G);

@@ -99,9 +99,9 @@ class N6_1_03_LiteralsTypesystemTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testLiteralWithFraction() {
-		assertLiteralType("int",    "0",   ".0");
+		assertLiteralType("number", "0",   ".0");
 		assertLiteralType("number", "0.1", ".1");
-		assertLiteralType("int",    "0",   ".0e-1");
+		assertLiteralType("number", "0",   ".0e-1");
 		assertLiteralType("int",    "0",   ".0E1");
 		assertLiteralType("number", "2.1", "2.1");
 		assertLiteralType("number", "0.3", "3.0e-1");
