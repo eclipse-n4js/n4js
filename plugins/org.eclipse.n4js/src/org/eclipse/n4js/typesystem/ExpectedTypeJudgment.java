@@ -93,6 +93,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
@@ -512,6 +513,10 @@ import com.google.inject.Inject;
 					return bottomTypeRef(G); // no expectation
 				} else {
 					// right-hand side:
+					if (!N4JSLanguageUtils.hasValidLHS(expr)) {
+						// suppress follow-up error
+						return NO_EXPECTATION; // no type expectation at all
+					}
 					// right-hand side is expected to be of same type (or subtype) as left-hand side
 					return ts.type(G, expr.getLhs()); // note: this gives us the type for write access on LHS
 				}
@@ -528,6 +533,10 @@ import com.google.inject.Inject;
 					return TypeUtils.createNonSimplifiedIntersectionType(numberTypeRef(G), stringTypeRef(G));
 				} else {
 					// right hand side:
+					if (!N4JSLanguageUtils.hasValidLHS(expr)) {
+						// suppress follow-up error
+						return NO_EXPECTATION; // no type expectation at all
+					}
 					final TypeRef lhsTypeRef = ts.type(G, expr.getLhs());
 					if (lhsTypeRef == null) {
 						return unknown();

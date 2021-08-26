@@ -23,7 +23,10 @@ import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.n4JS.AssignmentExpression
+import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.ConditionalExpression
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -1264,6 +1267,17 @@ public class N4JSLanguageUtils {
 		}
 
 		return OptionalFieldStrategy.OFF;
+	}
+
+	/**
+	 * Tells whether the given assignment expression has a valid left-hand side.
+	 */
+	def static boolean hasValidLHS(AssignmentExpression assignExpr) {
+		val lhs = assignExpr.lhs;
+		return lhs !== null && (
+			lhs.isValidSimpleAssignmentTarget()
+			|| (assignExpr.op === AssignmentOperator.ASSIGN && DestructureUtils.isTopOfDestructuringAssignment(assignExpr))
+		);
 	}
 
 	/**

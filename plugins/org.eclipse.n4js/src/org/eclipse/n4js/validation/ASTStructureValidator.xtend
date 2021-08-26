@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 import org.eclipse.n4js.n4JS.BindingElement
 import org.eclipse.n4js.n4JS.Block
@@ -103,7 +102,6 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 
-import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
 import static extension org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.*
 
@@ -656,17 +654,14 @@ class ASTStructureValidator {
 			validLabels,
 			constraints
 		)
-		val lhs = model.lhs
-		if (lhs !== null && !lhs.isValidSimpleAssignmentTarget) {
-			if (model.op !== AssignmentOperator.ASSIGN || !model.isTopOfDestructuringAssignment) {
-				val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS)
-				val target = nodes.head
-				producer.node = target
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.getMessageForAST_EXP_INVALID_LHS_ASS,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_EXP_INVALID_LHS_ASS),
-						IssueCodes.AST_EXP_INVALID_LHS_ASS))
-			}
+		if (model.lhs !== null && !N4JSLanguageUtils.hasValidLHS(model)) {
+			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS)
+			val target = nodes.head
+			producer.node = target
+			producer.addDiagnostic(
+				new DiagnosticMessage(IssueCodes.getMessageForAST_EXP_INVALID_LHS_ASS,
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_EXP_INVALID_LHS_ASS),
+					IssueCodes.AST_EXP_INVALID_LHS_ASS))
 		}
 	}
 
