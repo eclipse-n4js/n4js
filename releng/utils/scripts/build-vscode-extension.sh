@@ -158,4 +158,4 @@ echo "==== STEP 8/8: Killing Verdaccio"
 docker rm -f extension-publish-verdaccio || true
 
 
-echo "==== PUBLISH N4JS-LIBS - DONE"
+echo "==== BUILD VSCODE EXTENSION - DONE"
