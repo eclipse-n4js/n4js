@@ -191,7 +191,7 @@ function CastExpression() {
 	// CastExpression XPECT succs at '4' --> 4 as int
 	// CastExpression XPECT succs at '4 as int' --> "end"
 	"start";
-	// CastExpression XPECT warnings --> "Unnecessary cast from int to int" at "4 as int"
+	// CastExpression XPECT warnings --> "Unnecessary cast from 4 to int" at "4 as int"
 	4 as int;
 	"end";
 }

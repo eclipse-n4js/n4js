@@ -32,7 +32,7 @@ b01.methodB();
 
 /* test-3 XPECT errors ---
  *  "Couldn't resolve reference to IdentifiableElement 'b01'." at "b01"
- *  "int is not a subtype of B." at "42"
+ *  "42 is not a subtype of B." at "42"
  * ---
  */
 b01.methodB();
@@ -48,7 +48,7 @@ b0 = 42;
 
 /* test-5 XPECT errors ---
  *  "" at "b01"
- *  "int is not a subtype of B." at "42"
+ *  "42 is not a subtype of B." at "42"
  * ---
  */
 b01.methodB();
