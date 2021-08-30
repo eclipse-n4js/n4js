@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.n4js.n4idl.migrations.SuperClassifierIterator.SuperClassifierEntry;
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
@@ -21,6 +22,8 @@ import org.eclipse.n4js.ts.types.BuiltInType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.utils.TypeCompareUtils;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.collections.Iterables2;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -93,7 +96,7 @@ public class TypeDistanceComputer {
 	 *
 	 * Returns {@link #MAX_DISTANCE} if {@code typeRef1} is not a nominal subtype of {@code typeRef2}.
 	 *
-	 * Returns {@code 0} for primitive and built-in types iff they are equal (==).
+	 * Returns {@code 0} for primitive, literal, and built-in types iff they are equal (==).
 	 *
 	 * Only handles {@link TypeTypeRef}s and {@link TypeRef}s with non-null {@link TypeRef#getDeclaredType()} for now.
 	 *
@@ -102,6 +105,22 @@ public class TypeDistanceComputer {
 	 *             type distance computation (e.g. null, unsupported TypeRef subclasses, etc.).
 	 */
 	public double computeDistance(TypeRef typeRef1, TypeRef typeRef2) throws UnsupportedTypeDistanceOperandsException {
+		// handle special case of literal types up front
+		if (typeRef1 instanceof LiteralTypeRef) {
+			if (typeRef2 instanceof LiteralTypeRef) {
+				if (TypeCompareUtils.isEqual(typeRef1, typeRef2)) {
+					return 0;
+				}
+			} else {
+				if (N4JSLanguageUtils.isLiteralTypeBase((LiteralTypeRef) typeRef1, typeRef2)) {
+					return 0;
+				}
+			}
+			return MAX_DISTANCE;
+		} else if (typeRef2 instanceof LiteralTypeRef) {
+			return MAX_DISTANCE;
+		}
+
 		// obtain a valid pair of operands from the given type references
 		final Optional<Pair<Type, Type>> operands = extractTypeDistanceOperands(typeRef1, typeRef2);
 		// if that fails already, we assume a maximum type distance

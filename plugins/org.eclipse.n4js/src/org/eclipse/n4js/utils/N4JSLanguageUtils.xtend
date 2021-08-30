@@ -109,6 +109,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.ts.utils.TypeCompareUtils
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -714,6 +715,31 @@ public class N4JSLanguageUtils {
 		return false;
 	}
 
+
+	/**
+	 * Tells whether 'baseTypeRefCandidate' is the given literal type's {@link #getLiteralTypeBase(RuleEnvironment, TypeRef)
+	 * base type}, without requiring a rule environment and considering the semantic equality of 'int' and 'number'.
+	 */
+	def public static boolean isLiteralTypeBase(LiteralTypeRef literalTypeRef, TypeRef baseTypeRefCandidate) {
+		// the only chance for success is that 'baseTypeRefCandidate' is a type reference pointing to a primitive
+		// type, so on the success path we can assume that 'baseTypeRefCandidate' will give us a declared type we
+		// can use for building a rule environment (to avoid the need for clients to pass in a rule environment):
+		val declType = baseTypeRefCandidate.getDeclaredType();
+		if (declType !== null) {
+			val G = declType.newRuleEnvironment;
+			val baseTypeRef = getLiteralTypeBase(G, literalTypeRef);
+			if (TypeCompareUtils.isEqual(baseTypeRef, baseTypeRefCandidate)) {
+				return true;
+			}
+			val tInt = G.intType;
+			val tNumber = G.numberType;
+			if ((declType === tInt && baseTypeRef.declaredType === tNumber)
+				|| (declType === tNumber && baseTypeRef.declaredType === tInt)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts
