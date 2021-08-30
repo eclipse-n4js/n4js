@@ -53,4 +53,14 @@ class GeneratedSmokeTestCases4 {
 			})
 		'''.assertNoException
 	}
+
+	@Test
+	def void test_GH2186() {
+		'''
+			class G<T> {}
+			new G<
+			;
+			let x = 42;
+		'''.assertNoException
+	}
 }

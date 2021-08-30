@@ -214,7 +214,13 @@ public class TypeUtils {
 		ref.setDeclaredType(declaredType);
 		final EList<TypeArgument> refTypeArgs = ref.getTypeArgs();
 		for (TypeArgument typeArg : typeArgs) {
-			refTypeArgs.add(TypeUtils.copyIfContained(typeArg));
+			if (typeArg != null) {
+				refTypeArgs.add(TypeUtils.copyIfContained(typeArg));
+			} else {
+				// 'null' here is invalid (most likely caused by a syntax error) and EMF would throw an exception;
+				// to keep indices of any following type arguments valid, we create and add an UnknownTypeRef:
+				refTypeArgs.add(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
+			}
 		}
 		if (autoCreateTypeArgs) {
 			sanitizeRawTypeRef(ref);
