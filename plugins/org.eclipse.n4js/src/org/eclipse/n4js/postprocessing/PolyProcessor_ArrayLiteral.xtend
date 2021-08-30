@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.InferenceVariable
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
@@ -36,7 +37,6 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.
@@ -133,10 +133,18 @@ if(isValueToBeDestructured) {
 			} else {
 				#[ expectedTypeRef ]
 			};
+			val iterableType = G.iterableType;
+			val arrayType = G.arrayType;
 			for (candidateTypeRef : candidateTypeRefs) {
-				val extractedTypeRefs = tsh.extractIterableElementTypes(G, candidateTypeRef);
-				if (extractedTypeRefs.size > 0) {
-					return extractedTypeRefs; // will have len>1 only if expectation is IterableN
+				val declType = candidateTypeRef.declaredType;
+				if (declType === iterableType
+						|| declType === arrayType
+						|| G.isIterableN(declType)
+						|| G.isArrayN(declType)) {
+					val extractedTypeRefs = tsh.extractIterableElementTypes(G, candidateTypeRef);
+					if (extractedTypeRefs.size > 0) {
+						return extractedTypeRefs; // will have len>1 iff expectation is IterableN
+					}
 				}
 			}
 		}
