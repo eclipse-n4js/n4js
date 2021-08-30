@@ -36,6 +36,7 @@ import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.
@@ -124,13 +125,22 @@ if(isValueToBeDestructured) {
 	 * <li>#[] for any other kind of expectedTypeRef</li>
 	 * </ul>
 	 */
+	// FIXME align this with "choice of most promising candidate" in reduce!
 	private def List<TypeRef> getExpectedElemTypeRefs(RuleEnvironment G, TypeRef expectedTypeRef) {
 		if (expectedTypeRef !== null) {
-			val extractedTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
-			return extractedTypeRefs; // will have len>1 only if expectation is IterableN
-		} else {
-			return newArrayList // no or invalid type expectation
+			val candidateTypeRefs = if (expectedTypeRef instanceof UnionTypeExpression) {
+				expectedTypeRef.typeRefs
+			} else {
+				#[ expectedTypeRef ]
+			};
+			for (candidateTypeRef : candidateTypeRefs) {
+				val extractedTypeRefs = tsh.extractIterableElementTypes(G, candidateTypeRef);
+				if (extractedTypeRefs.size > 0) {
+					return extractedTypeRefs; // will have len>1 only if expectation is IterableN
+				}
+			}
 		}
+		return newArrayList // no or invalid type expectation
 	}
 
 	/**
