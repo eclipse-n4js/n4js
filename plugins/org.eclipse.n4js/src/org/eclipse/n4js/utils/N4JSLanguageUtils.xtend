@@ -74,6 +74,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
@@ -83,6 +84,7 @@ import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
@@ -758,11 +760,12 @@ public class N4JSLanguageUtils {
 	/**
 	 * Returns the "base type" for the given literal type, e.g. type string for literal type "hello".
 	 */
-	def public static ParameterizedTypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
 		return switch(literalTypeRef) {
 			BooleanLiteralTypeRef: G.booleanTypeRef
 			NumericLiteralTypeRef: getLiteralTypeBase(G, literalTypeRef)
 			StringLiteralTypeRef: G.stringTypeRef
+			EnumLiteralTypeRef: getLiteralTypeBase(G, literalTypeRef)
 			default: throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.simpleName)
 		};
 	}
@@ -771,8 +774,17 @@ public class N4JSLanguageUtils {
 	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only numeric
 	 * literal type references.
 	 */
-	def public static ParameterizedTypeRef getLiteralTypeBase(RuleEnvironment G, NumericLiteralTypeRef literalTypeRef) {
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, NumericLiteralTypeRef literalTypeRef) {
 		return if (isInt(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef;
+	}
+
+	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only enum
+	 * literal type references.
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, EnumLiteralTypeRef literalTypeRef) {
+		val enumType = literalTypeRef.enumType;
+		return if (enumType !== null) TypeUtils.createTypeRef(enumType) else TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 	}
 
 	// FIXME GH-2197 make this consistent with the #isIntLiteral() methods below!

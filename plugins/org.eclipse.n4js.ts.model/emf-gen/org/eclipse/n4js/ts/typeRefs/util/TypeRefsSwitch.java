@@ -348,6 +348,16 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF: {
+				EnumLiteralTypeRef enumLiteralTypeRef = (EnumLiteralTypeRef)theEObject;
+				T result = caseEnumLiteralTypeRef(enumLiteralTypeRef);
+				if (result == null) result = caseLiteralTypeRef(enumLiteralTypeRef);
+				if (result == null) result = caseTypeRef(enumLiteralTypeRef);
+				if (result == null) result = caseTypeArgument(enumLiteralTypeRef);
+				if (result == null) result = caseVersionable(enumLiteralTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypeRefsPackage.VERSIONED_REFERENCE: {
 				VersionedReference versionedReference = (VersionedReference)theEObject;
 				T result = caseVersionedReference(versionedReference);
@@ -820,6 +830,21 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseStringLiteralTypeRef(StringLiteralTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Enum Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Enum Literal Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEnumLiteralTypeRef(EnumLiteralTypeRef object) {
 		return null;
 	}
 

@@ -92,7 +92,6 @@ import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
-import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
@@ -136,6 +135,7 @@ import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
@@ -266,7 +266,9 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseTEnumLiteral(TEnumLiteral enumLiteral) {
-			return ref((TEnum) enumLiteral.eContainer());
+			EnumLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef();
+			result.setValue(enumLiteral);
+			return result;
 		}
 
 		/** Covers cases TField, TFormalParameter, TVariable. */
@@ -734,9 +736,13 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseN4EnumLiteral(N4EnumLiteral enumLiteral) {
-			final N4EnumDeclaration enumDecl = EcoreUtil2.getContainerOfType(enumLiteral, N4EnumDeclaration.class);
-			final TEnum tEnum = enumDecl != null ? enumDecl.getDefinedTypeAsEnum() : null;
-			return tEnum != null ? ref(tEnum) : unknown();
+			TEnumLiteral definedLiteral = enumLiteral.getDefinedLiteral();
+			if (definedLiteral == null) {
+				return unknown();
+			}
+			EnumLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef();
+			result.setValue(definedLiteral);
+			return result;
 		}
 
 		@Override

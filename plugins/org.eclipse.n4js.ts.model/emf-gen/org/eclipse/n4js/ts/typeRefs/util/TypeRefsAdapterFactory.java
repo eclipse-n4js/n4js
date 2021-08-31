@@ -188,6 +188,10 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createStringLiteralTypeRefAdapter();
 			}
 			@Override
+			public Adapter caseEnumLiteralTypeRef(EnumLiteralTypeRef object) {
+				return createEnumLiteralTypeRefAdapter();
+			}
+			@Override
 			public Adapter caseVersionedReference(VersionedReference object) {
 				return createVersionedReferenceAdapter();
 			}
@@ -612,6 +616,20 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStringLiteralTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef <em>Enum Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
+	 * @generated
+	 */
+	public Adapter createEnumLiteralTypeRefAdapter() {
 		return null;
 	}
 

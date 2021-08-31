@@ -23,6 +23,7 @@ import org.eclipse.n4js.scoping.utils.CompositeScope
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -191,6 +192,11 @@ class MemberScopingHelper {
 	private def dispatch IScope members(StringLiteralTypeRef ltr, MemberScopeRequest request) {
 		val G = request.context.newRuleEnvironment;
 		return members(G.stringTypeRef, request);
+	}
+
+	private def dispatch IScope members(EnumLiteralTypeRef ltr, MemberScopeRequest request) {
+		val G = request.context.newRuleEnvironment;
+		return members(N4JSLanguageUtils.getLiteralTypeBase(G, ltr), request);
 	}
 
 	private def dispatch IScope members(ParameterizedTypeRef ptr, MemberScopeRequest request) {

@@ -37,7 +37,7 @@ let digitFewer: DigitFewer;
 digit = Digit.ZERO;
 // XPECT errors --> "0 is not a subtype of Digit." at "0"
 digit = 0;
-// XPECT errors --> "DigitFewer is not a subtype of Digit." at "DigitFewer.ZERO"
+// XPECT errors --> "DigitFewer.ZERO is not a subtype of Digit." at "DigitFewer.ZERO"
 digit = DigitFewer.ZERO;
 // XPECT errors --> "DigitFewer is not a subtype of Digit." at "digitFewer"
 digit = digitFewer;
@@ -51,7 +51,7 @@ digit = num_0;
 // XPECT errors --> "union{0,1,2} is not a subtype of Digit." at "num_012"
 digit = num_012;
 
-// could be allowed in the future XPECT errors --> "Digit is not a subtype of 0." at "Digit.ZERO"
+// could be allowed in the future XPECT errors --> "Digit.ZERO is not a subtype of 0." at "Digit.ZERO"
 num_0 = Digit.ZERO;
 // could be allowed in the future XPECT errors --> "Digit is not a subtype of union{0,1,2}." at "digit"
 num_012 = digit;
@@ -84,7 +84,7 @@ let colorFewer: ColorFewer;
 color = Color.RED;
 // XPECT errors --> ""RED" is not a subtype of Color." at ""RED""
 color = "RED";
-// XPECT errors --> "ColorFewer is not a subtype of Color." at "ColorFewer.RED"
+// XPECT errors --> "ColorFewer.RED is not a subtype of Color." at "ColorFewer.RED"
 color = ColorFewer.RED;
 // XPECT errors --> "ColorFewer is not a subtype of Color." at "colorFewer"
 color = colorFewer;
@@ -98,7 +98,7 @@ color = str_red;
 // XPECT errors --> "union{"RED","GREEN","BLUE"} is not a subtype of Color." at "str_rgb"
 color = str_rgb;
 
-// could be allowed in the future XPECT errors --> "Color is not a subtype of "RED"." at "Color.RED"
+// could be allowed in the future XPECT errors --> "Color.RED is not a subtype of "RED"." at "Color.RED"
 str_red = Color.RED;
 // could be allowed in the future XPECT errors --> "Color is not a subtype of union{"RED","GREEN","BLUE"}." at "color"
 str_rgb = color;

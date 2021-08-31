@@ -16,7 +16,7 @@
 // XPECT noerrors -->
 var s : number = E.L;
 
-// Not a regular enum. XPECT errors --> "E is not a subtype of N4Enum." at "E.L"
+// Not a regular enum. XPECT errors --> "E.L is not a subtype of N4Enum." at "E.L"
 var v1 : N4Enum = E.L;
 
 // XPECT noerrors -->

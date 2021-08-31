@@ -34,9 +34,9 @@ enum ES {
     bar
 }
 
-// XPECT errors --> "ES is not a subtype of Object." at "ES.bar"
+// XPECT errors --> "ES.bar is not a subtype of Object." at "ES.bar"
 o = ES.bar;
-// XPECT errors --> "ES is not a subtype of ~Object." at "ES.bar"
+// XPECT errors --> "ES.bar is not a subtype of ~Object." at "ES.bar"
 so = ES.bar;
 
 

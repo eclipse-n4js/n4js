@@ -192,6 +192,15 @@ public interface TypeRefsFactory extends EFactory {
 	StringLiteralTypeRef createStringLiteralTypeRef();
 
 	/**
+	 * Returns a new object of class '<em>Enum Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Enum Literal Type Ref</em>'.
+	 * @generated
+	 */
+	EnumLiteralTypeRef createEnumLiteralTypeRef();
+
+	/**
 	 * Returns a new object of class '<em>Versioned Parameterized Type Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

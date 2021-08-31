@@ -16,6 +16,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTyp
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
@@ -349,6 +350,15 @@ import org.eclipse.n4js.utils.RecursionGuard;
 		public TypeArgument caseStringLiteralTypeRef(StringLiteralTypeRef typeRef) {
 			if (resolveLiteralTypes) {
 				return boundType == BoundType.UPPER ? RuleEnvironmentExtensions.stringTypeRef(G) : bottomTypeRef(G);
+			}
+			return typeRef;
+		}
+
+		@Override
+		public TypeArgument caseEnumLiteralTypeRef(EnumLiteralTypeRef typeRef) {
+			if (resolveLiteralTypes) {
+				return boundType == BoundType.UPPER ? N4JSLanguageUtils.getLiteralTypeBase(G, typeRef)
+						: bottomTypeRef(G);
 			}
 			return typeRef;
 		}

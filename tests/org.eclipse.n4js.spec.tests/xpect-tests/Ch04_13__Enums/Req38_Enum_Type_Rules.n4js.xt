@@ -36,13 +36,13 @@ var v7 : Object = E;
 var v8 : N4Enum = E;
 // XPECT errors --> "type{E} is not a subtype of E." at "E"
 var v9 : E = E;
-// XPECT errors --> "E is not a subtype of type{E}." at "E.L"
+// XPECT errors --> "E.L is not a subtype of type{E}." at "E.L"
 var va : type{E} = E.L;
-// XPECT errors --> "E is not a subtype of type{N4Enum}." at "E.L"
+// XPECT errors --> "E.L is not a subtype of type{N4Enum}." at "E.L"
 var vb : type{N4Enum} = E.L;
 
 enum E2 { L2: "literal" }
 // XPECT errors --> "type{E2} is not a subtype of type{E}." at "E2"
 var vc : type{E} = E2;
-// XPECT errors --> "E is not a subtype of E2." at "E.L"
+// XPECT errors --> "E.L is not a subtype of E2." at "E.L"
 var vd : E2 = E.L;

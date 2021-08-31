@@ -28,6 +28,8 @@ import java.util.UUID
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TN4Classifier
@@ -1334,6 +1336,21 @@ class StringLiteralTypeRef extends LiteralTypeRef {
 			return "null";
 		}
 		return '"' + Strings.escapeNonPrintable(value) + '"';
+	}
+}
+
+/*
+ * Not directly available to the programmer. Only used internally as the type of enum literals.
+ */
+class EnumLiteralTypeRef extends LiteralTypeRef {
+	refers TEnumLiteral value
+
+	op TEnum getEnumType() {
+		return value?.eContainer as TEnum;
+	}
+
+	op String internalGetTypeRefAsString() {
+		return enumType?.name + "." + value?.name
 	}
 }
 

@@ -87,6 +87,7 @@ LiteralTypeRef returns LiteralTypeRef:
 	  BooleanLiteralTypeRef
 	| NumericLiteralTypeRef
 	| StringLiteralTypeRef;
+	// note: EnumLiteralTypeRefs are not available in type expressions
 
 BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
 	{BooleanLiteralTypeRef} (astValue?='true' | 'false');

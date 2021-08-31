@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
@@ -263,6 +264,13 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass stringLiteralTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass enumLiteralTypeRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2122,6 +2130,46 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EClass getEnumLiteralTypeRef() {
+		return enumLiteralTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getEnumLiteralTypeRef_Value() {
+		return (EReference)enumLiteralTypeRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getEnumLiteralTypeRef__GetEnumType() {
+		return enumLiteralTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getEnumLiteralTypeRef__InternalGetTypeRefAsString() {
+		return enumLiteralTypeRefEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getVersionedReference() {
 		return versionedReferenceEClass;
 	}
@@ -2447,6 +2495,11 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEAttribute(stringLiteralTypeRefEClass, STRING_LITERAL_TYPE_REF__VALUE);
 		createEOperation(stringLiteralTypeRefEClass, STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
+		enumLiteralTypeRefEClass = createEClass(ENUM_LITERAL_TYPE_REF);
+		createEReference(enumLiteralTypeRefEClass, ENUM_LITERAL_TYPE_REF__VALUE);
+		createEOperation(enumLiteralTypeRefEClass, ENUM_LITERAL_TYPE_REF___GET_ENUM_TYPE);
+		createEOperation(enumLiteralTypeRefEClass, ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
+
 		versionedReferenceEClass = createEClass(VERSIONED_REFERENCE);
 		createEAttribute(versionedReferenceEClass, VERSIONED_REFERENCE__REQUESTED_VERSION);
 		createEOperation(versionedReferenceEClass, VERSIONED_REFERENCE___HAS_REQUESTED_VERSION);
@@ -2527,6 +2580,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		booleanLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
 		numericLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
 		stringLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
+		enumLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
 		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getParameterizedTypeRef());
 		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getVersionedReference());
 		versionedFunctionTypeRefEClass.getESuperTypes().add(this.getVersionedParameterizedTypeRef());
@@ -2848,6 +2902,13 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEAttribute(getStringLiteralTypeRef_Value(), theEcorePackage.getEString(), "value", null, 0, 1, StringLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getStringLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(enumLiteralTypeRefEClass, EnumLiteralTypeRef.class, "EnumLiteralTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getEnumLiteralTypeRef_Value(), theTypesPackage.getTEnumLiteral(), null, "value", null, 0, 1, EnumLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getEnumLiteralTypeRef__GetEnumType(), theTypesPackage.getTEnum(), "getEnumType", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getEnumLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(versionedReferenceEClass, VersionedReference.class, "VersionedReference", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getVersionedReference_RequestedVersion(), theEcorePackage.getEBigDecimal(), "requestedVersion", null, 0, 1, VersionedReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
