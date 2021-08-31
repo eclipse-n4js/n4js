@@ -258,10 +258,9 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 					// as when inferring the implicit type of variables with an initializer expression
 					!N4JSASTUtils.isImmutable(propAssignm)
 				} else {
-					// standard mode means we usually* have a type expectation; replacing a literal type by
-					// its base type could break the expectation
-					// (* a type expectation won't exist for "unexpected" properties, but those will show a
-					// warning anyway and are therefore a discouraged corner case)
+					// standard mode means we have a type expectation; if we resolved here, we might break
+					// constraints (instead, it's the responsibility of the constraint solver to avoid literal
+					// types as far as possible)
 					false
 				};
 				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType, resolveLiteralTypes);

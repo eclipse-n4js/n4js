@@ -21,11 +21,10 @@ let obj2 = { prop: 42 };
 
 
 
-// FIXME this comment is outdated, remove it!!!
-// In the next test case, it would be slightly more consistent to infer 'propWithoutExpectation' to type int
-// instead of 43, because while there is a type expectation for the overall object literal, no type expectation
-// exists for this property. However, this would require additional complexity only for this corner case that
-// produces a warning anyway, so we go with keeping the literal type.
+// The next test case is special, because we have one property with a type expectation and
+// another property without. In the latter case (and only in that case), the literal type
+// is resolved, for consistency with cases such as: let num = 42; (where 'num' is also
+// inferred to type 'int' instead of '42')
 
 // XPECT type of '{ prop: 42, propWithoutExpectation: 43 }' --> ~Object with { prop: union{0,42}; propWithoutExpectation: int }
 // XPECT warnings --> "propWithoutExpectation is not defined in ~Object with { prop: union{0,42} }; it will not be accessible from obj3." at "propWithoutExpectation"
