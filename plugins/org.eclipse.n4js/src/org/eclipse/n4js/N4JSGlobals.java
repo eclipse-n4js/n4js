@@ -36,9 +36,13 @@ import com.google.common.collect.ImmutableSetMultimap;
  */
 public final class N4JSGlobals {
 
+	/** Maximum value of type 'int' in N4JS. */
 	public static final int INT32_MAX_VALUE = Integer.MAX_VALUE;
+	/** Minimum value of type 'int' in N4JS. */
 	public static final int INT32_MIN_VALUE = Integer.MIN_VALUE;
+	/** Same as #{@link #INT32_MAX_VALUE}, but as a {@link BigDecimal}. */
 	public static final BigDecimal INT32_MAX_VALUE_BD = new BigDecimal(INT32_MAX_VALUE);
+	/** Same as #{@link #INT32_MIN_VALUE}, but as a {@link BigDecimal}. */
 	public static final BigDecimal INT32_MIN_VALUE_BD = new BigDecimal(INT32_MIN_VALUE);
 
 	/**

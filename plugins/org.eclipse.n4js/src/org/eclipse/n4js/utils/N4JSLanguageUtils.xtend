@@ -718,7 +718,7 @@ public class N4JSLanguageUtils {
 
 	/**
 	 * Tells whether 'baseTypeRefCandidate' is the given literal type's {@link #getLiteralTypeBase(RuleEnvironment, TypeRef)
-	 * base type}, without requiring a rule environment and considering the semantic equality of 'int' and 'number'.
+	 * base type}, without requiring a rule environment and with considering the semantic equality of 'int' and 'number'.
 	 */
 	def public static boolean isLiteralTypeBase(LiteralTypeRef literalTypeRef, TypeRef baseTypeRefCandidate) {
 		// the only chance for success is that 'baseTypeRefCandidate' is a type reference pointing to a primitive
