@@ -722,7 +722,11 @@ class RuleEnvironmentExtensions {
 			Type: obj
 			TypeRef: obj.declaredType
 		};
-		return type!==null && G.iterableNTypes.contains(type);
+		return isIterableN(G, type);
+	}
+
+	public def static boolean isIterableN(RuleEnvironment G, Type type) {
+		return type !== null && G.iterableNTypes.contains(type);
 	}
 
 	/* Returns built-in type {@code ArrayN<T1...TN>} */
@@ -742,14 +746,19 @@ class RuleEnvironmentExtensions {
 
 	/**
 	 * Returns true iff <code>obj</code> is a {@link Type} or {@link TypeRef} and is or points to
-	 * one of the <code>ArrayN&lt;...></code> built-in types.
+	 * one of the <code>ArrayN&lt;...></code> built-in types. Does <b>not</b> check for the
+	 * built-in type <code>Array&lt;T></code>.
 	 */
 	public def static boolean isArrayN(RuleEnvironment G, EObject obj) {
 		val type = switch(obj) {
 			Type: obj
 			TypeRef: obj.declaredType
 		};
-		return type!==null && G.arrayNTypes.contains(type);
+		return isArrayN(G, type);
+	}
+
+	public def static boolean isArrayN(RuleEnvironment G, Type type) {
+		return type !== null && G.arrayNTypes.contains(type);
 	}
 
 	/* Returns built-in type {@code Promise<S,F>} */

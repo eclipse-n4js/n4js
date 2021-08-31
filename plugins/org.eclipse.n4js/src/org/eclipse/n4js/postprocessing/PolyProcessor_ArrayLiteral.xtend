@@ -125,7 +125,6 @@ if(isValueToBeDestructured) {
 	 * <li>#[] for any other kind of expectedTypeRef</li>
 	 * </ul>
 	 */
-	// FIXME align this with "choice of most promising candidate" in reduce!
 	private def List<TypeRef> getExpectedElemTypeRefs(RuleEnvironment G, TypeRef expectedTypeRef) {
 		if (expectedTypeRef !== null) {
 			val candidateTypeRefs = if (expectedTypeRef instanceof UnionTypeExpression) {

@@ -10,10 +10,11 @@
  */
 package org.eclipse.n4js.ts.scoping.builtin;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -463,17 +464,17 @@ public final class BuiltInTypeScope extends EnumerableScope {
 		return getEObjectOrProxy(QualifiedName.create("Iterable" + n));
 	}
 
-	private List<TInterface> cachedIterableNTypes = null;
+	private Set<TInterface> cachedIterableNTypes = null;
 
 	/**
 	 * Returns all built-in types "IterableN" for 2 &leq; N &leq; {@link #ITERABLE_N__MAX_LEN}.
 	 */
-	public final List<TInterface> getIterableNTypes() {
+	public final Set<TInterface> getIterableNTypes() {
 		if (cachedIterableNTypes == null) {
-			cachedIterableNTypes = new ArrayList<>();
+			cachedIterableNTypes = new LinkedHashSet<>();
 			for (int n = 2; n <= ITERABLE_N__MAX_LEN; n++)
 				cachedIterableNTypes.add(getIterableNType(n));
-			cachedIterableNTypes = Collections.unmodifiableList(cachedIterableNTypes);
+			cachedIterableNTypes = Collections.unmodifiableSet(cachedIterableNTypes);
 		}
 		return cachedIterableNTypes;
 	}
@@ -487,17 +488,17 @@ public final class BuiltInTypeScope extends EnumerableScope {
 		return getEObjectOrProxy(QualifiedName.create("Array" + n));
 	}
 
-	private List<TClass> cachedArrayNTypes = null;
+	private Set<TClass> cachedArrayNTypes = null;
 
 	/**
 	 * Returns all built-in types "ArrayN" for 2 &leq; N &leq; {@link #ITERABLE_N__MAX_LEN}.
 	 */
-	public final List<TClass> getArrayNTypes() {
+	public final Set<TClass> getArrayNTypes() {
 		if (cachedArrayNTypes == null) {
-			cachedArrayNTypes = new ArrayList<>();
+			cachedArrayNTypes = new LinkedHashSet<>();
 			for (int n = 2; n <= ITERABLE_N__MAX_LEN; n++)
 				cachedArrayNTypes.add(getArrayNType(n));
-			cachedArrayNTypes = Collections.unmodifiableList(cachedArrayNTypes);
+			cachedArrayNTypes = Collections.unmodifiableSet(cachedArrayNTypes);
 		}
 		return cachedArrayNTypes;
 	}
