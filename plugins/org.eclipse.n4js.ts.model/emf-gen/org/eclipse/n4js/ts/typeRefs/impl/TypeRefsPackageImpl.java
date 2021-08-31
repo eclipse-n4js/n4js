@@ -2062,7 +2062,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getNumericLiteralTypeRef_Negated() {
+	public EAttribute getNumericLiteralTypeRef_AstNegated() {
 		return (EAttribute)numericLiteralTypeRefEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2439,7 +2439,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(booleanLiteralTypeRefEClass, BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
 		numericLiteralTypeRefEClass = createEClass(NUMERIC_LITERAL_TYPE_REF);
-		createEAttribute(numericLiteralTypeRefEClass, NUMERIC_LITERAL_TYPE_REF__NEGATED);
+		createEAttribute(numericLiteralTypeRefEClass, NUMERIC_LITERAL_TYPE_REF__AST_NEGATED);
 		createEAttribute(numericLiteralTypeRefEClass, NUMERIC_LITERAL_TYPE_REF__VALUE);
 		createEOperation(numericLiteralTypeRefEClass, NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
@@ -2839,7 +2839,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getBooleanLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(numericLiteralTypeRefEClass, NumericLiteralTypeRef.class, "NumericLiteralTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getNumericLiteralTypeRef_Negated(), theEcorePackage.getEBoolean(), "negated", null, 0, 1, NumericLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNumericLiteralTypeRef_AstNegated(), theEcorePackage.getEBoolean(), "astNegated", null, 0, 1, NumericLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNumericLiteralTypeRef_Value(), theEcorePackage.getEBigDecimal(), "value", null, 0, 1, NumericLiteralTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getNumericLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);

@@ -7629,13 +7629,13 @@ public interface TypeRefsPackage extends EPackage {
 	int NUMERIC_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
 
 	/**
-	 * The feature id for the '<em><b>Negated</b></em>' attribute.
+	 * The feature id for the '<em><b>Ast Negated</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NUMERIC_LITERAL_TYPE_REF__NEGATED = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
+	int NUMERIC_LITERAL_TYPE_REF__AST_NEGATED = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -11391,15 +11391,15 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getNumericLiteralTypeRef();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated <em>Negated</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isAstNegated <em>Ast Negated</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Negated</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated()
+	 * @return the meta object for the attribute '<em>Ast Negated</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isAstNegated()
 	 * @see #getNumericLiteralTypeRef()
 	 * @generated
 	 */
-	EAttribute getNumericLiteralTypeRef_Negated();
+	EAttribute getNumericLiteralTypeRef_AstNegated();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}'.
@@ -12977,12 +12977,12 @@ public interface TypeRefsPackage extends EPackage {
 		EClass NUMERIC_LITERAL_TYPE_REF = eINSTANCE.getNumericLiteralTypeRef();
 
 		/**
-		 * The meta object literal for the '<em><b>Negated</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Ast Negated</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NUMERIC_LITERAL_TYPE_REF__NEGATED = eINSTANCE.getNumericLiteralTypeRef_Negated();
+		EAttribute NUMERIC_LITERAL_TYPE_REF__AST_NEGATED = eINSTANCE.getNumericLiteralTypeRef_AstNegated();
 
 		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.

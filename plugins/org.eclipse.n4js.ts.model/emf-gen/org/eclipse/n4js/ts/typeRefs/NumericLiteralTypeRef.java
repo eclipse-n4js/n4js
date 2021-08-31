@@ -21,7 +21,7 @@ import java.math.BigDecimal;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated <em>Negated</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isAstNegated <em>Ast Negated</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}</li>
  * </ul>
  *
@@ -31,26 +31,29 @@ import java.math.BigDecimal;
  */
 public interface NumericLiteralTypeRef extends LiteralTypeRef {
 	/**
-	 * Returns the value of the '<em><b>Negated</b></em>' attribute.
+	 * Returns the value of the '<em><b>Ast Negated</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Negated</em>' attribute.
-	 * @see #setNegated(boolean)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getNumericLiteralTypeRef_Negated()
+	 * <!-- begin-model-doc -->
+	 *  True iff this is used as an AST node <em>and</em> the {@link LiteralTypeRef#getAstValue() astValue} needs to be negated to obtain the actual value.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Ast Negated</em>' attribute.
+	 * @see #setAstNegated(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getNumericLiteralTypeRef_AstNegated()
 	 * @model unique="false"
 	 * @generated
 	 */
-	boolean isNegated();
+	boolean isAstNegated();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isNegated <em>Negated</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isAstNegated <em>Ast Negated</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Negated</em>' attribute.
-	 * @see #isNegated()
+	 * @param value the new value of the '<em>Ast Negated</em>' attribute.
+	 * @see #isAstNegated()
 	 * @generated
 	 */
-	void setNegated(boolean value);
+	void setAstNegated(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Value</b></em>' attribute.

@@ -10847,13 +10847,13 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NumericLiteralTypeRef__Alternatives_0"
-    // InternalTypesParser.g:3008:1: rule__NumericLiteralTypeRef__Alternatives_0 : ( ( PlusSign ) | ( ( rule__NumericLiteralTypeRef__NegatedAssignment_0_1 ) ) );
+    // InternalTypesParser.g:3008:1: rule__NumericLiteralTypeRef__Alternatives_0 : ( ( PlusSign ) | ( ( rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1 ) ) );
     public final void rule__NumericLiteralTypeRef__Alternatives_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalTypesParser.g:3012:1: ( ( PlusSign ) | ( ( rule__NumericLiteralTypeRef__NegatedAssignment_0_1 ) ) )
+            // InternalTypesParser.g:3012:1: ( ( PlusSign ) | ( ( rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1 ) ) )
             int alt29=2;
             int LA29_0 = input.LA(1);
 
@@ -10891,19 +10891,19 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 2 :
-                    // InternalTypesParser.g:3019:2: ( ( rule__NumericLiteralTypeRef__NegatedAssignment_0_1 ) )
+                    // InternalTypesParser.g:3019:2: ( ( rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1 ) )
                     {
-                    // InternalTypesParser.g:3019:2: ( ( rule__NumericLiteralTypeRef__NegatedAssignment_0_1 ) )
-                    // InternalTypesParser.g:3020:3: ( rule__NumericLiteralTypeRef__NegatedAssignment_0_1 )
+                    // InternalTypesParser.g:3019:2: ( ( rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1 ) )
+                    // InternalTypesParser.g:3020:3: ( rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1 )
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedAssignment_0_1()); 
+                       before(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedAssignment_0_1()); 
                     }
-                    // InternalTypesParser.g:3021:3: ( rule__NumericLiteralTypeRef__NegatedAssignment_0_1 )
-                    // InternalTypesParser.g:3021:4: rule__NumericLiteralTypeRef__NegatedAssignment_0_1
+                    // InternalTypesParser.g:3021:3: ( rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1 )
+                    // InternalTypesParser.g:3021:4: rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1
                     {
                     pushFollow(FOLLOW_2);
-                    rule__NumericLiteralTypeRef__NegatedAssignment_0_1();
+                    rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -10911,7 +10911,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
                     }
 
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedAssignment_0_1()); 
+                       after(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedAssignment_0_1()); 
                     }
 
                     }
@@ -54708,9 +54708,9 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__BooleanLiteralTypeRef__AstValueAssignment_1_0"
 
 
-    // $ANTLR start "rule__NumericLiteralTypeRef__NegatedAssignment_0_1"
-    // InternalTypesParser.g:16514:1: rule__NumericLiteralTypeRef__NegatedAssignment_0_1 : ( ( HyphenMinus ) ) ;
-    public final void rule__NumericLiteralTypeRef__NegatedAssignment_0_1() throws RecognitionException {
+    // $ANTLR start "rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1"
+    // InternalTypesParser.g:16514:1: rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1 : ( ( HyphenMinus ) ) ;
+    public final void rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -54722,23 +54722,23 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
             // InternalTypesParser.g:16520:3: ( HyphenMinus )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); 
+               before(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); 
             }
             // InternalTypesParser.g:16521:3: ( HyphenMinus )
             // InternalTypesParser.g:16522:4: HyphenMinus
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); 
+               before(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); 
             }
             match(input,HyphenMinus,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); 
+               after(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); 
             }
 
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); 
+               after(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); 
             }
 
             }
@@ -54758,7 +54758,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__NumericLiteralTypeRef__NegatedAssignment_0_1"
+    // $ANTLR end "rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1"
 
 
     // $ANTLR start "rule__NumericLiteralTypeRef__AstValueAssignment_1_0"

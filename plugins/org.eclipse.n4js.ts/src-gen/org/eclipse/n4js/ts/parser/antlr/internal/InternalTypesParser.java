@@ -11377,12 +11377,12 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleNumericLiteralTypeRef"
-    // InternalTypesParser.g:4155:1: ruleNumericLiteralTypeRef returns [EObject current=null] : ( (otherlv_0= PlusSign | ( (lv_negated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) ) ;
+    // InternalTypesParser.g:4155:1: ruleNumericLiteralTypeRef returns [EObject current=null] : ( (otherlv_0= PlusSign | ( (lv_astNegated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) ) ;
     public final EObject ruleNumericLiteralTypeRef() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_0=null;
-        Token lv_negated_1_0=null;
+        Token lv_astNegated_1_0=null;
         Token lv_astValue_2_0=null;
         Token lv_astValue_3_0=null;
         Token lv_astValue_4_0=null;
@@ -11395,13 +11395,13 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalTypesParser.g:4161:2: ( ( (otherlv_0= PlusSign | ( (lv_negated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) ) )
-            // InternalTypesParser.g:4162:2: ( (otherlv_0= PlusSign | ( (lv_negated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) )
+            // InternalTypesParser.g:4161:2: ( ( (otherlv_0= PlusSign | ( (lv_astNegated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) ) )
+            // InternalTypesParser.g:4162:2: ( (otherlv_0= PlusSign | ( (lv_astNegated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) )
             {
-            // InternalTypesParser.g:4162:2: ( (otherlv_0= PlusSign | ( (lv_negated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) )
-            // InternalTypesParser.g:4163:3: (otherlv_0= PlusSign | ( (lv_negated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) )
+            // InternalTypesParser.g:4162:2: ( (otherlv_0= PlusSign | ( (lv_astNegated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) ) )
+            // InternalTypesParser.g:4163:3: (otherlv_0= PlusSign | ( (lv_astNegated_1_0= HyphenMinus ) ) )? ( ( (lv_astValue_2_0= RULE_INT ) ) | ( (lv_astValue_3_0= RULE_DOUBLE ) ) | ( (lv_astValue_4_0= RULE_OCTAL_INT ) ) | ( (lv_astValue_5_0= RULE_LEGACY_OCTAL_INT ) ) | ( (lv_astValue_6_0= RULE_HEX_INT ) ) | ( (lv_astValue_7_0= RULE_BINARY_INT ) ) | ( (lv_astValue_8_0= RULE_SCIENTIFIC_INT ) ) )
             {
-            // InternalTypesParser.g:4163:3: (otherlv_0= PlusSign | ( (lv_negated_1_0= HyphenMinus ) ) )?
+            // InternalTypesParser.g:4163:3: (otherlv_0= PlusSign | ( (lv_astNegated_1_0= HyphenMinus ) ) )?
             int alt86=3;
             int LA86_0 = input.LA(1);
 
@@ -11425,18 +11425,18 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalTypesParser.g:4169:4: ( (lv_negated_1_0= HyphenMinus ) )
+                    // InternalTypesParser.g:4169:4: ( (lv_astNegated_1_0= HyphenMinus ) )
                     {
-                    // InternalTypesParser.g:4169:4: ( (lv_negated_1_0= HyphenMinus ) )
-                    // InternalTypesParser.g:4170:5: (lv_negated_1_0= HyphenMinus )
+                    // InternalTypesParser.g:4169:4: ( (lv_astNegated_1_0= HyphenMinus ) )
+                    // InternalTypesParser.g:4170:5: (lv_astNegated_1_0= HyphenMinus )
                     {
-                    // InternalTypesParser.g:4170:5: (lv_negated_1_0= HyphenMinus )
-                    // InternalTypesParser.g:4171:6: lv_negated_1_0= HyphenMinus
+                    // InternalTypesParser.g:4170:5: (lv_astNegated_1_0= HyphenMinus )
+                    // InternalTypesParser.g:4171:6: lv_astNegated_1_0= HyphenMinus
                     {
-                    lv_negated_1_0=(Token)match(input,HyphenMinus,FOLLOW_73); if (state.failed) return current;
+                    lv_astNegated_1_0=(Token)match(input,HyphenMinus,FOLLOW_73); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                      						newLeafNode(lv_negated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0());
+                      						newLeafNode(lv_astNegated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0());
                       					
                     }
                     if ( state.backtracking==0 ) {
@@ -11444,7 +11444,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
                       						}
-                      						setWithLastConsumed(current, "negated", lv_negated_1_0 != null, "-");
+                      						setWithLastConsumed(current, "astNegated", lv_astNegated_1_0 != null, "-");
                       					
                     }
 

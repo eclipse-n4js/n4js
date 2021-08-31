@@ -705,7 +705,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-	 *         negated?='-'? 
+	 *         astNegated?='-'? 
 	 *         (
 	 *             astValue=INT | 
 	 *             astValue=DOUBLE | 

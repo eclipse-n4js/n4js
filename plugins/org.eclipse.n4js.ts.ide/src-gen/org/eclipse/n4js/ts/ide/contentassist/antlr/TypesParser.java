@@ -320,7 +320,7 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypeRefWithModifiersAccess().getFollowedByQuestionMarkAssignment_1(), "rule__TypeRefWithModifiers__FollowedByQuestionMarkAssignment_1");
 			builder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getDynamicAssignment_0_1(), "rule__TypeRefWithoutModifiers__DynamicAssignment_0_1");
 			builder.put(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAssignment_1_0(), "rule__BooleanLiteralTypeRef__AstValueAssignment_1_0");
-			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedAssignment_0_1(), "rule__NumericLiteralTypeRef__NegatedAssignment_0_1");
+			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedAssignment_0_1(), "rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstValueAssignment_1_0(), "rule__NumericLiteralTypeRef__AstValueAssignment_1_0");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstValueAssignment_1_1(), "rule__NumericLiteralTypeRef__AstValueAssignment_1_1");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstValueAssignment_1_2(), "rule__NumericLiteralTypeRef__AstValueAssignment_1_2");

@@ -3017,9 +3017,9 @@ rule__NumericLiteralTypeRef__Alternatives_0
 	)
 	|
 	(
-		{ before(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedAssignment_0_1()); }
-		(rule__NumericLiteralTypeRef__NegatedAssignment_0_1)
-		{ after(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedAssignment_0_1()); }
+		{ before(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedAssignment_0_1()); }
+		(rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1)
+		{ after(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedAssignment_0_1()); }
 	)
 ;
 finally {
@@ -16511,19 +16511,19 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NumericLiteralTypeRef__NegatedAssignment_0_1
+rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); }
+		{ before(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); }
 		(
-			{ before(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); }
+			{ before(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); }
 			HyphenMinus
-			{ after(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); }
+			{ after(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); }
 		)
-		{ after(grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0()); }
+		{ after(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0()); }
 	)
 ;
 finally {

@@ -33,7 +33,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl#isNegated <em>Negated</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl#isAstNegated <em>Ast Negated</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl#getValue <em>Value</em>}</li>
  * </ul>
  *
@@ -41,24 +41,24 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
  */
 public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements NumericLiteralTypeRef {
 	/**
-	 * The default value of the '{@link #isNegated() <em>Negated</em>}' attribute.
+	 * The default value of the '{@link #isAstNegated() <em>Ast Negated</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isNegated()
+	 * @see #isAstNegated()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean NEGATED_EDEFAULT = false;
+	protected static final boolean AST_NEGATED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isNegated() <em>Negated</em>}' attribute.
+	 * The cached value of the '{@link #isAstNegated() <em>Ast Negated</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isNegated()
+	 * @see #isAstNegated()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean negated = NEGATED_EDEFAULT;
+	protected boolean astNegated = AST_NEGATED_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
@@ -105,8 +105,8 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	 * @generated
 	 */
 	@Override
-	public boolean isNegated() {
-		return negated;
+	public boolean isAstNegated() {
+		return astNegated;
 	}
 
 	/**
@@ -115,11 +115,11 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	 * @generated
 	 */
 	@Override
-	public void setNegated(boolean newNegated) {
-		boolean oldNegated = negated;
-		negated = newNegated;
+	public void setAstNegated(boolean newAstNegated) {
+		boolean oldAstNegated = astNegated;
+		astNegated = newAstNegated;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__NEGATED, oldNegated, negated));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__AST_NEGATED, oldAstNegated, astNegated));
 	}
 
 	/**
@@ -178,8 +178,8 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__NEGATED:
-				return isNegated();
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__AST_NEGATED:
+				return isAstNegated();
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				return getValue();
 		}
@@ -194,8 +194,8 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__NEGATED:
-				setNegated((Boolean)newValue);
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__AST_NEGATED:
+				setAstNegated((Boolean)newValue);
 				return;
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				setValue((BigDecimal)newValue);
@@ -212,8 +212,8 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__NEGATED:
-				setNegated(NEGATED_EDEFAULT);
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__AST_NEGATED:
+				setAstNegated(AST_NEGATED_EDEFAULT);
 				return;
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				setValue(VALUE_EDEFAULT);
@@ -230,8 +230,8 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__NEGATED:
-				return negated != NEGATED_EDEFAULT;
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__AST_NEGATED:
+				return astNegated != AST_NEGATED_EDEFAULT;
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
@@ -262,8 +262,8 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (negated: ");
-		result.append(negated);
+		result.append(" (astNegated: ");
+		result.append(astNegated);
 		result.append(", value: ");
 		result.append(value);
 		result.append(')');

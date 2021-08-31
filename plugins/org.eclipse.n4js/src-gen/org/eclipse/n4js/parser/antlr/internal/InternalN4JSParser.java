@@ -53061,7 +53061,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleNumericLiteralTypeRef() throws RecognitionException {
         EObject current = null;
         Token otherlv_0=null;
-        Token lv_negated_1_0=null;
+        Token lv_astNegated_1_0=null;
         Token lv_astValue_2_0=null;
         Token lv_astValue_3_0=null;
         Token lv_astValue_4_0=null;
@@ -53094,15 +53094,15 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     {
                     {
-                    lv_negated_1_0=(Token)match(input,HyphenMinus,FOLLOW_191); if (state.failed) return current;
+                    lv_astNegated_1_0=(Token)match(input,HyphenMinus,FOLLOW_191); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      						newLeafNode(lv_negated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0());
+                      						newLeafNode(lv_astNegated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0());
                     }
                     if ( state.backtracking==0 ) {
                       						if (current==null) {
                       							current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
                       						}
-                      						setWithLastConsumed(current, "negated", lv_negated_1_0 != null, "-");
+                      						setWithLastConsumed(current, "astNegated", lv_astNegated_1_0 != null, "-");
                     }
                     }
                     }

@@ -1317,7 +1317,8 @@ class BooleanLiteralTypeRef extends LiteralTypeRef {
 }
 
 class NumericLiteralTypeRef extends LiteralTypeRef {
-	boolean negated
+	/* True iff this is used as an AST node <em>and</em> the {@link LiteralTypeRef#getAstValue() astValue} needs to be negated to obtain the actual value. */
+	boolean astNegated
 	BigDecimal value
 
 	op String internalGetTypeRefAsString() {

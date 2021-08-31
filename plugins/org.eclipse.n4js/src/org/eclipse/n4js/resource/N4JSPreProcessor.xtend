@@ -87,7 +87,7 @@ package final class N4JSPreProcessor {
 		var valueRaw = typeRef.astValue as BigDecimal; // validity of this cast is enforced by the grammar
 		if (valueRaw !== null) {
 			valueRaw = valueRaw.stripTrailingZeros;
-			if (typeRef.negated) {
+			if (typeRef.astNegated) {
 				valueRaw = valueRaw.negate();
 			}
 			typeRef.value = valueRaw;

@@ -134,12 +134,12 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
+	 *     (rule start) (ambiguity) astNegated?='-'
 	 *     (rule start) (ambiguity) astValue=STRING
 	 *     (rule start) (ambiguity) astValue?='true'
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
-	 *     (rule start) (ambiguity) negated?='-'
 	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}

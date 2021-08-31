@@ -36815,15 +36815,15 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 			    |
 			(
 				(
-					lv_negated_1_0=HyphenMinus
+					lv_astNegated_1_0=HyphenMinus
 					{
-						newLeafNode(lv_negated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getNegatedHyphenMinusKeyword_0_1_0());
+						newLeafNode(lv_astNegated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0());
 					}
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
 						}
-						setWithLastConsumed($current, "negated", lv_negated_1_0 != null, "-");
+						setWithLastConsumed($current, "astNegated", lv_astNegated_1_0 != null, "-");
 					}
 				)
 			)

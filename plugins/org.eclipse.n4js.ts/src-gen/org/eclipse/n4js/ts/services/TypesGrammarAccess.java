@@ -2971,7 +2971,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	}
 	
 	//NumericLiteralTypeRef returns NumericLiteralTypeRef:
-	//    ('+' | negated?='-')? // FIXME try to do this via value converters
+	//    ('+' | astNegated?='-')? // FIXME try to do this via value converters
 	//    (
 	//          astValue=INT
 	//        | astValue=DOUBLE

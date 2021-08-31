@@ -557,8 +557,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
 		private final Keyword cPlusSignKeyword_0_0 = (Keyword)cAlternatives_0.eContents().get(0);
-		private final Assignment cNegatedAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
-		private final Keyword cNegatedHyphenMinusKeyword_0_1_0 = (Keyword)cNegatedAssignment_0_1.eContents().get(0);
+		private final Assignment cAstNegatedAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
+		private final Keyword cAstNegatedHyphenMinusKeyword_0_1_0 = (Keyword)cAstNegatedAssignment_0_1.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cAstValueAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
 		private final RuleCall cAstValueINTTerminalRuleCall_1_0_0 = (RuleCall)cAstValueAssignment_1_0.eContents().get(0);
@@ -576,7 +576,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cAstValueSCIENTIFIC_INTTerminalRuleCall_1_6_0 = (RuleCall)cAstValueAssignment_1_6.eContents().get(0);
 		
 		//NumericLiteralTypeRef returns NumericLiteralTypeRef:
-		//    ('+' | negated?='-')? // FIXME try to do this via value converters
+		//    ('+' | astNegated?='-')? // FIXME try to do this via value converters
 		//    (
 		//          astValue=INT
 		//        | astValue=DOUBLE
@@ -588,7 +588,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    );
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('+' | negated?='-')? // FIXME try to do this via value converters
+		//('+' | astNegated?='-')? // FIXME try to do this via value converters
 		//(
 		//      astValue=INT
 		//    | astValue=DOUBLE
@@ -600,17 +600,17 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//)
 		public Group getGroup() { return cGroup; }
 		
-		//('+' | negated?='-')?
+		//('+' | astNegated?='-')?
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//'+'
 		public Keyword getPlusSignKeyword_0_0() { return cPlusSignKeyword_0_0; }
 		
-		//negated?='-'
-		public Assignment getNegatedAssignment_0_1() { return cNegatedAssignment_0_1; }
+		//astNegated?='-'
+		public Assignment getAstNegatedAssignment_0_1() { return cAstNegatedAssignment_0_1; }
 		
 		//'-'
-		public Keyword getNegatedHyphenMinusKeyword_0_1_0() { return cNegatedHyphenMinusKeyword_0_1_0; }
+		public Keyword getAstNegatedHyphenMinusKeyword_0_1_0() { return cAstNegatedHyphenMinusKeyword_0_1_0; }
 		
 		//// FIXME try to do this via value converters
 		//   (
@@ -3030,7 +3030,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//NumericLiteralTypeRef returns NumericLiteralTypeRef:
-	//    ('+' | negated?='-')? // FIXME try to do this via value converters
+	//    ('+' | astNegated?='-')? // FIXME try to do this via value converters
 	//    (
 	//          astValue=INT
 	//        | astValue=DOUBLE
