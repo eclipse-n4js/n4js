@@ -217,9 +217,9 @@ public abstract class N4JSASTUtils {
 		// note regarding @Final:
 		// it is tempting to treat an @Final field as immutable iff it has an initializer expression;
 		// however, even in case an initializer expression is provided for a @Final field, its value
-		// may be changed in the constructor (in practice often via a @Spec-constructor) and actually
-		// this is the standard case because this is the only reason for choosing a @Final field over a
-		// const field; thus, we have to treat @Final fields as mutable for the purpose of this method!
+		// may be changed via a @Spec-constructor (not in ordinary constructor code) and actually this
+		// is a common case because it is an important reason for choosing a @Final field over a const
+		// field; thus, we have to treat @Final fields as mutable for the purpose of this method!
 		return fieldDecl.isConst();
 	}
 
