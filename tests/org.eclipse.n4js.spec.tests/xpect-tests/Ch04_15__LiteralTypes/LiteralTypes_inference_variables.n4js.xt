@@ -61,12 +61,12 @@ class Cls {
 	// XPECT type of 'v44' --> "hello"
 	const v44 = "hello";
 
-	// XPECT type of 'v51' --> true
+	// XPECT type of 'v51' --> boolean
 	@Final v51 = true;
-	// XPECT type of 'v52' --> 42
+	// XPECT type of 'v52' --> int
 	@Final v52 = 42;
-	// XPECT type of 'v53' --> 42.1
+	// XPECT type of 'v53' --> number
 	@Final v53 = 42.1;
-	// XPECT type of 'v54' --> "hello"
+	// XPECT type of 'v54' --> string
 	@Final v54 = "hello";
 }
