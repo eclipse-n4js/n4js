@@ -214,7 +214,13 @@ public abstract class N4JSASTUtils {
 
 	/** Same as {@link #isImmutable(EObject)}, but only for fields. */
 	public static boolean isImmutable(N4FieldDeclaration fieldDecl) {
-		return fieldDecl.isConst() || fieldDecl.isFinal();
+		// note regarding @Final:
+		// it is tempting to treat an @Final field as immutable iff it has an initializer expression;
+		// however, even in case an initializer expression is provided for a @Final field, its value
+		// may be changed in the constructor (in practice often via a @Spec-constructor) and actually
+		// this is the standard case because this is the only reason for choosing a @Final field over a
+		// const field; thus, we have to treat @Final fields as mutable for the purpose of this method!
+		return fieldDecl.isConst();
 	}
 
 	/** Same as {@link #isImmutable(EObject)}, but only for variables. */
