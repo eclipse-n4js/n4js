@@ -1,0 +1,125 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+@NumberBased
+enum Digit {
+	ZERO: 0, ONE: 1, TWO: 2
+}
+@StringBased
+enum Status {
+	ON: "on", OFF: "off", BROKEN: "broken"
+}
+enum Color {
+	RED, GREEN, BLUE
+}
+enum ColorOther {
+	RED, GREEN, BLUE
+}
+
+let digit: Digit;
+let status: Status;
+let color: Color;
+
+// XPECT warnings --> "Unnecessary cast from 0 to number" at "0 as number"
+0 as number;
+// XPECT noerrors -->
+0 as Digit;
+// XPECT noerrors -->
+0 as Digit.ZERO;
+// XPECT errors --> "Cannot cast from 42 to Digit" at "42 as Digit"
+42 as Digit;
+// XPECT errors --> "Cannot cast from 42 to Status" at "42 as Status"
+42 as Status;
+
+
+// XPECT warnings --> "Unnecessary cast from "on" to string" at ""on" as string"
+"on" as string;
+// XPECT noerrors -->
+"on" as Status;
+// XPECT noerrors -->
+"on" as Status.ON;
+// XPECT errors --> "Cannot cast from "bad" to Status" at ""bad" as Status"
+"bad" as Status;
+// XPECT errors --> "Cannot cast from "bad" to Digit" at ""bad" as Digit"
+"bad" as Digit;
+
+
+// XPECT warnings --> "Unnecessary cast from Digit.ZERO to number" at "Digit.ZERO as number"
+Digit.ZERO as number;
+// XPECT warnings --> "Unnecessary cast from Digit.ZERO to Digit" at "Digit.ZERO as Digit"
+Digit.ZERO as Digit;
+// XPECT warnings --> "Unnecessary cast from Digit.ZERO to 0" at "Digit.ZERO as 0"
+Digit.ZERO as 0;
+// XPECT warnings --> "Unnecessary cast from Digit.ZERO to union{0,1}" at "Digit.ZERO as (0 | 1)"
+Digit.ZERO as (0 | 1);
+// XPECT warnings --> "Unnecessary cast from Digit.ZERO to union{0,1,42}" at "Digit.ZERO as (0 | 1 | 42)"
+Digit.ZERO as (0 | 1 | 42);
+// XPECT errors --> "Cannot cast from Digit.ZERO to union{1,2}" at "Digit.ZERO as (1 | 2)"
+Digit.ZERO as (1 | 2);
+// XPECT errors --> "Cannot cast from Digit.ZERO to 42" at "Digit.ZERO as 42"
+Digit.ZERO as 42;
+
+
+// XPECT warnings --> "Unnecessary cast from Status.OFF to string" at "Status.OFF as string"
+Status.OFF as string;
+// XPECT warnings --> "Unnecessary cast from Status.OFF to Status" at "Status.OFF as Status"
+Status.OFF as Status;
+// XPECT warnings --> "Unnecessary cast from Status.OFF to "off"" at "Status.OFF as "off""
+Status.OFF as "off";
+// XPECT warnings --> "Unnecessary cast from Status.OFF to union{"off","on"}" at "Status.OFF as ("off" | "on")"
+Status.OFF as ("off" | "on");
+// XPECT warnings --> "Unnecessary cast from Status.OFF to union{"off","on","someOtherValue"}" at "Status.OFF as ("off" | "on" | "someOtherValue")"
+Status.OFF as ("off" | "on" | "someOtherValue");
+// XPECT errors --> "Cannot cast from Status.OFF to union{"on","broken"}" at "Status.OFF as ("on" | "broken")"
+Status.OFF as ("on" | "broken");
+// XPECT errors --> "Cannot cast from Status.OFF to "someOtherValue"" at "Status.OFF as "someOtherValue""
+Status.OFF as "someOtherValue";
+
+
+// XPECT warnings --> "Unnecessary cast from Color.RED to Color" at "Color.RED as Color"
+Color.RED as Color;
+
+
+// XPECT noerrors -->
+digit as 0;
+// XPECT noerrors -->
+digit as (0 | 1);
+// XPECT noerrors -->
+digit as (0 | 1 | 42);
+// XPECT warnings --> "Unnecessary cast from Digit to union{0,1,2,42}" at "digit as (0 | 1 | 2 | 42)"
+digit as (0 | 1 | 2 | 42);
+// XPECT errors --> "Cannot cast from Digit to 42" at "digit as 42"
+digit as 42;
+
+
+// XPECT noerrors -->
+status as "on";
+// XPECT noerrors -->
+status as ("on" | "off");
+// XPECT noerrors -->
+status as ("on" | "off" | "someOtherValue");
+// XPECT warnings --> "Unnecessary cast from Status to union{"on","off","broken","someOtherValue"}" at "status as ("on" | "off" | "broken" | "someOtherValue")"
+status as ("on" | "off" | "broken" | "someOtherValue");
+// XPECT errors --> "Cannot cast from Status to "someOtherValue"" at "status as "someOtherValue""
+status as "someOtherValue";
+
+
+// XPECT noerrors -->
+color as Color.RED;
+// XPECT noerrors -->
+color as (Color.RED | Color.GREEN);
+// XPECT warnings --> "Unnecessary cast from Color to union{Color.RED,Color.GREEN,Color.BLUE}" at "color as (Color.RED | Color.GREEN | Color.BLUE)"
+color as (Color.RED | Color.GREEN | Color.BLUE);
+// XPECT errors --> "Cannot cast from Color to ColorOther" at "color as ColorOther"
+color as ColorOther;

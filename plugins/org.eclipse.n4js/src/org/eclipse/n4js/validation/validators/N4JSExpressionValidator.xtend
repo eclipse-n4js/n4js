@@ -78,7 +78,9 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -1244,7 +1246,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				|| (T instanceof TypeTypeRef)
 				|| (T instanceof UnionTypeExpression)
 				|| (T instanceof FunctionTypeExpression)
-				|| (T instanceof IntersectionTypeExpression);
+				|| (T instanceof IntersectionTypeExpression)
+				|| (T instanceof LiteralTypeRef);
 
 			if (specialChecks) {
 				internalCheckCastExpression(G, S, T, castExpression, true, false);
@@ -1255,11 +1258,32 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
+	private def boolean isLiteralOfNumberStringBasedEnum(TypeRef candidateTypeRef, TEnum enumType) {
+		val enumKind = N4JSLanguageUtils.getEnumKind(enumType);
+		if (enumKind === EnumKind.NumberBased) {
+			if (candidateTypeRef instanceof NumericLiteralTypeRef) {
+				val S_value = candidateTypeRef.value;
+				if (S_value !== null && enumType.literals.map[valueNumber].filterNull.exists[compareTo(S_value) === 0]) {
+					return true;
+				}
+			}
+		} else if (enumKind === EnumKind.StringBased) {
+			if (candidateTypeRef instanceof StringLiteralTypeRef) {
+				val S_value = candidateTypeRef.value;
+				if (S_value !== null && enumType.literals.map[valueString].filterNull.exists[it == S_value]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * 5.5.1. Type Cast, Constraints 78 (Cast Validation At Compile-Time): 3 and 4
 	 */
 	private def boolean internalCheckCastExpression(RuleEnvironment G, TypeRef S, TypeRef T,
 		CastExpression castExpression, boolean addIssues, boolean actualSourceTypeIsCPOE) {
+
 		if (T instanceof UnionTypeExpression) {
 			if (! T.typeRefs.exists [
 				internalCheckCastExpression(G, S, it, castExpression, false, actualSourceTypeIsCPOE)
@@ -1294,6 +1318,10 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				}
 				return false;
 			}
+		} else if ((T.declaredType instanceof TEnum && isLiteralOfNumberStringBasedEnum(S, T.declaredType as TEnum))
+			|| (S.declaredType instanceof TEnum && isLiteralOfNumberStringBasedEnum(T, S.declaredType as TEnum))) {
+			// allow casting numbers/strings to @NumberBased/@StringBased enums
+			return true; // cast is ok
 		} else if (canCheck(G, S, T, actualSourceTypeIsCPOE)) { // Constraint 81.3 (Cast Validation At Compile-Time):
 			var castOK = ts.subtypeSucceeded(G, T, S);
 			if (!castOK && S.isUseSiteStructuralTyping && S instanceof StructuralTypeRef && !(S as StructuralTypeRef).structuralMembers.empty) {
@@ -1362,13 +1390,13 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	private def boolean canCheck(RuleEnvironment G, TypeRef S, TypeRef T, boolean actualSourceTypeIsCPOE) {
 		return T instanceof FunctionTypeExpression
+			|| (T instanceof LiteralTypeRef || S instanceof LiteralTypeRef)
 			|| ((actualSourceTypeIsCPOE || isCPOE(G, S)) && isCPOE(G, T))
 			|| ((S.declaredType instanceof TInterface) && T.actuallyFinal)
 			|| (S.actuallyFinal && (T.declaredType instanceof TInterface))
 			|| (S instanceof ParameterizedTypeRef
 				&& T instanceof ParameterizedTypeRef
 				&& TypeUtils.isRawSuperType(T.declaredType, S.declaredType))
-			|| (S instanceof LiteralTypeRef)
 			;
 	}
 
