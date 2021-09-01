@@ -43,6 +43,7 @@ import org.eclipse.n4js.ts.typeRefs.BaseTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
@@ -369,6 +370,29 @@ public class TypeUtils {
 	 */
 	public static IntersectionTypeExpression createNonSimplifiedIntersectionType(TypeRef... elements) {
 		return createNonSimplifiedIntersectionType(Arrays.asList(elements));
+	}
+
+	/**
+	 * If the given type reference denotes an enum, this method returns a union of {@link EnumLiteralTypeRef}s for each
+	 * of the enum's literals; otherwise returns <code>null</code>.
+	 */
+	public static UnionTypeExpression createUnionOfLiteralTypesFromEnumType(TypeArgument typeArg) {
+		final Type declType = typeArg.getDeclaredType();
+		if (declType instanceof TEnum) {
+			final TEnum enumType = (TEnum) declType;
+			final List<EnumLiteralTypeRef> memberTypeRefs = new ArrayList<>(enumType.getLiterals().size());
+			for (TEnumLiteral enumLit : enumType.getLiterals()) {
+				if (enumLit != null) {
+					EnumLiteralTypeRef enumLitTypeRef = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef();
+					enumLitTypeRef.setValue(enumLit);
+					memberTypeRefs.add(enumLitTypeRef);
+				}
+			}
+			if (!memberTypeRefs.isEmpty()) {
+				return createNonSimplifiedUnionType(memberTypeRefs);
+			}
+		}
+		return null;
 	}
 
 	/**

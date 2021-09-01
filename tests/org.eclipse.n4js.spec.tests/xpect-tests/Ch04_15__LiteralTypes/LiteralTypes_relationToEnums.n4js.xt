@@ -24,12 +24,17 @@ enum Digit {
 enum DigitFewer {
 	ZERO: 0, ONE: 1
 }
+@NumberBased
+enum DigitMore {
+	ZERO: 0, ONE: 1, TWO: 2, THREE: 3
+}
 
 let num: number;
 let num_0: 0;
 let num_012: 0 | 1 | 2;
 let digit: Digit;
 let digitFewer: DigitFewer;
+let digitMore: DigitMore;
 
 // for reference, here the relation between @NumberBased enums and other types than LiteralTypeRef:
 
@@ -51,12 +56,14 @@ digit = num_0;
 // XPECT errors --> "union{0,1,2} is not a subtype of Digit." at "num_012"
 digit = num_012;
 
-// could be allowed in the future XPECT errors --> "Digit.ZERO is not a subtype of 0." at "Digit.ZERO"
+// XPECT noerrors -->
 num_0 = Digit.ZERO;
-// could be allowed in the future XPECT errors --> "Digit is not a subtype of union{0,1,2}." at "digit"
+// XPECT noerrors -->
 num_012 = digit;
-// could be allowed in the future XPECT errors --> "DigitFewer is not a subtype of union{0,1,2}." at "digitFewer"
+// XPECT noerrors -->
 num_012 = digitFewer;
+// XPECT errors --> "DigitMore is not a subtype of union{0,1,2}." at "digitMore"
+num_012 = digitMore;
 
 
 // --------------------------------------------------------------------------------------------------------------
@@ -71,12 +78,17 @@ enum Color {
 enum ColorFewer {
 	RED, GREEN
 }
+@StringBased
+enum ColorMore {
+	RED, GREEN, BLUE, YELLOW
+}
 
 let str: string;
 let str_red: "RED";
 let str_rgb: "RED" | "GREEN" | "BLUE";
 let color: Color;
 let colorFewer: ColorFewer;
+let colorMore: ColorMore;
 
 // for reference, here the relation between @StringBased enums and other types than LiteralTypeRef:
 
@@ -98,9 +110,59 @@ color = str_red;
 // XPECT errors --> "union{"RED","GREEN","BLUE"} is not a subtype of Color." at "str_rgb"
 color = str_rgb;
 
-// could be allowed in the future XPECT errors --> "Color.RED is not a subtype of "RED"." at "Color.RED"
+// XPECT noerrors -->
 str_red = Color.RED;
-// could be allowed in the future XPECT errors --> "Color is not a subtype of union{"RED","GREEN","BLUE"}." at "color"
+// XPECT noerrors -->
 str_rgb = color;
-// could be allowed in the future XPECT errors --> "ColorFewer is not a subtype of union{"RED","GREEN","BLUE"}." at "colorFewer"
+// XPECT noerrors -->
 str_rgb = colorFewer;
+// XPECT errors --> "ColorMore is not a subtype of union{"RED","GREEN","BLUE"}." at "colorMore"
+str_rgb = colorMore;
+
+
+// --------------------------------------------------------------------------------------------------------------
+// exactly the same, but for normal enums:
+
+
+enum ColorNormal {
+	RED, GREEN, BLUE
+}
+enum ColorNormalFewer {
+	RED, GREEN
+}
+enum ColorNormalMore {
+	RED, GREEN, BLUE, YELLOW
+}
+
+// FIXME enable this!!
+// let colorNormal_red: ColorNormal.RED;
+// let colorNormal_rgb: ColorNormal.RED | ColorNormal.GREEN | ColorNormal.BLUE;
+let colorNormal: ColorNormal;
+let colorNormalFewer: ColorNormalFewer;
+let colorNormalMore: ColorNormalMore;
+
+// for reference, here the relation between normal enums and other types than LiteralTypeRef:
+
+// XPECT noerrors -->
+colorNormal = ColorNormal.RED;
+// XPECT errors --> "ColorNormalFewer.RED is not a subtype of ColorNormal." at "ColorNormalFewer.RED"
+colorNormal = ColorNormalFewer.RED;
+// XPECT errors --> "ColorNormalFewer is not a subtype of ColorNormal." at "colorNormalFewer"
+colorNormal = colorNormalFewer;
+
+// and now the relation between normal enums and LiteralTypeRef:
+
+// FIXME enable this!!
+// // X--PECT noerrors -->
+// colorNormal = colorNormal_red;
+// // X--PECT noerrors -->
+// colorNormal = colorNormal_rgb;
+// 
+// // X--PECT noerrors -->
+// colorNormal_red = ColorNormal.RED;
+// // X--PECT noerrors -->
+// colorNormal_rgb = colorNormal;
+// // X--PECT noerrors -->
+// colorNormal_rgb = colorNormalFewer;
+// // X--PECT errors --> "TODO" at "colorNormalMore"
+// colorNormal_rgb = colorNormalMore;

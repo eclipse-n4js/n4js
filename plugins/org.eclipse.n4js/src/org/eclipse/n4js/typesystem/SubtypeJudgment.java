@@ -12,6 +12,7 @@ package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
@@ -43,6 +44,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
@@ -50,6 +52,7 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -62,6 +65,7 @@ import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -73,6 +77,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingResult;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -99,6 +104,22 @@ import com.google.common.collect.Iterables;
 
 	private Result getResult(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
 		final Result firstResult = doApply(G, leftArg, rightArg);
+		if (firstResult.isFailure() && leftArg.getDeclaredType() instanceof TEnum) {
+			// if something like MyEnum <: R fails, we try: MyEnum.Lit1 | ... | MyEnum.LitN <: R
+			final Pair<String, Type> guardKey = Pair.of(GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION,
+					leftArg.getDeclaredType());
+			if (G.get(guardKey) == null) {
+				RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+				G2.put(guardKey, Boolean.TRUE);
+				UnionTypeExpression secondLeftArg = TypeUtils.createUnionOfLiteralTypesFromEnumType(leftArg);
+				if (secondLeftArg != null) {
+					final Result secondResult = doApply(G2, secondLeftArg, rightArg);
+					if (secondResult.isSuccess()) {
+						return secondResult;
+					}
+				}
+			}
+		}
 		if (firstResult.isFailure() && leftArg instanceof TypeRef && ((TypeRef) leftArg).isDynamic()) {
 			// right<:left => left+<:right
 			final TypeRef nonDynamicCopy = TypeUtils.copy((TypeRef) leftArg);
@@ -295,12 +316,28 @@ import com.google.common.collect.Iterables;
 		if (left instanceof NumericLiteralTypeRef && right instanceof NumericLiteralTypeRef) {
 			BigDecimal leftValue = ((NumericLiteralTypeRef) left).getValue();
 			BigDecimal rightValue = ((NumericLiteralTypeRef) right).getValue();
-			if (leftValue != null && rightValue != null) {
-				// BigDecimal#equals() does not check for numeric equality, so we have to use #compareTo():
-				return resultFromBoolean(leftValue.compareTo(rightValue) == 0);
+			return resultFromBoolean(isNumericallyEqual(leftValue, rightValue));
+		} else if (left instanceof EnumLiteralTypeRef) {
+			TEnumLiteral enumLiteral = ((EnumLiteralTypeRef) left).getValue();
+			TEnum enumType = ((EnumLiteralTypeRef) left).getEnumType();
+			EnumKind enumKind = N4JSLanguageUtils.getEnumKind(enumType);
+			if (enumKind == EnumKind.NumberBased && right instanceof NumericLiteralTypeRef) {
+				BigDecimal leftValue = enumLiteral.getValueNumber();
+				BigDecimal rightValue = ((NumericLiteralTypeRef) right).getValue();
+				return resultFromBoolean(isNumericallyEqual(leftValue, rightValue));
+			} else if (enumKind == EnumKind.StringBased && right instanceof StringLiteralTypeRef) {
+				String leftValue = enumLiteral.getValueString();
+				String rightValue = ((StringLiteralTypeRef) right).getValue();
+				return resultFromBoolean(leftValue != null && leftValue.equals(rightValue));
 			}
+			return failure();
 		}
 		return resultFromBoolean(Objects.equals(left.getValue(), right.getValue()));
+	}
+
+	private boolean isNumericallyEqual(BigDecimal num1, BigDecimal num2) {
+		// BigDecimal#equals() does not check for numeric equality, so we have to use #compareTo():
+		return num1 != null && num2 != null && num1.compareTo(num2) == 0;
 	}
 
 	private Result applyParameterizedTypeRef(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right) {
