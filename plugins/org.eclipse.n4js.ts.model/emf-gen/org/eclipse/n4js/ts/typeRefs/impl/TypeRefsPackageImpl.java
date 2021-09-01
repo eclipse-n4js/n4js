@@ -1180,7 +1180,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getParameterizedTypeRef_AstNamespace() {
+	public EReference getParameterizedTypeRef_AstDeclaredTypeQualifier() {
 		return (EReference)parameterizedTypeRefEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -2384,7 +2384,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__TYPE_ARGS);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION);
-		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_NAMESPACE);
+		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY);
 		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY);
@@ -2736,7 +2736,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEReference(getParameterizedTypeRef_TypeArgs(), this.getTypeArgument(), null, "typeArgs", null, 0, -1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_ArrayTypeExpression(), theEcorePackage.getEBoolean(), "arrayTypeExpression", "false", 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_ArrayNTypeExpression(), theEcorePackage.getEBoolean(), "arrayNTypeExpression", "false", 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getParameterizedTypeRef_AstNamespace(), theTypesPackage.getModuleNamespaceVirtualType(), null, "astNamespace", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getParameterizedTypeRef_AstDeclaredTypeQualifier(), theTypesPackage.getType(), null, "astDeclaredTypeQualifier", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_ASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "aSTNodeOptionalFieldStrategy", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_DefinedTypingStrategy(), theTypesPackage.getTypingStrategy(), "definedTypingStrategy", null, 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

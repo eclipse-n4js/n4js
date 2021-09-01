@@ -27,7 +27,6 @@ package org.eclipse.n4js.ts.typeRefs
 import java.util.UUID
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -595,10 +594,14 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	boolean arrayNTypeExpression = "false"
 
 	/*
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
-	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
+	 * <ol>
+	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
+	 * and points to that namespace.
+	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
+	 * </ol>
 	 */
-	refers transient ModuleNamespaceVirtualType astNamespace
+	refers transient Type astDeclaredTypeQualifier
 
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy

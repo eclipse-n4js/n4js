@@ -7409,7 +7409,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (
-	 *             astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *             astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *             declaredType=[Type|TypeReferenceName] 
 	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *             dynamic?='+'? 
@@ -7434,11 +7434,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (
-	 *             astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?
-	 *         ) | 
+	 *         (astDeclaredTypeQualifier=[Type|TypeReferenceName]? declaredType=[Type|TypeReferenceName] (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?) | 
 	 *         (arrayNTypeExpression?='[' (typeArgs+=EmptyIterableTypeExpressionTail | (typeArgs+=TypeArgument typeArgs+=TypeArgument*)))
 	 *     )
 	 */
@@ -22191,7 +22187,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
@@ -22210,7 +22206,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
@@ -22231,7 +22227,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?
@@ -22257,7 +22253,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
@@ -22285,7 +22281,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
@@ -22306,7 +22302,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
@@ -22325,7 +22321,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
@@ -22347,7 +22343,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember*
@@ -22367,7 +22363,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
@@ -28214,7 +28210,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'? 
@@ -28232,7 +28228,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
+	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'?
@@ -28250,11 +28246,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ParameterizedTypeRefNominal returns ParameterizedTypeRef
 	 *
 	 * Constraint:
-	 *     (
-	 *         astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?
-	 *     )
+	 *     (astDeclaredTypeQualifier=[Type|TypeReferenceName]? declaredType=[Type|TypeReferenceName] (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?)
 	 */
 	protected void sequence_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

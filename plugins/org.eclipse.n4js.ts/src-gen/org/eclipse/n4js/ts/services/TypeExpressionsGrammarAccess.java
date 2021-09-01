@@ -530,6 +530,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cAstValueTrueKeyword_1_0_0 = (Keyword)cAstValueAssignment_1_0.eContents().get(0);
 		private final Keyword cFalseKeyword_1_1 = (Keyword)cAlternatives_1.eContents().get(1);
 		
+		//    // note: EnumLiteralTypeRefs are not available in type expressions
 		//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
 		//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
 		@Override public ParserRule getRule() { return rule; }
@@ -3019,6 +3020,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getLiteralTypeRefAccess().getRule();
 	}
 	
+	//    // note: EnumLiteralTypeRefs are not available in type expressions
 	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
 	//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
 	public BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {

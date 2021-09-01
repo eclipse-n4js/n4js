@@ -14,8 +14,13 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.TypeReferenceNode
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesystem.utils.NestedTypeRefsSwitch
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
@@ -27,6 +32,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4
  * Most type references created by the parser are already valid and can be used directly; the only exceptions
  * are:
  * <ul>
+ * <li>references to the literal of an enum must be converted to an {@link EnumLiteralTypeRef}.
  * <li>{@link TypeRef#isAliasUnresolved() unresolved} references to type aliases must be converted to
  * {@link TypeRef#isAliasResolved() resolved} references to type aliases (note: type aliases in the TModule
  * are not handled here but in {@link TypeAliasProcessor}).
@@ -52,8 +58,11 @@ package class TypeRefProcessor extends AbstractProcessor {
 		if (typeRef === null) {
 			return null;
 		}
-		// note: we also have to resolve type aliases that might be nested below a non-alias TypeRef!
-		var resolved = tsh.resolveTypeAliases(G, typeRef);
+		var resolved = typeRef;
+
+		resolved = doHandleEnumLiteralTypeRefs(G, resolved);
+		resolved = doHandleTypeAliases(G, resolved);
+
 		if (resolved === typeRef) {
 			// temporary tweak to ensure correctness of code base:
 			// if nothing was resolved, we could directly use 'typeRef' as the value of property
@@ -65,5 +74,41 @@ package class TypeRefProcessor extends AbstractProcessor {
 			resolved = TypeUtils.copy(typeRef);
 		}
 		return resolved;
+	}
+
+	def private TypeRef doHandleEnumLiteralTypeRefs(RuleEnvironment G, TypeRef typeRef) {
+		// note: we also have to handle parameterized type refs that might be nested below some other TypeRef!
+		return new ResolveParameterizedTypeRefPointingToTEnumLiteralSwitch(G).doSwitch(typeRef);
+	}
+
+	def private TypeRef doHandleTypeAliases(RuleEnvironment G, TypeRef typeRef) {
+		// note: we also have to resolve type aliases that might be nested below a non-alias TypeRef!
+		return tsh.resolveTypeAliases(G, typeRef);
+	}
+
+
+	private static class ResolveParameterizedTypeRefPointingToTEnumLiteralSwitch extends NestedTypeRefsSwitch {
+
+		new(RuleEnvironment G) {
+			super(G);
+		}
+
+		override protected derive(RuleEnvironment G_NEW) {
+			return new ResolveParameterizedTypeRefPointingToTEnumLiteralSwitch(G_NEW);
+		}
+
+		override protected caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
+			val astQualifier = typeRef.astDeclaredTypeQualifier;
+			if (astQualifier instanceof TEnum) {
+				val enumLiteralName = typeRef.declaredTypeAsText;
+				val enumLiteral = astQualifier.literals.findFirst[name == enumLiteralName];
+				if (enumLiteral !== null) {
+					val litTypeRef = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef();
+					litTypeRef.value = enumLiteral;
+					return litTypeRef;
+				}
+			}
+			return typeRef;
+		}
 	}
 }

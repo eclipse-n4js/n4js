@@ -330,7 +330,6 @@ import com.google.common.collect.Iterables;
 				String rightValue = ((StringLiteralTypeRef) right).getValue();
 				return resultFromBoolean(leftValue != null && leftValue.equals(rightValue));
 			}
-			return failure();
 		}
 		return resultFromBoolean(Objects.equals(left.getValue(), right.getValue()));
 	}

@@ -28806,7 +28806,7 @@ ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
 						}
 					}
 					{
-						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0());
+						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstDeclaredTypeQualifierTypeCrossReference_0_0_0());
 					}
 					ruleTypeReferenceName
 					{

@@ -477,7 +477,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
-	 *     (rule start) (ambiguity) astNamespace=[ModuleNamespaceVirtualType|TypeReferenceName]
+	 *     (rule start) (ambiguity) astDeclaredTypeQualifier=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) astNegated?='-'
 	 *     (rule start) (ambiguity) astValue=STRING
 	 *     (rule start) (ambiguity) astValue?='true'

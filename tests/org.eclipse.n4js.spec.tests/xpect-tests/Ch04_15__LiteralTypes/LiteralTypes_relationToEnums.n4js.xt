@@ -134,9 +134,9 @@ enum ColorNormalMore {
 	RED, GREEN, BLUE, YELLOW
 }
 
-// FIXME enable this!!
-// let colorNormal_red: ColorNormal.RED;
-// let colorNormal_rgb: ColorNormal.RED | ColorNormal.GREEN | ColorNormal.BLUE;
+let colorNormal_red: ColorNormal.RED;
+let colorNormal_rg: ColorNormal.RED | ColorNormal.GREEN;
+let colorNormal_rgb: ColorNormal.RED | ColorNormal.GREEN | ColorNormal.BLUE;
 let colorNormal: ColorNormal;
 let colorNormalFewer: ColorNormalFewer;
 let colorNormalMore: ColorNormalMore;
@@ -152,17 +152,26 @@ colorNormal = colorNormalFewer;
 
 // and now the relation between normal enums and LiteralTypeRef:
 
-// FIXME enable this!!
-// // X--PECT noerrors -->
-// colorNormal = colorNormal_red;
-// // X--PECT noerrors -->
-// colorNormal = colorNormal_rgb;
-// 
-// // X--PECT noerrors -->
-// colorNormal_red = ColorNormal.RED;
-// // X--PECT noerrors -->
-// colorNormal_rgb = colorNormal;
-// // X--PECT noerrors -->
-// colorNormal_rgb = colorNormalFewer;
-// // X--PECT errors --> "TODO" at "colorNormalMore"
-// colorNormal_rgb = colorNormalMore;
+// XPECT noerrors -->
+colorNormal = colorNormal_red;
+// XPECT noerrors -->
+colorNormal = colorNormal_rgb;
+
+// XPECT noerrors -->
+colorNormal_red = ColorNormal.RED;
+// XPECT errors --> "union{ColorNormal.RED,ColorNormal.GREEN} is not a subtype of ColorNormal.RED." at "colorNormal_rg"
+colorNormal_red = colorNormal_rg;
+// XPECT noerrors -->
+colorNormal_rg = ColorNormal.RED;
+// XPECT noerrors -->
+colorNormal_rg = colorNormal_red;
+// XPECT noerrors -->
+colorNormal_rg = colorNormal_rg;
+// XPECT errors --> "union{ColorNormal.RED,ColorNormal.GREEN,ColorNormal.BLUE} is not a subtype of union{ColorNormal.RED,ColorNormal.GREEN}." at "colorNormal_rgb"
+colorNormal_rg = colorNormal_rgb;
+// XPECT noerrors -->
+colorNormal_rgb = colorNormal;
+// XPECT errors --> "ColorNormalFewer is not a subtype of union{ColorNormal.RED,ColorNormal.GREEN,ColorNormal.BLUE}." at "colorNormalFewer"
+colorNormal_rgb = colorNormalFewer;
+// XPECT errors --> "ColorNormalMore is not a subtype of union{ColorNormal.RED,ColorNormal.GREEN,ColorNormal.BLUE}." at "colorNormalMore"
+colorNormal_rgb = colorNormalMore;

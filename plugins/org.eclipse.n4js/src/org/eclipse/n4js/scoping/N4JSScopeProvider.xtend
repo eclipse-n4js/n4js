@@ -70,6 +70,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeDefs
@@ -230,15 +231,19 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
+		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER) {
 			return new FilteringScope(getTypeScope(context, false), [
 				TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
+				|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
 			]);
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val namespace = context.astNamespace;
-				if (namespace!==null) {
-					return createScopeForNamespaceAccess(namespace, context);
+				val astQualifier = context.astDeclaredTypeQualifier;
+				switch (astQualifier) {
+					ModuleNamespaceVirtualType:
+						return createScopeForNamespaceAccess(astQualifier, context)
+					TEnum:
+						return new DynamicPseudoScope()
 				}
 			}
 			return getTypeScope(context, false);

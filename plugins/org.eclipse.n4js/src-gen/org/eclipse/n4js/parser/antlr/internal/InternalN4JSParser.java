@@ -40970,7 +40970,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						}
                     }
                     if ( state.backtracking==0 ) {
-                      						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0());
+                      						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstDeclaredTypeQualifierTypeCrossReference_0_0_0());
                     }
                     pushFollow(FOLLOW_124);
                     ruleTypeReferenceName();

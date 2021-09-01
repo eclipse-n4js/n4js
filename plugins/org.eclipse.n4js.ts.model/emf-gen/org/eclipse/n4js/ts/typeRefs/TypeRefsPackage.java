@@ -3448,13 +3448,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -3927,13 +3927,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_DECLARED_TYPE_QUALIFIER = PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -5787,13 +5787,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int FUNCTION_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -8722,13 +8722,13 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int VERSIONED_PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -9128,13 +9128,13 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_FUNCTION_TYPE_REF__ARRAY_NTYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF__AST_NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int VERSIONED_FUNCTION_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = VERSIONED_PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -9606,13 +9606,13 @@ public interface TypeRefsPackage extends EPackage {
 	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_NTYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_DECLARED_TYPE_QUALIFIER = VERSIONED_PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -10807,15 +10807,15 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_ArrayNTypeExpression();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Ast Namespace</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace()
+	 * @return the meta object for the reference '<em>Ast Declared Type Qualifier</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EReference getParameterizedTypeRef_AstNamespace();
+	EReference getParameterizedTypeRef_AstDeclaredTypeQualifier();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}'.
@@ -12612,12 +12612,12 @@ public interface TypeRefsPackage extends EPackage {
 		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_ArrayNTypeExpression();
 
 		/**
-		 * The meta object literal for the '<em><b>Ast Namespace</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Ast Declared Type Qualifier</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PARAMETERIZED_TYPE_REF__AST_NAMESPACE = eINSTANCE.getParameterizedTypeRef_AstNamespace();
+		EReference PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = eINSTANCE.getParameterizedTypeRef_AstDeclaredTypeQualifier();
 
 		/**
 		 * The meta object literal for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute feature.

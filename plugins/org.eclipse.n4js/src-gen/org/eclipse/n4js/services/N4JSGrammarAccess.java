@@ -8826,9 +8826,9 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.TypeReference");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
-		private final Assignment cAstNamespaceAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
-		private final CrossReference cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0 = (CrossReference)cAstNamespaceAssignment_0_0.eContents().get(0);
-		private final RuleCall cAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1 = (RuleCall)cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0.eContents().get(1);
+		private final Assignment cAstDeclaredTypeQualifierAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final CrossReference cAstDeclaredTypeQualifierTypeCrossReference_0_0_0 = (CrossReference)cAstDeclaredTypeQualifierAssignment_0_0.eContents().get(0);
+		private final RuleCall cAstDeclaredTypeQualifierTypeTypeReferenceNameParserRuleCall_0_0_0_1 = (RuleCall)cAstDeclaredTypeQualifierTypeCrossReference_0_0_0.eContents().get(1);
 		private final Keyword cFullStopKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cDeclaredTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
@@ -8840,26 +8840,26 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//// override to support referencing types via the namespace of namespace imports
 		//@Override
 		//fragment TypeReference*:
-		//    (astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+		//    (astDeclaredTypeQualifier=[types::Type|TypeReferenceName] '.')?
 		//    declaredType=[types::Type|TypeReferenceName]
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+		//(astDeclaredTypeQualifier=[types::Type|TypeReferenceName] '.')?
 		//declaredType=[types::Type|TypeReferenceName]
 		public Group getGroup() { return cGroup; }
 		
-		//(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+		//(astDeclaredTypeQualifier=[types::Type|TypeReferenceName] '.')?
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName]
-		public Assignment getAstNamespaceAssignment_0_0() { return cAstNamespaceAssignment_0_0; }
+		//astDeclaredTypeQualifier=[types::Type|TypeReferenceName]
+		public Assignment getAstDeclaredTypeQualifierAssignment_0_0() { return cAstDeclaredTypeQualifierAssignment_0_0; }
 		
-		//[types::ModuleNamespaceVirtualType|TypeReferenceName]
-		public CrossReference getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0() { return cAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0; }
+		//[types::Type|TypeReferenceName]
+		public CrossReference getAstDeclaredTypeQualifierTypeCrossReference_0_0_0() { return cAstDeclaredTypeQualifierTypeCrossReference_0_0_0; }
 		
 		//TypeReferenceName
-		public RuleCall getAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1() { return cAstNamespaceModuleNamespaceVirtualTypeTypeReferenceNameParserRuleCall_0_0_0_1; }
+		public RuleCall getAstDeclaredTypeQualifierTypeTypeReferenceNameParserRuleCall_0_0_0_1() { return cAstDeclaredTypeQualifierTypeTypeReferenceNameParserRuleCall_0_0_0_1; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_0_1() { return cFullStopKeyword_0_1; }
@@ -14745,7 +14745,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//// override to support referencing types via the namespace of namespace imports
 	//@Override
 	//fragment TypeReference*:
-	//    (astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+	//    (astDeclaredTypeQualifier=[types::Type|TypeReferenceName] '.')?
 	//    declaredType=[types::Type|TypeReferenceName]
 	//;
 	public TypeReferenceElements getTypeReferenceAccess() {
@@ -15551,6 +15551,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getLiteralTypeRefAccess().getRule();
 	}
 	
+	//    // note: EnumLiteralTypeRefs are not available in type expressions
 	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
 	//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
 	public TypeExpressionsGrammarAccess.BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {

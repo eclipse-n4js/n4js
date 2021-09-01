@@ -1221,7 +1221,7 @@ N4MemberAnnotationList:
 // override to support referencing types via the namespace of namespace imports
 @Override
 fragment TypeReference*:
-	(astNamespace=[types::ModuleNamespaceVirtualType|TypeReferenceName] '.')?
+	(astDeclaredTypeQualifier=[types::Type|TypeReferenceName] '.')?
 	declaredType=[types::Type|TypeReferenceName]
 ;
 
