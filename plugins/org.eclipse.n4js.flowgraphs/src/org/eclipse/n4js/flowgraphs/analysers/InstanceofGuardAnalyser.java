@@ -60,7 +60,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 		return getGuards(cfe, GuardAssertion.AlwaysHolds);
 	}
 
-	/** @return all {@code instanceof} guards that <b>never</b> hold at the given element */
+	/** @return all {@code instanceof} guards that <b>always</b> hold or <b>never</b> hold at the given element */
 	public Collection<InstanceofGuard> getDefinitiveGuards(ControlFlowElement cfe) {
 		return getGuards(cfe, GuardAssertion.AlwaysHolds, GuardAssertion.NeverHolds);
 	}
