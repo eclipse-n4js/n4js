@@ -36770,23 +36770,29 @@ ruleBooleanLiteralTypeRef returns [EObject current=null]
 		(
 			(
 				(
-					lv_astValue_1_0=True
+					lv_astValue_1_1=True
 					{
-						newLeafNode(lv_astValue_1_0, grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0());
+						newLeafNode(lv_astValue_1_1, grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0());
 					}
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getBooleanLiteralTypeRefRule());
 						}
-						setWithLastConsumed($current, "astValue", lv_astValue_1_0 != null, "true");
+						setWithLastConsumed($current, "astValue", lv_astValue_1_1, null);
+					}
+					    |
+					lv_astValue_1_2=False
+					{
+						newLeafNode(lv_astValue_1_2, grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueFalseKeyword_1_0_1());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getBooleanLiteralTypeRefRule());
+						}
+						setWithLastConsumed($current, "astValue", lv_astValue_1_2, null);
 					}
 				)
 			)
-			    |
-			otherlv_2=False
-			{
-				newLeafNode(otherlv_2, grammarAccess.getBooleanLiteralTypeRefAccess().getFalseKeyword_1_1());
-			}
 		)
 	)
 ;

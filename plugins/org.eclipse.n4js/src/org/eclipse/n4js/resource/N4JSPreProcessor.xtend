@@ -80,7 +80,7 @@ package final class N4JSPreProcessor {
 	}
 
 	def private dispatch void processNode(BooleanLiteralTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {
-		typeRef.value = typeRef.astValue as Boolean; // validity of this cast is enforced by the grammar
+		typeRef.value = typeRef.astValue == "true";
 	}
 
 	def private dispatch void processNode(NumericLiteralTypeRef typeRef, N4JSResource resource, BuiltInTypeScope builtInTypes) {

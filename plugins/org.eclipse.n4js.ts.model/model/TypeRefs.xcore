@@ -1317,7 +1317,7 @@ class BooleanLiteralTypeRef extends LiteralTypeRef {
 	Boolean value
 
 	op String internalGetTypeRefAsString() {
-		return value.toString ?: "null";
+		return value?.toString ?: "null";
 	}
 }
 

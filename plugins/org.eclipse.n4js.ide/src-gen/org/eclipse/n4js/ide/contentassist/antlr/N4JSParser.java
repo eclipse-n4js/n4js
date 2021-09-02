@@ -119,7 +119,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getAlternatives(), "rule__TypeRefFunctionTypeExpression__Alternatives");
 			builder.put(grammarAccess.getTypeArgInTypeTypeRefAccess().getAlternatives(), "rule__TypeArgInTypeTypeRef__Alternatives");
 			builder.put(grammarAccess.getLiteralTypeRefAccess().getAlternatives(), "rule__LiteralTypeRef__Alternatives");
-			builder.put(grammarAccess.getBooleanLiteralTypeRefAccess().getAlternatives_1(), "rule__BooleanLiteralTypeRef__Alternatives_1");
+			builder.put(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAlternatives_1_0(), "rule__BooleanLiteralTypeRef__AstValueAlternatives_1_0");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAlternatives_0(), "rule__NumericLiteralTypeRef__Alternatives_0");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAlternatives_1(), "rule__NumericLiteralTypeRef__Alternatives_1");
 			builder.put(grammarAccess.getThisTypeRefAccess().getAlternatives(), "rule__ThisTypeRef__Alternatives");
@@ -1053,7 +1053,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getArrayTypeExpressionAssignment_2_1_0_1(), "rule__ArrayTypeExpression__ArrayTypeExpressionAssignment_2_1_0_1");
 			builder.put(grammarAccess.getTypeRefWithModifiersAccess().getFollowedByQuestionMarkAssignment_1(), "rule__TypeRefWithModifiers__FollowedByQuestionMarkAssignment_1");
 			builder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getDynamicAssignment_0_1(), "rule__TypeRefWithoutModifiers__DynamicAssignment_0_1");
-			builder.put(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAssignment_1_0(), "rule__BooleanLiteralTypeRef__AstValueAssignment_1_0");
+			builder.put(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAssignment_1(), "rule__BooleanLiteralTypeRef__AstValueAssignment_1");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedAssignment_0_1(), "rule__NumericLiteralTypeRef__AstNegatedAssignment_0_1");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstValueAssignment_1_0(), "rule__NumericLiteralTypeRef__AstValueAssignment_1_0");
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstValueAssignment_1_1(), "rule__NumericLiteralTypeRef__AstValueAssignment_1_1");

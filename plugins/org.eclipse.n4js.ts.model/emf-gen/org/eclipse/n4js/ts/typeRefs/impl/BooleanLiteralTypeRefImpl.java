@@ -107,7 +107,11 @@ public class BooleanLiteralTypeRefImpl extends LiteralTypeRefImpl implements Boo
 	@Override
 	public String internalGetTypeRefAsString() {
 		String _elvis = null;
-		String _string = this.getValue().toString();
+		Boolean _value = this.getValue();
+		String _string = null;
+		if (_value!=null) {
+			_string=_value.toString();
+		}
 		if (_string != null) {
 			_elvis = _string;
 		} else {

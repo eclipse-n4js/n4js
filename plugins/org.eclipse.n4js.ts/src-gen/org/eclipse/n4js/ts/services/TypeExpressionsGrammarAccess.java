@@ -525,33 +525,33 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.BooleanLiteralTypeRef");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cBooleanLiteralTypeRefAction_0 = (Action)cGroup.eContents().get(0);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Assignment cAstValueAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
-		private final Keyword cAstValueTrueKeyword_1_0_0 = (Keyword)cAstValueAssignment_1_0.eContents().get(0);
-		private final Keyword cFalseKeyword_1_1 = (Keyword)cAlternatives_1.eContents().get(1);
+		private final Assignment cAstValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Alternatives cAstValueAlternatives_1_0 = (Alternatives)cAstValueAssignment_1.eContents().get(0);
+		private final Keyword cAstValueTrueKeyword_1_0_0 = (Keyword)cAstValueAlternatives_1_0.eContents().get(0);
+		private final Keyword cAstValueFalseKeyword_1_0_1 = (Keyword)cAstValueAlternatives_1_0.eContents().get(1);
 		
 		//    // note: EnumLiteralTypeRefs are not available in type expressions
 		//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
-		//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
+		//    {BooleanLiteralTypeRef} astValue=('true' | 'false');
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{BooleanLiteralTypeRef} (astValue?='true' | 'false')
+		//{BooleanLiteralTypeRef} astValue=('true' | 'false')
 		public Group getGroup() { return cGroup; }
 		
 		//{BooleanLiteralTypeRef}
 		public Action getBooleanLiteralTypeRefAction_0() { return cBooleanLiteralTypeRefAction_0; }
 		
-		//(astValue?='true' | 'false')
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		//astValue=('true' | 'false')
+		public Assignment getAstValueAssignment_1() { return cAstValueAssignment_1; }
 		
-		//astValue?='true'
-		public Assignment getAstValueAssignment_1_0() { return cAstValueAssignment_1_0; }
+		//('true' | 'false')
+		public Alternatives getAstValueAlternatives_1_0() { return cAstValueAlternatives_1_0; }
 		
 		//'true'
 		public Keyword getAstValueTrueKeyword_1_0_0() { return cAstValueTrueKeyword_1_0_0; }
 		
 		//'false'
-		public Keyword getFalseKeyword_1_1() { return cFalseKeyword_1_1; }
+		public Keyword getAstValueFalseKeyword_1_0_1() { return cAstValueFalseKeyword_1_0_1; }
 	}
 	public class NumericLiteralTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.NumericLiteralTypeRef");
@@ -3021,7 +3021,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	//    // note: EnumLiteralTypeRefs are not available in type expressions
 	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
-	//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
+	//    {BooleanLiteralTypeRef} astValue=('true' | 'false');
 	public BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {
 		return pBooleanLiteralTypeRef;
 	}

@@ -514,7 +514,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeArgument returns BooleanLiteralTypeRef
 	 *
 	 * Constraint:
-	 *     astValue?='true'?
+	 *     (astValue='true' | astValue='false')
 	 */
 	protected void sequence_BooleanLiteralTypeRef(ISerializationContext context, BooleanLiteralTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

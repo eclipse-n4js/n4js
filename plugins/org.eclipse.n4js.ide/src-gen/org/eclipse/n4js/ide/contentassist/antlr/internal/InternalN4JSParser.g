@@ -14441,21 +14441,21 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__BooleanLiteralTypeRef__Alternatives_1
+rule__BooleanLiteralTypeRef__AstValueAlternatives_1_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAssignment_1_0()); }
-		(rule__BooleanLiteralTypeRef__AstValueAssignment_1_0)
-		{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAssignment_1_0()); }
+		{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0()); }
+		True
+		{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getFalseKeyword_1_1()); }
+		{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueFalseKeyword_1_0_1()); }
 		False
-		{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getFalseKeyword_1_1()); }
+		{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueFalseKeyword_1_0_1()); }
 	)
 ;
 finally {
@@ -73755,9 +73755,9 @@ rule__BooleanLiteralTypeRef__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAlternatives_1()); }
-	(rule__BooleanLiteralTypeRef__Alternatives_1)
-	{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAlternatives_1()); }
+	{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAssignment_1()); }
+	(rule__BooleanLiteralTypeRef__AstValueAssignment_1)
+	{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAssignment_1()); }
 )
 ;
 finally {
@@ -90239,19 +90239,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__BooleanLiteralTypeRef__AstValueAssignment_1_0
+rule__BooleanLiteralTypeRef__AstValueAssignment_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0()); }
-		(
-			{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0()); }
-			True
-			{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0()); }
-		)
-		{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0()); }
+		{ before(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAlternatives_1_0()); }
+		(rule__BooleanLiteralTypeRef__AstValueAlternatives_1_0)
+		{ after(grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueAlternatives_1_0()); }
 	)
 ;
 finally {

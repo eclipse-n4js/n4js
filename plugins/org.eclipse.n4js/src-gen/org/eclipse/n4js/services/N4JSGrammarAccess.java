@@ -15553,7 +15553,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//    // note: EnumLiteralTypeRefs are not available in type expressions
 	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
-	//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
+	//    {BooleanLiteralTypeRef} astValue=('true' | 'false');
 	public TypeExpressionsGrammarAccess.BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {
 		return gaTypeExpressions.getBooleanLiteralTypeRefAccess();
 	}

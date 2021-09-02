@@ -2962,7 +2962,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	
 	//    // note: EnumLiteralTypeRefs are not available in type expressions
 	//BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
-	//    {BooleanLiteralTypeRef} (astValue?='true' | 'false');
+	//    {BooleanLiteralTypeRef} astValue=('true' | 'false');
 	public TypeExpressionsGrammarAccess.BooleanLiteralTypeRefElements getBooleanLiteralTypeRefAccess() {
 		return gaTypeExpressions.getBooleanLiteralTypeRefAccess();
 	}

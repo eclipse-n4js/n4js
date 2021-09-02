@@ -463,7 +463,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) '+'? astValue=LEGACY_OCTAL_INT
 	 *     (rule start) (ambiguity) '+'? astValue=OCTAL_INT
 	 *     (rule start) (ambiguity) '+'? astValue=SCIENTIFIC_INT
-	 *     (rule start) (ambiguity) 'false' (rule start)
 	 *     (rule start) (ambiguity) 'intersection' '{' typeRefs+=TypeRef
 	 *     (rule start) (ambiguity) 'this' (rule start)
 	 *     (rule start) (ambiguity) 'this' dynamic?='+'
@@ -479,8 +478,9 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
 	 *     (rule start) (ambiguity) astDeclaredTypeQualifier=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) astNegated?='-'
+	 *     (rule start) (ambiguity) astValue='false'
+	 *     (rule start) (ambiguity) astValue='true'
 	 *     (rule start) (ambiguity) astValue=STRING
-	 *     (rule start) (ambiguity) astValue?='true'
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
