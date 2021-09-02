@@ -27,20 +27,24 @@ END_SETUP */
 
 
 import {Color} from "Other";
+import {ColorWithLiteralValues} from "Other";
 import {ColorNumberBased} from "Other";
 import {ColorStringBased} from "Other";
 
 export public const red = Color.RED;
+export public const redWithLiteralValues = ColorWithLiteralValues.RED; // type could be exported as ColorWithLiteralValues.RED, but for now we export ColorWithLiteralValues
 export public const redNumberBased = ColorNumberBased.RED;
 export public const redStringBased = ColorStringBased.RED;
 
 
 /* XPECT generated_dts ---
 import {Color} from './Other'
+import {ColorWithLiteralValues} from './Other'
 import {ColorNumberBased} from './Other'
 import {ColorStringBased} from './Other'
 
-export const red: Color.RED;
+export const red: Color;
+export const redWithLiteralValues: ColorWithLiteralValues;
 export const redNumberBased: ColorNumberBased.RED;
 export const redStringBased: ColorStringBased.RED;
 --- */

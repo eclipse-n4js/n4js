@@ -61,6 +61,7 @@ import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 
@@ -302,15 +303,17 @@ class TypeReferenceTransformation extends Transformation {
 
 	def private void convertLiteralTypeRef(LiteralTypeRef typeRef) {
 		if (typeRef instanceof EnumLiteralTypeRef) {
-			val enumLiteralName = typeRef.value?.name;
 			val enumType = typeRef.enumType;
-			val referenceStr = if (enumLiteralName !== null && enumType !== null) {
-				getReferenceToType(enumType, state);
-			};
+			val referenceStr = if (enumType !== null) getReferenceToType(enumType, state);
 			if (referenceStr !== null) {
 				write(referenceStr);
-				write('.');
-				write(enumLiteralName);
+				val enumLiteralName = typeRef.value?.name;
+				val enumKind = N4JSLanguageUtils.getEnumKind(enumType);
+				if (enumLiteralName !== null
+						&& (enumKind === EnumKind.NumberBased || enumKind === EnumKind.StringBased)) {
+					write('.');
+					write(enumLiteralName);
+				}
 			} else {
 				write("any");
 			}

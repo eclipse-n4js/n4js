@@ -27,10 +27,12 @@ END_SETUP */
 
 
 import {getRed} from "Other";
+import {getRedWithLiteralValues} from "Other";
 import {getRedNumberBased} from "Other";
 import {getRedStringBased} from "Other";
 
 export public const red = getRed();
+export public const redWithLiteralValues = getRedWithLiteralValues(); // type could be exported as ColorWithLiteralValues.RED, but for now we export ColorWithLiteralValues
 export public const redNumberBased = getRedNumberBased();
 export public const redStringBased = getRedStringBased();
 
@@ -38,9 +40,11 @@ export public const redStringBased = getRedStringBased();
 /* XPECT generated_dts ---
 import {ColorStringBased} from './Other'
 import {ColorNumberBased} from './Other'
+import {ColorWithLiteralValues} from './Other'
 import {Color} from './Other'
 
-export const red: Color.RED;
+export const red: Color;
+export const redWithLiteralValues: ColorWithLiteralValues;
 export const redNumberBased: ColorNumberBased.RED;
 export const redStringBased: ColorStringBased.RED;
 --- */
