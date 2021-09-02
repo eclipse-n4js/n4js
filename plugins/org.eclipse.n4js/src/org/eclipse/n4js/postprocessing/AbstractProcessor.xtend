@@ -120,7 +120,7 @@ package abstract class AbstractProcessor {
 					// invoke #resolveTypeAliases() here; however, since this code is running before TypeAliasProcessor,
 					// we still have to invoke #resolveTypeAliases():
 					val innerReturnTypeRefResolved = tsh.resolveTypeAliases(G, innerReturnTypeRef);
-					val innerReturnTypeRefResolvedUB = ts.upperBoundWithReopenAndResolve(G, innerReturnTypeRefResolved);
+					val innerReturnTypeRefResolvedUB = ts.upperBoundWithReopenAndResolveTypeVars(G, innerReturnTypeRefResolved);
 					val scope = G.builtInTypeScope;
 					val needsRewrite = !N4JSLanguageUtils.hasExpectedSpecialReturnType(innerReturnTypeRefResolvedUB, funDef, scope);
 					if (needsRewrite) {

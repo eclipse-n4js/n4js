@@ -908,7 +908,7 @@ import com.google.inject.Inject;
 			// standard case:
 
 			TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-			targetTypeRef = ts.upperBoundWithReopenAndResolve(G, targetTypeRef);
+			targetTypeRef = ts.upperBoundWithReopenAndResolveTypeVars(G, targetTypeRef);
 
 			TypeRef indexTypeRef = ts.type(G, expr.getIndex());
 

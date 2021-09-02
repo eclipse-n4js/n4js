@@ -442,7 +442,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef typeTypeRef, boolean resolveTypeVariables) {
 		val typeArg = typeTypeRef.typeArg;
 		val typeArgUB = if (resolveTypeVariables) {
-			ts.upperBoundWithReopenAndResolve(G, typeArg)
+			ts.upperBoundWithReopenAndResolveTypeVars(G, typeArg)
 		} else {
 			ts.upperBoundWithReopen(G, typeArg)
 		};
