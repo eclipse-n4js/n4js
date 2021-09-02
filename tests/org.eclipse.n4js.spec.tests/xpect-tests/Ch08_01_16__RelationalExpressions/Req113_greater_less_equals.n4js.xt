@@ -34,32 +34,26 @@ ba[3] = true < false
 
 
 ba[4] =
-// old behavior:
-// X--PECT errors ---
-//"int is not a subtype of string." at "1"
-//"string is not a subtype of int." at ""a""
+// XPECT errors ---
+//"1 is not a subtype of string." at "1"
+//""a" is not a subtype of int." at ""a""
 //---
-// XPECT noerrors -->
 1 < "a"
 
 
 ba[5] =
-// old behavior:
-// X--PECT errors ---
-// "boolean is not a subtype of string." at "true"
-// "string is not a subtype of boolean." at ""a""
+// XPECT errors ---
+// "true is not a subtype of string." at "true"
+// ""a" is not a subtype of boolean." at ""a""
 // ---
-// XPECT noerrors -->
 true < "a"
 
 
 ba[6] =
-// old behavior:
-// X--PECT errors ---
-// "boolean is not a subtype of int." at "true"
-// "int is not a subtype of boolean." at "1"
+// XPECT errors ---
+// "1 is not a subtype of boolean." at "1"
+// "true is not a subtype of int." at "true"
 // ---
-// XPECT noerrors -->
 1 < true
 
 
@@ -71,12 +65,12 @@ ba[7] =
 new A() < R
 
 ba[8] =
-// XPECT errors --> "any is not a subtype of union{boolean,number,string}." at "func()"
+// XPECT errors --> "any is not a subtype of int." at "func()"
 1 < func()
 
 
 ba[9] =
-// XPECT errors --> "void is not a subtype of union{boolean,number,string}." at "funcv()"
+// XPECT errors --> "void is not a subtype of int." at "funcv()"
 1 < funcv()
 
 

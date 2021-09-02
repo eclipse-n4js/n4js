@@ -22,6 +22,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functi
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNumeric;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.n4EnumTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.objectTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.setThisBinding;
@@ -84,6 +85,7 @@ import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
@@ -450,8 +452,20 @@ import com.google.inject.Inject;
 				}
 			default: // <, <=, >, >=
 				if (javaScriptVariantHelper.isTypeAware(e)) {
-					return TypeUtils.createNonSimplifiedUnionType(booleanTypeRef(G), numberTypeRef(G),
-							stringTypeRef(G));
+					// TODO this looks expensive...
+					final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(
+							booleanTypeRef(G), numberTypeRef(G), stringTypeRef(G));
+					final Expression otherSide = expression == e.getLhs() ? e.getRhs() : e.getLhs();
+					final TypeRef otherSideTR = ts.type(G, otherSide);
+					if (otherSideTR == null) {
+						return unknown();
+					}
+					if (ts.subtype(G, otherSideTR, primsTR).isSuccess()
+							&& !ts.subtype(G, otherSideTR, nullTypeRef(G)).isSuccess()) {
+						return ts.upperBoundWithReopenAndResolveBoth(G, otherSideTR);
+					} else {
+						return primsTR;
+					}
 				} else {
 					return anyTypeRef(G);
 				}
