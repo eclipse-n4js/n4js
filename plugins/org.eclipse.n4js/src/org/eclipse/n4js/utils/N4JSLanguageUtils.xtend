@@ -121,7 +121,6 @@ import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 
@@ -775,7 +774,7 @@ public class N4JSLanguageUtils {
 	 * literal type references.
 	 */
 	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, NumericLiteralTypeRef literalTypeRef) {
-		return if (isInt(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef;
+		return if (isInt32(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef;
 	}
 
 	/**
@@ -787,8 +786,22 @@ public class N4JSLanguageUtils {
 		return if (enumType !== null) TypeUtils.createTypeRef(enumType) else TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 	}
 
-	// FIXME GH-2197 make this consistent with the #isIntLiteral() methods below!
-	def static boolean isInt(BigDecimal value) {
+	/**
+	 * Tells whether the given {@link BigDecimal} represents a Javascript int32.
+	 * <p>
+	 * Some notes:
+	 * <ol>
+	 * <li>the range of int32 is asymmetric: [ -2147483648, 2147483647 ]
+	 * <li>in Java, literals such as 1E0 etc. are always of type double, but we cannot follow the same rule here, because
+	 * the literal is not available and on the basis of the given {@code BigDecimal} we cannot distinguish this.
+	 * <li>hexadecimal and octal literals are always interpreted as positive integers (important difference to Java).
+	 * </ol>
+	 * See N4JS Specification, Section 8.1.3.1 for details.
+	 */
+	def static boolean isInt32(BigDecimal value) {
+		if (value === null) {
+			return false;
+		}
 		// note: normally the correct way of telling whether a BigDecimal is a whole number would be:
 		// boolean isWholeNumber = value.stripTrailingZeros().scale() <= 0;
 		// However, we here want BigDecimals like 0.0, 1.00, -42.0 to *NOT* be treated as a whole numbers,
@@ -797,76 +810,6 @@ public class N4JSLanguageUtils {
 		return isWholeNumber
 			&& N4JSGlobals.INT32_MIN_VALUE_BD.compareTo(value) <= 0
 			&& value.compareTo(N4JSGlobals.INT32_MAX_VALUE_BD) <= 0;
-	}
-
-	/**
-	 * Tells if the given numeric literal is a Javascript int32.
-	 */
-	def static boolean isIntLiteral(NumericLiteral numLit) {
-		val parent = numLit.eContainer;
-		val node = NodeModelUtils.findActualNodeFor(numLit);
-		val text = NodeModelUtils.getTokenText(node);
-		val result = isIntLiteral(text);
-		if(result===2) {
-			return parent instanceof UnaryExpression && (parent as UnaryExpression).op===UnaryOperator.NEG;
-		}
-		return result===1;
-	}
-	/**
-	 * Tells if the given string represents a Javascript int32. Returns 0 if not, 1 if it does, and 2 if the literal
-	 * represents a number that is an int32 only if it is negative, but not if it is positive (only for literal
-	 * "2147483648" and equivalent literals).
-	 * <p>
-	 * Some notes:
-	 * <ol>
-	 * <li>the range of int32 is asymmetric: [ -2147483648, 2147483647 ]
-	 * <li>in Java, 1E0 etc. are always of type double, so we follow the same rule below.
-	 * <li>hexadecimal and octal literals are always interpreted as positive integers (important difference to Java).
-	 * </ol>
-	 * See N4JS Specification, Section 8.1.3.1 for details.
-	 */
-	def static int isIntLiteral(String numLitStr) {
-		if(numLitStr===null || numLitStr.length===0) {
-			return 0;
-		}
-		val hasFractionOrExponent = numLitStr.containsOneOf('.','e','E');
-		if(hasFractionOrExponent) {
-			return 0;
-		}
-		try {
-			val isHex = numLitStr.startsWith("0x") || numLitStr.startsWith("0X");
-			val isOct = !isHex && numLitStr.startsWith("0") && numLitStr.length>1 && !numLitStr.containsOneOf('8','9');
-			val value = if(isHex) {
-				Long.parseLong(numLitStr.substring(2), 16)
-			} else if(isOct) {
-				Long.parseLong(numLitStr.substring(1), 8)
-			} else {
-				Long.parseLong(numLitStr) // here we support a leading '+' or '-'
-			};
-			if(value==2147483648L) { // <-- the one value that is in int32 range if negative, but outside if positive
-				return 2;
-			}
-			if(N4JSGlobals.INT32_MIN_VALUE<=value && value<=N4JSGlobals.INT32_MAX_VALUE) {
-				return 1;
-			}
-			return 0;
-		}
-		catch(NumberFormatException e) {
-			return 0;
-		}
-	}
-
-	def private static boolean containsOneOf(String str, char... ch) {
-		val len = str.length;
-		for(var i=0;i<len;i++) {
-			val chStr = str.charAt(i);
-			for(var j=0;j<ch.length;j++) {
-				if(chStr===ch.get(j)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
