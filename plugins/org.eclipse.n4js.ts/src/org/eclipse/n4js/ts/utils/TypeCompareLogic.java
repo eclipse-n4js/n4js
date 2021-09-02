@@ -220,7 +220,6 @@ import org.eclipse.xtext.naming.QualifiedName;
 				return c;
 			}
 		} else if (ref1 instanceof LiteralTypeRef) {
-			// FIXME can we do this more elegantly?
 			if (ref1 instanceof BooleanLiteralTypeRef) {
 				final BooleanLiteralTypeRef litRef1 = (BooleanLiteralTypeRef) ref1;
 				final BooleanLiteralTypeRef litRef2 = (BooleanLiteralTypeRef) ref2;

@@ -577,7 +577,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cAstValueSCIENTIFIC_INTTerminalRuleCall_1_6_0 = (RuleCall)cAstValueAssignment_1_6.eContents().get(0);
 		
 		//NumericLiteralTypeRef returns NumericLiteralTypeRef:
-		//    ('+' | astNegated?='-')? // FIXME try to do this via value converters
+		//    ('+' | astNegated?='-')?
 		//    (
 		//          astValue=INT
 		//        | astValue=DOUBLE
@@ -589,7 +589,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    );
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('+' | astNegated?='-')? // FIXME try to do this via value converters
+		//('+' | astNegated?='-')?
 		//(
 		//      astValue=INT
 		//    | astValue=DOUBLE
@@ -613,16 +613,15 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'-'
 		public Keyword getAstNegatedHyphenMinusKeyword_0_1_0() { return cAstNegatedHyphenMinusKeyword_0_1_0; }
 		
-		//// FIXME try to do this via value converters
-		//   (
-		//         astValue=INT
-		//       | astValue=DOUBLE
-		//       | astValue=OCTAL_INT
-		//       | astValue=LEGACY_OCTAL_INT
-		//       | astValue=HEX_INT
-		//       | astValue=BINARY_INT
-		//       | astValue=SCIENTIFIC_INT
-		//   )
+		//(
+		//      astValue=INT
+		//    | astValue=DOUBLE
+		//    | astValue=OCTAL_INT
+		//    | astValue=LEGACY_OCTAL_INT
+		//    | astValue=HEX_INT
+		//    | astValue=BINARY_INT
+		//    | astValue=SCIENTIFIC_INT
+		//)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//astValue=INT
@@ -3032,7 +3031,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//NumericLiteralTypeRef returns NumericLiteralTypeRef:
-	//    ('+' | astNegated?='-')? // FIXME try to do this via value converters
+	//    ('+' | astNegated?='-')?
 	//    (
 	//          astValue=INT
 	//        | astValue=DOUBLE

@@ -93,7 +93,7 @@ BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
 	{BooleanLiteralTypeRef} (astValue?='true' | 'false');
 
 NumericLiteralTypeRef returns NumericLiteralTypeRef:
-	('+' | astNegated?='-')? // FIXME try to do this via value converters
+	('+' | astNegated?='-')?
 	(
 		  astValue=INT
 		| astValue=DOUBLE

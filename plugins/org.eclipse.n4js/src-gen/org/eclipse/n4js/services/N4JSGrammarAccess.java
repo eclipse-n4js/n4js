@@ -15563,7 +15563,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//NumericLiteralTypeRef returns NumericLiteralTypeRef:
-	//    ('+' | astNegated?='-')? // FIXME try to do this via value converters
+	//    ('+' | astNegated?='-')?
 	//    (
 	//          astValue=INT
 	//        | astValue=DOUBLE
