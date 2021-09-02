@@ -35,6 +35,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -300,7 +301,22 @@ class TypeReferenceTransformation extends Transformation {
 	}
 
 	def private void convertLiteralTypeRef(LiteralTypeRef typeRef) {
-		write(typeRef.getTypeRefAsString());
+		if (typeRef instanceof EnumLiteralTypeRef) {
+			val enumLiteralName = typeRef.value?.name;
+			val enumType = typeRef.enumType;
+			val referenceStr = if (enumLiteralName !== null && enumType !== null) {
+				getReferenceToType(enumType, state);
+			};
+			if (referenceStr !== null) {
+				write(referenceStr);
+				write('.');
+				write(enumLiteralName);
+			} else {
+				write("any");
+			}
+		} else {
+			write(typeRef.getTypeRefAsString());
+		}
 	}	
 
 	def private String getStructuralTypeReplacements(TypeRef typeRef) {

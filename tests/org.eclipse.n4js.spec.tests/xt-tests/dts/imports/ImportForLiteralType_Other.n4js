@@ -1,0 +1,24 @@
+
+export public enum Color {
+	RED: "red", GREEN: "green", BLUE: "blue"
+}
+
+@NumberBased
+export public enum ColorNumberBased {
+	RED, GREEN, BLUE
+}
+
+@StringBased
+export public enum ColorStringBased {
+	RED, GREEN, BLUE
+}
+
+export public function getRed(): Color.RED {
+	return Color.RED;
+}
+export public function getRedNumberBased(): ColorNumberBased.RED {
+	return ColorNumberBased.RED;
+}
+export public function getRedStringBased(): ColorStringBased.RED {
+	return ColorStringBased.RED;
+}
