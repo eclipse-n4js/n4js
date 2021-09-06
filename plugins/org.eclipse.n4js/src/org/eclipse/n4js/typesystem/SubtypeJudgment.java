@@ -12,6 +12,7 @@ package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
@@ -43,6 +44,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
@@ -56,6 +58,7 @@ import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
@@ -104,18 +107,37 @@ import com.google.common.collect.Iterables;
 
 	private Result getResult(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
 		final Result firstResult = doApply(G, leftArg, rightArg);
-		if (firstResult.isFailure() && leftArg.getDeclaredType() instanceof TEnum) {
-			// if something like MyEnum <: R fails, we try: MyEnum.Lit1 | ... | MyEnum.LitN <: R
-			final Pair<String, Type> guardKey = Pair.of(GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION,
-					leftArg.getDeclaredType());
-			if (G.get(guardKey) == null) {
-				RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
-				G2.put(guardKey, Boolean.TRUE);
-				UnionTypeExpression secondLeftArg = TypeUtils.createUnionOfLiteralTypesFromEnumType(leftArg);
-				if (secondLeftArg != null) {
+		if (firstResult.isFailure()) {
+			Type leftDeclType = leftArg.getDeclaredType();
+			if (leftDeclType == RuleEnvironmentExtensions.booleanType(G)) {
+				// if boolean <: R fails, we try: true | false <: R
+				final String guardKey = GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION;
+				if (G.get(guardKey) == null) {
+					RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+					G2.put(guardKey, Boolean.TRUE);
+					BooleanLiteralTypeRef falseTypeRef = TypeRefsFactory.eINSTANCE.createBooleanLiteralTypeRef();
+					BooleanLiteralTypeRef trueTypeRef = TypeRefsFactory.eINSTANCE.createBooleanLiteralTypeRef();
+					falseTypeRef.setValue(false);
+					trueTypeRef.setValue(true);
+					UnionTypeExpression secondLeftArg = TypeUtils.createNonSimplifiedUnionType(falseTypeRef,
+							trueTypeRef);
 					final Result secondResult = doApply(G2, secondLeftArg, rightArg);
 					if (secondResult.isSuccess()) {
 						return secondResult;
+					}
+				}
+			} else if (leftDeclType instanceof TEnum) {
+				// if something like MyEnum <: R fails, we try: MyEnum.Lit1 | ... | MyEnum.LitN <: R
+				final Pair<String, Type> guardKey = Pair.of(GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION, leftDeclType);
+				if (G.get(guardKey) == null) {
+					RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+					G2.put(guardKey, Boolean.TRUE);
+					UnionTypeExpression secondLeftArg = TypeUtils.createUnionOfLiteralTypesFromEnumType(leftArg);
+					if (secondLeftArg != null) {
+						final Result secondResult = doApply(G2, secondLeftArg, rightArg);
+						if (secondResult.isSuccess()) {
+							return secondResult;
+						}
 					}
 				}
 			}

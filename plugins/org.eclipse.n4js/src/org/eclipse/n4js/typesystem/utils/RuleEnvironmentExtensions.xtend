@@ -111,6 +111,7 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_VARIABLE_DECLARATION = "varDecl";
 	public static final String GUARD_TYPE_CALL_EXPRESSION = "typeCallExpression";
 	public static final String GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION = "typePropertyAccessExpression";
+	public static final String GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION = "subtypeRef__replaceBooleanByUnion";
 	public static final String GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION = "subtypeRef__replaceEnumTypeByUnion";
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
