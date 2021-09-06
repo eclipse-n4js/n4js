@@ -142,6 +142,9 @@ public final class InferenceContext {
 	/** Tells if {@link #solve()} was invoked. */
 	private boolean isSolved = false;
 
+	/** The state of {@link #currentBounds} right before phase resolution started. */
+	private BoundSet preResolutionBounds = null;
+
 	/** The solution as returned by {@link #solve()}, or <code>null</code> if unsolvable. */
 	private Map<InferenceVariable, TypeRef> solution = null;
 
@@ -392,8 +395,7 @@ public final class InferenceContext {
 		if (DEBUG) {
 			log("****** Resolution");
 		}
-		final boolean success = !isDoomed() ? resolve() : false;
-		solution = success ? currentBounds.getInstantiations() : null;
+		final boolean success = resolve();
 		if (DEBUG) {
 			if (!success) {
 				log("NO SOLUTION FOUND");
@@ -411,14 +413,13 @@ public final class InferenceContext {
 		return solution;
 	}
 
-	// FIXME reconsider implementation of this method
 	/**
 	 * Tells whether the given candidate type reference looks like a promising partial solution for inference variable
 	 * 'infVar' within an overall unsolvable constraint system. Must only be used with unsolvable inference contexts,
-	 * i.e. {@link #solve()} must have been called before and must have returned <code>null</code>; otherwise an
+	 * i.e. {@link #solve()} must have been called before and must have returned <code>false</code>; otherwise an
 	 * exception is thrown.
 	 * <p>
-	 * If this method does not provide any strong guarantees and should only be used for non-critical heuristics, e.g.
+	 * This method does not provide any strong guarantees and should only be used for non-critical heuristics, e.g.
 	 * tweaking error messages.
 	 */
 	public boolean isPromisingPartialSolution(InferenceVariable infVar, TypeRef candidateTypeRef) {
@@ -428,13 +429,13 @@ public final class InferenceContext {
 		if (solution != null) {
 			throw new IllegalStateException("method #isPromisingPartialSolution() may only be used if solution failed");
 		}
-		TypeRef[] upperBounds = currentBounds.collectUpperBounds(infVar, true, true);
+		TypeRef[] upperBounds = preResolutionBounds.collectUpperBounds(infVar, true, true);
 		for (TypeRef upperBound : upperBounds) {
 			if (!ts.subtypeSucceeded(G, candidateTypeRef, upperBound)) {
 				return false;
 			}
 		}
-		TypeRef[] lowerBounds = currentBounds.collectLowerBounds(infVar, true, true);
+		TypeRef[] lowerBounds = preResolutionBounds.collectLowerBounds(infVar, true, true);
 		for (TypeRef lowerBound : lowerBounds) {
 			if (!ts.subtypeSucceeded(G, lowerBound, candidateTypeRef)) {
 				return false;
@@ -450,11 +451,18 @@ public final class InferenceContext {
 	 * Performs resolution of all inference variables of the receiving inference context. This might trigger further
 	 * reduction and incorporation steps.
 	 * <p>
-	 * If a solution is found, <code>true</code> is returned and {@link #currentBounds} will contain instantiations for
-	 * all inference variables. Otherwise, <code>false</code> is returned and {@link #currentBounds} will be in an
-	 * undefined state.
+	 * If a solution is found, <code>true</code> is returned, {@link #currentBounds} will contain instantiations for all
+	 * inference variables, and {@link #solution} will contain instantiations for all inference variables. Otherwise,
+	 * <code>false</code> is returned, {@link #currentBounds} will be in an undefined state, and {@link #solution} will
+	 * be <code>null</code>. In both cases, {@link #preResolutionBounds} will contain the state of
+	 * {@link #currentBounds} right before resolution started.
 	 */
 	private boolean resolve() {
+		preResolutionBounds = currentBounds.copy();
+		solution = null;
+		if (isDoomed()) {
+			return false;
+		}
 		Set<InferenceVariable> currVariableSet;
 		while ((currVariableSet = getSmallestVariableSet(inferenceVariables)) != null) {
 			for (InferenceVariable currVariable : currVariableSet) {
@@ -482,6 +490,7 @@ public final class InferenceContext {
 				return false;
 			}
 		}
+		solution = currentBounds.getInstantiations();
 		return true;
 	}
 
