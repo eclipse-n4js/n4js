@@ -47,7 +47,6 @@ import org.eclipse.n4js.n4JS.IterationStatement
 import org.eclipse.n4js.n4JS.LabelRef
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral
-import org.eclipse.n4js.n4JS.Literal
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.MethodDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
@@ -87,7 +86,10 @@ import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
 import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -525,6 +527,33 @@ class ASTStructureValidator {
 	}
 
 	def private dispatch void validateASTStructure(
+		NumericLiteralTypeRef model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (constraints.isStrict) {
+			val node = NodeModelUtils.findNodesForFeature(model, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE).head;
+			if (node !== null) {
+				val text = NodeModelUtils.getTokenText(node);
+				if (text.length() >= 2 && text.startsWith("0") && Character.isDigit(text.charAt(1))) {
+					producer.node = node;
+					producer.addDiagnostic(
+						new DiagnosticMessage(IssueCodes.messageForAST_STR_NO_OCTALS,
+							IssueCodes.getDefaultSeverity(IssueCodes.AST_STR_NO_OCTALS), IssueCodes.AST_STR_NO_OCTALS));
+				}
+			}
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+
+	def private dispatch void validateASTStructure(
 		StringLiteral model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -557,7 +586,27 @@ class ASTStructureValidator {
 		)
 	}
 
-	def private addErrorForOctalEscapeSequence(String rawValue, Literal model, EAttribute valueEAttribute, ASTStructureDiagnosticProducer producer) {
+	def private dispatch void validateASTStructure(
+		StringLiteralTypeRef model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		val node = NodeModelUtils.findNodesForFeature(model, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE).head;
+		if (node !== null) {
+			val text = NodeModelUtils.getTokenText(node);
+			addErrorForOctalEscapeSequence(text, model, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE, producer);
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+
+	def private addErrorForOctalEscapeSequence(String rawValue, EObject model, EAttribute valueEAttribute, ASTStructureDiagnosticProducer producer) {
 		val nodes = NodeModelUtils.findNodesForFeature(model, valueEAttribute);
 		val target = nodes.head;
 		val syntaxError = target.syntaxErrorMessage;
