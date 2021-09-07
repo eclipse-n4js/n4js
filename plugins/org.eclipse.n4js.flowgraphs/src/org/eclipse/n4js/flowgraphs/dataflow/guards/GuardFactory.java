@@ -144,7 +144,7 @@ public class GuardFactory {
 			}
 		}
 
-		// v == <literal> and <literal> == v
+		// v == <literal>
 		// TODO should also support v == <arbitrary expression of literal type>, e.g. v == fooReturningLiteral()
 		if (rhs instanceof BooleanLiteral || rhs instanceof NumericLiteral || rhs instanceof StringLiteral
 				|| isEnumLiteral(rhs)) {
