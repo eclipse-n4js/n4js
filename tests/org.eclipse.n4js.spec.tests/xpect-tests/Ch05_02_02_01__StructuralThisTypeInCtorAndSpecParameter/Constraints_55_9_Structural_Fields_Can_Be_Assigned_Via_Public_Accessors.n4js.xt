@@ -45,5 +45,5 @@ class C<T> {
 // XPECT noerrors --> "" at "t"
 new C<number>({ t: 42 })
 
-// XPECT errors --> "~Object with { t: int } is not a structural subtype of ~i~C<string>: t failed: int is not a super type of string." at "{ t: 42 }"
+// XPECT errors --> "~Object with { t: 42 } is not a structural subtype of ~i~C<string>: t failed: 42 is not a super type of string." at "{ t: 42 }"
 new C<string>({ t: 42 })

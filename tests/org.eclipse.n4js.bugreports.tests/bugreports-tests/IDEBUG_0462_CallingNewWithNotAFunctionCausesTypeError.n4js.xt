@@ -26,10 +26,10 @@ new Infinity;
 // XPECT errors --> "Not a reference to a constructor: undefined." at "(void 0)"
 new (void 0);
 
-// XPECT errors --> "Not a reference to a constructor: string." at "'some String'"
+// XPECT errors --> "Not a reference to a constructor: "some String"." at "'some String'"
 new 'some String';
 
-// XPECT errors --> "Not a reference to a constructor: int." at "2"
+// XPECT errors --> "Not a reference to a constructor: 2." at "2"
 new 2;
 
 // XPECT errors --> "Not a reference to a constructor: ~Object." at "{}"

@@ -13,7 +13,7 @@
 
 class A {
 	get c() : string {
-		// XPECT errors --> "int is not a subtype of string." at "42"
+		// XPECT errors --> "42 is not a subtype of string." at "42"
 		return 42;
 	}
 }

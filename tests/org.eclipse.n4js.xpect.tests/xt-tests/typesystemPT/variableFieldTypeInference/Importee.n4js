@@ -41,4 +41,3 @@ export public var                           remote_variableFN_inf  = function(p 
 
 export public var remote_variableOL_decl : ~Object with { s: string; n: number; } = { s: "hello", n: 42.0 };
 export public var                                      remote_variableOL_inf  = { s: "hello", n: 42.0 };
-

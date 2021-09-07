@@ -56,6 +56,20 @@
 0129;
 
 
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at "0123"
+let x01: 0123;
+
+// XPECT noerrors -->
+let x02: 0o123;
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\0112World""
+let x03: "Hello\0112World";
+
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at ""Hello\\312World""
+// XPECT warnings --> "Bad escapement" at ""Hello\\312World""
+let x04: "Hello\312World";
+
+
 class X {}
 let list= new Array<X>();
 // XPECT errors --> "The iteration variable of a for..in or for..of loop must not be provided with an initializer." at "new X()"

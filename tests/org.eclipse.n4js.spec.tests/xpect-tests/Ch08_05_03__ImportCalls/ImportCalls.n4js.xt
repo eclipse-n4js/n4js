@@ -21,13 +21,13 @@ function foo(): string {
 
 // XPECT noerrors -->
 import("./M");
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 import(42);
 // XPECT errors --> "An import call must have exactly one argument." at "import()"
 import();
 // XPECT errors ---
 // "An import call must have exactly one argument." at "import(41,42,43)"
-// "int is not a subtype of string." at "41"
+// "41 is not a subtype of string." at "41"
 // ---
 import(41,42,43);
 // XPECT errors ---

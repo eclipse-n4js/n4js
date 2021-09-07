@@ -37,13 +37,13 @@ var nNeg5 : number = - 2; //
 var nNeg6 : number = - 4; //
 var nNeg7 : number = - 8; //
 var nNeg8 : number = - - 255; //
-// XPECT errors --> "string is not a subtype of number." at ""4""
+// XPECT errors --> ""4" is not a subtype of number." at ""4""
 var nNeg9 : number = - "4";
 var nNeg10 : number = - Infinity; //
 // XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "{}"
 var nNeg11 : number = - {};
 var nNeg11b : number = - NaN; // NaN
-// XPECT errors --> "boolean is not a subtype of number." at "true"
+// XPECT errors --> "true is not a subtype of number." at "true"
 var nNeg12 : number = - true;
 // XPECT errors --> "C is not a subtype of number." at "new EC.C()"
 var nNeg13 : number = - new EC.C();

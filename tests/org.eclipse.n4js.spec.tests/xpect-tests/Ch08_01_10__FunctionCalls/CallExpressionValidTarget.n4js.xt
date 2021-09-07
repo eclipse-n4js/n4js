@@ -33,7 +33,7 @@ I();
 enum E { LIT }
 // XPECT errors --> "Not a function or method: type{E}." at "E"
 E();
-// XPECT errors --> "Not a function or method: E." at "E.LIT"
+// XPECT errors --> "Not a function or method: E.LIT." at "E.LIT"
 E.LIT();
 
 

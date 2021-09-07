@@ -12,7 +12,6 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
@@ -39,7 +38,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -158,30 +157,34 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayNTypeExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Ast Namespace</b></em>' reference.
+	 * Returns the value of the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
-	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
+	 * <ol>
+	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
+	 * and points to that namespace.
+	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
+	 * </ol>
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Ast Namespace</em>' reference.
-	 * @see #setAstNamespace(ModuleNamespaceVirtualType)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstNamespace()
+	 * @return the value of the '<em>Ast Declared Type Qualifier</em>' reference.
+	 * @see #setAstDeclaredTypeQualifier(Type)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstDeclaredTypeQualifier()
 	 * @model transient="true"
 	 * @generated
 	 */
-	ModuleNamespaceVirtualType getAstNamespace();
+	Type getAstDeclaredTypeQualifier();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ast Namespace</em>' reference.
-	 * @see #getAstNamespace()
+	 * @param value the new value of the '<em>Ast Declared Type Qualifier</em>' reference.
+	 * @see #getAstDeclaredTypeQualifier()
 	 * @generated
 	 */
-	void setAstNamespace(ModuleNamespaceVirtualType value);
+	void setAstDeclaredTypeQualifier(Type value);
 
 	/**
 	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.

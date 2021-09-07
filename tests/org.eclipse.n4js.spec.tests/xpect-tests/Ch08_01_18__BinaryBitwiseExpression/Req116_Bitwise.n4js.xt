@@ -29,31 +29,31 @@ console.log(n3);
 // wrongly typed boolean expressions:
 
 // XPECT errors ---
-//"boolean is not a subtype of number." at "false"
-//"boolean is not a subtype of number." at "true"
+//"false is not a subtype of number." at "false"
+//"true is not a subtype of number." at "true"
 //---
 var n4 : number = true & false ;
 
 
 // XPECT errors ---
-//"boolean is not a subtype of number." at "false"
-//"boolean is not a subtype of number." at "true"
+//"false is not a subtype of number." at "false"
+//"true is not a subtype of number." at "true"
 //---
 var n5 : number = true | false ;
 
 
 // XPECT errors ---
-//"boolean is not a subtype of number." at "false"
-//"boolean is not a subtype of number." at "true"
+//"false is not a subtype of number." at "false"
+//"true is not a subtype of number." at "true"
 //---
 var n6 : number = true ^ false ;
 
 
-// XPECT errors --> "boolean is not a subtype of number." at "false"
+// XPECT errors --> "false is not a subtype of number." at "false"
 var n7 : number = 9 ^ false ;
 
-// XPECT errors --> "boolean is not a subtype of number." at "false"
+// XPECT errors --> "false is not a subtype of number." at "false"
 var n8 : number = 9 & false ;
 
-// XPECT errors --> "boolean is not a subtype of number." at "false"
+// XPECT errors --> "false is not a subtype of number." at "false"
 var n9 : number = 9 | false ;

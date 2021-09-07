@@ -126,7 +126,7 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		changeNonOpenedFile(DEFAULT_MODULE_NAME, Pair.of("class A {", "let x:number = 'oops'; class A {"));
 		joinServerRequests();
 		assertIssues(Pair.of(DEFAULT_MODULE_NAME,
-				Collections.singletonList("(Error, [0:15 - 0:21], string is not a subtype of number.)")));
+				Collections.singletonList("(Error, [0:15 - 0:21], \"oops\" is not a subtype of number.)")));
 
 		// send command under test
 		languageServer.getFrontend().clean();
@@ -154,14 +154,14 @@ public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
 		startAndWaitForLspServer();
 
 		assertIssues(Pair.of("Main", Lists.newArrayList(
-				"(Error, [0:16 - 0:18], int is not a subtype of string.)")));
+				"(Error, [0:16 - 0:18], 42 is not a subtype of string.)")));
 
 		// fix the error on disk, but don't let the LSP server know (to avoid incremental build)
 		changeFileOnDiskWithoutNotification("Main", Pair.of("string", "number"));
 
 		joinServerRequests();
 		assertIssues(Pair.of("Main", Lists.newArrayList(
-				"(Error, [0:16 - 0:18], int is not a subtype of string.)")));
+				"(Error, [0:16 - 0:18], 42 is not a subtype of string.)")));
 
 		// send command under test
 		ExecuteCommandParams params = new ExecuteCommandParams(N4JSCommandService.N4JS_REBUILD,

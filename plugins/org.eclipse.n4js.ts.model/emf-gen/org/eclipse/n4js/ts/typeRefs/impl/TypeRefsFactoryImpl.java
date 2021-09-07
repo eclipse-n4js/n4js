@@ -82,6 +82,10 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION: return createFunctionTypeExpression();
 			case TypeRefsPackage.DEFERRED_TYPE_REF: return createDeferredTypeRef();
 			case TypeRefsPackage.TYPE_VARIABLE_MAPPING: return createTypeVariableMapping();
+			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF: return createBooleanLiteralTypeRef();
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF: return createNumericLiteralTypeRef();
+			case TypeRefsPackage.STRING_LITERAL_TYPE_REF: return createStringLiteralTypeRef();
+			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF: return createEnumLiteralTypeRef();
 			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF: return createVersionedParameterizedTypeRef();
 			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF: return createVersionedFunctionTypeRef();
 			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL: return createVersionedParameterizedTypeRefStructural();
@@ -287,6 +291,50 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	public TypeVariableMapping createTypeVariableMapping() {
 		TypeVariableMappingImpl typeVariableMapping = new TypeVariableMappingImpl();
 		return typeVariableMapping;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public BooleanLiteralTypeRef createBooleanLiteralTypeRef() {
+		BooleanLiteralTypeRefImpl booleanLiteralTypeRef = new BooleanLiteralTypeRefImpl();
+		return booleanLiteralTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NumericLiteralTypeRef createNumericLiteralTypeRef() {
+		NumericLiteralTypeRefImpl numericLiteralTypeRef = new NumericLiteralTypeRefImpl();
+		return numericLiteralTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public StringLiteralTypeRef createStringLiteralTypeRef() {
+		StringLiteralTypeRefImpl stringLiteralTypeRef = new StringLiteralTypeRefImpl();
+		return stringLiteralTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EnumLiteralTypeRef createEnumLiteralTypeRef() {
+		EnumLiteralTypeRefImpl enumLiteralTypeRef = new EnumLiteralTypeRefImpl();
+		return enumLiteralTypeRef;
 	}
 
 	/**

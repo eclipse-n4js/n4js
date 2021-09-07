@@ -14,17 +14,17 @@
 
 function foo(i : int, ... name : string) {}
 foo(0);
-// XPECT errors --> "string is not a subtype of int." at ""Hello""
+// XPECT errors --> ""Hello" is not a subtype of int." at ""Hello""
 foo("Hello");
 foo(0,"Hello");
 foo(0,"Hello", "World");
-// XPECT errors --> "int is not a subtype of string." at "1"
+// XPECT errors --> "1 is not a subtype of string." at "1"
 foo(0,1);
-// XPECT errors --> "int is not a subtype of string." at "2"
+// XPECT errors --> "2 is not a subtype of string." at "2"
 foo(0,"Hello",2);
 /* XPECT errors ---
-"int is not a subtype of string." at "3"
-"int is not a subtype of string." at "4"
+"3 is not a subtype of string." at "3"
+"4 is not a subtype of string." at "4"
 --- */
 foo(0,"Hello",3,4);
 
@@ -33,13 +33,13 @@ function bar(i : int, name : string) {}
 bar(0);
 /* XPECT errors ---
  "Incorrect number of arguments: expected 2, got 1." at "bar("Hello")"
- "string is not a subtype of int." at ""Hello""
+ ""Hello" is not a subtype of int." at ""Hello""
 --- */
 bar("Hello");
 bar(0,"Hello");
 // XPECT errors --> "Incorrect number of arguments: expected 2, got 3." at "bar(0,"Hello", "World")"
 bar(0,"Hello", "World");
-// XPECT errors --> "int is not a subtype of string." at "1"
+// XPECT errors --> "1 is not a subtype of string." at "1"
 bar(0,1);
 // XPECT errors --> "Incorrect number of arguments: expected 2, got 3." at "bar(0,"Hello",2)"
 bar(0,"Hello",2);

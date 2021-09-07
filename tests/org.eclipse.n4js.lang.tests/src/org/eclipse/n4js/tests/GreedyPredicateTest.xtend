@@ -12,12 +12,12 @@ package org.eclipse.n4js.tests
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.XtextParametrizedRunner
 import org.eclipse.n4js.XtextParametrizedRunner.ParametersProvider
 import org.eclipse.n4js.services.N4JSGrammarAccess
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
 import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.GrammarUtil
@@ -57,7 +57,8 @@ class GreedyPredicateTest {
 		'BindingProperty',
 		'BindingElementImpl',
 		'AnnotatedN4MemberDeclaration',
-		"N4MethodDeclaration"
+		"N4MethodDeclaration",
+		"AnnotationArgument"
 	];
 
 	@Inject

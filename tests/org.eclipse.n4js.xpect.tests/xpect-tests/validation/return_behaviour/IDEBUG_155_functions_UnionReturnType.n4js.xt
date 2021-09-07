@@ -25,5 +25,5 @@ function fu2(): union{string,void} {}
 // XPECT noerrors --> "string is one possible solution" at "fu3"
 function fu3(): union{string,X} { return "" }
 
-// XPECT errors --> "int is not a subtype of union{string,X}." at "42"
+// XPECT errors --> "42 is not a subtype of union{string,X}." at "42"
 function fu4(): union{string,X} { return 42; }

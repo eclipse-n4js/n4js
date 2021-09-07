@@ -25,14 +25,14 @@ type AsyncGeneratorAB = AsyncGenerator<A,B,any>;
 class G1<T extends Promise<A,any>> {
 	// XPECT type of 'm' --> {function():T}
 	async m(): T {
-		// XPECT errors --> "int is not a subtype of A." at "42"
+		// XPECT errors --> "42 is not a subtype of A." at "42"
 		return 42;
 	}
 }
 
 // XPECT type of 'fn1' --> {function():PromiseA}
 async function fn1(): PromiseA {
-	// XPECT errors --> "int is not a subtype of A." at "42"
+	// XPECT errors --> "42 is not a subtype of A." at "42"
 	return 42;
 }
 
@@ -43,18 +43,18 @@ async function fn1(): PromiseA {
 class G2<T extends Generator<A,B,any>> {
 	// XPECT type of 'm' --> {function():T}
 	* m(): T {
-		// XPECT errors --> "int is not a subtype of A." at "42"
+		// XPECT errors --> "42 is not a subtype of A." at "42"
 		yield 42;
-		// XPECT errors --> "int is not a subtype of B." at "42"
+		// XPECT errors --> "42 is not a subtype of B." at "42"
 		return 42;
 	}
 }
 
 // XPECT type of 'fn2' --> {function():GeneratorAB}
 function * fn2(): GeneratorAB {
-	// XPECT errors --> "int is not a subtype of A." at "42"
+	// XPECT errors --> "42 is not a subtype of A." at "42"
 	yield 42;
-	// XPECT errors --> "int is not a subtype of B." at "42"
+	// XPECT errors --> "42 is not a subtype of B." at "42"
 	return 42;
 }
 
@@ -65,18 +65,18 @@ function * fn2(): GeneratorAB {
 class G3<T extends AsyncGenerator<A,B,any>> {
 	// XPECT type of 'm' --> {function():T}
 	async * m(): T {
-		// XPECT errors --> "int is not a subtype of A." at "42"
+		// XPECT errors --> "42 is not a subtype of A." at "42"
 		yield 42;
-		// XPECT errors --> "int is not a subtype of B." at "42"
+		// XPECT errors --> "42 is not a subtype of B." at "42"
 		return 42;
 	}
 }
 
 // XPECT type of 'fn3' --> {function():AsyncGeneratorAB}
 async function * fn3(): AsyncGeneratorAB {
-	// XPECT errors --> "int is not a subtype of A." at "42"
+	// XPECT errors --> "42 is not a subtype of A." at "42"
 	yield 42;
-	// XPECT errors --> "int is not a subtype of B." at "42"
+	// XPECT errors --> "42 is not a subtype of B." at "42"
 	return 42;
 }
 

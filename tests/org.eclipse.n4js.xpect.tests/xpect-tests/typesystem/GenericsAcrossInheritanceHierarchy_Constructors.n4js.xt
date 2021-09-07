@@ -44,5 +44,5 @@ class Csup1<T> extends Csup2<T> {}
 class C<T> extends Csup1<T> {}
 
 new C<string>("hello");
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 new C<string>(42);

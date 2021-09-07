@@ -114,7 +114,7 @@ function BinaryLogicalExpression() {
 	4: 4
 --- */
 function CastExpression() {
-	// CastExpression XPECT warnings --> "Unnecessary cast from int to int" at "4 as int"
+	// CastExpression XPECT warnings --> "Unnecessary cast from 4 to int" at "4 as int"
 	4 as int;
 }
 

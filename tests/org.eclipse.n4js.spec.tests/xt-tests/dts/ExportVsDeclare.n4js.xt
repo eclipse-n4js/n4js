@@ -50,8 +50,8 @@ declare var varD: any;
 export var varE: any;
 declare let letD: any;
 export let letE: any;
-declare const constD: number;
-export const constE: number;
+declare const constD: 42;
+export const constE: 42;
 declare function fnD(): void;
 export function fnE(): void;
 declare class ClsD {}

@@ -18,10 +18,10 @@
 
 var four : number = 4; //fine
 const Five : Number = new Number(5); //fine
-// ok XPECT errors --> "number is not a subtype of Number." at "6.0"
+// ok XPECT errors --> "6 is not a subtype of Number." at "6.0"
 const SixNum : Number = 6.0;
 
-// ok XPECT errors --> "int is not a subtype of Number." at "6"
+// ok XPECT errors --> "6 is not a subtype of Number." at "6"
 const SixInt : Number = 6;
 
 // ok XPECT errors -->"Number is not a subtype of number." at "new Number(7)"
@@ -34,5 +34,5 @@ var sevenInt : int = new Number(7);
 function doStuff(str : String) {}
 
 doStuff(new String("some stuff")); //works
-// ok XPECT errors -->"string is not a subtype of String." at ""some stuff""
+// ok XPECT errors -->""some stuff" is not a subtype of String." at ""some stuff""
 doStuff("some stuff"); //error

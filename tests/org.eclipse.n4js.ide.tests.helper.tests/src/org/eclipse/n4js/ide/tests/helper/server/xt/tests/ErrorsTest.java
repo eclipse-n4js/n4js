@@ -47,11 +47,11 @@ public class ErrorsTest extends AbstractXtParentRunnerTest {
 				"Failed: errors~1: test-2 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[Couldn't resolve reference to IdentifiableElement 'b01'.]>");
 		assertResult("(test-3)", "Passed: errors~2: test-3 〔probands/Errors/Errors.n4js.xt〕");
 		assertResult("(test-4)",
-				"Failed: errors~3: test-4 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[int is not a subtype of B.]>");
+				"Failed: errors~3: test-4 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[42 is not a subtype of B.]>");
 		assertResult("(test-5)",
 				"Failed: errors~4: test-5 〔probands/Errors/Errors.n4js.xt〕. expected:<[]> but was:<[Couldn't resolve reference to IdentifiableElement 'b01'.]>");
 		assertResult("(test-6)",
-				"Failed: noerrors~1: test-6 〔probands/Errors/Errors.n4js.xt〕. Expected no errors, but found: ['int is not a subtype of B.' at '42']");
+				"Failed: noerrors~1: test-6 〔probands/Errors/Errors.n4js.xt〕. Expected no errors, but found: ['42 is not a subtype of B.' at '42']");
 		assertResult("(test-7)",
 				"Failed: errors~5: test-7 〔probands/Errors/Errors.n4js.xt〕. No error found at: ");
 		assertResult("(test-8)",

@@ -63,13 +63,13 @@ let ao4 = {
 
 let o5 = {
     string * g() {
-		// XPECT errors at '1' --> "int is not a subtype of string." at "1"
+		// XPECT errors at '1' --> "1 is not a subtype of string." at "1"
     	yield 1;
     }
 };
 let ao5 = {
     string async * ag() {
-		// XPECT errors at '1' --> "int is not a subtype of string." at "1"
+		// XPECT errors at '1' --> "1 is not a subtype of string." at "1"
     	yield 1;
     }
 };
@@ -107,13 +107,13 @@ let ao8 = {
 
 let o9 = {
     void * g() {
-		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+		// XPECT errors at '1' -->"1 is not a subtype of undefined." at "1"
     	return 1;
     }
 };
 let ao9 = {
     void async * ag() {
-		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+		// XPECT errors at '1' -->"1 is not a subtype of undefined." at "1"
     	return 1;
     }
 };
@@ -121,13 +121,13 @@ let ao9 = {
 
 let o10 = {
     void * g() {
-		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+		// XPECT errors at '1' -->"1 is not a subtype of undefined." at "1"
     	yield 1;
     }
 };
 let ao10 = {
     void async * ag() {
-		// XPECT errors at '1' -->"int is not a subtype of undefined." at "1"
+		// XPECT errors at '1' -->"1 is not a subtype of undefined." at "1"
     	yield 1;
     }
 };

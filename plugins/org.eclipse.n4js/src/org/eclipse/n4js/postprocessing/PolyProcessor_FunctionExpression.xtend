@@ -267,7 +267,8 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			capturesInExpectedTypeRef.forEach[G2.addFixedCapture(it)];
 		}
 		val solution3 = new HashMap(solution2);
-		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v) else v];
+		val resolveLiteralTypes = false; // if we resolved here, we might break constraints (it's the responsibility of the constraint solver to avoid literal types as far as possible)
+		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v, resolveLiteralTypes) else v];
 		// apply solution to resultTypeRef
 		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
 		// store type of funExpr in cache ...

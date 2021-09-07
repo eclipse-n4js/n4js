@@ -53,7 +53,8 @@ ArrayTypeExpression returns TypeRef:
 	| PrimaryTypeExpression =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*;
 
 PrimaryTypeExpression returns TypeRef:
-	( ArrowFunctionTypeExpression
+	( LiteralTypeRef
+	| ArrowFunctionTypeExpression
 	| ArrayNTypeExpression
 	| TypeRefWithModifiers
 	| "(" TypeRef ")"
@@ -80,6 +81,31 @@ TypeArgInTypeTypeRef returns TypeArgument:
 	  ParameterizedTypeRefNominal
 	| ThisTypeRefNominal
 	| WildcardOldNotation;
+
+
+LiteralTypeRef returns LiteralTypeRef:
+	  BooleanLiteralTypeRef
+	| NumericLiteralTypeRef
+	| StringLiteralTypeRef;
+	// note: EnumLiteralTypeRefs are not available in type expressions
+
+BooleanLiteralTypeRef returns BooleanLiteralTypeRef:
+	{BooleanLiteralTypeRef} astValue=('true' | 'false');
+
+NumericLiteralTypeRef returns NumericLiteralTypeRef:
+	('+' | astNegated?='-')?
+	(
+		  astValue=INT
+		| astValue=DOUBLE
+		| astValue=OCTAL_INT
+		| astValue=LEGACY_OCTAL_INT
+		| astValue=HEX_INT
+		| astValue=BINARY_INT
+		| astValue=SCIENTIFIC_INT
+	);
+
+StringLiteralTypeRef returns StringLiteralTypeRef:
+	astValue=STRING;
 
 
 ThisTypeRef returns ThisTypeRef:
@@ -332,8 +358,67 @@ N4Keyword:
 terminal IDENTIFIER:
 	IDENTIFIER_START IDENTIFIER_PART*;
 
-terminal INT returns ecore::EBigDecimal:
-	DECIMAL_INTEGER_LITERAL_FRAGMENT;
+/**
+ * The terminal rules to represent number literals are listed below.
+ *
+ * They implement the constraint
+ * 'The source character immediately following a NumericLiteral must not be an IdentifierStart or DecimalDigit.'
+ * in the value converter. That is, the terminals consume a trailing identifier and
+ * later on, a meaningful error will be attached.
+ */
+terminal INT returns ecore::EBigDecimal: DECIMAL_INTEGER_LITERAL_FRAGMENT;
+
+terminal DOUBLE returns ecore::EBigDecimal:
+	'.' DECIMAL_DIGIT_FRAGMENT+ EXPONENT_PART?
+	| DECIMAL_INTEGER_LITERAL_FRAGMENT '.' DECIMAL_DIGIT_FRAGMENT* EXPONENT_PART?
+;
+
+terminal BINARY_INT returns ecore::EBigDecimal: '0' ('b' | 'B') INT_SUFFIX;
+
+terminal OCTAL_INT returns ecore::EBigDecimal: '0' ('o' | 'O') INT_SUFFIX;
+
+terminal LEGACY_OCTAL_INT returns ecore::EBigDecimal: '0' DECIMAL_DIGIT_FRAGMENT INT_SUFFIX;
+
+terminal HEX_INT returns ecore::EBigDecimal: '0' ('x' | 'X') INT_SUFFIX;
+
+/**
+ * This terminal fragment includes the decimal digits '0'..'9' and also all other identifier part chars
+ * to have a relaxed grammar and better error messages from the value converter.
+ */
+terminal fragment INT_SUFFIX: IDENTIFIER_PART*;
+
+terminal SCIENTIFIC_INT returns ecore::EBigDecimal:
+	DECIMAL_INTEGER_LITERAL_FRAGMENT EXPONENT_PART
+;
+
+terminal fragment EXPONENT_PART:
+	  ('e' | 'E') SIGNED_INT
+	| IDENTIFIER
+;
+
+terminal fragment SIGNED_INT:
+	('+' | '-') DECIMAL_DIGIT_FRAGMENT+ IDENTIFIER?
+;
+
+/* This terminal rule is not as strict as the ECMA spec because we want to
+ * provide better error messages than the lexer does.
+ * Therefore, an unclosed string literal is consumed to the end of line
+ * and validated in the JSStringValueConverter afterwards.
+ */
+terminal STRING:
+	  '"' DOUBLE_STRING_CHAR* '"'?
+	| "'" SINGLE_STRING_CHAR* "'"?
+;
+
+terminal fragment DOUBLE_STRING_CHAR:
+	  !(LINE_TERMINATOR_FRAGMENT | '"' | '\\')
+	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+;
+
+terminal fragment SINGLE_STRING_CHAR:
+	  !(LINE_TERMINATOR_FRAGMENT | "'" | '\\')
+	| '\\' (LINE_TERMINATOR_SEQUENCE_FRAGMENT | !LINE_TERMINATOR_FRAGMENT)?
+;
 
 terminal ML_COMMENT:
 	ML_COMMENT_FRAGMENT;

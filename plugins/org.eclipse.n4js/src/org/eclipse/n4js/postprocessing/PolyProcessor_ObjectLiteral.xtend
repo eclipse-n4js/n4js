@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
 import java.util.Map
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
@@ -22,6 +23,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
@@ -42,6 +44,7 @@ import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -77,7 +80,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 
 		// quick mode as a performance tweak:
 		val haveUsableExpectedType = expectedTypeRef !== null
-				&& (expectedTypeRef.useSiteStructuralTyping || expectedTypeRef.defSiteStructuralTyping); // FIXME reconsider
+				&& (expectedTypeRef.useSiteStructuralTyping || expectedTypeRef.defSiteStructuralTyping); // TODO reconsider
 		val quickMode = !haveUsableExpectedType && !TypeUtils.isInferenceVariable(expectedTypeRef);
 
 		val List<TStructMember> tMembers = newArrayList;
@@ -249,8 +252,18 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 			val propAssignm = propPair.key;
 			val memberInTModule = propAssignm.definedMember;
 			if (memberInTModule !== null) {
-				val memberType = getMemberType(G, solution, quickMode, propPair);
-				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType);
+				val memberType = getMemberType(G, infCtx, solution, quickMode, propPair);
+				val resolveLiteralTypes = if (quickMode) {
+					// quick mode means we do not have a type expectation, so we handle literal types exactly
+					// as when inferring the implicit type of variables with an initializer expression
+					!N4JSASTUtils.isImmutable(propAssignm)
+				} else {
+					// standard mode means we have a type expectation; if we resolved here, we might break
+					// constraints (instead, it's the responsibility of the constraint solver to avoid literal
+					// types as far as possible)
+					false
+				};
+				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldPropertyParameter(G, memberType, resolveLiteralTypes);
 				EcoreUtilN4.doWithDeliver(false, [
 					memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
 				], memberInTModule);
@@ -275,7 +288,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		}
 	}
 
-	private def TypeRef getMemberType(RuleEnvironment G, Optional<Map<InferenceVariable, TypeRef>> solution,
+	private def TypeRef getMemberType(RuleEnvironment G, InferenceContext infCtx, Optional<Map<InferenceVariable, TypeRef>> solution,
 		boolean quickMode, Pair<PropertyAssignment, ? extends Versionable> prop2InfVarOrFallbackType
 	) {
 		var TypeRef memberType = null;
@@ -318,11 +331,45 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 			// failure case (both modes):
 			if (propAssignm instanceof PropertyNameValuePair) {
 				memberType = getFinalResultTypeOfNestedPolyExpression(propAssignm.expression)
+				memberType = adjustMemberTypeToAvoidMisleadingLiteralTypes(G, infCtx, quickMode, prop2InfVarOrFallbackType, memberType);
 			} else {
 				memberType = G.anyTypeRef
 			}
 		}
 
+		return memberType;
+	}
+
+	/**
+	 * Replaces literal types by their base type to avoid confusing error messages.
+	 * <p>
+	 * Without this tweak, the following code
+	 * <pre>
+	 * let x: ~Object with { prop1: string, prop2: number } = { prop1: "hello", prop2: "BAD!" };
+	 * </pre>
+	 * would produce the misleading error message
+	 * <pre>
+	 * ~Object with { prop1: "hello"; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop1 failed: "hello" is not equal to string and 1 more problems.
+	 * </pre>
+	 * With this tweak it changes to:
+	 * <pre>
+	 * ~Object with { prop1: string; prop2: "BAD!" } is not a structural subtype of ~Object with { prop1: string; prop2: number }: prop2 failed: "BAD!" is not equal to number.
+	 * </pre>
+	 */
+	private def TypeRef adjustMemberTypeToAvoidMisleadingLiteralTypes(RuleEnvironment G, InferenceContext infCtx,
+		boolean quickMode, Pair<PropertyAssignment, ? extends Versionable> prop2InfVarOrFallbackType, TypeRef memberType
+	) {
+		if (!quickMode) {
+			if (memberType instanceof LiteralTypeRef) {
+				val infVar = prop2InfVarOrFallbackType.value as InferenceVariable; // value is an infVar
+				if (!infCtx.isPromisingPartialSolution(infVar, memberType)) {
+					val baseType = N4JSLanguageUtils.getLiteralTypeBase(G, memberType);
+					if (infCtx.isPromisingPartialSolution(infVar, baseType)) {
+						return baseType;
+					}
+				}
+			}
+		}
 		return memberType;
 	}
 }

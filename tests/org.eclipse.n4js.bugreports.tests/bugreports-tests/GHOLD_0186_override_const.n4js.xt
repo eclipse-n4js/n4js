@@ -13,7 +13,7 @@
 
 
 class A {
-    const X = "x";
+    const X: string = "x";
     static Y = "y";
     static foo() {}
 }
@@ -22,7 +22,7 @@ class B extends A {
 
 	// noerror --> "The static field B.X cannot override const static field A.X." at "X"
     // XPECT errors --> "The const field B.X overriding const field A.X must be annotated with @Override." at "X"
-    const X = "x2";
+    const X: string = "x2";
 
     @Override
     static Y = "y";

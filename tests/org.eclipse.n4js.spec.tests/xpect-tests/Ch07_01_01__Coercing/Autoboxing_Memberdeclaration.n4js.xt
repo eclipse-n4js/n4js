@@ -18,63 +18,63 @@
 */
 
 class A{
-	// Typecheck in member declaration XPECT errors --> "int is not a subtype of string." at "2"
+	// Typecheck in member declaration XPECT errors --> "2 is not a subtype of string." at "2"
 	b : string = 2;
 
-	// Typecheck in member declaration XPECT errors -->  "boolean is not a subtype of string." at "true"
+	// Typecheck in member declaration XPECT errors -->  "true is not a subtype of string." at "true"
 	sB : string = true;
 
-	// Typecheck in member declaration XPECT errors -->  "boolean is not a subtype of number." at "false"
+	// Typecheck in member declaration XPECT errors -->  "false is not a subtype of number." at "false"
 	nB : number = false;
 
-	// Typecheck in member declaration XPECT errors --> "string is not a subtype of number." at ""ss""
+	// Typecheck in member declaration XPECT errors --> ""ss" is not a subtype of number." at ""ss""
 	nS : number = "ss";
 
-	// Typecheck in member declaration  XPECT errors --> "string is not a subtype of boolean." at ""hello""
+	// Typecheck in member declaration  XPECT errors --> ""hello" is not a subtype of boolean." at ""hello""
 	boolS : boolean = "hello";
 
-	// Typecheck in member declaration XPECT errors --> "int is not a subtype of boolean." at "55"
+	// Typecheck in member declaration XPECT errors --> "55 is not a subtype of boolean." at "55"
 	boolN : boolean = 55;
 
 	constructor() {
-		// XPECT errors --> "int is not a subtype of string." at "2"
+		// XPECT errors --> "2 is not a subtype of string." at "2"
 		this.b = 2;
 
-		// XPECT errors -->  "boolean is not a subtype of string." at "true"
+		// XPECT errors -->  "true is not a subtype of string." at "true"
 		this.sB = true;
 
-		// XPECT errors -->  "boolean is not a subtype of number." at "false"
+		// XPECT errors -->  "false is not a subtype of number." at "false"
 		this.nB = false;
 
-		// XPECT errors --> "string is not a subtype of number." at ""ss""
+		// XPECT errors --> ""ss" is not a subtype of number." at ""ss""
 		this.nS = "ss";
 
-		// XPECT errors --> "string is not a subtype of boolean." at ""hello""
+		// XPECT errors --> ""hello" is not a subtype of boolean." at ""hello""
 		this.boolS = "hello";
 
-		// XPECT errors --> "int is not a subtype of boolean." at "55"
+		// XPECT errors --> "55 is not a subtype of boolean." at "55"
 		this.boolN = 55;
 	}
 }
 
 class B extends A {
 	constructor() {
-		// XPECT errors --> "int is not a subtype of string." at "2"
+		// XPECT errors --> "2 is not a subtype of string." at "2"
 		this.b = 2;
 
-		// XPECT errors -->  "boolean is not a subtype of string." at "true"
+		// XPECT errors -->  "true is not a subtype of string." at "true"
 		this.sB = true;
 
-		// XPECT errors -->  "boolean is not a subtype of number." at "false"
+		// XPECT errors -->  "false is not a subtype of number." at "false"
 		this.nB = false;
 
-		// XPECT errors --> "string is not a subtype of number." at ""ss""
+		// XPECT errors --> ""ss" is not a subtype of number." at ""ss""
 		this.nS = "ss";
 
-		// XPECT errors --> "string is not a subtype of boolean." at ""hello""
+		// XPECT errors --> ""hello" is not a subtype of boolean." at ""hello""
 		this.boolS = "hello";
 
-		// XPECT errors --> "int is not a subtype of boolean." at "55"
+		// XPECT errors --> "55 is not a subtype of boolean." at "55"
 		this.boolN = 55;
 	}
 }

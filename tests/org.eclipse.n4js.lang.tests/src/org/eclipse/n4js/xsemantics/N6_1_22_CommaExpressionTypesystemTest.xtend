@@ -70,16 +70,16 @@ class N6_1_22_CommaExpressionTypesystemTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testCommaExpressionType() {
-		assertCommaExpressionType("int", '''1''','''2''');
-		assertCommaExpressionType("string", '''1''','''2''','''"hello"''');
-		assertCommaExpressionType("boolean", '''1''','''"string"''','''2''','''true''');
+		assertCommaExpressionType("2", '''1''','''2''');
+		assertCommaExpressionType("\"hello\"", '''1''','''2''','''"hello"''');
+		assertCommaExpressionType("true", '''1''','''"string"''','''2''','''true''');
 		assertCommaExpressionType("A", '''1''','''a''');
 		assertCommaExpressionType("number", '''1''','''"hello"''','''10-5''');
 
-		assertCommaExpressionType("int", '''"x"''','''2''');
-		assertCommaExpressionType("number", '''"x"''','''2.0''');
-		assertCommaExpressionType("string", '''"x"''','''"hello"''');
-		assertCommaExpressionType("boolean", '''"x"''','''true''');
+		assertCommaExpressionType("2", '''"x"''','''2''');
+		assertCommaExpressionType("2", '''"x"''','''2.0''');
+		assertCommaExpressionType("\"hello\"", '''"x"''','''"hello"''');
+		assertCommaExpressionType("true", '''"x"''','''true''');
 		assertCommaExpressionType("A", '''"x"''','''a''');
 		assertCommaExpressionType("number", '''"x"''','''10-5''');
 	}

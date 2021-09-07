@@ -16,7 +16,7 @@
 // XPECT noerrors -->
 var s : string = E.L;
 
-// Not a regular enum. XPECT errors --> "E is not a subtype of N4Enum." at "E.L"
+// Not a regular enum. XPECT errors --> "E.L is not a subtype of N4Enum." at "E.L"
 var v1 : N4Enum = E.L;
 
 // XPECT noerrors -->
@@ -43,7 +43,7 @@ x1(x);
 // XPECT noerrors -->
 x1(E.L)
 // This would be an uncheck use, that we want't to prevent.
-// XPECT errors --> "string is not a subtype of E." at ""sdf""
+// XPECT errors --> ""sdf" is not a subtype of E." at ""sdf""
 x1("sdf")
 
 // XPECT noerrors -->
@@ -58,7 +58,7 @@ x2("sdf")
 // XPECT noerrors -->
 function x3 () : E { return E.L; }
 
-// Prohibit unchecked use XPECT errors --> "string is not a subtype of E." at ""asdf""
+// Prohibit unchecked use XPECT errors --> ""asdf" is not a subtype of E." at ""asdf""
 function x4 () : E { return "asdf" }
 
 // XPECT noerrors -->

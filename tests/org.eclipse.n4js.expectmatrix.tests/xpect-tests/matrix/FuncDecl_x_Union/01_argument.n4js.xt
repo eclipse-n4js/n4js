@@ -29,7 +29,7 @@ f(2);
 // null as parameter XPECT noerrors -->
 f(null);
 
-// boolean as parameter XPECT errors --> "boolean is not a subtype of union{string,number}." at "true"
+// boolean as parameter XPECT errors --> "true is not a subtype of union{string,number}." at "true"
 f(true);
 
 // union of unions as argument XPECT noerrors -->

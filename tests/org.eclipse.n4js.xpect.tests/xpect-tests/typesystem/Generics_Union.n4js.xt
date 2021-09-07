@@ -26,10 +26,10 @@ var exp1check : A<string> = exp1;
 
 var exp2 = A.<number>of(42, [21]);
 // XPECT errors ---
-// "string is not a subtype of union{number,Array<number>}." at ""not""
-// "Array<string> is not a subtype of union{number,Array<number>}." at "["good"]"
+// ""bad" is not a subtype of union{number,Array<number>}." at ""bad""
+// "Array<string> is not a subtype of union{number,Array<number>}." at "["not good"]"
 // ---
-var exp3 = A.<number>of("not", ["good"], 21);
+var exp3 = A.<number>of("bad", ["not good"], 21);
 
 
 // inference:

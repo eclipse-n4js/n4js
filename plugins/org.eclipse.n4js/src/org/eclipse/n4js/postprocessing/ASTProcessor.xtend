@@ -89,8 +89,6 @@ public class ASTProcessor extends AbstractProcessor {
 	@Inject
 	private TypeDeferredProcessor typeDeferredProcessor;
 	@Inject
-	private TypeAliasProcessor typeAliasProcessor;
-	@Inject
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
 	@Inject
 	private RuntimeDependencyProcessor runtimeDependencyProcessor;
@@ -395,7 +393,6 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 
 		typeRefProcessor.handleTypeRefs(G, node, cache);
-		typeAliasProcessor.handleTypeAlias(G, node, cache);
 
 		if (node instanceof FunctionDefinition) {
 			handleAsyncOrGeneratorFunctionDefinition(G, node, cache);

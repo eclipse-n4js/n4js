@@ -19,7 +19,7 @@ function fun(n : number, m : number) {
 	(() => {
 		var i : number, j;
 		// arguments is bound to outer context (all well) XPECT noerrors -->
-		for (i in arguments) { j += arguments[i] }
+		for (i = 0; i < arguments.length; i++) { j += arguments[i] }
 		return j
 	})();
 }

@@ -521,7 +521,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		joinServerRequests();
 
 		// now the original errors have gone away and a new error shows up
-		assertIssues("Other" -> #[ "(Error, [3:16 - 3:21], string is not a subtype of number.)" ]);
+		assertIssues("Other" -> #[ '(Error, [3:16 - 3:21], "bad" is not a subtype of number.)' ]);
 
 		changeOpenedFile(packageJsonFileURI,
 			'"src", "src2"' -> '"src"'

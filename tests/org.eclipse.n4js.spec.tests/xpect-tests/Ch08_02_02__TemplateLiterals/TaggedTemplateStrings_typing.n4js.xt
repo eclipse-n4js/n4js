@@ -33,7 +33,7 @@ class C {
 }
 
 
-// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "tagBad"
+// XPECT errors --> ""nonsense" is not a subtype of {function(Array<string>):any}." at "tagBad"
 tagBad``;
 // XPECT noerrors -->
 tagTrivial``;
@@ -49,7 +49,7 @@ tagIgnoreExpr``;
 tagIgnoreExpr`${42}`;
 // XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>):any}." at "tagSpecific"
 tagSpecific``;
-// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>,int):any}." at "tagSpecific"
+// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>,42):any}." at "tagSpecific"
 tagSpecific`${42}`;
 // XPECT noerrors -->
 tagSpecific`${42} ${"hi"} ${[1,2,3]}`;
@@ -76,7 +76,7 @@ c.tagIgnoreExpr``;
 c.tagIgnoreExpr`${42}`;
 // XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>):any}." at "c.tagSpecific"
 c.tagSpecific``;
-// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>,int):any}." at "c.tagSpecific"
+// XPECT errors --> "{function(Array<string>,number,string,Array<number>):any} is not a subtype of {function(Array<string>,42):any}." at "c.tagSpecific"
 c.tagSpecific`${42}`;
 // XPECT noerrors -->
 c.tagSpecific`${42} ${"hi"} ${[1,2,3]}`;
@@ -86,7 +86,7 @@ c.tagMissingResult``;
 let result2 = c.tagFancyResult``;
 
 
-// XPECT errors --> "string is not a subtype of {function(Array<string>):any}." at "'result'"
+// XPECT errors --> ""result" is not a subtype of {function(Array<string>):any}." at "'result'"
 ()=>'result'`ignored`; // this should be parsed as ()=>('result'`ignored`)
 // XPECT noerrors -->
 (()=>'result')`ignored`;

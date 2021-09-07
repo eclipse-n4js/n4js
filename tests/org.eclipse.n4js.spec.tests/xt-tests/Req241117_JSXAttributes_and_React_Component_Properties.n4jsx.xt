@@ -67,5 +67,5 @@ const MyThirdrReactFuncComponent = (props: ~MyProps): React.ReactElement =>  {
 		<div>{props.y}</div>
 	);
 }
-// XPECT errors --> "boolean is not a subtype of int." at "true"
+// XPECT errors --> "true is not a subtype of int." at "true"
 <MyThirdrReactFuncComponent a={1} x={true} y="Some text" />

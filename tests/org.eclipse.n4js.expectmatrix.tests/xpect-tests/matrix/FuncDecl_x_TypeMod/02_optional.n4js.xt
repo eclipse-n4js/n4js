@@ -29,7 +29,7 @@ f();
 // IDEBUG-188 not enough arguments XPECT noerrors -->
 f(true);
 
-// IDEBUG-188 argument in wrong place XPECT errors --> "int is not a subtype of boolean." at "5"
+// IDEBUG-188 argument in wrong place XPECT errors --> "5 is not a subtype of boolean." at "5"
 f(5);
 
 // good arguments XPECT noerrors -->

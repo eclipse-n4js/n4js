@@ -31,7 +31,7 @@ var result00 = express(42);
 // XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "express()"
 var result01 = express();
 
-// XPECT errors --> "string is not a subtype of number." at "'wrong'"
+// XPECT errors --> ""wrong" is not a subtype of number." at "'wrong'"
 var result02 = express('wrong');
 
 // --------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ var result10 = expressAbstract(42);
 // XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "expressAbstract()"
 var result11 = expressAbstract();
 
-// XPECT errors --> "string is not a subtype of number." at "'wrong'"
+// XPECT errors --> ""wrong" is not a subtype of number." at "'wrong'"
 var result12 = expressAbstract('wrong');
 
 // --------------------------------------------------------------------------------------------------
@@ -57,5 +57,5 @@ var result20 = new express('correct');
 // XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "new express()"
 var result21 = new express();
 
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 var result22 = new express(42);

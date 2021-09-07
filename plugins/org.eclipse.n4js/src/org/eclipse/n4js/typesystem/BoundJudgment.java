@@ -14,9 +14,14 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottom
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.topTypeRef;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
@@ -29,13 +34,17 @@ import org.eclipse.n4js.typesystem.utils.BoundType;
 import org.eclipse.n4js.typesystem.utils.NestedTypeRefsSwitch;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
 
 /* package */ class BoundJudgment extends AbstractJudgment {
 
 	/** See {@link N4JSTypeSystem#upperBound(RuleEnvironment, TypeArgument)}. */
-	public TypeRef applyUpperBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolve) {
-		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER, reopen, resolve);
+	public TypeRef applyUpperBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen,
+			boolean resolveTypeVariables, boolean resolveLiteralTypes) {
+
+		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.UPPER, reopen,
+				resolveTypeVariables, resolveLiteralTypes);
 		final TypeRef result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg != null ? typeArg.getTypeRefAsString() : "<null>";
@@ -45,8 +54,11 @@ import org.eclipse.n4js.utils.RecursionGuard;
 	}
 
 	/** See {@link N4JSTypeSystem#lowerBound(RuleEnvironment, TypeArgument)}. */
-	public TypeRef applyLowerBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen, boolean resolve) {
-		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER, reopen, resolve);
+	public TypeRef applyLowerBound(RuleEnvironment G, TypeArgument typeArg, boolean reopen,
+			boolean resolveTypeVariables, boolean resolveLiteralTypes) {
+
+		final BoundSwitch theSwitch = new BoundSwitch(G, BoundType.LOWER, reopen,
+				resolveTypeVariables, resolveLiteralTypes);
 		final TypeRef result = theSwitch.doSwitch(typeArg);
 		if (result == null) {
 			final String stringRep = typeArg != null ? typeArg.getTypeRefAsString() : "<null>";
@@ -59,30 +71,36 @@ import org.eclipse.n4js.utils.RecursionGuard;
 
 		private final BoundType boundType;
 		private final boolean reopen;
-		private final boolean resolve;
+		private final boolean resolveTypeVariables;
+		private final boolean resolveLiteralTypes;
 
 		private final RecursionGuard<EObject> guard = new RecursionGuard<>();
 
-		public BoundSwitch(RuleEnvironment G, BoundType boundType, boolean reopen, boolean resolve) {
+		public BoundSwitch(RuleEnvironment G, BoundType boundType, boolean reopen,
+				boolean resolveTypeVariables, boolean resolveLiteralTypes) {
 			super(G);
 			this.boundType = boundType;
 			this.reopen = reopen;
-			this.resolve = resolve;
+			this.resolveTypeVariables = resolveTypeVariables;
+			this.resolveLiteralTypes = resolveLiteralTypes;
 		}
 
 		@Override
 		protected NestedTypeRefsSwitch derive(RuleEnvironment G_NEW) {
-			return new BoundSwitch(G_NEW, boundType, reopen, resolve);
+			return new BoundSwitch(G_NEW, boundType, reopen, resolveTypeVariables, resolveLiteralTypes);
 		}
 
 		// the following method is provided to increase readability of recursive invocations of #doSwitch()
 
 		private TypeRef bound(RuleEnvironment G_NEW, TypeArgument typeArg, BoundType boundTypeNEW,
-				boolean reopenNEW, boolean resolveNEW) {
-			if (G_NEW == G && boundTypeNEW == boundType && reopenNEW == reopen && resolveNEW == resolve) {
+				boolean reopenNEW, boolean resolveTypeVariablesNEW, boolean resolveLiteralTypesNEW) {
+			if (G_NEW == G && boundTypeNEW == boundType && reopenNEW == reopen
+					&& resolveTypeVariablesNEW == resolveTypeVariables
+					&& resolveLiteralTypesNEW == resolveLiteralTypes) {
 				return doSwitch(typeArg);
 			} else {
-				final BoundSwitch nestedSwitch = new BoundSwitch(G_NEW, boundTypeNEW, reopenNEW, resolveNEW);
+				final BoundSwitch nestedSwitch = new BoundSwitch(G_NEW, boundTypeNEW, reopenNEW,
+						resolveTypeVariablesNEW, resolveLiteralTypesNEW);
 				return nestedSwitch.doSwitch(typeArg);
 			}
 		}
@@ -139,7 +157,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 		@Override
 		protected TypeRef caseParameterizedTypeRef_processDeclaredType(ParameterizedTypeRef typeRef) {
 			TypeRef result = typeRef;
-			if (resolve) {
+			if (resolveTypeVariables) {
 				final Type declType = result.getDeclaredType();
 				if (declType instanceof TypeVariable) {
 					switch (boundType) {
@@ -214,7 +232,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 				}
 				// STEP 2: actually push the bound into the desired direction
 				if (boundToBePushed != null) {
-					TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
+					TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false, false);
 					if (boundOfBoundToBePushed != boundToBePushed) {
 						final Wildcard wildcardCpy = TypeUtils.copy(wildcard);
 						if (upperBound != null) {
@@ -233,7 +251,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 				// treat 'typeArg' like the upper bound of a wildcard
 				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
 				final BoundType pushDirection = boundType;
-				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false, false);
 				if (boundOfBoundToBePushed != boundToBePushed) {
 					return boundOfBoundToBePushed;
 				}
@@ -241,7 +259,7 @@ import org.eclipse.n4js.utils.RecursionGuard;
 				// treat 'typeArg' like the lower bound of a wildcard
 				final TypeRef boundToBePushed = (TypeRef) typeArg; // n.b. we know 'typeArg' isn't a Wildcard
 				final BoundType pushDirection = boundType.inverse();
-				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false);
+				final TypeRef boundOfBoundToBePushed = bound(G, boundToBePushed, pushDirection, reopen, false, false);
 				if (boundOfBoundToBePushed != boundToBePushed) {
 					return boundOfBoundToBePushed;
 				}
@@ -256,12 +274,12 @@ import org.eclipse.n4js.utils.RecursionGuard;
 
 		@Override
 		protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
-			return bound(G, returnTypeRef, boundType, reopen, false);
+			return bound(G, returnTypeRef, boundType, reopen, false, false);
 		}
 
 		@Override
 		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
-			return bound(G, fparTypeRef, boundType.inverse(), reopen, false);
+			return bound(G, fparTypeRef, boundType.inverse(), reopen, false, false);
 		}
 
 		@Override
@@ -304,6 +322,45 @@ import org.eclipse.n4js.utils.RecursionGuard;
 				typeArgPushed = TypeUtils.copyIfContained(typeArgPushed);
 			}
 			return typeArgPushed;
+		}
+
+		@Override
+		public TypeArgument caseLiteralTypeRef(LiteralTypeRef typeRef) {
+			throw new UnsupportedOperationException("missing case method for " + typeRef.eClass().getName());
+		}
+
+		@Override
+		public TypeArgument caseBooleanLiteralTypeRef(BooleanLiteralTypeRef typeRef) {
+			if (resolveLiteralTypes) {
+				return boundType == BoundType.UPPER ? RuleEnvironmentExtensions.booleanTypeRef(G) : bottomTypeRef(G);
+			}
+			return typeRef;
+		}
+
+		@Override
+		public TypeArgument caseNumericLiteralTypeRef(NumericLiteralTypeRef typeRef) {
+			if (resolveLiteralTypes) {
+				return boundType == BoundType.UPPER ? N4JSLanguageUtils.getLiteralTypeBase(G, typeRef)
+						: bottomTypeRef(G);
+			}
+			return typeRef;
+		}
+
+		@Override
+		public TypeArgument caseStringLiteralTypeRef(StringLiteralTypeRef typeRef) {
+			if (resolveLiteralTypes) {
+				return boundType == BoundType.UPPER ? RuleEnvironmentExtensions.stringTypeRef(G) : bottomTypeRef(G);
+			}
+			return typeRef;
+		}
+
+		@Override
+		public TypeArgument caseEnumLiteralTypeRef(EnumLiteralTypeRef typeRef) {
+			if (resolveLiteralTypes) {
+				return boundType == BoundType.UPPER ? N4JSLanguageUtils.getLiteralTypeBase(G, typeRef)
+						: bottomTypeRef(G);
+			}
+			return typeRef;
 		}
 
 		private boolean shouldBeReopened(ExistentialTypeRef etr) {

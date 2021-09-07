@@ -169,7 +169,7 @@ class N6_1_08_NewExpressionTypesystemTest extends AbstractTypesystemTest {
 		new C<string>(42);			// should fail
 		'''.assertValidationErrors(
 		'''
-		int is not a subtype of string.
+		42 is not a subtype of string.
 		''')
 	}
 
@@ -188,7 +188,7 @@ class N6_1_08_NewExpressionTypesystemTest extends AbstractTypesystemTest {
 		new C( {f: 42} )			// fail
 		'''.assertValidationErrors(
 		'''
-		~Object with { f: int } is not a structural subtype of ~~C: f failed: int is not equal to string.
+		~Object with { f: 42 } is not a structural subtype of ~~C: f failed: 42 is not equal to string.
 		''')
 	}
 
@@ -211,7 +211,7 @@ class N6_1_08_NewExpressionTypesystemTest extends AbstractTypesystemTest {
 		new E( {f: "hello", n: "oops"} )	// fail
 		'''.assertValidationErrors(
 		'''
-		~Object with { f: string; n: string } is not a structural subtype of ~~E: n failed: string is not equal to number.
+		~Object with { f: string; n: "oops" } is not a structural subtype of ~~E: n failed: "oops" is not equal to number.
 		''')
 	}
 

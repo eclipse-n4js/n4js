@@ -27,7 +27,8 @@ package org.eclipse.n4js.ts.typeRefs
 import java.util.UUID
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TN4Classifier
@@ -38,6 +39,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+import org.eclipse.n4js.utils.Strings
 
 type UUID wraps UUID
 
@@ -592,10 +594,14 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	boolean arrayNTypeExpression = "false"
 
 	/*
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
-	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
+	 * <ol>
+	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
+	 * and points to that namespace.
+	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
+	 * </ol>
 	 */
-	refers transient ModuleNamespaceVirtualType astNamespace
+	refers transient Type astDeclaredTypeQualifier
 
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
@@ -1300,6 +1306,57 @@ class TypeVariableMapping {
 	refers TypeVariable typeVar
 	contains TypeArgument typeArg
 }
+
+
+abstract class LiteralTypeRef extends TypeRef {
+	transient Object astValue
+	op Object getValue()
+}
+
+class BooleanLiteralTypeRef extends LiteralTypeRef {
+	Boolean value
+
+	op String internalGetTypeRefAsString() {
+		return value?.toString ?: "null";
+	}
+}
+
+class NumericLiteralTypeRef extends LiteralTypeRef {
+	/* True iff this is used as an AST node <em>and</em> the {@link LiteralTypeRef#getAstValue() astValue} needs to be negated to obtain the actual value. */
+	boolean astNegated
+	BigDecimal value
+
+	op String internalGetTypeRefAsString() {
+		return value?.stripTrailingZeros?.toPlainString ?: "null";
+	}
+}
+
+class StringLiteralTypeRef extends LiteralTypeRef {
+	String value
+
+	op String internalGetTypeRefAsString() {
+		if (value === null) {
+			return "null";
+		}
+		return '"' + Strings.escapeNonPrintable(value) + '"';
+	}
+}
+
+/*
+ * Not directly available to the programmer. Only used internally as the type of enum literals.
+ */
+class EnumLiteralTypeRef extends LiteralTypeRef {
+	refers TEnumLiteral value
+
+	op TEnum getEnumType() {
+		return value?.eContainer as TEnum;
+	}
+
+	op String internalGetTypeRefAsString() {
+		return enumType?.name + "." + value?.name
+	}
+}
+
 
 // ****************************************************************************************************
 // N4IDL related model elements

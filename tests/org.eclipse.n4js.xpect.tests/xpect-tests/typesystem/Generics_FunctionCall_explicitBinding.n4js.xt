@@ -31,7 +31,7 @@ function <T> f1(p : T) : T {
 var v1 : string = <string>f1("hello");
 // XPECT errors --> "number is not a subtype of string." at "<number>f1(42)"
 var v2 : string = <number>f1(42);
-// XPECT errors --> "string is not a subtype of number." at ""oops""
+// XPECT errors --> ""oops" is not a subtype of number." at ""oops""
 var v3 : number = <number>f1("oops");
 var v4 : number = <number>f1(42);
 
@@ -85,7 +85,7 @@ var f2 = function <T> (p : T) : T { return null; }
 var b1 : string = <string>f2("hello");
 // XPECT errors --> "number is not a subtype of string." at "<number>f2(42)"
 var b2 : string = <number>f2(42);
-// XPECT errors --> "string is not a subtype of number." at ""oops""
+// XPECT errors --> ""oops" is not a subtype of number." at ""oops""
 var b3 : number = <number>f2("oops");
 var b4 : number = <number>f2(42);
 

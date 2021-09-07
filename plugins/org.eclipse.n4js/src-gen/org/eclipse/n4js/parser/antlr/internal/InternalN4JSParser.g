@@ -27632,7 +27632,7 @@ ruleStringLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.N4JS.STRING");
+					"org.eclipse.n4js.ts.TypeExpressions.STRING");
 			}
 		)
 	)
@@ -27748,7 +27748,7 @@ ruleDoubleLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.N4JS.DOUBLE");
+					"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
 			}
 		)
 	)
@@ -27818,7 +27818,7 @@ ruleOctalIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.N4JS.OCTAL_INT");
+					"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
 			}
 		)
 	)
@@ -27853,7 +27853,7 @@ ruleLegacyOctalIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.N4JS.LEGACY_OCTAL_INT");
+					"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
 			}
 		)
 	)
@@ -27888,7 +27888,7 @@ ruleHexIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.N4JS.HEX_INT");
+					"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
 			}
 		)
 	)
@@ -27923,7 +27923,7 @@ ruleBinaryIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.N4JS.BINARY_INT");
+					"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
 			}
 		)
 	)
@@ -27958,7 +27958,7 @@ ruleScientificIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.N4JS.SCIENTIFIC_INT");
+					"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
 			}
 		)
 	)
@@ -28471,14 +28471,17 @@ ruleAnnotationArgument returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		{
-			newCompositeNode(grammarAccess.getAnnotationArgumentAccess().getLiteralAnnotationArgumentParserRuleCall_0());
-		}
-		this_LiteralAnnotationArgument_0=ruleLiteralAnnotationArgument
-		{
-			$current = $this_LiteralAnnotationArgument_0.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(ruleLiteralAnnotationArgument)=>
+			{
+				newCompositeNode(grammarAccess.getAnnotationArgumentAccess().getLiteralAnnotationArgumentParserRuleCall_0());
+			}
+			this_LiteralAnnotationArgument_0=ruleLiteralAnnotationArgument
+			{
+				$current = $this_LiteralAnnotationArgument_0.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
 		    |
 		{
 			newCompositeNode(grammarAccess.getAnnotationArgumentAccess().getTypeRefAnnotationArgumentParserRuleCall_1());
@@ -28803,7 +28806,7 @@ ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
 						}
 					}
 					{
-						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstNamespaceModuleNamespaceVirtualTypeCrossReference_0_0_0());
+						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstDeclaredTypeQualifierTypeCrossReference_0_0_0());
 					}
 					ruleTypeReferenceName
 					{
@@ -35103,7 +35106,7 @@ ruleLiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_1_0,
-						"org.eclipse.n4js.N4JS.STRING");
+						"org.eclipse.n4js.ts.TypeExpressions.STRING");
 				}
 			)
 		)
@@ -35204,7 +35207,7 @@ norm1_LiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_1_0,
-						"org.eclipse.n4js.N4JS.STRING");
+						"org.eclipse.n4js.ts.TypeExpressions.STRING");
 				}
 			)
 		)
@@ -36373,6 +36376,15 @@ rulePrimaryTypeExpression returns [EObject current=null]
 	leaveRule();
 }:
 	(
+		{
+			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getLiteralTypeRefParserRuleCall_0());
+		}
+		this_LiteralTypeRef_0=ruleLiteralTypeRef
+		{
+			$current = $this_LiteralTypeRef_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
 		(
 			((
 				(
@@ -36384,49 +36396,49 @@ rulePrimaryTypeExpression returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getArrowFunctionTypeExpressionParserRuleCall_0());
+				newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getArrowFunctionTypeExpressionParserRuleCall_1());
 			}
-			this_ArrowFunctionTypeExpression_0=ruleArrowFunctionTypeExpression
+			this_ArrowFunctionTypeExpression_1=ruleArrowFunctionTypeExpression
 			{
-				$current = $this_ArrowFunctionTypeExpression_0.current;
+				$current = $this_ArrowFunctionTypeExpression_1.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
 		    |
 		{
-			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_1());
+			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getArrayNTypeExpressionParserRuleCall_2());
 		}
-		this_ArrayNTypeExpression_1=ruleArrayNTypeExpression
+		this_ArrayNTypeExpression_2=ruleArrayNTypeExpression
 		{
-			$current = $this_ArrayNTypeExpression_1.current;
+			$current = $this_ArrayNTypeExpression_2.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getTypeRefWithModifiersParserRuleCall_2());
+			newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getTypeRefWithModifiersParserRuleCall_3());
 		}
-		this_TypeRefWithModifiers_2=ruleTypeRefWithModifiers
+		this_TypeRefWithModifiers_3=ruleTypeRefWithModifiers
 		{
-			$current = $this_TypeRefWithModifiers_2.current;
+			$current = $this_TypeRefWithModifiers_3.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		(
-			otherlv_3=LeftParenthesis
+			otherlv_4=LeftParenthesis
 			{
-				newLeafNode(otherlv_3, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_3_0());
+				newLeafNode(otherlv_4, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_4_0());
 			}
 			{
-				newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getTypeRefParserRuleCall_3_1());
+				newCompositeNode(grammarAccess.getPrimaryTypeExpressionAccess().getTypeRefParserRuleCall_4_1());
 			}
-			this_TypeRef_4=ruleTypeRef
+			this_TypeRef_5=ruleTypeRef
 			{
-				$current = $this_TypeRef_4.current;
+				$current = $this_TypeRef_5.current;
 				afterParserOrEnumRuleCall();
 			}
-			otherlv_5=RightParenthesis
+			otherlv_6=RightParenthesis
 			{
-				newLeafNode(otherlv_5, grammarAccess.getPrimaryTypeExpressionAccess().getRightParenthesisKeyword_3_2());
+				newLeafNode(otherlv_6, grammarAccess.getPrimaryTypeExpressionAccess().getRightParenthesisKeyword_4_2());
 			}
 		)
 	)
@@ -36682,6 +36694,313 @@ ruleTypeArgInTypeTypeRef returns [EObject current=null]
 			{
 				$current = $this_WildcardOldNotation_2.current;
 				afterParserOrEnumRuleCall();
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleLiteralTypeRef
+entryRuleLiteralTypeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getLiteralTypeRefRule()); }
+	iv_ruleLiteralTypeRef=ruleLiteralTypeRef
+	{ $current=$iv_ruleLiteralTypeRef.current; }
+	EOF;
+
+// Rule LiteralTypeRef
+ruleLiteralTypeRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getLiteralTypeRefAccess().getBooleanLiteralTypeRefParserRuleCall_0());
+		}
+		this_BooleanLiteralTypeRef_0=ruleBooleanLiteralTypeRef
+		{
+			$current = $this_BooleanLiteralTypeRef_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getLiteralTypeRefAccess().getNumericLiteralTypeRefParserRuleCall_1());
+		}
+		this_NumericLiteralTypeRef_1=ruleNumericLiteralTypeRef
+		{
+			$current = $this_NumericLiteralTypeRef_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getLiteralTypeRefAccess().getStringLiteralTypeRefParserRuleCall_2());
+		}
+		this_StringLiteralTypeRef_2=ruleStringLiteralTypeRef
+		{
+			$current = $this_StringLiteralTypeRef_2.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
+// Entry rule entryRuleBooleanLiteralTypeRef
+entryRuleBooleanLiteralTypeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getBooleanLiteralTypeRefRule()); }
+	iv_ruleBooleanLiteralTypeRef=ruleBooleanLiteralTypeRef
+	{ $current=$iv_ruleBooleanLiteralTypeRef.current; }
+	EOF;
+
+// Rule BooleanLiteralTypeRef
+ruleBooleanLiteralTypeRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				$current = forceCreateModelElement(
+					grammarAccess.getBooleanLiteralTypeRefAccess().getBooleanLiteralTypeRefAction_0(),
+					$current);
+			}
+		)
+		(
+			(
+				(
+					lv_astValue_1_1=True
+					{
+						newLeafNode(lv_astValue_1_1, grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueTrueKeyword_1_0_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getBooleanLiteralTypeRefRule());
+						}
+						setWithLastConsumed($current, "astValue", lv_astValue_1_1, null);
+					}
+					    |
+					lv_astValue_1_2=False
+					{
+						newLeafNode(lv_astValue_1_2, grammarAccess.getBooleanLiteralTypeRefAccess().getAstValueFalseKeyword_1_0_1());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getBooleanLiteralTypeRefRule());
+						}
+						setWithLastConsumed($current, "astValue", lv_astValue_1_2, null);
+					}
+				)
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleNumericLiteralTypeRef
+entryRuleNumericLiteralTypeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getNumericLiteralTypeRefRule()); }
+	iv_ruleNumericLiteralTypeRef=ruleNumericLiteralTypeRef
+	{ $current=$iv_ruleNumericLiteralTypeRef.current; }
+	EOF;
+
+// Rule NumericLiteralTypeRef
+ruleNumericLiteralTypeRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			otherlv_0=PlusSign
+			{
+				newLeafNode(otherlv_0, grammarAccess.getNumericLiteralTypeRefAccess().getPlusSignKeyword_0_0());
+			}
+			    |
+			(
+				(
+					lv_astNegated_1_0=HyphenMinus
+					{
+						newLeafNode(lv_astNegated_1_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstNegatedHyphenMinusKeyword_0_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed($current, "astNegated", lv_astNegated_1_0 != null, "-");
+					}
+				)
+			)
+		)?
+		(
+			(
+				(
+					lv_astValue_2_0=RULE_INT
+					{
+						newLeafNode(lv_astValue_2_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueINTTerminalRuleCall_1_0_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_2_0,
+							"org.eclipse.n4js.ts.TypeExpressions.INT");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_astValue_3_0=RULE_DOUBLE
+					{
+						newLeafNode(lv_astValue_3_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueDOUBLETerminalRuleCall_1_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_3_0,
+							"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_astValue_4_0=RULE_OCTAL_INT
+					{
+						newLeafNode(lv_astValue_4_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueOCTAL_INTTerminalRuleCall_1_2_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_4_0,
+							"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_astValue_5_0=RULE_LEGACY_OCTAL_INT
+					{
+						newLeafNode(lv_astValue_5_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueLEGACY_OCTAL_INTTerminalRuleCall_1_3_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_5_0,
+							"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_astValue_6_0=RULE_HEX_INT
+					{
+						newLeafNode(lv_astValue_6_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueHEX_INTTerminalRuleCall_1_4_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_6_0,
+							"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_astValue_7_0=RULE_BINARY_INT
+					{
+						newLeafNode(lv_astValue_7_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueBINARY_INTTerminalRuleCall_1_5_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_7_0,
+							"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_astValue_8_0=RULE_SCIENTIFIC_INT
+					{
+						newLeafNode(lv_astValue_8_0, grammarAccess.getNumericLiteralTypeRefAccess().getAstValueSCIENTIFIC_INTTerminalRuleCall_1_6_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getNumericLiteralTypeRefRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"astValue",
+							lv_astValue_8_0,
+							"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
+					}
+				)
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleStringLiteralTypeRef
+entryRuleStringLiteralTypeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getStringLiteralTypeRefRule()); }
+	iv_ruleStringLiteralTypeRef=ruleStringLiteralTypeRef
+	{ $current=$iv_ruleStringLiteralTypeRef.current; }
+	EOF;
+
+// Rule StringLiteralTypeRef
+ruleStringLiteralTypeRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			lv_astValue_0_0=RULE_STRING
+			{
+				newLeafNode(lv_astValue_0_0, grammarAccess.getStringLiteralTypeRefAccess().getAstValueSTRINGTerminalRuleCall_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getStringLiteralTypeRefRule());
+				}
+				setWithLastConsumed(
+					$current,
+					"astValue",
+					lv_astValue_0_0,
+					"org.eclipse.n4js.ts.TypeExpressions.STRING");
 			}
 		)
 	)
