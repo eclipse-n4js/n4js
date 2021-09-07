@@ -147,8 +147,8 @@ public class ReferenceResolutionFinder {
 
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		boolean neverNeedsImport = reference.eReference == N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY;
-		boolean needCollisionCheck = !isUnresolvedReference && !neverNeedsImport;
+		boolean isPropertyAccess = reference.eReference == N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY;
+		boolean needCollisionCheck = !isUnresolvedReference && !isPropertyAccess;
 
 		List<IEObjectDescription> candidates = new ArrayList<>(512);
 		Set<QualifiedName> candidateNames = needCollisionCheck ? new HashSet<>() : null;
@@ -175,7 +175,7 @@ public class ReferenceResolutionFinder {
 						? Optional.of(candidateNames)
 						: Optional.absent();
 				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
-						requireFullMatch, candidate, candidateProject, neverNeedsImport, scopeForCollisionCheck,
+						requireFullMatch, candidate, candidateProject, isPropertyAccess, scopeForCollisionCheck,
 						allElementsForCollisionCheck, conflictChecker);
 				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 					acceptor.accept(resolution);
@@ -229,10 +229,10 @@ public class ReferenceResolutionFinder {
 	 * @param candidateProjectOrNull
 	 *            the containing project of the <code>candidate</code> or <code>null</code> if not available /
 	 *            applicable (e.g. in case the candidate represents a built-in type).
-	 * @param neverNeedsImport
-	 *            <code>true</code> means that the caller is convinced that the candidate will never require an import
-	 *            and all computations related to adding missing imports, etc. can be skipped (e.g. when performing
-	 *            content assist for the property of a property access expression).
+	 * @param isPropertyAccess
+	 *            <code>true</code> iff content assist is performed for the property of a property access expression;
+	 *            means that all computations related to adding missing imports, etc. (including collision checks) can
+	 *            be skipped.
 	 * @param scopeForCollisionCheck
 	 *            a scope that will be used for a collision check. If the reference being resolved is known to be an
 	 *            unresolved reference and <code>requireFullMatch</code> is set to <code>true</code>, then this
@@ -240,13 +240,13 @@ public class ReferenceResolutionFinder {
 	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
-			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull, boolean neverNeedsImport,
+			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull, boolean isPropertyAccess,
 			Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
 			Predicate<String> conflictChecker) {
 
 		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, candidateProjectOrNull,
-					neverNeedsImport, scopeForCollisionCheck, allElementNamesForCollisionCheck,
+					isPropertyAccess, scopeForCollisionCheck, allElementNamesForCollisionCheck,
 					text, requireFullMatch, parseTreeNode, conflictChecker);
 
 			if (!rrc.isValid) {
@@ -259,7 +259,7 @@ public class ReferenceResolutionFinder {
 				String proposal = getProposal(rrc);
 				String label = getLabel(rrc, version);
 				String description = getDescription(rrc);
-				ImportDescriptor importToBeAdded = neverNeedsImport ? null : getImportToBeAdded(rrc);
+				ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
 
 				return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded);
 
@@ -362,6 +362,8 @@ public class ReferenceResolutionFinder {
 	private class ReferenceResolutionCandidate {
 		final IEObjectDescription candidate;
 		final IEObjectDescription candidateViaScopeShortName;
+		/** If <code>true</code>, then collision check and computation of a new import will be skipped. */
+		final boolean isPropertyAccess;
 		/** The project containing the candidate. Might be <code>null</code>, e.g. in case of built-in types. */
 		final N4JSProjectConfigSnapshot candidateProjectOrNull;
 		final boolean isScopedCandidateEqual;
@@ -377,22 +379,23 @@ public class ReferenceResolutionFinder {
 		final NameAndAlias addedImportNameAndAlias;
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
-				boolean neverNeedsImport,
+				boolean isPropertyAccess,
 				Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
 				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
 
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
-				if (!neverNeedsImport && !requireFullMatch && !scopeForCollisionCheck.isPresent()) {
+				if (!isPropertyAccess && !requireFullMatch && !scopeForCollisionCheck.isPresent()) {
 					throw new IllegalArgumentException(
 							"collision check may only be omitted if candidate never needs an import OR a full match is required");
 				}
-				if (neverNeedsImport && scopeForCollisionCheck.isPresent()) {
+				if (isPropertyAccess && scopeForCollisionCheck.isPresent()) {
 					throw new IllegalArgumentException(
 							"collision check should be omitted if candidate never needs an import");
 				}
 
 				this.candidate = candidate;
 				this.candidateProjectOrNull = candidateProjectOrNull;
+				this.isPropertyAccess = isPropertyAccess;
 				this.shortName = getShortName();
 				this.qualifiedName = getQualifiedName();
 				this.parentImportElement = getParentImportElement(parseTreeNode);
@@ -408,7 +411,7 @@ public class ReferenceResolutionFinder {
 				this.accessType = getAccessType();
 				this.aliasName = getAliasName();
 				this.namespaceName = getNamespaceName();
-				this.addedImportNameAndAlias = neverNeedsImport ? null : getImportChanges();
+				this.addedImportNameAndAlias = getImportChanges();
 				this.isValid = isValid(text, requireFullMatch, conflictChecker);
 			}
 		}
@@ -456,7 +459,7 @@ public class ReferenceResolutionFinder {
 
 		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck,
 				Optional<Set<QualifiedName>> allElementNamesForCollisionCheck) {
-			if (scopeForCollisionCheck.isPresent()) {
+			if (!isPropertyAccess && scopeForCollisionCheck.isPresent()) {
 				IScope scope = scopeForCollisionCheck.get();
 				Set<QualifiedName> allElementNames = allElementNamesForCollisionCheck.get();
 				IEObjectDescription candidateViaScope = getCandidateViaScope(scope, allElementNames);
@@ -467,10 +470,6 @@ public class ReferenceResolutionFinder {
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope, Set<QualifiedName> allElementNames) {
-			// EClass candidateEClass = this.candidate.getEClass();
-			// if (candidateEClass != null && TypesPackage.Literals.TMEMBER.isSuperTypeOf(candidateEClass)) {
-			// return null;
-			// }
 			QualifiedName shortNameQN = QualifiedName.create(shortName);
 			// because 'scope.getElements()' is slow-ish and we are invoked for every element in
 			// 'scope.getAllElements()' (see #collectAllElements() above), we use this guard:
@@ -566,6 +565,9 @@ public class ReferenceResolutionFinder {
 		 *         the same short name
 		 */
 		private boolean isScopedCandidateCollisioning() {
+			if (isPropertyAccess) {
+				return false;
+			}
 			if (isScopedCandidateEqual) {
 				return false;
 			}
@@ -645,6 +647,10 @@ public class ReferenceResolutionFinder {
 		}
 
 		private NameAndAlias getImportChanges() {
+			if (isPropertyAccess) {
+				return null;
+			}
+
 			if (parentImportElement != null) {
 				return null;
 			}
