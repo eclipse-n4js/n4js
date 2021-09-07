@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
@@ -146,7 +147,8 @@ public class ReferenceResolutionFinder {
 
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		boolean needCollisionCheck = !isUnresolvedReference;
+		boolean neverNeedsImport = reference.eReference == N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY;
+		boolean needCollisionCheck = !isUnresolvedReference && !neverNeedsImport;
 
 		List<IEObjectDescription> candidates = new ArrayList<>(512);
 		Set<QualifiedName> candidateNames = needCollisionCheck ? new HashSet<>() : null;
@@ -173,7 +175,7 @@ public class ReferenceResolutionFinder {
 						? Optional.of(candidateNames)
 						: Optional.absent();
 				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
-						requireFullMatch, candidate, candidateProject, scopeForCollisionCheck,
+						requireFullMatch, candidate, candidateProject, neverNeedsImport, scopeForCollisionCheck,
 						allElementsForCollisionCheck, conflictChecker);
 				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 					acceptor.accept(resolution);
@@ -227,6 +229,10 @@ public class ReferenceResolutionFinder {
 	 * @param candidateProjectOrNull
 	 *            the containing project of the <code>candidate</code> or <code>null</code> if not available /
 	 *            applicable (e.g. in case the candidate represents a built-in type).
+	 * @param neverNeedsImport
+	 *            <code>true</code> means that the caller is convinced that the candidate will never require an import
+	 *            and all computations related to adding missing imports, etc. can be skipped (e.g. when performing
+	 *            content assist for the property of a property access expression).
 	 * @param scopeForCollisionCheck
 	 *            a scope that will be used for a collision check. If the reference being resolved is known to be an
 	 *            unresolved reference and <code>requireFullMatch</code> is set to <code>true</code>, then this
@@ -234,14 +240,14 @@ public class ReferenceResolutionFinder {
 	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
-			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
+			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull, boolean neverNeedsImport,
 			Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
 			Predicate<String> conflictChecker) {
 
 		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, candidateProjectOrNull,
-					scopeForCollisionCheck, allElementNamesForCollisionCheck, text, requireFullMatch, parseTreeNode,
-					conflictChecker);
+					neverNeedsImport, scopeForCollisionCheck, allElementNamesForCollisionCheck,
+					text, requireFullMatch, parseTreeNode, conflictChecker);
 
 			if (!rrc.isValid) {
 				return null;
@@ -253,7 +259,7 @@ public class ReferenceResolutionFinder {
 				String proposal = getProposal(rrc);
 				String label = getLabel(rrc, version);
 				String description = getDescription(rrc);
-				ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
+				ImportDescriptor importToBeAdded = neverNeedsImport ? null : getImportToBeAdded(rrc);
 
 				return new ReferenceResolution(candidate, proposal, label, description, importToBeAdded);
 
@@ -371,13 +377,18 @@ public class ReferenceResolutionFinder {
 		final NameAndAlias addedImportNameAndAlias;
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
+				boolean neverNeedsImport,
 				Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
 				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
 
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
-				if (!requireFullMatch && !scopeForCollisionCheck.isPresent()) {
+				if (!neverNeedsImport && !requireFullMatch && !scopeForCollisionCheck.isPresent()) {
 					throw new IllegalArgumentException(
-							"collision check should only be omitted if a full match is required");
+							"collision check may only be omitted if candidate never needs an import OR a full match is required");
+				}
+				if (neverNeedsImport && scopeForCollisionCheck.isPresent()) {
+					throw new IllegalArgumentException(
+							"collision check should be omitted if candidate never needs an import");
 				}
 
 				this.candidate = candidate;
@@ -397,7 +408,7 @@ public class ReferenceResolutionFinder {
 				this.accessType = getAccessType();
 				this.aliasName = getAliasName();
 				this.namespaceName = getNamespaceName();
-				this.addedImportNameAndAlias = getImportChanges();
+				this.addedImportNameAndAlias = neverNeedsImport ? null : getImportChanges();
 				this.isValid = isValid(text, requireFullMatch, conflictChecker);
 			}
 		}
@@ -456,6 +467,10 @@ public class ReferenceResolutionFinder {
 		}
 
 		private IEObjectDescription getCandidateViaScope(IScope scope, Set<QualifiedName> allElementNames) {
+			// EClass candidateEClass = this.candidate.getEClass();
+			// if (candidateEClass != null && TypesPackage.Literals.TMEMBER.isSuperTypeOf(candidateEClass)) {
+			// return null;
+			// }
 			QualifiedName shortNameQN = QualifiedName.create(shortName);
 			// because 'scope.getElements()' is slow-ish and we are invoked for every element in
 			// 'scope.getAllElements()' (see #collectAllElements() above), we use this guard:
