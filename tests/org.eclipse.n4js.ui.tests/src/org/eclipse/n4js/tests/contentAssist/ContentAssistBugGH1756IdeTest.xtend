@@ -17,7 +17,7 @@ import org.junit.Test
  *
  */
 // converted from Issue1756PluginUITest
-class Issue1756IdeTest extends ConvertedCompletionIdeTest {
+class ContentAssistBugGH1756IdeTest extends ConvertedCompletionIdeTest {
 
 	@Test def void test_01() throws Exception {
 		testAtCursor('''
