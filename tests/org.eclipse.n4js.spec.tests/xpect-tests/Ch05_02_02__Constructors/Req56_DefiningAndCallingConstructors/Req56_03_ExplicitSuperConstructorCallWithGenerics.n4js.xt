@@ -25,7 +25,7 @@ class B1<S> extends A<S> {
 
 class B2<S> extends A<S> {
 	constructor() {
-		// XPECT errors --> "int is not a subtype of S." at "10"
+		// XPECT errors --> "10 is not a subtype of S." at "10"
 		super(10);
 	}
 }

@@ -17,14 +17,22 @@
 
 // XPECT type of 'v01' --> int
 var v01 = 0;
-// XPECT type of 'v02' --> int
-var v02 = -1;
+// XPECT type of 'v02a' --> int
+var v02a = +1;
+// XPECT type of 'v02b' --> int
+var v02b = -1;
 // XPECT type of 'v03' --> int
 var v03 = 1;
 
 
-// XPECT type of 'v04' --> number
-var v04 = 0.0;
+// XPECT type of 'v04a' --> number
+var v04a = 0.0;
+// XPECT type of 'v04b' --> number
+var v04b = 42.0;
+// XPECT type of 'v04c' --> number
+var v04c = +1.0;
+// XPECT type of 'v04d' --> number
+var v04d = -1.0;
 // XPECT type of 'v05' --> number
 var v05 = 4.2;
 
@@ -55,5 +63,7 @@ var v30 = -10000000000;
 var v31 = 10000000000;
 
 
-// XPECT type of 'v40' --> number
+// XPECT type of 'v40' --> int
 var v40 = -(2147483648);
+// XPECT type of 'v41' --> number
+var v41 = -(2147483649);

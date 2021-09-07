@@ -393,9 +393,9 @@ public class PreparationStep {
 		private boolean isDynamicNamespaceReference(EObject eObject) {
 			if (eObject instanceof ParameterizedTypeRef) {
 				ParameterizedTypeRef ptr = (ParameterizedTypeRef) eObject;
-				ModuleNamespaceVirtualType astNamespace = ptr.getAstNamespace();
-				if (astNamespace != null) {
-					return astNamespace.isDeclaredDynamic();
+				Type astQualifier = ptr.getAstDeclaredTypeQualifier();
+				if (astQualifier instanceof ModuleNamespaceVirtualType) {
+					return ((ModuleNamespaceVirtualType) astQualifier).isDeclaredDynamic();
 				}
 			}
 			return false;

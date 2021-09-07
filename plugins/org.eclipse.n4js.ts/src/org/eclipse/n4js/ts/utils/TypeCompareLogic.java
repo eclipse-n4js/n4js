@@ -13,12 +13,17 @@ package org.eclipse.n4js.ts.utils;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -211,6 +216,36 @@ import org.eclipse.xtext.naming.QualifiedName;
 			final ParameterizedTypeRef pref1 = (ParameterizedTypeRef) ref1;
 			final ParameterizedTypeRef pref2 = (ParameterizedTypeRef) ref2;
 			c = compareTypeArguments(fqnProvider, pref1.getTypeArgs(), pref2.getTypeArgs());
+			if (c != 0) {
+				return c;
+			}
+		} else if (ref1 instanceof LiteralTypeRef) {
+			if (ref1 instanceof BooleanLiteralTypeRef) {
+				final BooleanLiteralTypeRef litRef1 = (BooleanLiteralTypeRef) ref1;
+				final BooleanLiteralTypeRef litRef2 = (BooleanLiteralTypeRef) ref2;
+				c = compareComparables(litRef1.getValue(), litRef2.getValue());
+			} else if (ref1 instanceof NumericLiteralTypeRef) {
+				final NumericLiteralTypeRef litRef1 = (NumericLiteralTypeRef) ref1;
+				final NumericLiteralTypeRef litRef2 = (NumericLiteralTypeRef) ref2;
+				c = compareComparables(litRef1.getValue(), litRef2.getValue());
+			} else if (ref1 instanceof StringLiteralTypeRef) {
+				final StringLiteralTypeRef litRef1 = (StringLiteralTypeRef) ref1;
+				final StringLiteralTypeRef litRef2 = (StringLiteralTypeRef) ref2;
+				c = compareComparables(litRef1.getValue(), litRef2.getValue());
+			} else if (ref1 instanceof EnumLiteralTypeRef) {
+				final EnumLiteralTypeRef litRef1 = (EnumLiteralTypeRef) ref1;
+				final EnumLiteralTypeRef litRef2 = (EnumLiteralTypeRef) ref2;
+				c = compare(fqnProvider, litRef1.getEnumType(), litRef2.getEnumType());
+				if (c != 0) {
+					return c;
+				}
+				c = compareComparables(
+						litRef1.getValue() != null ? litRef1.getValue().getName() : null,
+						litRef2.getValue() != null ? litRef2.getValue().getName() : null);
+			} else {
+				throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.class.getSimpleName()
+						+ ": " + ref1.getClass().getSimpleName());
+			}
 			if (c != 0) {
 				return c;
 			}

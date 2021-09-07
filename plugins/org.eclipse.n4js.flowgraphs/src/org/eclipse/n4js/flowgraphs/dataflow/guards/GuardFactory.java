@@ -14,13 +14,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.FlowAssertionFactory;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
+import org.eclipse.n4js.n4JS.BooleanLiteral;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.ParenExpression;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.RelationalOperator;
@@ -28,6 +32,8 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TEnum;
 
 /**
  * Creates {@link Guard}s from given {@link Expression}s that are used as conditions.
@@ -68,11 +74,15 @@ public class GuardFactory {
 	}
 
 	static private Guard createGuardForInstanceof(EObject topContainer, boolean negateTree, RelationalExpression re) {
-		Expression lhs = re.getLhs();
-		Expression rhs = re.getRhs();
-		if (SymbolFactory.canCreate(lhs)) {
-			GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, re, negateTree, false);
-			Guard guard = createInstanceofGuard(re, asserts, lhs, rhs);
+		return createGuardForInstanceof(topContainer, negateTree, re, re.getLhs(), re.getRhs());
+	}
+
+	static private Guard createGuardForInstanceof(EObject topContainer, boolean negateTree, Expression condition,
+			ControlFlowElement symbolExpr, Expression typeIdentifierRef) {
+
+		if (SymbolFactory.canCreate(symbolExpr)) {
+			GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, condition, negateTree, false);
+			Guard guard = createInstanceofGuard(condition, asserts, symbolExpr, typeIdentifierRef);
 			return guard;
 		}
 		return null;
@@ -132,6 +142,16 @@ public class GuardFactory {
 			if (guardType != null) {
 				return createGuardForNUZ(topContainer, eqe, negateTree, sameEqualNot, guardType, symbolExpr);
 			}
+		}
+
+		// v == <literal>
+		// TODO should also support v == <arbitrary expression of literal type>, e.g. v == fooReturningLiteral()
+		if (rhs instanceof BooleanLiteral || rhs instanceof NumericLiteral || rhs instanceof StringLiteral
+				|| isEnumLiteral(rhs)) {
+			return createGuardForInstanceof(topContainer, negateTree ^ sameEqualNot, eqe, lhs, rhs);
+		} else if (lhs instanceof BooleanLiteral || lhs instanceof NumericLiteral || lhs instanceof StringLiteral
+				|| isEnumLiteral(lhs)) {
+			return createGuardForInstanceof(topContainer, negateTree ^ sameEqualNot, eqe, rhs, lhs);
 		}
 
 		return null;
@@ -221,9 +241,20 @@ public class GuardFactory {
 		return new Guard(expr, GuardType.IsZero, asserts, symoblExpr);
 	}
 
-	static private Guard createInstanceofGuard(Expression expr, GuardAssertion asserts, Expression symoblExpr,
+	static private Guard createInstanceofGuard(Expression expr, GuardAssertion asserts, ControlFlowElement symoblExpr,
 			Expression typeIdentifier) {
 
 		return new InstanceofGuard(expr, asserts, symoblExpr, typeIdentifier);
+	}
+
+	static private boolean isEnumLiteral(Expression expr) {
+		if (expr instanceof ParameterizedPropertyAccessExpression) {
+			Expression targetExpr = ((ParameterizedPropertyAccessExpression) expr).getTarget();
+			if (targetExpr instanceof IdentifierRef) {
+				IdentifiableElement id = ((IdentifierRef) targetExpr).getId();
+				return id instanceof TEnum;
+			}
+		}
+		return false;
 	}
 }

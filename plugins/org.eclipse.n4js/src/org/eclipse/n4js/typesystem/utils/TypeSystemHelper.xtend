@@ -254,12 +254,17 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return true;
 	}
 
-	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw) {
+	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw, boolean resolveLiteralTypes) {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
 		// take upper bound to get rid of wildcards, etc. (if any)
-		val typeUB = ts.upperBoundWithReopen(G, typeRaw);
+		val typeUB = if (resolveLiteralTypes) {
+			// ... and also replace literal types by their base type
+			ts.upperBoundWithReopenAndResolveLiteralTypes(G, typeRaw)
+		} else {
+			ts.upperBoundWithReopen(G, typeRaw)
+		};
 		// replace silly types
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
@@ -437,7 +442,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef typeTypeRef, boolean resolveTypeVariables) {
 		val typeArg = typeTypeRef.typeArg;
 		val typeArgUB = if (resolveTypeVariables) {
-			ts.upperBoundWithReopenAndResolve(G, typeArg)
+			ts.upperBoundWithReopenAndResolveTypeVars(G, typeArg)
 		} else {
 			ts.upperBoundWithReopen(G, typeArg)
 		};

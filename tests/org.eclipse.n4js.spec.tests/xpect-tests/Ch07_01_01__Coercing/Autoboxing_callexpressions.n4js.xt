@@ -26,28 +26,28 @@ function a01(s : String) : String { return s; }
 function a02(...s : String) : String { return s[0]; }
 function <A> a03( s : A) : A { return s; }
 
-// XPECT errors --> "string is not a subtype of String." at ""hallo""
+// XPECT errors --> ""hallo" is not a subtype of String." at ""hallo""
 var x01 = a01("hallo");
 // OK XPECT noerrors
 var x11 = a01(new String("hallo"));
 /* XPECT errors ---
-	"string is not a subtype of String." at ""hallo""
-	"string is not a subtype of String." at ""sdf""
-	"string is not a subtype of String." at ""sdf""
+	""hallo" is not a subtype of String." at ""hallo""
+	""sdf" is not a subtype of String." at ""sdf""
+	""sdf" is not a subtype of String." at ""sdf""
 	---
 */
 var x02 = a02("hallo","sdf","sdf");
 // OK XPECT noerrors
 var x12 = a02(new String("hallo"), new String("hh"));
 // Mixing s/String in variadic:
-// XPECT errors --> "string is not a subtype of String." at ""hh""
+// XPECT errors --> ""hh" is not a subtype of String." at ""hh""
 var x32 = a02(new String("hallo"), "hh");
 
 // X--PECT errors --> "string is not a subtype of String." at "a03( "hallo" )"
 // note: above error message would be better, cf. IDE-1727
 // XPECT errors ---
 // "A is not a subtype of String." at "a03( "hallo" )"
-// "string is not a subtype of A." at ""hallo""
+// ""hallo" is not a subtype of A." at ""hallo""
 // ---
 var xa01 : String = a03( "hallo" );
 // OK XPECT noerrors
@@ -75,11 +75,11 @@ var xb11 : String = <string> a03( new String("hallo") );
 // XPECT errors --> "String is not a subtype of string." at "new String("hallo")"
 var xb12 : string = <string> a03( new String("hallo") );
 
-// XPECT errors --> "string is not a subtype of String." at ""hallo""
+// XPECT errors --> ""hallo" is not a subtype of String." at ""hallo""
 var xc01 : String = <String> a03( "hallo" );
 /* XPECT errors ---
 	"String is not a subtype of string." at "<String> a03( "hallo" )"
-	"string is not a subtype of String." at ""hallo""
+	""hallo" is not a subtype of String." at ""hallo""
 	---
 */
 var xc02 : string = <String> a03( "hallo" );
@@ -98,13 +98,13 @@ var b2 : B2 = new B2();
 
 /* XPECT errors ---
 	"String is not a subtype of string." at "b2.b01("hallo")"
-	"string is not a subtype of String." at ""hallo""
+	""hallo" is not a subtype of String." at ""hallo""
 	---
 */
 var s201 : string = b2.b01("hallo");
 // XPECT errors --> "String is not a subtype of string." at "b2.b01( new String("hallo"))"
 var s202 : string = b2.b01( new String("hallo"));
-// XPECT errors --> "string is not a subtype of String." at ""hallo""
+// XPECT errors --> ""hallo" is not a subtype of String." at ""hallo""
 var s211 : String = b2.b01("hallo");
 // OK XPECT noerrors
 var s212 : String = b2.b01( new String("hallo"));

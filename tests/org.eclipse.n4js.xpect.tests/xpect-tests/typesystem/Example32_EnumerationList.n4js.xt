@@ -23,7 +23,7 @@ var colors : EList<Color>;
 colors.add(Color.R);
 var c : Color = colors.get();
 
-// XPECT errors --> "Size is not a subtype of Color." at "Size.L"
+// XPECT errors --> "Size.L is not a subtype of Color." at "Size.L"
 colors.add(Size.L);
 // XPECT errors --> "Color is not a subtype of Size." at "colors.get()"
 var s : Size = colors.get();
@@ -34,7 +34,7 @@ var clist : ColorList;
 clist.add(Color.G);
 var c2 : Color = clist.get();
 
-// XPECT errors --> "Size is not a subtype of Color." at "Size.L"
+// XPECT errors --> "Size.L is not a subtype of Color." at "Size.L"
 clist.add(Size.L);
 // XPECT errors --> "Color is not a subtype of Size." at "clist.get()"
 var s2 : Size = clist.get();

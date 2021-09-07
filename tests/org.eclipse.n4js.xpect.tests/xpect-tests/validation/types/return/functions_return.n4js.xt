@@ -61,7 +61,7 @@ function fooString1(): string {
 }
 
 function fooNumber6(): number {
-	// XPECT errors --> "string is not a subtype of number." at "'a'"
+	// XPECT errors --> ""a" is not a subtype of number." at "'a'"
 	return 'a'
 }
 

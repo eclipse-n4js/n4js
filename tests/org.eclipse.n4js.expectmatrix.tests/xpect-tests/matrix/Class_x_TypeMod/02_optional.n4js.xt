@@ -48,7 +48,7 @@ var a3 : A = new A({x: 3}, 5);
 // too many parameters XPECT errors --> "Incorrect number of arguments: expected 4, got 6." at "new A({x: 1},2,3,"4","5","6")"
 var a6 : A = new A({x: 1},2,3,"4","5","6");
 
-// wrong type of some parameters XPECT errors --> "int is not a subtype of string." at "4"
+// wrong type of some parameters XPECT errors --> "4 is not a subtype of string." at "4"
 var a4 : A = new A({x: 1},2,3,4);
 
 // no arguments XPECT noerrors -->
@@ -57,7 +57,7 @@ a0.f();
 // not enough arguments XPECT noerrors -->
 a0.f(true);
 
-// argument in wrong place XPECT errors --> "int is not a subtype of boolean." at "5"
+// argument in wrong place XPECT errors --> "5 is not a subtype of boolean." at "5"
 a0.f(5);
 
 // good arguments XPECT noerrors -->

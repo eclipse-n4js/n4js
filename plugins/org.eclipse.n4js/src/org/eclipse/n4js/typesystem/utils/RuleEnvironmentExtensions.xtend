@@ -25,12 +25,14 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -109,6 +111,8 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_VARIABLE_DECLARATION = "varDecl";
 	public static final String GUARD_TYPE_CALL_EXPRESSION = "typeCallExpression";
 	public static final String GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION = "typePropertyAccessExpression";
+	public static final String GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION = "subtypeRef__replaceBooleanByUnion";
+	public static final String GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION = "subtypeRef__replaceEnumTypeByUnion";
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
 	public static final String GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD = "substTypeVars_implicitUpperBoundOfWildcard";
@@ -720,7 +724,11 @@ class RuleEnvironmentExtensions {
 			Type: obj
 			TypeRef: obj.declaredType
 		};
-		return type!==null && G.iterableNTypes.contains(type);
+		return isIterableN(G, type);
+	}
+
+	public def static boolean isIterableN(RuleEnvironment G, Type type) {
+		return type !== null && G.iterableNTypes.contains(type);
 	}
 
 	/* Returns built-in type {@code ArrayN<T1...TN>} */
@@ -740,14 +748,19 @@ class RuleEnvironmentExtensions {
 
 	/**
 	 * Returns true iff <code>obj</code> is a {@link Type} or {@link TypeRef} and is or points to
-	 * one of the <code>ArrayN&lt;...></code> built-in types.
+	 * one of the <code>ArrayN&lt;...></code> built-in types. Does <b>not</b> check for the
+	 * built-in type <code>Array&lt;T></code>.
 	 */
 	public def static boolean isArrayN(RuleEnvironment G, EObject obj) {
 		val type = switch(obj) {
 			Type: obj
 			TypeRef: obj.declaredType
 		};
-		return type!==null && G.arrayNTypes.contains(type);
+		return isArrayN(G, type);
+	}
+
+	public def static boolean isArrayN(RuleEnvironment G, Type type) {
+		return type !== null && G.arrayNTypes.contains(type);
 	}
 
 	/* Returns built-in type {@code Promise<S,F>} */
@@ -880,6 +893,10 @@ class RuleEnvironmentExtensions {
 	public def static boolean isNumericOperand(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef===null) {
 			return false;
+		}
+		if (typeRef instanceof BooleanLiteralTypeRef
+			|| typeRef instanceof NumericLiteralTypeRef) {
+			return true;
 		}
 		if (G.predefinedTypes.builtInTypeScope.isNumericOperand(typeRef.declaredType)) {
 			return true;

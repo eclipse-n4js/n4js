@@ -79,27 +79,27 @@ var b : boolean;
 ////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////  ////////
 
 
-// XPECT warnings --> "Neither A is a subtype of int nor int is a subtype of A. The expression will always evaluate to false." at "anA === 4"
+// XPECT warnings --> "Neither A is a subtype of 4 nor 4 is a subtype of A. The expression will always evaluate to false." at "anA === 4"
 anA === 4;
 
-// XPECT warnings --> "Neither string is a subtype of R nor R is a subtype of string. The expression will always evaluate to true."  at ""hallo" !== r"
+// XPECT warnings --> "Neither "hallo" is a subtype of R nor R is a subtype of "hallo". The expression will always evaluate to true."  at ""hallo" !== r"
 "hallo" !== r;
 
-// XPECT warnings --> "Neither { Object,  R2 } is a subtype of int nor int is a subtype of { Object,  R2 }. The expression will always evaluate to false." at "ur === 0"
+// XPECT warnings --> "Neither { Object,  R2 } is a subtype of 0 nor 0 is a subtype of { Object,  R2 }. The expression will always evaluate to false." at "ur === 0"
 ur === 0;
 
-// XPECT warnings --> "Neither string is a subtype of int nor int is a subtype of string. The expression will always evaluate to false." at ""a" === 4"
+// XPECT warnings --> "Neither "a" is a subtype of 4 nor 4 is a subtype of "a". The expression will always evaluate to false." at ""a" === 4"
 "a" === 4;
 
-// XPECT warnings --> "Neither function funcU is a subtype of int nor int is a subtype of function funcU. The expression will always evaluate to false." at "funcU === 5"
+// XPECT warnings --> "Neither function funcU is a subtype of 5 nor 5 is a subtype of function funcU. The expression will always evaluate to false." at "funcU === 5"
 funcU === 5;
 
-// XPECT warnings --> "Neither { A,  I,  R } is a subtype of int nor int is a subtype of { A,  I,  R }. The expression will always evaluate to false." at "funcU( null ) === 5"
+// XPECT warnings --> "Neither { A,  I,  R } is a subtype of 5 nor 5 is a subtype of { A,  I,  R }. The expression will always evaluate to false." at "funcU( null ) === 5"
 funcU( null ) === 5;
 
 anyA === 3;
 
-// XPECT warnings --> "Neither int is a subtype of Ea nor Ea is a subtype of int. The expression will always evaluate to false." at "5 === ea"
+// XPECT warnings --> "Neither 5 is a subtype of Ea nor Ea is a subtype of 5. The expression will always evaluate to false." at "5 === ea"
 5 === ea;
 
 // XPECT warnings --> "Neither string is a subtype of R nor R is a subtype of string. The expression will always evaluate to true."  at "s !== r"

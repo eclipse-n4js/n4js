@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.types.InferenceVariable
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
@@ -33,6 +34,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -125,11 +127,27 @@ if(isValueToBeDestructured) {
 	 */
 	private def List<TypeRef> getExpectedElemTypeRefs(RuleEnvironment G, TypeRef expectedTypeRef) {
 		if (expectedTypeRef !== null) {
-			val extractedTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
-			return extractedTypeRefs; // will have len>1 only if expectation is IterableN
-		} else {
-			return newArrayList // no or invalid type expectation
+			val candidateTypeRefs = if (expectedTypeRef instanceof UnionTypeExpression) {
+				expectedTypeRef.typeRefs
+			} else {
+				#[ expectedTypeRef ]
+			};
+			val iterableType = G.iterableType;
+			val arrayType = G.arrayType;
+			for (candidateTypeRef : candidateTypeRefs) {
+				val declType = candidateTypeRef.declaredType;
+				if (declType === iterableType
+						|| declType === arrayType
+						|| G.isIterableN(declType)
+						|| G.isArrayN(declType)) {
+					val extractedTypeRefs = tsh.extractIterableElementTypes(G, candidateTypeRef);
+					if (extractedTypeRefs.size > 0) {
+						return extractedTypeRefs; // will have len>1 iff expectation is IterableN
+					}
+				}
+			}
 		}
+		return newArrayList // no or invalid type expectation
 	}
 
 	/**
@@ -137,7 +155,9 @@ if(isValueToBeDestructured) {
 	 * expectation of IterableN.
 	 */
 	private def TypeRef buildFallbackTypeForArrayLiteral(boolean isArrayN, int resultLen,
-		List<TypeRef> elemTypeRefs, List<TypeRef> expectedElemTypeRefs, RuleEnvironment G) {
+		List<TypeRef> elemTypeRefsWithLiteralTypes, List<TypeRef> expectedElemTypeRefs, RuleEnvironment G) {
+
+		val elemTypeRefs = elemTypeRefsWithLiteralTypes.map[N4JSLanguageUtils.getLiteralTypeBase(G, it)].toList;
 
 		if (isArrayN) {
 			val typeArgs = newArrayOfSize(resultLen);
@@ -271,7 +291,7 @@ if(isValueToBeDestructured) {
 	private def void handleOnSolvedPerformanceTweak(RuleEnvironment G, ASTMetaInfoCache cache, ArrayLiteral arrLit,
 		List<TypeRef> expectedElemTypeRefs
 	) {
-		val List<TypeRef> betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
+		val betterElemTypeRefs = storeTypesOfArrayElements(G, cache, arrLit);
 		val fallbackTypeRef = buildFallbackTypeForArrayLiteral(false, 1, betterElemTypeRefs, expectedElemTypeRefs, G);
 		cache.storeType(arrLit, fallbackTypeRef);
 	}

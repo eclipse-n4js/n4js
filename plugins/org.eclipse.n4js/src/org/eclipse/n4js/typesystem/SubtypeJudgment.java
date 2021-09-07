@@ -12,6 +12,8 @@ package org.eclipse.n4js.typesystem;
 
 import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
@@ -35,21 +37,28 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.string
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.undefinedType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.wrap;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
@@ -59,6 +68,7 @@ import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -70,6 +80,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.StructuralTypingResult;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -96,6 +107,41 @@ import com.google.common.collect.Iterables;
 
 	private Result getResult(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg) {
 		final Result firstResult = doApply(G, leftArg, rightArg);
+		if (firstResult.isFailure()) {
+			Type leftDeclType = leftArg.getDeclaredType();
+			if (leftDeclType == RuleEnvironmentExtensions.booleanType(G)) {
+				// if boolean <: R fails, we try: true | false <: R
+				final String guardKey = GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION;
+				if (G.get(guardKey) == null) {
+					RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+					G2.put(guardKey, Boolean.TRUE);
+					BooleanLiteralTypeRef falseTypeRef = TypeRefsFactory.eINSTANCE.createBooleanLiteralTypeRef();
+					BooleanLiteralTypeRef trueTypeRef = TypeRefsFactory.eINSTANCE.createBooleanLiteralTypeRef();
+					falseTypeRef.setValue(false);
+					trueTypeRef.setValue(true);
+					UnionTypeExpression secondLeftArg = TypeUtils.createNonSimplifiedUnionType(falseTypeRef,
+							trueTypeRef);
+					final Result secondResult = doApply(G2, secondLeftArg, rightArg);
+					if (secondResult.isSuccess()) {
+						return secondResult;
+					}
+				}
+			} else if (leftDeclType instanceof TEnum) {
+				// if something like MyEnum <: R fails, we try: MyEnum.Lit1 | ... | MyEnum.LitN <: R
+				final Pair<String, Type> guardKey = Pair.of(GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION, leftDeclType);
+				if (G.get(guardKey) == null) {
+					RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
+					G2.put(guardKey, Boolean.TRUE);
+					UnionTypeExpression secondLeftArg = TypeUtils.createUnionOfLiteralTypesFromEnumType(leftArg);
+					if (secondLeftArg != null) {
+						final Result secondResult = doApply(G2, secondLeftArg, rightArg);
+						if (secondResult.isSuccess()) {
+							return secondResult;
+						}
+					}
+				}
+			}
+		}
 		if (firstResult.isFailure() && leftArg instanceof TypeRef && ((TypeRef) leftArg).isDynamic()) {
 			// right<:left => left+<:right
 			final TypeRef nonDynamicCopy = TypeUtils.copy((TypeRef) leftArg);
@@ -214,6 +260,16 @@ import com.google.common.collect.Iterables;
 			}
 		}
 
+		if (left instanceof LiteralTypeRef) {
+			if (right instanceof LiteralTypeRef) {
+				return applyLiteralTypeRef_Both(G, (LiteralTypeRef) left, (LiteralTypeRef) right);
+			}
+			return applyLiteralTypeRef_Left(G, (LiteralTypeRef) left, right);
+		}
+		if (right instanceof LiteralTypeRef) {
+			return applyLiteralTypeRef_Right(G, left, (LiteralTypeRef) right);
+		}
+
 		// ParameterizedTypeRef
 		if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
 			return applyParameterizedTypeRef(G, (ParameterizedTypeRef) left, (ParameterizedTypeRef) right);
@@ -265,6 +321,44 @@ import com.google.common.collect.Iterables;
 				I.getTypeRefs().stream().map(
 						T -> ts.subtype(G, S, T)))
 								.trimCauses(); // legacy behavior; could improve error messages here!
+	}
+
+	private Result applyLiteralTypeRef_Left(RuleEnvironment G, LiteralTypeRef left, TypeRef right) {
+		TypeRef base = N4JSLanguageUtils.getLiteralTypeBase(G, left);
+		return requireAllSuccess(ts.subtype(G, base, right));
+	}
+
+	@SuppressWarnings("unused")
+	private Result applyLiteralTypeRef_Right(RuleEnvironment G, TypeRef left, LiteralTypeRef right) {
+		return failure();
+	}
+
+	@SuppressWarnings("unused")
+	private Result applyLiteralTypeRef_Both(RuleEnvironment G, LiteralTypeRef left, LiteralTypeRef right) {
+		if (left instanceof NumericLiteralTypeRef && right instanceof NumericLiteralTypeRef) {
+			BigDecimal leftValue = ((NumericLiteralTypeRef) left).getValue();
+			BigDecimal rightValue = ((NumericLiteralTypeRef) right).getValue();
+			return resultFromBoolean(isNumericallyEqual(leftValue, rightValue));
+		} else if (left instanceof EnumLiteralTypeRef) {
+			TEnumLiteral enumLiteral = ((EnumLiteralTypeRef) left).getValue();
+			TEnum enumType = ((EnumLiteralTypeRef) left).getEnumType();
+			EnumKind enumKind = N4JSLanguageUtils.getEnumKind(enumType);
+			if (enumKind == EnumKind.NumberBased && right instanceof NumericLiteralTypeRef) {
+				BigDecimal leftValue = enumLiteral.getValueNumber();
+				BigDecimal rightValue = ((NumericLiteralTypeRef) right).getValue();
+				return resultFromBoolean(isNumericallyEqual(leftValue, rightValue));
+			} else if (enumKind == EnumKind.StringBased && right instanceof StringLiteralTypeRef) {
+				String leftValue = enumLiteral.getValueString();
+				String rightValue = ((StringLiteralTypeRef) right).getValue();
+				return resultFromBoolean(leftValue != null && leftValue.equals(rightValue));
+			}
+		}
+		return resultFromBoolean(Objects.equals(left.getValue(), right.getValue()));
+	}
+
+	private boolean isNumericallyEqual(BigDecimal num1, BigDecimal num2) {
+		// BigDecimal#equals() does not check for numeric equality, so we have to use #compareTo():
+		return num1 != null && num2 != null && num1.compareTo(num2) == 0;
 	}
 
 	private Result applyParameterizedTypeRef(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right) {

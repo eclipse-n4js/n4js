@@ -524,8 +524,9 @@ The following rules apply:
 [req,id=IDE-94,version=1]
 --
 
-* Numeric literals with a fraction or using scientific notation, e.g. `2.0` and `2e0`, respectively, are always inferred to `number`, even if they represent integers in the range of int32.
-* Numeric literals that represent integers in the range of JavaScript’s int32, i.e. from $-2^{31}$ to $2^{31}-1$, are inferred to `int`.
+* Numeric literals with a fraction, e.g. `2.0`, are always inferred to `number`, even if they represent integers in the range of int32.
+* Numeric literals using scientific notation, e.g. `2e0`, are inferred to `int` iff they represent integers in the range of int32 (difference to Java!).
+* Other numeric literals are inferred to `int` iff they represent integers in the range of int32, i.e. from $-2^{31}$ to $2^{31}-1$.
 * Hexadecimal and octal literals are always interpreted as positive numbers, so all values above `0x7fffffff` and `017777777777` lie outside the range of int32 and will thus
 be inferred to `number`; this is an important difference to Java. See below for further elaboration.
 
@@ -537,7 +538,7 @@ There are differences to numeric literals in Java:
 
 h|Literal  h| Value h| Type h| Value h| Type
 
-|2147483648         |  -2147483648      |  int          |  -2147483648  |  int
+|-2147483648        |  -2147483648      |  int          |  -2147483648  |  int
 |2147483647         |  2147483647       |  int          |  2147483647   |  int
 |0x7fffffff         |  2147483647       |  int          |  2147483647   |  int
 |0x80000000         |  -2147483648      |  int          | +2147483648   |  number
@@ -552,8 +553,8 @@ h|Literal  h| Value h| Type h| Value h| Type
 
 The literals `0x100000000` and `0100000000000` produce a syntax error in Java.
 
-Until IDE-1881  is complete, all built-in operations always return a `number` even if all operands are of type `int`.
-For the time being, we therefore interpret `-1` as a negative integer literal (inferred to `int`), but `-(1)` as the negation of a positive integer literal (inferred to `number`).
+Until user story IDE-1881 is complete, all built-in operations always return a `number` even if all operands are of type `int`
+and the type system treats types `int` and `number` as equivalent, i.e. `int <: number` and `number <: int`.
 
 --
 

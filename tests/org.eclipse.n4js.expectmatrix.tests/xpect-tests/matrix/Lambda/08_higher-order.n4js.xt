@@ -22,7 +22,7 @@ function foo (f : {function (number) : number}) : number {
 // lambda as a parameter XPECT noerrors -->
 foo(n => {return n+6});
 
-// IDE-1037 lambda as a parameter, wrong return XPECT errors --> "string is not a subtype of number." at ""hello""
+// IDE-1037 lambda as a parameter, wrong return XPECT errors --> ""hello" is not a subtype of number." at ""hello""
 foo(n => {return "hello"});
 
 // IDE-1037 lambda as a parameter, simpler syntax XPECT noerrors -->
@@ -54,7 +54,7 @@ function bar3 () : {function (number) : number} {
 }
 
 function bar4 () : {function (number) : number} {
-	// lambda as return, wrong return XPECT errors --> "string is not a subtype of number." at ""hello""
+	// lambda as return, wrong return XPECT errors --> ""hello" is not a subtype of number." at ""hello""
 	return n=>{return "hello"};
 }
 

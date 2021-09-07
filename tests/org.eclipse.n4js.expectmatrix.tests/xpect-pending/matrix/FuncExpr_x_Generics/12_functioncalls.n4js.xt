@@ -62,7 +62,7 @@ var cfa06c : string = FA06("bee","you");
 // OK XPECT noerrors -->
 var cfa06d : string = FA06("bee","you","and");
 
-// wrong type in variadic XPECT errors --> "int is not a subtype of string." at "4"
+// wrong type in variadic XPECT errors --> "4 is not a subtype of string." at "4"
 var cfa06e : string = <string,string>FA06("bee","you","and",4);
 
 // X--PECT errors -->

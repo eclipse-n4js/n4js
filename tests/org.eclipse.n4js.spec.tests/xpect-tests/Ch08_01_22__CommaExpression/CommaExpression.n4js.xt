@@ -14,20 +14,20 @@
 
 var bA : boolean;
 
-// OK, true
+// OK, true XPECT noerrors -->
 bA = (12,34,true);
 
-// XPECT errors --> "int is not a subtype of boolean." at "12"
+// XPECT errors --> "12 is not a subtype of boolean." at "12"
 bA = 12,34,true;
 
-// OK, false
+// OK, false XPECT noerrors -->
 bA = false,12,34,true;
 
-// OK, true
+// OK, true XPECT noerrors -->
 bA = true,12,34,false;
 
-// XPECT errors --> "int is not a subtype of boolean." at "2"
+// XPECT errors --> "2 is not a subtype of boolean." at "2"
 bA = 2,1,0;
 
-// XPECT errors --> "string is not a subtype of boolean." at "( 2,true,"g" )"
+// XPECT errors --> ""g" is not a subtype of boolean." at "( 2,true,"g" )"
 bA = ( 2,true,"g" );

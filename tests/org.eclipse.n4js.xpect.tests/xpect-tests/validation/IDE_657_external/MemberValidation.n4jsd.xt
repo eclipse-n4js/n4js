@@ -16,7 +16,7 @@ export external public class MyObject extends Object {
 
 /* XPECT errors ---
  "Fields in external classes have to have no right side." at "_value"
- "string is not a subtype of String." at ""value""
+ ""value" is not a subtype of String." at ""value""
 --- */
 	private _value : String = "value";
 

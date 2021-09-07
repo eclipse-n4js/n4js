@@ -13,15 +13,15 @@
 
 function foo(fn : {function(number):string}) {}
 
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 foo(n=>{return 42});
 
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 foo((n : number)=>{return 42});
 
 
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 foo(n=>42);
 
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 foo((n : number)=>42);

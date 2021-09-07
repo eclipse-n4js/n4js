@@ -17,13 +17,13 @@ let ol = {
 	string m0() { return "hello"; },
 	// XPECT errors --> "Missing return or throw statement." at "string m1() {}"
 	string m1() {},
-	// XPECT errors --> "int is not a subtype of string." at "42"
+	// XPECT errors --> "42 is not a subtype of string." at "42"
 	string m2() { return 42; },
 	// XPECT noerrors -->
 	get g0(): string { return "hello"; },
 	// XPECT errors --> "Missing return or throw statement." at "get g1(): string {}"
 	get g1(): string {},
-	// XPECT errors --> "int is not a subtype of string." at "42"
+	// XPECT errors --> "42 is not a subtype of string." at "42"
 	get g2(): string { return 42; },
 	// XPECT noerrors -->
 	set s0(value: string) {}

@@ -16,7 +16,7 @@ function fS(s : String) {}
 
 //  ++++ simple string checks +++++++++++++
 
-// XPECT errors --> "string is not a subtype of String." at ""Hello""
+// XPECT errors --> ""Hello" is not a subtype of String." at ""Hello""
 fS("Hello");
 // XPECT errors --> "String is not a subtype of string." at "new String("Hello")"
 fs(new String("Hello"));

@@ -36,13 +36,13 @@ let v03 = obj['A'];
 let v04 = obj.A;
 
 
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 obj[E1.A] = 42;
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 obj[E2.LitA] = 42;
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 obj['A'] = 42;
-// XPECT errors --> "int is not a subtype of string." at "42"
+// XPECT errors --> "42 is not a subtype of string." at "42"
 obj.A = 42;
 
 

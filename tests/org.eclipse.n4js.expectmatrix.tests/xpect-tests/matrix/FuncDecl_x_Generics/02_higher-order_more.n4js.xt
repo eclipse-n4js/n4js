@@ -43,7 +43,7 @@ var cfa22a : string = FA22()();
 // OK XPECT noerrors -->
 var cfa22b : string = FA22()("bee");
 
-// XPECT errors --> "int is not a subtype of string." at "4"
+// XPECT errors --> "4 is not a subtype of string." at "4"
 var cfa22c : string = FA22()(4);
 
 // XPECT errors --> "string is not a subtype of number." at "FA22()("bee")"
@@ -51,7 +51,7 @@ var cfa22d : number = FA22()("bee");
 
 /* XPECT errors ---
 "string is not a subtype of number." at "FA22()(4)"
-"int is not a subtype of string." at "4"
+"4 is not a subtype of string." at "4"
 --- */
 var cfa22e : number = FA22()(4);
 
@@ -67,10 +67,10 @@ var f = <string>FA23();
 // OK XPECT noerrors -->
 var cfa23b : string = <string>FA23()("bee");
 
-// XPECT errors --> "int is not a subtype of string." at "4"
+// XPECT errors --> "4 is not a subtype of string." at "4"
 var cfa23c : string = <string>FA23()(4);
 
-// XPECT errors --> "string is not a subtype of number." at ""bee""
+// XPECT errors --> ""bee" is not a subtype of number." at ""bee""
 var cfa23d : number = <number>FA23()("bee");
 
 // OK XPECT noerrors -->

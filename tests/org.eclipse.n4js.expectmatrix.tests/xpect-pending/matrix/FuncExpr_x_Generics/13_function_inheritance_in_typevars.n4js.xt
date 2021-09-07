@@ -84,7 +84,7 @@ var cbfa06a : CB1<string> = FA06(new CB1<string>() , 1,2,3,4,5 );
 // variadic sequence as union-type {string,number} XPECT  noerrors -->
 var cbfa06b : CB1<string> = FA06(new CB1<string>() , 1,2,3,"bb",5 );
 
-// wrong variadic sequence XPECT errors --> "string is not a subtype of number." at ""bb""
+// wrong variadic sequence XPECT errors --> ""bb" is not a subtype of number." at ""bb""
 var cbfa06c : CB1<string> = <CB1<string>,number>FA06(new CB1<string>() , 1,2,3,"bb",5 );
 
 

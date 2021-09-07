@@ -43,7 +43,7 @@ a.f();
 a.f(true);
 
 /* IDEBUG-188 argument in wrong place XPECT errors ---
-"int is not a subtype of boolean." at "5"
+"5 is not a subtype of boolean." at "5"
 ---*/
 a.f(5);
 
@@ -74,7 +74,7 @@ ac.f();
 // not enough arguments XPECT noerrors -->
 ac.f(true);
 
-// argument in wrong place XPECT errors --> "int is not a subtype of boolean." at "5"
+// argument in wrong place XPECT errors --> "5 is not a subtype of boolean." at "5"
 ac.f(5);
 
 // good arguments XPECT noerrors -->

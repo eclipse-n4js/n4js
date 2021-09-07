@@ -45,8 +45,6 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 
 	@Inject
 	private N4JSTypeSystem ts;
-//	@Inject
-//	private extension ValidationTestHelper
 
 
 	val private static preamble = '''
@@ -84,15 +82,12 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 	var Type G;
 	var Type G2;
 
-	def private Script parse(CharSequence code) {
-		val script = createScript(JavaScriptVariant.n4js, (preamble + code).toString);
+	def private Script parseAndValidate(CharSequence code) {
+		val script = createAndValidateScript(JavaScriptVariant.n4js, (preamble + code).toString);
 
 		_G = RuleEnvironmentExtensions.newRuleEnvironment(script);
 
 		N4JSResource.postProcessContainingN4JSResourceOf(script);
-		// FIXME make sure we only work with valid models
-		//val issues = script.validate();
-		//assertEquals(Arrays.toString(issues.toArray), 0, issues.size);
 
 		A = script.module.topLevelTypes.findFirst[name=="A"];
 		B = script.module.topLevelTypes.findFirst[name=="B"];
@@ -176,7 +171,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 			function <T> foo(p: T) : T {return null;}
 			foo( a );
 		'''
-		.parse
+		.parseAndValidate
 		.firstCallExpression.assertType(
 			A.ref
 		)
@@ -187,7 +182,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 			function <T> foo(p: T) : T {return null;}
 			foo(foo(foo( a )));
 		'''
-		.parse
+		.parseAndValidate
 		.firstCallExpression.assertType(
 			A.ref
 		)
@@ -198,7 +193,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 			function <T> foo(p: T) : G<T> {return null;}
 			foo(foo(foo( a )));
 		'''
-		.parse
+		.parseAndValidate
 		.firstCallExpression.assertType(
 			G.of(G.of(G.of(A)))
 		)
@@ -209,7 +204,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 			function <T> foo(p: T) : G<T> {return null;}
 			var test: G<G<G<B>>> = foo(foo(foo( c )));
 		'''
-		.parse
+		.parseAndValidate
 		.firstCallExpression.assertType(
 			G.of(G.of(G.of(B)))
 		)
@@ -221,9 +216,9 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 	@Test
 	def void test_FunctionExpression_nonPoly() {
 		'''
-			var fun = function(p: A):B {};
+			var fun = function(p: A):B {return null;};
 		'''
-		.parse
+		.parseAndValidate
 		.firstFunctionExpression.assertType(
 			functionType(B,A) // {function(A):B}
 		)
@@ -233,7 +228,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var fun: {function(A):void} = function(p) {};
 		'''
-		.parse
+		.parseAndValidate
 		.firstFunctionExpression.assertType(
 			functionType(_G.voidType, A) // {function(A):void}
 		)
@@ -245,7 +240,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 				var a: A = p;
 			};
 		'''
-		.parse
+		.parseAndValidate
 		.firstFunctionExpression.assertType(
 			functionType(_G.voidType, A) // {function(A):void}
 		)
@@ -255,7 +250,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var fun = function(p) {};
 		'''
-		.parse
+		.parseAndValidate
 		.firstFunctionExpression.assertType(
 			functionType(_G.voidType, _G.anyType) // {function(any):void}
 		)
@@ -265,7 +260,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var fun: {function():A} = function() {return null;};
 		'''
-		.parse
+		.parseAndValidate
 		.firstFunctionExpression.assertType(
 			functionType(A) // {function():A}
 		)
@@ -275,7 +270,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var fun = function() {return null;};
 		'''
-		.parse
+		.parseAndValidate
 		.firstFunctionExpression.assertType(
 			functionType(_G.anyType) // {function():any}
 		)
@@ -286,9 +281,9 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 	def void test_CallExpression_x_FunctionExpression_nonPoly() { // note: only the function expression is non-poly (the outer call expression is poly)
 		'''
 			function <P,R> foo(fn: {function(P):R}) : G2<P,R> {return null;}
-			foo( function(p: A):B {} );
+			foo( function(p: A):B {return null;} );
 		'''
-		.parse
+		.parseAndValidate
 		.firstCallExpression.assertType(
 			G2.of(A,B)
 		)
@@ -299,7 +294,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 			function <T> foo(fn: {function(T)}) : T {return null;}
 			var test: A = foo( function(p) {} );
 		'''
-		.parse
+		.parseAndValidate
 		.firstCallExpression.assertType(
 			A.ref
 		)
@@ -313,7 +308,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 			function <T> foo(fn: {function():T}) : T {return null;}
 			var test: A = foo( function() {return null;} );
 		'''
-		.parse
+		.parseAndValidate
 		.firstCallExpression.assertType(
 			A.ref
 		)
@@ -330,7 +325,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var arr = ["hello", 42];
 		'''
-		.parse
+		.parseAndValidate
 		.firstArrayLiteral.assertType(
 			_G.arrayType.of(union(_G.numberType, _G.stringType)) // Array<union{number,string}>
 		)
@@ -340,7 +335,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var arr: Array<union{string,number}> = ["hello", 42];
 		'''
-		.parse
+		.parseAndValidate
 		.firstArrayLiteral.assertType(
 			_G.arrayType.of(union(_G.stringType, _G.numberType)) // Array<union{string,number}>
 		)
@@ -350,7 +345,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var arr: Array<union{B1,B2}> = [b1, b2];
 		'''
-		.parse
+		.parseAndValidate
 		.firstArrayLiteral.assertType(
 			_G.arrayType.of(union(B1, B2)) // Array<union{B1,B2}>
 		)
@@ -360,7 +355,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var arr: Array<any> = ["hello", 42];
 		'''
-		.parse
+		.parseAndValidate
 		.firstArrayLiteral.assertType(
 			_G.arrayType.of(_G.anyTypeRef) // Array<any>
 		)
@@ -370,7 +365,7 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var arr: Array<A> = [b1, b2];
 		'''
-		.parse
+		.parseAndValidate
 		.firstArrayLiteral.assertType(
 			_G.arrayType.of(A.ref) // Array<A>
 		)
@@ -380,9 +375,64 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 		'''
 			var arr: Array<?> = [b1, b2];
 		'''
-		.parse
+		.parseAndValidate
 		.firstArrayLiteral.assertType(
 			_G.arrayType.of(union(B1, B2)) // Array<union{B1,B2}>
+		)
+	}
+	@Test
+	def void test_ArrayLiteral_unionAsExpectation() {
+		'''
+			var arr: number | Array<B> = [c];
+		'''
+		.parseAndValidate
+		.firstArrayLiteral.assertType(
+			_G.arrayType.of(B) // Array<B>
+		)
+	}
+	@Test
+	def void test_ArrayLiteral_unionAsExpectation_subtypeOfIterableOrArrayIsInvalidOption() {
+		'''
+			class MyArray<T> extends Array<T> {}
+			var arr: MyArray<A> | Iterable2<A,B> = [b,c];
+		'''
+		.parseAndValidate
+		.firstArrayLiteral.assertType(
+			_G.arrayNType(2).of(B,C) // Array2<B,C>
+		)
+	}
+	@Test
+	def void test_ArrayLiteral_unionAsExpectation_subtypeOfIterableOrArrayIsInvalidOption_string01() {
+		'''
+			var arr: string | Iterable2<A,B> = [b,c];
+		'''
+		.parseAndValidate
+		.firstArrayLiteral.assertType(
+			_G.arrayNType(2).of(B,C) // Array2<B,C>
+		)
+	}
+	@Test
+	def void test_ArrayLiteral_unionAsExpectation_subtypeOfIterableOrArrayIsInvalidOption_string02() {
+		'''
+			var arr: string | Iterable2<string,string> = ["hello", "world"];
+		'''
+		.parseAndValidate
+		.firstArrayLiteral.assertType(
+			_G.arrayNType(2).of(_G.stringTypeRef, _G.stringTypeRef) // Array2<string,string>
+		)
+	}
+	@Test
+	def void test_ArrayLiteral_unionAsExpectation_subtypeOfIterableOrArrayIsInvalidOption_string03() {
+		'''
+			@StringBased
+			enum Status {
+				ON, OFF
+			}
+			var arr: string | Array2<string,string> = [Status.ON, "world"];
+		'''
+		.parseAndValidate
+		.firstArrayLiteral.assertType(
+			_G.arrayNType(2).of(_G.stringTypeRef, _G.stringTypeRef) // Array2<string,string>
 		)
 	}
 

@@ -69,6 +69,21 @@ class TypeDistanceComputerTest extends Assert {
 	}
 	
 	@Test
+	public def void testLiteralTypeDistance() {
+		assertEquals(0, d("true", "true", preamble), 0);
+		assertEquals(0, d("true", "boolean", preamble), 0);
+		assertEquals(0, d("42", "42", preamble), 0);
+		assertEquals(0, d("42", "int", preamble), 0);
+		assertEquals(0, d("42", "number", preamble), 0);
+		assertEquals(0, d("'hello'", "'hello'", preamble), 0);
+		assertEquals(0, d("'hello'", "string", preamble), 0);
+
+		assertEquals(MAX_DISTANCE, d("true", "string", preamble), 0);
+		assertEquals(MAX_DISTANCE, d("42", "string", preamble), 0);
+		assertEquals(MAX_DISTANCE, d("'hello'", "number", preamble), 0);
+	}
+	
+	@Test
 	public def void testBuiltInTypeDistance() {
 		assertEquals("any -> any", 0, d("any", "any", preamble), 0);		
 		assertEquals("any -> boolean", MAX_DISTANCE, d("any", "boolean", preamble), 0);

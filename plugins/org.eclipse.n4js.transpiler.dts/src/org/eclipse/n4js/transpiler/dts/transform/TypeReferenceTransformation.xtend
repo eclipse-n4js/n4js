@@ -35,10 +35,12 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -59,6 +61,7 @@ import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 
@@ -186,10 +189,12 @@ class TypeReferenceTransformation extends Transformation {
 			write("any"); // unsupported type reference
 		} else if (typeRef instanceof TypeTypeRef) {
 			write("any"); // unsupported type reference
+		} else if (typeRef instanceof LiteralTypeRef) {
+			convertLiteralTypeRef(typeRef);
 		} else if (typeRef instanceof UnknownTypeRef) {
 			write("any"); // unsupported type reference
 		} else {
-			throw new IllegalStateException("unknown subclass of " + ComposedTypeRef.simpleName + ": " + typeRef.getClass.simpleName);
+			throw new IllegalStateException("unknown subclass of " + TypeRef.simpleName + ": " + typeRef.getClass.simpleName);
 		}
 	}
 
@@ -295,7 +300,28 @@ class TypeReferenceTransformation extends Transformation {
 		
 		write(prependType.isNullOrEmpty ? "" : ">");
 	}
-	
+
+	def private void convertLiteralTypeRef(LiteralTypeRef typeRef) {
+		if (typeRef instanceof EnumLiteralTypeRef) {
+			val enumType = typeRef.enumType;
+			val referenceStr = if (enumType !== null) getReferenceToType(enumType, state);
+			if (referenceStr !== null) {
+				write(referenceStr);
+				val enumLiteralName = typeRef.value?.name;
+				val enumKind = N4JSLanguageUtils.getEnumKind(enumType);
+				if (enumLiteralName !== null
+						&& (enumKind === EnumKind.NumberBased || enumKind === EnumKind.StringBased)) {
+					write('.');
+					write(enumLiteralName);
+				}
+			} else {
+				write("any");
+			}
+		} else {
+			write(typeRef.getTypeRefAsString());
+		}
+	}	
+
 	def private String getStructuralTypeReplacements(TypeRef typeRef) {
 		return switch (typeRef.getTypingStrategy()) {
 					case TypingStrategy.STRUCTURAL_FIELDS: "StructuralFields<"

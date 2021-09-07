@@ -128,18 +128,18 @@ anA === {};
 anA === {a:3};
 // XPECT warnings --> "Neither A is a subtype of Array nor Array is a subtype of A. The expression will always evaluate to false."  at "anA === [2,3]"
 anA === [2,3];
-// XPECT warnings --> "Neither A is a subtype of int nor int is a subtype of A. The expression will always evaluate to false." at "anA === 4"
+// XPECT warnings --> "Neither A is a subtype of 4 nor 4 is a subtype of A. The expression will always evaluate to false." at "anA === 4"
 anA === 4;
 
 ub === new B(); // is union of type Object ?
 
-// XPECT warnings --> "Neither string is a subtype of R nor R is a subtype of string. The expression will always evaluate to true."  at ""hallo" !== r"
+// XPECT warnings --> "Neither "hallo" is a subtype of R nor R is a subtype of "hallo". The expression will always evaluate to true."  at ""hallo" !== r"
 "hallo" !== r;
 
 
 
 
-// XPECT warnings --> "Neither { Object,  R2 } is a subtype of int nor int is a subtype of { Object,  R2 }. The expression will always evaluate to false." at "ur === 0"
+// XPECT warnings --> "Neither { Object,  R2 } is a subtype of 0 nor 0 is a subtype of { Object,  R2 }. The expression will always evaluate to false." at "ur === 0"
 ur === 0;
 //  OK
 ur === o;

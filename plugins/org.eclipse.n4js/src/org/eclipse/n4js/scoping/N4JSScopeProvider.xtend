@@ -70,6 +70,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeDefs
@@ -230,15 +231,19 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_NAMESPACE) {
+		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER) {
 			return new FilteringScope(getTypeScope(context, false), [
 				TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
+				|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
 			]);
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val namespace = context.astNamespace;
-				if (namespace!==null) {
-					return createScopeForNamespaceAccess(namespace, context);
+				val astQualifier = context.astDeclaredTypeQualifier;
+				switch (astQualifier) {
+					ModuleNamespaceVirtualType:
+						return createScopeForNamespaceAccess(astQualifier, context)
+					TEnum:
+						return new DynamicPseudoScope()
 				}
 			}
 			return getTypeScope(context, false);
@@ -528,7 +533,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val G = propertyAccess.newRuleEnvironment;
 		val TypeRef typeRefRaw = ts.type(G, receiver);
 		// take upper bound to get rid of ExistentialTypeRefs, ThisTypeRefs, etc.
-		val TypeRef typeRef = ts.upperBoundWithReopenAndResolve(G, typeRefRaw);
+		// (literal types are handled in dispatch method #members() of MemberScopingHelper)
+		val TypeRef typeRef = ts.upperBoundWithReopenAndResolveTypeVars(G, typeRefRaw);
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
@@ -727,7 +733,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				if (propsTypeRef !== null) {
 					// Prevent "Cannot resolve to element" error message of unknown attributes since
 					// we want to issue a warning instead
-					val TypeRef propsTypeRefUB = ts.upperBoundWithReopenAndResolve(context.newRuleEnvironment, propsTypeRef);
+					val TypeRef propsTypeRefUB = ts.upperBoundWithReopenAndResolveTypeVars(context.newRuleEnvironment, propsTypeRef);
 					val memberScope = memberScopingHelper.createMemberScope(propsTypeRefUB, context, checkVisibility,
 						staticAccess, structFieldInitMode);
 					return new DynamicPseudoScope(memberScope);

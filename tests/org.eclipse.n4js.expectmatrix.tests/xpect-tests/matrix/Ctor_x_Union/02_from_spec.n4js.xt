@@ -25,7 +25,7 @@ class B {}
 // one element of union XPECT noerrors -->
 var a1 = new A({x: 4});
 
-// not the element of union XPECT errors --> "~Object with { x: boolean } is not a structural subtype of ~i~A: x failed: boolean is not equal to union{number,string,B}." at "{x: true}"
+// not the element of union XPECT errors --> "~Object with { x: true } is not a structural subtype of ~i~A: x failed: true is not equal to union{number,string,B}." at "{x: true}"
 var a2 = new A({x: true});
 
 var x : union{number,string,B};

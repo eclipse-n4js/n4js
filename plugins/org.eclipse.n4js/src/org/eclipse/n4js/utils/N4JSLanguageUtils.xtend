@@ -12,6 +12,7 @@ package org.eclipse.n4js.utils
 
 import java.io.IOException
 import java.io.InputStream
+import java.math.BigDecimal
 import java.util.Properties
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
@@ -22,7 +23,10 @@ import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.n4JS.AssignmentExpression
+import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.ConditionalExpression
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -67,14 +71,20 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
@@ -101,6 +111,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.ts.utils.TypeCompareUtils
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -110,7 +121,6 @@ import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 
@@ -708,73 +718,98 @@ public class N4JSLanguageUtils {
 
 
 	/**
-	 * Tells if the given numeric literal is a Javascript int32.
+	 * Tells whether 'baseTypeRefCandidate' is the given literal type's {@link #getLiteralTypeBase(RuleEnvironment, TypeRef)
+	 * base type}, without requiring a rule environment and with considering the semantic equality of 'int' and 'number'.
 	 */
-	def static boolean isIntLiteral(NumericLiteral numLit) {
-		val parent = numLit.eContainer;
-		val node = NodeModelUtils.findActualNodeFor(numLit);
-		val text = NodeModelUtils.getTokenText(node);
-		val result = isIntLiteral(text);
-		if(result===2) {
-			return parent instanceof UnaryExpression && (parent as UnaryExpression).op===UnaryOperator.NEG;
+	def public static boolean isLiteralTypeBase(LiteralTypeRef literalTypeRef, TypeRef baseTypeRefCandidate) {
+		// the only chance for success is that 'baseTypeRefCandidate' is a type reference pointing to a primitive
+		// type, so on the success path we can assume that 'baseTypeRefCandidate' will give us a declared type we
+		// can use for building a rule environment (to avoid the need for clients to pass in a rule environment):
+		val declType = baseTypeRefCandidate.getDeclaredType();
+		if (declType !== null) {
+			val G = declType.newRuleEnvironment;
+			val baseTypeRef = getLiteralTypeBase(G, literalTypeRef);
+			if (TypeCompareUtils.isEqual(baseTypeRef, baseTypeRefCandidate)) {
+				return true;
+			}
+			val tInt = G.intType;
+			val tNumber = G.numberType;
+			if ((declType === tInt && baseTypeRef.declaredType === tNumber)
+				|| (declType === tNumber && baseTypeRef.declaredType === tInt)) {
+				return true;
+			}
 		}
-		return result===1;
+		return false;
 	}
+
 	/**
-	 * Tells if the given string represents a Javascript int32. Returns 0 if not, 1 if it does, and 2 if the literal
-	 * represents a number that is an int32 only if it is negative, but not if it is positive (only for literal
-	 * "2147483648" and equivalent literals).
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts
+	 * type references of any kind and converts them only if they are {@link LiteralTypeRef}s.
+	 * <p>
+	 * Note that this does not support nesting, i.e. literal type references nested within
+	 * a type reference of another kind won't be converted!
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof LiteralTypeRef) {
+			return getLiteralTypeBase(G, typeRef);
+		}
+		return typeRef;
+	}
+
+	/**
+	 * Returns the "base type" for the given literal type, e.g. type string for literal type "hello".
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
+		return switch(literalTypeRef) {
+			BooleanLiteralTypeRef: G.booleanTypeRef
+			NumericLiteralTypeRef: getLiteralTypeBase(G, literalTypeRef)
+			StringLiteralTypeRef: G.stringTypeRef
+			EnumLiteralTypeRef: getLiteralTypeBase(G, literalTypeRef)
+			default: throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.simpleName)
+		};
+	}
+
+	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only numeric
+	 * literal type references.
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, NumericLiteralTypeRef literalTypeRef) {
+		return if (isInt32(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef;
+	}
+
+	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only enum
+	 * literal type references.
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, EnumLiteralTypeRef literalTypeRef) {
+		val enumType = literalTypeRef.enumType;
+		return if (enumType !== null) TypeUtils.createTypeRef(enumType) else TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+	}
+
+	/**
+	 * Tells whether the given {@link BigDecimal} represents a Javascript int32.
 	 * <p>
 	 * Some notes:
 	 * <ol>
 	 * <li>the range of int32 is asymmetric: [ -2147483648, 2147483647 ]
-	 * <li>in Java, 1E0 etc. are always of type double, so we follow the same rule below.
+	 * <li>in Java, literals such as 1E0 etc. are always of type double, but we cannot follow the same rule here, because
+	 * the literal is not available and on the basis of the given {@code BigDecimal} we cannot distinguish this.
 	 * <li>hexadecimal and octal literals are always interpreted as positive integers (important difference to Java).
 	 * </ol>
 	 * See N4JS Specification, Section 8.1.3.1 for details.
 	 */
-	def static int isIntLiteral(String numLitStr) {
-		if(numLitStr===null || numLitStr.length===0) {
-			return 0;
+	def static boolean isInt32(BigDecimal value) {
+		if (value === null) {
+			return false;
 		}
-		val hasFractionOrExponent = numLitStr.containsOneOf('.','e','E');
-		if(hasFractionOrExponent) {
-			return 0;
-		}
-		try {
-			val isHex = numLitStr.startsWith("0x") || numLitStr.startsWith("0X");
-			val isOct = !isHex && numLitStr.startsWith("0") && numLitStr.length>1 && !numLitStr.containsOneOf('8','9');
-			val value = if(isHex) {
-				Long.parseLong(numLitStr.substring(2), 16)
-			} else if(isOct) {
-				Long.parseLong(numLitStr.substring(1), 8)
-			} else {
-				Long.parseLong(numLitStr) // here we support a leading '+' or '-'
-			};
-			if(value==2147483648L) { // <-- the one value that is in int32 range if negative, but outside if positive
-				return 2;
-			}
-			if(Integer.MIN_VALUE<=value && value<=Integer.MAX_VALUE) {
-				return 1;
-			}
-			return 0;
-		}
-		catch(NumberFormatException e) {
-			return 0;
-		}
-	}
-
-	def private static boolean containsOneOf(String str, char... ch) {
-		val len = str.length;
-		for(var i=0;i<len;i++) {
-			val chStr = str.charAt(i);
-			for(var j=0;j<ch.length;j++) {
-				if(chStr===ch.get(j)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		// note: normally the correct way of telling whether a BigDecimal is a whole number would be:
+		// boolean isWholeNumber = value.stripTrailingZeros().scale() <= 0;
+		// However, we here want BigDecimals like 0.0, 1.00, -42.0 to *NOT* be treated as a whole numbers,
+		// so we instead go with:
+		val isWholeNumber = value.scale() <= 0;
+		return isWholeNumber
+			&& N4JSGlobals.INT32_MIN_VALUE_BD.compareTo(value) <= 0
+			&& value.compareTo(N4JSGlobals.INT32_MAX_VALUE_BD) <= 0;
 	}
 
 	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
@@ -1213,6 +1248,17 @@ public class N4JSLanguageUtils {
 		}
 
 		return OptionalFieldStrategy.OFF;
+	}
+
+	/**
+	 * Tells whether the given assignment expression has a valid left-hand side.
+	 */
+	def static boolean hasValidLHS(AssignmentExpression assignExpr) {
+		val lhs = assignExpr.lhs;
+		return lhs !== null && (
+			lhs.isValidSimpleAssignmentTarget()
+			|| (assignExpr.op === AssignmentOperator.ASSIGN && DestructureUtils.isTopOfDestructuringAssignment(assignExpr))
+		);
 	}
 
 	/**

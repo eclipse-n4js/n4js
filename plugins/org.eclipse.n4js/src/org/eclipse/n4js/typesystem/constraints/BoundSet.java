@@ -91,6 +91,22 @@ import com.google.common.collect.SetMultimap;
 		this.ts = ts;
 	}
 
+	private BoundSet(BoundSet other) {
+		this(other.ic, other.G, other.ts);
+		this.boundsPerInfVar.putAll(other.boundsPerInfVar);
+		this.instantiations.putAll(other.instantiations);
+		this.incorporatedBounds.addAll(other.incorporatedBounds);
+		this.haveBoundFALSE = other.haveBoundFALSE;
+		this.haveRawTypeRef = other.haveRawTypeRef;
+	}
+
+	/**
+	 * Creates a copy of this bound set's current state.
+	 */
+	public BoundSet copy() {
+		return new BoundSet(this);
+	}
+
 	/**
 	 * Once a contradiction has been detected, constraint solving can quit early: no solution exists anyway.
 	 */

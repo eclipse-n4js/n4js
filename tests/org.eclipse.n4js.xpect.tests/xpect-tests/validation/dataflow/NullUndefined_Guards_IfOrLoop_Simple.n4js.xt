@@ -363,7 +363,7 @@ function f43() {
 }
 
 function f44() {
-	let a : int;
+	let a : string;
 	for (a in ns()) {
 		// XPECT nowarnings -->
 		a.toString();
@@ -373,7 +373,7 @@ function f44() {
 }
 
 function f45() {
-	let a : int = 0;
+	let a : string = '0';
 	for (a in ns()) {
 		// XPECT nowarnings -->
 		a.toString();

@@ -17,10 +17,10 @@
 
 // variadic parameter in function expression XPECT noerrors -->
 var f = function (... param : string) : string {
-	var s1 : number, s = "";
-	for (s1 in param) {
+	var s = "";
+	for (var i = 0; i < param.length; i++) {
 		// accessing in function XPECT noerrors -->
-		s += param[s1];
+		s += param[i];
 	}
 	return s;
 }

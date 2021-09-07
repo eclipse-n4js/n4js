@@ -95,6 +95,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
@@ -453,7 +454,7 @@ import com.google.inject.Inject;
 				if (javaScriptVariantHelper.isTypeAware(e)) {
 					// TODO this looks expensive...
 					final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(
-							numberTypeRef(G), stringTypeRef(G), booleanTypeRef(G));
+							booleanTypeRef(G), numberTypeRef(G), stringTypeRef(G));
 					final Expression otherSide = expression == e.getLhs() ? e.getRhs() : e.getLhs();
 					final TypeRef otherSideTR = ts.type(G, otherSide);
 					if (otherSideTR == null) {
@@ -461,7 +462,7 @@ import com.google.inject.Inject;
 					}
 					if (ts.subtype(G, otherSideTR, primsTR).isSuccess()
 							&& !ts.subtype(G, otherSideTR, nullTypeRef(G)).isSuccess()) {
-						return otherSideTR;
+						return ts.upperBoundWithReopenAndResolveBoth(G, otherSideTR);
 					} else {
 						return primsTR;
 					}
@@ -526,6 +527,10 @@ import com.google.inject.Inject;
 					return bottomTypeRef(G); // no expectation
 				} else {
 					// right-hand side:
+					if (!N4JSLanguageUtils.hasValidLHS(expr)) {
+						// suppress follow-up error
+						return NO_EXPECTATION; // no type expectation at all
+					}
 					// right-hand side is expected to be of same type (or subtype) as left-hand side
 					return ts.type(G, expr.getLhs()); // note: this gives us the type for write access on LHS
 				}
@@ -542,6 +547,10 @@ import com.google.inject.Inject;
 					return TypeUtils.createNonSimplifiedIntersectionType(numberTypeRef(G), stringTypeRef(G));
 				} else {
 					// right hand side:
+					if (!N4JSLanguageUtils.hasValidLHS(expr)) {
+						// suppress follow-up error
+						return NO_EXPECTATION; // no type expectation at all
+					}
 					final TypeRef lhsTypeRef = ts.type(G, expr.getLhs());
 					if (lhsTypeRef == null) {
 						return unknown();

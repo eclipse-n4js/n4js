@@ -193,6 +193,51 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Returns <code>true</code> iff the given AST node is a variable, field, or property that is immutable (e.g. const,
+	 * final).
+	 */
+	public static boolean isImmutable(EObject astNode) {
+		if (astNode instanceof PropertyNameValuePair) {
+			return isImmutable((PropertyNameValuePair) astNode);
+		} else if (astNode instanceof N4FieldDeclaration) {
+			return isImmutable((N4FieldDeclaration) astNode);
+		} else if (astNode instanceof VariableDeclaration) {
+			return isImmutable((VariableDeclaration) astNode);
+		}
+		return false;
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for properties. */
+	public static boolean isImmutable(@SuppressWarnings("unused") PropertyNameValuePair nameValuePair) {
+		return false;
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for fields. */
+	public static boolean isImmutable(N4FieldDeclaration fieldDecl) {
+		// note regarding @Final:
+		// it is tempting to treat an @Final field as immutable iff it has an initializer expression;
+		// however, even in case an initializer expression is provided for a @Final field, its value
+		// may be changed via a @Spec-constructor (not in ordinary constructor code) and actually this
+		// is a common case because it is an important reason for choosing a @Final field over a const
+		// field; thus, we have to treat @Final fields as mutable for the purpose of this method!
+		return fieldDecl.isConst();
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for variables. */
+	public static boolean isImmutable(VariableDeclaration vdecl) {
+		return getVariableStatementKeyword(vdecl) == VariableStatementKeyword.CONST;
+	}
+
+	/**
+	 * Returns the {@link VariableStatementKeyword} of the given variable, i.e. {@code var}, {@code let}, or
+	 * {@code const}.
+	 */
+	public static VariableStatementKeyword getVariableStatementKeyword(VariableDeclaration vdecl) {
+		VariableDeclarationContainer container = getVariableDeclarationContainer(vdecl);
+		return container != null ? container.getVarStmtKeyword() : null;
+	}
+
+	/**
 	 * To get from a variable declaration to its "containing" {@link VariableDeclarationContainer} use this method.
 	 * Details on why this is required are given {@link VariableDeclarationContainer here}.
 	 */
