@@ -30,6 +30,7 @@ import org.eclipse.n4js.workspace.N4JSProjectConfig
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfig
 import org.eclipse.n4js.workspace.locations.FileURI
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -53,6 +54,7 @@ class SemanticDependenciesTest {
 
 	@Inject private ProjectDiscoveryHelper projectDiscoveryHelper;
 	@Inject private ProjectDescriptionLoader projectDescriptionLoader;
+	@Inject private SemanticDependencySupplier semanticDependencySupplier;
 	@Inject private N4JSConfigSnapshotFactory configSnapshotFactory;
 	@Inject private UriExtensions uriExtensions;
 
@@ -60,7 +62,7 @@ class SemanticDependenciesTest {
 
 	@Before
 	public def void createWorkspace() {
-		this.workspace = new MockWorkspaceConfig(projectDiscoveryHelper, projectDescriptionLoader, configSnapshotFactory, uriExtensions);
+		this.workspace = new MockWorkspaceConfig(projectDiscoveryHelper, projectDescriptionLoader, semanticDependencySupplier, configSnapshotFactory, uriExtensions);
 	}
 
 	@After
@@ -333,21 +335,24 @@ class SemanticDependenciesTest {
 class MockWorkspaceConfig extends N4JSWorkspaceConfig {
 
 	new(ProjectDiscoveryHelper projectDiscoveryHelper, ProjectDescriptionLoader projectDescriptionLoader,
+		SemanticDependencySupplier semanticDependencySupplier,
 		ConfigSnapshotFactory configSnapshotFactory, UriExtensions uriExtensions) {
 
 		super(URI.createFileURI(File.separator + "mock-workspace"),
-			projectDiscoveryHelper, projectDescriptionLoader, configSnapshotFactory, uriExtensions);
+			projectDiscoveryHelper, projectDescriptionLoader, semanticDependencySupplier, configSnapshotFactory, uriExtensions);
 	}
 
 	override protected MockTypeDefinitionsProject createProjectConfig(FileURI path, ProjectDescription pd) {
-		return new MockTypeDefinitionsProject(this, path, pd, projectDescriptionLoader);
+		return new MockTypeDefinitionsProject(this, path, pd, projectDescriptionLoader, semanticDependencySupplier);
 	}
 }
 
 class MockTypeDefinitionsProject extends N4JSProjectConfig {
 
-	new(MockWorkspaceConfig workspace, FileURI path, ProjectDescription pd, ProjectDescriptionLoader pdLoader) {
-		super(workspace, path, pd, pdLoader);
+	new(MockWorkspaceConfig workspace, FileURI path, ProjectDescription pd, ProjectDescriptionLoader pdLoader, 
+		SemanticDependencySupplier semanticDependencySupplier
+	) {
+		super(workspace, path, pd, pdLoader, semanticDependencySupplier);
 	}
 	
 	public override String toString() {

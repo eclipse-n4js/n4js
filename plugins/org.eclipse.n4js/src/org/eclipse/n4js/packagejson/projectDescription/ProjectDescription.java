@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class ProjectDescription extends ImmutableDataClass {
 
+	private final String qualifiedName;
 	private final String name;
 	private final String vendorId;
 	private final String vendorName;
@@ -58,8 +59,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
-	public ProjectDescription(String name, String vendorId, String vendorName, VersionNumber version,
-			ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
+	public ProjectDescription(String qualifiedName, String name, String vendorId, String vendorName,
+			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath,
@@ -67,6 +68,8 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
 			boolean n4jsNature, boolean yarnWorkspaceRoot,
 			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
+
+		this.qualifiedName = qualifiedName;
 		this.name = name;
 		this.vendorId = vendorId;
 		this.vendorName = vendorName;
@@ -93,6 +96,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	public ProjectDescription(ProjectDescription template) {
+		this.qualifiedName = template.qualifiedName;
 		this.name = template.name;
 		this.vendorId = template.vendorId;
 		this.vendorName = template.vendorName;
@@ -125,6 +129,7 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public ProjectDescriptionBuilder change() {
 		ProjectDescriptionBuilder builder = new ProjectDescriptionBuilder();
+		builder.setName(qualifiedName);
 		builder.setName(name);
 		builder.setVendorId(vendorId);
 		builder.setVendorName(vendorName);
@@ -147,6 +152,11 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
 		builder.getWorkspaces().addAll(workspaces);
 		return builder;
+	}
+
+	/** The project qualified name is the relative path from the project root (which may be a yarn workspace). */
+	public String getQualifiedName() {
+		return qualifiedName;
 	}
 
 	/** The project name, possibly including a scope prefix (e.g. {@code "@someScope/myProject"}). */
@@ -279,6 +289,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
+				qualifiedName,
 				name,
 				vendorId,
 				vendorName,
@@ -307,7 +318,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ProjectDescription other = (ProjectDescription) obj;
-		return Objects.equals(name, other.name)
+		return Objects.equals(qualifiedName, other.qualifiedName)
+				&& Objects.equals(name, other.name)
 				&& Objects.equals(vendorId, other.vendorId)
 				&& Objects.equals(vendorName, other.vendorName)
 				// version is covered by internalVersionStr

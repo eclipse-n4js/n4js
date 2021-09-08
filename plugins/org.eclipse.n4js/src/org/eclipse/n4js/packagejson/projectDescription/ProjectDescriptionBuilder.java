@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.packagejson.projectDescription;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.google.common.collect.Iterables;
 public class ProjectDescriptionBuilder {
 
 	private FileURI location;
+	private String qualifiedName;
 	private String name;
 	private String vendorId;
 	private String vendorName;
@@ -55,13 +57,27 @@ public class ProjectDescriptionBuilder {
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
 		String failSafeName = (name == null || name.isBlank()) && location != null
-				? location.findDerivedProjectName().getRawName()
+				? location.findProjectName().getRawName()
 				: name;
-		return new ProjectDescription(failSafeName, vendorId, vendorName, version, type, mainModule,
+		qualifiedName = computeQualifiedName(failSafeName);
+		return new ProjectDescription(qualifiedName, failSafeName, vendorId, vendorName, version, type, mainModule,
 				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
 				implementationId, implementedProjects, outputPath, sourceContainers, moduleFilters, testedProjects,
 				definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts,
 				workspaces);
+	}
+
+	private String computeQualifiedName(String failSafeName) {
+		if (qualifiedName != null) {
+			return qualifiedName;
+		} else if (location != null) {
+			FileURI projectRoot = location.getParent().getProjectRoot();
+			if (projectRoot != null && projectRoot.getParent() != null) {
+				List<String> relativePath = location.deresolve(projectRoot.getParent());
+				return String.join(File.separator, relativePath);
+			}
+		}
+		return failSafeName;
 	}
 
 	public FileURI getLocation() {
@@ -75,6 +91,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setLocation(URI location) {
 		this.location = location == null ? null : new FileURI(location);
+		return this;
+	}
+
+	public String getQualifiedName() {
+		return qualifiedName;
+	}
+
+	public ProjectDescriptionBuilder setQualifiedName(String qualifiedName) {
+		this.qualifiedName = qualifiedName;
 		return this;
 	}
 

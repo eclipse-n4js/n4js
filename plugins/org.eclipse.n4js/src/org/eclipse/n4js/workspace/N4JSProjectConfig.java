@@ -51,6 +51,7 @@ import com.google.common.collect.Iterables;
 public class N4JSProjectConfig implements XIProjectConfig {
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
+	private final SemanticDependencySupplier semanticDependencySupplier;
 
 	private final N4JSWorkspaceConfig workspace;
 	private final FileURI path;
@@ -62,10 +63,12 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 * Constructor
 	 */
 	public N4JSProjectConfig(N4JSWorkspaceConfig workspace, FileURI path, ProjectDescription pd,
-			ProjectDescriptionLoader projectDescriptionLoader) {
+			ProjectDescriptionLoader projectDescriptionLoader, SemanticDependencySupplier semanticDependencySupplier) {
+
 		this.workspace = Objects.requireNonNull(workspace);
 		this.path = Objects.requireNonNull(path);
 		this.projectDescriptionLoader = Objects.requireNonNull(projectDescriptionLoader);
+		this.semanticDependencySupplier = Objects.requireNonNull(semanticDependencySupplier);
 
 		this.projectDescription = Objects.requireNonNull(pd);
 		this.sourceFolders = createSourceFolders(pd);
@@ -149,7 +152,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	@Override
 	public String getName() {
-		return projectDescription.getName();
+		return projectDescription.getQualifiedName();
 	}
 
 	/** Returns this project's name as an {@link N4JSProjectName}. */
@@ -167,7 +170,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	/** The dependencies of this project as given in the <code>package.json</code> file. */
 	@Override
 	public Set<String> getDependencies() {
-		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
+		List<ProjectDependency> deps = semanticDependencySupplier.changeToQualifiedNames(workspace, this,
+				projectDescription.getProjectDependencies());
 		Set<String> result = new LinkedHashSet<>(deps.size());
 		for (ProjectDependency dep : deps) {
 			result.add(dep.getProjectName());
@@ -191,7 +195,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	public List<ProjectDependency> computeSemanticDependencies() {
 		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
 		return ImmutableList.copyOf(
-				SemanticDependencySupplier.computeSemanticDependencies(workspace.definitionProjects, deps));
+				semanticDependencySupplier.changeToQualifiedNames(workspace, this,
+						semanticDependencySupplier.computeSemanticDependencies(workspace.definitionProjects, deps)));
 	}
 
 	@Override

@@ -322,7 +322,7 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	public U getProjectRoot() {
 		@SuppressWarnings("unchecked")
 		U result = (U) this;
-		if (isFile()) {
+		if (isFile()) { // FIXME: Should this check to be a package.json files?
 			result = result.getParent();
 		}
 		while (result != null) {

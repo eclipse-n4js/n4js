@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.workspace.utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,20 +22,30 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.DependencyType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.semver.SemverUtils;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
+import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.workspace.N4JSProjectConfig;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfig;
+
+import com.google.inject.Inject;
 
 /**
  * Computes the semantic dependencies of an N4JS project.
  */
 public class SemanticDependencySupplier {
 
+	/** */
+	@Inject
+	protected NodeModulesDiscoveryHelper nodeModulesDiscoveryHelper;
+
 	/**
 	 * Actually computes the semantic dependencies, see {@link N4JSProjectConfig#computeSemanticDependencies()}.
 	 */
-	public static List<ProjectDependency> computeSemanticDependencies(
+	public List<ProjectDependency> computeSemanticDependencies(
 			DefinitionProjectMap definitionProjects, List<ProjectDependency> dependencies) {
 
 		Set<String> implicitDependencies = new LinkedHashSet<>();
@@ -71,5 +86,75 @@ public class SemanticDependencySupplier {
 			pDeps.move(0, moveToTopDep);
 		}
 		return pDeps;
+	}
+
+	/**
+	 */
+	public List<ProjectDependency> changeToQualifiedNames(N4JSWorkspaceConfig workspace,
+			N4JSProjectConfig containingProject, List<ProjectDependency> dependencies) {
+
+		Path workspaceLocation = workspace.getPathAsFileURI().toPath();
+		Path projectLocation = containingProject.getPathAsFileURI().toPath();
+		Path relProjectLocation = workspaceLocation.relativize(containingProject.getPathAsFileURI().toPath());
+		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectLocation);
+		List<ProjectDependency> result = new ArrayList<>();
+		for (ProjectDependency dep : dependencies) {
+			String depName = dep.getProjectName();
+			String qualifiedName = getQualifiedName(workspaceLocation, relProjectLocation, nodeModulesFolder, depName);
+			qualifiedName = qualifiedName == null ? depName : qualifiedName;
+			ProjectDependency newDep = new ProjectDependency(qualifiedName, dep.getType(),
+					dep.getVersionRequirementString(), dep.getVersionRequirement());
+			result.add(newDep);
+		}
+
+		return result;
+	}
+
+	private String getQualifiedName(Path workspaceLocation, Path relProjectLocation,
+			NodeModulesFolder nodeModulesFolder, String depName) {
+
+		Path relDepPath = null;
+		if (nodeModulesFolder == null) {
+			relDepPath = relProjectLocation.resolve(N4JSGlobals.NODE_MODULES).resolve(depName);
+
+		} else {
+			for (File nodeModulesDir : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
+				Path absDepPath = nodeModulesDir.toPath().resolve(depName);
+				if (absDepPath.resolve(N4JSGlobals.PACKAGE_JSON).toFile().isFile()) {
+					absDepPath = resolveSymbolicLinkOrDefault(absDepPath);
+					relDepPath = workspaceLocation.relativize(absDepPath);
+					break;
+				}
+			}
+		}
+		if (relDepPath != null) {
+			return relDepPath.toString();
+		}
+		return null;
+	}
+
+	public static Path resolveSymbolicLinkOrDefault(Path path) {
+		Path resolvedPath = resolveSymbolicLink(path);
+		if (resolvedPath == null) {
+			return path;
+		} else {
+			return resolvedPath;
+		}
+	}
+
+	public static Path resolveSymbolicLink(Path path) {
+		if (Files.isSymbolicLink(path)) {
+			try {
+				Path slTarget = Files.readSymbolicLink(path);
+				if (slTarget.isAbsolute()) {
+					return slTarget;
+				} else {
+					return path.getParent().resolve(slTarget).normalize();
+				}
+			} catch (IOException e) {
+				e.printStackTrace(); // FIXME: handle this properly
+			}
+		}
+		return null;
 	}
 }

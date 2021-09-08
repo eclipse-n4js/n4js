@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.DefinitionProjectMap;
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
@@ -39,9 +41,7 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -60,12 +60,14 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	/***/
 	protected final ProjectDescriptionLoader projectDescriptionLoader;
 	/***/
+	protected final SemanticDependencySupplier semanticDependencySupplier;
+	/***/
 	protected final ConfigSnapshotFactory configSnapshotFactory;
 	/***/
 	protected final UriExtensions uriExtensions;
 
 	/** All projects registered in this workspace. */
-	protected final BiMap<String, N4JSProjectConfig> name2ProjectConfig = HashBiMap.create();
+	protected final Map<String, N4JSProjectConfig> qualifiedName2ProjectConfig = new LinkedHashMap<>();
 	/** Map between definition projects and their defined projects. */
 	protected final DefinitionProjectMap definitionProjects = new DefinitionProjectMap();
 
@@ -74,12 +76,13 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 * {@link #reloadAllProjectInformationFromDisk()} is invoked for the first time.
 	 */
 	public N4JSWorkspaceConfig(URI baseDirectory, ProjectDiscoveryHelper projectDiscoveryHelper,
-			ProjectDescriptionLoader projectDescriptionLoader, ConfigSnapshotFactory configSnapshotFactory,
-			UriExtensions uriExtensions) {
+			ProjectDescriptionLoader projectDescriptionLoader, SemanticDependencySupplier semanticDependencySupplier,
+			ConfigSnapshotFactory configSnapshotFactory, UriExtensions uriExtensions) {
 
 		this.baseDirectory = baseDirectory;
 		this.projectDiscoveryHelper = projectDiscoveryHelper;
 		this.projectDescriptionLoader = projectDescriptionLoader;
+		this.semanticDependencySupplier = semanticDependencySupplier;
 		this.configSnapshotFactory = configSnapshotFactory;
 		this.uriExtensions = uriExtensions;
 	}
@@ -96,12 +99,12 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	@Override
 	public Set<? extends N4JSProjectConfig> getProjects() {
-		return ImmutableSet.copyOf(name2ProjectConfig.values());
+		return ImmutableSet.copyOf(qualifiedName2ProjectConfig.values());
 	}
 
 	@Override
 	public N4JSProjectConfig findProjectByName(String name) {
-		return name2ProjectConfig.get(name);
+		return qualifiedName2ProjectConfig.get(name);
 	}
 
 	/**
@@ -118,7 +121,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	/** Remove all {@link N4JSProjectConfig}s from this workspace. */
 	protected void deregisterAllProjects() {
-		name2ProjectConfig.clear();
+		qualifiedName2ProjectConfig.clear();
 		definitionProjects.clear();
 	}
 
@@ -132,19 +135,19 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 */
 	// TODO GH-1314 reconsider shadowing of projects with same name
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
-		String name = pd.getName();
-		if (name2ProjectConfig.containsKey(name)) {
-			return null; // see note on shadowing in API doc of this method!
+		String qualifiedName = pd.getQualifiedName();
+		if (qualifiedName2ProjectConfig.containsKey(qualifiedName)) {
+			return null;
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
-		name2ProjectConfig.put(newProject.getName(), newProject);
+		qualifiedName2ProjectConfig.put(qualifiedName, newProject);
 		updateDefinitionProjects(null, pd);
 		return newProject;
 	}
 
 	/** Creates an instance of {@link N4JSProjectConfig} without registering it. */
 	protected N4JSProjectConfig createProjectConfig(FileURI path, ProjectDescription pd) {
-		return new N4JSProjectConfig(this, path, pd, projectDescriptionLoader);
+		return new N4JSProjectConfig(this, path, pd, projectDescriptionLoader, semanticDependencySupplier);
 	}
 
 	/** Invoked by {@link N4JSProjectConfig} when its state changes. */

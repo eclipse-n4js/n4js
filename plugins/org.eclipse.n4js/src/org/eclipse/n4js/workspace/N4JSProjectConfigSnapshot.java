@@ -48,7 +48,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			boolean indexOnly, boolean generatorEnabled, Iterable<String> dependencies,
 			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
 
-		super(projectDescription.getName(), path,
+		super(projectDescription.getQualifiedName(), path,
 				Collections.singleton(URIUtils.trimTrailingPathSeparator(path).appendSegment(N4JSGlobals.PACKAGE_JSON)),
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
 

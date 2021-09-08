@@ -44,6 +44,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier;
 
 import com.google.inject.Inject;
 
@@ -118,15 +119,12 @@ public class ProjectDiscoveryHelper {
 		Collections.sort(sortedProjects);
 
 		List<Path> sortedDependecies = new ArrayList<>();
-		for (Map.Entry<String, Path> dependency : dependencies.entrySet()) {
-			if (!projects.containsKey(dependency.getKey())) {
-				sortedDependecies.add(dependency.getValue());
-			}
-		}
+		sortedDependecies.addAll(dependencies.values());
 		Collections.sort(sortedDependecies);
 
 		sortedProjects.addAll(sortedDependecies);
 
+		// FIXME: necessary at all?
 		if (loadAllDescriptions) {
 			for (Path path : sortedProjects) {
 				getCachedProjectDescription(path, pdCache);
@@ -216,7 +214,7 @@ public class ProjectDiscoveryHelper {
 		// 2) having the workspace root project or not makes a huge difference (projects exist inside projects) and it
 		// is better to always stick to one situation (otherwise many tests would have to be provided in two variants),
 		// 3) the yarn workspace root project has always been included.
-		allProjectDirs.putIfAbsent(projectDescription.getName(), yarnProjectRoot);
+		allProjectDirs.putIfAbsent(projectDescription.getQualifiedName(), yarnProjectRoot);
 
 		Map<String, Path> memberProjects = new LinkedHashMap<>();
 		for (String workspaceGlob : workspaces) {
@@ -307,7 +305,9 @@ public class ProjectDiscoveryHelper {
 								ProjectDescription projectDescription = getCachedProjectDescription(dir, pdCache);
 								// note: add 'dir' to 'allProjectDirs' even if it is PLAINJS (will be taken care of by
 								// #removeUnnecessaryPlainjsProjects() below)
-								allProjectDirs.putIfAbsent(projectDescription.getName(), dir);
+								if (projectDescription != null) {
+									allProjectDirs.putIfAbsent(projectDescription.getQualifiedName(), dir);
+								}
 								return FileVisitResult.SKIP_SUBTREE;
 							}
 						}
@@ -334,6 +334,7 @@ public class ProjectDiscoveryHelper {
 	private void removeUnnecessaryPlainjsProjects(Map<String, Path> projects, Map<Path, ProjectDescription> pdCache) {
 		Map<String, Path> plainjsProjects = new HashMap<>();
 		Set<String> projectsRequiredByAnN4JSProject = new HashSet<>();
+		Map<String, String> name2QualifiedName = new HashMap<>();
 		for (Path project : projects.values()) {
 			ProjectDescription pd = getCachedProjectDescription(project, pdCache);
 			if (pd == null) {
@@ -341,6 +342,8 @@ public class ProjectDiscoveryHelper {
 			}
 			ProjectType type = pd.getType();
 			if (type == ProjectType.PLAINJS) {
+				// note: in case a name occurs twice yarn would throw an error
+				name2QualifiedName.put(pd.getName(), pd.getQualifiedName());
 				plainjsProjects.put(pd.getName(), project);
 			} else {
 				List<String> deps = pd.getProjectDependencies().stream()
@@ -349,17 +352,21 @@ public class ProjectDiscoveryHelper {
 			}
 		}
 		plainjsProjects.keySet().removeAll(projectsRequiredByAnN4JSProject);
-		projects.keySet().removeAll(plainjsProjects.keySet());
+		for (String plainJsName : plainjsProjects.keySet()) {
+			if (name2QualifiedName.containsKey(plainJsName)) {
+				projects.remove(name2QualifiedName.get(plainJsName));
+			}
+		}
 	}
 
 	private void addIfNotPlainjs(Map<String, Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
 		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
 		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
-			addHere.putIfAbsent(pd.getName(), project);
+			addHere.putIfAbsent(pd.getQualifiedName(), project);
 		}
 	}
 
-	/** @return the potentially cached {@link ProjectDescription} for the project in the given directory */
+	/** @return the potentially cached {@link ProjectDescription} for the project in the given directory or null. */
 	private ProjectDescription getCachedProjectDescription(Path path, Map<Path, ProjectDescription> cache) {
 		if (!cache.containsKey(path)) {
 			FileURI uri = new FileURI(path.toFile());
@@ -398,15 +405,15 @@ public class ProjectDiscoveryHelper {
 		Map<String, Path> dependencies = new LinkedHashMap<>();
 
 		for (Path nextProject : allProjectDirs.values()) {
-			collectProjectDependencies(nextProject, pdCache, dependencies);
+			collectProjectDependencies(allProjectDirs, nextProject, pdCache, dependencies);
 		}
 
 		return dependencies;
 	}
 
 	/** Collects all (transitive) dependencies of the given project */
-	private void collectProjectDependencies(Path projectDir, Map<Path, ProjectDescription> pdCache,
-			Map<String, Path> dependencies) {
+	private void collectProjectDependencies(Map<String, Path> allProjectDirs, Path projectDir,
+			Map<Path, ProjectDescription> pdCache, Map<String, Path> dependencies) {
 
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectDir, pdCache);
 		LinkedHashSet<Path> workList = new LinkedHashSet<>();
@@ -416,11 +423,11 @@ public class ProjectDiscoveryHelper {
 			Path nextProject = iterator.next();
 			iterator.remove();
 
-			findDependencies(nextProject, nodeModulesFolder, pdCache, workList, dependencies);
+			findDependencies(allProjectDirs, nextProject, nodeModulesFolder, pdCache, workList, dependencies);
 		}
 	}
 
-	private void findDependencies(Path prjDir, NodeModulesFolder nodeModulesFolder,
+	private void findDependencies(Map<String, Path> allProjectDirs, Path prjDir, NodeModulesFolder nodeModulesFolder,
 			Map<Path, ProjectDescription> pdCache, Set<Path> workList, Map<String, Path> dependencies) {
 
 		Path prjNodeModules = prjDir.resolve(N4JSGlobals.NODE_MODULES);
@@ -433,10 +440,31 @@ public class ProjectDiscoveryHelper {
 			String depName = dependency.getProjectName();
 
 			Path depLocation = findDependencyLocation(nodeModulesFolder, prjNodeModules, depName);
-			if (!prjDir.equals(depLocation)) {
+			if (isNewDependency(allProjectDirs, prjDir, pdCache, depLocation)) {
 				addDependency(depLocation, pdCache, workList, dependencies);
 			}
 		}
+	}
+
+	private boolean isNewDependency(Map<String, Path> allProjectDirs, Path prjDir,
+			Map<Path, ProjectDescription> pdCache, Path depLocation) {
+
+		if (depLocation == null) {
+			return false;
+		}
+		// check reference to yarn packages project
+		if (Files.isSymbolicLink(depLocation)) {
+			Path linkTarget = SemanticDependencySupplier.resolveSymbolicLink(depLocation);
+			if (linkTarget != null) {
+				ProjectDescription prjDescrLinked = getCachedProjectDescription(linkTarget, pdCache);
+				if (prjDescrLinked != null && allProjectDirs.containsKey(prjDescrLinked.getQualifiedName())) {
+					return false;
+				}
+			}
+		}
+
+		// check self-reference
+		return !prjDir.equals(depLocation);
 	}
 
 	private void addDependency(Path depLocation, Map<Path, ProjectDescription> pdCache, Set<Path> workList,
@@ -452,12 +480,12 @@ public class ProjectDiscoveryHelper {
 			ProjectDescription depPD = getCachedProjectDescription(depLocation, pdCache);
 
 			if (depPD != null) {
-				String depName = depPD.getName();
-				if (dependencies.containsKey(depName)) {
+				String depQualifiedName = depPD.getQualifiedName();
+				if (dependencies.containsKey(depQualifiedName)) {
 					return;
 				}
 
-				dependencies.putIfAbsent(depName, depLocation);
+				dependencies.putIfAbsent(depQualifiedName, depLocation);
 
 				if (depPD.hasN4JSNature()) {
 					workList.add(depLocation);
@@ -466,8 +494,7 @@ public class ProjectDiscoveryHelper {
 		}
 	}
 
-	// Always use dependency of yarn workspace node_modules folder if it is available
-	// TODO GH-1314, remove shadow logic here
+	// Note: in node_modules folders the project name always equals its parent folder(s)
 	private Path findDependencyLocation(NodeModulesFolder nodeModulesFolder, Path prjNodeModules, String depName) {
 		if (nodeModulesFolder == null) {
 			return prjNodeModules.resolve(depName);
