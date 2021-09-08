@@ -14,7 +14,7 @@ import org.eclipse.n4js.tests.utils.ConvertedCompletionIdeTest
 import org.junit.Test
 
 // converted from ContentAssistBugPluginUITest
-class ContentAssistBugIdeTest extends ConvertedCompletionIdeTest {
+class ContentAssistBugGH0039IdeTest extends ConvertedCompletionIdeTest {
 
 	private final String expectedProposals = '''
 			(__proto__, Property, __proto__, , , 00000, , , , ([3:5 - 3:5], __proto__), [], [], , )

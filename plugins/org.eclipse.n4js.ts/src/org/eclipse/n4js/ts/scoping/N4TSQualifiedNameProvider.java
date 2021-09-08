@@ -134,12 +134,13 @@ public class N4TSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 	 * {@link #POLYFILL_SEGMENT}.
 	 */
 	public static boolean isPolyfill(QualifiedName name) {
-		if (name == null || name.getSegmentCount() < 2) {
+		if (name == null) {
 			return false;
 		}
 		// as long as Module-polyfill is not enforced, we check for presence and then adapt:
 		int polyModuleOffest = isModulePolyfill(name) ? 1 : 0;
-		return POLYFILL_SEGMENT.equals(name.getSegment(name.getSegmentCount() - (2 + polyModuleOffest)));
+		int polyFillSegmentIdx = name.getSegmentCount() - (2 + polyModuleOffest);
+		return polyFillSegmentIdx >= 0 && POLYFILL_SEGMENT.equals(name.getSegment(polyFillSegmentIdx));
 	}
 
 	/**
