@@ -1,9 +1,8 @@
 # Project Discovery Test
 # working dir marked with '*'
 
-# Projects in the global node_modules folder of a yarn workspace root project have priority over
-# projects in local node_modules folders. Note that this is at odds with node's module look-up,
-# but is necessary because N4JS does not yet support multiple projects with the same name.
+# Projects in the local node_modules folders of a yarn workspace projects have priority over
+# the projects in the global yarn workspace node_modules folder.
 
 FOLDERS
 - someFolder
@@ -19,4 +18,4 @@ FOLDERS
 EXPECT
 - someFolder/P1
 - someFolder/P1/packages/D1
-- someFolder/P1/node_modules/Q1
+- someFolder/P1/packages/D1/node_modules/Q1
