@@ -322,7 +322,7 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	public U getProjectRoot() {
 		@SuppressWarnings("unchecked")
 		U result = (U) this;
-		if (isFile()) { // FIXME: Should this check to be a package.json files?
+		if (isFile()) {
 			result = result.getParent();
 		}
 		while (result != null) {
@@ -332,6 +332,18 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 			result = result.getParent();
 		}
 		return null;
+	}
+
+	/**
+	 * Ascends from the current location to find the nearest project root and determines the project name of its parent
+	 * folders.
+	 */
+	public N4JSProjectName findProjectName() {
+		U projectRoot = getProjectRoot();
+		if (projectRoot == null) {
+			return null;
+		}
+		return projectRoot.deriveProjectName();
 	}
 
 	/**
