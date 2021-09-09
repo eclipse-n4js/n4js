@@ -194,9 +194,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 */
 	public List<ProjectDependency> computeSemanticDependencies() {
 		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
-		return ImmutableList.copyOf(
-				semanticDependencySupplier.changeToQualifiedNames(workspace, this,
-						semanticDependencySupplier.computeSemanticDependencies(workspace.definitionProjects, deps)));
+		List<ProjectDependency> semanticDependencies = semanticDependencySupplier
+				.computeSemanticDependencies(workspace.definitionProjects, deps);
+		return ImmutableList
+				.copyOf(semanticDependencySupplier.changeToQualifiedNames(workspace, this, semanticDependencies));
 	}
 
 	@Override

@@ -83,7 +83,7 @@ public class ProjectDiscoveryTest {
 
 	private ArrayList<String> getActualFolders(Path tmpDir, Path workspaceRoot) {
 		List<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(Collections.singleton(workspaceRoot),
-				new HashMap<>(), false);
+				new HashMap<>());
 		ArrayList<String> actualFolders = new ArrayList<>();
 		for (Path projectDir : projectDirs) {
 			String relativeFolder = tmpDir.relativize(projectDir).toString();

@@ -109,9 +109,7 @@ public class ProjectDiscoveryHelper {
 	 * Note that the dependencies (i.e. projects in {@code node_modules} folders) are listed after all workspace
 	 * projects.
 	 */
-	public List<Path> collectAllProjectDirs(Collection<Path> workspaceRoots, Map<Path, ProjectDescription> pdCache,
-			boolean loadAllDescriptions) {
-
+	public List<Path> collectAllProjectDirs(Collection<Path> workspaceRoots, Map<Path, ProjectDescription> pdCache) {
 		Map<String, Path> projects = collectAllProjects(workspaceRoots, pdCache);
 		Map<String, Path> dependencies = collectNecessaryDependencies(projects, pdCache);
 
@@ -123,13 +121,6 @@ public class ProjectDiscoveryHelper {
 		Collections.sort(sortedDependecies);
 
 		sortedProjects.addAll(sortedDependecies);
-
-		// FIXME: necessary at all?
-		if (loadAllDescriptions) {
-			for (Path path : sortedProjects) {
-				getCachedProjectDescription(path, pdCache);
-			}
-		}
 
 		return sortedProjects;
 	}
@@ -177,7 +168,7 @@ public class ProjectDiscoveryHelper {
 				collectYarnWorkspaceProjects(yarnProjectDir, pdCache, allProjectDirs);
 			} else {
 				// Is a stand-alone npm project
-				addIfNotPlainjs(allProjectDirs, wsRoot, pdCache);
+				addIfNotPlainjs(wsRoot, pdCache, allProjectDirs);
 			}
 		}
 	}
@@ -263,7 +254,7 @@ public class ProjectDiscoveryHelper {
 								&& nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile(), pdCache)) {
 							collectYarnWorkspaceProjects(dir, pdCache, allProjectDirs);
 						} else {
-							addIfNotPlainjs(allProjectDirs, dir, pdCache);
+							addIfNotPlainjs(dir, pdCache, allProjectDirs);
 						}
 						return FileVisitResult.SKIP_SUBTREE;
 					}
@@ -359,10 +350,12 @@ public class ProjectDiscoveryHelper {
 		}
 	}
 
-	private void addIfNotPlainjs(Map<String, Path> addHere, Path project, Map<Path, ProjectDescription> pdCache) {
+	private void addIfNotPlainjs(Path project, Map<Path, ProjectDescription> pdCache,
+			Map<String, Path> allProjectDirs) {
+
 		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
 		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
-			addHere.putIfAbsent(pd.getQualifiedName(), project);
+			allProjectDirs.putIfAbsent(pd.getQualifiedName(), project);
 		}
 	}
 

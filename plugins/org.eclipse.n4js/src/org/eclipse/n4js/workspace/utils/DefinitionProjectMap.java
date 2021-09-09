@@ -37,8 +37,8 @@ import com.google.common.collect.SetMultimap;
  */
 public class DefinitionProjectMap {
 
-	private final Map<String, String> definition2DefinedProject = new HashMap<>();
-	private final SetMultimap<String, String> defined2DefinitionProjects = HashMultimap.create();
+	private final Map<N4JSProjectName, N4JSProjectName> definition2DefinedProject = new HashMap<>();
+	private final SetMultimap<N4JSProjectName, N4JSProjectName> defined2DefinitionProjects = HashMultimap.create();
 
 	/** Creates a new, empty {@link DefinitionProjectMap}. */
 	public DefinitionProjectMap() {
@@ -54,7 +54,7 @@ public class DefinitionProjectMap {
 	/**
 	 * Tells whether the project with the given name is a definition project known to this registry.
 	 */
-	public boolean isDefinitionProject(String projectName) {
+	public boolean isDefinitionProject(N4JSProjectName projectName) {
 		return definition2DefinedProject.containsKey(projectName);
 	}
 
@@ -63,7 +63,7 @@ public class DefinitionProjectMap {
 	 * if the project with the given name is not a definition project, does not specify a defined project in its
 	 * <code>package.json</code> file, or no project exists with the given name.
 	 */
-	public String getDefinedProject(String nameOfDefinitionProject) {
+	public N4JSProjectName getDefinedProject(N4JSProjectName nameOfDefinitionProject) {
 		return definition2DefinedProject.get(nameOfDefinitionProject);
 	}
 
@@ -74,10 +74,10 @@ public class DefinitionProjectMap {
 	 * If several such definition projects exist, this method will choose one of them in a way that is consistently
 	 * reproducible.
 	 */
-	public String getDefinitionProject(String nameOfDefinedProject) {
-		String result = null;
-		for (String p : getDefinitionProjects(nameOfDefinedProject)) {
-			if (result == null || result.compareTo(p) > 0) {
+	public N4JSProjectName getDefinitionProject(N4JSProjectName nameOfDefinedProject) {
+		N4JSProjectName result = null;
+		for (N4JSProjectName p : getDefinitionProjects(nameOfDefinedProject)) {
+			if (result == null || result.getRawName().compareTo(p.getRawName()) > 0) {
 				result = p;
 			}
 		}
@@ -87,7 +87,7 @@ public class DefinitionProjectMap {
 	/**
 	 * Returns the names of all definition projects that define the project with the given name.
 	 */
-	public Set<String> getDefinitionProjects(String nameOfDefinedProject) {
+	public Set<N4JSProjectName> getDefinitionProjects(N4JSProjectName nameOfDefinedProject) {
 		return defined2DefinitionProjects.get(nameOfDefinedProject);
 	}
 
@@ -99,23 +99,23 @@ public class DefinitionProjectMap {
 
 	/** Add a project. */
 	public void addProject(ProjectDescription pd) {
-		String name = pd.getQualifiedName();
+		N4JSProjectName name = pd.getN4JSProjectName();
 		ProjectType type = pd.getType();
 		if (name == null || type == null) {
 			return; // ignore invalid project descriptions
 		}
-		String definedProjectName = pd.getDefinesPackage() != null
+		N4JSProjectName definedProjectName = pd.getDefinesPackage() != null
 				? new N4JSProjectName(pd.getDefinesPackage())
 				: null;
 		addProject(name, type, definedProjectName);
 	}
 
 	/** Add a project. */
-	public void addProject(String name, ProjectType projectType, String definedProjectOrNull) {
+	public void addProject(N4JSProjectName name, ProjectType projectType, N4JSProjectName definedProjectOrNull) {
 		Objects.requireNonNull(name);
 		Objects.requireNonNull(projectType);
 		if (projectType == ProjectType.DEFINITION) {
-			String oldDefinedProjectName = definition2DefinedProject.put(name, definedProjectOrNull);
+			N4JSProjectName oldDefinedProjectName = definition2DefinedProject.put(name, definedProjectOrNull);
 			if (oldDefinedProjectName != null) {
 				defined2DefinitionProjects.remove(oldDefinedProjectName, name);
 			}
@@ -126,9 +126,9 @@ public class DefinitionProjectMap {
 	}
 
 	/** Remove a project. */
-	public void removeProject(String name) {
+	public void removeProject(N4JSProjectName name) {
 		Objects.requireNonNull(name);
-		String oldDefinedProjectName = definition2DefinedProject.remove(name);
+		N4JSProjectName oldDefinedProjectName = definition2DefinedProject.remove(name);
 		if (oldDefinedProjectName != null) {
 			defined2DefinitionProjects.remove(oldDefinedProjectName, name);
 		}
@@ -136,8 +136,8 @@ public class DefinitionProjectMap {
 
 	/** Notify this registry that the properties of a project have changed. */
 	public void changeProject(ProjectDescription pdOld, ProjectDescription pdNew) {
-		String oldName = pdOld.getQualifiedName();
-		if (oldName != null && !oldName.equals(pdNew.getQualifiedName())) {
+		N4JSProjectName oldName = pdOld.getN4JSProjectName();
+		if (oldName != null && !oldName.equals(pdNew.getN4JSProjectName())) {
 			removeProject(oldName);
 		}
 		addProject(pdNew);

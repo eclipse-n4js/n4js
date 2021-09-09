@@ -41,6 +41,7 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -171,10 +172,11 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		Path baseDir = getPathAsFileURI().toPath();
 		Map<Path, ProjectDescription> pdCache = new HashMap<>();
 		List<Path> newProjectPaths = projectDiscoveryHelper.collectAllProjectDirs(Collections.singleton(baseDir),
-				pdCache, true /* force loading of all project descriptions */);
+				pdCache);
 		for (Path newProjectPath : newProjectPaths) {
 			FileURI newProjectPathAsFileURI = new FileURI(newProjectPath);
-			ProjectDescription pd = pdCache.get(newProjectPath); // should not be null (we forced loading above)
+			Preconditions.checkNotNull(pdCache);
+			ProjectDescription pd = pdCache.get(newProjectPath);
 			registerProject(newProjectPathAsFileURI, pd);
 		}
 	}
