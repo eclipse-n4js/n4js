@@ -19,7 +19,11 @@ class BuildOrderWorkspacesExtendedTest extends AbstractBuildOrderTest {
 
 	@Test
 	def void testWorkspacesObject() {
-		test("yarn-test-project, n4js-runtime, P1, P2", 
+		test("yarn-test-project, " + 
+			"yarn-test-project/node_modules/n4js-runtime, " + 
+			"yarn-test-project/packages/P1, " + 
+			"yarn-test-project/packages/P2",
+ 
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
