@@ -34,6 +34,7 @@ import org.eclipse.xtext.util.UriExtensions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 /**
  * Extends Xtext's default {@link ProjectConfigSnapshot} by some additional attributes (e.g. project type).
@@ -188,10 +189,11 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	 * Returns this project's {@link ProjectDescription#getProjectDependencies() dependencies} and
 	 * {@link ProjectDescription#getImplementedProjects() implemented projects} (in this order).
 	 */
-	public ImmutableList<ProjectReference> getDependenciesAndImplementedApis() {
-		ImmutableList.Builder<ProjectReference> result = ImmutableList.builder();
-		result.addAll(projectDescription.getProjectDependencies());
-		result.addAll(projectDescription.getImplementedProjects());
+	public ImmutableList<String> getDependenciesAndImplementedApis() {
+		ImmutableList.Builder<String> result = ImmutableList.builder();
+		result.addAll(getDependencies());
+		result.addAll(
+				Iterables.transform(projectDescription.getImplementedProjects(), ProjectReference::getProjectName));
 		return result.build();
 	}
 

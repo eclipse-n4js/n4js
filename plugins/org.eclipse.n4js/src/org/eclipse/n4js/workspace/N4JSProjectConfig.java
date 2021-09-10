@@ -11,6 +11,7 @@
 package org.eclipse.n4js.workspace;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -126,6 +127,20 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return path.withTrailingPathDelimiter().toURI();
 	}
 
+	public Path getRelatedWorkspacePath() {
+		Path relativePathFromRelatedWorkspace = getPathInRelatedWorkspace();
+		int relPathFromRWNameCount = relativePathFromRelatedWorkspace.getNameCount();
+		Path projectAbsPath = getPathAsFileURI().toPath();
+		int endIndex = projectAbsPath.getNameCount() - relPathFromRWNameCount + 1;
+		Path relatedWorkspacePath = Path.of("/").resolve(projectAbsPath.subpath(0, endIndex));
+		return relatedWorkspacePath;
+	}
+
+	public Path getPathInRelatedWorkspace() {
+		Path pathInRelatedWorkspace = Path.of(getName());
+		return pathInRelatedWorkspace;
+	}
+
 	/** Returns the {@link #getPath() path} as a {@link FileURI}. */
 	public FileURI getPathAsFileURI() {
 		return path;
@@ -170,7 +185,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	/** The dependencies of this project as given in the <code>package.json</code> file. */
 	@Override
 	public Set<String> getDependencies() {
-		List<ProjectDependency> deps = semanticDependencySupplier.changeToQualifiedNames(workspace, this,
+		List<ProjectDependency> deps = semanticDependencySupplier.changeToQualifiedNames(this,
 				projectDescription.getProjectDependencies());
 		Set<String> result = new LinkedHashSet<>(deps.size());
 		for (ProjectDependency dep : deps) {
@@ -197,7 +212,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		List<ProjectDependency> semanticDependencies = semanticDependencySupplier
 				.computeSemanticDependencies(workspace.definitionProjects, deps);
 		return ImmutableList
-				.copyOf(semanticDependencySupplier.changeToQualifiedNames(workspace, this, semanticDependencies));
+				.copyOf(semanticDependencySupplier.changeToQualifiedNames(this, semanticDependencies));
 	}
 
 	@Override

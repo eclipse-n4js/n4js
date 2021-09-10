@@ -29,7 +29,6 @@ import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.workspace.N4JSProjectConfig;
-import org.eclipse.n4js.workspace.N4JSWorkspaceConfig;
 
 import com.google.inject.Inject;
 
@@ -90,17 +89,18 @@ public class SemanticDependencySupplier {
 
 	/**
 	 */
-	public List<ProjectDependency> changeToQualifiedNames(N4JSWorkspaceConfig workspace,
-			N4JSProjectConfig containingProject, List<ProjectDependency> dependencies) {
+	public List<ProjectDependency> changeToQualifiedNames(N4JSProjectConfig containingProject,
+			List<ProjectDependency> dependencies) {
 
-		Path workspaceLocation = workspace.getPathAsFileURI().toPath();
+		Path workspaceParentLocation = containingProject.getRelatedWorkspacePath().getParent();
+		Path relProjectLocation = containingProject.getPathInRelatedWorkspace();
 		Path projectLocation = containingProject.getPathAsFileURI().toPath();
-		Path relProjectLocation = workspaceLocation.relativize(containingProject.getPathAsFileURI().toPath());
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectLocation);
 		List<ProjectDependency> result = new ArrayList<>();
 		for (ProjectDependency dep : dependencies) {
 			String depName = dep.getProjectName();
-			String qualifiedName = getQualifiedName(workspaceLocation, relProjectLocation, nodeModulesFolder, depName);
+			String qualifiedName = getQualifiedName(workspaceParentLocation, relProjectLocation, nodeModulesFolder,
+					depName);
 			qualifiedName = qualifiedName == null ? depName : qualifiedName;
 			ProjectDependency newDep = new ProjectDependency(qualifiedName, dep.getType(),
 					dep.getVersionRequirementString(), dep.getVersionRequirement());
