@@ -143,6 +143,7 @@ public class SemanticDependencySupplier {
 	}
 
 	public static Path resolveSymbolicLink(Path path) {
+		Path parent = path.getParent();
 		if (Files.isSymbolicLink(path)) {
 			try {
 				Path slTarget = Files.readSymbolicLink(path);
@@ -154,7 +155,25 @@ public class SemanticDependencySupplier {
 			} catch (IOException e) {
 				e.printStackTrace(); // FIXME: handle this properly
 			}
+		} else if (parent != null && parent.getFileName().toString().startsWith("@") && Files.isSymbolicLink(parent)) {
+			Path slTargetOfParent = resolveSymbolicLink(parent);
+			return slTargetOfParent.resolve(path.getName(path.getNameCount() - 1));
 		}
 		return null;
+	}
+
+	public static String convertProjectIdToName(String projectIdStr) {
+		Path projectIdPath = Path.of(projectIdStr);
+		int nameCount = projectIdPath.getNameCount();
+		if (nameCount == 0) {
+			return null;
+		}
+		if (nameCount == 1) {
+			return projectIdStr;
+		}
+		if (projectIdPath.getName(nameCount - 2).startsWith("@")) {
+			return projectIdPath.subpath(nameCount - 2, nameCount - 1).toString();
+		}
+		return projectIdPath.getFileName().toString();
 	}
 }

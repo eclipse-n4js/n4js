@@ -352,7 +352,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		// pairs that represent project dependencies
 		val dependencyPairs = (dependenciesValue as JSONObject).nameValuePairs;
 		// obtain project description for higher-level access to contained information
-		val projectName = getProjectDescription().getName;
+		val projectName = getProjectDescription().qualifiedName;
 		// get project build order of current build
 		val projectOrderInfo = wc.getBuildOrderInfo;
 		
@@ -360,10 +360,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		for (projectCycle : projectOrderInfo.getProjectCycles) {
 			if (projectCycle.contains(projectName)) {
 				for (dependencyPair : dependencyPairs) {
-					if (projectCycle.contains(dependencyPair.name)) {
-						val dependencyCycle = Strings.join(", ", projectCycle);
-						val message = getMessageForPROJECT_DEPENDENCY_CYCLE(dependencyCycle);
-						addIssue(message, dependencyPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PROJECT_DEPENDENCY_CYCLE);
+					for (projectCycleName : projectCycle) {
+						if (projectCycleName.endsWith("/" + dependencyPair.name)) {
+							val dependencyCycle = Strings.join(", ", projectCycle);
+							val message = getMessageForPROJECT_DEPENDENCY_CYCLE(dependencyCycle);
+							addIssue(message, dependencyPair, JSONPackage.Literals.NAME_VALUE_PAIR__NAME, PROJECT_DEPENDENCY_CYCLE);
+						}
 					}
 				}
 			}

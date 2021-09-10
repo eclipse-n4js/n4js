@@ -38,6 +38,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -133,6 +134,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			.map[(if (it.getNew === null) it.old else it.getNew).exportedObjects]
 			.filter[!it.empty]
 			.map[it.get(0).getProjectName]
+			.map[SemanticDependencySupplier.convertProjectIdToName(it)]
 			.toSet;
 
 
