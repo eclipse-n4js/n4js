@@ -132,6 +132,11 @@ export function getTypeKind(decl: ts.Node): model.TypeKind {
 	return undefined;
 }
 
+export function isReadonly(node: ts.Declaration): boolean {
+	const flags = ts.getCombinedModifierFlags(node);
+	return utils.testFlag(flags, ts.ModifierFlags.Readonly);
+}
+
 export function getValueTypesOfEnum(enumDecl: ts.EnumDeclaration, checker: ts.TypeChecker): Set<string> {
 	const types = new Set<string>();
 	for (const lit of enumDecl.members) {

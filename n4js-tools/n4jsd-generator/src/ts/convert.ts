@@ -304,11 +304,15 @@ export class Converter {
 
 		result.name = symMember.getName();
 
-		if (ts.isPropertyDeclaration(representativeNode)) {
+		const isReadonly = utils_ts.isReadonly(representativeNode);
+		if ((ts.isPropertyDeclaration(representativeNode) && !isReadonly)
+			|| (ts.isPropertySignature(representativeNode) && !isReadonly)) {
 			result.kind = model.MemberKind.FIELD;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
-		} else if (ts.isGetAccessorDeclaration(representativeNode)) {
+		} else if (ts.isGetAccessorDeclaration(representativeNode)
+			|| (ts.isPropertyDeclaration(representativeNode) && isReadonly)
+			|| (ts.isPropertySignature(representativeNode) && isReadonly)) {
 			result.kind = model.MemberKind.GETTER;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;

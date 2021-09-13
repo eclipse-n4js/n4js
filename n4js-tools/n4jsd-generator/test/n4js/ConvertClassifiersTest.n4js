@@ -67,17 +67,19 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					import { Buffer } from "./buffer"
 
 					export interface Writable {
-						field: string; // TODO not yet supported by n4jsd-generator
+						field: string;
+						readonly fieldReadOnly: Buffer;
 
 						write(chunk: any, fn: () => void): Buffer;
 						write(chunk: any, encoding: string, fn: () => void): boolean;
 
-						readonly getter: Buffer; // TODO not yet supported by n4jsd-generator
+						get getter(): Buffer;
 						// set setter(value: Buffer); // not supported by TypeScript
 					}
 
 					export class Stream implements Writable {
 						public field: string;
+						readonly fieldReadOnly: Buffer;
 
 						public constructor(buff: Buffer);
 						public constructor(opts: {fastMode: boolean});
@@ -93,11 +95,15 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					import { Buffer } from "buffer";
 
 					export external public interface ~Writable {
+						field: any+;
+						get fieldReadOnly(): any+;
 						write(chunk: any+, fn: any+): any+; // further signatures were omitted
+						get getter(): any+;
 					}
 
 					export external public class ~Stream {
 						public field: any+;
+						get fieldReadOnly(): any+;
 						public constructor(buff: any+); // further signatures were omitted
 						public write(chunk: any+, fn: any+): any+; // further signatures were omitted
 						get getter(): any+;
