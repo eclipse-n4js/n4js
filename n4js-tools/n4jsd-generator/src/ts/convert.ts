@@ -305,14 +305,14 @@ export class Converter {
 		result.name = symMember.getName();
 
 		const isReadonly = utils_ts.isReadonly(representativeNode);
-		if ((ts.isPropertyDeclaration(representativeNode) && !isReadonly)
-			|| (ts.isPropertySignature(representativeNode) && !isReadonly)) {
+		if ((!isReadonly && ts.isPropertyDeclaration(representativeNode))
+			|| (!isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.FIELD;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
 		} else if (ts.isGetAccessorDeclaration(representativeNode)
-			|| (ts.isPropertyDeclaration(representativeNode) && isReadonly)
-			|| (ts.isPropertySignature(representativeNode) && isReadonly)) {
+			|| (isReadonly && ts.isPropertyDeclaration(representativeNode))
+			|| (isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.GETTER;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
