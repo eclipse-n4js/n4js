@@ -22,6 +22,13 @@ export let _ROOT: string = undefined;
 /** Same as 'ROOT', but as a relative path based on the current working directory. */
 export let _ROOT_RELATIVE: string = undefined;
 
+export public interface ~ConversionOptions {
+	/** Additional command line arguments passed to the generator. */
+	args?: string[];
+	/** Expected errors reported by the generator. */
+	expectedErrors?: string[];
+}
+
 export public interface ~ModuleDesc {
 	/** Module name without file extension. May also be a relative(!) path using '/' as delimiter. */
 	name: string;
@@ -159,15 +166,17 @@ export public class AbstractN4jsdGeneratorTest {
 	}
 
 	protected assertConversion(...modules: ModuleDesc) {
-		this.doAssertConversion(modules, []);
+		this.doAssertConversion({}, modules);
 	}
 
-	protected assertConversionWithErrors(modules: ModuleDesc[], ...expectedErrors: string) {
-		this.doAssertConversion(modules, expectedErrors);
+	protected assertConversionWithOptions(options: ConversionOptions, ...modules: ModuleDesc) {
+		this.doAssertConversion(options, modules);
 	}
 
-	private doAssertConversion(modules: ModuleDesc[], expectedErrors: string[]) {
+	private doAssertConversion(options: ConversionOptions, modules: ModuleDesc[]) {
 		Assert.isTrue(modules.length > 0, "at least one module description must be given");
+		const additionalArgs = options.args ?? [];
+		const expectedErrors = options.expectedErrors ?? [];
 		const projectName = "TestProject";
 		this.createProject("input", projectName);
 		for (const currModule of modules) {
@@ -175,7 +184,13 @@ export public class AbstractN4jsdGeneratorTest {
 			const path = "input/" + projectName + "/" + fileName;
 			this.createFile(path, currModule.dts);
 		}
-		const args = [ "-f", "-o", _ROOT + "/output", _ROOT + "/input/" + projectName ];
+
+		const args = [ "-f", "-o", _ROOT + "/output" ];
+		for (const currArg of additionalArgs) {
+			args.push(currArg);
+		}
+		args.push(_ROOT + "/input/" + projectName);
+
 		if (expectedErrors.length === 0) {
 			this.doRunN4jsdGenerator(args, []);
 		} else {

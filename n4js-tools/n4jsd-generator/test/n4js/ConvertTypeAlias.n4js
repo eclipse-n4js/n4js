@@ -11,24 +11,36 @@
 
 import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
 
-/**
- * Tests how the generator behaves when given .d.ts files with compile errors.
- */
-export public class InvalidInputTest extends AbstractN4jsdGeneratorTest {
+export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
-	public testSimple() {
+	public testTypeAlias01() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export type MyAlias = string;
+				`,
+				n4jsd: `
+					export external public type MyAlias = any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testTypeAlias02() {
 		this.assertConversionWithOptions(
 			{
-				expectedErrors: [
-					"compile error(s) in '.d.ts' input files:\n    Cannot find module './unresolved/module' or its corresponding type declarations."
-				]
+				args: [ "--copy-type-refs" ]
 			},
 			{
-				name: "SomeModule",
+				name: "main",
 				dts: `
-					import {Buffer} from "./unresolved/module"
-					export const value: Buffer;
+					export type MyAlias = string;
+				`,
+				n4jsd: `
+					export external public type MyAlias = string;
 				`
 			}
 		);
