@@ -446,7 +446,7 @@ public class ProjectDiscoveryHelper {
 			return false;
 		}
 		// check reference to yarn packages project
-		if (Files.isSymbolicLink(depLocation)) {
+		if (SemanticDependencySupplier.isSymbolicLink(depLocation)) {
 			Path linkTarget = SemanticDependencySupplier.resolveSymbolicLink(depLocation);
 			if (linkTarget != null) {
 				ProjectDescription prjDescrLinked = getCachedProjectDescription(linkTarget, pdCache);

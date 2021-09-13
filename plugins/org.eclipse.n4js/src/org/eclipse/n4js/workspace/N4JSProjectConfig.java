@@ -185,7 +185,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	/** The dependencies of this project as given in the <code>package.json</code> file. */
 	@Override
 	public Set<String> getDependencies() {
-		List<ProjectDependency> deps = semanticDependencySupplier.changeToQualifiedNames(this,
+		List<ProjectDependency> deps = semanticDependencySupplier.changeToQualifiedNames(workspace, this,
 				projectDescription.getProjectDependencies());
 		Set<String> result = new LinkedHashSet<>(deps.size());
 		for (ProjectDependency dep : deps) {
@@ -212,7 +212,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		List<ProjectDependency> semanticDependencies = semanticDependencySupplier
 				.computeSemanticDependencies(workspace.definitionProjects, deps);
 		return ImmutableList
-				.copyOf(semanticDependencySupplier.changeToQualifiedNames(this, semanticDependencies));
+				.copyOf(semanticDependencySupplier.changeToQualifiedNames(workspace, this, semanticDependencies));
 	}
 
 	@Override

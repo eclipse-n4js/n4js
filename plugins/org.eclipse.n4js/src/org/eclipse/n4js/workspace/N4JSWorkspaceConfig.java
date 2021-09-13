@@ -127,14 +127,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	}
 
 	/**
-	 * Registers the project at the given path with the given project description. Does nothing if a project for that
-	 * path or name was already registered.
-	 * <p>
-	 * This behavior means that projects registered first will shadow all projects registered later; together with the
-	 * fact that the {@link ProjectDiscoveryHelper} will return dependencies after workspace projects, this leads to
-	 * workspace projects shadowing projects of same name in the {@code node_modules} folder.
+	 * Registers the project at the given path with the given project description.
 	 */
-	// TODO GH-1314 reconsider shadowing of projects with same name
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
 		String qualifiedName = pd.getQualifiedName();
 		if (qualifiedName2ProjectConfig.containsKey(qualifiedName)) {

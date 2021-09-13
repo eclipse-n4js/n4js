@@ -29,6 +29,7 @@ import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
 import org.eclipse.n4js.workspace.N4JSProjectConfig;
+import org.eclipse.n4js.workspace.N4JSWorkspaceConfig;
 
 import com.google.inject.Inject;
 
@@ -89,8 +90,8 @@ public class SemanticDependencySupplier {
 
 	/**
 	 */
-	public List<ProjectDependency> changeToQualifiedNames(N4JSProjectConfig containingProject,
-			List<ProjectDependency> dependencies) {
+	public List<ProjectDependency> changeToQualifiedNames(N4JSWorkspaceConfig workspace,
+			N4JSProjectConfig containingProject, List<ProjectDependency> dependencies) {
 
 		Path workspaceParentLocation = containingProject.getRelatedWorkspacePath().getParent();
 		Path relProjectLocation = containingProject.getPathInRelatedWorkspace();
@@ -99,8 +100,8 @@ public class SemanticDependencySupplier {
 		List<ProjectDependency> result = new ArrayList<>();
 		for (ProjectDependency dep : dependencies) {
 			String depName = dep.getProjectName();
-			String qualifiedName = getQualifiedName(workspaceParentLocation, relProjectLocation, nodeModulesFolder,
-					depName);
+			String qualifiedName = getQualifiedName(workspace, workspaceParentLocation, relProjectLocation,
+					nodeModulesFolder, depName);
 			qualifiedName = qualifiedName == null ? depName : qualifiedName;
 			ProjectDependency newDep = new ProjectDependency(qualifiedName, dep.getType(),
 					dep.getVersionRequirementString(), dep.getVersionRequirement());
@@ -110,7 +111,7 @@ public class SemanticDependencySupplier {
 		return result;
 	}
 
-	private String getQualifiedName(Path workspaceLocation, Path relProjectLocation,
+	private String getQualifiedName(N4JSWorkspaceConfig workspace, Path workspaceLocation, Path relProjectLocation,
 			NodeModulesFolder nodeModulesFolder, String depName) {
 
 		Path relDepPath = null;
@@ -121,8 +122,11 @@ public class SemanticDependencySupplier {
 			for (File nodeModulesDir : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
 				Path absDepPath = nodeModulesDir.toPath().resolve(depName);
 				if (absDepPath.resolve(N4JSGlobals.PACKAGE_JSON).toFile().isFile()) {
-					absDepPath = resolveSymbolicLinkOrDefault(absDepPath);
-					relDepPath = workspaceLocation.relativize(absDepPath);
+					Path resolvedDepPath = resolveSymbolicLinkOrDefault(absDepPath);
+					relDepPath = workspaceLocation.relativize(resolvedDepPath);
+					if (workspace.findProjectByName(relDepPath.toString()) == null) {
+						relDepPath = workspaceLocation.relativize(absDepPath);
+					}
 					break;
 				}
 			}
@@ -142,8 +146,30 @@ public class SemanticDependencySupplier {
 		}
 	}
 
-	public static Path resolveSymbolicLink(Path path) {
+	public static boolean isSymbolicLink(Path path) {
+		if (Files.isSymbolicLink(path)) {
+			return true;
+		}
+		if (isSymbolicLinkParent(path)) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean isSymbolicLinkParent(Path path) {
 		Path parent = path.getParent();
+		if (parent != null && parent.getFileName().toString().startsWith("@") && Files.isSymbolicLink(parent)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static Path resolveSymbolicLink(Path path) {
+		if (isSymbolicLinkParent(path)) {
+			Path parent = path.getParent();
+			Path slTargetOfParent = resolveSymbolicLink(parent);
+			return slTargetOfParent.resolve(path.getName(path.getNameCount() - 1));
+		}
 		if (Files.isSymbolicLink(path)) {
 			try {
 				Path slTarget = Files.readSymbolicLink(path);
@@ -155,9 +181,6 @@ public class SemanticDependencySupplier {
 			} catch (IOException e) {
 				e.printStackTrace(); // FIXME: handle this properly
 			}
-		} else if (parent != null && parent.getFileName().toString().startsWith("@") && Files.isSymbolicLink(parent)) {
-			Path slTargetOfParent = resolveSymbolicLink(parent);
-			return slTargetOfParent.resolve(path.getName(path.getNameCount() - 1));
 		}
 		return null;
 	}
