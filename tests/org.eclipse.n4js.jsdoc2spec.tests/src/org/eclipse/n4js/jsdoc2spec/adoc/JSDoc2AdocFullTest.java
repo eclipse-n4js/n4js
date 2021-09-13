@@ -81,7 +81,8 @@ public class JSDoc2AdocFullTest extends JSDoc2SpecProcessorFullTest {
 				String expectationFileName = projectName + "/expected.adoc";
 
 				ResourceSet resourceSet = workspaceAccess.createResourceSet();
-				N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(resourceSet, projectName);
+				N4JSProjectConfigSnapshot project = workspaceAccess.findProjectByName(resourceSet,
+						"yarn-test-project/packages/" + projectName);
 				assertNotNull("Project not found", project);
 
 				Collection<SpecFile> specChangeSet = jSDoc2SpecProcessor.convert(

@@ -32,7 +32,9 @@
    END_SETUP
 */
 
-/* XPECT output ---
+// Test obsole since API/IMPL concept is doomed
+
+/* XPECT FIXME output ---
 Hello from Implementation one.x.impl::p.A.n4js !
 Step 2
 Step 3
