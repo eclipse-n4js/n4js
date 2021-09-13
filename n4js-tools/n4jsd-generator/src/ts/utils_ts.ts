@@ -126,7 +126,7 @@ export function getTypeKind(decl: ts.Node): model.TypeKind {
 		} else if (ts.isEnumDeclaration(decl)) {
 			return model.TypeKind.ENUM;
 		} else if (ts.isTypeAliasDeclaration(decl)) {
-			return model.TypeKind.ALIAS;
+			return model.TypeKind.TYPE_ALIAS;
 		}
 	}
 	return undefined;

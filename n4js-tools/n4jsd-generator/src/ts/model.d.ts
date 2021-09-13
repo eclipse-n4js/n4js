@@ -70,7 +70,7 @@ export class Function extends ExportableElement {
 }
 
 export enum TypeKind {
-	INTERFACE, CLASS, ENUM, ALIAS
+	INTERFACE, CLASS, ENUM, TYPE_ALIAS
 }
 
 export enum PrimitiveBasedKind {
@@ -81,8 +81,9 @@ export class Type extends ExportableElement {
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
-	literals: EnumLiteral[];
 	members: Member[];
+	literals: EnumLiteral[];
+	aliasedType: TypeRef;
 }
 
 export class EnumLiteral extends NamedElement {
