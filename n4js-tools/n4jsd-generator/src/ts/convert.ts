@@ -317,6 +317,7 @@ export class Converter {
 
 		const result = new model.Member();
 		result.accessibility = utils_ts.getAccessibility(representativeNode);
+		result.isStatic = false; // FIXME
 
 		if (ts.isTypeParameterDeclaration(representativeNode)) {
 			// type parameters appear as members, but they are handled elsewhere
@@ -326,6 +327,18 @@ export class Converter {
 		if (ts.isConstructorDeclaration(representativeNode)) {
 			result.kind = model.MemberKind.CTOR;
 			result.signatures = this.convertConstructSignatures(symOwner);
+			return result;
+		}
+		if (ts.isConstructSignatureDeclaration(representativeNode)
+			&& this.runtimeLibs) {
+
+			result.kind = model.MemberKind.CTOR;
+			const resultSig = new model.Signature();
+			resultSig.parameters = representativeNode.parameters.map(param => {
+				const paramSym = this.checker.getSymbolAtLocation(param.name);
+				return this.convertParameter(paramSym);
+			});
+			result.signatures = [ resultSig ];
 			return result;
 		}
 
@@ -360,12 +373,14 @@ export class Converter {
 
 	private convertConstructSignatures(somethingWithCtors: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithCtors, somethingWithCtors.valueDeclaration!);
-		return this.convertSignatures([...type.getConstructSignatures()]);
+		const constructSigs = type.getConstructSignatures();
+		return this.convertSignatures([...constructSigs]);
 	}
 
 	private convertCallSignatures(somethingWithSignatures: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithSignatures, somethingWithSignatures.valueDeclaration!);
-		return this.convertSignatures([...type.getCallSignatures()]);
+		const callSigs = type.getCallSignatures();
+		return this.convertSignatures([...callSigs]);
 	}
 
 	private convertSignatures(signatures: ts.Signature[]): model.Signature[] {

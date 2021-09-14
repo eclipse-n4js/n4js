@@ -100,6 +100,7 @@ export enum MemberKind {
 export class Member extends NamedElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
+	isStatic: boolean;
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
@@ -293,6 +294,11 @@ class Emitter {
 		if (member.accessibility !== undefined) {
 			this.emitAccessibility(member);
 			buff.push(" ");
+		}
+		if (member.isStatic) {
+			if (member.kind !== MemberKind.CTOR) {
+				buff.push("static ");
+			}
 		}
 		switch(member.kind) {
 			case MemberKind.CTOR:

@@ -98,6 +98,7 @@ export enum MemberKind {
 export class Member extends NamedElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
+	isStatic: boolean;
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
