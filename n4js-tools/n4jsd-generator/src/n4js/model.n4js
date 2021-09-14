@@ -83,6 +83,7 @@ export class Type extends ExportableElement {
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
+	typeParams: string[] = [];
 	members: Member[] = [];
 	literals: EnumLiteral[] = [];
 	aliasedType: TypeRef;
@@ -235,6 +236,9 @@ class Emitter {
 			buff.push("~");
 		}
 		buff.push(type.name);
+		if (type.typeParams.length > 0) {
+			buff.push("<", type.typeParams.join(","), ">");
+		}
 		if (type.kind === TypeKind.TYPE_ALIAS) {
 			buff.push(" = ");
 			this.emitTypeRef(type.aliasedType);

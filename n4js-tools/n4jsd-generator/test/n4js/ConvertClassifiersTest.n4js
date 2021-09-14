@@ -53,6 +53,26 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 	}
 
 	@Test
+	public testGenerics() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc<T1,T2> {}
+					export class Cls<T1,T2> {}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc<T1,T2> {
+					}
+
+					export external public class ~Cls<T1,T2> {
+					}
+				`
+			}
+		);
+	}
+
+	@Test
 	public testMembers() {
 		this.assertConversion(
 			{

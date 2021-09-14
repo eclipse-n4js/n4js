@@ -81,6 +81,7 @@ export class Type extends ExportableElement {
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
+	typeParams: string[];
 	members: Member[];
 	literals: EnumLiteral[];
 	aliasedType: TypeRef;

@@ -254,10 +254,11 @@ export class Converter {
 	}
 
 	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
-		let result = new model.Type();
+		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.INTERFACE;
 		result.defSiteStructural = true;
+		result.typeParams.push(...this.convertTypeParameters(node));
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -265,13 +266,26 @@ export class Converter {
 	}
 
 	private convertClass(node: ts.ClassDeclaration): model.Type {
-		let result = new model.Type();
+		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.CLASS;
 		result.defSiteStructural = true;
+		result.typeParams.push(...this.convertTypeParameters(node));
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
+		return result;
+	}
+
+	private convertTypeParameters(node: ts.NamedDeclaration): string[] {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		const result = [];
+		sym.members?.forEach((symMember, name) => {
+			const representativeNode = symMember.declarations[0] as ts.NamedDeclaration;
+			if (ts.isTypeParameterDeclaration(representativeNode)) {
+				result.push(symMember.name);
+			}
+		});
 		return result;
 	}
 
@@ -296,6 +310,11 @@ export class Converter {
 		const result = new model.Member();
 		result.accessibility = utils_ts.getAccessibility(representativeNode);
 
+		if (ts.isTypeParameterDeclaration(representativeNode)) {
+			// type parameters appear as members, but they are handled elsewhere
+			// -> so ignore them here:
+			return undefined;
+		}
 		if (ts.isConstructorDeclaration(representativeNode)) {
 			result.kind = model.MemberKind.CTOR;
 			result.signatures = this.convertConstructSignatures(symOwner);
