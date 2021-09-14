@@ -65,7 +65,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		return;
 	}
 
-	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath);
+	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath, opts.runtimeLibs);
 
 	// check for compile errors on TypeScript side
 	// TODO: this seems to take a long time and is not strictly necessary; consider removing it or making it optional!

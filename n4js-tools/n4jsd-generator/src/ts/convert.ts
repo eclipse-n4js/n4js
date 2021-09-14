@@ -16,22 +16,27 @@ import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
 
 export class Converter {
+	private readonly projectPath?: string;
+	/** True iff option '--runtime-libs' was given on the command line. */
+	private readonly runtimeLibs: boolean;
+
 	private readonly program: ts.Program;
 	private readonly checker: ts.TypeChecker;
-	private readonly projectPath?: string;
 
 	private exportAssignment: ts.ExportAssignment;
 	private readonly issues: utils.Issue[] = [];
 
-	constructor(sourceDtsFilePaths: string[], projectPath?: string) {
+	constructor(sourceDtsFilePaths: string[], projectPath?: string, runtimeLibs = false) {
 		if (projectPath !== undefined && !path_lib.isAbsolute(projectPath)) {
 			throw "projectPath must be absolute";
 		}
 
+		this.projectPath = projectPath;
+		this.runtimeLibs = runtimeLibs;
+
 		const program = ts.createProgram(sourceDtsFilePaths, { allowJs: true });
 		this.program = program;
 		this.checker = program.getTypeChecker();
-		this.projectPath = projectPath;
 	}
 
 	getDiagnostics(): string[] {
