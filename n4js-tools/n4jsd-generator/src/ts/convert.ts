@@ -324,21 +324,18 @@ export class Converter {
 			// -> so ignore them here:
 			return undefined;
 		}
+
 		if (ts.isConstructorDeclaration(representativeNode)) {
 			result.kind = model.MemberKind.CTOR;
 			result.signatures = this.convertConstructSignatures(symOwner);
 			return result;
-		}
-		if (ts.isConstructSignatureDeclaration(representativeNode)
-			&& this.runtimeLibs) {
-
+		} else if (ts.isConstructSignatureDeclaration(representativeNode)) {
 			result.kind = model.MemberKind.CTOR;
-			const resultSig = new model.Signature();
-			resultSig.parameters = representativeNode.parameters.map(param => {
-				const paramSym = this.checker.getSymbolAtLocation(param.name);
-				return this.convertParameter(paramSym);
-			});
-			result.signatures = [ resultSig ];
+			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
+			return result;
+		} else if (ts.isCallSignatureDeclaration(representativeNode)) {
+			result.kind = model.MemberKind.CALLABLE_CTOR;
+			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
 		}
 
@@ -346,13 +343,13 @@ export class Converter {
 
 		const isReadonly = utils_ts.isReadonly(representativeNode);
 		if ((!isReadonly && ts.isPropertyDeclaration(representativeNode))
-			|| (!isReadonly && ts.isPropertySignature(representativeNode))) {
+				|| (!isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.FIELD;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
 		} else if (ts.isGetAccessorDeclaration(representativeNode)
-			|| (isReadonly && ts.isPropertyDeclaration(representativeNode))
-			|| (isReadonly && ts.isPropertySignature(representativeNode))) {
+				|| (isReadonly && ts.isPropertyDeclaration(representativeNode))
+				|| (isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.GETTER;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
@@ -390,6 +387,29 @@ export class Converter {
 			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
 			result.returnType = this.convertTypeReferenceOfTypedDeclaration(sig.declaration);
 			results.push(result);
+		}
+		return results;
+	}
+
+	private convertSignatureDeclarationsInAST(decls: ts.Declaration[]): model.Signature[] {
+		const results = [] as model.Signature[];
+		for (const decl of decls) {
+			const isConstructSigDecl = ts.isConstructSignatureDeclaration(decl);
+			if (isConstructSigDecl
+				|| ts.isCallSignatureDeclaration(decl)
+				|| ts.isIndexSignatureDeclaration(decl)) {
+				const result = new model.Signature();
+				for (const param of decl.parameters) {
+					const paramSym = this.checker.getSymbolAtLocation(param.name);
+					if (paramSym) {
+						result.parameters.push(this.convertParameter(paramSym));
+					}
+				}
+				if (!isConstructSigDecl && decl.type) {
+					result.returnType = this.convertTypeReference(decl.type);
+				}
+				results.push(result);
+			}
 		}
 		return results;
 	}

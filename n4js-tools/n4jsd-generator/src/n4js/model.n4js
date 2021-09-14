@@ -94,7 +94,7 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, FIELD, GETTER, SETTER, METHOD
+	CTOR, CALLABLE_CTOR, FIELD, GETTER, SETTER, METHOD
 }
 
 export class Member extends NamedElement {
@@ -248,7 +248,7 @@ class Emitter {
 			buff.pushln(" {");
 			buff.indent();
 			if (type.kind === TypeKind.INTERFACE || type.kind === TypeKind.CLASS) {
-				this.emitMembers(type.members);
+				this.emitMembers(type, type.members);
 			} else if (type.kind === TypeKind.ENUM) {
 				this.emitEnumLiterals(type.literals, type.primitiveBased === PrimitiveBasedKind.STRING_BASED);
 			} else {
@@ -281,29 +281,37 @@ class Emitter {
 		}
 	}
 
-	emitMembers(members: Member[]) {
+	emitMembers(parent: Type, members: Member[]) {
 		const buff = this.buff;
 		for (const m of members) {
-			this.emitMember(m);
+			this.emitMember(parent, m);
 			buff.pushln();
 		}
 	}
 
-	emitMember(member: Member) {
+	emitMember(parent: Type, member: Member) {
 		const buff = this.buff;
 		if (member.accessibility !== undefined) {
 			this.emitAccessibility(member);
 			buff.push(" ");
 		}
 		if (member.isStatic) {
-			if (member.kind !== MemberKind.CTOR) {
+			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
 				buff.push("static ");
 			}
 		}
 		switch(member.kind) {
 			case MemberKind.CTOR:
+				if (parent && parent.kind === TypeKind.INTERFACE) {
+					buff.push("@CovariantConstructor");
+					buff.pushln();
+				}
 				buff.push("constructor");
 				this.emitSignature(member.signatures[0], true);
+				buff.push(";");
+				break;
+			case MemberKind.CALLABLE_CTOR:
+				this.emitSignature(member.signatures[0]);
 				buff.push(";");
 				break;
 			case MemberKind.FIELD:

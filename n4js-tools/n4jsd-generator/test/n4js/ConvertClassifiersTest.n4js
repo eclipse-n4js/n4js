@@ -165,4 +165,51 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 			}
 		);
 	}
+
+	@Test
+	public testConstructSignatures() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						new(p: string): Ifc;
+						new(p1: string, p2: number): Ifc;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						@CovariantConstructor
+						constructor(p: string); // further signatures were omitted
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCallSignatures() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						(p: string): number;
+						(p1: string, p2: number): boolean;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						(p: string): number; // further signatures were omitted
+					}
+				`
+			}
+		);
+	}
 }
