@@ -34,7 +34,10 @@ export class Converter {
 		this.projectPath = projectPath;
 		this.runtimeLibs = runtimeLibs;
 
-		const program = ts.createProgram(sourceDtsFilePaths, { allowJs: true });
+		const program = ts.createProgram(sourceDtsFilePaths, {
+			allowJs: true,
+			noLib: this.runtimeLibs
+		});
 		this.program = program;
 		this.checker = program.getTypeChecker();
 	}
