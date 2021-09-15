@@ -34,10 +34,17 @@ export class Converter {
 		this.projectPath = projectPath;
 		this.runtimeLibs = runtimeLibs;
 
-		const program = ts.createProgram(sourceDtsFilePaths, {
-			allowJs: true,
-			noLib: this.runtimeLibs
-		});
+		// prepare compilation options
+		const opts: ts.CompilerOptions = {
+			allowJs: true
+		};
+		if (runtimeLibs) {
+			opts.noLib = true;
+			opts.types = []; // make sure we do not compile type definitions requested in a tsconfig.json the compiler might find!
+		}
+
+		// compile .d.ts files
+		const program = ts.createProgram(sourceDtsFilePaths, opts);
 		this.program = program;
 		this.checker = program.getTypeChecker();
 	}
@@ -49,6 +56,8 @@ export class Converter {
 		diagnostics.push(...this.program.getSemanticDiagnostics());
 		const result = [] as string[];
 		for (const diag of diagnostics) {
+			// note: this is how to retrieve the path of the file containing the issue:
+			//const fileName = diag?.file?.fileName;
 			const msg = diag?.messageText;
 			if (typeof msg === 'string') {
 				result.push(msg);

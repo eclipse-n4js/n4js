@@ -101,7 +101,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 	if (opts.runtimeLibs) {
 		for (const srcDtsPath of sourceDtsFilePaths) {
 			const script = scripts.get(srcDtsPath);
-			runtimeLibs.postProcessRuntimeLib(script);
+			runtimeLibs.postProcessRuntimeLib(path_lib.basename(srcDtsPath), script);
 		}
 	}
 

@@ -14,9 +14,40 @@
 // file 'cmdLineOpts.n4js' for finding those.
 
 import * as model from "model";
+import {Socket} from "net";
+
+const PREAMBLE = `@@Global @@ProvidedByRuntime
+`;
 
 const CONSTRUCTOR_TYPE_SUFFIX = "Constructor";
 
+const IGNORED_ELEMENTS = new Map<string,Set<string>>([
+	[ "es5.d.ts", new Set<string>([
+		// stuff defined in primitive_js.n4ts and global.n4ts:
+		"NaN", "Infinity", "eval", "parseInt", "parseFloat", "isNaN", "isFinite", "decodeURI", "decodeURIComponent",
+		"encodeURI", "encodeURIComponent", "escape", "unescape",
+		// type constructors:
+		"Partial", "Required", "Readonly", "Pick", "Record", "Exclude", "Extract", "Omit", "NonNullable",
+		"Parameters", "ConstructorParameters", "ReturnType", "InstanceType", "Uppercase", "Lowercase",
+		"Capitalize", "Uncapitalize",
+		// decorators:
+		"ClassDecorator", "PropertyDecorator", "MethodDecorator", "ParameterDecorator",
+		// odd stuff:
+		"ThisParameterType", "OmitThisParameter", "CallableFunction", "NewableFunction", "PromiseConstructorLike"
+	])] as [string, Set<string>]
+]);
+
+const POLYFILLS = new Map<string,Set<string>>([
+	[ "es5.d.ts", new Set<string>([
+		"Boolean", "Number", "String", "Symbol", "Object", "RegExp", "Function", "Array", "Date", "Math", "JSON", "Error"
+	])] as [string, Set<string>]
+]);
+
+const FINAL_CLASSIFIERS = new Map<string,Set<string>>([
+	[ "es5.d.ts", new Set<string>([
+		"Boolean", "Number", "String", "Symbol", "RegExp", "Function", "Date", "Math", "JSON"
+	])] as [string, Set<string>]
+]);
 
 /**
  * Invoked for each script iff in "--runtime-libs" mode. Will modify its top-level elements
@@ -24,7 +55,52 @@ const CONSTRUCTOR_TYPE_SUFFIX = "Constructor";
  *
  * @param script the script to modify.
  */
-export public function postProcessRuntimeLib(script: model.Script) {
+export public function postProcessRuntimeLib(dtsFileName: string, script: model.Script) {
+	script.preamble = PREAMBLE;
+	removeMetaProperties(script);
+	removeIgnoredElements(dtsFileName, script);
+	handleCtorInstanceTypePattern(script);
+	handlePolyfills(dtsFileName, script);
+	handleFinalClassifiers(dtsFileName, script);
+}
+
+function removeMetaProperties(script: model.Script) {
+	for (const elem of script.topLevelElements) {
+		if (elem instanceof model.Type) {
+			const ms = elem.members;
+			let i = 0;
+			while (i < ms.length) {
+				const m = ms[i];
+				if ((m.name === "constructor" && m.kind !== model.MemberKind.CTOR)
+						|| m.name === "prototype") {
+					ms.splice(i, 1);
+				} else {
+					++i;
+				}
+			}
+		}
+	}
+}
+
+function removeIgnoredElements(dtsFileName: string, script: model.Script) {
+	const ignoredElems = IGNORED_ELEMENTS.get(dtsFileName);
+	if (!ignoredElems || ignoredElems.size === 0) {
+		return;
+	}
+	let i = 0;
+	const elems = script.topLevelElements;
+	while (i < elems.length) {
+		const elem = elems[i];
+		const elemName = elem.name;
+		if (elemName && ignoredElems.has(elemName)) {
+			elems.splice(i, 1);
+		} else {
+			++i;
+		}
+	}
+}
+
+function handleCtorInstanceTypePattern(script: model.Script) {
 	const elemsByName = new Map<string,model.ExportableElement[]>();
 	for (const elem of script.topLevelElements) {
 		const name = elem.name;
@@ -38,8 +114,10 @@ export public function postProcessRuntimeLib(script: model.Script) {
 
 	const topLevelElementsToBeRemoved = [] as model.ExportableElement[];
 
-	for (const varDecl of script.topLevelElements.filter(elem => elem instanceof model.Variable) as model.Variable[]) {
-		handleCtorInstanceTypePattern(varDecl, elemsByName, topLevelElementsToBeRemoved);
+	for (const elem of script.topLevelElements) {
+		if (elem instanceof model.Variable) {
+			adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementsToBeRemoved);
+		}
 	}
 
 	for (const elem of topLevelElementsToBeRemoved) {
@@ -50,7 +128,7 @@ export public function postProcessRuntimeLib(script: model.Script) {
 	}
 }
 
-function handleCtorInstanceTypePattern(
+function adjustCtorInstanceTypesForVarDecl(
 	varDecl: model.Variable,
 	elemsByName: Map<string,model.ExportableElement[]>,
 	topLevelElementsToBeRemoved: model.ExportableElement[]) {
@@ -78,20 +156,22 @@ function handleCtorInstanceTypePattern(
 	if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
 		const instanceTypeName = typeName.substring(0, typeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
 		const instanceTypes = elemsByName.get(instanceTypeName)?.filter(elem => elem instanceof model.Type) as model.Type[];
-		if (instanceTypes && instanceTypes.length === 1) {
-			const instanceTypeCandidate = instanceTypes[0];
-			if (instanceTypeCandidate.kind === model.TypeKind.INTERFACE) {
-				instanceType = instanceTypeCandidate;
+		if (instanceTypes) {
+			for (const instanceTypeCandidate of instanceTypes) {
+				if (instanceTypeCandidate.kind === model.TypeKind.INTERFACE) {
+					instanceType = instanceTypeCandidate;
+					break;
+				}
 			}
 		}
 	}
 	// change "constructor type" to a class and make all members static
-	type.kind = model.TypeKind.CLASS;
+	changeInterfaceToClass(type);
 	type.members.forEach(m => m.isStatic = true);
 	// merge the "constructor type" into the "instance type" (if any)
 	if (instanceType) {
 		// change "instance type" to a class
-		instanceType.kind = model.TypeKind.CLASS;
+		changeInterfaceToClass(instanceType);
 		// move all members of the "constructor type" into the "instance type"
 		type.members.forEach(m => instanceType.members.push(m));
 		type.members.length = 0;
@@ -100,4 +180,51 @@ function handleCtorInstanceTypePattern(
 	}
 	// mark the variable declaration as "to be removed"
 	topLevelElementsToBeRemoved.push(varDecl);
+}
+
+function handlePolyfills(dtsFileName: string, script: model.Script) {
+	const polyfills = POLYFILLS.get(dtsFileName);
+	if (!polyfills || polyfills.size === 0) {
+		return;
+	}
+	for (const elem of script.topLevelElements) {
+		if (!(elem instanceof model.Type)) {
+			continue;
+		}
+		const elemName = elem.name;
+		if (elemName && polyfills.has(elemName)) {
+			elem.annotations.push(new model.Annotation("@Polyfill"));
+			elem.extends = new model.TypeRef(elemName);
+			elem.defSiteStructural = false;
+		}
+	}
+}
+
+function handleFinalClassifiers(dtsFileName: string, script: model.Script) {
+	const finalClassifiers = FINAL_CLASSIFIERS.get(dtsFileName);
+	if (!finalClassifiers || finalClassifiers.size === 0) {
+		return;
+	}
+	for (const elem of script.topLevelElements) {
+		if (!(elem instanceof model.Type)) {
+			continue;
+		}
+		const elemName = elem.name;
+		if (elemName && finalClassifiers.has(elemName)) {
+			elem.annotations.push(new model.Annotation("@Final"));
+		}
+	}
+}
+
+function changeInterfaceToClass(ifc: model.Type) {
+	if (ifc.kind !== model.TypeKind.INTERFACE) {
+		throw "ifc is expected to be an interface, but was: " + ifc.kind;
+	}
+	ifc.kind = model.TypeKind.CLASS;
+	// due to different default accessibilities, we have to make accessibility PUBLIC explicit:
+	ifc.members.forEach(m => {
+		if (!m.accessibility) {
+			m.accessibility = model.Accessibility.PUBLIC;
+		}
+	});
 }

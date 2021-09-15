@@ -23,8 +23,17 @@ export enum Accessibility {
 	PRIVATE
 }
 
+export class Annotation {
+	name: string;
+}
+
+export interface AnnotatableElement {
+	annotations: Annotation[];
+}
+
 export class Script {
 	mode: DTSMode;
+	preamble?: string;
 	imports: Import[];
 	topLevelElements: ExportableElement[];
 	issues: utils.Issue[];
@@ -77,11 +86,13 @@ export enum PrimitiveBasedKind {
 	STRING_BASED, NUMBER_BASED
 }
 
-export class Type extends ExportableElement {
+export class Type extends ExportableElement implements AnnotatableElement {
+	annotations: Annotation[];
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
 	typeParams: string[];
+	extends?: TypeRef;
 	members: Member[];
 	literals: EnumLiteral[];
 	aliasedType: TypeRef;
@@ -95,7 +106,8 @@ export enum MemberKind {
 	CTOR, CALLABLE_CTOR, FIELD, GETTER, SETTER, METHOD
 }
 
-export class Member extends NamedElement {
+export class Member extends NamedElement implements AnnotatableElement {
+	annotations: Annotation[];
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;

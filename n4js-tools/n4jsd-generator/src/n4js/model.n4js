@@ -25,8 +25,21 @@ export enum Accessibility {
 	PRIVATE
 }
 
+export class Annotation {
+	name: string;
+
+	constructor(name: string =) {
+		this.name = name;
+	}
+}
+
+export interface AnnotatableElement {
+	annotations: Annotation[] = [];
+}
+
 export class Script {
 	mode: DTSMode = DTSMode.NONE;
+	preamble?: string;
 	imports: Import[] = [];
 	topLevelElements: ExportableElement[] = [];
 	issues: utils.Issue[] = [];
@@ -79,11 +92,12 @@ export enum PrimitiveBasedKind {
 	STRING_BASED, NUMBER_BASED
 }
 
-export class Type extends ExportableElement {
+export class Type extends ExportableElement implements AnnotatableElement {
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
 	typeParams: string[] = [];
+	extends?: TypeRef;
 	members: Member[] = [];
 	literals: EnumLiteral[] = [];
 	aliasedType: TypeRef;
@@ -97,7 +111,7 @@ export enum MemberKind {
 	CTOR, CALLABLE_CTOR, FIELD, GETTER, SETTER, METHOD
 }
 
-export class Member extends NamedElement {
+export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
@@ -121,6 +135,10 @@ export class Parameter extends NamedElement {
 export class TypeRef {
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
+
+	constructor(tsSourceString: string =) {
+		this.tsSourceString = tsSourceString;
+	}
 }
 
 
@@ -140,6 +158,9 @@ class Emitter {
 
 	emitScript(script: Script) {
 		const buff = this.buff;
+		if (script.preamble) {
+			buff.pushln(script.preamble);
+		}
 		if (script.imports.length > 0) {
 			script.imports.forEach((elem, idx) => {
 				if (idx > 0) {
@@ -224,6 +245,7 @@ class Emitter {
 
 	emitType(type: Type) {
 		const buff = this.buff;
+		this.emitAnnotations(type, true);
 		if (type.primitiveBased === PrimitiveBasedKind.STRING_BASED) {
 			buff.pushln("@StringBased");
 		} else if (type.primitiveBased === PrimitiveBasedKind.NUMBER_BASED) {
@@ -239,6 +261,10 @@ class Emitter {
 		buff.push(type.name);
 		if (type.typeParams.length > 0) {
 			buff.push("<", type.typeParams.join(","), ">");
+		}
+		if (type.extends) {
+			buff.push(" extends ");
+			this.emitTypeRef(type.extends);
 		}
 		if (type.kind === TypeKind.TYPE_ALIAS) {
 			buff.push(" = ");
@@ -291,9 +317,12 @@ class Emitter {
 
 	emitMember(parent: Type, member: Member) {
 		const buff = this.buff;
+		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
-			this.emitAccessibility(member);
-			buff.push(" ");
+			if (member.kind !== MemberKind.CALLABLE_CTOR) { // TODO how to define accessibility of a callable ctor?
+				this.emitAccessibility(member);
+				buff.push(" ");
+			}
 		}
 		if (member.isStatic) {
 			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
@@ -315,22 +344,26 @@ class Emitter {
 				buff.push(";");
 				break;
 			case MemberKind.FIELD:
-				buff.push(member.name);
+				this.emitPropertyName(member.name);
 				this.emitTypeAnnotation(member.type);
 				buff.push(";");
 				break;
 			case MemberKind.GETTER:
-				buff.push("get ", member.name, "()");
+				buff.push("get ");
+				this.emitPropertyName(member.name);
+				buff.push("()");
 				this.emitTypeAnnotation(member.type);
 				buff.push(";");
 				break;
 			case MemberKind.SETTER:
-				buff.push("set ", member.name, "(", "value");
+				buff.push("set ");
+				this.emitPropertyName(member.name);
+				buff.push("(", "value");
 				this.emitTypeAnnotation(member.type);
 				buff.push(");");
 				break;
 			case MemberKind.METHOD:
-				buff.push(member.name);
+				this.emitPropertyName(member.name);
 				this.emitSignature(member.signatures[0]);
 				buff.push(";");
 				break;
@@ -407,6 +440,40 @@ class Emitter {
 			buff.push(typeRef.tsSourceString);
 		} else {
 			buff.push("any+");
+		}
+	}
+
+	emitAnnotations(annotElem: AnnotatableElement, separateLine = false) {
+		for (const ann of annotElem.annotations) {
+			this.emitAnnotation(ann, separateLine);
+		}
+	}
+
+	emitAnnotation(ann: Annotation, separateLine = false) {
+		const buff = this.buff;
+		const name = ann.name;
+		if (!name.startsWith("@")) {
+			buff.push("@");
+		}
+		buff.push(name);
+		if (separateLine) {
+			buff.pushln();
+		} else {
+			buff.push(" ");
+		}
+	}
+
+	emitPropertyName(name: string) {
+		const buff = this.buff;
+		const legal = utils.isLegalIdentifier(name);
+		if (!legal) {
+			buff.push('"');
+		}
+		if (name && name.length > 0) {
+			buff.push(name.replace('"', '\\"'));
+		}
+		if (!legal) {
+			buff.push('"');
 		}
 	}
 }
