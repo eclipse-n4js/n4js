@@ -44,7 +44,7 @@ import org.junit.runner.RunWith
 import static org.junit.Assert.*
 
 /**
- * Low level tests for {@link N4JSProjectConfig#computeSemanticDependencies()} and
+ * Low level tests for {@link N4JSProjectConfig#getSemanticDependencies()} and
  * the related tracking of definition projects in {@link N4JSWorkspaceConfig}.
  * <p>
  * Uses custom mock-implementations to avoid a complicated test setup.
@@ -79,7 +79,7 @@ class SemanticDependenciesTest {
 		val definition = implementation.definitionProject;
 		val client = project(new N4JSProjectName("client"), #[implementation]);
 
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["client/node_modules/"+definition.name, "client/node_modules/impl"]);
 	}
 
@@ -91,7 +91,7 @@ class SemanticDependenciesTest {
 		definitionProject(new N4JSProjectName(N4JSGlobals.N4JSD_SCOPE, "anotherDefOfImpl"), implementation);
 		val client = project(new N4JSProjectName("client"), #[implementation]);
 
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["client/node_modules/@n4jsd/anotherDefOfImpl", "client/node_modules/impl"]);
 	}
 
@@ -102,7 +102,7 @@ class SemanticDependenciesTest {
 		val definition = implementation.definitionProject;
 		val client = project(new N4JSProjectName("client"), #[implementation, definition]);
 		
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["client/node_modules/@n4jsd/impl", "client/node_modules/impl"]);
 	}
 	
@@ -113,7 +113,7 @@ class SemanticDependenciesTest {
 		val definition = implementation.definitionProject;
 		val client = project(new N4JSProjectName("client"), #[definition, implementation]);
 		
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["client/node_modules/@n4jsd/impl", "client/node_modules/impl"]);
 	}
 	
@@ -124,7 +124,7 @@ class SemanticDependenciesTest {
 		val definition = definitionProject(new N4JSProjectName("definitionOfImpl"), implementation);
 		val client = project(new N4JSProjectName("client"), #[implementation, definition]);
 		
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Definition project is listed before implementation.", orderedDependencies, #["client/node_modules/definitionOfImpl", "client/node_modules/impl"]);
 	}
 	
@@ -138,7 +138,7 @@ class SemanticDependenciesTest {
 		
 		val client = project(new N4JSProjectName("client"), #[definition1, implementation1, definition2, implementation2]);
 		
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Definition projects are listed before implementation.", 
 			orderedDependencies, #["client/node_modules/@n4jsd/impl1", "client/node_modules/@n4jsd/impl2", "client/node_modules/impl1", "client/node_modules/impl2"]);
 	}
@@ -155,7 +155,7 @@ class SemanticDependenciesTest {
 		
 		val client = project(new N4JSProjectName("client"), #[definition1.name, implementation1.name, "@n4jsd/impl", implementation2.name]);
 		
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Duplicate type definition project IDs do not prevent the dependency order computation from terminating successfully.",
 			orderedDependencies, #["client/node_modules/@n4jsd/impl", "client/node_modules/@n4jsd/impl", "client/node_modules/impl1", "client/node_modules/impl2"]);
 	}
@@ -171,8 +171,8 @@ class SemanticDependenciesTest {
 		// notice order of 'def2', 'def1'
 		val clientReversed = project(new N4JSProjectName("clientReversed"), #[implementation, def2, def1]);
 		
-		val orderedDependencies = client.computeSemanticDependencies();
-		val orderedDependenciesReversed = clientReversed.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
+		val orderedDependenciesReversed = clientReversed.getSemanticDependencies();
 
 		assertOrder("Two type definitions project with same definesPackage will be listed in order of declaration before their implementation project.",
 			orderedDependencies, #["client/node_modules/def1", "client/node_modules/def2", "client/node_modules/impl"] );
@@ -191,8 +191,8 @@ class SemanticDependenciesTest {
 		val client1 = project(new N4JSProjectName("client1"), #[implementation, orphanDefinition, regularDefinition]);
 		val client2 = project(new N4JSProjectName("client2"), #[implementation, regularDefinition, orphanDefinition]);
 		
-		val orderedDependencies1 = client1.computeSemanticDependencies();
-		val orderedDependencies2 = client2.computeSemanticDependencies();
+		val orderedDependencies1 = client1.getSemanticDependencies();
+		val orderedDependencies2 = client2.getSemanticDependencies();
 		
 		assertOrder("Orphan type definitions are also moved to the front.", 
 			orderedDependencies1, #["client1/node_modules/def", "client1/node_modules/@n4jsd/impl", "client1/node_modules/impl"]);
@@ -219,7 +219,7 @@ class SemanticDependenciesTest {
 		Collections.shuffle(dependencies, new Random(821));
 				
 		val client = project(new N4JSProjectName("client"), dependencies);
-		val orderedDependencies = client.computeSemanticDependencies();
+		val orderedDependencies = client.getSemanticDependencies();
 		
 		val orderRepresentation = orderedDependencies.join(" ");
 		val problems = checkTypeDefinitionsOccurBeforeImplementationProjects(orderedDependencies);

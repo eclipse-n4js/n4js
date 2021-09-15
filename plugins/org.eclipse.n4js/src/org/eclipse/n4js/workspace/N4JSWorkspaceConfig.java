@@ -43,6 +43,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -67,8 +68,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	/***/
 	protected final UriExtensions uriExtensions;
 
-	/** All projects registered in this workspace. */
+	/** All projects registered in this workspace by their id. */
 	protected final Map<String, N4JSProjectConfig> qualifiedName2ProjectConfig = new LinkedHashMap<>();
+	/** All projects by their package name. */
+	protected final HashMultimap<String, N4JSProjectConfig> packageName2ProjectConfigs = HashMultimap.create();
 	/** Map between definition projects and their defined projects. */
 	protected final DefinitionProjectMap definitionProjects = new DefinitionProjectMap();
 
@@ -108,6 +111,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return qualifiedName2ProjectConfig.get(name);
 	}
 
+	public Set<N4JSProjectConfig> findProjectsByPackageName(String name) {
+		return packageName2ProjectConfigs.get(name);
+	}
+
 	/**
 	 * No longer supported; will throw {@code UnsupportedOperationException}. See
 	 * {@link XIWorkspaceConfig#findProjectContaining(URI)} for details on deprecation.
@@ -123,6 +130,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	/** Remove all {@link N4JSProjectConfig}s from this workspace. */
 	protected void deregisterAllProjects() {
 		qualifiedName2ProjectConfig.clear();
+		packageName2ProjectConfigs.clear();
 		definitionProjects.clear();
 	}
 
@@ -136,6 +144,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
 		qualifiedName2ProjectConfig.put(qualifiedName, newProject);
+		packageName2ProjectConfigs.put(pd.getName(), newProject);
 		updateDefinitionProjects(null, pd);
 		return newProject;
 	}
@@ -246,27 +255,43 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		for (URI uri : Sets.union(oldProjectsMap.keySet(), newProjectsMap.keySet())) {
 			boolean isOld = oldProjectsMap.containsKey(uri);
 			boolean isNew = newProjectsMap.containsKey(uri);
+
 			if (isOld && !isNew) {
+				// deleted
 				changes = changes.merge(WorkspaceChanges.createProjectRemoved(oldProjectsMap.get(uri)));
 			} else if (!isOld && isNew) {
+				// added
 				ProjectConfigSnapshot newPC = configSnapshotFactory
 						.createProjectConfigSnapshot(newProjectsMap.get(uri));
 				changes = changes.merge(WorkspaceChanges.createProjectAdded(newPC));
 			} else if (isOld && isNew) {
-				if (alsoDetectChangedProjects) {
-					ProjectConfigSnapshot oldPC = oldProjectsMap.get(uri);
+				// check name change
+				String oldPackageName = ((N4JSProjectConfigSnapshot) oldProjectsMap.get(uri)).getPackageName();
+				String newPackageName = newProjectsMap.get(uri).getPackageName();
+				if (Objects.equals(oldPackageName, newPackageName)) {
+					// no change
+					if (alsoDetectChangedProjects) {
+						ProjectConfigSnapshot oldPC = oldProjectsMap.get(uri);
+						ProjectConfigSnapshot newPC = configSnapshotFactory
+								.createProjectConfigSnapshot(newProjectsMap.get(uri));
+
+						changes = changes.merge(N4JSProjectConfig.computeChanges(oldPC, newPC));
+					}
+				} else {
+					// names changed
 					ProjectConfigSnapshot newPC = configSnapshotFactory
 							.createProjectConfigSnapshot(newProjectsMap.get(uri));
-
-					changes = changes.merge(N4JSProjectConfig.computeChanges(oldPC, newPC));
+					changes = changes.merge(WorkspaceChanges.createProjectAdded(newPC));
+					changes = changes.merge(WorkspaceChanges.createProjectRemoved(oldProjectsMap.get(uri)));
 				}
+
 			}
 		}
 		return changes;
 	}
 
 	/**
-	 * The list of {@link N4JSProjectConfig#computeSemanticDependencies() semantic dependencies} of
+	 * The list of {@link N4JSProjectConfig#getSemanticDependencies() semantic dependencies} of
 	 * {@link N4JSProjectConfig}s is tricky for three reasons:
 	 * <ol>
 	 * <li>the semantic dependencies do not contain names of non-existing projects (in case of unresolved project
@@ -283,9 +308,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	protected WorkspaceChanges recomputeSemanticDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
 			WorkspaceChanges changes) {
 
-		boolean needRecompute = !changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()
+		boolean needRecompute = !changes.getAddedProjects().isEmpty()
+				|| !changes.getRemovedProjects().isEmpty()
 				|| Iterables.any(changes.getChangedProjects(),
-						pc -> didDefinitionPropertiesChange(pc, oldWorkspaceConfig));
+						pc -> affectedByPropertyChanges(pc, oldWorkspaceConfig));
 
 		if (needRecompute) {
 			List<ProjectConfigSnapshot> projectsWithChangedSemanticDeps = new ArrayList<>();
@@ -298,7 +324,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				}
 				// convert to list in next line, because we want the below #equals() check to also include the order:
 				List<String> oldSemanticDeps = new ArrayList<>(oldSnapshot.getDependencies());
-				List<String> newSemanticDeps = ((N4JSProjectConfig) pc).computeSemanticDependencies().stream()
+				List<String> newSemanticDeps = ((N4JSProjectConfig) pc).getSemanticDependencies().stream()
 						.map(ProjectDependency::getProjectName)
 						.collect(Collectors.toList());
 				if (!newSemanticDeps.equals(oldSemanticDeps)) {
@@ -338,21 +364,43 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	/** Tells whether the dependencies of the given project changed w.r.t. the given old workspace config. */
 	private static boolean didDependenciesChange(ProjectConfigSnapshot projectConfig,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
+
 		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(projectConfig.getName());
-		return oldProjectConfig == null || !Objects.equals(
-				((N4JSProjectConfigSnapshot) projectConfig).getDependencies(),
-				((N4JSProjectConfigSnapshot) oldProjectConfig).getDependencies());
+		N4JSProjectConfigSnapshot newCasted = (N4JSProjectConfigSnapshot) projectConfig;
+		N4JSProjectConfigSnapshot oldCasted = (N4JSProjectConfigSnapshot) oldProjectConfig;
+
+		return oldProjectConfig == null
+				|| !Objects.equals(oldCasted.getPackageName(), newCasted.getPackageName())
+				|| !Objects.equals(
+						((N4JSProjectConfigSnapshot) projectConfig).getDependencies(),
+						((N4JSProjectConfigSnapshot) oldProjectConfig).getDependencies());
 	}
 
 	/** Tells whether the property {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} changed. */
-	private static boolean didDefinitionPropertiesChange(ProjectConfigSnapshot newProjectConfig,
+	private static boolean affectedByPropertyChanges(ProjectConfigSnapshot newProjectConfig,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
 		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(newProjectConfig.getName());
 		if (oldProjectConfig == null) {
 			return true;
 		}
-		N4JSProjectConfigSnapshot newCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
 		N4JSProjectConfigSnapshot oldCasted = (N4JSProjectConfigSnapshot) oldProjectConfig;
+		N4JSProjectConfigSnapshot newCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
+
+		if (didDefinitionPropertiesChange(oldCasted, newCasted)) {
+			return true;
+		}
+
+		if (!Objects.equals(oldCasted.getPackageName(), newCasted.getPackageName())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/** Tells whether the property {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} changed. */
+	private static boolean didDefinitionPropertiesChange(N4JSProjectConfigSnapshot oldCasted,
+			N4JSProjectConfigSnapshot newCasted) {
+
 		boolean newIsDefinition = newCasted.getType() == ProjectType.DEFINITION;
 		boolean oldIsDefinition = oldCasted.getType() == ProjectType.DEFINITION;
 		if (newIsDefinition != oldIsDefinition) {

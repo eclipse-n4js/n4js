@@ -13,6 +13,7 @@ package org.eclipse.n4js.tests.xtext.workspace;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
@@ -62,6 +63,6 @@ public class ProjectSetTest {
 		N4JSSourceFolderSnapshot srcFolder = new N4JSSourceFolderSnapshot("src", path.appendSegment("src"),
 				SourceContainerType.SOURCE, "src");
 		return new N4JSProjectConfigSnapshot(pd, path, false, true, Collections.emptyList(),
-				Collections.singleton(srcFolder));
+				Collections.singleton(srcFolder), Map.of());
 	}
 }

@@ -104,10 +104,15 @@ public class ProjectDiscoveryHelper {
 	/**
 	 * Collects all projects and uses the approach described above with each of the given workspace root folders.
 	 * <p>
-	 * Note that projects and dependencies are sorted to avoid indeterminism from file system.
+	 * Notes:
+	 * <ul>
+	 * <li/>Projects and dependencies are sorted to avoid indeterminism from file system.
+	 * <li/>Dependencies (i.e. projects in {@code node_modules} folders) are listed after all workspace projects.
+	 * <li/>Projects in packages folders have a symlink in the node_modules folder (created by yarn). The symlink is not
+	 * used in favor for the path in the packages folder because we want to support workspaces that have not yet
+	 * initialized by yarn.
+	 * </ul>
 	 * <p>
-	 * Note that the dependencies (i.e. projects in {@code node_modules} folders) are listed after all workspace
-	 * projects.
 	 */
 	public List<Path> collectAllProjectDirs(Collection<Path> workspaceRoots, Map<Path, ProjectDescription> pdCache) {
 		Map<String, Path> projects = collectAllProjects(workspaceRoots, pdCache);

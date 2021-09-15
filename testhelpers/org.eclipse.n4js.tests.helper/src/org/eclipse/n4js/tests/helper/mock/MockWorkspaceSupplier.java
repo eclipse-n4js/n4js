@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -135,7 +136,7 @@ public class MockWorkspaceSupplier {
 		ProjectDescription pd = loadedOrCreated.getValue();
 		List<N4JSSourceFolderSnapshot> sourceFolders = createSourceFolders(projectPath, pd);
 		return new N4JSProjectConfigSnapshot(pd, projectPath.withTrailingPathDelimiter().toURI(), false, true,
-				Collections.emptyList(), sourceFolders);
+				Collections.emptyList(), sourceFolders, Map.of());
 	}
 
 	/** See {@link #createWorkspaceConfig()}. */

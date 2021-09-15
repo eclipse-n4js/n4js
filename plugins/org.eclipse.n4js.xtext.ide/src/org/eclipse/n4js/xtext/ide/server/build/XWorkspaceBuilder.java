@@ -339,15 +339,15 @@ public class XWorkspaceBuilder {
 		queue(this.deletedFiles, actualDirtyFiles, actualDeletedFiles);
 
 		// take care of removed projects
-		Set<ProjectConfigSnapshot> delProjects = new HashSet<>();
+		Set<ProjectConfigSnapshot> deletedProjects = new HashSet<>();
 		for (ProjectConfigSnapshot prjConfig : changes.getRemovedProjects()) {
-			delProjects.add(prjConfig);
+			deletedProjects.add(prjConfig);
 		}
 		for (ProjectConfigSnapshot prjConfig : Iterables.concat(changes.getAddedProjects(),
 				changes.getChangedProjects())) {
-			delProjects.remove(prjConfig);
+			deletedProjects.remove(prjConfig);
 		}
-		for (ProjectConfigSnapshot delPrj : delProjects) {
+		for (ProjectConfigSnapshot delPrj : deletedProjects) {
 			ImmutableSet<? extends ProjectConfigSnapshot> affected = updateResult.oldWorkspaceConfigSnapshot
 					.getProjectsDependingOn(delPrj.getName());
 			this.affectedByDeletedProjects.addAll(affected);
