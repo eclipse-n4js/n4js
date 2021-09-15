@@ -17,8 +17,6 @@ import * as utils_ts from "./utils_ts";
 
 export class Converter {
 	private readonly projectPath?: string;
-	/** True iff option '--runtime-libs' was given on the command line. */
-	private readonly runtimeLibs: boolean;
 
 	private readonly program: ts.Program;
 	private readonly checker: ts.TypeChecker;
@@ -26,22 +24,17 @@ export class Converter {
 	private exportAssignment: ts.ExportAssignment;
 	private readonly issues: utils.Issue[] = [];
 
-	constructor(sourceDtsFilePaths: string[], projectPath?: string, runtimeLibs = false) {
+	constructor(sourceDtsFilePaths: string[], projectPath?: string) {
 		if (projectPath !== undefined && !path_lib.isAbsolute(projectPath)) {
 			throw "projectPath must be absolute";
 		}
 
 		this.projectPath = projectPath;
-		this.runtimeLibs = runtimeLibs;
 
 		// prepare compilation options
 		const opts: ts.CompilerOptions = {
 			allowJs: true
 		};
-		if (runtimeLibs) {
-			opts.noLib = true;
-			opts.types = []; // make sure we do not compile type definitions requested in a tsconfig.json the compiler might find!
-		}
 
 		// compile .d.ts files
 		const program = ts.createProgram(sourceDtsFilePaths, opts);

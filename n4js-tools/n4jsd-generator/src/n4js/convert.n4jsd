@@ -13,7 +13,7 @@ import * as model from "model";
 
 export external public class Converter {
 
-	constructor(sourceDtsFilePaths: string[], projectPath: string =, runtimeLibs: boolean =);
+	constructor(sourceDtsFilePaths: string[], projectPath: string =);
 
 	convertScript(sourceFilePath: string): model.Script;
 
