@@ -20,7 +20,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				args: [ "--runtime-libs", "--copy-type-refs" ]
 			},
 			{
-				name: "es5.d.ts",
+				name: "es5",
 				dts: `
 					interface SomeType {
 						someInstanceMethod(p: string): number;
@@ -34,10 +34,12 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					declare var SomeType: SomeTypeConstructor;
 				`,
 				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
 					export external public class ~SomeType {
-						someInstanceMethod(p: string): number;
-						constructor(p: string);
-						static someStaticMethod(p: string): number;
+						public someInstanceMethod(p: string): number;
+						public constructor(p: string);
+						public static someStaticMethod(p: string): number;
 					}
 				`
 			}
@@ -51,7 +53,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				args: [ "--runtime-libs", "--copy-type-refs" ]
 			},
 			{
-				name: "es5.d.ts",
+				name: "es5",
 				dts: `
 					interface SomeGenType<T> {
 						someInstanceMethod(p: string): T;
@@ -65,10 +67,46 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					declare var SomeGenType: SomeGenTypeConstructor;
 				`,
 				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
 					export external public class ~SomeGenType<T> {
-						someInstanceMethod(p: string): T;
-						constructor(...elems: T[]);
-						static someStaticMethod(p: string): number;
+						public someInstanceMethod(p: string): T;
+						public constructor(...elems: T[]);
+						public static someStaticMethod(p: string): number;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testPolyfill() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ]
+			},
+			{
+				name: "es5",
+				dts: `
+					export class Object {
+						public someMemberAddedToObject(): string;
+					}
+					export class Math {
+						public someMemberAddedToMath(): string;
+					}
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					@Polyfill
+					export external public class Object extends Object {
+						public someMemberAddedToObject(): string;
+					}
+
+					@Polyfill
+					@Final
+					export external public class Math extends Math {
+						public someMemberAddedToMath(): string;
 					}
 				`
 			}

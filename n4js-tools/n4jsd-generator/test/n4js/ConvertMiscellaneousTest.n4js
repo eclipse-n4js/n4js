@@ -43,4 +43,45 @@ export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest 
 			}
 		);
 	}
+
+	@Test
+	public testInvalidMemberNames() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export class Cls {
+						_field: string;
+						$1: string;
+						"&": string;
+						"+": string;
+						"\`": string;
+						"'": string;
+						'"': string;
+						"f&": string;
+						"f+": string;
+						"f\`": string;
+						"f'": string;
+						'f"': string;
+					}
+				`,
+				n4jsd: `
+					export external public class ~Cls {
+						_field: any+;
+						$1: any+;
+						"&": any+;
+						"+": any+;
+						"\`": any+;
+						"'": any+;
+						"\\"": any+;
+						"f&": any+;
+						"f+": any+;
+						"f\`": any+;
+						"f'": any+;
+						"f\\"": any+;
+					}
+				`
+			}
+		);
+	}
 }

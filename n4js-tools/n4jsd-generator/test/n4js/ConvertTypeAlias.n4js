@@ -11,7 +11,7 @@
 
 import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
 
-export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest {
+export public class ConvertTypeAliasTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
 	public testTypeAlias01() {
