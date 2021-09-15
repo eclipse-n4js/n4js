@@ -14,7 +14,6 @@
 // file 'cmdLineOpts.n4js' for finding those.
 
 import * as model from "model";
-import {Socket} from "net";
 
 const PREAMBLE = `@@Global @@ProvidedByRuntime
 `;
