@@ -128,6 +128,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return isExternal();
 	}
 
+	/** Returns the project id for a given package name or the package name itself. */
 	public String getProjectIdForPackageName(String packageName) {
 		return packageNameToProjectIds.getOrDefault(packageName, packageName);
 	}

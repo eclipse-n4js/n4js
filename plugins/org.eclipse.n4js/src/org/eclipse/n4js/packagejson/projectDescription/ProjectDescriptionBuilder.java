@@ -58,35 +58,33 @@ public class ProjectDescriptionBuilder {
 
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
-		String failSafeName = (packageName == null || packageName.isBlank()) && location != null
-				? location.findProjectName().getRawName()
-				: packageName;
-		id = computeQualifiedName(failSafeName);
+		id = id == null ? computeQualifiedName() : id;
 		return new ProjectDescription(location, relatedRootLocation, id,
-				failSafeName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
+				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage, nestedNodeModulesFolder,
 				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts, workspaces);
 	}
 
-	private String computeQualifiedName(String failSafeName) {
+	public String computeQualifiedName() {
 		if (relatedRootLocation == null) {
 			relatedRootLocation = location;
 		}
 
-		if (id != null) {
-			return id;
-		} else if (location != null) {
+		if (location != null) {
 			if (relatedRootLocation != null && relatedRootLocation.getParent() != null) {
-				FileURI parent = relatedRootLocation.getParent();
-				if (parent.getName().startsWith("@") && parent.getParent() != null) {
+				Path parent = relatedRootLocation.getParent().toPath();
+				if (parent.getFileName() != null
+						&& parent.getFileName().toString().startsWith("@")
+						&& parent.getParent() != null) {
+
 					parent = parent.getParent();
 				}
-				Path relativeLocation = parent.relativize(location);
+				Path relativeLocation = parent.relativize(location.toPath());
 				return relativeLocation.toString();
 			}
 		}
-		return failSafeName;
+		return packageName;
 	}
 
 	public FileURI getLocation() {

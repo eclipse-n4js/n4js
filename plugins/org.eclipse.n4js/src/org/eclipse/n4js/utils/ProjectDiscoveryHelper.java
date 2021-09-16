@@ -34,12 +34,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescriptionBuilder;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
@@ -372,15 +374,25 @@ public class ProjectDiscoveryHelper {
 	private ProjectDescription getOrCreateProjectDescription(Path path, Path relatedRoot,
 			Map<Path, ProjectDescription> cache) {
 
-		// recompute project description in case the nodeModulesDiscoveryHelper added it
 		if (!cache.containsKey(path) || cache.get(path).getRelatedRootLocation() == null) {
 			FileURI location = new FileURI(path.toFile());
 			FileURI relatedRootLocation = relatedRoot == null ? null : new FileURI(relatedRoot.toFile());
-			ProjectDescription depPD = projectDescriptionLoader
+			ProjectDescription pd = projectDescriptionLoader
 					.loadProjectDescriptionAtLocation(location, relatedRootLocation);
-			cache.put(path, depPD);
+			cache.put(path, pd);
 		}
-		return cache.get(path);
+		ProjectDescription pd = cache.get(path);
+		if (pd != null && relatedRoot != null && pd.getRelatedRootLocation() != null
+				&& !Objects.equals(relatedRoot, pd.getRelatedRootLocation().toPath())) {
+
+			// recompute project description in case the nodeModulesDiscoveryHelper added it
+			ProjectDescriptionBuilder pdb = pd.change();
+			pd = pdb.setRelatedRootLocation(new FileURI(relatedRoot.toFile()))
+					.setId(pdb.computeQualifiedName())
+					.build();
+			cache.put(path, pd);
+		}
+		return pd;
 	}
 
 	/** @return the {@link ProjectDescription} for the project in the given directory or null. */

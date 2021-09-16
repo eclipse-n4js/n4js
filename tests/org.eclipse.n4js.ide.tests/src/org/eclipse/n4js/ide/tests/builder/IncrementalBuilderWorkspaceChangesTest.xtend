@@ -357,7 +357,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			]
 		];
 
-		doTestAddRemoveDependency("MainProject" -> "OtherProject", false, originalErrors);
+		doTestAddRemoveDependency("MainProject" -> "OtherProject", true, originalErrors);
 	}
 
 	@Test

@@ -304,8 +304,9 @@ class SemanticDependenciesTest {
 				}
 			}
 		}
-		val pd = newProjectDescription(projectName, null, dependencies);
-		return workspace.registerProject(workspace.pathAsFileURI.appendPath(projectName.getRawName), pd);
+		val prjLocation = workspace.pathAsFileURI.appendPath(projectName.getRawName);
+		val pd = newProjectDescription(prjLocation, projectName, null, dependencies);
+		return workspace.registerProject(prjLocation, pd);
 	}
 	
 	/**
@@ -331,11 +332,12 @@ class SemanticDependenciesTest {
 	 * {@code definesPackage}. 
 	 */
 	private def N4JSProjectConfig definitionProject(N4JSProjectName projectName, N4JSProjectName definesPackage) {
-		val pd = newProjectDescription(projectName, definesPackage, Collections.<String>emptyList());
-		return workspace.registerProject(workspace.pathAsFileURI.appendPath(projectName.getRawName), pd);
+		val prjLocation = workspace.pathAsFileURI.appendPath(projectName.getRawName);
+		val pd = newProjectDescription(prjLocation, projectName, definesPackage, Collections.<String>emptyList());
+		return workspace.registerProject(prjLocation, pd);
 	}
 
-	private static def ProjectDescription newProjectDescription(N4JSProjectName projectName,
+	private def ProjectDescription newProjectDescription(FileURI location, N4JSProjectName projectName,
 		N4JSProjectName definesPackage, String... dependencies) {
 
 		val projectType = if (definesPackage !== null) {
@@ -344,6 +346,7 @@ class SemanticDependenciesTest {
 			ProjectType.LIBRARY
 		};
 		val pdb = ProjectDescription.builder()
+			.setLocation(location)
 			.setPackageName(projectName.rawName)
 			.setType(projectType)
 			.setDefinesPackage(definesPackage?.rawName);
