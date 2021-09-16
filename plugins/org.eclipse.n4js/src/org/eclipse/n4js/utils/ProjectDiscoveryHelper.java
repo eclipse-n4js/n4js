@@ -148,7 +148,7 @@ public class ProjectDiscoveryHelper {
 
 		if (nodeModulesFolder == null) {
 			// Assume side-by-side case (neither NPM nor Yarn project)
-			collectProjects(wsRoot, true, pdCache, allProjectDirs);
+			collectProjects(wsRoot, null, true, pdCache, allProjectDirs);
 
 			if (allProjectDirs.isEmpty()) {
 				// no project found => not side-by-side case: Search in parent directories
@@ -173,7 +173,7 @@ public class ProjectDiscoveryHelper {
 				collectYarnWorkspaceProjects(yarnProjectDir, pdCache, allProjectDirs);
 			} else {
 				// Is a stand-alone npm project
-				addIfNotPlainjs(wsRoot, pdCache, allProjectDirs);
+				addIfNotPlainjs(wsRoot, wsRoot, pdCache, allProjectDirs);
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class ProjectDiscoveryHelper {
 	private void collectYarnWorkspaceProjects(Path yarnProjectRoot, Map<Path, ProjectDescription> pdCache,
 			Map<String, Path> allProjectDirs) {
 
-		ProjectDescription projectDescription = getCachedProjectDescription(yarnProjectRoot, pdCache);
+		ProjectDescription projectDescription = getOrCreateProjectDescription(yarnProjectRoot, null, pdCache);
 		if (projectDescription == null) {
 			return;
 		}
@@ -222,14 +222,14 @@ public class ProjectDiscoveryHelper {
 		}
 	}
 
-	private void collectProjects(Path root, boolean includeSubtree, Map<Path, ProjectDescription> pdCache,
-			Map<String, Path> allProjectDirs) {
+	private void collectProjects(Path root, Path relatedRoot, boolean includeSubtree,
+			Map<Path, ProjectDescription> pdCache, Map<String, Path> allProjectDirs) {
 
 		if (!root.toFile().isDirectory()) {
 			return;
 		}
 
-		FileVisitResult defaultReturn;
+		final FileVisitResult defaultReturn;
 		int depth;
 		if (includeSubtree) {
 			defaultReturn = CONTINUE;
@@ -259,7 +259,7 @@ public class ProjectDiscoveryHelper {
 								&& nodeModulesDiscoveryHelper.isYarnWorkspaceRoot(dir.toFile(), pdCache)) {
 							collectYarnWorkspaceProjects(dir, pdCache, allProjectDirs);
 						} else {
-							addIfNotPlainjs(dir, pdCache, allProjectDirs);
+							addIfNotPlainjs(dir, relatedRoot, pdCache, allProjectDirs);
 						}
 						return FileVisitResult.SKIP_SUBTREE;
 					}
@@ -272,16 +272,16 @@ public class ProjectDiscoveryHelper {
 		}
 	}
 
-	private void collectGlobMatches(String glob, Path location, Map<Path, ProjectDescription> pdCache,
+	private void collectGlobMatches(String glob, Path yarnRoot, Map<Path, ProjectDescription> pdCache,
 			Map<String, Path> allProjectDirs) {
 
 		int depth = glob.contains("**") ? Integer.MAX_VALUE : glob.split("/").length + 1;
 
 		@SuppressWarnings("resource")
-		PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + location.resolve(glob));
+		PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + yarnRoot.resolve(glob));
 		try {
 			EnumSet<FileVisitOption> options = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-			Files.walkFileTree(location, options, depth, new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(yarnRoot, options, depth, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
@@ -292,13 +292,14 @@ public class ProjectDiscoveryHelper {
 						Path dirName = dir.getName(dir.getNameCount() - 1);
 						if (dirName.toString().startsWith("@")) {
 							// note: project names must not start with '@' (unless it is a parent folder)
-							collectProjects(dir, false, pdCache, allProjectDirs);
+							collectProjects(dir, yarnRoot, false, pdCache, allProjectDirs);
 							return FileVisitResult.SKIP_SUBTREE;
 
 						} else {
 							File pckJson = dir.resolve(N4JSGlobals.PACKAGE_JSON).toFile();
 							if (pckJson.isFile()) {
-								ProjectDescription projectDescription = getCachedProjectDescription(dir, pdCache);
+								ProjectDescription projectDescription = getOrCreateProjectDescription(dir, yarnRoot,
+										pdCache);
 								// note: add 'dir' to 'allProjectDirs' even if it is PLAINJS (will be taken care of by
 								// #removeUnnecessaryPlainjsProjects() below)
 								if (projectDescription != null) {
@@ -332,15 +333,15 @@ public class ProjectDiscoveryHelper {
 		Set<String> projectsRequiredByAnN4JSProject = new HashSet<>();
 		Map<String, String> name2QualifiedName = new HashMap<>();
 		for (Path project : projects.values()) {
-			ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+			ProjectDescription pd = getProjectDescription(project, pdCache); // if it is null it was not added before
 			if (pd == null) {
 				continue;
 			}
 			ProjectType type = pd.getType();
 			if (type == ProjectType.PLAINJS) {
 				// note: in case a name occurs twice yarn would throw an error
-				name2QualifiedName.put(pd.getName(), pd.getQualifiedName());
-				plainjsProjects.put(pd.getName(), project);
+				name2QualifiedName.put(pd.getPackageName(), pd.getQualifiedName());
+				plainjsProjects.put(pd.getPackageName(), project);
 			} else {
 				List<String> deps = pd.getProjectDependencies().stream()
 						.map(ProjectReference::getProjectName).collect(Collectors.toList());
@@ -355,39 +356,36 @@ public class ProjectDiscoveryHelper {
 		}
 	}
 
-	private void addIfNotPlainjs(Path project, Map<Path, ProjectDescription> pdCache,
+	private void addIfNotPlainjs(Path project, Path relatedRoot, Map<Path, ProjectDescription> pdCache,
 			Map<String, Path> allProjectDirs) {
 
-		ProjectDescription pd = getCachedProjectDescription(project, pdCache);
+		ProjectDescription pd = getOrCreateProjectDescription(project, relatedRoot, pdCache);
 		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
 			allProjectDirs.putIfAbsent(pd.getQualifiedName(), project);
 		}
 	}
 
-	/** @return the potentially cached {@link ProjectDescription} for the project in the given directory or null. */
-	private ProjectDescription getCachedProjectDescription(Path path, Map<Path, ProjectDescription> cache) {
-		if (!cache.containsKey(path)) {
-			FileURI uri = new FileURI(path.toFile());
-			ProjectDescription depPD = projectDescriptionLoader.loadProjectDescriptionAtLocation(uri);
+	/**
+	 * @return the potentially cached {@link ProjectDescription} for the project in the given directory or creates it.
+	 *         In case creation fails, null is returned.
+	 */
+	private ProjectDescription getOrCreateProjectDescription(Path path, Path relatedRoot,
+			Map<Path, ProjectDescription> cache) {
+
+		// recompute project description in case the nodeModulesDiscoveryHelper added it
+		if (!cache.containsKey(path) || cache.get(path).getRelatedRootLocation() == null) {
+			FileURI location = new FileURI(path.toFile());
+			FileURI relatedRootLocation = relatedRoot == null ? null : new FileURI(relatedRoot.toFile());
+			ProjectDescription depPD = projectDescriptionLoader
+					.loadProjectDescriptionAtLocation(location, relatedRootLocation);
 			cache.put(path, depPD);
 		}
-
 		return cache.get(path);
 	}
 
-	/** Searches all dependencies (ie. npm projects) of the given set of projects */
-	@SuppressWarnings("unused")
-	private Map<String, Path> collectAllDependencies(Map<String, Path> allProjectDirs,
-			Map<Path, ProjectDescription> pdCache) {
-
-		Map<String, Path> dependencies = new LinkedHashMap<>();
-		List<Path> nodeModulesFolders = nodeModulesDiscoveryHelper.findNodeModulesFolders(allProjectDirs.values(),
-				pdCache);
-
-		for (Path nmFolder : new LinkedHashSet<>(nodeModulesFolders)) {
-			collectProjects(nmFolder, true, pdCache, dependencies);
-		}
-		return dependencies;
+	/** @return the {@link ProjectDescription} for the project in the given directory or null. */
+	private ProjectDescription getProjectDescription(Path path, Map<Path, ProjectDescription> cache) {
+		return cache.get(path);
 	}
 
 	/**
@@ -428,8 +426,9 @@ public class ProjectDiscoveryHelper {
 	private void findDependencies(Map<String, Path> allProjectDirs, Path prjDir, NodeModulesFolder nodeModulesFolder,
 			Map<Path, ProjectDescription> pdCache, Set<Path> workList, Map<String, Path> dependencies) {
 
+		Path relatedRoot = nodeModulesFolder.getRelatedRoot();
 		Path prjNodeModules = prjDir.resolve(N4JSGlobals.NODE_MODULES);
-		ProjectDescription prjDescr = getCachedProjectDescription(prjDir, pdCache);
+		ProjectDescription prjDescr = getOrCreateProjectDescription(prjDir, relatedRoot, pdCache);
 		if (prjDescr == null) {
 			return;
 		}
@@ -438,14 +437,14 @@ public class ProjectDiscoveryHelper {
 			String depName = dependency.getProjectName();
 
 			Path depLocation = findDependencyLocation(nodeModulesFolder, prjNodeModules, depName);
-			if (isNewDependency(allProjectDirs, prjDir, pdCache, depLocation)) {
-				addDependency(depLocation, pdCache, workList, dependencies);
+			if (isNewDependency(allProjectDirs, prjDir, pdCache, depLocation, relatedRoot)) {
+				addDependency(depLocation, relatedRoot, pdCache, workList, dependencies);
 			}
 		}
 	}
 
 	private boolean isNewDependency(Map<String, Path> allProjectDirs, Path prjDir,
-			Map<Path, ProjectDescription> pdCache, Path depLocation) {
+			Map<Path, ProjectDescription> pdCache, Path depLocation, Path relatedRoot) {
 
 		if (depLocation == null) {
 			return false;
@@ -454,7 +453,7 @@ public class ProjectDiscoveryHelper {
 		if (SemanticDependencySupplier.isSymbolicLink(depLocation)) {
 			Path linkTarget = SemanticDependencySupplier.resolveSymbolicLink(depLocation);
 			if (linkTarget != null) {
-				ProjectDescription prjDescrLinked = getCachedProjectDescription(linkTarget, pdCache);
+				ProjectDescription prjDescrLinked = getOrCreateProjectDescription(linkTarget, relatedRoot, pdCache);
 				if (prjDescrLinked != null && allProjectDirs.containsKey(prjDescrLinked.getQualifiedName())) {
 					return false;
 				}
@@ -465,8 +464,8 @@ public class ProjectDiscoveryHelper {
 		return !prjDir.equals(depLocation);
 	}
 
-	private void addDependency(Path depLocation, Map<Path, ProjectDescription> pdCache, Set<Path> workList,
-			Map<String, Path> dependencies) {
+	private void addDependency(Path depLocation, Path relatedRoot, Map<Path, ProjectDescription> pdCache,
+			Set<Path> workList, Map<String, Path> dependencies) {
 
 		if (depLocation == null) {
 			return;
@@ -475,7 +474,7 @@ public class ProjectDiscoveryHelper {
 		Path packageJson = depLocation.resolve(N4JSGlobals.PACKAGE_JSON);
 		if (packageJson.toFile().isFile()) {
 
-			ProjectDescription depPD = getCachedProjectDescription(depLocation, pdCache);
+			ProjectDescription depPD = getOrCreateProjectDescription(depLocation, relatedRoot, pdCache);
 
 			if (depPD != null) {
 				String depQualifiedName = depPD.getQualifiedName();
@@ -495,7 +494,7 @@ public class ProjectDiscoveryHelper {
 	// Note: in node_modules folders the project name always equals its parent folder(s)
 	private Path findDependencyLocation(NodeModulesFolder nodeModulesFolder, Path prjNodeModules, String depName) {
 		if (nodeModulesFolder == null) {
-			return prjNodeModules.resolve(depName);
+			return prjNodeModules.resolve(depName); // can this happen?
 		}
 		for (File currNMF : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
 			File depLocation = new File(currNMF, depName);

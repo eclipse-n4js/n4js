@@ -256,7 +256,7 @@ class PackageJsonHelperTest {
 
 
 	def private assertCorrectDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
-		assertEquals(DEFAULT_PROJECT_ID, pd.getName);
+		assertEquals(DEFAULT_PROJECT_ID, pd.getPackageName);
 		assertEquals(VERSION.defaultValue, pd.getVersion.toString);
 		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
 		assertEquals(null, pd.vendorName);
@@ -291,7 +291,7 @@ class PackageJsonHelperTest {
 	def private ProjectDescription parseAndConvert(CharSequence jsonSource, boolean applyDefaultValues, String defaultProjectName) {
 		val jsonParseHelper = N4LanguageUtils.getServiceForContext(JSONGlobals.FILE_EXTENSION, JSONParseHelper).get();
 		val jsonDocument = jsonParseHelper.parseSuccessfully(jsonSource);
-		val pd = packageJsonHelper.convertToProjectDescription(null, jsonDocument, applyDefaultValues, defaultProjectName)?.build();
+		val pd = packageJsonHelper.convertToProjectDescription(jsonDocument, applyDefaultValues, defaultProjectName)?.build();
 		return pd;
 	}
 }

@@ -155,7 +155,8 @@ public class MockWorkspaceSupplier {
 	/** See {@link #createWorkspaceConfig()}. */
 	protected Optional<Pair<FileURI, ProjectDescription>> loadProjectDescription() {
 		FileURI candidateProjectPath = new FileURI(new File("").getAbsoluteFile());
-		ProjectDescription pd = projectDescriptionLoader.loadProjectDescriptionAtLocation(candidateProjectPath);
+		ProjectDescription pd = projectDescriptionLoader
+				.loadProjectDescriptionAtLocation(candidateProjectPath, null);
 		return Optional.fromNullable(pd != null ? Pair.of(candidateProjectPath, pd) : null);
 	}
 

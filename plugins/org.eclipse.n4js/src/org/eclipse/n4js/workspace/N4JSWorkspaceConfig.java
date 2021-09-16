@@ -115,6 +115,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		return packageName2ProjectConfigs.get(name);
 	}
 
+	public Set<String> getAllProjectNames() {
+		return Collections.unmodifiableSet(packageName2ProjectConfigs.keySet());
+	}
+
 	/**
 	 * No longer supported; will throw {@code UnsupportedOperationException}. See
 	 * {@link XIWorkspaceConfig#findProjectContaining(URI)} for details on deprecation.
@@ -144,7 +148,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
 		qualifiedName2ProjectConfig.put(qualifiedName, newProject);
-		packageName2ProjectConfigs.put(pd.getName(), newProject);
+		packageName2ProjectConfigs.put(pd.getPackageName(), newProject);
 		updateDefinitionProjects(null, pd);
 		return newProject;
 	}

@@ -21,6 +21,7 @@ import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ImmutableDataClass;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -33,7 +34,10 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class ProjectDescription extends ImmutableDataClass {
 
+	private final FileURI location;
+	private final FileURI relatedRootlocation;
 	private final String qualifiedName;
+
 	private final String name;
 	private final String vendorId;
 	private final String vendorName;
@@ -59,7 +63,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
-	public ProjectDescription(String qualifiedName, String name, String vendorId, String vendorName,
+	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
+			String qualifiedName, String name, String vendorId, String vendorName,
 			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
@@ -69,6 +74,8 @@ public class ProjectDescription extends ImmutableDataClass {
 			boolean n4jsNature, boolean yarnWorkspaceRoot,
 			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
 
+		this.location = location;
+		this.relatedRootlocation = relatedRootlocation;
 		this.qualifiedName = qualifiedName;
 		this.name = name;
 		this.vendorId = vendorId;
@@ -96,6 +103,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	public ProjectDescription(ProjectDescription template) {
+		this.location = template.location;
+		this.relatedRootlocation = template.relatedRootlocation;
 		this.qualifiedName = template.qualifiedName;
 		this.name = template.name;
 		this.vendorId = template.vendorId;
@@ -129,6 +138,8 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public ProjectDescriptionBuilder change() {
 		ProjectDescriptionBuilder builder = new ProjectDescriptionBuilder();
+		builder.setLocation(location);
+		builder.setRelatedRootLocation(relatedRootlocation);
 		builder.setName(qualifiedName);
 		builder.setName(name);
 		builder.setVendorId(vendorId);
@@ -154,13 +165,22 @@ public class ProjectDescription extends ImmutableDataClass {
 		return builder;
 	}
 
+	public FileURI getLocation() {
+		return location;
+	}
+
+	/** The location of the transitive parent root. */
+	public FileURI getRelatedRootLocation() {
+		return relatedRootlocation;
+	}
+
 	/** The project qualified name is the relative path from the project root (which may be a yarn workspace). */
 	public String getQualifiedName() {
 		return qualifiedName;
 	}
 
 	/** The project name, possibly including a scope prefix (e.g. {@code "@someScope/myProject"}). */
-	public String getName() {
+	public String getPackageName() {
 		return name;
 	}
 

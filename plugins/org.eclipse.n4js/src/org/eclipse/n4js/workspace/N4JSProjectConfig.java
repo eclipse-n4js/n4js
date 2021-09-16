@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,13 +84,14 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 */
 	protected void updateProjectStateFromDisk() {
 		ProjectDescription pdOld = projectDescription;
-		projectDescription = projectDescriptionLoader.loadProjectDescriptionAtLocation(path);
+		projectDescription = projectDescriptionLoader
+				.loadProjectDescriptionAtLocation(path, pdOld.getRelatedRootLocation());
 		if (projectDescription == null) {
 			projectDescription = ProjectDescription.builder().build();
 		}
 		// a project is not allowed to change its name
-		String nameOld = pdOld.getName();
-		if (!Objects.equals(projectDescription.getName(), nameOld)) {
+		String nameOld = pdOld.getPackageName();
+		if (!Objects.equals(projectDescription.getPackageName(), nameOld)) {
 			// projectDescription = projectDescription.change().setName(nameOld).build();
 			System.out.println();
 		}
@@ -139,7 +141,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		Path projectAbsPath = getPathAsFileURI().toPath();
 		int endIndex = projectAbsPath.getNameCount() - relPathFromRWNameCount + 1;
 		Path relatedWorkspacePath = Path.of("/").resolve(projectAbsPath.subpath(0, endIndex));
-		return relatedWorkspacePath;
+		return projectDescription.getRelatedRootLocation().toPath();
 	}
 
 	public Path getPathInRelatedWorkspace() {
@@ -177,7 +179,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	}
 
 	public String getPackageName() {
-		return projectDescription.getName();
+		return projectDescription.getPackageName();
 	}
 
 	/** Returns this project's name as an {@link N4JSProjectName}. */
@@ -240,10 +242,12 @@ public class N4JSProjectConfig implements XIProjectConfig {
 				.computeSemanticDependencies(workspace.definitionProjects, deps);
 
 		Path workspaceLocation = getRelatedWorkspacePath();
-		Path projectLocation = getPathAsFileURI().toPath();
+
+		HashSet<String> allNames = new HashSet<>(workspace.getAllProjectNames());
+		semanticDeps.stream().forEach(d -> allNames.add(d.getProjectName()));
 
 		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.getQualifiedNames(
-				workspace, workspaceLocation, projectLocation, semanticDeps));
+				workspace, workspaceLocation, projectDescription, allNames));
 
 		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());
 		for (ProjectDependency sdep : semanticDeps) {

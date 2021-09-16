@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.packagejson.projectDescription;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,9 @@ import com.google.common.collect.Iterables;
 public class ProjectDescriptionBuilder {
 
 	private FileURI location;
-	private String qualifiedName;
+	private FileURI relatedRootlocation;
+	private String qualifiedName; // id
+
 	private String name;
 	private String vendorId;
 	private String vendorName;
@@ -60,21 +62,27 @@ public class ProjectDescriptionBuilder {
 				? location.findProjectName().getRawName()
 				: name;
 		qualifiedName = computeQualifiedName(failSafeName);
-		return new ProjectDescription(qualifiedName, failSafeName, vendorId, vendorName, version, type, mainModule,
-				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
-				implementationId, implementedProjects, outputPath, sourceContainers, moduleFilters, testedProjects,
-				definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts,
-				workspaces);
+		return new ProjectDescription(location, relatedRootlocation, qualifiedName,
+				failSafeName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
+				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
+				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage, nestedNodeModulesFolder,
+				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts, workspaces);
 	}
 
 	private String computeQualifiedName(String failSafeName) {
 		if (qualifiedName != null) {
 			return qualifiedName;
 		} else if (location != null) {
-			FileURI projectRoot = location.getParent().getProjectRoot();
-			if (projectRoot != null && projectRoot.getParent() != null) {
-				List<String> relativePath = location.deresolve(projectRoot.getParent());
-				return String.join(File.separator, relativePath);
+			if (relatedRootlocation != null && relatedRootlocation.getParent() != null) {
+				Path relativeLocation = relatedRootlocation.getParent().relativize(location);
+				return relativeLocation.toString();
+			} else if (location.getParent() != null) {
+				FileURI parent = location.getParent();
+				if (parent.getName().startsWith("@") && parent.getParent() != null) {
+					parent = parent.getParent();
+				}
+				Path relativeLocation = parent.relativize(location);
+				return relativeLocation.toString();
 			}
 		}
 		return failSafeName;
@@ -91,6 +99,20 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setLocation(URI location) {
 		this.location = location == null ? null : new FileURI(location);
+		return this;
+	}
+
+	public FileURI getRelatedRootLocation() {
+		return relatedRootlocation;
+	}
+
+	public ProjectDescriptionBuilder setRelatedRootLocation(FileURI relatedRootlocation) {
+		this.relatedRootlocation = relatedRootlocation;
+		return this;
+	}
+
+	public ProjectDescriptionBuilder setRelatedRootLocation(URI relatedRootlocation) {
+		this.relatedRootlocation = relatedRootlocation == null ? null : new FileURI(relatedRootlocation);
 		return this;
 	}
 

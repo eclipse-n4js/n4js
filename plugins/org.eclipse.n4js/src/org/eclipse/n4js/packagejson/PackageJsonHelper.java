@@ -36,7 +36,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -86,15 +85,15 @@ public class PackageJsonHelper {
 	 * @return the project description converted from the given JSON document or <code>null</code> if the root value of
 	 *         the given JSON document is not a {@link JSONObject}.
 	 */
-	public ProjectDescriptionBuilder convertToProjectDescription(URI location, JSONDocument packageJSON,
-			boolean applyDefaultValues, String defaultProjectName) {
+	public ProjectDescriptionBuilder convertToProjectDescription(JSONDocument packageJSON, boolean applyDefaultValues,
+			String defaultProjectName) {
+
 		JSONValue rootValue = packageJSON.getContent();
 		if (!(rootValue instanceof JSONObject)) {
 			return null;
 		}
 
 		ProjectDescriptionBuilder target = new ProjectDescriptionBuilder();
-		target.setLocation(location);
 		List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 		convertRootPairs(target, rootPairs);
 

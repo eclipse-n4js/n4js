@@ -15,19 +15,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.DependencyType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.semver.SemverUtils;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper;
 import org.eclipse.n4js.utils.NodeModulesDiscoveryHelper.NodeModulesFolder;
@@ -92,27 +93,27 @@ public class SemanticDependencySupplier {
 	}
 
 	public Map<String, String> getQualifiedNames(N4JSWorkspaceConfig workspace, Path workspaceLocation,
-			Path projectLocation, List<ProjectDependency> dependencies) {
+			ProjectDescription projectDescription, Iterable<String> packageNames) {
 
+		Path projectLocation = projectDescription.getLocation().toPath();
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectLocation);
 		Map<String, String> packageName2projectIds = new HashMap<>();
-		for (ProjectDependency dep : dependencies) {
-			String depName = dep.getProjectName();
-			Set<N4JSProjectConfig> candidatesByPackageName = workspace.findProjectsByPackageName(depName);
-			String qualifiedName = getQualifiedName(workspaceLocation, projectLocation, candidatesByPackageName,
-					nodeModulesFolder, depName);
+		for (String packageName : packageNames) {
+			Set<N4JSProjectConfig> candidates = workspace.findProjectsByPackageName(packageName);
+			String qualifiedName = getQualifiedName(workspaceLocation, projectLocation, candidates,
+					nodeModulesFolder, packageName);
 
-			qualifiedName = qualifiedName == null ? depName : qualifiedName;
-			packageName2projectIds.put(depName, qualifiedName);
+			qualifiedName = qualifiedName == null ? packageName : qualifiedName;
+			packageName2projectIds.put(packageName, qualifiedName);
 
 		}
 		return packageName2projectIds;
 	}
 
 	private String getQualifiedName(Path workspaceLocation, Path projectLocation,
-			Set<N4JSProjectConfig> candidatesByPackageName, NodeModulesFolder nodeModulesFolder, String depName) {
+			Set<N4JSProjectConfig> candidates, NodeModulesFolder nodeModulesFolder, String depName) {
 
-		Path pathToDep = getPathToDependency(workspaceLocation, projectLocation, candidatesByPackageName,
+		Path pathToDep = getPathToDependency(workspaceLocation, projectLocation, candidates,
 				nodeModulesFolder, depName);
 		if (pathToDep == null) {
 			return null;
@@ -123,29 +124,30 @@ public class SemanticDependencySupplier {
 	}
 
 	private Path getPathToDependency(Path workspaceLocation, Path projectLocation,
-			Set<N4JSProjectConfig> candidatesByPackageName, NodeModulesFolder nodeModulesFolder, String depName) {
+			Set<N4JSProjectConfig> candidates, NodeModulesFolder nodeModulesFolder, String depName) {
 
 		if (nodeModulesFolder == null) {
 			return projectLocation.resolve(N4JSGlobals.NODE_MODULES).resolve(depName);
 
 		} else {
+
+			Set<Path> candidatePaths = new HashSet<>();
+
 			// First check if it is a packages project
-			for (N4JSProjectConfig candidate : candidatesByPackageName) {
+			for (N4JSProjectConfig candidate : candidates) {
 				if (!candidate.isInNodeModulesFolder()) {
 					if (Objects.equals(workspaceLocation, candidate.getRelatedWorkspacePath())) {
 						// inside the same yarn workspace
 						return candidate.getPathAsFileURI().toPath();
 					}
 				}
+				candidatePaths.add(candidate.getPathAsFileURI().toPath());
 			}
 
 			// Second check if it is a dependency in the node_modules folder
-			Set<Path> pathsByPackageName = candidatesByPackageName.stream()
-					.map(p -> p.getPathAsFileURI().toPath())
-					.collect(Collectors.toSet());
 			for (File nodeModulesDir : nodeModulesFolder.getNodeModulesFoldersInOrderOfPriority()) {
 				Path absDepPath = nodeModulesDir.toPath().resolve(depName);
-				if (pathsByPackageName.contains(absDepPath)) {
+				if (candidatePaths.contains(absDepPath)) {
 					// dependency in a node_modules folder
 					return absDepPath;
 				}

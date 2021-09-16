@@ -177,7 +177,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document);
+		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, null, document);
 		if(description === null) {
 			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
 			// (maybe during manual creation of a new project); therefore we cannot log an error here:

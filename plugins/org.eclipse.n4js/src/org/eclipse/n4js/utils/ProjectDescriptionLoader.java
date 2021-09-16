@@ -83,24 +83,30 @@ public class ProjectDescriptionLoader {
 	 * <p>
 	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json).
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI<?> location) {
+	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI<?> location, SafeURI<?> relatedRootLocation) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
 		}
-		return loadProjectDescriptionAtLocation(location.toURI(), packageJSON);
+		URI relatedRootLocationUri = relatedRootLocation == null ? null : relatedRootLocation.toURI();
+		return loadProjectDescriptionAtLocation(location.toURI(), relatedRootLocationUri, packageJSON);
 	}
 
 	/**
 	 * Same as {@link #loadPackageJSONAtLocation(SafeURI)}.
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
+	public ProjectDescription loadProjectDescriptionAtLocation(URI location, URI relatedRootLocation,
+			JSONDocument packageJSON) {
+
 		adjustMainPath(location, packageJSON);
 		ProjectDescriptionBuilder pdbFromPackageJSON = packageJSON != null
-				? packageJsonHelper.convertToProjectDescription(location, packageJSON, true, null)
+				? packageJsonHelper.convertToProjectDescription(packageJSON, true, null)
 				: null;
 		if (pdbFromPackageJSON != null) {
 			setInformationFromFileSystem(location, pdbFromPackageJSON);
+			pdbFromPackageJSON.setLocation(location);
+			pdbFromPackageJSON.setRelatedRootLocation(relatedRootLocation);
+
 			ProjectDescription result = pdbFromPackageJSON.build();
 			return result;
 		} else {

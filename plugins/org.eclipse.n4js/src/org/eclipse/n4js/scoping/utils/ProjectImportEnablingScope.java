@@ -221,7 +221,7 @@ public class ProjectImportEnablingScope implements IScope {
 
 				String matchingModules = Strings.join(", ",
 						e -> //
-						e.getValue().getName() + "/" + e.getKey().getQualifiedName().toString(),
+						e.getValue().getPackageName() + "/" + e.getKey().getQualifiedName().toString(),
 						descriptionsToProject.entrySet());
 
 				sbErrrorMessage.append(matchingModules);

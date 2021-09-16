@@ -99,7 +99,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 
 		changeOpenedFile("P1/package.json", "\"n4js-runtime\": \"*\"" -> "\"n4js-runtime\": \"*\", \"P2\": \"*\"");
-		
+
 		assertNoIssues();
 		
 		saveOpenedFile("P1/package.json");

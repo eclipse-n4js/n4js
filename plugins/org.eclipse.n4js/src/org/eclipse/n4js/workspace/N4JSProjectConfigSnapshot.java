@@ -159,7 +159,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	/** Returns this project's {@link ProjectDescription#getType() type}. */
 	public String getPackageName() {
-		return projectDescription.getName();
+		return projectDescription.getPackageName();
 	}
 
 	/** Returns this project's {@link ProjectDescription#getType() type}. */

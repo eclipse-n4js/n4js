@@ -171,7 +171,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		val ws = workspaceAccess.getWorkspaceConfig(document);
 
 		val description = getProjectDescription();
-		val projectName = description.getName;
+		val projectName = description.getPackageName;
 
 		// if the project name cannot be determined, exit early
 		if (projectName === null) {
@@ -188,7 +188,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		// Describing Self-Project as RuntimeDependency to handle clash with filled Members from current Project consistently.
 		val selfProject = JSONModelUtils.createStringLiteral(projectName);
-		val N4JSProjectConfigSnapshot optOwnProject = ws.findProjectContaining(document.eResource.URI)
+		val N4JSProjectConfigSnapshot optOwnProject = getProjectConfigSnapshot();
 		if (optOwnProject !== null) {
 			rteAndRtl = Iterables.concat(rteAndRtl, #{selfProject})
 		}
@@ -520,11 +520,11 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		val description = getProjectDescription();
 		
 		// if the project name cannot be determined, exit early
-		if (description.getName === null) {
+		if (description.getPackageName === null) {
 			return;
 		}
 		
-		val currentProject = allProjects.get(new N4JSProjectName(description.getName));
+		val currentProject = allProjects.get(new N4JSProjectName(description.getPackageName));
 
 		// Nothing to do with non-existing, missing and/or external projects.
 		if (null === currentProject || currentProject.external) {
@@ -538,7 +538,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		while (!stack.isEmpty) {
 
 			val actual = stack.pop;
-			val actualId = actual.name;
+			val actualId = actual.packageName;
 			checkState(actual.external, '''Implementation error. Only external projects are expected: «actual».''');
 
 			if (!visitedProjectNames.add(actualId)) {
@@ -588,7 +588,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	def void checkMandatoryDependencies(JSONDocument document) {
 
 		val description = getProjectDescription();
-		val projectName = description.getName;
+		val projectName = description.getPackageName;
 		val projectType = description.getType;
 		if (projectName == N4JSGlobals.N4JS_RUNTIME.rawName) {
 			return; // not applicable ("n4js-runtime" does not need to have a dependency to "n4js-runtime"!)
@@ -1142,7 +1142,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		// check project existence.
 		val String refId = ref.referencedProjectId;
 		val String refName = ref.referencedProjectName;
-		val currentProjectName = description.getName;
+		val currentProjectName = description.getPackageName;
 
 		// check for empty project ID
 		if (refId === null || refId.isEmpty) {
@@ -1180,7 +1180,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		// check version constraint if the current project is not external and has no nested 
 		// node_modules folder
-		val boolean ignoreVersion = (currentProject.isExternal && description.hasNestedNodeModulesFolder);
+		val boolean ignoreVersion = (currentProject.isExternal); // FIXME: WE NEED?: && description.hasNestedNodeModulesFolder
 		if (!ignoreVersion) {
 			checkVersions(currentProject, ref, allProjects);
 		}
@@ -1273,15 +1273,22 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	}
 
 	/**
-	 * Returns the {@link ProjectDescription} that can be created based on the information
-	 * to be found in the currently validated {@link JSONDocument}.
-	 *
-	 * @See {@link ProjectDescriptionLoader}
+	 * Returns the {@link ProjectDescription} of the currently validated {@link JSONDocument}.
 	 */
 	protected def ProjectDescription getProjectDescription() {
+		return getProjectConfigSnapshot().projectDescription;
+	}
+
+	/**
+	 * Returns the cached {@link N4JSProjectConfigSnapshot} of the currently validated {@link JSONDocument}.
+	 */
+	protected def N4JSProjectConfigSnapshot getProjectConfigSnapshot() {
 		return contextMemoize(PROJECT_DESCRIPTION_CACHE, [
 			val doc = getDocument();
-			projectDescriptionLoader.loadProjectDescriptionAtLocation(doc.eResource.URI.trimSegments(1), doc);
+			val resUri = doc.eResource.URI;
+			val wscs = workspaceAccess.getWorkspaceConfig(doc);
+			val pcs = wscs.findProjectContaining(resUri);
+			return pcs;
 		]);
 	}
 
