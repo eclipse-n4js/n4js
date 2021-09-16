@@ -36,9 +36,9 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	private final FileURI location;
 	private final FileURI relatedRootlocation;
-	private final String qualifiedName;
+	private final String id;
 
-	private final String name;
+	private final String packageName;
 	private final String vendorId;
 	private final String vendorName;
 	private final VersionNumber version;
@@ -64,7 +64,7 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
-			String qualifiedName, String name, String vendorId, String vendorName,
+			String id, String packageName, String vendorId, String vendorName,
 			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
@@ -76,8 +76,8 @@ public class ProjectDescription extends ImmutableDataClass {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
-		this.qualifiedName = qualifiedName;
-		this.name = name;
+		this.id = id;
+		this.packageName = packageName;
 		this.vendorId = vendorId;
 		this.vendorName = vendorName;
 		this.version = version != null ? EcoreUtil.copy(version) : null;
@@ -105,8 +105,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	public ProjectDescription(ProjectDescription template) {
 		this.location = template.location;
 		this.relatedRootlocation = template.relatedRootlocation;
-		this.qualifiedName = template.qualifiedName;
-		this.name = template.name;
+		this.id = template.id;
+		this.packageName = template.packageName;
 		this.vendorId = template.vendorId;
 		this.vendorName = template.vendorName;
 		this.version = template.version != null ? EcoreUtil.copy(template.version) : null;
@@ -140,8 +140,8 @@ public class ProjectDescription extends ImmutableDataClass {
 		ProjectDescriptionBuilder builder = new ProjectDescriptionBuilder();
 		builder.setLocation(location);
 		builder.setRelatedRootLocation(relatedRootlocation);
-		builder.setName(qualifiedName);
-		builder.setName(name);
+		builder.setId(id);
+		builder.setPackageName(packageName);
 		builder.setVendorId(vendorId);
 		builder.setVendorName(vendorName);
 		builder.setVersion(version != null ? EcoreUtil.copy(version) : null);
@@ -174,18 +174,18 @@ public class ProjectDescription extends ImmutableDataClass {
 		return relatedRootlocation;
 	}
 
-	/** The project qualified name is the relative path from the project root (which may be a yarn workspace). */
-	public String getQualifiedName() {
-		return qualifiedName;
+	/** The project id name is the relative path from the project root (which may be a yarn workspace). */
+	public String getId() {
+		return id;
 	}
 
 	/** The project name, possibly including a scope prefix (e.g. {@code "@someScope/myProject"}). */
 	public String getPackageName() {
-		return name;
+		return packageName;
 	}
 
 	public N4JSProjectName getN4JSProjectName() {
-		return name != null ? new N4JSProjectName(name) : null;
+		return packageName != null ? new N4JSProjectName(packageName) : null;
 	}
 
 	public String getVendorId() {
@@ -309,8 +309,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				qualifiedName,
-				name,
+				id,
+				packageName,
 				vendorId,
 				vendorName,
 				// projectVersion is covered by internalProjectVersionStr
@@ -338,8 +338,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ProjectDescription other = (ProjectDescription) obj;
-		return Objects.equals(qualifiedName, other.qualifiedName)
-				&& Objects.equals(name, other.name)
+		return Objects.equals(id, other.id)
+				&& Objects.equals(packageName, other.packageName)
 				&& Objects.equals(vendorId, other.vendorId)
 				&& Objects.equals(vendorName, other.vendorName)
 				// version is covered by internalVersionStr
@@ -369,7 +369,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName());
 		sb.append(" {\n");
-		sb.append("    name: " + name + "\n");
+		sb.append("    name: " + packageName + "\n");
 		toStringAdditionalProperties(sb);
 		sb.append("    dependencies: [");
 		if (dependencies.isEmpty()) {

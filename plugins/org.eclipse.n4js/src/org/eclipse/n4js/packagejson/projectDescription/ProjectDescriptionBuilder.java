@@ -27,10 +27,10 @@ import com.google.common.collect.Iterables;
 public class ProjectDescriptionBuilder {
 
 	private FileURI location;
-	private FileURI relatedRootlocation;
-	private String qualifiedName; // id
+	private FileURI relatedRootLocation;
+	private String id;
 
-	private String name;
+	private String packageName;
 	private String vendorId;
 	private String vendorName;
 	private VersionNumber version;
@@ -58,11 +58,11 @@ public class ProjectDescriptionBuilder {
 
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
-		String failSafeName = (name == null || name.isBlank()) && location != null
+		String failSafeName = (packageName == null || packageName.isBlank()) && location != null
 				? location.findProjectName().getRawName()
-				: name;
-		qualifiedName = computeQualifiedName(failSafeName);
-		return new ProjectDescription(location, relatedRootlocation, qualifiedName,
+				: packageName;
+		id = computeQualifiedName(failSafeName);
+		return new ProjectDescription(location, relatedRootLocation, id,
 				failSafeName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage, nestedNodeModulesFolder,
@@ -70,14 +70,15 @@ public class ProjectDescriptionBuilder {
 	}
 
 	private String computeQualifiedName(String failSafeName) {
-		if (qualifiedName != null) {
-			return qualifiedName;
+		if (relatedRootLocation == null) {
+			relatedRootLocation = location;
+		}
+
+		if (id != null) {
+			return id;
 		} else if (location != null) {
-			if (relatedRootlocation != null && relatedRootlocation.getParent() != null) {
-				Path relativeLocation = relatedRootlocation.getParent().relativize(location);
-				return relativeLocation.toString();
-			} else if (location.getParent() != null) {
-				FileURI parent = location.getParent();
+			if (relatedRootLocation != null && relatedRootLocation.getParent() != null) {
+				FileURI parent = relatedRootLocation.getParent();
 				if (parent.getName().startsWith("@") && parent.getParent() != null) {
 					parent = parent.getParent();
 				}
@@ -103,34 +104,34 @@ public class ProjectDescriptionBuilder {
 	}
 
 	public FileURI getRelatedRootLocation() {
-		return relatedRootlocation;
+		return relatedRootLocation;
 	}
 
 	public ProjectDescriptionBuilder setRelatedRootLocation(FileURI relatedRootlocation) {
-		this.relatedRootlocation = relatedRootlocation;
+		this.relatedRootLocation = relatedRootlocation;
 		return this;
 	}
 
 	public ProjectDescriptionBuilder setRelatedRootLocation(URI relatedRootlocation) {
-		this.relatedRootlocation = relatedRootlocation == null ? null : new FileURI(relatedRootlocation);
+		this.relatedRootLocation = relatedRootlocation == null ? null : new FileURI(relatedRootlocation);
 		return this;
 	}
 
-	public String getQualifiedName() {
-		return qualifiedName;
+	public String getId() {
+		return id;
 	}
 
-	public ProjectDescriptionBuilder setQualifiedName(String qualifiedName) {
-		this.qualifiedName = qualifiedName;
+	public ProjectDescriptionBuilder setId(String id) {
+		this.id = id;
 		return this;
 	}
 
-	public String getName() {
-		return name;
+	public String getPackageName() {
+		return packageName;
 	}
 
-	public ProjectDescriptionBuilder setName(String name) {
-		this.name = name;
+	public ProjectDescriptionBuilder setPackageName(String packageName) {
+		this.packageName = packageName;
 		return this;
 	}
 

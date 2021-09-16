@@ -292,8 +292,8 @@ class SemanticDependenciesTest {
 				val relPath = projectName.getRawName + "/node_modules/";
 				val newQName = relPath + depName;
 				
-				if (!Objects.equals(pd.qualifiedName, newQName)) {
-					val newPD = pd.change().setQualifiedName(newQName).build();
+				if (!Objects.equals(pd.id, newQName)) {
+					val newPD = pd.change().setId(newQName).build();
 					
 					workspace.deregisterProject(depName);
 					
@@ -344,7 +344,7 @@ class SemanticDependenciesTest {
 			ProjectType.LIBRARY
 		};
 		val pdb = ProjectDescription.builder()
-			.setName(projectName.rawName)
+			.setPackageName(projectName.rawName)
 			.setType(projectType)
 			.setDefinesPackage(definesPackage?.rawName);
 		for (depName : dependencies) {

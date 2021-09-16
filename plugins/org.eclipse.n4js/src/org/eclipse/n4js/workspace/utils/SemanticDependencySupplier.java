@@ -92,15 +92,15 @@ public class SemanticDependencySupplier {
 		return pDeps;
 	}
 
-	public Map<String, String> getQualifiedNames(N4JSWorkspaceConfig workspace, Path workspaceLocation,
-			ProjectDescription projectDescription, Iterable<String> packageNames) {
+	public Map<String, String> getQualifiedNames(N4JSWorkspaceConfig workspace, ProjectDescription projectDescription,
+			Path relatedRootLocation, Iterable<String> packageNames) {
 
 		Path projectLocation = projectDescription.getLocation().toPath();
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectLocation);
 		Map<String, String> packageName2projectIds = new HashMap<>();
 		for (String packageName : packageNames) {
 			Set<N4JSProjectConfig> candidates = workspace.findProjectsByPackageName(packageName);
-			String qualifiedName = getQualifiedName(workspaceLocation, projectLocation, candidates,
+			String qualifiedName = getQualifiedName(relatedRootLocation, projectLocation, candidates,
 					nodeModulesFolder, packageName);
 
 			qualifiedName = qualifiedName == null ? packageName : qualifiedName;
@@ -110,20 +110,20 @@ public class SemanticDependencySupplier {
 		return packageName2projectIds;
 	}
 
-	private String getQualifiedName(Path workspaceLocation, Path projectLocation,
+	private String getQualifiedName(Path relatedRootLocation, Path projectLocation,
 			Set<N4JSProjectConfig> candidates, NodeModulesFolder nodeModulesFolder, String depName) {
 
-		Path pathToDep = getPathToDependency(workspaceLocation, projectLocation, candidates,
+		Path pathToDep = getPathToDependency(relatedRootLocation, projectLocation, candidates,
 				nodeModulesFolder, depName);
 		if (pathToDep == null) {
 			return null;
 		}
-		Path workspaceParentLocation = workspaceLocation.getParent();
+		Path workspaceParentLocation = relatedRootLocation.getParent();
 		Path relDepPath = workspaceParentLocation.relativize(pathToDep);
 		return relDepPath.toString();
 	}
 
-	private Path getPathToDependency(Path workspaceLocation, Path projectLocation,
+	private Path getPathToDependency(Path relatedRootLocation, Path projectLocation,
 			Set<N4JSProjectConfig> candidates, NodeModulesFolder nodeModulesFolder, String depName) {
 
 		if (nodeModulesFolder == null) {
@@ -136,7 +136,7 @@ public class SemanticDependencySupplier {
 			// First check if it is a packages project
 			for (N4JSProjectConfig candidate : candidates) {
 				if (!candidate.isInNodeModulesFolder()) {
-					if (Objects.equals(workspaceLocation, candidate.getRelatedWorkspacePath())) {
+					if (Objects.equals(relatedRootLocation, candidate.getRelatedRootLocation())) {
 						// inside the same yarn workspace
 						return candidate.getPathAsFileURI().toPath();
 					}

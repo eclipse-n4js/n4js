@@ -165,7 +165,7 @@ public class MockWorkspaceSupplier {
 		VersionNumber versionNumber = SemverUtils.createVersionNumber(0, 0, 1);
 		Iterable<SourceContainerDescription> sourceContainers = createSourceContainerDescriptions();
 		ProjectDescription pd = ProjectDescription.builder()
-				.setName(TEST_PROJECT__NAME)
+				.setPackageName(TEST_PROJECT__NAME)
 				.setVersion(versionNumber)
 				.setType(TEST_PROJECT__TYPE)
 				.setVendorId(TEST_PROJECT__VENDOR_ID)

@@ -135,18 +135,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return path.withTrailingPathDelimiter().toURI();
 	}
 
-	public Path getRelatedWorkspacePath() {
-		Path relativePathFromRelatedWorkspace = getPathInRelatedWorkspace();
-		int relPathFromRWNameCount = relativePathFromRelatedWorkspace.getNameCount();
-		Path projectAbsPath = getPathAsFileURI().toPath();
-		int endIndex = projectAbsPath.getNameCount() - relPathFromRWNameCount + 1;
-		Path relatedWorkspacePath = Path.of("/").resolve(projectAbsPath.subpath(0, endIndex));
+	public Path getRelatedRootLocation() {
 		return projectDescription.getRelatedRootLocation().toPath();
-	}
-
-	public Path getPathInRelatedWorkspace() {
-		Path pathInRelatedWorkspace = Path.of(getName());
-		return pathInRelatedWorkspace;
 	}
 
 	/** Returns the {@link #getPath() path} as a {@link FileURI}. */
@@ -173,11 +163,13 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return getPathAsFileURI().appendSegment(N4JSGlobals.PACKAGE_JSON);
 	}
 
+	/** @return the project id */
 	@Override
 	public String getName() {
-		return projectDescription.getQualifiedName();
+		return projectDescription.getId();
 	}
 
+	/** @return the project name */
 	public String getPackageName() {
 		return projectDescription.getPackageName();
 	}
@@ -241,13 +233,13 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		List<ProjectDependency> semanticDeps = semanticDependencySupplier
 				.computeSemanticDependencies(workspace.definitionProjects, deps);
 
-		Path workspaceLocation = getRelatedWorkspacePath();
+		Path relatedRootLocation = getRelatedRootLocation();
 
 		HashSet<String> allNames = new HashSet<>(workspace.getAllProjectNames());
 		semanticDeps.stream().forEach(d -> allNames.add(d.getProjectName()));
 
 		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.getQualifiedNames(
-				workspace, workspaceLocation, projectDescription, allNames));
+				workspace, projectDescription, relatedRootLocation, allNames));
 
 		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());
 		for (ProjectDependency sdep : semanticDeps) {

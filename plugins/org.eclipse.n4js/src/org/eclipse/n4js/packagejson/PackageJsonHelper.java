@@ -114,7 +114,7 @@ public class PackageJsonHelper {
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case NAME:
-				target.setName(asNonEmptyStringOrNull(value));
+				target.setPackageName(asNonEmptyStringOrNull(value));
 				break;
 			case VERSION:
 				target.setVersion(asVersionNumberOrNull(value));
@@ -313,8 +313,8 @@ public class PackageJsonHelper {
 			// project type 'PLAINJS':
 			target.setType(parseProjectType(PROJECT_TYPE.defaultValue));
 		}
-		if (target.getName() == null) {
-			target.setName(defaultProjectName);
+		if (target.getPackageName() == null) {
+			target.setPackageName(defaultProjectName);
 		}
 		if (target.getVersion() == null) {
 			target.setVersion(createDefaultVersionNumber());

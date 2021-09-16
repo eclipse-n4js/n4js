@@ -98,6 +98,10 @@ public class ProjectDescriptionLoader {
 	public ProjectDescription loadProjectDescriptionAtLocation(URI location, URI relatedRootLocation,
 			JSONDocument packageJSON) {
 
+		if (location == null) {
+			return null;
+		}
+
 		adjustMainPath(location, packageJSON);
 		ProjectDescriptionBuilder pdbFromPackageJSON = packageJSON != null
 				? packageJsonHelper.convertToProjectDescription(packageJSON, true, null)

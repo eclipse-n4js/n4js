@@ -142,7 +142,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 * Registers the project at the given path with the given project description.
 	 */
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
-		String qualifiedName = pd.getQualifiedName();
+		String qualifiedName = pd.getId();
 		if (qualifiedName2ProjectConfig.containsKey(qualifiedName)) {
 			return null;
 		}

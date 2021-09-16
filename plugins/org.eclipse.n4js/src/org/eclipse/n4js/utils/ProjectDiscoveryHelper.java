@@ -210,7 +210,7 @@ public class ProjectDiscoveryHelper {
 		// 2) having the workspace root project or not makes a huge difference (projects exist inside projects) and it
 		// is better to always stick to one situation (otherwise many tests would have to be provided in two variants),
 		// 3) the yarn workspace root project has always been included.
-		allProjectDirs.putIfAbsent(projectDescription.getQualifiedName(), yarnProjectRoot);
+		allProjectDirs.putIfAbsent(projectDescription.getId(), yarnProjectRoot);
 
 		Map<String, Path> memberProjects = new LinkedHashMap<>();
 		for (String workspaceGlob : workspaces) {
@@ -303,7 +303,7 @@ public class ProjectDiscoveryHelper {
 								// note: add 'dir' to 'allProjectDirs' even if it is PLAINJS (will be taken care of by
 								// #removeUnnecessaryPlainjsProjects() below)
 								if (projectDescription != null) {
-									allProjectDirs.putIfAbsent(projectDescription.getQualifiedName(), dir);
+									allProjectDirs.putIfAbsent(projectDescription.getId(), dir);
 								}
 								return FileVisitResult.SKIP_SUBTREE;
 							}
@@ -340,7 +340,7 @@ public class ProjectDiscoveryHelper {
 			ProjectType type = pd.getType();
 			if (type == ProjectType.PLAINJS) {
 				// note: in case a name occurs twice yarn would throw an error
-				name2QualifiedName.put(pd.getPackageName(), pd.getQualifiedName());
+				name2QualifiedName.put(pd.getPackageName(), pd.getId());
 				plainjsProjects.put(pd.getPackageName(), project);
 			} else {
 				List<String> deps = pd.getProjectDependencies().stream()
@@ -361,7 +361,7 @@ public class ProjectDiscoveryHelper {
 
 		ProjectDescription pd = getOrCreateProjectDescription(project, relatedRoot, pdCache);
 		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
-			allProjectDirs.putIfAbsent(pd.getQualifiedName(), project);
+			allProjectDirs.putIfAbsent(pd.getId(), project);
 		}
 	}
 
@@ -454,7 +454,7 @@ public class ProjectDiscoveryHelper {
 			Path linkTarget = SemanticDependencySupplier.resolveSymbolicLink(depLocation);
 			if (linkTarget != null) {
 				ProjectDescription prjDescrLinked = getOrCreateProjectDescription(linkTarget, relatedRoot, pdCache);
-				if (prjDescrLinked != null && allProjectDirs.containsKey(prjDescrLinked.getQualifiedName())) {
+				if (prjDescrLinked != null && allProjectDirs.containsKey(prjDescrLinked.getId())) {
 					return false;
 				}
 			}
@@ -477,7 +477,7 @@ public class ProjectDiscoveryHelper {
 			ProjectDescription depPD = getOrCreateProjectDescription(depLocation, relatedRoot, pdCache);
 
 			if (depPD != null) {
-				String depQualifiedName = depPD.getQualifiedName();
+				String depQualifiedName = depPD.getId();
 				if (dependencies.containsKey(depQualifiedName)) {
 					return;
 				}

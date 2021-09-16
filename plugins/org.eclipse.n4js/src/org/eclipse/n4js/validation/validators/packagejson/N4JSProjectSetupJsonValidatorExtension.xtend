@@ -356,7 +356,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		// pairs that represent project dependencies
 		val dependencyPairs = (dependenciesValue as JSONObject).nameValuePairs;
 		// obtain project description for higher-level access to contained information
-		val projectName = getProjectDescription().qualifiedName;
+		val projectName = getProjectDescription().id;
 		// get project build order of current build
 		val projectOrderInfo = wc.getBuildOrderInfo;
 		
