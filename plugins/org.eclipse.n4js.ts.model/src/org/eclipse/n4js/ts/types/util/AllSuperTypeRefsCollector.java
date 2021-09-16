@@ -18,7 +18,6 @@ import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TInterface;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 
 import com.google.common.collect.Lists;
 
@@ -56,12 +55,6 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 		} else if (containerType instanceof TInterface) {
 			TInterface casted = (TInterface) containerType;
 			result.addAll(casted.getSuperInterfaceRefs());
-		} else if (containerType instanceof TObjectPrototype) {
-			TObjectPrototype casted = (TObjectPrototype) containerType;
-			ParameterizedTypeRef superType = casted.getSuperType();
-			if (superType != null) {
-				result.add(superType);
-			}
 		} else if (containerType instanceof PrimitiveType) {
 			PrimitiveType assignmentCompatible = ((PrimitiveType) containerType).getAssignmentCompatible();
 			if (assignmentCompatible != null) {

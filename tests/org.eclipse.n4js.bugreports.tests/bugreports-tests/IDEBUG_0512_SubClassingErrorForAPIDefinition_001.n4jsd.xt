@@ -45,7 +45,7 @@ export external class SubURIError extends URIError { }
 export external class MyError extends Error { }
 
 @N4JS
-// XPECT errors --> "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "MySubError"
+// XPECT noerrors --> "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "MySubError"
 export external class MySubError extends MyError { }
 
 
@@ -63,7 +63,7 @@ export external class MySubError2 extends MyError2 { }
 export external class SuperClass { }
 
 @N4JS
-// XPECT errors --> "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "SubClass"
+// XPECT noerrors --> "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "SubClass"
 export external class SubClass extends SuperClass {
 
 }

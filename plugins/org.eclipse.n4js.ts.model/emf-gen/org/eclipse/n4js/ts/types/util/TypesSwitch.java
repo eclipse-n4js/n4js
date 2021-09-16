@@ -428,25 +428,6 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypesPackage.TOBJECT_PROTOTYPE: {
-				TObjectPrototype tObjectPrototype = (TObjectPrototype)theEObject;
-				T result = caseTObjectPrototype(tObjectPrototype);
-				if (result == null) result = caseTClassifier(tObjectPrototype);
-				if (result == null) result = caseAccessibleTypeElement(tObjectPrototype);
-				if (result == null) result = caseArrayLike(tObjectPrototype);
-				if (result == null) result = caseContainerType(tObjectPrototype);
-				if (result == null) result = caseSyntaxRelatedTElement(tObjectPrototype);
-				if (result == null) result = caseTVersionable(tObjectPrototype);
-				if (result == null) result = caseGenericType(tObjectPrototype);
-				if (result == null) result = caseType(tObjectPrototype);
-				if (result == null) result = caseTExportableElement(tObjectPrototype);
-				if (result == null) result = caseTAnnotableElement(tObjectPrototype);
-				if (result == null) result = caseVersionable(tObjectPrototype);
-				if (result == null) result = caseIdentifiableElement(tObjectPrototype);
-				if (result == null) result = caseTypableElement(tObjectPrototype);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypesPackage.ARRAY_LIKE: {
 				ArrayLike arrayLike = (ArrayLike)theEObject;
 				T result = caseArrayLike(arrayLike);
@@ -458,6 +439,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseTN4Classifier(tn4Classifier);
 				if (result == null) result = caseTClassifier(tn4Classifier);
 				if (result == null) result = caseAccessibleTypeElement(tn4Classifier);
+				if (result == null) result = caseArrayLike(tn4Classifier);
 				if (result == null) result = caseTMigratable(tn4Classifier);
 				if (result == null) result = caseContainerType(tn4Classifier);
 				if (result == null) result = caseSyntaxRelatedTElement(tn4Classifier);
@@ -478,6 +460,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTN4Classifier(tClass);
 				if (result == null) result = caseTClassifier(tClass);
 				if (result == null) result = caseAccessibleTypeElement(tClass);
+				if (result == null) result = caseArrayLike(tClass);
 				if (result == null) result = caseTMigratable(tClass);
 				if (result == null) result = caseContainerType(tClass);
 				if (result == null) result = caseSyntaxRelatedTElement(tClass);
@@ -498,6 +481,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTN4Classifier(tInterface);
 				if (result == null) result = caseTClassifier(tInterface);
 				if (result == null) result = caseAccessibleTypeElement(tInterface);
+				if (result == null) result = caseArrayLike(tInterface);
 				if (result == null) result = caseTMigratable(tInterface);
 				if (result == null) result = caseContainerType(tInterface);
 				if (result == null) result = caseSyntaxRelatedTElement(tInterface);
@@ -1283,21 +1267,6 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTClassifier(TClassifier object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>TObject Prototype</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>TObject Prototype</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTObjectPrototype(TObjectPrototype object) {
 		return null;
 	}
 

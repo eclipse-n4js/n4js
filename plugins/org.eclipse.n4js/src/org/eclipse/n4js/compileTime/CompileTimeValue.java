@@ -25,8 +25,8 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
@@ -292,8 +292,8 @@ public abstract class CompileTimeValue {
 	public static CompileTimeValue of(TField value) {
 		if (value != null) {
 			final EObject parent = value.eContainer();
-			if (!(parent instanceof TObjectPrototype
-					&& "Symbol".equals(((TObjectPrototype) parent).getName())
+			if (!(parent instanceof TClass
+					&& "Symbol".equals(((TClass) parent).getName())
 					&& N4Scheme.isFromResourceWithN4Scheme(parent))) {
 				throw new IllegalArgumentException("given TField does not represent a built-in symbol");
 			}

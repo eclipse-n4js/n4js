@@ -162,7 +162,6 @@ import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.TTypedElement;
@@ -776,12 +775,6 @@ import com.google.inject.Inject;
 			if (containingClass.isStaticPolyfill()) { // IDE-1735: static-polyfills replacing original constructor
 				if (superClassifier instanceof TClass) {
 					effectiveSuperClassifier = getDeclaredOrImplicitSuperType(G, (TClass) superClassifier);
-				} else if (superClassifier instanceof TObjectPrototype) {
-					final ParameterizedTypeRef superTypeRef = ((TObjectPrototype) superClassifier).getSuperType();
-					final Type superType = superTypeRef != null ? superTypeRef.getDeclaredType() : null;
-					if (superType instanceof TClassifier) {
-						effectiveSuperClassifier = (TClassifier) superType;
-					}
 				}
 			}
 

@@ -180,18 +180,17 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	public class TypeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.Types.Type");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cTObjectPrototypeParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cTClassParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cTInterfaceParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cTEnumParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cAnyTypeParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cVoidTypeParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cUndefinedTypeParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cNullTypeParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cPrimitiveTypeParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cTFunctionParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
-		private final RuleCall cTypeVariableParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cVirtualBaseTypeParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cTClassParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cTInterfaceParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cTEnumParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cAnyTypeParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cVoidTypeParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cUndefinedTypeParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cNullTypeParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cPrimitiveTypeParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cTFunctionParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cTypeVariableParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cVirtualBaseTypeParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
 		
 		//// TODO jvp: more type information, cf. types model
 		///*
@@ -199,8 +198,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		// * we cannot distinguish whether 'T' is a type variable T, or a type with name 'T'. Thus,
 		// * type variables are handled similar to types (and are actually types).
 		// */
-		//Type:       TObjectPrototype
-		//        | TClass
+		//Type:       TClass
 		//        | TInterface
 		//        | TEnum
 		//        | AnyType
@@ -214,8 +212,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//TObjectPrototype
-		// | TClass
+		//TClass
 		// | TInterface
 		// | TEnum
 		// | AnyType
@@ -228,41 +225,38 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		// | VirtualBaseType
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//TObjectPrototype
-		public RuleCall getTObjectPrototypeParserRuleCall_0() { return cTObjectPrototypeParserRuleCall_0; }
-		
 		//TClass
-		public RuleCall getTClassParserRuleCall_1() { return cTClassParserRuleCall_1; }
+		public RuleCall getTClassParserRuleCall_0() { return cTClassParserRuleCall_0; }
 		
 		//TInterface
-		public RuleCall getTInterfaceParserRuleCall_2() { return cTInterfaceParserRuleCall_2; }
+		public RuleCall getTInterfaceParserRuleCall_1() { return cTInterfaceParserRuleCall_1; }
 		
 		//TEnum
-		public RuleCall getTEnumParserRuleCall_3() { return cTEnumParserRuleCall_3; }
+		public RuleCall getTEnumParserRuleCall_2() { return cTEnumParserRuleCall_2; }
 		
 		//AnyType
-		public RuleCall getAnyTypeParserRuleCall_4() { return cAnyTypeParserRuleCall_4; }
+		public RuleCall getAnyTypeParserRuleCall_3() { return cAnyTypeParserRuleCall_3; }
 		
 		//VoidType
-		public RuleCall getVoidTypeParserRuleCall_5() { return cVoidTypeParserRuleCall_5; }
+		public RuleCall getVoidTypeParserRuleCall_4() { return cVoidTypeParserRuleCall_4; }
 		
 		//UndefinedType
-		public RuleCall getUndefinedTypeParserRuleCall_6() { return cUndefinedTypeParserRuleCall_6; }
+		public RuleCall getUndefinedTypeParserRuleCall_5() { return cUndefinedTypeParserRuleCall_5; }
 		
 		//NullType
-		public RuleCall getNullTypeParserRuleCall_7() { return cNullTypeParserRuleCall_7; }
+		public RuleCall getNullTypeParserRuleCall_6() { return cNullTypeParserRuleCall_6; }
 		
 		//PrimitiveType
-		public RuleCall getPrimitiveTypeParserRuleCall_8() { return cPrimitiveTypeParserRuleCall_8; }
+		public RuleCall getPrimitiveTypeParserRuleCall_7() { return cPrimitiveTypeParserRuleCall_7; }
 		
 		//TFunction
-		public RuleCall getTFunctionParserRuleCall_9() { return cTFunctionParserRuleCall_9; }
+		public RuleCall getTFunctionParserRuleCall_8() { return cTFunctionParserRuleCall_8; }
 		
 		//TypeVariable
-		public RuleCall getTypeVariableParserRuleCall_10() { return cTypeVariableParserRuleCall_10; }
+		public RuleCall getTypeVariableParserRuleCall_9() { return cTypeVariableParserRuleCall_9; }
 		
 		//VirtualBaseType
-		public RuleCall getVirtualBaseTypeParserRuleCall_11() { return cVirtualBaseTypeParserRuleCall_11; }
+		public RuleCall getVirtualBaseTypeParserRuleCall_10() { return cVirtualBaseTypeParserRuleCall_10; }
 	}
 	public class TypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.Types.TypeRef");
@@ -772,165 +766,6 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		//STRING
 		public RuleCall getSTRINGTerminalRuleCall() { return cSTRINGTerminalRuleCall; }
 	}
-	public class TObjectPrototypeElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.Types.TObjectPrototype");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cDeclaredTypeAccessModifierAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cDeclaredTypeAccessModifierTypeAccessModifierEnumRuleCall_0_0 = (RuleCall)cDeclaredTypeAccessModifierAssignment_0.eContents().get(0);
-		private final Assignment cDeclaredProvidedByRuntimeAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final Keyword cDeclaredProvidedByRuntimeProvidedByRuntimeKeyword_1_0 = (Keyword)cDeclaredProvidedByRuntimeAssignment_1.eContents().get(0);
-		private final Assignment cDeclaredFinalAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final Keyword cDeclaredFinalFinalKeyword_2_0 = (Keyword)cDeclaredFinalAssignment_2.eContents().get(0);
-		private final Keyword cObjectKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Assignment cNameAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cNameBindingTypesIdentifierParserRuleCall_4_0 = (RuleCall)cNameAssignment_4.eContents().get(0);
-		private final RuleCall cTypeVariablesParserRuleCall_5 = (RuleCall)cGroup.eContents().get(5);
-		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
-		private final Keyword cExtendsKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
-		private final Assignment cSuperTypeAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
-		private final RuleCall cSuperTypeParameterizedTypeRefNominalParserRuleCall_6_1_0 = (RuleCall)cSuperTypeAssignment_6_1.eContents().get(0);
-		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
-		private final Keyword cIndexedKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
-		private final Assignment cDeclaredElementTypeAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final RuleCall cDeclaredElementTypeParameterizedTypeRefNominalParserRuleCall_7_1_0 = (RuleCall)cDeclaredElementTypeAssignment_7_1.eContents().get(0);
-		private final Assignment cAnnotationsAssignment_8 = (Assignment)cGroup.eContents().get(8);
-		private final RuleCall cAnnotationsTAnnotationParserRuleCall_8_0 = (RuleCall)cAnnotationsAssignment_8.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_9 = (Keyword)cGroup.eContents().get(9);
-		private final Assignment cOwnedMembersAssignment_10 = (Assignment)cGroup.eContents().get(10);
-		private final RuleCall cOwnedMembersTMemberParserRuleCall_10_0 = (RuleCall)cOwnedMembersAssignment_10.eContents().get(0);
-		private final Group cGroup_11 = (Group)cGroup.eContents().get(11);
-		private final Assignment cCallableCtorAssignment_11_0 = (Assignment)cGroup_11.eContents().get(0);
-		private final RuleCall cCallableCtorCallableCtorParserRuleCall_11_0_0 = (RuleCall)cCallableCtorAssignment_11_0.eContents().get(0);
-		private final Assignment cOwnedMembersAssignment_11_1 = (Assignment)cGroup_11.eContents().get(1);
-		private final RuleCall cOwnedMembersTMemberParserRuleCall_11_1_0 = (RuleCall)cOwnedMembersAssignment_11_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
-		
-		//TObjectPrototype:
-		//    declaredTypeAccessModifier=TypeAccessModifier
-		//    (declaredProvidedByRuntime?='providedByRuntime')?
-		//    (declaredFinal?='final')?
-		//    'object' name=BindingTypesIdentifier
-		//    TypeVariables?
-		//    ('extends'  superType=ParameterizedTypeRefNominal)?
-		//    ('indexed' declaredElementType=ParameterizedTypeRefNominal)?
-		//    annotations+=TAnnotation*
-		//    '{'
-		//        ownedMembers+=TMember*
-		//        (
-		//            callableCtor=CallableCtor
-		//            ownedMembers+=TMember*
-		//        )?
-		//    '}'
-		//;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//declaredTypeAccessModifier=TypeAccessModifier
-		//(declaredProvidedByRuntime?='providedByRuntime')?
-		//(declaredFinal?='final')?
-		//'object' name=BindingTypesIdentifier
-		//TypeVariables?
-		//('extends'  superType=ParameterizedTypeRefNominal)?
-		//('indexed' declaredElementType=ParameterizedTypeRefNominal)?
-		//annotations+=TAnnotation*
-		//'{'
-		//    ownedMembers+=TMember*
-		//    (
-		//        callableCtor=CallableCtor
-		//        ownedMembers+=TMember*
-		//    )?
-		//'}'
-		public Group getGroup() { return cGroup; }
-		
-		//declaredTypeAccessModifier=TypeAccessModifier
-		public Assignment getDeclaredTypeAccessModifierAssignment_0() { return cDeclaredTypeAccessModifierAssignment_0; }
-		
-		//TypeAccessModifier
-		public RuleCall getDeclaredTypeAccessModifierTypeAccessModifierEnumRuleCall_0_0() { return cDeclaredTypeAccessModifierTypeAccessModifierEnumRuleCall_0_0; }
-		
-		//(declaredProvidedByRuntime?='providedByRuntime')?
-		public Assignment getDeclaredProvidedByRuntimeAssignment_1() { return cDeclaredProvidedByRuntimeAssignment_1; }
-		
-		//'providedByRuntime'
-		public Keyword getDeclaredProvidedByRuntimeProvidedByRuntimeKeyword_1_0() { return cDeclaredProvidedByRuntimeProvidedByRuntimeKeyword_1_0; }
-		
-		//(declaredFinal?='final')?
-		public Assignment getDeclaredFinalAssignment_2() { return cDeclaredFinalAssignment_2; }
-		
-		//'final'
-		public Keyword getDeclaredFinalFinalKeyword_2_0() { return cDeclaredFinalFinalKeyword_2_0; }
-		
-		//'object'
-		public Keyword getObjectKeyword_3() { return cObjectKeyword_3; }
-		
-		//name=BindingTypesIdentifier
-		public Assignment getNameAssignment_4() { return cNameAssignment_4; }
-		
-		//BindingTypesIdentifier
-		public RuleCall getNameBindingTypesIdentifierParserRuleCall_4_0() { return cNameBindingTypesIdentifierParserRuleCall_4_0; }
-		
-		//TypeVariables?
-		public RuleCall getTypeVariablesParserRuleCall_5() { return cTypeVariablesParserRuleCall_5; }
-		
-		//('extends'  superType=ParameterizedTypeRefNominal)?
-		public Group getGroup_6() { return cGroup_6; }
-		
-		//'extends'
-		public Keyword getExtendsKeyword_6_0() { return cExtendsKeyword_6_0; }
-		
-		//superType=ParameterizedTypeRefNominal
-		public Assignment getSuperTypeAssignment_6_1() { return cSuperTypeAssignment_6_1; }
-		
-		//ParameterizedTypeRefNominal
-		public RuleCall getSuperTypeParameterizedTypeRefNominalParserRuleCall_6_1_0() { return cSuperTypeParameterizedTypeRefNominalParserRuleCall_6_1_0; }
-		
-		//('indexed' declaredElementType=ParameterizedTypeRefNominal)?
-		public Group getGroup_7() { return cGroup_7; }
-		
-		//'indexed'
-		public Keyword getIndexedKeyword_7_0() { return cIndexedKeyword_7_0; }
-		
-		//declaredElementType=ParameterizedTypeRefNominal
-		public Assignment getDeclaredElementTypeAssignment_7_1() { return cDeclaredElementTypeAssignment_7_1; }
-		
-		//ParameterizedTypeRefNominal
-		public RuleCall getDeclaredElementTypeParameterizedTypeRefNominalParserRuleCall_7_1_0() { return cDeclaredElementTypeParameterizedTypeRefNominalParserRuleCall_7_1_0; }
-		
-		//annotations+=TAnnotation*
-		public Assignment getAnnotationsAssignment_8() { return cAnnotationsAssignment_8; }
-		
-		//TAnnotation
-		public RuleCall getAnnotationsTAnnotationParserRuleCall_8_0() { return cAnnotationsTAnnotationParserRuleCall_8_0; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_9() { return cLeftCurlyBracketKeyword_9; }
-		
-		//ownedMembers+=TMember*
-		public Assignment getOwnedMembersAssignment_10() { return cOwnedMembersAssignment_10; }
-		
-		//TMember
-		public RuleCall getOwnedMembersTMemberParserRuleCall_10_0() { return cOwnedMembersTMemberParserRuleCall_10_0; }
-		
-		//(
-		//    callableCtor=CallableCtor
-		//    ownedMembers+=TMember*
-		//)?
-		public Group getGroup_11() { return cGroup_11; }
-		
-		//callableCtor=CallableCtor
-		public Assignment getCallableCtorAssignment_11_0() { return cCallableCtorAssignment_11_0; }
-		
-		//CallableCtor
-		public RuleCall getCallableCtorCallableCtorParserRuleCall_11_0_0() { return cCallableCtorCallableCtorParserRuleCall_11_0_0; }
-		
-		//ownedMembers+=TMember*
-		public Assignment getOwnedMembersAssignment_11_1() { return cOwnedMembersAssignment_11_1; }
-		
-		//TMember
-		public RuleCall getOwnedMembersTMemberParserRuleCall_11_1_0() { return cOwnedMembersTMemberParserRuleCall_11_1_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_12() { return cRightCurlyBracketKeyword_12; }
-	}
 	public class VirtualBaseTypeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.Types.VirtualBaseType");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -1015,20 +850,32 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		private final Keyword cDeclaredAbstractAbstractKeyword_2_0 = (Keyword)cDeclaredAbstractAssignment_2.eContents().get(0);
 		private final Assignment cDeclaredFinalAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final Keyword cDeclaredFinalFinalKeyword_3_0 = (Keyword)cDeclaredFinalAssignment_3.eContents().get(0);
-		private final Keyword cClassKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		private final RuleCall cTClassOrInterfaceHeaderParserRuleCall_5 = (RuleCall)cGroup.eContents().get(5);
+		private final Alternatives cAlternatives_4 = (Alternatives)cGroup.eContents().get(4);
+		private final Group cGroup_4_0 = (Group)cAlternatives_4.eContents().get(0);
+		private final Assignment cExternalAssignment_4_0_0 = (Assignment)cGroup_4_0.eContents().get(0);
+		private final Keyword cExternalObjectKeyword_4_0_0_0 = (Keyword)cExternalAssignment_4_0_0.eContents().get(0);
+		private final Assignment cNameAssignment_4_0_1 = (Assignment)cGroup_4_0.eContents().get(1);
+		private final RuleCall cNameBindingTypesIdentifierParserRuleCall_4_0_1_0 = (RuleCall)cNameAssignment_4_0_1.eContents().get(0);
+		private final RuleCall cTypeVariablesParserRuleCall_4_0_2 = (RuleCall)cGroup_4_0.eContents().get(2);
+		private final Group cGroup_4_1 = (Group)cAlternatives_4.eContents().get(1);
+		private final Keyword cClassKeyword_4_1_0 = (Keyword)cGroup_4_1.eContents().get(0);
+		private final RuleCall cTClassOrInterfaceHeaderParserRuleCall_4_1_1 = (RuleCall)cGroup_4_1.eContents().get(1);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Keyword cExtendsKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Assignment cSuperClassRefAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
+		private final RuleCall cSuperClassRefParameterizedTypeRefNominalParserRuleCall_5_1_0 = (RuleCall)cSuperClassRefAssignment_5_1.eContents().get(0);
 		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
-		private final Keyword cExtendsKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
-		private final Assignment cSuperClassRefAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
-		private final RuleCall cSuperClassRefParameterizedTypeRefNominalParserRuleCall_6_1_0 = (RuleCall)cSuperClassRefAssignment_6_1.eContents().get(0);
+		private final Keyword cImplementsKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Assignment cImplementedInterfaceRefsAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
+		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_6_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_6_1.eContents().get(0);
+		private final Group cGroup_6_2 = (Group)cGroup_6.eContents().get(2);
+		private final Keyword cCommaKeyword_6_2_0 = (Keyword)cGroup_6_2.eContents().get(0);
+		private final Assignment cImplementedInterfaceRefsAssignment_6_2_1 = (Assignment)cGroup_6_2.eContents().get(1);
+		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_6_2_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_6_2_1.eContents().get(0);
 		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
-		private final Keyword cImplementsKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
-		private final Assignment cImplementedInterfaceRefsAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_7_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_7_1.eContents().get(0);
-		private final Group cGroup_7_2 = (Group)cGroup_7.eContents().get(2);
-		private final Keyword cCommaKeyword_7_2_0 = (Keyword)cGroup_7_2.eContents().get(0);
-		private final Assignment cImplementedInterfaceRefsAssignment_7_2_1 = (Assignment)cGroup_7_2.eContents().get(1);
-		private final RuleCall cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_7_2_1_0 = (RuleCall)cImplementedInterfaceRefsAssignment_7_2_1.eContents().get(0);
+		private final Keyword cIndexedKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
+		private final Assignment cDeclaredElementTypeAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
+		private final RuleCall cDeclaredElementTypeParameterizedTypeRefNominalParserRuleCall_7_1_0 = (RuleCall)cDeclaredElementTypeAssignment_7_1.eContents().get(0);
 		private final Assignment cAnnotationsAssignment_8 = (Assignment)cGroup.eContents().get(8);
 		private final RuleCall cAnnotationsTAnnotationParserRuleCall_8_0 = (RuleCall)cAnnotationsAssignment_8.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_9 = (Keyword)cGroup.eContents().get(9);
@@ -1046,9 +893,13 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		//    (declaredProvidedByRuntime?='providedByRuntime')?
 		//    (declaredAbstract?='abstract')?
 		//    (declaredFinal?='final')?
-		//    'class' TClassOrInterfaceHeader
+		//    (
+		//        (external?='object' name=BindingTypesIdentifier TypeVariables?)
+		//    |    ('class' TClassOrInterfaceHeader)
+		//    )
 		//    ('extends'  superClassRef=ParameterizedTypeRefNominal)?
 		//    ('implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*)?
+		//    ('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 		//    annotations+=TAnnotation*
 		//    '{'
 		//        ownedMembers+=TMember*
@@ -1064,9 +915,13 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		//(declaredProvidedByRuntime?='providedByRuntime')?
 		//(declaredAbstract?='abstract')?
 		//(declaredFinal?='final')?
-		//'class' TClassOrInterfaceHeader
+		//(
+		//    (external?='object' name=BindingTypesIdentifier TypeVariables?)
+		//|    ('class' TClassOrInterfaceHeader)
+		//)
 		//('extends'  superClassRef=ParameterizedTypeRefNominal)?
 		//('implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*)?
+		//('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 		//annotations+=TAnnotation*
 		//'{'
 		//    ownedMembers+=TMember*
@@ -1101,47 +956,86 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		//'final'
 		public Keyword getDeclaredFinalFinalKeyword_3_0() { return cDeclaredFinalFinalKeyword_3_0; }
 		
+		//(
+		//    (external?='object' name=BindingTypesIdentifier TypeVariables?)
+		//|    ('class' TClassOrInterfaceHeader)
+		//)
+		public Alternatives getAlternatives_4() { return cAlternatives_4; }
+		
+		//(external?='object' name=BindingTypesIdentifier TypeVariables?)
+		public Group getGroup_4_0() { return cGroup_4_0; }
+		
+		//external?='object'
+		public Assignment getExternalAssignment_4_0_0() { return cExternalAssignment_4_0_0; }
+		
+		//'object'
+		public Keyword getExternalObjectKeyword_4_0_0_0() { return cExternalObjectKeyword_4_0_0_0; }
+		
+		//name=BindingTypesIdentifier
+		public Assignment getNameAssignment_4_0_1() { return cNameAssignment_4_0_1; }
+		
+		//BindingTypesIdentifier
+		public RuleCall getNameBindingTypesIdentifierParserRuleCall_4_0_1_0() { return cNameBindingTypesIdentifierParserRuleCall_4_0_1_0; }
+		
+		//TypeVariables?
+		public RuleCall getTypeVariablesParserRuleCall_4_0_2() { return cTypeVariablesParserRuleCall_4_0_2; }
+		
+		//('class' TClassOrInterfaceHeader)
+		public Group getGroup_4_1() { return cGroup_4_1; }
+		
 		//'class'
-		public Keyword getClassKeyword_4() { return cClassKeyword_4; }
+		public Keyword getClassKeyword_4_1_0() { return cClassKeyword_4_1_0; }
 		
 		//TClassOrInterfaceHeader
-		public RuleCall getTClassOrInterfaceHeaderParserRuleCall_5() { return cTClassOrInterfaceHeaderParserRuleCall_5; }
+		public RuleCall getTClassOrInterfaceHeaderParserRuleCall_4_1_1() { return cTClassOrInterfaceHeaderParserRuleCall_4_1_1; }
 		
 		//('extends'  superClassRef=ParameterizedTypeRefNominal)?
-		public Group getGroup_6() { return cGroup_6; }
+		public Group getGroup_5() { return cGroup_5; }
 		
 		//'extends'
-		public Keyword getExtendsKeyword_6_0() { return cExtendsKeyword_6_0; }
+		public Keyword getExtendsKeyword_5_0() { return cExtendsKeyword_5_0; }
 		
 		//superClassRef=ParameterizedTypeRefNominal
-		public Assignment getSuperClassRefAssignment_6_1() { return cSuperClassRefAssignment_6_1; }
+		public Assignment getSuperClassRefAssignment_5_1() { return cSuperClassRefAssignment_5_1; }
 		
 		//ParameterizedTypeRefNominal
-		public RuleCall getSuperClassRefParameterizedTypeRefNominalParserRuleCall_6_1_0() { return cSuperClassRefParameterizedTypeRefNominalParserRuleCall_6_1_0; }
+		public RuleCall getSuperClassRefParameterizedTypeRefNominalParserRuleCall_5_1_0() { return cSuperClassRefParameterizedTypeRefNominalParserRuleCall_5_1_0; }
 		
 		//('implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*)?
-		public Group getGroup_7() { return cGroup_7; }
+		public Group getGroup_6() { return cGroup_6; }
 		
 		//'implements'
-		public Keyword getImplementsKeyword_7_0() { return cImplementsKeyword_7_0; }
+		public Keyword getImplementsKeyword_6_0() { return cImplementsKeyword_6_0; }
 		
 		//implementedInterfaceRefs+=ParameterizedTypeRefNominal
-		public Assignment getImplementedInterfaceRefsAssignment_7_1() { return cImplementedInterfaceRefsAssignment_7_1; }
+		public Assignment getImplementedInterfaceRefsAssignment_6_1() { return cImplementedInterfaceRefsAssignment_6_1; }
 		
 		//ParameterizedTypeRefNominal
-		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_7_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_7_1_0; }
+		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_6_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_6_1_0; }
 		
 		//(',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*
-		public Group getGroup_7_2() { return cGroup_7_2; }
+		public Group getGroup_6_2() { return cGroup_6_2; }
 		
 		//','
-		public Keyword getCommaKeyword_7_2_0() { return cCommaKeyword_7_2_0; }
+		public Keyword getCommaKeyword_6_2_0() { return cCommaKeyword_6_2_0; }
 		
 		//implementedInterfaceRefs+=ParameterizedTypeRefNominal
-		public Assignment getImplementedInterfaceRefsAssignment_7_2_1() { return cImplementedInterfaceRefsAssignment_7_2_1; }
+		public Assignment getImplementedInterfaceRefsAssignment_6_2_1() { return cImplementedInterfaceRefsAssignment_6_2_1; }
 		
 		//ParameterizedTypeRefNominal
-		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_7_2_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_7_2_1_0; }
+		public RuleCall getImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_6_2_1_0() { return cImplementedInterfaceRefsParameterizedTypeRefNominalParserRuleCall_6_2_1_0; }
+		
+		//('indexed' declaredElementType=ParameterizedTypeRefNominal)?
+		public Group getGroup_7() { return cGroup_7; }
+		
+		//'indexed'
+		public Keyword getIndexedKeyword_7_0() { return cIndexedKeyword_7_0; }
+		
+		//declaredElementType=ParameterizedTypeRefNominal
+		public Assignment getDeclaredElementTypeAssignment_7_1() { return cDeclaredElementTypeAssignment_7_1; }
+		
+		//ParameterizedTypeRefNominal
+		public RuleCall getDeclaredElementTypeParameterizedTypeRefNominalParserRuleCall_7_1_0() { return cDeclaredElementTypeParameterizedTypeRefNominalParserRuleCall_7_1_0; }
 		
 		//annotations+=TAnnotation*
 		public Assignment getAnnotationsAssignment_8() { return cAnnotationsAssignment_8; }
@@ -2221,7 +2115,6 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	private final TypesComputedPropertyNameElements pTypesComputedPropertyName;
 	private final TypesSymbolLiteralComputedNameElements pTypesSymbolLiteralComputedName;
 	private final TypesStringLiteralComputedNameElements pTypesStringLiteralComputedName;
-	private final TObjectPrototypeElements pTObjectPrototype;
 	private final VirtualBaseTypeElements pVirtualBaseType;
 	private final TClassElements pTClass;
 	private final TInterfaceElements pTInterface;
@@ -2273,7 +2166,6 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		this.pTypesComputedPropertyName = new TypesComputedPropertyNameElements();
 		this.pTypesSymbolLiteralComputedName = new TypesSymbolLiteralComputedNameElements();
 		this.pTypesStringLiteralComputedName = new TypesStringLiteralComputedNameElements();
-		this.pTObjectPrototype = new TObjectPrototypeElements();
 		this.pVirtualBaseType = new VirtualBaseTypeElements();
 		this.pTClass = new TClassElements();
 		this.pTInterface = new TInterfaceElements();
@@ -2419,8 +2311,7 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	// * we cannot distinguish whether 'T' is a type variable T, or a type with name 'T'. Thus,
 	// * type variables are handled similar to types (and are actually types).
 	// */
-	//Type:       TObjectPrototype
-	//        | TClass
+	//Type:       TClass
 	//        | TInterface
 	//        | TEnum
 	//        | AnyType
@@ -2606,31 +2497,6 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 		return getTypesStringLiteralComputedNameAccess().getRule();
 	}
 	
-	//TObjectPrototype:
-	//    declaredTypeAccessModifier=TypeAccessModifier
-	//    (declaredProvidedByRuntime?='providedByRuntime')?
-	//    (declaredFinal?='final')?
-	//    'object' name=BindingTypesIdentifier
-	//    TypeVariables?
-	//    ('extends'  superType=ParameterizedTypeRefNominal)?
-	//    ('indexed' declaredElementType=ParameterizedTypeRefNominal)?
-	//    annotations+=TAnnotation*
-	//    '{'
-	//        ownedMembers+=TMember*
-	//        (
-	//            callableCtor=CallableCtor
-	//            ownedMembers+=TMember*
-	//        )?
-	//    '}'
-	//;
-	public TObjectPrototypeElements getTObjectPrototypeAccess() {
-		return pTObjectPrototype;
-	}
-	
-	public ParserRule getTObjectPrototypeRule() {
-		return getTObjectPrototypeAccess().getRule();
-	}
-	
 	///*
 	// * Virtual base type, not visible to N4JS users.
 	// * Used to define common super types, e.g. for all enumerations.
@@ -2655,9 +2521,13 @@ public class TypesGrammarAccess extends AbstractElementFinder.AbstractGrammarEle
 	//    (declaredProvidedByRuntime?='providedByRuntime')?
 	//    (declaredAbstract?='abstract')?
 	//    (declaredFinal?='final')?
-	//    'class' TClassOrInterfaceHeader
+	//    (
+	//        (external?='object' name=BindingTypesIdentifier TypeVariables?)
+	//    |    ('class' TClassOrInterfaceHeader)
+	//    )
 	//    ('extends'  superClassRef=ParameterizedTypeRefNominal)?
 	//    ('implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*)?
+	//    ('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 	//    annotations+=TAnnotation*
 	//    '{'
 	//        ownedMembers+=TMember*

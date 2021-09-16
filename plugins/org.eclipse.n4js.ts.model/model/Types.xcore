@@ -1052,27 +1052,6 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 	}
 }
 
-/*
- * Plain JavaScript objects with super type (=prototype).
- * This is used for defining predefined types such as Object, String, Date etc.
- */
-class TObjectPrototype extends TClassifier, AccessibleTypeElement, ArrayLike {
-	contains ParameterizedTypeRef superType
-
-	boolean declaredFinal
-
-	op TMethod getOwnedCtor() {
-		return ownedMembers.filter(TMethod).findFirst[name.equals('constructor')]
-	}
-
-	/**
-	 * Returns value of declaredFinal attribute.
-	 */
-	op boolean isFinal() {
-		return declaredFinal;
-	}
-}
-
 /**
  * 'Trait' that allows to mark a certain type as "array like". If an elementType is
  * provided, that one is assumed to be the return type of index access expressions with a numeric index.
@@ -1092,7 +1071,7 @@ abstract class ArrayLike {
 	op TypeRef getElementType()
 }
 
-class TN4Classifier extends TClassifier, AccessibleTypeElement, TMigratable {
+class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike, TMigratable {
 	/*
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */

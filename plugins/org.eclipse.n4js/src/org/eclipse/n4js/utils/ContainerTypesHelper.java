@@ -11,7 +11,6 @@
 package org.eclipse.n4js.utils;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.INHERITED;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.MIXEDIN;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.OWNED;
@@ -50,7 +49,6 @@ import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.AbstractHierachyTraverser;
 import org.eclipse.n4js.ts.types.util.MemberList;
@@ -193,9 +191,13 @@ public class ContainerTypesHelper {
 		 * E.g., in
 		 *
 		 * <pre>
-		 * interface I { m() {} }
-		 * interface J extends I {}
-		 * class A implements J {}
+		 * interface I {
+		 * 	m(){}
+		 * }
+		 * interface J extends I {
+		 * }
+		 * class A implements J {
+		 * }
 		 * </pre>
 		 *
 		 * a (pseudo) call {@code directSuperTypeBequestingMember(A, m)} would return {@code J}.
@@ -444,9 +446,6 @@ public class ContainerTypesHelper {
 			} else if (type instanceof TInterface) {
 				superType = null;
 				interfaces = ((TInterface) type).getSuperInterfaceRefs();
-			} else if (type instanceof TObjectPrototype) {
-				superType = explicitOrImplicitSuperType(type);
-				interfaces = emptyList();
 			} else {
 				return MemberList.emptyList();
 			}
@@ -555,9 +554,6 @@ public class ContainerTypesHelper {
 				superType = null;
 				interfaces = new ArrayList<>(((TInterface) type).getSuperInterfaceRefs());
 				interfaces.addAll(((TInterface) spolyBuddy).getSuperInterfaceRefs());
-			} else if (type instanceof TObjectPrototype) {
-				superType = explicitOrImplicitSuperType(type);
-				interfaces = emptyList();
 			} else {
 				return MemberList.emptyList();
 			}
@@ -735,7 +731,7 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected List<ParameterizedTypeRef> getPolyfills(Type filledType) {
-				if (includePolyfills && (filledType instanceof TClass || filledType instanceof TObjectPrototype)) {
+				if (includePolyfills && filledType instanceof TClass) {
 					TClassifier tClassifier = (TClassifier) filledType;
 					if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
 					) {

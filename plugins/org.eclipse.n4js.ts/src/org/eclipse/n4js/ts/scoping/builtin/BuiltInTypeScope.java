@@ -26,7 +26,6 @@ import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TInterface;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeDefs;
 import org.eclipse.n4js.ts.types.UndefinedType;
@@ -324,7 +323,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	/**
 	 * Returns the built-in object type "String" (upper case!).
 	 */
-	public final TObjectPrototype getStringObjectType() {
+	public final TClass getStringObjectType() {
 		return getEObjectOrProxy(QN_STRING_OBJECT);
 	}
 
@@ -338,7 +337,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	/**
 	 * Returns the built-in object type "Number" (upper case!).
 	 */
-	public final TObjectPrototype getNumberObjectType() {
+	public final TClass getNumberObjectType() {
 		return getEObjectOrProxy(QN_NUMBER_OBJECT);
 	}
 
@@ -359,7 +358,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	/**
 	 * Returns the built-in object type "Symbol" (upper case!).
 	 */
-	public final TObjectPrototype getSymbolObjectType() {
+	public final TClass getSymbolObjectType() {
 		return getEObjectOrProxy(QN_SYMBOL_OBJECT);
 	}
 
@@ -387,14 +386,14 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	/**
 	 * Returns the built-in type "RegExp".
 	 */
-	public final TObjectPrototype getRegexpType() {
+	public final TClass getRegexpType() {
 		return getEObjectOrProxy(QN_REGEXP);
 	}
 
 	/**
 	 * Returns the built-in type "Array".
 	 */
-	public final TObjectPrototype getArrayType() {
+	public final TClass getArrayType() {
 		return getEObjectOrProxy(QN_ARRAY);
 	}
 
@@ -409,7 +408,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	/**
 	 * Returns the built-in type "Function", implicit base class for all functions.
 	 */
-	public final TObjectPrototype getFunctionType() {
+	public final TClass getFunctionType() {
 		return getEObjectOrProxy(QN_FUNCTION);
 	}
 
@@ -515,14 +514,14 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 *
 	 * @return the object prototype for the built-in error.
 	 */
-	public final TObjectPrototype getErrorType() {
+	public final TClass getErrorType() {
 		return getEObjectOrProxy(QN_ERROR);
 	}
 
 	/**
 	 * Returns the built-in type "N4Enum", implicit base class for all N4 enumerations.
 	 */
-	public final TObjectPrototype getN4EnumType() {
+	public final TClass getN4EnumType() {
 		return getEObjectOrProxy(QN_N4ENUM);
 	}
 
@@ -530,7 +529,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * Returns the built-in type "N4NumberBasedEnum", implicit base class for all N4 number based enumerations, enums
 	 * annotated with @NumberBased.
 	 */
-	public final TObjectPrototype getN4NumberBasedEnumType() {
+	public final TClass getN4NumberBasedEnumType() {
 		return getEObjectOrProxy(QN_N4NUMBERBASEDENUM);
 	}
 
@@ -538,7 +537,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * Returns the built-in type "N4StringBasedEnum", implicit base class for all N4 string based enumerations, enums
 	 * annotated with @StringBased.
 	 */
-	public final TObjectPrototype getN4StringBasedEnumType() {
+	public final TClass getN4StringBasedEnumType() {
 		return getEObjectOrProxy(QN_N4STRINGBASEDENUM);
 	}
 

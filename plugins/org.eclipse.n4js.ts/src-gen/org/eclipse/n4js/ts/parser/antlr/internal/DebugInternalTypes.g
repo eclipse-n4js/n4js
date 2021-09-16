@@ -63,8 +63,6 @@ ruleTAnnotationTypeRefArgument:
 // Rule Type
 ruleType:
 	(
-		ruleTObjectPrototype
-		    |
 		ruleTClass
 		    |
 		ruleTInterface
@@ -239,41 +237,6 @@ ruleTypesStringLiteralComputedName:
 	RULE_STRING
 ;
 
-// Rule TObjectPrototype
-ruleTObjectPrototype:
-	ruleTypeAccessModifier
-	'providedByRuntime'
-	?
-	'final'
-	?
-	'object'
-	ruleBindingTypesIdentifier
-	ruleTypeVariables?
-	(
-		'extends'
-		ruleParameterizedTypeRefNominal
-	)?
-	(
-		'indexed'
-		ruleParameterizedTypeRefNominal
-	)?
-	(
-		('@'
-		RULE_IDENTIFIER
-		)=>
-		ruleTAnnotation
-	)*
-	'{'
-	ruleTMember
-	*
-	(
-		ruleCallableCtor
-		ruleTMember
-		*
-	)?
-	'}'
-;
-
 // Rule VirtualBaseType
 ruleVirtualBaseType:
 	'virtualBase'
@@ -297,8 +260,14 @@ ruleTClass:
 	?
 	'final'
 	?
-	'class'
-	ruleTClassOrInterfaceHeader
+	(
+		'object'
+		ruleBindingTypesIdentifier
+		ruleTypeVariables?
+		    |
+		'class'
+		ruleTClassOrInterfaceHeader
+	)
 	(
 		'extends'
 		ruleParameterizedTypeRefNominal
@@ -310,6 +279,10 @@ ruleTClass:
 			','
 			ruleParameterizedTypeRefNominal
 		)*
+	)?
+	(
+		'indexed'
+		ruleParameterizedTypeRefNominal
 	)?
 	(
 		('@'

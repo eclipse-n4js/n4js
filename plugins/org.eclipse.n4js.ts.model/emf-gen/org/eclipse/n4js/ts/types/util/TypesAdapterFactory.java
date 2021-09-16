@@ -214,10 +214,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTClassifierAdapter();
 			}
 			@Override
-			public Adapter caseTObjectPrototype(TObjectPrototype object) {
-				return createTObjectPrototypeAdapter();
-			}
-			@Override
 			public Adapter caseArrayLike(ArrayLike object) {
 				return createArrayLikeAdapter();
 			}
@@ -810,20 +806,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTClassifierAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TObjectPrototype <em>TObject Prototype</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TObjectPrototype
-	 * @generated
-	 */
-	public Adapter createTObjectPrototypeAdapter() {
 		return null;
 	}
 

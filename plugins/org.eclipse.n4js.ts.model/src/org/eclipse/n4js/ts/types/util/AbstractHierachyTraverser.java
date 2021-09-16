@@ -19,7 +19,6 @@ import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TInterface;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.VirtualBaseType;
@@ -111,25 +110,6 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 					return result;
 				}
 			}
-		}
-		return Boolean.FALSE;
-	}
-
-	@Override
-	public Boolean caseTObjectPrototype(TObjectPrototype object) {
-		if (guard.tryNext(object)) {
-			if (!object.isPolyfill()) {
-				if (doProcess(getPolyfills(object))) {
-					return true;
-				}
-			}
-			if (process(object)) {
-				return Boolean.TRUE;
-			}
-			if (!object.isPolyfill()) {
-				return doProcess(getSuperTypes(object));
-			}
-
 		}
 		return Boolean.FALSE;
 	}
@@ -252,8 +232,6 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			return Collections.singletonList(((TClass) t).getSuperClassRef());
 		else if (t instanceof TInterface && !((TInterface) t).getSuperInterfaceRefs().isEmpty())
 			return ((TInterface) t).getSuperInterfaceRefs();
-		else if (t instanceof TObjectPrototype && ((TObjectPrototype) t).getSuperType() != null)
-			return Collections.singletonList(((TObjectPrototype) t).getSuperType());
 		return getImplicitSuperTypes(t);
 	}
 

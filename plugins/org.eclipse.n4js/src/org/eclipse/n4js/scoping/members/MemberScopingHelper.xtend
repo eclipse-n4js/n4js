@@ -22,6 +22,7 @@ import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
 import org.eclipse.n4js.scoping.utils.CompositeScope
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -40,8 +41,8 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -367,10 +368,10 @@ class MemberScopingHelper {
 			IScope.NULLSCOPE
 		};
 
-		if (!request.staticAccess && type instanceof TObjectPrototype) {
+		if (!request.staticAccess && type instanceof TClass && N4Scheme.isFromResourceWithN4Scheme(type)) {
 			// TObjectPrototypes defined in builtin_js.n4ts and builtin_n4.n4ts are allowed to extend primitive
 			// types, and the following is required to support auto-boxing in such a case:
-			val rootSuperType = getRootSuperType(type as TObjectPrototype);
+			val rootSuperType = getRootSuperType(type as TClass);
 			if (rootSuperType instanceof PrimitiveType) {
 				val boxedType = rootSuperType.autoboxedType;
 				if(boxedType!==null) {
@@ -393,7 +394,7 @@ class MemberScopingHelper {
 		val builtInTypeScope = BuiltInTypeScope.get(getResourceSet(enumeration, request.context));
 		// IDE-1221 select built-in type depending on whether this enumeration is tagged number-/string-based
 		val enumKind = N4JSLanguageUtils.getEnumKind(enumeration);
-		val TObjectPrototype specificEnumType = switch(enumKind) {
+		val specificEnumType = switch(enumKind) {
 			case Normal: builtInTypeScope.n4EnumType
 			case NumberBased: builtInTypeScope.n4NumberBasedEnumType
 			case StringBased: builtInTypeScope.n4StringBasedEnumType
@@ -415,11 +416,11 @@ class MemberScopingHelper {
 		return result;
 	}
 
-	def private Type getRootSuperType(TObjectPrototype type) {
+	def private Type getRootSuperType(TClass type) {
 		var Type curr = type;
 		var Type next;
 		do {
-			next = if(curr instanceof TObjectPrototype) curr.superType?.declaredType;
+			next = if(curr instanceof TClass) curr.superClassRef?.declaredType;
 			if (next !== null) {
 				curr = next;
 			}

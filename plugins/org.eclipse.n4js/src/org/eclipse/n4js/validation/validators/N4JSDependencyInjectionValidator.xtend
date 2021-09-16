@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -46,7 +47,6 @@ import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -892,7 +892,9 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			return false;
 		}
 		// declared type must not be a built-in type
-		if (declType instanceof BuiltInType || declType instanceof TObjectPrototype || declType instanceof VirtualBaseType) {
+		if (declType instanceof BuiltInType
+			|| declType instanceof VirtualBaseType
+			|| N4Scheme.isFromResourceWithN4Scheme(declType)) {
 			return false;
 		}
 		// declared type must be a class or interface

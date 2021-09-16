@@ -102,7 +102,6 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
@@ -560,7 +559,7 @@ public class N4JSLanguageUtils {
 			return false;
 		}
 		val pseudoStaticType = (typeArg as TypeRef).declaredType;
-		return pseudoStaticType instanceof TN4Classifier || pseudoStaticType instanceof TObjectPrototype;
+		return pseudoStaticType instanceof TN4Classifier;
 	}
 
 	/**

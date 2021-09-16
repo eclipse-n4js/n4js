@@ -31,10 +31,10 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -200,7 +200,7 @@ public class N4JSEnumValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 			final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(identRef);
-			final TObjectPrototype enumType = enumKind == EnumKind.NumberBased
+			final TClass enumType = enumKind == EnumKind.NumberBased
 					? RuleEnvironmentExtensions.n4NumberBasedEnumType(G)
 					: RuleEnvironmentExtensions.n4StringBasedEnumType(G);
 			final TMember getterLiterals = enumType.findOwnedMember("literals", false, true);

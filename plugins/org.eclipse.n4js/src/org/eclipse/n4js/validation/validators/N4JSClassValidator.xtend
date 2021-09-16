@@ -38,7 +38,6 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -255,7 +254,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			if (superType instanceof PrimitiveType) {
 				val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(superType.name);
 				addIssue(message, n4Class.superClassRef, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE);
-			} else if (!(superType instanceof TClass) && !(superType instanceof TObjectPrototype)) {
+			} else if (!(superType instanceof TClass)) {
 				if (superType instanceof TInterface) {
 					val message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(n4Class.description, "extend",
 						superType.description, "implements");
@@ -265,7 +264,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(message, n4Class.superClassRef, null, CLF_WRONG_META_TYPE);
 					return false;
 				}
-			} else if (superType instanceof TClass) {
+			} else if(superType instanceof TClass) {
 				// (got a super class; now validate it ...)
 
 				// super class must not be final (except in case of polyfills)
@@ -295,11 +294,6 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				if (superType.observable && !(n4Class.definedType as TClass).observable) {
 					val message = getMessageForCLF_OBSERVABLE_MISSING(n4Class.name, superType.name);
 					addIssue(message, n4Class, N4_TYPE_DECLARATION__NAME, CLF_OBSERVABLE_MISSING);
-					return false;
-				}
-			} else if (superType instanceof TObjectPrototype) {
-				// the following applies to TObjectPrototype as well (not just to TClass)
-				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superType)) {
 					return false;
 				}
 			}
@@ -333,8 +327,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
 				// consumed type must be an interface
 				if (!(consumedType instanceof TInterface)) {
-					if ((consumedType instanceof TClass || consumedType instanceof TObjectPrototype) &&
-						n4Class.superClassRef === null) {
+					if (consumedType instanceof TClass && n4Class.superClassRef === null) {
 						val message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(n4Class.description, "implement",
 							consumedType.description, "extends");
 						addIssue(message, it, null, SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);

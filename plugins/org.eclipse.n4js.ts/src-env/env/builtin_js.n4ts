@@ -210,7 +210,7 @@ public providedByRuntime object Object @Global {
  *
  * @see ES5, 15.3  Function Objects, page 117 (PDF: 129) [ECMA5]
  */
-public providedByRuntime final object Function extends Object @Global {
+public providedByRuntime object Function extends Object @Global {
 
 	/**
 	 * The Function prototype object is itself a Function object (its [[Class]] is "Function") that, when invoked, accepts any arguments and returns undefined.
@@ -620,7 +620,7 @@ public providedByRuntime  object Array<T> extends Object indexed T @Global {
  *
  * @see ES5, 15.5  String Objects, page 141 (PDF: 153) [ECMA5]
  */
-public providedByRuntime final object String extends Object indexed string @Global {
+public providedByRuntime object String extends Object indexed string @Global {
 
 	/**
 	 * TODO finalize signature
@@ -866,7 +866,7 @@ public providedByRuntime final object String extends Object indexed string @Glob
  *
  * @see ES5, 15.6  Boolean Objects, page 152 (PDF: 164) [ECMA5]
  */
-public providedByRuntime final object Boolean extends Object @Global {
+public providedByRuntime object Boolean extends Object @Global {
 
     /**
 	 * Returns a Boolean value (not a Boolean object) computed by ToBoolean(value).
@@ -892,7 +892,7 @@ public providedByRuntime final object Boolean extends Object @Global {
  *
  * @see ES5, 15.7  Number Objects, page 154 (PDF: 166) [ECMA5]
  */
-public providedByRuntime final object Number extends Object @Global {
+public providedByRuntime object Number extends Object @Global {
 
 	/**
 	 * TODO finalize signature
@@ -986,7 +986,7 @@ public providedByRuntime final object Number extends Object @Global {
  *
  * TODO in ES6 this is defined to be a property of the global object and a constructor function
  */
-public providedByRuntime final object Symbol extends Object @Global {
+public providedByRuntime object Symbol extends Object @Global {
 
 	/**
 	 * Creates a new, primitive symbol.
@@ -1044,7 +1044,7 @@ public providedByRuntime final object Symbol extends Object @Global {
  *
  * @see ES5, 15.8  The Math Object, page 159 (PDF: 171) [ECMA5]
  */
-public providedByRuntime final object Math extends Object @Global  {
+public providedByRuntime object Math extends Object @Global  {
 	/**
 	 * The Number value for e, the base of the natural logarithms, which is approximately 2.7182818284590452354.
 	 *
@@ -1234,7 +1234,7 @@ public providedByRuntime final object Math extends Object @Global  {
  *
  * @see ES5, 15.9  The Date Object, page 165 (PDF: 177) [ECMA5]
  */
-public providedByRuntime final object Date extends Object @Global {
+public providedByRuntime object Date extends Object @Global {
 
 	/**
 	 * TODO finalize signature
@@ -1530,7 +1530,7 @@ public providedByRuntime final object Date extends Object @Global {
  *
  * @see ES5, 15.10  RegExp (Regular Expression) Objects, page 180 (PDF: 192) [ECMA5]
  */
-public providedByRuntime final object RegExp extends Object @Global {
+public providedByRuntime object RegExp extends Object @Global {
 
 
 
@@ -1774,7 +1774,7 @@ public providedByRuntime object URIError extends Error @Global { }
  *
  * @see ES5, 15.12  The JSON Object, page 201 (PDF: 213) [ECMA5]
  */
-public providedByRuntime final object JSON extends Object @Global {
+public providedByRuntime object JSON extends Object @Global {
 
 	// since ECMAScript 5
 

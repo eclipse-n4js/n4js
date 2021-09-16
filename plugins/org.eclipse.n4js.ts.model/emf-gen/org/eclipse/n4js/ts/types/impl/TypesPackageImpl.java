@@ -72,7 +72,6 @@ import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TN4Classifier;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
@@ -342,13 +341,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tClassifierEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass tObjectPrototypeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2154,56 +2146,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getTObjectPrototype() {
-		return tObjectPrototypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTObjectPrototype_SuperType() {
-		return (EReference)tObjectPrototypeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getTObjectPrototype_DeclaredFinal() {
-		return (EAttribute)tObjectPrototypeEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getTObjectPrototype__GetOwnedCtor() {
-		return tObjectPrototypeEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getTObjectPrototype__IsFinal() {
-		return tObjectPrototypeEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getArrayLike() {
 		return arrayLikeEClass;
 	}
@@ -3830,12 +3772,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tClassifierEClass, TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
 		createEOperation(tClassifierEClass, TCLASSIFIER___IS_FINAL);
 
-		tObjectPrototypeEClass = createEClass(TOBJECT_PROTOTYPE);
-		createEReference(tObjectPrototypeEClass, TOBJECT_PROTOTYPE__SUPER_TYPE);
-		createEAttribute(tObjectPrototypeEClass, TOBJECT_PROTOTYPE__DECLARED_FINAL);
-		createEOperation(tObjectPrototypeEClass, TOBJECT_PROTOTYPE___GET_OWNED_CTOR);
-		createEOperation(tObjectPrototypeEClass, TOBJECT_PROTOTYPE___IS_FINAL);
-
 		arrayLikeEClass = createEClass(ARRAY_LIKE);
 		createEReference(arrayLikeEClass, ARRAY_LIKE__DECLARED_ELEMENT_TYPE);
 		createEOperation(arrayLikeEClass, ARRAY_LIKE___GET_ELEMENT_TYPE);
@@ -4097,11 +4033,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tClassifierEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getTVersionable());
 		tClassifierEClass.getEGenericSuperTypes().add(g1);
-		tObjectPrototypeEClass.getESuperTypes().add(this.getTClassifier());
-		tObjectPrototypeEClass.getESuperTypes().add(this.getAccessibleTypeElement());
-		tObjectPrototypeEClass.getESuperTypes().add(this.getArrayLike());
 		tn4ClassifierEClass.getESuperTypes().add(this.getTClassifier());
 		tn4ClassifierEClass.getESuperTypes().add(this.getAccessibleTypeElement());
+		tn4ClassifierEClass.getESuperTypes().add(this.getArrayLike());
 		tn4ClassifierEClass.getESuperTypes().add(this.getTMigratable());
 		tClassEClass.getESuperTypes().add(this.getTN4Classifier());
 		tInterfaceEClass.getESuperTypes().add(this.getTN4Classifier());
@@ -4407,14 +4341,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTClassifier__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTClassifier__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(tObjectPrototypeEClass, TObjectPrototype.class, "TObjectPrototype", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTObjectPrototype_SuperType(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superType", null, 0, 1, TObjectPrototype.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTObjectPrototype_DeclaredFinal(), theEcorePackage.getEBoolean(), "declaredFinal", null, 0, 1, TObjectPrototype.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getTObjectPrototype__GetOwnedCtor(), this.getTMethod(), "getOwnedCtor", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTObjectPrototype__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(arrayLikeEClass, ArrayLike.class, "ArrayLike", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getArrayLike_DeclaredElementType(), theTypeRefsPackage.getTypeRef(), null, "declaredElementType", null, 0, 1, ArrayLike.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

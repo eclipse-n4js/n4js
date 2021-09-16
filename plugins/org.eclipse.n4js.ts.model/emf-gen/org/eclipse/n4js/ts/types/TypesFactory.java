@@ -255,15 +255,6 @@ public interface TypesFactory extends EFactory {
 	TMigration createTMigration();
 
 	/**
-	 * Returns a new object of class '<em>TObject Prototype</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>TObject Prototype</em>'.
-	 * @generated
-	 */
-	TObjectPrototype createTObjectPrototype();
-
-	/**
 	 * Returns a new object of class '<em>TN4 Classifier</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

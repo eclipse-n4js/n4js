@@ -81,7 +81,6 @@ import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructuralType;
@@ -156,8 +155,6 @@ public class TypeUtils {
 			}
 		} else if (type instanceof TInterface) {
 			return createTypeTypeRef(createTypeRef(type, typeArgs), false);
-		} else if (type instanceof TObjectPrototype) {
-			return createConstructorTypeRef(type, typeArgs);
 		} else if (type instanceof TypeAlias) {
 			Type actualDeclType = getActualDeclaredType((TypeAlias) type);
 			if (actualDeclType != null) {
@@ -956,13 +953,6 @@ public class TypeUtils {
 				ParameterizedTypeRef typeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 				typeRef.setDeclaredType(assignmentCompatible);
 				return singletonList(typeRef);
-			}
-		}
-		if (type instanceof TObjectPrototype) {
-			// IDE-1221 string based enums: traversing super types for object prototypes as well
-			TObjectPrototype tObjectPrototype = (TObjectPrototype) type;
-			if (tObjectPrototype.getSuperType() != null) {
-				return singletonList(tObjectPrototype.getSuperType());
 			}
 		}
 		return Collections.emptyList();

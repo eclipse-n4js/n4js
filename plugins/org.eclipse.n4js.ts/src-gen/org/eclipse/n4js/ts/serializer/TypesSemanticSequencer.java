@@ -46,7 +46,6 @@ import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMethod;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
@@ -436,7 +435,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ColonSepTypeRef_DefaultFormalParameter_TAnonymousFormalParameter(context, (TAnonymousFormalParameter) semanticObject); 
 				return; 
 			case TypesPackage.TCLASS:
-				sequence_TClass_TClassOrInterfaceHeader(context, (TClass) semanticObject); 
+				sequence_TClass_TClassOrInterfaceHeader_TypeVariables(context, (TClass) semanticObject); 
 				return; 
 			case TypesPackage.TENUM:
 				sequence_TEnum(context, (TEnum) semanticObject); 
@@ -470,9 +469,6 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
-			case TypesPackage.TOBJECT_PROTOTYPE:
-				sequence_TObjectPrototype_TypeVariables(context, (TObjectPrototype) semanticObject); 
-				return; 
 			case TypesPackage.TSETTER:
 				sequence_TSetter(context, (TSetter) semanticObject); 
 				return; 
@@ -1036,17 +1032,19 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredProvidedByRuntime?='providedByRuntime'? 
 	 *         declaredAbstract?='abstract'? 
 	 *         declaredFinal?='final'? 
-	 *         typingStrategy=TypingStrategyDefSiteOperator? 
-	 *         name=BindingTypesIdentifier 
-	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
+	 *         (
+	 *             (external?='object' name=BindingTypesIdentifier (typeVars+=TypeVariable typeVars+=TypeVariable*)?) | 
+	 *             (typingStrategy=TypingStrategyDefSiteOperator? name=BindingTypesIdentifier (typeVars+=TypeVariable typeVars+=TypeVariable*)?)
+	 *         ) 
 	 *         superClassRef=ParameterizedTypeRefNominal? 
 	 *         (implementedInterfaceRefs+=ParameterizedTypeRefNominal implementedInterfaceRefs+=ParameterizedTypeRefNominal*)? 
+	 *         declaredElementType=ParameterizedTypeRefNominal? 
 	 *         annotations+=TAnnotation* 
 	 *         ownedMembers+=TMember* 
 	 *         (callableCtor=CallableCtor ownedMembers+=TMember*)?
 	 *     )
 	 */
-	protected void sequence_TClass_TClassOrInterfaceHeader(ISerializationContext context, TClass semanticObject) {
+	protected void sequence_TClass_TClassOrInterfaceHeader_TypeVariables(ISerializationContext context, TClass semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -1084,30 +1082,6 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_TEnum(ISerializationContext context, TEnum semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     Type returns TObjectPrototype
-	 *     TObjectPrototype returns TObjectPrototype
-	 *
-	 * Constraint:
-	 *     (
-	 *         declaredTypeAccessModifier=TypeAccessModifier 
-	 *         declaredProvidedByRuntime?='providedByRuntime'? 
-	 *         declaredFinal?='final'? 
-	 *         name=BindingTypesIdentifier 
-	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         superType=ParameterizedTypeRefNominal? 
-	 *         declaredElementType=ParameterizedTypeRefNominal? 
-	 *         annotations+=TAnnotation* 
-	 *         ownedMembers+=TMember* 
-	 *         (callableCtor=CallableCtor ownedMembers+=TMember*)?
-	 *     )
-	 */
-	protected void sequence_TObjectPrototype_TypeVariables(ISerializationContext context, TObjectPrototype semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

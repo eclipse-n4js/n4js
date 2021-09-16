@@ -55,12 +55,24 @@ let a23: (string&number)[];
 // XPECT type of 'a24' --> intersection{Array<string>,number}
 let a24: string[]&number;
 
+// XPECT warnings ---
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "string[]"
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "number[]"
+// ---
 // XPECT type of 'a25' --> intersection{Array<string>,Array<number>}
 let a25: string[]&number[];
 
+// XPECT warnings ---
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "string[]"
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "number[][]"
+// ---
 // XPECT type of 'a26' --> intersection{Array<string>,Array<Array<number>>}
 let a26: string[]&number[][];
 
+// XPECT warnings ---
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "string[]"
+// "An intersection type should not contain different type arguments for the same invariant type parameter. Otherwise is can be instantiated only with undefined." at "number[]"
+// ---
 // XPECT type of 'a27' --> Array<intersection{Array<string>,Array<number>}>
 let a27: (string[]&number[])[];
 

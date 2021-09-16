@@ -32,7 +32,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -60,7 +59,7 @@ class TypeAssistant extends TransformationAssistant {
 				allClassifierDecls.filter(N4ClassDeclaration).map[superClassRef].filterNull
 				.forall[
 					val originalDeclType = state.info.getOriginalProcessedTypeRef(it)?.declaredType;
-					return originalDeclType instanceof TClass || originalDeclType instanceof TObjectPrototype;
+					return originalDeclType instanceof TClass;
 				]);
 			assertTrue("all classifier declarations must have all implementedOrExtendedInterfaceRefs pointing to a TInterface",
 				allClassifierDecls.map[implementedOrExtendedInterfaceRefs].flatten

@@ -44,7 +44,6 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.util.Variance
@@ -387,7 +386,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		}
 		if(typeRef instanceof TypeTypeRef) {
 			val cls = getStaticType(G, typeRef);
-			if(cls instanceof TClass || cls instanceof TObjectPrototype)
+			if(cls instanceof TClass)
 				return true;
 		}
 		return false;
@@ -408,7 +407,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		}
 		if(typeRef instanceof TypeTypeRef) {
 			val cls = getStaticType(G, typeRef);
-			if(cls instanceof TClass || cls instanceof TObjectPrototype)
+			if(cls instanceof TClass)
 				type = cls;
 		}
 		if(type instanceof ContainerType<?>) {

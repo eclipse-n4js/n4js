@@ -67,8 +67,7 @@ enum MemberAccessModifier: private | project | protectedInternal | protected | p
  * we cannot distinguish whether 'T' is a type variable T, or a type with name 'T'. Thus,
  * type variables are handled similar to types (and are actually types).
  */
-Type: 	  TObjectPrototype
-		| TClass
+Type: 	  TClass
 		| TInterface
 		| TEnum
 		| AnyType
@@ -147,24 +146,6 @@ TypesStringLiteralComputedName:
 ;
 
 
-TObjectPrototype:
-	declaredTypeAccessModifier=TypeAccessModifier
-	(declaredProvidedByRuntime?='providedByRuntime')?
-	(declaredFinal?='final')?
-	'object' name=BindingTypesIdentifier
-	TypeVariables?
-	('extends'  superType=ParameterizedTypeRefNominal)?
-	('indexed' declaredElementType=ParameterizedTypeRefNominal)?
-	annotations+=TAnnotation*
-	'{'
-		ownedMembers+=TMember*
-		(
-			callableCtor=CallableCtor
-			ownedMembers+=TMember*
-		)?
-	'}'
-;
-
 /*
  * Virtual base type, not visible to N4JS users.
  * Used to define common super types, e.g. for all enumerations.
@@ -182,9 +163,13 @@ TClass:
 	(declaredProvidedByRuntime?='providedByRuntime')?
 	(declaredAbstract?='abstract')?
 	(declaredFinal?='final')?
-	'class' TClassOrInterfaceHeader
+	(
+		(external?='object' name=BindingTypesIdentifier TypeVariables?)
+	|	('class' TClassOrInterfaceHeader)
+	)
 	('extends'  superClassRef=ParameterizedTypeRefNominal)?
 	('implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*)?
+	('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 	annotations+=TAnnotation*
 	'{'
 		ownedMembers+=TMember*

@@ -108,7 +108,6 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TVariable
@@ -1415,8 +1414,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (d !== null) {
 			val concreteMetaType = d instanceof TClass
 				|| d instanceof TEnum
-				|| d instanceof PrimitiveType
-				|| d instanceof TObjectPrototype;
+				|| d instanceof PrimitiveType;
 			return concreteMetaType;
 		}
 

@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
@@ -45,7 +46,6 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -1036,10 +1036,14 @@ class RuleEnvironmentExtensions {
 
 		switch (declaredType) {
 			TClass:
-				if (declaredType == G.n4ObjectType || (declaredType.external && !declaredType.declaredN4JS) ||
-					declaredType.typingStrategy==TypingStrategy.STRUCTURAL)
+				if (declaredType == G.objectType) {
+					emptyList
+				} else if (declaredType == G.n4ObjectType
+						|| (declaredType.external && !declaredType.declaredN4JS)
+						|| declaredType.typingStrategy==TypingStrategy.STRUCTURAL
+						|| N4Scheme.isFromResourceWithN4Scheme(declaredType) ) {
 					G.objectPrototypesAllImplicitSuperTypeRefs
-				else {
+				} else {
 					if (declaredType.superClassRef===null) {
 						G.n4ClassifiersAllImplicitSuperTypeRefs
 					} else {
@@ -1048,11 +1052,6 @@ class RuleEnvironmentExtensions {
 				}
 			TN4Classifier:
 				G.n4ClassifiersAllImplicitSuperTypeRefs
-			TObjectPrototype:
-				if (declaredType == G.objectType)
-					emptyList
-				else
-					G.objectPrototypesAllImplicitSuperTypeRefs
 			TEnum:
 				switch (N4JSLanguageUtils.getEnumKind(declaredType)) {
 					case Normal: #[G.objectTypeRef]
