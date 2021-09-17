@@ -13,7 +13,6 @@ package org.eclipse.n4js.workspace;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,6 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
@@ -177,13 +175,12 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	protected void reloadAllProjectInformationFromDisk() {
 		deregisterAllProjects();
 		Path baseDir = getPathAsFileURI().toPath();
-		Map<Path, ProjectDescription> pdCache = new HashMap<>();
-		List<Path> newProjectPaths = projectDiscoveryHelper.collectAllProjectDirs(Collections.singleton(baseDir),
-				pdCache);
-		for (Path newProjectPath : newProjectPaths) {
+		Map<Path, ProjectDescription> projects = projectDiscoveryHelper
+				.collectAllProjectDirs(Collections.singleton(baseDir));
+
+		for (Path newProjectPath : projects.keySet()) {
 			FileURI newProjectPathAsFileURI = new FileURI(newProjectPath);
-			Preconditions.checkNotNull(pdCache);
-			ProjectDescription pd = pdCache.get(newProjectPath);
+			ProjectDescription pd = projects.get(newProjectPath);
 			registerProject(newProjectPathAsFileURI, pd);
 		}
 	}
