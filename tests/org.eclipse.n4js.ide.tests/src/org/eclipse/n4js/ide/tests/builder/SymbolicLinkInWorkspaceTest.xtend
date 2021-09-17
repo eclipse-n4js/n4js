@@ -84,9 +84,7 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		createYarnWorkspaceWithProjectMainWithDependencyTo("ProjectOther");
 		val other = createProjectOutsideWorkspace("ProjectOther", "Other");
 		val packagesFolder = getProjectLocation().toPath;
-			Files.createSymbolicLink(packagesFolder.resolve("ProjectOther"), other);
-			val nodeModulesFolder = getNodeModulesFolder().toPath;
-			Files.createSymbolicLink(nodeModulesFolder.resolve("ProjectOther"), packagesFolder.resolve("ProjectOther"));
+		Files.createSymbolicLink(packagesFolder.resolve("ProjectOther"), other);
 		startAndWaitForLspServer();
 
 		assertProjectsInWorkspace(
@@ -104,8 +102,6 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		val other = createProjectOutsideWorkspace("@someScope/ProjectOther", "Other");
 		val packagesFolder = getProjectLocation().toPath;
 		Files.createSymbolicLink(packagesFolder.resolve("@someScope"), other.parent);
-		val nodeModulesFolder = getNodeModulesFolder().toPath;
-		Files.createSymbolicLink(nodeModulesFolder.resolve("@someScope"), packagesFolder.resolve("@someScope"));
 		startAndWaitForLspServer();
 
 		assertProjectsInWorkspace(
@@ -124,8 +120,6 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		val packagesFolder = getProjectLocation().toPath;
 		Files.createDirectory(packagesFolder.resolve("@someScope"));
 		Files.createSymbolicLink(packagesFolder.resolve("@someScope").resolve("ProjectOther"), other);
-		val nodeModulesFolder = getNodeModulesFolder().toPath;
-		Files.createSymbolicLink(nodeModulesFolder.resolve("@someScope"), packagesFolder.resolve("@someScope"));
 		startAndWaitForLspServer();
 
 		assertProjectsInWorkspace(
@@ -144,8 +138,6 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		val packagesFolder = getProjectLocation().toPath;
 		val otherInWorkspace = packagesFolder.resolve("ProjectOther");
 		FileCopier.copy(other, otherInWorkspace);
-		val nodeModulesFolder = getNodeModulesFolder().toPath;
-		Files.createSymbolicLink(nodeModulesFolder.resolve("ProjectOther"), otherInWorkspace);
 		FileDeleter.delete(otherInWorkspace.resolve("src"));
 		Files.createSymbolicLink(otherInWorkspace.resolve("src"), other.resolve("src"));
 		startAndWaitForLspServer();
@@ -159,8 +151,6 @@ class SymbolicLinkInWorkspaceTest extends AbstractIdeTest {
 		val packagesFolder = getProjectLocation().toPath;
 		val otherInWorkspace = packagesFolder.resolve("ProjectOther");
 		FileCopier.copy(other, otherInWorkspace);
-		val nodeModulesFolder = getNodeModulesFolder().toPath;
-		Files.createSymbolicLink(nodeModulesFolder.resolve("ProjectOther"), otherInWorkspace);
 		val folderB = otherInWorkspace.resolve("src").resolve("a").resolve("b");
 		FileDeleter.delete(folderB);
 		Files.createSymbolicLink(folderB, other.resolve("src").resolve("a").resolve("b"));
