@@ -21,34 +21,34 @@ import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 @SuppressWarnings("javadoc")
 public class ProjectReference extends ImmutableDataClass {
 
-	private final String projectName;
+	private final String packageName;
 
-	public ProjectReference(String projectName) {
-		this.projectName = projectName;
+	public ProjectReference(String packageName) {
+		this.packageName = packageName;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public String getPackageName() {
+		return packageName;
 	}
 
 	public N4JSProjectName getN4JSProjectName() {
-		return projectName != null ? new N4JSProjectName(projectName) : null;
+		return packageName != null ? new N4JSProjectName(packageName) : null;
 	}
 
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				projectName);
+				packageName);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ProjectReference other = (ProjectReference) obj;
-		return Objects.equals(projectName, other.projectName);
+		return Objects.equals(packageName, other.packageName);
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " { projectName: " + projectName + " }";
+		return getClass().getSimpleName() + " { packageName: " + packageName + " }";
 	}
 }

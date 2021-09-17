@@ -239,7 +239,7 @@ class SemanticDependenciesTest {
 		
 		val List<String> problems = new ArrayList();
 		
-		for (dependencyName : dependencies.map[projectName]) {
+		for (dependencyName : dependencies.map[getPackageName]) {
 			val dependency = workspace.findProjectByName(dependencyName);
 			if (dependency.projectDescription.getType == ProjectType.DEFINITION) {
 				if (encounteredImplProjectsById.containsKey(dependency.projectDescription.definesPackage)) {
@@ -260,7 +260,7 @@ class SemanticDependenciesTest {
 	 * the {@code expectedProjectNameOrder} in terms of their project IDs.
 	 */
 	private static def void assertOrder(String message, Iterable<ProjectDependency> dependencies, Iterable<String> expectedProjectNameOrder) {
-		val actual = dependencies.map[d | d.projectName].join(" ");
+		val actual = dependencies.map[d | d.getPackageName].join(" ");
 		val expectation = expectedProjectNameOrder.join(" ");
 		
 		assertEquals(message, expectation, actual);

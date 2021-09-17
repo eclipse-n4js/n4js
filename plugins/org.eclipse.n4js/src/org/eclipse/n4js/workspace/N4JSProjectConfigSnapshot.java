@@ -206,7 +206,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		ImmutableList.Builder<String> result = ImmutableList.builder();
 		result.addAll(getDependencies());
 		result.addAll(
-				Iterables.transform(projectDescription.getImplementedProjects(), ProjectReference::getProjectName));
+				Iterables.transform(projectDescription.getImplementedProjects(), ProjectReference::getPackageName));
 		return result.build();
 	}
 

@@ -238,7 +238,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 			if (null != eResource) {
 				final N4JSProjectConfigSnapshot elementProject = workspaceAccess.findProjectContaining(eResource);
 				if (null != elementProject) {
-					if (elementProject.getName().equals(testedProject.getProjectName())) {
+					if (elementProject.getName().equals(testedProject.getPackageName())) {
 						return true;
 					}
 				}
@@ -261,7 +261,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	public boolean isTestedProjectOf(final TModule contextModule, final N4JSProjectConfigSnapshot elementProject) {
 		for (final ProjectReference testedProject : getTestedProjects(contextModule.eResource())) {
-			if (elementProject.getName().equals(testedProject.getProjectName())) {
+			if (elementProject.getName().equals(testedProject.getPackageName())) {
 				return true;
 			}
 		}

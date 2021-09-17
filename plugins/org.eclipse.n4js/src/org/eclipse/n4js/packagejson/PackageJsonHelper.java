@@ -231,7 +231,7 @@ public class PackageJsonHelper {
 		Set<String> existingProjectNames = new HashSet<>();
 		if (avoidDuplicates) {
 			for (ProjectDependency pd : target.getDependencies()) {
-				existingProjectNames.add(pd.getProjectName());
+				existingProjectNames.add(pd.getPackageName());
 			}
 		}
 
@@ -286,7 +286,7 @@ public class PackageJsonHelper {
 		Set<String> projectNamesToRemove = new HashSet<>();
 		List<ProjectDependency> projectDependencies = target.getDependencies();
 		for (ProjectDependency dep : projectDependencies) {
-			String otherProject = dep.getProjectName();
+			String otherProject = dep.getPackageName();
 			for (String suffix : N4JSGlobals.API_PROJECT_NAME_SUFFIXES) {
 				if (otherProject.endsWith(suffix)) {
 					projectNamesToRemove.add(otherProject.substring(0, otherProject.length() - suffix.length()));
@@ -296,7 +296,7 @@ public class PackageJsonHelper {
 		}
 		if (!projectNamesToRemove.isEmpty()) {
 			for (int i = projectDependencies.size() - 1; i >= 0; i--) {
-				if (projectNamesToRemove.contains(projectDependencies.get(i).getProjectName())) {
+				if (projectNamesToRemove.contains(projectDependencies.get(i).getPackageName())) {
 					projectDependencies.remove(i);
 				}
 			}

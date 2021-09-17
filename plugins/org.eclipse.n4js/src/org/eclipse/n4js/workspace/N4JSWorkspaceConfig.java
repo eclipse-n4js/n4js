@@ -329,7 +329,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				// convert to list in next line, because we want the below #equals() check to also include the order:
 				List<String> oldSemanticDeps = new ArrayList<>(oldSnapshot.getDependencies());
 				List<String> newSemanticDeps = ((N4JSProjectConfig) pc).getSemanticDependencies().stream()
-						.map(ProjectDependency::getProjectName)
+						.map(ProjectDependency::getPackageName)
 						.collect(Collectors.toList());
 				if (!newSemanticDeps.equals(oldSemanticDeps)) {
 					ProjectConfigSnapshot newSnapshot = configSnapshotFactory.createProjectConfigSnapshot(pc);

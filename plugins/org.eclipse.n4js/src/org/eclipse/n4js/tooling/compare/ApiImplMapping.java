@@ -89,7 +89,7 @@ public class ApiImplMapping {
 		final ApiImplMapping mapping = new ApiImplMapping();
 		for (N4JSProjectConfigSnapshot pImpl : wc.getProjects()) {
 			for (ProjectReference pApi : pImpl.getProjectDescription().getImplementedProjects()) {
-				N4JSProjectConfigSnapshot pApiResolved = wc.findProjectByName(pApi.getProjectName());
+				N4JSProjectConfigSnapshot pApiResolved = wc.findProjectByName(pApi.getPackageName());
 				if (pApiResolved != null) {
 					mapping.put(pApiResolved, pImpl);
 				}
@@ -139,7 +139,7 @@ public class ApiImplMapping {
 
 		for (N4JSProjectConfigSnapshot pImpl : implProjects) {
 			for (ProjectReference pApiRef : pImpl.getProjectDescription().getImplementedProjects()) {
-				N4JSProjectConfigSnapshot pApi = wc.findProjectByName(pApiRef.getProjectName());
+				N4JSProjectConfigSnapshot pApi = wc.findProjectByName(pApiRef.getPackageName());
 				if (pApi != null) {
 					// note: #getImplementedProjects() will return implemented projects from entire workspace,
 					// so we here have to make sure pApi is contained in apiProjects

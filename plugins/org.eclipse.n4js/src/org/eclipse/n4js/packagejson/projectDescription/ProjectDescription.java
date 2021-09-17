@@ -376,7 +376,7 @@ public class ProjectDescription extends ImmutableDataClass {
 			sb.append("]\n");
 		} else {
 			sb.append(' ');
-			sb.append(Joiner.on(", ").join(IterableExtensions.map(dependencies, ProjectDependency::getProjectName)));
+			sb.append(Joiner.on(", ").join(IterableExtensions.map(dependencies, ProjectDependency::getPackageName)));
 			sb.append(" ]\n");
 		}
 		sb.append("    sourceContainers: [");
@@ -410,7 +410,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		sb.append("    mainModule: " + mainModule + "\n");
 		if (!testedProjects.isEmpty()) {
 			String namesStr = Joiner.on(", ").join(
-					IterableExtensions.map(testedProjects, ProjectReference::getProjectName));
+					IterableExtensions.map(testedProjects, ProjectReference::getPackageName));
 			sb.append("    testedProjects: [ " + namesStr + " ]\n");
 		}
 		if (definesPackage != null) {

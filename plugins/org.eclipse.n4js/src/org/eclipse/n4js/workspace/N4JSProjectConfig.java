@@ -192,7 +192,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
 		Set<String> result = new LinkedHashSet<>(deps.size());
 		for (ProjectDependency dep : deps) {
-			result.add(getProjectIdForPackageName(dep.getProjectName()));
+			result.add(getProjectIdForPackageName(dep.getPackageName()));
 		}
 		return result;
 	}
@@ -236,14 +236,14 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		Path relatedRootLocation = getRelatedRootLocation();
 
 		HashSet<String> allNames = new HashSet<>(workspace.getAllProjectNames());
-		semanticDeps.stream().forEach(d -> allNames.add(d.getProjectName()));
+		semanticDeps.stream().forEach(d -> allNames.add(d.getPackageName()));
 
 		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.getQualifiedNames(
 				workspace, projectDescription, relatedRootLocation, allNames));
 
 		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());
 		for (ProjectDependency sdep : semanticDeps) {
-			String qualifiedName = getProjectIdForPackageName(sdep.getProjectName());
+			String qualifiedName = getProjectIdForPackageName(sdep.getPackageName());
 			ProjectDependency newDep = new ProjectDependency(qualifiedName, sdep.getType(),
 					sdep.getVersionRequirementString(), sdep.getVersionRequirement());
 			result.add(newDep);

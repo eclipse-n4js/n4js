@@ -346,7 +346,7 @@ public class ProjectDiscoveryHelper {
 				plainjsProjects.put(pd.getPackageName(), project);
 			} else {
 				List<String> deps = pd.getProjectDependencies().stream()
-						.map(ProjectReference::getProjectName).collect(Collectors.toList());
+						.map(ProjectReference::getPackageName).collect(Collectors.toList());
 				projectsRequiredByAnN4JSProject.addAll(deps);
 			}
 		}
@@ -446,7 +446,7 @@ public class ProjectDiscoveryHelper {
 		}
 
 		for (ProjectDependency dependency : prjDescr.getProjectDependencies()) {
-			String depName = dependency.getProjectName();
+			String depName = dependency.getPackageName();
 
 			Path depLocation = findDependencyLocation(nodeModulesFolder, prjNodeModules, depName);
 			if (isNewDependency(allProjectDirs, prjDir, pdCache, depLocation, relatedRoot)) {

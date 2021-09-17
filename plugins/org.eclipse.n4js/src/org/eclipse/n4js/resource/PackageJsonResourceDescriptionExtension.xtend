@@ -317,7 +317,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	}
 
 	private static def String asString(Iterable<? extends ProjectReference> it) {
-		it.filterNull.map[projectName].filterNull.join(SEPARATOR)
+		it.filterNull.map[getPackageName].filterNull.join(SEPARATOR)
 	}
 
 	private static def boolean isPackageJSON(IResourceDescription desc) {

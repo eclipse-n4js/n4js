@@ -48,7 +48,7 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 		N4JSProjectConfig projectConfigCasted = (N4JSProjectConfig) projectConfig;
 
 		List<String> semanticDependencies = Lists.transform(projectConfigCasted.getSemanticDependencies(),
-				ProjectDependency::getProjectName);
+				ProjectDependency::getPackageName);
 
 		return new N4JSProjectConfigSnapshot(
 				projectConfigCasted.getProjectDescription(),
