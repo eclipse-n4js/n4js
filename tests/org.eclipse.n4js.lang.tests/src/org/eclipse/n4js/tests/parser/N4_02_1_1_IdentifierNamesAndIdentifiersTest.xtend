@@ -32,9 +32,9 @@ class N4_02_1_1_IdentifierNamesAndIdentifiersTest extends AbstractParserTest {
 	@Inject N4JSQualifiedNameProvider qualifiedNameProvider;
 	@Inject IQualifiedNameConverter qualifiedNameConverter;
 
-	private def withVendorAndProject(Script script, String vendorID, String projectName) {
+	private def withVendorAndProject(Script script, String vendorID, String projectID) {
 		script.eResource.contents.get(1) as TModule => [
-			it.projectName = projectName
+			it.projectID = projectID
 			it.vendorID = vendorID
 		]
 		return script

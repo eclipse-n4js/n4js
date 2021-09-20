@@ -143,7 +143,7 @@ public class XpectN4JSES5TranspilerHelper {
 		String fileToRun = jsModulePathToRun(testScript);
 
 		// Not in UI case, hence manually set up the resources
-		String artificialProjectName = testScript.getModule().getProjectName();
+		String artificialProjectName = testScript.getModule().getPackageName();
 
 		// provide n4js-runtime in the version of the current build
 		N4jsLibsAccess.installN4jsLibs(
@@ -280,7 +280,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 	private String getCompiledFileBasePath(final Script script, boolean includeProjectName) {
 		String path = includeProjectName
-				? script.getModule().getProjectName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
+				? script.getModule().getPackageName() + '/' + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
 				: N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(script);

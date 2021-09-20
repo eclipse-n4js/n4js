@@ -69,10 +69,15 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	String qualifiedName
 	/**
-	 * The <em>N4JS project name</em> of the project containing this module, as defined at
-	 * {@link org.eclipse.n4js.utils.ProjectDescriptionUtils#isProjectNameWithScope(String)}.
+	 * The <em>package name</em> of the project containing this module, as defined at
+	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#packageName}.
 	 */
-	String projectName
+	String packageName
+	/**
+	 * The <em>project id</em> of the project containing this module, as defined at
+	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#id}.
+	 */
+	String projectID
 	/**
 	 * The vendorId of the project containing this module.
 	 */

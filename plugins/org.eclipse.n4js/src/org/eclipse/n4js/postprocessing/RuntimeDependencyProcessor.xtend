@@ -209,6 +209,6 @@ class RuntimeDependencyProcessor {
 	def private static boolean isDifferentModuleInSameProject(TModule module, ASTMetaInfoCache cache) {
 		return module !== null && !module.eIsProxy
 			&& module.eResource !== cache.resource
-			&& module.projectName == cache.projectName;
+			&& module.projectID == cache.projectID;
 	}
 }

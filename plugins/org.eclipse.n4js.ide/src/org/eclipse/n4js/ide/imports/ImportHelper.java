@@ -116,7 +116,7 @@ public class ImportHelper {
 		}
 
 		TModule module = importDecl.getModule();
-		N4JSProjectName targetProjectName = new N4JSProjectName(module.getProjectName());
+		N4JSProjectName targetProjectName = new N4JSProjectName(module.getPackageName());
 		QualifiedName targetModule = qualifiedNameConverter.toQualifiedName(module.getQualifiedName());
 
 		String moduleSpecifier = importDecl.getModuleSpecifierAsText();
