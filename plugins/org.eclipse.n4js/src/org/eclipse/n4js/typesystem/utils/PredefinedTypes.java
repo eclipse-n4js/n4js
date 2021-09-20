@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesystem.utils;
 
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope;
-import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 
 /**
@@ -34,19 +33,12 @@ public class PredefinedTypes {
 	public final GlobalObjectScope globalObjectScope;
 
 	/**
-	 * Virtual types, mainly to access the ArgumentsType
-	 */
-	public final VirtualBaseTypeScope virtualBaseTypeScope;
-
-	/**
 	 * Creates facade with given scopes.
 	 */
-	public PredefinedTypes(BuiltInTypeScope builtInTypeScope, GlobalObjectScope globalObjectScope,
-			VirtualBaseTypeScope virtualBaseTypeScope) {
+	public PredefinedTypes(BuiltInTypeScope builtInTypeScope, GlobalObjectScope globalObjectScope) {
 		super();
 		this.builtInTypeScope = builtInTypeScope;
 		this.globalObjectScope = globalObjectScope;
-		this.virtualBaseTypeScope = virtualBaseTypeScope;
 	}
 
 	@Override

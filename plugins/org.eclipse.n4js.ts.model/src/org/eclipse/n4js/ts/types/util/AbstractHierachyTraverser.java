@@ -21,7 +21,6 @@ import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.utils.RecursionGuard;
 
 /**
@@ -176,14 +175,6 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 
 	@Override
 	public Boolean caseTStructuralType(TStructuralType object) {
-		if (guard.tryNext(object)) {
-			return process(object);
-		}
-		return Boolean.FALSE;
-	}
-
-	@Override
-	public Boolean caseVirtualBaseType(VirtualBaseType object) {
 		if (guard.tryNext(object)) {
 			return process(object);
 		}

@@ -32,8 +32,6 @@ Intersection : 'intersection';
 
 Constructor : 'constructor';
 
-VirtualBase : 'virtualBase';
-
 Implements : 'implements';
 
 Instanceof : 'instanceof';

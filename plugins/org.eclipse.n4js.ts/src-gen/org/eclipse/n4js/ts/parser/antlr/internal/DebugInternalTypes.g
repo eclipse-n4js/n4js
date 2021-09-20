@@ -82,8 +82,6 @@ ruleType:
 		ruleTFunction
 		    |
 		ruleTypeVariable
-		    |
-		ruleVirtualBaseType
 	)
 ;
 
@@ -204,8 +202,6 @@ ruleTypesSpecificKeywords:
 		    |
 		'object'
 		    |
-		'virtualBase'
-		    |
 		'primitive'
 		    |
 		'autoboxedType'
@@ -235,20 +231,6 @@ ruleTypesSymbolLiteralComputedName:
 // Rule TypesStringLiteralComputedName
 ruleTypesStringLiteralComputedName:
 	RULE_STRING
-;
-
-// Rule VirtualBaseType
-ruleVirtualBaseType:
-	'virtualBase'
-	ruleBindingTypesIdentifier
-	(
-		'indexed'
-		ruleParameterizedTypeRefNominal
-	)?
-	'{'
-	ruleTMember
-	*
-	'}'
 ;
 
 // Rule TClass
@@ -315,6 +297,10 @@ ruleTInterface:
 			','
 			ruleParameterizedTypeRefNominal
 		)*
+	)?
+	(
+		'indexed'
+		ruleParameterizedTypeRefNominal
 	)?
 	(
 		('@'

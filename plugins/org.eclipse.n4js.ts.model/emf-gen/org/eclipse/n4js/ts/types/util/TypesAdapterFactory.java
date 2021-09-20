@@ -162,10 +162,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createContainerTypeAdapter();
 			}
 			@Override
-			public Adapter caseVirtualBaseType(VirtualBaseType object) {
-				return createVirtualBaseTypeAdapter();
-			}
-			@Override
 			public Adapter caseModuleNamespaceVirtualType(ModuleNamespaceVirtualType object) {
 				return createModuleNamespaceVirtualTypeAdapter();
 			}
@@ -624,20 +620,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createContainerTypeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.VirtualBaseType <em>Virtual Base Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.VirtualBaseType
-	 * @generated
-	 */
-	public Adapter createVirtualBaseTypeAdapter() {
 		return null;
 	}
 

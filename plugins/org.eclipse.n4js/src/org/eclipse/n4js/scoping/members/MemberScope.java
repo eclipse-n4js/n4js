@@ -16,10 +16,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.scoping.utils.RestrictedUsageDescription;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.NameAndAccess;
+import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
@@ -174,8 +175,8 @@ public class MemberScope extends AbstractMemberScope {
 	protected IEObjectDescription createSingleElementDescription(TMember existingMember) {
 		IEObjectDescription description = super.createSingleElementDescription(existingMember);
 		// #hack for IDE-662 restriction on arguments.callee in all modes except for unrestricted Javascript.
-		if (type instanceof VirtualBaseType) {
-			if (type.getName().equals("ArgumentsType") && existingMember.getName().equals("callee")) {
+		if (type instanceof TInterface && N4Scheme.isFromResourceWithN4Scheme(type)) {
+			if (type.getName().equals("IArguments") && existingMember.getName().equals("callee")) {
 				// JavaScriptVariant jsVariant = JavaScriptVariant.getVariant(context);
 				if (!jsVariantHelper.isUnrestrictedMode(context)) {
 					return new RestrictedUsageDescription(description, jsVariantHelper.variantMode(context));

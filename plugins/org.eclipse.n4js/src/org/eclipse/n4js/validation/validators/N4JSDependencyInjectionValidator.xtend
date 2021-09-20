@@ -51,7 +51,6 @@ import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.ts.types.VirtualBaseType
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -894,7 +893,6 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		}
 		// declared type must not be a built-in type (except N4Provider)
 		if (declType instanceof BuiltInType
-			|| declType instanceof VirtualBaseType
 			|| (N4Scheme.isFromResourceWithN4Scheme(declType) && declType.name != BuiltInTypeScope.QN_N4PROVIDER.toString)) {
 			return false;
 		}

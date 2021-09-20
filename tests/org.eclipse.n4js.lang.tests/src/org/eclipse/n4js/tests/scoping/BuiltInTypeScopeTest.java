@@ -26,7 +26,6 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope;
-import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -100,7 +99,6 @@ public class BuiltInTypeScopeTest {
 
 		// trigger more loading
 		GlobalObjectScope.get(resourceSet).getAllElements();
-		VirtualBaseTypeScope.get(resourceSet).getAllElements();
 
 		Assert.assertEquals(FluentIterable.from(builtInResourceSet.getResources()).transform(Resource::getURI)
 				.join(Joiner.on('\n')), 7, builtInResourceSet.getResources().size());

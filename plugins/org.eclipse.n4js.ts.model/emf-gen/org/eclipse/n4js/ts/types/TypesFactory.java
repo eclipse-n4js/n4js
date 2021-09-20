@@ -165,15 +165,6 @@ public interface TypesFactory extends EFactory {
 	Type createType();
 
 	/**
-	 * Returns a new object of class '<em>Virtual Base Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Virtual Base Type</em>'.
-	 * @generated
-	 */
-	VirtualBaseType createVirtualBaseType();
-
-	/**
 	 * Returns a new object of class '<em>Module Namespace Virtual Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -30,9 +30,6 @@ public class ScopeRegistrar extends BuiltInSchemeRegistrar {
 
 		GlobalObjectScope globalObjectScope = GlobalObjectScope.get(builtInSchemeResourceSet);
 		GlobalObjectScopeAccess.registerGlobalObjectScope(globalObjectScope, targetResourceSet);
-
-		VirtualBaseTypeScope virtualBaseTypeScope = VirtualBaseTypeScope.get(builtInSchemeResourceSet);
-		VirtualBaseTypeScopeAccess.registerVirtualBaseTypeScope(virtualBaseTypeScope, targetResourceSet);
 	}
 
 	@Override
@@ -41,9 +38,6 @@ public class ScopeRegistrar extends BuiltInSchemeRegistrar {
 
 		GlobalObjectScope globalObjectScope = new GlobalObjectScope(descriptor);
 		GlobalObjectScopeAccess.registerGlobalObjectScope(globalObjectScope, resourceSet);
-
-		VirtualBaseTypeScope virtualBaseTypeScope = new VirtualBaseTypeScope(descriptor);
-		VirtualBaseTypeScopeAccess.registerVirtualBaseTypeScope(virtualBaseTypeScope, resourceSet);
 	}
 
 }

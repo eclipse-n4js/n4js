@@ -107,8 +107,6 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getNullTypeAccess().getGroup(), "rule__NullType__Group__0");
 			builder.put(grammarAccess.getTypesComputedPropertyNameAccess().getGroup(), "rule__TypesComputedPropertyName__Group__0");
 			builder.put(grammarAccess.getTypesSymbolLiteralComputedNameAccess().getGroup(), "rule__TypesSymbolLiteralComputedName__Group__0");
-			builder.put(grammarAccess.getVirtualBaseTypeAccess().getGroup(), "rule__VirtualBaseType__Group__0");
-			builder.put(grammarAccess.getVirtualBaseTypeAccess().getGroup_3(), "rule__VirtualBaseType__Group_3__0");
 			builder.put(grammarAccess.getTClassAccess().getGroup(), "rule__TClass__Group__0");
 			builder.put(grammarAccess.getTClassAccess().getGroup_4_0(), "rule__TClass__Group_4_0__0");
 			builder.put(grammarAccess.getTClassAccess().getGroup_4_1(), "rule__TClass__Group_4_1__0");
@@ -120,6 +118,7 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTInterfaceAccess().getGroup(), "rule__TInterface__Group__0");
 			builder.put(grammarAccess.getTInterfaceAccess().getGroup_4(), "rule__TInterface__Group_4__0");
 			builder.put(grammarAccess.getTInterfaceAccess().getGroup_4_2(), "rule__TInterface__Group_4_2__0");
+			builder.put(grammarAccess.getTInterfaceAccess().getGroup_5(), "rule__TInterface__Group_5__0");
 			builder.put(grammarAccess.getTypeVariableAccess().getGroup(), "rule__TypeVariable__Group__0");
 			builder.put(grammarAccess.getTypeVariableAccess().getGroup_1(), "rule__TypeVariable__Group_1__0");
 			builder.put(grammarAccess.getTClassOrInterfaceHeaderAccess().getGroup(), "rule__TClassOrInterfaceHeader__Group__0");
@@ -236,9 +235,6 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVoidTypeAccess().getNameAssignment_1(), "rule__VoidType__NameAssignment_1");
 			builder.put(grammarAccess.getUndefinedTypeAccess().getNameAssignment_1(), "rule__UndefinedType__NameAssignment_1");
 			builder.put(grammarAccess.getNullTypeAccess().getNameAssignment_1(), "rule__NullType__NameAssignment_1");
-			builder.put(grammarAccess.getVirtualBaseTypeAccess().getNameAssignment_2(), "rule__VirtualBaseType__NameAssignment_2");
-			builder.put(grammarAccess.getVirtualBaseTypeAccess().getDeclaredElementTypeAssignment_3_1(), "rule__VirtualBaseType__DeclaredElementTypeAssignment_3_1");
-			builder.put(grammarAccess.getVirtualBaseTypeAccess().getOwnedMembersAssignment_5(), "rule__VirtualBaseType__OwnedMembersAssignment_5");
 			builder.put(grammarAccess.getTClassAccess().getDeclaredTypeAccessModifierAssignment_0(), "rule__TClass__DeclaredTypeAccessModifierAssignment_0");
 			builder.put(grammarAccess.getTClassAccess().getDeclaredProvidedByRuntimeAssignment_1(), "rule__TClass__DeclaredProvidedByRuntimeAssignment_1");
 			builder.put(grammarAccess.getTClassAccess().getDeclaredAbstractAssignment_2(), "rule__TClass__DeclaredAbstractAssignment_2");
@@ -257,8 +253,9 @@ public class TypesParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTInterfaceAccess().getDeclaredProvidedByRuntimeAssignment_1(), "rule__TInterface__DeclaredProvidedByRuntimeAssignment_1");
 			builder.put(grammarAccess.getTInterfaceAccess().getSuperInterfaceRefsAssignment_4_1(), "rule__TInterface__SuperInterfaceRefsAssignment_4_1");
 			builder.put(grammarAccess.getTInterfaceAccess().getSuperInterfaceRefsAssignment_4_2_1(), "rule__TInterface__SuperInterfaceRefsAssignment_4_2_1");
-			builder.put(grammarAccess.getTInterfaceAccess().getAnnotationsAssignment_5(), "rule__TInterface__AnnotationsAssignment_5");
-			builder.put(grammarAccess.getTInterfaceAccess().getOwnedMembersAssignment_7(), "rule__TInterface__OwnedMembersAssignment_7");
+			builder.put(grammarAccess.getTInterfaceAccess().getDeclaredElementTypeAssignment_5_1(), "rule__TInterface__DeclaredElementTypeAssignment_5_1");
+			builder.put(grammarAccess.getTInterfaceAccess().getAnnotationsAssignment_6(), "rule__TInterface__AnnotationsAssignment_6");
+			builder.put(grammarAccess.getTInterfaceAccess().getOwnedMembersAssignment_8(), "rule__TInterface__OwnedMembersAssignment_8");
 			builder.put(grammarAccess.getTypeVariableAccess().getNameAssignment_0(), "rule__TypeVariable__NameAssignment_0");
 			builder.put(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundAssignment_1_1(), "rule__TypeVariable__DeclaredUpperBoundAssignment_1_1");
 			builder.put(grammarAccess.getTClassOrInterfaceHeaderAccess().getTypingStrategyAssignment_0(), "rule__TClassOrInterfaceHeader__TypingStrategyAssignment_0");

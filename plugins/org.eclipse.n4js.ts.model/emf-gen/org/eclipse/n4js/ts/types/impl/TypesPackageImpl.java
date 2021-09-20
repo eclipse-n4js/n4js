@@ -92,7 +92,6 @@ import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.UndefinedType;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.ts.types.VoidType;
 
 import org.eclipse.n4js.ts.types.util.Variance;
@@ -250,13 +249,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass containerTypeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass virtualBaseTypeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1748,26 +1740,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getContainerType__GetOrCreateOwnedMembersByNameAndAccess() {
 		return containerTypeEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVirtualBaseType() {
-		return virtualBaseTypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getVirtualBaseType_DeclaredOwnedMembers() {
-		return (EReference)virtualBaseTypeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3720,9 +3692,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS);
 
-		virtualBaseTypeEClass = createEClass(VIRTUAL_BASE_TYPE);
-		createEReference(virtualBaseTypeEClass, VIRTUAL_BASE_TYPE__DECLARED_OWNED_MEMBERS);
-
 		moduleNamespaceVirtualTypeEClass = createEClass(MODULE_NAMESPACE_VIRTUAL_TYPE);
 		createEReference(moduleNamespaceVirtualTypeEClass, MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE);
 		createEAttribute(moduleNamespaceVirtualTypeEClass, MODULE_NAMESPACE_VIRTUAL_TYPE__DECLARED_DYNAMIC);
@@ -3998,16 +3967,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		typeEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
 		genericTypeEClass.getESuperTypes().add(this.getType());
 		containerTypeEClass.getESuperTypes().add(this.getGenericType());
-		g1 = createEGenericType(this.getContainerType());
-		EGenericType g2 = createEGenericType(this.getTMember());
-		g1.getETypeArguments().add(g2);
-		virtualBaseTypeEClass.getEGenericSuperTypes().add(g1);
-		g1 = createEGenericType(this.getArrayLike());
-		virtualBaseTypeEClass.getEGenericSuperTypes().add(g1);
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getType());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		g1 = createEGenericType(this.getContainerType());
-		g2 = createEGenericType(this.getTMember());
+		EGenericType g2 = createEGenericType(this.getTMember());
 		g1.getETypeArguments().add(g2);
 		primitiveTypeEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getArrayLike());
@@ -4277,9 +4240,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		g3 = createEGenericType(this.getTMember());
 		g2.setEUpperBound(g3);
 		initEOperation(op, g1);
-
-		initEClass(virtualBaseTypeEClass, VirtualBaseType.class, "VirtualBaseType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getVirtualBaseType_DeclaredOwnedMembers(), this.getTMember(), null, "declaredOwnedMembers", null, 0, -1, VirtualBaseType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(moduleNamespaceVirtualTypeEClass, ModuleNamespaceVirtualType.class, "ModuleNamespaceVirtualType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getModuleNamespaceVirtualType_Module(), this.getTModule(), null, "module", null, 0, 1, ModuleNamespaceVirtualType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

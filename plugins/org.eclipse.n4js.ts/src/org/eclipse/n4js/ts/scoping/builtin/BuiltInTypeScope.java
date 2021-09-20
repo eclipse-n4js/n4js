@@ -29,7 +29,6 @@ import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeDefs;
 import org.eclipse.n4js.ts.types.UndefinedType;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -159,6 +158,11 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * The built-in name {@code Function}
 	 */
 	public static final QualifiedName QN_FUNCTION = QualifiedName.create("Function");
+
+	/**
+	 * The built-in name {@code IArguments}
+	 */
+	public static final QualifiedName QN_I_ARGUMENTS = QualifiedName.create("IArguments");
 
 	/**
 	 * The built-in name {@code Iterator}
@@ -413,6 +417,13 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	}
 
 	/**
+	 * Returns the built-in type "IArguments" of the implicit, array-like 'arguments' variable.
+	 */
+	public final TInterface getArgumentsType() {
+		return getEObjectOrProxy(QN_I_ARGUMENTS);
+	}
+
+	/**
 	 * Returns the built-in type "Iterator".
 	 */
 	public final TInterface getIteratorType() {
@@ -646,10 +657,8 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	protected void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
 		TypeDefs typeDefinitions = (TypeDefs) resource.getContents().get(0);
 		for (Type type : typeDefinitions.getTypes()) {
-			if (!(type instanceof VirtualBaseType)) {
-				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
-				elements.put(description.getName(), description);
-			}
+			IEObjectDescription description = EObjectDescription.create(type.getName(), type);
+			elements.put(description.getName(), description);
 		}
 	}
 }

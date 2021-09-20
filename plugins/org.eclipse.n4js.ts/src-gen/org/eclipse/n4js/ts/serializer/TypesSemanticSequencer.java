@@ -55,7 +55,6 @@ import org.eclipse.n4js.ts.types.TypeDefs;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.UndefinedType;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Parameter;
@@ -500,9 +499,6 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				else break;
 			case TypesPackage.UNDEFINED_TYPE:
 				sequence_UndefinedType(context, (UndefinedType) semanticObject); 
-				return; 
-			case TypesPackage.VIRTUAL_BASE_TYPE:
-				sequence_VirtualBaseType(context, (VirtualBaseType) semanticObject); 
 				return; 
 			case TypesPackage.VOID_TYPE:
 				sequence_VoidType(context, (VoidType) semanticObject); 
@@ -1012,6 +1008,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         name=BindingTypesIdentifier 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
+	 *         declaredElementType=ParameterizedTypeRefNominal? 
 	 *         annotations+=TAnnotation* 
 	 *         ownedMembers+=TMember*
 	 *     )
@@ -1280,19 +1277,6 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getUndefinedTypeAccess().getNameUndefinedKeyword_1_0(), semanticObject.getName());
 		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     Type returns VirtualBaseType
-	 *     VirtualBaseType returns VirtualBaseType
-	 *
-	 * Constraint:
-	 *     (name=BindingTypesIdentifier declaredElementType=ParameterizedTypeRefNominal? ownedMembers+=TMember*)
-	 */
-	protected void sequence_VirtualBaseType(ISerializationContext context, VirtualBaseType semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

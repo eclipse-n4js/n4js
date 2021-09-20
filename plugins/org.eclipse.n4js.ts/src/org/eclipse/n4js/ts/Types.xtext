@@ -77,7 +77,6 @@ Type: 	  TClass
 		| PrimitiveType
 		| TFunction
 		| TypeVariable
-		| VirtualBaseType
 ;
 
 @Override
@@ -125,7 +124,6 @@ TypesSpecificKeywords:
 	| 'undefined'
 	// no ECMAScript nor N4JS keyword, used in types only
 	| 'object'
-	| 'virtualBase'
 	| 'primitive'
 	| 'autoboxedType'
 	| 'assignmnentCompatible'
@@ -145,18 +143,6 @@ TypesStringLiteralComputedName:
 	STRING
 ;
 
-
-/*
- * Virtual base type, not visible to N4JS users.
- * Used to define common super types, e.g. for all enumerations.
- */
-VirtualBaseType: {VirtualBaseType}
-	'virtualBase' name=BindingTypesIdentifier
-	('indexed' declaredElementType=ParameterizedTypeRefNominal)?
-	'{'
-		(ownedMembers+=TMember)*
-	'}'
-;
 
 TClass:
 	declaredTypeAccessModifier=TypeAccessModifier
@@ -185,6 +171,7 @@ TInterface:
 	(declaredProvidedByRuntime?='providedByRuntime')?
 	'interface' TClassOrInterfaceHeader 
 	('extends' superInterfaceRefs+=ParameterizedTypeRefNominal (',' superInterfaceRefs+=ParameterizedTypeRefNominal)*)?
+	('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 	annotations+=TAnnotation*
 	'{' (ownedMembers+=TMember)* '}'
 ;

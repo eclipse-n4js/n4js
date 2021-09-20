@@ -255,21 +255,6 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypesPackage.VIRTUAL_BASE_TYPE: {
-				VirtualBaseType virtualBaseType = (VirtualBaseType)theEObject;
-				T result = caseVirtualBaseType(virtualBaseType);
-				if (result == null) result = caseContainerType(virtualBaseType);
-				if (result == null) result = caseArrayLike(virtualBaseType);
-				if (result == null) result = caseGenericType(virtualBaseType);
-				if (result == null) result = caseType(virtualBaseType);
-				if (result == null) result = caseTExportableElement(virtualBaseType);
-				if (result == null) result = caseTAnnotableElement(virtualBaseType);
-				if (result == null) result = caseVersionable(virtualBaseType);
-				if (result == null) result = caseIdentifiableElement(virtualBaseType);
-				if (result == null) result = caseTypableElement(virtualBaseType);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE: {
 				ModuleNamespaceVirtualType moduleNamespaceVirtualType = (ModuleNamespaceVirtualType)theEObject;
 				T result = caseModuleNamespaceVirtualType(moduleNamespaceVirtualType);
@@ -1072,21 +1057,6 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public <MT extends TMember> T caseContainerType(ContainerType<MT> object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Virtual Base Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Virtual Base Type</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseVirtualBaseType(VirtualBaseType object) {
 		return null;
 	}
 

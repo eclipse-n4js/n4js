@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
-import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
@@ -184,9 +183,8 @@ class RuleEnvironmentExtensions {
 		}
 		val builtInTypeScope = BuiltInTypeScope.get(resourceSet);
 		val globalObjectTypeScope = GlobalObjectScope.get(resourceSet);
-		val virtualBaseTypeScope = VirtualBaseTypeScope.get(resourceSet);
 		G.put(PredefinedTypes.PREDEFINED_TYPES_KEY,
-			new PredefinedTypes(builtInTypeScope, globalObjectTypeScope, virtualBaseTypeScope));
+			new PredefinedTypes(builtInTypeScope, globalObjectTypeScope));
 	}
 
 	def static setPredefinedTypes(RuleEnvironment G, PredefinedTypes predefinedTypes) {
@@ -571,6 +569,16 @@ class RuleEnvironmentExtensions {
 		G.functionType.createTypeRef
 	}
 
+	/* Returns built-in type {@code IArguments} */
+	public def static argumentsType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.argumentsType
+	}
+
+	/* Returns newly created reference to built-in type {@code IArguments} */
+	public def static argumentsTypeRef(RuleEnvironment G) {
+		G.argumentsType.createTypeRef
+	}
+
 	/* Returns built-in type {@code N4Object} */
 	public def static n4ObjectType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.n4ObjectType
@@ -639,16 +647,6 @@ class RuleEnvironmentExtensions {
 		G.errorType.createTypeRef
 	}
 
-	/* Returns built-in type {@code ArgumentsType} */
-	public def static argumentsType(RuleEnvironment G) {
-		G.getPredefinedTypes().virtualBaseTypeScope.argumentsType
-	}
-
-	/* Returns newly created reference to built-in type {@code ArgumentsType} */
-	public def static argumentsTypeRef(RuleEnvironment G) {
-		G.argumentsType.createTypeRef
-	}
-	
 	/* Returns built-in type {@code MigrationContext} */
 	public def static migrationContextType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.migrationContextType;

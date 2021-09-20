@@ -800,18 +800,6 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 }
 
 /*
- * Used for predefining members shared by all types of a certain meta-tyes, such as
- * enumerations all providing a getter method value. It sole purpose is to mix in the defined members here into the
- * actual types transparently inheriting from that type.
- */
-class VirtualBaseType extends ContainerType<TMember>, ArrayLike {
-	/*
-	 * Directly contained members, that is predefined members of all enums
-	 */
-	contains TMember[] declaredOwnedMembers
-}
-
-/*
  * Virtual type for ES6 namespace imports. Not directly available for N4JS users, can be used only
  * like TypeReferenceName. See ES6::9.4.6 Module Namespace Exotic Objects
  */

@@ -292,7 +292,7 @@ public providedByRuntime object Function extends Object @Global {
 	/**
 	 * Arguments of a Function as array-like object
 	 */
-	public get arguments(): ArgumentsType
+	public get arguments(): any
 }
 
 /**
@@ -1831,7 +1831,7 @@ public providedByRuntime object JSON extends Object @Global {
  * The arguments are accessible through index-access in the order they are passed in at function call time.
  * Cf. §10.6 Arguments Object, page 60 (PDF: 72) [ECMA5]
  */
-virtualBase ArgumentsType indexed any {
+public providedByRuntime interface ~IArguments indexed any {
 	/**
 	 * number of actually passed in arguments of a function/method call. may be modified.
 	 * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments/length
