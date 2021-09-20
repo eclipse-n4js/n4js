@@ -18,17 +18,19 @@ export public class InvalidInputTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
 	public testSimple() {
-		this.assertConversionWithErrors(
-			[
-				{
-					name: "SomeModule",
-					dts: `
-						import {Buffer} from "./unresolved/module"
-						export const value: Buffer;
-					`
-				}
-			],
-			"compile error(s) in '.d.ts' input files:\n    Cannot find module './unresolved/module' or its corresponding type declarations."
+		this.assertConversionWithOptions(
+			{
+				expectedErrors: [
+					"compile error(s) in '.d.ts' input files:\n    Cannot find module './unresolved/module' or its corresponding type declarations."
+				]
+			},
+			{
+				name: "SomeModule",
+				dts: `
+					import {Buffer} from "./unresolved/module"
+					export const value: Buffer;
+				`
+			}
 		);
 	}
 }
