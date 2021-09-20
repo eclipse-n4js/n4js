@@ -107,6 +107,7 @@ import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.LanguageInfo;
@@ -1696,21 +1697,32 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				"", result.getErrOut().trim());
 	}
 
-	/**
-	 * Asserts the workspace contains the given projects. Each project is represented as a path to its project folder,
-	 * relative to the {@link #getRoot() root folder}.
-	 */
+	/** Asserts the workspace contains the given project ids. */
 	protected void assertProjectsInWorkspace(String... expectedProjects) {
-		Set<String> expectedProjectPathStrs = FluentIterable.from(expectedProjects)
-				.transform(String::trim)
-				.toSet();
-
 		Path baseFolder = getRoot().toPath();
 		WorkspaceConfigSnapshot wc = concurrentIndex.getWorkspaceConfigSnapshot();
 		Set<String> actualProjectPathStrs = FluentIterable.from(wc.getProjects())
 				.transform(p -> Path.of(p.getPath().toFileString()))
 				.transform(path -> baseFolder.relativize(path))
 				.transform(Object::toString)
+				.toSet();
+
+		assertProjectsInWorkspace(expectedProjects, actualProjectPathStrs);
+	}
+
+	/**
+	 * Asserts that the project with the given project ids has dependencies to the expected list of project ids.
+	 */
+	protected void assertDependenciesOf(String projectID, String... expectedProjects) {
+		WorkspaceConfigSnapshot wc = concurrentIndex.getWorkspaceConfigSnapshot();
+		ProjectConfigSnapshot project = wc.findProjectByName(projectID);
+		ImmutableSet<String> dependencies = project.getDependencies();
+		assertProjectsInWorkspace(expectedProjects, dependencies);
+	}
+
+	private void assertProjectsInWorkspace(String[] expectedProjects, Set<String> actualProjectPathStrs) {
+		Set<String> expectedProjectPathStrs = FluentIterable.from(expectedProjects)
+				.transform(String::trim)
 				.toSet();
 
 		SetView<String> missing = Sets.difference(expectedProjectPathStrs, actualProjectPathStrs);

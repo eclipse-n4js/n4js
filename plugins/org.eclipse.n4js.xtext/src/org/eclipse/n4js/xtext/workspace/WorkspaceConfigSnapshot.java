@@ -69,7 +69,7 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 
 	/** Find the project with the given name. */
 	public ProjectConfigSnapshot findProjectByName(String name) {
-		return projects.findProjectByName(name);
+		return projects.findProjectByProjectID(name);
 	}
 
 	/** See {@link ProjectSet#findProjectByPath(URI)}. */
