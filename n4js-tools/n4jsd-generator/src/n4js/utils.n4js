@@ -127,3 +127,48 @@ export function testFlag(value: number, flag: number): boolean {
 export function <T> cast(value: any): T {
 	return value as T;
 }
+
+const charCode_a = "a".charCodeAt(0);
+const charCode_z = "z".charCodeAt(0);
+const charCode_A = "A".charCodeAt(0);
+const charCode_Z = "Z".charCodeAt(0);
+const charCode_0 = "0".charCodeAt(0);
+const charCode_9 = "9".charCodeAt(0);
+
+export function isLegalIdentifierStart(ch: string): boolean {
+	if (!ch || ch.length !== 1) {
+		return false;
+	}
+	if (ch === '_' || ch === '$') {
+		return true;
+	}
+	const code = ch.charCodeAt(0);
+	return (charCode_a <= code && code <= charCode_z)
+			|| (charCode_A <= code && code <= charCode_Z);
+}
+
+export function isLegalIdentifierPart(ch: string): boolean {
+	if (!ch || ch.length !== 1) {
+		return false;
+	}
+	if (isLegalIdentifierStart(ch)) {
+		return true;
+	}
+	const code = ch.charCodeAt(0);
+	return (charCode_0 <= code && code <= charCode_9);
+}
+
+export function isLegalIdentifier(str: string) {
+	if (!str || str.length === 0) {
+		return false;
+	}
+	if (!isLegalIdentifierStart(str.charAt(0))) {
+		return false;
+	}
+	for (let i = 1; i < str.length; i++) {
+		if (!isLegalIdentifierPart(str.charAt(i))) {
+			return false;
+		}
+	}
+	return true;
+}

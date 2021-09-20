@@ -53,6 +53,26 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 	}
 
 	@Test
+	public testGenerics() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc<T1,T2> {}
+					export class Cls<T1,T2> {}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc<T1,T2> {
+					}
+
+					export external public class ~Cls<T1,T2> {
+					}
+				`
+			}
+		);
+	}
+
+	@Test
 	public testMembers() {
 		this.assertConversion(
 			{
@@ -67,17 +87,19 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					import { Buffer } from "./buffer"
 
 					export interface Writable {
-						field: string; // TODO not yet supported by n4jsd-generator
+						field: string;
+						readonly fieldReadOnly: Buffer;
 
 						write(chunk: any, fn: () => void): Buffer;
 						write(chunk: any, encoding: string, fn: () => void): boolean;
 
-						readonly getter: Buffer; // TODO not yet supported by n4jsd-generator
+						get getter(): Buffer;
 						// set setter(value: Buffer); // not supported by TypeScript
 					}
 
 					export class Stream implements Writable {
 						public field: string;
+						readonly fieldReadOnly: Buffer;
 
 						public constructor(buff: Buffer);
 						public constructor(opts: {fastMode: boolean});
@@ -93,11 +115,15 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					import { Buffer } from "buffer";
 
 					export external public interface ~Writable {
+						field: any+;
+						get fieldReadOnly(): any+;
 						write(chunk: any+, fn: any+): any+; // further signatures were omitted
+						get getter(): any+;
 					}
 
 					export external public class ~Stream {
 						public field: any+;
+						get fieldReadOnly(): any+;
 						public constructor(buff: any+); // further signatures were omitted
 						public write(chunk: any+, fn: any+): any+; // further signatures were omitted
 						get getter(): any+;
@@ -134,6 +160,53 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 						public m2(): any+;
 						protected m3(): any+;
 						private m4(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testConstructSignatures() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						new(p: string): Ifc;
+						new(p1: string, p2: number): Ifc;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						@CovariantConstructor
+						constructor(p: string); // further signatures were omitted
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCallSignatures() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						(p: string): number;
+						(p1: string, p2: number): boolean;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						(p: string): number; // further signatures were omitted
 					}
 				`
 			}

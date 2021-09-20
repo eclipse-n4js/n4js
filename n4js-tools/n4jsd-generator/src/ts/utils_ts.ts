@@ -126,10 +126,15 @@ export function getTypeKind(decl: ts.Node): model.TypeKind {
 		} else if (ts.isEnumDeclaration(decl)) {
 			return model.TypeKind.ENUM;
 		} else if (ts.isTypeAliasDeclaration(decl)) {
-			return model.TypeKind.ALIAS;
+			return model.TypeKind.TYPE_ALIAS;
 		}
 	}
 	return undefined;
+}
+
+export function isReadonly(node: ts.Declaration): boolean {
+	const flags = ts.getCombinedModifierFlags(node);
+	return utils.testFlag(flags, ts.ModifierFlags.Readonly);
 }
 
 export function getValueTypesOfEnum(enumDecl: ts.EnumDeclaration, checker: ts.TypeChecker): Set<string> {

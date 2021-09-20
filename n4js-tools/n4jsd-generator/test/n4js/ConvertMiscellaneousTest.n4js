@@ -45,34 +45,40 @@ export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest 
 	}
 
 	@Test
-	public testAliasedUnionOfLiteralTypes() {
+	public testInvalidMemberNames() {
 		this.assertConversion(
 			{
 				name: "main",
 				dts: `
-					export type AliasedUnionOfLiteralStringTypes = 'GOOD' | 'BAD' | 'IN BETWEEN' | 'specialÖ' | 'specialÜ' | '12345';
-					export type AliasedUnionOfLiteralNumberTypes = 1 | 2 | 4 | 8 | 16;
-					// export type AliasUnsupported1 = 's' | 42;
-					// export type AliasUnsupported2 = NS.Buffer;
+					export class Cls {
+						_field: string;
+						$1: string;
+						"&": string;
+						"+": string;
+						"\`": string;
+						"'": string;
+						'"': string;
+						"f&": string;
+						"f+": string;
+						"f\`": string;
+						"f'": string;
+						'f"': string;
+					}
 				`,
 				n4jsd: `
-					@StringBased
-					export external public enum AliasedUnionOfLiteralStringTypes {
-						GOOD: 'GOOD',
-						BAD: 'BAD',
-						IN_BETWEEN: 'IN BETWEEN',
-						specialX: 'specialÖ',
-						specialX2: 'specialÜ',
-						_12345: '12345'
-					}
-
-					@NumberBased
-					export external public enum AliasedUnionOfLiteralNumberTypes {
-						L1: 1,
-						L2: 2,
-						L4: 4,
-						L8: 8,
-						L16: 16
+					export external public class ~Cls {
+						_field: any+;
+						$1: any+;
+						"&": any+;
+						"+": any+;
+						"\`": any+;
+						"'": any+;
+						"\\"": any+;
+						"f&": any+;
+						"f+": any+;
+						"f\`": any+;
+						"f'": any+;
+						"f\\"": any+;
 					}
 				`
 			}
