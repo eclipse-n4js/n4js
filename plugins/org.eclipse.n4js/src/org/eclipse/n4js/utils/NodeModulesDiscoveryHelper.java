@@ -266,12 +266,16 @@ public class NodeModulesDiscoveryHelper {
 	}
 
 	private boolean isPointingTo(File base, String relativePath, File target) {
-		if (target.getParentFile().getName().startsWith("@")) {
-			target = target.getParentFile();
-		}
 		String pattern = base.getAbsolutePath() + File.separator + relativePath;
 		PathMatcher matcher = ModuleFilterUtils.createPathMatcher(pattern);
-		return matcher.matches(target.toPath());
+		if (matcher.matches(target.toPath())) {
+			return true;
+		}
+		if (target.getParentFile().getName().startsWith("@")) {
+			target = target.getParentFile();
+			return matcher.matches(target.toPath());
+		}
+		return false;
 	}
 
 	private boolean isInNodeModulesFolder(File projectRoot) {
