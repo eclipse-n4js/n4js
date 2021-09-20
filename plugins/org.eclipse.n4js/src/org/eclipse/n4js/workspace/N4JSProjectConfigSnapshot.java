@@ -158,7 +158,13 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(uri);
 	}
 
-	/** Returns this project's {@link ProjectDescription#getType() type}. */
+	/** Return the project id. */
+	@Override
+	public String getName() {
+		return super.getName();
+	}
+
+	/** Returns this project's {@link ProjectDescription#getPackageName() package name}. */
 	public String getPackageName() {
 		return projectDescription.getPackageName();
 	}
