@@ -135,6 +135,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return path.withTrailingPathDelimiter().toURI();
 	}
 
+	/** @return the related root, see {@link ProjectDescription#getRelatedRootLocation()} */
 	public Path getRelatedRootLocation() {
 		return projectDescription.getRelatedRootLocation().toPath();
 	}
@@ -217,10 +218,19 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return semanticDependencies;
 	}
 
+	/**
+	 * Returns the project id for the given package name. This method respects the context of this project, i.e. that in
+	 * case there exist multiple projects with the given package name, the project id of that project is returned that a
+	 * dependency from this project would bind to.
+	 */
 	public String getProjectIdForPackageName(String packageName) {
 		return getPackageNameForProjectIdMap().getOrDefault(packageName, packageName);
 	}
 
+	/**
+	 * @return a map from package names to project ids. This map respects the context of this project, see
+	 *         {@link #getProjectIdForPackageName(String)}.
+	 */
 	public Map<String, String> getPackageNameForProjectIdMap() {
 		if (packageNameToProjectIds == null) {
 			init();
@@ -228,6 +238,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return packageNameToProjectIds;
 	}
 
+	/** Initializes {@link #packageNameToProjectIds} and {@link #semanticDependencies}. */
 	protected void init() {
 		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
 		List<ProjectDependency> semanticDeps = semanticDependencySupplier
@@ -235,10 +246,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 		Path relatedRootLocation = getRelatedRootLocation();
 
-		HashSet<String> allNames = new HashSet<>(workspace.getAllProjectNames());
+		HashSet<String> allNames = new HashSet<>(workspace.getAllPackageNames());
 		semanticDeps.stream().forEach(d -> allNames.add(d.getPackageName()));
 
-		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.getQualifiedNames(
+		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.computePackageName2ProjectIdMap(
 				workspace, projectDescription, relatedRootLocation, allNames));
 
 		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());

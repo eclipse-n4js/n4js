@@ -67,7 +67,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	protected final UriExtensions uriExtensions;
 
 	/** All projects registered in this workspace by their id. */
-	protected final Map<String, N4JSProjectConfig> qualifiedName2ProjectConfig = new LinkedHashMap<>();
+	protected final Map<String, N4JSProjectConfig> projectId2ProjectConfig = new LinkedHashMap<>();
 	/** All projects by their package name. */
 	protected final HashMultimap<String, N4JSProjectConfig> packageName2ProjectConfigs = HashMultimap.create();
 	/** Map between definition projects and their defined projects. */
@@ -101,19 +101,21 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	@Override
 	public Set<? extends N4JSProjectConfig> getProjects() {
-		return ImmutableSet.copyOf(qualifiedName2ProjectConfig.values());
+		return ImmutableSet.copyOf(projectId2ProjectConfig.values());
 	}
 
 	@Override
 	public N4JSProjectConfig findProjectByName(String name) {
-		return qualifiedName2ProjectConfig.get(name);
+		return projectId2ProjectConfig.get(name);
 	}
 
-	public Set<N4JSProjectConfig> findProjectsByPackageName(String name) {
-		return packageName2ProjectConfigs.get(name);
+	/** @return a project config for the given package name */
+	public Set<N4JSProjectConfig> findProjectsByPackageName(String packageName) {
+		return packageName2ProjectConfigs.get(packageName);
 	}
 
-	public Set<String> getAllProjectNames() {
+	/** @return all package names in the workspace */
+	public Set<String> getAllPackageNames() {
 		return Collections.unmodifiableSet(packageName2ProjectConfigs.keySet());
 	}
 
@@ -131,7 +133,7 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	/** Remove all {@link N4JSProjectConfig}s from this workspace. */
 	protected void deregisterAllProjects() {
-		qualifiedName2ProjectConfig.clear();
+		projectId2ProjectConfig.clear();
 		packageName2ProjectConfigs.clear();
 		definitionProjects.clear();
 	}
@@ -141,11 +143,11 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 */
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
 		String qualifiedName = pd.getId();
-		if (qualifiedName2ProjectConfig.containsKey(qualifiedName)) {
+		if (projectId2ProjectConfig.containsKey(qualifiedName)) {
 			return null;
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
-		qualifiedName2ProjectConfig.put(qualifiedName, newProject);
+		projectId2ProjectConfig.put(qualifiedName, newProject);
 		packageName2ProjectConfigs.put(pd.getPackageName(), newProject);
 		updateDefinitionProjects(null, pd);
 		return newProject;

@@ -125,7 +125,6 @@ public class NodeModulesDiscoveryHelper {
 		return new NodeModulesFolder(false, false, false, nodeModulesPath.toFile(), null);
 	}
 
-	@Deprecated // unused -> remove
 	/** Same as {@link #findNodeModulesFolders(Collection, Map)} without cache */
 	public List<Path> findNodeModulesFolders(Collection<Path> n4jsProjects) {
 		final Map<Path, ProjectDescription> pdCache = new HashMap<>();
@@ -144,7 +143,6 @@ public class NodeModulesDiscoveryHelper {
 	 *            paths to the root folder of N4JS projects. If a path points to a folder not containing a valid N4JS
 	 *            project, the behavior is undefined (will not be checked by this method).
 	 */
-	@Deprecated // unused -> remove
 	public List<Path> findNodeModulesFolders(Collection<Path> n4jsProjects, Map<Path, ProjectDescription> pdCache) {
 		List<Path> result = new ArrayList<>();
 

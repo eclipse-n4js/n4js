@@ -92,8 +92,13 @@ public class SemanticDependencySupplier {
 		return pDeps;
 	}
 
-	public Map<String, String> getQualifiedNames(N4JSWorkspaceConfig workspace, ProjectDescription projectDescription,
-			Path relatedRootLocation, Iterable<String> packageNames) {
+	/**
+	 * Computes a map from package names to project ids. The context of the given project is taken into account, i.e. in
+	 * case there exist multiple projects in the workspace with the same package name, the id of that project is mapped
+	 * that would bind to the given project as a dependency.
+	 */
+	public Map<String, String> computePackageName2ProjectIdMap(N4JSWorkspaceConfig workspace,
+			ProjectDescription projectDescription, Path relatedRootLocation, Iterable<String> packageNames) {
 
 		Path projectLocation = projectDescription.getLocation().toPath();
 		NodeModulesFolder nodeModulesFolder = nodeModulesDiscoveryHelper.getNodeModulesFolder(projectLocation);
@@ -156,6 +161,7 @@ public class SemanticDependencySupplier {
 		return null;
 	}
 
+	/** @return the resolved path or the path itself */
 	public static Path resolveSymbolicLinkOrDefault(Path path) {
 		Path resolvedPath = resolveSymbolicLink(path);
 		if (resolvedPath == null) {
@@ -165,6 +171,7 @@ public class SemanticDependencySupplier {
 		}
 	}
 
+	/** @return true iff the given path is a symbolic link or iff its parent is a scope folder and a symbolic link */
 	public static boolean isSymbolicLink(Path path) {
 		if (Files.isSymbolicLink(path)) {
 			return true;
@@ -183,6 +190,7 @@ public class SemanticDependencySupplier {
 		return false;
 	}
 
+	/** Resolves the given path in case it is a symbolic link. Otherwise returns null. */
 	public static Path resolveSymbolicLink(Path path) {
 		if (isSymbolicLinkParent(path)) {
 			Path parent = path.getParent();
@@ -198,20 +206,26 @@ public class SemanticDependencySupplier {
 					return path.getParent().resolve(slTarget).normalize();
 				}
 			} catch (IOException e) {
-				e.printStackTrace(); // FIXME: handle this properly
+				return null;
 			}
 		}
 		return null;
+
 	}
 
-	public static String convertProjectIdToName(String projectIdStr) {
-		Path projectIdPath = Path.of(projectIdStr);
+	/**
+	 * Converts a project id to a package name. Since project ids are made of relative paths, be sure that this path
+	 * contains the package name. This can be assumed to be always true if the given project id is from a project inside
+	 * a {@code node_modules} folder.
+	 */
+	public static String convertProjectIdToPackageName(String projectId) {
+		Path projectIdPath = Path.of(projectId);
 		int nameCount = projectIdPath.getNameCount();
 		if (nameCount == 0) {
 			return null;
 		}
 		if (nameCount == 1) {
-			return projectIdStr;
+			return projectId;
 		}
 		if (projectIdPath.getName(nameCount - 2).startsWith("@")) {
 			return projectIdPath.subpath(nameCount - 2, nameCount - 1).toString();

@@ -376,7 +376,7 @@ class MockWorkspaceConfig extends N4JSWorkspaceConfig {
 	}
 	
 	def public void deregisterProject(String name) {
-		qualifiedName2ProjectConfig.remove(name);
+		projectId2ProjectConfig.remove(name);
 	}
 }
 

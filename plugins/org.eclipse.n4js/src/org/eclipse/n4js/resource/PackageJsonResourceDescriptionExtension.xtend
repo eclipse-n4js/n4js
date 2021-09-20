@@ -134,7 +134,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			.map[(if (it.getNew === null) it.old else it.getNew).exportedObjects]
 			.filter[!it.empty]
 			.map[it.get(0).getProjectName]
-			.map[SemanticDependencySupplier.convertProjectIdToName(it)]
+			.map[SemanticDependencySupplier.convertProjectIdToPackageName(it)]
 			.toSet;
 
 
