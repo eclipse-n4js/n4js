@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
@@ -891,10 +892,10 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		if (declType instanceof PrimitiveType) {
 			return false;
 		}
-		// declared type must not be a built-in type
+		// declared type must not be a built-in type (except N4Provider)
 		if (declType instanceof BuiltInType
 			|| declType instanceof VirtualBaseType
-			|| N4Scheme.isFromResourceWithN4Scheme(declType)) {
+			|| (N4Scheme.isFromResourceWithN4Scheme(declType) && declType.name != BuiltInTypeScope.QN_N4PROVIDER.toString)) {
 			return false;
 		}
 		// declared type must be a class or interface
