@@ -80,10 +80,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDefinition;
-import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
@@ -173,12 +173,12 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	 * Checks constraints defined in chapter 5.4. Redefinition of Members.
 	 */
 	@Check
-	public void checkMemberRedefinitions(N4ClassifierDeclaration n4ClassifierDecl) { // NO_UCD (unused code)
+	public void checkMemberRedefinitions(N4ClassifierDefinition n4ClassifierDefinition) { // NO_UCD (unused code)
 
-		if (!(n4ClassifierDecl.getDefinedType() instanceof TClassifier)) {
+		if (!(n4ClassifierDefinition.getDefinedType() instanceof TClassifier)) {
 			return; // wrongly parsed
 		}
-		TClassifier tClassifier = (TClassifier) n4ClassifierDecl.getDefinedType();
+		TClassifier tClassifier = (TClassifier) n4ClassifierDefinition.getDefinedType();
 		getContext().put(TClassifier.class, tClassifier);
 
 		RuleEnvironment g = RuleEnvironmentExtensions.newRuleEnvironment(tClassifier);
@@ -198,14 +198,15 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			Collection<TMember> membersMissingOverrideAnnotation = new HashSet<>();
 
 			if (isClass) {
-				constraints_67_MemberOverride_checkEntry(n4ClassifierDecl, tClassifier, mm,
+				constraints_67_MemberOverride_checkEntry(n4ClassifierDefinition, tClassifier, mm,
 						membersMissingOverrideAnnotation);
 			}
 			if (mm.hasImplemented()) {
 				// first mix in
 				if (holdConstraints_68_Consumption(mm)) {
 					// then check if everything is implemented
-					constraints_69_Implementation(n4ClassifierDecl, tClassifier, mm, membersMissingOverrideAnnotation);
+					constraints_69_Implementation(n4ClassifierDefinition, tClassifier, mm,
+							membersMissingOverrideAnnotation);
 				}
 			}
 			constraints_60_InheritedConsumedCovariantSpecConstructor(tClassifier, mm);
@@ -213,15 +214,15 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			constraints_42_45_46_AbstractMember(mm, nonAccessibleAbstractMembersBySuperTypeRefNode);
 			unusedGenericTypeVariable(mm);
 
-			checkUnpairedAccessorConsumption(mm, n4ClassifierDecl);
-			checkUnpairedAccessorFilling(mm, n4ClassifierDecl);
+			checkUnpairedAccessorConsumption(mm, n4ClassifierDefinition);
+			checkUnpairedAccessorFilling(mm, n4ClassifierDefinition);
 
 			messageMissingOverrideAnnotation(mm, membersMissingOverrideAnnotation);
 		}
 
 		final boolean foundImpossibleExtendsImplements = !nonAccessibleAbstractMembersBySuperTypeRefNode.isEmpty();
 		if (foundImpossibleExtendsImplements) {
-			messageImpossibleExtendsImplements(n4ClassifierDecl, nonAccessibleAbstractMembersBySuperTypeRefNode);
+			messageImpossibleExtendsImplements(n4ClassifierDefinition, nonAccessibleAbstractMembersBySuperTypeRefNode);
 		}
 
 		if (!foundImpossibleExtendsImplements) { // avoid consequential errors
@@ -383,13 +384,13 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	 * This method doesn't add issues for missing override annotations but adds the missing-annotation-members to the
 	 * given collection.
 	 */
-	private void constraints_67_MemberOverride_checkEntry(N4ClassifierDeclaration contextDecl, Type contextType,
+	private void constraints_67_MemberOverride_checkEntry(N4ClassifierDefinition contextDef, Type contextType,
 			MemberMatrix mm, Collection<TMember> membersMissingOverrideAnnotation) {
 		for (TMember m : mm.owned()) {
 			for (TMember s : mm.inherited()) {
 				// 1. s must be accessible and
 				// 2. m must be override compatible to s
-				if (checkAccessibilityAndOverrideCompatibility(RedefinitionType.overridden, contextDecl, contextType,
+				if (checkAccessibilityAndOverrideCompatibility(RedefinitionType.overridden, contextDef, contextType,
 						m, s, false, mm) == OverrideCompatibilityResult.COMPATIBLE) {
 					// avoid consequential errors
 
@@ -493,7 +494,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	 * This method doesn't add issues for missing override annotations but adds the missing-annotation-members to the
 	 * given collection.
 	 */
-	private void constraints_69_Implementation(N4ClassifierDeclaration contextDecl, Type contextType, MemberMatrix mm,
+	private void constraints_69_Implementation(N4ClassifierDefinition contextDef, Type contextType, MemberMatrix mm,
 			Collection<TMember> membersMissingOverrideAnnotation) {
 
 		String missingAccessor = null;
@@ -528,7 +529,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				// 1. m must be accessible and
 				// 2.a & 2.b: m_ must be implementation-compatible to m
 				OverrideCompatibilityResult compatibility = checkAccessibilityAndOverrideCompatibility(
-						RedefinitionType.implemented, contextDecl, contextType, m_, m,
+						RedefinitionType.implemented, contextDef, contextType, m_, m,
 						!iter.isActualMember(), mm);
 				if (compatibility == OverrideCompatibilityResult.ACCESSOR_PAIR) {
 					continue;
@@ -599,7 +600,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	 *            member matrix, only to improve error message
 	 */
 	private OverrideCompatibilityResult checkAccessibilityAndOverrideCompatibility(RedefinitionType redefinitionType,
-			N4ClassifierDeclaration contextDecl, Type contextType, TMember m, TMember s, boolean consumptionConflict,
+			N4ClassifierDefinition contextDef, Type contextType, TMember m, TMember s, boolean consumptionConflict,
 			MemberMatrix mm) {
 
 		// getter/setter combination not checked here
@@ -619,7 +620,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		if (contextModule != null
 				&& !memberVisibilityChecker.isVisibleWhenOverriding(contextModule, contextType, contextType, s)) {
 			if (!consumptionConflict) { // avoid consequential errors
-				messageOverrideNonAccessible(redefinitionType, contextDecl, contextType, m, s);
+				messageOverrideNonAccessible(redefinitionType, contextDef, contextType, m, s);
 			}
 			return OverrideCompatibilityResult.ERROR;
 		}
@@ -1032,16 +1033,18 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	}
 
 	private void messageOverrideNonAccessible(@SuppressWarnings("unused") RedefinitionType redefinitionType,
-			N4ClassifierDeclaration contextDecl, Type contextType, TMember overriding, TMember overridden) {
+			N4ClassifierDefinition contextDef, Type contextType, TMember overriding, TMember overridden) {
 		String message = getMessageForCLF_REDEFINED_NON_ACCESSIBLE(
 				validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
 		if (overriding.eContainer() == contextType) {
 			addIssue(message, overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
 					CLF_REDEFINED_NON_ACCESSIBLE);
-		} else {
-			addIssue(message, contextDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
+		} else if (contextDef instanceof N4TypeDeclaration) {
+			addIssue(message, contextDef, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME,
 					CLF_REDEFINED_NON_ACCESSIBLE);
+		} else {
+			addIssue(message, contextDef, CLF_REDEFINED_NON_ACCESSIBLE);
 		}
 	}
 
