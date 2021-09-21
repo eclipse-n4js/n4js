@@ -68,7 +68,7 @@ public class ProjectDependency extends ProjectReference {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " { type: " + type
-				+ ", projectName: " + getPackageName()
+				+ ", packageName: " + getPackageName()
 				+ ", versionRequirementString: " + versionRequirementString
 				+ ", versionRequirement: " + internalVersionRequirementStr + " }";
 	}

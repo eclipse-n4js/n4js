@@ -34,6 +34,7 @@ import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
@@ -43,7 +44,7 @@ import com.google.common.collect.Iterables;
 public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	private final ProjectDescription projectDescription;
-	private final Map<String, String> packageNameToProjectIds;
+	private final ImmutableMap<String, String> packageNameToProjectIds;
 	private final boolean external;
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
@@ -56,7 +57,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
 
 		this.projectDescription = Objects.requireNonNull(projectDescription);
-		this.packageNameToProjectIds = packageNameToProjectIds;
+		this.packageNameToProjectIds = ImmutableMap.copyOf(packageNameToProjectIds);
 		this.external = isDirectlyLocatedInNodeModulesFolder(path);
 	}
 

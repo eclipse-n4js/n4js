@@ -58,7 +58,7 @@ public class ProjectDescriptionBuilder {
 
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
-		id = id == null ? computeQualifiedName() : id;
+		id = id == null ? computeProjectID() : id;
 		return new ProjectDescription(location, relatedRootLocation, id,
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
@@ -66,7 +66,7 @@ public class ProjectDescriptionBuilder {
 				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts, workspaces);
 	}
 
-	public String computeQualifiedName() {
+	public String computeProjectID() {
 		if (relatedRootLocation == null) {
 			relatedRootLocation = location;
 		}

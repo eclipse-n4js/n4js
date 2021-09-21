@@ -390,7 +390,7 @@ public class ProjectDiscoveryHelper {
 			// recompute project description in case the nodeModulesDiscoveryHelper added it
 			ProjectDescriptionBuilder pdb = pd.change();
 			pd = pdb.setRelatedRootLocation(new FileURI(relatedRoot.toFile()))
-					.setId(pdb.computeQualifiedName())
+					.setId(pdb.computeProjectID())
 					.build();
 			cache.put(path, pd);
 		}
