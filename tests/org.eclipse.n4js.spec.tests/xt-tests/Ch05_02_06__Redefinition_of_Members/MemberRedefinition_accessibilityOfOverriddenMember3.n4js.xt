@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	 Workspace {
+		Project "ProjectOther" {
+			Folder "src" {
+				File "Other.n4js" { from="./MemberRedefinition_accessibilityOfOverriddenMember_Other.n4js" }
+			}
+		}
+		Project "ProjectMain" {
+			Folder "src" {
+				ThisFile {}
+			}
+			DEPENDS_ON "ProjectOther"
+		}
+	}
+
+END_SETUP */
+
+
+// CASE #3: the overridden/implemented member OtherIfc#someMethod() is *not* accessible from SubCls
+// --> should show an error
+// (the difference to case #2 is that now the error should show up on SubCls#someMethod(), not on SubCls)
+
+
+import {OtherCls} from "Other";
+import {OtherIfc} from "Other";
+
+class SubCls extends OtherCls implements OtherIfc {
+	// XPECT errors --> "The method SubCls.someMethod cannot override or implement non-accessible method OtherIfc.someMethod." at "someMethod"
+	@Override public someMethod(p: string) {}
+}
