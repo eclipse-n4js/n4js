@@ -12,17 +12,19 @@ package org.eclipse.n4js.scoping.builtin
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
-import org.eclipse.n4js.ts.types.TypeDefs
 import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.validation.Issue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -64,9 +66,14 @@ class BuiltInTypesDefinitionTest {
 			val URI uri = N4Scheme.N4URI.create(filename);
 			val resource = rs.getResource(uri, loadOnDemand)
 			assertNotNull(uri.toString + " not in " + rs.resources.map[uri], resource)
-			assertEquals("Predefined types file must contain a single object", 1, resource.contents.size);
+			val numOfRootElems = if (resource.URI.lastSegment.endsWith(N4JSGlobals.N4TS_FILE_EXTENSION)) 1 else 2;
+			assertEquals("Predefined types file must contain a single object", numOfRootElems, resource.contents.size);
 			val EObject content = resource.contents.head;
-			assertTrue("Predefined types file must contain TypeDefs, but was " + content.eClass.name, content instanceof TypeDefs);
+			if (resource.URI.lastSegment.endsWith(N4JSGlobals.N4TS_FILE_EXTENSION)) {
+				assertTrue("Predefined types file must contain TypeDefs, but was " + content.eClass.name, content instanceof TypeDefs);
+			} else {
+				assertTrue("Predefined types file must contain Script, but was " + content.eClass.name, content instanceof Script);
+			}
 			validationTestHelper.validate(content)
 			assertNoIssues(content)
 		}

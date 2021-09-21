@@ -14,11 +14,15 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.NullType;
@@ -31,11 +35,15 @@ import org.eclipse.n4js.ts.types.TypeDefs;
 import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Functions;
 
 /**
  * This scope provides access to the built in JS types. It is recommended to use {@link BuiltInTypeScopeAccess} directly
@@ -44,7 +52,7 @@ import com.google.common.annotations.VisibleForTesting;
  * The scope basically decorates the resource set and provides strongly typed accessors to an enumerated set of built-in
  * types.
  */
-public final class BuiltInTypeScope extends EnumerableScope {
+public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 
 	/**
 	 * Visible for testing purpose
@@ -53,7 +61,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	public static final String[] FILE_NAMES = {
 			"primitives_js.n4ts",
 			"primitives_n4.n4ts",
-			"builtin_js.n4ts",
+			"builtin_js.n4jsd",
 			"builtin_n4.n4ts",
 			"console.n4ts",
 			"builtin_n4idl.n4ts"
@@ -247,7 +255,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * Creates a new scope for built in types in the given resource set.
 	 */
 	public BuiltInTypeScope(ExecutionEnvironmentDescriptor descriptor) {
-		super(descriptor);
+		super(BuiltInTypeScope.class, descriptor);
 	}
 
 	/**
@@ -654,11 +662,60 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	}
 
 	@Override
-	protected void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
-		TypeDefs typeDefinitions = (TypeDefs) resource.getContents().get(0);
-		for (Type type : typeDefinitions.getTypes()) {
-			IEObjectDescription description = EObjectDescription.create(type.getName(), type);
-			elements.put(description.getName(), description);
+	protected void doBuildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
+		EObject ast = resource.getContents().get(0);
+		if (ast instanceof TypeDefs) {
+			TypeDefs typeDefinitions = (TypeDefs) resource.getContents().get(0);
+			for (Type type : typeDefinitions.getTypes()) {
+				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
+				elements.put(description.getName(), description);
+			}
+		} else if (ast instanceof Script) {
+			// FIXME clean up
+
+			Script script = (Script) ast;
+
+			// List<Diagnostic> syntaxErrors = script.eResource().getErrors();
+			// if (!syntaxErrors.isEmpty()) {
+			// throw new IllegalStateException("built-in definition " + resource.getURI().lastSegment()
+			// + " contains syntax errors:\n " + Joiner.on("\n ").join(syntaxErrors));
+			// }
+
+			for (Type type : script.getModule().getTopLevelTypes()) {
+				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
+				elements.put(description.getName(), description);
+			}
+
+			// trigger resolution
+			try {
+				((LazyLinkingResource) resource).resolveLazyCrossReferences(CancelIndicator.NullImpl);
+			} catch (Throwable th) {
+				throw new IllegalStateException(
+						"exception while resolving built-in definition " + resource.getURI().lastSegment(), th);
+			}
+			// IdentifierRef idRef = IteratorExtensions.head(
+			// IteratorExtensions.filter(ast.eAllContents(), IdentifierRef.class));
+			// idRef.getId();
+			// ParameterizedTypeRef typeRef = IteratorExtensions.head(
+			// IteratorExtensions.filter(ast.eAllContents(), ParameterizedTypeRef.class));
+			// typeRef.getDeclaredType();
+
+			Map<String, Type> typesByName = script.getModule().getTopLevelTypes().stream()
+					.collect(Collectors.toMap(Type::getName, Functions.identity()));
+
+			Type anyType = (Type) elements.get(QN_ANY).getEObjectOrProxy();
+			Type stringType = (Type) elements.get(QN_STRING).getEObjectOrProxy();
+			TClass stringObjectType = (TClass) typesByName.get(QN_STRING_OBJECT.toString());
+			TClass arrayObjectType = (TClass) typesByName.get(QN_ARRAY.toString());
+			TInterface argumentsType = (TInterface) typesByName.get(QN_I_ARGUMENTS.toString());
+			Objects.requireNonNull(stringObjectType);
+			Objects.requireNonNull(arrayObjectType);
+			Objects.requireNonNull(argumentsType);
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				stringObjectType.setDeclaredElementType(TypeUtils.createTypeRef(stringType));
+				arrayObjectType.setDeclaredElementType(TypeUtils.createTypeRef(arrayObjectType.getTypeVars().get(0)));
+				argumentsType.setDeclaredElementType(TypeUtils.createTypeRef(anyType));
+			}, stringObjectType, arrayObjectType);
 		}
 	}
 }

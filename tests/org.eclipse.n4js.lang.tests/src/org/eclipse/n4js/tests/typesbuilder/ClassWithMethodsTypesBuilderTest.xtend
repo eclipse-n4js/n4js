@@ -92,7 +92,7 @@ class ClassWithMethodsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val type = assertTypeRefOfTField(phase, tField, newN4jsResource)
 
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, type, "//@types.5")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, type, "/1/@topLevelTypes.5")
 	}
 
 	def private assertFirstTMethod(String phase, TClass tClass, Resource newN4jsResource) {
@@ -142,7 +142,7 @@ class ClassWithMethodsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val type = assertFirstN4Field(phase, n4Class, resource)
 
-		assertBuiltinTypeFragmentURI(phase, resource, type, "//@types.5")
+		assertBuiltinTypeFragmentURI(phase, resource, type, "/1/@topLevelTypes.5")
 
 		assertFirstN4Method(phase, n4Class, resource)
 

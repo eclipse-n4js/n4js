@@ -1,0 +1,350 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+@@Global @@ProvidedByRuntime
+
+export external public class Object {
+
+	(...args: any): Object
+	public get __proto__(): Object
+	public static get prototype(): Object
+	public static getPrototypeOf(obj: Object): Object
+	public static getOwnPropertyDescriptor(obj: Object, prop: string): Object
+	public static getOwnPropertyNames(obj: Object): Array<string>
+	public static create(proto: Object, props: Object = undefined): Object
+	public static <T extends Object> defineProperty(obj: T, property: string, desc: Object): T
+	public static <T extends Object> defineProperties(obj: T, props: Object): T
+	public static <T extends Object> seal(obj: T): T
+	public static <T extends Object> freeze(obj: T): T
+	public static <T extends Object> preventExtensions(obj: T): T
+	public static isSealed(obj: Object): boolean
+	public static isFrozen(obj: Object): boolean
+	public static isExtensible(obj: Object): boolean
+	public static keys(obj: Object): Array<string>
+
+	public constructor(value: any = undefined)
+	public toString(): string
+	public toLocaleString(): string
+	public valueOf(): any // any as inherited by sub classes as well
+	public hasOwnProperty(propertyName: union{string, symbol}): boolean
+	public isPrototypeOf(o: Object): boolean
+	public propertyIsEnumerable(propertyName: string): boolean
+
+	public static is(value1: any, value2: any): boolean
+}
+
+export external public class Function extends Object {
+
+	@Override public static get prototype(): Function
+	public get prototype(): Object
+	(... args: string): Function
+	public constructor (...args: string) // note: keep this signature (except return type) aligned with the callable constructor above
+	public apply(thisArg: any, argArray: Array<?>): any
+	public call(thisArg: any, ...args: any): any
+	public bind(thisArg: any, ...args: any): {function(... args: any): any}
+	public get length(): number
+	public get arguments(): any
+}
+
+export external public class Array<T> extends Object {
+
+	@Override public static get prototype(): Array<? extends any>
+	public static isArray(obj: any): boolean
+	public constructor(first: union{number, T} = undefined, ...items: T)  // TODO: signature is type unsafe, allows to create arrays with elements of wrong type, new Array<string>(5, "x", "y"), but cannot write constructor(items : union {number, T... items} = undefined)
+	public concat(...items: union {T, Array<? extends T>}): Array<T>
+	public join(separator: string = undefined): string
+	public pop(): T
+	public push(...items: T): number
+	public reverse(): Array<T>
+	public shift(): T
+	public slice(start: number = undefined, end: number = undefined): Array<T>
+	public sort(compareFn: {function (x: T, y: T) : number} = undefined): Array<T>
+	public splice(start: number = undefined, deleteCount: number = undefined, ...items: T): Array<T>
+	public unshift(...items: T): number
+	public indexOf(searchElement: any, fromIndex: number = undefined): number
+	public lastIndexOf(searchElement: any, fromIndex: number = undefined): number
+	public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean
+	public <ThisT extends Object> some(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): boolean
+	public <ThisT extends Object> forEach(callback: {function(value: T, index: number, traversedObject: Array<T>) : void}, thisObject: ThisT = undefined): void
+	public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>
+	public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>
+	public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT
+	public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT
+
+	public get length(): number
+	public set length(length: number)
+	public [Symbol.iterator](): Iterator<T>
+}
+
+export external public class String extends Object {
+
+	(...args: any): string
+	public static fromCharCode(...chars: number): string
+	public constructor(value: any = undefined)
+	@Override public valueOf(): string
+	public charAt(pos: number): string
+	public charCodeAt(index: number): number
+	public concat(...strings: string): string
+	public indexOf(searchString: string, position: number = undefined): number
+	public lastIndexOf(searchString: string, position: number = undefined): number
+	public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number
+	public match(regexp: RegExp): TEMP_ReturnTypeOfMatchExec
+	public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string
+	public search(regexp: any): number
+	public slice(start: number, end: number = undefined): string
+	public split(separator: any, limit: number = undefined): Array<string>
+	public substring(start: number, end: number = undefined): string
+	public toLowerCase(): string
+	public toLocaleLowerCase(): string
+	public toUpperCase(): string
+	public toLocaleUpperCase(): string
+	public trim(): string
+	public get length(): number
+	public [Symbol.iterator](): Iterator<string>
+}
+
+export external public class Boolean extends Object {
+
+	public constructor(value: any = undefined)
+	@Override public valueOf(): boolean
+}
+
+export external public class Number extends Object {
+
+	(... args: any): number
+	public const MAX_VALUE: number
+	public const MIN_VALUE: number
+	public const NaN: number
+	public const NEGATIVE_INFINITY: number
+	public const POSITIVE_INFINITY: number
+	public constructor(value: any = undefined)
+	@Override public toString(radix: number = undefined): string
+	@Override public valueOf(): number
+	public toFixed(fractionalDigits: number = undefined): string
+	public toExponential(fractionalDigits: number = undefined): string
+	public toPrecision(precision: number = undefined): string
+}
+
+export external public class Symbol extends Object {
+
+	(description: string = undefined): symbol
+	public const iterator: symbol
+	public const asyncIterator: symbol
+	public const hasInstance: symbol
+	public static for(key: string): symbol
+	public static keyFor(sym: symbol): string
+}
+
+export external public class Math extends Object {
+	public const E: number
+	public const LN10: number
+	public const LN2: number
+	public const LOG2E: number
+	public const LOG10E: number
+	public const PI: number
+	public const SQRT1_2: number
+	public const SQRT2: number
+	public static abs(x: number): number
+	public static acos(x: number): number
+	public static asin(x: number): number
+	public static atan(x: number): number
+	public static atan2(x: number, y: number): number
+	public static ceil(x: number): number
+	public static cos(x: number): number
+	public static exp(x: number): number
+	public static floor(x: number): number
+	public static log(x: number): number
+	public static max(...x: number): number
+	public static min(...x: number): number
+	public static pow(x: number, y: number): number
+	public static random(): number
+	public static round(x: number): number
+	public static sin(x: number): number
+	public static sqrt(x: number): number
+	public static tan(x: number): number
+}
+
+export external public class Date extends Object {
+
+	(... args: any): string
+	public static parse(dateString: string): number
+	public static UTC(year: number, month: number, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, milliseconds: number = undefined): number
+	public static now(): number
+	public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined)
+	@Override public toString(): string
+	public toDateString(): string
+	public toTimeString(): string
+	@Override public toLocaleString(): string
+	public toLocaleDateString(): string
+	public toLocaleTimeString(): string
+	@Override public valueOf(): number
+	public getTime(): number
+	public getFullYear(): number
+	public getUTCFullYear(): number
+	public getMonth(): number
+	public getUTCMonth(): number
+	public getDate(): number
+	public getUTCDate(): number
+	public getDay(): number
+	public getUTCDay(): number
+	public getHours(): number
+	public getUTCHours(): number
+	public getMinutes(): number
+	public getUTCMinutes(): number
+	public getSeconds(): number
+	public getUTCSeconds(): number
+	public getMilliseconds(): number
+	public getUTCMilliseconds(): number
+	public getTimezoneOffset(): number
+	public setTime(value: number): number
+	public setMilliseconds(ms: number): number
+	public setUTCMilliseconds(ms: number): number
+	public setSeconds(sec: number, ms: number = undefined): number
+	public setUTCSeconds(sec: number, ms: number = undefined): number
+	public setMinutes(min: number, sec: number = undefined, ms: number = undefined): number
+	public setUTCMinutes(min: number, sec: number = undefined, ms: number = undefined): number
+	public setHours(hour: number, min: number = undefined, sec: number = undefined, ms: number = undefined): number
+	public setUTCHours(hour: number, min: number = undefined, sec: number = undefined, ms: number = undefined): number
+	public setDate(date: number): number
+	public setUTCDate(date: number): number
+	public setMonth(month: number, date: number = undefined): number
+	public setUTCMonth(month: number, date: number = undefined): number
+	public setFullYear(year: number, month: number = undefined, date: number = undefined): number
+	public setUTCFullYear(year: number, month: number = undefined, date: number = undefined): number
+	public toUTCString(): string
+	public toISOString(): string
+	public toJSON(key: any = undefined): string
+}
+
+export external public class RegExp extends Object {
+	public static $1: string;
+	public static $2: string;
+	public static $3: string;
+	public static $4: string;
+	public static $5: string;
+	public static $6: string;
+	public static $7: string;
+	public static $8: string;
+	public static $9: string;
+	public constructor(pattern: string = undefined, flags: string = undefined)
+	public exec(str: string = undefined): TEMP_ReturnTypeOfMatchExec
+	public test(str: string = undefined): boolean
+	@Override public toString(): string
+	public source: string
+	public get global(): boolean
+	public get ignoreCase(): boolean
+	public multiline: boolean
+	public lastIndex: number
+}
+
+
+export external public class Error extends Object {
+	public constructor(message: string = undefined)
+	public name?: string /* = "Error";*/
+	public message?: string /* = "";*/
+	@Override public toString(): string
+}
+
+export external public class EvalError extends Error { }
+export external public class RangeError extends Error { }
+export external public class ReferenceError extends Error { }
+export external public class SyntaxError extends Error { }
+export external public class TypeError extends Error { }
+export external public class URIError extends Error { }
+
+export external public class JSON extends Object {
+	public static parse(jsonString: string, reviver: {function(key: any, value: any) : any} = undefined): any
+	public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string
+}
+
+
+export external public interface ~IArguments {
+	public length: number;
+	public callee: any;
+}
+
+
+export external public interface ~Iterator<out T> {
+	public abstract next(): IteratorEntry<T>
+}
+
+export external public interface ~AsyncIterator<out T> {
+	public abstract next(): Promise<IteratorEntry<T>, ?>
+}
+
+export external public interface ~IteratorEntry<out T> {
+	public done: boolean;
+	@Final public value?: T;
+}
+
+export external public interface ~Iterable<out T> {
+	public abstract [Symbol.iterator](): Iterator<T>
+}
+
+export external public interface ~AsyncIterable<out T> {
+	public abstract [Symbol.asyncIterator](): AsyncIterator<T>
+}
+
+export external public interface ~Generator<out TYield, out TReturn, in TNext> extends Iterable<TYield>, Iterator<TYield> {
+	@Override public abstract next(value: TNext = undefined): IteratorEntry<TYield>
+	public abstract [Symbol.iterator](): Generator<TYield, TReturn, TNext>
+	public abstract throw(exception: any): IteratorEntry<TYield>;
+	public abstract return(value: TNext = undefined): IteratorEntry<TReturn>;
+}
+
+export external public interface ~AsyncGenerator<out TYield, out TReturn, in TNext> extends AsyncIterable<TYield>, AsyncIterator<TYield> {
+	@Override public abstract next(value: TNext = undefined): Promise<IteratorEntry<TYield>, ?>
+	public abstract [Symbol.asyncIterator](): AsyncGenerator<TYield, TReturn, TNext>
+	public abstract throw(exception: any): Promise<IteratorEntry<TYield>, any>;
+	public abstract return(value: TNext = undefined): Promise<IteratorEntry<TReturn>, ?>;
+}
+
+export external public class Promise<out S, out F> extends Object {
+
+	public constructor(
+		executor: {function(
+			resolveFn:{function(arg: S = undefined):void},
+			rejectFn: {function(arg: F = undefined):void}
+		): void}
+	)
+
+	public <Snew, Fnew> then(
+		onFulfilled: {function(arg:S = undefined): union{Snew, Promise<Snew, Fnew>}?},
+		onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?} = undefined
+	): Promise<Snew, Fnew>
+
+	public <Snew, Fnew> catch(
+		onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?}
+	): Promise<Snew, Fnew>
+
+	public static <S, F> reject(f: F): Promise<S, F>
+	public static <S, F> resolve(
+		s: union{
+			Promise<S, F>,
+			~Object with { then(...args: any): Promise<S, F>; }, // i.e. thenable
+			S
+		}
+	): Promise<S, F>
+
+	public static <T> all(iterable: Iterable<union{Promise<T,?>, T}>): Promise<Array<T>, any>
+	public static <T> race(iterable: Iterable<union{Promise<T,?>, T}>): Promise<T, any>
+}
+
+/**
+ * Work-around:
+ * Temporary class to define the return type of methods String#match() and RegExp#exec(), because
+ * .n4ts files do not properly support "with"-clauses of structural types (see IDEBUG-273).
+ */
+export external public class TEMP_ReturnTypeOfMatchExec extends Array<string> {
+	public index: number;
+	public input: string;
+	public groups?: any+;
+}

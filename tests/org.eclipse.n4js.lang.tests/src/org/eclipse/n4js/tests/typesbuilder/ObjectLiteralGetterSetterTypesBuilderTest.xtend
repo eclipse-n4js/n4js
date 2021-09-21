@@ -76,7 +76,7 @@ class ObjectLiteralGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest
 
 		val firstVariable = assertTVariable(phase, newN4jsResource, 0, "callee", false)
 		val firstVariableType = assertTypeRef(phase, firstVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "//@types.0")  // any
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "/1/@topLevelTypes.0")  // any
 	}
 
 	override assertExampleJSStructure(String phase, Resource resource) {
