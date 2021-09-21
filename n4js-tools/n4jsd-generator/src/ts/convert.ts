@@ -16,9 +16,10 @@ import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
 
 export class Converter {
+	private readonly projectPath?: string;
+
 	private readonly program: ts.Program;
 	private readonly checker: ts.TypeChecker;
-	private readonly projectPath?: string;
 
 	private exportAssignment: ts.ExportAssignment;
 	private readonly issues: utils.Issue[] = [];
@@ -28,10 +29,17 @@ export class Converter {
 			throw "projectPath must be absolute";
 		}
 
-		const program = ts.createProgram(sourceDtsFilePaths, { allowJs: true });
+		this.projectPath = projectPath;
+
+		// prepare compilation options
+		const opts: ts.CompilerOptions = {
+			allowJs: true
+		};
+
+		// compile .d.ts files
+		const program = ts.createProgram(sourceDtsFilePaths, opts);
 		this.program = program;
 		this.checker = program.getTypeChecker();
-		this.projectPath = projectPath;
 	}
 
 	getDiagnostics(): string[] {
@@ -41,6 +49,8 @@ export class Converter {
 		diagnostics.push(...this.program.getSemanticDiagnostics());
 		const result = [] as string[];
 		for (const diag of diagnostics) {
+			// note: this is how to retrieve the path of the file containing the issue:
+			//const fileName = diag?.file?.fileName;
 			const msg = diag?.messageText;
 			if (typeof msg === 'string') {
 				result.push(msg);
@@ -254,10 +264,11 @@ export class Converter {
 	}
 
 	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
-		let result = new model.Type();
+		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.INTERFACE;
 		result.defSiteStructural = true;
+		result.typeParams.push(...this.convertTypeParameters(node));
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -265,13 +276,26 @@ export class Converter {
 	}
 
 	private convertClass(node: ts.ClassDeclaration): model.Type {
-		let result = new model.Type();
+		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.kind = model.TypeKind.CLASS;
 		result.defSiteStructural = true;
+		result.typeParams.push(...this.convertTypeParameters(node));
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
+		return result;
+	}
+
+	private convertTypeParameters(node: ts.NamedDeclaration): string[] {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		const result = [];
+		sym.members?.forEach((symMember, name) => {
+			const representativeNode = symMember.declarations[0] as ts.NamedDeclaration;
+			if (ts.isTypeParameterDeclaration(representativeNode)) {
+				result.push(symMember.name);
+			}
+		});
 		return result;
 	}
 
@@ -295,20 +319,39 @@ export class Converter {
 
 		const result = new model.Member();
 		result.accessibility = utils_ts.getAccessibility(representativeNode);
+		result.isStatic = false; // FIXME
+
+		if (ts.isTypeParameterDeclaration(representativeNode)) {
+			// type parameters appear as members, but they are handled elsewhere
+			// -> so ignore them here:
+			return undefined;
+		}
 
 		if (ts.isConstructorDeclaration(representativeNode)) {
 			result.kind = model.MemberKind.CTOR;
 			result.signatures = this.convertConstructSignatures(symOwner);
 			return result;
+		} else if (ts.isConstructSignatureDeclaration(representativeNode)) {
+			result.kind = model.MemberKind.CTOR;
+			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
+			return result;
+		} else if (ts.isCallSignatureDeclaration(representativeNode)) {
+			result.kind = model.MemberKind.CALLABLE_CTOR;
+			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
+			return result;
 		}
 
 		result.name = symMember.getName();
 
-		if (ts.isPropertyDeclaration(representativeNode)) {
+		const isReadonly = utils_ts.isReadonly(representativeNode);
+		if ((!isReadonly && ts.isPropertyDeclaration(representativeNode))
+				|| (!isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.FIELD;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
-		} else if (ts.isGetAccessorDeclaration(representativeNode)) {
+		} else if (ts.isGetAccessorDeclaration(representativeNode)
+				|| (isReadonly && ts.isPropertyDeclaration(representativeNode))
+				|| (isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.GETTER;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 			return result;
@@ -329,12 +372,14 @@ export class Converter {
 
 	private convertConstructSignatures(somethingWithCtors: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithCtors, somethingWithCtors.valueDeclaration!);
-		return this.convertSignatures([...type.getConstructSignatures()]);
+		const constructSigs = type.getConstructSignatures();
+		return this.convertSignatures([...constructSigs]);
 	}
 
 	private convertCallSignatures(somethingWithSignatures: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithSignatures, somethingWithSignatures.valueDeclaration!);
-		return this.convertSignatures([...type.getCallSignatures()]);
+		const callSigs = type.getCallSignatures();
+		return this.convertSignatures([...callSigs]);
 	}
 
 	private convertSignatures(signatures: ts.Signature[]): model.Signature[] {
@@ -344,6 +389,29 @@ export class Converter {
 			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
 			result.returnType = this.convertTypeReferenceOfTypedDeclaration(sig.declaration);
 			results.push(result);
+		}
+		return results;
+	}
+
+	private convertSignatureDeclarationsInAST(decls: ts.Declaration[]): model.Signature[] {
+		const results = [] as model.Signature[];
+		for (const decl of decls) {
+			const isConstructSigDecl = ts.isConstructSignatureDeclaration(decl);
+			if (isConstructSigDecl
+				|| ts.isCallSignatureDeclaration(decl)
+				|| ts.isIndexSignatureDeclaration(decl)) {
+				const result = new model.Signature();
+				for (const param of decl.parameters) {
+					const paramSym = this.checker.getSymbolAtLocation(param.name);
+					if (paramSym) {
+						result.parameters.push(this.convertParameter(paramSym));
+					}
+				}
+				if (!isConstructSigDecl && decl.type) {
+					result.returnType = this.convertTypeReference(decl.type);
+				}
+				results.push(result);
+			}
 		}
 		return results;
 	}
@@ -360,43 +428,13 @@ export class Converter {
 		return result;
 	}
 
-	private convertTypeAlias(node: ts.TypeAliasDeclaration): model.Type | undefined {
-		if (!ts.isUnionTypeNode(node.type)
-			|| node.type.types.length === 0
-			|| !node.type.types.every(ts.isLiteralTypeNode)) {
-			// not the special case covered by this method
-			this.createIssueForNode("type alias not supported (except the special case of an aliased union of literal types)", node);
-			return undefined;
-		}
-		const literalValues = [] as (string | number)[];
-		for (const elemTypeNode of node.type.types) {
-			const elemType = this.checker.getTypeFromTypeNode(elemTypeNode);
-			if (elemType.isLiteral()) {
-				if (elemType.isNumberLiteral()) {
-					literalValues.push(elemType.value);
-					continue;
-				} else if (elemType.isStringLiteral()) {
-					literalValues.push(elemType.value);
-					continue;
-				}
-			}
-			this.createIssueForNode("unsupported type in aliased union of literal types: " + this.checker.typeToString(elemType), node);
-			return undefined;
-		}
-		const isAllString = literalValues.every(v => typeof v == 'string');
-		const isAllNumber = literalValues.every(v => typeof v == 'number');
-		if (!isAllString && !isAllNumber) {
-			this.createIssueForNode("a combination of strings and numbers in an aliased union of literal types is not allowed", node);
-			return undefined;
-		}
-
+	private convertTypeAlias(node: ts.TypeAliasDeclaration): model.Type {
 		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
-		result.kind = model.TypeKind.ENUM;
+		result.kind = model.TypeKind.TYPE_ALIAS;
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
-		result.primitiveBased = isAllString ? model.PrimitiveBasedKind.STRING_BASED : model.PrimitiveBasedKind.NUMBER_BASED;
-		result.literals.push(...utils_ts.createEnumLiteralsFromValues(literalValues));
+		result.aliasedType = this.convertTypeReference(node.type);
 		return result;
 	}
 
