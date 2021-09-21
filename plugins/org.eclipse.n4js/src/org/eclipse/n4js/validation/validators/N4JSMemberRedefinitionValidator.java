@@ -1037,7 +1037,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		String message = getMessageForCLF_REDEFINED_NON_ACCESSIBLE(
 				validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
 				validatorMessageHelper.descriptionDifferentFrom(overridden, overriding));
-		if (overriding.eContainer() == contextType) {
+		if (overriding.getContainingType() == contextType) {
 			addIssue(message, overriding.getAstElement(), N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME,
 					CLF_REDEFINED_NON_ACCESSIBLE);
 		} else if (contextDef instanceof N4TypeDeclaration) {
