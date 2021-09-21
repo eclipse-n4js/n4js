@@ -318,7 +318,15 @@ public class ReferenceResolutionFinder {
 		}
 
 		QualifiedName rrcQN = rrc.qualifiedName;
-		QualifiedName descrQN = (rrcQN.getSegmentCount() > 1) ? rrcQN.skipLast(1) : rrcQN;
+		final int segCount = rrcQN.getSegmentCount();
+		final QualifiedName descrQN;
+		if (segCount > 0 && rrcQN.getFirstSegment().equals(N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT)) {
+			descrQN = rrcQN.skipFirst(1);
+		} else if (rrcQN.getSegmentCount() > 1) {
+			descrQN = rrcQN.skipLast(1);
+		} else {
+			descrQN = rrcQN;
+		}
 		return qualifiedNameConverter.toString(descrQN);
 	}
 

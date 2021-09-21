@@ -63,16 +63,16 @@ public class ImplementationTest extends AbstractImplementationTest {
 		startAndWaitForLspServer();
 
 		DefinitionParams definitionParams = new DefinitionParams();
-		definitionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4ts"));
+		definitionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4jsd"));
 		// see position from test above
-		definitionParams.setPosition(new Position(838, 15));
+		definitionParams.setPosition(new Position(109, 12));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
 				.definition(definitionParams);
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 
 		File root = getRoot();
 		String actualSignatureHelp = new StringLSP4J(root).toString4(definitions);
-		assertEquals("(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])", actualSignatureHelp.trim());
+		assertEquals("(n4scheme:/builtin_js.n4jsd, [109:12 - 109:18])", actualSignatureHelp.trim());
 	}
 
 }

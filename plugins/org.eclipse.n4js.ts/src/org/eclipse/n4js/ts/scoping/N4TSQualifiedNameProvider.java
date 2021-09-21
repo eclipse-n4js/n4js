@@ -61,6 +61,7 @@ public class N4TSQualifiedNameProvider extends IQualifiedNameProvider.AbstractIm
 	 */
 	public static QualifiedName getPolyfillFQN(TClassifier tClassifier, IQualifiedNameProvider qualifiedNameProvider) {
 		QualifiedName prefix = qualifiedNameProvider.getFullyQualifiedName(EcoreUtil.getRootContainer(tClassifier));
+		// FIXME probably this can simply be deleted now!
 		if ("n4ts".equals(tClassifier.eResource().getURI().fileExtension())) { // } instanceof TObjectPrototype) {
 			prefix = append(prefix, GLOBAL_NAMESPACE_SEGMENT);
 			// TODO this has to be removed, instead, also n4ts files should use "#" as global namespace segment
