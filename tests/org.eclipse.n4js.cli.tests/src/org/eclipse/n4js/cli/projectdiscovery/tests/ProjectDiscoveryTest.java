@@ -49,6 +49,7 @@ public class ProjectDiscoveryTest {
 				testFiles.add(new File(folder, testFileName));
 			}
 		}
+		Collections.sort(testFiles);
 		return testFiles;
 	}
 

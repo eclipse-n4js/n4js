@@ -1,0 +1,14 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+
+FOLDERS
+- P1 [PROJECT workspaces=["packages/@MyScope/*"]]
+-- packages
+--- @MyScope
+----*D1 [PROJECT]
+
+
+EXPECT
+- P1
+- P1/packages/@MyScope/D1
