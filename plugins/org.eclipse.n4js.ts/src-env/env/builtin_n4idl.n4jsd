@@ -18,6 +18,8 @@
 // For details see: /n4js-runtime/src/n4js/N4BuiltInTypes.n4js
 
 
+@@Global @@ProvidedByRuntime
+
 /**
  * A {@link MigrationController} schedules the actual execution of migrations. 
  * 
@@ -26,7 +28,7 @@
  * order of exe-cution and populates the associated migration context with resulting 
  * context information (e.g. trace links).
  */
-public interface MigrationController {
+export external public interface MigrationController {
 	/**
 	 * Migrate the given migration arguments to the given
 	 * target model version.
@@ -65,7 +67,7 @@ public interface MigrationController {
  * It provides migrations with traceability information such as trace links 
  * and modification detection. It may further serve as a storage for arbitrary user data.
  */
-public interface MigrationContext {
+export external public interface MigrationContext {
 	/** 
 	 * Returns the targets of all outgoing trace links of the given migration argument.
 	 * 

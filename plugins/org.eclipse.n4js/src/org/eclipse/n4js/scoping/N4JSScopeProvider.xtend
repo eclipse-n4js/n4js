@@ -607,7 +607,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 			TypeDefs: {
 				// This case applies when a scope for the built-in type definition
-				// files (builtin_n4.n4ts) is requested. This can simply be handled by a BuiltInTypeScope.
+				// files (builtin_n4.n4jsd) is requested. This can simply be handled by a BuiltInTypeScope.
 				return BuiltInTypeScope.get(context.eResource.resourceSet);
 			}
 			default: {

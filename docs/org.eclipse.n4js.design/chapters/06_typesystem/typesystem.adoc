@@ -57,7 +57,7 @@ We distinguish four kinds of types as summarized in <<tab:KindOfTypes,Kind Of Ty
 === Built-in and Primitive Types
 
 The built-in and primitive types are not defined by the user, i.e. N4JS programmer. Instead, they are defined in special
-internal files using the internal N4TS language: `builtin_js.n4ts`, `builtin_n4.n4ts`, `primitives_js.n4ts`, `primitives_n4.n4ts`.
+internal files: `builtin_js.n4jsd`, `builtin_n4.n4jsd`, `primitives_js.n4ts`, `primitives_n4.n4ts`.
 
 
 [[sec:Type_Model_DSL]]

@@ -62,9 +62,9 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 			"primitives_js.n4ts",
 			"primitives_n4.n4ts",
 			"builtin_js.n4jsd",
-			"builtin_n4.n4ts",
-			"console.n4ts",
-			"builtin_n4idl.n4ts"
+			"builtin_n4.n4jsd",
+			"builtin_n4idl.n4jsd",
+			"console.n4jsd"
 	};
 
 	/**
@@ -700,22 +700,26 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 			// IteratorExtensions.filter(ast.eAllContents(), ParameterizedTypeRef.class));
 			// typeRef.getDeclaredType();
 
-			Map<String, Type> typesByName = script.getModule().getTopLevelTypes().stream()
-					.collect(Collectors.toMap(Type::getName, Functions.identity()));
+			String fileName = resource.getURI().lastSegment();
+			if (fileName.equals("builtin_js.n4jsd")) {
+				Map<String, Type> typesByName = script.getModule().getTopLevelTypes().stream()
+						.collect(Collectors.toMap(Type::getName, Functions.identity()));
 
-			Type anyType = (Type) elements.get(QN_ANY).getEObjectOrProxy();
-			Type stringType = (Type) elements.get(QN_STRING).getEObjectOrProxy();
-			TClass stringObjectType = (TClass) typesByName.get(QN_STRING_OBJECT.toString());
-			TClass arrayObjectType = (TClass) typesByName.get(QN_ARRAY.toString());
-			TInterface argumentsType = (TInterface) typesByName.get(QN_I_ARGUMENTS.toString());
-			Objects.requireNonNull(stringObjectType);
-			Objects.requireNonNull(arrayObjectType);
-			Objects.requireNonNull(argumentsType);
-			EcoreUtilN4.doWithDeliver(false, () -> {
-				stringObjectType.setDeclaredElementType(TypeUtils.createTypeRef(stringType));
-				arrayObjectType.setDeclaredElementType(TypeUtils.createTypeRef(arrayObjectType.getTypeVars().get(0)));
-				argumentsType.setDeclaredElementType(TypeUtils.createTypeRef(anyType));
-			}, stringObjectType, arrayObjectType);
+				Type anyType = (Type) elements.get(QN_ANY).getEObjectOrProxy();
+				Type stringType = (Type) elements.get(QN_STRING).getEObjectOrProxy();
+				TClass stringObjectType = (TClass) typesByName.get(QN_STRING_OBJECT.toString());
+				TClass arrayObjectType = (TClass) typesByName.get(QN_ARRAY.toString());
+				TInterface argumentsType = (TInterface) typesByName.get(QN_I_ARGUMENTS.toString());
+				Objects.requireNonNull(stringObjectType);
+				Objects.requireNonNull(arrayObjectType);
+				Objects.requireNonNull(argumentsType);
+				EcoreUtilN4.doWithDeliver(false, () -> {
+					stringObjectType.setDeclaredElementType(TypeUtils.createTypeRef(stringType));
+					arrayObjectType
+							.setDeclaredElementType(TypeUtils.createTypeRef(arrayObjectType.getTypeVars().get(0)));
+					argumentsType.setDeclaredElementType(TypeUtils.createTypeRef(anyType));
+				}, stringObjectType, arrayObjectType);
+			}
 		}
 	}
 }

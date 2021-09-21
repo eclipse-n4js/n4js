@@ -369,7 +369,8 @@ class MemberScopingHelper {
 		};
 
 		if (!request.staticAccess && type instanceof TClass && N4Scheme.isFromResourceWithN4Scheme(type)) {
-			// TObjectPrototypes defined in builtin_js.n4ts and builtin_n4.n4ts are allowed to extend primitive
+			// FIXME reconsider
+			// classifiers defined in builtin_js.n4jsd and builtin_n4.n4jsd are allowed to extend primitive
 			// types, and the following is required to support auto-boxing in such a case:
 			val rootSuperType = getRootSuperType(type as TClass);
 			if (rootSuperType instanceof PrimitiveType) {

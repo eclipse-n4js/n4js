@@ -33,7 +33,7 @@ declare type typeName<T> = string;
 declare type IteratorExt<T> = Iterator<T> & Iterable<T>;
 
 
-// Merged from builtin_n4.n4ts
+// Merged from builtin_n4.n4jsd
 
 /**
  * Work-around:

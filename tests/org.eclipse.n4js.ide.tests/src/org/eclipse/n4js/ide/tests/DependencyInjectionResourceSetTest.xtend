@@ -104,7 +104,7 @@ class DependencyInjectionResourceSetTest extends AbstractIdeTest {
 	}
 
 	def private ResourceSet getBuiltInSchemeResourceSet(ResourceSet rs) {
-		val uri = URI.createURI(N4Scheme.SCHEME + ":/builtin_n4.n4ts");
+		val uri = URI.createURI(N4Scheme.SCHEME + ":/builtin_n4.n4jsd");
 		val res = rs.getResource(uri, false);
 		return res?.resourceSet;
 	}

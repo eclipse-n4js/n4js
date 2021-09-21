@@ -9,11 +9,10 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-
-publicInternal class GlobalObject {
-	public final NaN: number;
-	public final Infinity: number;
-	public final undefined: undefined;
+export external public class GlobalObject {
+	@Final public NaN: number;
+	@Final public Infinity: number;
+	@Final public undefined: undefined;
 
 	public eval(x: any): Object
 	public parseInt(s: any, radix: number = undefined): number

@@ -9,8 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+@@Global @@ProvidedByRuntime
 
-public providedByRuntime object console @Global {
+export external public class console {
 // see also https://developer.mozilla.org/en-US/docs/Web/API/console
 	/**
 	 * Outputs a log message, the concrete format depends on the engine.

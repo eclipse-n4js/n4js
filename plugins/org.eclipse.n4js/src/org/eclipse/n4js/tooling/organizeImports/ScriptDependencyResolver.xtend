@@ -157,7 +157,7 @@ class ScriptDependencyResolver {
 			}
 		}
 
-		// ignore built-in things as n4scheme:/console.n4ts :
+		// ignore built-in things as n4scheme:/console.n4jsd:
 		// in non platform realm check if URI describes file,
 		// in eclipse platform realm check if URI describes platform resource
 		return eo.eResource?.getURI !== null //
