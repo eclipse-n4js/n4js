@@ -71,7 +71,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case TypesPackage.TYPE_DEFS: return createTypeDefs();
 			case TypesPackage.TMODULE: return createTModule();
 			case TypesPackage.RUNTIME_DEPENDENCY: return createRuntimeDependency();
 			case TypesPackage.COMPOSED_MEMBER_CACHE: return createComposedMemberCache();
@@ -181,17 +180,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeDefs createTypeDefs() {
-		TypeDefsImpl typeDefs = new TypeDefsImpl();
-		return typeDefs;
 	}
 
 	/**

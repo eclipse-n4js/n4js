@@ -86,7 +86,6 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeAlias;
-import org.eclipse.n4js.ts.types.TypeDefs;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -103,13 +102,6 @@ import org.eclipse.n4js.ts.types.util.Variance;
  * @generated
  */
 public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass typeDefsEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -640,26 +632,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(TypesPackage.eNS_URI, theTypesPackage);
 		return theTypesPackage;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getTypeDefs() {
-		return typeDefsEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTypeDefs_Types() {
-		return (EReference)typeDefsEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3561,9 +3533,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		isCreated = true;
 
 		// Create classes and their features
-		typeDefsEClass = createEClass(TYPE_DEFS);
-		createEReference(typeDefsEClass, TYPE_DEFS__TYPES);
-
 		tModuleEClass = createEClass(TMODULE);
 		createEAttribute(tModuleEClass, TMODULE__SIMPLE_NAME);
 		createEAttribute(tModuleEClass, TMODULE__QUALIFIED_NAME);
@@ -4049,9 +4018,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tVariableEClass.getESuperTypes().add(this.getTTypedElement());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(typeDefsEClass, TypeDefs.class, "TypeDefs", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypeDefs_Types(), this.getType(), null, "types", null, 0, -1, TypeDefs.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(tModuleEClass, TModule.class, "TModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTModule_SimpleName(), theEcorePackage.getEString(), "simpleName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_QualifiedName(), theEcorePackage.getEString(), "qualifiedName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

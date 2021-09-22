@@ -69,10 +69,6 @@ public final class N4JSGlobals {
 	public static final String N4JSD_FILE_EXTENSION = "n4jsd";
 
 	/**
-	 * Files extension of N4TS source files (<b>not</b> including the separator dot).
-	 */
-	public static final String N4TS_FILE_EXTENSION = "n4ts";
-	/**
 	 * Files extension of XT source files (<b>not</b> including the separator dot).
 	 */
 	public static final String XT_FILE_EXTENSION = "xt";

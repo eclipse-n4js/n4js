@@ -43,16 +43,6 @@ type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
 
-/*
- * Container used when explicitly defining types, e.g., for defining built in types or for tests.
- */
-class TypeDefs {
-	/*
-	 * Types defined in a single file. These types must not reference external types.
-	 */
-	contains Type[] types
-}
-
 /**
  * The TModule is the representation of the script on the type level.
  */

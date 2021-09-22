@@ -15,7 +15,7 @@
 // a bare import of 'n4js-runtime' which will load this file.
 
 
-// Merged from primitives_js.n4ts
+// Merged from primitives.n4jsd
 
 declare type pathSelector<T> = string;
 declare type i18nKey = string;

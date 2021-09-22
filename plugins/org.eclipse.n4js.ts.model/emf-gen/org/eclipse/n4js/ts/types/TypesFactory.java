@@ -30,15 +30,6 @@ public interface TypesFactory extends EFactory {
 	TypesFactory eINSTANCE = org.eclipse.n4js.ts.types.impl.TypesFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Type Defs</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Type Defs</em>'.
-	 * @generated
-	 */
-	TypeDefs createTypeDefs();
-
-	/**
 	 * Returns a new object of class '<em>TModule</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

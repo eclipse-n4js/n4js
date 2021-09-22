@@ -76,12 +76,6 @@ public class TypesSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case TypesPackage.TYPE_DEFS: {
-				TypeDefs typeDefs = (TypeDefs)theEObject;
-				T result = caseTypeDefs(typeDefs);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypesPackage.TMODULE: {
 				TModule tModule = (TModule)theEObject;
 				T result = caseTModule(tModule);
@@ -743,21 +737,6 @@ public class TypesSwitch<T> extends Switch<T> {
 			}
 			default: return defaultCase(theEObject);
 		}
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Type Defs</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Type Defs</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTypeDefs(TypeDefs object) {
-		return null;
 	}
 
 	/**

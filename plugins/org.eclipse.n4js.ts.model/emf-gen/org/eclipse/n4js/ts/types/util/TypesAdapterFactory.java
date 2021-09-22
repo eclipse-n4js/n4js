@@ -78,10 +78,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	protected TypesSwitch<Adapter> modelSwitch =
 		new TypesSwitch<Adapter>() {
 			@Override
-			public Adapter caseTypeDefs(TypeDefs object) {
-				return createTypeDefsAdapter();
-			}
-			@Override
 			public Adapter caseTModule(TModule object) {
 				return createTModuleAdapter();
 			}
@@ -328,20 +324,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TypeDefs <em>Type Defs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TypeDefs
-	 * @generated
-	 */
-	public Adapter createTypeDefsAdapter() {
-		return null;
-	}
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TModule <em>TModule</em>}'.

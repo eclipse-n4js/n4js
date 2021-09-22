@@ -19,8 +19,7 @@ Contributors:
 The type model is used to define actual types and their relations (meta-model is defined by means of Xcore in file `Types.xcore`)
 and also references to types (meta-model in `TypeRefs.xcore`). The type model is built via the `N4JSTypesBuilder` when a resource
 is loaded and processed, and most type related tasks work only on the type model. Some types that are (internally) available
-in N4JS are not defined in N4JS, but instead in a special, internal type language not available to N4JS developers, called N4TS
-and defined in file `Types.xtext`.
+in N4JS are defined in N4JSD.
 
 The types are referenced by AST elements; vice versa the AST elements can be referenced from the types (see `SyntaxRelatedTElement`).
 This backward reference is a simple reference to an EObject.
@@ -33,12 +32,9 @@ The following figure, <<fig:cd_typeAndTypeRefHierarchy,Types and Type References
 [[fig:cd_typeAndTypeRefHierarchy]]
 image::{find}images/cd_typeModelHierarchy_allInOne.png[title="Type Model Overview: Types in the upper half and Type References in the lower half."]
 
-Most types are self-explanatory. `TypeDefs` is the container element used in N4TS. Note that not all types and properties of types are available in N4JS – some can only be used in the N4TS language or be inferred by the type system for internal purposes. Some types need some explanation:
+Most types are self-explanatory. Note that not all types and properties of types are available in N4JS or N4JSD – some will be created programmatically by `BuiltInTypeScope` or be inferred by the type system for internal purposes.
 
-* `TObjectPrototype`: Metatype for defining built-in object types such as `Object` or `Date`, only available in N4TS.
-* `VirtualBaseType`: This type is not available in N4JS. It is used to define common properties provided by all types of a certain metatype. E.g., it is used for defining some properties shared by all enumerations (this was the reason for introducing this type).
-
-We distinguish four kinds of types as summarized in <<tab:KindOfTypes,Kind Of Types>>. Role is an internal construct for different kind of users who can define the special kind of type. The language column refers to the language used to specify the type; which is either N4JS or N4TS.
+We distinguish four kinds of types as summarized in <<tab:KindOfTypes,Kind Of Types>>. Role is an internal construct for different kind of users who can define the special kind of type. The language column refers to the language used to specify the type; which is either N4JS.
 
 [[tab:KindOfTypes]]
 .Kind of Types
@@ -48,8 +44,8 @@ We distinguish four kinds of types as summarized in <<tab:KindOfTypes,Kind Of Ty
 
 |user |N4JS |developer |User defined types, such as declared classes or functions. These types are to be explicitly defined or imported in the code.
 |library |N4JSD |developer |Type declarations only, comparable to C header files, without implementation. Used for defining the API of 3rd party libraries. These type definitions are to be explicitly defined or imported in the code.
-|builtin |N4TS |smith |Built-in ECMAScript objects interpreted as types. E.g., `String`, `Date`, `Math`. These types are provided by N4JS and are always available.
-|primitive |N4TS |smith |Primitive ECMAScript (and N4JS ties), such as `string`, `number`, `pathselector<T>`, `i18n`, and also `any`, `undefined` and `void`. These types are provided by N4JS and are always available. Primitive types are described in detail in the spec (see chapter "Primitive ECMAScript Types").
+|builtin |(internal) |smith |Built-in ECMAScript objects interpreted as types. E.g., `String`, `Date`, `Math`. These types are provided by N4JS and are always available.
+|primitive |(internal) |smith |Primitive ECMAScript (and N4JS ties), such as `string`, `number`, `pathselector<T>`, `i18n`, and also `any`, `undefined` and `void`. These types are provided by N4JS and are always available. Primitive types are described in detail in the spec (see chapter "Primitive ECMAScript Types").
 |===
 
 
@@ -57,39 +53,7 @@ We distinguish four kinds of types as summarized in <<tab:KindOfTypes,Kind Of Ty
 === Built-in and Primitive Types
 
 The built-in and primitive types are not defined by the user, i.e. N4JS programmer. Instead, they are defined in special
-internal files: `builtin_js.n4jsd`, `builtin_n4.n4jsd`, `primitives_js.n4ts`, `primitives_n4.n4ts`.
-
-
-[[sec:Type_Model_DSL]]
-[.language-n4js]
-=== Type Model DSL
-
-For defining built-in types and for tests, a special DSL called N4TS is provided by means of an Xtext grammar and generated
-tools. The syntax is similar to n4js, but of course without method or function bodies, i.e. without any statements of expressions.
-The grammar file is found in `Types.xtext`.
-
-The following list documents some differences to N4JS:
-
-.  access modifiers directly support ``Internal``, so no annotations are needed (nor supported) here.
-.  besides N4 classifiers such as classes, the following classifiers can be defined:
-..  `object` define classes derived from object (predefined object types) Special features:
-+
-[horizontal]
-indexed::
-  defined what type is returned in case of index access
-..  `virtualBase` virtual base types for argument
-.  `primitive` primitive types (number, string etc.) Special features:
-+
-[horizontal]
-indexed::
-  defined what type is returned in case of index access
-autoboxedType::
-  defines to which type the primitive can be auto boxed
-assignmnentCompatible::
-  defines to which type the primitive is assignment compatible
-.  types `any`, `null`, `void`, `undefined` – special types.
-
-Annotations are not supported in the types DSL.
+internal files (`primitives.n4jsd`, `builtin_js.n4jsd`, `builtin_n4.n4jsd`) or created programmatically by `BuiltInTypeScope`.
 
 
 [[sec:Type_System_Implementation]]

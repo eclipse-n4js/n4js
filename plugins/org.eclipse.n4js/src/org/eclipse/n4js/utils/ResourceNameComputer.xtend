@@ -24,7 +24,6 @@ import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.semver.Semver.VersionNumber
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -95,10 +94,6 @@ public final class ResourceNameComputer {
 	 */
 	def String getFullyQualifiedTypeName(Type type) {
 		val EObject rootContainer = getRootContainer(type);
-		if (rootContainer instanceof TypeDefs) {
-			// 'type' is a built-in type
-			return getSimpleTypeName(type);
-		}
 		var QualifiedName moduleFQN = qualifiedNameProvider.getFullyQualifiedName(rootContainer);
 		if (PolyfillUtils.isModulePolyfill(moduleFQN)) {
 			// IDE-1735 strip the extra ModulePolyfill-marker

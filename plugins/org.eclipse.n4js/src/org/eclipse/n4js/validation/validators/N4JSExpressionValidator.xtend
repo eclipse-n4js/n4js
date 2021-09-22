@@ -17,7 +17,6 @@ import java.util.Comparator
 import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.compileTime.CompileTimeEvaluationError
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator.UnresolvedPropertyAccessError
 import org.eclipse.n4js.compileTime.CompileTimeValue
@@ -66,11 +65,12 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.ExpressionExtensions
-import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
-import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
@@ -112,7 +112,6 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -651,8 +650,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_STRUCTURAL_TYPES(staticType.name);
 						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
 							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_STRUCTURAL_TYPES);
-					} else if (staticType instanceof TInterface &&
-						EcoreUtil.getRootContainer(staticType) instanceof TypeDefs) {
+					} else if (staticType instanceof TInterface && N4Scheme.isFromResourceWithN4Scheme(staticType)) {
 						val message = IssueCodes.
 							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES(staticType.name);
 						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
