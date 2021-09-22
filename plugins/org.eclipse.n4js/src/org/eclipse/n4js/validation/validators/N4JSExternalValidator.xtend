@@ -362,7 +362,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private validateNonAnnotatedClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType,
 		ExportDeclaration eo) {
-		if (superType !== null && ! superType.isExternal) {
+		if (superType !== null && (!superType.isExternal || AnnotationDefinition.N4JS.hasAnnotation(superType))) {
 			val message = messageForCLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT
 			val eObjectToNameFeature = eo.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,

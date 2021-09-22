@@ -23,6 +23,7 @@
 /**
  * Base class for all N4 reflective elements.
  */
+@N4JS
 export external public abstract class N4Element extends N4Object {
 
 	/**
@@ -58,6 +59,7 @@ export external public abstract class N4Element extends N4Object {
 /**
  * Base class for all reflective classes with a name.
  */
+@N4JS
 export external public abstract class N4NamedElement extends N4Element {
 	/**
 	 * The simple name of a named element.
@@ -68,6 +70,7 @@ export external public abstract class N4NamedElement extends N4Element {
 /**
  * Base class for all reflective classes describing a type (declaration).
  */
+@N4JS
 export external public abstract class N4Type extends N4NamedElement {
 	/**
 	 * The FQN of the type.
@@ -100,6 +103,7 @@ export external public abstract class N4Type extends N4NamedElement {
 /**
  * Base class for meta types of classes and interfaces.
  */
+@N4JS
 export external public abstract class N4Classifier extends N4Type {
 
 	/**
@@ -197,7 +201,7 @@ export external public abstract class N4Classifier extends N4Type {
 /**
  * Meta information of an n4 class.
  */
-@Final
+@N4JS @Final
 export external public class N4Class extends N4Classifier {
 
 	/**
@@ -210,7 +214,7 @@ export external public class N4Class extends N4Classifier {
 /**
  * Meta information of an n4 interface.
  */
-@Final
+@N4JS @Final
 export external public class N4Interface extends N4Classifier {
 	/**
 	 * Returns true if this N4Class describes an N4-interface declaration.
@@ -222,6 +226,7 @@ export external public class N4Interface extends N4Classifier {
 /**
  * Description of a member, that is a method or field.
  */
+@N4JS
 export external public abstract class N4Member extends N4NamedElement {
 	public get owner(): N4Classifier
 	public get isStatic(): boolean
@@ -230,7 +235,7 @@ export external public abstract class N4Member extends N4NamedElement {
 /**
  * Description of a method.
  */
-@Final
+@N4JS @Final
 export external public class N4Method extends N4Member {
 	public get jsFunction(): Function
 }
@@ -238,14 +243,14 @@ export external public class N4Method extends N4Member {
 /**
  * Description of a simple data field.
  */
-@Final
+@N4JS @Final
 export external public class N4DataField extends N4Member {
 }
 
 /**
  * Description of an accessor, that is a getter or setter.
  */
-@Final
+@N4JS @Final
 export external public class N4Accessor extends N4Member {
 	/**
 	 * Flag indicating whether accessor is a getter or setter, internal detail.
@@ -266,7 +271,7 @@ export external public class N4Accessor extends N4Member {
 /**
  * Description of an N4Enum
  */
-@Final
+@N4JS @Final
 export external public class N4EnumType extends N4Type {
 	/**
 	 * Returns true if this N4Classifier describes an N4-enumeration declaration.
@@ -331,7 +336,7 @@ export external public class N4Enum {
 /**
  * Annotation with value.
  */
-@Final
+@N4JS @Final
 export external public class N4Annotation extends N4Object {
 
 	/**
@@ -347,6 +352,7 @@ export external public class N4Annotation extends N4Object {
 /**
  * The base class for all instances of n4 classes.
  */
+@N4JS
 export external public class N4Object extends Object {
 
 	/**
