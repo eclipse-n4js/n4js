@@ -17,7 +17,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.VersionedElement;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.xtext.EcoreUtil2;
 

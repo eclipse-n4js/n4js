@@ -21,16 +21,16 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Iterables;
-
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.util.MemberList;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.validation.validators.N4JSMemberRedefinitionValidator;
+
+import com.google.common.collect.Iterables;
 
 /**
  * Helper class for {@link N4JSMemberRedefinitionValidator} storing all members with same name and static modifier in a

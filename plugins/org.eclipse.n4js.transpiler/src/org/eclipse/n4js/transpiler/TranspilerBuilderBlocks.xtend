@@ -99,7 +99,7 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 
 /**
  * Builder methods for intermediate elements.

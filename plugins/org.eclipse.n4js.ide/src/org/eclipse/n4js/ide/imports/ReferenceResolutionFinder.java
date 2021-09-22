@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
@@ -32,7 +33,6 @@ import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -320,7 +320,7 @@ public class ReferenceResolutionFinder {
 		QualifiedName rrcQN = rrc.qualifiedName;
 		final int segCount = rrcQN.getSegmentCount();
 		final QualifiedName descrQN;
-		if (segCount > 0 && rrcQN.getFirstSegment().equals(N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT)) {
+		if (segCount > 0 && rrcQN.getFirstSegment().equals(N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT)) {
 			descrQN = rrcQN.skipFirst(1);
 		} else if (rrcQN.getSegmentCount() > 1) {
 			descrQN = rrcQN.skipLast(1);
@@ -681,7 +681,7 @@ public class ReferenceResolutionFinder {
 
 			// Globally available elements should not generate imports
 			if (importName.getSegmentCount() == 2
-					&& N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(importName.getFirstSegment())) {
+					&& N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(importName.getFirstSegment())) {
 				// type name is a simple name from global Namespace - no need to hassle with imports
 				return null;
 			}

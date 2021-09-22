@@ -22,7 +22,7 @@ import org.eclipse.n4js.ts.types.BuiltInType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.utils.TypeCompareUtils;
+import org.eclipse.n4js.types.utils.TypeCompareUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.collections.Iterables2;
 import org.eclipse.xtext.xbase.lib.Pair;

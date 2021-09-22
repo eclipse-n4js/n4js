@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
+import org.eclipse.n4js.tooling.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.xtext.findReferences.IReferenceFinder;

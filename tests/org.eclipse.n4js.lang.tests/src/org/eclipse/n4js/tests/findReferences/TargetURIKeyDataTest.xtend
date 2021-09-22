@@ -12,20 +12,20 @@ package org.eclipse.n4js.tests.findReferences
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess
-import org.eclipse.n4js.ts.findReferences.TargetURIKey
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.ENamedElement
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EcoreFactory
 import org.eclipse.emf.ecore.EcorePackage
+import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.tooling.findReferences.SimpleResourceAccess
+import org.eclipse.n4js.tooling.findReferences.TargetURIKey
 import org.eclipse.xtext.findReferences.TargetURIs
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.XtextResourceSet
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -17,8 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
-import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.xtext.naming.QualifiedName;

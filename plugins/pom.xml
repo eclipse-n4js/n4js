@@ -30,8 +30,6 @@ Contributors:
 		<module>org.eclipse.n4js.common.unicode</module>
 		<!-- types -->
 		<module>org.eclipse.n4js.ts.model</module>
-		<module>org.eclipse.n4js.ts</module>
-		<module>org.eclipse.n4js.ts.ide</module>
 		<!-- regex -->
 		<module>org.eclipse.n4js.regex</module>
 		<module>org.eclipse.n4js.regex.ide</module>

@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesbuilder;
 
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -20,7 +20,7 @@ import org.eclipse.n4js.ts.types.TStructGetter
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructSetter
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 
 /**
  * Methods for creating types from TypeRefs are collected in this class.

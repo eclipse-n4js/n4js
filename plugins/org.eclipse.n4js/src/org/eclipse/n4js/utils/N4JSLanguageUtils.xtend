@@ -69,8 +69,8 @@ import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
-import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -110,8 +110,8 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.utils.TypeCompareUtils
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeCompareUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariantHelper

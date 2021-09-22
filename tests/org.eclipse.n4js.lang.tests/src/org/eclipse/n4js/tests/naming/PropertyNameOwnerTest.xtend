@@ -26,7 +26,7 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
+import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner

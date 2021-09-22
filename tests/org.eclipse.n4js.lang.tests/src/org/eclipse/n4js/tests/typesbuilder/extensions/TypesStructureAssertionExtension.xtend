@@ -12,7 +12,7 @@ package org.eclipse.n4js.tests.typesbuilder.extensions
 
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.TypedElement
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass

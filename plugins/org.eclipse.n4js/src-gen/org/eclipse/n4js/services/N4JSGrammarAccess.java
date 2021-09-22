@@ -14,7 +14,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.util.List;
 import org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess;
-import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;

@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.scoping.utils.RestrictedUsageDescription;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.NameAndAccess;
 import org.eclipse.n4js.ts.types.TInterface;

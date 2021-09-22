@@ -18,8 +18,8 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith

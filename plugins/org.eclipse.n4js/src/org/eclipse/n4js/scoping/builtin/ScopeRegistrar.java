@@ -11,8 +11,6 @@
 package org.eclipse.n4js.scoping.builtin;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
-import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 
 import com.google.inject.Singleton;
 

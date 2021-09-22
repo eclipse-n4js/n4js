@@ -93,7 +93,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.services.N4JSGrammarAccess
-import org.eclipse.n4js.ts.formatting2.TypeExpressionsFormatter
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef

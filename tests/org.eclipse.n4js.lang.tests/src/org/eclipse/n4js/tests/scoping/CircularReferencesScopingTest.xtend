@@ -24,7 +24,7 @@ import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMethod

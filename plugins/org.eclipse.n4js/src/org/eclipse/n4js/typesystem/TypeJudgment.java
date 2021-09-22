@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
+import static org.eclipse.n4js.types.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_CALL_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_VARIABLE_DECLARATION;
@@ -130,9 +130,9 @@ import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.scoping.members.MemberScopingHelper;
 import org.eclipse.n4js.tooling.react.ReactHelper;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
@@ -171,7 +171,7 @@ import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;

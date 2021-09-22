@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
-import org.eclipse.n4js.ts.utils.N4TSGlobals;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -278,7 +277,7 @@ public final class N4JSGlobals {
 	 *
 	 * @see N4JSQualifiedNameConverter#DELIMITER
 	 */
-	public static final String QUALIFIED_NAME_DELIMITER = N4TSGlobals.QUALIFIED_NAME_DELIMITER;
+	public static final String QUALIFIED_NAME_DELIMITER = "/";
 
 	/**
 	 * Character used to separate the namespace name from the exported element's name when referring to an element via a
@@ -290,7 +289,7 @@ public final class N4JSGlobals {
 	 * let c: NS.OtherClass;
 	 * </pre>
 	 */
-	public static final char NAMESPACE_ACCESS_DELIMITER = N4TSGlobals.NAMESPACE_ACCESS_DELIMITER;
+	public static final char NAMESPACE_ACCESS_DELIMITER = '.';
 
 	/**
 	 * All HTML tags.

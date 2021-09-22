@@ -14,7 +14,7 @@ import com.google.inject.Singleton
 import java.math.BigDecimal
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef

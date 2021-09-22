@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
@@ -50,7 +50,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.RecursionGuard
@@ -58,7 +58,7 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 
-import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
+import static extension org.eclipse.n4js.types.utils.TypeUtils.*
 
 /**
  * Extensions of class RuleEnvironment for handling substitutions and

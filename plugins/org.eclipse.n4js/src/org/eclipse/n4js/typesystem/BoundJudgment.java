@@ -29,7 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.Variance;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.BoundType;
 import org.eclipse.n4js.typesystem.utils.NestedTypeRefsSwitch;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;

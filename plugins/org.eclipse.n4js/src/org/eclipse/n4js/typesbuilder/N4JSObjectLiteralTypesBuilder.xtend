@@ -17,7 +17,7 @@ import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
@@ -26,7 +26,7 @@ import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructSetter
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 
 /**
  */

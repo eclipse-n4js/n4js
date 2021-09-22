@@ -18,7 +18,7 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor
 import org.eclipse.n4js.tests.issues.IssueUtils
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.XtextResource

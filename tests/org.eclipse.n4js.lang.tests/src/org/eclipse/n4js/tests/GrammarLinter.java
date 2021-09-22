@@ -16,6 +16,10 @@ import static org.eclipse.xtext.EcoreUtil2.typeSelect;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.n4js.N4JSStandaloneSetup;
+import org.eclipse.n4js.TypeExpressionsStandaloneSetup;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.services.TypeExpressionsGrammarAccess;
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.EnumRule;
@@ -27,11 +31,6 @@ import org.eclipse.xtext.ParserRule;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.N4JSStandaloneSetup;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
-import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess;
 
 /**
  * Small helper to identifiy potential programming problems in the grammar.

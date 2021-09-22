@@ -44,7 +44,7 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.StaticPolyfillHelper

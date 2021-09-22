@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -105,7 +105,7 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 		// "#global#
 		List<ImportNormalizer> result = newArrayList();
 		result.add(createImportedNamespaceResolver(
-				N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT + N4JSQualifiedNameConverter.DELIMITER + "*",
+				N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT + N4JSQualifiedNameConverter.DELIMITER + "*",
 				ignoreCase));
 		return result;
 	}

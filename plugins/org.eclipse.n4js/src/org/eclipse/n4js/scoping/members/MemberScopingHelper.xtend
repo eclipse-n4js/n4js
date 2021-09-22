@@ -21,8 +21,8 @@ import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
 import org.eclipse.n4js.scoping.utils.CompositeScope
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef

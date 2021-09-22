@@ -14,8 +14,8 @@ import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -26,11 +26,11 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 
-import static extension org.eclipse.n4js.ts.utils.TypeUtils.convertTypeArgsToRefs
+import static extension org.eclipse.n4js.types.utils.TypeUtils.convertTypeArgsToRefs
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**

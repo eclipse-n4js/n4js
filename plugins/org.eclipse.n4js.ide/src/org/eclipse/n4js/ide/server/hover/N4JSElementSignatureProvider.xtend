@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.ts.ide.server.hover.CustomHoverLabelUtil
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TVariable

@@ -34,13 +34,13 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
+import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -499,7 +499,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
 		val moduleQN = qnProvider.getFullyQualifiedName(script.module)
 		// check
-		if (! N4TSQualifiedNameProvider.isModulePolyfill(moduleQN)) {
+		if (! PolyfillUtils.isModulePolyfill(moduleQN)) {
 			println("### strange should start with '!MPOLY' for " + script?.module?.eResource?.URI);
 			return
 		}

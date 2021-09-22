@@ -13,7 +13,6 @@ package org.eclipse.n4js;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
 import org.eclipse.xtext.ISetup;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.IResourceServiceProvider;

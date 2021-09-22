@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.TMemberEntry;
 import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
@@ -54,7 +54,7 @@ import org.eclipse.n4js.ts.types.util.AbstractHierachyTraverser;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.types.util.NonSymetricMemberKey;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -735,7 +735,7 @@ public class ContainerTypesHelper {
 					TClassifier tClassifier = (TClassifier) filledType;
 					if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
 					) {
-						QualifiedName qn = N4TSQualifiedNameProvider.getPolyfillFQN(tClassifier, qualifiedNameProvider);
+						QualifiedName qn = PolyfillUtils.getPolyfillFQN(tClassifier, qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
 
@@ -747,7 +747,7 @@ public class ContainerTypesHelper {
 					}
 					if (isContainedInStaticPolyfillAware(filledType) // static-polyfilled work as well
 					) {
-						QualifiedName qn = N4TSQualifiedNameProvider.getStaticPolyfillFQN(tClassifier,
+						QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN(tClassifier,
 								qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
@@ -806,7 +806,7 @@ public class ContainerTypesHelper {
 				if (!containerType.isStaticPolyfill() || !(bottomType instanceof TClassifier)) {
 					return false;
 				}
-				QualifiedName qn = N4TSQualifiedNameProvider.getStaticPolyfillFQN((TClassifier) bottomType,
+				QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN((TClassifier) bottomType,
 						qualifiedNameProvider);
 				if (containerType instanceof TClass) { // short cut
 					return qn.equals(qualifiedNameProvider.getFullyQualifiedName(containerType));
