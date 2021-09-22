@@ -21,6 +21,7 @@ import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ImmutableDataClass;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -33,7 +34,11 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class ProjectDescription extends ImmutableDataClass {
 
-	private final String name;
+	private final FileURI location;
+	private final FileURI relatedRootlocation;
+	private final String id;
+
+	private final String packageName;
 	private final String vendorId;
 	private final String vendorName;
 	private final VersionNumber version;
@@ -58,8 +63,9 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
-	public ProjectDescription(String name, String vendorId, String vendorName, VersionNumber version,
-			ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
+	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
+			String id, String packageName, String vendorId, String vendorName,
+			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath,
@@ -67,7 +73,11 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
 			boolean n4jsNature, boolean yarnWorkspaceRoot,
 			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
-		this.name = name;
+
+		this.location = location;
+		this.relatedRootlocation = relatedRootlocation;
+		this.id = id;
+		this.packageName = packageName;
 		this.vendorId = vendorId;
 		this.vendorName = vendorName;
 		this.version = version != null ? EcoreUtil.copy(version) : null;
@@ -93,7 +103,10 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	public ProjectDescription(ProjectDescription template) {
-		this.name = template.name;
+		this.location = template.location;
+		this.relatedRootlocation = template.relatedRootlocation;
+		this.id = template.id;
+		this.packageName = template.packageName;
 		this.vendorId = template.vendorId;
 		this.vendorName = template.vendorName;
 		this.version = template.version != null ? EcoreUtil.copy(template.version) : null;
@@ -125,7 +138,10 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public ProjectDescriptionBuilder change() {
 		ProjectDescriptionBuilder builder = new ProjectDescriptionBuilder();
-		builder.setName(name);
+		builder.setLocation(location);
+		builder.setRelatedRootLocation(relatedRootlocation);
+		builder.setId(id);
+		builder.setPackageName(packageName);
 		builder.setVendorId(vendorId);
 		builder.setVendorName(vendorName);
 		builder.setVersion(version != null ? EcoreUtil.copy(version) : null);
@@ -149,13 +165,27 @@ public class ProjectDescription extends ImmutableDataClass {
 		return builder;
 	}
 
+	public FileURI getLocation() {
+		return location;
+	}
+
+	/** The location of the transitive parent root. */
+	public FileURI getRelatedRootLocation() {
+		return relatedRootlocation;
+	}
+
+	/** The project id name is the relative path from the project root (which may be a yarn workspace). */
+	public String getId() {
+		return id;
+	}
+
 	/** The project name, possibly including a scope prefix (e.g. {@code "@someScope/myProject"}). */
-	public String getName() {
-		return name;
+	public String getPackageName() {
+		return packageName;
 	}
 
 	public N4JSProjectName getN4JSProjectName() {
-		return name != null ? new N4JSProjectName(name) : null;
+		return packageName != null ? new N4JSProjectName(packageName) : null;
 	}
 
 	public String getVendorId() {
@@ -279,7 +309,10 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				name,
+				id,
+				location,
+				relatedRootlocation,
+				packageName,
 				vendorId,
 				vendorName,
 				// projectVersion is covered by internalProjectVersionStr
@@ -307,7 +340,10 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ProjectDescription other = (ProjectDescription) obj;
-		return Objects.equals(name, other.name)
+		return Objects.equals(id, other.id)
+				&& Objects.equals(location, other.location)
+				&& Objects.equals(relatedRootlocation, other.relatedRootlocation)
+				&& Objects.equals(packageName, other.packageName)
 				&& Objects.equals(vendorId, other.vendorId)
 				&& Objects.equals(vendorName, other.vendorName)
 				// version is covered by internalVersionStr
@@ -337,14 +373,14 @@ public class ProjectDescription extends ImmutableDataClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName());
 		sb.append(" {\n");
-		sb.append("    name: " + name + "\n");
+		sb.append("    name: " + packageName + "\n");
 		toStringAdditionalProperties(sb);
 		sb.append("    dependencies: [");
 		if (dependencies.isEmpty()) {
 			sb.append("]\n");
 		} else {
 			sb.append(' ');
-			sb.append(Joiner.on(", ").join(IterableExtensions.map(dependencies, ProjectDependency::getProjectName)));
+			sb.append(Joiner.on(", ").join(IterableExtensions.map(dependencies, ProjectDependency::getPackageName)));
 			sb.append(" ]\n");
 		}
 		sb.append("    sourceContainers: [");
@@ -378,7 +414,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		sb.append("    mainModule: " + mainModule + "\n");
 		if (!testedProjects.isEmpty()) {
 			String namesStr = Joiner.on(", ").join(
-					IterableExtensions.map(testedProjects, ProjectReference::getProjectName));
+					IterableExtensions.map(testedProjects, ProjectReference::getPackageName));
 			sb.append("    testedProjects: [ " + namesStr + " ]\n");
 		}
 		if (definesPackage != null) {

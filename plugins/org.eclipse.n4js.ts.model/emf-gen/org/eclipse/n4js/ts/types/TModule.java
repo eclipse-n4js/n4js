@@ -28,7 +28,8 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getPackageName <em>Package Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectID <em>Project ID</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isN4jsdModule <em>N4jsd Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isStaticPolyfillModule <em>Static Polyfill Module</em>}</li>
@@ -112,31 +113,58 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	void setQualifiedName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Project Name</b></em>' attribute.
+	 * Returns the value of the '<em><b>Package Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * The <em>N4JS project name</em> of the project containing this module, as defined at
-	 * {@link org.eclipse.n4js.utils.ProjectDescriptionUtils#isProjectNameWithScope(String)}.
+	 * The <em>package name</em> of the project containing this module, as defined at
+	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#packageName}.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Project Name</em>' attribute.
-	 * @see #setProjectName(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ProjectName()
+	 * @return the value of the '<em>Package Name</em>' attribute.
+	 * @see #setPackageName(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_PackageName()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getProjectName();
+	String getPackageName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getProjectName <em>Project Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getPackageName <em>Package Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Project Name</em>' attribute.
-	 * @see #getProjectName()
+	 * @param value the new value of the '<em>Package Name</em>' attribute.
+	 * @see #getPackageName()
 	 * @generated
 	 */
-	void setProjectName(String value);
+	void setPackageName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Project ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The <em>project id</em> of the project containing this module, as defined at
+	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#id}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Project ID</em>' attribute.
+	 * @see #setProjectID(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ProjectID()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getProjectID();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getProjectID <em>Project ID</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Project ID</em>' attribute.
+	 * @see #getProjectID()
+	 * @generated
+	 */
+	void setProjectID(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Vendor ID</b></em>' attribute.

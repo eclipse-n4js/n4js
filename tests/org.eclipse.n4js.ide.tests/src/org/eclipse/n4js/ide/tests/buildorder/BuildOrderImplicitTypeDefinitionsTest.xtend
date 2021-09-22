@@ -19,7 +19,15 @@ class BuildOrderImplicitTypeDefinitionsTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testSingleDependency1() {
-		test("yarn-test-project, @n4jsd/Lib1, @n4jsd/Lib3, @n4jsd/Lib2, n4js-runtime, Lib1, Lib2, P1",
+		test("yarn-test-project, " + 
+			"yarn-test-project/packages-gen/@n4jsd/Lib1, " + 
+			"yarn-test-project/packages-gen/@n4jsd/Lib3, " + 
+			"yarn-test-project/packages-gen/@n4jsd/Lib2, " + 
+			"yarn-test-project/node_modules/n4js-runtime, " + 
+			"yarn-test-project/node_modules/Lib1, " + 
+			"yarn-test-project/node_modules/Lib2, " + 
+			"yarn-test-project/packages/P1",
+			
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			CFG_NODE_MODULES + "Lib1" -> #[
 				"package.json" -> '''

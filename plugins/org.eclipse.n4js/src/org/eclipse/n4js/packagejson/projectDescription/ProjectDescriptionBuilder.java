@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.packagejson.projectDescription;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,10 @@ import com.google.common.collect.Iterables;
 public class ProjectDescriptionBuilder {
 
 	private FileURI location;
-	private String name;
+	private FileURI relatedRootLocation;
+	private String id;
+
+	private String packageName;
 	private String vendorId;
 	private String vendorName;
 	private VersionNumber version;
@@ -54,14 +58,33 @@ public class ProjectDescriptionBuilder {
 
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
-		String failSafeName = (name == null || name.isBlank()) && location != null
-				? location.findDerivedProjectName().getRawName()
-				: name;
-		return new ProjectDescription(failSafeName, vendorId, vendorName, version, type, mainModule,
-				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
-				implementationId, implementedProjects, outputPath, sourceContainers, moduleFilters, testedProjects,
-				definesPackage, nestedNodeModulesFolder, n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts,
-				workspaces);
+		id = id == null ? computeProjectID() : id;
+		return new ProjectDescription(location, relatedRootLocation, id,
+				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
+				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
+				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage, nestedNodeModulesFolder,
+				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts, workspaces);
+	}
+
+	public String computeProjectID() {
+		if (relatedRootLocation == null) {
+			relatedRootLocation = location;
+		}
+
+		if (location != null) {
+			if (relatedRootLocation != null && relatedRootLocation.getParent() != null) {
+				Path parent = relatedRootLocation.getParent().toPath();
+				if (parent.getFileName() != null
+						&& parent.getFileName().toString().startsWith("@")
+						&& parent.getParent() != null) {
+
+					parent = parent.getParent();
+				}
+				Path relativeLocation = parent.relativize(location.toPath());
+				return relativeLocation.toString();
+			}
+		}
+		return packageName;
 	}
 
 	public FileURI getLocation() {
@@ -78,12 +101,35 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public String getName() {
-		return name;
+	public FileURI getRelatedRootLocation() {
+		return relatedRootLocation;
 	}
 
-	public ProjectDescriptionBuilder setName(String name) {
-		this.name = name;
+	public ProjectDescriptionBuilder setRelatedRootLocation(FileURI relatedRootlocation) {
+		this.relatedRootLocation = relatedRootlocation;
+		return this;
+	}
+
+	public ProjectDescriptionBuilder setRelatedRootLocation(URI relatedRootlocation) {
+		this.relatedRootLocation = relatedRootlocation == null ? null : new FileURI(relatedRootlocation);
+		return this;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public ProjectDescriptionBuilder setId(String id) {
+		this.id = id;
+		return this;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public ProjectDescriptionBuilder setPackageName(String packageName) {
+		this.packageName = packageName;
 		return this;
 	}
 

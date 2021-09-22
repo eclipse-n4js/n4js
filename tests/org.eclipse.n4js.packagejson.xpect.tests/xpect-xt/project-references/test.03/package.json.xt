@@ -54,7 +54,7 @@
 		"test.data.rl.project.two": "*",
 		// XPECT errors ---
 		// "Project cannot reference itself." at ""test.03": "*""
-		// "Dependency cycle of the projects: test.03." at ""test.03""
+		// "Dependency cycle of the projects: yarn-test-project/packages/test.03." at ""test.03""
 		// ---
 		"test.03": "*"
 	},

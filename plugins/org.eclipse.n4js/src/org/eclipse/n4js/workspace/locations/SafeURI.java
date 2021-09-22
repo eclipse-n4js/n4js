@@ -335,6 +335,18 @@ public abstract class SafeURI<U extends SafeURI<U>> {
 	}
 
 	/**
+	 * Ascends from the current location to find the nearest project root and determines the project name of its parent
+	 * folders.
+	 */
+	public N4JSProjectName findProjectName() {
+		U projectRoot = getProjectRoot();
+		if (projectRoot == null) {
+			return null;
+		}
+		return projectRoot.deriveProjectName();
+	}
+
+	/**
 	 * Follow symbolic links and return the result.
 	 */
 	public abstract FileURI resolveSymLinks();

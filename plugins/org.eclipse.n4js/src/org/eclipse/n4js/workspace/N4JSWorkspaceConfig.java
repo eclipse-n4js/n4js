@@ -13,7 +13,7 @@ package org.eclipse.n4js.workspace;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +30,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.DefinitionProjectMap;
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
@@ -39,9 +40,8 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.util.UriExtensions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -60,12 +60,16 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	/***/
 	protected final ProjectDescriptionLoader projectDescriptionLoader;
 	/***/
+	protected final SemanticDependencySupplier semanticDependencySupplier;
+	/***/
 	protected final ConfigSnapshotFactory configSnapshotFactory;
 	/***/
 	protected final UriExtensions uriExtensions;
 
-	/** All projects registered in this workspace. */
-	protected final BiMap<String, N4JSProjectConfig> name2ProjectConfig = HashBiMap.create();
+	/** All projects registered in this workspace by their id. */
+	protected final Map<String, N4JSProjectConfig> projectId2ProjectConfig = new LinkedHashMap<>();
+	/** All projects by their package name. */
+	protected final HashMultimap<String, N4JSProjectConfig> packageName2ProjectConfigs = HashMultimap.create();
 	/** Map between definition projects and their defined projects. */
 	protected final DefinitionProjectMap definitionProjects = new DefinitionProjectMap();
 
@@ -74,12 +78,13 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	 * {@link #reloadAllProjectInformationFromDisk()} is invoked for the first time.
 	 */
 	public N4JSWorkspaceConfig(URI baseDirectory, ProjectDiscoveryHelper projectDiscoveryHelper,
-			ProjectDescriptionLoader projectDescriptionLoader, ConfigSnapshotFactory configSnapshotFactory,
-			UriExtensions uriExtensions) {
+			ProjectDescriptionLoader projectDescriptionLoader, SemanticDependencySupplier semanticDependencySupplier,
+			ConfigSnapshotFactory configSnapshotFactory, UriExtensions uriExtensions) {
 
 		this.baseDirectory = baseDirectory;
 		this.projectDiscoveryHelper = projectDiscoveryHelper;
 		this.projectDescriptionLoader = projectDescriptionLoader;
+		this.semanticDependencySupplier = semanticDependencySupplier;
 		this.configSnapshotFactory = configSnapshotFactory;
 		this.uriExtensions = uriExtensions;
 	}
@@ -96,12 +101,22 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	@Override
 	public Set<? extends N4JSProjectConfig> getProjects() {
-		return ImmutableSet.copyOf(name2ProjectConfig.values());
+		return ImmutableSet.copyOf(projectId2ProjectConfig.values());
 	}
 
 	@Override
 	public N4JSProjectConfig findProjectByName(String name) {
-		return name2ProjectConfig.get(name);
+		return projectId2ProjectConfig.get(name);
+	}
+
+	/** @return a project config for the given package name */
+	public Set<N4JSProjectConfig> findProjectsByPackageName(String packageName) {
+		return packageName2ProjectConfigs.get(packageName);
+	}
+
+	/** @return all package names in the workspace */
+	public Set<String> getAllPackageNames() {
+		return Collections.unmodifiableSet(packageName2ProjectConfigs.keySet());
 	}
 
 	/**
@@ -118,33 +133,32 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 
 	/** Remove all {@link N4JSProjectConfig}s from this workspace. */
 	protected void deregisterAllProjects() {
-		name2ProjectConfig.clear();
+		projectId2ProjectConfig.clear();
+		packageName2ProjectConfigs.clear();
 		definitionProjects.clear();
 	}
 
 	/**
-	 * Registers the project at the given path with the given project description. Does nothing if a project for that
-	 * path or name was already registered.
-	 * <p>
-	 * This behavior means that projects registered first will shadow all projects registered later; together with the
-	 * fact that the {@link ProjectDiscoveryHelper} will return dependencies after workspace projects, this leads to
-	 * workspace projects shadowing projects of same name in the {@code node_modules} folder.
+	 * Registers the project at the given path with the given project description.
 	 */
-	// TODO GH-1314 reconsider shadowing of projects with same name
 	public N4JSProjectConfig registerProject(FileURI path, ProjectDescription pd) {
-		String name = pd.getName();
-		if (name2ProjectConfig.containsKey(name)) {
-			return null; // see note on shadowing in API doc of this method!
+		String qualifiedName = pd.getId();
+		if (projectId2ProjectConfig.containsKey(qualifiedName)) {
+			return null;
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
-		name2ProjectConfig.put(newProject.getName(), newProject);
+		projectId2ProjectConfig.put(qualifiedName, newProject);
+		String packageName = pd.getPackageName();
+		if (packageName != null) { // e.g. yarn projects do not have a package name
+			packageName2ProjectConfigs.put(packageName, newProject);
+		}
 		updateDefinitionProjects(null, pd);
 		return newProject;
 	}
 
 	/** Creates an instance of {@link N4JSProjectConfig} without registering it. */
 	protected N4JSProjectConfig createProjectConfig(FileURI path, ProjectDescription pd) {
-		return new N4JSProjectConfig(this, path, pd, projectDescriptionLoader);
+		return new N4JSProjectConfig(this, path, pd, projectDescriptionLoader, semanticDependencySupplier);
 	}
 
 	/** Invoked by {@link N4JSProjectConfig} when its state changes. */
@@ -166,12 +180,12 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	protected void reloadAllProjectInformationFromDisk() {
 		deregisterAllProjects();
 		Path baseDir = getPathAsFileURI().toPath();
-		Map<Path, ProjectDescription> pdCache = new HashMap<>();
-		List<Path> newProjectPaths = projectDiscoveryHelper.collectAllProjectDirs(Collections.singleton(baseDir),
-				pdCache, true /* force loading of all project descriptions */);
-		for (Path newProjectPath : newProjectPaths) {
+		Map<Path, ProjectDescription> projects = projectDiscoveryHelper
+				.collectAllProjectDirs(Collections.singleton(baseDir));
+
+		for (Path newProjectPath : projects.keySet()) {
 			FileURI newProjectPathAsFileURI = new FileURI(newProjectPath);
-			ProjectDescription pd = pdCache.get(newProjectPath); // should not be null (we forced loading above)
+			ProjectDescription pd = projects.get(newProjectPath);
 			registerProject(newProjectPathAsFileURI, pd);
 		}
 	}
@@ -247,27 +261,43 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		for (URI uri : Sets.union(oldProjectsMap.keySet(), newProjectsMap.keySet())) {
 			boolean isOld = oldProjectsMap.containsKey(uri);
 			boolean isNew = newProjectsMap.containsKey(uri);
+
 			if (isOld && !isNew) {
+				// deleted
 				changes = changes.merge(WorkspaceChanges.createProjectRemoved(oldProjectsMap.get(uri)));
 			} else if (!isOld && isNew) {
+				// added
 				ProjectConfigSnapshot newPC = configSnapshotFactory
 						.createProjectConfigSnapshot(newProjectsMap.get(uri));
 				changes = changes.merge(WorkspaceChanges.createProjectAdded(newPC));
 			} else if (isOld && isNew) {
-				if (alsoDetectChangedProjects) {
-					ProjectConfigSnapshot oldPC = oldProjectsMap.get(uri);
+				// check name change
+				String oldPackageName = ((N4JSProjectConfigSnapshot) oldProjectsMap.get(uri)).getPackageName();
+				String newPackageName = newProjectsMap.get(uri).getPackageName();
+				if (Objects.equals(oldPackageName, newPackageName)) {
+					// no change
+					if (alsoDetectChangedProjects) {
+						ProjectConfigSnapshot oldPC = oldProjectsMap.get(uri);
+						ProjectConfigSnapshot newPC = configSnapshotFactory
+								.createProjectConfigSnapshot(newProjectsMap.get(uri));
+
+						changes = changes.merge(N4JSProjectConfig.computeChanges(oldPC, newPC));
+					}
+				} else {
+					// names changed
 					ProjectConfigSnapshot newPC = configSnapshotFactory
 							.createProjectConfigSnapshot(newProjectsMap.get(uri));
-
-					changes = changes.merge(N4JSProjectConfig.computeChanges(oldPC, newPC));
+					changes = changes.merge(WorkspaceChanges.createProjectAdded(newPC));
+					changes = changes.merge(WorkspaceChanges.createProjectRemoved(oldProjectsMap.get(uri)));
 				}
+
 			}
 		}
 		return changes;
 	}
 
 	/**
-	 * The list of {@link N4JSProjectConfig#computeSemanticDependencies() semantic dependencies} of
+	 * The list of {@link N4JSProjectConfig#getSemanticDependencies() semantic dependencies} of
 	 * {@link N4JSProjectConfig}s is tricky for three reasons:
 	 * <ol>
 	 * <li>the semantic dependencies do not contain names of non-existing projects (in case of unresolved project
@@ -284,9 +314,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	protected WorkspaceChanges recomputeSemanticDependenciesIfNecessary(WorkspaceConfigSnapshot oldWorkspaceConfig,
 			WorkspaceChanges changes) {
 
-		boolean needRecompute = !changes.getAddedProjects().isEmpty() || !changes.getRemovedProjects().isEmpty()
+		boolean needRecompute = !changes.getAddedProjects().isEmpty()
+				|| !changes.getRemovedProjects().isEmpty()
 				|| Iterables.any(changes.getChangedProjects(),
-						pc -> didDefinitionPropertiesChange(pc, oldWorkspaceConfig));
+						pc -> affectedByPropertyChanges(pc, oldWorkspaceConfig));
 
 		if (needRecompute) {
 			List<ProjectConfigSnapshot> projectsWithChangedSemanticDeps = new ArrayList<>();
@@ -299,8 +330,8 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 				}
 				// convert to list in next line, because we want the below #equals() check to also include the order:
 				List<String> oldSemanticDeps = new ArrayList<>(oldSnapshot.getDependencies());
-				List<String> newSemanticDeps = ((N4JSProjectConfig) pc).computeSemanticDependencies().stream()
-						.map(ProjectDependency::getProjectName)
+				List<String> newSemanticDeps = ((N4JSProjectConfig) pc).getSemanticDependencies().stream()
+						.map(ProjectDependency::getPackageName)
 						.collect(Collectors.toList());
 				if (!newSemanticDeps.equals(oldSemanticDeps)) {
 					ProjectConfigSnapshot newSnapshot = configSnapshotFactory.createProjectConfigSnapshot(pc);
@@ -339,21 +370,43 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 	/** Tells whether the dependencies of the given project changed w.r.t. the given old workspace config. */
 	private static boolean didDependenciesChange(ProjectConfigSnapshot projectConfig,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
+
 		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(projectConfig.getName());
-		return oldProjectConfig == null || !Objects.equals(
-				((N4JSProjectConfigSnapshot) projectConfig).getDependencies(),
-				((N4JSProjectConfigSnapshot) oldProjectConfig).getDependencies());
+		N4JSProjectConfigSnapshot newCasted = (N4JSProjectConfigSnapshot) projectConfig;
+		N4JSProjectConfigSnapshot oldCasted = (N4JSProjectConfigSnapshot) oldProjectConfig;
+
+		return oldProjectConfig == null
+				|| !Objects.equals(oldCasted.getPackageName(), newCasted.getPackageName())
+				|| !Objects.equals(
+						((N4JSProjectConfigSnapshot) projectConfig).getDependencies(),
+						((N4JSProjectConfigSnapshot) oldProjectConfig).getDependencies());
 	}
 
 	/** Tells whether the property {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} changed. */
-	private static boolean didDefinitionPropertiesChange(ProjectConfigSnapshot newProjectConfig,
+	private static boolean affectedByPropertyChanges(ProjectConfigSnapshot newProjectConfig,
 			WorkspaceConfigSnapshot oldWorkspaceConfig) {
 		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByName(newProjectConfig.getName());
 		if (oldProjectConfig == null) {
 			return true;
 		}
-		N4JSProjectConfigSnapshot newCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
 		N4JSProjectConfigSnapshot oldCasted = (N4JSProjectConfigSnapshot) oldProjectConfig;
+		N4JSProjectConfigSnapshot newCasted = (N4JSProjectConfigSnapshot) newProjectConfig;
+
+		if (didDefinitionPropertiesChange(oldCasted, newCasted)) {
+			return true;
+		}
+
+		if (!Objects.equals(oldCasted.getPackageName(), newCasted.getPackageName())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/** Tells whether the property {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} changed. */
+	private static boolean didDefinitionPropertiesChange(N4JSProjectConfigSnapshot oldCasted,
+			N4JSProjectConfigSnapshot newCasted) {
+
 		boolean newIsDefinition = newCasted.getType() == ProjectType.DEFINITION;
 		boolean oldIsDefinition = oldCasted.getType() == ProjectType.DEFINITION;
 		if (newIsDefinition != oldIsDefinition) {

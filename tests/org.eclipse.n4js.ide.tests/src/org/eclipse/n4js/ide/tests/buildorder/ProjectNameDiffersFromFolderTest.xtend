@@ -19,7 +19,7 @@ class ProjectNameDiffersFromFolderTest extends AbstractBuildOrderTest {
 
 	@Test
 	def void testDiffName() {
-		test("yarn-test-project, Not-P1", 
+		test("yarn-test-project, yarn-test-project/packages/P1", 
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				PACKAGE_JSON -> '''
@@ -42,7 +42,7 @@ class ProjectNameDiffersFromFolderTest extends AbstractBuildOrderTest {
 
 	@Test
 	def void testScopedProjectDiffName1() {
-		test("yarn-test-project, @OtherScope/Not-P1", 
+		test("yarn-test-project, yarn-test-project/packages/@MyScope/P1", 
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"@MyScope/P1" -> #[
 				PACKAGE_JSON -> '''
@@ -65,7 +65,7 @@ class ProjectNameDiffersFromFolderTest extends AbstractBuildOrderTest {
 
 	@Test
 	def void testScopedProjectDiffName2() {
-		test("yarn-test-project, @OtherScope/P1", 
+		test("yarn-test-project, yarn-test-project/packages/MissingScope-P1", 
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"MissingScope-P1" -> #[
 				PACKAGE_JSON -> '''

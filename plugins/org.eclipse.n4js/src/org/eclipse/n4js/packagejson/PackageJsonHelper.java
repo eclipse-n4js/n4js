@@ -36,7 +36,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -86,15 +85,15 @@ public class PackageJsonHelper {
 	 * @return the project description converted from the given JSON document or <code>null</code> if the root value of
 	 *         the given JSON document is not a {@link JSONObject}.
 	 */
-	public ProjectDescriptionBuilder convertToProjectDescription(URI location, JSONDocument packageJSON,
-			boolean applyDefaultValues, String defaultProjectName) {
+	public ProjectDescriptionBuilder convertToProjectDescription(JSONDocument packageJSON, boolean applyDefaultValues,
+			String defaultProjectName) {
+
 		JSONValue rootValue = packageJSON.getContent();
 		if (!(rootValue instanceof JSONObject)) {
 			return null;
 		}
 
 		ProjectDescriptionBuilder target = new ProjectDescriptionBuilder();
-		target.setLocation(location);
 		List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 		convertRootPairs(target, rootPairs);
 
@@ -115,7 +114,7 @@ public class PackageJsonHelper {
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case NAME:
-				target.setName(asNonEmptyStringOrNull(value));
+				target.setPackageName(asNonEmptyStringOrNull(value));
 				break;
 			case VERSION:
 				target.setVersion(asVersionNumberOrNull(value));
@@ -232,7 +231,7 @@ public class PackageJsonHelper {
 		Set<String> existingProjectNames = new HashSet<>();
 		if (avoidDuplicates) {
 			for (ProjectDependency pd : target.getDependencies()) {
-				existingProjectNames.add(pd.getProjectName());
+				existingProjectNames.add(pd.getPackageName());
 			}
 		}
 
@@ -287,7 +286,7 @@ public class PackageJsonHelper {
 		Set<String> projectNamesToRemove = new HashSet<>();
 		List<ProjectDependency> projectDependencies = target.getDependencies();
 		for (ProjectDependency dep : projectDependencies) {
-			String otherProject = dep.getProjectName();
+			String otherProject = dep.getPackageName();
 			for (String suffix : N4JSGlobals.API_PROJECT_NAME_SUFFIXES) {
 				if (otherProject.endsWith(suffix)) {
 					projectNamesToRemove.add(otherProject.substring(0, otherProject.length() - suffix.length()));
@@ -297,7 +296,7 @@ public class PackageJsonHelper {
 		}
 		if (!projectNamesToRemove.isEmpty()) {
 			for (int i = projectDependencies.size() - 1; i >= 0; i--) {
-				if (projectNamesToRemove.contains(projectDependencies.get(i).getProjectName())) {
+				if (projectNamesToRemove.contains(projectDependencies.get(i).getPackageName())) {
 					projectDependencies.remove(i);
 				}
 			}
@@ -314,8 +313,8 @@ public class PackageJsonHelper {
 			// project type 'PLAINJS':
 			target.setType(parseProjectType(PROJECT_TYPE.defaultValue));
 		}
-		if (target.getName() == null) {
-			target.setName(defaultProjectName);
+		if (target.getPackageName() == null) {
+			target.setPackageName(defaultProjectName);
 		}
 		if (target.getVersion() == null) {
 			target.setVersion(createDefaultVersionNumber());

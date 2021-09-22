@@ -53,7 +53,7 @@ public class ExcludePckJson_IdeTest extends ConvertedIdeTest {
 		File project = getProjectRootForImportedProject(PROJECT_NAME);
 		assertTrue("Test project is not a directory.", project.isDirectory());
 
-		IResourceDescriptions index = concurrentIndex.getProjectIndex(PROJECT_NAME);
+		IResourceDescriptions index = concurrentIndex.getProjectIndex("yarn-test-project/packages/" + PROJECT_NAME);
 		assertNotNull("index of test project not found", index);
 
 		List<String> jsonFilesInIndex = new ArrayList<>();
