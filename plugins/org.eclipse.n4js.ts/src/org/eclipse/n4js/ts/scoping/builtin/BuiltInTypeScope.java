@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.ts.scoping.builtin;
 
+import static org.eclipse.n4js.ts.types.util.PrimitiveTypeBuilder.createPrimitive;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -25,13 +29,17 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.AnyType;
+import org.eclipse.n4js.ts.types.BuiltInType;
 import org.eclipse.n4js.ts.types.NullType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TInterface;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeDefs;
+import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
@@ -44,6 +52,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Functions;
+import com.google.common.base.Preconditions;
 
 /**
  * This scope provides access to the built in JS types. It is recommended to use {@link BuiltInTypeScopeAccess} directly
@@ -59,8 +68,7 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 	 */
 	@VisibleForTesting
 	public static final String[] FILE_NAMES = {
-			"primitives_js.n4ts",
-			"primitives_n4.n4ts",
+			"primitives.n4jsd",
 			"builtin_js.n4jsd",
 			"builtin_n4.n4jsd",
 			"builtin_n4idl.n4jsd",
@@ -124,6 +132,10 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 	 * The primitive name {@code boolean}
 	 */
 	public static final QualifiedName QN_BOOLEAN = QualifiedName.create("boolean");
+	/**
+	 * The object type name {@code Boolean}
+	 */
+	public static final QualifiedName QN_BOOLEAN_OBJECT = QualifiedName.create("Boolean");
 	/**
 	 * The primitive name {@code symbol}
 	 */
@@ -323,6 +335,13 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 	 */
 	public final PrimitiveType getBooleanType() {
 		return getEObjectOrProxy(QN_BOOLEAN);
+	}
+
+	/**
+	 * Returns the built-in object type "Boolean" (upper case!).
+	 */
+	public final TClass getBooleanObjectType() {
+		return getEObjectOrProxy(QN_BOOLEAN_OBJECT);
 	}
 
 	/**
@@ -674,6 +693,15 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 			// FIXME clean up
 
 			Script script = (Script) ast;
+			TModule module = script.getModule();
+
+			String fileName = resource.getURI().lastSegment();
+			if ("primitives.n4jsd".equals(fileName)) {
+				List<Type> coreTypes = createCoreTypes();
+				EcoreUtilN4.doWithDeliver(false, () -> {
+					module.getTopLevelTypes().addAll(coreTypes);
+				}, module);
+			}
 
 			// List<Diagnostic> syntaxErrors = script.eResource().getErrors();
 			// if (!syntaxErrors.isEmpty()) {
@@ -681,32 +709,26 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 			// + " contains syntax errors:\n " + Joiner.on("\n ").join(syntaxErrors));
 			// }
 
-			for (Type type : script.getModule().getTopLevelTypes()) {
+			for (Type type : module.getTopLevelTypes()) {
 				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
 				elements.put(description.getName(), description);
 			}
 
 			// trigger resolution
 			try {
+				// FIXME use N4JSResource instead!
 				((LazyLinkingResource) resource).resolveLazyCrossReferences(CancelIndicator.NullImpl);
 			} catch (Throwable th) {
 				throw new IllegalStateException(
 						"exception while resolving built-in definition " + resource.getURI().lastSegment(), th);
 			}
-			// IdentifierRef idRef = IteratorExtensions.head(
-			// IteratorExtensions.filter(ast.eAllContents(), IdentifierRef.class));
-			// idRef.getId();
-			// ParameterizedTypeRef typeRef = IteratorExtensions.head(
-			// IteratorExtensions.filter(ast.eAllContents(), ParameterizedTypeRef.class));
-			// typeRef.getDeclaredType();
 
-			String fileName = resource.getURI().lastSegment();
-			if (fileName.equals("builtin_js.n4jsd")) {
-				Map<String, Type> typesByName = script.getModule().getTopLevelTypes().stream()
+			if ("builtin_js.n4jsd".equals(fileName)) {
+				Map<String, Type> typesByName = module.getTopLevelTypes().stream()
 						.collect(Collectors.toMap(Type::getName, Functions.identity()));
 
 				Type anyType = (Type) elements.get(QN_ANY).getEObjectOrProxy();
-				Type stringType = (Type) elements.get(QN_STRING).getEObjectOrProxy();
+				PrimitiveType stringType = (PrimitiveType) elements.get(QN_STRING).getEObjectOrProxy();
 				TClass stringObjectType = (TClass) typesByName.get(QN_STRING_OBJECT.toString());
 				TClass arrayObjectType = (TClass) typesByName.get(QN_ARRAY.toString());
 				TInterface argumentsType = (TInterface) typesByName.get(QN_I_ARGUMENTS.toString());
@@ -719,7 +741,59 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 							.setDeclaredElementType(TypeUtils.createTypeRef(arrayObjectType.getTypeVars().get(0)));
 					argumentsType.setDeclaredElementType(TypeUtils.createTypeRef(anyType));
 				}, stringObjectType, arrayObjectType);
+
+				// set autoboxedType property of primitive types
+				setAutoboxedType(elements, QN_BOOLEAN, QN_BOOLEAN_OBJECT);
+				setAutoboxedType(elements, QN_NUMBER, QN_NUMBER_OBJECT);
+				setAutoboxedType(elements, QN_INT, QN_NUMBER_OBJECT);
+				setAutoboxedType(elements, QN_STRING, QN_STRING_OBJECT);
+				setAutoboxedType(elements, QN_PATHSELECTOR, QN_STRING_OBJECT);
+				setAutoboxedType(elements, QN_I18NKEY, QN_STRING_OBJECT);
+				setAutoboxedType(elements, QN_TYPENAME, QN_STRING_OBJECT);
 			}
 		}
+	}
+
+	private void setAutoboxedType(Map<QualifiedName, IEObjectDescription> elements,
+			QualifiedName primitiveTypeName, QualifiedName autoboxedTypeName) {
+		PrimitiveType type = (PrimitiveType) elements.get(primitiveTypeName).getEObjectOrProxy();
+		TClassifier autoboxedType = (TClassifier) elements.get(autoboxedTypeName).getEObjectOrProxy();
+		EcoreUtilN4.doWithDeliver(false, () -> {
+			type.setAutoboxedType(autoboxedType);
+		}, type);
+	}
+
+	private List<Type> createCoreTypes() {
+		final List<Type> result = new ArrayList<>();
+
+		// EcmaScript
+		PrimitiveType stringType;
+		result.add(createBuiltIn(TypesPackage.Literals.UNDEFINED_TYPE));
+		result.add(createBuiltIn(TypesPackage.Literals.NULL_TYPE));
+		result.add(createPrimitive(QN_BOOLEAN).done());
+		result.add(createPrimitive(QN_NUMBER).done());
+		result.add(stringType = createPrimitive(QN_STRING).done());
+		result.add(createPrimitive(QN_SYMBOL).done());
+
+		stringType.setDeclaredElementType(TypeUtils.createTypeRef(stringType));
+
+		// N4JS
+		result.add(createBuiltIn(TypesPackage.Literals.ANY_TYPE));
+		result.add(createBuiltIn(TypesPackage.Literals.VOID_TYPE));
+		result.add(createPrimitive(QN_INT).done());
+		result.add(createPrimitive(QN_PATHSELECTOR).typeParam("T").assignmentCompatible(stringType).done());
+		result.add(createPrimitive(QN_I18NKEY).assignmentCompatible(stringType).done());
+		result.add(createPrimitive(QN_TYPENAME).typeParam("T").assignmentCompatible(stringType).done());
+
+		return result;
+	}
+
+	private BuiltInType createBuiltIn(EClass eClass) {
+		BuiltInType result = (BuiltInType) TypesFactory.eINSTANCE.create(eClass);
+		String eClassName = eClass.getName();
+		Preconditions.checkState(eClassName.endsWith("Type"));
+		String name = eClassName.substring(0, eClassName.length() - "Type".length()).toLowerCase();
+		result.setName(name);
+		return result;
 	}
 }

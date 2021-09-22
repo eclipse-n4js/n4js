@@ -27,7 +27,7 @@ public interface AnyType extends BuiltInType {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Of course any can be subtyped, it is the bottom type.
+	 * Of course any can be subtyped, it is the top type.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

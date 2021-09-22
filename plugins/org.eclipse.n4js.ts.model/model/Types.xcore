@@ -849,7 +849,7 @@ class BuiltInType extends Type {
 
 class AnyType extends BuiltInType {
 	/**
-	 * Of course any can be subtyped, it is the bottom type.
+	 * Of course any can be subtyped, it is the top type.
 	 */
 	op boolean isFinal() {
 		return false;
