@@ -740,7 +740,7 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 					arrayObjectType
 							.setDeclaredElementType(TypeUtils.createTypeRef(arrayObjectType.getTypeVars().get(0)));
 					argumentsType.setDeclaredElementType(TypeUtils.createTypeRef(anyType));
-				}, stringObjectType, arrayObjectType);
+				}, stringObjectType, arrayObjectType, argumentsType);
 
 				// set autoboxedType property of primitive types
 				setAutoboxedType(elements, QN_BOOLEAN, QN_BOOLEAN_OBJECT);
