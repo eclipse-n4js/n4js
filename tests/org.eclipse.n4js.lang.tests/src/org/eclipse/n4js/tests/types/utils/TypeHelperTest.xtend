@@ -44,7 +44,7 @@ class TypeHelperTest  {
 
 	@Test
 	def void testCollectAllSuperTypesSimpleClasses() {
-		val typeDefs = '''
+		val script = '''
 			public class A{}
 			public class B extends A {}
 			public class C extends B {}
@@ -52,10 +52,10 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = typeDefs.module.topLevelTypes.get(0).createTypeRef()
-		var B = typeDefs.module.topLevelTypes.get(1).createTypeRef()
-		var C = typeDefs.module.topLevelTypes.get(2).createTypeRef();
-		var D = typeDefs.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.topLevelTypes.get(0).createTypeRef()
+		var B = script.module.topLevelTypes.get(1).createTypeRef()
+		var C = script.module.topLevelTypes.get(2).createTypeRef();
+		var D = script.module.topLevelTypes.get(3).createTypeRef();
 
 		assertEquals("", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, false).asString());
 		assertEquals("A", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, false).asString());
@@ -65,7 +65,7 @@ class TypeHelperTest  {
 
 	@Test
 	def void testCollectAllSuperTypesSimpleClassesReflexive() {
-		val typeDefs = '''
+		val script = '''
 			public class A{}
 			public class B extends A {}
 			public class C extends B {}
@@ -73,10 +73,10 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = typeDefs.module.topLevelTypes.get(0).createTypeRef();
-		var B = typeDefs.module.topLevelTypes.get(1).createTypeRef();
-		var C = typeDefs.module.topLevelTypes.get(2).createTypeRef();
-		var D = typeDefs.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.topLevelTypes.get(0).createTypeRef();
+		var B = script.module.topLevelTypes.get(1).createTypeRef();
+		var C = script.module.topLevelTypes.get(2).createTypeRef();
+		var D = script.module.topLevelTypes.get(3).createTypeRef();
 
 		assertEquals("A", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, true).asString());
 		assertEquals("B,A", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, true).asString());
@@ -86,7 +86,7 @@ class TypeHelperTest  {
 
 	@Test
 	def void testCollectAllSuperTypesRecursiveClasses() {
-		val typeDefs = '''
+		val script = '''
 			public class A extends D {}
 			public class B extends A {}
 			public class C extends B {}
@@ -94,10 +94,10 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = typeDefs.module.topLevelTypes.get(0).createTypeRef();
-		var B = typeDefs.module.topLevelTypes.get(1).createTypeRef();
-		var C = typeDefs.module.topLevelTypes.get(2).createTypeRef();
-		var D = typeDefs.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.topLevelTypes.get(0).createTypeRef();
+		var B = script.module.topLevelTypes.get(1).createTypeRef();
+		var C = script.module.topLevelTypes.get(2).createTypeRef();
+		var D = script.module.topLevelTypes.get(3).createTypeRef();
 
 		assertEquals("D,C,B", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, false).asString());
 		assertEquals("A,D,C", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, false).asString());
@@ -107,7 +107,7 @@ class TypeHelperTest  {
 
 	@Test
 	def void testCollectAllSuperTypesXtended() {
-		val typeDefs = '''
+		val script = '''
 			public class A implements I {}
 			public class B extends A implements L {}
 			public class C extends B implements R {}
@@ -121,17 +121,14 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = typeDefs.module.topLevelTypes.get(0).createTypeRef();
-		var B = typeDefs.module.topLevelTypes.get(1).createTypeRef();
-		var C = typeDefs.module.topLevelTypes.get(2).createTypeRef();
-		var D = typeDefs.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.topLevelTypes.get(0).createTypeRef();
+		var B = script.module.topLevelTypes.get(1).createTypeRef();
+		var C = script.module.topLevelTypes.get(2).createTypeRef();
+		var D = script.module.topLevelTypes.get(3).createTypeRef();
 
 		assertEquals("I", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, false).asString());
 		assertEquals("A,I,L,K", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, false).asString());
 		assertEquals("B,A,I,L,K,R", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(C, false).asString());
 		assertEquals("C,B,A,I,L,K,R,T,S", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(D, false).asString());
 	}
-
-
-
 }

@@ -117,13 +117,13 @@ class ObjectLiteralGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest
 		assertEquals(phase + ": expected TStructuralType getter count", 1, tStructType.ownedMembers.filter(TStructGetter).size)
 		assertEquals(phase + ": expected TStructuralType setter count", 1, tStructType.ownedMembers.filter(TStructSetter).size)
 
-		assertTStructField(phase, tStructType, "a", "//@types.3")
-		assertTStructField(phase, tStructType, "$data_property_b", "//@types.0")
-		assertTStructField(phase, tStructType, "c", "//@types.3")
-		assertTStructField(phase, tStructType, "d", "//@types.3")
-		assertTStructField(phase, tStructType, "$data_property_e", "//@types.0")
+		assertTStructField(phase, tStructType, "a", "/1/@topLevelTypes.4")
+		assertTStructField(phase, tStructType, "$data_property_b", "/1/@topLevelTypes.6")
+		assertTStructField(phase, tStructType, "c", "/1/@topLevelTypes.4")
+		assertTStructField(phase, tStructType, "d", "/1/@topLevelTypes.4")
+		assertTStructField(phase, tStructType, "$data_property_e", "/1/@topLevelTypes.6")
 
 		assertTGetter(phase, tStructType, "b")
-		assertTSetter(phase, tStructType, "e", "newE", "//@types.3")
+		assertTSetter(phase, tStructType, "e", "newE", "/1/@topLevelTypes.4")
 	}
 }

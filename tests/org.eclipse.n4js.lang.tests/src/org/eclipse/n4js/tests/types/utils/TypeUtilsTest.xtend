@@ -12,9 +12,9 @@ package org.eclipse.n4js.tests.types.utils
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
-import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource
 import org.eclipse.xtext.testing.InjectWith
@@ -26,6 +26,8 @@ import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
 
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+
 /**
  */
 @RunWith(XtextRunner)
@@ -33,12 +35,12 @@ import static org.junit.Assert.*
 class TypeUtilsTest {
 
 	@Inject
-	extension ParseHelper<TypeDefs>
+	extension ParseHelper<Script>
 
 
 	@Test
 	def void testDeclaredSuperTypesClass() {
-		val typeDefs =
+		val script =
 		'''
 		public class A {}
 		public class B extends A{}
@@ -52,14 +54,14 @@ class TypeUtilsTest {
 		public interface J {}
 		'''.parse();
 
-		assertNotNull(typeDefs);
+		assertNotNull(script);
 
-		val A = typeDefs.types.get(0);
-		val B = typeDefs.types.get(1);
-		val C = typeDefs.types.get(2);
-		val D = typeDefs.types.get(3);
-		val E = typeDefs.types.get(4);
-		val F = typeDefs.types.get(5);
+		val A = script.module.topLevelTypes.get(0);
+		val B = script.module.topLevelTypes.get(1);
+		val C = script.module.topLevelTypes.get(2);
+		val D = script.module.topLevelTypes.get(3);
+		val E = script.module.topLevelTypes.get(4);
+		val F = script.module.topLevelTypes.get(5);
 
 		assertEquals("", TypeUtils.declaredSuperTypes(A).map[typeRefAsString].join(","));
 		assertEquals("A", TypeUtils.declaredSuperTypes(B).map[typeRefAsString].join(","));
@@ -71,7 +73,7 @@ class TypeUtilsTest {
 
 	@Test
 	def void testDeclaredSuperTypesInterfaces() {
-		val typeDefs =
+		val script =
 		'''
 		public interface I {}
 		public interface J extends I {}
@@ -79,11 +81,11 @@ class TypeUtilsTest {
 		public interface K  {}
 		'''.parse();
 
-		assertNotNull(typeDefs);
+		assertNotNull(script);
 
-		val I = typeDefs.types.get(0);
-		val J = typeDefs.types.get(1);
-		val L = typeDefs.types.get(2);
+		val I = script.module.topLevelTypes.get(0);
+		val J = script.module.topLevelTypes.get(1);
+		val L = script.module.topLevelTypes.get(2);
 
 		assertEquals("", TypeUtils.declaredSuperTypes(I).map[typeRefAsString].join(","));
 		assertEquals("I", TypeUtils.declaredSuperTypes(J).map[typeRefAsString].join(","));
@@ -92,22 +94,19 @@ class TypeUtilsTest {
 
 	@Test
 	def void testDeclaredSuperTypesOthers() {
-		val typeDefs =
+		val script =
 		'''
-			undefined{}
-			null{}
-			primitive boolean {}
-			any{}
-			void{}
+			true;
 		'''.parse();
 
-		assertNotNull(typeDefs);
+		assertNotNull(script);
 
-		val undefType = typeDefs.types.get(0);
-		val nullType = typeDefs.types.get(1);
-		val booleanType = typeDefs.types.get(2);
-		val anyType = typeDefs.types.get(2);
-		val voidType = typeDefs.types.get(2);
+		val G = script.newRuleEnvironment;
+		val undefType = G.undefinedType;
+		val nullType = G.nullType;
+		val booleanType = G.booleanType;
+		val anyType = G.anyType;
+		val voidType = G.voidType;
 
 		assertEquals("", TypeUtils.declaredSuperTypes(null).map[typeRefAsString].join(","));
 		assertEquals("", TypeUtils.declaredSuperTypes(undefType).map[typeRefAsString].join(","));
@@ -167,10 +166,10 @@ class TypeUtilsTest {
 	}
 
 	def private void testCopy_recursiveUpperBounds(CharSequence code, String expectedImplicitUpperBoundOfLastWildcard) {
-		val typeDefs = code.parse();
-		(typeDefs.eResource as LazyLinkingResource).resolveLazyCrossReferences(CancelIndicator.NullImpl); // important!
+		val script = code.parse();
+		(script.eResource as LazyLinkingResource).resolveLazyCrossReferences(CancelIndicator.NullImpl); // important!
 
-		val wildcard = typeDefs.eAllContents.filter(Wildcard).last // take *last* wildcard in code
+		val wildcard = script.eAllContents.filter(Wildcard).last // take *last* wildcard in code
 		assertNotNull(wildcard);
 
 		// make sure we can copy the wildcard without a StackOverflowException

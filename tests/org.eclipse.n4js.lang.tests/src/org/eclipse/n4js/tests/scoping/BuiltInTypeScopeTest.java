@@ -25,8 +25,8 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
-import org.eclipse.n4js.scoping.builtin.GlobalObjectScope;
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.GlobalObjectScope;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.PrimitiveType;
@@ -101,7 +101,7 @@ public class BuiltInTypeScopeTest {
 		GlobalObjectScope.get(resourceSet).getAllElements();
 
 		Assert.assertEquals(FluentIterable.from(builtInResourceSet.getResources()).transform(Resource::getURI)
-				.join(Joiner.on('\n')), 7, builtInResourceSet.getResources().size());
+				.join(Joiner.on('\n')), 6, builtInResourceSet.getResources().size());
 
 		EcoreUtil.resolveAll(builtInResourceSet);
 		Map<EObject, Collection<Setting>> unresolvedProxies = EcoreUtil.UnresolvedProxyCrossReferencer

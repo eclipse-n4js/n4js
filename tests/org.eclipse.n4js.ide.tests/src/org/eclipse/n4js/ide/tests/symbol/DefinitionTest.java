@@ -37,7 +37,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_01() throws Exception {
 		testAtCursor(
 				"var s: s<|>tring = ''; s.length;",
-				"(n4scheme:/primitives_js.n4ts, [33:10 - 33:16])");
+				"(n4scheme:/primitives.n4jsd, [0:0 - 12:0])");
 	}
 
 	/***/
