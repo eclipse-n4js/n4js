@@ -148,7 +148,10 @@ public class N4JSWorkspaceConfig implements XIWorkspaceConfig {
 		}
 		N4JSProjectConfig newProject = createProjectConfig(path, pd);
 		projectId2ProjectConfig.put(qualifiedName, newProject);
-		packageName2ProjectConfigs.put(pd.getPackageName(), newProject);
+		String packageName = pd.getPackageName();
+		if (packageName != null) { // e.g. yarn projects do not have a package name
+			packageName2ProjectConfigs.put(packageName, newProject);
+		}
 		updateDefinitionProjects(null, pd);
 		return newProject;
 	}
