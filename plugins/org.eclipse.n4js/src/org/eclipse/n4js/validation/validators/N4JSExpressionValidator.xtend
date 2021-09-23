@@ -65,7 +65,6 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
@@ -1511,7 +1510,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		TypeRef receiverTypeRef, CompileTimeValue indexValue, boolean indexIsNumeric) {
 
 		val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);
-		if (ComputedPropertyNameValueConverter.SYMBOL_ITERATOR_MANGLED == memberName) {
+		if (N4JSLanguageUtils.SYMBOL_ITERATOR_MANGLED == memberName) {
 			// Implementation restriction: member name clashes with compiler-internal, synthetic, mangled name.
 			addIssue(getMessageForEXP_INDEXED_ACCESS_IMPL_RESTRICTION(), indexedAccess,
 				EXP_INDEXED_ACCESS_IMPL_RESTRICTION);

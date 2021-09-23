@@ -14,7 +14,6 @@ import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
@@ -29,6 +28,7 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 import static extension org.eclipse.n4js.types.utils.TypeUtils.convertTypeArgsToRefs
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
@@ -138,9 +138,9 @@ class IterableComputer extends TypeSystemHelperStrategy {
 				val res = G.get(Resource);
 				if(res instanceof Resource) {
 					val memberName = if(iterableType===G.asyncIterableType) {
-						ComputedPropertyNameValueConverter.SYMBOL_ASYNC_ITERATOR_MANGLED;
+						N4JSLanguageUtils.SYMBOL_ASYNC_ITERATOR_MANGLED;
 					} else {
-						ComputedPropertyNameValueConverter.SYMBOL_ITERATOR_MANGLED;
+						N4JSLanguageUtils.SYMBOL_ITERATOR_MANGLED;
 					};
 					val m = containerTypesHelper.fromContext(res).findMember(declType,memberName,false,false);
 					if(m instanceof TMethod) {

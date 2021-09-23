@@ -68,9 +68,8 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
-import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -149,9 +148,32 @@ public class N4JSLanguageUtils {
 	public static boolean OPAQUE_JS_MODULES = true;
 
 	/**
-	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
+	 * Prefix used in names of members that are identified by a built-in symbol.
+	 * <p>
+	 * Take this example:
+	 *
+	 * <pre>
+	 * class C&lt;T> {
+	 *     Iterator&lt;T> [Symbol.iterator]() {
+	 *         // ...
+	 *     }
+	 * }
+	 * </pre>
+	 *
+	 * Here, class C has a single method identified by built-in symbol 'iterator'. Internally, this will be represented
+	 * by a method with name {@link #SYMBOL_IDENTIFIER_PREFIX} + "iterator".
 	 */
-	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
+	public static final String SYMBOL_IDENTIFIER_PREFIX = "#";
+
+	/**
+	 * Internally special-casing [Symbol.iterator] as a member named hash-iterator.
+	 */
+	public static final String SYMBOL_ITERATOR_MANGLED = SYMBOL_IDENTIFIER_PREFIX + "iterator";
+
+	/**
+	 * Internally special-casing [Symbol.asyncIterator] as a member named hash-iterator.
+	 */
+	public static final String SYMBOL_ASYNC_ITERATOR_MANGLED = SYMBOL_IDENTIFIER_PREFIX + "asyncIterator";
 
 	/**
 	 * The default language version returned by method {@link #getLanguageVersion()} in case no actual

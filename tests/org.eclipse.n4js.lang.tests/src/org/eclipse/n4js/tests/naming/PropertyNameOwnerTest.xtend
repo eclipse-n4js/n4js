@@ -26,8 +26,8 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.parser.conversion.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
@@ -43,7 +43,7 @@ import static org.junit.Assert.*
 @InjectWith(N4JSInjectorProviderWithIssueSuppression)
 class PropertyNameOwnerTest {
 
-	private static final String SYM_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
+	private static final String SYM_PREFIX = N4JSLanguageUtils.SYMBOL_IDENTIFIER_PREFIX;
 
 	@Inject
 	private extension N4JSParseHelper

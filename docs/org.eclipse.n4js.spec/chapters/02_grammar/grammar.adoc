@@ -34,24 +34,7 @@ IdentifierStart : UnicodeLetter | '_';
                 \ UnicodeEscapeSequence
 ----
 
-N4JS supports a limited form of computed-names for member declarations:
-
-[source,xtext]
-----
-N4JSPropertyComputedName:
-    '[' (SymbolLiteralComputedName | StringLiteralComputedName) ']'
-;
-
-SymbolLiteralComputedName: N4JSIdentifier '.' N4JSIdentifier ;
-
-StringLiteralComputedName: STRING ;
-----
-
-As can be seen, a computed-name must be either
-
-*  a symbol reference, e.g., `Symbol.iterator`
-*  a string literal, i.e., a compile time known constant.
-This notation is useful when interoperating with libraries that define members whose names contain special characters (e.g., a field name starting with commercial-at)
+In addition, N4JS supports computed-names for member declarations.
 
 In N4JS, identifiers are further constrained in order to avoid ambiguities and to make code more readable.
 Some of these constraints will lead to errors, others only to warnings.
