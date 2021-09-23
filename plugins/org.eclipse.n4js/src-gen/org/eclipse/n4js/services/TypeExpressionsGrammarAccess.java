@@ -1589,8 +1589,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		///**
 		// * All TMembers here are only used in ParameterizedTypeRefStructural references
-		// * Most type references are optional. However, in the types language (n4ts), these
-		// * references are NOT optional.
+		// * Most type references are optional.
 		// */
 		//TStructMember:
 		//      TStructGetter
@@ -3307,8 +3306,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	///**
 	// * All TMembers here are only used in ParameterizedTypeRefStructural references
-	// * Most type references are optional. However, in the types language (n4ts), these
-	// * references are NOT optional.
+	// * Most type references are optional.
 	// */
 	//TStructMember:
 	//      TStructGetter

@@ -1615,7 +1615,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				return false;
 			}
 			TField case !id.writeable: {
-				// note: this case can happen only when referring to globals in GlobalObject (see file global.n4ts);
+				// note: this case can happen only when referring to globals in GlobalObject (see file global.n4jsd);
 				// in all other cases of referencing a field, 'lhs' will be a PropertyAccessExpression (those cases
 				// will be handled in class AbstractMemberScope as part of scoping)
 				addIssue(

@@ -11,18 +11,17 @@
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
 import com.google.inject.Inject
-import org.eclipse.n4js.ts.types.TModule
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.resource.IResourceDescriptions
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
-import org.eclipse.xtext.xbase.lib.Pair
-
-import static org.junit.Assert.*
 import org.eclipse.n4js.resource.UserDataMapper
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.IResourceDescription
+import org.eclipse.xtext.resource.IResourceDescriptions
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+
+import static org.junit.Assert.*
 
 /**
  */
@@ -35,7 +34,7 @@ class TypesAssertionsExtensions {
 	private extension TypeEqualityAssertionsExtension
 
 	def Iterable<IEObjectDescription> assertAllExportedElementAreOnIndex(String phase, IResourceDescriptions resourceDescriptions, List<? extends Pair<? extends Class<? extends EObject>, String>> expectedExportedTypeToNamePairs) {
-		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension != "n4ts"].map[exportedObjects].flatten
+		val eoDescs = resourceDescriptions.allResourceDescriptions.map[exportedObjects].flatten
 		val expectedTestContentCount = expectedExportedTypeToNamePairs.size // type roots
 		assertEquals(phase + ": count of elements are marked as exported should equal to EResourceDescriptions", expectedTestContentCount, eoDescs.size)
 		assertExpectedTypes(phase, eoDescs, expectedExportedTypeToNamePairs)
@@ -44,7 +43,7 @@ class TypesAssertionsExtensions {
 	
 	def void assertUserDataCreated(String phase, Resource testResource) {
 		val resourceDescriptions = assertIndexHasBeenFilled(phase, testResource);
-		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension != "n4ts"].map[exportedObjects].flatten
+		val eoDescs = resourceDescriptions.allResourceDescriptions.map[exportedObjects].flatten
 		val syntaxEoDesc = eoDescs.head;
 		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT));
 	}

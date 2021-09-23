@@ -124,7 +124,7 @@ class ScriptDependencyResolver {
 	 * <ul>
 	 * Evaluates to true if:
 	 * <li> provided EO is not from the module provided at creation time (that module is assumed to be one for which we analyze dependencies)</li>
-	 * <li> provided EO is not from built in types (usually n4ts files)</li>
+	 * <li> provided EO is not from built in types</li>
 	 * <li> (in case of AST elements) is not annotated with {@link AnnotationDefinition.PROVIDED_BY_RUNTIME)</li>
 	 * <li> (in case of TS elements) providedByRuntime evaluates to false</li>
 	 * </ul>

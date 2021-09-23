@@ -114,7 +114,7 @@ public class FindReferenceHelper {
 		public void accept(IReferenceDescription description) {
 			// This method is only called in case of finding refs for primitives.
 			// For instance, the method is called when a reference to a primitive type (e.g. string)
-			// is found in primitive_ts.n4ts
+			// is found in primitives.n4jsd
 			// We don't care about those in Xpect test.
 		}
 	}
