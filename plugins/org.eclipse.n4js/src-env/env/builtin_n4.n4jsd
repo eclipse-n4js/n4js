@@ -29,7 +29,7 @@ export external public abstract class N4Element extends N4Object {
 	/**
 	 * Disallow instantiation of this class and its subclasses by user code.
 	 */
-	private constructor():void;
+	private constructor();
 
 	/**
 	 * Annotations attached to this element.
@@ -288,7 +288,7 @@ export external public class N4Enum {
 	/**
 	 * Disallow instantiation of this type by user code.
 	 */
-	private constructor(name: string, value: string=):void;
+	private constructor(name: string, value: string=);
 
 	/**
 	 * Returns the name of a concrete literal
@@ -305,7 +305,8 @@ export external public class N4Enum {
 	 * Returns a string representation of a concrete literal, it returns
 	 * the same result as value()
 	 */
-	 public toString(): string
+	@Override
+	public toString(): string
 
 	/**
 	 * Returns the meta class object of this enum literal for reflection.
@@ -342,7 +343,7 @@ export external public class N4Annotation extends N4Object {
 	/**
 	 * Disallow instantiation of this class by user code.
 	 */
-	private constructor():void;
+	private constructor();
 
 	public get name(): string
 	public get details(): Array<string>
@@ -360,7 +361,7 @@ export external public class N4Object extends Object {
 	 */
 	// This constructor is only defined here to avoid having the one from Object (which has a parameter) be inherited
 	// by all N4JS classes that do not define a custom constructor.
-	public constructor(): void
+	public constructor()
 
 	/**
 	 * Returns the meta class object of this class for reflection.
@@ -380,13 +381,14 @@ export external public class N4NumberBasedEnum extends number {
 	/**
 	 * Disallow instantiation of this type by user code.
 	 */
-	private constructor():void;
+	private constructor();
 
 	/**
 	 * Returns a string representation of a concrete literal, it returns
 	 * the same result as value()
 	 */
-	 public toString(): string
+	@Override
+	public toString(): string
 
 	/**
 	 * Returns array of concrete enum literals
@@ -402,13 +404,14 @@ export external public class N4StringBasedEnum extends string {
 	/**
 	 * Disallow instantiation of this type by user code.
 	 */
-	private constructor():void;
+	private constructor();
 
 	/**
 	 * Returns a string representation of a concrete literal, it returns
 	 * the same result as value()
 	 */
-	 public toString(): string
+	@Override
+	public toString(): string
 
 	/**
 	 * Returns array of concrete enum literals

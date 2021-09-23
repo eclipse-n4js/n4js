@@ -59,6 +59,7 @@ import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -154,6 +155,9 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	def void checkExportableNameConflictsWithBuiltIn(ExportableElement exportableElement) {
 		if (exportableElement instanceof AnnotableElement) {
 			if (AnnotationDefinition.GLOBAL.hasAnnotation(exportableElement)) {
+				if (N4Scheme.isFromResourceWithN4Scheme(exportableElement)) {
+					return; // this validation does not apply to built-in types (i.e. builtin_js.n4jsd, etc.)
+				}
 				if (exportableElement.isPolyfill) {
 					return; // of course it is possible to fill predefined types
 				}

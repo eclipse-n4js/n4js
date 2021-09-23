@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.members.TypingStrategyFilter
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -252,8 +253,10 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		if (superType !== null && superType.name !== null) { // note: in case superType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 			if (superType instanceof PrimitiveType) {
-				val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(superType.name);
-				addIssue(message, n4Class.superClassRef, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE);
+				if (!N4Scheme.isFromResourceWithN4Scheme(n4Class)) { // primitive types may be extended in built-in types
+					val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(superType.name);
+					addIssue(message, n4Class.superClassRef, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE);
+				}
 			} else if (!(superType instanceof TClass)) {
 				if (superType instanceof TInterface) {
 					val message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(n4Class.description, "extend",

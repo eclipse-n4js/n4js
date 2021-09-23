@@ -295,14 +295,14 @@ export external public interface ~AsyncIterable<out T> {
 
 export external public interface ~Generator<out TYield, out TReturn, in TNext> extends Iterable<TYield>, Iterator<TYield> {
 	@Override public abstract next(value: TNext = undefined): IteratorEntry<TYield>
-	public abstract [Symbol.iterator](): Generator<TYield, TReturn, TNext>
+	@Override public abstract [Symbol.iterator](): Generator<TYield, TReturn, TNext>
 	public abstract throw(exception: any): IteratorEntry<TYield>;
 	public abstract return(value: TNext = undefined): IteratorEntry<TReturn>;
 }
 
 export external public interface ~AsyncGenerator<out TYield, out TReturn, in TNext> extends AsyncIterable<TYield>, AsyncIterator<TYield> {
 	@Override public abstract next(value: TNext = undefined): Promise<IteratorEntry<TYield>, ?>
-	public abstract [Symbol.asyncIterator](): AsyncGenerator<TYield, TReturn, TNext>
+	@Override public abstract [Symbol.asyncIterator](): AsyncGenerator<TYield, TReturn, TNext>
 	public abstract throw(exception: any): Promise<IteratorEntry<TYield>, any>;
 	public abstract return(value: TNext = undefined): Promise<IteratorEntry<TReturn>, ?>;
 }
