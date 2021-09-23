@@ -96,7 +96,7 @@ export external public class String extends Object {
 	public indexOf(searchString: string, position: number = undefined): number
 	public lastIndexOf(searchString: string, position: number = undefined): number
 	public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number
-	public match(regexp: RegExp): TEMP_ReturnTypeOfMatchExec
+	public match(regexp: RegExp): ~Array<string> with { index: number; input: string; groups?: any+; }
 	public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string
 	public search(regexp: any): number
 	public slice(start: number, end: number = undefined): string
@@ -235,7 +235,7 @@ export external public class RegExp extends Object {
 	public static $8: string;
 	public static $9: string;
 	public constructor(pattern: string = undefined, flags: string = undefined)
-	public exec(str: string = undefined): TEMP_ReturnTypeOfMatchExec
+	public exec(str: string = undefined): ~Array<string> with { index: number; input: string; groups?: any+; }
 	public test(str: string = undefined): boolean
 	@Override public toString(): string
 	public source: string
@@ -336,15 +336,4 @@ export external public class Promise<out S, out F> extends Object {
 
 	public static <T> all(iterable: Iterable<union{Promise<T,?>, T}>): Promise<Array<T>, any>
 	public static <T> race(iterable: Iterable<union{Promise<T,?>, T}>): Promise<T, any>
-}
-
-/**
- * Work-around:
- * Temporary class to define the return type of methods String#match() and RegExp#exec(), because
- * .n4ts files do not properly support "with"-clauses of structural types (see IDEBUG-273).
- */
-export external public class TEMP_ReturnTypeOfMatchExec extends Array<string> {
-	public index: number;
-	public input: string;
-	public groups?: any+;
 }

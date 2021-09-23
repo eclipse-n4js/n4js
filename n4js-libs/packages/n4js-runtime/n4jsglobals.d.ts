@@ -36,18 +36,6 @@ declare type IteratorExt<T> = Iterator<T> & Iterable<T>;
 // Merged from builtin_n4.n4jsd
 
 /**
- * Work-around:
- * Temporary class to define the return type of methods String#match() and RegExp#exec(), because
- * .n4ts files do not properly support "with"-clauses of structural types (see IDEBUG-273).
- */
-declare class TEMP_ReturnTypeOfMatchExec extends Array<string> {
-    public index: number;
-    public input: string;
-    public groups?: any;
-}
-
-
-/**
  * Base class for all N4 reflective elements.
  */
 declare abstract class N4Element extends N4Object {

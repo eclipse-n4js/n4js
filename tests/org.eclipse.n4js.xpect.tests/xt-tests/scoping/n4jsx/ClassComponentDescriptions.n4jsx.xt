@@ -62,7 +62,7 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 		N4Enum, N4EnumType, N4Interface, N4Member, N4Method, N4NamedElement, N4Object,
 		N4Provider, N4NumberBasedEnum, N4StringBasedEnum, N4Type, NaN, Number, Object, Promise,
 		RangeError, React, ReferenceError, RegExp,
-		String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError, URIError,
+		String, Symbol, SyntaxError, TypeError, URIError,
 		__proto__, arguments, console, constText, constructor,
 		decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty,
 		index.Component, index.ComponentProps, index.ReactElement, index.Fragment, index.PropConstraint,
