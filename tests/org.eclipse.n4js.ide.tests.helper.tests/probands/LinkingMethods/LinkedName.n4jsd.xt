@@ -14,40 +14,40 @@
  */
 
 /* pos 0 */
-primitive any{}
+export external public class Cls0 {}
 
 /* pos 1 */
-primitive number{}
+export external public class Cls1 {}
 
 /* pos 2 */
-primitive string{}
+export external public enum Color { RED, GREEN, BLUE }
 
 /* pos 3 */
-public class MySuperDuperClass {
+export external public class MySuperDuperClass {
 
 }
 
 /* pos 4 */
-public interface MyRole {
+export external public interface MyRole {
 
 }
 
 /* pos 5 */
-public interface Comparable {
+export external public interface Comparable {
 
 }
 
 /* pos 6 */
-public interface MyInterface {
+export external public interface MyInterface {
 
 }
 
 /* pos 7 */
-public function MyFunction() : any
+export external public function MyFunction() : any
 
 /* pos 8 */
-// LN-1 XPECT linkedName at 'MyInterface' --> MyInterface
+// LN-1 XPECT linkedName at 'MyInterface' --> LinkedName.MyInterface
 // LN-2 XPECT linkedName at 'Comparable' --> Wrong Expectation
 
-public class MySuperClass<T extends MyInterface> extends MySuperDuperClass implements Comparable {
+export external public class MySuperClass<T extends MyInterface> extends MySuperDuperClass implements Comparable {
 }
