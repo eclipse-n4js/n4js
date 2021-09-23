@@ -142,7 +142,7 @@ public class PolyfillValidatorFragment {
 
 			final TypeReferenceNode<ParameterizedTypeRef> superClassRef = n4Class.getSuperClassRef();
 			final Type superType = superClassRef != null ? superClassRef.getTypeRef().getDeclaredType() : null;
-			if (!(superType instanceof TClassifier)) { // TClass or TObjectPrototype
+			if (!(superType instanceof TClassifier)) { // TClass or TInterface
 				return true; // consequential error
 			}
 			state.filledType = (TClassifier) superType;

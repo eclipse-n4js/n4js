@@ -55,7 +55,7 @@ class TypeAssistant extends TransformationAssistant {
 			val allClassifierDecls = collectNodes(state.im, N4ClassifierDeclaration, false);
 			assertTrue("all classifier declarations must have an original defined type",
 				allClassifierDecls.forall[state.info.getOriginalDefinedType(it)!==null]);
-			assertTrue("all class declarations must have a superClassRef pointing to a TClass or TObjectPrototype (if non-null)",
+			assertTrue("all class declarations must have a superClassRef pointing to a TClass (if non-null)",
 				allClassifierDecls.filter(N4ClassDeclaration).map[superClassRef].filterNull
 				.forall[
 					val originalDeclType = state.info.getOriginalProcessedTypeRef(it)?.declaredType;

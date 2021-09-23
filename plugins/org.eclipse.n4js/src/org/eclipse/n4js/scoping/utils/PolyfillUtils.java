@@ -13,7 +13,6 @@ package org.eclipse.n4js.scoping.utils;
 import java.util.Optional;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
@@ -39,10 +38,6 @@ public class PolyfillUtils {
 	 */
 	public static QualifiedName getPolyfillFQN(TClassifier tClassifier, IQualifiedNameProvider qualifiedNameProvider) {
 		QualifiedName prefix = qualifiedNameProvider.getFullyQualifiedName(EcoreUtil.getRootContainer(tClassifier));
-		if ("n4ts".equals(tClassifier.eResource().getURI().fileExtension())) { // } instanceof TObjectPrototype) {
-			prefix = QualifiedNameUtils.append(prefix, N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT);
-			// TODO this has to be removed, instead, also n4ts files should use "#" as global namespace segment
-		}
 		prefix = QualifiedNameUtils.append(prefix, POLYFILL_SEGMENT);
 		return QualifiedNameUtils.append(prefix, tClassifier.getName());
 	}
@@ -54,10 +49,6 @@ public class PolyfillUtils {
 	public static QualifiedName getStaticPolyfillFQN(TClassifier tClassifier,
 			IQualifiedNameProvider qualifiedNameProvider) {
 		QualifiedName prefix = qualifiedNameProvider.getFullyQualifiedName(EcoreUtil.getRootContainer(tClassifier));
-		// if ("n4ts".equals(tClassifier.eResource().getURI().fileExtension())) { // } instanceof TObjectPrototype) {
-		// prefix = append(prefix, GLOBAL_NAMESPACE_SEGMENT);
-		// // TODO this has to be removed, instead, also n4ts files should use "#" as global namespace segment
-		// }
 		prefix = QualifiedNameUtils.prepend(MODULE_POLYFILL_SEGMENT, prefix);
 		prefix = QualifiedNameUtils.append(prefix, POLYFILL_SEGMENT);
 		return QualifiedNameUtils.append(prefix, tClassifier.getName());

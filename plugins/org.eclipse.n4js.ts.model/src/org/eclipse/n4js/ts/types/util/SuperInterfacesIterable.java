@@ -65,7 +65,9 @@ public class SuperInterfacesIterable implements Iterable<TInterface> {
 		 * {@link #currClass}, if the currently processed class has not changed since then.
 		 */
 		private TClass currClassAtLastNextInvocation = null;
-		/** The element that will be returned by next call to {@link #next()} or <code>null</code> if no next element. */
+		/**
+		 * The element that will be returned by next call to {@link #next()} or <code>null</code> if no next element.
+		 */
 		private TInterface next = null;
 
 		private final RecursionGuard<TClassifier> guard = new RecursionGuard<>();
@@ -102,7 +104,6 @@ public class SuperInterfacesIterable implements Iterable<TInterface> {
 					} else if (currClass != null) {
 						// priority #2: continue with interfaces of super-class of currClass
 						ParameterizedTypeRef superType = currClass.getSuperClassRef();
-						// can be TObjectPrototype when inheriting e.g. Object from Types model
 						final TClassifier superClass;
 						if (null != superType && superType.getDeclaredType() instanceof TClassifier) {
 							superClass = (TClassifier) superType.getDeclaredType();

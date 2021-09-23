@@ -733,7 +733,7 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	transient EMap<NameAndAccess, ? extends TMember> ownedMembersByNameAndAccess
 
 	contains MT[] ownedMembers
-	contains TMethod callableCtor // required in TClass and TObjectPrototype
+	contains TMethod callableCtor // required in TClass
 
 	/**
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.

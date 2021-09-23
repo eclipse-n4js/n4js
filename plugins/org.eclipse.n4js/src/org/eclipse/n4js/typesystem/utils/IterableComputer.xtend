@@ -83,7 +83,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 			// simple: typeRef directly points to Array<> or an ArrayN<>
 			result = typeRef.typeArgs.convertTypeArgsToRefs;
 		} else if(declType instanceof PrimitiveType) {
-			// note: the 'elementType' property we read in the next line is also used with instances of TObjectPrototype
+			// note: the 'elementType' property we read in the next line is also used with certain instances of TClass
 			// (e.g. upper-case 'String'), but we need not and should not handle those within this block, because those
 			// types are expected to be structural subtypes of Iterable<>, which is handled below in the if-block for
 			// ContainerType<?>

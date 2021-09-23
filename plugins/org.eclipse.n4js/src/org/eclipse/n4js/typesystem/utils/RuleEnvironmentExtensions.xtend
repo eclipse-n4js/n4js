@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -990,8 +990,8 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
-	 * Returns the declared or implicit super type of a class. This might be a TClass or, in case
-	 * of implicit super types and external classes, a TObjectPrototype (i.e. "Object").
+	 * Returns the declared or implicit super type of a class. This might be a TClassifier or, in case
+	 * of implicit super types and external classes, a TClass (i.e. "Object").
 	 */
 	public def static TClassifier getDeclaredOrImplicitSuperType(RuleEnvironment G, TClass tClass) {
 		// this method is called by validator, AST and type model may be corrupt
@@ -1023,7 +1023,7 @@ class RuleEnvironmentExtensions {
 			if (declaredType instanceof TClass) {
 				if (declaredType == G.n4ObjectType || (declaredType.external && !declaredType.declaredN4JS) ||
 						declaredType.typingStrategy==TypingStrategy.STRUCTURAL) {
-							return G.objectPrototypesAllImplicitSuperTypeRefs;
+							return G.builtInTypesAllImplicitSuperTypeRefs;
 				} else {
 					return G.n4ClassifiersAllImplicitSuperTypeRefs;
 				}
@@ -1040,7 +1040,7 @@ class RuleEnvironmentExtensions {
 						|| (declaredType.external && !declaredType.declaredN4JS)
 						|| declaredType.typingStrategy==TypingStrategy.STRUCTURAL
 						|| N4Scheme.isFromResourceWithN4Scheme(declaredType) ) {
-					G.objectPrototypesAllImplicitSuperTypeRefs
+					G.builtInTypesAllImplicitSuperTypeRefs
 				} else {
 					if (declaredType.superClassRef===null) {
 						G.n4ClassifiersAllImplicitSuperTypeRefs
@@ -1134,8 +1134,8 @@ class RuleEnvironmentExtensions {
 	 * Returns unmodifiable list of type references to all implicit super types of all built-in JavaScript object types,
 	 * object literals and via constructor created elements: {@code Object}.
 	 */
-	public def static getObjectPrototypesAllImplicitSuperTypeRefs(RuleEnvironment G) {
-		return G.getPredefinedTypes().builtInTypeScope.objectPrototypesAllImplicitSuperTypeRefs
+	public def static getBuiltInTypesAllImplicitSuperTypeRefs(RuleEnvironment G) {
+		return G.getPredefinedTypes().builtInTypeScope.builtInTypesAllImplicitSuperTypeRefs
 	}
 
 	/**

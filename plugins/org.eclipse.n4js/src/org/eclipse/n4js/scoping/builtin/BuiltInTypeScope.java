@@ -654,7 +654,7 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 	 * object literals and via constructor created elements: {@code Object}. NB that {@code Object} is a object
 	 * prototype itself, that is, client code has to check that case explicitly.
 	 */
-	public synchronized List<ParameterizedTypeRef> getObjectPrototypesAllImplicitSuperTypeRefs() {
+	public synchronized List<ParameterizedTypeRef> getBuiltInTypesAllImplicitSuperTypeRefs() {
 		if (objectPrototypesAllImplicitSuperTypeRefs == null) {
 			initImplicitSuperTypeLists();
 		}

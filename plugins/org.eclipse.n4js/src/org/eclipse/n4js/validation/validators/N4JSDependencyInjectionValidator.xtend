@@ -134,7 +134,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		if (staticType === null || staticType.eIsProxy)
 			return;
 		if (!(staticType instanceof TClass)) {
-			// in "new C" ignore C being TObjectPrototype or TInterface
+			// in "new C" ignore C being TInterface, primitive type, etc.
 			return;
 		}
 
