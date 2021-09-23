@@ -53,7 +53,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_03() throws Exception {
 		testAtCursor(
 				"var s: string = ''; s.le<|>ngth;",
-				"(n4scheme:/builtin_js.n4jsd, [109:12 - 109:18])");
+				"(n4scheme:/builtin_js.n4jsd, [839:12 - 839:18])");
 	}
 
 	/***/
@@ -65,14 +65,14 @@ public class DefinitionTest extends AbstractDefinitionTest {
 		DefinitionParams definitionParams = new DefinitionParams();
 		definitionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4jsd"));
 		// see position from test above
-		definitionParams.setPosition(new Position(109, 12));
+		definitionParams.setPosition(new Position(839, 12));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
 				.definition(definitionParams);
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 
 		File root = getRoot();
 		String actualSignatureHelp = new StringLSP4J(root).toString4(definitions);
-		assertEquals("(n4scheme:/builtin_js.n4jsd, [109:12 - 109:18])", actualSignatureHelp.trim());
+		assertEquals("(n4scheme:/builtin_js.n4jsd, [839:12 - 839:18])", actualSignatureHelp.trim());
 	}
 
 }
