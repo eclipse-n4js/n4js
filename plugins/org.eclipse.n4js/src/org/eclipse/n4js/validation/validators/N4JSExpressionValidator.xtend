@@ -1237,6 +1237,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				castExpression, IssueCodes.EXP_CAST_UNNECESSARY);
 		} else {
 			val specialChecks = (T.declaredType instanceof ContainerType<?>)
+				|| (T.declaredType instanceof PrimitiveType)
 				|| (T.declaredType instanceof TEnum)
 				|| (T.declaredType instanceof TypeVariable)
 				|| (T instanceof TypeTypeRef)

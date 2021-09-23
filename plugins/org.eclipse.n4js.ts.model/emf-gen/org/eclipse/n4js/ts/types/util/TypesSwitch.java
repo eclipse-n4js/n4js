@@ -265,9 +265,8 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.PRIMITIVE_TYPE: {
 				PrimitiveType primitiveType = (PrimitiveType)theEObject;
 				T result = casePrimitiveType(primitiveType);
-				if (result == null) result = caseContainerType(primitiveType);
-				if (result == null) result = caseArrayLike(primitiveType);
 				if (result == null) result = caseGenericType(primitiveType);
+				if (result == null) result = caseArrayLike(primitiveType);
 				if (result == null) result = caseType(primitiveType);
 				if (result == null) result = caseTExportableElement(primitiveType);
 				if (result == null) result = caseTAnnotableElement(primitiveType);

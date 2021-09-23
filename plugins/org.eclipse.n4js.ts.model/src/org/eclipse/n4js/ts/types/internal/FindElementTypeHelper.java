@@ -13,6 +13,7 @@ package org.eclipse.n4js.ts.types.internal;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.util.AbstractHierachyTraverser;
 
 /**
@@ -31,6 +32,14 @@ public class FindElementTypeHelper extends AbstractHierachyTraverser<TypeRef> {
 		super(type);
 	}
 
+	/**
+	 * @param type
+	 *            the initial type that should be processed.
+	 */
+	public FindElementTypeHelper(PrimitiveType type) {
+		super(type);
+	}
+
 	@Override
 	protected TypeRef doGetResult() {
 		return result;
@@ -41,6 +50,12 @@ public class FindElementTypeHelper extends AbstractHierachyTraverser<TypeRef> {
 		if (currentType instanceof ArrayLike) {
 			result = ((ArrayLike) currentType).getDeclaredElementType();
 		}
+		return result != null;
+	}
+
+	@Override
+	protected boolean process(PrimitiveType currentType) {
+		result = currentType.getDeclaredElementType();
 		return result != null;
 	}
 }

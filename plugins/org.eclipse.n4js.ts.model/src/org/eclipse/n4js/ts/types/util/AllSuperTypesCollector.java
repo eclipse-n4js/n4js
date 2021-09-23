@@ -12,10 +12,11 @@ package org.eclipse.n4js.ts.types.util;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
+
+import com.google.common.collect.Lists;
 
 /**
  * Collects all declared super types, implicit super types or polyfills are ignored.
@@ -44,6 +45,11 @@ public class AllSuperTypesCollector extends AbstractCompleteHierarchyTraverser<L
 	protected void doProcess(ContainerType<?> containerType) {
 		if (containerType instanceof TClassifier)
 			result.add((TClassifier) containerType);
+	}
+
+	@Override
+	protected void doProcess(PrimitiveType currentType) {
+		// nothing to do in this case
 	}
 
 	/**

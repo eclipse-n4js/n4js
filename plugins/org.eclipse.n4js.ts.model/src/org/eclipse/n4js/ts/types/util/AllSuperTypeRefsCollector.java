@@ -55,13 +55,16 @@ public class AllSuperTypeRefsCollector extends AbstractCompleteHierarchyTraverse
 		} else if (containerType instanceof TInterface) {
 			TInterface casted = (TInterface) containerType;
 			result.addAll(casted.getSuperInterfaceRefs());
-		} else if (containerType instanceof PrimitiveType) {
-			PrimitiveType assignmentCompatible = ((PrimitiveType) containerType).getAssignmentCompatible();
-			if (assignmentCompatible != null) {
-				ParameterizedTypeRef typeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-				typeRef.setDeclaredType(assignmentCompatible);
-				result.add(typeRef);
-			}
+		}
+	}
+
+	@Override
+	protected void doProcess(PrimitiveType currentType) {
+		PrimitiveType assignmentCompatible = currentType.getAssignmentCompatible();
+		if (assignmentCompatible != null) {
+			ParameterizedTypeRef typeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+			typeRef.setDeclaredType(assignmentCompatible);
+			result.add(typeRef);
 		}
 	}
 

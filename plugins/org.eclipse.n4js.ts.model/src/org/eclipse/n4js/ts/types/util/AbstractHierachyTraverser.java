@@ -55,12 +55,23 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	/**
 	 * The type which the traverser has to traverse, that is the bottom type of the hierarchy.
 	 */
-	protected final ContainerType<?> bottomType;
+	protected final Type bottomType;
 
 	/**
 	 * Creates a new traverser that is used to safely process a potentially cyclic inheritance tree.
 	 */
 	public AbstractHierachyTraverser(ContainerType<?> type) {
+		this((Type) type);
+	}
+
+	/**
+	 * Creates a new traverser that is used to safely process a potentially cyclic inheritance tree.
+	 */
+	public AbstractHierachyTraverser(PrimitiveType type) {
+		this((Type) type);
+	}
+
+	private AbstractHierachyTraverser(Type type) {
 		this.bottomType = type;
 		guard = new RecursionGuard<>();
 	}
@@ -86,6 +97,15 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 * @return {@code true} if the processing is finished and no further types should be considered.
 	 */
 	protected abstract boolean process(ContainerType<?> type);
+
+	/**
+	 * Process the given primitive type. The traversal itself is handled by this class.
+	 *
+	 * @param type
+	 *            the processed type.
+	 * @return {@code true} if the processing is finished and no further types should be considered.
+	 */
+	protected abstract boolean process(PrimitiveType type);
 
 	private void traverse() {
 		Boolean result = doSwitch(bottomType);

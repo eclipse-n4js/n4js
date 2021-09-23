@@ -811,9 +811,9 @@ class ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement {
 }
 
 /*
- * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot be parameterized.
+ * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot have members.
  */
-class PrimitiveType extends ContainerType<TMember>, ArrayLike {
+class PrimitiveType extends GenericType, ArrayLike {
 	/*
 	 * Specifies a type to and from which this type is assignment compatible.
 	 * Only used for special stringish types such as typename or pathSelector,

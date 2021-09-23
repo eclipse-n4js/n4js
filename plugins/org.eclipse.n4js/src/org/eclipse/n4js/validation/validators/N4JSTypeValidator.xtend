@@ -64,6 +64,7 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
@@ -146,7 +147,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			val ub = typeVar.declaredUpperBound;
 			if (ub !== null) {
 				val declType = ub.declaredType;
-				if (declType instanceof ContainerType<?> && declType.final) {
+				if ((declType instanceof ContainerType<?> || declType instanceof PrimitiveType) && declType.final) {
 					if (declType === functionType) {
 						// important exception (until function type expressions are supported as bounds):
 						// class C<T extends Function> {} makes sense even though Function is final

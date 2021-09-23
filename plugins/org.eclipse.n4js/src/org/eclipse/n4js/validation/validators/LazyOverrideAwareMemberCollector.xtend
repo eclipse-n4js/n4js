@@ -17,6 +17,7 @@ import java.util.List
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
@@ -113,6 +114,10 @@ public class LazyOverrideAwareMemberCollector extends AbstractCompleteHierarchyT
 			val ownedMembers = type.getOwnedMembers()
 			result.addAll(ownedMembers);
 		}
+	}
+
+	override protected doProcess(PrimitiveType currentType) {
+		// nothing to do in this case
 	}
 
 	def protected processAndReplace(TClassifier type) {

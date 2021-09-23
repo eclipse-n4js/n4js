@@ -2834,7 +2834,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__NAME = CONTAINER_TYPE__NAME;
+	int PRIMITIVE_TYPE__NAME = GENERIC_TYPE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
@@ -2843,7 +2843,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__EXPORTED_NAME = CONTAINER_TYPE__EXPORTED_NAME;
+	int PRIMITIVE_TYPE__EXPORTED_NAME = GENERIC_TYPE__EXPORTED_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2852,7 +2852,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__ANNOTATIONS = CONTAINER_TYPE__ANNOTATIONS;
+	int PRIMITIVE_TYPE__ANNOTATIONS = GENERIC_TYPE__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -2861,34 +2861,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__TYPE_VARS = CONTAINER_TYPE__TYPE_VARS;
-
-	/**
-	 * The feature id for the '<em><b>Owned Members By Name And Access</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS = CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS;
-
-	/**
-	 * The feature id for the '<em><b>Owned Members</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE__OWNED_MEMBERS = CONTAINER_TYPE__OWNED_MEMBERS;
-
-	/**
-	 * The feature id for the '<em><b>Callable Ctor</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE__CALLABLE_CTOR = CONTAINER_TYPE__CALLABLE_CTOR;
+	int PRIMITIVE_TYPE__TYPE_VARS = GENERIC_TYPE__TYPE_VARS;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -2897,7 +2870,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE = CONTAINER_TYPE_FEATURE_COUNT + 0;
+	int PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE = GENERIC_TYPE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Assignment Compatible</b></em>' reference.
@@ -2906,7 +2879,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__ASSIGNMENT_COMPATIBLE = CONTAINER_TYPE_FEATURE_COUNT + 1;
+	int PRIMITIVE_TYPE__ASSIGNMENT_COMPATIBLE = GENERIC_TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Autoboxed Type</b></em>' reference.
@@ -2915,7 +2888,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__AUTOBOXED_TYPE = CONTAINER_TYPE_FEATURE_COUNT + 2;
+	int PRIMITIVE_TYPE__AUTOBOXED_TYPE = GENERIC_TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Primitive Type</em>' class.
@@ -2924,7 +2897,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE_FEATURE_COUNT = CONTAINER_TYPE_FEATURE_COUNT + 3;
+	int PRIMITIVE_TYPE_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -2933,7 +2906,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_CONTAINING_MODULE = CONTAINER_TYPE___GET_CONTAINING_MODULE;
+	int PRIMITIVE_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -2942,7 +2915,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
+	int PRIMITIVE_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -2951,7 +2924,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_VERSION = CONTAINER_TYPE___GET_VERSION;
+	int PRIMITIVE_TYPE___GET_VERSION = GENERIC_TYPE___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -2960,7 +2933,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_ALIAS = CONTAINER_TYPE___IS_ALIAS;
+	int PRIMITIVE_TYPE___IS_ALIAS = GENERIC_TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -2969,7 +2942,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_PROVIDED_BY_RUNTIME = CONTAINER_TYPE___IS_PROVIDED_BY_RUNTIME;
+	int PRIMITIVE_TYPE___IS_PROVIDED_BY_RUNTIME = GENERIC_TYPE___IS_PROVIDED_BY_RUNTIME;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -2978,7 +2951,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_POLYFILL = CONTAINER_TYPE___IS_POLYFILL;
+	int PRIMITIVE_TYPE___IS_POLYFILL = GENERIC_TYPE___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -2987,7 +2960,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_STATIC_POLYFILL = CONTAINER_TYPE___IS_STATIC_POLYFILL;
+	int PRIMITIVE_TYPE___IS_STATIC_POLYFILL = GENERIC_TYPE___IS_STATIC_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2996,7 +2969,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_FINAL = CONTAINER_TYPE___IS_FINAL;
+	int PRIMITIVE_TYPE___IS_FINAL = GENERIC_TYPE___IS_FINAL;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -3005,7 +2978,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_DYNAMIZABLE = CONTAINER_TYPE___IS_DYNAMIZABLE;
+	int PRIMITIVE_TYPE___IS_DYNAMIZABLE = GENERIC_TYPE___IS_DYNAMIZABLE;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -3014,7 +2987,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_ARRAY_LIKE = CONTAINER_TYPE___IS_ARRAY_LIKE;
+	int PRIMITIVE_TYPE___IS_ARRAY_LIKE = GENERIC_TYPE___IS_ARRAY_LIKE;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -3023,7 +2996,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_TYPE_ACCESS_MODIFIER = CONTAINER_TYPE___GET_TYPE_ACCESS_MODIFIER;
+	int PRIMITIVE_TYPE___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE___GET_TYPE_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -3032,7 +3005,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_GENERIC = CONTAINER_TYPE___IS_GENERIC;
+	int PRIMITIVE_TYPE___IS_GENERIC = GENERIC_TYPE___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -3041,7 +3014,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_TYPE_VARS = CONTAINER_TYPE___GET_TYPE_VARS;
+	int PRIMITIVE_TYPE___GET_TYPE_VARS = GENERIC_TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -3050,7 +3023,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = CONTAINER_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
+	int PRIMITIVE_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = GENERIC_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -3059,7 +3032,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_RAW_TYPE_AS_STRING = CONTAINER_TYPE___GET_RAW_TYPE_AS_STRING;
+	int PRIMITIVE_TYPE___GET_RAW_TYPE_AS_STRING = GENERIC_TYPE___GET_RAW_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -3068,43 +3041,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_TYPE_AS_STRING = CONTAINER_TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE___GET_OWNED_CTOR = CONTAINER_TYPE___GET_OWNED_CTOR;
-
-	/**
-	 * The operation id for the '<em>Find Owned Member</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE___FIND_OWNED_MEMBER__STRING = CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING;
-
-	/**
-	 * The operation id for the '<em>Find Owned Member</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN = CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN;
-
-	/**
-	 * The operation id for the '<em>Get Or Create Owned Members By Name And Access</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
+	int PRIMITIVE_TYPE___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -3113,7 +3050,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_ELEMENT_TYPE = CONTAINER_TYPE_OPERATION_COUNT + 0;
+	int PRIMITIVE_TYPE___GET_ELEMENT_TYPE = GENERIC_TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Primitive Type</em>' class.
@@ -3122,7 +3059,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 1;
+	int PRIMITIVE_TYPE_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.BuiltInTypeImpl <em>Built In Type</em>}' class.

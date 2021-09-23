@@ -42,6 +42,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.NameAndAccess;
+import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TField;
@@ -795,6 +796,12 @@ public class ContainerTypesHelper {
 				return false;
 			}
 
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
 			/**
 			 * Returns true if the given container type is a polyfill of the bottom type.
 			 * <p>
@@ -876,6 +883,12 @@ public class ContainerTypesHelper {
 				}
 				return false;
 			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
 		}
 
 		private class MemberEntriesCollector extends AbstractMemberCollector<Collection<TMemberEntry>> {
@@ -921,6 +934,12 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
+			@Override
 			protected boolean doProcessConsumedRoles(TClass object) {
 				if (object == bottomType) {
 					source = MIXEDIN;
@@ -959,6 +978,12 @@ public class ContainerTypesHelper {
 				}
 				return false;
 
+			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
 			}
 
 			@Override
