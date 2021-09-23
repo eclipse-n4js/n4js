@@ -17,16 +17,13 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.BuiltInType;
@@ -43,14 +40,11 @@ import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Functions;
 import com.google.common.base.Preconditions;
 
 /**
@@ -60,18 +54,24 @@ import com.google.common.base.Preconditions;
  * The scope basically decorates the resource set and provides strongly typed accessors to an enumerated set of built-in
  * types.
  */
-public final class BuiltInTypeScope extends ReentrantEnumerableScope {
+public final class BuiltInTypeScope extends EnumerableScope {
+
+	private static final String PRIMITIVES_N4JSD = "primitives.n4jsd";
+	private static final String BUILTIN_JS_N4JSD = "builtin_js.n4jsd";
+	private static final String BUILTIN_N4_N4JSD = "builtin_n4.n4jsd";
+	private static final String BUILTIN_N4IDL_N4JSD = "builtin_n4idl.n4jsd";
+	private static final String CONSOLE_N4JSD = "console.n4jsd";
 
 	/**
 	 * Visible for testing purpose
 	 */
 	@VisibleForTesting
 	public static final String[] FILE_NAMES = {
-			"primitives.n4jsd",
-			"builtin_js.n4jsd",
-			"builtin_n4.n4jsd",
-			"builtin_n4idl.n4jsd",
-			"console.n4jsd"
+			PRIMITIVES_N4JSD,
+			BUILTIN_JS_N4JSD,
+			BUILTIN_N4_N4JSD,
+			BUILTIN_N4IDL_N4JSD,
+			CONSOLE_N4JSD
 	};
 
 	/**
@@ -266,7 +266,7 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 	 * Creates a new scope for built in types in the given resource set.
 	 */
 	public BuiltInTypeScope(ExecutionEnvironmentDescriptor descriptor) {
-		super(BuiltInTypeScope.class, descriptor);
+		super(descriptor);
 	}
 
 	/**
@@ -680,79 +680,67 @@ public final class BuiltInTypeScope extends ReentrantEnumerableScope {
 	}
 
 	@Override
-	protected void doBuildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
-		EObject ast = resource.getContents().get(0);
-		if (!(ast instanceof Script)) {
-			return; // FIXME fail fast
-		}
-
-		// FIXME clean up
-
-		Script script = (Script) ast;
-		TModule module = script.getModule();
-
+	protected void buildMap(Resource resourceRaw, Map<QualifiedName, IEObjectDescription> elements) {
+		N4JSResource resource = (N4JSResource) resourceRaw;
 		String fileName = resource.getURI().lastSegment();
-		if ("primitives.n4jsd".equals(fileName)) {
-			List<Type> coreTypes = createCoreTypes();
-			EcoreUtilN4.doWithDeliver(false, () -> {
-				module.getTopLevelTypes().addAll(coreTypes);
-			}, module);
-		}
+		TModule module = (TModule) resource.getContents().get(1); // do not change this to resource.getModule()
 
-		// List<Diagnostic> syntaxErrors = script.eResource().getErrors();
-		// if (!syntaxErrors.isEmpty()) {
-		// throw new IllegalStateException("built-in definition " + resource.getURI().lastSegment()
-		// + " contains syntax errors:\n " + Joiner.on("\n ").join(syntaxErrors));
-		// }
+		beforeRegistration(fileName, module);
 
+		// register types
 		for (Type type : module.getTopLevelTypes()) {
 			IEObjectDescription description = EObjectDescription.create(type.getName(), type);
 			elements.put(description.getName(), description);
 		}
 
-		// trigger resolution
+		// trigger post-processing
 		try {
-			// FIXME use N4JSResource instead!
-			((LazyLinkingResource) resource).resolveLazyCrossReferences(CancelIndicator.NullImpl);
+			resource.performPostProcessing();
 		} catch (Throwable th) {
-			throw new IllegalStateException(
-					"exception while resolving built-in definition " + resource.getURI().lastSegment(), th);
+			throw new IllegalStateException("exception while post-processing built-in type definition file: "
+					+ resource.getURI().lastSegment(), th);
 		}
 
-		if ("builtin_js.n4jsd".equals(fileName)) {
-			Map<String, Type> typesByName = module.getTopLevelTypes().stream()
-					.collect(Collectors.toMap(Type::getName, Functions.identity()));
+		afterPostProcessing(fileName);
+	}
 
-			Type anyType = (Type) elements.get(QN_ANY).getEObjectOrProxy();
-			PrimitiveType stringType = (PrimitiveType) elements.get(QN_STRING).getEObjectOrProxy();
-			TClass stringObjectType = (TClass) typesByName.get(QN_STRING_OBJECT.toString());
-			TClass arrayObjectType = (TClass) typesByName.get(QN_ARRAY.toString());
-			TInterface argumentsType = (TInterface) typesByName.get(QN_I_ARGUMENTS.toString());
-			Objects.requireNonNull(stringObjectType);
-			Objects.requireNonNull(arrayObjectType);
-			Objects.requireNonNull(argumentsType);
+	private void beforeRegistration(String fileName, TModule module) {
+		if (PRIMITIVES_N4JSD.equals(fileName)) {
+			List<Type> coreTypes = createCoreTypes();
 			EcoreUtilN4.doWithDeliver(false, () -> {
-				stringObjectType.setDeclaredElementType(TypeUtils.createTypeRef(stringType));
-				arrayObjectType
-						.setDeclaredElementType(TypeUtils.createTypeRef(arrayObjectType.getTypeVars().get(0)));
-				argumentsType.setDeclaredElementType(TypeUtils.createTypeRef(anyType));
-			}, stringObjectType, arrayObjectType, argumentsType);
-
-			// set autoboxedType property of primitive types
-			setAutoboxedType(elements, QN_BOOLEAN, QN_BOOLEAN_OBJECT);
-			setAutoboxedType(elements, QN_NUMBER, QN_NUMBER_OBJECT);
-			setAutoboxedType(elements, QN_INT, QN_NUMBER_OBJECT);
-			setAutoboxedType(elements, QN_STRING, QN_STRING_OBJECT);
-			setAutoboxedType(elements, QN_PATHSELECTOR, QN_STRING_OBJECT);
-			setAutoboxedType(elements, QN_I18NKEY, QN_STRING_OBJECT);
-			setAutoboxedType(elements, QN_TYPENAME, QN_STRING_OBJECT);
+				module.getTopLevelTypes().addAll(coreTypes);
+			}, module);
 		}
 	}
 
-	private void setAutoboxedType(Map<QualifiedName, IEObjectDescription> elements,
-			QualifiedName primitiveTypeName, QualifiedName autoboxedTypeName) {
-		PrimitiveType type = (PrimitiveType) elements.get(primitiveTypeName).getEObjectOrProxy();
-		TClassifier autoboxedType = (TClassifier) elements.get(autoboxedTypeName).getEObjectOrProxy();
+	private void afterPostProcessing(String fileName) {
+		if (BUILTIN_JS_N4JSD.equals(fileName)) {
+			// set the index element type
+			Type anyType = getAnyType();
+			PrimitiveType stringType = getStringType();
+			TClass stringObjectType = getStringObjectType();
+			TClass arrayType = getArrayType();
+			TInterface argumentsType = getArgumentsType();
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				stringObjectType.setDeclaredElementType(TypeUtils.createTypeRef(stringType));
+				arrayType.setDeclaredElementType(TypeUtils.createTypeRef(arrayType.getTypeVars().get(0)));
+				argumentsType.setDeclaredElementType(TypeUtils.createTypeRef(anyType));
+			}, stringObjectType, arrayType, argumentsType);
+
+			// set the autoboxedType property of primitive types
+			setAutoboxedType(QN_BOOLEAN, QN_BOOLEAN_OBJECT);
+			setAutoboxedType(QN_NUMBER, QN_NUMBER_OBJECT);
+			setAutoboxedType(QN_INT, QN_NUMBER_OBJECT);
+			setAutoboxedType(QN_STRING, QN_STRING_OBJECT);
+			setAutoboxedType(QN_PATHSELECTOR, QN_STRING_OBJECT);
+			setAutoboxedType(QN_I18NKEY, QN_STRING_OBJECT);
+			setAutoboxedType(QN_TYPENAME, QN_STRING_OBJECT);
+		}
+	}
+
+	private void setAutoboxedType(QualifiedName primitiveTypeName, QualifiedName autoboxedTypeName) {
+		PrimitiveType type = (PrimitiveType) getEObjectOrProxy(primitiveTypeName);
+		TClassifier autoboxedType = (TClassifier) getEObjectOrProxy(autoboxedTypeName);
 		EcoreUtilN4.doWithDeliver(false, () -> {
 			type.setAutoboxedType(autoboxedType);
 		}, type);

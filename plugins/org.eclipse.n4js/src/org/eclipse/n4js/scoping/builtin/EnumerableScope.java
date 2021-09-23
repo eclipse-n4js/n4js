@@ -20,16 +20,15 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.AbstractScope;
 
 import com.google.common.collect.Maps;
-
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.types.utils.TypeUtils;
 
 /**
  * An enumerable scope contains a well known set of elements. Their names are usually known at compile time.
@@ -49,12 +48,21 @@ public abstract class EnumerableScope extends AbstractScope {
 	}
 
 	/**
+	 * Get all elements in this scope.
+	 */
+	protected Map<QualifiedName, IEObjectDescription> getElements() {
+		if (elements == null) {
+			createElements();
+		}
+		return elements;
+	}
+
+	/**
 	 * Create the map of descriptions that make up this scope.
 	 */
-	protected final Map<QualifiedName, IEObjectDescription> createElements() {
-		Map<QualifiedName, IEObjectDescription> result = Maps.newLinkedHashMap();
-		descriptor.processResources(getFileNames(), (r) -> buildMap(r, result));
-		return result;
+	protected void createElements() {
+		elements = Maps.newLinkedHashMap();
+		descriptor.processResources(getFileNames(), (r) -> buildMap(r, elements));
 	}
 
 	/**
@@ -70,23 +78,12 @@ public abstract class EnumerableScope extends AbstractScope {
 
 	@Override
 	protected Iterable<IEObjectDescription> getAllLocalElements() {
-		if (elements == null) {
-			elements = createElements();
-		}
-		return elements.values();
+		return getElements().values();
 	}
 
 	@Override
 	protected Iterable<IEObjectDescription> getLocalElementsByName(QualifiedName name) {
-		if (elements == null) {
-			elements = createElements();
-		}
-		IEObjectDescription result = null;
-		if (isIgnoreCase()) {
-			result = elements.get(name.toLowerCase());
-		} else {
-			result = elements.get(name);
-		}
+		IEObjectDescription result = getElements().get(isIgnoreCase() ? name.toLowerCase() : name);
 		if (result == null)
 			return Collections.emptyList();
 		return Collections.singleton(result);
@@ -94,16 +91,9 @@ public abstract class EnumerableScope extends AbstractScope {
 
 	@Override
 	protected boolean isShadowed(IEObjectDescription fromParent) {
-		if (elements == null) {
-			elements = createElements();
-		}
-		if (isIgnoreCase()) {
-			boolean result = elements.containsKey(fromParent.getName().toLowerCase());
-			return result;
-		} else {
-			boolean result = elements.containsKey(fromParent.getName());
-			return result;
-		}
+		QualifiedName name = fromParent.getName();
+		boolean result = getElements().containsKey(isIgnoreCase() ? name.toLowerCase() : name);
+		return result;
 	}
 
 	/**
