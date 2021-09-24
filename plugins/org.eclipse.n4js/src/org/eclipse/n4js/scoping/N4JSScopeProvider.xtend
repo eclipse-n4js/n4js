@@ -99,6 +99,9 @@ import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.scoping.utils.BetterSourceElementExtensions
+import org.eclipse.n4js.scoping.utils.BetterScopesHelper
+import org.eclipse.emf.common.util.EList
 
 /**
  * This class contains custom scoping description.
@@ -136,7 +139,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject ImportedElementsScopingHelper importedElementsScopingHelper
 
-	@Inject SourceElementExtensions sourceElementExtensions;
+	@Inject BetterSourceElementExtensions sourceElementExtensions;
 
 	@Inject EObjectDescriptionHelper descriptionsHelper;
 
@@ -151,6 +154,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject TopLevelElementsCollector topLevelElementCollector
 
 	@Inject ScopesHelper scopesHelper
+	
+	@Inject BetterScopesHelper bScopesHelper
 
 	@Inject VersionHelper versionHelper;
 
@@ -260,7 +265,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			NamedImportSpecifier					: return scope_ImportedElement(context, reference)
 			IdentifierRef							: return scope_IdentifierRef_id(context, reference)
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
-			N4FieldAccessor							: return Scopes.scopeFor(EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition).ownedFields)
+			N4FieldAccessor							: {
+				val container = EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition);
+				return bScopesHelper.scopeForEObjects(container, container.ownedFields);
+			}
 			default									: return IScope.NULLSCOPE
 		}
 	}
@@ -343,7 +351,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	private def IScope getAllLabels(Script script) {
-		return Scopes.scopeFor(script.eAllContents.filter(LabelledStatement).toIterable);
+		return bScopesHelper.scopeForEObjects(script, script.eAllContents.filter(LabelledStatement).toIterable);
 	}
 
 	/**
@@ -457,9 +465,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			scope = importedElementsScopingHelper.getImportedIdentifiables(baseScope, script);
 		}
 
-		for (scopeList : scopeLists.reverseView) {
-			scope = scopesHelper.mapBasedScopeFor(context, scope, scopeList);
-		}
+
+		scope = bScopesHelper.scopeForEObjects(context, scope, false, scopeLists.flatten);
+
 		return scope;
 	}
 
@@ -473,13 +481,13 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return globalScope;
 	}
 
-	def private List<Iterable<IEObjectDescription>> collectLexialEnvironmentsScopeLists(VariableEnvironmentElement vee,
-		List<Iterable<IEObjectDescription>> result) {
+	def private List<Iterable<EObject>> collectLexialEnvironmentsScopeLists(VariableEnvironmentElement vee,
+			List<Iterable<? extends EObject>> result) {
 
-		result.add(Scopes.scopedElementsFor(sourceElementExtensions.collectVisibleIdentifiableElements(vee)));
+		result.add(sourceElementExtensions.collectVisibleIdentifiableElements(vee));
 
 		// arguments must be in own outer scope in order to enable shadowing of inner variables named "arguments"
-		result.add(Scopes.scopedElementsFor(sourceElementExtensions.collectLocalArguments(vee)));
+		result.add(sourceElementExtensions.collectLocalArguments(vee));
 
 		val parent = ancestor(vee, VariableEnvironmentElement);
 		if (parent !== null) {
@@ -503,7 +511,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		
 		// get regular top-level elements scope
-		val topLevelElementsScope = scopesHelper.mapBasedScopeFor(importedModule, IScope.NULLSCOPE,
+		val topLevelElementsScope = bScopesHelper.scopeFor(importedModule, IScope.NULLSCOPE, false,
 			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
 		
 		// if the context resource does not allow for versioned types but the imported module does...

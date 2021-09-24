@@ -79,6 +79,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.scoping.utils.BetterSourceElementExtensions
 
 /**
  */
@@ -90,7 +91,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject WorkspaceAccess workspaceAccess;
 
-	@Inject SourceElementExtensions sourceElementExtensions;
+	@Inject BetterSourceElementExtensions sourceElementExtensions;
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
