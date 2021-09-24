@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.scoping.builtin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
@@ -39,6 +41,19 @@ public class ExecutionEnvironmentDescriptor {
 			Resource resource = resourceSet.getResource(uri, true);
 			consumer.accept(resource);
 		}
+	}
+
+	/**
+	 * Returns a list of resources for the given files.
+	 */
+	protected List<Resource> processResources(String[] fileNames) {
+		List<Resource> resources = new ArrayList<>(fileNames.length);
+		for (String fileName : fileNames) {
+			URI uri = N4Scheme.N4URI.create(fileName);
+			Resource resource = resourceSet.getResource(uri, true);
+			resources.add(resource);
+		}
+		return resources;
 	}
 
 }

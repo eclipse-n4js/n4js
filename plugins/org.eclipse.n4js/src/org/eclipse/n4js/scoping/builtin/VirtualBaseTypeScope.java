@@ -15,22 +15,21 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.EObjectDescription;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
+import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope2;
 import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeDefs;
 import org.eclipse.n4js.ts.types.VirtualBaseType;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.EObjectDescription;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * This scope provides access to virtual base types, only available to the type system.
  */
-public final class VirtualBaseTypeScope extends EnumerableScope {
+public final class VirtualBaseTypeScope extends EnumerableScope2 {
 
-	private static final String[] FILE_NAMES = { "builtin_js.n4ts" /* pull only virtualBase stuff. */};
+	private static final String[] FILE_NAMES = { "builtin_js.n4ts" /* pull only virtualBase stuff. */ };
 
 	/**
 	 * Obtains an instance in the context of the given resourceSet.
@@ -48,7 +47,21 @@ public final class VirtualBaseTypeScope extends EnumerableScope {
 	 * Creates a new scope that loads its content by using the given descriptor.
 	 */
 	public VirtualBaseTypeScope(ExecutionEnvironmentDescriptor descriptor) {
-		super(descriptor);
+		super("VirtualBaseTypeScope", FILE_NAMES, descriptor, VirtualBaseTypeScope::buildMap);
+	}
+
+	/**
+	 * Process the given resource and add everything which is important for this scope into the given map of result
+	 * elements.
+	 */
+	static void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> result) {
+		TypeDefs typeDefinitions = (TypeDefs) resource.getContents().get(0);
+		for (Type type : typeDefinitions.getTypes()) {
+			if (type instanceof VirtualBaseType) { // only virtualBase children.
+				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
+				result.put(description.getName(), description);
+			}
+		}
 	}
 
 	/**
@@ -61,22 +74,6 @@ public final class VirtualBaseTypeScope extends EnumerableScope {
 	 */
 	public final VirtualBaseType getArgumentsType() {
 		return getEObjectOrProxy(QN_VBT_ARGUMENTS);
-	}
-
-	@Override
-	protected String[] getFileNames() {
-		return FILE_NAMES;
-	}
-
-	@Override
-	protected void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
-		TypeDefs typeDefinitions = (TypeDefs) resource.getContents().get(0);
-		for (Type type : typeDefinitions.getTypes()) {
-			if (type instanceof VirtualBaseType) { // only virtualBase children.
-				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
-				elements.put(description.getName(), description);
-			}
-		}
 	}
 
 }

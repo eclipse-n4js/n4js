@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
+import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope2;
 import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
@@ -36,7 +36,7 @@ import com.google.common.annotations.VisibleForTesting;
  *
  * Retrieve via {@link GlobalObjectScope#get(ResourceSet)}.
  */
-public final class GlobalObjectScope extends EnumerableScope {
+public final class GlobalObjectScope extends EnumerableScope2 {
 
 	/**
 	 * Visible for testing purpose.
@@ -80,16 +80,14 @@ public final class GlobalObjectScope extends EnumerableScope {
 	 * Create a new global object scope where the object is provided by means of the given descriptor.
 	 */
 	public GlobalObjectScope(ExecutionEnvironmentDescriptor descriptor) {
-		super(descriptor);
+		super("GlobalObjectScope", FILE_NAMES, descriptor, GlobalObjectScope::buildMap);
 	}
 
-	@Override
-	protected String[] getFileNames() {
-		return FILE_NAMES;
-	}
-
-	@Override
-	protected void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
+	/**
+	 * Process the given resource and add everything which is important for this scope into the given map of result
+	 * elements.
+	 */
+	static void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
 		IDefaultResourceDescriptionStrategy strategy = ((XtextResource) resource).getResourceServiceProvider()
 				.get(IDefaultResourceDescriptionStrategy.class);
 		TreeIterator<EObject> allProperContents = EcoreUtil.getAllProperContents(resource, false);

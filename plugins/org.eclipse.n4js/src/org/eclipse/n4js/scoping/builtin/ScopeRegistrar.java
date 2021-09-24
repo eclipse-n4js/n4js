@@ -28,22 +28,22 @@ public class ScopeRegistrar extends BuiltInSchemeRegistrar {
 	public void registerScopes(ResourceSet targetResourceSet, ResourceSet builtInSchemeResourceSet) {
 		super.registerScopes(targetResourceSet, builtInSchemeResourceSet);
 
-		GlobalObjectScope globalObjectScope = GlobalObjectScope.get(builtInSchemeResourceSet);
-		GlobalObjectScopeAccess.registerGlobalObjectScope(globalObjectScope, targetResourceSet);
+		GlobalObjectScopeAccess.registerGlobalObjectScope(
+				() -> GlobalObjectScope.get(builtInSchemeResourceSet), targetResourceSet);
 
-		VirtualBaseTypeScope virtualBaseTypeScope = VirtualBaseTypeScope.get(builtInSchemeResourceSet);
-		VirtualBaseTypeScopeAccess.registerVirtualBaseTypeScope(virtualBaseTypeScope, targetResourceSet);
+		VirtualBaseTypeScopeAccess.registerVirtualBaseTypeScope(
+				() -> VirtualBaseTypeScope.get(builtInSchemeResourceSet), targetResourceSet);
 	}
 
 	@Override
 	protected void register(ResourceSet resourceSet, ExecutionEnvironmentDescriptor descriptor) {
 		super.register(resourceSet, descriptor);
 
-		GlobalObjectScope globalObjectScope = new GlobalObjectScope(descriptor);
-		GlobalObjectScopeAccess.registerGlobalObjectScope(globalObjectScope, resourceSet);
+		GlobalObjectScopeAccess.registerGlobalObjectScope(
+				() -> new GlobalObjectScope(descriptor), resourceSet);
 
-		VirtualBaseTypeScope virtualBaseTypeScope = new VirtualBaseTypeScope(descriptor);
-		VirtualBaseTypeScopeAccess.registerVirtualBaseTypeScope(virtualBaseTypeScope, resourceSet);
+		VirtualBaseTypeScopeAccess.registerVirtualBaseTypeScope(
+				() -> new VirtualBaseTypeScope(descriptor), resourceSet);
 	}
 
 }

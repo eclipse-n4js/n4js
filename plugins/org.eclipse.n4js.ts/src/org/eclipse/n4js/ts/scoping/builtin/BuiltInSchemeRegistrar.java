@@ -53,16 +53,16 @@ public class BuiltInSchemeRegistrar implements N4Scheme {
 	 * Cache the scopes on the target resource set based on the shared scopes of the builtInSchemeResourceSet.
 	 */
 	public void registerScopes(ResourceSet targetResourceSet, ResourceSet builtInSchemeResourceSet) {
-		BuiltInTypeScope typeScope = BuiltInTypeScope.get(builtInSchemeResourceSet);
-		BuiltInTypeScopeAccess.registerBuiltInTypeScope(typeScope, targetResourceSet);
+		BuiltInTypeScopeAccess.registerBuiltInTypeScope(
+				() -> BuiltInTypeScope.get(builtInSchemeResourceSet), targetResourceSet);
 	}
 
 	/**
 	 * Register all well defined scopes at the resource set.
 	 */
 	protected void register(ResourceSet builtInSchemeResourceSet, ExecutionEnvironmentDescriptor descriptor) {
-		BuiltInTypeScope typeScope = new BuiltInTypeScope(descriptor);
-		BuiltInTypeScopeAccess.registerBuiltInTypeScope(typeScope, builtInSchemeResourceSet);
+		BuiltInTypeScopeAccess.registerBuiltInTypeScope(
+				() -> new BuiltInTypeScope(descriptor), builtInSchemeResourceSet);
 	}
 
 	/**

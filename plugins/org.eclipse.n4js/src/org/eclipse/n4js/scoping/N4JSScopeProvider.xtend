@@ -267,7 +267,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
 			N4FieldAccessor							: {
 				val container = EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition);
-				return bScopesHelper.scopeForEObjects(container, container.ownedFields);
+				return bScopesHelper.scopeForEObjects("N4FieldAccessor", container, container.ownedFields);
 			}
 			default									: return IScope.NULLSCOPE
 		}
@@ -351,7 +351,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	private def IScope getAllLabels(Script script) {
-		return bScopesHelper.scopeForEObjects(script, script.eAllContents.filter(LabelledStatement).toIterable);
+		return bScopesHelper.scopeForEObjects("scope_LabelledStatement", script, script.eAllContents.filter(LabelledStatement).toIterable);
 	}
 
 	/**
@@ -466,7 +466,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 
 
-		scope = bScopesHelper.scopeForEObjects(context, scope, false, scopeLists.flatten);
+		scope = bScopesHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
 
 		return scope;
 	}
@@ -511,7 +511,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		
 		// get regular top-level elements scope
-		val topLevelElementsScope = bScopesHelper.scopeFor(importedModule, IScope.NULLSCOPE, false,
+		val topLevelElementsScope = bScopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", importedModule, IScope.NULLSCOPE, false,
 			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
 		
 		// if the context resource does not allow for versioned types but the imported module does...

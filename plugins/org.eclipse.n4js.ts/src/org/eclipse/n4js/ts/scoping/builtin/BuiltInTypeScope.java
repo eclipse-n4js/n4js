@@ -46,7 +46,7 @@ import com.google.common.annotations.VisibleForTesting;
  * The scope basically decorates the resource set and provides strongly typed accessors to an enumerated set of built-in
  * types.
  */
-public final class BuiltInTypeScope extends EnumerableScope {
+public final class BuiltInTypeScope extends EnumerableScope2 {
 
 	/**
 	 * Visible for testing purpose
@@ -244,7 +244,21 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * Creates a new scope for built in types in the given resource set.
 	 */
 	public BuiltInTypeScope(ExecutionEnvironmentDescriptor descriptor) {
-		super(descriptor);
+		super("BuiltInTypeScope", FILE_NAMES, descriptor, BuiltInTypeScope::buildMap);
+	}
+
+	/**
+	 * Process the given resource and add everything which is important for this scope into the given map of result
+	 * elements.
+	 */
+	static void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
+		TypeDefs typeDefinitions = (TypeDefs) resource.getContents().get(0);
+		for (Type type : typeDefinitions.getTypes()) {
+			if (!(type instanceof VirtualBaseType)) {
+				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
+				elements.put(description.getName(), description);
+			}
+		}
 	}
 
 	/**
@@ -638,19 +652,4 @@ public final class BuiltInTypeScope extends EnumerableScope {
 		return functionTypesAllImplicitSuperTypeRefs;
 	}
 
-	@Override
-	protected String[] getFileNames() {
-		return FILE_NAMES;
-	}
-
-	@Override
-	protected void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> elements) {
-		TypeDefs typeDefinitions = (TypeDefs) resource.getContents().get(0);
-		for (Type type : typeDefinitions.getTypes()) {
-			if (!(type instanceof VirtualBaseType)) {
-				IEObjectDescription description = EObjectDescription.create(type.getName(), type);
-				elements.put(description.getName(), description);
-			}
-		}
-	}
 }

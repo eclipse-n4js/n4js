@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.scoping.builtin;
 
+import java.util.function.Supplier;
+
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -19,24 +21,25 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class VirtualBaseTypeScopeAccess extends AdapterImpl {
 
-	private final VirtualBaseTypeScope scope;
+	private final Supplier<VirtualBaseTypeScope> scopeSupplier;
+	private VirtualBaseTypeScope scope;
 
 	/**
 	 * Registers an instance of the {@link VirtualBaseTypeScope} for the given context {@link ResourceSet}.
 	 */
-	public static void registerVirtualBaseTypeScope(VirtualBaseTypeScope scope, ResourceSet context) {
+	public static void registerVirtualBaseTypeScope(Supplier<VirtualBaseTypeScope> scopeSupplier, ResourceSet context) {
 		if (EcoreUtil.getAdapter(context.eAdapters(), VirtualBaseTypeScope.class) != null) {
 			throw new IllegalStateException("Attempt to install adapter for VirtualBaseTypeScope twice");
 		}
-		VirtualBaseTypeScopeAccess adapter = new VirtualBaseTypeScopeAccess(scope);
+		VirtualBaseTypeScopeAccess adapter = new VirtualBaseTypeScopeAccess(scopeSupplier);
 		context.eAdapters().add(adapter);
 	}
 
 	/**
 	 * Non-public constructor for the adapter.
 	 */
-	VirtualBaseTypeScopeAccess(VirtualBaseTypeScope scope) {
-		this.scope = scope;
+	VirtualBaseTypeScopeAccess(Supplier<VirtualBaseTypeScope> scopeSupplier) {
+		this.scopeSupplier = scopeSupplier;
 	}
 
 	@Override
@@ -45,6 +48,9 @@ public class VirtualBaseTypeScopeAccess extends AdapterImpl {
 	}
 
 	VirtualBaseTypeScope getScope() {
+		if (scope == null) {
+			scope = scopeSupplier.get();
+		}
 		return scope;
 	}
 

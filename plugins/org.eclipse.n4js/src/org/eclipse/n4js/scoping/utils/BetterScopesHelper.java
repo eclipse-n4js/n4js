@@ -17,12 +17,14 @@ import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.scoping.BetterScope;
+import org.eclipse.n4js.ts.scoping.BetterScope;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  *
@@ -30,27 +32,65 @@ import org.eclipse.xtext.util.SimpleAttributeResolver;
 public class BetterScopesHelper {
 
 	/** TODO */
-	public IScope scopeForEObjects(EObject context, Iterable<? extends EObject> eObjects) {
-		return scopeForEObjects(context, IScope.NULLSCOPE, false, eObjects);
+	public IScope scopeForEObjects(String name, EObject context, Iterable<? extends EObject> eObjects) {
+		return scopeForEObjects(name, context, IScope.NULLSCOPE, eObjects);
 	}
 
 	/** TODO */
-	public IScope scopeForEObjects(EObject context, IScope parent, boolean ignoreCase,
+	public IScope scopeForEObjects(String name, EObject context, IScope parent, Iterable<? extends EObject> eObjects) {
+		return scopeForEObjects(name, context, parent, false, eObjects);
+	}
+
+	/** TODO */
+	public IScope scopeForEObjects(String name, EObject context, IScope parent, boolean ignoreCase,
 			Iterable<? extends EObject> eObjects) {
 
-		return internalScopeFor(context, parent, ignoreCase, eObjects, this::convertToIEObjectDescription);
+		return scopeForEObjects(name, context, parent, ignoreCase, eObjects, null);
 	}
 
 	/** TODO */
-	public IScope scopeFor(EObject context, Iterable<IEObjectDescription> descriptions) {
-		return scopeFor(context, IScope.NULLSCOPE, false, descriptions);
+	public IScope scopeForEObjects(String name, EObject context, IScope parent,
+			Iterable<? extends EObject> eObjects, Function<IEObjectDescription, IEObjectDescription> wrap) {
+
+		return internalScopeFor(name, context, parent, false, eObjects, this::convertToIEObjectDescription, wrap);
 	}
 
 	/** TODO */
-	public IScope scopeFor(EObject context, IScope parent, boolean ignoreCase,
+	public IScope scopeForEObjects(String name, EObject context, IScope parent, boolean ignoreCase,
+			Iterable<? extends EObject> eObjects, Function<IEObjectDescription, IEObjectDescription> wrap) {
+
+		return internalScopeFor(name, context, parent, ignoreCase, eObjects, this::convertToIEObjectDescription, wrap);
+	}
+
+	/** TODO */
+	public IScope scopeFor(String name, EObject context, Iterable<IEObjectDescription> descriptions) {
+		return scopeFor(name, context, IScope.NULLSCOPE, descriptions);
+	}
+
+	/** TODO */
+	public IScope scopeFor(String name, EObject context, IScope parent, Iterable<IEObjectDescription> descriptions) {
+		return scopeFor(name, context, parent, false, descriptions);
+	}
+
+	/** TODO */
+	public IScope scopeFor(String name, EObject context, IScope parent, boolean ignoreCase,
 			Iterable<IEObjectDescription> descriptions) {
 
-		return internalScopeFor(context, parent, ignoreCase, descriptions, t -> t);
+		return scopeFor(name, context, parent, ignoreCase, descriptions, null);
+	}
+
+	/** TODO */
+	public IScope scopeFor(String name, EObject context, IScope parent,
+			Iterable<IEObjectDescription> descriptions, Function<IEObjectDescription, IEObjectDescription> wrap) {
+
+		return internalScopeFor(name, context, parent, false, descriptions, t -> t, wrap);
+	}
+
+	/** TODO */
+	public IScope scopeFor(String name, EObject context, IScope parent, boolean ignoreCase,
+			Iterable<IEObjectDescription> descriptions, Function<IEObjectDescription, IEObjectDescription> wrap) {
+
+		return internalScopeFor(name, context, parent, ignoreCase, descriptions, t -> t, wrap);
 	}
 
 	private IEObjectDescription convertToIEObjectDescription(EObject eObject) {
@@ -61,8 +101,9 @@ public class BetterScopesHelper {
 		return description;
 	}
 
-	private <T> IScope internalScopeFor(EObject context, IScope parent, boolean ignoreCase,
-			Iterable<? extends T> descriptions, Function<T, IEObjectDescription> convert) {
+	private <T> IScope internalScopeFor(String name, EObject context, IScope parent, boolean ignoreCase,
+			Iterable<? extends T> descriptions, Function<T, IEObjectDescription> convert,
+			Function<IEObjectDescription, IEObjectDescription> wrap) {
 
 		Iterator<? extends T> iterator = descriptions.iterator();
 		if (!iterator.hasNext()) {
@@ -74,6 +115,12 @@ public class BetterScopesHelper {
 
 		for (T t : descriptions) {
 			IEObjectDescription description = convert.apply(t);
+			if (description == null) {
+				continue;
+			}
+			if (wrap != null) {
+				description = wrap.apply(description);
+			}
 			if (description == null) {
 				continue;
 			}
@@ -92,7 +139,8 @@ public class BetterScopesHelper {
 			}
 		}
 
-		return new BetterScope(context, parent, mapByURI, mapByQN, ignoreCase);
+		return new BetterScope(name, context, parent, ImmutableMap.copyOf(mapByURI), ImmutableMap.copyOf(mapByQN),
+				ignoreCase);
 	}
 
 }

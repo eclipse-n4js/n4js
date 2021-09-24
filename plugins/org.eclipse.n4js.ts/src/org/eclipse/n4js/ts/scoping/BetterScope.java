@@ -8,11 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.scoping;
+package org.eclipse.n4js.ts.scoping;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -21,6 +20,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 
@@ -28,18 +28,22 @@ import com.google.common.collect.LinkedHashMultimap;
  *
  */
 public class BetterScope implements IScope {
+	final String name;
 	final EObject context;
 	final IScope parent;
 	final int depth;
 	final boolean ignoreCase;
-	final Map<QualifiedName, IEObjectDescription> localElementsForQN;
-	final Map<URI, IEObjectDescription> localElementsForURI;
+	final ImmutableMap<QualifiedName, IEObjectDescription> localElementsForQN;
+	final ImmutableMap<URI, IEObjectDescription> localElementsForURI;
 	final LinkedHashMultimap<QualifiedName, IEObjectDescription> allElementsForQN = null;
 	final LinkedHashMultimap<URI, IEObjectDescription> allElementsForURI = null;
 
-	public BetterScope(EObject context, IScope parent, Map<URI, IEObjectDescription> elementsByURI,
-			Map<QualifiedName, IEObjectDescription> elementsByQN, boolean ignoreCase) {
+	/** Constructor */
+	public BetterScope(String name, EObject context, IScope parent,
+			ImmutableMap<URI, IEObjectDescription> elementsByURI,
+			ImmutableMap<QualifiedName, IEObjectDescription> elementsByQN, boolean ignoreCase) {
 
+		this.name = name;
 		this.context = context;
 		this.parent = parent;
 		this.depth = computeDepth();
@@ -64,10 +68,10 @@ public class BetterScope implements IScope {
 		return localElementsForQN.values();
 	}
 
-	protected Collection<IEObjectDescription> getLocalElements(QualifiedName name) {
+	protected Collection<IEObjectDescription> getLocalElements(QualifiedName qName) {
 		IEObjectDescription result = null;
-		name = isIgnoreCase() ? name.toLowerCase() : name;
-		result = localElementsForQN.get(name);
+		qName = isIgnoreCase() ? qName.toLowerCase() : qName;
+		result = localElementsForQN.get(qName);
 		if (result == null)
 			return Collections.emptyList();
 		return Collections.singleton(result);
@@ -86,8 +90,8 @@ public class BetterScope implements IScope {
 		return parent.getAllElements();
 	}
 
-	protected Iterable<IEObjectDescription> getParentElements(QualifiedName name) {
-		return parent.getElements(name);
+	protected Iterable<IEObjectDescription> getParentElements(QualifiedName qName) {
+		return parent.getElements(qName);
 	}
 
 	protected Iterable<IEObjectDescription> getParentElements(EObject object) {
@@ -95,10 +99,10 @@ public class BetterScope implements IScope {
 	}
 
 	@Override
-	public IEObjectDescription getSingleElement(QualifiedName name) {
-		Iterable<IEObjectDescription> localElements = getLocalElements(name);
+	public IEObjectDescription getSingleElement(QualifiedName qName) {
+		Iterable<IEObjectDescription> localElements = getLocalElements(qName);
 		if (!localElements.iterator().hasNext()) {
-			localElements = getParentElements(name);
+			localElements = getParentElements(qName);
 		}
 		return localElements.iterator().hasNext() ? localElements.iterator().next() : null;
 	}
@@ -118,8 +122,8 @@ public class BetterScope implements IScope {
 	}
 
 	@Override
-	public Iterable<IEObjectDescription> getElements(QualifiedName name) {
-		return Iterables.concat(getLocalElements(name), getParentElements(name));
+	public Iterable<IEObjectDescription> getElements(QualifiedName qName) {
+		return Iterables.concat(getLocalElements(qName), getParentElements(qName));
 	}
 
 	@Override
@@ -127,4 +131,8 @@ public class BetterScope implements IScope {
 		return Iterables.concat(getLocalElements(object), getParentElements(object));
 	}
 
+	@Override
+	public String toString() {
+		return name + " [" + depth + "] " + context.toString();
+	}
 }

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.scoping.builtin;
 
+import java.util.function.Supplier;
+
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -19,21 +21,22 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class BuiltInTypeScopeAccess extends AdapterImpl {
 
-	private final BuiltInTypeScope scope;
+	private final Supplier<BuiltInTypeScope> scopeSupplier;
+	private BuiltInTypeScope scope;
 
 	/**
 	 * Assign the given scope to the given resource set by means of an Adapter.
 	 */
-	public static void registerBuiltInTypeScope(BuiltInTypeScope scope, ResourceSet context) {
+	public static void registerBuiltInTypeScope(Supplier<BuiltInTypeScope> scopeSupplier, ResourceSet context) {
 		if (EcoreUtil.getAdapter(context.eAdapters(), BuiltInTypeScope.class) != null) {
 			throw new IllegalStateException("Attempt to install adapter for BuiltInTypeScope twice");
 		}
-		BuiltInTypeScopeAccess adapter = new BuiltInTypeScopeAccess(scope);
+		BuiltInTypeScopeAccess adapter = new BuiltInTypeScopeAccess(scopeSupplier);
 		context.eAdapters().add(adapter);
 	}
 
-	BuiltInTypeScopeAccess(BuiltInTypeScope scope) {
-		this.scope = scope;
+	BuiltInTypeScopeAccess(Supplier<BuiltInTypeScope> scopeSupplier) {
+		this.scopeSupplier = scopeSupplier;
 	}
 
 	@Override
@@ -42,6 +45,9 @@ public class BuiltInTypeScopeAccess extends AdapterImpl {
 	}
 
 	BuiltInTypeScope getScope() {
+		if (scope == null) {
+			scope = scopeSupplier.get();
+		}
 		return scope;
 	}
 
