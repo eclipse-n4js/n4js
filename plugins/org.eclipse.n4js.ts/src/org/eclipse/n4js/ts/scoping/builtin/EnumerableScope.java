@@ -13,97 +13,70 @@ package org.eclipse.n4js.ts.scoping.builtin;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.impl.AbstractScope;
-
-import com.google.common.collect.Maps;
-
+import org.eclipse.n4js.ts.scoping.BetterScope;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 /**
  * An enumerable scope contains a well known set of elements. Their names are usually known at compile time.
  */
-public abstract class EnumerableScope extends AbstractScope {
+public abstract class EnumerableScope extends BetterScope {
 
-	private Map<QualifiedName, IEObjectDescription> elements;
+	/** Instantiate a new enumerable scope without a parent scope. */
+	protected EnumerableScope(String name, String[] fileNames, ExecutionEnvironmentDescriptor descriptor,
+			BiConsumer<Resource, Map<QualifiedName, IEObjectDescription>> buildMap) {
 
-	private final ExecutionEnvironmentDescriptor descriptor;
+		this(name, ImmutableMap.copyOf(createElements(fileNames, descriptor, buildMap)));
 
-	/**
-	 * Instantiate a new enumerable scope without a parent scope.
-	 */
-	protected EnumerableScope(ExecutionEnvironmentDescriptor descriptor) {
-		super(IScope.NULLSCOPE, false);
-		this.descriptor = descriptor;
 	}
 
-	/**
-	 * Create the map of descriptions that make up this scope.
-	 */
-	protected final Map<QualifiedName, IEObjectDescription> createElements() {
+	/** Constructor */
+	protected EnumerableScope(String name, ImmutableMap<QualifiedName, IEObjectDescription> m1) {
+		this(name, buildUriMap(m1), m1);
+	}
+
+	/** Constructor */
+	protected EnumerableScope(String name, ImmutableMap<URI, IEObjectDescription> m1,
+			ImmutableMap<QualifiedName, IEObjectDescription> m2) {
+
+		super(name, null, IScope.NULLSCOPE, m1, m2, false);
+	}
+
+	/** Create the map of descriptions that make up this scope. */
+	static Map<QualifiedName, IEObjectDescription> createElements(String[] fileNames,
+			ExecutionEnvironmentDescriptor descriptor,
+			BiConsumer<Resource, Map<QualifiedName, IEObjectDescription>> buildMap) {
+
 		Map<QualifiedName, IEObjectDescription> result = Maps.newLinkedHashMap();
-		descriptor.processResources(getFileNames(), (r) -> buildMap(r, result));
+		List<Resource> resources = descriptor.processResources(fileNames);
+		for (Resource res : resources) {
+			buildMap.accept(res, result);
+		}
 		return result;
 	}
 
-	/**
-	 * Process the given resource and add everything which is important for this scope into the given map of result
-	 * elements.
-	 */
-	protected abstract void buildMap(Resource resource, Map<QualifiedName, IEObjectDescription> result);
-
-	/**
-	 * Return the file names that should be used when this scope is initialized.
-	 */
-	protected abstract String[] getFileNames();
-
-	@Override
-	protected Iterable<IEObjectDescription> getAllLocalElements() {
-		if (elements == null) {
-			elements = createElements();
+	static ImmutableMap<URI, IEObjectDescription> buildUriMap(Map<QualifiedName, IEObjectDescription> mapByQN) {
+		Map<URI, IEObjectDescription> map = new HashMap<>();
+		for (IEObjectDescription descr : mapByQN.values()) {
+			map.put(descr.getEObjectURI(), descr);
 		}
-		return elements.values();
-	}
-
-	@Override
-	protected Iterable<IEObjectDescription> getLocalElementsByName(QualifiedName name) {
-		if (elements == null) {
-			elements = createElements();
-		}
-		IEObjectDescription result = null;
-		if (isIgnoreCase()) {
-			result = elements.get(name.toLowerCase());
-		} else {
-			result = elements.get(name);
-		}
-		if (result == null)
-			return Collections.emptyList();
-		return Collections.singleton(result);
-	}
-
-	@Override
-	protected boolean isShadowed(IEObjectDescription fromParent) {
-		if (elements == null) {
-			elements = createElements();
-		}
-		if (isIgnoreCase()) {
-			boolean result = elements.containsKey(fromParent.getName().toLowerCase());
-			return result;
-		} else {
-			boolean result = elements.containsKey(fromParent.getName());
-			return result;
-		}
+		return ImmutableMap.copyOf(map);
 	}
 
 	/**
@@ -121,8 +94,9 @@ public abstract class EnumerableScope extends AbstractScope {
 	 */
 	protected <T extends EObject> T getEObjectOrProxy(QualifiedName qn) {
 		IEObjectDescription description = getSingleElement(qn);
-		if (description == null)
+		if (description == null) {
 			throw new IllegalStateException(qn + " is not contained in this scope");
+		}
 		@SuppressWarnings("unchecked")
 		T result = (T) description.getEObjectOrProxy();
 		return result;

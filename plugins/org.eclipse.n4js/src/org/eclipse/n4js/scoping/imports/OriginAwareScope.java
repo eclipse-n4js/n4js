@@ -63,20 +63,7 @@ public class OriginAwareScope implements IScope {
 	@Override
 	public IEObjectDescription getSingleElement(QualifiedName name) {
 		IEObjectDescription ret = delegatee.getSingleElement(name);
-		if (ret == null)
-			return null;
-
-		ImportSpecifier origin = origins.get(ret);
-		if (origin != null) {
-			EObject script = EcoreUtil.getRootContainer(origin);
-			if ((script instanceof Script) && ((Script) script).isFlaggedUsageMarkingFinished()) {
-				// do nothing as linking phase is over
-			} else {
-				// return usage aware description
-				return getUsageAwareDescription(ret);
-			}
-		}
-		return ret;
+		return getUsageAwareDescription(ret);
 	}
 
 	@Override

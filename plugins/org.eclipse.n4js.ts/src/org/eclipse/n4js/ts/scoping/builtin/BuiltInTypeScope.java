@@ -46,7 +46,7 @@ import com.google.common.annotations.VisibleForTesting;
  * The scope basically decorates the resource set and provides strongly typed accessors to an enumerated set of built-in
  * types.
  */
-public final class BuiltInTypeScope extends EnumerableScope2 {
+public final class BuiltInTypeScope extends EnumerableScope {
 
 	/**
 	 * Visible for testing purpose

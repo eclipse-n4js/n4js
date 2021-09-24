@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope2;
+import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
 import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
@@ -36,7 +36,7 @@ import com.google.common.annotations.VisibleForTesting;
  *
  * Retrieve via {@link GlobalObjectScope#get(ResourceSet)}.
  */
-public final class GlobalObjectScope extends EnumerableScope2 {
+public final class GlobalObjectScope extends EnumerableScope {
 
 	/**
 	 * Visible for testing purpose.

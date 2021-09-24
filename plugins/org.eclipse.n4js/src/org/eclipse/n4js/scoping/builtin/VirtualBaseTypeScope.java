@@ -15,7 +15,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope2;
+import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
 import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeDefs;
@@ -27,7 +27,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 /**
  * This scope provides access to virtual base types, only available to the type system.
  */
-public final class VirtualBaseTypeScope extends EnumerableScope2 {
+public final class VirtualBaseTypeScope extends EnumerableScope {
 
 	private static final String[] FILE_NAMES = { "builtin_js.n4ts" /* pull only virtualBase stuff. */ };
 

@@ -56,12 +56,12 @@ import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
+import org.eclipse.n4js.scoping.utils.BetterScopesHelper
+import org.eclipse.n4js.scoping.utils.BetterSourceElementExtensions
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
-import org.eclipse.n4js.scoping.utils.ScopesHelper
-import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
@@ -88,20 +88,15 @@ import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription
-import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.scoping.utils.BetterSourceElementExtensions
-import org.eclipse.n4js.scoping.utils.BetterScopesHelper
-import org.eclipse.emf.common.util.EList
 
 /**
  * This class contains custom scoping description.
@@ -153,8 +148,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject TopLevelElementsCollector topLevelElementCollector
 
-	@Inject ScopesHelper scopesHelper
-	
 	@Inject BetterScopesHelper bScopesHelper
 
 	@Inject VersionHelper versionHelper;

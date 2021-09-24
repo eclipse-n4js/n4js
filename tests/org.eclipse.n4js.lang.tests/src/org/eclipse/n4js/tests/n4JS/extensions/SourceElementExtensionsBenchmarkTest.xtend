@@ -15,7 +15,7 @@ import java.util.List
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.scoping.utils.SourceElementExtensions
+import org.eclipse.n4js.scoping.utils.BetterSourceElementExtensions
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -128,7 +128,7 @@ class SourceElementExtensionsBenchmarkTest extends Assert {
 
 	@Inject extension ParseHelper<Script>
 
-	@Inject extension SourceElementExtensions
+	@Inject extension BetterSourceElementExtensions
 
 	var Script script
 	var List<FunctionDefinition> functions

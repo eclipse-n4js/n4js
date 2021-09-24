@@ -54,9 +54,6 @@ public class BetterSourceElementExtensions {
 	@Inject
 	IResourceScopeCache cache;
 
-	@Inject
-	SourceElementExtensions sourceElementExtensions;
-
 	/**
 	 * Collects all elements visible from the given element. This will include the element itself, if it is either a
 	 * {@link FunctionExpression} or a {@link IdentifiableElement}. Note that a {@code N4Class} is not variable
