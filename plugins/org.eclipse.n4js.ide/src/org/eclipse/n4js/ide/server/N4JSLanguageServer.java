@@ -16,18 +16,23 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.GlobalObjectScope;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.ide.server.util.ParamHelper;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -38,6 +43,9 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 
 	@Inject
 	private ParamHelper paramHelper;
+
+	@Inject
+	private Provider<XtextResourceSet> resourceSetProvider;
 
 	@Override
 	protected boolean isSupported(URI uri) {
@@ -74,6 +82,18 @@ public class N4JSLanguageServer extends XLanguageServerImpl implements N4JSProto
 	private String documentContents(ResourceTaskContext ofc, CancelIndicator cancelIndicator) {
 		XDocument doc = ofc.getDocument();
 		return doc.getContents();
+	}
+
+	@Override
+	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
+		CompletableFuture<InitializeResult> result = super.initialize(params);
+
+		// force initialization of built-in types
+		XtextResourceSet resourceSet = resourceSetProvider.get();
+		BuiltInTypeScope.get(resourceSet).getArrayType();
+		GlobalObjectScope.get(resourceSet).getGlobalObject();
+
+		return result;
 	}
 
 	@Override
