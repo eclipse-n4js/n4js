@@ -182,7 +182,7 @@ class ImportedElementsScopingHelper {
 		val invalidLocalScope = scopesHelper.scopeFor("findImportedElements-invalidImports", script, invalidImports.values)
 		val localValidScope = scopesHelper.scopeFor("findImportedElements-validImports", script, parentScope, validImports.values)
 		val importScope = new UberParentScope("findImportedElements-uberParent", localValidScope, invalidLocalScope)
-		return new OriginAwareScope(importScope, originatorMap);
+		return new OriginAwareScope(script, importScope, originatorMap);
 		
 		// local broken elements are hidden by parent scope, both are hidden by valid local elements
 //		val invalidLocalScope = scopesHelper.scopeFor("findImportedElements-invalidImports", script, invalidImports.values)
