@@ -58,6 +58,13 @@ public abstract class EnumerableScope extends BetterScope {
 		super(name, null, IScope.NULLSCOPE, m1, m2, false);
 	}
 
+	/** Constructor */
+	protected EnumerableScope(String name, IScope parent, ImmutableMap<URI, IEObjectDescription> m1,
+			ImmutableMap<QualifiedName, IEObjectDescription> m2) {
+
+		super(name, null, parent, m1, m2, false);
+	}
+
 	/** Create the map of descriptions that make up this scope. */
 	static Map<QualifiedName, IEObjectDescription> createElements(String[] fileNames,
 			ExecutionEnvironmentDescriptor descriptor,

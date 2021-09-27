@@ -34,9 +34,9 @@ import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
+import org.eclipse.n4js.scoping.utils.BetterScopesHelper
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
-import org.eclipse.n4js.scoping.utils.MergedScope
-import org.eclipse.n4js.scoping.utils.ScopesHelper
+import org.eclipse.n4js.scoping.utils.UberParentScope
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -53,8 +53,8 @@ import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import org.eclipse.n4js.scoping.utils.MergedScope
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -88,7 +88,7 @@ class ImportedElementsScopingHelper {
 	private MemberScopeFactory memberScopeFactory
 
 	@Inject
-	private ScopesHelper scopesHelper;
+	private BetterScopesHelper scopesHelper;
 
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
@@ -100,9 +100,10 @@ class ImportedElementsScopingHelper {
 		val IScope scriptScope = cache.get(script -> 'importedIdentifiables', script.eResource) [|
 			// TODO parentScope (usually global scope) arg is not part of cache key but used in value!
 			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
-			val builtInTypes = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet))
-			val globalObjectScope = getGlobalObjectProperties(new MergedScope(parentScope, builtInTypes), script)
-			val result = script.findImportedElements(globalObjectScope, true);
+			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet))
+			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope)
+			val globalObjectScope = getGlobalObjectProperties(uberParent, script)
+			val result = findImportedElements(script, globalObjectScope, true);
 			return result;
 		]
 		return scriptScope
@@ -110,8 +111,7 @@ class ImportedElementsScopingHelper {
 
 	def IScope getImportedTypes(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
-			val result = script.findImportedElements(parentScope, false);
-			return result;
+			return findImportedElements(script, parentScope, false);
 		]
 		return scriptScope
 	}
@@ -149,7 +149,7 @@ class ImportedElementsScopingHelper {
 		val contextResource = script.eResource;
 		val imports = script.scriptElements.filter(ImportDeclaration)
 
-		if (imports.empty) return parentScope
+		if (imports.empty) return parentScope;
 
 		/** broken/invisible imported eObjects descriptions 
 		 *  - in case of broken state of imports this can be {@link AmbiguousImportDescription}
@@ -177,12 +177,18 @@ class ImportedElementsScopingHelper {
 			}
 		}
 
-		// local broken elements are hidden by parent scope, both are hidden by valid local elements
-		val invalidLocalScope = new SimpleScope(invalidImports.values)
-		val localBaseScope = new MergedScope(invalidLocalScope, parentScope)
-		val localValidScope = scopesHelper.mapBasedScopeFor(script, localBaseScope, validImports.values)
 
-		return new OriginAwareScope(localValidScope, originatorMap);
+//		 local broken elements are hidden by parent scope, both are hidden by valid local elements
+		val invalidLocalScope = scopesHelper.scopeFor("findImportedElements-invalidImports", script, invalidImports.values)
+		val localValidScope = scopesHelper.scopeFor("findImportedElements-validImports", script, parentScope, validImports.values)
+		val importScope = new UberParentScope("findImportedElements-uberParent", localValidScope, invalidLocalScope)
+		return new OriginAwareScope(importScope, originatorMap);
+		
+		// local broken elements are hidden by parent scope, both are hidden by valid local elements
+//		val invalidLocalScope = scopesHelper.scopeFor("findImportedElements-invalidImports", script, invalidImports.values)
+//		val localBaseScope = new UberParentScope("findImportedElements-uberParent", parentScope, invalidLocalScope)
+//		val localValidScope = scopesHelper.scopeFor("findImportedElements-validImports", script, localBaseScope, validImports.values)
+//		return new OriginAwareScope(localValidScope, originatorMap);
 	}
 
 	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,

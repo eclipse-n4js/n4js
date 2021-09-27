@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -36,8 +37,10 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * This scope provides access to the built in JS types. It is recommended to use {@link BuiltInTypeScopeAccess} directly
@@ -245,6 +248,21 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public BuiltInTypeScope(ExecutionEnvironmentDescriptor descriptor) {
 		super("BuiltInTypeScope", FILE_NAMES, descriptor, BuiltInTypeScope::buildMap);
+	}
+
+	/**
+	 * Constructor used to copy this instance.
+	 */
+	BuiltInTypeScope(ImmutableMap<URI, IEObjectDescription> m1,
+			ImmutableMap<QualifiedName, IEObjectDescription> m2, IScope parent,
+			List<ParameterizedTypeRef> n4classifiersAllImplicitSuperTypeRefs,
+			List<ParameterizedTypeRef> objectPrototypesAllImplicitSuperTypeRefs,
+			List<ParameterizedTypeRef> functionTypesAllImplicitSuperTypeRefs) {
+
+		super("BuiltInTypeScope", parent, m1, m2);
+		this.n4classifiersAllImplicitSuperTypeRefs = n4classifiersAllImplicitSuperTypeRefs;
+		this.objectPrototypesAllImplicitSuperTypeRefs = objectPrototypesAllImplicitSuperTypeRefs;
+		this.functionTypesAllImplicitSuperTypeRefs = functionTypesAllImplicitSuperTypeRefs;
 	}
 
 	/**
@@ -650,6 +668,14 @@ public final class BuiltInTypeScope extends EnumerableScope {
 			initImplicitSuperTypeLists();
 		}
 		return functionTypesAllImplicitSuperTypeRefs;
+	}
+
+	/** Creates a copy of this scope and puts the given parent at the top. */
+	public BuiltInTypeScope copyWithParent(IScope parentScope) {
+		return new BuiltInTypeScope(localElementsForURI, localElementsForQN, parentScope,
+				n4classifiersAllImplicitSuperTypeRefs,
+				objectPrototypesAllImplicitSuperTypeRefs, functionTypesAllImplicitSuperTypeRefs);
+
 	}
 
 }

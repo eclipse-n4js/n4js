@@ -28,15 +28,22 @@ import com.google.common.collect.LinkedHashMultimap;
  *
  */
 public class BetterScope implements IScope {
-	final String name;
-	final EObject context;
-	final IScope parent;
-	final int depth;
-	final boolean ignoreCase;
-	final ImmutableMap<QualifiedName, IEObjectDescription> localElementsForQN;
-	final ImmutableMap<URI, IEObjectDescription> localElementsForURI;
-	final LinkedHashMultimap<QualifiedName, IEObjectDescription> allElementsForQN = null;
-	final LinkedHashMultimap<URI, IEObjectDescription> allElementsForURI = null;
+	/** Name to identify the scope instance */
+	final protected String name;
+	/** {@link EObject} this scope was created for */
+	final protected EObject context;
+	/** Parent scope or null */
+	final protected IScope parent;
+	/** Number of parent scopes of type {@link BetterScope} above this scope +1 */
+	final protected int depth;
+	/** true iff this scope is not case sensitive */
+	final protected boolean ignoreCase;
+	/** Local elements mapped by {@link QualifiedName} */
+	final protected ImmutableMap<QualifiedName, IEObjectDescription> localElementsForQN;
+	/** Local elements mapped by {@link URI} */
+	final protected ImmutableMap<URI, IEObjectDescription> localElementsForURI;
+	final protected LinkedHashMultimap<QualifiedName, IEObjectDescription> allElementsForQN = null;
+	final protected LinkedHashMultimap<URI, IEObjectDescription> allElementsForURI = null;
 
 	/** Constructor */
 	public BetterScope(String name, EObject context, IScope parent,
