@@ -436,7 +436,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 	 *            a project type other than PLAINJS).
 	 */
 	def private void doTestAddRemoveDependency(Pair<String, String> dependency, boolean targetIsN4JSProject,
-		Pair<String, List<String>>[] originalErrors) {
+			Pair<String, List<String>>[] originalErrors) {
 
 		val sourceProjectName = dependency.key;
 		val targetProjectName = dependency.value;
@@ -456,9 +456,10 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		} else {
 			// unfortunately we have an additional error in the open, non-saved package.json file when a dependency to a plain-JS-project is added
 			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
+			val tpnLength = 31 + targetProjectName.length;
 			val errorsBeforeSaving = originalErrors + #[
 				sourceProjectName + "/" + PACKAGE_JSON -> #[
-					"(Error, [15:24 - 15:45], Project does not exist with project ID: PlainjsProject.)"
+					"(Error, [15:24 - 15:" + tpnLength + "], Project does not exist with project ID: " + targetProjectName + ".)"
 				]
 			];
 			assertIssues(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor

@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.types.utils.TypeHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -162,7 +161,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 					// imported names as well!
 					namesImportedByCandidate = getImportedNames(candidate);
 				}
-
+				// continue here: snapshot needs both information: original dep names and resolved q-names
 				IResourceDescription oldDesc = delta.getOld();
 				IResourceDescription newDesc = delta.getNew();
 				if (isAffected(namesImportedByCandidate, newDesc) // we may added a new exported name!
@@ -209,9 +208,9 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 			}
 
 			String toProjectName = toProject.getName();
-			Iterable<ProjectReference> fromProjectDependencies = getDependenciesForIsAffected(fromProject);
-			for (ProjectReference fromProjectDependencyName : fromProjectDependencies) {
-				if (Objects.equals(fromProjectDependencyName.getProjectName(), toProjectName)) {
+			Iterable<String> fromProjectDependencyNames = getDependenciesForIsAffected(fromProject);
+			for (String fromProjectDependencyName : fromProjectDependencyNames) {
+				if (Objects.equals(fromProjectDependencyName, toProjectName)) {
 					return true;
 				}
 			}
@@ -222,14 +221,8 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	/**
 	 * Returns project dependencies of the given project that should be considered when computing the
 	 * {@link #isAffected(Collection, IResourceDescription, IResourceDescriptions) isAffected()} relation.
-	 * <p>
-	 * Normally this method should return {@link N4JSProjectConfigSnapshot#getDependenciesAndImplementedApis()}, but
-	 * subclasses may choose to filter out certain dependencies. In effect, filtering out certain dependencies will mean
-	 * that incremental builds won't propagate along those dependencies.
-	 * <p>
-	 * NOTE: only required for external library workspace in Eclipse.
 	 */
-	protected Iterable<ProjectReference> getDependenciesForIsAffected(N4JSProjectConfigSnapshot fromProject) {
+	protected Iterable<String> getDependenciesForIsAffected(N4JSProjectConfigSnapshot fromProject) {
 		return fromProject.getDependenciesAndImplementedApis();
 	}
 

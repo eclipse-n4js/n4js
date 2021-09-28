@@ -61,11 +61,16 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 			joinServerRequests();
 		}
 
+
 		assertProjectsInWorkspace(
 			"yarn-test-project",
 			"yarn-test-project/node_modules/n4js-runtime",
 			"yarn-test-project/node_modules/ProjectOther",
 			"yarn-test-project/packages/ProjectMain"
+		);
+		assertDependenciesOf("yarn-test-project/packages/ProjectMain",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/node_modules/ProjectOther"
 		);
 		assertIssues(
 			"ModuleMain" -> #[
@@ -82,11 +87,19 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 		languageServer.didChangeWatchedFiles(params);
 		joinServerRequests();
 
+
+
+		
 		assertProjectsInWorkspace(
 			"yarn-test-project",
 			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/node_modules/ProjectOther",
 			"yarn-test-project/packages/ProjectOther",
 			"yarn-test-project/packages/ProjectMain"
+		);
+		assertDependenciesOf("yarn-test-project/packages/ProjectMain",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/packages/ProjectOther"
 		);
 		assertIssues(
 			"ModuleMain" -> #[
@@ -134,8 +147,13 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 		assertProjectsInWorkspace(
 			"yarn-test-project",
 			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/node_modules/ProjectOther",
 			"yarn-test-project/packages/ProjectOther",
 			"yarn-test-project/packages/ProjectMain"
+		);
+		assertDependenciesOf("yarn-test-project/packages/ProjectMain",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/packages/ProjectOther"
 		);
 		assertIssues(
 			"ModuleMain" -> #[
@@ -151,6 +169,10 @@ class IncrementalBuilderShadowingTest extends AbstractIdeTest {
 			"yarn-test-project/node_modules/n4js-runtime",
 			"yarn-test-project/node_modules/ProjectOther",
 			"yarn-test-project/packages/ProjectMain"
+		);
+		assertDependenciesOf("yarn-test-project/packages/ProjectMain",
+			"yarn-test-project/node_modules/n4js-runtime",
+			"yarn-test-project/node_modules/ProjectOther"
 		);
 		assertIssues(
 			"ModuleMain" -> #[

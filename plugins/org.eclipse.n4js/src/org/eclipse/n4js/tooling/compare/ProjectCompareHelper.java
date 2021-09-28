@@ -299,7 +299,7 @@ public class ProjectCompareHelper {
 
 				List<N4JSProjectConfigSnapshot> apiProjects = new ArrayList<>();
 				for (ProjectReference apiProjectRef : implProject.getProjectDescription().getImplementedProjects()) {
-					N4JSProjectConfigSnapshot currApiProject = wc.findProjectByName(apiProjectRef.getProjectName());
+					N4JSProjectConfigSnapshot currApiProject = wc.findProjectByName(apiProjectRef.getPackageName());
 					if (currApiProject != null) {
 						apiProjects.add(currApiProject);
 					}

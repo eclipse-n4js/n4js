@@ -47,7 +47,8 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getQualifiedName <em>Qualified Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getProjectName <em>Project Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getPackageName <em>Package Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getProjectID <em>Project ID</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVendorID <em>Vendor ID</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isN4jsdModule <em>N4jsd Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isStaticPolyfillModule <em>Static Polyfill Module</em>}</li>
@@ -124,24 +125,44 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	protected String qualifiedName = QUALIFIED_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getProjectName() <em>Project Name</em>}' attribute.
+	 * The default value of the '{@link #getPackageName() <em>Package Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProjectName()
+	 * @see #getPackageName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PROJECT_NAME_EDEFAULT = null;
+	protected static final String PACKAGE_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getProjectName() <em>Project Name</em>}' attribute.
+	 * The cached value of the '{@link #getPackageName() <em>Package Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProjectName()
+	 * @see #getPackageName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String projectName = PROJECT_NAME_EDEFAULT;
+	protected String packageName = PACKAGE_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getProjectID() <em>Project ID</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProjectID()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PROJECT_ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getProjectID() <em>Project ID</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProjectID()
+	 * @generated
+	 * @ordered
+	 */
+	protected String projectID = PROJECT_ID_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getVendorID() <em>Vendor ID</em>}' attribute.
@@ -507,8 +528,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public String getProjectName() {
-		return projectName;
+	public String getPackageName() {
+		return packageName;
 	}
 
 	/**
@@ -517,11 +538,34 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public void setProjectName(String newProjectName) {
-		String oldProjectName = projectName;
-		projectName = newProjectName;
+	public void setPackageName(String newPackageName) {
+		String oldPackageName = packageName;
+		packageName = newPackageName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__PROJECT_NAME, oldProjectName, projectName));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__PACKAGE_NAME, oldPackageName, packageName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getProjectID() {
+		return projectID;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setProjectID(String newProjectID) {
+		String oldProjectID = projectID;
+		projectID = newProjectID;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__PROJECT_ID, oldProjectID, projectID));
 	}
 
 	/**
@@ -905,8 +949,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getSimpleName();
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				return getQualifiedName();
-			case TypesPackage.TMODULE__PROJECT_NAME:
-				return getProjectName();
+			case TypesPackage.TMODULE__PACKAGE_NAME:
+				return getPackageName();
+			case TypesPackage.TMODULE__PROJECT_ID:
+				return getProjectID();
 			case TypesPackage.TMODULE__VENDOR_ID:
 				return getVendorID();
 			case TypesPackage.TMODULE__N4JSD_MODULE:
@@ -970,8 +1016,11 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				setQualifiedName((String)newValue);
 				return;
-			case TypesPackage.TMODULE__PROJECT_NAME:
-				setProjectName((String)newValue);
+			case TypesPackage.TMODULE__PACKAGE_NAME:
+				setPackageName((String)newValue);
+				return;
+			case TypesPackage.TMODULE__PROJECT_ID:
+				setProjectID((String)newValue);
 				return;
 			case TypesPackage.TMODULE__VENDOR_ID:
 				setVendorID((String)newValue);
@@ -1062,8 +1111,11 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				setQualifiedName(QUALIFIED_NAME_EDEFAULT);
 				return;
-			case TypesPackage.TMODULE__PROJECT_NAME:
-				setProjectName(PROJECT_NAME_EDEFAULT);
+			case TypesPackage.TMODULE__PACKAGE_NAME:
+				setPackageName(PACKAGE_NAME_EDEFAULT);
+				return;
+			case TypesPackage.TMODULE__PROJECT_ID:
+				setProjectID(PROJECT_ID_EDEFAULT);
 				return;
 			case TypesPackage.TMODULE__VENDOR_ID:
 				setVendorID(VENDOR_ID_EDEFAULT);
@@ -1140,8 +1192,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return SIMPLE_NAME_EDEFAULT == null ? simpleName != null : !SIMPLE_NAME_EDEFAULT.equals(simpleName);
 			case TypesPackage.TMODULE__QUALIFIED_NAME:
 				return QUALIFIED_NAME_EDEFAULT == null ? qualifiedName != null : !QUALIFIED_NAME_EDEFAULT.equals(qualifiedName);
-			case TypesPackage.TMODULE__PROJECT_NAME:
-				return PROJECT_NAME_EDEFAULT == null ? projectName != null : !PROJECT_NAME_EDEFAULT.equals(projectName);
+			case TypesPackage.TMODULE__PACKAGE_NAME:
+				return PACKAGE_NAME_EDEFAULT == null ? packageName != null : !PACKAGE_NAME_EDEFAULT.equals(packageName);
+			case TypesPackage.TMODULE__PROJECT_ID:
+				return PROJECT_ID_EDEFAULT == null ? projectID != null : !PROJECT_ID_EDEFAULT.equals(projectID);
 			case TypesPackage.TMODULE__VENDOR_ID:
 				return VENDOR_ID_EDEFAULT == null ? vendorID != null : !VENDOR_ID_EDEFAULT.equals(vendorID);
 			case TypesPackage.TMODULE__N4JSD_MODULE:
@@ -1232,8 +1286,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		result.append(simpleName);
 		result.append(", qualifiedName: ");
 		result.append(qualifiedName);
-		result.append(", projectName: ");
-		result.append(projectName);
+		result.append(", packageName: ");
+		result.append(packageName);
+		result.append(", projectID: ");
+		result.append(projectID);
 		result.append(", vendorID: ");
 		result.append(vendorID);
 		result.append(", n4jsdModule: ");

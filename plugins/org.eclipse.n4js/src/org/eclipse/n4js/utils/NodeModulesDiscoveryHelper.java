@@ -46,6 +46,8 @@ public class NodeModulesDiscoveryHelper {
 		final public boolean isYarnWorkspaceRoot;
 		/** <code>true</code> iff the given project is contained in a yarn workspace but isn't the root */
 		final public boolean isYarnWorkspaceMember;
+		/** <code>true</code> iff the given project is contained in a node_modules folder of a yarn workspace */
+		final public boolean isYarnWorkspaceDependency;
 		/** node_modules folder of the given project or <code>null</code> if it doesn't have one */
 		final public File localNodeModulesFolder;
 		/** node_modules folder of the related yarn workspace project */
@@ -53,9 +55,11 @@ public class NodeModulesDiscoveryHelper {
 
 		/** Constructor */
 		public NodeModulesFolder(boolean isYarnWorkspaceRoot, boolean isYarnWorkspaceMember,
-				File localNodeModulesFolder, File workspaceNodeModulesFolder) {
+				boolean isYarnWorkspaceDependency, File localNodeModulesFolder, File workspaceNodeModulesFolder) {
+
 			this.isYarnWorkspaceRoot = isYarnWorkspaceRoot;
 			this.isYarnWorkspaceMember = isYarnWorkspaceMember;
+			this.isYarnWorkspaceDependency = isYarnWorkspaceDependency;
 			this.localNodeModulesFolder = localNodeModulesFolder;
 			this.workspaceNodeModulesFolder = workspaceNodeModulesFolder;
 		}
@@ -69,10 +73,7 @@ public class NodeModulesDiscoveryHelper {
 		 * @return {@link #localNodeModulesFolder} and {@link #workspaceNodeModulesFolder} iff not null.
 		 */
 		public List<File> getNodeModulesFoldersInOrderOfPriority() {
-			// GH-1314: according to node's module look-up semantics it would be correct to give the local folder
-			// priority over the workspace folder; however, because N4JS does not yet support several projects with the
-			// same name, we have to give the workspace folder the higher priority
-			ArrayList<File> nmfList = Lists.newArrayList(this.workspaceNodeModulesFolder, this.localNodeModulesFolder);
+			ArrayList<File> nmfList = Lists.newArrayList(this.localNodeModulesFolder, this.workspaceNodeModulesFolder);
 			nmfList.removeAll(Collections.singleton(null));
 			return Collections.unmodifiableList(nmfList);
 		}
@@ -80,6 +81,14 @@ public class NodeModulesDiscoveryHelper {
 		/** True iff the {@link #workspaceNodeModulesFolder} is not null */
 		public boolean isYarnWorkspace() {
 			return this.workspaceNodeModulesFolder != null;
+		}
+
+		/** @return the related root of this project */
+		public Path getRelatedRoot() {
+			if (isYarnWorkspaceRoot || isYarnWorkspaceMember || isYarnWorkspaceDependency) {
+				return workspaceNodeModulesFolder.getParentFile().toPath();
+			}
+			return localNodeModulesFolder.getParentFile().toPath();
 		}
 	}
 
@@ -100,19 +109,20 @@ public class NodeModulesDiscoveryHelper {
 
 		if (isYarnWorkspaceRoot(projectLocationAsFile, Optional.absent(), pdCache)) {
 			File workspaceNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
-			return new NodeModulesFolder(true, false, null, workspaceNMF);
+			return new NodeModulesFolder(true, false, false, null, workspaceNMF);
 		}
 
 		final Optional<File> workspaceRoot = getYarnWorkspaceRoot(projectLocationAsFile, pdCache);
 		if (workspaceRoot.isPresent()) {
+			boolean isYarnWorkspaceDependency = isInNodeModulesFolder(projectLocationAsFile);
 			File workspaceNMF = new File(workspaceRoot.get(), N4JSGlobals.NODE_MODULES);
 			File localNMF = new File(projectLocationAsFile, N4JSGlobals.NODE_MODULES);
-			localNMF = localNMF.exists() ? localNMF : null;
-			return new NodeModulesFolder(false, true, localNMF, workspaceNMF);
+			localNMF = !isYarnWorkspaceDependency && localNMF.exists() ? localNMF : null;
+			return new NodeModulesFolder(false, true, isYarnWorkspaceDependency, localNMF, workspaceNMF);
 		}
 
 		final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
-		return new NodeModulesFolder(false, false, nodeModulesPath.toFile(), null);
+		return new NodeModulesFolder(false, false, false, nodeModulesPath.toFile(), null);
 	}
 
 	/** Same as {@link #findNodeModulesFolders(Collection, Map)} without cache */
@@ -221,10 +231,14 @@ public class NodeModulesDiscoveryHelper {
 
 		// check if one of the values in property "workspaces" points to 'projectFolder'
 		if (projectFolder.isPresent()) {
+			File prjFolder = projectFolder.get();
 			for (String relativePath : workspaces) {
-				if (isPointingTo(folder, relativePath, projectFolder.get())) {
+				if (isPointingTo(folder, relativePath, prjFolder)) {
 					return true;
 				}
+			}
+			if (isInNodeModulesFolder(prjFolder)) {
+				return true;
 			}
 			return false;
 		}
@@ -238,8 +252,10 @@ public class NodeModulesDiscoveryHelper {
 		final ProjectDescription prjDescr = pdCache.computeIfAbsent(yarnProjectFolder.toPath(),
 				// load value from package.json
 				p -> {
+					FileURI location = new FileURI(yarnProjectFolder);
+					// yarn projects do not have a related root, hence location is given
 					ProjectDescription pd = projectDescriptionLoader
-							.loadProjectDescriptionAtLocation(new FileURI(yarnProjectFolder));
+							.loadProjectDescriptionAtLocation(location, null);
 					return pd;
 				});
 		final List<String> workspaces = (prjDescr != null && prjDescr.isYarnWorkspaceRoot())
@@ -252,7 +268,31 @@ public class NodeModulesDiscoveryHelper {
 	private boolean isPointingTo(File base, String relativePath, File target) {
 		String pattern = base.getAbsolutePath() + File.separator + relativePath;
 		PathMatcher matcher = ModuleFilterUtils.createPathMatcher(pattern);
-		return matcher.matches(target.toPath());
+		if (matcher.matches(target.toPath())) {
+			return true;
+		}
+		if (target.getParentFile().getName().startsWith("@")) {
+			target = target.getParentFile();
+			return matcher.matches(target.toPath());
+		}
+		return false;
 	}
 
+	private boolean isInNodeModulesFolder(File projectRoot) {
+		if (projectRoot == null) {
+			return false;
+		}
+		File parentFolder = projectRoot.getParentFile();
+		if (parentFolder == null) {
+			return false;
+		}
+		if (N4JSGlobals.NODE_MODULES.equals(parentFolder.getName())) {
+			return true;
+		}
+		if (parentFolder.getName().startsWith("@")
+				&& N4JSGlobals.NODE_MODULES.equals(parentFolder.getParentFile().getName())) {
+			return true;
+		}
+		return false;
+	}
 }

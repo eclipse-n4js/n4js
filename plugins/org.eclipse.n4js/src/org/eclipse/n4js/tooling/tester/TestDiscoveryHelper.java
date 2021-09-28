@@ -52,10 +52,10 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ResourceNameComputer;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -404,7 +404,7 @@ public class TestDiscoveryHelper {
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,
-				module.getProjectName(), method.getName(), method.getName(), EcoreUtil.getURI(method));
+				module.getPackageName(), method.getName(), method.getName(), EcoreUtil.getURI(method));
 		return testCase;
 	}
 
@@ -446,7 +446,8 @@ public class TestDiscoveryHelper {
 		final Map<URI, TModule> uri2Modules = newHashMap();
 		for (final URI moduleUri : moduleUris) {
 			ResourceSet resSet = resourceSetAccess.apply(moduleUri);
-			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet).or(new IResourceDescriptions.NullImpl());
+			IResourceDescriptions index = workspaceAccess.getXtextIndex(resSet)
+					.or(new IResourceDescriptions.NullImpl());
 			final IResourceDescription resDesc = index.getResourceDescription(moduleUri);
 			uri2Modules.put(moduleUri, workspaceAccess.loadModuleFromIndex(resSet, resDesc, false));
 		}

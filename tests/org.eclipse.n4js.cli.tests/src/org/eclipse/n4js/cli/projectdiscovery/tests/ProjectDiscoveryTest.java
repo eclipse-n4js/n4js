@@ -17,11 +17,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import org.eclipse.n4js.cli.N4jscFactory;
 import org.eclipse.n4js.cli.projectdiscovery.tests.CreateProjectStructureUtils.ProjectDiscoveryTestData;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.BeforeClass;
@@ -49,6 +49,7 @@ public class ProjectDiscoveryTest {
 				testFiles.add(new File(folder, testFileName));
 			}
 		}
+		Collections.sort(testFiles);
 		return testFiles;
 	}
 
@@ -82,10 +83,11 @@ public class ProjectDiscoveryTest {
 	}
 
 	private ArrayList<String> getActualFolders(Path tmpDir, Path workspaceRoot) {
-		List<Path> projectDirs = projectDiscoveryHelper.collectAllProjectDirs(Collections.singleton(workspaceRoot),
-				new HashMap<>(), false);
+		Map<Path, ProjectDescription> projects = projectDiscoveryHelper
+				.collectAllProjectDirs(Collections.singleton(workspaceRoot));
+
 		ArrayList<String> actualFolders = new ArrayList<>();
-		for (Path projectDir : projectDirs) {
+		for (Path projectDir : projects.keySet()) {
 			String relativeFolder = tmpDir.relativize(projectDir).toString();
 			actualFolders.add(relativeFolder);
 		}

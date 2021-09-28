@@ -189,7 +189,8 @@ public class N4JSTypesBuilder {
 
 			val project = workspaceAccess.findProjectContaining(resource);
 			if (project !== null) {
-				result.projectName = project.name;
+				result.projectID = project.name;
+				result.packageName = project.packageName;
 				result.vendorID = project.vendorId;
 
 				// main module

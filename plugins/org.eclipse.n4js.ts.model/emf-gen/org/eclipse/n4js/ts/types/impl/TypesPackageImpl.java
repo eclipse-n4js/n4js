@@ -670,7 +670,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_ProjectName() {
+	public EAttribute getTModule_PackageName() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -680,7 +680,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_VendorID() {
+	public EAttribute getTModule_ProjectID() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -690,7 +690,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_N4jsdModule() {
+	public EAttribute getTModule_VendorID() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -700,7 +700,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_StaticPolyfillModule() {
+	public EAttribute getTModule_N4jsdModule() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -710,7 +710,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_StaticPolyfillAware() {
+	public EAttribute getTModule_StaticPolyfillModule() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -720,7 +720,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_MainModule() {
+	public EAttribute getTModule_StaticPolyfillAware() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -730,7 +730,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_PreLinkingPhase() {
+	public EAttribute getTModule_MainModule() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -740,7 +740,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_Reconciled() {
+	public EAttribute getTModule_PreLinkingPhase() {
 		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -750,8 +750,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_DependenciesRuntime() {
-		return (EReference)tModuleEClass.getEStructuralFeatures().get(10);
+	public EAttribute getTModule_Reconciled() {
+		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -760,7 +760,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_CyclicModulesRuntime() {
+	public EReference getTModule_DependenciesRuntime() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -770,7 +770,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_CyclicModulesLoadtimeForInheritance() {
+	public EReference getTModule_CyclicModulesRuntime() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -780,7 +780,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_RuntimeCyclicLoadtimeDependents() {
+	public EReference getTModule_CyclicModulesLoadtimeForInheritance() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -790,7 +790,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_TopLevelTypes() {
+	public EReference getTModule_RuntimeCyclicLoadtimeDependents() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(14);
 	}
 
@@ -800,7 +800,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_Variables() {
+	public EReference getTModule_TopLevelTypes() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(15);
 	}
 
@@ -810,7 +810,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_InternalTypes() {
+	public EReference getTModule_Variables() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(16);
 	}
 
@@ -820,7 +820,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_ExposedInternalTypes() {
+	public EReference getTModule_InternalTypes() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(17);
 	}
 
@@ -830,7 +830,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_InternalDynamicElements() {
+	public EReference getTModule_ExposedInternalTypes() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(18);
 	}
 
@@ -840,8 +840,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getTModule_InternalDynamicElements() {
+		return (EReference)tModuleEClass.getEStructuralFeatures().get(19);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getTModule_AstMD5() {
-		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(19);
+		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(20);
 	}
 
 	/**
@@ -851,16 +861,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EReference getTModule_ComposedMemberCaches() {
-		return (EReference)tModuleEClass.getEStructuralFeatures().get(20);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTModule_TemporaryTypes() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(21);
 	}
 
@@ -870,8 +870,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getTModule_TemporaryTypes() {
+		return (EReference)tModuleEClass.getEStructuralFeatures().get(22);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getTModule_ModuleSpecifier() {
-		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(22);
+		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(23);
 	}
 
 	/**
@@ -3536,7 +3546,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tModuleEClass = createEClass(TMODULE);
 		createEAttribute(tModuleEClass, TMODULE__SIMPLE_NAME);
 		createEAttribute(tModuleEClass, TMODULE__QUALIFIED_NAME);
-		createEAttribute(tModuleEClass, TMODULE__PROJECT_NAME);
+		createEAttribute(tModuleEClass, TMODULE__PACKAGE_NAME);
+		createEAttribute(tModuleEClass, TMODULE__PROJECT_ID);
 		createEAttribute(tModuleEClass, TMODULE__VENDOR_ID);
 		createEAttribute(tModuleEClass, TMODULE__N4JSD_MODULE);
 		createEAttribute(tModuleEClass, TMODULE__STATIC_POLYFILL_MODULE);
@@ -4017,7 +4028,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(tModuleEClass, TModule.class, "TModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTModule_SimpleName(), theEcorePackage.getEString(), "simpleName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_QualifiedName(), theEcorePackage.getEString(), "qualifiedName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTModule_ProjectName(), theEcorePackage.getEString(), "projectName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTModule_PackageName(), theEcorePackage.getEString(), "packageName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTModule_ProjectID(), theEcorePackage.getEString(), "projectID", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_VendorID(), theEcorePackage.getEString(), "vendorID", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_N4jsdModule(), theEcorePackage.getEBoolean(), "n4jsdModule", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_StaticPolyfillModule(), theEcorePackage.getEBoolean(), "staticPolyfillModule", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -38,6 +38,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -133,6 +134,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			.map[(if (it.getNew === null) it.old else it.getNew).exportedObjects]
 			.filter[!it.empty]
 			.map[it.get(0).getProjectName]
+			.map[SemanticDependencySupplier.convertProjectIdToPackageName(it)]
 			.toSet;
 
 
@@ -175,7 +177,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document);
+		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, null, document);
 		if(description === null) {
 			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
 			// (maybe during manual creation of a new project); therefore we cannot log an error here:
@@ -192,7 +194,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private def Map<String, String> createProjectDescriptionUserData(ProjectDescription it) {
 		val builder = ImmutableMap.builder;
 		builder.put(PROJECT_TYPE_KEY, '''«PackageJsonUtils.getProjectTypeStringRepresentation(getType)»''');
-		builder.put(PROJECT_NAME_KEY, getName.nullToEmpty);
+		builder.put(PROJECT_NAME_KEY, id.nullToEmpty);
 		builder.put(IMPLEMENTATION_ID_KEY, implementationId.nullToEmpty);
 
 		val vers = getVersion;
@@ -315,7 +317,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	}
 
 	private static def String asString(Iterable<? extends ProjectReference> it) {
-		it.filterNull.map[projectName].filterNull.join(SEPARATOR)
+		it.filterNull.map[getPackageName].filterNull.join(SEPARATOR)
 	}
 
 	private static def boolean isPackageJSON(IResourceDescription desc) {

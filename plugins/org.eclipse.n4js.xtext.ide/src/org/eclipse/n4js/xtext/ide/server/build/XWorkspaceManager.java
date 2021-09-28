@@ -80,6 +80,8 @@ public class XWorkspaceManager {
 
 	/** The result of a {@link XWorkspaceManager#update(Set, Set, boolean) workspace update}. */
 	public static class UpdateResult {
+		/** The old workspace config snapshot. Can be null */
+		public final WorkspaceConfigSnapshot oldWorkspaceConfigSnapshot;
 		/** The workspace changes. */
 		public final WorkspaceChanges changes;
 		/** Former contents of the projects that were removed. */
@@ -91,10 +93,11 @@ public class XWorkspaceManager {
 		public final List<String> cyclicProjectChanges;
 
 		/** Creates a new {@link UpdateResult}. */
-		public UpdateResult(WorkspaceChanges changes,
+		public UpdateResult(WorkspaceConfigSnapshot oldWorkspaceConfigSnapshot, WorkspaceChanges changes,
 				Iterable<? extends IResourceDescription> removedProjectsContents,
 				Iterable<String> cyclicProjectChanges) {
 
+			this.oldWorkspaceConfigSnapshot = oldWorkspaceConfigSnapshot;
 			this.changes = changes;
 			this.removedProjectsContents = ImmutableList.copyOf(removedProjectsContents);
 			this.cyclicProjectChanges = ImmutableList.copyOf(cyclicProjectChanges);
@@ -157,7 +160,8 @@ public class XWorkspaceManager {
 	 */
 	public UpdateResult update(Set<URI> dirtyFiles, Set<URI> deletedFiles, boolean refresh) {
 		if (workspaceConfig == null) {
-			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList(), Collections.emptyList());
+			return new UpdateResult(null, WorkspaceChanges.NO_CHANGES, Collections.emptyList(),
+					Collections.emptyList());
 		}
 
 		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles, refresh);
@@ -176,7 +180,8 @@ public class XWorkspaceManager {
 		updateProjects(changes.getChangedProjects());
 		addProjects(changes.getAddedProjects());
 
-		Collection<ImmutableList<String>> oldCycles = workspaceConfigSnapshot.getBuildOrderInfo()
+		WorkspaceConfigSnapshot oldWCS = workspaceConfigSnapshot;
+		Collection<ImmutableList<String>> oldCycles = oldWCS.getBuildOrderInfo()
 				.getProjectCycles();
 
 		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
@@ -193,7 +198,7 @@ public class XWorkspaceManager {
 			}
 		}
 
-		return new UpdateResult(changes, removedProjectsContents, cyclicProjectChanges);
+		return new UpdateResult(oldWCS, changes, removedProjectsContents, cyclicProjectChanges);
 	}
 
 	private List<IResourceDescription> collectAllResourceDescriptions(
