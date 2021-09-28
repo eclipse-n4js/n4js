@@ -44,7 +44,6 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
 /**
@@ -56,16 +55,20 @@ import com.google.common.base.Preconditions;
  */
 public final class BuiltInTypeScope extends EnumerableScope {
 
-	private static final String PRIMITIVES_N4JSD = "primitives.n4jsd";
-	private static final String BUILTIN_JS_N4JSD = "builtin_js.n4jsd";
-	private static final String BUILTIN_N4_N4JSD = "builtin_n4.n4jsd";
-	private static final String BUILTIN_N4IDL_N4JSD = "builtin_n4idl.n4jsd";
-	private static final String CONSOLE_N4JSD = "console.n4jsd";
+	/***/
+	public static final String PRIMITIVES_N4JSD = "primitives.n4jsd";
+	/***/
+	public static final String BUILTIN_JS_N4JSD = "builtin_js.n4jsd";
+	/***/
+	public static final String BUILTIN_N4_N4JSD = "builtin_n4.n4jsd";
+	/***/
+	public static final String BUILTIN_N4IDL_N4JSD = "builtin_n4idl.n4jsd";
+	/***/
+	public static final String CONSOLE_N4JSD = "console.n4jsd";
 
 	/**
-	 * Visible for testing purpose
+	 * Names of files containing built-in type definitions.
 	 */
-	@VisibleForTesting
 	public static final String[] FILE_NAMES = {
 			PRIMITIVES_N4JSD,
 			BUILTIN_JS_N4JSD,
