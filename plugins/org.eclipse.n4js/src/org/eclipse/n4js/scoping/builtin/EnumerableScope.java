@@ -28,6 +28,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.AbstractScope;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 /**
@@ -35,7 +36,10 @@ import com.google.common.collect.Maps;
  */
 public abstract class EnumerableScope extends AbstractScope {
 
-	private Map<QualifiedName, IEObjectDescription> elements;
+	/** The elements in this scope. Non-<code>null</code> only after element creation has <em>completed</em>. */
+	private ImmutableMap<QualifiedName, IEObjectDescription> elements;
+	/** The elements in this scope. Non-<code>null</code> only while element creation is <em>in progress</em>. */
+	private Map<QualifiedName, IEObjectDescription> elementsBeingCreated;
 
 	private final ExecutionEnvironmentDescriptor descriptor;
 
@@ -51,18 +55,37 @@ public abstract class EnumerableScope extends AbstractScope {
 	 * Get all elements in this scope.
 	 */
 	protected Map<QualifiedName, IEObjectDescription> getElements() {
-		if (elements == null) {
-			createElements();
+		if (elements != null) {
+			return elements;
 		}
-		return elements;
+		synchronized (this) {
+			if (elements != null) {
+				return elements;
+			}
+			if (elementsBeingCreated != null) {
+				// note: the semantics of Java's synchronized block guarantees that we only ever get to this point when
+				// during the creation of elements (i.e. #createElements()) the thread creating the elements recursively
+				// invokes this method (i.e. #getElements()); in other words, we never return map 'elementsBeingCreated'
+				// to a different thread than the one currently executing method #createElements()
+				return Collections.unmodifiableMap(elementsBeingCreated);
+			}
+			try {
+				elementsBeingCreated = Maps.newLinkedHashMap();
+				createElements(elementsBeingCreated);
+			} finally {
+				// even in case of exceptions we do not want to retry creating elements
+				elements = ImmutableMap.copyOf(elementsBeingCreated);
+				elementsBeingCreated = null;
+			}
+			return elements;
+		}
 	}
 
 	/**
 	 * Create the map of descriptions that make up this scope.
 	 */
-	protected void createElements() {
-		elements = Maps.newLinkedHashMap();
-		descriptor.processResources(getFileNames(), (r) -> buildMap(r, elements));
+	protected void createElements(Map<QualifiedName, IEObjectDescription> result) {
+		descriptor.processResources(getFileNames(), (r) -> buildMap(r, result));
 	}
 
 	/**
