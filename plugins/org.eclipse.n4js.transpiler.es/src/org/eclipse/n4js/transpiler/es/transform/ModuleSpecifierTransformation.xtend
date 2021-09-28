@@ -177,6 +177,6 @@ class ModuleSpecifierTransformation extends Transformation {
 				return definedProjectName;
 			}
 		}
-		return new N4JSProjectName(project.name);
+		return new N4JSProjectName(project.projectDescription.packageName);
 	}
 }
