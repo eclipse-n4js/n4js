@@ -38,13 +38,15 @@ const IGNORED_ELEMENTS = new Map<string,Set<string>>([
 
 const POLYFILLS = new Map<string,Set<string>>([
 	[ "es5.d.ts", new Set<string>([
-		"Boolean", "Number", "String", "Symbol", "Object", "RegExp", "Function", "Array", "Date", "Math", "JSON", "Error"
+		// FIXME
+		// "Boolean", "Number", "String", "Symbol", "Object", "RegExp", "Function", "Array", "Date", "Math", "JSON", "Error"
 	])] as [string, Set<string>]
 ]);
 
 const FINAL_CLASSIFIERS = new Map<string,Set<string>>([
 	[ "es5.d.ts", new Set<string>([
-		"Boolean", "Number", "String", "Symbol", "RegExp", "Function", "Date", "Math", "JSON"
+		// FIXME
+		// "Boolean", "Number", "String", "Symbol", "RegExp", "Function", "Date", "Math", "JSON"
 	])] as [string, Set<string>]
 ]);
 
@@ -220,6 +222,7 @@ function changeInterfaceToClass(ifc: model.Type) {
 		throw "ifc is expected to be an interface, but was: " + ifc.kind;
 	}
 	ifc.kind = model.TypeKind.CLASS;
+	ifc.defSiteStructural = false;
 	// due to different default accessibilities, we have to make accessibility PUBLIC explicit:
 	ifc.members.forEach(m => {
 		if (!m.accessibility) {

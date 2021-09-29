@@ -36,7 +36,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
 
-					export external public class ~SomeType {
+					export external public class SomeType {
 						public someInstanceMethod(p: string): number;
 						public constructor(p: string);
 						public static someStaticMethod(p: string): number;
@@ -69,7 +69,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
 
-					export external public class ~SomeGenType<T> {
+					export external public class SomeGenType<T> {
 						public someInstanceMethod(p: string): T;
 						public constructor(...elems: T[]);
 						public static someStaticMethod(p: string): number;
@@ -79,6 +79,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 		);
 	}
 
+	@Ignore // FIXME cannot be tested at the moment (because no types in current example input that use polyfilling)
 	@Test
 	public testPolyfill() {
 		this.assertConversionWithOptions(
