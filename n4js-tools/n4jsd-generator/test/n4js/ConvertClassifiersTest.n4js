@@ -73,6 +73,38 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 	}
 
 	@Test
+	public testGenericMembers() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						m<T>(p: T): T;
+						// no static members in interfaces
+					}
+					export class Cls {
+						public m<T>(p: T): T;
+						public static sm<T>(p: T): T;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						<T> m(p: T): T;
+					}
+
+					export external public class ~Cls {
+						public <T> m(p: T): T;
+						public static <T> sm(p: T): T;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
 	public testMembers() {
 		this.assertConversion(
 			{

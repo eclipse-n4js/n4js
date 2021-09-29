@@ -336,16 +336,24 @@ export class Converter {
 		// we need an AST node; in case of overloading there will be several declarations (one per signature)
 		// but because relevant properties (kind, accessibility, etc.) will be the same in all cases we can
 		// simply use the first one as representative:
-		const representativeNode = symMember.declarations[0] as ts.NamedDeclaration;
+		const representativeNode = symMember.declarations[0] as ts.SignatureDeclaration;
 
 		const result = new model.Member();
 		result.accessibility = utils_ts.getAccessibility(representativeNode);
 		result.isStatic = isStatic;
 
 		if (ts.isTypeParameterDeclaration(representativeNode)) {
-			// type parameters appear as members, but they are handled elsewhere
+			// type parameters of the containing classifier appear as members, but they are handled elsewhere
 			// -> so ignore them here:
 			return undefined;
+		}
+
+		// type parameters of 'symMember'
+		for (const typeParam of representativeNode.typeParameters ?? []) {
+			const typeParamName = typeParam.name.text;
+			if (typeParamName) {
+				result.typeParams.push(typeParamName);
+			}
 		}
 
 		if (ts.isConstructorDeclaration(representativeNode)) {

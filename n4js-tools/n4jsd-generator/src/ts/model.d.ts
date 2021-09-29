@@ -111,6 +111,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
+	typeParams: string[];
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];

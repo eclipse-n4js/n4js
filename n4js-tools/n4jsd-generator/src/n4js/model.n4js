@@ -115,6 +115,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
+	typeParams: string[] = [];
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
@@ -327,6 +328,11 @@ class Emitter {
 		if (member.isStatic) {
 			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
 				buff.push("static ");
+			}
+		}
+		if (member.typeParams.length > 0) {
+			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
+				buff.push("<", member.typeParams.join(","), "> ");
 			}
 		}
 		switch(member.kind) {
