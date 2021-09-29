@@ -76,6 +76,110 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 	public testMembers() {
 		this.assertConversion(
 			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						field: string;
+						get getter(): string;
+						set setter(p: string);
+						method1(): void;
+						method2(p1: string, p2: number): string;
+					}
+					
+					export class Cls {
+						field: string;
+						get getter(): string;
+						set setter(p: string);
+						method1(): void;
+						method2(p1: string, p2: number): string;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						field: any+;
+						get getter(): any+;
+						set setter(value: any+);
+						method1(): any+;
+						method2(p1: any+, p2: any+): any+;
+					}
+					
+					export external public class ~Cls {
+						field: any+;
+						get getter(): any+;
+						set setter(value: any+);
+						method1(): any+;
+						method2(p1: any+, p2: any+): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersStatic() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					// static members in interfaces not supported by TypeScript
+
+					export class Cls {
+						static field: string;
+						static get getter(): string;
+						static set setter(p: string);
+						static method1(): void;
+						static method2(p1: string, p2: number): string;
+					}
+				`,
+				n4jsd: `
+					export external public class ~Cls {
+						static field: any+;
+						static get getter(): any+;
+						static set setter(value: any+);
+						static method1(): any+;
+						static method2(p1: any+, p2: any+): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersAccesibility() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface SomeInterface {
+						m1(): void; // accesibility modifiers not allowed here!
+					}
+					export class SomeClass {
+						m1(): void;
+						public m2(): void;
+						protected m3(): void;
+						private m4(): void;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~SomeInterface {
+						m1(): any+;
+					}
+
+					export external public class ~SomeClass {
+						m1(): any+;
+						public m2(): any+;
+						protected m3(): any+;
+						private m4(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersUseCase() {
+		this.assertConversion(
+			{
 				name: "buffer",
 				dts: `
 					export class Buffer {}
@@ -128,38 +232,6 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 						public write(chunk: any+, fn: any+): any+; // further signatures were omitted
 						get getter(): any+;
 						set setter(value: any+);
-					}
-				`
-			}
-		);
-	}
-
-	@Test
-	public testMembersAccesibility() {
-		this.assertConversion(
-			{
-				name: "main",
-				dts: `
-					export interface SomeInterface {
-						m1(): void; // accesibility modifiers not allowed here!
-					}
-					export class SomeClass {
-						m1(): void;
-						public m2(): void;
-						protected m3(): void;
-						private m4(): void;
-					}
-				`,
-				n4jsd: `
-					export external public interface ~SomeInterface {
-						m1(): any+;
-					}
-
-					export external public class ~SomeClass {
-						m1(): any+;
-						public m2(): any+;
-						protected m3(): any+;
-						private m4(): any+;
 					}
 				`
 			}

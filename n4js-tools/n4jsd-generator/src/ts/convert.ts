@@ -309,16 +309,30 @@ export class Converter {
 	private convertMembers(node: ts.NamedDeclaration): model.Member[] {
 		const sym = this.checker.getSymbolAtLocation(node.name);
 		const result = [] as model.Member[];
+		// instance members
 		sym.members?.forEach((symMember, name) => {
-			const member = this.convertMember(symMember, sym);
-			if (member !== undefined) {
-				result.push(member);
+			const n4jsMember = this.convertMember(symMember, false, sym);
+			if (n4jsMember !== undefined) {
+				result.push(n4jsMember);
 			}
 		});
+		// static members
+		if (ts.isClassLike(node)) {
+			for (const m of node.members) {
+				if (!utils_ts.isStatic(m)) {
+					continue;
+				}
+				const symMember = this.checker.getSymbolAtLocation(m.name);
+				const n4jsMember = this.convertMember(symMember, true, sym);
+				if (n4jsMember !== undefined) {
+					result.push(n4jsMember);
+				}
+			}
+		}
 		return result;
 	}
 
-	private convertMember(symMember: ts.Symbol, symOwner: ts.Symbol): model.Member | undefined {
+	private convertMember(symMember: ts.Symbol, isStatic: boolean, symOwner: ts.Symbol): model.Member | undefined {
 		// we need an AST node; in case of overloading there will be several declarations (one per signature)
 		// but because relevant properties (kind, accessibility, etc.) will be the same in all cases we can
 		// simply use the first one as representative:
@@ -326,7 +340,7 @@ export class Converter {
 
 		const result = new model.Member();
 		result.accessibility = utils_ts.getAccessibility(representativeNode);
-		result.isStatic = false; // FIXME
+		result.isStatic = isStatic;
 
 		if (ts.isTypeParameterDeclaration(representativeNode)) {
 			// type parameters appear as members, but they are handled elsewhere
