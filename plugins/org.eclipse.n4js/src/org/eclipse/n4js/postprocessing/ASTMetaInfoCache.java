@@ -53,7 +53,7 @@ public final class ASTMetaInfoCache {
 	// (add new properties here; getters should be public, setters should have package visibility)
 
 	private final N4JSResource resource;
-	private final String projectName;
+	private final String projectID;
 	private final boolean hasBrokenAST;
 	private final ASTFlowInfo flowInfo;
 	private final Map<TypableElement, TypeRef> actualTypes = new HashMap<>();
@@ -64,7 +64,7 @@ public final class ASTMetaInfoCache {
 
 	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
 		this.resource = resource;
-		this.projectName = resource.getModule().getProjectName();
+		this.projectID = resource.getModule().getProjectID();
 		this.hasBrokenAST = hasBrokenAST;
 		this.flowInfo = flowInfo;
 		this.hasUnknownTypeRef = false;
@@ -75,9 +75,9 @@ public final class ASTMetaInfoCache {
 		return resource;
 	}
 
-	/** @return the name of the containing project; see {@link TModule#getProjectName()}. */
-	public String getProjectName() {
-		return projectName;
+	/** @return the name of the containing project; see {@link TModule#getProjectID()}. */
+	public String getProjectID() {
+		return projectID;
 	}
 
 	/** @return if the resource of this cache has a broken AST. */

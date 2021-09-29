@@ -47,7 +47,7 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 		);
 
 		startAndWaitForLspServer();
-		assertProjectBuildOrder("[lib, n4js-runtime, test-project]");
+		assertProjectBuildOrder("[test-project/node_modules/lib, test-project/node_modules/n4js-runtime, test-project]");
 		assertIssues("MyModule" -> #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"]);
 		shutdownLspServer();
 		
@@ -62,7 +62,7 @@ class IncrementalBuilderCopiedProjectTest extends AbstractIncrementalBuilderTest
 		startAndWaitForLspServer();
 		val myModule1 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"/src/MyModule.n4js"));
 		val myModule2 = new FileURI(new File(getRoot(), DEFAULT_PROJECT_NAME+"2/src/MyModule.n4js"));
-		assertProjectBuildOrder("[lib, n4js-runtime, test-project, test-project2]");
+		assertProjectBuildOrder("[test-project/node_modules/lib, test-project/node_modules/n4js-runtime, test-project, test-project2/node_modules/lib, test-project2/node_modules/n4js-runtime, test-project2]");
 		assertIssues(Map.of(
 			myModule1, #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"],
 			myModule2, #["(Error, [0:0 - 0:11], Couldn't resolve reference to IdentifiableElement '_globalThis'.)"]

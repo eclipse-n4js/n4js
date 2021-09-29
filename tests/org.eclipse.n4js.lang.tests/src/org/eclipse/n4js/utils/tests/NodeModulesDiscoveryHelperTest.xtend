@@ -237,8 +237,8 @@ class NodeModulesDiscoveryHelperTest {
 
 		"packages/P0".assertIsYarnWorkspace(true);
 		"packages/P1".assertIsYarnWorkspace(true);
-		"packages/@myScope/X1".assertIsYarnWorkspace(false);
-		"packages/@myScope/X2".assertIsYarnWorkspace(false);
+		"packages/@myScope/X1".assertIsYarnWorkspace(true);
+		"packages/@myScope/X2".assertIsYarnWorkspace(true);
 	}
 
 	@Test

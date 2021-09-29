@@ -34,9 +34,16 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	 * Constructor
 	 */
 	public N4JSProjectName(String name) {
-		this.name = Preconditions.checkNotNull(name);
-		if (name.indexOf(NPM_SCOPE_SEPARATOR) >= 0) {
-			Preconditions.checkArgument(name.startsWith(NPM_SCOPE_PREFIX), name);
+		Preconditions.checkNotNull(name);
+		if (name.indexOf(NPM_SCOPE_SEPARATOR) < 0) {
+			Preconditions.checkArgument(!name.startsWith(NPM_SCOPE_PREFIX), name);
+			this.name = name;
+		} else if (name.startsWith(NPM_SCOPE_PREFIX)) {
+			Preconditions.checkArgument(name.indexOf(NPM_SCOPE_SEPARATOR) >= 0, name);
+			this.name = name;
+		} else {
+			Path path = Path.of(name);
+			this.name = ProjectDescriptionUtils.deriveN4JSProjectNameFromPath(path);
 		}
 	}
 

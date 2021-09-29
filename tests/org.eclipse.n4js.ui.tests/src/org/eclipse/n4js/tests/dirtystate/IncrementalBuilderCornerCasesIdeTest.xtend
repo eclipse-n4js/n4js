@@ -169,7 +169,7 @@ public class IncrementalBuilderCornerCasesIdeTest extends ConvertedIdeTest {
 	}
 
 	private def IResourceDescription findFileInXtextIndex(String projectName, String fileNameIncludingExtension) {
-		return concurrentIndex.getProjectIndex(projectName).allResourceDescriptions.findFirst[rd|
+		return concurrentIndex.getProjectIndex("yarn-test-project/packages/"+projectName).allResourceDescriptions.findFirst[rd|
 			val uri = rd?.URI;
 			return uri !== null
 				&& uri.toString.endsWith("/" + fileNameIncludingExtension);

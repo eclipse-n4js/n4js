@@ -11,6 +11,7 @@
 package org.eclipse.n4js.workspace;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
@@ -33,7 +34,9 @@ import org.eclipse.xtext.util.UriExtensions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 /**
  * Extends Xtext's default {@link ProjectConfigSnapshot} by some additional attributes (e.g. project type).
@@ -41,18 +44,20 @@ import com.google.common.collect.ImmutableSet;
 public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	private final ProjectDescription projectDescription;
+	private final ImmutableMap<String, String> packageNameToProjectIds;
 	private final boolean external;
 
 	/** Creates a new {@link N4JSProjectConfigSnapshot}. */
 	public N4JSProjectConfigSnapshot(ProjectDescription projectDescription, URI path,
 			boolean indexOnly, boolean generatorEnabled, Iterable<String> dependencies,
-			Iterable<? extends SourceFolderSnapshot> sourceFolders) {
+			Iterable<? extends SourceFolderSnapshot> sourceFolders, Map<String, String> packageNameToProjectIds) {
 
-		super(projectDescription.getName(), path,
+		super(projectDescription.getId(), path,
 				Collections.singleton(URIUtils.trimTrailingPathSeparator(path).appendSegment(N4JSGlobals.PACKAGE_JSON)),
 				indexOnly, generatorEnabled, dependencies, sourceFolders);
 
 		this.projectDescription = Objects.requireNonNull(projectDescription);
+		this.packageNameToProjectIds = ImmutableMap.copyOf(packageNameToProjectIds);
 		this.external = isDirectlyLocatedInNodeModulesFolder(path);
 	}
 
@@ -73,7 +78,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	 * Returns the project dependencies.
 	 * <p>
 	 * Note that this method does not return the {@link N4JSProjectConfig#getDependencies() raw dependencies} as given
-	 * in the <code>package.json</code> but the {@link N4JSProjectConfig#computeSemanticDependencies() "semantic"
+	 * in the <code>package.json</code> but the {@link N4JSProjectConfig#getSemanticDependencies() "semantic"
 	 * dependencies} computed by class {@link N4JSProjectConfig}.
 	 */
 	@Override
@@ -124,6 +129,11 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return isExternal();
 	}
 
+	/** Returns the project id for a given package name or the package name itself. */
+	public String getProjectIdForPackageName(String packageName) {
+		return packageNameToProjectIds.getOrDefault(packageName, packageName);
+	}
+
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 
@@ -147,6 +157,17 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	@Override
 	public N4JSSourceFolderSnapshot findSourceFolderContaining(URI uri) {
 		return (N4JSSourceFolderSnapshot) super.findSourceFolderContaining(uri);
+	}
+
+	/** Return the project id. */
+	@Override
+	public String getName() {
+		return super.getName();
+	}
+
+	/** Returns this project's {@link ProjectDescription#getPackageName() package name}. */
+	public String getPackageName() {
+		return projectDescription.getPackageName();
 	}
 
 	/** Returns this project's {@link ProjectDescription#getType() type}. */
@@ -188,10 +209,11 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	 * Returns this project's {@link ProjectDescription#getProjectDependencies() dependencies} and
 	 * {@link ProjectDescription#getImplementedProjects() implemented projects} (in this order).
 	 */
-	public ImmutableList<ProjectReference> getDependenciesAndImplementedApis() {
-		ImmutableList.Builder<ProjectReference> result = ImmutableList.builder();
-		result.addAll(projectDescription.getProjectDependencies());
-		result.addAll(projectDescription.getImplementedProjects());
+	public ImmutableList<String> getDependenciesAndImplementedApis() {
+		ImmutableList.Builder<String> result = ImmutableList.builder();
+		result.addAll(getDependencies());
+		result.addAll(
+				Iterables.transform(projectDescription.getImplementedProjects(), ProjectReference::getPackageName));
 		return result.build();
 	}
 

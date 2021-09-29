@@ -11,8 +11,11 @@
 package org.eclipse.n4js.workspace;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,21 +54,26 @@ import com.google.common.collect.Iterables;
 public class N4JSProjectConfig implements XIProjectConfig {
 
 	private final ProjectDescriptionLoader projectDescriptionLoader;
+	private final SemanticDependencySupplier semanticDependencySupplier;
 
 	private final N4JSWorkspaceConfig workspace;
 	private final FileURI path;
 	// the following are not immutable, because an existing project might have its properties changed:
 	private ProjectDescription projectDescription;
 	private Set<? extends IN4JSSourceFolder> sourceFolders;
+	private List<ProjectDependency> semanticDependencies;
+	private Map<String, String> packageNameToProjectIds;
 
 	/**
 	 * Constructor
 	 */
 	public N4JSProjectConfig(N4JSWorkspaceConfig workspace, FileURI path, ProjectDescription pd,
-			ProjectDescriptionLoader projectDescriptionLoader) {
+			ProjectDescriptionLoader projectDescriptionLoader, SemanticDependencySupplier semanticDependencySupplier) {
+
 		this.workspace = Objects.requireNonNull(workspace);
 		this.path = Objects.requireNonNull(path);
 		this.projectDescriptionLoader = Objects.requireNonNull(projectDescriptionLoader);
+		this.semanticDependencySupplier = Objects.requireNonNull(semanticDependencySupplier);
 
 		this.projectDescription = Objects.requireNonNull(pd);
 		this.sourceFolders = createSourceFolders(pd);
@@ -76,19 +84,23 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 */
 	protected void updateProjectStateFromDisk() {
 		ProjectDescription pdOld = projectDescription;
-		projectDescription = projectDescriptionLoader.loadProjectDescriptionAtLocation(path);
+		projectDescription = projectDescriptionLoader
+				.loadProjectDescriptionAtLocation(path, pdOld.getRelatedRootLocation());
 		if (projectDescription == null) {
 			projectDescription = ProjectDescription.builder().build();
 		}
 		// a project is not allowed to change its name
-		String nameOld = pdOld.getName();
-		if (!Objects.equals(projectDescription.getName(), nameOld)) {
+		String nameOld = pdOld.getPackageName();
+		if (!Objects.equals(projectDescription.getPackageName(), nameOld)) {
 			// projectDescription = projectDescription.change().setName(nameOld).build();
+			System.out.println();
 		}
 		if (projectDescription.equals(pdOld)) {
 			return; // nothing changed
 		}
 		sourceFolders = createSourceFolders(projectDescription);
+		semanticDependencies = null;
+		packageNameToProjectIds = null;
 		workspace.onProjectChanged(path, pdOld, projectDescription);
 	}
 
@@ -123,6 +135,11 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return path.withTrailingPathDelimiter().toURI();
 	}
 
+	/** @return the related root, see {@link ProjectDescription#getRelatedRootLocation()} */
+	public Path getRelatedRootLocation() {
+		return projectDescription.getRelatedRootLocation().toPath();
+	}
+
 	/** Returns the {@link #getPath() path} as a {@link FileURI}. */
 	public FileURI getPathAsFileURI() {
 		return path;
@@ -147,9 +164,15 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return getPathAsFileURI().appendSegment(N4JSGlobals.PACKAGE_JSON);
 	}
 
+	/** @return the project id */
 	@Override
 	public String getName() {
-		return projectDescription.getName();
+		return projectDescription.getId();
+	}
+
+	/** @return the project name */
+	public String getPackageName() {
+		return projectDescription.getPackageName();
 	}
 
 	/** Returns this project's name as an {@link N4JSProjectName}. */
@@ -170,7 +193,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
 		Set<String> result = new LinkedHashSet<>(deps.size());
 		for (ProjectDependency dep : deps) {
-			result.add(dep.getProjectName());
+			result.add(getProjectIdForPackageName(dep.getPackageName()));
 		}
 		return result;
 	}
@@ -188,10 +211,55 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	 * available as n4jsd files yet; all other modules should be shadowed by the definition project (i.e. shadowing on
 	 * the module-level).
 	 */
-	public List<ProjectDependency> computeSemanticDependencies() {
+	public List<ProjectDependency> getSemanticDependencies() {
+		if (semanticDependencies == null) {
+			init();
+		}
+		return semanticDependencies;
+	}
+
+	/**
+	 * Returns the project id for the given package name. This method respects the context of this project, i.e. that in
+	 * case there exist multiple projects with the given package name, the project id of that project is returned that a
+	 * dependency from this project would bind to.
+	 */
+	public String getProjectIdForPackageName(String packageName) {
+		return getPackageNameForProjectIdMap().getOrDefault(packageName, packageName);
+	}
+
+	/**
+	 * @return a map from package names to project ids. This map respects the context of this project, see
+	 *         {@link #getProjectIdForPackageName(String)}.
+	 */
+	public Map<String, String> getPackageNameForProjectIdMap() {
+		if (packageNameToProjectIds == null) {
+			init();
+		}
+		return packageNameToProjectIds;
+	}
+
+	/** Initializes {@link #packageNameToProjectIds} and {@link #semanticDependencies}. */
+	protected void init() {
 		List<ProjectDependency> deps = projectDescription.getProjectDependencies();
-		return ImmutableList.copyOf(
-				SemanticDependencySupplier.computeSemanticDependencies(workspace.definitionProjects, deps));
+		List<ProjectDependency> semanticDeps = semanticDependencySupplier
+				.computeSemanticDependencies(workspace.definitionProjects, deps);
+
+		Path relatedRootLocation = getRelatedRootLocation();
+
+		HashSet<String> allNames = new HashSet<>(workspace.getAllPackageNames());
+		semanticDeps.stream().forEach(d -> allNames.add(d.getPackageName()));
+
+		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.computePackageName2ProjectIdMap(
+				workspace, projectDescription, relatedRootLocation, allNames));
+
+		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());
+		for (ProjectDependency sdep : semanticDeps) {
+			String qualifiedName = getProjectIdForPackageName(sdep.getPackageName());
+			ProjectDependency newDep = new ProjectDependency(qualifiedName, sdep.getType(),
+					sdep.getVersionRequirementString(), sdep.getVersionRequirement());
+			result.add(newDep);
+		}
+		semanticDependencies = Collections.unmodifiableList(result);
 	}
 
 	@Override
@@ -210,13 +278,17 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	}
 
 	/**
-	 * Projects are indexed but not transpiled if they have '.' as the output path or if they are located in
-	 * node_modules folders.
+	 * Projects are indexed but not transpiled if they are located in node_modules folders.
 	 *
 	 * @return true iff this project should be indexed only
 	 */
 	@Override
 	public boolean indexOnly() {
+		return isInNodeModulesFolder();
+	}
+
+	/** @return true iff this project is located inside a node_modules folder */
+	public boolean isInNodeModulesFolder() {
 		URI projectBase = getPath();
 		String lastSegment = projectBase.lastSegment();
 		if (lastSegment == null || lastSegment.isBlank()) {

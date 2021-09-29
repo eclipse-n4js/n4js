@@ -43,9 +43,9 @@ class TypeVisibilityCheckerTest {
 	@Inject
 	Provider<XtextResourceSet> resourceSetProvider;
 
-	private def withVendorAndProject(Script script, String vendorID, String projectName) {
+	private def withVendorAndProject(Script script, String vendorID, String projectID) {
 		script.eResource.contents.get(1) as TModule => [
-			it.projectName = projectName
+			it.projectID = projectID
 			it.vendorID = vendorID
 		]
 		return script

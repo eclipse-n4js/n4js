@@ -387,7 +387,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * TODO IDE-1487 currently there is no notion of default compiler. We fake call to the ES5 sub generator.
 	 */
 	def final static String calculateProjectBasedOutputDirectory(N4JSProjectConfigSnapshot project, boolean includeProjectName) {
-		return if (includeProjectName) project.name + "/" + project.outputPath else project.outputPath;
+		return if (includeProjectName) project.packageName + "/" + project.outputPath else project.outputPath;
 	}
 
 	/** Access to compiler ID */

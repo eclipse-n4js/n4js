@@ -17,6 +17,7 @@ import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfig;
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier;
 import org.eclipse.n4js.xtext.ide.server.XIWorkspaceConfigFactory;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
@@ -38,6 +39,9 @@ public class N4JSWorkspaceConfigFactory implements XIWorkspaceConfigFactory {
 	private ProjectDescriptionLoader projectDescriptionLoader;
 
 	@Inject
+	private SemanticDependencySupplier semanticDependencySupplier;
+
+	@Inject
 	private N4JSConfigSnapshotFactory configSnapshotFactory;
 
 	@Inject
@@ -54,6 +58,6 @@ public class N4JSWorkspaceConfigFactory implements XIWorkspaceConfigFactory {
 	/** Actually create a new instance of {@link N4JSWorkspaceConfig}. */
 	protected N4JSWorkspaceConfig doCreateWorkspaceConfig(URI workspaceBaseURI) {
 		return new N4JSWorkspaceConfig(workspaceBaseURI, projectDiscoveryHelper, projectDescriptionLoader,
-				configSnapshotFactory, uriExtensions);
+				semanticDependencySupplier, configSnapshotFactory, uriExtensions);
 	}
 }

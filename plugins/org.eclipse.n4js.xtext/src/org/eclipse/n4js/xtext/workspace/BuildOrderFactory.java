@@ -130,7 +130,7 @@ public class BuildOrderFactory {
 
 		/** Find the project with the given name. */
 		protected ProjectConfigSnapshot findProjectByName(ProjectSet projects, String name) {
-			return projects.findProjectByName(name);
+			return projects.findProjectByProjectID(name);
 		}
 
 		/**

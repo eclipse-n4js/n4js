@@ -360,7 +360,7 @@ public class MemberVisibilityChecker {
 		TModule memberModule = EcoreUtil2.getContainerOfType(member, TModule.class);
 		// receiverModule == null indicates either a follow-up problem or a builtin type
 		return memberModule == null || memberModule == contextModule
-				|| Strings.equal(memberModule.getProjectName(), contextModule.getProjectName())
+				|| Strings.equal(memberModule.getProjectID(), contextModule.getProjectID())
 						&& Strings.equal(contextModule.getVendorID(), memberModule.getVendorID())
 				|| typeVisibilityChecker.isTestedProjectOf(contextModule, memberModule);
 	}

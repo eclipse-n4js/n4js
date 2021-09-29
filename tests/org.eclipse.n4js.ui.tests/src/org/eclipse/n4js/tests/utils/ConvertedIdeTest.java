@@ -140,7 +140,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		cleanBuildAndWait();
 		// ensure that all projects have been imported properly
 		final Set<String> expectedProjects = importedProjects.stream()
-				.map(N4JSProjectName::getRawName).collect(Collectors.toSet());
+				.map(pn -> "yarn-test-project/packages/" + pn.getRawName()).collect(Collectors.toSet());
 		final Set<String> actualProjects = concurrentIndex.entries().stream()
 				.map(Entry::getKey).collect(Collectors.toSet());
 		final Set<String> missingProjects = new HashSet<>(Sets.difference(expectedProjects, actualProjects));
