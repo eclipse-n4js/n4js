@@ -54,7 +54,6 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import org.eclipse.n4js.scoping.utils.MergedScope
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -183,12 +182,6 @@ class ImportedElementsScopingHelper {
 		val localValidScope = scopesHelper.scopeFor("findImportedElements-validImports", script, parentScope, validImports.values)
 		val importScope = new UberParentScope("findImportedElements-uberParent", localValidScope, invalidLocalScope)
 		return new OriginAwareScope(script, importScope, originatorMap);
-		
-		// local broken elements are hidden by parent scope, both are hidden by valid local elements
-//		val invalidLocalScope = scopesHelper.scopeFor("findImportedElements-invalidImports", script, invalidImports.values)
-//		val localBaseScope = new UberParentScope("findImportedElements-uberParent", parentScope, invalidLocalScope)
-//		val localValidScope = scopesHelper.scopeFor("findImportedElements-validImports", script, localBaseScope, validImports.values)
-//		return new OriginAwareScope(localValidScope, originatorMap);
 	}
 
 	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
