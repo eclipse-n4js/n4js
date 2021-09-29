@@ -133,12 +133,34 @@ export class Parameter extends NamedElement {
 	isVariadic: boolean;
 }
 
+export enum TypeRefKind {
+	/** Referring to a type by name or alias. Corresponds to ParameterizedTypeRef in N4JS. */
+	NAMED,
+	LITERAL,
+	FUNCTION,
+	OBJECT,
+	UNION,
+	INTERSECTION,
+	PARENTHESES
+}
+
 export class TypeRef {
+	kind: TypeRefKind;
+	dynamic: boolean;
+	targetTypeName: string;
+	targetTypeArgs: TypeRef[] = [];
+	signature: Signature;
+	memberTypeRefs: TypeRef[] = [];
+	parenthesizedTypeRef: TypeRef;
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
 
 	constructor(tsSourceString: string =) {
 		this.tsSourceString = tsSourceString;
+	}
+
+	public isComposed(): boolean {
+		return this.kind === TypeRefKind.UNION || this.kind === TypeRefKind.INTERSECTION;
 	}
 }
 
@@ -425,27 +447,110 @@ class Emitter {
 		}
 	}
 
-	emitTypeAnnotation(typeRef: TypeRef) {
+	emitTypeAnnotation(typeRef: TypeRef, separator: string = ": ") {
 		const buff = this.buff;
 		if (getGlobalOptions()?.copyTypeRefs) {
 			if (typeRef) {
-				buff.push(": ");
+				buff.push(separator);
 				this.emitTypeRef(typeRef);
 			}
 		} else {
 			// note: in "any+ mode" we write out "any+" even in case
 			// the type was undeclared on the TypeScript side, because
 			// N4JS would infer the type to "any" instead of "any+":
-			buff.push(": ", "any+");
+			buff.push(separator, "any+");
 		}
 	}
 
 	emitTypeRef(typeRef: TypeRef) {
 		const buff = this.buff;
-		if (getGlobalOptions()?.copyTypeRefs && typeRef) {
-			buff.push(typeRef.tsSourceString);
-		} else {
+		if (!getGlobalOptions()?.copyTypeRefs || !typeRef) {
 			buff.push("any+");
+			return;
+		}
+		switch(typeRef.kind) {
+			case TypeRefKind.NAMED:
+				this.emitNamedTypeRef(typeRef);
+				break;
+			case TypeRefKind.LITERAL:
+				buff.push(typeRef.tsSourceString);
+				break;
+			case TypeRefKind.FUNCTION:
+				this.emitFunctionTypeRef(typeRef);
+				break;
+			case TypeRefKind.OBJECT:
+				buff.push("~Object with ")
+				buff.push(typeRef.tsSourceString); // FIXME add proper support for object types!
+				break;
+			case TypeRefKind.UNION:
+			case TypeRefKind.INTERSECTION:
+				this.emitComposedTypeRef(typeRef.kind, typeRef.memberTypeRefs);
+				break;
+			case TypeRefKind.PARENTHESES:
+				buff.push("(");
+				this.emitTypeRef(typeRef.parenthesizedTypeRef);
+				buff.push(")");
+				break;
+			default:
+				throw "unsupported TypeRefKind: " + typeRef.kind
+		}
+	}
+
+	emitNamedTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.NAMED) {
+			throw "not a TypeRef of kind TypeRefKind.NAMED: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		buff.push(typeRef.targetTypeName);
+		if (typeRef.targetTypeArgs.length > 0) {
+			buff.push("<");
+			let isFirst = true;
+			for (const currTypeArg of typeRef.targetTypeArgs) {
+				if (!isFirst) {
+					buff.push(",");
+				}
+				this.emitTypeRef(currTypeArg);
+				isFirst = false;
+			}
+			buff.push(">");
+		}
+		if (typeRef.dynamic) {
+			buff.push("+");
+		}
+	}
+
+	emitFunctionTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.FUNCTION) {
+			throw "not a TypeRef of kind TypeRefKind.FUNCTION: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		this.emitSignature(typeRef.signature, true);
+		buff.push("=>");
+		const returnType = typeRef.signature.returnType;
+		if (returnType) {
+			const needParens = returnType.isComposed();
+			if (needParens) {
+				buff.push("(");
+			}
+			this.emitTypeRef(returnType);
+			if (needParens) {
+				buff.push(")");
+			}
+		} else {
+			buff.push("void");
+		}
+	}
+
+	emitComposedTypeRef(typeRefKind: TypeRefKind, memberTypeRefs: TypeRef[]) {
+		const buff = this.buff;
+		const spearator = typeRefKind === TypeRefKind.UNION ? " | " : " & ";
+		let isFirst = true;
+		for (const memberTypeRef of memberTypeRefs) {
+			if (!isFirst) {
+				buff.push(spearator);
+			}
+			isFirst = false;
+			this.emitTypeRef(memberTypeRef);
 		}
 	}
 

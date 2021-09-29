@@ -129,9 +129,29 @@ export class Parameter extends NamedElement {
 	isVariadic: boolean;
 }
 
+export enum TypeRefKind {
+	/** Referring to a type by name or alias. Corresponds to ParameterizedTypeRef in N4JS. */
+	NAMED,
+	LITERAL,
+	FUNCTION,
+	OBJECT,
+	UNION,
+	INTERSECTION,
+	PARENTHESES
+}
+
 export class TypeRef {
+	kind: TypeRefKind;
+	dynamic: boolean;
+	targetTypeName: string;
+	targetTypeArgs: TypeRef[];
+	signature: Signature;
+	memberTypeRefs: TypeRef[];
+	parenthesizedTypeRef: TypeRef;
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
+
+	public isComposed(): boolean;
 }
 
 export function scriptToString(script: Script): string;

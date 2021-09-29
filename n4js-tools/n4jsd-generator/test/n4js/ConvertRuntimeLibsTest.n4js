@@ -71,7 +71,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 
 					export external public class SomeGenType<T> {
 						public someInstanceMethod(p: string): T;
-						public constructor(...elems: T[]);
+						public constructor(...elems: T);
 						public static someStaticMethod(p: string): number;
 					}
 				`

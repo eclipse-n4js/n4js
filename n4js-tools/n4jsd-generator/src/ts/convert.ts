@@ -428,7 +428,8 @@ export class Converter {
 			const isConstructSigDecl = ts.isConstructSignatureDeclaration(decl);
 			if (isConstructSigDecl
 				|| ts.isCallSignatureDeclaration(decl)
-				|| ts.isIndexSignatureDeclaration(decl)) {
+				|| ts.isIndexSignatureDeclaration(decl)
+				|| ts.isFunctionTypeNode(decl)) {
 				const result = new model.Signature();
 				for (const param of decl.parameters) {
 					const paramSym = this.checker.getSymbolAtLocation(param.name);
@@ -453,6 +454,14 @@ export class Converter {
 			let paramDecl = param.declarations[0] as ts.ParameterDeclaration;
 			result.isOptional = this.checker.isOptionalParameter(paramDecl);
 			result.isVariadic = !!paramDecl.dotDotDotToken;
+		}
+		if (result.isVariadic
+			&& result.type?.kind === model.TypeRefKind.NAMED
+			&& result.type?.targetTypeName === "Array"
+			&& result.type?.targetTypeArgs?.length > 0) {
+			// "(...args: string[]):void" must be turned into
+			// "(...args: string):void" on N4JS side:
+			result.type = result.type.targetTypeArgs[0];
 		}
 		return result;
 	}
@@ -500,12 +509,103 @@ export class Converter {
 		return undefined;
 	}
 	private convertTypeReference(node?: ts.TypeNode): model.TypeRef {
-		if (node) {
-			const result = new model.TypeRef();
-			result.tsSourceString = node.getText().trim();
-			return result;
+		if (!node) {
+			return undefined;
 		}
-		return undefined;
+		const kind = node.kind;
+		const sourceStr = node.getText().trim();
+		const result = new model.TypeRef();
+
+		// search typescript.js for "function isTypeNodeKind(kind)" to see a list of possible kind values:
+		if (kind === ts.SyntaxKind.AnyKeyword
+			|| kind === ts.SyntaxKind.BooleanKeyword
+			|| kind === ts.SyntaxKind.NumberKeyword
+			|| kind === ts.SyntaxKind.StringKeyword
+			|| kind === ts.SyntaxKind.SymbolKeyword
+			|| kind === ts.SyntaxKind.VoidKeyword
+			|| kind === ts.SyntaxKind.UndefinedKeyword) {
+			// type keyword supported by N4JS
+			result.kind = model.TypeRefKind.NAMED;
+			result.targetTypeName = sourceStr;
+		} else if (kind === ts.SyntaxKind.ObjectKeyword) {
+			// type keyword NOT supported by N4JS, but it can be converted
+			result.kind = model.TypeRefKind.NAMED;
+			result.targetTypeName = "Object";
+		} else if (kind === ts.SyntaxKind.NullKeyword
+			|| kind === ts.SyntaxKind.NeverKeyword
+			|| kind === ts.SyntaxKind.UnknownKeyword
+			|| kind === ts.SyntaxKind.BigIntKeyword) {
+			// type keyword NOT supported by N4JS -> replace by "any+"
+			return createAnyPlus();
+		} else if (ts.isTypeReferenceNode(node)) {
+			// reference to another type (except those represented as keyword, see above)
+			result.kind = model.TypeRefKind.NAMED;
+			result.targetTypeName = node.typeName.getText().trim();
+			if (node.typeArguments) {
+				for (const typeArg of node.typeArguments) {
+					result.targetTypeArgs.push(this.convertTypeReference(typeArg) ?? createAnyPlus());
+				}
+			}
+		} else if (ts.isLiteralTypeNode(node)) {
+			const literal = node.literal;
+			if (literal.kind === ts.SyntaxKind.NullKeyword) {
+				// not supported on N4JS side
+				return createAnyPlus();
+			} else if (literal.kind === ts.SyntaxKind.FalseKeyword) {
+				result.kind = model.TypeRefKind.LITERAL;
+			} else if (literal.kind === ts.SyntaxKind.TrueKeyword) {
+				result.kind = model.TypeRefKind.LITERAL;
+			} else if (ts.isLiteralExpression(literal)) {
+				result.kind = model.TypeRefKind.LITERAL;
+			} else if (ts.isPrefixUnaryExpression(literal)) {
+				result.kind = model.TypeRefKind.LITERAL;
+			} else {
+				this.createIssueForUnsupportedNode(literal, "literal in LiteralTypeNode");
+				return createAnyPlus();
+			}
+		} else if (ts.isFunctionTypeNode(node)) {
+			result.kind = model.TypeRefKind.FUNCTION;
+			result.signature = this.convertSignatureDeclarationsInAST([node])[0];
+		} else if (ts.isArrayTypeNode(node)) {
+			result.kind = model.TypeRefKind.NAMED;
+			result.targetTypeName = "Array";
+			let elemType = node.elementType;
+			if (ts.isParenthesizedTypeNode(elemType)) {
+				elemType = elemType.type;
+			}
+			result.targetTypeArgs.push(this.convertTypeReference(elemType) ?? createAnyPlus());
+		} else if (ts.isTypeLiteralNode(node)) {
+			// object type syntax, e.g. "let x: { prop: string };"
+			result.kind = model.TypeRefKind.OBJECT;
+			// FIXME add proper support for object types!
+		} else if (ts.isUnionTypeNode(node)) {
+			result.kind = model.TypeRefKind.UNION;
+			for (const memberNode of node.types) {
+				const memberTypeRef = this.convertTypeReference(memberNode);
+				if (memberTypeRef) {
+					result.memberTypeRefs.push(memberTypeRef);
+				}
+			}
+		} else if (ts.isIntersectionTypeNode(node)) {
+			result.kind = model.TypeRefKind.INTERSECTION;
+			for (const memberNode of node.types) {
+				const memberTypeRef = this.convertTypeReference(memberNode);
+				if (memberTypeRef) {
+					result.memberTypeRefs.push(memberTypeRef);
+				}
+			}
+		} else if (ts.isParenthesizedTypeNode(node)) {
+			result.kind = model.TypeRefKind.PARENTHESES;
+			result.parenthesizedTypeRef = this.convertTypeReference(node.type);
+		// } else if (ts.isTupleTypeNode(node)) {
+		// } else if (ts.isTypePredicateNode(node)) {
+		} else {
+			this.createIssueForUnsupportedNode(node, "TypeNode (in #convertTypeReference())")
+			return createAnyPlus();
+		}
+
+		result.tsSourceString = sourceStr;
+		return result;
 	}
 
 	private createIssueForUnsupportedNode(node: ts.Node, superKind: string = "node") {
@@ -518,4 +618,12 @@ export class Converter {
 		const error = utils.error(msg + "\n" + offendingCode);
 		this.issues.push(error);
 	}
+}
+
+function createAnyPlus(): model.TypeRef {
+	const result = new model.TypeRef();
+	result.kind = model.TypeRefKind.NAMED;
+	result.targetTypeName = "any";
+	result.dynamic = true;
+	return result;
 }

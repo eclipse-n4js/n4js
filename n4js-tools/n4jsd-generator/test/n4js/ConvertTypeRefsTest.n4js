@@ -1,0 +1,126 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testBuiltIns() {
+		this.assertTypeRefConversion("any", "any");
+		this.assertTypeRefConversion("undefined", "undefined");
+		this.assertTypeRefConversion("null", "any+"); // unsupported by N4JS
+		this.assertTypeRefConversion("never", "any+"); // unsupported by N4JS
+		this.assertTypeRefConversion("unknown", "any+"); // unsupported by N4JS
+	}
+
+	@Test
+	public testPrimitives() {
+		this.assertTypeRefConversion("boolean", "boolean");
+		this.assertTypeRefConversion("number", "number");
+		this.assertTypeRefConversion("string", "string");
+		this.assertTypeRefConversion("object", "Object"); // note: this is changed to upper-case Object!
+		this.assertTypeRefConversion("symbol", "symbol");
+	}
+
+	@Test
+	public testRefsToClassifier() {
+		this.assertTypeRefConversion("Ifc", "Ifc");
+		this.assertTypeRefConversion("Cls", "Cls");
+		this.assertTypeRefConversion("GenCls<string>", "GenCls<string>");
+		this.assertTypeRefConversion("GenCls<null>", "GenCls<any+>"); // asserts that conversion works for type arguments
+	}
+
+	@Test
+	public testLiteralTypes() {
+		this.assertTypeRefConversion("false", "false");
+		this.assertTypeRefConversion("true", "true");
+		this.assertTypeRefConversion("42", "42");
+		this.assertTypeRefConversion("42.1", "42.1");
+		this.assertTypeRefConversion("-1.23", "-1.23");
+		this.assertTypeRefConversion("-  1.23", "-  1.23");
+		this.assertTypeRefConversion("''", "''");
+		this.assertTypeRefConversion("'hello'", "'hello'");
+		this.assertTypeRefConversion('"hello"', '"hello"');
+		this.assertTypeRefConversion('`hello`', '`hello`');
+	}
+
+	@Test
+	public testFunctionTypes_parameters() {
+		this.assertTypeRefConversion("(p1:string,p2:number)=>void", "(p1: string, p2: number)=>void");
+		this.assertTypeRefConversion("(p?:string)=>void", "(p: string = )=>void");
+		this.assertTypeRefConversion("(...ps:string[])=>void", "(...ps: string)=>void");
+	}
+
+	@Test
+	public testFunctionTypes_returnTypes() {
+		this.assertTypeRefConversion("()=>void", "()=>void");
+		this.assertTypeRefConversion("()=>string", "()=>string");
+		this.assertTypeRefConversion("()=>Cls", "()=>Cls");
+		this.assertTypeRefConversion("()=>Cls|Ifc",   "()=>(Cls | Ifc)"); // important: parentheses required on N4JS side!
+		this.assertTypeRefConversion("()=>(Cls|Ifc)", "()=>(Cls | Ifc)");
+		this.assertTypeRefConversion("(()=>Cls)|Ifc", "(()=>Cls) | Ifc");
+	}
+
+	@Test
+	public testArrayTypes() {
+		this.assertTypeRefConversion("string[]", "Array<string>");
+		this.assertTypeRefConversion("Cls[]", "Array<Cls>");
+		this.assertTypeRefConversion("(Ifc | Cls)[]", "Array<Ifc | Cls>");
+	}
+
+	@Test
+	public testObjectTypes() {
+		this.assertTypeRefConversion("{ prop: string }", "~Object with { prop: string }");
+	}
+
+	@Test
+	public testComposedTypeRef() {
+		this.assertTypeRefConversion("Ifc | Cls", "Ifc | Cls");
+		this.assertTypeRefConversion("Ifc & Cls", "Ifc & Cls");
+	}
+
+	@Test
+	public testParentheses() {
+		this.assertTypeRefConversion("(Ifc | Cls) & Cls", "(Ifc | Cls) & Cls");
+		this.assertTypeRefConversion("Ifc & (Ifc | Cls) & Cls", "Ifc & (Ifc | Cls) & Cls");
+	}
+
+	private assertTypeRefConversion(sourceDts: string, expectedSourceN4jsd: string) {
+		console.log(`Testing type reference conversion from "${sourceDts}" to "${expectedSourceN4jsd}" ...`);
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5",
+				dts: `
+					export interface Ifc {}
+					export class Cls {}
+					export class GenCls<T> {}
+					export const c: ${sourceDts};
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+					}
+
+					export external public class ~Cls {
+					}
+
+					export external public class ~GenCls<T> {
+					}
+
+					export public const c: ${expectedSourceN4jsd};
+				`
+			}
+		);
+	}
+}
