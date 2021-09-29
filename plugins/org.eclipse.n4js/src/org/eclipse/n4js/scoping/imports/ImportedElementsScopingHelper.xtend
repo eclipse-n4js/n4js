@@ -37,6 +37,7 @@ import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
 import org.eclipse.n4js.scoping.utils.BetterScopesHelper
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.UberParentScope
+import org.eclipse.n4js.scoping.utils.ScopesHelper
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -54,6 +55,8 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import org.eclipse.n4js.scoping.utils.MergedScope
+import org.eclipse.xtext.scoping.impl.SimpleScope
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -88,6 +91,8 @@ class ImportedElementsScopingHelper {
 
 	@Inject
 	private BetterScopesHelper scopesHelper;
+	@Inject
+	private ScopesHelper scopesHelper1;
 
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
@@ -179,8 +184,9 @@ class ImportedElementsScopingHelper {
 
 //		 local broken elements are hidden by parent scope, both are hidden by valid local elements
 		val invalidLocalScope = scopesHelper.scopeFor("findImportedElements-invalidImports", script, invalidImports.values)
-		val localValidScope = scopesHelper.scopeFor("findImportedElements-validImports", script, parentScope, validImports.values)
-		val importScope = new UberParentScope("findImportedElements-uberParent", localValidScope, invalidLocalScope)
+		val localValidScope2 = scopesHelper.scopeFor("findImportedElements-validImports", script, parentScope, validImports.values)
+		val localValidScope = scopesHelper1.mapBasedScopeFor( script, parentScope, validImports.values)
+		val importScope = new UberParentScope("findImportedElements-uberParent", localValidScope2, invalidLocalScope)
 		return new OriginAwareScope(script, importScope, originatorMap);
 	}
 
