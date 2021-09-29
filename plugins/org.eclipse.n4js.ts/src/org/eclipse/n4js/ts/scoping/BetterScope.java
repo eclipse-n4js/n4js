@@ -60,7 +60,11 @@ public class BetterScope implements IScope {
 	}
 
 	protected int computeDepth() {
-		return (parent instanceof BetterScope) ? ((BetterScope) parent).computeDepth() + 1 : 0;
+		return (getParent() instanceof BetterScope) ? ((BetterScope) getParent()).computeDepth() + 1 : 0;
+	}
+
+	protected IScope getParent() {
+		return parent;
 	}
 
 	public boolean isIgnoreCase() {
@@ -123,16 +127,27 @@ public class BetterScope implements IScope {
 		return localElements.iterator().hasNext() ? localElements.iterator().next() : null;
 	}
 
+	/**
+	 * Returns all elements in the order of shadowing. No elements are filtered out due to shadowing (as done by Xtext).
+	 */
 	@Override
 	public Iterable<IEObjectDescription> getAllElements() {
 		return Iterables.concat(getAllLocalElements(), getAllParentElements());
 	}
 
+	/**
+	 * Returns all elements with the given name in the order of shadowing. No elements are filtered out due to shadowing
+	 * (as done by Xtext).
+	 */
 	@Override
 	public Iterable<IEObjectDescription> getElements(QualifiedName qName) {
 		return Iterables.concat(getLocalElements(qName), getParentElements(qName));
 	}
 
+	/**
+	 * Returns all elements of the given EObject in the order of shadowing. No elements are filtered out due to
+	 * shadowing (as done by Xtext).
+	 */
 	@Override
 	public Iterable<IEObjectDescription> getElements(EObject object) {
 		return Iterables.concat(getLocalElements(object), getParentElements(object));
@@ -140,6 +155,14 @@ public class BetterScope implements IScope {
 
 	@Override
 	public String toString() {
-		return name + " [" + depth + "] " + context.toString();
+		String parentString = null;
+		try {
+			final IScope parentScope = getParent();
+			parentString = parentScope.toString();
+		} catch (Throwable t) {
+			parentString = t.getClass().getSimpleName() + " : " + t.getMessage();
+		}
+		return getClass().getSimpleName() + " " + name + " " + (ignoreCase ? "[ignore case]" : "")
+				+ getAllLocalElements() + "\n -> " + parentString;
 	}
 }
