@@ -16,7 +16,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
@@ -389,23 +391,23 @@ public class XtMethods {
 	}
 
 	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
-	public List<String> getScopeString(IEObjectCoveringRegion ocr) {
+	public Set<String> getScopeString(IEObjectCoveringRegion ocr) {
 		return getScopeWithResourceString(ocr, desc -> desc.getName().toString());
 	}
 
 	/** Implementation for {@link XtIdeTest#scopeWithResource(XtMethodData)} */
-	public List<String> getScopeWithResourceString(IEObjectCoveringRegion ocr) {
+	public Set<String> getScopeWithResourceString(IEObjectCoveringRegion ocr) {
 		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
 				.descriptionToNameWithPosition(desc.getEObjectURI(), false, desc));
 	}
 
 	/** Implementation for {@link XtIdeTest#scopeWithPosition(XtMethodData)} */
-	public List<String> getScopeWithPositionString(IEObjectCoveringRegion ocr) {
+	public Set<String> getScopeWithPositionString(IEObjectCoveringRegion ocr) {
 		return getScopeWithResourceString(ocr, desc -> EObjectDescriptionToNameWithPositionMapper
 				.descriptionToNameWithPosition(desc.getEObjectURI(), true, desc));
 	}
 
-	private List<String> getScopeWithResourceString(IEObjectCoveringRegion ocr,
+	private LinkedHashSet<String> getScopeWithResourceString(IEObjectCoveringRegion ocr,
 			Function<IEObjectDescription, String> toString) {
 
 		IScope scope = scopeProvider.getScope(ocr.getEObject(), (EReference) ocr.getEStructuralFeature());
@@ -413,7 +415,7 @@ public class XtMethods {
 				desc -> !IEObjectDescriptionWithError.isErrorDescription(desc));
 		List<IEObjectDescription> allElements = Lists.newArrayList(scopeWithoutErrors.getAllElements());
 
-		List<String> scopeNames = new ArrayList<>();
+		LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
 		for (IEObjectDescription desc : allElements) {
 			scopeNames.add(toString.apply(desc));
 		}

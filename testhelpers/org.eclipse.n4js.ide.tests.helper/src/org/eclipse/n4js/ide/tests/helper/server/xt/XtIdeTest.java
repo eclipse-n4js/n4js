@@ -620,7 +620,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scope(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scope", "at");
-		List<String> scopeStr = xtMethods.getScopeString(ocr);
+		Set<String> scopeStr = xtMethods.getScopeString(ocr);
 		assertEqualIterables(data.expectation, scopeStr);
 	}
 
@@ -638,7 +638,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scopeWithPosition(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithPosition", "at");
-		List<String> scopeStr = xtMethods.getScopeWithPositionString(ocr);
+		Set<String> scopeStr = xtMethods.getScopeWithPositionString(ocr);
 		assertEqualIterables(data.expectation, scopeStr);
 	}
 
@@ -656,7 +656,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scopeWithResource(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithResource", "at");
-		List<String> scopeStr = xtMethods.getScopeWithResourceString(ocr);
+		Set<String> scopeStr = xtMethods.getScopeWithResourceString(ocr);
 		assertEqualIterables(data.expectation, scopeStr);
 	}
 
