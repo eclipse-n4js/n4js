@@ -601,6 +601,8 @@ export class Converter {
 			// object type syntax, e.g. "let x: { prop: string };"
 			result.kind = model.TypeRefKind.OBJECT;
 			result.members.push(...this.convertMembersOfObjectType(node));
+		} else if (ts.isThisTypeNode(node)) {
+			result.kind = model.TypeRefKind.THIS;
 		} else if (ts.isUnionTypeNode(node)) {
 			result.kind = model.TypeRefKind.UNION;
 			for (const memberNode of node.types) {

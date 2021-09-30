@@ -139,6 +139,7 @@ export enum TypeRefKind {
 	LITERAL,
 	FUNCTION,
 	OBJECT,
+	THIS,
 	UNION,
 	INTERSECTION,
 	PARENTHESES
@@ -490,6 +491,9 @@ class Emitter {
 				break;
 			case TypeRefKind.OBJECT:
 				this.emitObjectTypeRef(typeRef);
+				break;
+			case TypeRefKind.THIS:
+				buff.push("this");
 				break;
 			case TypeRefKind.UNION:
 			case TypeRefKind.INTERSECTION:

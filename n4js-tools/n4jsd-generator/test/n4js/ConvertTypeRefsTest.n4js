@@ -140,4 +140,51 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 			}
 		);
 	}
+
+	@Test
+	public testThisType() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5",
+				dts: `
+					export class Cls {
+						public method(): this;
+					}
+				`,
+				n4jsd: `
+					export external public class ~Cls {
+						public method(): this;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testVoidType() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5",
+				dts: `
+					export function foo(): void;
+					export class Cls {
+						public method(): void;
+					}
+				`,
+				n4jsd: `
+					export external public function foo(): void;
+
+					export external public class ~Cls {
+						public method(): void;
+					}
+				`
+			}
+		);
+	}
 }
