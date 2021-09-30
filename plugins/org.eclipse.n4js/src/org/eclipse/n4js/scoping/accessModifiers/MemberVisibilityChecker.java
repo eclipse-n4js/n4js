@@ -308,14 +308,18 @@ public class MemberVisibilityChecker {
 
 		// Protected means, that the context-type is a sub-type of the receiver-type
 		if (contextType == null) {
-			// not type information available, maybe just parsing the script: context is relevant here.
+			// no type information available, maybe just parsing the script: context is relevant here.
+			return false;
+		}
+		if (!(declaredReceiverType instanceof TClassifier)) {
+			// only TClassifiers can have sub-types
 			return false;
 		}
 
 		// contextType must be a super-type of declaredRecieverType:
 		List<TClassifier> receiverSuperTypes = AllSuperTypesCollector.collect((TClassifier) declaredReceiverType);
 		if (!receiverSuperTypes.contains(contextType)) {
-			// Problem: if super-keyword was usesed, the call is still valid.
+			// Problem: if super-keyword was used, the call is still valid.
 			if (!supercall) {
 				return false;
 			}
@@ -324,8 +328,7 @@ public class MemberVisibilityChecker {
 		// and the member is part of a super-type (including default-method of implemented interfaces) of the
 		// receiver-type
 		TClassifier memberClsfContainer = EcoreUtil2.getContainerOfType(member, TClassifier.class);
-		if (declaredReceiverType instanceof TClassifier &&
-				receiverSuperTypes.contains(memberClsfContainer)) {
+		if (receiverSuperTypes.contains(memberClsfContainer)) {
 			// definition of member is done in the super-type-tree of the receiver.
 			return true;
 		}
