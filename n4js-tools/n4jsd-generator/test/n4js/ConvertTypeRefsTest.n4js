@@ -102,6 +102,11 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 	}
 
 	@Test
+	public testTypeOperators() {
+		this.assertTypeRefConversion("readonly string[]", "Array<string>"); // for now, type operators are simply ignored on N4JS side
+	}
+
+	@Test
 	public testNesting() {
 		// ensure that conversion works for type references that are nested within other type references
 		// (as test case for the nested conversion we use the conversion from "object" to "Object")
