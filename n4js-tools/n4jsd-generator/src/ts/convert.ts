@@ -622,6 +622,26 @@ export class Converter {
 		} else if (ts.isParenthesizedTypeNode(node)) {
 			result.kind = model.TypeRefKind.PARENTHESES;
 			result.parenthesizedTypeRef = this.convertTypeReference(node.type);
+		} else if (ts.isTypeOperatorNode(node)) {
+			let op: model.TypeRefOperator = undefined;
+			switch(node.operator) {
+				case ts.SyntaxKind.KeyOfKeyword:
+					op = model.TypeRefOperator.KEYOF;
+					break;
+				case ts.SyntaxKind.UniqueKeyword:
+					op = model.TypeRefOperator.UNIQUE;
+					break;
+				case ts.SyntaxKind.ReadonlyKeyword:
+					op = model.TypeRefOperator.READONLY;
+					break;
+				default:
+					this.createIssueForNode("unsupported type operator: " + node.operator, node);
+			}
+			const resultNested = this.convertTypeReference(node.type);
+			if (resultNested && op) {
+				resultNested.tsOperators.push(op);
+			}
+			return resultNested;
 		// } else if (ts.isTupleTypeNode(node)) {
 		// } else if (ts.isTypePredicateNode(node)) {
 		} else {

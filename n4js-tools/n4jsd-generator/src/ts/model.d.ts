@@ -141,6 +141,12 @@ export enum TypeRefKind {
 	PARENTHESES
 }
 
+export enum TypeRefOperator {
+	KEYOF,
+	UNIQUE,
+	READONLY
+}
+
 export class TypeRef {
 	kind: TypeRefKind;
 	dynamic: boolean;
@@ -150,6 +156,8 @@ export class TypeRef {
 	members: Member[];
 	composedTypeRefs: TypeRef[];
 	parenthesizedTypeRef: TypeRef;
+	/** The type operators that preceded this type reference on the TypeScript side. */
+	tsOperators: TypeRefOperator[];
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
 
