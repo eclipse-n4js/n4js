@@ -32,7 +32,6 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -65,20 +64,8 @@ public class BetterSourceElementExtensions {
 	 * @return the list of EObjects visible
 	 */
 	public List<IdentifiableElement> collectVisibleIdentifiableElements(VariableEnvironmentElement element) {
-		return cache.get(Pair.of("collectVisibleIdentifiableElements", element), element.eResource(), () -> {
-			List<IdentifiableElement> result = new ArrayList<>();
-			if (element instanceof IdentifiableElement) {
-				result.add((IdentifiableElement) element);
-			} else if (element instanceof FunctionExpression && ((FunctionExpression) element).getName() != null) {
-				collectVisibleTypedElement((FunctionExpression) element, result);
-			}
-
-			List<IdentifiableElement> visibleIdentifiableElements = doCollectVisibleIdentifiableElements(element,
-					element, true);
-			result.addAll(visibleIdentifiableElements);
-
-			return result;
-		});
+		Pair<String, VariableEnvironmentElement> key = Pair.of("collectVisibleIdentifiableElements", element);
+		return cache.get(key, element.eResource(), () -> doCollectVisibleIdentifiableElements(element));
 	}
 
 	/**
@@ -89,15 +76,35 @@ public class BetterSourceElementExtensions {
 	 * @return list with single entry of an arguments variable or empty list.
 	 */
 	public List<IdentifiableElement> collectLocalArguments(VariableEnvironmentElement element) {
-		return cache.get(Pair.of("collectLocalArguments", element), element.eResource(), () -> {
-			List<IdentifiableElement> result = new ArrayList<>();
-			if (element instanceof FunctionOrFieldAccessor) {
-				if (!(element instanceof ArrowFunction)) {
-					result.add(((FunctionOrFieldAccessor) element).getLocalArgumentsVariable());
-				}
+		Pair<String, VariableEnvironmentElement> key = Pair.of("collectLocalArguments", element);
+		return cache.get(key, element.eResource(), () -> doCollectLocalArguments(element));
+	}
+
+	private List<IdentifiableElement> doCollectVisibleIdentifiableElements(VariableEnvironmentElement element) {
+		List<IdentifiableElement> result = new ArrayList<>();
+		if (element instanceof IdentifiableElement) {
+			result.add((IdentifiableElement) element);
+
+		} else if (element instanceof FunctionExpression && ((FunctionExpression) element).getName() != null) {
+			collectVisibleTypedElement((FunctionExpression) element, result);
+		}
+
+		List<IdentifiableElement> visibleIdentifiableElements = doCollectVisibleIdentifiableElements(element,
+				element, true);
+
+		result.addAll(visibleIdentifiableElements);
+
+		return result;
+	}
+
+	private List<IdentifiableElement> doCollectLocalArguments(VariableEnvironmentElement element) {
+		List<IdentifiableElement> result = new ArrayList<>();
+		if (element instanceof FunctionOrFieldAccessor) {
+			if (!(element instanceof ArrowFunction)) {
+				result.add(((FunctionOrFieldAccessor) element).getLocalArgumentsVariable());
 			}
-			return result;
-		});
+		}
+		return result;
 	}
 
 	/**
@@ -257,14 +264,6 @@ public class BetterSourceElementExtensions {
 		public Boolean caseExpression(Expression feature) {
 			// optimization:
 			// variable declarations are statements and expression don't ever contain statements
-			allContents.prune();
-			return true;
-		}
-
-		// FIXME: Valid?
-		// @Override
-		public Boolean caseTypeRef(TypeRef feature) {
-			// do not collect elements of type refs, such as fields in structural types. cf. GHOLD-130
 			allContents.prune();
 			return true;
 		}

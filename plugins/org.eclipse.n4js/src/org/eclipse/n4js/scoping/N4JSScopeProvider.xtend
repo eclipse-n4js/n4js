@@ -13,6 +13,7 @@ package org.eclipse.n4js.scoping
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.name.Named
+import java.util.Iterator
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -49,6 +50,7 @@ import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -93,7 +95,6 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
-import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -111,7 +112,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	public final static String NAMED_DELEGATE = "org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.delegate";
 
 	@Inject
-	IResourceScopeCache cache
+	N4JSCache cache
 
 	/**
 	 * The scope provider creating the "parent" scope, i.e. including elements from the index.
@@ -430,13 +431,30 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (vee === null) {
 			return IScope.NULLSCOPE;
 		}
+		
+		ensureLexicalEnvironmentScopes(context, ref);
 
-		// TODO parent vee-s should be cached as well
-		return cache.get('scope_IdentifierRef_id' -> vee,
-			vee.eResource, [| return buildLexicalEnvironmentScope(vee, context, ref)]
-		);
+		return cache.mustGet('scope_IdentifierRef_id' -> vee, vee.eResource);
 	}
 
+
+	private def void ensureLexicalEnvironmentScopes(EObject context, EReference reference) {
+		val Script script = EcoreUtil.getRootContainer(context) as Script;
+		val resource = script.eResource;
+		val veeScopesBuilt = cache.contains('scope_IdentifierRef_id' -> script, resource); // note that a script is a vee
+		if (!veeScopesBuilt) {
+			cache.get('scope_IdentifierRef_id' -> script, resource, [buildLexicalEnvironmentScope(script, context, reference)]);
+			val Iterator<EObject> scriptIterator = script.eAllContents;
+			while (scriptIterator.hasNext) {
+				val vee = scriptIterator.next;
+				if (vee instanceof VariableEnvironmentElement) {
+					// fill the cache
+					cache.get('scope_IdentifierRef_id' -> vee, resource, [buildLexicalEnvironmentScope(vee, context, reference)]);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Builds a lexical environment scope with the given parameters.
 	 * Filters out primitive types.
@@ -474,7 +492,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return globalScope;
 	}
 
-	def private List<Iterable<EObject>> collectLexialEnvironmentsScopeLists(VariableEnvironmentElement vee,
+	def private void collectLexialEnvironmentsScopeLists(VariableEnvironmentElement vee,
 			List<Iterable<? extends EObject>> result) {
 
 		result.add(sourceElementExtensions.collectVisibleIdentifiableElements(vee));
