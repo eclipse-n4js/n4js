@@ -36,7 +36,6 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 		this.assertTypeRefConversion("Ifc", "Ifc");
 		this.assertTypeRefConversion("Cls", "Cls");
 		this.assertTypeRefConversion("GenCls<string>", "GenCls<string>");
-		this.assertTypeRefConversion("GenCls<null>", "GenCls<any+>"); // asserts that conversion works for type arguments
 	}
 
 	@Test
@@ -79,7 +78,15 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
 	public testObjectTypes() {
-		this.assertTypeRefConversion("{ prop: string }", "~Object with { prop: string }");
+		this.assertTypeRefConversion("{ prop: string }", "~Object with { prop: string; }");
+		this.assertTypeRefConversion("{ get getter(): string }", "~Object with { get getter(): string; }");
+		this.assertTypeRefConversion("{ set setter(p: string) }", "~Object with { set setter(value: string); }");
+		this.assertTypeRefConversion("{ method(p: string): number }", "~Object with { method(p: string): number; }");
+
+		this.assertTypeRefConversion("{ prop }", "~Object with { prop: any+; }");
+		this.assertTypeRefConversion("{ get getter() }", "~Object with { get getter(): any+; }");
+		this.assertTypeRefConversion("{ set setter(p) }", "~Object with { set setter(value: any+); }");
+		this.assertTypeRefConversion("{ method(p) }", "~Object with { method(p: any+): any+; }");
 	}
 
 	@Test
@@ -92,6 +99,16 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 	public testParentheses() {
 		this.assertTypeRefConversion("(Ifc | Cls) & Cls", "(Ifc | Cls) & Cls");
 		this.assertTypeRefConversion("Ifc & (Ifc | Cls) & Cls", "Ifc & (Ifc | Cls) & Cls");
+	}
+
+	@Test
+	public testNesting() {
+		// ensure that conversion works for type references that are nested within other type references
+		// (as test case for the nested conversion we use the conversion from "object" to "Object")
+		this.assertTypeRefConversion("GenCls<object>", "GenCls<Object>"); // nested as type argument
+		this.assertTypeRefConversion("(p:object)=>object", "(p: Object)=>Object"); // nested in function type
+		this.assertTypeRefConversion("{ method(p: object): object }", "~Object with { method(p: Object): Object; }"); // nested in member of object type
+		this.assertTypeRefConversion("object | string", "Object | string"); // nested in composed type
 	}
 
 	private assertTypeRefConversion(sourceDts: string, expectedSourceN4jsd: string) {

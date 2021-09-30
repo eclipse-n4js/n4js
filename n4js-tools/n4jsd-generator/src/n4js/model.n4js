@@ -150,7 +150,8 @@ export class TypeRef {
 	targetTypeName: string;
 	targetTypeArgs: TypeRef[] = [];
 	signature: Signature;
-	memberTypeRefs: TypeRef[] = [];
+	members: Member[] = [];
+	composedTypeRefs: TypeRef[] = [];
 	parenthesizedTypeRef: TypeRef;
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
@@ -297,7 +298,7 @@ class Emitter {
 			buff.pushln(" {");
 			buff.indent();
 			if (type.kind === TypeKind.INTERFACE || type.kind === TypeKind.CLASS) {
-				this.emitMembers(type, type.members);
+				this.emitMembers(type.members, type);
 			} else if (type.kind === TypeKind.ENUM) {
 				this.emitEnumLiterals(type.literals, type.primitiveBased === PrimitiveBasedKind.STRING_BASED);
 			} else {
@@ -330,15 +331,22 @@ class Emitter {
 		}
 	}
 
-	emitMembers(parent: Type, members: Member[]) {
+	emitMembers(members: Member[], parent: Type =, onePerLine: boolean = true) {
 		const buff = this.buff;
+		let isFirst = true;
 		for (const m of members) {
-			this.emitMember(parent, m);
-			buff.pushln();
+			if (!isFirst && !onePerLine) {
+				buff.push(" ");
+			}
+			this.emitMember(m, parent);
+			if (onePerLine) {
+				buff.pushln();
+			}
+			isFirst = false;
 		}
 	}
 
-	emitMember(parent: Type, member: Member) {
+	emitMember(member: Member, parent: Type =) {
 		const buff = this.buff;
 		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
@@ -453,6 +461,8 @@ class Emitter {
 			if (typeRef) {
 				buff.push(separator);
 				this.emitTypeRef(typeRef);
+			} else {
+				buff.push(separator, "any+");
 			}
 		} else {
 			// note: in "any+ mode" we write out "any+" even in case
@@ -479,12 +489,11 @@ class Emitter {
 				this.emitFunctionTypeRef(typeRef);
 				break;
 			case TypeRefKind.OBJECT:
-				buff.push("~Object with ")
-				buff.push(typeRef.tsSourceString); // FIXME add proper support for object types!
+				this.emitObjectTypeRef(typeRef);
 				break;
 			case TypeRefKind.UNION:
 			case TypeRefKind.INTERSECTION:
-				this.emitComposedTypeRef(typeRef.kind, typeRef.memberTypeRefs);
+				this.emitComposedTypeRef(typeRef.kind, typeRef.composedTypeRefs);
 				break;
 			case TypeRefKind.PARENTHESES:
 				buff.push("(");
@@ -498,7 +507,7 @@ class Emitter {
 
 	emitNamedTypeRef(typeRef: TypeRef) {
 		if (typeRef.kind !== TypeRefKind.NAMED) {
-			throw "not a TypeRef of kind TypeRefKind.NAMED: " + typeRef.kind;
+			throw "not a TypeRef of kind TypeRefKind.NAMED, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
 		buff.push(typeRef.targetTypeName);
@@ -521,7 +530,7 @@ class Emitter {
 
 	emitFunctionTypeRef(typeRef: TypeRef) {
 		if (typeRef.kind !== TypeRefKind.FUNCTION) {
-			throw "not a TypeRef of kind TypeRefKind.FUNCTION: " + typeRef.kind;
+			throw "not a TypeRef of kind TypeRefKind.FUNCTION, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
 		this.emitSignature(typeRef.signature, true);
@@ -539,6 +548,16 @@ class Emitter {
 		} else {
 			buff.push("void");
 		}
+	}
+
+	emitObjectTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.OBJECT) {
+			throw "not a TypeRef of kind TypeRefKind.OBJECT, but got: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		buff.push("~Object with { ");
+		this.emitMembers(typeRef.members, undefined, false);
+		buff.push(" }");
 	}
 
 	emitComposedTypeRef(typeRefKind: TypeRefKind, memberTypeRefs: TypeRef[]) {
@@ -587,4 +606,13 @@ class Emitter {
 			buff.push('"');
 		}
 	}
+}
+
+
+export function createAnyPlus(): TypeRef {
+	const result = new TypeRef();
+	result.kind = TypeRefKind.NAMED;
+	result.targetTypeName = "any";
+	result.dynamic = true;
+	return result;
 }

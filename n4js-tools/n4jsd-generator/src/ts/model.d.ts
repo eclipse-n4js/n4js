@@ -146,7 +146,8 @@ export class TypeRef {
 	targetTypeName: string;
 	targetTypeArgs: TypeRef[];
 	signature: Signature;
-	memberTypeRefs: TypeRef[];
+	members: Member[];
+	composedTypeRefs: TypeRef[];
 	parenthesizedTypeRef: TypeRef;
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
@@ -155,3 +156,4 @@ export class TypeRef {
 }
 
 export function scriptToString(script: Script): string;
+export function createAnyPlus(): TypeRef;
