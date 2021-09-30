@@ -25,7 +25,6 @@ import org.eclipse.n4js.semver.Semver.VersionNumber
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
@@ -216,10 +215,10 @@ public final class ResourceNameComputer {
 	def private static String formatDescriptor(N4JSProjectConfigSnapshot project, String unitPath, String sep1, String sep2,
 		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
-		var projectName = project.n4JSProjectName
+		var packageName = project.packageName === null ? project.name : project.packageName;
 		var path = unitPath
 		if (asJsIdentifier) {
-			projectName = new N4JSProjectName(getValidJavascriptIdentifierName(project.name))
+			packageName = getValidJavascriptIdentifierName(packageName)
 			path = getValidUnitPath(unitPath)
 		}
 
@@ -228,10 +227,10 @@ public final class ResourceNameComputer {
 		}
 
 		if (useProjectVersion) {
-			return projectName + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
+			return packageName + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
 		}
 
-		return projectName + sep3 + path;
+		return packageName + sep3 + path;
 	}
 
 	/** Ensures that all parts of the unit path are valid JS identifiers */
