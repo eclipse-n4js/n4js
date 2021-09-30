@@ -91,7 +91,7 @@ class N4JSScopingTestWithIndexTest {
 				    <ownedMembers xsi:type="types:TField" name="s" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0"/>
 				      <typeRef xsi:type="typeRefs:ParameterizedTypeRef">
-				        <declaredType href="n4scheme:/builtin_js.n4ts#//@types.3"/>
+				        <declaredType href="n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.3"/>
 				      </typeRef>
 				    </ownedMembers>
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">

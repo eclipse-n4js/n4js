@@ -21,7 +21,7 @@ import org.eclipse.n4js.n4JS.TypedElement
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*

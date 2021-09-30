@@ -56,7 +56,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -142,7 +142,7 @@ public class PolyfillValidatorFragment {
 
 			final TypeReferenceNode<ParameterizedTypeRef> superClassRef = n4Class.getSuperClassRef();
 			final Type superType = superClassRef != null ? superClassRef.getTypeRef().getDeclaredType() : null;
-			if (!(superType instanceof TClassifier)) { // TClass or TObjectPrototype
+			if (!(superType instanceof TClassifier)) { // TClass or TInterface
 				return true; // consequential error
 			}
 			state.filledType = (TClassifier) superType;
@@ -379,7 +379,7 @@ public class PolyfillValidatorFragment {
 				.getResourceDescription(res), index);
 		// Iterable over all exported Polyfills
 		Iterable<IEObjectDescription> iterEObj = container.getExportedObjects(TypesPackage.Literals.TCLASSIFIER,
-				N4TSQualifiedNameProvider.getPolyfillFQN(state.filledType, qualifiedNameProvider), false);
+				PolyfillUtils.getPolyfillFQN(state.filledType, qualifiedNameProvider), false);
 
 		// collection of involved TModules for each Member.
 		ListMultimap<TMember, TModule> clashProviders = LinkedListMultimap.create();

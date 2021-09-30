@@ -17,8 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.ts.scoping.builtin.EnumerableScope;
-import org.eclipse.n4js.ts.scoping.builtin.ExecutionEnvironmentDescriptor;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -42,12 +40,12 @@ public final class GlobalObjectScope extends EnumerableScope {
 	 * Visible for testing purpose.
 	 */
 	@VisibleForTesting
-	public static final String[] FILE_NAMES = { "global.n4ts" };
+	public static final String[] FILE_NAMES = { "global.n4jsd" };
 
 	/**
 	 * The qualified name of the global object.
 	 */
-	protected static final QualifiedName GLOBAL_OBJECT = QualifiedName.create("GlobalObject");
+	protected static final QualifiedName GLOBAL_OBJECT = QualifiedName.create("global", "GlobalObject");
 
 	/**
 	 * Obtains an instance in the context of the given resourceSet.

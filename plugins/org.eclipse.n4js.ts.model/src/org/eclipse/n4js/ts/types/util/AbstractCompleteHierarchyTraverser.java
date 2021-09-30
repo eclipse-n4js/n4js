@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ts.types.util;
 
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.PrimitiveType;
 
 /**
  * A hierarchy traverser that will always traverse the complete hierarchy.
@@ -31,6 +32,12 @@ public abstract class AbstractCompleteHierarchyTraverser<Result> extends Abstrac
 		return false;
 	}
 
+	@Override
+	protected boolean process(PrimitiveType currentType) {
+		doProcess(currentType);
+		return false;
+	}
+
 	/**
 	 * Process the given container type. The traversal itself is handled by the super type.
 	 *
@@ -38,5 +45,13 @@ public abstract class AbstractCompleteHierarchyTraverser<Result> extends Abstrac
 	 *            the processed type.
 	 */
 	protected abstract void doProcess(ContainerType<?> currentType);
+
+	/**
+	 * Process the given primitive type. The traversal itself is handled by the super type.
+	 *
+	 * @param currentType
+	 *            the processed type.
+	 */
+	protected abstract void doProcess(PrimitiveType currentType);
 
 }

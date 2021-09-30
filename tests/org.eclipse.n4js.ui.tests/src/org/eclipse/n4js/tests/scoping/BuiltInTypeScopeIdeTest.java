@@ -11,7 +11,7 @@
 package org.eclipse.n4js.tests.scoping;
 
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.XtextResourceSet;

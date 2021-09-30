@@ -14,8 +14,9 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.symbol.XDocumentSymbolService;
@@ -91,10 +92,10 @@ public class N4JSDocumentSymbolService extends XDocumentSymbolService {
 		if (qualifiedName != null && segCount > 1) {
 			String first = qualifiedName.getFirstSegment();
 			String secondToLast = qualifiedName.getSegment(segCount - 2);
-			if (N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(first)) {
+			if (N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(first)) {
 				return "(global)";
-			} else if (N4TSQualifiedNameProvider.POLYFILL_SEGMENT.equals(secondToLast)) {
-				if (N4TSQualifiedNameProvider.MODULE_POLYFILL_SEGMENT.equals(first)) {
+			} else if (PolyfillUtils.POLYFILL_SEGMENT.equals(secondToLast)) {
+				if (PolyfillUtils.MODULE_POLYFILL_SEGMENT.equals(first)) {
 					qualifiedName = qualifiedName.skipFirst(1);
 				}
 				return qualifiedName.getSegmentCount() > 2

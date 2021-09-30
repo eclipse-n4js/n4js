@@ -58,24 +58,11 @@ class MultiSingletonExpectation {
 	// TODO GH-2061 investigate the new duplicates (compare to old test expectation above)
 
 	static def String get() '''
-		Found multiple instances for 19 singleton classes:
-		Singleton 'org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess' has 4 instances that have the following injectors:
+		Found multiple instances for 15 singleton classes:
+		Singleton 'org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess' has 3 instances that have the following injectors:
 			- JSON-Injector
 			- N4JS-Injector
 			- Regex-Injector
-			- Types-Injector
-		Singleton 'org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar' has 2 instances that have the following injectors:
-			- N4JS-Injector
-			- Types-Injector
-		Singleton 'org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider' has 2 instances that have the following injectors:
-			- N4JS-Injector
-			- Types-Injector
-		Singleton 'org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInSchemeProvider' has 2 instances that have the following injectors:
-			- N4JS-Injector
-			- Types-Injector
-		Singleton 'org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess' has 2 instances that have the following injectors:
-			- N4JS-Injector
-			- Types-Injector
 		Singleton 'org.eclipse.n4js.workspace.WorkspaceAccess' has 2 instances that have the following injectors:
 			- JSON-Injector
 			- N4JS-Injector

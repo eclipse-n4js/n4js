@@ -19,14 +19,12 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
+import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.semver.Semver.VersionNumber
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
@@ -95,12 +93,8 @@ public final class ResourceNameComputer {
 	 */
 	def String getFullyQualifiedTypeName(Type type) {
 		val EObject rootContainer = getRootContainer(type);
-		if (rootContainer instanceof TypeDefs) {
-			// 'type' is a built-in type
-			return getSimpleTypeName(type);
-		}
 		var QualifiedName moduleFQN = qualifiedNameProvider.getFullyQualifiedName(rootContainer);
-		if (N4TSQualifiedNameProvider.isModulePolyfill(moduleFQN)) {
+		if (PolyfillUtils.isModulePolyfill(moduleFQN)) {
 			// IDE-1735 strip the extra ModulePolyfill-marker
 			moduleFQN = moduleFQN.skipFirst(1);
 		}
@@ -221,10 +215,10 @@ public final class ResourceNameComputer {
 	def private static String formatDescriptor(N4JSProjectConfigSnapshot project, String unitPath, String sep1, String sep2,
 		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
-		var projectName = project.n4JSProjectName
+		var packageName = project.packageName === null ? project.name : project.packageName;
 		var path = unitPath
 		if (asJsIdentifier) {
-			projectName = new N4JSProjectName(getValidJavascriptIdentifierName(project.name))
+			packageName = getValidJavascriptIdentifierName(packageName)
 			path = getValidUnitPath(unitPath)
 		}
 
@@ -233,10 +227,10 @@ public final class ResourceNameComputer {
 		}
 
 		if (useProjectVersion) {
-			return projectName + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
+			return packageName + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
 		}
 
-		return projectName + sep3 + path;
+		return packageName + sep3 + path;
 	}
 
 	/** Ensures that all parts of the unit path are valid JS identifiers */

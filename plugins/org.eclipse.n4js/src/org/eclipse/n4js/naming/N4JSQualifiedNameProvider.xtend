@@ -24,7 +24,6 @@ import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
@@ -42,6 +41,11 @@ import org.eclipse.xtext.naming.QualifiedName
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.n4js.scoping.utils.PolyfillUtils
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
+import org.eclipse.xtext.naming.IQualifiedNameConverter
+import com.google.inject.Inject
 
 /**
  * Calculates the fully qualified name for the passed in objects.
@@ -49,7 +53,18 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * Be very careful when changing anything here as the FQN affects a lot of concepts, including scoping and even typing.
  * That is, elements are often handled differently if they have a qualified name or not.
  */
-class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
+class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
+
+	/**
+	 * The injected qualified name converter.
+	 */
+	@Inject
+	protected IQualifiedNameConverter converter;
+
+	/**
+	 * Segment used for the global module.
+	 */
+	public static String GLOBAL_NAMESPACE_SEGMENT = "#";
 
 	/** Last segment of fully qualified names for the root {@link JSONDocument} of package.json files. */
 	public static final String PACKAGE_JSON_SEGMENT = "!package_json";
@@ -115,7 +130,7 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 		if ( module.qualifiedName.length != 0 && ! AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
 			var plainQN = converter.toQualifiedName(module.qualifiedName);
 			if( module.isStaticPolyfillModule ) {
-				return prepend(MODULE_POLYFILL_SEGMENT, plainQN)
+				return QualifiedNameUtils.prepend(PolyfillUtils.MODULE_POLYFILL_SEGMENT, plainQN)
 			}
 			return plainQN
 		} else {
@@ -127,18 +142,18 @@ class N4JSQualifiedNameProvider extends N4TSQualifiedNameProvider {
 		var prefix = typeDecl.rootContainer.fullyQualifiedName;
 		if ( typeDecl.isPolyfill || typeDecl.isStaticPolyfill )
 		{
-			prefix = append(prefix, POLYFILL_SEGMENT);
+			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val fqn = append(prefix, typeDecl.exportedName ?: typeDecl.name);
+		val fqn = QualifiedNameUtils.append(prefix, typeDecl.exportedName ?: typeDecl.name);
 		return fqn;
 	}
 
 	private def QualifiedName fqnTClassifier(TClassifier tClassifier) {
 		var prefix = tClassifier.rootContainer.fullyQualifiedName;
 		if (tClassifier.polyfill) {
-			prefix = append(prefix, POLYFILL_SEGMENT);
+			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val fqn = append(prefix, tClassifier.exportedName ?: tClassifier.name);
+		val fqn = QualifiedNameUtils.append(prefix, tClassifier.exportedName ?: tClassifier.name);
 		return fqn;
 	}
 

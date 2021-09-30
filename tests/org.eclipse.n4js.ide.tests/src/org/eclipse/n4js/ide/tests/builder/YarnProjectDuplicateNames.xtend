@@ -40,7 +40,6 @@ class YarnProjectDuplicateNames extends AbstractIncrementalBuilderTest {
 		]
 	];
 
-	@Ignore // GH-2143
 	@Test
 	def void projectEqualsWorkspaceName() throws Exception {
 		testWorkspaceManager.createTestOnDisk(testData1);
@@ -50,7 +49,10 @@ class YarnProjectDuplicateNames extends AbstractIncrementalBuilderTest {
 		val workspaceConfig = concurrentIndex.getWorkspaceConfigSnapshot();
 		val projects = workspaceConfig.projects as Iterable<ProjectConfigSnapshot>;
 		assertEquals(
-			"yarn-test-project, yarn-test-project, someProject2, n4js-runtime",
+			"yarn-test-project, "+
+			"yarn-test-project/packages/someProject2, "+
+			"yarn-test-project/packages/yarn-test-project, "+
+			"yarn-test-project/node_modules/n4js-runtime",
 			Strings.join(", ", [p|p.name], projects)
 		);
 	}

@@ -33,7 +33,7 @@ import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;

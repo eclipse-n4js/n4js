@@ -11,7 +11,6 @@
 @@Global @@ProvidedByRuntime
 
 
-@Final
 @Polyfill export external public class Date extends Date {
 	/**
 	 * Returns formatted date time using locales and options as defined in 
@@ -44,4 +43,3 @@
 	@Override
 	public toLocaleTimeString(locales: string | string[]=, options: ~r~DateTimeFormatOptions=): string
 }
-

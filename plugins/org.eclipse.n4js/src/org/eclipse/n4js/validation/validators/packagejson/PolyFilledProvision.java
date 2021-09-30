@@ -12,7 +12,7 @@ package org.eclipse.n4js.validation.validators.packagejson;
 
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -69,7 +69,7 @@ public class PolyFilledProvision {
 		// Assumption: 2nd-last segment is "!POLY"
 		String last = qualifiedName.getLastSegment();
 		String poly = qualifiedName.skipLast(1).getLastSegment();
-		assert (N4TSQualifiedNameProvider.POLYFILL_SEGMENT.equals(poly));
+		assert (PolyfillUtils.POLYFILL_SEGMENT.equals(poly));
 		QualifiedName ret = qualifiedName.skipLast(2).append(last);
 		return ret.toString();
 	}
@@ -81,7 +81,7 @@ public class PolyFilledProvision {
 	 */
 	public static boolean isPolyfill(IEObjectDescription description) {
 		return description.getQualifiedName().getSegments().stream()
-				.anyMatch(it -> N4TSQualifiedNameProvider.POLYFILL_SEGMENT.equals(it));
+				.anyMatch(it -> PolyfillUtils.POLYFILL_SEGMENT.equals(it));
 	}
 
 }

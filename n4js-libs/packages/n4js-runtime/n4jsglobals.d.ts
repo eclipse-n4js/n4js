@@ -15,7 +15,7 @@
 // a bare import of 'n4js-runtime' which will load this file.
 
 
-// Merged from primitives_js.n4ts
+// Merged from primitives.n4jsd
 
 declare type pathSelector<T> = string;
 declare type i18nKey = string;
@@ -33,19 +33,7 @@ declare type typeName<T> = string;
 declare type IteratorExt<T> = Iterator<T> & Iterable<T>;
 
 
-// Merged from builtin_n4.n4ts
-
-/**
- * Work-around:
- * Temporary class to define the return type of methods String#match() and RegExp#exec(), because
- * .n4ts files do not properly support "with"-clauses of structural types (see IDEBUG-273).
- */
-declare class TEMP_ReturnTypeOfMatchExec extends Array<string> {
-    public index: number;
-    public input: string;
-    public groups?: any;
-}
-
+// Merged from builtin_n4.n4jsd
 
 /**
  * Base class for all N4 reflective elements.

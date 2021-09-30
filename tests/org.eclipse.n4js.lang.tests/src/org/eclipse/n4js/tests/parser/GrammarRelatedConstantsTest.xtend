@@ -13,7 +13,7 @@ package org.eclipse.n4js.tests.parser
 import com.google.common.collect.Sets
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSLanguageConstants
-import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess
+import org.eclipse.n4js.services.TypeExpressionsGrammarAccess
 import org.eclipse.xtext.Alternatives
 import org.eclipse.xtext.Keyword
 import org.junit.Test

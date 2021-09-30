@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
 import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;

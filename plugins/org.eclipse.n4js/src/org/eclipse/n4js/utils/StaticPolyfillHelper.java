@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.Type;
@@ -80,7 +80,7 @@ public final class StaticPolyfillHelper {
 					final QualifiedName qnFilled = qualifiedNameConverter
 							.toQualifiedName(res.getModule().getQualifiedName());
 					final IResourceDescriptions index = indexAccess.getResourceDescriptions(res.getResourceSet());
-					final java.util.Optional<QualifiedName> optQnFilling = N4TSQualifiedNameProvider
+					final java.util.Optional<QualifiedName> optQnFilling = PolyfillUtils
 							.toStaticPolyfillFQN(qnFilled);
 					if (optQnFilling.isPresent()) {
 						final QualifiedName qnFilling = optQnFilling.get();

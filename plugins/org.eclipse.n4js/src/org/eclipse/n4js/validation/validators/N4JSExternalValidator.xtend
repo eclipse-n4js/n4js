@@ -41,10 +41,8 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -240,10 +238,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	def private handleN4ClassDeclaration(ExportDeclaration eo, N4ClassDeclaration exported) {
 		validateClassifierIsExternal(exported.external, "classes", eo)
 		// relaxed by IDEBUG-561:	exported.validateClassifierIsPublicApi("classes", eo)
-		if (AnnotationDefinition.N4JS.hasAnnotation(exported)) {
-			validateExtensionOfNotAnnotatedClass(exported, eo)
-			validateConsumptionOfNonAnnotatedInterfaces(exported.implementedInterfaceRefs, eo, "classes")
-		} else {
+		if (!AnnotationDefinition.N4JS.hasAnnotation(exported)) {
 			val superClass = exported.superClassRef?.typeRef?.hasExpectedTypes(TClass)
 			validateNonAnnotatedClassDoesntExtendN4Object(exported, superClass, eo)
 			validateConsumptionOfNonExternalInterfaces(exported.implementedInterfaceRefs, eo, "classes")
@@ -256,12 +251,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	def private handleN4InterfaceDeclaration(ExportDeclaration eo, N4InterfaceDeclaration exported) {
 		if (exported.typingStrategy == TypingStrategy.NOMINAL || exported.typingStrategy == TypingStrategy.DEFAULT) {
 			validateClassifierIsExternal(exported.external, "interfaces", eo)
-		}
-		// relaxed by IDEBUG-561:		exported.validateClassifierIsPublicApi("interfaces", eo)
-		if (AnnotationDefinition.N4JS.hasAnnotation(exported)) {
-			validateConsumptionOfNonAnnotatedInterfaces(exported.superInterfaceRefs, eo, "interfaces")
-		} else {
-			validateConsumptionOfNonExternalInterfaces(exported.superInterfaceRefs, eo, "interfaces")
 		}
 		validateNoObservableAtClassifier(eo, exported, "interfaces")
 		validateMembers(exported, "interfaces")
@@ -373,7 +362,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private validateNonAnnotatedClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType,
 		ExportDeclaration eo) {
-		if (superType !== null && ! superType.isExternal) {
+		if (superType !== null && (!superType.isExternal || AnnotationDefinition.N4JS.hasAnnotation(superType))) {
 			val message = messageForCLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT
 			val eObjectToNameFeature = eo.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,
@@ -386,76 +375,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			val message = getMessageForCLF_EXT_EXTERNAL(classifiers)
 			val eObjectToNameFeature = eo.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_EXTERNAL)
-		}
-	}
-
-	def private validateExtensionOfNotAnnotatedClass(N4ClassDeclaration exportedWithN4JSAnnotation,
-		ExportDeclaration eo) {
-		val TClass superClass = exportedWithN4JSAnnotation.superClassType
-		if (superClass !== null) {
-			if (superClass.isExternal) {
-				validateSuperClassAnnotatedWithN4JS(superClass, eo)
-			}
-		} else {
-			val superType = exportedWithN4JSAnnotation.superClassRef?.typeRef?.declaredType
-			if (superType !== null && !"N4Object".equals(superType.name) && !isSubtypeOfError(superType)) {
-				handleSuperClassNotAnnotatedWithN4JS(eo)
-			}
-		}
-	}
-
-	/**
-	 * Returns with {@code true} if the type argument is a subtype of Error. Could be direct or implicit subtype as well.
-	 * 13.1 ExternalDeclarations, Constraints 144/c (External allowed occurrences)
-	 *
-	 * @see IDEBUG-512
-	 */
-	def private isSubtypeOfError(Type type) {
-		var toPrototype = [Type t|if (t instanceof TObjectPrototype) t else null];
-		var TObjectPrototype prototype = toPrototype.apply(type);
-		while (null !== prototype) {
-			val G = RuleEnvironmentExtensions.newRuleEnvironment(prototype);
-			if (RuleEnvironmentExtensions.errorType(G) === prototype) {
-				return true;
-			}
-			prototype = toPrototype.apply(prototype?.superType?.declaredType);
-		}
-		return false;
-	}
-
-	def private validateSuperClassAnnotatedWithN4JS(TClass classifier, ExportDeclaration eo) {
-		if (!AnnotationDefinition.N4JS.hasAnnotation(classifier)) {
-			handleSuperClassNotAnnotatedWithN4JS(eo)
-		}
-	}
-
-	private def handleSuperClassNotAnnotatedWithN4JS(ExportDeclaration eo) {
-		val message = messageForCLF_EXT_ANNOTATED_EXTEND
-		val eObjectToNameFeature = eo.findNameFeature
-		addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_ANNOTATED_EXTEND)
-	}
-
-	def private getSuperClassType(N4ClassDeclaration exported) {
-		exported.superClassRef?.typeRef?.hasExpectedTypes(TClass)
-	}
-
-	def private validateConsumptionOfNonAnnotatedInterfaces(
-		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces,
-		ExportDeclaration eo, String classifiers) {
-
-		for (TInterface tinterface : superInterfaces.map[typeRef].map[hasExpectedTypes(TInterface)].filter[it !== null]) {
-			validateConsumptionOfNonExternalInterface(tinterface, classifiers, eo)
-			validateConsumptionOfNonAnnotatedRole(tinterface, classifiers, eo)
-		}
-	}
-
-	private def validateConsumptionOfNonAnnotatedRole(TInterface consumedRole, String classifiers,
-		ExportDeclaration eo) {
-		if (!AnnotationDefinition.N4JS.hasAnnotation(consumedRole) &&
-			consumedRole.typingStrategy != TypingStrategy.STRUCTURAL) {
-			val message = getMessageForCLF_EXT_ANNOTATED_CONSUME(classifiers)
-			val eObjectToNameFeature = eo.findNameFeature
-			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_ANNOTATED_CONSUME)
 		}
 	}
 

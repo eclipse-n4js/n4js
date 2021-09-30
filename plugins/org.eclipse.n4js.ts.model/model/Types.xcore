@@ -43,16 +43,6 @@ type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
 
-/*
- * Container used when explicitly defining types, e.g., for defining built in types or for tests.
- */
-class TypeDefs {
-	/*
-	 * Types defined in a single file. These types must not reference external types.
-	 */
-	contains Type[] types
-}
-
 /**
  * The TModule is the representation of the script on the type level.
  */
@@ -748,7 +738,7 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	transient EMap<NameAndAccess, ? extends TMember> ownedMembersByNameAndAccess
 
 	contains MT[] ownedMembers
-	contains TMethod callableCtor // required in TClass and TObjectPrototype
+	contains TMethod callableCtor // required in TClass
 
 	/**
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.
@@ -805,18 +795,6 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 }
 
 /*
- * Used for predefining members shared by all types of a certain meta-tyes, such as
- * enumerations all providing a getter method value. It sole purpose is to mix in the defined members here into the
- * actual types transparently inheriting from that type.
- */
-class VirtualBaseType extends ContainerType<TMember>, ArrayLike {
-	/*
-	 * Directly contained members, that is predefined members of all enums
-	 */
-	contains TMember[] declaredOwnedMembers
-}
-
-/*
  * Virtual type for ES6 namespace imports. Not directly available for N4JS users, can be used only
  * like TypeReferenceName. See ES6::9.4.6 Module Namespace Exotic Objects
  */
@@ -838,9 +816,9 @@ class ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement {
 }
 
 /*
- * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot be parameterized.
+ * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot have members.
  */
-class PrimitiveType extends ContainerType<TMember>, ArrayLike {
+class PrimitiveType extends GenericType, ArrayLike {
 	/*
 	 * Specifies a type to and from which this type is assignment compatible.
 	 * Only used for special stringish types such as typename or pathSelector,
@@ -866,7 +844,7 @@ class BuiltInType extends Type {
 
 class AnyType extends BuiltInType {
 	/**
-	 * Of course any can be subtyped, it is the bottom type.
+	 * Of course any can be subtyped, it is the top type.
 	 */
 	op boolean isFinal() {
 		return false;
@@ -1057,27 +1035,6 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 	}
 }
 
-/*
- * Plain JavaScript objects with super type (=prototype).
- * This is used for defining predefined types such as Object, String, Date etc.
- */
-class TObjectPrototype extends TClassifier, AccessibleTypeElement, ArrayLike {
-	contains ParameterizedTypeRef superType
-
-	boolean declaredFinal
-
-	op TMethod getOwnedCtor() {
-		return ownedMembers.filter(TMethod).findFirst[name.equals('constructor')]
-	}
-
-	/**
-	 * Returns value of declaredFinal attribute.
-	 */
-	op boolean isFinal() {
-		return declaredFinal;
-	}
-}
-
 /**
  * 'Trait' that allows to mark a certain type as "array like". If an elementType is
  * provided, that one is assumed to be the return type of index access expressions with a numeric index.
@@ -1097,7 +1054,7 @@ abstract class ArrayLike {
 	op TypeRef getElementType()
 }
 
-class TN4Classifier extends TClassifier, AccessibleTypeElement, TMigratable {
+class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike, TMigratable {
 	/*
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */

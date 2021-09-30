@@ -142,9 +142,6 @@ public class ImportsAwareReferenceProposalCreator {
 		if (TypesPackage.eINSTANCE.getBuiltInType() == eClass) {
 			return ContentAssistEntry.KIND_CLASS;
 		}
-		if (TypesPackage.eINSTANCE.getTObjectPrototype() == eClass) {
-			return ContentAssistEntry.KIND_CLASS;
-		}
 		if (TypesPackage.eINSTANCE.getPrimitiveType() == eClass) {
 			return ContentAssistEntry.KIND_KEYWORD;
 		}

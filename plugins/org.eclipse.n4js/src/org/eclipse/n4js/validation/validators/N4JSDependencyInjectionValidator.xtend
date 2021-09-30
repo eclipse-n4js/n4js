@@ -31,6 +31,8 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -46,14 +48,12 @@ import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.ts.types.VirtualBaseType
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
@@ -134,7 +134,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		if (staticType === null || staticType.eIsProxy)
 			return;
 		if (!(staticType instanceof TClass)) {
-			// in "new C" ignore C being TObjectPrototype or TInterface
+			// in "new C" ignore C being TInterface, primitive type, etc.
 			return;
 		}
 
@@ -891,8 +891,9 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		if (declType instanceof PrimitiveType) {
 			return false;
 		}
-		// declared type must not be a built-in type
-		if (declType instanceof BuiltInType || declType instanceof TObjectPrototype || declType instanceof VirtualBaseType) {
+		// declared type must not be a built-in type (except N4Provider)
+		if (declType instanceof BuiltInType
+			|| (N4Scheme.isFromResourceWithN4Scheme(declType) && declType.name != BuiltInTypeScope.QN_N4PROVIDER.toString)) {
 			return false;
 		}
 		// declared type must be a class or interface

@@ -42,7 +42,7 @@ import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType
-import org.eclipse.n4js.ts.validation.TypesKeywordProvider
+import org.eclipse.n4js.validation.utils.TypesKeywordProvider
 
 /**
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.

@@ -17,7 +17,6 @@ import java.util.Comparator
 import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.compileTime.CompileTimeEvaluationError
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator.UnresolvedPropertyAccessError
 import org.eclipse.n4js.compileTime.CompileTimeValue
@@ -67,10 +66,10 @@ import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.ExpressionExtensions
-import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
@@ -108,15 +107,13 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -652,8 +649,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_STRUCTURAL_TYPES(staticType.name);
 						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
 							IssueCodes.TYS_INSTANCEOF_NOT_SUPPORTED_FOR_STRUCTURAL_TYPES);
-					} else if (staticType instanceof TInterface &&
-						EcoreUtil.getRootContainer(staticType) instanceof TypeDefs) {
+					} else if (staticType instanceof TInterface && N4Scheme.isFromResourceWithN4Scheme(staticType)) {
 						val message = IssueCodes.
 							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_BUILT_IN_INTERFACES(staticType.name);
 						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
@@ -1241,6 +1237,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				castExpression, IssueCodes.EXP_CAST_UNNECESSARY);
 		} else {
 			val specialChecks = (T.declaredType instanceof ContainerType<?>)
+				|| (T.declaredType instanceof PrimitiveType)
 				|| (T.declaredType instanceof TEnum)
 				|| (T.declaredType instanceof TypeVariable)
 				|| (T instanceof TypeTypeRef)
@@ -1415,8 +1412,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (d !== null) {
 			val concreteMetaType = d instanceof TClass
 				|| d instanceof TEnum
-				|| d instanceof PrimitiveType
-				|| d instanceof TObjectPrototype;
+				|| d instanceof PrimitiveType;
 			return concreteMetaType;
 		}
 
@@ -1515,7 +1511,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		TypeRef receiverTypeRef, CompileTimeValue indexValue, boolean indexIsNumeric) {
 
 		val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);
-		if (ComputedPropertyNameValueConverter.SYMBOL_ITERATOR_MANGLED == memberName) {
+		if (N4JSLanguageUtils.SYMBOL_ITERATOR_MANGLED == memberName) {
 			// Implementation restriction: member name clashes with compiler-internal, synthetic, mangled name.
 			addIssue(getMessageForEXP_INDEXED_ACCESS_IMPL_RESTRICTION(), indexedAccess,
 				EXP_INDEXED_ACCESS_IMPL_RESTRICTION);
@@ -1619,7 +1615,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				return false;
 			}
 			TField case !id.writeable: {
-				// note: this case can happen only when referring to globals in GlobalObject (see file global.n4ts);
+				// note: this case can happen only when referring to globals in GlobalObject (see file global.n4jsd);
 				// in all other cases of referencing a field, 'lhs' will be a PropertyAccessExpression (those cases
 				// will be handled in class AbstractMemberScope as part of scoping)
 				addIssue(

@@ -48,7 +48,7 @@ public class ExtendedClassesIterable implements Iterable<TClass> {
 				return null;
 			}
 			final Type superType = superTypeRef.getDeclaredType();
-			if (superType instanceof TClass) { // if someone extends Object explicitly, we get a TObjectPrototype here!
+			if (superType instanceof TClass) { // if someone extends Object explicitly, we will traverse it here!
 				final TClass superClass = (TClass) superType;
 				if (guard.tryNext(superClass)) {
 					return superClass;

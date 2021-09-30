@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
@@ -38,6 +39,8 @@ import com.google.gson.JsonElement;
  * </ul>
  */
 public class DtsAfterBuildListener implements AfterBuildListener {
+	private final Logger LOGGER = Logger.getLogger(this.getClass());
+
 	final N4JSProjectConfigSnapshot projectConfig;
 	final File tsconfig;
 
@@ -54,7 +57,7 @@ public class DtsAfterBuildListener implements AfterBuildListener {
 				ensureTSConfig();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Could not read tsconfig.json: " + tsconfig.toString(), e);
 		}
 	}
 

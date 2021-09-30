@@ -13,13 +13,12 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Function;
-
-import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 
 /**
  * Maps an {code IEObjectDescription} to a string with name and position (resource, and optionally line number), with
@@ -73,13 +72,12 @@ public class EObjectDescriptionToNameWithPositionMapper implements Function<IEOb
 	 * the type is build) is located in same file on line 23</td>
 	 * </tr>
 	 * <tr>
-	 * <td><code>Infinity - global.n4ts:3</code></td>
-	 * <td>An element "Infinity", located in another resource "global.n4ts" on line 3.</td>
+	 * <td><code>Infinity - global.n4jsd:3</code></td>
+	 * <td>An element "Infinity", located in another resource "global.n4jsd" on line 3.</td>
 	 * </tr>
 	 * <tr>
-	 * <td><code>decodeURI - global.n4ts:11</code></td>
-	 * <td>An element "decodeURI", located in another resource "global.n4ts" on line 11. Although the element may be a
-	 * type, there is no syntax related element because "n4ts" directly describes types.</td>
+	 * <td><code>decodeURI - global.n4jsd:11</code></td>
+	 * <td>An element "decodeURI", located in another resource "global.n4jsd" on line 11.</td>
 	 * </tr>
 	 * </table>
 	 *

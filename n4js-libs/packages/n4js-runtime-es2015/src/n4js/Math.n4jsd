@@ -10,7 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill export @Final external public class Math extends Math {
+@Polyfill export external public class Math extends Math {
     public static log10(x: number): number;
     public static log2(x: number): number;
     public static log1p(x: number): number;
@@ -29,4 +29,3 @@
     public static clz32(x: number): number;
     public static fround(x: number): number;
 }
-

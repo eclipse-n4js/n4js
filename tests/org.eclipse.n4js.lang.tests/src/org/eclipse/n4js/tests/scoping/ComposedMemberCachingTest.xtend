@@ -20,7 +20,7 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.junit.Test

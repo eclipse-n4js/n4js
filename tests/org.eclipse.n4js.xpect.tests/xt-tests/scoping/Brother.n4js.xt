@@ -50,7 +50,7 @@ N4Accessor, N4Annotation, N4Class, N4Classifier, N4DataField, N4Element, N4Enum,
 N4EnumType, N4Interface, N4Member, N4Method, N4NamedElement, N4Object, N4Provider,
 N4StringBasedEnum,
 N4Type, N4ApiNotImplementedError, Number, Object, Promise, RangeError, ReferenceError, RegExp, !Sister,
-SisterObject, String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError, URIError, any, boolean, console, i18nKey,
+SisterObject, String, Symbol, SyntaxError, TypeError, URIError, any, boolean, console, i18nKey,
 number, int, pathSelector, string, symbol, typeName, undefined, void
 ---*/
 	project getSister() : SisterObject { return null; }

@@ -1163,7 +1163,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 		// we will get here if
 		// a) we have an Xtext lazy linking proxy or
-		// b) targetUri points to an n4ts resource or some other, non-N4JS resource
+		// b) targetUri points to a json resource or some other, non-N4JS resource
 		// --> above special handling not required, so just apply EMF's default resolution behavior
 		return EcoreUtil.resolve(proxy, this);
 	}
