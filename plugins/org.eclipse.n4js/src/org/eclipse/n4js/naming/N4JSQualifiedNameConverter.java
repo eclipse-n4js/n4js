@@ -12,8 +12,9 @@ package org.eclipse.n4js.naming;
 
 import java.util.List;
 
-import org.eclipse.n4js.ts.naming.N4TSQualifiedNameConverter;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.collect.Lists;
@@ -21,16 +22,15 @@ import com.google.common.collect.Lists;
 /**
  * Changes separator for string representations of qualified names to "/".
  */
-public class N4JSQualifiedNameConverter extends N4TSQualifiedNameConverter {
+public class N4JSQualifiedNameConverter extends IQualifiedNameConverter.DefaultImpl {
 
-	/**
-	 * Delimiter used in string representations of fully-qualified names.
-	 * <p>
-	 * Copied from super class to avoid annoying warnings when accessing the constant via this class:
-	 * "The static field N4TSQualifiedNameConverter.DELIMITER should be accessed directly".
-	 */
-	@SuppressWarnings("hiding")
-	public static final String DELIMITER = N4TSQualifiedNameConverter.DELIMITER;
+	/** See {@link N4JSGlobals#QUALIFIED_NAME_DELIMITER}. */
+	public static final String DELIMITER = N4JSGlobals.QUALIFIED_NAME_DELIMITER;
+
+	@Override
+	public String getDelimiter() {
+		return DELIMITER;
+	}
 
 	@Override
 	public QualifiedName toQualifiedName(String qualifiedNameAsString) {

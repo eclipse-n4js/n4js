@@ -10,8 +10,6 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill @Final export external public class RegExp extends RegExp {
+@Polyfill export external public class RegExp extends RegExp {
     public get flags(): string;
 }
-
-

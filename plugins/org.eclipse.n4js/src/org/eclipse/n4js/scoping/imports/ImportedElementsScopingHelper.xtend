@@ -31,13 +31,13 @@ import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
 import org.eclipse.n4js.scoping.utils.BetterScopesHelper
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.UberParentScope
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType

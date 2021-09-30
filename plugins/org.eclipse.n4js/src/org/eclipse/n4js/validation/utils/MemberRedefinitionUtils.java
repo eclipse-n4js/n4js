@@ -92,11 +92,8 @@ public class MemberRedefinitionUtils {
 				.collect(Collectors.toSet());
 
 		boolean isOverridingSuperclassMember = overriddenClassifierTypes.contains(TypesPackage.eINSTANCE.getTClass());
-		boolean isOverridingObjectPrototypeMembers = overriddenClassifierTypes
-				.contains(TypesPackage.eINSTANCE.getTObjectPrototype());
-
 		boolean isImplementing = overriddenClassifierTypes.contains(TypesPackage.eINSTANCE.getTInterface());
-		boolean isOverriding = isOverridingSuperclassMember || isOverridingObjectPrototypeMembers;
+		boolean isOverriding = isOverridingSuperclassMember;
 		boolean isInterfaceExtendingInterface = redefiningClassifier instanceof TInterface;
 
 		if (isOverriding && isImplementing) {

@@ -15,7 +15,7 @@ import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope;
 import org.eclipse.n4js.scoping.utils.ExpressionExtensions;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.resource.IEObjectDescription;

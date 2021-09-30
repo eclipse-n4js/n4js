@@ -13,16 +13,15 @@ package org.eclipse.n4js.validation.validators;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.ArrowFunction;
+import org.eclipse.n4js.types.utils.LambdaUtils;
+import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.n4JS.ArrowFunction;
-import org.eclipse.n4js.ts.utils.LambdaUtils;
-import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
-import org.eclipse.n4js.validation.IssueCodes;
 
 /**
  */

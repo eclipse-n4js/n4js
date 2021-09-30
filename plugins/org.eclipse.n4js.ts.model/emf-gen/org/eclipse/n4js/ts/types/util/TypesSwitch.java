@@ -76,12 +76,6 @@ public class TypesSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case TypesPackage.TYPE_DEFS: {
-				TypeDefs typeDefs = (TypeDefs)theEObject;
-				T result = caseTypeDefs(typeDefs);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypesPackage.TMODULE: {
 				TModule tModule = (TModule)theEObject;
 				T result = caseTModule(tModule);
@@ -255,21 +249,6 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypesPackage.VIRTUAL_BASE_TYPE: {
-				VirtualBaseType virtualBaseType = (VirtualBaseType)theEObject;
-				T result = caseVirtualBaseType(virtualBaseType);
-				if (result == null) result = caseContainerType(virtualBaseType);
-				if (result == null) result = caseArrayLike(virtualBaseType);
-				if (result == null) result = caseGenericType(virtualBaseType);
-				if (result == null) result = caseType(virtualBaseType);
-				if (result == null) result = caseTExportableElement(virtualBaseType);
-				if (result == null) result = caseTAnnotableElement(virtualBaseType);
-				if (result == null) result = caseVersionable(virtualBaseType);
-				if (result == null) result = caseIdentifiableElement(virtualBaseType);
-				if (result == null) result = caseTypableElement(virtualBaseType);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE: {
 				ModuleNamespaceVirtualType moduleNamespaceVirtualType = (ModuleNamespaceVirtualType)theEObject;
 				T result = caseModuleNamespaceVirtualType(moduleNamespaceVirtualType);
@@ -286,9 +265,8 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.PRIMITIVE_TYPE: {
 				PrimitiveType primitiveType = (PrimitiveType)theEObject;
 				T result = casePrimitiveType(primitiveType);
-				if (result == null) result = caseContainerType(primitiveType);
-				if (result == null) result = caseArrayLike(primitiveType);
 				if (result == null) result = caseGenericType(primitiveType);
+				if (result == null) result = caseArrayLike(primitiveType);
 				if (result == null) result = caseType(primitiveType);
 				if (result == null) result = caseTExportableElement(primitiveType);
 				if (result == null) result = caseTAnnotableElement(primitiveType);
@@ -428,25 +406,6 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypesPackage.TOBJECT_PROTOTYPE: {
-				TObjectPrototype tObjectPrototype = (TObjectPrototype)theEObject;
-				T result = caseTObjectPrototype(tObjectPrototype);
-				if (result == null) result = caseTClassifier(tObjectPrototype);
-				if (result == null) result = caseAccessibleTypeElement(tObjectPrototype);
-				if (result == null) result = caseArrayLike(tObjectPrototype);
-				if (result == null) result = caseContainerType(tObjectPrototype);
-				if (result == null) result = caseSyntaxRelatedTElement(tObjectPrototype);
-				if (result == null) result = caseTVersionable(tObjectPrototype);
-				if (result == null) result = caseGenericType(tObjectPrototype);
-				if (result == null) result = caseType(tObjectPrototype);
-				if (result == null) result = caseTExportableElement(tObjectPrototype);
-				if (result == null) result = caseTAnnotableElement(tObjectPrototype);
-				if (result == null) result = caseVersionable(tObjectPrototype);
-				if (result == null) result = caseIdentifiableElement(tObjectPrototype);
-				if (result == null) result = caseTypableElement(tObjectPrototype);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypesPackage.ARRAY_LIKE: {
 				ArrayLike arrayLike = (ArrayLike)theEObject;
 				T result = caseArrayLike(arrayLike);
@@ -458,6 +417,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseTN4Classifier(tn4Classifier);
 				if (result == null) result = caseTClassifier(tn4Classifier);
 				if (result == null) result = caseAccessibleTypeElement(tn4Classifier);
+				if (result == null) result = caseArrayLike(tn4Classifier);
 				if (result == null) result = caseTMigratable(tn4Classifier);
 				if (result == null) result = caseContainerType(tn4Classifier);
 				if (result == null) result = caseSyntaxRelatedTElement(tn4Classifier);
@@ -478,6 +438,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTN4Classifier(tClass);
 				if (result == null) result = caseTClassifier(tClass);
 				if (result == null) result = caseAccessibleTypeElement(tClass);
+				if (result == null) result = caseArrayLike(tClass);
 				if (result == null) result = caseTMigratable(tClass);
 				if (result == null) result = caseContainerType(tClass);
 				if (result == null) result = caseSyntaxRelatedTElement(tClass);
@@ -498,6 +459,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTN4Classifier(tInterface);
 				if (result == null) result = caseTClassifier(tInterface);
 				if (result == null) result = caseAccessibleTypeElement(tInterface);
+				if (result == null) result = caseArrayLike(tInterface);
 				if (result == null) result = caseTMigratable(tInterface);
 				if (result == null) result = caseContainerType(tInterface);
 				if (result == null) result = caseSyntaxRelatedTElement(tInterface);
@@ -774,21 +736,6 @@ public class TypesSwitch<T> extends Switch<T> {
 			}
 			default: return defaultCase(theEObject);
 		}
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Type Defs</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Type Defs</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTypeDefs(TypeDefs object) {
-		return null;
 	}
 
 	/**
@@ -1092,21 +1039,6 @@ public class TypesSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Virtual Base Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Virtual Base Type</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseVirtualBaseType(VirtualBaseType object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Module Namespace Virtual Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1283,21 +1215,6 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTClassifier(TClassifier object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>TObject Prototype</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>TObject Prototype</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTObjectPrototype(TObjectPrototype object) {
 		return null;
 	}
 

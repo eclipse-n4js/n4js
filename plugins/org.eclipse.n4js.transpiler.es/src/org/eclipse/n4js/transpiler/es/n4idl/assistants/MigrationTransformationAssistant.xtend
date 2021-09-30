@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.n4idl.assistants
 
 import com.google.inject.Inject
 import java.util.List
+import java.util.Optional
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
@@ -33,11 +34,9 @@ import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TMigratable
 import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import java.util.Optional
 
 /**
  * Transformation assistant for generating migration-support related ES code.
@@ -185,8 +184,8 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 	/** 
 	 * Returns an {@link ArrayElement} which represents the given {@link Type} at runtime.
 	 * 
-	 * For instance, for {@link TN4Classifier}s or {@link TObjectPrototype}s that is an 
-	 * instance of {@code type{Object}} and for primitive types that is a string {@code "primitive"}.
+	 * For instance, for {@link TN4Classifier}s that is an  instance of {@code type{Object}}
+	 * and for primitive types that is a string {@code "primitive"}.
 	 * 
 	 * {@link TypeTypeRef}s are represented as plain object of the form <code>{type: <constructor/type ref>}</code>
 	 * 
@@ -200,8 +199,6 @@ class MigrationTransformationAssistant extends TransformationAssistant {
 						_ArrayElement(_IdentRef(getSymbolTableEntryOriginal(typeRef.declaredType, true)))
 					PrimitiveType:
 						_ArrayElement(_StringLiteral("primitive"))
-					TObjectPrototype:
-						_ArrayElement(_IdentRef(getSymbolTableEntryOriginal(typeRef.declaredType, true)))
 				}
 			TypeTypeRef:
 						_ArrayElement(_ObjLit("type" -> _IdentRef(getSymbolTableEntryOriginal(getType(typeRef), true))))

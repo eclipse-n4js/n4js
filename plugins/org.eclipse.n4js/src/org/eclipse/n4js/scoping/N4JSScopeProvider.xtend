@@ -65,7 +65,6 @@ import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.tooling.react.ReactHelper
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -75,7 +74,6 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
-import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -623,11 +621,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			FunctionTypeExpression: {
 				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
 				return locallyKnownTypesScopingHelper.scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
-			}
-			TypeDefs: {
-				// This case applies when a scope for the built-in type definition
-				// files (builtin_n4.n4ts) is requested. This can simply be handled by a BuiltInTypeScope.
-				return BuiltInTypeScope.get(context.eResource.resourceSet);
 			}
 			default: {
 				val container = context.eContainer;

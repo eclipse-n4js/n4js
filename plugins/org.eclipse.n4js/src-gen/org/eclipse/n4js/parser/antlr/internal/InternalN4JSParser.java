@@ -865,7 +865,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       										current,
                                       										"typingStrategy",
                                       										lv_typingStrategy_12_0,
-                                      										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+                                      										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
                                       									afterParserOrEnumRuleCall();
                                     }
                                     }
@@ -889,7 +889,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               										current,
                               										"name",
                               										lv_name_13_0,
-                              										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                              										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                               									afterParserOrEnumRuleCall();
                             }
                             }
@@ -1046,7 +1046,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       										current,
                                       										"typingStrategy",
                                       										lv_typingStrategy_20_0,
-                                      										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+                                      										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
                                       									afterParserOrEnumRuleCall();
                                     }
                                     }
@@ -1070,7 +1070,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               										current,
                               										"name",
                               										lv_name_21_0,
-                              										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                              										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                               									afterParserOrEnumRuleCall();
                             }
                             }
@@ -1238,7 +1238,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_29_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -1410,7 +1410,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_39_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -2101,7 +2101,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"alias",
                       							lv_alias_2_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+                      							"org.eclipse.n4js.TypeExpressions.IdentifierName");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -2678,7 +2678,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       										current,
                                       										"typingStrategy",
                                       										lv_typingStrategy_15_0,
-                                      										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+                                      										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
                                       									afterParserOrEnumRuleCall();
                                     }
                                     }
@@ -2702,7 +2702,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               										current,
                               										"name",
                               										lv_name_16_0,
-                              										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                              										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                               									afterParserOrEnumRuleCall();
                             }
                             }
@@ -2834,7 +2834,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                                       										current,
                                       										"typingStrategy",
                                       										lv_typingStrategy_22_0,
-                                      										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+                                      										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
                                       									afterParserOrEnumRuleCall();
                                     }
                                     }
@@ -2858,7 +2858,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               										current,
                               										"name",
                               										lv_name_23_0,
-                              										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                              										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                               									afterParserOrEnumRuleCall();
                             }
                             }
@@ -3001,7 +3001,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_30_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -3148,7 +3148,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_39_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -3801,7 +3801,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"alias",
                       							lv_alias_4_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      							"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -4003,7 +4003,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"alias",
               						lv_alias_3_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -5584,7 +5584,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_1_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -5729,7 +5729,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_1_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -5874,7 +5874,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_1_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -6019,7 +6019,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_1_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -8307,7 +8307,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"name",
               					lv_name_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -8348,7 +8348,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"name",
               					lv_name_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -8863,7 +8863,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								current,
                               								"name",
                               								lv_name_3_0,
-                              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                               							afterParserOrEnumRuleCall();
                             }
                             }
@@ -9051,7 +9051,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               								current,
                               								"name",
                               								lv_name_3_0,
-                              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                               							afterParserOrEnumRuleCall();
                             }
                             }
@@ -9558,7 +9558,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -9798,7 +9798,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -12681,7 +12681,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_1_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -12801,7 +12801,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_1_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -12921,7 +12921,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_1_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -13041,7 +13041,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_1_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -13163,7 +13163,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               									current,
               									"name",
               									lv_name_1_0,
-              									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               								afterParserOrEnumRuleCall();
             }
             }
@@ -13311,7 +13311,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               									current,
               									"name",
               									lv_name_1_0,
-              									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               								afterParserOrEnumRuleCall();
             }
             }
@@ -13459,7 +13459,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               									current,
               									"name",
               									lv_name_1_0,
-              									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               								afterParserOrEnumRuleCall();
             }
             }
@@ -13607,7 +13607,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               									current,
               									"name",
               									lv_name_1_0,
-              									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               								afterParserOrEnumRuleCall();
             }
             }
@@ -17294,7 +17294,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"name",
               					lv_name_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -17335,7 +17335,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"name",
               					lv_name_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -18877,7 +18877,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_0_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -18952,7 +18952,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_0_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+              								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -19764,7 +19764,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_1_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -19808,7 +19808,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_3_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -19888,7 +19888,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_1_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -19932,7 +19932,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_3_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -26097,7 +26097,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"typeRefInAST",
               					lv_typeRefInAST_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+              					"org.eclipse.n4js.TypeExpressions.TypeRef");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -26164,7 +26164,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"typeRefInAST",
               					lv_typeRefInAST_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
+              					"org.eclipse.n4js.TypeExpressions.TypeRefWithModifiers");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -26231,7 +26231,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"typeRefInAST",
               					lv_typeRefInAST_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+              					"org.eclipse.n4js.TypeExpressions.ParameterizedTypeRefNominal");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -26298,7 +26298,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"typeRefInAST",
               					lv_typeRefInAST_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
+              					"org.eclipse.n4js.TypeExpressions.ArrayTypeExpression");
               				afterParserOrEnumRuleCall();
             }
             }
@@ -38592,7 +38592,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.STRING");
+              					"org.eclipse.n4js.TypeExpressions.STRING");
             }
             }
             }
@@ -38856,7 +38856,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
+              					"org.eclipse.n4js.TypeExpressions.DOUBLE");
             }
             }
             }
@@ -38919,7 +38919,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.INT");
+              					"org.eclipse.n4js.TypeExpressions.INT");
             }
             }
             }
@@ -38982,7 +38982,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
+              					"org.eclipse.n4js.TypeExpressions.OCTAL_INT");
             }
             }
             }
@@ -39045,7 +39045,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
+              					"org.eclipse.n4js.TypeExpressions.LEGACY_OCTAL_INT");
             }
             }
             }
@@ -39108,7 +39108,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
+              					"org.eclipse.n4js.TypeExpressions.HEX_INT");
             }
             }
             }
@@ -39171,7 +39171,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
+              					"org.eclipse.n4js.TypeExpressions.BINARY_INT");
             }
             }
             }
@@ -39234,7 +39234,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"value",
               					lv_value_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
+              					"org.eclipse.n4js.TypeExpressions.SCIENTIFIC_INT");
             }
             }
             }
@@ -41283,7 +41283,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"typingStrategy",
                       								lv_typingStrategy_2_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+                      								"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -41320,7 +41320,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -42434,7 +42434,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_2_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -42545,7 +42545,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"name",
                       						lv_name_2_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -42711,7 +42711,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"typingStrategy",
                       								lv_typingStrategy_2_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+                      								"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -42748,7 +42748,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -43095,7 +43095,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -43278,7 +43278,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"name",
               						lv_name_0_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+              						"org.eclipse.n4js.TypeExpressions.IdentifierName");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -43445,7 +43445,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"name",
                       								lv_name_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -49453,7 +49453,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"literalName",
                       						lv_literalName_0_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+                      						"org.eclipse.n4js.TypeExpressions.IdentifierName");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -49476,7 +49476,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"literalName",
                       						lv_literalName_1_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.STRING");
+                      						"org.eclipse.n4js.TypeExpressions.STRING");
                     }
                     }
                     }
@@ -49684,7 +49684,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"literalName",
                       						lv_literalName_0_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+                      						"org.eclipse.n4js.TypeExpressions.IdentifierName");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -49707,7 +49707,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"literalName",
                       						lv_literalName_1_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.STRING");
+                      						"org.eclipse.n4js.TypeExpressions.STRING");
                     }
                     }
                     }
@@ -51257,7 +51257,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"declaredVersion",
               					lv_declaredVersion_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
+              					"org.eclipse.n4js.TypeExpressions.VERSION");
             }
             }
             }
@@ -51367,7 +51367,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      								current,
                     	      								"typeRefs",
                     	      								lv_typeRefs_3_0,
-                    	      								"org.eclipse.n4js.ts.TypeExpressions.IntersectionTypeExpression");
+                    	      								"org.eclipse.n4js.TypeExpressions.IntersectionTypeExpression");
                     	      							afterParserOrEnumRuleCall();
                     	    }
                     	    }
@@ -51493,7 +51493,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      								current,
                     	      								"typeRefs",
                     	      								lv_typeRefs_3_0,
-                    	      								"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
+                    	      								"org.eclipse.n4js.TypeExpressions.ArrayTypeExpression");
                     	      							afterParserOrEnumRuleCall();
                     	    }
                     	    }
@@ -51745,7 +51745,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"typeArgs",
                       							lv_typeArgs_1_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.WildcardOldNotationWithoutBound");
+                      							"org.eclipse.n4js.TypeExpressions.WildcardOldNotationWithoutBound");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -51851,7 +51851,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"typeArgs",
                       							lv_typeArgs_9_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.Wildcard");
+                      							"org.eclipse.n4js.TypeExpressions.Wildcard");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -53175,7 +53175,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"astValue",
                       							lv_astValue_2_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.INT");
+                      							"org.eclipse.n4js.TypeExpressions.INT");
                     }
                     }
                     }
@@ -53197,7 +53197,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"astValue",
                       							lv_astValue_3_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
+                      							"org.eclipse.n4js.TypeExpressions.DOUBLE");
                     }
                     }
                     }
@@ -53219,7 +53219,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"astValue",
                       							lv_astValue_4_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
+                      							"org.eclipse.n4js.TypeExpressions.OCTAL_INT");
                     }
                     }
                     }
@@ -53241,7 +53241,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"astValue",
                       							lv_astValue_5_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
+                      							"org.eclipse.n4js.TypeExpressions.LEGACY_OCTAL_INT");
                     }
                     }
                     }
@@ -53263,7 +53263,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"astValue",
                       							lv_astValue_6_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
+                      							"org.eclipse.n4js.TypeExpressions.HEX_INT");
                     }
                     }
                     }
@@ -53285,7 +53285,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"astValue",
                       							lv_astValue_7_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
+                      							"org.eclipse.n4js.TypeExpressions.BINARY_INT");
                     }
                     }
                     }
@@ -53307,7 +53307,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"astValue",
                       							lv_astValue_8_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
+                      							"org.eclipse.n4js.TypeExpressions.SCIENTIFIC_INT");
                     }
                     }
                     }
@@ -53374,7 +53374,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"astValue",
               					lv_astValue_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.STRING");
+              					"org.eclipse.n4js.TypeExpressions.STRING");
             }
             }
             }
@@ -53594,7 +53594,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"definedTypingStrategy",
               						lv_definedTypingStrategy_0_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+              						"org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -53746,7 +53746,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"declaredThisType",
                       							lv_declaredThisType_5_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.TypeRefFunctionTypeExpression");
+                      							"org.eclipse.n4js.TypeExpressions.TypeRefFunctionTypeExpression");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -53791,7 +53791,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"ownedTypeVars",
                       							lv_ownedTypeVars_9_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+                      							"org.eclipse.n4js.TypeExpressions.TypeVariable");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -53827,7 +53827,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      								current,
                     	      								"ownedTypeVars",
                     	      								lv_ownedTypeVars_11_0,
-                    	      								"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+                    	      								"org.eclipse.n4js.TypeExpressions.TypeVariable");
                     	      							afterParserOrEnumRuleCall();
                     	    }
                     	    }
@@ -54001,7 +54001,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"returnTypeRef",
               						lv_returnTypeRef_5_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.PrimaryTypeExpression");
+              						"org.eclipse.n4js.TypeExpressions.PrimaryTypeExpression");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -54053,7 +54053,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       						current,
                       						"fpars",
                       						lv_fpars_0_0,
-                      						"org.eclipse.n4js.ts.TypeExpressions.TAnonymousFormalParameter");
+                      						"org.eclipse.n4js.TypeExpressions.TAnonymousFormalParameter");
                       					afterParserOrEnumRuleCall();
                     }
                     }
@@ -54089,7 +54089,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      							current,
                     	      							"fpars",
                     	      							lv_fpars_2_0,
-                    	      							"org.eclipse.n4js.ts.TypeExpressions.TAnonymousFormalParameter");
+                    	      							"org.eclipse.n4js.TypeExpressions.TAnonymousFormalParameter");
                     	      						afterParserOrEnumRuleCall();
                     	    }
                     	    }
@@ -54200,7 +54200,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       									current,
                       									"name",
                       									lv_name_1_0,
-                      									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+                      									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
                       								afterParserOrEnumRuleCall();
                     }
                     }
@@ -54244,7 +54244,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"typeRef",
                       							lv_typeRef_3_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+                      							"org.eclipse.n4js.TypeExpressions.TypeRef");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -54426,7 +54426,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"typeRefs",
               						lv_typeRefs_3_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+              						"org.eclipse.n4js.TypeExpressions.TypeRef");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -54462,7 +54462,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							current,
             	      							"typeRefs",
             	      							lv_typeRefs_5_0,
-            	      							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+            	      							"org.eclipse.n4js.TypeExpressions.TypeRef");
             	      						afterParserOrEnumRuleCall();
             	    }
             	    }
@@ -54561,7 +54561,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"typeRefs",
               						lv_typeRefs_3_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+              						"org.eclipse.n4js.TypeExpressions.TypeRef");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -54597,7 +54597,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							current,
             	      							"typeRefs",
             	      							lv_typeRefs_5_0,
-            	      							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+            	      							"org.eclipse.n4js.TypeExpressions.TypeRef");
             	      						afterParserOrEnumRuleCall();
             	    }
             	    }
@@ -54916,7 +54916,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"definedTypingStrategy",
                       								lv_definedTypingStrategy_0_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+                      								"org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -54965,7 +54965,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"definedTypingStrategy",
                       								lv_definedTypingStrategy_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+                      								"org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -55156,7 +55156,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"typeArgs",
                       							lv_typeArgs_1_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.EmptyIterableTypeExpressionTail");
+                      							"org.eclipse.n4js.TypeExpressions.EmptyIterableTypeExpressionTail");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -55183,7 +55183,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"typeArgs",
                       								lv_typeArgs_2_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+                      								"org.eclipse.n4js.TypeExpressions.TypeArgument");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -55219,7 +55219,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     	      									current,
                     	      									"typeArgs",
                     	      									lv_typeArgs_4_0,
-                    	      									"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+                    	      									"org.eclipse.n4js.TypeExpressions.TypeArgument");
                     	      								afterParserOrEnumRuleCall();
                     	    }
                     	    }
@@ -55330,7 +55330,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"requestedVersion",
               					lv_requestedVersion_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
+              					"org.eclipse.n4js.TypeExpressions.VERSION");
             }
             }
             }
@@ -55379,7 +55379,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"typeArgs",
               						lv_typeArgs_1_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+              						"org.eclipse.n4js.TypeExpressions.TypeArgument");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -55415,7 +55415,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							current,
             	      							"typeArgs",
             	      							lv_typeArgs_3_0,
-            	      							"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+            	      							"org.eclipse.n4js.TypeExpressions.TypeArgument");
             	      						afterParserOrEnumRuleCall();
             	    }
             	    }
@@ -55486,7 +55486,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							current,
             	      							"astStructuralMembers",
             	      							lv_astStructuralMembers_1_0,
-            	      							"org.eclipse.n4js.ts.TypeExpressions.TStructMember");
+            	      							"org.eclipse.n4js.TypeExpressions.TStructMember");
             	      						afterParserOrEnumRuleCall();
             	    }
             	    }
@@ -55748,7 +55748,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_2_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+              								"org.eclipse.n4js.TypeExpressions.IdentifierName");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -55848,7 +55848,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"typeVars",
               						lv_typeVars_1_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+              						"org.eclipse.n4js.TypeExpressions.TypeVariable");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -55884,7 +55884,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      							current,
             	      							"typeVars",
             	      							lv_typeVars_3_0,
-            	      							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+            	      							"org.eclipse.n4js.TypeExpressions.TypeVariable");
             	      						afterParserOrEnumRuleCall();
             	    }
             	    }
@@ -55942,7 +55942,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"typeRef",
               						lv_typeRef_1_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+              						"org.eclipse.n4js.TypeExpressions.TypeRef");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -55990,7 +55990,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"returnTypeRef",
               						lv_returnTypeRef_1_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+              						"org.eclipse.n4js.TypeExpressions.TypeRef");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -56061,7 +56061,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"name",
               						lv_name_0_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+              						"org.eclipse.n4js.TypeExpressions.IdentifierName");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -56196,7 +56196,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_2_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+              								"org.eclipse.n4js.TypeExpressions.IdentifierName");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -56341,7 +56341,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               								current,
               								"name",
               								lv_name_2_0,
-              								"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+              								"org.eclipse.n4js.TypeExpressions.IdentifierName");
               							afterParserOrEnumRuleCall();
             }
             }
@@ -56392,7 +56392,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"fpar",
               						lv_fpar_5_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TAnonymousFormalParameter");
+              						"org.eclipse.n4js.TypeExpressions.TAnonymousFormalParameter");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -56655,7 +56655,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"typeArg",
               						lv_typeArg_4_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.TypeArgInTypeTypeRef");
+              						"org.eclipse.n4js.TypeExpressions.TypeArgInTypeTypeRef");
               					afterParserOrEnumRuleCall();
             }
             }
@@ -56998,7 +56998,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"declaredUpperBound",
                       								lv_declaredUpperBound_3_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+                      								"org.eclipse.n4js.TypeExpressions.TypeRef");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -57030,7 +57030,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       								current,
                       								"declaredLowerBound",
                       								lv_declaredLowerBound_5_0,
-                      								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+                      								"org.eclipse.n4js.TypeExpressions.TypeRef");
                       							afterParserOrEnumRuleCall();
                     }
                     }
@@ -57195,7 +57195,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"declaredUpperBound",
                       							lv_declaredUpperBound_1_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+                      							"org.eclipse.n4js.TypeExpressions.TypeRef");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -57237,7 +57237,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"declaredLowerBound",
                       							lv_declaredLowerBound_3_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+                      							"org.eclipse.n4js.TypeExpressions.TypeRef");
                       						afterParserOrEnumRuleCall();
                     }
                     }
@@ -57356,7 +57356,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               						current,
               						"name",
               						lv_name_2_0,
-              						"org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER");
+              						"org.eclipse.n4js.TypeExpressions.IDENTIFIER");
             }
             }
             }
@@ -57389,7 +57389,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                       							current,
                       							"declaredUpperBound",
                       							lv_declaredUpperBound_4_0,
-                      							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+                      							"org.eclipse.n4js.TypeExpressions.TypeRef");
                       						afterParserOrEnumRuleCall();
                     }
                     }

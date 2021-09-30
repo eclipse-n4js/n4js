@@ -7,7 +7,6 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ide,
- org.eclipse.n4js.ts,
  org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.xtext,
@@ -23,7 +22,6 @@ Require-Bundle: org.eclipse.n4js,
  com.google.inject,
  com.google.gson,
  org.kohsuke.args4j;bundle-version="2.33.0",
- org.eclipse.n4js.ts.ide,
  org.eclipse.n4js.smith,
  org.eclipse.xtext.testing,
  org.apache.commons.lang

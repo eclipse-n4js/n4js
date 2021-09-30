@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.transpiler.TranspilerState;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;

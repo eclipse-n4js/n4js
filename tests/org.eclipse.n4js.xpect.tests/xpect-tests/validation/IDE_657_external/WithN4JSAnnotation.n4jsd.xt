@@ -14,7 +14,7 @@
 export external public class MyClass {}
 
 @N4JS
-/* XPECT errors ---
+/* this rule was relaxed XPECT noerrors ---
    "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "MyClass2"
  --- */
 export external public class MyClass2 extends MyClass {}
@@ -22,7 +22,7 @@ export external public class MyClass2 extends MyClass {}
 export external public interface MyRole {}
 
 @N4JS
-/* XPECT errors ---
+/* this rule was relaxed XPECT noerrors ---
    "External classes annotated with @N4JS aren't allowed to consume interfaces without such annotation." at "MyClass3"
  --- */
 export external public class MyClass3 implements MyRole {}
@@ -31,13 +31,13 @@ export external public class MyClass3 implements MyRole {}
 export external public class MyClass4 extends N4Object {}
 
 @N4JS
-/* XPECT errors ---
+/* this rule was relaxed XPECT noerrors ---
    "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "MyClass5"
  --- */
 export external public class MyClass5 extends String {}
 
 @N4JS
-/* XPECT errors ---
+/* this rule was relaxed XPECT noerrors ---
    "External interfaces annotated with @N4JS aren't allowed to consume interfaces without such annotation." at "MyRole2"
  --- */
 export external public interface MyRole2 extends MyRole {}

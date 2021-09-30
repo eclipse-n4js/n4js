@@ -52,7 +52,7 @@ for (var a in "Hello") {
 
 function foo() {
 
-	// XPECT noerrors --> "ArgumentsType is ok"
+	// XPECT noerrors --> "IArguments is ok"
 	for (var s in arguments) {
 		console.log(s);
 	}
@@ -60,7 +60,7 @@ function foo() {
 
 // --------------------------------------------------------------------------
 
-// XPECT errors --> "42 is not a subtype of union{Object,string,ArgumentsType}." at "42"
+// XPECT errors --> "42 is not a subtype of union{Object,string,IArguments}." at "42"
 for (var b in 42) {
 }
 

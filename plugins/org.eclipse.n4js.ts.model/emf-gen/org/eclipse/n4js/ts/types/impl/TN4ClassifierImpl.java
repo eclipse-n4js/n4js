@@ -17,16 +17,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
+import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TN4Classifier;
@@ -45,6 +50,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getDeclaredElementType <em>Declared Element Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getMigrations <em>Migrations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDynamizable <em>Dynamizable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getTypingStrategy <em>Typing Strategy</em>}</li>
@@ -92,6 +98,16 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @ordered
 	 */
 	protected boolean declaredProvidedByRuntime = DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredElementType() <em>Declared Element Type</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredElementType()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef declaredElementType;
 
 	/**
 	 * The cached value of the '{@link #getMigrations() <em>Migrations</em>}' reference list.
@@ -214,6 +230,51 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDeclaredElementType() {
+		return declaredElementType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDeclaredElementType(TypeRef newDeclaredElementType, NotificationChain msgs) {
+		TypeRef oldDeclaredElementType = declaredElementType;
+		declaredElementType = newDeclaredElementType;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE, oldDeclaredElementType, newDeclaredElementType);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredElementType(TypeRef newDeclaredElementType) {
+		if (newDeclaredElementType != declaredElementType) {
+			NotificationChain msgs = null;
+			if (declaredElementType != null)
+				msgs = ((InternalEObject)declaredElementType).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE, null, msgs);
+			if (newDeclaredElementType != null)
+				msgs = ((InternalEObject)newDeclaredElementType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE, null, msgs);
+			msgs = basicSetDeclaredElementType(newDeclaredElementType, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE, newDeclaredElementType, newDeclaredElementType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<TMigration> getMigrations() {
 		if (migrations == null) {
 			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TN4_CLASSIFIER__MIGRATIONS);
@@ -304,12 +365,28 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
+				return basicSetDeclaredElementType(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_TYPE_ACCESS_MODIFIER:
 				return getDeclaredTypeAccessModifier();
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_PROVIDED_BY_RUNTIME:
 				return isDeclaredProvidedByRuntime();
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
+				return getDeclaredElementType();
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				return getMigrations();
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
@@ -334,6 +411,9 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_PROVIDED_BY_RUNTIME:
 				setDeclaredProvidedByRuntime((Boolean)newValue);
+				return;
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
+				setDeclaredElementType((TypeRef)newValue);
 				return;
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				getMigrations().clear();
@@ -363,6 +443,9 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_PROVIDED_BY_RUNTIME:
 				setDeclaredProvidedByRuntime(DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT);
 				return;
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
+				setDeclaredElementType((TypeRef)null);
+				return;
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				getMigrations().clear();
 				return;
@@ -388,6 +471,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return declaredTypeAccessModifier != DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_PROVIDED_BY_RUNTIME:
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
+				return declaredElementType != null;
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				return migrations != null && !migrations.isEmpty();
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
@@ -412,6 +497,12 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				default: return -1;
 			}
 		}
+		if (baseClass == ArrayLike.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE: return TypesPackage.ARRAY_LIKE__DECLARED_ELEMENT_TYPE;
+				default: return -1;
+			}
+		}
 		if (baseClass == TMigratable.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TN4_CLASSIFIER__MIGRATIONS: return TypesPackage.TMIGRATABLE__MIGRATIONS;
@@ -432,6 +523,12 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			switch (baseFeatureID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.TN4_CLASSIFIER__DECLARED_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME: return TypesPackage.TN4_CLASSIFIER__DECLARED_PROVIDED_BY_RUNTIME;
+				default: return -1;
+			}
+		}
+		if (baseClass == ArrayLike.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.ARRAY_LIKE__DECLARED_ELEMENT_TYPE: return TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
 				default: return -1;
 			}
 		}
@@ -463,6 +560,12 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TN4_CLASSIFIER___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TN4_CLASSIFIER___IS_EXPORTED;
+				default: return -1;
+			}
+		}
+		if (baseClass == ArrayLike.class) {
+			switch (baseOperationID) {
+				case TypesPackage.ARRAY_LIKE___GET_ELEMENT_TYPE: return TypesPackage.TN4_CLASSIFIER___GET_ELEMENT_TYPE;
 				default: return -1;
 			}
 		}

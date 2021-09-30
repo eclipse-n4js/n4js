@@ -72,7 +72,6 @@ import org.eclipse.n4js.ts.types.TMigratable;
 import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TN4Classifier;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
@@ -87,13 +86,11 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeAlias;
-import org.eclipse.n4js.ts.types.TypeDefs;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.UndefinedType;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.ts.types.VoidType;
 
 import org.eclipse.n4js.ts.types.util.Variance;
@@ -105,13 +102,6 @@ import org.eclipse.n4js.ts.types.util.Variance;
  * @generated
  */
 public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass typeDefsEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -257,13 +247,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass virtualBaseTypeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass moduleNamespaceVirtualTypeEClass = null;
 
 	/**
@@ -342,13 +325,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tClassifierEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass tObjectPrototypeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -656,26 +632,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(TypesPackage.eNS_URI, theTypesPackage);
 		return theTypesPackage;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getTypeDefs() {
-		return typeDefsEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTypeDefs_Types() {
-		return (EReference)typeDefsEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1774,26 +1730,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getVirtualBaseType() {
-		return virtualBaseTypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getVirtualBaseType_DeclaredOwnedMembers() {
-		return (EReference)virtualBaseTypeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getModuleNamespaceVirtualType() {
 		return moduleNamespaceVirtualTypeEClass;
 	}
@@ -2156,56 +2092,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getTClassifier__IsFinal() {
 		return tClassifierEClass.getEOperations().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getTObjectPrototype() {
-		return tObjectPrototypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTObjectPrototype_SuperType() {
-		return (EReference)tObjectPrototypeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getTObjectPrototype_DeclaredFinal() {
-		return (EAttribute)tObjectPrototypeEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getTObjectPrototype__GetOwnedCtor() {
-		return tObjectPrototypeEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getTObjectPrototype__IsFinal() {
-		return tObjectPrototypeEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -3657,9 +3543,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		isCreated = true;
 
 		// Create classes and their features
-		typeDefsEClass = createEClass(TYPE_DEFS);
-		createEReference(typeDefsEClass, TYPE_DEFS__TYPES);
-
 		tModuleEClass = createEClass(TMODULE);
 		createEAttribute(tModuleEClass, TMODULE__SIMPLE_NAME);
 		createEAttribute(tModuleEClass, TMODULE__QUALIFIED_NAME);
@@ -3789,9 +3672,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS);
 
-		virtualBaseTypeEClass = createEClass(VIRTUAL_BASE_TYPE);
-		createEReference(virtualBaseTypeEClass, VIRTUAL_BASE_TYPE__DECLARED_OWNED_MEMBERS);
-
 		moduleNamespaceVirtualTypeEClass = createEClass(MODULE_NAMESPACE_VIRTUAL_TYPE);
 		createEReference(moduleNamespaceVirtualTypeEClass, MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE);
 		createEAttribute(moduleNamespaceVirtualTypeEClass, MODULE_NAMESPACE_VIRTUAL_TYPE__DECLARED_DYNAMIC);
@@ -3840,12 +3720,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tClassifierEClass, TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(tClassifierEClass, TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
 		createEOperation(tClassifierEClass, TCLASSIFIER___IS_FINAL);
-
-		tObjectPrototypeEClass = createEClass(TOBJECT_PROTOTYPE);
-		createEReference(tObjectPrototypeEClass, TOBJECT_PROTOTYPE__SUPER_TYPE);
-		createEAttribute(tObjectPrototypeEClass, TOBJECT_PROTOTYPE__DECLARED_FINAL);
-		createEOperation(tObjectPrototypeEClass, TOBJECT_PROTOTYPE___GET_OWNED_CTOR);
-		createEOperation(tObjectPrototypeEClass, TOBJECT_PROTOTYPE___IS_FINAL);
 
 		arrayLikeEClass = createEClass(ARRAY_LIKE);
 		createEReference(arrayLikeEClass, ARRAY_LIKE__DECLARED_ELEMENT_TYPE);
@@ -4073,27 +3947,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		typeEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
 		genericTypeEClass.getESuperTypes().add(this.getType());
 		containerTypeEClass.getESuperTypes().add(this.getGenericType());
-		g1 = createEGenericType(this.getContainerType());
-		EGenericType g2 = createEGenericType(this.getTMember());
-		g1.getETypeArguments().add(g2);
-		virtualBaseTypeEClass.getEGenericSuperTypes().add(g1);
-		g1 = createEGenericType(this.getArrayLike());
-		virtualBaseTypeEClass.getEGenericSuperTypes().add(g1);
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getType());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
-		g1 = createEGenericType(this.getContainerType());
-		g2 = createEGenericType(this.getTMember());
-		g1.getETypeArguments().add(g2);
-		primitiveTypeEClass.getEGenericSuperTypes().add(g1);
-		g1 = createEGenericType(this.getArrayLike());
-		primitiveTypeEClass.getEGenericSuperTypes().add(g1);
+		primitiveTypeEClass.getESuperTypes().add(this.getGenericType());
+		primitiveTypeEClass.getESuperTypes().add(this.getArrayLike());
 		builtInTypeEClass.getESuperTypes().add(this.getType());
 		anyTypeEClass.getESuperTypes().add(this.getBuiltInType());
 		undefinedTypeEClass.getESuperTypes().add(this.getBuiltInType());
 		nullTypeEClass.getESuperTypes().add(this.getBuiltInType());
 		voidTypeEClass.getESuperTypes().add(this.getBuiltInType());
 		g1 = createEGenericType(this.getContainerType());
-		g2 = createEGenericType(this.getTStructMember());
+		EGenericType g2 = createEGenericType(this.getTStructMember());
 		g1.getETypeArguments().add(g2);
 		tStructuralTypeEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getSyntaxRelatedTElement());
@@ -4108,11 +3972,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tClassifierEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getTVersionable());
 		tClassifierEClass.getEGenericSuperTypes().add(g1);
-		tObjectPrototypeEClass.getESuperTypes().add(this.getTClassifier());
-		tObjectPrototypeEClass.getESuperTypes().add(this.getAccessibleTypeElement());
-		tObjectPrototypeEClass.getESuperTypes().add(this.getArrayLike());
 		tn4ClassifierEClass.getESuperTypes().add(this.getTClassifier());
 		tn4ClassifierEClass.getESuperTypes().add(this.getAccessibleTypeElement());
+		tn4ClassifierEClass.getESuperTypes().add(this.getArrayLike());
 		tn4ClassifierEClass.getESuperTypes().add(this.getTMigratable());
 		tClassEClass.getESuperTypes().add(this.getTN4Classifier());
 		tInterfaceEClass.getESuperTypes().add(this.getTN4Classifier());
@@ -4163,9 +4025,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tVariableEClass.getESuperTypes().add(this.getTTypedElement());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(typeDefsEClass, TypeDefs.class, "TypeDefs", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTypeDefs_Types(), this.getType(), null, "types", null, 0, -1, TypeDefs.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(tModuleEClass, TModule.class, "TModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTModule_SimpleName(), theEcorePackage.getEString(), "simpleName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_QualifiedName(), theEcorePackage.getEString(), "qualifiedName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4356,9 +4215,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		g2.setEUpperBound(g3);
 		initEOperation(op, g1);
 
-		initEClass(virtualBaseTypeEClass, VirtualBaseType.class, "VirtualBaseType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getVirtualBaseType_DeclaredOwnedMembers(), this.getTMember(), null, "declaredOwnedMembers", null, 0, -1, VirtualBaseType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(moduleNamespaceVirtualTypeEClass, ModuleNamespaceVirtualType.class, "ModuleNamespaceVirtualType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getModuleNamespaceVirtualType_Module(), this.getTModule(), null, "module", null, 0, 1, ModuleNamespaceVirtualType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModuleNamespaceVirtualType_DeclaredDynamic(), theEcorePackage.getEBoolean(), "declaredDynamic", null, 0, 1, ModuleNamespaceVirtualType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4419,14 +4275,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTClassifier__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTClassifier__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(tObjectPrototypeEClass, TObjectPrototype.class, "TObjectPrototype", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTObjectPrototype_SuperType(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superType", null, 0, 1, TObjectPrototype.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTObjectPrototype_DeclaredFinal(), theEcorePackage.getEBoolean(), "declaredFinal", null, 0, 1, TObjectPrototype.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getTObjectPrototype__GetOwnedCtor(), this.getTMethod(), "getOwnedCtor", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTObjectPrototype__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(arrayLikeEClass, ArrayLike.class, "ArrayLike", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getArrayLike_DeclaredElementType(), theTypeRefsPackage.getTypeRef(), null, "declaredElementType", null, 0, 1, ArrayLike.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

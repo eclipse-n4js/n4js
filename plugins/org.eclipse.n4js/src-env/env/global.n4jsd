@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+export external public class GlobalObject {
+	@Final public NaN: number;
+	@Final public Infinity: number;
+	@Final public undefined: undefined;
+
+	public eval(x: any): Object
+	public parseInt(s: any, radix: number = undefined): number
+	public parseFloat(x: any): number
+	public isNaN(x: number): boolean
+	public isFinite(x: number): boolean
+	public decodeURI(encodedURI: string): string
+	public decodeURIComponent(encodedURIComponent: string): string
+	public encodeURI(uri: string): string
+	public encodeURIComponent(uriComponent: string): string
+}

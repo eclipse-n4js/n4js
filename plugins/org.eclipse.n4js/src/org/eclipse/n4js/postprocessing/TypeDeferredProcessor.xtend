@@ -33,7 +33,7 @@ import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TTypedElement
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper

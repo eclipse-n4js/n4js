@@ -25,14 +25,14 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 
-import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
+import static extension org.eclipse.n4js.types.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
  * @see ThisTypeComputer#getThisTypeAtLocation(RuleEnvironment,EObject)

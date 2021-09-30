@@ -15,11 +15,11 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4idl.N4IDLGlobals
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.ts.types.TypingStrategy
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -70,7 +70,7 @@ class N4IDLClassifierTransformationAssistant extends TransformationAssistant {
 		}
 
 		// make sure the interface is not a built-in type
-		if (ifcToAdd.eContainer instanceof TypeDefs) {
+		if (N4Scheme.isFromResourceWithN4Scheme(ifcToAdd)) {
 			return false
 		}
 

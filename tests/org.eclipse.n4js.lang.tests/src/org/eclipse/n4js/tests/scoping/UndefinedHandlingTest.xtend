@@ -15,7 +15,7 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.N4JSParseHelper
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.diagnostics.Diagnostic

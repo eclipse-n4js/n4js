@@ -13,7 +13,7 @@ package org.eclipse.n4js.parser.conversion;
 import java.math.BigDecimal;
 
 import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess;
+import org.eclipse.n4js.services.TypeExpressionsGrammarAccess;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.ValueConverterException;

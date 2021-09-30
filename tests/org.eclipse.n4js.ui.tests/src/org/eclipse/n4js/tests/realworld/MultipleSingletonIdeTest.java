@@ -87,7 +87,6 @@ public class MultipleSingletonIdeTest extends ConvertedIdeTest {
 
 		Assert.assertNull(injectors.put(getInjectorFor("n4js"), "N4JS-Injector"));
 		Assert.assertNull(injectors.put(getInjectorFor("json"), "JSON-Injector"));
-		Assert.assertNull(injectors.put(getInjectorFor("n4ts"), "Types-Injector"));
 		Assert.assertNull(injectors.put(getInjectorFor("regex"), "Regex-Injector"));
 
 		return injectors;

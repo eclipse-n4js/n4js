@@ -12,7 +12,6 @@ package org.eclipse.n4js.parser.conversion;
 
 import java.math.BigDecimal;
 
-import org.eclipse.n4js.ts.conversions.IdentifierDelegateValueConverter;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractDeclarativeValueConverterService;

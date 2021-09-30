@@ -38,7 +38,6 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -54,6 +53,7 @@ import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import static org.junit.Assert.*
+import org.eclipse.n4js.types.utils.TypeUtils
 
 /*
  * Base class for type system tests (with xsemantics)

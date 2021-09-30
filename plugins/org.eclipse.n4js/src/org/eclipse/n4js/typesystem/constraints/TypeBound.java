@@ -14,8 +14,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.util.Variance;
-import org.eclipse.n4js.ts.utils.TypeCompareUtils;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeCompareUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 
 /**
  * Type bounds are similar to {@link TypeConstraint}s, but are required to be of a simpler, more unified form: the LHS
