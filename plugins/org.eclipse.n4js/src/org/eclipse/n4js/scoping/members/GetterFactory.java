@@ -18,7 +18,7 @@ import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 
 /**
  * The abstract {@link GetterFactory} is the base class for the child classes {@link UnionGetterFactory} and

@@ -10,7 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill export @Final external public class Number extends Number {
+@Polyfill export external public class Number extends Number {
     public const EPSILON: number;
     public const MAX_SAFE_INTEGER: number;
     public const MIN_SAFE_INTEGER: number;
@@ -23,4 +23,3 @@
     public static isSafeInteger(number: number): boolean;
     //public static number toInteger(number number); // maybe ES.next?
 }
-

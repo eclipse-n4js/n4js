@@ -27,7 +27,6 @@ import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TVersionable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.versions.VersionableUtils
@@ -137,9 +136,8 @@ class VersionHelper {
 	 * Finds the {@link IEObjectDescription} of all versions of the given TClassifier.
 	 */
 	def <T extends Type> Iterable<? extends T> findTypeVersions(T type) {
-		if (type instanceof TObjectPrototype || // TObjectPrototypes are unversioned -> there exists only a single version
-			!VersionableUtils.isTVersionable(type) // There are no other versions for an unversioned classifier
-		) {
+		if (!VersionableUtils.isTVersionable(type)) {
+			// There are no other versions for an unversioned classifier
 			return Collections.singleton(type);
 		}
 
@@ -163,10 +161,6 @@ class VersionHelper {
 	 * @return the requested version of the given classifier, or <code>null</code> if no such version exists
 	 */
 	def <T extends Type> T findTypeWithVersion(T type, int version) {
-		if (type instanceof TObjectPrototype) {
-			return type; // TObjectPrototypes are unversioned -> there exists only a single version
-		}
-
 		val elements = findTypeVersions(type);
 
 		return elements

@@ -32,7 +32,7 @@ declare const c1: Iterable2<string, number>;
 declare const c2: Array<Iterable2<string, number>>;
 declare function f1(): Iterable2<Iterable2<number, string>, number>;
 declare abstract class MyIterableClass<T> implements Iterable2<T, number> {
-	public [Symbol.iterator](): Iterator<T | number>;
+	public abstract [Symbol.iterator](): Iterator<T | number>;
 }
 declare interface MyIterableInterface<T> extends Iterable3<T, string, number> {}
 declare interface MyOtherIterableInterface<T> extends Iterable3<Iterable2<T, number>, string, number> {}

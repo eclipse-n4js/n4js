@@ -23,7 +23,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
-import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -41,7 +40,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *
  * @generated
  */
-public class PrimitiveTypeImpl extends ContainerTypeImpl<TMember> implements PrimitiveType {
+public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType {
 	/**
 	 * The cached value of the '{@link #getDeclaredElementType() <em>Declared Element Type</em>}' containment reference.
 	 * <!-- begin-user-doc -->

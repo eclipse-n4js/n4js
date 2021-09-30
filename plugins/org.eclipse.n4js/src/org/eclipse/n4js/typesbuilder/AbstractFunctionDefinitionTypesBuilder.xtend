@@ -14,11 +14,11 @@ import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 
 /**
  * Base class for functions and methods

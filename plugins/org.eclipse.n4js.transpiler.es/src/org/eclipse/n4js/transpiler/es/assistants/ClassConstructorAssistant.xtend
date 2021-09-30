@@ -45,8 +45,7 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TObjectPrototype
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -474,8 +473,6 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	def private TMethod getNearestConstructorInHierarchy(TClassifier clazz) {
 		val ownedCtor = if (clazz instanceof TClass) {
 			clazz.ownedCtor
-		} else if (clazz instanceof TObjectPrototype) {
-			clazz.ownedCtor
 		};
 
 		if (ownedCtor !== null) {
@@ -483,8 +480,6 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		} else {
 			val superType = if (clazz instanceof TClass) {
 				clazz.getSuperClassRef?.declaredType
-			} else if (clazz instanceof TObjectPrototype) {
-				clazz.superType?.declaredType
 			};
 			if (superType instanceof TClassifier) {
 				return superType.getNearestConstructorInHierarchy;

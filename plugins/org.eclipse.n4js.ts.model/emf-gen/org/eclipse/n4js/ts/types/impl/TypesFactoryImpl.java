@@ -71,7 +71,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case TypesPackage.TYPE_DEFS: return createTypeDefs();
 			case TypesPackage.TMODULE: return createTModule();
 			case TypesPackage.RUNTIME_DEPENDENCY: return createRuntimeDependency();
 			case TypesPackage.COMPOSED_MEMBER_CACHE: return createComposedMemberCache();
@@ -86,7 +85,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.INFERENCE_VARIABLE: return createInferenceVariable();
 			case TypesPackage.TFUNCTION: return createTFunction();
 			case TypesPackage.TYPE: return createType();
-			case TypesPackage.VIRTUAL_BASE_TYPE: return createVirtualBaseType();
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE: return createModuleNamespaceVirtualType();
 			case TypesPackage.PRIMITIVE_TYPE: return createPrimitiveType();
 			case TypesPackage.BUILT_IN_TYPE: return createBuiltInType();
@@ -96,7 +94,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.VOID_TYPE: return createVoidType();
 			case TypesPackage.TSTRUCTURAL_TYPE: return createTStructuralType();
 			case TypesPackage.TMIGRATION: return createTMigration();
-			case TypesPackage.TOBJECT_PROTOTYPE: return createTObjectPrototype();
 			case TypesPackage.TN4_CLASSIFIER: return createTN4Classifier();
 			case TypesPackage.TCLASS: return createTClass();
 			case TypesPackage.TINTERFACE: return createTInterface();
@@ -183,17 +180,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TypeDefs createTypeDefs() {
-		TypeDefsImpl typeDefs = new TypeDefsImpl();
-		return typeDefs;
 	}
 
 	/**
@@ -356,17 +342,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	@Override
-	public VirtualBaseType createVirtualBaseType() {
-		VirtualBaseTypeImpl virtualBaseType = new VirtualBaseTypeImpl();
-		return virtualBaseType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public ModuleNamespaceVirtualType createModuleNamespaceVirtualType() {
 		ModuleNamespaceVirtualTypeImpl moduleNamespaceVirtualType = new ModuleNamespaceVirtualTypeImpl();
 		return moduleNamespaceVirtualType;
@@ -458,17 +433,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TMigration createTMigration() {
 		TMigrationImpl tMigration = new TMigrationImpl();
 		return tMigration;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TObjectPrototype createTObjectPrototype() {
-		TObjectPrototypeImpl tObjectPrototype = new TObjectPrototypeImpl();
-		return tObjectPrototype;
 	}
 
 	/**

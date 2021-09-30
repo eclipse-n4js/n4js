@@ -52,7 +52,7 @@ public class VersionUtilsTest extends Assert {
 		Assert.assertEquals("Versioned union type", 2, VersionableUtils.getVersion(makeTypeRef("union{A#2, string}", preamble)));
 		
 		Assert.assertEquals("Versioned intersection type", 1, VersionableUtils.getVersion(makeTypeRef("intersection{A#1, I#2}", preamble)));
-		Assert.assertEquals("Versioned intersection type", 2, VersionableUtils.getVersion(makeTypeRef("intersection{A#2, Function}", preamble)));
+		Assert.assertEquals("Versioned intersection type", 2, VersionableUtils.getVersion(makeTypeRef("intersection{A#2, Iterable<?>}", preamble)));
 	}
 	
 	@Test

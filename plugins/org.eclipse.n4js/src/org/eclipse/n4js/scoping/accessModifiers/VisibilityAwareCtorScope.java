@@ -15,7 +15,7 @@ import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMethod;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;

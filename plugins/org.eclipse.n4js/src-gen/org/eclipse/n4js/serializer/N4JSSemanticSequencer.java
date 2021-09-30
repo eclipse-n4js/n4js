@@ -138,7 +138,6 @@ import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ts.serializer.TypeExpressionsSemanticSequencer;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;

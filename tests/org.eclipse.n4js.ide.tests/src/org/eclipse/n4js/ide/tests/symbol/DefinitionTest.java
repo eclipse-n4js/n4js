@@ -37,7 +37,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_01() throws Exception {
 		testAtCursor(
 				"var s: s<|>tring = ''; s.length;",
-				"(n4scheme:/primitives_js.n4ts, [33:10 - 33:16])");
+				"(n4scheme:/primitives.n4jsd, [0:0 - 12:0])");
 	}
 
 	/***/
@@ -53,7 +53,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_03() throws Exception {
 		testAtCursor(
 				"var s: string = ''; s.le<|>ngth;",
-				"(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])");
+				"(n4scheme:/builtin_js.n4jsd, [839:12 - 839:18])");
 	}
 
 	/***/
@@ -63,16 +63,16 @@ public class DefinitionTest extends AbstractDefinitionTest {
 		startAndWaitForLspServer();
 
 		DefinitionParams definitionParams = new DefinitionParams();
-		definitionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4ts"));
+		definitionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4jsd"));
 		// see position from test above
-		definitionParams.setPosition(new Position(838, 15));
+		definitionParams.setPosition(new Position(839, 12));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
 				.definition(definitionParams);
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 
 		File root = getRoot();
 		String actualSignatureHelp = new StringLSP4J(root).toString4(definitions);
-		assertEquals("(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])", actualSignatureHelp.trim());
+		assertEquals("(n4scheme:/builtin_js.n4jsd, [839:12 - 839:18])", actualSignatureHelp.trim());
 	}
 
 }

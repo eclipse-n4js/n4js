@@ -23,18 +23,18 @@ import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SuperLiteral;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
+import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
@@ -218,7 +218,7 @@ public class MemberVisibilityChecker {
 				return null;
 			// Change receiverType to implicit super class Function.
 			BuiltInTypeScope builtInTypeScope = BuiltInTypeScope.get(resourceSet);
-			TObjectPrototype functionType = builtInTypeScope.getFunctionType();
+			TClass functionType = builtInTypeScope.getFunctionType();
 			return functionType;
 		}
 		return receiverType.getDeclaredType();

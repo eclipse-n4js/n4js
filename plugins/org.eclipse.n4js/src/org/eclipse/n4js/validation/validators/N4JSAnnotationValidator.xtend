@@ -34,13 +34,14 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
+import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -445,12 +446,15 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 				ANN_DISALLOWED_IN_NONDEFINTION_FILE);
 			return
 		}
-		val projURI = element.eResource.URI;
+		val resource = element.eResource;
+		val projURI = resource.URI;
 		val project = workspaceAccess.findProjectByNestedLocation(annotation, projURI);
 		if (project === null) {
-			val msg = getMessageForNO_PROJECT_FOUND(projURI);
-			val script = EcoreUtil2.getContainerOfType(element, Script);
-			addIssue(msg, script, NO_PROJECT_FOUND);
+			if (!N4Scheme.isResourceWithN4Scheme(resource)) { // built-in type definition files are not contained in a project
+				val msg = getMessageForNO_PROJECT_FOUND(projURI);
+				val script = EcoreUtil2.getContainerOfType(element, Script);
+				addIssue(msg, script, NO_PROJECT_FOUND);
+			}
 		} else {
 			val projectType = project.type;
 			if (projectType !== ProjectType.RUNTIME_ENVIRONMENT && projectType !== ProjectType.RUNTIME_LIBRARY) {
@@ -499,7 +503,7 @@ class N4JSAnnotationValidator extends AbstractN4JSDeclarativeValidator {
 
 		val moduleQN = qnProvider.getFullyQualifiedName(script.module)
 		// check
-		if (! N4TSQualifiedNameProvider.isModulePolyfill(moduleQN)) {
+		if (! PolyfillUtils.isModulePolyfill(moduleQN)) {
 			println("### strange should start with '!MPOLY' for " + script?.module?.eResource?.URI);
 			return
 		}

@@ -547,7 +547,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 										$current,
 										"typingStrategy",
 										lv_typingStrategy_12_0,
-										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -566,7 +566,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 										$current,
 										"name",
 										lv_name_13_0,
-										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -657,7 +657,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 										$current,
 										"typingStrategy",
 										lv_typingStrategy_20_0,
-										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -676,7 +676,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 										$current,
 										"name",
 										lv_name_21_0,
-										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -780,7 +780,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_29_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -897,7 +897,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_39_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -1316,7 +1316,7 @@ ruleExportSpecifier returns [EObject current=null]
 							$current,
 							"alias",
 							lv_alias_2_0,
-							"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+							"org.eclipse.n4js.TypeExpressions.IdentifierName");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -1759,7 +1759,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 										$current,
 										"typingStrategy",
 										lv_typingStrategy_15_0,
-										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -1778,7 +1778,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 										$current,
 										"name",
 										lv_name_16_0,
-										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -1856,7 +1856,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 										$current,
 										"typingStrategy",
 										lv_typingStrategy_22_0,
-										"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+										"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -1875,7 +1875,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 										$current,
 										"name",
 										lv_name_23_0,
-										"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+										"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 									afterParserOrEnumRuleCall();
 								}
 							)
@@ -1966,7 +1966,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_30_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -2070,7 +2070,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_39_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -2462,7 +2462,7 @@ ruleNamedImportSpecifier returns [EObject current=null]
 							$current,
 							"alias",
 							lv_alias_4_0,
-							"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+							"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -2579,7 +2579,7 @@ ruleNamespaceImportSpecifier returns [EObject current=null]
 						$current,
 						"alias",
 						lv_alias_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -3578,7 +3578,7 @@ ruleFunctionHeader[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"name",
 						lv_name_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -3661,7 +3661,7 @@ norm1_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"name",
 						lv_name_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -3744,7 +3744,7 @@ norm2_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"name",
 						lv_name_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -3827,7 +3827,7 @@ norm3_FunctionHeader[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"name",
 						lv_name_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -5466,7 +5466,7 @@ ruleBindingIdentifierAsFormalParameter returns [EObject current=null]
 					$current,
 					"name",
 					lv_name_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -5496,7 +5496,7 @@ norm1_BindingIdentifierAsFormalParameter returns [EObject current=null]
 					$current,
 					"name",
 					lv_name_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -5788,7 +5788,7 @@ ruleAnnotatedExpression returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -5899,7 +5899,7 @@ norm1_AnnotatedExpression returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -6210,7 +6210,7 @@ ruleBindingElementFragment[EObject in_current]  returns [EObject current=in_curr
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -6351,7 +6351,7 @@ norm1_BindingElementFragment[EObject in_current]  returns [EObject current=in_cu
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -8309,7 +8309,7 @@ ruleVariableDeclarationImpl[EObject in_current]  returns [EObject current=in_cur
 								$current,
 								"name",
 								lv_name_1_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -8395,7 +8395,7 @@ norm1_VariableDeclarationImpl[EObject in_current]  returns [EObject current=in_c
 								$current,
 								"name",
 								lv_name_1_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -8481,7 +8481,7 @@ norm2_VariableDeclarationImpl[EObject in_current]  returns [EObject current=in_c
 								$current,
 								"name",
 								lv_name_1_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -8567,7 +8567,7 @@ norm3_VariableDeclarationImpl[EObject in_current]  returns [EObject current=in_c
 								$current,
 								"name",
 								lv_name_1_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -8659,7 +8659,7 @@ norm4_VariableDeclarationImpl[EObject in_current]  returns [EObject current=in_c
 									$current,
 									"name",
 									lv_name_1_0,
-									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -8765,7 +8765,7 @@ norm5_VariableDeclarationImpl[EObject in_current]  returns [EObject current=in_c
 									$current,
 									"name",
 									lv_name_1_0,
-									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -8871,7 +8871,7 @@ norm6_VariableDeclarationImpl[EObject in_current]  returns [EObject current=in_c
 									$current,
 									"name",
 									lv_name_1_0,
-									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -8977,7 +8977,7 @@ norm7_VariableDeclarationImpl[EObject in_current]  returns [EObject current=in_c
 									$current,
 									"name",
 									lv_name_1_0,
-									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -11578,7 +11578,7 @@ ruleBindingIdentifierAsVariableDeclaration returns [EObject current=null]
 					$current,
 					"name",
 					lv_name_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -11608,7 +11608,7 @@ norm2_BindingIdentifierAsVariableDeclaration returns [EObject current=null]
 					$current,
 					"name",
 					lv_name_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+					"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -12546,7 +12546,7 @@ ruleLabelledStatement returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_0_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -12614,7 +12614,7 @@ norm1_LabelledStatement returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_0_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -13176,7 +13176,7 @@ ruleCatchVariable returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_1_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -13212,7 +13212,7 @@ ruleCatchVariable returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -13279,7 +13279,7 @@ norm1_CatchVariable returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_1_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -13315,7 +13315,7 @@ norm1_CatchVariable returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -18616,7 +18616,7 @@ ruleTypeReferenceNode returns [EObject current=null]
 					$current,
 					"typeRefInAST",
 					lv_typeRefInAST_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+					"org.eclipse.n4js.TypeExpressions.TypeRef");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -18652,7 +18652,7 @@ ruleTypeReferenceWithModifiersNode returns [EObject current=null]
 					$current,
 					"typeRefInAST",
 					lv_typeRefInAST_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.TypeRefWithModifiers");
+					"org.eclipse.n4js.TypeExpressions.TypeRefWithModifiers");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -18688,7 +18688,7 @@ ruleParameterizedTypeRefNominalNode returns [EObject current=null]
 					$current,
 					"typeRefInAST",
 					lv_typeRefInAST_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.ParameterizedTypeRefNominal");
+					"org.eclipse.n4js.TypeExpressions.ParameterizedTypeRefNominal");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -18724,7 +18724,7 @@ ruleArrayTypeExpressionNode returns [EObject current=null]
 					$current,
 					"typeRefInAST",
 					lv_typeRefInAST_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
+					"org.eclipse.n4js.TypeExpressions.ArrayTypeExpression");
 				afterParserOrEnumRuleCall();
 			}
 		)
@@ -27632,7 +27632,7 @@ ruleStringLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.STRING");
+					"org.eclipse.n4js.TypeExpressions.STRING");
 			}
 		)
 	)
@@ -27748,7 +27748,7 @@ ruleDoubleLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
+					"org.eclipse.n4js.TypeExpressions.DOUBLE");
 			}
 		)
 	)
@@ -27783,7 +27783,7 @@ ruleIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.INT");
+					"org.eclipse.n4js.TypeExpressions.INT");
 			}
 		)
 	)
@@ -27818,7 +27818,7 @@ ruleOctalIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
+					"org.eclipse.n4js.TypeExpressions.OCTAL_INT");
 			}
 		)
 	)
@@ -27853,7 +27853,7 @@ ruleLegacyOctalIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
+					"org.eclipse.n4js.TypeExpressions.LEGACY_OCTAL_INT");
 			}
 		)
 	)
@@ -27888,7 +27888,7 @@ ruleHexIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
+					"org.eclipse.n4js.TypeExpressions.HEX_INT");
 			}
 		)
 	)
@@ -27923,7 +27923,7 @@ ruleBinaryIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
+					"org.eclipse.n4js.TypeExpressions.BINARY_INT");
 			}
 		)
 	)
@@ -27958,7 +27958,7 @@ ruleScientificIntLiteral returns [EObject current=null]
 					$current,
 					"value",
 					lv_value_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
+					"org.eclipse.n4js.TypeExpressions.SCIENTIFIC_INT");
 			}
 		)
 	)
@@ -28977,7 +28977,7 @@ ruleN4ClassDeclaration returns [EObject current=null]
 								$current,
 								"typingStrategy",
 								lv_typingStrategy_2_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+								"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -28996,7 +28996,7 @@ ruleN4ClassDeclaration returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -29559,7 +29559,7 @@ ruleN4ClassExpression returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_2_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -29626,7 +29626,7 @@ norm1_N4ClassExpression returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_2_0,
-						"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+						"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -29735,7 +29735,7 @@ ruleN4InterfaceDeclaration returns [EObject current=null]
 								$current,
 								"typingStrategy",
 								lv_typingStrategy_2_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyDefSiteOperator");
+								"org.eclipse.n4js.TypeExpressions.TypingStrategyDefSiteOperator");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -29754,7 +29754,7 @@ ruleN4InterfaceDeclaration returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -29963,7 +29963,7 @@ ruleN4EnumDeclaration returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -30070,7 +30070,7 @@ ruleN4EnumLiteral returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_0_0,
-						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+						"org.eclipse.n4js.TypeExpressions.IdentifierName");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -30181,7 +30181,7 @@ ruleN4TypeAliasDeclaration returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -35086,7 +35086,7 @@ ruleLiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_0_0,
-						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+						"org.eclipse.n4js.TypeExpressions.IdentifierName");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -35106,7 +35106,7 @@ ruleLiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.STRING");
+						"org.eclipse.n4js.TypeExpressions.STRING");
 				}
 			)
 		)
@@ -35187,7 +35187,7 @@ norm1_LiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_0_0,
-						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+						"org.eclipse.n4js.TypeExpressions.IdentifierName");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -35207,7 +35207,7 @@ norm1_LiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.STRING");
+						"org.eclipse.n4js.TypeExpressions.STRING");
 				}
 			)
 		)
@@ -35981,7 +35981,7 @@ ruleVersionDeclaration[EObject in_current]  returns [EObject current=in_current]
 					$current,
 					"declaredVersion",
 					lv_declaredVersion_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
+					"org.eclipse.n4js.TypeExpressions.VERSION");
 			}
 		)
 	)
@@ -36038,7 +36038,7 @@ ruleTypeRef returns [EObject current=null]
 								$current,
 								"typeRefs",
 								lv_typeRefs_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.IntersectionTypeExpression");
+								"org.eclipse.n4js.TypeExpressions.IntersectionTypeExpression");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -36099,7 +36099,7 @@ ruleIntersectionTypeExpression returns [EObject current=null]
 								$current,
 								"typeRefs",
 								lv_typeRefs_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.ArrayTypeExpression");
+								"org.eclipse.n4js.TypeExpressions.ArrayTypeExpression");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -36147,7 +36147,7 @@ ruleArrayTypeExpression returns [EObject current=null]
 							$current,
 							"typeArgs",
 							lv_typeArgs_1_0,
-							"org.eclipse.n4js.ts.TypeExpressions.WildcardOldNotationWithoutBound");
+							"org.eclipse.n4js.TypeExpressions.WildcardOldNotationWithoutBound");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -36238,7 +36238,7 @@ ruleArrayTypeExpression returns [EObject current=null]
 							$current,
 							"typeArgs",
 							lv_typeArgs_9_0,
-							"org.eclipse.n4js.ts.TypeExpressions.Wildcard");
+							"org.eclipse.n4js.TypeExpressions.Wildcard");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -36849,7 +36849,7 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 							$current,
 							"astValue",
 							lv_astValue_2_0,
-							"org.eclipse.n4js.ts.TypeExpressions.INT");
+							"org.eclipse.n4js.TypeExpressions.INT");
 					}
 				)
 			)
@@ -36868,7 +36868,7 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 							$current,
 							"astValue",
 							lv_astValue_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.DOUBLE");
+							"org.eclipse.n4js.TypeExpressions.DOUBLE");
 					}
 				)
 			)
@@ -36887,7 +36887,7 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 							$current,
 							"astValue",
 							lv_astValue_4_0,
-							"org.eclipse.n4js.ts.TypeExpressions.OCTAL_INT");
+							"org.eclipse.n4js.TypeExpressions.OCTAL_INT");
 					}
 				)
 			)
@@ -36906,7 +36906,7 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 							$current,
 							"astValue",
 							lv_astValue_5_0,
-							"org.eclipse.n4js.ts.TypeExpressions.LEGACY_OCTAL_INT");
+							"org.eclipse.n4js.TypeExpressions.LEGACY_OCTAL_INT");
 					}
 				)
 			)
@@ -36925,7 +36925,7 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 							$current,
 							"astValue",
 							lv_astValue_6_0,
-							"org.eclipse.n4js.ts.TypeExpressions.HEX_INT");
+							"org.eclipse.n4js.TypeExpressions.HEX_INT");
 					}
 				)
 			)
@@ -36944,7 +36944,7 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 							$current,
 							"astValue",
 							lv_astValue_7_0,
-							"org.eclipse.n4js.ts.TypeExpressions.BINARY_INT");
+							"org.eclipse.n4js.TypeExpressions.BINARY_INT");
 					}
 				)
 			)
@@ -36963,7 +36963,7 @@ ruleNumericLiteralTypeRef returns [EObject current=null]
 							$current,
 							"astValue",
 							lv_astValue_8_0,
-							"org.eclipse.n4js.ts.TypeExpressions.SCIENTIFIC_INT");
+							"org.eclipse.n4js.TypeExpressions.SCIENTIFIC_INT");
 					}
 				)
 			)
@@ -37000,7 +37000,7 @@ ruleStringLiteralTypeRef returns [EObject current=null]
 					$current,
 					"astValue",
 					lv_astValue_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.STRING");
+					"org.eclipse.n4js.TypeExpressions.STRING");
 			}
 		)
 	)
@@ -37102,7 +37102,7 @@ ruleThisTypeRefStructural returns [EObject current=null]
 						$current,
 						"definedTypingStrategy",
 						lv_definedTypingStrategy_0_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+						"org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -37185,7 +37185,7 @@ ruleFunctionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"declaredThisType",
 							lv_declaredThisType_5_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRefFunctionTypeExpression");
+							"org.eclipse.n4js.TypeExpressions.TypeRefFunctionTypeExpression");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -37218,7 +37218,7 @@ ruleFunctionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"ownedTypeVars",
 							lv_ownedTypeVars_9_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+							"org.eclipse.n4js.TypeExpressions.TypeVariable");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -37242,7 +37242,7 @@ ruleFunctionTypeExpressionOLD returns [EObject current=null]
 								$current,
 								"ownedTypeVars",
 								lv_ownedTypeVars_11_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+								"org.eclipse.n4js.TypeExpressions.TypeVariable");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -37365,7 +37365,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 						$current,
 						"returnTypeRef",
 						lv_returnTypeRef_5_0,
-						"org.eclipse.n4js.ts.TypeExpressions.PrimaryTypeExpression");
+						"org.eclipse.n4js.TypeExpressions.PrimaryTypeExpression");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -37397,7 +37397,7 @@ ruleTAnonymousFormalParameterList[EObject in_current]  returns [EObject current=
 						$current,
 						"fpars",
 						lv_fpars_0_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TAnonymousFormalParameter");
+						"org.eclipse.n4js.TypeExpressions.TAnonymousFormalParameter");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -37421,7 +37421,7 @@ ruleTAnonymousFormalParameterList[EObject in_current]  returns [EObject current=
 							$current,
 							"fpars",
 							lv_fpars_2_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TAnonymousFormalParameter");
+							"org.eclipse.n4js.TypeExpressions.TAnonymousFormalParameter");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -37486,7 +37486,7 @@ ruleTAnonymousFormalParameter returns [EObject current=null]
 									$current,
 									"name",
 									lv_name_1_0,
-									"org.eclipse.n4js.ts.TypeExpressions.BindingIdentifier");
+									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -37522,7 +37522,7 @@ ruleTAnonymousFormalParameter returns [EObject current=null]
 							$current,
 							"typeRef",
 							lv_typeRef_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+							"org.eclipse.n4js.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -37633,7 +37633,7 @@ ruleUnionTypeExpressionOLD returns [EObject current=null]
 						$current,
 						"typeRefs",
 						lv_typeRefs_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+						"org.eclipse.n4js.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -37657,7 +37657,7 @@ ruleUnionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"typeRefs",
 							lv_typeRefs_5_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+							"org.eclipse.n4js.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -37715,7 +37715,7 @@ ruleIntersectionTypeExpressionOLD returns [EObject current=null]
 						$current,
 						"typeRefs",
 						lv_typeRefs_3_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+						"org.eclipse.n4js.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -37739,7 +37739,7 @@ ruleIntersectionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"typeRefs",
 							lv_typeRefs_5_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+							"org.eclipse.n4js.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -37898,7 +37898,7 @@ ruleParameterizedTypeRefStructural returns [EObject current=null]
 								$current,
 								"definedTypingStrategy",
 								lv_definedTypingStrategy_0_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+								"org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -37938,7 +37938,7 @@ ruleParameterizedTypeRefStructural returns [EObject current=null]
 								$current,
 								"definedTypingStrategy",
 								lv_definedTypingStrategy_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+								"org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -38046,7 +38046,7 @@ ruleArrayNTypeExpression returns [EObject current=null]
 							$current,
 							"typeArgs",
 							lv_typeArgs_1_0,
-							"org.eclipse.n4js.ts.TypeExpressions.EmptyIterableTypeExpressionTail");
+							"org.eclipse.n4js.TypeExpressions.EmptyIterableTypeExpressionTail");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -38067,7 +38067,7 @@ ruleArrayNTypeExpression returns [EObject current=null]
 								$current,
 								"typeArgs",
 								lv_typeArgs_2_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+								"org.eclipse.n4js.TypeExpressions.TypeArgument");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -38091,7 +38091,7 @@ ruleArrayNTypeExpression returns [EObject current=null]
 									$current,
 									"typeArgs",
 									lv_typeArgs_4_0,
-									"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+									"org.eclipse.n4js.TypeExpressions.TypeArgument");
 								afterParserOrEnumRuleCall();
 							}
 						)
@@ -38159,7 +38159,7 @@ ruleVersionRequest[EObject in_current]  returns [EObject current=in_current]
 					$current,
 					"requestedVersion",
 					lv_requestedVersion_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
+					"org.eclipse.n4js.TypeExpressions.VERSION");
 			}
 		)
 	)
@@ -38193,7 +38193,7 @@ ruleTypeArguments[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"typeArgs",
 						lv_typeArgs_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+						"org.eclipse.n4js.TypeExpressions.TypeArgument");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -38217,7 +38217,7 @@ ruleTypeArguments[EObject in_current]  returns [EObject current=in_current]
 							$current,
 							"typeArgs",
 							lv_typeArgs_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeArgument");
+							"org.eclipse.n4js.TypeExpressions.TypeArgument");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -38259,7 +38259,7 @@ ruleTStructMemberList[EObject in_current]  returns [EObject current=in_current]
 							$current,
 							"astStructuralMembers",
 							lv_astStructuralMembers_1_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TStructMember");
+							"org.eclipse.n4js.TypeExpressions.TStructMember");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -38445,7 +38445,7 @@ ruleTStructMethod returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_2_0,
-								"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+								"org.eclipse.n4js.TypeExpressions.IdentifierName");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -38515,7 +38515,7 @@ ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"typeVars",
 						lv_typeVars_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+						"org.eclipse.n4js.TypeExpressions.TypeVariable");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -38539,7 +38539,7 @@ ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
 							$current,
 							"typeVars",
 							lv_typeVars_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+							"org.eclipse.n4js.TypeExpressions.TypeVariable");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -38580,7 +38580,7 @@ ruleColonSepTypeRef[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"typeRef",
 						lv_typeRef_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+						"org.eclipse.n4js.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -38616,7 +38616,7 @@ ruleColonSepReturnTypeRef[EObject in_current]  returns [EObject current=in_curre
 						$current,
 						"returnTypeRef",
 						lv_returnTypeRef_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+						"org.eclipse.n4js.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -38654,7 +38654,7 @@ ruleTStructField returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_0_0,
-						"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+						"org.eclipse.n4js.TypeExpressions.IdentifierName");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -38743,7 +38743,7 @@ ruleTStructGetter returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_2_0,
-								"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+								"org.eclipse.n4js.TypeExpressions.IdentifierName");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -38842,7 +38842,7 @@ ruleTStructSetter returns [EObject current=null]
 								$current,
 								"name",
 								lv_name_2_0,
-								"org.eclipse.n4js.ts.TypeExpressions.IdentifierName");
+								"org.eclipse.n4js.TypeExpressions.IdentifierName");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -38881,7 +38881,7 @@ ruleTStructSetter returns [EObject current=null]
 						$current,
 						"fpar",
 						lv_fpar_5_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TAnonymousFormalParameter");
+						"org.eclipse.n4js.TypeExpressions.TAnonymousFormalParameter");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -39016,7 +39016,7 @@ ruleTypeTypeRef returns [EObject current=null]
 						$current,
 						"typeArg",
 						lv_typeArg_4_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeArgInTypeTypeRef");
+						"org.eclipse.n4js.TypeExpressions.TypeArgInTypeTypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -39165,7 +39165,7 @@ ruleWildcardOldNotation returns [EObject current=null]
 								$current,
 								"declaredUpperBound",
 								lv_declaredUpperBound_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+								"org.eclipse.n4js.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -39191,7 +39191,7 @@ ruleWildcardOldNotation returns [EObject current=null]
 								$current,
 								"declaredLowerBound",
 								lv_declaredLowerBound_5_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+								"org.eclipse.n4js.TypeExpressions.TypeRef");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -39276,7 +39276,7 @@ ruleWildcardNewNotation returns [EObject current=null]
 							$current,
 							"declaredUpperBound",
 							lv_declaredUpperBound_1_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+							"org.eclipse.n4js.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -39312,7 +39312,7 @@ ruleWildcardNewNotation returns [EObject current=null]
 							$current,
 							"declaredLowerBound",
 							lv_declaredLowerBound_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+							"org.eclipse.n4js.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -39382,7 +39382,7 @@ ruleTypeVariable returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_2_0,
-						"org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER");
+						"org.eclipse.n4js.TypeExpressions.IDENTIFIER");
 				}
 			)
 		)
@@ -39405,7 +39405,7 @@ ruleTypeVariable returns [EObject current=null]
 							$current,
 							"declaredUpperBound",
 							lv_declaredUpperBound_4_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+							"org.eclipse.n4js.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)

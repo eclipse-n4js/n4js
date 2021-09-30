@@ -14,7 +14,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.util.List;
 import org.eclipse.n4js.common.unicode.services.UnicodeGrammarAccess;
-import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;
@@ -15828,8 +15827,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	///**
 	// * All TMembers here are only used in ParameterizedTypeRefStructural references
-	// * Most type references are optional. However, in the types language (n4ts), these
-	// * references are NOT optional.
+	// * Most type references are optional.
 	// */
 	//TStructMember:
 	//      TStructGetter

@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -96,8 +97,10 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 				// extended type must be an interface
 				if (!(extendedType instanceof TInterface)) {
 					if (extendedType instanceof PrimitiveType) {
-						val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(extendedType.name);
-						addIssue(message, it, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
+						if (!N4Scheme.isFromResourceWithN4Scheme(n4Interface)) { // primitive types may be extended in built-in types
+							val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(extendedType.name);
+							addIssue(message, it, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
+						}
 					} else {
 						val message = IssueCodes.getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend",
 							extendedType.description);

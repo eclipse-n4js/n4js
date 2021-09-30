@@ -30,7 +30,7 @@ import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.postprocessing.ComputedNameProcessor
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
@@ -43,7 +43,7 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 @Singleton

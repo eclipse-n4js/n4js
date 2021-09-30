@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
+import static org.eclipse.n4js.types.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
@@ -77,7 +77,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.Result;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;

@@ -24,8 +24,6 @@ import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
 import org.eclipse.n4js.semver.SemverStandaloneSetup;
-import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
-import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.ISetup;
@@ -90,7 +88,6 @@ public class N4JSStandaloneSetup implements ISetup {
 	 */
 	protected void setupOtherLanguages() {
 		RegularExpressionStandaloneSetup.doSetup();
-		TypesStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 		JSONStandaloneSetup.doSetup();
 		SemverStandaloneSetup.doSetup();

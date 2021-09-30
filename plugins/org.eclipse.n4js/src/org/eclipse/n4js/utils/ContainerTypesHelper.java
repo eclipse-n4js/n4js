@@ -11,7 +11,6 @@
 package org.eclipse.n4js.utils;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.INHERITED;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.MIXEDIN;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.OWNED;
@@ -38,11 +37,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.TMemberEntry;
 import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.NameAndAccess;
+import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TField;
@@ -50,13 +50,12 @@ import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.AbstractHierachyTraverser;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.types.util.NonSymetricMemberKey;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -193,9 +192,13 @@ public class ContainerTypesHelper {
 		 * E.g., in
 		 *
 		 * <pre>
-		 * interface I { m() {} }
-		 * interface J extends I {}
-		 * class A implements J {}
+		 * interface I {
+		 * 	m(){}
+		 * }
+		 * interface J extends I {
+		 * }
+		 * class A implements J {
+		 * }
 		 * </pre>
 		 *
 		 * a (pseudo) call {@code directSuperTypeBequestingMember(A, m)} would return {@code J}.
@@ -444,9 +447,6 @@ public class ContainerTypesHelper {
 			} else if (type instanceof TInterface) {
 				superType = null;
 				interfaces = ((TInterface) type).getSuperInterfaceRefs();
-			} else if (type instanceof TObjectPrototype) {
-				superType = explicitOrImplicitSuperType(type);
-				interfaces = emptyList();
 			} else {
 				return MemberList.emptyList();
 			}
@@ -555,9 +555,6 @@ public class ContainerTypesHelper {
 				superType = null;
 				interfaces = new ArrayList<>(((TInterface) type).getSuperInterfaceRefs());
 				interfaces.addAll(((TInterface) spolyBuddy).getSuperInterfaceRefs());
-			} else if (type instanceof TObjectPrototype) {
-				superType = explicitOrImplicitSuperType(type);
-				interfaces = emptyList();
 			} else {
 				return MemberList.emptyList();
 			}
@@ -735,11 +732,11 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected List<ParameterizedTypeRef> getPolyfills(Type filledType) {
-				if (includePolyfills && (filledType instanceof TClass || filledType instanceof TObjectPrototype)) {
+				if (includePolyfills && filledType instanceof TClass) {
 					TClassifier tClassifier = (TClassifier) filledType;
 					if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
 					) {
-						QualifiedName qn = N4TSQualifiedNameProvider.getPolyfillFQN(tClassifier, qualifiedNameProvider);
+						QualifiedName qn = PolyfillUtils.getPolyfillFQN(tClassifier, qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
 
@@ -751,7 +748,7 @@ public class ContainerTypesHelper {
 					}
 					if (isContainedInStaticPolyfillAware(filledType) // static-polyfilled work as well
 					) {
-						QualifiedName qn = N4TSQualifiedNameProvider.getStaticPolyfillFQN(tClassifier,
+						QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN(tClassifier,
 								qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
@@ -799,6 +796,12 @@ public class ContainerTypesHelper {
 				return false;
 			}
 
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
 			/**
 			 * Returns true if the given container type is a polyfill of the bottom type.
 			 * <p>
@@ -810,7 +813,7 @@ public class ContainerTypesHelper {
 				if (!containerType.isStaticPolyfill() || !(bottomType instanceof TClassifier)) {
 					return false;
 				}
-				QualifiedName qn = N4TSQualifiedNameProvider.getStaticPolyfillFQN((TClassifier) bottomType,
+				QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN((TClassifier) bottomType,
 						qualifiedNameProvider);
 				if (containerType instanceof TClass) { // short cut
 					return qn.equals(qualifiedNameProvider.getFullyQualifiedName(containerType));
@@ -880,6 +883,12 @@ public class ContainerTypesHelper {
 				}
 				return false;
 			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
 		}
 
 		private class MemberEntriesCollector extends AbstractMemberCollector<Collection<TMemberEntry>> {
@@ -925,6 +934,12 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
+			@Override
 			protected boolean doProcessConsumedRoles(TClass object) {
 				if (object == bottomType) {
 					source = MIXEDIN;
@@ -963,6 +978,12 @@ public class ContainerTypesHelper {
 				}
 				return false;
 
+			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
 			}
 
 			@Override

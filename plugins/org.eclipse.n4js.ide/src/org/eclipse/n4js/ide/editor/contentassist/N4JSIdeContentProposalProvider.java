@@ -18,10 +18,11 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
@@ -56,9 +57,9 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 			// Don't propose any erroneous descriptions.
 			boolean valid = true;
 			valid &= !isErrorDescription(eObjectDescription);
-			valid &= !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment());
-			valid &= !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName);
-			valid &= !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
+			valid &= !N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment());
+			valid &= !PolyfillUtils.isModulePolyfill(qualifiedName);
+			valid &= !PolyfillUtils.isPolyfill(qualifiedName);
 			return valid;
 		}
 

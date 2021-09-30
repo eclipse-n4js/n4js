@@ -10,7 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-@Polyfill export @Final external public class String extends String {
+@Polyfill export external public class String extends String {
     public substr(begin: number, length: number=): string;
     
     public padStart(len: int, pad: string=): string;

@@ -85,6 +85,7 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
@@ -132,7 +133,8 @@ class ASTStructureValidator {
 
 	@ToString
 	protected static class Constraints {
-		static val STRICT = 1
+		static val BUILT_IN_TYPE_DEFINITION = 1
+		static val STRICT = BUILT_IN_TYPE_DEFINITION << 1
 		static val N4JS = STRICT << 1
 		static val EXTERNAL = N4JS << 1
 		static val ALLOW_NESTED_FUNCTION_DECLARATION = EXTERNAL << 1
@@ -152,8 +154,18 @@ class ASTStructureValidator {
 			if (b) value else 0
 		}
 
-		new(boolean n4js, boolean external) {
-			this(N4JS.getIf(n4js).bitwiseOr(EXTERNAL.getIf(external)).bitwiseOr(ALLOW_VAR_WITHOUT_INITIALIZER).bitwiseOr(ALLOW_YIELD_EXPRESSION))
+		new(boolean builtInTypeDefinition, boolean n4js, boolean external) {
+			this(
+				BUILT_IN_TYPE_DEFINITION.getIf(builtInTypeDefinition).bitwiseOr(
+					N4JS.getIf(n4js).bitwiseOr(
+						EXTERNAL.getIf(external).bitwiseOr(
+							ALLOW_VAR_WITHOUT_INITIALIZER.bitwiseOr(
+								ALLOW_YIELD_EXPRESSION
+							)
+						)
+					)
+				)
+			)
 		}
 
 		new(int bits) {
@@ -162,6 +174,10 @@ class ASTStructureValidator {
 
 		def private is(int bit) {
 			return this.bits.bitwiseAnd(bit) !== 0
+		}
+
+		def boolean isBuiltInTypeDefinition() {
+			return is(BUILT_IN_TYPE_DEFINITION)
 		}
 
 		def boolean isN4JS() {
@@ -283,7 +299,10 @@ class ASTStructureValidator {
 		if(resource !== null && !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 			val producer = new ASTStructureDiagnosticProducer(consumer);
 			validateASTStructure(model, producer, Sets.newHashSetWithExpectedSize(2),
-				new Constraints(jsVariantHelper.isN4JSMode(model), jsVariantHelper.isExternalMode(model))
+				new Constraints(
+					N4Scheme.isResourceWithN4Scheme(resource),
+					jsVariantHelper.isN4JSMode(model),
+					jsVariantHelper.isExternalMode(model))
 			);
 		}
 	}
@@ -1252,7 +1271,8 @@ class ASTStructureValidator {
 	def private void validateName(PropertyNameOwner model, Constraints constraints, ASTStructureDiagnosticProducer producer) {
 		val name = model.name
 		if (name !== null) {
-			if (!model.isValidName) {
+			if (!model.isValidName
+					&& !constraints.isBuiltInTypeDefinition) {
 				issueNameDiagnostic(model, producer, name)
 			} else {
 				if (constraints.isN4JS) {

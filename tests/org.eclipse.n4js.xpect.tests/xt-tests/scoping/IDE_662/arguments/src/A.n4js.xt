@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest END_SETUP */
 
 // The following are replicated to AT_662_arguments_localvar.n4js.xt (model/scopingSimple/arguments/src)
-// but with a local definition of class "ArgumentsType" - so they still should work!
+// but with a local definition of class "IArguments" - so they still should work!
 // --- --- --- positive tests --- --- --- \\
 
 function a1(s1 : string, n2 : number) {
@@ -67,13 +67,13 @@ interface R2 {
 
 
 
-export class ArgumentsType {
+export class IArguments {
 	public xa : number = 3;
 	public yo() : void {}
 }
 
 
-var args : ArgumentsType = new ArgumentsType();
+var args : IArguments = new IArguments();
 var s : number = args.xa;
 
 

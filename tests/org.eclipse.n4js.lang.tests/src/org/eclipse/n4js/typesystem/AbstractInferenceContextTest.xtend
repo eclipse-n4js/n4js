@@ -22,8 +22,8 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.utils.TypeCompareUtils
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeCompareUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment

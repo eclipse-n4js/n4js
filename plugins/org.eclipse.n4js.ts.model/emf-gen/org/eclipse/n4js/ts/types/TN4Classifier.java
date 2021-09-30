@@ -28,7 +28,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TN4Classifier extends TClassifier, AccessibleTypeElement, TMigratable {
+public interface TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike, TMigratable {
 	/**
 	 * Returns the value of the '<em><b>Dynamizable</b></em>' attribute.
 	 * The default value is <code>"true"</code>.

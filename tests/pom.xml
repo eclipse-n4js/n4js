@@ -330,9 +330,7 @@ Contributors:
 				<module>org.eclipse.n4js.spec.examples.xpect.tests</module>
 				<module>org.eclipse.n4js.xpect.tests</module>
 
-				<module>org.eclipse.n4js.ts.tests</module>
 				<module>org.eclipse.n4js.ts.model.tests</module>
-				<module>org.eclipse.n4js.ts.xpect.tests</module>
 
 				<module>org.eclipse.n4js.transpiler.tests</module>
 				<module>org.eclipse.n4js.transpiler.es5.tests</module>

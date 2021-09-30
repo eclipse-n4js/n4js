@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.resource.N4JSCrossReferenceComputer
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.validation.TypesKeywordProvider
+import org.eclipse.n4js.validation.utils.TypesKeywordProvider
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
