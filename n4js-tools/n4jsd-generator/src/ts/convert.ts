@@ -172,6 +172,9 @@ export class Converter {
 				return this.convertVariableDeclList(children[1] as ts.VariableDeclarationList);
 			}
 		} else if (ts.isModuleDeclaration(node)) {
+			if (!this.exportAssignment) {
+				return []; // FIXME!!!!! do not merge this to master
+			}
 			const exportSymbol = this.checker.getSymbolAtLocation(this.exportAssignment.expression);
 			
 			if (utils.testFlagsOR(exportSymbol.flags,
@@ -412,6 +415,8 @@ export class Converter {
 			result.kind = model.MemberKind.METHOD;
 			result.signatures = sigs;
 			return result;
+		} else if (ts.isIndexSignatureDeclaration(representativeNode)) {
+			// not supported yet
 		}
 		this.createIssueForUnsupportedNode(representativeNode, "member");
 		return undefined;
