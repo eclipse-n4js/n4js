@@ -93,7 +93,6 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
-import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
@@ -337,14 +336,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 			current = current.eContainer; // labeled statement must be a container
 		}
-		if (elements.empty)
+		if (elements.empty) {
 			return parent;
-		val result = new SimpleScope(parent, elements);
+		}
+		val result = bScopesHelper.scopeFor("contextLabels", current, parent, elements);
 		return result;
 	}
 
 	private def IScope getAllLabels(Script script) {
-		return bScopesHelper.scopeForEObjects("scope_LabelledStatement", script, script.eAllContents.filter(LabelledStatement).toIterable);
+		return bScopesHelper.scopeForEObjects("allLabels", script, script.eAllContents.filter(LabelledStatement).toIterable);
 	}
 
 	/**
