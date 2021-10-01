@@ -21,9 +21,11 @@ class YarnDifferentPackageNames extends AbstractIncrementalBuilderTest {
 	private static val testData = #[
 		"main-project" -> #[
 			"MainModule" -> '''
-				import {LibraryClass} from "LibraryModule"
+				import {LibraryClass} from "LibraryModule";
+				import {LibraryVar} from "library-project-other-name/LibraryModule";
 				
 				new LibraryClass();
+				LibraryVar;
 			''',
 			CFG_DEPENDENCIES -> '''
 				library-project-other-name
@@ -33,6 +35,7 @@ class YarnDifferentPackageNames extends AbstractIncrementalBuilderTest {
 			"LibraryModule" -> '''
 				export public class LibraryClass {
 				}
+				export public const LibraryVar = 0;
 			''',
 			PACKAGE_JSON -> '''
 				{
@@ -78,8 +81,10 @@ class YarnDifferentPackageNames extends AbstractIncrementalBuilderTest {
 			
 			import 'n4js-runtime'
 			import {LibraryClass} from 'library-project-other-name'
+			import {LibraryVar} from 'library-project-other-name'
 			
 			new LibraryClass();
+			LibraryVar;
 			//# sourceMappingURL=MainModule.map
 		''');
 
@@ -94,6 +99,7 @@ class YarnDifferentPackageNames extends AbstractIncrementalBuilderTest {
 					return $getReflectionForClass(this, '["LibraryClass","LibraryModule","library-project-other-name"]');
 				}
 			}
+			export const LibraryVar = 0;
 			//# sourceMappingURL=LibraryModule.map
 		''');
 	}
