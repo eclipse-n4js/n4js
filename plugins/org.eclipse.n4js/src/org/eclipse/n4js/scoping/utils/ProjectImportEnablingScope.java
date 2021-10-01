@@ -355,7 +355,7 @@ public class ProjectImportEnablingScope implements IScope {
 		// here:
 		Iterable<String> dependencies = project.getDependencies();
 		for (String pName : dependencies) {
-			N4JSProjectConfigSnapshot p = workspaceConfigSnapshot.findProjectByName(pName);
+			N4JSProjectConfigSnapshot p = workspaceConfigSnapshot.findProjectByID(pName);
 			if (p == null) {
 				continue;
 			}

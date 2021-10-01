@@ -32,7 +32,7 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 	 * Subset of {@link BuildOrderInfo#sortedProjects}: when {@link BuildOrderInfo} is used as an iterator, only those
 	 * projects are iterated over that are contained in this set
 	 */
-	final protected Set<String> visitProjectNames = new HashSet<>();
+	final protected Set<String> visitProjectIDs = new HashSet<>();
 	/** Set of all projects that have already visited by this iterator */
 	final protected LinkedHashSet<ProjectConfigSnapshot> visitedAlready = new LinkedHashSet<>();
 
@@ -50,16 +50,16 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 	@Override
 	public BuildOrderIterator visit(Collection<? extends ProjectConfigSnapshot> projectConfigs) {
 		for (ProjectConfigSnapshot pc : projectConfigs) {
-			String projectName = pc.getName();
+			String projectID = pc.getName();
 
 			if (!visitedAlready.contains(pc)
 					&& boi.sortedProjects.indexOf(pc) < boi.sortedProjects.indexOf(lastVisited)) {
-				String currentProjectName = current().getName();
+				String currentProjectID = current().getName();
 				throw new IllegalStateException("Dependency-inverse visit order not supported: from "
-						+ currentProjectName + " to " + projectName);
+						+ currentProjectID + " to " + projectID);
 			}
 
-			visitProjectNames.add(projectName);
+			visitProjectIDs.add(projectID);
 			iteratorIndex = boi.sortedProjects.indexOf(lastVisited);
 			moveNext();
 		}
@@ -86,15 +86,15 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 
 	/** @return the set of projects that may contain resources that need to be rebuild given the list of changes */
 	protected Set<ProjectConfigSnapshot> getAffectedProjects(List<IResourceDescription.Delta> changes) {
-		Set<String> changedProjectsNames = new HashSet<>();
+		Set<String> changedProjectIDs = new HashSet<>();
 		for (IResourceDescription.Delta change : changes) {
 			ProjectConfigSnapshot projectConfig = wcs.findProjectByNestedLocation(change.getUri());
-			changedProjectsNames.add(projectConfig.getName());
+			changedProjectIDs.add(projectConfig.getName());
 		}
 
 		Set<ProjectConfigSnapshot> affectedProjects = new HashSet<>();
-		for (String changedProjectName : changedProjectsNames) {
-			affectedProjects.addAll(wcs.getProjectsDependingOn(changedProjectName));
+		for (String changedProjectID : changedProjectIDs) {
+			affectedProjects.addAll(wcs.getProjectsDependingOn(changedProjectID));
 		}
 
 		return affectedProjects;
@@ -143,7 +143,7 @@ public class BuildOrderIterator implements IOrderIterator<ProjectConfigSnapshot>
 
 	private void moveNext() {
 		iteratorIndex++;
-		while (hasNext() && !visitProjectNames.contains(atIndex().getName())) {
+		while (hasNext() && !visitProjectIDs.contains(atIndex().getName())) {
 			iteratorIndex++;
 		}
 	}

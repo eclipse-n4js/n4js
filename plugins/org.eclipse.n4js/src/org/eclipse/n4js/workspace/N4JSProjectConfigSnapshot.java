@@ -32,6 +32,7 @@ import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
@@ -139,7 +140,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	/** This project's name as an {@link N4JSProjectName}. */
 	public N4JSProjectName getN4JSProjectName() {
-		return new N4JSProjectName(getName());
+		if (Strings.isNullOrEmpty(getPackageName())) {
+			return new N4JSProjectName(getName());
+		}
+		return new N4JSProjectName(getPackageName());
 	}
 
 	/** Returns this project's {@link #getPath() path} as a {@link FileURI}. */

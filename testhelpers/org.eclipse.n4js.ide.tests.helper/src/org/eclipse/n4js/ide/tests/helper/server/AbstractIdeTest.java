@@ -1715,7 +1715,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void assertDependenciesOf(String projectID, String... expectedProjects) {
 		WorkspaceConfigSnapshot wc = concurrentIndex.getWorkspaceConfigSnapshot();
-		ProjectConfigSnapshot project = wc.findProjectByName(projectID);
+		ProjectConfigSnapshot project = wc.findProjectByID(projectID);
 		ImmutableSet<String> dependencies = project.getDependencies();
 		assertProjectsInWorkspace(expectedProjects, dependencies);
 	}

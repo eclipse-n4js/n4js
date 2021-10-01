@@ -177,7 +177,10 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	/** Returns this project's name as an {@link N4JSProjectName}. */
 	public N4JSProjectName getN4JSProjectName() {
-		return new N4JSProjectName(getName());
+		if (Strings.isNullOrEmpty(getPackageName())) {
+			return new N4JSProjectName(getName());
+		}
+		return new N4JSProjectName(getPackageName());
 	}
 
 	/** Tells whether this project is a yarn workspace project. */
@@ -249,8 +252,9 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		HashSet<String> allNames = new HashSet<>(workspace.getAllPackageNames());
 		semanticDeps.stream().forEach(d -> allNames.add(d.getPackageName()));
 
-		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.computePackageName2ProjectIdMap(
-				workspace, projectDescription, relatedRootLocation, allNames));
+		packageNameToProjectIds = Collections
+				.unmodifiableMap(semanticDependencySupplier.computePackageName2ProjectIdMap(
+						workspace, projectDescription, relatedRootLocation, allNames));
 
 		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());
 		for (ProjectDependency sdep : semanticDeps) {
@@ -325,9 +329,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, URI changedResource,
 			ConfigSnapshotFactory configSnapshotFactory) {
 
-		String projectName = getName();
-		ProjectConfigSnapshot oldProjectConfig = projectName != null ? oldWorkspaceConfig.findProjectByName(projectName)
-				: null;
+		String projectID = getName();
+		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByID(projectID);
 
 		if (!exists()) {
 			// project was deleted

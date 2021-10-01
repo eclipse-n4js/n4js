@@ -162,9 +162,9 @@ public class N4jscCompiler {
 			if (!projects.isEmpty()) {
 				Path workspace = options.getDir().toPath();
 
-				SortedMap<String, String> projectNameList = new TreeMap<>();
+				SortedMap<String, String> projectList = new TreeMap<>();
 				for (ProjectConfigSnapshot prj : projects) {
-					String prjName = prj.getName() == null ? "[no_name]" : prj.getName();
+					String prjID = prj.getName() == null ? "[no_name]" : prj.getName();
 					String locationStr = null;
 					if (prj.getPath() == null) {
 						locationStr = "[no_location]";
@@ -174,11 +174,11 @@ public class N4jscCompiler {
 							locationStr = ".";
 						}
 					}
-					String outputLine = String.format(prjNameWithPadding + " at %s", prjName, locationStr);
-					projectNameList.put(locationStr, outputLine);
+					String outputLine = String.format(prjNameWithPadding + " at %s", prjID, locationStr);
+					projectList.put(locationStr, outputLine);
 				}
 
-				LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectNameList.values()));
+				LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectList.values()));
 			}
 		}
 	}

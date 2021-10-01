@@ -42,8 +42,8 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	private AfterBuildListener afterBuildListener;
 
 	/** Create the build request. */
-	protected XBuildRequest getBuildRequest(String projectName) {
-		XBuildRequest result = new XBuildRequest(projectName);
+	protected XBuildRequest getBuildRequest(String projectID) {
+		XBuildRequest result = new XBuildRequest(projectID);
 		if (afterDeleteListener != null) {
 			result.addAfterDeleteListener(afterDeleteListener);
 		}
@@ -63,13 +63,13 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig, ProjectConfigSnapshot projectConfig,
 			Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
 
-		String projectName = projectConfig.getName();
-		XBuildRequest result = getBuildRequest(projectName);
+		String projectID = projectConfig.getName();
+		XBuildRequest result = getBuildRequest(projectID);
 
 		result.setIndexOnly(projectConfig.indexOnly());
 		result.setGeneratorEnabled(projectConfig.isGeneratorEnabled());
 
-		if (workspaceConfig.isInDependencyCycle(projectName)) {
+		if (workspaceConfig.isInDependencyCycle(projectID)) {
 			changedFiles = new HashSet<>(changedFiles);
 			changedFiles.retainAll(projectConfig.getProjectDescriptionUris());
 			deletedFiles = new HashSet<>(deletedFiles);

@@ -122,19 +122,19 @@ public class ProjectSet {
 	 * method {@link #update(Iterable, Iterable)}.
 	 */
 	protected void updateLookupMaps(
-			BiMap<String, ProjectConfigSnapshot> lookupId2Project,
-			SetMultimap<String, ProjectConfigSnapshot> lookupId2DependentProjects,
+			BiMap<String, ProjectConfigSnapshot> lookupID2Project,
+			SetMultimap<String, ProjectConfigSnapshot> lookupID2DependentProjects,
 			Map<URI, ProjectConfigSnapshot> lookupProjectPath2Project,
 			Map<URI, ProjectConfigSnapshot> lookupSourceFolderPath2Project,
 			Iterable<? extends ProjectConfigSnapshot> changedProjects, Iterable<String> removedProjectIDs) {
 
 		// apply updates for removed projects (this must be done first!)
 		for (String projectID : removedProjectIDs) {
-			ProjectConfigSnapshot removedProject = lookupId2Project.get(projectID);
+			ProjectConfigSnapshot removedProject = lookupID2Project.get(projectID);
 			if (removedProject != null) {
-				lookupId2Project.remove(removedProject.getName());
+				lookupID2Project.remove(removedProject.getName());
 				for (String dependencyID : removedProject.getDependencies()) {
-					lookupId2DependentProjects.remove(dependencyID, removedProject);
+					lookupID2DependentProjects.remove(dependencyID, removedProject);
 				}
 				lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(removedProject.getPath()));
 				for (SourceFolderSnapshot sourceFolder : removedProject.getSourceFolders()) {
@@ -145,10 +145,10 @@ public class ProjectSet {
 
 		// apply updates for added/changed projects
 		for (ProjectConfigSnapshot project : changedProjects) {
-			ProjectConfigSnapshot oldProject = lookupId2Project.put(project.getName(), project);
+			ProjectConfigSnapshot oldProject = lookupID2Project.put(project.getName(), project);
 			if (oldProject != null) {
 				for (String dependencyID : oldProject.getDependencies()) {
-					lookupId2DependentProjects.remove(dependencyID, oldProject);
+					lookupID2DependentProjects.remove(dependencyID, oldProject);
 				}
 				lookupProjectPath2Project.remove(URIUtils.trimTrailingPathSeparator(oldProject.getPath()));
 				for (SourceFolderSnapshot sourceFolder : oldProject.getSourceFolders()) {
@@ -156,7 +156,7 @@ public class ProjectSet {
 				}
 			}
 			for (String dependencyID : project.getDependencies()) {
-				lookupId2DependentProjects.put(dependencyID, project);
+				lookupID2DependentProjects.put(dependencyID, project);
 			}
 			lookupProjectPath2Project.put(URIUtils.trimTrailingPathSeparator(project.getPath()), project);
 			for (SourceFolderSnapshot sourceFolder : project.getSourceFolders()) {
@@ -186,12 +186,12 @@ public class ProjectSet {
 	}
 
 	/** Returns all projects as a map from project id to project configuration. */
-	public ImmutableBiMap<String, ? extends ProjectConfigSnapshot> getProjectsByProjectID() {
+	public ImmutableBiMap<String, ? extends ProjectConfigSnapshot> getProjectsByID() {
 		return id2Project;
 	}
 
 	/** Returns the project with the given project id or <code>null</code> if not found. */
-	public ProjectConfigSnapshot findProjectByProjectID(String projectID) {
+	public ProjectConfigSnapshot findProjectByID(String projectID) {
 		return id2Project.get(projectID);
 	}
 

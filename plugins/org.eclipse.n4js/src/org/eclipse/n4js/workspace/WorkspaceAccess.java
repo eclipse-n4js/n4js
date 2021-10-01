@@ -73,14 +73,14 @@ public class WorkspaceAccess {
 		return getWorkspaceConfig(context).findProjectByPath(path);
 	}
 
-	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByID(String)}. */
 	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, N4JSProjectName projectName) {
 		return projectName != null ? findProjectByName(context, projectName.getRawName()) : null;
 	}
 
-	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByID(String)}. */
 	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, String projectName) {
-		return getWorkspaceConfig(context).findProjectByName(projectName);
+		return getWorkspaceConfig(context).findProjectByID(projectName);
 	}
 
 	/**
