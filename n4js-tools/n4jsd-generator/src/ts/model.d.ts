@@ -138,7 +138,10 @@ export enum TypeRefKind {
 	THIS,
 	UNION,
 	INTERSECTION,
-	PARENTHESES
+	PARENTHESES,
+	// the following are not actually supported on N4JS side:
+	PREDICATE,
+	MAPPED_TYPE
 }
 
 export enum TypeRefOperator {

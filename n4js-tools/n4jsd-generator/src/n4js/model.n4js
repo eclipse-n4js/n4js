@@ -142,7 +142,10 @@ export enum TypeRefKind {
 	THIS,
 	UNION,
 	INTERSECTION,
-	PARENTHESES
+	PARENTHESES,
+	// the following are not actually supported on N4JS side:
+	PREDICATE,
+	MAPPED_TYPE
 }
 
 export enum TypeRefOperator {
@@ -511,6 +514,12 @@ class Emitter {
 				buff.push("(");
 				this.emitTypeRef(typeRef.parenthesizedTypeRef);
 				buff.push(")");
+				break;
+			case TypeRefKind.PREDICATE:
+				buff.push("boolean");
+				break;
+			case TypeRefKind.MAPPED_TYPE:
+				buff.push("Object+");
 				break;
 			default:
 				throw "unsupported TypeRefKind: " + typeRef.kind

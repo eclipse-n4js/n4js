@@ -102,6 +102,16 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 	}
 
 	@Test
+	public testTypePredicates() {
+		this.assertTypeRefConversion("(value: any) => value is Cls", "(value: any)=>boolean"); // not supported on N4JS side
+	}
+
+	@Test
+	public testMappedTypes() {
+		this.assertTypeRefConversion("{ [Property in keyof Cls]: number }", "Object+"); // not supported on N4JS side
+	}
+
+	@Test
 	public testTypeOperators() {
 		this.assertTypeRefConversion("readonly string[]", "Array<string>"); // for now, type operators are simply ignored on N4JS side
 	}

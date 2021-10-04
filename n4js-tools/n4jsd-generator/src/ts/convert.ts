@@ -642,8 +642,13 @@ export class Converter {
 				resultNested.tsOperators.push(op);
 			}
 			return resultNested;
+		} else if (ts.isTypePredicateNode(node)) {
+			// e.g. "this is Cls"
+			result.kind = model.TypeRefKind.PREDICATE;
+		} else if (ts.isMappedTypeNode(node)) {
+			// e.g. { [P in K]: T[P]; }
+			result.kind = model.TypeRefKind.MAPPED_TYPE;
 		// } else if (ts.isTupleTypeNode(node)) {
-		// } else if (ts.isTypePredicateNode(node)) {
 		} else {
 			this.createIssueForUnsupportedNode(node, "TypeNode (in #convertTypeReference())")
 			return model.createAnyPlus();
