@@ -103,7 +103,8 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, CALLABLE_CTOR, FIELD, GETTER, SETTER, METHOD
+	CTOR, CALLABLE_CTOR, INDEX_SIGNATURE,
+	FIELD, GETTER, SETTER, METHOD
 }
 
 export class Member extends NamedElement implements AnnotatableElement {

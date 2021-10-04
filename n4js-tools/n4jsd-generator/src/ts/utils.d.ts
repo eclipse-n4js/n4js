@@ -23,6 +23,7 @@ export class Issue {
 }
 export function error(msg: string): Issue
 export function warning(msg: string): Issue
+export function issue(kind: IssueKind, msg: string): Issue
 
 export enum LogKind {
 	ERROR, ISSUE, INFO

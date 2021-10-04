@@ -139,7 +139,7 @@ export class Converter {
 				return results;
 			}
 		}
-		this.createIssueForUnsupportedNode(node, "import");
+		this.createErrorForUnsupportedNode(node, "import");
 		return [];
 	}
 
@@ -197,7 +197,7 @@ export class Converter {
 				}
 			}
 		}
-		this.createIssueForUnsupportedNode(node);
+		this.createErrorForUnsupportedNode(node);
 		return [];
 	}
 
@@ -258,7 +258,7 @@ export class Converter {
 			} else {
 				// use @StringBased enum in error case
 				result.primitiveBased = model.PrimitiveBasedKind.STRING_BASED;
-				this.createIssueForNode("unsupported value types in const enum: " + Array.from(valueTypes).join(", "), node);
+				this.createErrorForNode("unsupported value types in const enum: " + Array.from(valueTypes).join(", "), node);
 			}
 		}
 
@@ -397,6 +397,10 @@ export class Converter {
 			result.kind = model.MemberKind.CALLABLE_CTOR;
 			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
+		} else if (ts.isIndexSignatureDeclaration(representativeNode)) {
+			result.kind = model.MemberKind.INDEX_SIGNATURE;
+			result.signatures = [ this.convertIndexSignatureDeclarationInAST(representativeNode) ];
+			return result;
 		}
 
 		result.name = symMember.getName();
@@ -406,28 +410,24 @@ export class Converter {
 				|| (!isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.FIELD;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
-			return result;
 		} else if (ts.isGetAccessorDeclaration(representativeNode)
 				|| (isReadonly && ts.isPropertyDeclaration(representativeNode))
 				|| (isReadonly && ts.isPropertySignature(representativeNode))) {
 			result.kind = model.MemberKind.GETTER;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
-			return result;
 		} else if (ts.isSetAccessorDeclaration(representativeNode)) {
 			result.kind = model.MemberKind.SETTER;
 			result.type = this.convertTypeReferenceOfTypedDeclaration(representativeNode.parameters[0]);
-			return result;
 		} else if (ts.isMethodDeclaration(representativeNode)
 				|| ts.isMethodSignature(representativeNode)) {
 			const sigs = this.convertCallSignatures(symMember);
 			result.kind = model.MemberKind.METHOD;
 			result.signatures = sigs;
-			return result;
-		} else if (ts.isIndexSignatureDeclaration(representativeNode)) {
-			// not supported yet
+		} else {
+			this.createErrorForUnsupportedNode(representativeNode, "member");
+			return undefined;
 		}
-		this.createIssueForUnsupportedNode(representativeNode, "member");
-		return undefined;
+		return result;
 	}
 
 	private convertConstructSignatures(somethingWithCtors: ts.Symbol): model.Signature[] {
@@ -475,6 +475,19 @@ export class Converter {
 			}
 		}
 		return results;
+	}
+
+	private convertIndexSignatureDeclarationInAST(decl: ts.IndexSignatureDeclaration): model.Signature {
+		const result = new model.Signature();
+		const param = decl.parameters[0];
+		if (param) {
+			const paramSym = this.checker.getSymbolAtLocation(param.name);
+			if (paramSym) {
+				result.parameters.push(this.convertParameter(paramSym));
+			}
+		}
+		result.returnType = this.convertTypeReference(decl.type);
+		return result;
 	}
 
 	private convertParameter(param: ts.Symbol): model.Parameter {
@@ -591,7 +604,7 @@ export class Converter {
 			} else if (ts.isPrefixUnaryExpression(literal)) {
 				result.kind = model.TypeRefKind.LITERAL;
 			} else {
-				this.createIssueForUnsupportedNode(literal, "literal in LiteralTypeNode");
+				this.createErrorForUnsupportedNode(literal, "literal in LiteralTypeNode");
 				return model.createAnyPlus();
 			}
 		} else if (ts.isFunctionTypeNode(node)) {
@@ -643,7 +656,7 @@ export class Converter {
 					op = model.TypeRefOperator.READONLY;
 					break;
 				default:
-					this.createIssueForNode("unsupported type operator: " + node.operator, node);
+					this.createErrorForNode("unsupported type operator: " + node.operator, node);
 			}
 			const resultNested = this.convertTypeReference(node.type);
 			if (resultNested && op) {
@@ -653,12 +666,14 @@ export class Converter {
 		} else if (ts.isTypePredicateNode(node)) {
 			// e.g. "this is Cls"
 			result.kind = model.TypeRefKind.PREDICATE;
+			this.createWarningForNode("type predicate will be replaced by any+", node);
 		} else if (ts.isMappedTypeNode(node)) {
 			// e.g. { [P in K]: T[P]; }
 			result.kind = model.TypeRefKind.MAPPED_TYPE;
+			this.createWarningForNode("mapped type will be replaced by Object+", node);
 		// } else if (ts.isTupleTypeNode(node)) {
 		} else {
-			this.createIssueForUnsupportedNode(node, "TypeNode (in #convertTypeReference())")
+			this.createErrorForUnsupportedNode(node, "TypeNode (in #convertTypeReference())")
 			return model.createAnyPlus();
 		}
 
@@ -675,14 +690,22 @@ export class Converter {
 		return this.ignorePredicate?.(filePath, elementName);
 	}
 
-	private createIssueForUnsupportedNode(node: ts.Node, superKind: string = "node") {
-		const nodeKindStr = ts.SyntaxKind[node.kind];
-		this.createIssueForNode("unsupported kind of " + superKind + ": " + nodeKindStr, node);
+	private createWarningForNode(msg: string, node: ts.Node) {
+		this.createIssueForNode(utils.IssueKind.WARNING, msg, node);
 	}
 
-	private createIssueForNode(msg: string, node: ts.Node) {
+	private createErrorForUnsupportedNode(node: ts.Node, superKind: string = "node") {
+		const nodeKindStr = ts.SyntaxKind[node.kind];
+		this.createErrorForNode("unsupported kind of " + superKind + ": " + nodeKindStr, node);
+	}
+
+	private createErrorForNode(msg: string, node: ts.Node) {
+		this.createIssueForNode(utils.IssueKind.ERROR, msg, node);
+	}
+
+	private createIssueForNode(kind: utils.IssueKind, msg: string, node: ts.Node) {
 		const offendingCode = utils_ts.getSourceCodeForNode(node);
-		const error = utils.error(msg + "\n" + offendingCode);
+		const error = utils.issue(kind, msg + "\n" + offendingCode);
 		this.issues.push(error);
 	}
 }

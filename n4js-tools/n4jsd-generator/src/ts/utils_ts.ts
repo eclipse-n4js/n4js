@@ -214,7 +214,7 @@ export function createEnumLiteralsFromValues(values: (string | number)[]): model
 	return results;
 }
 
-export function getSourceCodeForNode(node: ts.Node, indentStr: string = "  |"): string {
+export function getSourceCodeForNode(node: ts.Node, indentStr: string = "    |"): string {
 	const sourceFile = node.getSourceFile();
 	let offendingCode = sourceFile.text.substring(node.pos, node.end);
 	offendingCode = offendingCode.trim();

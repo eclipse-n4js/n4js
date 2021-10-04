@@ -141,14 +141,11 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 					export const c: ${sourceDts};
 				`,
 				n4jsd: `
-					export external public interface ~Ifc {
-					}
+					export external public interface ~Ifc {}
 
-					export external public class ~Cls {
-					}
+					export external public class ~Cls {}
 
-					export external public class ~GenCls<T> {
-					}
+					export external public class ~GenCls<T> {}
 
 					export public const c: ${expectedSourceN4jsd};
 				`

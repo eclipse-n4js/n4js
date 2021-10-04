@@ -108,7 +108,8 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, CALLABLE_CTOR, FIELD, GETTER, SETTER, METHOD
+	CTOR, CALLABLE_CTOR, INDEX_SIGNATURE,
+	FIELD, GETTER, SETTER, METHOD
 }
 
 export class Member extends NamedElement implements AnnotatableElement {
@@ -307,25 +308,32 @@ class Emitter {
 			this.emitTypeRef(type.aliasedType);
 			buff.push(";");
 		} else {
-			buff.pushln(" {");
+			buff.push(" {");
 			buff.indent();
+			let didEmit = false;
 			if (type.kind === TypeKind.INTERFACE || type.kind === TypeKind.CLASS) {
-				this.emitMembers(type.members, type);
+				didEmit = this.emitMembers(type.members, type);
 			} else if (type.kind === TypeKind.ENUM) {
-				this.emitEnumLiterals(type.literals, type.primitiveBased === PrimitiveBasedKind.STRING_BASED);
+				didEmit = this.emitEnumLiterals(type.literals, type.primitiveBased === PrimitiveBasedKind.STRING_BASED);
 			} else {
 				throw "unknown kind of type: " + type.kind;
 			}
 			buff.undent();
+			if (didEmit) {
+				buff.pushln();
+			}
 			buff.push("}");
 		}
 	}
 
-	emitEnumLiterals(literals: EnumLiteral[], isStringBased: boolean) {
+	emitEnumLiterals(literals: EnumLiteral[], isStringBased: boolean): boolean {
 		const buff = this.buff;
-		const len = literals.length;
-		for (let i = 0; i < len; i++) {
-			const lit = literals[i];
+		let isFirst = true;
+		for (const lit of literals) {
+			if (!isFirst) {
+				buff.push(",");
+			}
+			buff.pushln();
 			buff.push(lit.name);
 			if (lit.value !== undefined) {
 				buff.push(": ");
@@ -335,27 +343,29 @@ class Emitter {
 					buff.push("" + lit.value);
 				}
 			}
-			if (i + 1 < len) {
-				buff.pushln(",");
-			} else {
-				buff.pushln();
-			}
+			isFirst = false;
 		}
+		return !isFirst;
 	}
 
-	emitMembers(members: Member[], parent: Type =, onePerLine: boolean = true) {
+	emitMembers(members: Member[], parent: Type =, onePerLine: boolean = true): boolean {
 		const buff = this.buff;
 		let isFirst = true;
 		for (const m of members) {
-			if (!isFirst && !onePerLine) {
-				buff.push(" ");
+			if (m.kind === MemberKind.INDEX_SIGNATURE) {
+				continue; // ignore index signatures, for now
 			}
-			this.emitMember(m, parent);
 			if (onePerLine) {
 				buff.pushln();
+			} else {
+				if (!isFirst) {
+					buff.push(" ");
+				}
 			}
+			this.emitMember(m, parent);
 			isFirst = false;
 		}
+		return !isFirst;
 	}
 
 	emitMember(member: Member, parent: Type =) {

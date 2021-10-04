@@ -36,17 +36,13 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					import { Buffer } from "buffer";
 
-					export external public interface ~Writable {
-					}
+					export external public interface ~Writable {}
 
-					export external public interface ~Writable2 {
-					}
+					export external public interface ~Writable2 {}
 
-					export external public class ~Stream {
-					}
+					export external public class ~Stream {}
 
-					export external public class ~Stream2 {
-					}
+					export external public class ~Stream2 {}
 				`
 			}
 		);
@@ -62,11 +58,9 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					export class Cls<T1,T2> {}
 				`,
 				n4jsd: `
-					export external public interface ~Ifc<T1,T2> {
-					}
+					export external public interface ~Ifc<T1,T2> {}
 
-					export external public class ~Cls<T1,T2> {
-					}
+					export external public class ~Cls<T1,T2> {}
 				`
 			}
 		);
