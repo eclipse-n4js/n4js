@@ -164,7 +164,7 @@ public class BetterSourceElementExtensions {
 				TClass polyfilledOrOriginalTypeCasted = (TClass) polyfilledOrOriginalType;
 				N4ClassDeclaration n4ClassDecl = (N4ClassDeclaration) polyfilledOrOriginalTypeCasted.getAstElement();
 				if (n4ClassDecl != null) {
-					nonNullClassDecl = feature;
+					nonNullClassDecl = n4ClassDecl;
 				}
 			}
 
