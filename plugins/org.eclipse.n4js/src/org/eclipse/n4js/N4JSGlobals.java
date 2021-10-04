@@ -23,7 +23,7 @@ import java.util.Set;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.collect.ImmutableSet;
@@ -85,16 +85,16 @@ public final class N4JSGlobals {
 	/**
 	 * Mangelhaft
 	 */
-	public static final N4JSProjectName MANGELHAFT = new N4JSProjectName(VENDOR_ID + ".mangelhaft");
+	public static final N4JSPackageName MANGELHAFT = new N4JSPackageName(VENDOR_ID + ".mangelhaft");
 	/**
 	 * Mangelhaft Assert
 	 */
-	public static final N4JSProjectName MANGELHAFT_ASSERT = new N4JSProjectName(MANGELHAFT + ".assert");
+	public static final N4JSPackageName MANGELHAFT_ASSERT = new N4JSPackageName(MANGELHAFT + ".assert");
 
 	/**
 	 * Name of the npm package containing the mangelhaft command-line interface.
 	 */
-	public static final N4JSProjectName MANGELHAFT_CLI = new N4JSProjectName("n4js-mangelhaft-cli");
+	public static final N4JSPackageName MANGELHAFT_CLI = new N4JSPackageName("n4js-mangelhaft-cli");
 
 	/**
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
@@ -141,22 +141,22 @@ public final class N4JSGlobals {
 	 * It is expected that this npm package lives in the N4JS Git repository at path {@value #N4JS_LIBS_SOURCES_PATH},
 	 * cf. {@link #N4JS_LIBS_SOURCES_PATH}.
 	 */
-	public static final N4JSProjectName N4JS_RUNTIME = new N4JSProjectName("n4js-runtime");
+	public static final N4JSPackageName N4JS_RUNTIME = new N4JSPackageName("n4js-runtime");
 
 	/**
 	 * Runtime for ECMA 402.
 	 */
-	public static final N4JSProjectName N4JS_RUNTIME_ECMA402 = new N4JSProjectName("n4js-runtime-ecma402");
+	public static final N4JSPackageName N4JS_RUNTIME_ECMA402 = new N4JSPackageName("n4js-runtime-ecma402");
 
 	/**
 	 * Runtime for node.js
 	 */
-	public static final N4JSProjectName N4JS_RUNTIME_NODE = new N4JSProjectName("n4js-runtime-node");
+	public static final N4JSPackageName N4JS_RUNTIME_NODE = new N4JSPackageName("n4js-runtime-node");
 
 	/**
 	 * Runtime for HTML5 DOM definitions, i.e. <code>window</code>, <code>document</code>, etc.
 	 */
-	public static final N4JSProjectName N4JS_RUNTIME_HTML5 = new N4JSProjectName("n4js-runtime-html5");
+	public static final N4JSPackageName N4JS_RUNTIME_HTML5 = new N4JSPackageName("n4js-runtime-html5");
 
 	/**
 	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
@@ -239,33 +239,33 @@ public final class N4JSGlobals {
 	/**
 	 * All project names of n4js libraries.
 	 */
-	public static final Set<N4JSProjectName> ALL_N4JS_LIBS = ImmutableSet.of(
-			new N4JSProjectName("n4js-cli"),
-			new N4JSProjectName("n4js-mangelhaft-cli"),
+	public static final Set<N4JSPackageName> ALL_N4JS_LIBS = ImmutableSet.of(
+			new N4JSPackageName("n4js-cli"),
+			new N4JSPackageName("n4js-mangelhaft-cli"),
 			N4JS_RUNTIME,
 			N4JS_RUNTIME_ECMA402,
-			new N4JSProjectName("n4js-runtime-es2015"),
-			new N4JSProjectName("n4js-runtime-esnext"),
-			new N4JSProjectName("n4js-runtime-fetch"),
+			new N4JSPackageName("n4js-runtime-es2015"),
+			new N4JSPackageName("n4js-runtime-esnext"),
+			new N4JSPackageName("n4js-runtime-fetch"),
 			N4JS_RUNTIME_HTML5,
 			N4JS_RUNTIME_NODE,
-			new N4JSProjectName("n4js-runtime-node-tests"),
-			new N4JSProjectName("n4js-runtime-v8"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft.assert"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft.assert.test"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.console"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.ide"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.ide.test"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.xunit"),
-			new N4JSProjectName("org.eclipse.n4js.mangelhaft.test"));
+			new N4JSPackageName("n4js-runtime-node-tests"),
+			new N4JSPackageName("n4js-runtime-v8"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert.test"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.console"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.ide"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.ide.test"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.xunit"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.test"));
 
 	/**
 	 * The values of this map define TypeScript libraries to be included in the "lib" property of an auto-generated
 	 * <code>tsconfig.json</code> file whenever the corresponding N4JS runtime library is declared as required runtime
 	 * library in the containing project's <code>package.json</code> file.
 	 */
-	public static final ImmutableSetMultimap<N4JSProjectName, String> N4JS_DTS_LIB_CORRESPONDENCE = ImmutableSetMultimap
+	public static final ImmutableSetMultimap<N4JSPackageName, String> N4JS_DTS_LIB_CORRESPONDENCE = ImmutableSetMultimap
 			.of(N4JS_RUNTIME_HTML5, "dom");
 
 	/**

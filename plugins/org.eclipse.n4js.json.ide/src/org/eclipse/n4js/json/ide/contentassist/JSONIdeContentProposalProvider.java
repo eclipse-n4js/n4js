@@ -25,7 +25,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
@@ -88,7 +88,7 @@ public class JSONIdeContentProposalProvider extends IdeContentProposalProvider {
 			if (PackageJsonProperties.DEPENDENCIES.name.equals(last)
 					|| PackageJsonProperties.DEV_DEPENDENCIES.name.equals(last)) {
 				for (N4JSProjectConfigSnapshot project : workspaceAccess.findAllProjects(context.getResource())) {
-					N4JSProjectName projectName = project.getN4JSProjectName();
+					N4JSPackageName projectName = project.getN4JSPackageName();
 					ContentAssistEntry entryForModule = getProposalCreator().createProposal(
 							'"' + projectName.getRawName() + '"', context, ContentAssistEntry.KIND_MODULE, null);
 					if (entryForModule != null) {

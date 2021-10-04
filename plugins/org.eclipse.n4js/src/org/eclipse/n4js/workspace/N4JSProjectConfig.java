@@ -33,7 +33,7 @@ import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -175,12 +175,12 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return projectDescription.getPackageName();
 	}
 
-	/** Returns this project's name as an {@link N4JSProjectName}. */
-	public N4JSProjectName getN4JSProjectName() {
+	/** Returns this project's name as an {@link N4JSPackageName}. */
+	public N4JSPackageName getN4JSPackageName() {
 		if (Strings.isNullOrEmpty(getPackageName())) {
-			return new N4JSProjectName(getName());
+			return new N4JSPackageName(getName());
 		}
-		return new N4JSProjectName(getPackageName());
+		return new N4JSPackageName(getPackageName());
 	}
 
 	/** Tells whether this project is a yarn workspace project. */

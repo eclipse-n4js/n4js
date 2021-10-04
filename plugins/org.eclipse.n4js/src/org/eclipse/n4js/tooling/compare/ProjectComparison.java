@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 
 /**
  * Comparison of one or more API projects and their corresponding implementation projects. This is mainly a tree of
@@ -30,12 +30,12 @@ import org.eclipse.n4js.workspace.utils.N4JSProjectName;
 @SuppressWarnings("javadoc")
 public class ProjectComparison {
 
-	final N4JSProjectName[] implIds;
+	final N4JSPackageName[] implIds;
 	final List<ProjectComparisonEntry> entries = new ArrayList<>();
 
 	final Map<Object, ProjectComparisonEntry> objToEntry = new HashMap<>();
 
-	public ProjectComparison(N4JSProjectName[] implIds) {
+	public ProjectComparison(N4JSPackageName[] implIds) {
 		if (implIds == null)
 			throw new IllegalArgumentException();
 		this.implIds = implIds;
@@ -45,15 +45,15 @@ public class ProjectComparison {
 		return implIds.length;
 	}
 
-	public N4JSProjectName[] getImplIds() {
+	public N4JSPackageName[] getImplIds() {
 		return implIds;
 	}
 
-	public N4JSProjectName getImplId(int implIndex) {
+	public N4JSPackageName getImplId(int implIndex) {
 		return implIds != null && implIndex >= 0 && implIndex < implIds.length ? implIds[implIndex] : null;
 	}
 
-	public int getImplIndex(N4JSProjectName implId) {
+	public int getImplIndex(N4JSPackageName implId) {
 		for (int idx = 0; idx < implIds.length; idx++)
 			if (implId.equals(implIds[idx]))
 				return idx;

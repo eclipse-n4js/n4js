@@ -145,11 +145,11 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		}
 		final JSONStringLiteral projectNameLiteral = (JSONStringLiteral) projectNameValue;
 		final String projectName = projectNameLiteral.getValue();
-		final String projectNameWithoutScope = ProjectDescriptionUtils.getPlainProjectName(projectName);
+		final String projectNameWithoutScope = ProjectDescriptionUtils.getPlainPackageName(projectName);
 		final String scopeName = ProjectDescriptionUtils.getScopeName(projectName);
 
 		// make sure the name conforms to the IDENTIFIER_PATTERN
-		if (!ProjectDescriptionUtils.isValidPlainProjectName(projectNameWithoutScope)) {
+		if (!ProjectDescriptionUtils.isValidPlainPackageName(projectNameWithoutScope)) {
 			addIssue(IssueCodes.getMessageForPKGJ_INVALID_PROJECT_NAME(projectNameWithoutScope),
 					projectNameValue, IssueCodes.PKGJ_INVALID_PROJECT_NAME);
 		}

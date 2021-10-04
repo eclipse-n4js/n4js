@@ -71,7 +71,6 @@ import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -88,6 +87,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -159,7 +159,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	def checkConsistentPolyfills(JSONDocument document) {
 		// Take the RTE and RTL's check for duplicate fillings.
 		// lookup of names in project description
-		val Map<N4JSProjectName, JSONStringLiteral> mQName2rtDep = newHashMap()
+		val Map<N4JSPackageName, JSONStringLiteral> mQName2rtDep = newHashMap()
 
 		val ws = workspaceAccess.getWorkspaceConfig(document);
 
@@ -189,7 +189,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		for (JSONStringLiteral libraryLiteral : rteAndRtl) {
 			if (null !== libraryLiteral) {
 				val String libPPqname = libraryLiteral.value
-				mQName2rtDep.put(new N4JSProjectName(libPPqname), libraryLiteral)
+				mQName2rtDep.put(new N4JSPackageName(libPPqname), libraryLiteral)
 			}
 		}
 
@@ -202,7 +202,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		for (ieoT : allPolyFillTypes) {
 			val optSrcContainer = ws.findProjectContaining(ieoT.EObjectURI);
 			if (optSrcContainer !== null) {
-				val depQName = new N4JSProjectName(optSrcContainer.name);
+				val depQName = new N4JSPackageName(optSrcContainer.name);
 				val dependency = mQName2rtDep.get(depQName);
 				if (dependency === null) {
 					// TODO IDE-1735 typically a static Polyfill - can only be used inside of a single project
@@ -431,7 +431,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		private def boolean hasTestDependency(N4JSProjectConfigSnapshot p) {
 			for (String depNameRaw : p.dependencies) {
-				val depName = new N4JSProjectName(depNameRaw);
+				val depName = new N4JSPackageName(depNameRaw);
 				if (N4JSGlobals.MANGELHAFT.equals(depName) || N4JSGlobals.MANGELHAFT_ASSERT.equals(depName)) {
 					return true;
 				}
@@ -491,7 +491,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		val description = getProjectDescription();
 		
 		if (LIBRARY == description.getType && !description.implementationId.nullOrEmpty) {
-			val expectedImplementationId = new N4JSProjectName(description.implementationId);
+			val expectedImplementationId = new N4JSPackageName(description.implementationId);
 			val allProjects = getAllProjectsById();
 			val pcs = getProjectConfigSnapshot();
 			
@@ -521,7 +521,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			return;
 		}
 		
-		val currentProject = allProjects.get(new N4JSProjectName(description.getPackageName));
+		val currentProject = allProjects.get(new N4JSPackageName(description.getPackageName));
 
 		// Nothing to do with non-existing, missing and/or external projects.
 		if (null === currentProject || currentProject.external) {
@@ -530,7 +530,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		val visitedProjectNames = <String>newHashSet();
 		val stack = new Stack<N4JSProjectConfigSnapshot>();
-		stack.addAll(currentProject.dependencies.map[allProjects.get(new N4JSProjectName(it))].filterNull.filter[external]);
+		stack.addAll(currentProject.dependencies.map[allProjects.get(new N4JSPackageName(it))].filterNull.filter[external]);
 
 		while (!stack.isEmpty) {
 
@@ -543,7 +543,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 				return;
 			}
 
-			val actualDirectDependencies = actual.dependencies.map[allProjects.get(new N4JSProjectName(it))].filterNull;
+			val actualDirectDependencies = actual.dependencies.map[allProjects.get(new N4JSPackageName(it))].filterNull;
 			// If external has any *NON* external dependency we should raise a warning.
 			val workspaceDependency = actualDirectDependencies.findFirst[!external];
 			if (null !== workspaceDependency) {

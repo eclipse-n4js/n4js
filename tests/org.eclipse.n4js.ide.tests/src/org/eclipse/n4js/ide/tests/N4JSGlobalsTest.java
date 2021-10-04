@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
@@ -29,7 +29,7 @@ public class N4JSGlobalsTest {
 	/** Validates constant {@link N4JSGlobals#ALL_N4JS_LIBS} */
 	@Test
 	public void allN4jsLibsTest() {
-		Set<N4JSProjectName> actualN4jsLibs = N4jsLibsAccess.findAllN4jsLibs().keySet();
+		Set<N4JSPackageName> actualN4jsLibs = N4jsLibsAccess.findAllN4jsLibs().keySet();
 		assertTrue(Sets.difference(N4JSGlobals.ALL_N4JS_LIBS, actualN4jsLibs).isEmpty());
 		assertTrue(Sets.difference(actualN4jsLibs, N4JSGlobals.ALL_N4JS_LIBS).isEmpty());
 	}

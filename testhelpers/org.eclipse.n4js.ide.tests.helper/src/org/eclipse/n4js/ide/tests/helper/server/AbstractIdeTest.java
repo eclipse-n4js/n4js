@@ -99,7 +99,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
@@ -322,8 +322,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.getNodeModulesFolder();
 	}
 
-	/** @see TestWorkspaceManager#getNodeModulesFolder(N4JSProjectName) */
-	public File getNodeModulesFolder(N4JSProjectName projectName) {
+	/** @see TestWorkspaceManager#getNodeModulesFolder(N4JSPackageName) */
+	public File getNodeModulesFolder(N4JSPackageName projectName) {
 		return testWorkspaceManager.getNodeModulesFolder(projectName);
 	}
 
@@ -1750,8 +1750,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void installN4JSRuntime() {
 		File root = getProjectRoot();
-		N4JSProjectName projectName = new N4JSProjectName(root);
-		installN4jsLibs(projectName, new N4JSProjectName[] { N4JSGlobals.N4JS_RUNTIME });
+		N4JSPackageName projectName = new N4JSPackageName(root);
+		installN4jsLibs(projectName, new N4JSPackageName[] { N4JSGlobals.N4JS_RUNTIME });
 	}
 
 	/**
@@ -1759,7 +1759,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *
 	 * @see N4jsLibsAccess#installN4jsLibs
 	 */
-	protected void installN4jsLibs(N4JSProjectName targetProject, N4JSProjectName[] libsToInstall) {
+	protected void installN4jsLibs(N4JSPackageName targetProject, N4JSPackageName[] libsToInstall) {
 		if (libsToInstall == null || libsToInstall.length == 0) {
 			return;
 		}

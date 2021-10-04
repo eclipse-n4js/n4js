@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -74,7 +74,7 @@ public class WorkspaceAccess {
 	}
 
 	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByID(String)}. */
-	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, N4JSProjectName projectName) {
+	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, N4JSPackageName projectName) {
 		return projectName != null ? findProjectByName(context, projectName.getRawName()) : null;
 	}
 
