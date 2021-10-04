@@ -173,7 +173,7 @@ export class Converter {
 				&& children[1].kind === ts.SyntaxKind.VariableDeclarationList) {
 				// something like "export var someStr: string, someNum: number;"
 				const result = this.convertVariableDeclList(children[1] as ts.VariableDeclarationList);
-				if (result[0]?.jsdoc === undefined) {
+				if (result[0] && !result[0].jsdoc) {
 					result[0].jsdoc = utils_ts.getJSDocForNode(node);
 				}
 				return result;
