@@ -88,7 +88,7 @@ public class BuildOrderFactory {
 			}
 
 			for (String projectName : orderedProjectNames) {
-				ProjectConfigSnapshot pc = findProjectByName(projects, projectName);
+				ProjectConfigSnapshot pc = findProjectByID(projects, projectName);
 				if (pc != null) {
 					pSortedProjects.add(pc);
 				}
@@ -99,27 +99,27 @@ public class BuildOrderFactory {
 		protected void computeOrder(ProjectSet projects, Collection<ImmutableList<String>> pProjectCycles,
 				ProjectConfigSnapshot pc, LinkedHashSet<String> orderedProjects, LinkedHashSet<String> projectStack) {
 
-			String pdName = pc.getName();
-			if (orderedProjects.contains(pdName)) {
+			String pdID = pc.getName();
+			if (orderedProjects.contains(pdID)) {
 				return;
 			}
 
-			if (projectStack.contains(pdName)) {
+			if (projectStack.contains(pdID)) {
 				ArrayList<String> listStack = new ArrayList<>(projectStack);
-				List<String> cycle = listStack.subList(listStack.indexOf(pdName), listStack.size());
+				List<String> cycle = listStack.subList(listStack.indexOf(pdID), listStack.size());
 				pProjectCycles.add(ImmutableList.copyOf(cycle));
 			} else {
-				projectStack.add(pdName);
+				projectStack.add(pdID);
 
 				for (String depName : getDependencies(pc)) {
-					ProjectConfigSnapshot depPC = findProjectByName(projects, depName);
+					ProjectConfigSnapshot depPC = findProjectByID(projects, depName);
 					if (depPC != null) {
 						computeOrder(projects, pProjectCycles, depPC, orderedProjects, projectStack);
 					}
 				}
 
-				orderedProjects.add(pdName);
-				projectStack.remove(pdName);
+				orderedProjects.add(pdID);
+				projectStack.remove(pdID);
 			}
 		}
 
@@ -129,8 +129,8 @@ public class BuildOrderFactory {
 		}
 
 		/** Find the project with the given name. */
-		protected ProjectConfigSnapshot findProjectByName(ProjectSet projects, String name) {
-			return projects.findProjectByProjectID(name);
+		protected ProjectConfigSnapshot findProjectByID(ProjectSet projects, String projectID) {
+			return projects.findProjectByID(projectID);
 		}
 
 		/**

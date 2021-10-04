@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;
@@ -41,7 +41,7 @@ public abstract class AbstractCliJarTest extends AbstractCliCompileTest {
 	protected final Path fixture;
 
 	/** Specifies whether before testing, the n4js libraries are copied to the workspace location. */
-	protected final Predicate<N4JSProjectName> n4jsLibsPredicate;
+	protected final Predicate<N4JSPackageName> n4jsLibsPredicate;
 
 	/**
 	 * Subclass must provide the fixture, i.e. name of folder containing test data.

@@ -35,7 +35,7 @@ public class N4JSQualifiedNameConverter extends IQualifiedNameConverter.DefaultI
 	@Override
 	public QualifiedName toQualifiedName(String qualifiedNameAsString) {
 		QualifiedName result = super.toQualifiedName(qualifiedNameAsString);
-		if (result != null && ProjectDescriptionUtils.isProjectNameWithScope(qualifiedNameAsString)) {
+		if (result != null && ProjectDescriptionUtils.isPackageNameWithScope(qualifiedNameAsString)) {
 			// in case of NPM scopes, merge the first two segments:
 			List<String> segs = Lists.newArrayList(result.getSegments());
 			segs.set(0, segs.get(0) + ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR + segs.get(1));

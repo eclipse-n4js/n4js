@@ -56,8 +56,8 @@ public class N4JSWorkspaceConfigSnapshot extends WorkspaceConfigSnapshot {
 
 	/** {@inheritDoc} */
 	@Override
-	public N4JSProjectConfigSnapshot findProjectByName(String name) {
-		return (N4JSProjectConfigSnapshot) super.findProjectByName(name);
+	public N4JSProjectConfigSnapshot findProjectByID(String projectID) {
+		return (N4JSProjectConfigSnapshot) super.findProjectByID(projectID);
 	}
 
 	/** {@inheritDoc} */

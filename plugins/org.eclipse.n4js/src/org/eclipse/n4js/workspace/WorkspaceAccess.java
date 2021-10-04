@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -73,14 +73,14 @@ public class WorkspaceAccess {
 		return getWorkspaceConfig(context).findProjectByPath(path);
 	}
 
-	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
-	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, N4JSProjectName projectName) {
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByID(String)}. */
+	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, N4JSPackageName projectName) {
 		return projectName != null ? findProjectByName(context, projectName.getRawName()) : null;
 	}
 
-	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByName(String)}. */
+	/** Convenience for {@link N4JSWorkspaceConfigSnapshot#findProjectByID(String)}. */
 	public N4JSProjectConfigSnapshot findProjectByName(Notifier context, String projectName) {
-		return getWorkspaceConfig(context).findProjectByName(projectName);
+		return getWorkspaceConfig(context).findProjectByID(projectName);
 	}
 
 	/**

@@ -22,7 +22,7 @@ import org.eclipse.n4js.utils.ImmutableDataClass;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Joiner;
@@ -184,8 +184,8 @@ public class ProjectDescription extends ImmutableDataClass {
 		return packageName;
 	}
 
-	public N4JSProjectName getN4JSProjectName() {
-		return packageName != null ? new N4JSProjectName(packageName) : null;
+	public N4JSPackageName getN4JSProjectName() {
+		return packageName != null ? new N4JSPackageName(packageName) : null;
 	}
 
 	public String getVendorId() {

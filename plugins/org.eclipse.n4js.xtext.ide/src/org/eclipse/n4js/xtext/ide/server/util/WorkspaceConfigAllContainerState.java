@@ -65,7 +65,7 @@ public class WorkspaceConfigAllContainerState implements IAllContainersState {
 	@Override
 	public List<String> getVisibleContainerHandles(String containerHandle) {
 		WorkspaceConfigSnapshot ws = getWorkspaceConfig();
-		ProjectConfigSnapshot project = ws != null ? ws.findProjectByName(containerHandle) : null;
+		ProjectConfigSnapshot project = ws != null ? ws.findProjectByID(containerHandle) : null;
 		if (project == null) {
 			return Collections.singletonList(containerHandle);
 		}

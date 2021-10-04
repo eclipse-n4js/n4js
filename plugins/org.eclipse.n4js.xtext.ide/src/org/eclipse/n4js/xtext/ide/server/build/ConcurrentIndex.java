@@ -56,7 +56,7 @@ public class ConcurrentIndex {
 	private ConfigSnapshotFactory configSnapshotFactory;
 
 	/** Map of all project indices. */
-	private final Map<String, ResourceDescriptionsData> project2Index = new HashMap<>();
+	private final Map<String, ResourceDescriptionsData> projectID2Index = new HashMap<>();
 	/** A snapshot of the current workspace configuration. */
 	private WorkspaceConfigSnapshot workspaceConfig = null;
 	/** Registered listeners. */
@@ -82,38 +82,38 @@ public class ConcurrentIndex {
 
 	/** Set an initial workspace configuration. */
 	public void initialize(WorkspaceConfigSnapshot initialWorkspaceConfig) {
-		ImmutableSet.Builder<String> removedProjectsBuilder = ImmutableSet.builder();
+		ImmutableSet.Builder<String> removedProjectIDsBuilder = ImmutableSet.builder();
 		synchronized (this) {
 			if (workspaceConfig != null) {
-				removedProjectsBuilder.addAll(project2Index.keySet());
+				removedProjectIDsBuilder.addAll(projectID2Index.keySet());
 			}
-			project2Index.clear();
+			projectID2Index.clear();
 			workspaceConfig = initialWorkspaceConfig;
 		}
-		ImmutableSet<String> removedProjects = removedProjectsBuilder.build();
-		if (!initialWorkspaceConfig.getProjects().isEmpty() || !removedProjects.isEmpty()) {
+		ImmutableSet<String> removedProjectIDs = removedProjectIDsBuilder.build();
+		if (!initialWorkspaceConfig.getProjects().isEmpty() || !removedProjectIDs.isEmpty()) {
 			notifyListeners(initialWorkspaceConfig, ImmutableMap.of(),
-					ImmutableList.copyOf(initialWorkspaceConfig.getProjects()), removedProjects);
+					ImmutableList.copyOf(initialWorkspaceConfig.getProjects()), removedProjectIDs);
 		}
 	}
 
 	/** Removes all projects and their indices. */
 	public void removeAllProjects() {
-		ImmutableSet<String> removedProjectNames;
+		ImmutableSet<String> removedProjectIDs;
 		WorkspaceConfigSnapshot workspaceConfigNew;
 		synchronized (this) {
-			removedProjectNames = ImmutableSet.copyOf(project2Index.keySet());
-			project2Index.clear();
+			removedProjectIDs = ImmutableSet.copyOf(projectID2Index.keySet());
+			projectID2Index.clear();
 			workspaceConfigNew = configSnapshotFactory.clear(workspaceConfig);
 			workspaceConfig = workspaceConfigNew;
 		}
-		notifyListeners(workspaceConfigNew, ImmutableMap.of(), ImmutableList.of(), removedProjectNames);
+		notifyListeners(workspaceConfigNew, ImmutableMap.of(), ImmutableList.of(), removedProjectIDs);
 	}
 
 	/** Returns the index for the given project name or <code>null</code> if no such project name exists. */
-	public synchronized ResourceDescriptionsData getProjectIndex(String projectName) {
-		Objects.requireNonNull(projectName);
-		return project2Index.get(projectName);
+	public synchronized ResourceDescriptionsData getProjectIndex(String projectID) {
+		Objects.requireNonNull(projectID);
+		return projectID2Index.get(projectID);
 	}
 
 	/** Returns the current configuration of the workspace. */
@@ -122,32 +122,32 @@ public class ConcurrentIndex {
 	}
 
 	/** Returns the project configuration of the given project name. */
-	public synchronized ProjectConfigSnapshot getProjectConfig(String projectName) {
-		Objects.requireNonNull(projectName);
-		return workspaceConfig.findProjectByName(projectName);
+	public synchronized ProjectConfigSnapshot getProjectConfig(String projectID) {
+		Objects.requireNonNull(projectID);
+		return workspaceConfig.findProjectByID(projectID);
 	}
 
 	/** Sets the index for the given project name. */
-	public ResourceDescriptionsData setProjectIndex(String projectName, ResourceDescriptionsData projectIndex) {
-		Objects.requireNonNull(projectName);
+	public ResourceDescriptionsData setProjectIndex(String projectID, ResourceDescriptionsData projectIndex) {
+		Objects.requireNonNull(projectID);
 		Objects.requireNonNull(projectIndex);
 		ResourceDescriptionsData oldProjectIndex;
 		WorkspaceConfigSnapshot currWorkspaceConfig;
 		synchronized (this) {
-			oldProjectIndex = project2Index.put(projectName, projectIndex);
+			oldProjectIndex = projectID2Index.put(projectID, projectIndex);
 			currWorkspaceConfig = workspaceConfig;
 		}
 		if ((oldProjectIndex != null && !oldProjectIndex.isEmpty()) || !projectIndex.isEmpty()) {
 			// check avoids many notifications during initialization
-			notifyListeners(currWorkspaceConfig, ImmutableMap.of(projectName, projectIndex), ImmutableList.of(),
+			notifyListeners(currWorkspaceConfig, ImmutableMap.of(projectID, projectIndex), ImmutableList.of(),
 					ImmutableSet.of());
 		}
 		return oldProjectIndex;
 	}
 
 	/** Sets the contents of the project with the given name to the empty set, but does not remove the project. */
-	public ResourceDescriptionsData clearProjectIndex(String projectName) {
-		return setProjectIndex(projectName, new ResourceDescriptionsData(Collections.emptyList()));
+	public ResourceDescriptionsData clearProjectIndex(String projectID) {
+		return setProjectIndex(projectID, new ResourceDescriptionsData(Collections.emptyList()));
 	}
 
 	/**
@@ -157,22 +157,22 @@ public class ConcurrentIndex {
 	 * {@link ProjectSet#update(Iterable, Iterable)}.
 	 */
 	public WorkspaceConfigSnapshot changeOrRemoveProjects(Iterable<? extends ProjectConfigSnapshot> changedProjects,
-			Iterable<String> removedProjects) {
+			Iterable<String> removedProjectIDs) {
 
 		Objects.requireNonNull(changedProjects);
-		Objects.requireNonNull(removedProjects);
+		Objects.requireNonNull(removedProjectIDs);
 		ImmutableList<? extends ProjectConfigSnapshot> changedProjectsCpy = ImmutableList.copyOf(changedProjects);
-		ImmutableSet<String> removedProjectsCpy = ImmutableSet.copyOf(removedProjects);
+		ImmutableSet<String> removedProjectIDsCpy = ImmutableSet.copyOf(removedProjectIDs);
 		WorkspaceConfigSnapshot newWorkspaceConfig;
 		ImmutableSet.Builder<String> actuallyRemovedProjectsBuilder = ImmutableSet.builder();
 		synchronized (this) {
-			for (String removedProjectName : removedProjectsCpy) {
-				if (project2Index.remove(removedProjectName) != null) {
-					actuallyRemovedProjectsBuilder.add(removedProjectName);
+			for (String removedProjectID : removedProjectIDsCpy) {
+				if (projectID2Index.remove(removedProjectID) != null) {
+					actuallyRemovedProjectsBuilder.add(removedProjectID);
 				}
 			}
 
-			newWorkspaceConfig = configSnapshotFactory.update(workspaceConfig, changedProjectsCpy, removedProjectsCpy);
+			newWorkspaceConfig = configSnapshotFactory.update(workspaceConfig, changedProjectsCpy, removedProjectIDsCpy);
 
 			workspaceConfig = newWorkspaceConfig;
 		}
@@ -192,7 +192,7 @@ public class ConcurrentIndex {
 	public synchronized ImmutableList<Entry<String, ResourceDescriptionsData>> entries() {
 		return ImmutableList.<Entry<String, ResourceDescriptionsData>> builder()
 				.addAll(Iterables.transform(
-						project2Index.entrySet(),
+						projectID2Index.entrySet(),
 						e -> Maps.immutableEntry(e.getKey(), e.getValue())))
 				.build();
 	}
@@ -212,20 +212,20 @@ public class ConcurrentIndex {
 			WorkspaceConfigSnapshot newWorkspaceConfig,
 			ImmutableMap<String, ? extends ResourceDescriptionsData> changedDescriptions,
 			ImmutableList<? extends ProjectConfigSnapshot> changedProjects,
-			ImmutableSet<String> removedProjects) {
+			ImmutableSet<String> removedProjectIDs) {
 
 		for (IIndexListener l : listeners) {
-			l.onIndexChanged(newWorkspaceConfig, changedDescriptions, changedProjects, removedProjects);
+			l.onIndexChanged(newWorkspaceConfig, changedDescriptions, changedProjects, removedProjectIDs);
 		}
 	}
 
 	/** Create a snapshot of this index. */
 	public synchronized ChunkedResourceDescriptions toDescriptions() {
-		return new ChunkedResourceDescriptions(project2Index);
+		return new ChunkedResourceDescriptions(projectID2Index);
 	}
 
 	/** Create a snapshot of this index and attach it to the given resource set. */
 	public synchronized ChunkedResourceDescriptions toDescriptions(ResourceSet resourceSet) {
-		return new ChunkedResourceDescriptions(project2Index, resourceSet);
+		return new ChunkedResourceDescriptions(projectID2Index, resourceSet);
 	}
 }
