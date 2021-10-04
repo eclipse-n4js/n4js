@@ -546,7 +546,7 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public String getName() {
+	public String getProjectID() {
 		return getProjectConfig().getName();
 	}
 

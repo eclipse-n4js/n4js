@@ -13,7 +13,7 @@ package org.eclipse.n4js.packagejson.projectDescription;
 import java.util.Objects;
 
 import org.eclipse.n4js.utils.ImmutableDataClass;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 
 /**
  * Reference to another project without version requirement.
@@ -31,8 +31,8 @@ public class ProjectReference extends ImmutableDataClass {
 		return packageName;
 	}
 
-	public N4JSProjectName getN4JSProjectName() {
-		return packageName != null ? new N4JSProjectName(packageName) : null;
+	public N4JSPackageName getN4JSProjectName() {
+		return packageName != null ? new N4JSPackageName(packageName) : null;
 	}
 
 	@Override

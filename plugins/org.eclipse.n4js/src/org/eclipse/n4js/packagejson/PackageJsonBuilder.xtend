@@ -19,10 +19,10 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
 
 import static com.google.common.base.Optional.fromNullable
 import static com.google.common.base.Preconditions.checkNotNull
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 
 /**
  * Convenient builder for creating the N4JS package.json compliant {@link JSONDocument} model 
@@ -262,7 +262,7 @@ public class PackageJsonBuilder {
 	 * @param projectDependency the project dependency to add to the current builder. Cannot be {@code null}.
 	 * @return the builder.
 	 */
-	def PackageJsonBuilder withDependency(N4JSProjectName projectDependency) {
+	def PackageJsonBuilder withDependency(N4JSPackageName projectDependency) {
 		dependencies.put(checkNotNull(projectDependency).rawName, "*")
 		return this;
 	}
@@ -275,7 +275,7 @@ public class PackageJsonBuilder {
 	 * 
 	 * @return the builder.
 	 */
-	def PackageJsonBuilder withDependency(N4JSProjectName projectDependency, String versionConstraint) {
+	def PackageJsonBuilder withDependency(N4JSPackageName projectDependency, String versionConstraint) {
 		dependencies.put(checkNotNull(projectDependency).rawName, checkNotNull(versionConstraint))
 		return this;
 	}
@@ -285,7 +285,7 @@ public class PackageJsonBuilder {
 	 * @param projectDevDependency the project devDependency to add to the current builder. Cannot be {@code null}.
 	 * @return the builder.
 	 */
-	def PackageJsonBuilder withDevDependency(N4JSProjectName projectDevDependency) {
+	def PackageJsonBuilder withDevDependency(N4JSPackageName projectDevDependency) {
 		devDependencies.put(checkNotNull(projectDevDependency).rawName, "*")
 		return this;
 	}

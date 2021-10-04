@@ -165,8 +165,8 @@ public class XWorkspaceBuilder {
 
 			while (pboIterator.hasNext()) {
 				ProjectConfigSnapshot projectConfig = pboIterator.next();
-				String projectName = projectConfig.getName();
-				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
+				String projectID = projectConfig.getName();
+				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectID);
 				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, allDeltas);
 				allDeltas.addAll(partialresult.getAffectedResources());
 			}
@@ -363,7 +363,7 @@ public class XWorkspaceBuilder {
 
 		for (String cyclicProject : updateResult.cyclicProjectChanges) {
 			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig()
-					.findProjectByName(cyclicProject);
+					.findProjectByID(cyclicProject);
 
 			Collection<URI> projectDescriptionUris = projectConfig.getProjectDescriptionUris();
 			dirtyFiles.addAll(projectDescriptionUris);
@@ -431,7 +431,7 @@ public class XWorkspaceBuilder {
 			Map<String, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
 			Set<String> changedProjects = Sets.union(project2dirty.keySet(), project2deleted.keySet());
 			List<ProjectConfigSnapshot> changedPCs = changedProjects.stream()
-					.map(workspaceConfig::findProjectByName).collect(Collectors.toList());
+					.map(workspaceConfig::findProjectByID).collect(Collectors.toList());
 
 			BuildOrderIterator pboIterator = buildOrderFactory.createBuildOrderIterator(workspaceConfig, changedPCs);
 			pboIterator.visit(affectedByDeletedProjects);
@@ -504,7 +504,7 @@ public class XWorkspaceBuilder {
 			if (projectManager == null) {
 				continue; // happens when editing a package.json file in a newly created project
 			}
-			String projectName = projectManager.getName();
+			String projectName = projectManager.getProjectID();
 			if (!project2uris.containsKey(projectName)) {
 				project2uris.put(projectName, new HashSet<>());
 			}

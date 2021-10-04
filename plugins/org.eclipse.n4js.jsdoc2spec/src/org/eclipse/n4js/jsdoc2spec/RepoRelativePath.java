@@ -24,7 +24,7 @@ import org.eclipse.n4js.utils.Log;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
@@ -81,7 +81,7 @@ public class RepoRelativePath {
 			pathOfProjectInRepo = pathOfProjectInRepo.replace(File.separatorChar, '/');
 		}
 
-		N4JSProjectName projName = project.getN4JSProjectName();
+		N4JSPackageName projName = project.getN4JSPackageName();
 		String repoName = getRepoName(repoFolder);
 		return new RepoRelativePath(repoName, pathOfProjectInRepo, // repo relative
 				projName, pathOfResourceInProject, // project relative
@@ -175,7 +175,7 @@ public class RepoRelativePath {
 	/**
 	 * Name of the Eclipse project.
 	 */
-	public final N4JSProjectName projectName;
+	public final N4JSPackageName projectName;
 	/**
 	 * Absolute path in Eclipse project.
 	 */
@@ -188,7 +188,7 @@ public class RepoRelativePath {
 	/**
 	 * The parameters are copied to the fields (with the same name), see field description for their meaning.
 	 */
-	private RepoRelativePath(String repositoryName, String pathOfProjectInRepo, N4JSProjectName projectName,
+	private RepoRelativePath(String repositoryName, String pathOfProjectInRepo, N4JSPackageName projectName,
 			String pathOfResourceInProject, int lineNumber) {
 		this.repositoryName = repositoryName;
 		this.pathOfProjectInRepo = pathOfProjectInRepo;

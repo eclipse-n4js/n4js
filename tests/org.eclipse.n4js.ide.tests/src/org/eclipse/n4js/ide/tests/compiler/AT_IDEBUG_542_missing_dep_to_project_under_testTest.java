@@ -22,7 +22,7 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class AT_IDEBUG_542_missing_dep_to_project_under_testTest extends Abstrac
 		workspace = setupWorkspace(WSP_542, true,
 				N4JSGlobals.N4JS_RUNTIME,
 				N4JSGlobals.MANGELHAFT,
-				new N4JSProjectName("n4js-runtime-es2015"));
+				new N4JSPackageName("n4js-runtime-es2015"));
 	}
 
 	/** Delete workspace. */

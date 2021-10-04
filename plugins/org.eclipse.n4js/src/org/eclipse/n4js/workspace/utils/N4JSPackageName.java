@@ -26,14 +26,14 @@ import com.google.common.base.Preconditions;
 /**
  * A project name of the shape `(@scope/)?name`.
  */
-public final class N4JSProjectName implements Comparable<N4JSProjectName> {
+public final class N4JSPackageName implements Comparable<N4JSPackageName> {
 
 	private final String name;
 
 	/**
 	 * Constructor
 	 */
-	public N4JSProjectName(String name) {
+	public N4JSPackageName(String name) {
 		Preconditions.checkNotNull(name);
 		if (name.indexOf(NPM_SCOPE_SEPARATOR) < 0) {
 			Preconditions.checkArgument(!name.startsWith(NPM_SCOPE_PREFIX), name);
@@ -43,28 +43,28 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 			this.name = name;
 		} else {
 			Path path = Path.of(name);
-			this.name = ProjectDescriptionUtils.deriveN4JSProjectNameFromPath(path);
+			this.name = ProjectDescriptionUtils.deriveN4JSPackageNameFromPath(path);
 		}
 	}
 
 	/**
 	 * Constructor
 	 */
-	public N4JSProjectName(Path path) {
-		this(ProjectDescriptionUtils.deriveN4JSProjectNameFromPath(path));
+	public N4JSPackageName(Path path) {
+		this(ProjectDescriptionUtils.deriveN4JSPackageNameFromPath(path));
 	}
 
 	/**
 	 * Constructor
 	 */
-	public N4JSProjectName(File file) {
-		this(ProjectDescriptionUtils.deriveN4JSProjectNameFromFile(file));
+	public N4JSPackageName(File file) {
+		this(ProjectDescriptionUtils.deriveN4JSPackageNameFromFile(file));
 	}
 
 	/**
 	 * Constructor
 	 */
-	public N4JSProjectName(String scopeName, String plainName) {
+	public N4JSPackageName(String scopeName, String plainName) {
 		this(Preconditions.checkNotNull(scopeName) + NPM_SCOPE_SEPARATOR + Preconditions.checkNotNull(plainName));
 	}
 
@@ -72,7 +72,7 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	 * Returns the plain project name of the project, i.e. without scope prefix.
 	 */
 	public String getPlainName() {
-		return ProjectDescriptionUtils.getPlainProjectName(name);
+		return ProjectDescriptionUtils.getPlainPackageName(name);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	/**
 	 * Convert this project name to an Xtext qualified name.
 	 * <p>
-	 * As explained {@link ProjectDescriptionUtils#isProjectNameWithScope(String) here}, a scope name, if present, and
+	 * As explained {@link ProjectDescriptionUtils#isPackageNameWithScope(String) here}, a scope name, if present, and
 	 * the plain project name are expected to be represented as a <em>single</em> segment.
 	 * <p>
 	 * See also {@link N4JSQualifiedNameConverter#toQualifiedName(String)}.
@@ -129,7 +129,7 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 	}
 
 	@Override
-	public int compareTo(N4JSProjectName o) {
+	public int compareTo(N4JSPackageName o) {
 		return name.compareTo(o.getRawName());
 	}
 
@@ -149,7 +149,7 @@ public final class N4JSProjectName implements Comparable<N4JSProjectName> {
 			return false;
 		if (getClass() != obj.getClass())
 			throw new IllegalArgumentException("Cannot compare to type " + obj.getClass().getName());
-		N4JSProjectName other = (N4JSProjectName) obj;
+		N4JSPackageName other = (N4JSPackageName) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

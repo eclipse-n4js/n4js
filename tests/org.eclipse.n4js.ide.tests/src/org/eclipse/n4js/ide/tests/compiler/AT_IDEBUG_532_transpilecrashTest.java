@@ -21,7 +21,7 @@ import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +40,8 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractCliCompileTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace(WSP_532, true,
-				N4JSGlobals.N4JS_RUNTIME, new N4JSProjectName("n4js-runtime-es2015"),
-				new N4JSProjectName("org.eclipse.n4js.mangelhaft"));
+				N4JSGlobals.N4JS_RUNTIME, new N4JSPackageName("n4js-runtime-es2015"),
+				new N4JSPackageName("org.eclipse.n4js.mangelhaft"));
 	}
 
 	/** Delete workspace. */

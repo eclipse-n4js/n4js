@@ -33,7 +33,7 @@ import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
@@ -177,7 +177,7 @@ public class ProjectImportEnablingScope implements IScope {
 
 					} else if (n4jsdProject.getType() == ProjectType.DEFINITION
 							&& Objects.equals(n4jsdProject.getDefinesPackage(),
-									new N4JSProjectName(jsProject.getName()))) {
+									new N4JSPackageName(jsProject.getName()))) {
 						// case: n4jsd and js file are inside an n4js-definition and a plain-js project
 						return n4jsdObjDescr;
 					}
@@ -245,11 +245,11 @@ public class ProjectImportEnablingScope implements IScope {
 
 		switch (moduleSpecifierForm) {
 		case PROJECT: {
-			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
+			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
 			return findModulesInProject(Optional.absent(), firstSegment);
 		}
 		case COMPLETE: {
-			final N4JSProjectName firstSegment = new N4JSProjectName(name.getFirstSegment());
+			final N4JSPackageName firstSegment = new N4JSPackageName(name.getFirstSegment());
 			return findModulesInProject(Optional.of(name.skipFirst(1)), firstSegment);
 		}
 		case PLAIN: {
@@ -285,7 +285,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 * </ol>
 	 */
 	private Collection<IEObjectDescription> findModulesInProject(Optional<QualifiedName> moduleName,
-			N4JSProjectName projectName) {
+			N4JSPackageName projectName) {
 
 		boolean useMainModule = !moduleName.isPresent();
 
@@ -296,12 +296,12 @@ public class ProjectImportEnablingScope implements IScope {
 
 		Collection<IEObjectDescription> result;
 		result = moduleNameToSearch != null
-				? getElementsWithDesiredProjectName(moduleNameToSearch, targetProject.getN4JSProjectName())
+				? getElementsWithDesiredProjectName(moduleNameToSearch, targetProject.getN4JSPackageName())
 				: Collections.emptyList();
 
 		if (result.isEmpty()
 				&& targetProject != null
-				&& !Objects.equals(targetProject.getN4JSProjectName(), projectName)) {
+				&& !Objects.equals(targetProject.getN4JSPackageName(), projectName)) {
 			// no elements found AND #findProject() returned a different project than we asked for (happens if a
 			// type definition project is available)
 			// -> as a fall back, try again in project we asked for (i.e. the defined project)
@@ -321,10 +321,10 @@ public class ProjectImportEnablingScope implements IScope {
 
 	/**
 	 * This method asks {@link #delegate} for elements matching provided <code>moduleSpecifier</code>. Returned results
-	 * are filtered by expected {@link N4JSProjectName}.
+	 * are filtered by expected {@link N4JSPackageName}.
 	 */
 	private Collection<IEObjectDescription> getElementsWithDesiredProjectName(QualifiedName moduleSpecifier,
-			N4JSProjectName projectName) {
+			N4JSPackageName projectName) {
 
 		final Iterable<IEObjectDescription> moduleSpecifierMatchesWithPossibleDuplicates = delegate
 				.getElements(moduleSpecifier);
@@ -335,17 +335,17 @@ public class ProjectImportEnablingScope implements IScope {
 		for (IEObjectDescription desc : moduleSpecifierMatchesWithPossibleDuplicates) {
 			final N4JSProjectConfigSnapshot containingProject = workspaceConfigSnapshot
 					.findProjectContaining(desc.getEObjectURI());
-			if (containingProject != null && projectName.equals(containingProject.getN4JSProjectName())) {
+			if (containingProject != null && projectName.equals(containingProject.getN4JSPackageName())) {
 				result.put(desc.getEObjectURI().toString(), desc);
 			}
 		}
 		return result.values();
 	}
 
-	private N4JSProjectConfigSnapshot findProject(N4JSProjectName projectName, N4JSProjectConfigSnapshot project,
+	private N4JSProjectConfigSnapshot findProject(N4JSPackageName projectName, N4JSProjectConfigSnapshot project,
 			boolean preferDefinitionProject) {
 
-		if (Objects.equals(project.getN4JSProjectName(), projectName)) {
+		if (Objects.equals(project.getN4JSPackageName(), projectName)) {
 			return project;
 		}
 
@@ -355,7 +355,7 @@ public class ProjectImportEnablingScope implements IScope {
 		// here:
 		Iterable<String> dependencies = project.getDependencies();
 		for (String pName : dependencies) {
-			N4JSProjectConfigSnapshot p = workspaceConfigSnapshot.findProjectByName(pName);
+			N4JSProjectConfigSnapshot p = workspaceConfigSnapshot.findProjectByID(pName);
 			if (p == null) {
 				continue;
 			}
@@ -363,7 +363,7 @@ public class ProjectImportEnablingScope implements IScope {
 			if (preferDefinitionProject && Objects.equals(p.getDefinesPackage(), projectName)) {
 				return p;
 			}
-			if (Objects.equals(p.getN4JSProjectName(), projectName)) {
+			if (Objects.equals(p.getN4JSPackageName(), projectName)) {
 				return p;
 			}
 		}
@@ -376,7 +376,7 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	private ModuleSpecifierForm computeImportType(QualifiedName name, N4JSProjectConfigSnapshot project) {
 		final String firstSegment = name.getFirstSegment();
-		final N4JSProjectConfigSnapshot targetProject = findProject(new N4JSProjectName(firstSegment), project, true);
+		final N4JSProjectConfigSnapshot targetProject = findProject(new N4JSPackageName(firstSegment), project, true);
 		final boolean firstSegmentIsProjectName = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectName, targetProject);
 	}

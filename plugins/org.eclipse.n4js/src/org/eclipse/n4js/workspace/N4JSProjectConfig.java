@@ -33,7 +33,7 @@ import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.n4js.utils.ProjectDescriptionLoader;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -175,9 +175,12 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return projectDescription.getPackageName();
 	}
 
-	/** Returns this project's name as an {@link N4JSProjectName}. */
-	public N4JSProjectName getN4JSProjectName() {
-		return new N4JSProjectName(getName());
+	/** Returns this project's name as an {@link N4JSPackageName}. */
+	public N4JSPackageName getN4JSPackageName() {
+		if (Strings.isNullOrEmpty(getPackageName())) {
+			return new N4JSPackageName(getName());
+		}
+		return new N4JSPackageName(getPackageName());
 	}
 
 	/** Tells whether this project is a yarn workspace project. */
@@ -249,8 +252,9 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		HashSet<String> allNames = new HashSet<>(workspace.getAllPackageNames());
 		semanticDeps.stream().forEach(d -> allNames.add(d.getPackageName()));
 
-		packageNameToProjectIds = Collections.unmodifiableMap(semanticDependencySupplier.computePackageName2ProjectIdMap(
-				workspace, projectDescription, relatedRootLocation, allNames));
+		packageNameToProjectIds = Collections
+				.unmodifiableMap(semanticDependencySupplier.computePackageName2ProjectIdMap(
+						workspace, projectDescription, relatedRootLocation, allNames));
 
 		List<ProjectDependency> result = new ArrayList<>(semanticDeps.size());
 		for (ProjectDependency sdep : semanticDeps) {
@@ -325,9 +329,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 	public WorkspaceChanges update(WorkspaceConfigSnapshot oldWorkspaceConfig, URI changedResource,
 			ConfigSnapshotFactory configSnapshotFactory) {
 
-		String projectName = getName();
-		ProjectConfigSnapshot oldProjectConfig = projectName != null ? oldWorkspaceConfig.findProjectByName(projectName)
-				: null;
+		String projectID = getName();
+		ProjectConfigSnapshot oldProjectConfig = oldWorkspaceConfig.findProjectByID(projectID);
 
 		if (!exists()) {
 			// project was deleted

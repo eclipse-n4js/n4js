@@ -59,9 +59,9 @@ public class SemanticDependencySupplier {
 		EList<ProjectDependency> pDeps = ECollections.newBasicEList(dependencies);
 		boolean sawDefinitionsOnly = true;
 		for (ProjectDependency dependency : pDeps) {
-			N4JSProjectName dependencyName = dependency.getN4JSProjectName();
+			N4JSPackageName dependencyName = dependency.getN4JSProjectName();
 			existingDependencies.add(dependencyName.getRawName());
-			N4JSProjectName definitionProjectName = definitionProjects.getDefinitionProject(dependencyName);
+			N4JSPackageName definitionProjectName = definitionProjects.getDefinitionProject(dependencyName);
 			if (definitionProjectName != null) {
 				implicitDependencies.add(definitionProjectName.getRawName());
 			}
