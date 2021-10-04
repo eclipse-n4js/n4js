@@ -13,6 +13,7 @@
 // Additional tweaks may be found also in other places; see usage of Options#runtimeLibs in
 // file 'cmdLineOpts.n4js' for finding those.
 
+import * as path_lib from "path";
 import * as model from "model";
 
 const PREAMBLE = `@@Global @@ProvidedByRuntime
@@ -49,6 +50,12 @@ const FINAL_CLASSIFIERS = new Map<string,Set<string>>([
 		// "Boolean", "Number", "String", "Symbol", "RegExp", "Function", "Date", "Math", "JSON"
 	])] as [string, Set<string>]
 ]);
+
+export public function isIgnored(filePath: string, elementName: string): boolean {
+	const fileName = path_lib.basename(filePath);
+	const ignoredNames = IGNORED_ELEMENTS.get(fileName);
+	return ignoredNames?.has(elementName);
+}
 
 /**
  * Invoked for each script iff in "--runtime-libs" mode. Will modify its top-level elements

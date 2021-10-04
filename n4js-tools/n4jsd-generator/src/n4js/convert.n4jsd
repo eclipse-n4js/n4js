@@ -11,9 +11,11 @@
 
 import * as model from "model";
 
+export external type IgnorePredicate = (filePath: string, elementName: string) => boolean;
+
 export external public class Converter {
 
-	constructor(sourceDtsFilePaths: string[], projectPath: string =, runtimeLibs: boolean =);
+	constructor(sourceDtsFilePaths: string[], projectPath: string =, ignorePredicate: IgnorePredicate =, runtimeLibs: boolean =);
 
 	convertScript(sourceFilePath: string): model.Script;
 

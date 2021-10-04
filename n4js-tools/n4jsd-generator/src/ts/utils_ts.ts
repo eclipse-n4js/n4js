@@ -15,6 +15,16 @@ import * as utils from "./utils";
 
 // utilities related to TypeScript
 
+export function getFilePath(node: ts.Node): string | undefined {
+	while (node && !ts.isSourceFile(node)) {
+		node = node.parent;
+	}
+	if (node && ts.isSourceFile(node)) {
+		return node.fileName;
+	}
+	return undefined;
+}
+
 export function getAllChildNodes(node: ts.Node): ts.Node[] {
 	// for some reason, node.getChildren() does not do the trick in all cases, it seems
 	const result = [] as ts.Node[];

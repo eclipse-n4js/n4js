@@ -14,7 +14,7 @@ import * as path_lib from "path";
 
 import { USAGE, Options, parseCommandLineOptions } from "cmdLineOpts";
 import * as model from "model";
-import { Converter } from "convert";
+import { Converter, IgnorePredicate } from "convert";
 import * as runtimeLibs from "runtimeLibs"
 import * as utils from "utils";
 
@@ -66,7 +66,14 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 		return;
 	}
 
-	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath, opts.runtimeLibs);
+	let ignorePredicate: IgnorePredicate = undefined;
+	if (opts.runtimeLibs) {
+		ignorePredicate = (filePath, elementName) => {
+			return runtimeLibs.isIgnored(filePath, elementName);
+		};
+	}
+
+	const converter = new Converter(sourceDtsFilePaths, sourceProjectPath, ignorePredicate, opts.runtimeLibs);
 
 	// check for compile errors on TypeScript side
 	// TODO: this seems to take a long time and is not strictly necessary; consider removing it or making it optional!

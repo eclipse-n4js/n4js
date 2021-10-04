@@ -15,8 +15,11 @@ import * as model from "./model";
 import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
 
+export type IgnorePredicate = (filePath: string, elementName: string) => boolean;
+
 export class Converter {
 	private readonly projectPath?: string;
+	private readonly ignorePredicate?: IgnorePredicate;
 	/** True iff option '--runtime-libs' was given on the command line. */
 	private readonly runtimeLibs: boolean;
 
@@ -26,12 +29,13 @@ export class Converter {
 	private exportAssignment: ts.ExportAssignment;
 	private readonly issues: utils.Issue[] = [];
 
-	constructor(sourceDtsFilePaths: string[], projectPath?: string, runtimeLibs = false) {
+	constructor(sourceDtsFilePaths: string[], projectPath?: string, ignorePredicate?: IgnorePredicate, runtimeLibs = false) {
 		if (projectPath !== undefined && !path_lib.isAbsolute(projectPath)) {
 			throw "projectPath must be absolute";
 		}
 
 		this.projectPath = projectPath;
+		this.ignorePredicate = ignorePredicate;
 		this.runtimeLibs = runtimeLibs;
 
 		// prepare compilation options
@@ -152,16 +156,15 @@ export class Converter {
 		} else if (ts.isVariableDeclarationList(node)) {
 			return this.convertVariableDeclList(node); // TODO can a VariableDeclarationList even appear here?
 		} else if (ts.isFunctionDeclaration(node)) {
-			return [ this.convertFunction(node) ];
+			return this.isIgnored(node) ? [] : [ this.convertFunction(node) ];
 		} else if (ts.isEnumDeclaration(node)) {
-			return [ this.convertEnum(node) ];
+			return this.isIgnored(node) ? [] : [ this.convertEnum(node) ];
 		} else if (ts.isInterfaceDeclaration(node)) {
-			return [ this.convertInterface(node) ];
+			return this.isIgnored(node) ? [] : [ this.convertInterface(node) ];
 		} else if (ts.isClassDeclaration(node)) {
-			return [ this.convertClass(node) ];
+			return this.isIgnored(node) ? [] : [ this.convertClass(node) ];
 		} else if (ts.isTypeAliasDeclaration(node)) {
-			const elem = this.convertTypeAlias(node);
-			return elem !== undefined ? [ elem ] : [];
+			return this.isIgnored(node) ? [] : [ this.convertTypeAlias(node) ];
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
 			if (children.length === 2
@@ -175,12 +178,15 @@ export class Converter {
 			if (!this.exportAssignment) {
 				return []; // FIXME!!!!! do not merge this to master
 			}
+			if (this.isIgnored(node)) {
+				return [];
+			}
 			const exportSymbol = this.checker.getSymbolAtLocation(this.exportAssignment.expression);
-			
+
 			if (utils.testFlagsOR(exportSymbol.flags,
 				ts.SymbolFlags.ValueModule,
 				ts.SymbolFlags.NamespaceModule)) {
-				
+
 				const sym = this.checker.getSymbolAtLocation(node.name);
 				if (sym === exportSymbol) {
 					const result = [];
@@ -199,7 +205,9 @@ export class Converter {
 		const keyword = utils_ts.getVarDeclKeyword(node);
 		const result = [] as model.Variable[];
 		for (const varDecl of node.declarations) {
-			result.push(this.convertVariable(varDecl, keyword));
+			if (!this.isIgnored(varDecl)) {
+				result.push(this.convertVariable(varDecl, keyword));
+			}
 		}
 		return result;
 	}
@@ -656,6 +664,15 @@ export class Converter {
 
 		result.tsSourceString = sourceStr;
 		return result;
+	}
+
+	private isIgnored(node: ts.NamedDeclaration) {
+		if (!this.ignorePredicate) {
+			return false;
+		}
+		const filePath = utils_ts.getFilePath(node);
+		const elementName = utils_ts.getLocalNameOfExportableElement(node as ts.NamedDeclaration, this.checker);
+		return this.ignorePredicate?.(filePath, elementName);
 	}
 
 	private createIssueForUnsupportedNode(node: ts.Node, superKind: string = "node") {
