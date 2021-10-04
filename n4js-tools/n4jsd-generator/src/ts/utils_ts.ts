@@ -216,7 +216,7 @@ export function createEnumLiteralsFromValues(values: (string | number)[]): model
 
 export function getSourceCodeForNode(node: ts.Node, indentStr: string = "    |"): string {
 	const sourceFile = node.getSourceFile();
-	let offendingCode = sourceFile.text.substring(node.pos, node.end);
+	let offendingCode = sourceFile.text.substring(node.getStart(), node.getEnd());
 	offendingCode = offendingCode.trim();
 	if (offendingCode.length > 256) {
 		offendingCode = offendingCode.slice(0, 256) + " [...]";
@@ -224,4 +224,38 @@ export function getSourceCodeForNode(node: ts.Node, indentStr: string = "    |")
 	offendingCode = offendingCode.replace(/\r\n/gi, "\n");
 	offendingCode = indentStr + offendingCode.replace(/\n/gi, "\n" + indentStr);
 	return offendingCode;
+}
+
+export function getJSDocForNode(node: ts.Node): string | undefined {
+	const sourceFile = node.getSourceFile();
+	const leadingWhiteSpace = sourceFile.text.substring(node.pos, node.getStart());
+	// search last "/**" that is not immediately followed by "/"
+	const len = leadingWhiteSpace.length;
+	let idxStart = -1;
+	let idx = 0;
+	while (true) {
+		idx = leadingWhiteSpace.indexOf("/*", idx);
+		if (idx < 0) {
+			break;
+		} else if (idx + 3 < len
+			&& leadingWhiteSpace.charAt(idx + 2) === '*'
+			&& leadingWhiteSpace.charAt(idx + 3) !== '/') {
+			// start of a JSDoc comment
+			idxStart = idx;
+		}
+		idx += 2;
+	}
+	if (idxStart < 0) {
+		return undefined;
+	}
+	let idxEnd = leadingWhiteSpace.indexOf("*/", idxStart);
+	if (idxEnd < 0) {
+		return undefined;
+	}
+	// get rid of unnecessary white space in comment
+	let doc = leadingWhiteSpace.substring(idxStart, idxEnd + 2);
+	doc = doc.replace(/\r\n/gi, "\n");
+	doc = doc.replace(/\n\s+/gi, "\n");
+	doc = doc.replace(/\n\*/gi, "\n *");
+	return doc;
 }

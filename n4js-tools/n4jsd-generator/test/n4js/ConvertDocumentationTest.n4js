@@ -1,0 +1,205 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertDocumentationTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testNonJsDoc01() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					/*
+					 * Some non-JSDoc documentation.
+					 */
+					export var myVar: string;
+				`,
+				n4jsd: `
+					export public var myVar: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testNonJsDoc02() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					//
+					// Some non-JSDoc documentation.
+					//
+					export var myVar: string;
+				`,
+				n4jsd: `
+					export public var myVar: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testNonJsDoc03() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					//
+					//
+					/** This should not be used. */
+					//
+					/**
+					 * Some JSDoc documentation.
+					 */
+					//
+					/**/ // <--- not a JSDoc comment!
+					//
+					export var myVar: string;
+				`,
+				n4jsd: `
+					/**
+					 * Some JSDoc documentation.
+					 */
+					export public var myVar: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testDocumentedVariable01() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					/**
+					 * Some documentation.
+					 */
+					export var myVar: string;
+				`,
+				n4jsd: `
+					/**
+					 * Some documentation.
+					 */
+					export public var myVar: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testDocumentedVariable02() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					/**
+					 * This should not override the documentaton for myVar1!
+					 */
+					export var
+						/**
+						 * Documentation for myVar1.
+						 */
+						myVar1: string,
+						/**
+						 * Documentation for myVar2.
+						 */
+						myVar2: string;
+				`,
+				n4jsd: `
+					/**
+					 * Documentation for myVar1.
+					 */
+					export public var myVar1: any+;
+
+					/**
+					 * Documentation for myVar2.
+					 */
+					export public var myVar2: any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testDocumentedFunction() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					/**
+					 * Some documentation.
+					 */
+					export function foo(): string;
+				`,
+				n4jsd: `
+					/**
+					 * Some documentation.
+					 */
+					export external public function foo(): any+;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testDocumentedClassifiers() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					/**
+					 * Some interface documentation.
+					 */
+					export interface Ifc {
+						/**
+						 * Some method documentation (in interface).
+						 */
+						method(): string;
+					}
+					/**
+					 * Some class documentation.
+					 */
+					export class Cls {
+						/**
+						 * Some method documentation (in class).
+						 */
+						method(): string;
+					}
+				`,
+				n4jsd: `
+				/**
+				 * Some interface documentation.
+				 */
+				export external public interface ~Ifc {
+					/**
+					 * Some method documentation (in interface).
+					 */
+					method(): any+;
+				}
+
+				/**
+				 * Some class documentation.
+				 */
+				export external public class ~Cls {
+					/**
+					 * Some method documentation (in class).
+					 */
+					method(): any+;
+				}
+		   `
+			}
+		);
+	}
+}

@@ -58,6 +58,7 @@ export class NamedImport extends Import {
 
 export abstract class NamedElement {
 	name: string;
+	jsdoc?: string;
 }
 
 export abstract class ExportableElement extends NamedElement {

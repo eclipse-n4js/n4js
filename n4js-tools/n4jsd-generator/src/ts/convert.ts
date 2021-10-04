@@ -172,7 +172,11 @@ export class Converter {
 					|| children[0].kind === ts.SyntaxKind.DeclareKeyword)
 				&& children[1].kind === ts.SyntaxKind.VariableDeclarationList) {
 				// something like "export var someStr: string, someNum: number;"
-				return this.convertVariableDeclList(children[1] as ts.VariableDeclarationList);
+				const result = this.convertVariableDeclList(children[1] as ts.VariableDeclarationList);
+				if (result[0]?.jsdoc === undefined) {
+					result[0].jsdoc = utils_ts.getJSDocForNode(node);
+				}
+				return result;
 			}
 		} else if (ts.isModuleDeclaration(node)) {
 			if (!this.exportAssignment) {
@@ -215,6 +219,7 @@ export class Converter {
 	private convertVariable(node: ts.VariableDeclaration, keyword: model.VariableKeyword): model.Variable {
 		const result = new model.Variable();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+		result.jsdoc = utils_ts.getJSDocForNode(node);
 		result.keyword = keyword;
 		result.type = this.convertTypeReference(node.type);
 		result.exported = utils_ts.isExported(node);
@@ -228,6 +233,7 @@ export class Converter {
 		
 		const result = new model.Function();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+		result.jsdoc = utils_ts.getJSDocForNode(node);
 		const expOfModule = this.checker.getExportSymbolOfSymbol(sym);
 		
 		result.signatures = funSigs;
@@ -239,6 +245,7 @@ export class Converter {
 	private convertEnum(node: ts.EnumDeclaration): model.Type {
 		let result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+		result.jsdoc = utils_ts.getJSDocForNode(node);
 		result.kind = model.TypeKind.ENUM;
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -273,6 +280,7 @@ export class Converter {
 			const litSym = this.checker.getSymbolAtLocation(lit.name);
 			const result = new model.EnumLiteral();
 			result.name = litSym.getName();
+			result.jsdoc = utils_ts.getJSDocForNode(lit);
 			if (isConst) {
 				result.value = this.checker.getConstantValue(lit);
 			}
@@ -284,6 +292,7 @@ export class Converter {
 	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
 		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+		result.jsdoc = utils_ts.getJSDocForNode(node);
 		result.kind = model.TypeKind.INTERFACE;
 		result.defSiteStructural = true;
 		result.typeParams.push(...this.convertTypeParameters(node));
@@ -296,6 +305,7 @@ export class Converter {
 	private convertClass(node: ts.ClassDeclaration): model.Type {
 		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+		result.jsdoc = utils_ts.getJSDocForNode(node);
 		result.kind = model.TypeKind.CLASS;
 		result.defSiteStructural = true;
 		result.typeParams.push(...this.convertTypeParameters(node));
@@ -365,6 +375,7 @@ export class Converter {
 		const representativeNode = symMember.declarations[0] as ts.SignatureDeclaration;
 
 		const result = new model.Member();
+		result.jsdoc = utils_ts.getJSDocForNode(representativeNode);
 		result.accessibility = utils_ts.getAccessibility(representativeNode);
 		result.isStatic = isStatic;
 
@@ -513,6 +524,7 @@ export class Converter {
 	private convertTypeAlias(node: ts.TypeAliasDeclaration): model.Type {
 		const result = new model.Type();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+		result.jsdoc = utils_ts.getJSDocForNode(node);
 		result.kind = model.TypeKind.TYPE_ALIAS;
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -666,7 +678,7 @@ export class Converter {
 		} else if (ts.isTypePredicateNode(node)) {
 			// e.g. "this is Cls"
 			result.kind = model.TypeRefKind.PREDICATE;
-			this.createWarningForNode("type predicate will be replaced by any+", node);
+			this.createWarningForNode("type predicate will be replaced by boolean", node);
 		} else if (ts.isMappedTypeNode(node)) {
 			// e.g. { [P in K]: T[P]; }
 			result.kind = model.TypeRefKind.MAPPED_TYPE;

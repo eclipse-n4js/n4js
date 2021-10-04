@@ -64,6 +64,7 @@ export class NamedImport extends Import {
 
 export abstract class NamedElement {
 	name: string;
+	jsdoc?: string;
 }
 
 export abstract class ExportableElement extends NamedElement {
@@ -260,6 +261,7 @@ class Emitter {
 
 	emitVariable(variable: Variable) {
 		const buff = this.buff;
+		this.emitDocumentation(variable);
 		this.emitExportKeywordIfNecessary(variable);
 		buff.push("public ");
 		buff.push(variable.keyword.name.toLowerCase());
@@ -271,6 +273,7 @@ class Emitter {
 
 	emitFunction(fun: Function) {
 		const buff = this.buff;
+		this.emitDocumentation(fun);
 		this.emitExportKeywordIfNecessary(fun);
 		buff.push("external ");
 		buff.push("public ");
@@ -282,6 +285,7 @@ class Emitter {
 
 	emitType(type: Type) {
 		const buff = this.buff;
+		this.emitDocumentation(type);
 		this.emitAnnotations(type, true);
 		if (type.primitiveBased === PrimitiveBasedKind.STRING_BASED) {
 			buff.pushln("@StringBased");
@@ -334,6 +338,7 @@ class Emitter {
 				buff.push(",");
 			}
 			buff.pushln();
+			this.emitDocumentation(lit);
 			buff.push(lit.name);
 			if (lit.value !== undefined) {
 				buff.push(": ");
@@ -357,6 +362,7 @@ class Emitter {
 			}
 			if (onePerLine) {
 				buff.pushln();
+				this.emitDocumentation(m);
 			} else {
 				if (!isFirst) {
 					buff.push(" ");
@@ -370,6 +376,7 @@ class Emitter {
 
 	emitMember(member: Member, parent: Type =) {
 		const buff = this.buff;
+		// note: documentation is emitted by #emitMembers()
 		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
 			if (member.kind !== MemberKind.CALLABLE_CTOR) { // TODO how to define accessibility of a callable ctor?
@@ -635,6 +642,19 @@ class Emitter {
 		}
 		if (!legal) {
 			buff.push('"');
+		}
+	}
+
+	emitDocumentation(elem: NamedElement) {
+		const doc = elem.jsdoc;
+		if (!doc) {
+			return;
+		}
+		const buff = this.buff;
+		const docLines = doc.split("\n");
+		for (const line of docLines) {
+			buff.push(line);
+			buff.pushln();
 		}
 	}
 }
