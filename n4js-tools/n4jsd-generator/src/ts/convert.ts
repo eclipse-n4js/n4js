@@ -27,6 +27,7 @@ export class Converter {
 	private readonly checker: ts.TypeChecker;
 
 	private exportAssignment: ts.ExportAssignment;
+	private readonly convertedTypes: Set<ts.Symbol> = new Set<ts.Symbol>();
 	private readonly issues: utils.Issue[] = [];
 
 	constructor(sourceDtsFilePaths: string[], projectPath?: string, ignorePredicate?: IgnorePredicate, runtimeLibs = false) {
@@ -75,6 +76,7 @@ export class Converter {
 	convertScript(sourceFilePath: string): model.Script {
 		// clean up
 		this.exportAssignment = undefined;
+		this.convertedTypes.clear();
 		this.issues.length = 0;
 
 		const sourceFile = this.program.getSourceFile(sourceFilePath);
@@ -156,15 +158,15 @@ export class Converter {
 		} else if (ts.isVariableDeclarationList(node)) {
 			return this.convertVariableDeclList(node); // TODO can a VariableDeclarationList even appear here?
 		} else if (ts.isFunctionDeclaration(node)) {
-			return this.isIgnored(node) ? [] : [ this.convertFunction(node) ];
+			return this.isToBeConverted(node) ? [ this.convertFunction(node) ] : [];
 		} else if (ts.isEnumDeclaration(node)) {
-			return this.isIgnored(node) ? [] : [ this.convertEnum(node) ];
+			return this.isToBeConverted(node) ? [ this.convertEnum(node) ] : [];
 		} else if (ts.isInterfaceDeclaration(node)) {
-			return this.isIgnored(node) ? [] : [ this.convertInterface(node) ];
+			return this.isToBeConverted(node) ? [ this.convertInterface(node) ] : [];
 		} else if (ts.isClassDeclaration(node)) {
-			return this.isIgnored(node) ? [] : [ this.convertClass(node) ];
+			return this.isToBeConverted(node) ? [ this.convertClass(node) ] : [];
 		} else if (ts.isTypeAliasDeclaration(node)) {
-			return this.isIgnored(node) ? [] : [ this.convertTypeAlias(node) ];
+			return this.isToBeConverted(node) ? [ this.convertTypeAlias(node) ] : [];
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
 			if (children.length === 2
@@ -182,7 +184,7 @@ export class Converter {
 			if (!this.exportAssignment) {
 				return []; // FIXME!!!!! do not merge this to master
 			}
-			if (this.isIgnored(node)) {
+			if (!this.isToBeConverted(node)) {
 				return [];
 			}
 			const exportSymbol = this.checker.getSymbolAtLocation(this.exportAssignment.expression);
@@ -209,7 +211,7 @@ export class Converter {
 		const keyword = utils_ts.getVarDeclKeyword(node);
 		const result = [] as model.Variable[];
 		for (const varDecl of node.declarations) {
-			if (!this.isIgnored(varDecl)) {
+			if (this.isToBeConverted(varDecl)) {
 				result.push(this.convertVariable(varDecl, keyword));
 			}
 		}
@@ -691,6 +693,17 @@ export class Converter {
 
 		result.tsSourceString = sourceStr;
 		return result;
+	}
+
+	private isToBeConverted(node: ts.NamedDeclaration) {
+		if (ts.isInterfaceDeclaration(node)) {
+			const sym = this.checker.getSymbolAtLocation(node.name);
+			if (this.convertedTypes.has(sym)) {
+				return false; // already converted
+			}
+			this.convertedTypes.add(sym);
+		}
+		return !this.isIgnored(node);
 	}
 
 	private isIgnored(node: ts.NamedDeclaration) {
