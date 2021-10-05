@@ -131,7 +131,7 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 			utils.log("Writing n4jsd-file: " + trgtN4jsdPath);
 		}
 		utils.mkdirs(path_lib.dirname(trgtN4jsdPath));
-		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr + "\n", undefined);
+		fs_lib.writeFileSync(trgtN4jsdPath, n4jsdStr, undefined);
 	}
 }
 

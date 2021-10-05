@@ -39,7 +39,8 @@ export interface AnnotatableElement {
 
 export class Script {
 	mode: DTSMode = DTSMode.NONE;
-	preamble?: string;
+	prefix?: string;
+	suffix?: string;
 	imports: Import[] = [];
 	topLevelElements: ExportableElement[] = [];
 	issues: utils.Issue[] = [];
@@ -197,8 +198,9 @@ class Emitter {
 
 	emitScript(script: Script) {
 		const buff = this.buff;
-		if (script.preamble) {
-			buff.pushln(script.preamble);
+		if (script.prefix) {
+			buff.pushln(script.prefix);
+			buff.pushln(); // separate prefix from main code by one empty line
 		}
 		if (script.imports.length > 0) {
 			script.imports.forEach((elem, idx) => {
@@ -217,6 +219,11 @@ class Emitter {
 			}
 			this.emitExportableElement(elem);
 		});
+		buff.pushln();
+		if (script.suffix) {
+			buff.pushln(); // separate main code from suffix by one empty line
+			buff.pushln(script.suffix);
+		}
 	}
 
 	emitImport(elem: Import) {

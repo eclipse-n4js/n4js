@@ -15,11 +15,84 @@
 
 import * as path_lib from "path";
 import * as model from "model";
+import * as utils from "utils";
 
-const PREAMBLE = `@@Global @@ProvidedByRuntime
+const PREAMBLE = `@@Global @@ProvidedByRuntime`;
 
-type ReadonlyArray<T> = Array<T>;
-`;
+const SCRIPT_PREFIX = new Map<string,string>([
+]);
+
+const SCRIPT_SUFFIX = new Map<string,string>([
+	[ "es5.d.ts", `
+		type ReadonlyArray<T> = Array<T>;
+
+		export external public interface ~Iterator<out T> {
+			public abstract next(): IteratorEntry<T>
+		}
+		
+		export external public interface ~AsyncIterator<out T> {
+			public abstract next(): Promise<IteratorEntry<T>, ?>
+		}
+		
+		export external public interface ~IteratorEntry<out T> {
+			public done: boolean;
+			@Final public value?: T;
+		}
+		
+		export external public interface ~Iterable<out T> {
+			public abstract [Symbol.iterator](): Iterator<T>
+		}
+		
+		export external public interface ~AsyncIterable<out T> {
+			public abstract [Symbol.asyncIterator](): AsyncIterator<T>
+		}
+		
+		export external public interface ~Generator<out TYield, out TReturn, in TNext> extends Iterable<TYield>, Iterator<TYield> {
+			@Override public abstract next(value: TNext = undefined): IteratorEntry<TYield>
+			@Override public abstract [Symbol.iterator](): Generator<TYield, TReturn, TNext>
+			public abstract throw(exception: any): IteratorEntry<TYield>;
+			public abstract return(value: TNext = undefined): IteratorEntry<TReturn>;
+		}
+		
+		export external public interface ~AsyncGenerator<out TYield, out TReturn, in TNext> extends AsyncIterable<TYield>, AsyncIterator<TYield> {
+			@Override public abstract next(value: TNext = undefined): Promise<IteratorEntry<TYield>, ?>
+			@Override public abstract [Symbol.asyncIterator](): AsyncGenerator<TYield, TReturn, TNext>
+			public abstract throw(exception: any): Promise<IteratorEntry<TYield>, any>;
+			public abstract return(value: TNext = undefined): Promise<IteratorEntry<TReturn>, ?>;
+		}
+		
+		export external public class Promise<out S, out F> extends Object {
+		
+			public constructor(
+				executor: {function(
+					resolveFn:{function(arg: S = undefined):void},
+					rejectFn: {function(arg: F = undefined):void}
+				): void}
+			)
+		
+			public <Snew, Fnew> then(
+				onFulfilled: {function(arg:S = undefined): union{Snew, Promise<Snew, Fnew>}?},
+				onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?} = undefined
+			): Promise<Snew, Fnew>
+		
+			public <Snew, Fnew> catch(
+				onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?}
+			): Promise<Snew, Fnew>
+		
+			public static <S, F> reject(f: F): Promise<S, F>
+			public static <S, F> resolve(
+				s: union{
+					Promise<S, F>,
+					~Object with { then(...args: any): Promise<S, F>; }, // i.e. thenable
+					S
+				}
+			): Promise<S, F>
+		
+			public static <T> all(iterable: Iterable<union{Promise<T,?>, T}>): Promise<Array<T>, any>
+			public static <T> race(iterable: Iterable<union{Promise<T,?>, T}>): Promise<T, any>
+		}
+	` ] as [string,string]
+]);
 
 const CONSTRUCTOR_TYPE_SUFFIX = "Constructor";
 
@@ -79,13 +152,37 @@ export public function isIgnored(filePath: string, elementName: string): boolean
  * @param script the script to modify.
  */
 export public function postProcessRuntimeLib(dtsFileName: string, script: model.Script) {
-	script.preamble = PREAMBLE;
+	handleSimpleConfigurations(dtsFileName, script);
 	removeMetaProperties(script);
 	removeIgnoredElements(dtsFileName, script);
 	handleCtorInstanceTypePattern(script);
 	handlePolyfills(dtsFileName, script);
 	handleFinalClassifiers(dtsFileName, script);
-	handleAdditionalCode(dtsFileName, script);
+}
+
+function handleSimpleConfigurations(dtsFileName: string, script: model.Script) {
+	const prefix = SCRIPT_PREFIX.get(dtsFileName);
+	if (PREAMBLE || prefix) {
+		script.prefix = utils.trimMultiLineString(PREAMBLE ?? "") + utils.trimMultiLineString(prefix ?? "");
+	}
+	const suffix = SCRIPT_SUFFIX.get(dtsFileName);
+	if (suffix) {
+		script.suffix = utils.trimMultiLineString(suffix);
+	}
+	const additionalCode = ADDITIONAL_CODE.get(dtsFileName);
+	if (additionalCode && additionalCode.size > 0) {
+		for (const elem of script.topLevelElements) {
+			if (!(elem instanceof model.Type)) {
+				continue;
+			}
+			const elemName = elem.name;
+			if (elemName && additionalCode.has(elemName)) {
+				for (const code of additionalCode.get(elemName)) {
+					elem.additionalCode.push(code);
+				}
+			}
+		}
+	}
 }
 
 function removeMetaProperties(script: model.Script) {
@@ -252,22 +349,4 @@ function changeInterfaceToClass(ifc: model.Type) {
 			m.accessibility = model.Accessibility.PUBLIC;
 		}
 	});
-}
-
-function handleAdditionalCode(dtsFileName: string, script: model.Script) {
-	const additionalCode = ADDITIONAL_CODE.get(dtsFileName);
-	if (!additionalCode || additionalCode.size === 0) {
-		return;
-	}
-	for (const elem of script.topLevelElements) {
-		if (!(elem instanceof model.Type)) {
-			continue;
-		}
-		const elemName = elem.name;
-		if (elemName && additionalCode.has(elemName)) {
-			for (const code of additionalCode.get(elemName)) {
-				elem.additionalCode.push(code);
-			}
-		}
-	}
 }
