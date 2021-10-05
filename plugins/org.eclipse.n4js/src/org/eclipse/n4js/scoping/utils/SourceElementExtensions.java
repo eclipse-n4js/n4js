@@ -133,7 +133,7 @@ public class SourceElementExtensions {
 
 		List<IdentifiableElement> result = new ArrayList<>();
 		TreeIterator<EObject> allContents = element.eAllContents();
-		InternalCFEMapper veeSwitch = new InternalCFEMapper(start, includeBlockScopedElements, allContents, result);
+		VEESwitch veeSwitch = new VEESwitch(start, includeBlockScopedElements, allContents, result);
 		while (allContents.hasNext()) {
 			EObject next = allContents.next();
 			veeSwitch.doSwitch(next);
@@ -141,13 +141,13 @@ public class SourceElementExtensions {
 		return result;
 	}
 
-	private class InternalCFEMapper extends N4JSSwitch<Boolean> {
+	private class VEESwitch extends N4JSSwitch<Boolean> {
 		final VariableEnvironmentElement start;
 		final boolean includeBlockScopedElements;
 		final TreeIterator<EObject> allContents;
 		final List<? super IdentifiableElement> addHere;
 
-		InternalCFEMapper(VariableEnvironmentElement start, boolean includeBlockScopedElements,
+		VEESwitch(VariableEnvironmentElement start, boolean includeBlockScopedElements,
 				TreeIterator<EObject> allContents, List<? super IdentifiableElement> addHere) {
 
 			this.start = start;
@@ -158,17 +158,20 @@ public class SourceElementExtensions {
 
 		@Override
 		public Boolean caseN4ClassDeclaration(N4ClassDeclaration feature) {
-			Type polyfilledOrOriginalType = getTypeOrPolyfilledType(feature);
 			N4ClassDeclaration nonNullClassDecl = feature;
+			Type polyfilledOrOriginalType = getTypeOrPolyfilledType(feature);
 			if (polyfilledOrOriginalType instanceof TClass) {
 				TClass polyfilledOrOriginalTypeCasted = (TClass) polyfilledOrOriginalType;
-				N4ClassDeclaration n4ClassDecl = (N4ClassDeclaration) polyfilledOrOriginalTypeCasted.getAstElement();
-				if (n4ClassDecl != null) {
-					nonNullClassDecl = n4ClassDecl;
-				}
+
+				addHere.add(polyfilledOrOriginalTypeCasted);
+				// N4ClassDeclaration n4ClassDecl = (N4ClassDeclaration) polyfilledOrOriginalTypeCasted.getAstElement();
+				// if (n4ClassDecl != null) {
+				// nonNullClassDecl = n4ClassDecl;
+				// }
+			} else {
+				collectVisibleTypedElement(nonNullClassDecl, addHere);
 			}
 
-			collectVisibleTypedElement(nonNullClassDecl, addHere);
 			allContents.prune();
 			return true;
 		}
