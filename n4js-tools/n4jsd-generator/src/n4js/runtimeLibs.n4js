@@ -395,6 +395,24 @@ const ADDITIONAL_CODE = new Map<string,Map<string,string[]>>([
 	])] as [string, Map<string,string[]>]
 ]);
 
+const MEMBER_REPLACEMENTS = new Map<string,Map<string,string>>([
+	[ "es5.d.ts", new Map<string,string>([
+		["Object#create", "public static create(proto: Object, props: Object = undefined): Object;"] as [string,string],
+		["Object#freeze", "public static <T extends Object> freeze(obj: T): T;"] as [string,string],
+		["String#localeCompare", "public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number;"] as [string,string],
+		["String#replace", "public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string;"] as [string,string],
+		["Array#concat", "public concat(...items: union {T, Array<? extends T>}): Array<T>;"] as [string,string],
+		["Array#splice", "public splice(start: number = undefined, deleteCount: number = undefined, ...items: T): Array<T>;"] as [string,string],
+		["Array#every", "public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;"] as [string,string],
+		["Array#filter", "public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;"] as [string,string],
+		["Array#reduce", "public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;"] as [string,string],
+		["Array#reduceRight", "public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;"] as [string,string],
+		["Date#constructor", "public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);"] as [string,string],
+		["RegExp#constructor", ""] as [string,string],
+		["JSON#stringify", ""] as [string,string]
+	])] as [string, Map<string,string>]
+]);
+
 export public function isIgnored(filePath: string, elementName: string): boolean {
 	const fileName = path_lib.basename(filePath);
 	const ignoredNames = IGNORED_ELEMENTS.get(fileName);
@@ -417,6 +435,7 @@ export public function postProcessRuntimeLib(dtsFileName: string, script: model.
 }
 
 function handleSimpleConfigurations(dtsFileName: string, script: model.Script) {
+	// script prefix/suffix
 	const prefix = SCRIPT_PREFIX.get(dtsFileName);
 	if (PREAMBLE || prefix) {
 		script.prefix = utils.trimMultiLineString(PREAMBLE ?? "") + utils.trimMultiLineString(prefix ?? "");
@@ -425,6 +444,7 @@ function handleSimpleConfigurations(dtsFileName: string, script: model.Script) {
 	if (suffix) {
 		script.suffix = utils.trimMultiLineString(suffix);
 	}
+	// additional code for types
 	const additionalCode = ADDITIONAL_CODE.get(dtsFileName);
 	if (additionalCode && additionalCode.size > 0) {
 		for (const elem of script.topLevelElements) {
@@ -436,6 +456,33 @@ function handleSimpleConfigurations(dtsFileName: string, script: model.Script) {
 				for (const code of additionalCode.get(elemName)) {
 					elem.additionalCode.push(code);
 				}
+			}
+		}
+	}
+	// member replacement
+	const memberReplacements = MEMBER_REPLACEMENTS.get(dtsFileName);
+	if (memberReplacements && memberReplacements.size > 0) {
+		for (const elem of script.topLevelElements) {
+			if (!(elem instanceof model.Type)) {
+				continue;
+			}
+			const typeName = elem.name;
+			let idx = 0;
+			while (idx < elem.members.length) {
+				const member = elem.members[idx];
+				const memberName = member.kind === model.MemberKind.CTOR ? "constructor" : member.name;
+				const key = typeName + "#" + memberName;
+				if (memberReplacements.has(key)) {
+					const replacement = memberReplacements.get(typeName + "#" + memberName);
+					if (replacement !== undefined && replacement !== null) {
+						member.replacementCode = replacement;
+					} else {
+						// null/undefined means: remove the member
+						elem.members.splice(idx, 1);
+						--idx;
+					}
+				}
+				++idx;
 			}
 		}
 	}

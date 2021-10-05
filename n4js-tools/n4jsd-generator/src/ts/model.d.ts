@@ -118,6 +118,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
+	replacementCode?: string;
 }
 
 export class Signature {

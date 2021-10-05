@@ -123,6 +123,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
+	replacementCode?: string;
 }
 
 export class Signature {
@@ -392,6 +393,10 @@ class Emitter {
 		const buff = this.buff;
 		if (emitDocumentation) {
 			this.emitDocumentation(member);
+		}
+		if (member.replacementCode) {
+			this.emitCode(member.replacementCode);
+			return;
 		}
 		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
