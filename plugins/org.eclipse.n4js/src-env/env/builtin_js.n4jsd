@@ -23,7 +23,7 @@ export external public class Object {
 	public constructor(value: any = );
 	(): any; // further signatures were omitted
 	public static getPrototypeOf(o: any): any;
-	public static getOwnPropertyDescriptor(o: any, p: PropertyKey): PropertyDescriptor | undefined;
+	public static getOwnPropertyDescriptor(o: any, p: PropertyKey): PropertyDescriptor;
 	public static getOwnPropertyNames(o: any): Array<string>;
 	public static create(o: Object | any+): any; // further signatures were omitted
 	public static <T> defineProperty(o: T, p: PropertyKey, attributes: PropertyDescriptor & ThisType<any>): T;
@@ -62,9 +62,9 @@ export external public class String {
 	public concat(...strings: string): string;
 	public indexOf(searchString: string, position: number = ): number;
 	public lastIndexOf(searchString: string, position: number = ): number;
-	public localeCompare(that: string): number; // further signatures were omitted
+	public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number;
 	public match(regexp: string | RegExp): RegExpMatchArray | any+;
-	public replace(searchValue: string | RegExp, replaceValue: string): string; // further signatures were omitted
+	public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string;
 	public search(regexp: string | RegExp): number;
 	public slice(start: number = , end: number = ): string;
 	public split(separator: string | RegExp, limit: number = ): Array<string>;
@@ -285,25 +285,25 @@ export external public class Array<T> {
 	public length: number;
 	public toString(): string;
 	public toLocaleString(): string;
-	public pop(): T | undefined;
+	public pop(): T;
 	public push(...items: T): number;
-	public concat(...items: ConcatArray<T>): Array<T>; // further signatures were omitted
+	public concat(...items: union {T, Array<? extends T>}): Array<T>;
 	public join(separator: string = ): string;
 	public reverse(): Array<T>;
-	public shift(): T | undefined;
+	public shift(): T;
 	public slice(start: number = , end: number = ): Array<T>;
 	public sort(compareFn: (a: T, b: T)=>number = ): this;
-	public splice(start: number, deleteCount: number = ): Array<T>; // further signatures were omitted
+	public splice(start: number = undefined, deleteCount: number = undefined, ...items: T): Array<T>;
 	public unshift(...items: T): number;
 	public indexOf(searchElement: T, fromIndex: number = ): number;
 	public lastIndexOf(searchElement: T, fromIndex: number = ): number;
-	public <S> every(predicate: (value: T, index: number, array: Array<T>)=>boolean, thisArg: any = ): boolean; // further signatures were omitted
+	public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;
 	public some(predicate: (value: T, index: number, array: Array<T>)=>any+, thisArg: any = ): boolean;
 	public forEach(callbackfn: (value: T, index: number, array: Array<T>)=>void, thisArg: any = ): void;
 	public <U> map(callbackfn: (value: T, index: number, array: Array<T>)=>U, thisArg: any = ): Array<U>;
-	public <S> filter(predicate: (value: T, index: number, array: Array<T>)=>boolean, thisArg: any = ): Array<S>; // further signatures were omitted
-	public reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: Array<T>)=>T): T; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: Array<T>)=>T): T; // further signatures were omitted
+	public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;
+	public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
+	public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
 	public constructor(arrayLength: number = ); // further signatures were omitted
 	(arrayLength: number = ): Array<any>; // further signatures were omitted
 	public static isArray(arg: any): boolean;
@@ -380,7 +380,7 @@ export external public class Int8Array {
 	public every(predicate: (value: number, index: number, array: Int8Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Int8Array)=>any, thisArg: any = ): Int8Array;
-	public find(predicate: (value: number, index: number, obj: Int8Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Int8Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Int8Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Int8Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -414,7 +414,7 @@ export external public class Uint8Array {
 	public every(predicate: (value: number, index: number, array: Uint8Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Uint8Array)=>any, thisArg: any = ): Uint8Array;
-	public find(predicate: (value: number, index: number, obj: Uint8Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Uint8Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Uint8Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Uint8Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -448,7 +448,7 @@ export external public class Uint8ClampedArray {
 	public every(predicate: (value: number, index: number, array: Uint8ClampedArray)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Uint8ClampedArray)=>any, thisArg: any = ): Uint8ClampedArray;
-	public find(predicate: (value: number, index: number, obj: Uint8ClampedArray)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Uint8ClampedArray)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Uint8ClampedArray)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Uint8ClampedArray)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -482,7 +482,7 @@ export external public class Int16Array {
 	public every(predicate: (value: number, index: number, array: Int16Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Int16Array)=>any, thisArg: any = ): Int16Array;
-	public find(predicate: (value: number, index: number, obj: Int16Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Int16Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Int16Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Int16Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -516,7 +516,7 @@ export external public class Uint16Array {
 	public every(predicate: (value: number, index: number, array: Uint16Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Uint16Array)=>any, thisArg: any = ): Uint16Array;
-	public find(predicate: (value: number, index: number, obj: Uint16Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Uint16Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Uint16Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Uint16Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -550,7 +550,7 @@ export external public class Int32Array {
 	public every(predicate: (value: number, index: number, array: Int32Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Int32Array)=>any, thisArg: any = ): Int32Array;
-	public find(predicate: (value: number, index: number, obj: Int32Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Int32Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Int32Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Int32Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -584,7 +584,7 @@ export external public class Uint32Array {
 	public every(predicate: (value: number, index: number, array: Uint32Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Uint32Array)=>any, thisArg: any = ): Uint32Array;
-	public find(predicate: (value: number, index: number, obj: Uint32Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Uint32Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Uint32Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Uint32Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -618,7 +618,7 @@ export external public class Float32Array {
 	public every(predicate: (value: number, index: number, array: Float32Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Float32Array)=>any, thisArg: any = ): Float32Array;
-	public find(predicate: (value: number, index: number, obj: Float32Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Float32Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Float32Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Float32Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
@@ -652,7 +652,7 @@ export external public class Float64Array {
 	public every(predicate: (value: number, index: number, array: Float64Array)=>any+, thisArg: any = ): boolean;
 	public fill(value: number, start: number = , end: number = ): this;
 	public filter(predicate: (value: number, index: number, array: Float64Array)=>any, thisArg: any = ): Float64Array;
-	public find(predicate: (value: number, index: number, obj: Float64Array)=>boolean, thisArg: any = ): number | undefined;
+	public find(predicate: (value: number, index: number, obj: Float64Array)=>boolean, thisArg: any = ): number;
 	public findIndex(predicate: (value: number, index: number, obj: Float64Array)=>boolean, thisArg: any = ): number;
 	public forEach(callbackfn: (value: number, index: number, array: Float64Array)=>void, thisArg: any = ): void;
 	public indexOf(searchElement: number, fromIndex: number = ): number;
