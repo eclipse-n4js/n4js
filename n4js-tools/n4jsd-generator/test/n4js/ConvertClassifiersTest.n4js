@@ -310,4 +310,26 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 			}
 		);
 	}
+
+	@Test
+	public testCallSignatures_genericsUnsupported() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						<T>(value: T): boolean;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						(value: any+): boolean;
+					}
+				`
+			}
+		);
+	}
 }

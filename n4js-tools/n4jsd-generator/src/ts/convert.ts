@@ -28,6 +28,7 @@ export class Converter {
 
 	private exportAssignment: ts.ExportAssignment;
 	private readonly convertedTypes: Set<ts.Symbol> = new Set<ts.Symbol>();
+	private readonly suppressedTypes: Set<ts.Type> = new Set<ts.Type>();
 	private readonly issues: utils.Issue[] = [];
 
 	constructor(sourceDtsFilePaths: string[], projectPath?: string, ignorePredicate?: IgnorePredicate, runtimeLibs = false) {
@@ -77,6 +78,7 @@ export class Converter {
 		// clean up
 		this.exportAssignment = undefined;
 		this.convertedTypes.clear();
+		this.suppressedTypes.clear();
 		this.issues.length = 0;
 
 		const sourceFile = this.program.getSourceFile(sourceFilePath);
@@ -388,10 +390,21 @@ export class Converter {
 		}
 
 		// type parameters of 'symMember'
-		for (const typeParam of representativeNode.typeParameters ?? []) {
-			const typeParamName = typeParam.name.text;
-			if (typeParamName) {
-				result.typeParams.push(typeParamName);
+		if (representativeNode.typeParameters) {
+			// is parameterization for this kind of member supported on N4JS side?
+			const typeParamsSupported = !ts.isCallSignatureDeclaration(representativeNode);
+			if (typeParamsSupported) {
+				// yes
+				for (const typeParam of representativeNode.typeParameters) {
+					const typeParamName = typeParam.name.text;
+					if (typeParamName) {
+						result.typeParams.push(typeParamName);
+					}
+				}
+			} else {
+				// no, type parameters are not supported on N4JS side for this member,
+				// so in the signature of this member we have to suppress all references to these type parameters:
+				this.suppressTypes([...representativeNode.typeParameters]);
 			}
 		}
 
@@ -597,6 +610,10 @@ export class Converter {
 			return model.createAnyPlus();
 		} else if (ts.isTypeReferenceNode(node)) {
 			// reference to another type (except those represented as keyword, see above)
+			const type = this.checker.getTypeAtLocation(node.typeName);
+			if (this.suppressedTypes.has(type)) {
+				return model.createAnyPlus();
+			}
 			result.kind = model.TypeRefKind.NAMED;
 			result.targetTypeName = node.typeName.getText().trim();
 			if (node.typeArguments) {
@@ -713,6 +730,18 @@ export class Converter {
 		const filePath = utils_ts.getFilePath(node);
 		const elementName = utils_ts.getLocalNameOfExportableElement(node as ts.NamedDeclaration, this.checker);
 		return this.ignorePredicate?.(filePath, elementName);
+	}
+
+	private suppressTypes(nodes: ts.NamedDeclaration[]): ts.Type[] {
+		const addedTypes = [];
+		for (const node of nodes) {
+			const type = this.checker.getTypeAtLocation(node.name);
+			if (type) {
+				this.suppressedTypes.add(type);
+				addedTypes.push(type);
+			}
+		}
+		return addedTypes;
 	}
 
 	private createWarningForNode(msg: string, node: ts.Node) {
