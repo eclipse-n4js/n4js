@@ -21,7 +21,7 @@ export external public class Object {
 	public isPrototypeOf(v: Object): boolean;
 	public propertyIsEnumerable(v: PropertyKey): boolean;
 	public constructor(value: any = );
-	(): any; // further signatures were omitted
+	(...args: any): Object;
 	public static getPrototypeOf(o: any): any;
 	public static getOwnPropertyDescriptor(o: any, p: PropertyKey): PropertyDescriptor;
 	public static getOwnPropertyNames(o: any): Array<string>;
@@ -52,7 +52,7 @@ export external public class Object {
 export external public class Function {
 	public apply(thisArg: any, argArray: any = ): any;
 	public call(thisArg: any, ...argArray: any): any;
-	public bind(thisArg: any, ...argArray: any): any;
+	public bind(thisArg: any, ...args: any): {function(... args: any): any}
 	public toString(): string;
 	public get length(): number;
 	public arguments: any;

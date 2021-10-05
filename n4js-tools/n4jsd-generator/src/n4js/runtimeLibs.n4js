@@ -434,11 +434,13 @@ const ADDITIONAL_CODE = new Map<string,Map<string,string[]>>([
 
 const MEMBER_REPLACEMENTS = new Map<string,Map<string,string>>([
 	[ "es5.d.ts", new Map<string,string>([
-		// signature on TypeScript side seems to be incorrect (return type is 'Object' causing errors when overridden to return a primitve type)
-		[ "Object#valueOf", "public valueOf(): any" ] as [string,string],
+		// required due to odd return types on TypeScript side
+		[ "Function#bind", "public bind(thisArg: any, ...args: any): {function(... args: any): any}" ] as [string,string], // return type in .d.ts is 'any' instead of a function
+		[ "Object#valueOf", "public valueOf(): any" ] as [string,string], // return type in .d.ts is 'Object' causing errors when overridden to return a primitve type
 		// required due to different signature
 		[ "Array#map", "public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>;" ] as [string,string],
 		// required due to overloading:
+		[ "Object#()", "(...args: any): Object;" ] as [string,string],
 		[ "Object#create", "public static create(proto: Object, props: Object = undefined): Object;" ] as [string,string],
 		[ "Object#freeze", "public static <T extends Object> freeze(obj: T): T;" ] as [string,string],
 		[ "String#localeCompare", "public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number;" ] as [string,string],
@@ -514,7 +516,14 @@ function handleSimpleConfigurations(dtsFileName: string, script: model.Script) {
 			let idx = 0;
 			while (idx < elem.members.length) {
 				const member = elem.members[idx];
-				const memberName = member.kind === model.MemberKind.CTOR ? "constructor" : member.name;
+				let memberName;
+				if (member.kind === model.MemberKind.CTOR) {
+					memberName = "constructor";
+				} else if (member.kind === model.MemberKind.CALLABLE_CTOR) {
+					memberName = "()";
+				} else {
+					memberName = member.name;
+				}
 				const key = typeName + "#" + memberName;
 				if (memberReplacements.has(key)) {
 					const replacement = memberReplacements.get(key);
