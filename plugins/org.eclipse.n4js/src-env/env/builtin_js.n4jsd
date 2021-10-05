@@ -25,11 +25,11 @@ export external public class Object {
 	public static getPrototypeOf(o: any): any;
 	public static getOwnPropertyDescriptor(o: any, p: PropertyKey): PropertyDescriptor;
 	public static getOwnPropertyNames(o: any): Array<string>;
-	public static create(o: Object | any+): any; // further signatures were omitted
+	public static create(proto: Object, props: Object = undefined): Object;
 	public static <T> defineProperty(o: T, p: PropertyKey, attributes: PropertyDescriptor & ThisType<any>): T;
 	public static <T> defineProperties(o: T, properties: PropertyDescriptorMap & ThisType<any>): T;
 	public static <T> seal(o: T): T;
-	public static <T> freeze(a: Array<T>): Array<T>; // further signatures were omitted
+	public static <T extends Object> freeze(obj: T): T;
 	public static <T> preventExtensions(o: T): T;
 	public static isSealed(o: any): boolean;
 	public static isFrozen(o: any): boolean;
@@ -206,7 +206,7 @@ export external public class Date {
 	public toUTCString(): string;
 	public toISOString(): string;
 	public toJSON(key: any = ): string;
-	public constructor(); // further signatures were omitted
+	public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);
 	(): string;
 	public static parse(s: string): number;
 	public static UTC(year: number, month: number, date: number = , hours: number = , minutes: number = , seconds: number = , ms: number = ): number;
@@ -232,7 +232,7 @@ export external public class RegExp {
 	public get multiline(): boolean;
 	public lastIndex: number;
 	public compile(): this;
-	public constructor(pattern: RegExp | string); // further signatures were omitted
+	public constructor(pattern: string = undefined, flags: string = undefined);
 	(pattern: RegExp | string): RegExp; // further signatures were omitted
 	public static $1: string;
 	public static $2: string;
@@ -295,7 +295,7 @@ export external public class URIError extends Error {
 
 export external public class JSON {
 	public static parse(text: string, reviver: (_this: any, key: string, value: any)=>any = ): any;
-	public static stringify(value: any, replacer: (_this: any, key: string, value: any)=>any = , space: string | number = ): string; // further signatures were omitted
+	public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;
 }
 
 export external public interface ~ConcatArray<T> {
@@ -327,7 +327,7 @@ export external public class Array<T> {
 	public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;
 	public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
 	public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
-	public constructor(arrayLength: number = ); // further signatures were omitted
+	public constructor(first: union{number, T} = undefined, ...items: T);  // TODO: signature is type unsafe, allows to create arrays with elements of wrong type, new Array<string>(5, 'x', 'y'), but cannot write constructor(items : union {number, T... items} = undefined)
 	(arrayLength: number = ): Array<any>; // further signatures were omitted
 	public static isArray(arg: any): boolean;
 	public [Symbol.iterator](): Iterator<T>;
