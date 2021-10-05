@@ -133,7 +133,7 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 				args: [ "--copy-type-refs" ]
 			},
 			{
-				name: "es5",
+				name: "main",
 				dts: `
 					export interface Ifc {}
 					export class Cls {}
@@ -160,7 +160,7 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 				args: [ "--copy-type-refs" ]
 			},
 			{
-				name: "es5",
+				name: "main",
 				dts: `
 					export class Cls {
 						public method(): this;
@@ -182,7 +182,7 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 				args: [ "--copy-type-refs" ]
 			},
 			{
-				name: "es5",
+				name: "main",
 				dts: `
 					export function foo(): void;
 					export class Cls {
@@ -194,6 +194,30 @@ export public class ConvertTypeRefsTest extends AbstractN4jsdGeneratorTest {
 
 					export external public class ~Cls {
 						public method(): void;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testAvoidUndefinedInUnion() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "main",
+				dts: `
+					export class Cls {
+						public method1(): string | undefined;
+						public method2(): undefined | undefined;
+					}
+				`,
+				n4jsd: `
+					export external public class ~Cls {
+						public method1(): string;
+						public method2(): undefined;
 					}
 				`
 			}

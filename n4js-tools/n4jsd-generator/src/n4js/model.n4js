@@ -176,6 +176,9 @@ export class TypeRef {
 		this.tsSourceString = tsSourceString;
 	}
 
+	public isBuiltInUndefined(): boolean {
+		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "undefined";
+	}
 	public isComposed(): boolean {
 		return this.kind === TypeRefKind.UNION || this.kind === TypeRefKind.INTERSECTION;
 	}
@@ -466,7 +469,7 @@ class Emitter {
 		}
 		buff.push(")");
 		if (!ignoreReturnType) {
-			this.emitTypeAnnotation(sig.returnType);
+			this.emitTypeAnnotation(simplifyUnion(sig.returnType));
 		}
 	}
 
@@ -692,6 +695,42 @@ class Emitter {
 	}
 }
 
+
+export function simplifyUnion(typeRef: TypeRef): TypeRef {
+	if (typeRef?.kind !== TypeRefKind.UNION) {
+		return typeRef;
+	}
+	let idx = 0;
+	const typeRefs = [...typeRef.composedTypeRefs];
+	while (idx < typeRefs.length) {
+		const curr = typeRefs[idx];
+		if (curr.isBuiltInUndefined()) {
+			typeRefs.splice(idx,1);
+		} else {
+			++idx;
+		}
+	}
+	const len = typeRefs.length;
+	if (len === 0) {
+		return createUndefined();
+	} else if (len === 1) {
+		return typeRefs[0];
+	} else {
+		const result = new TypeRef();
+		result.kind = TypeRefKind.UNION;
+		for (const typeRef of typeRefs) {
+			result.composedTypeRefs.push(typeRef);
+		}
+		return result;
+	}
+}
+
+export function createUndefined(): TypeRef {
+	const result = new TypeRef();
+	result.kind = TypeRefKind.NAMED;
+	result.targetTypeName = "undefined";
+	return result;
+}
 
 export function createAnyPlus(): TypeRef {
 	const result = new TypeRef();

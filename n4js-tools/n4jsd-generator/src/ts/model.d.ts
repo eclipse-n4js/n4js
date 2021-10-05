@@ -167,8 +167,10 @@ export class TypeRef {
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
 
+	public isBuiltInUndefined(): boolean;
 	public isComposed(): boolean;
 }
 
 export function scriptToString(script: Script): string;
+export function createUndefined(): TypeRef;
 export function createAnyPlus(): TypeRef;
