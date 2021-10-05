@@ -104,10 +104,6 @@ export external public class Number {
 	public static get POSITIVE_INFINITY(): number;
 }
 
-export external public interface ~TemplateStringsArray {
-	get raw(): Array<string>;
-}
-
 export external public interface ~ImportMeta {}
 
 export external public class Math {
@@ -190,12 +186,12 @@ export external public class Date {
 	public static now(): number;
 }
 
-export external public interface ~RegExpMatchArray {
+export external public interface ~RegExpMatchArray extends Array<string> {
 	index: number;
 	input: string;
 }
 
-export external public interface ~RegExpExecArray {
+export external public interface ~RegExpExecArray extends Array<string> {
 	index: number;
 	input: string;
 }
@@ -240,32 +236,32 @@ export external public class Error {
 	(message: string = ): Error;
 }
 
-export external public class EvalError {
+export external public class EvalError extends Error {
 	public constructor(message: string = );
 	(message: string = ): EvalError;
 }
 
-export external public class RangeError {
+export external public class RangeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): RangeError;
 }
 
-export external public class ReferenceError {
+export external public class ReferenceError extends Error {
 	public constructor(message: string = );
 	(message: string = ): ReferenceError;
 }
 
-export external public class SyntaxError {
+export external public class SyntaxError extends Error {
 	public constructor(message: string = );
 	(message: string = ): SyntaxError;
 }
 
-export external public class TypeError {
+export external public class TypeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): TypeError;
 }
 
-export external public class URIError {
+export external public class URIError extends Error {
 	public constructor(message: string = );
 	(message: string = ): URIError;
 }
