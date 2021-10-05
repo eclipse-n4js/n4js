@@ -300,6 +300,7 @@ export class Converter {
 		result.kind = model.TypeKind.INTERFACE;
 		result.defSiteStructural = true;
 		result.typeParams.push(...this.convertTypeParameters(node));
+		this.convertHeritageClauses(node, result);
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -313,6 +314,7 @@ export class Converter {
 		result.kind = model.TypeKind.CLASS;
 		result.defSiteStructural = true;
 		result.typeParams.push(...this.convertTypeParameters(node));
+		this.convertHeritageClauses(node, result);
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -329,6 +331,33 @@ export class Converter {
 			}
 		});
 		return result;
+	}
+
+	private convertHeritageClauses(node: ts.InterfaceDeclaration | ts.ClassDeclaration, type: model.Type) {
+		for (const clause of node.heritageClauses ?? []) {
+			const n4jsTypeRefs = [];
+			for (const expr of clause.types) {
+				const n4jsTypeRef = this.convertExpressionWithTypeArguments(expr);
+				if (n4jsTypeRef) {
+					n4jsTypeRefs.push(n4jsTypeRef);
+				} else {
+					this.createErrorForNode("unable to convert type reference in heritage clause", expr);
+				}
+			}
+			if (n4jsTypeRefs.length > 0) {
+				switch (clause.token) {
+					case ts.SyntaxKind.ExtendsKeyword:
+						type.extends.push(...n4jsTypeRefs);
+						break;
+					case ts.SyntaxKind.ImplementsKeyword:
+						type.implements.push(...n4jsTypeRefs);
+						break;
+					default:
+						this.createErrorForNode("unsupported keyword in heritage clause: " + clause.token, clause);
+						break;
+				}
+			}
+		}
 	}
 
 	private convertMembers(node: ts.NamedDeclaration): model.Member[] {
@@ -579,6 +608,21 @@ export class Converter {
 		}
 		return undefined;
 	}
+	private convertExpressionWithTypeArguments(node: ts.ExpressionWithTypeArguments): model.TypeRef {
+		const type = this.checker.getTypeAtLocation(node.expression);
+		if (this.suppressedTypes.has(type)) {
+			return model.createAnyPlus();
+		}
+		const result = new model.TypeRef();
+		result.kind = model.TypeRefKind.NAMED;
+		result.targetTypeName = node.expression.getText().trim();
+		if (node.typeArguments) {
+			for (const typeArg of node.typeArguments) {
+				result.targetTypeArgs.push(this.convertTypeReference(typeArg) ?? model.createAnyPlus());
+			}
+		}
+		return result;
+	}
 	private convertTypeReference(node?: ts.TypeNode): model.TypeRef {
 		if (!node) {
 			return undefined;
@@ -609,7 +653,7 @@ export class Converter {
 			// type keyword NOT supported by N4JS -> replace by "any+"
 			return model.createAnyPlus();
 		} else if (ts.isTypeReferenceNode(node)) {
-			// reference to another type (except those represented as keyword, see above)
+			// reference to another type (except for those types that are represented as keyword, see above)
 			const type = this.checker.getTypeAtLocation(node.typeName);
 			if (this.suppressedTypes.has(type)) {
 				return model.createAnyPlus();

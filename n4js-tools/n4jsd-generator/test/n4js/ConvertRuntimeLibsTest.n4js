@@ -20,7 +20,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				args: [ "--runtime-libs", "--copy-type-refs" ]
 			},
 			{
-				name: "es5",
+				name: "es5test",
 				dts: `
 					interface SomeType {
 						someInstanceMethod(p: string): number;
@@ -35,8 +35,6 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				`,
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
-
-					type ReadonlyArray<T> = Array<T>;
 
 					export external public class SomeType {
 						public someInstanceMethod(p: string): number;
@@ -55,7 +53,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				args: [ "--runtime-libs", "--copy-type-refs" ]
 			},
 			{
-				name: "es5",
+				name: "es5test",
 				dts: `
 					interface SomeGenType<T> {
 						someInstanceMethod(p: string): T;
@@ -71,13 +69,39 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
 
-					type ReadonlyArray<T> = Array<T>;
-
 					export external public class SomeGenType<T> {
 						public someInstanceMethod(p: string): T;
 						public constructor(...elems: T);
 						public static someStaticMethod(p: string): number;
 					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_inheritance() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ]
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeType {}
+					interface SomeTypeConstructor {}
+					declare var SomeType: SomeTypeConstructor;
+
+					interface SomeSubType extends SomeType {}
+					interface SomeSubTypeConstructor extends SomeTypeConstructor {}
+					declare var SomeSubType: SomeSubTypeConstructor;
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeType {}
+
+					export external public class SomeSubType extends SomeType {}
 				`
 			}
 		);

@@ -358,7 +358,7 @@ const IGNORED_ELEMENTS = new Map<string,Set<string>>([
 		"NaN", "Infinity", "eval", "parseInt", "parseFloat", "isNaN", "isFinite", "decodeURI", "decodeURIComponent",
 		"encodeURI", "encodeURIComponent", "escape", "unescape",
 		// read-only types:
-		"ReadonlyArray",
+		"ReadonlyArray", "TemplateStringsArray",
 		// type constructors:
 		"Partial", "Required", "Readonly", "Pick", "Record", "Exclude", "Extract", "Omit", "NonNullable",
 		"Parameters", "ConstructorParameters", "ReturnType", "InstanceType", "Uppercase", "Lowercase",
@@ -618,7 +618,8 @@ function handlePolyfills(dtsFileName: string, script: model.Script) {
 		const elemName = elem.name;
 		if (elemName && polyfills.has(elemName)) {
 			elem.annotations.push(new model.Annotation("@Polyfill"));
-			elem.extends = new model.TypeRef(elemName);
+			elem.extends.length = 0;
+			elem.extends.push(new model.TypeRef(elemName));
 			elem.defSiteStructural = false;
 		}
 	}

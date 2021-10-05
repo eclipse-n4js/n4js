@@ -49,6 +49,33 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 	}
 
 	@Test
+	public testClassifiersInheritance() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {}
+					export interface IfcOther {}
+					export interface SubIfc extends Ifc, IfcOther {}
+					export class Cls implements Ifc {}
+					export class SubCls extends Cls implements SubIfc, IfcOther {}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {}
+
+					export external public interface ~IfcOther {}
+
+					export external public interface ~SubIfc extends Ifc, IfcOther {}
+
+					export external public class ~Cls implements Ifc {}
+
+					export external public class ~SubCls extends Cls implements SubIfc, IfcOther {}
+				`
+			}
+		);
+	}
+
+	@Test
 	public testGenerics() {
 		this.assertConversion(
 			{

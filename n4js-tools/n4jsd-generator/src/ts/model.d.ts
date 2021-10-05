@@ -93,7 +93,8 @@ export class Type extends ExportableElement implements AnnotatableElement {
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
 	typeParams: string[];
-	extends?: TypeRef;
+	extends: TypeRef[];
+	implements: TypeRef[];
 	members: Member[];
 	literals: EnumLiteral[];
 	aliasedType: TypeRef;

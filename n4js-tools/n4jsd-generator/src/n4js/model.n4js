@@ -99,7 +99,8 @@ export class Type extends ExportableElement implements AnnotatableElement {
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
 	typeParams: string[] = [];
-	extends?: TypeRef;
+	extends: TypeRef[] = [];
+	implements: TypeRef[] = [];
 	members: Member[] = [];
 	literals: EnumLiteral[] = [];
 	aliasedType: TypeRef;
@@ -315,9 +316,13 @@ class Emitter {
 		if (type.typeParams.length > 0) {
 			buff.push("<", type.typeParams.join(","), ">");
 		}
-		if (type.extends) {
+		if (type.extends.length > 0) {
 			buff.push(" extends ");
-			this.emitTypeRef(type.extends);
+			this.emitTypeRefs(type.extends, true);
+		}
+		if (type.implements.length > 0) {
+			buff.push(" implements ");
+			this.emitTypeRefs(type.implements, true);
 		}
 		if (type.kind === TypeKind.TYPE_ALIAS) {
 			buff.push(" = ");
@@ -526,9 +531,22 @@ class Emitter {
 		}
 	}
 
-	emitTypeRef(typeRef: TypeRef) {
+	emitTypeRefs(typeRefs: TypeRef[], emitAlways: boolean = false): boolean {
 		const buff = this.buff;
-		if (!getGlobalOptions()?.copyTypeRefs || !typeRef) {
+		let isFirst = true;
+		for (const typeRef of typeRefs) {
+			if (!isFirst) {
+				buff.push(", ");
+			}
+			this.emitTypeRef(typeRef, emitAlways);
+			isFirst = false;
+		}
+		return !isFirst;
+	}
+
+	emitTypeRef(typeRef: TypeRef, emitAlways: boolean = false) {
+		const buff = this.buff;
+		if (!(emitAlways || getGlobalOptions()?.copyTypeRefs) || !typeRef) {
 			buff.push("any+");
 			return;
 		}
