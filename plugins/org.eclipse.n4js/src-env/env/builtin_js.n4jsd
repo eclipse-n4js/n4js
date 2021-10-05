@@ -16,7 +16,7 @@ export external public interface ~PropertyDescriptorMap {}
 export external public class Object {
 	public toString(): string;
 	public toLocaleString(): string;
-	public valueOf(): Object;
+	public valueOf(): any
 	public hasOwnProperty(v: PropertyKey): boolean;
 	public isPrototypeOf(v: Object): boolean;
 	public propertyIsEnumerable(v: PropertyKey): boolean;
@@ -35,7 +35,18 @@ export external public class Object {
 	public static isFrozen(o: any): boolean;
 	public static isExtensible(o: any): boolean;
 	public static keys(o: Object): Array<string>;
+	/**
+	 * The built-in ES5 property "__proto__", here modeled as a read-only property (i.e. no setter provided), because
+	 * changing an object's prototype after creation is strongly discouraged in todays Javascript engines.
+	 */
 	public get __proto__(): Object;
+	/**
+	 * The initial value of Object.prototype is the standard built-in Object prototype object (15.2.4).
+	 *
+	 * Remark: Modeled as getter to emulate const and to allow for overriding.
+	 * @see ES5, 15.2.3.1
+	 */
+	public static get prototype(): Object;
 }
 
 export external public class Function {
@@ -48,6 +59,17 @@ export external public class Function {
 	public caller: Function;
 	public constructor(...args: string);
 	(...args: string): Function;
+	/**
+	 * The Function prototype object is itself a Function object (its [[Class]] is "Function") that, when invoked, accepts any arguments and returns undefined.
+	 */
+	@Override public static get prototype(): Function;
+	/**
+	 * The value of the prototype property is used to initialize the [[Prototype]] internal property of a newly created object before the Function object is invoked as a constructor for that newly created object. This property has the attribute { [[Writable]]: true, [[Enumerable]]: false, [[Configurable]]: false }.
+	 * NOTE Function objects created using Function.prototype.bind do not have a prototype property.
+	 *
+	 * @see ES5 15.3.5.2
+	 */
+	public get prototype(): Object;
 }
 
 export external public interface ~IArguments {
@@ -80,6 +102,11 @@ export external public class String {
 	public constructor(value: any = );
 	(value: any = ): string;
 	public static fromCharCode(...codes: number): string;
+	/**
+	 * Returns a new Iterator object that iterates over the code points of a String value, returning each code point as
+	 * a String value.
+	 */
+	public [Symbol.iterator](): Iterator<string>
 }
 
 export external public class Boolean {
@@ -94,7 +121,7 @@ export external public class Number {
 	public toExponential(fractionDigits: number = ): string;
 	public toPrecision(precision: number = ): string;
 	public valueOf(): number;
-	public toLocaleString(locales: string | Array<string> = , options: Intl.NumberFormatOptions = ): string;
+	public toLocaleString(locales: string | Array<string> = , options: Object = ): string;
 	public constructor(value: any = );
 	(value: any = ): number;
 	public static get MAX_VALUE(): number;
@@ -296,7 +323,7 @@ export external public class Array<T> {
 	public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;
 	public some(predicate: (value: T, index: number, array: Array<T>)=>any+, thisArg: any = ): boolean;
 	public forEach(callbackfn: (value: T, index: number, array: Array<T>)=>void, thisArg: any = ): void;
-	public <U> map(callbackfn: (value: T, index: number, array: Array<T>)=>U, thisArg: any = ): Array<U>;
+	public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>;
 	public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;
 	public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
 	public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
@@ -304,6 +331,12 @@ export external public class Array<T> {
 	(arrayLength: number = ): Array<any>; // further signatures were omitted
 	public static isArray(arg: any): boolean;
 	public [Symbol.iterator](): Iterator<T>;
+	/**
+	 * The initial value of Array.prototype is the Array prototype object (15.4.4).
+	 *
+	 * @see ES5 15.4.3.1
+	 */
+	@Override public static get prototype(): Array<? extends any>
 }
 
 export external public interface ~TypedPropertyDescriptor<T> {

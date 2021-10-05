@@ -14,4 +14,4 @@
 
 var r : ~Array<string> with {index: number; input: string;};
 // XPECT noerrors -->
-r = /foo/.exec();
+r = /foo/.exec("");
