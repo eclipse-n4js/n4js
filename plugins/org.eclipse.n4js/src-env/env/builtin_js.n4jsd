@@ -85,7 +85,7 @@ export external public class String {
 export external public class Boolean {
 	public valueOf(): boolean;
 	public constructor(value: any = );
-	(value: T = ): boolean;
+	(value: any+ = ): boolean;
 }
 
 export external public class Number {
