@@ -39,7 +39,7 @@ class LocallyKnownTypesScopingHelper {
 	ImportedElementsScopingHelper importedElementsScopingHelper
 
 	@Inject
-	BetterScopesHelper bScopesHelper
+	ScopeSnapshotHelper scopeSnapshotHelper
 
 	/**
 	 * Returns the type itself and type variables in case the type is generic.
@@ -59,10 +59,10 @@ class LocallyKnownTypesScopingHelper {
 					// e.g. class C<T> { static x: T; }
 					// --> return same scope as in success case, but wrap descriptions with a WrongStaticAccessorDescription
 					val wrapEODs = [new WrongStaticAccessDescription(it, staticAccess)];
-					result = bScopesHelper.scopeForEObjects("scopeWithTypeAndItsTypeVariables-1", type, result, type.typeVars, wrapEODs);
+					result = scopeSnapshotHelper.scopeForEObjects("scopeWithTypeAndItsTypeVariables-1", type, result, type.typeVars, wrapEODs);
 				} else {
 					// success case: simply add type variables to scope
-					result = bScopesHelper.scopeForEObjects("scopeWithTypeAndItsTypeVariables-2", type, result, type.typeVars);
+					result = scopeSnapshotHelper.scopeForEObjects("scopeWithTypeAndItsTypeVariables-2", type, result, type.typeVars);
 				}
 			}
 		}
@@ -77,7 +77,7 @@ class LocallyKnownTypesScopingHelper {
 		val mDef = m.definedMember
 		if (mDef instanceof TStructMethod) {
 			if (mDef.generic) {
-				return bScopesHelper.scopeForEObjects("scopeWithTypeVarsOfTStructMethod", mDef, parent, mDef.typeVars);
+				return scopeSnapshotHelper.scopeForEObjects("scopeWithTypeVarsOfTStructMethod", mDef, parent, mDef.typeVars);
 			}
 		}
 		return parent;
@@ -88,7 +88,7 @@ class LocallyKnownTypesScopingHelper {
 	 */
 	def IScope scopeWithTypeVarsOfFunctionTypeExpression(IScope parent, FunctionTypeExpression funTypeExpr) {
 		if (funTypeExpr !== null && funTypeExpr.generic) {
-			return bScopesHelper.scopeForEObjects("scopeWithTypeVarsOfFunctionTypeExpression", funTypeExpr, parent, funTypeExpr.typeVars);
+			return scopeSnapshotHelper.scopeForEObjects("scopeWithTypeVarsOfFunctionTypeExpression", funTypeExpr, parent, funTypeExpr.typeVars);
 		}
 		return parent;
 	}
@@ -118,7 +118,7 @@ class LocallyKnownTypesScopingHelper {
 			return parent;
 		}
 		val eoDescrs = local.topLevelTypes.map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
-		return bScopesHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
+		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
 	}
 
 	/**
@@ -136,11 +136,11 @@ class LocallyKnownTypesScopingHelper {
 		// locally defined types except polyfillType itself
 		val local = script.module
 		val eoDescrs = local.topLevelTypes.filter[it !== polyfillType].map[EObjectDescription.create(name, it)];
-		val IScope localTypesScope = bScopesHelper.scopeFor("scopeWithLocallyKnownTypesForPolyfillSuperRef", script, importScope, eoDescrs);
+		val IScope localTypesScope = scopeSnapshotHelper.scopeFor("scopeWithLocallyKnownTypesForPolyfillSuperRef", script, importScope, eoDescrs);
 
 		// type variables of polyfill
 		if (polyfillType.generic) {
-			return bScopesHelper.scopeForEObjects("scopeWithLocallyKnownTypesForPolyfillSuperRef-polyfillType", polyfillType, localTypesScope, polyfillType.typeVars);
+			return scopeSnapshotHelper.scopeForEObjects("scopeWithLocallyKnownTypesForPolyfillSuperRef-polyfillType", polyfillType, localTypesScope, polyfillType.typeVars);
 		}
 
 		// non generic:

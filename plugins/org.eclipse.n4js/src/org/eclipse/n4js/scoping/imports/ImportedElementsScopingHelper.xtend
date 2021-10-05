@@ -35,7 +35,6 @@ import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
-import org.eclipse.n4js.scoping.utils.BetterScopesHelper
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.UberParentScope
 import org.eclipse.n4js.ts.typeRefs.Versionable
@@ -54,6 +53,7 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -87,7 +87,7 @@ class ImportedElementsScopingHelper {
 	private MemberScopeFactory memberScopeFactory
 
 	@Inject
-	private BetterScopesHelper scopesHelper;
+	private ScopeSnapshotHelper scopesHelper;
 
 	@Inject
 	private JavaScriptVariantHelper variantHelper;

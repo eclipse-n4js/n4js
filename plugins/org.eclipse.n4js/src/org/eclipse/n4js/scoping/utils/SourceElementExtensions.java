@@ -45,10 +45,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * Helper to create scopes for {@link VariableEnvironmentElement}s.
  */
 @Singleton
-public class BetterSourceElementExtensions {
+public class SourceElementExtensions {
 
 	@Inject
 	IResourceScopeCache cache;

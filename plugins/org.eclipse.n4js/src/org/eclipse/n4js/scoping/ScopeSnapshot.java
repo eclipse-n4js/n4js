@@ -24,17 +24,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
 /**
- *
+ * Snapshot information of a scope
  */
-public class BetterScope implements IScope {
+public class ScopeSnapshot implements IScope {
 	/** Name to identify the scope instance */
 	final protected String name;
 	/** {@link EObject} this scope was created for */
 	final protected EObject context;
 	/** Parent scope or null */
 	final protected IScope parent;
-	/** Number of parent scopes of type {@link BetterScope} above this scope +1 */
-	final protected int depth;
 	/** true iff this scope is not case sensitive */
 	final protected boolean ignoreCase;
 	/** Local elements mapped by {@link QualifiedName} */
@@ -43,39 +41,35 @@ public class BetterScope implements IScope {
 	final protected ImmutableMap<URI, IEObjectDescription> localElementsForURI;
 
 	/** Constructor */
-	public BetterScope(String name, EObject context, IScope parent,
+	public ScopeSnapshot(String name, EObject context, IScope parent,
 			ImmutableMap<URI, IEObjectDescription> elementsByURI,
 			ImmutableMap<QualifiedName, IEObjectDescription> elementsByQN, boolean ignoreCase) {
 
 		this.name = name;
 		this.context = context;
 		this.parent = parent;
-		this.depth = computeDepth();
 		this.ignoreCase = ignoreCase;
 		this.localElementsForQN = elementsByQN;
 		this.localElementsForURI = elementsByURI;
 	}
 
-	protected int computeDepth() {
-		return (getParent() instanceof BetterScope) ? ((BetterScope) getParent()).computeDepth() + 1 : 0;
-	}
-
+	/** Return the parent of this scope */
 	protected IScope getParent() {
 		return parent;
 	}
 
+	// TODO check if unused feature?
+	/** @return true iff this scope is not case sensitive */
 	public boolean isIgnoreCase() {
 		return ignoreCase;
 	}
 
-	public int getDepth() {
-		return depth;
-	}
-
+	/** Returns all local elements */
 	protected Collection<IEObjectDescription> getAllLocalElements() {
 		return localElementsForQN.values();
 	}
 
+	/** Returns all local elements for the given {@link QualifiedName} */
 	protected Collection<IEObjectDescription> getLocalElements(QualifiedName qName) {
 		IEObjectDescription result = null;
 		qName = isIgnoreCase() ? qName.toLowerCase() : qName;
@@ -85,6 +79,7 @@ public class BetterScope implements IScope {
 		return Collections.singleton(result);
 	}
 
+	/** Returns all local elements for the given {@link EObject} */
 	protected Collection<IEObjectDescription> getLocalElements(EObject object) {
 		final URI uri = EcoreUtil2.getPlatformResourceOrNormalizedURI(object);
 		IEObjectDescription result = null;
@@ -94,14 +89,17 @@ public class BetterScope implements IScope {
 		return Collections.singleton(result);
 	}
 
+	/** Returns all elements of the parent */
 	protected Iterable<IEObjectDescription> getAllParentElements() {
 		return parent.getAllElements();
 	}
 
+	/** Returns all elements of the parent for the given {@link QualifiedName} */
 	protected Iterable<IEObjectDescription> getParentElements(QualifiedName qName) {
 		return parent.getElements(qName);
 	}
 
+	/** Returns all elements of the parent for the given {@link EObject} */
 	protected Iterable<IEObjectDescription> getParentElements(EObject object) {
 		return parent.getElements(object);
 	}

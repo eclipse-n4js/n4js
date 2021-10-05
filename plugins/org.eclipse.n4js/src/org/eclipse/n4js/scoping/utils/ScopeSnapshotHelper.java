@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.scoping.BetterScope;
+import org.eclipse.n4js.scoping.ScopeSnapshot;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -27,66 +27,66 @@ import org.eclipse.xtext.util.SimpleAttributeResolver;
 import com.google.common.collect.ImmutableMap;
 
 /**
- *
+ * Helper class that provides convenience methods to create instances of {@link ScopeSnapshot}s.
  */
-public class BetterScopesHelper {
+public class ScopeSnapshotHelper {
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given eObjects list is empty */
 	public IScope scopeForEObjects(String name, EObject context, Iterable<? extends EObject> eObjects) {
 		return scopeForEObjects(name, context, IScope.NULLSCOPE, eObjects);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given eObjects list is empty */
 	public IScope scopeForEObjects(String name, EObject context, IScope parent, Iterable<? extends EObject> eObjects) {
 		return scopeForEObjects(name, context, parent, false, eObjects);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given eObjects list is empty */
 	public IScope scopeForEObjects(String name, EObject context, IScope parent, boolean ignoreCase,
 			Iterable<? extends EObject> eObjects) {
 
 		return scopeForEObjects(name, context, parent, ignoreCase, eObjects, null);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given eObjects list is empty */
 	public IScope scopeForEObjects(String name, EObject context, IScope parent,
 			Iterable<? extends EObject> eObjects, Function<IEObjectDescription, IEObjectDescription> wrap) {
 
 		return internalScopeFor(name, context, parent, false, eObjects, this::convertToIEObjectDescription, wrap);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given eObjects list is empty */
 	public IScope scopeForEObjects(String name, EObject context, IScope parent, boolean ignoreCase,
 			Iterable<? extends EObject> eObjects, Function<IEObjectDescription, IEObjectDescription> wrap) {
 
 		return internalScopeFor(name, context, parent, ignoreCase, eObjects, this::convertToIEObjectDescription, wrap);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given description list is empty */
 	public IScope scopeFor(String name, EObject context, Iterable<IEObjectDescription> descriptions) {
 		return scopeFor(name, context, IScope.NULLSCOPE, descriptions);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given description list is empty */
 	public IScope scopeFor(String name, EObject context, IScope parent, Iterable<IEObjectDescription> descriptions) {
 		return scopeFor(name, context, parent, false, descriptions);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given description list is empty */
 	public IScope scopeFor(String name, EObject context, IScope parent, boolean ignoreCase,
 			Iterable<IEObjectDescription> descriptions) {
 
 		return scopeFor(name, context, parent, ignoreCase, descriptions, null);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given descriptions list is empty */
 	public IScope scopeFor(String name, EObject context, IScope parent,
 			Iterable<IEObjectDescription> descriptions, Function<IEObjectDescription, IEObjectDescription> wrap) {
 
 		return internalScopeFor(name, context, parent, false, descriptions, t -> t, wrap);
 	}
 
-	/** TODO */
+	/** Returns a scope for the given arguments or the parent scope iff the given descriptions list is empty */
 	public IScope scopeFor(String name, EObject context, IScope parent, boolean ignoreCase,
 			Iterable<IEObjectDescription> descriptions, Function<IEObjectDescription, IEObjectDescription> wrap) {
 
@@ -139,7 +139,7 @@ public class BetterScopesHelper {
 			}
 		}
 
-		return new BetterScope(name, context, parent, ImmutableMap.copyOf(mapByURI), ImmutableMap.copyOf(mapByQN),
+		return new ScopeSnapshot(name, context, parent, ImmutableMap.copyOf(mapByURI), ImmutableMap.copyOf(mapByQN),
 				ignoreCase);
 	}
 

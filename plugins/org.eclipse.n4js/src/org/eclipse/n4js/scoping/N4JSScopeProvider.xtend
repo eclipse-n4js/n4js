@@ -58,8 +58,6 @@ import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
-import org.eclipse.n4js.scoping.utils.BetterScopesHelper
-import org.eclipse.n4js.scoping.utils.BetterSourceElementExtensions
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
@@ -95,6 +93,10 @@ import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.scoping.validation.ContextAwareTypeScopeValidator
+import org.eclipse.n4js.scoping.validation.ScopeInfo
+import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 
 /**
  * This class contains custom scoping description.
@@ -132,7 +134,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject ImportedElementsScopingHelper importedElementsScopingHelper
 
-	@Inject BetterSourceElementExtensions sourceElementExtensions;
+	@Inject SourceElementExtensions sourceElementExtensions;
 
 	@Inject EObjectDescriptionHelper descriptionsHelper;
 
@@ -146,7 +148,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject TopLevelElementsCollector topLevelElementCollector
 
-	@Inject BetterScopesHelper bScopesHelper
+	@Inject ScopeSnapshotHelper scopeSnapshotHelper
 
 	@Inject VersionHelper versionHelper;
 
@@ -258,7 +260,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
 			N4FieldAccessor							: {
 				val container = EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition);
-				return bScopesHelper.scopeForEObjects("N4FieldAccessor", container, container.ownedFields);
+				return scopeSnapshotHelper.scopeForEObjects("N4FieldAccessor", container, container.ownedFields);
 			}
 			default									: return IScope.NULLSCOPE
 		}
@@ -338,12 +340,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (elements.empty) {
 			return parent;
 		}
-		val result = bScopesHelper.scopeFor("contextLabels", current, parent, elements);
+		val result = scopeSnapshotHelper.scopeFor("contextLabels", current, parent, elements);
 		return result;
 	}
 
 	private def IScope getAllLabels(Script script) {
-		return bScopesHelper.scopeForEObjects("allLabels", script, script.eAllContents.filter(LabelledStatement).toIterable);
+		return scopeSnapshotHelper.scopeForEObjects("allLabels", script, script.eAllContents.filter(LabelledStatement).toIterable);
 	}
 
 	/**
@@ -475,7 +477,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 
 
-		scope = bScopesHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
+		scope = scopeSnapshotHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
 
 		return scope;
 	}
@@ -520,7 +522,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		
 		// get regular top-level elements scope
-		val topLevelElementsScope = bScopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", importedModule, IScope.NULLSCOPE, false,
+		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", importedModule, IScope.NULLSCOPE, false,
 			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
 		
 		// if the context resource does not allow for versioned types but the imported module does...
@@ -585,7 +587,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	def public IScope getTypeScope(EObject context, boolean fromStaticContext) {
 		val internal = getTypeScopeInternal(context, fromStaticContext);
-		return new ContextAwareTypeScope(internal, context);
+		
+		val legacy = new ContextAwareTypeScope(internal, context);
+		val scopeInfo = new ScopeInfo(internal, legacy, new ContextAwareTypeScopeValidator(context));
+		
+		return scopeInfo;
 	}
 
 	def private IScope getTypeScopeInternal(EObject context, boolean fromStaticContext) {

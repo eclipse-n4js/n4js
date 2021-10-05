@@ -18,7 +18,6 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
-import org.eclipse.n4js.scoping.utils.BetterSourceElementExtensions
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -28,6 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 
 /**
  */
@@ -37,7 +37,7 @@ class SourceElementExtensionsTest {
 	@Inject private extension ParseHelper<Script>;
 	@Inject private extension ValidationTestHelper;
 
-	@Inject extension BetterSourceElementExtensions;
+	@Inject extension SourceElementExtensions;
 
 	@Test
 	def testCollectVisibleIdentifiableElementsForFunctionExpression() {
