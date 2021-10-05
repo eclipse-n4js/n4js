@@ -102,6 +102,7 @@ export class Type extends ExportableElement implements AnnotatableElement {
 	members: Member[] = [];
 	literals: EnumLiteral[] = [];
 	aliasedType: TypeRef;
+	additionalCode: string[] = [];
 }
 
 export class EnumLiteral extends NamedElement {
@@ -322,6 +323,10 @@ class Emitter {
 			} else {
 				throw "unknown kind of type: " + type.kind;
 			}
+			for (const code of type.additionalCode) {
+				buff.pushln();
+				didEmit = this.emitCode(code) || didEmit;
+			}
 			buff.undent();
 			if (didEmit) {
 				buff.pushln();
@@ -362,21 +367,22 @@ class Emitter {
 			}
 			if (onePerLine) {
 				buff.pushln();
-				this.emitDocumentation(m);
 			} else {
 				if (!isFirst) {
 					buff.push(" ");
 				}
 			}
-			this.emitMember(m, parent);
+			this.emitMember(m, onePerLine, parent);
 			isFirst = false;
 		}
 		return !isFirst;
 	}
 
-	emitMember(member: Member, parent: Type =) {
+	emitMember(member: Member, emitDocumentation: boolean, parent: Type =) {
 		const buff = this.buff;
-		// note: documentation is emitted by #emitMembers()
+		if (emitDocumentation) {
+			this.emitDocumentation(member);
+		}
 		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
 			if (member.kind !== MemberKind.CALLABLE_CTOR) { // TODO how to define accessibility of a callable ctor?
@@ -461,6 +467,10 @@ class Emitter {
 		const buff = this.buff;
 		if (param.isVariadic) {
 			buff.push("...");
+		}
+		if (param.name === "this") {
+			// TypeScript supports "this" as the name of a parameter, but N4JS does not:
+			buff.push("_");
 		}
 		buff.push(param.name);
 		this.emitTypeAnnotation(param.type);
@@ -648,14 +658,30 @@ class Emitter {
 	emitDocumentation(elem: NamedElement) {
 		const doc = elem.jsdoc;
 		if (!doc) {
-			return;
+			return false;
+		}
+		if (this.emitCode(doc)) {
+			this.buff.pushln();
+			return true;
+		}
+		return false;
+	}
+
+	emitCode(code: string): boolean {
+		if (code === undefined || code === null) {
+			return false;
 		}
 		const buff = this.buff;
-		const docLines = doc.split("\n");
-		for (const line of docLines) {
+		const codeLines = code.split("\n");
+		let isFirst = true;
+		for (const line of codeLines) {
+			if (!isFirst) {
+				buff.pushln();
+			}
 			buff.push(line);
-			buff.pushln();
+			isFirst = false;
 		}
+		return !isFirst;
 	}
 }
 

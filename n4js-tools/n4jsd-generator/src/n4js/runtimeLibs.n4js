@@ -17,6 +17,8 @@ import * as path_lib from "path";
 import * as model from "model";
 
 const PREAMBLE = `@@Global @@ProvidedByRuntime
+
+type ReadonlyArray<T> = Array<T>;
 `;
 
 const CONSTRUCTOR_TYPE_SUFFIX = "Constructor";
@@ -26,10 +28,12 @@ const IGNORED_ELEMENTS = new Map<string,Set<string>>([
 		// stuff defined in primitive_js.n4ts and global.n4ts:
 		"NaN", "Infinity", "eval", "parseInt", "parseFloat", "isNaN", "isFinite", "decodeURI", "decodeURIComponent",
 		"encodeURI", "encodeURIComponent", "escape", "unescape",
+		// read-only types:
+		"ReadonlyArray",
 		// type constructors:
 		"Partial", "Required", "Readonly", "Pick", "Record", "Exclude", "Extract", "Omit", "NonNullable",
 		"Parameters", "ConstructorParameters", "ReturnType", "InstanceType", "Uppercase", "Lowercase",
-		"Capitalize", "Uncapitalize",
+		"Capitalize", "Uncapitalize", "Awaited",
 		// decorators:
 		"ClassDecorator", "PropertyDecorator", "MethodDecorator", "ParameterDecorator",
 		// odd stuff:
@@ -51,6 +55,17 @@ const FINAL_CLASSIFIERS = new Map<string,Set<string>>([
 	])] as [string, Set<string>]
 ]);
 
+const ADDITIONAL_CODE = new Map<string,Map<string,string[]>>([
+	[ "es5.d.ts", new Map<string,string[]>([
+		["Object", [
+			"public get __proto__(): Object;"
+		]] as [string,string[]],
+		["Array", [
+			"public [Symbol.iterator](): Iterator<T>;"
+		]] as [string,string[]]
+	])] as [string, Map<string,string[]>]
+]);
+
 export public function isIgnored(filePath: string, elementName: string): boolean {
 	const fileName = path_lib.basename(filePath);
 	const ignoredNames = IGNORED_ELEMENTS.get(fileName);
@@ -70,6 +85,7 @@ export public function postProcessRuntimeLib(dtsFileName: string, script: model.
 	handleCtorInstanceTypePattern(script);
 	handlePolyfills(dtsFileName, script);
 	handleFinalClassifiers(dtsFileName, script);
+	handleAdditionalCode(dtsFileName, script);
 }
 
 function removeMetaProperties(script: model.Script) {
@@ -236,4 +252,22 @@ function changeInterfaceToClass(ifc: model.Type) {
 			m.accessibility = model.Accessibility.PUBLIC;
 		}
 	});
+}
+
+function handleAdditionalCode(dtsFileName: string, script: model.Script) {
+	const additionalCode = ADDITIONAL_CODE.get(dtsFileName);
+	if (!additionalCode || additionalCode.size === 0) {
+		return;
+	}
+	for (const elem of script.topLevelElements) {
+		if (!(elem instanceof model.Type)) {
+			continue;
+		}
+		const elemName = elem.name;
+		if (elemName && additionalCode.has(elemName)) {
+			for (const code of additionalCode.get(elemName)) {
+				elem.additionalCode.push(code);
+			}
+		}
+	}
 }

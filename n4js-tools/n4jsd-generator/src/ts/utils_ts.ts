@@ -259,3 +259,23 @@ export function getJSDocForNode(node: ts.Node): string | undefined {
 	doc = doc.replace(/\n\*/gi, "\n *");
 	return doc;
 }
+
+export function getContextForNode(node: ts.Node, checker: ts.TypeChecker): string | undefined {
+	let result = undefined;
+	node = node?.parent;
+	while (node && !ts.isSourceFile(node)) {
+		const name = node['name'];
+		let nameStr: string = undefined;
+		if (typeof name === "string") {
+			nameStr = name;
+		} else if (name) {
+			const sym = checker.getSymbolAtLocation(name);
+			nameStr = sym.getName();
+		}
+		if (nameStr) {
+			result = result ? nameStr + "." + result : nameStr;
+		}
+		node = node.parent;
+	}
+	return result;
+}

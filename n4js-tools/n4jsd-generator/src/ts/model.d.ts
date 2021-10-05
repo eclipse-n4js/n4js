@@ -97,6 +97,7 @@ export class Type extends ExportableElement implements AnnotatableElement {
 	members: Member[];
 	literals: EnumLiteral[];
 	aliasedType: TypeRef;
+	additionalCode: string[];
 }
 
 export class EnumLiteral extends NamedElement {

@@ -36,6 +36,8 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
 
+					type ReadonlyArray<T> = Array<T>;
+
 					export external public class SomeType {
 						public someInstanceMethod(p: string): number;
 						public constructor(p: string);
@@ -68,6 +70,8 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				`,
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
+
+					type ReadonlyArray<T> = Array<T>;
 
 					export external public class SomeGenType<T> {
 						public someInstanceMethod(p: string): T;

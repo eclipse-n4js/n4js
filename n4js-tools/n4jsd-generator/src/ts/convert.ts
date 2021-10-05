@@ -716,8 +716,9 @@ export class Converter {
 	}
 
 	private createIssueForNode(kind: utils.IssueKind, msg: string, node: ts.Node) {
+		const contextStr = utils_ts.getContextForNode(node, this.checker);
 		const offendingCode = utils_ts.getSourceCodeForNode(node);
-		const error = utils.issue(kind, msg + "\n" + offendingCode);
+		const error = utils.issue(kind, msg + (contextStr ? " (in " + contextStr + ")" : "") + "\n" + offendingCode);
 		this.issues.push(error);
 	}
 }
