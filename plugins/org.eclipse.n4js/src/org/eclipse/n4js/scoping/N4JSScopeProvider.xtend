@@ -13,6 +13,7 @@ package org.eclipse.n4js.scoping
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.name.Named
+import java.util.Iterator
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -49,6 +50,7 @@ import org.eclipse.n4js.n4idl.scoping.NonVersionAwareContextScope
 import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.n4idl.versioning.VersionUtils
+import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -60,8 +62,6 @@ import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
-import org.eclipse.n4js.scoping.utils.ScopesHelper
-import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -86,17 +86,17 @@ import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription
-import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
-import org.eclipse.xtext.scoping.impl.SimpleScope
-import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.scoping.validation.ContextAwareTypeScopeValidator
+import org.eclipse.n4js.scoping.validation.ScopeInfo
+import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 
 /**
  * This class contains custom scoping description.
@@ -112,7 +112,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	public final static String NAMED_DELEGATE = "org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.delegate";
 
 	@Inject
-	IResourceScopeCache cache
+	N4JSCache cache
 
 	/**
 	 * The scope provider creating the "parent" scope, i.e. including elements from the index.
@@ -148,7 +148,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject TopLevelElementsCollector topLevelElementCollector
 
-	@Inject ScopesHelper scopesHelper
+	@Inject ScopeSnapshotHelper scopeSnapshotHelper
 
 	@Inject VersionHelper versionHelper;
 
@@ -258,7 +258,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			NamedImportSpecifier					: return scope_ImportedElement(context, reference)
 			IdentifierRef							: return scope_IdentifierRef_id(context, reference)
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
-			N4FieldAccessor							: return Scopes.scopeFor(EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition).ownedFields)
+			N4FieldAccessor							: {
+				val container = EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition);
+				return scopeSnapshotHelper.scopeForEObjects("N4FieldAccessor", container, container.ownedFields);
+			}
 			default									: return IScope.NULLSCOPE
 		}
 	}
@@ -334,14 +337,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 			current = current.eContainer; // labeled statement must be a container
 		}
-		if (elements.empty)
+		if (elements.empty) {
 			return parent;
-		val result = new SimpleScope(parent, elements);
+		}
+		val result = scopeSnapshotHelper.scopeFor("contextLabels", current, parent, elements);
 		return result;
 	}
 
 	private def IScope getAllLabels(Script script) {
-		return Scopes.scopeFor(script.eAllContents.filter(LabelledStatement).toIterable);
+		return scopeSnapshotHelper.scopeForEObjects("allLabels", script, script.eAllContents.filter(LabelledStatement).toIterable);
 	}
 
 	/**
@@ -427,13 +431,30 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (vee === null) {
 			return IScope.NULLSCOPE;
 		}
+		
+		ensureLexicalEnvironmentScopes(context, ref);
 
-		// TODO parent vee-s should be cached as well
-		return cache.get('scope_IdentifierRef_id' -> vee,
-			vee.eResource, [| return buildLexicalEnvironmentScope(vee, context, ref)]
-		);
+		return cache.mustGet('scope_IdentifierRef_id' -> vee, vee.eResource);
 	}
 
+
+	private def void ensureLexicalEnvironmentScopes(EObject context, EReference reference) {
+		val Script script = EcoreUtil.getRootContainer(context) as Script;
+		val resource = script.eResource;
+		val veeScopesBuilt = cache.contains('scope_IdentifierRef_id' -> script, resource); // note that a script is a vee
+		if (!veeScopesBuilt) {
+			cache.get('scope_IdentifierRef_id' -> script, resource, [buildLexicalEnvironmentScope(script, context, reference)]);
+			val Iterator<EObject> scriptIterator = script.eAllContents;
+			while (scriptIterator.hasNext) {
+				val vee = scriptIterator.next;
+				if (vee instanceof VariableEnvironmentElement) {
+					// fill the cache
+					cache.get('scope_IdentifierRef_id' -> vee, resource, [buildLexicalEnvironmentScope(vee, context, reference)]);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Builds a lexical environment scope with the given parameters.
 	 * Filters out primitive types.
@@ -455,9 +476,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			scope = importedElementsScopingHelper.getImportedIdentifiables(baseScope, script);
 		}
 
-		for (scopeList : scopeLists.reverseView) {
-			scope = scopesHelper.mapBasedScopeFor(context, scope, scopeList);
-		}
+
+		scope = scopeSnapshotHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
+
 		return scope;
 	}
 
@@ -471,13 +492,13 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return globalScope;
 	}
 
-	def private List<Iterable<IEObjectDescription>> collectLexialEnvironmentsScopeLists(VariableEnvironmentElement vee,
-		List<Iterable<IEObjectDescription>> result) {
+	def private void collectLexialEnvironmentsScopeLists(VariableEnvironmentElement vee,
+			List<Iterable<? extends EObject>> result) {
 
-		result.add(Scopes.scopedElementsFor(sourceElementExtensions.collectVisibleIdentifiableElements(vee)));
+		result.add(sourceElementExtensions.collectVisibleIdentifiableElements(vee));
 
 		// arguments must be in own outer scope in order to enable shadowing of inner variables named "arguments"
-		result.add(Scopes.scopedElementsFor(sourceElementExtensions.collectLocalArguments(vee)));
+		result.add(sourceElementExtensions.collectLocalArguments(vee));
 
 		val parent = ancestor(vee, VariableEnvironmentElement);
 		if (parent !== null) {
@@ -501,7 +522,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		
 		// get regular top-level elements scope
-		val topLevelElementsScope = scopesHelper.mapBasedScopeFor(importedModule, IScope.NULLSCOPE,
+		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", importedModule, IScope.NULLSCOPE, false,
 			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
 		
 		// if the context resource does not allow for versioned types but the imported module does...
@@ -566,7 +587,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	def public IScope getTypeScope(EObject context, boolean fromStaticContext) {
 		val internal = getTypeScopeInternal(context, fromStaticContext);
-		return new ContextAwareTypeScope(internal, context);
+		
+		val legacy = new ContextAwareTypeScope(internal, context);
+		val scopeInfo = new ScopeInfo(internal, legacy, new ContextAwareTypeScopeValidator(context));
+		
+		return scopeInfo;
 	}
 
 	def private IScope getTypeScopeInternal(EObject context, boolean fromStaticContext) {

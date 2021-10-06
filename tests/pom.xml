@@ -357,9 +357,10 @@ Contributors:
 				<module>org.eclipse.n4js.ide.tests</module>
 				<module>org.eclipse.n4js.ide.tests.helper.tests</module>
 				<module>org.eclipse.n4js.ui.tests</module> <!-- note the bad name: these are actually IDE tests -->
-
+<!-- 
 				<module>org.eclipse.n4js.n4idl.lang.tests</module>
 				<module>org.eclipse.n4js.n4idl.spec.tests</module>
+ -->
 
 			</modules>
 		</profile>

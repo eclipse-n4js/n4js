@@ -25,6 +25,8 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.IUsageAwareEObjectDescription;
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
+import org.eclipse.n4js.scoping.validation.ScopeElementIssue;
+import org.eclipse.n4js.scoping.validation.ScopeInfo;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
@@ -89,7 +91,16 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 		if (crossRefString != null && !crossRefString.equals("")) {
 			final IScope scope = getScope(context, ref);
 			QualifiedName qualifiedLinkName = qualifiedNameConverter.toQualifiedName(crossRefString);
-			IEObjectDescription eObjectDescription = scope.getSingleElement(qualifiedLinkName);
+
+			IEObjectDescription eObjectDescription = null;
+			if (scope instanceof ScopeInfo) {
+				ScopeInfo scopeInfo = ((ScopeInfo) scope);
+				eObjectDescription = scopeInfo.getScope().getSingleElement(qualifiedLinkName);
+
+			} else {
+				eObjectDescription = scope.getSingleElement(qualifiedLinkName);
+			}
+
 			IEObjectDescriptionWithError errorDescr;
 			Resource resource = context.eResource();
 			if (resource != null
@@ -97,9 +108,25 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 							.getDescriptionWithError(eObjectDescription)) != null
 					// isNoValidate traverses the file system so it should be the last part of the check
 					&& !workspaceAccess.isNoValidate(resource, resource.getURI())) {
-				addError(context, node, errorDescr);
+				addIssue(context, node, errorDescr);
 			} else if (eObjectDescription instanceof UnresolvableObjectDescription) {
 				return Collections.<EObject> singletonList((EObject) context.eGet(ref, false));
+			}
+
+			if (scope instanceof ScopeInfo) {
+				ScopeInfo scopeInfo = ((ScopeInfo) scope);
+
+				if (!scopeInfo.isValid(eObjectDescription) && resource != null
+						&& !workspaceAccess.isNoValidate(resource, resource.getURI())) {
+
+					List<ScopeElementIssue> issues = scopeInfo.getIssues(eObjectDescription);
+					for (ScopeElementIssue issue : issues) {
+						addIssue(context, node, issue);
+					}
+					if (issues.isEmpty()) {
+						eObjectDescription = null;
+					}
+				}
 			}
 
 			if (eObjectDescription != null) {
@@ -152,15 +179,35 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 	 *            the context object that caused the error.
 	 * @param node
 	 *            the error location.
-	 * @param error
+	 * @param issue
 	 *            the actual error description.
 	 */
-	protected void addError(EObject context, INode node, IEObjectDescriptionWithError error) {
-		N4JSResource resource = (N4JSResource) context.eResource();
-		if (resource.isValidationDisabled())
-			return;
+	protected void addIssue(EObject context, INode node, IEObjectDescriptionWithError issue) {
+		doAddIssue(context, node, issue, issue.getSeverity(), issue.getIssueCode(), issue.getMessage());
+	}
 
-		final Severity severity = error.getSeverity();
+	/**
+	 * Add the error to the resource of the given {@code context} if it does support validation.
+	 *
+	 * @param context
+	 *            the context object that caused the error.
+	 * @param node
+	 *            the error location.
+	 * @param issue
+	 *            the actual error description.
+	 */
+	protected void addIssue(EObject context, INode node, ScopeElementIssue issue) {
+		doAddIssue(context, node, issue.delegate, issue.severity, issue.issueCode, issue.message);
+	}
+
+	private void doAddIssue(EObject context, INode node, IEObjectDescription objDescr, Severity severity,
+			String issueCode, String message) {
+
+		N4JSResource resource = (N4JSResource) context.eResource();
+		if (resource.isValidationDisabled()) {
+			return;
+		}
+
 		List<Diagnostic> list;
 		if (severity == Severity.WARNING) {
 			list = resource.getWarnings();
@@ -170,10 +217,10 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 
 		// Convert key value user data to String array
 		String[] userData = null;
-		if (error.getUserDataKeys() != null) {
-			ArrayList<String> userDataList = new ArrayList<>(error.getUserDataKeys().length * 2);
-			for (String userDataKey : error.getUserDataKeys()) {
-				final String userDataValue = error.getUserData(userDataKey);
+		if (objDescr.getUserDataKeys() != null) {
+			ArrayList<String> userDataList = new ArrayList<>(objDescr.getUserDataKeys().length * 2);
+			for (String userDataKey : objDescr.getUserDataKeys()) {
+				final String userDataValue = objDescr.getUserData(userDataKey);
 				if (userDataValue != null) {
 					userDataList.add(userDataKey);
 					userDataList.add(userDataValue);
@@ -182,9 +229,10 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 			userData = userDataList.toArray(new String[userDataList.size()]);
 		}
 
-		Diagnostic diagnostic = new XtextLinkingDiagnostic(node, error.getMessage(), error.getIssueCode(), userData);
+		Diagnostic diagnostic = new XtextLinkingDiagnostic(node, message, issueCode, userData);
 
-		if (!list.contains(diagnostic))
+		if (!list.contains(diagnostic)) {
 			list.add(diagnostic);
+		}
 	}
 }

@@ -26,6 +26,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.Ignore
 
 /**
  * Transpiler tests which make sure that the generated structure of the {@link N4IDLGlobals#MIGRATIONS_STATIC_FIELD}
@@ -55,6 +56,7 @@ class MigrationTransformationTranspilerTest extends AbstractN4IDLTranspilerTest 
 	}
 	
 	@Test
+	@Ignore // doomed feature
 	def void testMultipleMigrationsTransformation() {
 		val state = '''
 			class A#1 {}
