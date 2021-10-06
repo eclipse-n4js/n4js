@@ -162,12 +162,7 @@ public class SourceElementExtensions {
 			Type polyfilledOrOriginalType = getTypeOrPolyfilledType(feature);
 			if (polyfilledOrOriginalType instanceof TClass) {
 				TClass polyfilledOrOriginalTypeCasted = (TClass) polyfilledOrOriginalType;
-
 				addHere.add(polyfilledOrOriginalTypeCasted);
-				// N4ClassDeclaration n4ClassDecl = (N4ClassDeclaration) polyfilledOrOriginalTypeCasted.getAstElement();
-				// if (n4ClassDecl != null) {
-				// nonNullClassDecl = n4ClassDecl;
-				// }
 			} else {
 				collectVisibleTypedElement(nonNullClassDecl, addHere);
 			}
