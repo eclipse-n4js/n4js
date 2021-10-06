@@ -7,8 +7,6 @@ export external public interface ~PropertyDescriptor {
 	enumerable: boolean;
 	value: any;
 	writable: boolean;
-	get(): any;
-	set(v: any): void;
 }
 
 export external public interface ~PropertyDescriptorMap {}
@@ -85,7 +83,7 @@ export external public class String {
 	public indexOf(searchString: string, position: number = ): number;
 	public lastIndexOf(searchString: string, position: number = ): number;
 	public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number;
-	public match(regexp: string | RegExp): RegExpMatchArray | any+;
+	public match(regexp: string | RegExp): RegExpMatchArray;
 	public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string;
 	public search(regexp: string | RegExp): number;
 	public slice(start: number = , end: number = ): string;
@@ -224,7 +222,7 @@ export external public interface ~RegExpExecArray extends Array<string> {
 }
 
 export external public class RegExp {
-	public exec(string: string): RegExpExecArray | any+;
+	public exec(string: string): RegExpExecArray;
 	public test(string: string): boolean;
 	public get source(): string;
 	public get global(): boolean;
@@ -318,8 +316,8 @@ export external public class Array<T> {
 	public sort(compareFn: (a: T, b: T)=>number = ): this;
 	public splice(start: number = undefined, deleteCount: number = undefined, ...items: T): Array<T>;
 	public unshift(...items: T): number;
-	public indexOf(searchElement: T, fromIndex: number = ): number;
-	public lastIndexOf(searchElement: T, fromIndex: number = ): number;
+	public indexOf(searchElement: any, fromIndex: number = ): number;
+	public lastIndexOf(searchElement: any, fromIndex: number = ): number;
 	public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;
 	public some(predicate: (value: T, index: number, array: Array<T>)=>any+, thisArg: any = ): boolean;
 	public forEach(callbackfn: (value: T, index: number, array: Array<T>)=>void, thisArg: any = ): void;
@@ -349,7 +347,7 @@ export external public interface ~TypedPropertyDescriptor<T> {
 }
 
 export external public interface ~PromiseLike<T> {
-	<TResult1,TResult2> then(onfulfilled: ((value: T)=>(TResult1 | PromiseLike<TResult1>)) | undefined | any+ = , onrejected: ((reason: any)=>(TResult2 | PromiseLike<TResult2>)) | undefined | any+ = ): PromiseLike<TResult1 | TResult2>;
+	<TResult1,TResult2> then(onfulfilled: ((value: T)=>(TResult1 | PromiseLike<TResult1>)) = , onrejected: ((reason: any)=>(TResult2 | PromiseLike<TResult2>)) = ): PromiseLike<TResult1 | TResult2>;
 }
 
 export external public interface ~ArrayLike<T> {

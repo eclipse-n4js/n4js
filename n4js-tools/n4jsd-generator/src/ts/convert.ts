@@ -699,22 +699,29 @@ export class Converter {
 			result.members.push(...this.convertMembersOfObjectType(node));
 		} else if (ts.isThisTypeNode(node)) {
 			result.kind = model.TypeRefKind.THIS;
-		} else if (ts.isUnionTypeNode(node)) {
-			result.kind = model.TypeRefKind.UNION;
+		} else if (ts.isUnionTypeNode(node)
+			|| ts.isIntersectionTypeNode(node)) {
+			const isUnion = ts.isUnionTypeNode(node);
+			const n4jsMemberTypeRefs = [];
 			for (const memberNode of node.types) {
-				const memberTypeRef = this.convertTypeReference(memberNode);
-				if (memberTypeRef) {
-					result.composedTypeRefs.push(memberTypeRef);
+				if (isUnion) {
+					let memberKind = ts.isLiteralTypeNode(memberNode) ? memberNode.literal.kind : memberNode.kind;
+					if (memberKind === ts.SyntaxKind.NullKeyword || memberKind === ts.SyntaxKind.UndefinedKeyword) {
+						continue; // avoid 'null', 'undefined' in unions
+					}
+				}
+				const n4jsMemberTypeRef = this.convertTypeReference(memberNode);
+				if (n4jsMemberTypeRef) {
+					n4jsMemberTypeRefs.push(n4jsMemberTypeRef);
 				}
 			}
-		} else if (ts.isIntersectionTypeNode(node)) {
-			result.kind = model.TypeRefKind.INTERSECTION;
-			for (const memberNode of node.types) {
-				const memberTypeRef = this.convertTypeReference(memberNode);
-				if (memberTypeRef) {
-					result.composedTypeRefs.push(memberTypeRef);
-				}
+			if (n4jsMemberTypeRefs.length === 0) {
+				return model.createUndefined();
+			} else if (n4jsMemberTypeRefs.length === 1) {
+				return n4jsMemberTypeRefs[0];
 			}
+			result.kind = isUnion ? model.TypeRefKind.UNION : model.TypeRefKind.INTERSECTION;
+			result.composedTypeRefs.push(...n4jsMemberTypeRefs);
 		} else if (ts.isParenthesizedTypeNode(node)) {
 			result.kind = model.TypeRefKind.PARENTHESES;
 			result.parenthesizedTypeRef = this.convertTypeReference(node.type);

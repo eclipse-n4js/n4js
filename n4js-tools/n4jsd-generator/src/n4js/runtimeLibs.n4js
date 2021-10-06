@@ -354,7 +354,7 @@ const IGNORED_ELEMENTS = new Map<string,Set<string>>([
 	[ "es5.d.ts", new Set<string>([
 		// temporarily ignored, because we need our own definition:
 		"Symbol", "Promise",
-		// stuff defined in primitive_js.n4ts and global.n4ts:
+		// stuff defined in primitive_js.n4ts and global.n4jsd:
 		"NaN", "Infinity", "eval", "parseInt", "parseFloat", "isNaN", "isFinite", "decodeURI", "decodeURIComponent",
 		"encodeURI", "encodeURIComponent", "escape", "unescape",
 		// read-only types:
@@ -437,6 +437,9 @@ const MEMBER_REPLACEMENTS = new Map<string,Map<string,string>>([
 		// required due to odd return types on TypeScript side
 		[ "Function#bind", "public bind(thisArg: any, ...args: any): {function(... args: any): any}" ] as [string,string], // return type in .d.ts is 'any' instead of a function
 		[ "Object#valueOf", "public valueOf(): any" ] as [string,string], // return type in .d.ts is 'Object' causing errors when overridden to return a primitve type
+		// required due to stricter type checking in N4JS (type of searchElement must be 'any' instead of 'T' on N4JS side)
+		[ "Array#indexOf", "public indexOf(searchElement: any, fromIndex: number = ): number;" ] as [string,string],
+		[ "Array#lastIndexOf", "public lastIndexOf(searchElement: any, fromIndex: number = ): number;" ] as [string,string],
 		// required due to different signature
 		[ "Array#map", "public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>;" ] as [string,string],
 		// required due to overloading:
@@ -454,7 +457,10 @@ const MEMBER_REPLACEMENTS = new Map<string,Map<string,string>>([
 		[ "Array#reduceRight", "public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;" ] as [string,string],
 		[ "Date#constructor", "public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);" ] as [string,string],
 		[ "RegExp#constructor", "public constructor(pattern: string = undefined, flags: string = undefined);" ] as [string,string],
-		[ "JSON#stringify", "public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;" ] as [string,string]
+		[ "JSON#stringify", "public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;" ] as [string,string],
+		// other oddities:
+		[ "PropertyDescriptor#get", undefined ] as [string,string],
+		[ "PropertyDescriptor#set", undefined ] as [string,string]
 	])] as [string, Map<string,string>]
 ]);
 
