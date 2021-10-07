@@ -94,10 +94,6 @@ class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStatic
 		assertIssues(
 			"src2/A.n4js" -> #[
 				"(Error, [4:53 - 4:57], Couldn't resolve reference to Type 'Poly'.)",
-				"(Error, [6:34 - 6:35], Couldn't resolve reference to Type 'T'.)",
-				"(Error, [7:33 - 7:34], Couldn't resolve reference to Type 'T'.)",
-				"(Error, [9:32 - 9:33], Couldn't resolve reference to Type 'T'.)",
-				"(Error, [9:43 - 9:44], Couldn't resolve reference to Type 'T'.)",
 				"(Error, [10:22 - 10:26], Couldn't resolve reference to IdentifiableElement 'unit'.)",
 				"(Error, [16:30 - 16:34], Couldn't resolve reference to IdentifiableElement 'unit'.)"
 			]
