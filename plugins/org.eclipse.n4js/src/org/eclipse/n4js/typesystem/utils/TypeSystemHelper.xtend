@@ -26,7 +26,6 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -76,8 +75,6 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 class TypeSystemHelper {
 
 	@Inject private N4JSTypeSystem ts;
-
-	@Inject private N4IDLVersionResolver versionResolver;
 
 	// *****************************************************************************************************
 	//   forwarding of utility methods implemented in strategy classes
@@ -460,8 +457,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		 val typeRef = getStaticTypeRef(G, ctr);
 		 val type = typeRef?.declaredType;
 		 if (type !== null) {
-		 	 var resultTypeRef = TypeExtensions.ref(type,typeArgs);
-		 	 return versionResolver.resolveVersion(resultTypeRef, typeRef);
+		 	 return TypeExtensions.ref(type, typeArgs);
 		 }
 		 return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 	 }

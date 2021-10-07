@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
@@ -36,8 +35,6 @@ import com.google.inject.Inject;
 	protected TypeSystemHelper typeSystemHelper;
 	@Inject
 	protected ContainerTypesHelper containerTypesHelper;
-	@Inject
-	protected N4IDLVersionResolver n4idlVersionResolver;
 
 	protected static UnknownTypeRef unknown() {
 		return TypeRefsFactory.eINSTANCE.createUnknownTypeRef();

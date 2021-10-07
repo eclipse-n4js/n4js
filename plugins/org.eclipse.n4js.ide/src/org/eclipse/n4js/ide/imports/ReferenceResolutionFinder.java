@@ -24,10 +24,8 @@ import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
-import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
@@ -254,10 +252,8 @@ public class ReferenceResolutionFinder {
 			}
 
 			try (Measurement m2 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
-				int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
-
 				String proposal = getProposal(rrc);
-				String label = getLabel(rrc, version);
+				String label = getLabel(rrc);
 				String description = getDescription(rrc);
 				ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
 
@@ -286,8 +282,8 @@ public class ReferenceResolutionFinder {
 		return rrc.shortName;
 	}
 
-	private String getLabel(ReferenceResolutionCandidate rrc, int version) {
-		String typeVersion = (version == 0) ? "" : N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
+	private String getLabel(ReferenceResolutionCandidate rrc) {
+		String typeVersion = "";
 		if (rrc.isAlias()) {
 			return rrc.aliasName + typeVersion;
 		}

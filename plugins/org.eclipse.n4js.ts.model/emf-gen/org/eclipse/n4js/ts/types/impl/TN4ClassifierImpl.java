@@ -14,8 +14,6 @@ import com.google.common.base.Objects;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -26,14 +24,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.ArrayLike;
-import org.eclipse.n4js.ts.types.TMigratable;
-import org.eclipse.n4js.ts.types.TMigration;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -51,7 +45,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getDeclaredElementType <em>Declared Element Type</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getMigrations <em>Migrations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDynamizable <em>Dynamizable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getTypingStrategy <em>Typing Strategy</em>}</li>
  * </ul>
@@ -108,16 +101,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @ordered
 	 */
 	protected TypeRef declaredElementType;
-
-	/**
-	 * The cached value of the '{@link #getMigrations() <em>Migrations</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMigrations()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<TMigration> migrations;
 
 	/**
 	 * The default value of the '{@link #isDynamizable() <em>Dynamizable</em>}' attribute.
@@ -275,19 +258,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @generated
 	 */
 	@Override
-	public EList<TMigration> getMigrations() {
-		if (migrations == null) {
-			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TN4_CLASSIFIER__MIGRATIONS);
-		}
-		return migrations;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isDynamizable() {
 		return dynamizable;
 	}
@@ -387,8 +357,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return isDeclaredProvidedByRuntime();
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				return getDeclaredElementType();
-			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
-				return getMigrations();
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				return isDynamizable();
 			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
@@ -402,7 +370,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -414,10 +381,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				setDeclaredElementType((TypeRef)newValue);
-				return;
-			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
-				getMigrations().clear();
-				getMigrations().addAll((Collection<? extends TMigration>)newValue);
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				setDynamizable((Boolean)newValue);
@@ -446,9 +409,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				setDeclaredElementType((TypeRef)null);
 				return;
-			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
-				getMigrations().clear();
-				return;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				setDynamizable(DYNAMIZABLE_EDEFAULT);
 				return;
@@ -473,8 +433,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				return declaredElementType != null;
-			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
-				return migrations != null && !migrations.isEmpty();
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				return dynamizable != DYNAMIZABLE_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
@@ -503,12 +461,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				default: return -1;
 			}
 		}
-		if (baseClass == TMigratable.class) {
-			switch (derivedFeatureID) {
-				case TypesPackage.TN4_CLASSIFIER__MIGRATIONS: return TypesPackage.TMIGRATABLE__MIGRATIONS;
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -529,12 +481,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		if (baseClass == ArrayLike.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.ARRAY_LIKE__DECLARED_ELEMENT_TYPE: return TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
-				default: return -1;
-			}
-		}
-		if (baseClass == TMigratable.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.TMIGRATABLE__MIGRATIONS: return TypesPackage.TN4_CLASSIFIER__MIGRATIONS;
 				default: return -1;
 			}
 		}
@@ -566,11 +512,6 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		if (baseClass == ArrayLike.class) {
 			switch (baseOperationID) {
 				case TypesPackage.ARRAY_LIKE___GET_ELEMENT_TYPE: return TypesPackage.TN4_CLASSIFIER___GET_ELEMENT_TYPE;
-				default: return -1;
-			}
-		}
-		if (baseClass == TMigratable.class) {
-			switch (baseOperationID) {
 				default: return -1;
 			}
 		}

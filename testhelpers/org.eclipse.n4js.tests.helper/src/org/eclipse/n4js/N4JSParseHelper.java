@@ -22,7 +22,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.validation.JavaScriptVariant;
 import org.eclipse.xtext.resource.FileExtensionProvider;
 import org.eclipse.xtext.testing.util.ParseHelper;
@@ -86,11 +85,6 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 			case strict: {
 				setFileExtension(N4JSGlobals.JS_FILE_EXTENSION);
 				Script script = parse("\"scrict mode\"\n" + text);
-				return script;
-			}
-			case n4idl: {
-				setFileExtension(N4IDLGlobals.N4IDL_FILE_EXTENSION);
-				Script script = parse(text);
 				return script;
 			}
 			case unrestricted:

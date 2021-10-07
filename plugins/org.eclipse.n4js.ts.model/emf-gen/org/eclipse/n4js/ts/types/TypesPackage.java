@@ -85,7 +85,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 53;
+	int SYNTAX_RELATED_TELEMENT = 50;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -1951,22 +1951,13 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION__DECLARED_VERSION = GENERIC_TYPE_FEATURE_COUNT + 3;
-
-	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__EXTERNAL = GENERIC_TYPE_FEATURE_COUNT + 4;
+	int TFUNCTION__EXTERNAL = GENERIC_TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
@@ -1975,7 +1966,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__FPARS = GENERIC_TYPE_FEATURE_COUNT + 5;
+	int TFUNCTION__FPARS = GENERIC_TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Return Value Marked Optional</b></em>' attribute.
@@ -1984,7 +1975,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL = GENERIC_TYPE_FEATURE_COUNT + 6;
+	int TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL = GENERIC_TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
@@ -1993,7 +1984,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__RETURN_TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 7;
+	int TFUNCTION__RETURN_TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
@@ -2002,7 +1993,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_THIS_TYPE = GENERIC_TYPE_FEATURE_COUNT + 8;
+	int TFUNCTION__DECLARED_THIS_TYPE = GENERIC_TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -2011,7 +2002,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_ASYNC = GENERIC_TYPE_FEATURE_COUNT + 9;
+	int TFUNCTION__DECLARED_ASYNC = GENERIC_TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Declared Generator</b></em>' attribute.
@@ -2020,7 +2011,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_GENERATOR = GENERIC_TYPE_FEATURE_COUNT + 10;
+	int TFUNCTION__DECLARED_GENERATOR = GENERIC_TYPE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Constructor</b></em>' attribute.
@@ -2029,7 +2020,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__CONSTRUCTOR = GENERIC_TYPE_FEATURE_COUNT + 11;
+	int TFUNCTION__CONSTRUCTOR = GENERIC_TYPE_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>TFunction</em>' class.
@@ -2038,7 +2029,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 12;
+	int TFUNCTION_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -2048,6 +2039,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_VERSION = GENERIC_TYPE___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -2176,22 +2176,13 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_VERSION = GENERIC_TYPE_OPERATION_COUNT + 3;
-
-	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -2200,7 +2191,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CALLABLE_CONSTRUCTOR = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TFUNCTION___IS_CALLABLE_CONSTRUCTOR = GENERIC_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -2209,7 +2200,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -2218,7 +2209,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 7;
+	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2227,7 +2218,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 8;
+	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>TFunction</em>' class.
@@ -2236,7 +2227,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 9;
+	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
@@ -4400,693 +4391,6 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TVersionableImpl <em>TVersionable</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.impl.TVersionableImpl
-	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVersionable()
-	 * @generated
-	 */
-	int TVERSIONABLE = 28;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE__NAME = TYPE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE__ANNOTATIONS = TYPE__ANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE__DECLARED_VERSION = TYPE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>TVersionable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Containing Module</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
-
-	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_EXPORTED = TYPE___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Is Alias</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_ALIAS = TYPE___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_PROVIDED_BY_RUNTIME = TYPE___IS_PROVIDED_BY_RUNTIME;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_POLYFILL = TYPE___IS_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_STATIC_POLYFILL = TYPE___IS_STATIC_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Final</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_FINAL = TYPE___IS_FINAL;
-
-	/**
-	 * The operation id for the '<em>Is Dynamizable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_DYNAMIZABLE = TYPE___IS_DYNAMIZABLE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_ARRAY_LIKE = TYPE___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Get Element Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_ELEMENT_TYPE = TYPE___GET_ELEMENT_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_TYPE_ACCESS_MODIFIER = TYPE___GET_TYPE_ACCESS_MODIFIER;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___IS_GENERIC = TYPE___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
-
-	/**
-	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_VARIANCE_OF_TYPE_VAR__INT = TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
-
-	/**
-	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE___GET_VERSION = TYPE_OPERATION_COUNT + 0;
-
-	/**
-	 * The number of operations of the '<em>TVersionable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVERSIONABLE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 1;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMigratableImpl <em>TMigratable</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.impl.TMigratableImpl
-	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMigratable()
-	 * @generated
-	 */
-	int TMIGRATABLE = 29;
-
-	/**
-	 * The feature id for the '<em><b>Migrations</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATABLE__MIGRATIONS = 0;
-
-	/**
-	 * The number of structural features of the '<em>TMigratable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATABLE_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>TMigratable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATABLE_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl <em>TMigration</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.impl.TMigrationImpl
-	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMigration()
-	 * @generated
-	 */
-	int TMIGRATION = 30;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__NAME = TFUNCTION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__EXPORTED_NAME = TFUNCTION__EXPORTED_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__ANNOTATIONS = TFUNCTION__ANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__TYPE_VARS = TFUNCTION__TYPE_VARS;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__DECLARED_TYPE_ACCESS_MODIFIER = TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER;
-
-	/**
-	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__DECLARED_PROVIDED_BY_RUNTIME = TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME;
-
-	/**
-	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__AST_ELEMENT = TFUNCTION__AST_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__DECLARED_VERSION = TFUNCTION__DECLARED_VERSION;
-
-	/**
-	 * The feature id for the '<em><b>External</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__EXTERNAL = TFUNCTION__EXTERNAL;
-
-	/**
-	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__FPARS = TFUNCTION__FPARS;
-
-	/**
-	 * The feature id for the '<em><b>Return Value Marked Optional</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__RETURN_VALUE_MARKED_OPTIONAL = TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL;
-
-	/**
-	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__RETURN_TYPE_REF = TFUNCTION__RETURN_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__DECLARED_THIS_TYPE = TFUNCTION__DECLARED_THIS_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__DECLARED_ASYNC = TFUNCTION__DECLARED_ASYNC;
-
-	/**
-	 * The feature id for the '<em><b>Declared Generator</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__DECLARED_GENERATOR = TFUNCTION__DECLARED_GENERATOR;
-
-	/**
-	 * The feature id for the '<em><b>Constructor</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__CONSTRUCTOR = TFUNCTION__CONSTRUCTOR;
-
-	/**
-	 * The feature id for the '<em><b>Source Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__SOURCE_VERSION = TFUNCTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Target Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__TARGET_VERSION = TFUNCTION_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Has Declared Source And Target Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION = TFUNCTION_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Source Type Refs</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__SOURCE_TYPE_REFS = TFUNCTION_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Target Type Refs</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__TARGET_TYPE_REFS = TFUNCTION_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>principal Argument Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION__PRINCIPAL_ARGUMENT_TYPE = TFUNCTION_FEATURE_COUNT + 5;
-
-	/**
-	 * The number of structural features of the '<em>TMigration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 6;
-
-	/**
-	 * The operation id for the '<em>Get Containing Module</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
-
-	/**
-	 * The operation id for the '<em>Is Alias</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_ALIAS = TFUNCTION___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_POLYFILL = TFUNCTION___IS_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_STATIC_POLYFILL = TFUNCTION___IS_STATIC_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Dynamizable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_DYNAMIZABLE = TFUNCTION___IS_DYNAMIZABLE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_ARRAY_LIKE = TFUNCTION___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Get Element Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_ELEMENT_TYPE = TFUNCTION___GET_ELEMENT_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_GENERIC = TFUNCTION___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_TYPE_VARS = TFUNCTION___GET_TYPE_VARS;
-
-	/**
-	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_VARIANCE_OF_TYPE_VAR__INT = TFUNCTION___GET_VARIANCE_OF_TYPE_VAR__INT;
-
-	/**
-	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_RAW_TYPE_AS_STRING = TFUNCTION___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_TYPE_AS_STRING = TFUNCTION___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_PROVIDED_BY_RUNTIME = TFUNCTION___IS_PROVIDED_BY_RUNTIME;
-
-	/**
-	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_TYPE_ACCESS_MODIFIER = TFUNCTION___GET_TYPE_ACCESS_MODIFIER;
-
-	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_VERSION = TFUNCTION___GET_VERSION;
-
-	/**
-	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_RETURN_VALUE_OPTIONAL = TFUNCTION___IS_RETURN_VALUE_OPTIONAL;
-
-	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_CALLABLE_CONSTRUCTOR = TFUNCTION___IS_CALLABLE_CONSTRUCTOR;
-
-	/**
-	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_FPAR_FOR_ARG_IDX__INT = TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT;
-
-	/**
-	 * The operation id for the '<em>Get Function As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_FUNCTION_AS_STRING = TFUNCTION___GET_FUNCTION_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Final</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___IS_FINAL = TFUNCTION___IS_FINAL;
-
-	/**
-	 * The operation id for the '<em>Get Principal Argument Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_PRINCIPAL_ARGUMENT_TYPE = TFUNCTION_OPERATION_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Migration As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION___GET_MIGRATION_AS_STRING = TFUNCTION_OPERATION_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>TMigration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMIGRATION_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 2;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl <em>TClassifier</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5094,7 +4398,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-	int TCLASSIFIER = 31;
+	int TCLASSIFIER = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5169,22 +4473,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER__AST_ELEMENT = CONTAINER_TYPE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASSIFIER__DECLARED_VERSION = CONTAINER_TYPE_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Declared Covariant Constructor</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR = CONTAINER_TYPE_FEATURE_COUNT + 2;
+	int TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR = CONTAINER_TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>TClassifier</em>' class.
@@ -5193,7 +4488,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER_FEATURE_COUNT = CONTAINER_TYPE_FEATURE_COUNT + 3;
+	int TCLASSIFIER_FEATURE_COUNT = CONTAINER_TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -5212,6 +4507,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_VERSION = CONTAINER_TYPE___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -5367,22 +4671,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASSIFIER___GET_VERSION = CONTAINER_TYPE_OPERATION_COUNT + 0;
-
-	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___IS_ABSTRACT = CONTAINER_TYPE_OPERATION_COUNT + 1;
+	int TCLASSIFIER___IS_ABSTRACT = CONTAINER_TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
@@ -5391,7 +4686,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_SUPER_CLASSIFIERS = CONTAINER_TYPE_OPERATION_COUNT + 2;
+	int TCLASSIFIER___GET_SUPER_CLASSIFIERS = CONTAINER_TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
@@ -5400,7 +4695,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS = CONTAINER_TYPE_OPERATION_COUNT + 3;
+	int TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS = CONTAINER_TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
@@ -5409,7 +4704,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = CONTAINER_TYPE_OPERATION_COUNT + 4;
+	int TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = CONTAINER_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -5418,7 +4713,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 5;
+	int TCLASSIFIER___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>TClassifier</em>' class.
@@ -5427,7 +4722,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 6;
+	int TCLASSIFIER_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ArrayLikeImpl <em>Array Like</em>}' class.
@@ -5437,7 +4732,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-	int ARRAY_LIKE = 32;
+	int ARRAY_LIKE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5483,7 +4778,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-	int TN4_CLASSIFIER = 33;
+	int TN4_CLASSIFIER = 30;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5558,15 +4853,6 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER__AST_ELEMENT = TCLASSIFIER__AST_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER__DECLARED_VERSION = TCLASSIFIER__DECLARED_VERSION;
-
-	/**
 	 * The feature id for the '<em><b>Declared Covariant Constructor</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5603,22 +4889,13 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE = TCLASSIFIER_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Migrations</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER__MIGRATIONS = TCLASSIFIER_FEATURE_COUNT + 3;
-
-	/**
 	 * The feature id for the '<em><b>Dynamizable</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__DYNAMIZABLE = TCLASSIFIER_FEATURE_COUNT + 4;
+	int TN4_CLASSIFIER__DYNAMIZABLE = TCLASSIFIER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
@@ -5627,7 +4904,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__TYPING_STRATEGY = TCLASSIFIER_FEATURE_COUNT + 5;
+	int TN4_CLASSIFIER__TYPING_STRATEGY = TCLASSIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>TN4 Classifier</em>' class.
@@ -5636,7 +4913,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 6;
+	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -5646,6 +4923,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_VERSION = TCLASSIFIER___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -5774,15 +5060,6 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = TCLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER___GET_VERSION = TCLASSIFIER___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5880,7 +5157,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-	int TCLASS = 34;
+	int TCLASS = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5955,15 +5232,6 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__AST_ELEMENT = TN4_CLASSIFIER__AST_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS__DECLARED_VERSION = TN4_CLASSIFIER__DECLARED_VERSION;
-
-	/**
 	 * The feature id for the '<em><b>Declared Covariant Constructor</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5998,15 +5266,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASS__DECLARED_ELEMENT_TYPE = TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Migrations</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS__MIGRATIONS = TN4_CLASSIFIER__MIGRATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Dynamizable</b></em>' attribute.
@@ -6126,6 +5385,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_VERSION = TN4_CLASSIFIER___GET_VERSION;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6232,15 +5500,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASS___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = TN4_CLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS___GET_VERSION = TN4_CLASSIFIER___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
@@ -6367,7 +5626,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-	int TINTERFACE = 35;
+	int TINTERFACE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6442,15 +5701,6 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__AST_ELEMENT = TN4_CLASSIFIER__AST_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE__DECLARED_VERSION = TN4_CLASSIFIER__DECLARED_VERSION;
-
-	/**
 	 * The feature id for the '<em><b>Declared Covariant Constructor</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6485,15 +5735,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE__DECLARED_ELEMENT_TYPE = TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Migrations</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE__MIGRATIONS = TN4_CLASSIFIER__MIGRATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Dynamizable</b></em>' attribute.
@@ -6548,6 +5789,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_VERSION = TN4_CLASSIFIER___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -6676,15 +5926,6 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = TN4_CLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE___GET_VERSION = TN4_CLASSIFIER___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6782,7 +6023,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-	int TMEMBER = 36;
+	int TMEMBER = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7062,7 +6303,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER = 37;
+	int TMEMBER_WITH_ACCESS_MODIFIER = 34;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7360,7 +6601,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-	int TSTRUCT_MEMBER = 38;
+	int TSTRUCT_MEMBER = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7658,7 +6899,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-	int TMETHOD = 39;
+	int TMETHOD = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7722,15 +6963,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD__AST_ELEMENT = TFUNCTION__AST_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD__DECLARED_VERSION = TFUNCTION__DECLARED_VERSION;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -7913,6 +7145,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_VERSION = TFUNCTION___GET_VERSION;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8037,15 +7278,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_VERSION = TFUNCTION___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -8262,7 +7494,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-	int TSTRUCT_METHOD = 40;
+	int TSTRUCT_METHOD = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8326,15 +7558,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD__AST_ELEMENT = TMETHOD__AST_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD__DECLARED_VERSION = TMETHOD__DECLARED_VERSION;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -8526,6 +7749,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_VERSION = TMETHOD___GET_VERSION;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8650,15 +7882,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___IS_EXPORTED = TMETHOD___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_VERSION = TMETHOD___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -8884,7 +8107,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-	int TFORMAL_PARAMETER = 41;
+	int TFORMAL_PARAMETER = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9029,7 +8252,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-	int TANONYMOUS_FORMAL_PARAMETER = 42;
+	int TANONYMOUS_FORMAL_PARAMETER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9192,7 +8415,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-	int TFIELD = 43;
+	int TFIELD = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9535,7 +8758,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-	int TSTRUCT_FIELD = 44;
+	int TSTRUCT_FIELD = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9896,7 +9119,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-	int FIELD_ACCESSOR = 45;
+	int FIELD_ACCESSOR = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10230,7 +9453,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-	int TGETTER = 46;
+	int TGETTER = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10573,7 +9796,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-	int TSTRUCT_GETTER = 47;
+	int TSTRUCT_GETTER = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10934,7 +10157,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-	int TSETTER = 48;
+	int TSETTER = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11277,7 +10500,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-	int TSTRUCT_SETTER = 49;
+	int TSTRUCT_SETTER = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11638,7 +10861,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-	int TENUM = 50;
+	int TENUM = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11695,31 +10918,13 @@ public interface TypesPackage extends EPackage {
 	int TENUM__AST_ELEMENT = TYPE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM__DECLARED_VERSION = TYPE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Migrations</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM__MIGRATIONS = TYPE_FEATURE_COUNT + 4;
-
-	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM__EXTERNAL = TYPE_FEATURE_COUNT + 5;
+	int TENUM__EXTERNAL = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Literals</b></em>' containment reference list.
@@ -11728,7 +10933,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM__LITERALS = TYPE_FEATURE_COUNT + 6;
+	int TENUM__LITERALS = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>TEnum</em>' class.
@@ -11737,7 +10942,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_FEATURE_COUNT = TYPE_FEATURE_COUNT + 7;
+	int TENUM_FEATURE_COUNT = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -11747,6 +10952,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TENUM___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_VERSION = TYPE___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -11875,22 +11089,13 @@ public interface TypesPackage extends EPackage {
 	int TENUM___IS_EXPORTED = TYPE_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM___GET_VERSION = TYPE_OPERATION_COUNT + 3;
-
-	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM___GET_TYPE_VARS = TYPE_OPERATION_COUNT + 4;
+	int TENUM___GET_TYPE_VARS = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>TEnum</em>' class.
@@ -11899,7 +11104,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 5;
+	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl <em>TEnum Literal</em>}' class.
@@ -11909,7 +11114,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-	int TENUM_LITERAL = 51;
+	int TENUM_LITERAL = 48;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -11982,7 +11187,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAlias()
 	 * @generated
 	 */
-	int TYPE_ALIAS = 52;
+	int TYPE_ALIAS = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12235,7 +11440,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-	int TCONSTABLE_ELEMENT = 54;
+	int TCONSTABLE_ELEMENT = 51;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12281,7 +11486,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 55;
+	int TVARIABLE = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12462,7 +11667,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 56;
+	int TYPING_STRATEGY = 53;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12472,7 +11677,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 57;
+	int TYPE_ACCESS_MODIFIER = 54;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12482,7 +11687,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 58;
+	int MEMBER_ACCESS_MODIFIER = 55;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12492,7 +11697,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 59;
+	int MEMBER_TYPE = 56;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12502,7 +11707,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 57;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12512,7 +11717,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 61;
+	int ITERABLE_OF_TCLASSIFIER = 58;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12522,7 +11727,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 62;
+	int VARIANCE = 59;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12532,7 +11737,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 63;
+	int NAME_AND_ACCESS = 60;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12542,7 +11747,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 64;
+	int MEMBER_LIST = 61;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12552,7 +11757,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 65;
+	int TCLASSIFIER_ITERABLE = 62;
 
 
 	/**
@@ -13860,154 +13065,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTStructuralType__IsFinal();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TVersionable <em>TVersionable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>TVersionable</em>'.
-	 * @see org.eclipse.n4js.ts.types.TVersionable
-	 * @generated
-	 */
-	EClass getTVersionable();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TVersionable#getDeclaredVersion <em>Declared Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Declared Version</em>'.
-	 * @see org.eclipse.n4js.ts.types.TVersionable#getDeclaredVersion()
-	 * @see #getTVersionable()
-	 * @generated
-	 */
-	EAttribute getTVersionable_DeclaredVersion();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TVersionable#getVersion() <em>Get Version</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TVersionable#getVersion()
-	 * @generated
-	 */
-	EOperation getTVersionable__GetVersion();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TMigratable <em>TMigratable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>TMigratable</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigratable
-	 * @generated
-	 */
-	EClass getTMigratable();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TMigratable#getMigrations <em>Migrations</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Migrations</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigratable#getMigrations()
-	 * @see #getTMigratable()
-	 * @generated
-	 */
-	EReference getTMigratable_Migrations();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TMigration <em>TMigration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>TMigration</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigration
-	 * @generated
-	 */
-	EClass getTMigration();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TMigration#getSourceVersion <em>Source Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Source Version</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigration#getSourceVersion()
-	 * @see #getTMigration()
-	 * @generated
-	 */
-	EAttribute getTMigration_SourceVersion();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TMigration#getTargetVersion <em>Target Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Target Version</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigration#getTargetVersion()
-	 * @see #getTMigration()
-	 * @generated
-	 */
-	EAttribute getTMigration_TargetVersion();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TMigration#isHasDeclaredSourceAndTargetVersion <em>Has Declared Source And Target Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Has Declared Source And Target Version</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigration#isHasDeclaredSourceAndTargetVersion()
-	 * @see #getTMigration()
-	 * @generated
-	 */
-	EAttribute getTMigration_HasDeclaredSourceAndTargetVersion();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TMigration#getSourceTypeRefs <em>Source Type Refs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Source Type Refs</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigration#getSourceTypeRefs()
-	 * @see #getTMigration()
-	 * @generated
-	 */
-	EReference getTMigration_SourceTypeRefs();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TMigration#getTargetTypeRefs <em>Target Type Refs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Target Type Refs</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigration#getTargetTypeRefs()
-	 * @see #getTMigration()
-	 * @generated
-	 */
-	EReference getTMigration_TargetTypeRefs();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.TMigration#get_principalArgumentType <em>principal Argument Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>principal Argument Type</em>'.
-	 * @see org.eclipse.n4js.ts.types.TMigration#get_principalArgumentType()
-	 * @see #getTMigration()
-	 * @generated
-	 */
-	EReference getTMigration__principalArgumentType();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getPrincipalArgumentType() <em>Get Principal Argument Type</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Principal Argument Type</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TMigration#getPrincipalArgumentType()
-	 * @generated
-	 */
-	EOperation getTMigration__GetPrincipalArgumentType();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMigration#getMigrationAsString() <em>Get Migration As String</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Migration As String</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TMigration#getMigrationAsString()
-	 * @generated
-	 */
-	EOperation getTMigration__GetMigrationAsString();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TClassifier <em>TClassifier</em>}'.
@@ -16629,124 +15686,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TSTRUCTURAL_TYPE___IS_FINAL = eINSTANCE.getTStructuralType__IsFinal();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TVersionableImpl <em>TVersionable</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.types.impl.TVersionableImpl
-		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVersionable()
-		 * @generated
-		 */
-		EClass TVERSIONABLE = eINSTANCE.getTVersionable();
-
-		/**
-		 * The meta object literal for the '<em><b>Declared Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TVERSIONABLE__DECLARED_VERSION = eINSTANCE.getTVersionable_DeclaredVersion();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TVERSIONABLE___GET_VERSION = eINSTANCE.getTVersionable__GetVersion();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TMigratableImpl <em>TMigratable</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.types.impl.TMigratableImpl
-		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMigratable()
-		 * @generated
-		 */
-		EClass TMIGRATABLE = eINSTANCE.getTMigratable();
-
-		/**
-		 * The meta object literal for the '<em><b>Migrations</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TMIGRATABLE__MIGRATIONS = eINSTANCE.getTMigratable_Migrations();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TMigrationImpl <em>TMigration</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.types.impl.TMigrationImpl
-		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMigration()
-		 * @generated
-		 */
-		EClass TMIGRATION = eINSTANCE.getTMigration();
-
-		/**
-		 * The meta object literal for the '<em><b>Source Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TMIGRATION__SOURCE_VERSION = eINSTANCE.getTMigration_SourceVersion();
-
-		/**
-		 * The meta object literal for the '<em><b>Target Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TMIGRATION__TARGET_VERSION = eINSTANCE.getTMigration_TargetVersion();
-
-		/**
-		 * The meta object literal for the '<em><b>Has Declared Source And Target Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TMIGRATION__HAS_DECLARED_SOURCE_AND_TARGET_VERSION = eINSTANCE.getTMigration_HasDeclaredSourceAndTargetVersion();
-
-		/**
-		 * The meta object literal for the '<em><b>Source Type Refs</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TMIGRATION__SOURCE_TYPE_REFS = eINSTANCE.getTMigration_SourceTypeRefs();
-
-		/**
-		 * The meta object literal for the '<em><b>Target Type Refs</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TMIGRATION__TARGET_TYPE_REFS = eINSTANCE.getTMigration_TargetTypeRefs();
-
-		/**
-		 * The meta object literal for the '<em><b>principal Argument Type</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TMIGRATION__PRINCIPAL_ARGUMENT_TYPE = eINSTANCE.getTMigration__principalArgumentType();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Principal Argument Type</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TMIGRATION___GET_PRINCIPAL_ARGUMENT_TYPE = eINSTANCE.getTMigration__GetPrincipalArgumentType();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Migration As String</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TMIGRATION___GET_MIGRATION_AS_STRING = eINSTANCE.getTMigration__GetMigrationAsString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl <em>TClassifier</em>}' class.

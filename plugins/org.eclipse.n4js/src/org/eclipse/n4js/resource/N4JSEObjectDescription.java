@@ -14,9 +14,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4idl.N4IDLGlobals;
-import org.eclipse.n4js.ts.types.TVersionable;
-import org.eclipse.n4js.ts.versions.VersionableUtils;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -53,11 +51,7 @@ public class N4JSEObjectDescription extends EObjectDescription {
 	 */
 	public static IEObjectDescription create(QualifiedName qualifiedName, EObject element,
 			Map<String, String> userData) {
-		if (VersionableUtils.isTVersionable(element)) {
-			return new N4JSEObjectDescription(qualifiedName, (TVersionable) element, userData);
-		} else {
-			return EObjectDescription.create(qualifiedName, element, userData);
-		}
+		return EObjectDescription.create(qualifiedName, element, userData);
 	}
 
 	/**
@@ -70,8 +64,7 @@ public class N4JSEObjectDescription extends EObjectDescription {
 	 * @param userData
 	 *            The description user data
 	 */
-	private N4JSEObjectDescription(QualifiedName qualifiedName, TVersionable element,
-			Map<String, String> userData) {
+	private N4JSEObjectDescription(QualifiedName qualifiedName, Type element, Map<String, String> userData) {
 		super(qualifiedName, element, userData);
 	}
 
@@ -81,10 +74,7 @@ public class N4JSEObjectDescription extends EObjectDescription {
 		// Since the element is from the type model, the
 		// element should never be a proxy
 		if (!objectOrProxy.eIsProxy()) {
-			// Casting to TVersionable is safe, since the constructor doesn't allow for any other value
-			// and #element is final in the superclass
-			return this.getName().toString() + N4IDLGlobals.VERSION_SEPARATOR
-					+ ((TVersionable) objectOrProxy).getVersion();
+			return this.getName().toString();
 		}
 		// fall-back to super implementation
 		return super.toString();

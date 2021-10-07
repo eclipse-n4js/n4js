@@ -411,24 +411,6 @@ public final class AnnotationDefinition {
 	public final static AnnotationDefinition SINGLETON = define("Singleton").targets(N4_CLASS_DECLARATION)
 			.retention(RUNTIME).end();
 
-	// <---- N4IDL specific ---->
-
-	/**
-	 * Annotation to mark function declarations as migrations in the context of N4IDL.
-	 */
-	public final static AnnotationDefinition MIGRATION = define("Migration").targets(FUNCTION_DECLARATION)
-			.javaScriptVariants(N4JSJavaScriptVariantHelper.EXT_N4IDL)
-			.args(N4JSPackage.Literals.NUMERIC_LITERAL, N4JSPackage.Literals.NUMERIC_LITERAL).argsOptional()
-			.retention(RUNTIME).end();
-
-	/**
-	 * Annotation to mark classifier and function declarations as version aware in the context of N4IDL.
-	 */
-	public final static AnnotationDefinition VERSION_AWARE = define("VersionAware")
-			.targets(FUNCTION_DECLARATION, N4_CLASSIFIER_DECLARATION)
-			.javaScriptVariants(N4JSJavaScriptVariantHelper.EXT_N4IDL)
-			.retention(RUNTIME).end();
-
 	// <---- miscellaneous ---->
 
 	/**

@@ -70,9 +70,7 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		interfaceType.exportedName = n4Interface.exportedName;
 		interfaceType.external = n4Interface.external;
 		
-		VersionedTypesBuilderUtil.setTypeVersion(interfaceType, n4Interface);
-		
-		interfaceType
+		return interfaceType
 	}
 
 	def private void addExtendedInterfaces(TInterface interfaceType, N4InterfaceDeclaration c, boolean preLinkingPhase) {

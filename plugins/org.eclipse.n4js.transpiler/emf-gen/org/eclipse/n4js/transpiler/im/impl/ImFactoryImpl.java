@@ -80,8 +80,6 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 			case ImPackage.DELEGATING_SETTER_DECLARATION: return createDelegatingSetterDeclaration();
 			case ImPackage.DELEGATING_METHOD_DECLARATION: return createDelegatingMethodDeclaration();
 			case ImPackage.STRING_LITERAL_FOR_STE: return createStringLiteralForSTE();
-			case ImPackage.VERSIONED_IDENTIFIER_REF_IM: return createVersionedIdentifierRef_IM();
-			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM: return createVersionedNamedImportSpecifier_IM();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -239,28 +237,6 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	public StringLiteralForSTE createStringLiteralForSTE() {
 		StringLiteralForSTEImpl stringLiteralForSTE = new StringLiteralForSTEImpl();
 		return stringLiteralForSTE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedIdentifierRef_IM createVersionedIdentifierRef_IM() {
-		VersionedIdentifierRef_IMImpl versionedIdentifierRef_IM = new VersionedIdentifierRef_IMImpl();
-		return versionedIdentifierRef_IM;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedNamedImportSpecifier_IM createVersionedNamedImportSpecifier_IM() {
-		VersionedNamedImportSpecifier_IMImpl versionedNamedImportSpecifier_IM = new VersionedNamedImportSpecifier_IMImpl();
-		return versionedNamedImportSpecifier_IM;
 	}
 
 	/**

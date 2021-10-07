@@ -22,8 +22,6 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
-import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
@@ -36,6 +34,8 @@ import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
+import org.eclipse.n4js.scoping.utils.MultiImportedElementsMap
+import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 import org.eclipse.n4js.scoping.utils.UberParentScope
 import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -44,16 +44,13 @@ import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -89,11 +86,7 @@ class ImportedElementsScopingHelper {
 	@Inject
 	private ScopeSnapshotHelper scopesHelper;
 
-	@Inject
-	private JavaScriptVariantHelper variantHelper;
 
-	@Inject
-	private VersionHelper versionHelper;
 
 	def IScope getImportedIdentifiables(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedIdentifiables', script.eResource) [|
@@ -222,21 +215,8 @@ class ImportedElementsScopingHelper {
 
 	private def void addNamedImports(NamedImportSpecifier specifier, TExportableElement element, QualifiedName importedName,
 		IEODesc2ISpec originatorMap, ImportedElementsMap validImports) {
-		if (variantHelper.allowVersionedTypes(specifier) && VersionableUtils.isTVersionable(element)) {
-			// If the current context supports versioned types, import all versions of the
-			// specified type.
-			versionHelper.findTypeVersions(element as Type).forEach[ type |
-				val description = validImports.putOrError(type, importedName,
-					IssueCodes.IMP_AMBIGUOUS
-				);
-				originatorMap.putWithOrigin(description, specifier);
-			]
-		} else {
-			// Otherwise only import the type which was linked to the import specifier
-			// at link-time.
-			val ieod = validImports.putOrError(element, importedName, IssueCodes.IMP_AMBIGUOUS);
-			originatorMap.putWithOrigin(ieod, specifier)
-		}
+		val ieod = validImports.putOrError(element, importedName, IssueCodes.IMP_AMBIGUOUS);
+		originatorMap.putWithOrigin(ieod, specifier)
 	}
 
 	private def void processNamespaceSpecifier(

@@ -45,6 +45,11 @@ public final class N4JSGlobals {
 	public static final BigDecimal INT32_MIN_VALUE_BD = new BigDecimal(INT32_MIN_VALUE);
 
 	/**
+	 * The hashbang prefix is used to start a hashbang at the beginning of a module or script. E.g. #!/usr/bin/env node
+	 */
+	public static final String HASHBANG_PREFIX = "#!";
+
+	/**
 	 * Files extension of JS source files (<b>not</b> including the separator dot).
 	 */
 	public static final String JS_FILE_EXTENSION = "js";
@@ -72,11 +77,6 @@ public final class N4JSGlobals {
 	 * Files extension of XT source files (<b>not</b> including the separator dot).
 	 */
 	public static final String XT_FILE_EXTENSION = "xt";
-
-	/**
-	 * Files extension of N4IDL source files (<b>not</b> including the separator dot).
-	 */
-	public static final String N4IDL_FILE_EXTENSION = "n4idl";
 
 	/**
 	 * Vendor ID

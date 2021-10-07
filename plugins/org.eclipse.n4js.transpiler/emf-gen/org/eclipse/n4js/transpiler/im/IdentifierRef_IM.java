@@ -21,7 +21,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  *
  * <!-- begin-model-doc -->
  * SymbolTable-aware replacement for {@link IdentifierRef}.
- * Original property {@link IdentifierRef.id} is always {@code null}.
+ * Original property {@link IdentifierRef#getId()} is always {@code null}.
  * <!-- end-model-doc -->
  *
  *

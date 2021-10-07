@@ -116,8 +116,6 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 			}
 		);
 		
-		VersionedTypesBuilderUtil.setTypeVersion(tclass, classDecl);
-
 		return tclass;
 	}
 
