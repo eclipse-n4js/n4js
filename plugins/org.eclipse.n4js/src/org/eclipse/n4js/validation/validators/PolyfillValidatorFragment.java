@@ -238,7 +238,8 @@ public class PolyfillValidatorFragment {
 	private boolean holdsExplicitExtends(PolyfillValidationState state) {
 		final TypeReferenceNode<ParameterizedTypeRef> filledTypeRef = state.superClassifierNode;
 		if (filledTypeRef == null) { // (Polyfill Class) 156.1
-			final String msg = getMessageForCLF_POLYFILL_EXTEND_MISSING(state.name);
+			final String msg = getMessageForCLF_POLYFILL_EXTEND_MISSING(state.name,
+					keywordProvider.keywordWithIndefiniteArticle(state.polyType));
 			addIssue(state, msg, CLF_POLYFILL_EXTEND_MISSING);
 			return false;
 		}

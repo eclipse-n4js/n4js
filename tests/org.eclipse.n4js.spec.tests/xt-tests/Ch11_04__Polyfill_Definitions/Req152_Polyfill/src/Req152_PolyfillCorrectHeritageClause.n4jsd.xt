@@ -28,16 +28,29 @@
 @@ProvidedByRuntime
 @@Global
 
+
 export public interface ~I {}
 
+
 @Polyfill
-// XPECT errors --> "Polyfill Object must not implement any interfaces." at "Object"
-export external public class Object extends Object implements I {
+// XPECT errors --> "Polyfill Object must explicitly extend a class." at "Object"
+export external public class Object {
+	additionalMethod();
+}
+@Polyfill
+// XPECT errors --> "Polyfill String must not implement any interfaces." at "String"
+export external public class String extends String implements I {
 	additionalMethod();
 }
 
+
 @Polyfill
-// XPECT errors --> "Polyfill IArguments must not extend any additional interfaces." at "IArguments"
-export external public interface ~IArguments extends IArguments, I {
+// XPECT errors --> "Polyfill IArguments must explicitly extend an interface." at "IArguments"
+export external public interface ~IArguments {
+	additionalMethod();
+}
+@Polyfill
+// XPECT errors --> "Polyfill IteratorEntry must not extend any additional interfaces." at "IteratorEntry"
+export external public interface ~IteratorEntry<T> extends IteratorEntry<T>, I {
 	additionalMethod();
 }
