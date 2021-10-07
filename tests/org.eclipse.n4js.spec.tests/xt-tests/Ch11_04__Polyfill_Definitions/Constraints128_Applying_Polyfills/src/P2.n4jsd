@@ -16,7 +16,13 @@
 @@Global
 
 @Polyfill
-export external public class F extends F {
+export external public class Cls extends Cls {
+	additionalMethod();
+	additionalMethod2();
+}
+
+@Polyfill
+export external public interface Ifc extends Ifc {
 	additionalMethod();
 	additionalMethod2();
 }

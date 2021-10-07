@@ -27,14 +27,24 @@
  */
 
 
-var f : F<string> = new F<string>();
-var s : string;
+let s : string;
 
+let cls : Cls<string> = new Cls<string>();
 // XPECT noerrors --> "bind to original def"
-s = f.initialMethod();
+s = cls.initialMethod();
 // XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
-s = f.additionalMethod();
+s = cls.additionalMethod();
 // XPECT noerrors --> No error expected: "bind to polyfile in P1"
-s = f.additionalMethod1();
+s = cls.additionalMethod1();
 // XPECT noerrors --> No error expected: "bind to polyfile in P2"
-s = f.additionalMethod2();
+s = cls.additionalMethod2();
+
+let ifc : Ifc<string>;
+// XPECT noerrors --> "bind to original def"
+s = ifc.initialMethod();
+// XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
+s = ifc.additionalMethod();
+// XPECT noerrors --> No error expected: "bind to polyfile in P1"
+s = ifc.additionalMethod1();
+// XPECT noerrors --> No error expected: "bind to polyfile in P2"
+s = ifc.additionalMethod2();

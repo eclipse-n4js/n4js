@@ -372,7 +372,8 @@ public class PolyfillValidatorFragment {
 		final String typeVars2 = Joiner.on(',').join(
 				state.filledType.getTypeVars().stream().map(v -> v.getTypeAsString()).toArray());
 		if (!typeVars1.equals(typeVars2)) {
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS(state.name);
+			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS(state.name,
+					keywordProvider.keyword(state.filledType));
 			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_TYPEPARS);
 			return false;
 		}

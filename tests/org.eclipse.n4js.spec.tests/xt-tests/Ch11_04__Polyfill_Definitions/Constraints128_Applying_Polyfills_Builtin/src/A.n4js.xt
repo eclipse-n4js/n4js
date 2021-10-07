@@ -29,13 +29,18 @@
 // org.eclipse.n4js.naming.N4JSQualifiedNameProvider.getPolyfillFQN(TClassifier, IQualifiedNameProvider)
 // as there is a hack which handles built-in types and their global segment slightly differently
 
-var f = new Object();
+
+let f = new Object();
 // XPECT noerrors --> "provided by polyfill P"
 f.additionalMethod();
-
-
+// XPECT noerrors --> "bind to original def"
+f.toString();
 // XPECT noerrors --> "bind to polyfill in P"
 Object.addStatic();
 
+
+let i: IArguments;
+// XPECT noerrors --> "provided by polyfill P"
+i.additionalMethod();
 // XPECT noerrors --> "bind to original def"
-f.toString();
+let len: number = i.length;

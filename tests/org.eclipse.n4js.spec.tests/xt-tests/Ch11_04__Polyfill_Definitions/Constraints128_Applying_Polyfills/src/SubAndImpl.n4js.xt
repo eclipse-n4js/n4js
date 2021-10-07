@@ -26,27 +26,40 @@
 	END_SETUP
  */
 
-let cls = new Cls();
+
+class SubCls extends Cls {}
+
+let s = new SubCls();
 // XPECT noerrors --> "bind to original def"
-cls.initialMethod();
+s.initialMethod();
 // XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
-cls.additionalMethod();
+s.additionalMethod();
 // XPECT noerrors --> "bind to polyfill in P1"
-cls.additionalMethod1();
+s.additionalMethod1();
 // XPECT noerrors --> "bind to polyfill in P2"
-cls.additionalMethod2();
+s.additionalMethod2();
 // XPECT noerrors --> "bind to polyfill in P1"
-Cls.addStatic();
+SubCls.addStatic();
 
 
-let ifc: Ifc;
+interface SubIfc extends Ifc {}
+
+let si: SubIfc;
 // XPECT noerrors --> "bind to original def"
-ifc.initialMethod();
+si.initialMethod();
 // XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
-ifc.additionalMethod();
+si.additionalMethod();
 // XPECT noerrors --> "bind to polyfill in P1"
-ifc.additionalMethod1();
+si.additionalMethod1();
 // XPECT noerrors --> "bind to polyfill in P2"
-ifc.additionalMethod2();
+si.additionalMethod2();
 // no static methods in external interfaces (even if they are annotated with @N4JS)
-//Ifc.addStatic();
+//SubIfc.addStatic();
+
+
+// XPECT errors --> "Class ImplCls must either be declared abstract or implement method Ifc.additionalMethod2 and method Ifc.additionalMethod1." at "ImplCls"
+class ImplCls implements Ifc {
+	@Override public initialMethod() {}
+	// XPECT errors --> "Signature of method ImplCls.additionalMethod does not conform to implemented method Ifc.additionalMethod: {function(string):void} is not a subtype of {function():void}." at "additionalMethod"
+	@Override public additionalMethod(p: string) {}
+}
