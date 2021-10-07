@@ -270,7 +270,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 				// (got a super class; now validate it ...)
 
 				// super class must not be final (except in case of polyfills)
-				if (superType.final && !(N4JSLanguageUtils.isNonStaticPolyfill(n4Class) || N4JSLanguageUtils.isStaticPolyfill(n4Class))) { // FIXME GH-2224
+				if (superType.final && !(N4JSLanguageUtils.isNonStaticPolyfill(n4Class) || N4JSLanguageUtils.isStaticPolyfill(n4Class))) {
 					val message = getMessageForCLF_EXTEND_FINAL(superType.name);
 
 					val superTypeAstElement = superType.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement,

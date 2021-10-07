@@ -129,7 +129,7 @@ public class PolyfillValidatorFragment {
 	 */
 	public boolean holdsPolyfill(PolyfillValidatorHost validator, N4ClassifierDeclaration n4Classifier) {
 		boolean isStaticPolyFill = N4JSLanguageUtils.isStaticPolyfill(n4Classifier);
-		if (isStaticPolyFill || N4JSLanguageUtils.isNonStaticPolyfill(n4Classifier)) { // FIXME GH-2224
+		if (isStaticPolyFill || N4JSLanguageUtils.isNonStaticPolyfill(n4Classifier)) {
 			PolyfillValidationState state = new PolyfillValidationState();
 			state.host = validator;
 			state.n4Classifier = n4Classifier;
