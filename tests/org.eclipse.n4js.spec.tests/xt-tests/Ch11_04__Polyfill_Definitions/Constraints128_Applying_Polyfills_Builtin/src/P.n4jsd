@@ -22,3 +22,8 @@ export external public class Object extends Object {
 
 	public static addStatic();
 }
+
+@Polyfill
+export external public interface ~IArguments extends IArguments {
+	public additionalMethod();
+}

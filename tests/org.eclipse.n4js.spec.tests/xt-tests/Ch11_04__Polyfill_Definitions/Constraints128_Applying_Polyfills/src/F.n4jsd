@@ -11,6 +11,11 @@
 
 @@Global
 @@ProvidedByRuntime
-export external public class F {
+
+export external public class Cls {
+	initialMethod();
+}
+
+export external public interface Ifc {
 	initialMethod();
 }

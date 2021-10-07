@@ -142,7 +142,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 		if (guard.tryNext(object)) {
 			if (!object.isPolyfill()) {
 				if (doProcess(getPolyfills(object))) {
-					return true;
+					return Boolean.TRUE;
 				}
 			}
 			if (process(object)) {
@@ -151,9 +151,9 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			if (!object.isPolyfill() || object.isStaticPolyfill()) {
 				// enqueueInterface(object.getConsumedRoles());
 				if (doProcessSuperTypes(object)) {
-					return true;
+					return Boolean.TRUE;
 				}
-				if (doProcessConsumedRoles(object)) {
+				if (doProcessImplementedInterfaces(object)) {
 					return Boolean.TRUE;
 				}
 			}
@@ -171,17 +171,26 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	/**
 	 * Process the consumed roles of a class.
 	 */
-	protected boolean doProcessConsumedRoles(TClass object) {
+	protected boolean doProcessImplementedInterfaces(TClass object) {
 		return doProcess(object.getImplementedInterfaceRefs());
 	}
 
 	@Override
 	public Boolean caseTInterface(TInterface object) {
 		if (guard.tryNext(object)) {
+			if (!object.isPolyfill()) {
+				if (doProcess(getPolyfills(object))) {
+					return Boolean.TRUE;
+				}
+			}
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			return doProcessSuperInterfaces(object);
+			if (!object.isPolyfill()) {
+				if (doProcessSuperInterfaces(object)) {
+					return Boolean.TRUE;
+				}
+			}
 		}
 		return Boolean.FALSE;
 	}

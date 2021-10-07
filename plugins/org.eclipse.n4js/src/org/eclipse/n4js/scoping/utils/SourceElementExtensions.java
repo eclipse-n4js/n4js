@@ -11,6 +11,7 @@
 package org.eclipse.n4js.scoping.utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -24,6 +25,7 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
@@ -34,6 +36,7 @@ import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
@@ -269,13 +272,14 @@ public class SourceElementExtensions {
 
 	/** @return the defined type of the given element or the declared type of the corresponding polyfilled class */
 	public Type getTypeOrPolyfilledType(TypeDefiningElement tde) {
-		if (tde instanceof N4ClassDeclaration) {
-			N4ClassDeclaration n4cd = (N4ClassDeclaration) tde;
-			if (N4JSLanguageUtils.isPolyfill(n4cd) || N4JSLanguageUtils.isStaticPolyfill(n4cd)) {
+		if (tde instanceof N4ClassifierDeclaration) {
+			N4ClassifierDeclaration n4cd = (N4ClassifierDeclaration) tde;
+			if (N4JSLanguageUtils.isNonStaticPolyfill(n4cd) || N4JSLanguageUtils.isStaticPolyfill(n4cd)) {
 				// in polyfill? delegate to filled type and its type variables
-				TClass filledType = n4cd.getDefinedTypeAsClass();
-				if (filledType != null && filledType.getSuperClassRef() != null) {
-					return filledType.getSuperClassRef().getDeclaredType();
+				TClassifier filledType = (TClassifier) n4cd.getDefinedType();
+				Iterator<? extends TClassifier> superClassifiers = filledType.getSuperClassifiers().iterator();
+				if (superClassifiers.hasNext()) {
+					return superClassifiers.next();
 				}
 			}
 		}

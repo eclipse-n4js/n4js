@@ -834,7 +834,7 @@ public class N4JSLanguageUtils {
 	}
 
 	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
-	def static boolean isPolyfill(AnnotableElement astElement) {
+	def static boolean isNonStaticPolyfill(AnnotableElement astElement) {
 		return AnnotationDefinition.POLYFILL.hasAnnotation( astElement );
 	}
 
