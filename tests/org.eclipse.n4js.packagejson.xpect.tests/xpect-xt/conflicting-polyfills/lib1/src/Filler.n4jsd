@@ -11,7 +11,7 @@
     public repeat(count: number): string;
 }
 
-@Polyfill export @Final external public class ~IArguments extends IArguments {
+@Polyfill export @Final external public interface ~IArguments extends IArguments {
 	public addedField: number;
 	public get addedGetter(): string;
 	public set addedSetter(value: string);
