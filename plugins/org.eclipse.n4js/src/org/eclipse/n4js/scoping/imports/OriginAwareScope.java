@@ -13,7 +13,6 @@ package org.eclipse.n4js.scoping.imports;
 import java.util.HashMap;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
@@ -39,6 +38,8 @@ import com.google.common.collect.Iterables;
  */
 public class OriginAwareScope implements IScope {
 
+	private final Script script;
+
 	private final IScope delegatee;
 
 	private final HashMap<IEObjectDescription, ImportSpecifier> origins;
@@ -50,7 +51,8 @@ public class OriginAwareScope implements IScope {
 	 * @param map
 	 *            Map of {@link ImportSpecifier}-origins for {@link IEObjectDescription}'s
 	 */
-	OriginAwareScope(IScope scope, HashMap<IEObjectDescription, ImportSpecifier> map) {
+	OriginAwareScope(Script script, IScope scope, HashMap<IEObjectDescription, ImportSpecifier> map) {
+		this.script = script;
 		this.delegatee = scope;
 		this.origins = map;
 	}
@@ -63,25 +65,19 @@ public class OriginAwareScope implements IScope {
 	@Override
 	public IEObjectDescription getSingleElement(QualifiedName name) {
 		IEObjectDescription ret = delegatee.getSingleElement(name);
-		if (ret == null)
-			return null;
-
-		ImportSpecifier origin = origins.get(ret);
-		if (origin != null) {
-			EObject script = EcoreUtil.getRootContainer(origin);
-			if ((script instanceof Script) && ((Script) script).isFlaggedUsageMarkingFinished()) {
-				// do nothing as linking phase is over
-			} else {
-				// return usage aware description
-				return getUsageAwareDescription(ret);
-			}
+		if (script.isFlaggedUsageMarkingFinished()) {
+			return ret;
 		}
-		return ret;
+		return getUsageAwareDescription(ret);
 	}
 
 	@Override
 	public Iterable<IEObjectDescription> getElements(QualifiedName name) {
-		return Iterables.transform(delegatee.getElements(name), this::getUsageAwareDescription);
+		Iterable<IEObjectDescription> ret = delegatee.getElements(name);
+		if (script.isFlaggedUsageMarkingFinished()) {
+			return ret;
+		}
+		return Iterables.transform(ret, this::getUsageAwareDescription);
 	}
 
 	@Override
@@ -102,25 +98,18 @@ public class OriginAwareScope implements IScope {
 	private IEObjectDescription getUsageAwareDescription(IEObjectDescription original) {
 		ImportSpecifier origin = origins.get(original);
 		if (origin != null) {
-			EObject script = EcoreUtil.getRootContainer(origin);
-			if ((script instanceof Script) && ((Script) script).isFlaggedUsageMarkingFinished()) {
-				// do nothing as linking phase is over
+			// TODO: Mark Twin-Ambiguous as well as used.
+			if (original instanceof AmbiguousImportDescription) {
+				AmbiguousImportDescription ambiguousImportDescription = (AmbiguousImportDescription) original;
+				return new UsageAwareAmbiguousImportDescription(ambiguousImportDescription, origin);
+			} else if (original instanceof PlainAccessOfAliasedImportDescription) {
+				PlainAccessOfAliasedImportDescription plainAccess = (PlainAccessOfAliasedImportDescription) original;
+				return new UsageAwarePlainAccessOfAliasedImportDescription(plainAccess, origin);
 			} else {
-				// TODO: Mark Twin-Ambiguous as well as used.
-				if (original instanceof AmbiguousImportDescription) {
-					AmbiguousImportDescription ambiguousImportDescription = (AmbiguousImportDescription) original;
-					return new UsageAwareAmbiguousImportDescription(ambiguousImportDescription, origin);
-				} else if (original instanceof PlainAccessOfAliasedImportDescription) {
-					PlainAccessOfAliasedImportDescription plainAccess = (PlainAccessOfAliasedImportDescription) original;
-					return new UsageAwarePlainAccessOfAliasedImportDescription(plainAccess, origin);
+				if (IEObjectDescriptionWithError.isErrorDescription(original)) {
+					return new UsageAwareImportDescriptionWithError<>((IEObjectDescriptionWithError) original, origin);
 				} else {
-					if (IEObjectDescriptionWithError.isErrorDescription(original)) {
-						return new UsageAwareImportDescriptionWithError<>(
-								(IEObjectDescriptionWithError) original, origin);
-					} else {
-						return new UsageAwareImportDescription<>(original, origin);
-					}
-
+					return new UsageAwareImportDescription<>(original, origin);
 				}
 			}
 		}

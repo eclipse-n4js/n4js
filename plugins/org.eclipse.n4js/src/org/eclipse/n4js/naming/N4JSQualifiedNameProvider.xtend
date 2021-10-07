@@ -172,7 +172,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		}
 		// (2) if unsuccessful, take projectName from the URI
 		if (projectName === null) {
-			projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(uri.trimSegments(1));
+			projectName = ProjectDescriptionUtils.deriveN4JSPackageNameFromURI(uri.trimSegments(1));
 		}
 		// create qualified name from projectName
 		if (projectName !== null && !projectName.isEmpty) {

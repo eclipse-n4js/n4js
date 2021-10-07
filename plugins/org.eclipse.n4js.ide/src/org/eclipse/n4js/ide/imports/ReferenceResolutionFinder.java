@@ -39,7 +39,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -339,8 +339,8 @@ public class ReferenceResolutionFinder {
 		QualifiedName qualifiedName = requestedImport.name;
 		String optionalAlias = requestedImport.alias;
 
-		N4JSProjectName projectName = rrc.candidateProjectOrNull != null
-				? rrc.candidateProjectOrNull.getN4JSProjectName()
+		N4JSPackageName projectName = rrc.candidateProjectOrNull != null
+				? rrc.candidateProjectOrNull.getN4JSPackageName()
 				: null;
 		if (projectName == null) {
 			return null;
@@ -716,7 +716,7 @@ public class ReferenceResolutionFinder {
 			if (candidateProjectOrNull != null && candidateModuleQNStr != null
 					&& N4JSLanguageUtils.isMainModule(candidateProjectOrNull, candidateModuleQNStr)) {
 				// use project import when importing from a main module (e.g. index.Element -> react.Element)
-				N4JSProjectName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
+				N4JSPackageName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
 				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
 				candidateName = projectName.toQualifiedName().append(lastSegmentOfQFN);
 
@@ -724,7 +724,7 @@ public class ReferenceResolutionFinder {
 					&& (projectType == ProjectType.PLAINJS || projectType == ProjectType.DEFINITION)) {
 				// use complete module specifier when importing from PLAINJS or DEFINITION project
 				// (i.e. prepend project name)
-				N4JSProjectName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
+				N4JSPackageName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
 				candidateName = projectName.toQualifiedName().append(candidate.getQualifiedName());
 
 			} else {
@@ -768,14 +768,14 @@ public class ReferenceResolutionFinder {
 		return N4JSLanguageUtils.isActualElementInScope(desc);
 	}
 
-	private static N4JSProjectName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {
+	private static N4JSPackageName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {
 		if (project.getType() == ProjectType.DEFINITION) {
-			N4JSProjectName definedProjectName = project.getDefinesPackage();
+			N4JSPackageName definedProjectName = project.getDefinesPackage();
 			if (definedProjectName != null) {
 				return definedProjectName;
 			}
 		}
-		return project.getN4JSProjectName();
+		return project.getN4JSPackageName();
 	}
 
 	private static class NameAndAlias {

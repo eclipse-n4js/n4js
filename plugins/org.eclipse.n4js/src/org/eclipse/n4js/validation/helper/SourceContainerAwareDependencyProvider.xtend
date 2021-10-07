@@ -44,7 +44,7 @@ class SourceContainerAwareDependencyProvider implements DependencyProvider<N4JSP
 	}
 
 	override getDependencies(N4JSProjectConfigSnapshot p) {
-		val directDepsResolved = p.dependencies.map[workspaceConfig.findProjectByName(it)].filterNull;
+		val directDepsResolved = p.dependencies.map[workspaceConfig.findProjectByID(it)].filterNull;
 		if (ignoreExternalPlainJsProjects) {
 			return ImmutableList.copyOf(directDepsResolved.filter[dep|!isIgnored(dep)]);
 		} else {

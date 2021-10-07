@@ -33,9 +33,11 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  */
+@Singleton
 public class N4JSCache extends OnChangeEvictingCache {
 
 	@Inject
@@ -97,6 +99,25 @@ public class N4JSCache extends OnChangeEvictingCache {
 		} catch (OperationCanceledException oce) {
 			// observation: the cache remains unchanged, to avoid cache corruption.
 			return null;
+		}
+	}
+
+	/** @return true iff the cache for the given resource does not contain the given key */
+	public boolean contains(Object key, Resource resource) {
+		CacheAdapter adapter = getOrCreate(resource);
+		return adapter.get(key) != null;
+	}
+
+	/** @return a cached value for the given pair of resource and key or throws an {@link IllegalStateException}. */
+	@SuppressWarnings("unchecked")
+	public <T> T mustGet(Object key, Resource resource) {
+		CacheAdapter adapter = getOrCreate(resource);
+		Object value = adapter.get(key);
+		if (value == null) {
+			throw new IllegalStateException(
+					"Cache was expected to contain a value for " + key + " of resource " + resource.getURI());
+		} else {
+			return (T) value;
 		}
 	}
 

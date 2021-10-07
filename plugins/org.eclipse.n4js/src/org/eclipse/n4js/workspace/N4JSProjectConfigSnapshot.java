@@ -27,11 +27,12 @@ import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ModuleFilterUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
@@ -97,9 +98,9 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	}
 
 	/** Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property. */
-	public N4JSProjectName getDefinesPackage() {
+	public N4JSPackageName getDefinesPackage() {
 		String definesPackage = projectDescription.getDefinesPackage();
-		return definesPackage != null ? new N4JSProjectName(definesPackage) : null;
+		return definesPackage != null ? new N4JSPackageName(definesPackage) : null;
 	}
 
 	@Override
@@ -137,9 +138,12 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	// ==============================================================================================================
 	// Convenience and utility methods (do not introduce additional data)
 
-	/** This project's name as an {@link N4JSProjectName}. */
-	public N4JSProjectName getN4JSProjectName() {
-		return new N4JSProjectName(getName());
+	/** This project's name as an {@link N4JSPackageName}. */
+	public N4JSPackageName getN4JSPackageName() {
+		if (Strings.isNullOrEmpty(getPackageName())) {
+			return new N4JSPackageName(getName());
+		}
+		return new N4JSPackageName(getPackageName());
 	}
 
 	/** Returns this project's {@link #getPath() path} as a {@link FileURI}. */

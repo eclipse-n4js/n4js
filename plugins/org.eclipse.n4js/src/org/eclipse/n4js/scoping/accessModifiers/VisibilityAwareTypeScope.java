@@ -26,7 +26,7 @@ import org.eclipse.xtext.scoping.IScope;
 /**
  * A scope implementation that annotates invisible types as such to flag them with errors immediately on access.
  *
- * @see ErrorAwareLinkingService#addError
+ * @see ErrorAwareLinkingService#addIssue
  */
 public class VisibilityAwareTypeScope extends FilterWithErrorMarkerScope {
 

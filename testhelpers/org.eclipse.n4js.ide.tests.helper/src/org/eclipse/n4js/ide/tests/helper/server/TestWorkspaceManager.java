@@ -34,7 +34,7 @@ import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -169,11 +169,11 @@ public class TestWorkspaceManager {
 	/** @return the main node_modules folder of the workspace. */
 	public File getNodeModulesFolder() {
 		String rootProjectName = isYarnWorkspace() ? YARN_TEST_PROJECT : DEFAULT_PROJECT_NAME;
-		return getNodeModulesFolder(new N4JSProjectName(rootProjectName));
+		return getNodeModulesFolder(new N4JSPackageName(rootProjectName));
 	}
 
 	/** @return the node_modules folder of the project with the given name. Respects yarn workspace setups. */
-	public File getNodeModulesFolder(N4JSProjectName projectName) {
+	public File getNodeModulesFolder(N4JSPackageName projectName) {
 		final File projectLocation = getProjectLocation();
 		final File projectFolder = projectName.getLocation(projectLocation.toPath());
 		final File nodeModulesFolder = isYarnWorkspace()

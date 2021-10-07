@@ -22,7 +22,6 @@ import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
@@ -40,7 +39,7 @@ class LocallyKnownTypesScopingHelper {
 	ImportedElementsScopingHelper importedElementsScopingHelper
 
 	@Inject
-	ScopesHelper scopesHelper
+	ScopeSnapshotHelper scopeSnapshotHelper
 
 	/**
 	 * Returns the type itself and type variables in case the type is generic.
@@ -59,11 +58,11 @@ class LocallyKnownTypesScopingHelper {
 					// error case: type variables of a classifier cannot be accessed from static members
 					// e.g. class C<T> { static x: T; }
 					// --> return same scope as in success case, but wrap descriptions with a WrongStaticAccessorDescription
-					result = scopesHelper.scopeFor(type.typeVars, [new WrongStaticAccessDescription(it, staticAccess)],
-						result);
+					val wrapEODs = [new WrongStaticAccessDescription(it, staticAccess)];
+					result = scopeSnapshotHelper.scopeForEObjects("scopeWithTypeAndItsTypeVariables-1", type, result, type.typeVars, wrapEODs);
 				} else {
 					// success case: simply add type variables to scope
-					result = Scopes.scopeFor(type.typeVars, result);
+					result = scopeSnapshotHelper.scopeForEObjects("scopeWithTypeAndItsTypeVariables-2", type, result, type.typeVars);
 				}
 			}
 		}
@@ -78,7 +77,7 @@ class LocallyKnownTypesScopingHelper {
 		val mDef = m.definedMember
 		if (mDef instanceof TStructMethod) {
 			if (mDef.generic) {
-				return Scopes.scopeFor(mDef.typeVars, parent)
+				return scopeSnapshotHelper.scopeForEObjects("scopeWithTypeVarsOfTStructMethod", mDef, parent, mDef.typeVars);
 			}
 		}
 		return parent;
@@ -89,7 +88,7 @@ class LocallyKnownTypesScopingHelper {
 	 */
 	def IScope scopeWithTypeVarsOfFunctionTypeExpression(IScope parent, FunctionTypeExpression funTypeExpr) {
 		if (funTypeExpr !== null && funTypeExpr.generic) {
-			return Scopes.scopeFor(funTypeExpr.typeVars, parent);
+			return scopeSnapshotHelper.scopeForEObjects("scopeWithTypeVarsOfFunctionTypeExpression", funTypeExpr, parent, funTypeExpr.typeVars);
 		}
 		return parent;
 	}
@@ -118,8 +117,8 @@ class LocallyKnownTypesScopingHelper {
 		if (local === null || local.eIsProxy) {
 			return parent;
 		}
-		return scopesHelper.mapBasedScopeFor(script, parent, local.topLevelTypes.map [ topLevelType |
-			EObjectDescription.create(topLevelType.name, topLevelType) ]);
+		val eoDescrs = local.topLevelTypes.map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
+		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
 	}
 
 	/**
@@ -136,13 +135,12 @@ class LocallyKnownTypesScopingHelper {
 
 		// locally defined types except polyfillType itself
 		val local = script.module
-		val IScope localTypesScope = scopesHelper.mapBasedScopeFor(script, importScope, local.topLevelTypes.filter [
-			it !== polyfillType
-		].map[EObjectDescription.create(name, it)]);
+		val eoDescrs = local.topLevelTypes.filter[it !== polyfillType].map[EObjectDescription.create(name, it)];
+		val IScope localTypesScope = scopeSnapshotHelper.scopeFor("scopeWithLocallyKnownTypesForPolyfillSuperRef", script, importScope, eoDescrs);
 
 		// type variables of polyfill
 		if (polyfillType.generic) {
-			return Scopes.scopeFor(polyfillType.typeVars, localTypesScope)
+			return scopeSnapshotHelper.scopeForEObjects("scopeWithLocallyKnownTypesForPolyfillSuperRef-polyfillType", polyfillType, localTypesScope, polyfillType.typeVars);
 		}
 
 		// non generic:

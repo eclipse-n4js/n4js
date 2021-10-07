@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.scoping.builtin;
 
+import java.util.function.Supplier;
+
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -19,24 +21,25 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class GlobalObjectScopeAccess extends AdapterImpl {
 
-	private final GlobalObjectScope scope;
+	private final Supplier<GlobalObjectScope> scopeSupplier;
+	private GlobalObjectScope scope;
 
 	/**
 	 * Registers an instance of the {@link GlobalObjectScope} for the given context {@link ResourceSet}.
 	 */
-	public static void registerGlobalObjectScope(GlobalObjectScope scope, ResourceSet context) {
+	public static void registerGlobalObjectScope(Supplier<GlobalObjectScope> scopeSupplier, ResourceSet context) {
 		if (EcoreUtil.getAdapter(context.eAdapters(), GlobalObjectScope.class) != null) {
 			throw new IllegalStateException("Attempt to install adapter for GlobalObjectScope twice");
 		}
-		GlobalObjectScopeAccess adapter = new GlobalObjectScopeAccess(scope);
+		GlobalObjectScopeAccess adapter = new GlobalObjectScopeAccess(scopeSupplier);
 		context.eAdapters().add(adapter);
 	}
 
 	/**
 	 * Non-public constructor for the adapter.
 	 */
-	GlobalObjectScopeAccess(GlobalObjectScope scope) {
-		this.scope = scope;
+	GlobalObjectScopeAccess(Supplier<GlobalObjectScope> scopeSupplier) {
+		this.scopeSupplier = scopeSupplier;
 	}
 
 	@Override
@@ -45,6 +48,9 @@ public class GlobalObjectScopeAccess extends AdapterImpl {
 	}
 
 	GlobalObjectScope getScope() {
+		if (scope == null) {
+			scope = scopeSupplier.get();
+		}
 		return scope;
 	}
 

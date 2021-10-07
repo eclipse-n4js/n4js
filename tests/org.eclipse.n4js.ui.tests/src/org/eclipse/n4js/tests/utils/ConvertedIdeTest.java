@@ -42,7 +42,7 @@ import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -108,7 +108,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	 * starts the LSP server, and then imports all projects in the given proband folder. Each sub-folder of the given
 	 * proband folder is assumed to be a project and will be imported.
 	 */
-	protected List<N4JSProjectName> importProband(File probandFolder, Collection<N4JSProjectName> n4jsLibs) {
+	protected List<N4JSPackageName> importProband(File probandFolder, Collection<N4JSPackageName> n4jsLibs) {
 		if (testWorkspaceManager.isCreated()) {
 			throw new IllegalStateException("the test workspace has already been created");
 		}
@@ -116,21 +116,21 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		testWorkspaceManager.createTestOnDisk(); // this will create an empty yarn workspace
 		startAndWaitForLspServer();
 		// import the projects
-		final List<N4JSProjectName> importedProjects = new ArrayList<>();
+		final List<N4JSPackageName> importedProjects = new ArrayList<>();
 		boolean needToCopyLibs = true;
 		for (final File child : probandFolder.listFiles()) {
 			if (child.isDirectory()) {
 				if (child.getName().startsWith(ProjectDescriptionUtils.NPM_SCOPE_PREFIX)) {
 					for (final File grandChild : child.listFiles()) {
 						if (grandChild.isDirectory()) {
-							final N4JSProjectName name = new N4JSProjectName(child.getName(), grandChild.getName());
+							final N4JSPackageName name = new N4JSPackageName(child.getName(), grandChild.getName());
 							importProject(probandFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
 							importedProjects.add(name);
 							needToCopyLibs = false;
 						}
 					}
 				} else {
-					final N4JSProjectName name = new N4JSProjectName(child.getName());
+					final N4JSPackageName name = new N4JSPackageName(child.getName());
 					importProject(probandFolder, name, needToCopyLibs ? n4jsLibs : Collections.emptyList());
 					importedProjects.add(name);
 					needToCopyLibs = false;
@@ -148,8 +148,8 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		return importedProjects;
 	}
 
-	/** Same as {@link #importProject(File, N4JSProjectName, Collection)}, but without installing any n4js libraries. */
-	protected File importProject(File probandsFolder, N4JSProjectName projectName) {
+	/** Same as {@link #importProject(File, N4JSPackageName, Collection)}, but without installing any n4js libraries. */
+	protected File importProject(File probandsFolder, N4JSPackageName projectName) {
 		return importProject(probandsFolder, projectName, Collections.emptyList());
 	}
 
@@ -166,14 +166,14 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 	 *            the name of the test project, must be folder contained in probandsFolder
 	 * @param n4jsLibs
 	 *            names of N4JS libraries to install from the local <code>n4js-libs</code> top-level folder (see
-	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, N4JSProjectName...)}).
+	 *            {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...)}).
 	 * @return the imported project
 	 * @see <a href=
 	 *      "http://stackoverflow.com/questions/12484128/how-do-i-import-an-eclipse-project-from-a-zip-file-programmatically">
 	 *      stackoverflow: from zip</a>
 	 */
-	protected File importProject(File probandsFolder, N4JSProjectName projectName,
-			Collection<N4JSProjectName> n4jsLibs) {
+	protected File importProject(File probandsFolder, N4JSPackageName projectName,
+			Collection<N4JSPackageName> n4jsLibs) {
 
 		if (!testWorkspaceManager.isCreated()) {
 			throw new IllegalStateException("the test workspace is not yet created");
@@ -187,7 +187,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 
 		File projectFolder = projectName.getLocation(getProjectLocation().toPath());
 
-		installN4jsLibs(projectName, n4jsLibs.toArray(new N4JSProjectName[0]));
+		installN4jsLibs(projectName, n4jsLibs.toArray(new N4JSPackageName[0]));
 
 		// copy project into workspace
 		// (need to do that manually to properly handle NPM scopes, because the Eclipse import functionality won't put

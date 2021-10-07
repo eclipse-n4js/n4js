@@ -23,7 +23,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 
 /**
  * Converts the module specifiers of import statements from N4JS to ES6.
@@ -170,13 +170,13 @@ class ModuleSpecifierTransformation extends Transformation {
 		return sb.toString();
 	}
 
-	def protected N4JSProjectName getActualProjectName(N4JSProjectConfigSnapshot project) {
+	def protected N4JSPackageName getActualProjectName(N4JSProjectConfigSnapshot project) {
 		if (project.type === ProjectType.DEFINITION) {
 			val definedProjectName = project.definesPackage;
 			if (definedProjectName !== null && !definedProjectName.isEmpty) {
 				return definedProjectName;
 			}
 		}
-		return new N4JSProjectName(project.packageName);
+		return new N4JSPackageName(project.packageName);
 	}
 }

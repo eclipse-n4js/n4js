@@ -64,7 +64,7 @@ class StaticPolyfillSimpleIdeTest extends AbstractStaticPolyfillBuilderIdeTest {
 
 		assertIssues(
 			"src2/a/b/Poly.n4js" -> #[
-				"(Error, [7:8 - 7:19], Signature of constructor of class K (line 7) does not conform to overridden constructor of class K (line 11): {function(number)} is not a subtype of {function(string)}.)"
+				"(Error, [7:8 - 7:19], Signature of constructor of class K (line 7) does not conform to overridden constructor of class K: {function(number)} is not a subtype of {function(string)}.)"
 			]
 		);
 		assertFalse("generated file should be deleted", generatedFile.exists)

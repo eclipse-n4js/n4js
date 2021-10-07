@@ -23,7 +23,7 @@ import org.eclipse.n4js.packagejson.PackageJsonModificationUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
@@ -90,7 +90,7 @@ public class DtsAfterBuildListener implements AfterBuildListener {
 		sb.append("[");
 		sb.append("\"es2019\", \"es2020\"");
 		for (ProjectReference requiredLibRef : projectConfig.getProjectDescription().getRequiredRuntimeLibraries()) {
-			N4JSProjectName requiredLibName = requiredLibRef.getN4JSProjectName();
+			N4JSPackageName requiredLibName = requiredLibRef.getN4JSProjectName();
 			ImmutableSet<String> dtsLibNames = N4JSGlobals.N4JS_DTS_LIB_CORRESPONDENCE.get(requiredLibName);
 			for (String dtsLibName : dtsLibNames) {
 				sb.append(", \"");

@@ -60,7 +60,7 @@ import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
@@ -116,16 +116,16 @@ public class ProjectCompareHelper {
 			return null;
 		}
 
-		final List<N4JSProjectName> allImplIds = mapping.getAllImplIds();
+		final List<N4JSPackageName> allImplIds = mapping.getAllImplIds();
 		final int implCount = allImplIds.size();
 
-		final ProjectComparison root = new ProjectComparison(allImplIds.toArray(new N4JSProjectName[implCount]));
+		final ProjectComparison root = new ProjectComparison(allImplIds.toArray(new N4JSPackageName[implCount]));
 
-		for (N4JSProjectName currApiId : mapping.getApiIds()) {
+		for (N4JSPackageName currApiId : mapping.getApiIds()) {
 			final N4JSProjectConfigSnapshot currApi = mapping.getApi(currApiId);
 			final N4JSProjectConfigSnapshot[] currImpls = new N4JSProjectConfigSnapshot[implCount];
 			for (int idx = 0; idx < implCount; idx++) {
-				final N4JSProjectName currImplId = allImplIds.get(idx);
+				final N4JSPackageName currImplId = allImplIds.get(idx);
 				currImpls[idx] = mapping.getImpl(currApiId, currImplId);
 			}
 			createEntries(root, currApi, currImpls, resourceSet, index);
@@ -183,10 +183,10 @@ public class ProjectCompareHelper {
 	 * @return implementation ID if applicable - unset if the parameter is not implementing an API or is itself from an
 	 *         API definition.
 	 */
-	public Optional<N4JSProjectName> getImplementationID(TModule apiImplModule) {
+	public Optional<N4JSPackageName> getImplementationID(TModule apiImplModule) {
 		N4JSProjectConfigSnapshot implProject = workspaceAccess.findProjectContaining(apiImplModule);
 		String implId = implProject != null ? implProject.getImplementationId() : null;
-		return implId != null ? Optional.of(new N4JSProjectName(implId)) : Optional.absent();
+		return implId != null ? Optional.of(new N4JSPackageName(implId)) : Optional.absent();
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class ProjectCompareHelper {
 	 * @return data-structure holding the compare-result.
 	 */
 	public ProjectComparisonEntry compareModules(TModule apiImplModule) {
-		Optional<N4JSProjectName> implID = getImplementationID(apiImplModule);
+		Optional<N4JSPackageName> implID = getImplementationID(apiImplModule);
 		if (implID.isPresent()) {
 			return compareModules(apiImplModule, implID.get());
 		}
@@ -214,7 +214,7 @@ public class ProjectCompareHelper {
 	 * @return a comparison between API and implementation with implementationID, or <code>null</code> if no project
 	 *         could be found, the module is not part of an API/IMPL ...
 	 */
-	public ProjectComparisonEntry compareModules(TModule module, N4JSProjectName implementationID) {
+	public ProjectComparisonEntry compareModules(TModule module, N4JSPackageName implementationID) {
 		return compareModules(module, implementationID, false);
 	}
 
@@ -232,7 +232,7 @@ public class ProjectCompareHelper {
 	 * @return a comparison between API and implementation with implementationID, or <code>null</code> if no project
 	 *         could be found, the module is not part of an API/IMPL ...
 	 */
-	public ProjectComparisonEntry compareModules(TModule module, N4JSProjectName implementationID,
+	public ProjectComparisonEntry compareModules(TModule module, N4JSPackageName implementationID,
 			final boolean includePolyfills) {
 
 		Resource resource = module.eResource();
@@ -253,7 +253,7 @@ public class ProjectCompareHelper {
 
 			ApiImplMapping mapping = ApiImplMapping.of(wc);
 
-			implProject = mapping.getImpl(project.getN4JSProjectName(), implementationID);
+			implProject = mapping.getImpl(project.getN4JSPackageName(), implementationID);
 			if (implProject == null) {
 				return null; // no implementation found.
 			}
@@ -293,13 +293,13 @@ public class ProjectCompareHelper {
 		} else {
 			// it is an implementations project
 			// check that the implementation ID matches.
-			if (implementationID.equals(new N4JSProjectName(project.getImplementationId()))) {
+			if (implementationID.equals(new N4JSPackageName(project.getImplementationId()))) {
 				implProject = project;
 				apiImplModule = module;
 
 				List<N4JSProjectConfigSnapshot> apiProjects = new ArrayList<>();
 				for (ProjectReference apiProjectRef : implProject.getProjectDescription().getImplementedProjects()) {
-					N4JSProjectConfigSnapshot currApiProject = wc.findProjectByName(apiProjectRef.getPackageName());
+					N4JSProjectConfigSnapshot currApiProject = wc.findProjectByID(apiProjectRef.getPackageName());
 					if (currApiProject != null) {
 						apiProjects.add(currApiProject);
 					}
@@ -353,8 +353,8 @@ public class ProjectCompareHelper {
 	public ProjectComparisonEntry compareModules(N4JSProjectConfigSnapshot apiProject, TModule api,
 			N4JSProjectConfigSnapshot implProject, TModule impl, final boolean includePolyfills) {
 		String implId = implProject.getImplementationId();
-		N4JSProjectName implIdAsName = implId != null ? new N4JSProjectName(implId) : null;
-		ProjectComparison projectComparison = new ProjectComparison(new N4JSProjectName[] {
+		N4JSPackageName implIdAsName = implId != null ? new N4JSPackageName(implId) : null;
+		ProjectComparison projectComparison = new ProjectComparison(new N4JSPackageName[] {
 				implIdAsName
 		});
 		ProjectComparisonEntry dummyParent = new ProjectComparisonEntry(projectComparison, apiProject, implProject);

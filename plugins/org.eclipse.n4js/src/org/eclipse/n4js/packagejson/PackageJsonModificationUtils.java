@@ -38,7 +38,7 @@ import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
@@ -212,7 +212,7 @@ public class PackageJsonModificationUtils {
 	 *
 	 * @return list of all modified package.json files
 	 */
-	public static List<Path> setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<N4JSProjectName> projectNames,
+	public static List<Path> setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<N4JSPackageName> projectNames,
 			String versionConstraintToSet) throws IOException {
 
 		List<Path> packageJsonFiles = new LinkedList<>();
@@ -252,7 +252,7 @@ public class PackageJsonModificationUtils {
 	 * @return true iff the package.json file was modified
 	 */
 	public static boolean setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
-			Set<N4JSProjectName> projectNames, String versionConstraintToSet) throws IOException {
+			Set<N4JSPackageName> projectNames, String versionConstraintToSet) throws IOException {
 		String packageJsonStr = Files.readString(packageJsonFile);
 		Optional<String> result = setVersionOfDependenciesInPackageJsonString(packageJsonStr, projectNames,
 				versionConstraintToSet);
@@ -274,7 +274,7 @@ public class PackageJsonModificationUtils {
 	 *             in case of parse errors.
 	 */
 	public static Optional<String> setVersionOfDependenciesInPackageJsonString(String packageJson,
-			Set<N4JSProjectName> projectNames, String versionConstraintToSet) {
+			Set<N4JSPackageName> projectNames, String versionConstraintToSet) {
 		List<ElementWithRegion> deps = findDependenciesWithRegion(packageJson);
 		if (deps.isEmpty()) {
 			return Optional.absent();
@@ -282,7 +282,7 @@ public class PackageJsonModificationUtils {
 		StringBuilder result = null;
 		Collections.sort(deps, (dep1, dep2) -> Integer.compare(dep2.offset, dep1.offset));
 		for (ElementWithRegion dep : deps) {
-			if (projectNames.contains(new N4JSProjectName(dep.elementName))) {
+			if (projectNames.contains(new N4JSPackageName(dep.elementName))) {
 				if (result == null) {
 					result = new StringBuilder(packageJson);
 				}

@@ -19,7 +19,7 @@ import java.util.Map;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.Before;
 
 import com.google.common.base.Predicate;
@@ -172,7 +172,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	 * Same as {@link #setupWorkspace(String, Predicate, boolean)}, but accepts one or more names of libraries to
 	 * install instead of a predicate.
 	 */
-	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace, N4JSProjectName... libNames)
+	protected static File setupWorkspace(String testDataSet, boolean createYarnWorkspace, N4JSPackageName... libNames)
 			throws IOException {
 		return setupWorkspace(testDataSet, libName -> Arrays.asList(libNames).contains(libName), createYarnWorkspace);
 	}
@@ -186,13 +186,13 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 	 *
 	 * @returns file indicating the relative path to the copied data set
 	 */
-	protected static File setupWorkspace(String testDataSet, Predicate<N4JSProjectName> n4jsLibrariesPredicate,
+	protected static File setupWorkspace(String testDataSet, Predicate<N4JSPackageName> n4jsLibrariesPredicate,
 			boolean createYarnWorkspace) throws IOException {
 		return setupWorkspace(FIXTURE, testDataSet, n4jsLibrariesPredicate, createYarnWorkspace);
 	}
 
 	private static File setupWorkspace(String testDataRoot, String testDataSet,
-			Predicate<N4JSProjectName> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
+			Predicate<N4JSPackageName> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
 		Path fixture = new File(testDataRoot, testDataSet).toPath();
 		Path root = FileUtils.createTempDirectory(testDataRoot + "_" + testDataSet + "_");
 		root = root.toFile().getCanonicalFile().toPath();

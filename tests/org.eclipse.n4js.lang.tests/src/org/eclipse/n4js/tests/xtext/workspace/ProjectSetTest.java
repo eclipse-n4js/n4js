@@ -54,7 +54,7 @@ public class ProjectSetTest {
 	}
 
 	private N4JSProjectConfigSnapshot createProjectConfig(URI path) {
-		String name = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(path);
+		String name = ProjectDescriptionUtils.deriveN4JSPackageNameFromURI(path);
 		ProjectDescription pd = ProjectDescription.builder()
 				.setPackageName(name)
 				.setType(ProjectType.LIBRARY)
