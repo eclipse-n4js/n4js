@@ -20,6 +20,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -403,14 +404,12 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				addAccessModifierUserData(userData, type.getTypeAccessModifier());
 				addVersionableVersion(userData, type);
 
-				// Add additional user data for descriptions representing a TClass
-				if (type instanceof TClass) {
-					final TClass tClass = (TClass) type;
-					addClassUserData(userData, tClass);
-					if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(tClass.getExportedName())) {
-						userData.put(EXPORT_DEFAULT_KEY, Boolean.toString(true));
-					}
-				} else if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(type.getExportedName())) {
+				// Add additional user data for descriptions representing a TClassifier
+				if (type instanceof TClassifier) {
+					final TClassifier tClassifier = (TClassifier) type;
+					addClassifierUserData(userData, tClassifier);
+				}
+				if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(type.getExportedName())) {
 					userData.put(EXPORT_DEFAULT_KEY, Boolean.toString(true));
 				}
 
@@ -487,42 +486,44 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	}
 
 	/**
-	 * Creates the additional user data map for elements of type {@link TClass}.
+	 * Creates the additional user data map for elements of type {@link TClassifier}.
 	 *
 	 * @param userData
 	 *            Map that will be populated with data.
-	 * @param tClass
-	 *            The {@link TClass} element to create user data for.
+	 * @param tClassifier
+	 *            The {@link TClassifier} element to create user data for.
 	 * @returns An immutable user-data map
 	 */
-	private void addClassUserData(final Map<String, String> userData, TClass tClass) {
-		if (tClass.isExported() != EXPORTED_CLASS_DEFAULT) {
-			userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClass.isExported()));
+	private void addClassifierUserData(final Map<String, String> userData, TClassifier tClassifier) {
+		if (tClassifier.isExported() != EXPORTED_CLASS_DEFAULT) {
+			userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClassifier.isExported()));
 		}
-		if (tClass.isAbstract() != ABSTRACT_DEFAULT) {
-			userData.put(ABSTRACT_KEY, Boolean.toString(tClass.isAbstract()));
+		if (tClassifier.isAbstract() != ABSTRACT_DEFAULT) {
+			userData.put(ABSTRACT_KEY, Boolean.toString(tClassifier.isAbstract()));
 		}
-		if (tClass.isFinal() != FINAL_DEFAULT) {
-			userData.put(FINAL_KEY, Boolean.toString(tClass.isFinal()));
+		if (tClassifier.isFinal() != FINAL_DEFAULT) {
+			userData.put(FINAL_KEY, Boolean.toString(tClassifier.isFinal()));
 		}
-		if (tClass.isPolyfill() != POLYFILL_DEFAULT) {
-			userData.put(POLYFILL_KEY, Boolean.toString(tClass.isPolyfill()));
+		if (tClassifier.isPolyfill() != POLYFILL_DEFAULT) {
+			userData.put(POLYFILL_KEY, Boolean.toString(tClassifier.isPolyfill()));
 		}
-		if (tClass.isStaticPolyfill() != STATIC_POLYFILL_DEFAULT) {
-			userData.put(STATIC_POLYFILL_KEY, Boolean.toString(tClass.isStaticPolyfill()));
+		if (tClassifier.isStaticPolyfill() != STATIC_POLYFILL_DEFAULT) {
+			userData.put(STATIC_POLYFILL_KEY, Boolean.toString(tClassifier.isStaticPolyfill()));
 		}
 
-		boolean hasTestMethod = false;
-		for (TMember member : tClass.getOwnedMembers()) {
-			if (member instanceof TMethod) {
-				if (AnnotationDefinition.TEST_METHOD.hasAnnotation(member)) {
-					hasTestMethod = true;
-					break;
+		if (tClassifier instanceof TClass) {
+			boolean hasTestMethod = false;
+			for (TMember member : tClassifier.getOwnedMembers()) {
+				if (member instanceof TMethod) {
+					if (AnnotationDefinition.TEST_METHOD.hasAnnotation(member)) {
+						hasTestMethod = true;
+						break;
+					}
 				}
 			}
-		}
-		if (hasTestMethod != TEST_CLASS_DEFAULT) {
-			userData.put(TEST_CLASS_KEY, Boolean.toString(hasTestMethod));
+			if (hasTestMethod != TEST_CLASS_DEFAULT) {
+				userData.put(TEST_CLASS_KEY, Boolean.toString(hasTestMethod));
+			}
 		}
 	}
 }

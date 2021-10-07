@@ -163,7 +163,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				}
 
 				// Normal Polyfill
-				if( script.hasPolyfill && ! module.isStaticPolyfillModule ) {
+				if( hasNonStaticPolyfill(script) && ! module.isStaticPolyfillModule ) {
 					// IDE-1735 in case of normal Polyfill this can't be mixed with static polyfills.
 					return;
 				}
@@ -211,10 +211,10 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 
 
 	/** @returns true if the script contains a toplevel-type annotated with a {@code @Polyfill}. */
-	private def boolean hasPolyfill(Script script) {
+	private def boolean hasNonStaticPolyfill(Script script) {
 		for (se:script.scriptElements){
 			switch (se) {
-				AnnotableElement : { if( se.isPolyfill  ) return true;}
+				AnnotableElement : { if( se.isNonStaticPolyfill  ) return true;}
 			}
 		}
 		return false;

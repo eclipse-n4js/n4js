@@ -732,11 +732,11 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected List<ParameterizedTypeRef> getPolyfills(Type filledType) {
-				if (includePolyfills && filledType instanceof TClass) {
+				if (includePolyfills && filledType instanceof TClassifier) {
 					TClassifier tClassifier = (TClassifier) filledType;
 					if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
 					) {
-						QualifiedName qn = PolyfillUtils.getPolyfillFQN(tClassifier, qualifiedNameProvider);
+						QualifiedName qn = PolyfillUtils.getNonStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
 
@@ -746,10 +746,10 @@ public class ContainerTypesHelper {
 									polyFill -> TypeUtils.createTypeRef(polyFill)).collect(Collectors.toList());
 						}
 					}
-					if (isContainedInStaticPolyfillAware(filledType) // static-polyfilled work as well
+					if (filledType instanceof TClass // only classes can be statically polyfilled
+							&& isContainedInStaticPolyfillAware(filledType) // and only types in "aware" modules
 					) {
-						QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN(tClassifier,
-								qualifiedNameProvider);
+						QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
 
@@ -940,11 +940,11 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
-			protected boolean doProcessConsumedRoles(TClass object) {
+			protected boolean doProcessImplementedInterfaces(TClass object) {
 				if (object == bottomType) {
 					source = MIXEDIN;
 				}
-				return super.doProcessConsumedRoles(object);
+				return super.doProcessImplementedInterfaces(object);
 			}
 		}
 

@@ -2140,7 +2140,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTN4Classifier_Dynamizable() {
+	public EAttribute getTN4Classifier_DeclaredNonStaticPolyfill() {
 		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2150,8 +2150,28 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTN4Classifier_TypingStrategy() {
+	public EAttribute getTN4Classifier_Dynamizable() {
 		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTN4Classifier_TypingStrategy() {
+		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTN4Classifier__IsPolyfill() {
+		return tn4ClassifierEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -2210,7 +2230,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_DeclaredPolyfill() {
+	public EAttribute getTClass_DeclaredStaticPolyfill() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -2220,7 +2240,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_DeclaredStaticPolyfill() {
+	public EAttribute getTClass_Observable() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -2230,18 +2250,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_Observable() {
-		return (EAttribute)tClassEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getTClass_SuperClassRef() {
-		return (EReference)tClassEClass.getEStructuralFeatures().get(7);
+		return (EReference)tClassEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2251,7 +2261,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EReference getTClass_ImplementedInterfaceRefs() {
-		return (EReference)tClassEClass.getEStructuralFeatures().get(8);
+		return (EReference)tClassEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -3726,15 +3736,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(arrayLikeEClass, ARRAY_LIKE___GET_ELEMENT_TYPE);
 
 		tn4ClassifierEClass = createEClass(TN4_CLASSIFIER);
+		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL);
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__DYNAMIZABLE);
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__TYPING_STRATEGY);
+		createEOperation(tn4ClassifierEClass, TN4_CLASSIFIER___IS_POLYFILL);
 
 		tClassEClass = createEClass(TCLASS);
 		createEAttribute(tClassEClass, TCLASS__EXTERNAL);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_ABSTRACT);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_N4JS);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_FINAL);
-		createEAttribute(tClassEClass, TCLASS__DECLARED_POLYFILL);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_STATIC_POLYFILL);
 		createEAttribute(tClassEClass, TCLASS__OBSERVABLE);
 		createEReference(tClassEClass, TCLASS__SUPER_CLASS_REF);
@@ -4282,15 +4293,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getArrayLike__GetElementType(), theTypeRefsPackage.getTypeRef(), "getElementType", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tn4ClassifierEClass, TN4Classifier.class, "TN4Classifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTN4Classifier_DeclaredNonStaticPolyfill(), theEcorePackage.getEBoolean(), "declaredNonStaticPolyfill", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTN4Classifier_Dynamizable(), theEcorePackage.getEBoolean(), "dynamizable", "true", 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTN4Classifier_TypingStrategy(), this.getTypingStrategy(), "typingStrategy", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTN4Classifier__IsPolyfill(), theEcorePackage.getEBoolean(), "isPolyfill", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tClassEClass, TClass.class, "TClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTClass_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredAbstract(), theEcorePackage.getEBoolean(), "declaredAbstract", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredN4JS(), theEcorePackage.getEBoolean(), "declaredN4JS", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredFinal(), theEcorePackage.getEBoolean(), "declaredFinal", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTClass_DeclaredPolyfill(), theEcorePackage.getEBoolean(), "declaredPolyfill", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredStaticPolyfill(), theEcorePackage.getEBoolean(), "declaredStaticPolyfill", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_Observable(), theEcorePackage.getEBoolean(), "observable", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTClass_SuperClassRef(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superClassRef", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

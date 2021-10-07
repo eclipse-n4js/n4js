@@ -15,8 +15,6 @@ import static org.eclipse.n4js.AnnotationDefinition.GLOBAL;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillModule;
-import static org.eclipse.n4js.utils.N4JSLanguageUtils.isPolyfill;
-import static org.eclipse.n4js.utils.N4JSLanguageUtils.isStaticPolyfill;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_GLOBALS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_MODIFIER;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER;
@@ -67,6 +65,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
@@ -121,8 +120,8 @@ public class PolyfillValidatorFragment {
 	 * Class) 156: Polyfill
 	 */
 	public boolean holdsPolyfill(N4JSClassValidator validator, N4ClassDeclaration n4Class) {
-		boolean isStaticPolyFill = isStaticPolyfill(n4Class);
-		if (isStaticPolyFill || isPolyfill(n4Class)) {
+		boolean isStaticPolyFill = N4JSLanguageUtils.isStaticPolyfill(n4Class);
+		if (isStaticPolyFill || N4JSLanguageUtils.isNonStaticPolyfill(n4Class)) { // FIXME GH-2224
 			PolyfillValidationState state = new PolyfillValidationState();
 			state.host = validator;
 			state.n4Class = n4Class;
@@ -379,7 +378,7 @@ public class PolyfillValidatorFragment {
 				.getResourceDescription(res), index);
 		// Iterable over all exported Polyfills
 		Iterable<IEObjectDescription> iterEObj = container.getExportedObjects(TypesPackage.Literals.TCLASSIFIER,
-				PolyfillUtils.getPolyfillFQN(state.filledType, qualifiedNameProvider), false);
+				PolyfillUtils.getNonStaticPolyfillFQN(state.filledType, qualifiedNameProvider), false);
 
 		// collection of involved TModules for each Member.
 		ListMultimap<TMember, TModule> clashProviders = LinkedListMultimap.create();

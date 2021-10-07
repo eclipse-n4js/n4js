@@ -205,7 +205,7 @@ public final class AnnotationDefinition {
 	 * 12.4. Polyfill Definitions
 	 */
 	public final static AnnotationDefinition POLYFILL = define("Polyfill")
-			.targets(EXPORT_DECLARATION, EXPORTABLE_ELEMENT)
+			.targets(N4_CLASSIFIER_DECLARATION)
 			.end();
 
 	/**

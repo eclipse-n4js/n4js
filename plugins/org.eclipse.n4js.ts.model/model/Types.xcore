@@ -1055,6 +1055,8 @@ abstract class ArrayLike {
 }
 
 class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike, TMigratable {
+
+	boolean declaredNonStaticPolyfill
 	/*
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */
@@ -1065,6 +1067,13 @@ class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike, TMigr
 	 * The latter is only available on use site.
 	 */
 	TypingStrategy typingStrategy
+
+	/**
+	 * Returns true iff the class is a polyfill.
+	 */
+	op boolean isPolyfill() {
+		return declaredNonStaticPolyfill;
+	}
 }
 
 class TClass extends TN4Classifier {
@@ -1072,7 +1081,6 @@ class TClass extends TN4Classifier {
 	boolean declaredAbstract
 	boolean declaredN4JS
 	boolean declaredFinal
-	boolean declaredPolyfill
 	boolean declaredStaticPolyfill
 	boolean observable
 	contains ParameterizedTypeRef superClassRef
@@ -1109,7 +1117,7 @@ class TClass extends TN4Classifier {
 	 * Returns true if the class actually is a polyfill or a static-polyfill. (c.f. {@link TClass#isStaticPolyfill()})
 	 */
 	op boolean isPolyfill() {
-		return declaredPolyfill;
+		return declaredNonStaticPolyfill || declaredStaticPolyfill;
 	}
 
 	/**

@@ -36,7 +36,8 @@ public class PolyfillUtils {
 	 * Returns the matching (internal) name of the polyfill matching the given classifier. There are no polyfills of
 	 * polyfills, so the returned name is independent from the polyfill flag of the given classifier.
 	 */
-	public static QualifiedName getPolyfillFQN(TClassifier tClassifier, IQualifiedNameProvider qualifiedNameProvider) {
+	public static QualifiedName getNonStaticPolyfillFQN(TClassifier tClassifier,
+			IQualifiedNameProvider qualifiedNameProvider) {
 		QualifiedName prefix = qualifiedNameProvider.getFullyQualifiedName(EcoreUtil.getRootContainer(tClassifier));
 		prefix = QualifiedNameUtils.append(prefix, POLYFILL_SEGMENT);
 		return QualifiedNameUtils.append(prefix, tClassifier.getName());

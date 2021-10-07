@@ -27,7 +27,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredAbstract <em>Declared Abstract</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredN4JS <em>Declared N4JS</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredFinal <em>Declared Final</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredPolyfill <em>Declared Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isDeclaredStaticPolyfill <em>Declared Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#isObservable <em>Observable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TClass#getSuperClassRef <em>Super Class Ref</em>}</li>
@@ -126,28 +125,6 @@ public interface TClass extends TN4Classifier {
 	 * @generated
 	 */
 	void setDeclaredFinal(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Declared Polyfill</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Polyfill</em>' attribute.
-	 * @see #setDeclaredPolyfill(boolean)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTClass_DeclaredPolyfill()
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean isDeclaredPolyfill();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredPolyfill <em>Declared Polyfill</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Polyfill</em>' attribute.
-	 * @see #isDeclaredPolyfill()
-	 * @generated
-	 */
-	void setDeclaredPolyfill(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared Static Polyfill</b></em>' attribute.
