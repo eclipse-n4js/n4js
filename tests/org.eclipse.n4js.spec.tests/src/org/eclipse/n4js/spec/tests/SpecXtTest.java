@@ -32,6 +32,6 @@ public class SpecXtTest {
 
 	@XtFolder
 	static String getFolder() {
-		return "xt-tests/Ch11_04__Polyfill_Definitions";
+		return "xt-tests";
 	}
 }

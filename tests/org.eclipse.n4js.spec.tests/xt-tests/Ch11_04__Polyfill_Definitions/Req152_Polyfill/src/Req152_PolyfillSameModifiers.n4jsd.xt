@@ -65,6 +65,6 @@ export external public class SomeFinalClass extends SomeFinalClass {
 /* XPECT errors ---
 "Polyfill IArguments cannot be declared @Internal public, must be defined public just as the filled interface." at "IArguments"
 --- */
-export @Internal external public interface IArguments extends IArguments {
+export @Internal external public interface ~IArguments extends IArguments {
 	additionalMethod();
 }
