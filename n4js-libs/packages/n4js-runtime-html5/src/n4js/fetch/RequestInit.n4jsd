@@ -12,7 +12,7 @@
 
 import {URLSearchParams} from "URLSearchParams";
 
-@Polyfill export external public abstract class RequestInit extends RequestInit {
+@Polyfill export external public abstract class ~RequestInit extends RequestInit {
     @Override
     public get body?(): string|Blob|FormData|URLSearchParams;
 }

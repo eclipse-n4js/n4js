@@ -37,6 +37,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
@@ -60,12 +61,14 @@ import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
@@ -77,9 +80,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
-
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 
 /**
  */
@@ -158,7 +158,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 				if (N4Scheme.isFromResourceWithN4Scheme(exportableElement)) {
 					return; // this validation does not apply to built-in types (i.e. builtin_js.n4jsd, etc.)
 				}
-				if (exportableElement.isPolyfill) {
+				if (N4JSLanguageUtils.isNonStaticPolyfill(exportableElement)) {
 					return; // of course it is possible to fill predefined types
 				}
 				val name = exportableElement.declaredName;
@@ -325,8 +325,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									return;
 								} else {
 									if (!( // do not create issues for polyfills conflicting with imports, as they might fill them
-										dupeEO instanceof N4ClassDeclaration && baseEO instanceof ImportSpecifier &&
-										(dupeEO as N4ClassDeclaration).isPolyfill
+										dupeEO instanceof N4ClassifierDeclaration && baseEO instanceof ImportSpecifier &&
+										N4JSLanguageUtils.isNonStaticPolyfill(dupeEO as N4ClassDeclaration)
 										// TODO IDE-1735 does this check need to be activated for static polyfills?
 									)) {
 										addIssue(

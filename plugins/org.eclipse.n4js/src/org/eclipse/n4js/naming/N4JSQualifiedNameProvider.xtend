@@ -140,7 +140,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 	private def QualifiedName fqnTypeDeclaration(N4TypeDeclaration typeDecl) {
 		var prefix = typeDecl.rootContainer.fullyQualifiedName;
-		if ( typeDecl.isPolyfill || typeDecl.isStaticPolyfill )
+		if ( typeDecl.isNonStaticPolyfill || typeDecl.isStaticPolyfill )
 		{
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}

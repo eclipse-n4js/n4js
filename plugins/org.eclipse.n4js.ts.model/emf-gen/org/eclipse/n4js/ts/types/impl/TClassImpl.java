@@ -35,6 +35,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -50,7 +51,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredAbstract <em>Declared Abstract</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredN4JS <em>Declared N4JS</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredFinal <em>Declared Final</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredPolyfill <em>Declared Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredStaticPolyfill <em>Declared Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isObservable <em>Observable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#getSuperClassRef <em>Super Class Ref</em>}</li>
@@ -139,26 +139,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * @ordered
 	 */
 	protected boolean declaredFinal = DECLARED_FINAL_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isDeclaredPolyfill() <em>Declared Polyfill</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isDeclaredPolyfill()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean DECLARED_POLYFILL_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isDeclaredPolyfill() <em>Declared Polyfill</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isDeclaredPolyfill()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean declaredPolyfill = DECLARED_POLYFILL_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isDeclaredStaticPolyfill() <em>Declared Static Polyfill</em>}' attribute.
@@ -337,29 +317,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 * @generated
 	 */
 	@Override
-	public boolean isDeclaredPolyfill() {
-		return declaredPolyfill;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDeclaredPolyfill(boolean newDeclaredPolyfill) {
-		boolean oldDeclaredPolyfill = declaredPolyfill;
-		declaredPolyfill = newDeclaredPolyfill;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TCLASS__DECLARED_POLYFILL, oldDeclaredPolyfill, declaredPolyfill));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isDeclaredStaticPolyfill() {
 		return declaredStaticPolyfill;
 	}
@@ -525,7 +482,7 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	 */
 	@Override
 	public boolean isPolyfill() {
-		return this.isDeclaredPolyfill();
+		return (this.isDeclaredNonStaticPolyfill() || this.isDeclaredStaticPolyfill());
 	}
 
 	/**
@@ -580,8 +537,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				return isDeclaredN4JS();
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				return isDeclaredFinal();
-			case TypesPackage.TCLASS__DECLARED_POLYFILL:
-				return isDeclaredPolyfill();
 			case TypesPackage.TCLASS__DECLARED_STATIC_POLYFILL:
 				return isDeclaredStaticPolyfill();
 			case TypesPackage.TCLASS__OBSERVABLE:
@@ -614,9 +569,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				return;
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				setDeclaredFinal((Boolean)newValue);
-				return;
-			case TypesPackage.TCLASS__DECLARED_POLYFILL:
-				setDeclaredPolyfill((Boolean)newValue);
 				return;
 			case TypesPackage.TCLASS__DECLARED_STATIC_POLYFILL:
 				setDeclaredStaticPolyfill((Boolean)newValue);
@@ -655,9 +607,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				setDeclaredFinal(DECLARED_FINAL_EDEFAULT);
 				return;
-			case TypesPackage.TCLASS__DECLARED_POLYFILL:
-				setDeclaredPolyfill(DECLARED_POLYFILL_EDEFAULT);
-				return;
 			case TypesPackage.TCLASS__DECLARED_STATIC_POLYFILL:
 				setDeclaredStaticPolyfill(DECLARED_STATIC_POLYFILL_EDEFAULT);
 				return;
@@ -690,8 +639,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				return declaredN4JS != DECLARED_N4JS_EDEFAULT;
 			case TypesPackage.TCLASS__DECLARED_FINAL:
 				return declaredFinal != DECLARED_FINAL_EDEFAULT;
-			case TypesPackage.TCLASS__DECLARED_POLYFILL:
-				return declaredPolyfill != DECLARED_POLYFILL_EDEFAULT;
 			case TypesPackage.TCLASS__DECLARED_STATIC_POLYFILL:
 				return declaredStaticPolyfill != DECLARED_STATIC_POLYFILL_EDEFAULT;
 			case TypesPackage.TCLASS__OBSERVABLE:
@@ -725,6 +672,12 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 				case TypesPackage.TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS: return TypesPackage.TCLASS___GET_SUPER_CLASSIFIER_REFS;
 				case TypesPackage.TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS: return TypesPackage.TCLASS___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS;
 				case TypesPackage.TCLASSIFIER___IS_FINAL: return TypesPackage.TCLASS___IS_FINAL;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == TN4Classifier.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TN4_CLASSIFIER___IS_POLYFILL: return TypesPackage.TCLASS___IS_POLYFILL;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -775,8 +728,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 		result.append(declaredN4JS);
 		result.append(", declaredFinal: ");
 		result.append(declaredFinal);
-		result.append(", declaredPolyfill: ");
-		result.append(declaredPolyfill);
 		result.append(", declaredStaticPolyfill: ");
 		result.append(declaredStaticPolyfill);
 		result.append(", observable: ");

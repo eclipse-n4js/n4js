@@ -9,14 +9,19 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-
 // Test needs to be run in project configured as ProjectType: runtimeEnvironment (i.e. need package.json in this or parent folder)
 
 @@ProvidedByRuntime
 @@Global
 
 @Polyfill
-export external public class F<T> extends F<T> {
+export external public class Cls<T> extends Cls<T> {
+	additionalMethod() : T;
+	additionalMethod2() : T;
+}
+
+@Polyfill
+export external public interface Ifc<T> extends Ifc<T> {
 	additionalMethod() : T;
 	additionalMethod2() : T;
 }

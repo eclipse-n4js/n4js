@@ -30,8 +30,16 @@
 @@Global
 
 @Polyfill
-// XPEC noerrors --> "T equals T"
-export external public class F<T> extends F<T> {
+// XPECT noerrors --> "T equals T"
+export external public class Cls<T> extends Cls<T> {
+
+	// XPECT noerrors --> "and we can use T"
+	genMethod(t : T) : T;
+}
+
+@Polyfill
+// XPECT noerrors --> "T equals T"
+export external public interface Ifc<T> extends Ifc<T> {
 
 	// XPECT noerrors --> "and we can use T"
 	genMethod(t : T) : T;

@@ -45,6 +45,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
@@ -59,12 +60,10 @@ import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
 
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-
 /**
  * superfluous properties in {@code @Spec} constructor.
  */
-class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
+class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements PolyfillValidatorHost {
 
 	@Inject private N4JSTypeSystem ts;
 
@@ -201,7 +200,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			if (field !== null) {
 				val containingClassifier = field.containingType;
 				if (containingClassifier instanceof TInterface) {
-					if (containingClassifier.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation) {
+					if (N4JSLanguageUtils.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(containingClassifier)) {
 						val message = getMessageForCLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION(field.name, containingClassifier.name);
 						addIssue(message, property.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION);
 					}
@@ -271,7 +270,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				// (got a super class; now validate it ...)
 
 				// super class must not be final (except in case of polyfills)
-				if (superType.final && !(n4Class.isPolyfill || n4Class.isStaticPolyfill)) {
+				if (superType.final && !(N4JSLanguageUtils.isNonStaticPolyfill(n4Class) || N4JSLanguageUtils.isStaticPolyfill(n4Class))) {
 					val message = getMessageForCLF_EXTEND_FINAL(superType.name);
 
 					val superTypeAstElement = superType.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement,

@@ -52,6 +52,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getDeclaredElementType <em>Declared Element Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getMigrations <em>Migrations</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDynamizable <em>Dynamizable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getTypingStrategy <em>Typing Strategy</em>}</li>
  * </ul>
@@ -118,6 +119,26 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @ordered
 	 */
 	protected EList<TMigration> migrations;
+
+	/**
+	 * The default value of the '{@link #isDeclaredNonStaticPolyfill() <em>Declared Non Static Polyfill</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredNonStaticPolyfill()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DECLARED_NON_STATIC_POLYFILL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDeclaredNonStaticPolyfill() <em>Declared Non Static Polyfill</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredNonStaticPolyfill()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean declaredNonStaticPolyfill = DECLARED_NON_STATIC_POLYFILL_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isDynamizable() <em>Dynamizable</em>}' attribute.
@@ -288,6 +309,29 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredNonStaticPolyfill() {
+		return declaredNonStaticPolyfill;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredNonStaticPolyfill(boolean newDeclaredNonStaticPolyfill) {
+		boolean oldDeclaredNonStaticPolyfill = declaredNonStaticPolyfill;
+		declaredNonStaticPolyfill = newDeclaredNonStaticPolyfill;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL, oldDeclaredNonStaticPolyfill, declaredNonStaticPolyfill));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDynamizable() {
 		return dynamizable;
 	}
@@ -326,6 +370,16 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		typingStrategy = newTypingStrategy == null ? TYPING_STRATEGY_EDEFAULT : newTypingStrategy;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY, oldTypingStrategy, typingStrategy));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isPolyfill() {
+		return this.isDeclaredNonStaticPolyfill();
 	}
 
 	/**
@@ -389,6 +443,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return getDeclaredElementType();
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				return getMigrations();
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
+				return isDeclaredNonStaticPolyfill();
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				return isDynamizable();
 			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
@@ -418,6 +474,9 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				getMigrations().clear();
 				getMigrations().addAll((Collection<? extends TMigration>)newValue);
+				return;
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
+				setDeclaredNonStaticPolyfill((Boolean)newValue);
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				setDynamizable((Boolean)newValue);
@@ -449,6 +508,9 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				getMigrations().clear();
 				return;
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
+				setDeclaredNonStaticPolyfill(DECLARED_NON_STATIC_POLYFILL_EDEFAULT);
+				return;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				setDynamizable(DYNAMIZABLE_EDEFAULT);
 				return;
@@ -475,6 +537,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return declaredElementType != null;
 			case TypesPackage.TN4_CLASSIFIER__MIGRATIONS:
 				return migrations != null && !migrations.isEmpty();
+			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
+				return declaredNonStaticPolyfill != DECLARED_NON_STATIC_POLYFILL_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
 				return dynamizable != DYNAMIZABLE_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__TYPING_STRATEGY:
@@ -551,6 +615,7 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TN4_CLASSIFIER___IS_PROVIDED_BY_RUNTIME;
+				case TypesPackage.TYPE___IS_POLYFILL: return TypesPackage.TN4_CLASSIFIER___IS_POLYFILL;
 				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -585,6 +650,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.TN4_CLASSIFIER___IS_POLYFILL:
+				return isPolyfill();
 			case TypesPackage.TN4_CLASSIFIER___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER:
@@ -607,6 +674,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		result.append(declaredTypeAccessModifier);
 		result.append(", declaredProvidedByRuntime: ");
 		result.append(declaredProvidedByRuntime);
+		result.append(", declaredNonStaticPolyfill: ");
+		result.append(declaredNonStaticPolyfill);
 		result.append(", dynamizable: ");
 		result.append(dynamizable);
 		result.append(", typingStrategy: ");
