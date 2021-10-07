@@ -63,7 +63,7 @@ import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExte
 /**
  * superfluous properties in {@code @Spec} constructor.
  */
-class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
+class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements PolyfillValidatorHost {
 
 	@Inject private N4JSTypeSystem ts;
 

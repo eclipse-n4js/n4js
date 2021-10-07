@@ -31,7 +31,13 @@
 export public interface ~I {}
 
 @Polyfill
-// XPECT errors --> "Polyfill Object must not implement any interfaces or consume any interfaces." at "Object"
+// XPECT errors --> "Polyfill Object must not implement any interfaces." at "Object"
 export external public class Object extends Object implements I {
+	additionalMethod();
+}
+
+@Polyfill
+// XPECT errors --> "Polyfill IArguments must not extend any additional interfaces." at "IArguments"
+export external public interface ~IArguments extends IArguments, I {
 	additionalMethod();
 }

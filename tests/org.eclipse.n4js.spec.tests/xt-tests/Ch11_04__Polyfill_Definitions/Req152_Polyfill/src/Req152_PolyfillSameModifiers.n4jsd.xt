@@ -14,7 +14,7 @@
 	 Workspace {
 		Project "PolyfillTest" {
 			Folder "src" {
-				File "Other.n4jsd" { from="./Req152_PolyfillClassModifiers_Other.n4jsd" }
+				File "Other.n4jsd" { from="./Req152_PolyfillSameModifiers_Other.n4jsd" }
 				ThisFile {}
 			}
 			File "package.json" { from="../package.json" }
@@ -28,6 +28,9 @@
 
 @@ProvidedByRuntime
 @@Global
+
+
+// for classes:
 
 @Polyfill
 // XPECT errors --> "Polyfill Object cannot be declared abstract, must be defined non-abstract just as the filled class." at "Object"
@@ -52,5 +55,16 @@ export @Final external public class Error extends Error {
 @Polyfill
 // XPECT errors --> "Polyfill SomeFinalClass cannot be declared non-@Final, must be defined @Final just as the filled class." at "SomeFinalClass"
 export external public class SomeFinalClass extends SomeFinalClass {
+	additionalMethod();
+}
+
+
+// for interfaces:
+
+@Polyfill
+/* XPECT errors ---
+"Polyfill IArguments cannot be declared @Internal public, must be defined public just as the filled interface." at "IArguments"
+--- */
+export @Internal external public interface IArguments extends IArguments {
 	additionalMethod();
 }

@@ -48,3 +48,8 @@ export external public class String extends String {
 @Polyfill export external public class MathShim extends Math {
 	timezone();
 }
+
+// XPECT errors --> "Name of polyfill IArgumentsShim must equal name of filled interface IArguments." at "IArgumentsShim"
+@Polyfill export external public interface IArgumentsShim extends IArguments {
+	timezone();
+}

@@ -183,4 +183,18 @@ class TypesKeywordProvider {
 		}
 	}
 
+	def dispatch String keyword(TypingStrategy strategy) {
+		return switch (strategy) {
+			case DEFAULT: "default"
+			case NOMINAL: "nominal"
+			case STRUCTURAL: "structural"
+			case STRUCTURAL_FIELDS: "structural fields"
+			case STRUCTURAL_READ_ONLY_FIELDS: "structural read-only fields"
+			case STRUCTURAL_WRITE_ONLY_FIELDS: "structural write-only fields"
+			case STRUCTURAL_FIELD_INITIALIZER: "structural field initializer"
+			case EMPTY: "structural empty"
+			default:
+				throw new IllegalStateException("unsupported typing strategy: " + strategy)
+		};
+	}
 }

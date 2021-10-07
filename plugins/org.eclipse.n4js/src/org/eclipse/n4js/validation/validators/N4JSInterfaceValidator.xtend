@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.AnnotationDefinition
@@ -30,7 +31,10 @@ import static extension org.eclipse.n4js.validation.validators.StaticPolyfillVal
 
 /**
  */
-class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
+class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements PolyfillValidatorHost {
+
+	@Inject
+	private PolyfillValidatorFragment polyfillValidatorFragment;
 
 	/**
 	 * NEEDED
@@ -48,16 +52,19 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 	def checkN4InterfaceDeclaration(N4InterfaceDeclaration n4Interface) {
 
 		// wrong parsed
-		if (n4Interface.definedType === null) {
-			return
+		if (!(n4Interface.definedType instanceof TInterface)) {
+			return;
 		}
 
-		holdsNoCyclicInheritance(n4Interface)
+		if (polyfillValidatorFragment.holdsPolyfill(this, n4Interface)) {
 
-		n4Interface.internalCheckExtendedInterfaces
-		n4Interface.internalCheckNotFinal
-		n4Interface.internalCheckNoFieldInitizializer
-		n4Interface.internalCheckNotInStaticPolyfillModule(this) // IDE-1735
+			holdsNoCyclicInheritance(n4Interface)
+
+			n4Interface.internalCheckExtendedInterfaces
+			n4Interface.internalCheckNotFinal
+			n4Interface.internalCheckNoFieldInitizializer
+			n4Interface.internalCheckNotInStaticPolyfillModule(this) // IDE-1735
+		}
 	}
 
 	// publish this method.
