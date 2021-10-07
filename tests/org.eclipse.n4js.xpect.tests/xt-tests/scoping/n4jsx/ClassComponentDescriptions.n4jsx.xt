@@ -57,7 +57,7 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 		AsyncGenerator, AsyncIterable, AsyncIterator, Boolean, Date, Error, EvalError,
 		Function, Generator, IArguments, Infinity, Iterable, Iterable2, Iterable3, Iterable4,
 		Iterable5, Iterable6, Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON,
-		LowerComponent, Math, MigrationContext, MigrationController, MyComponent, N4Accessor,
+		LowerComponent, Math, MyComponent, N4Accessor,
 		N4Annotation, N4ApiNotImplementedError, N4Class, N4Classifier, N4DataField, N4Element,
 		N4Enum, N4EnumType, N4Interface, N4Member, N4Method, N4NamedElement, N4Object,
 		N4Provider, N4NumberBasedEnum, N4StringBasedEnum, N4Type, NaN, Number, Object, Promise,
