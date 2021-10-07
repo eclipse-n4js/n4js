@@ -437,6 +437,7 @@ const MEMBER_REPLACEMENTS = new Map<string,Map<string,string>>([
 		// required due to odd return types on TypeScript side
 		[ "Function#bind", "public bind(thisArg: any, ...args: any): {function(... args: any): any}" ] as [string,string], // return type in .d.ts is 'any' instead of a function
 		[ "Object#valueOf", "public valueOf(): any" ] as [string,string], // return type in .d.ts is 'Object' causing errors when overridden to return a primitve type
+		[ "Object#getPrototypeOf", "public static getPrototypeOf(o: any): Object;" ] as [string,string], // return type in .d.ts is 'any' instead of 'Object'
 		// required due to stricter type checking in N4JS (type of searchElement must be 'any' instead of 'T' on N4JS side)
 		[ "Array#indexOf", "public indexOf(searchElement: any, fromIndex: number = ): number;" ] as [string,string],
 		[ "Array#lastIndexOf", "public lastIndexOf(searchElement: any, fromIndex: number = ): number;" ] as [string,string],

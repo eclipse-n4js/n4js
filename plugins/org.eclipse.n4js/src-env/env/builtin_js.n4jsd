@@ -20,7 +20,7 @@ export external public class Object {
 	public propertyIsEnumerable(v: PropertyKey): boolean;
 	public constructor(value: any = );
 	(...args: any): Object;
-	public static getPrototypeOf(o: any): any;
+	public static getPrototypeOf(o: any): Object;
 	public static getOwnPropertyDescriptor(o: any, p: PropertyKey): PropertyDescriptor;
 	public static getOwnPropertyNames(o: any): Array<string>;
 	public static create(proto: Object, props: Object = undefined): Object;
