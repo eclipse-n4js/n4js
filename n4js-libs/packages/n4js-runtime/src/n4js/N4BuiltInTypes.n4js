@@ -14,8 +14,8 @@
 //
 // This file is only responsible for creating the output code for the below types,
 // which will be used during runtime. The below types will not be directly made
-// available to N4JS code at compile time (type information, etc.); instead, files
-// builtin_n4.n4jsd and builtin_n4idl.n4jsd declare the below types as built-in types.
+// available to N4JS code at compile time (type information, etc.); instead, file
+// builtin_n4.n4jsd declares the below types as built-in types.
 //
 // This has the following consequences:
 // 1) neither "@@Global" nor "export" with an accessibility higher than "project" must be used in this file

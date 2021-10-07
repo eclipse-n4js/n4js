@@ -525,10 +525,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		new SerializerPatchModule().configure(binder);
 	}
 
-	//// N4IDL specific bindings
-
-	/**
-	 */
+	/**  */
 	public Class<? extends ImportedElementsMap.Provider> bindImportedElementsMapProvider() {
 		return ImportedElementsMap.Provider.class;
 	}

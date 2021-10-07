@@ -32,7 +32,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 /**
- * Utility methods for our custom Xtext languages (N4JS, N4JSX, N4IDL, ...) that are <em>language independent</em>, i.e.
+ * Utility methods for our custom Xtext languages (N4JS, N4JSX, ...) that are <em>language independent</em>, i.e.
  * applicable without change to all those languages.
  * <p>
  * Note that there are language-specific variants of this class, e.g. {@code N4JSLanguageUtils}.
@@ -153,7 +153,7 @@ public class N4LanguageUtils {
 	 * instance is used for the given context URI.
 	 *
 	 * @param uri
-	 *            the URI of an Xtext language resource, e.g. an N4JS, N4JSX, or N4IDL resource.
+	 *            the URI of an Xtext language resource, e.g. an N4JS or N4JSX resource.
 	 * @param serviceType
 	 *            the type of the service to obtain.
 	 * @return the service instance or {@link Optional#empty()} if no Xtext resource service provide was found for the

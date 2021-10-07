@@ -62,8 +62,6 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	/***/
 	public static final String BUILTIN_N4_N4JSD = "builtin_n4.n4jsd";
 	/***/
-	public static final String BUILTIN_N4IDL_N4JSD = "builtin_n4idl.n4jsd";
-	/***/
 	public static final String CONSOLE_N4JSD = "console.n4jsd";
 
 	/**
@@ -73,7 +71,6 @@ public final class BuiltInTypeScope extends EnumerableScope {
 			PRIMITIVES_N4JSD,
 			BUILTIN_JS_N4JSD,
 			BUILTIN_N4_N4JSD,
-			BUILTIN_N4IDL_N4JSD,
 			CONSOLE_N4JSD
 	};
 
@@ -250,11 +247,6 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * The built-in name {@code N4Provider}.
 	 */
 	public static final QualifiedName QN_N4PROVIDER = QualifiedName.create("N4Provider");
-
-	/**
-	 * The built-in name {@code MigrationContext}.
-	 */
-	public static final QualifiedName QN_MIGRATION_CONTEXT = QualifiedName.create("MigrationContext");
 
 	// Built-in classes related to reflection:
 	private static final QualifiedName QN_N4ELEMENT = QualifiedName.create("N4Element");
@@ -593,13 +585,6 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public final TInterface getN4ProviderType() {
 		return getEObjectOrProxy(QN_N4PROVIDER);
-	}
-
-	/**
-	 * Returns the built-in N4IDL type "MigrationContext".
-	 */
-	public final TInterface getMigrationContextType() {
-		return getEObjectOrProxy(QN_MIGRATION_CONTEXT);
 	}
 
 	/**
