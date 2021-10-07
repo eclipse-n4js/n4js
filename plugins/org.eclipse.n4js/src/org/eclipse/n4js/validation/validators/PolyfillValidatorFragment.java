@@ -15,6 +15,7 @@ import static org.eclipse.n4js.AnnotationDefinition.GLOBAL;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillModule;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_GLOBALS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_MODIFIER;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER;
@@ -29,6 +30,7 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_STATIC_DIFFERE
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_GLOBALS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER;
@@ -144,7 +146,7 @@ public class PolyfillValidatorFragment {
 			}
 
 			state.superClassifierNode = IterableExtensions.head(n4Classifier.getSuperClassifierRefs());
-			if (!holdsExpliciteExtends(state)) {
+			if (!holdsExplicitExtends(state)) {
 				return false;
 			}
 			// now we know that state.superClassifierNode !== null
@@ -160,7 +162,8 @@ public class PolyfillValidatorFragment {
 			// Different rules for static/non-static polyfills:
 			if (!isStaticPolyFill) {
 				// non-static polyfill case
-				if (!(holdPolyfillName(state) //
+				if (!(holdPolyfillClassifierKind(state) //
+						&& holdPolyfillName(state) //
 						&& holdsProvidedByRuntime(state) //
 						&& holdsNoImplementsOrConsumes(state) //
 						&& holdsEqualModifiers(state) //
@@ -171,7 +174,8 @@ public class PolyfillValidatorFragment {
 				}
 			} else {
 				// static polyfill case, IDE-1735
-				if (!(holdPolyfillName(state) //
+				if (!(holdPolyfillClassifierKind(state)
+						&& holdPolyfillName(state) //
 						// && holdsProvidedByRuntime(state) //
 						// && holdsNoImplementsOrConsumes(state) //
 						&& holdsFilledClassIsStaticPolyfillAware(state) //
@@ -231,11 +235,23 @@ public class PolyfillValidatorFragment {
 	/**
 	 * Constraint (Polyfill Class) 156.1
 	 */
-	private boolean holdsExpliciteExtends(PolyfillValidationState state) {
+	private boolean holdsExplicitExtends(PolyfillValidationState state) {
 		final TypeReferenceNode<ParameterizedTypeRef> filledTypeRef = state.superClassifierNode;
 		if (filledTypeRef == null) { // (Polyfill Class) 156.1
 			final String msg = getMessageForCLF_POLYFILL_EXTEND_MISSING(state.name);
 			addIssue(state, msg, CLF_POLYFILL_EXTEND_MISSING);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean holdPolyfillClassifierKind(PolyfillValidationState state) {
+		if (state.polyType.eClass() != state.filledType.eClass()) {
+			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND(
+					keywordProvider.keyword(state.filledType), state.name,
+					keywordProvider.keywordWithIndefiniteArticle(state.filledType),
+					keywordProvider.keywordWithIndefiniteArticle(state.polyType));
+			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND);
 			return false;
 		}
 		return true;
