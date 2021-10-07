@@ -71,7 +71,7 @@ class WrongTypeAnnotationsTest extends AbstractParserTest {
 		val varStmt = elements.head as VariableStatement
 		val varDecl = varStmt.varDeclsOrBindings.head as VariableDeclaration
 		assertEquals('fun', varDecl.name)
-		assertNull(varDecl.expression)
+		assertNotNull(varDecl.expression)
 		val exprStmt = elements.last as ExpressionStatement
 		val identifierRef = exprStmt.expression as IdentifierRef
 		// this is really bad error recovery
