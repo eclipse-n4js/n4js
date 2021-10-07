@@ -21,7 +21,7 @@
 // 1) neither "@@Global" nor "export" with an accessibility higher than "project" must be used in this file
 //   (to ensure only the implementations, not the types declared below, are available to ordinary N4JS code),
 // 2) no API documentation should be included in this file (instead, it should be
-//    placed in files builtin_n4.n4jsd / builtin_n4idl.n4jsd),
+//    placed in file builtin_n4.n4jsd),
 // 3) at the end of this file, all global types need to be explicitly added to the
 //    global object, in order to make them available globally at runtime (this won't
 //    happen automatically).

@@ -13,7 +13,6 @@ package org.eclipse.n4js.ts.types;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.util.Variance;
 
@@ -35,7 +34,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
  * @model
  * @generated
  */
-public interface Type extends TExportableElement, TAnnotableElement, Versionable {
+public interface Type extends TExportableElement, TAnnotableElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

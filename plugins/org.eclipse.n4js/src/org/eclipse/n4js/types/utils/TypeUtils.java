@@ -61,7 +61,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -1432,9 +1431,7 @@ public class TypeUtils {
 		if (source instanceof FunctionTypeRef) {
 			throw new IllegalArgumentException("FunctionTypeRefs do not have a corresponding structural variant");
 		}
-		EClass ptrsEClass = source instanceof VersionedParameterizedTypeRef
-				? TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural()
-				: TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
+		EClass ptrsEClass = TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
 		return (ParameterizedTypeRefStructural) copy(source, false, false, ptrsEClass);
 	}
 

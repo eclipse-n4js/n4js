@@ -568,7 +568,7 @@ enum MemberAccessModifier {
  * </p>
  */
 //TODO why not abstract (doesn't work when it is abstract, but why?)
-class Type extends TExportableElement, TAnnotableElement, org.eclipse.n4js.ts.typeRefs.Versionable {
+class Type extends TExportableElement, TAnnotableElement {
 
 	/** Returns true iff this type is a type alias. */
 	op boolean isAlias() {

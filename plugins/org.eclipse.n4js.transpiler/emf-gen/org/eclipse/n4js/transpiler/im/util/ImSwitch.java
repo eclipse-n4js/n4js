@@ -50,13 +50,9 @@ import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
-import org.eclipse.n4js.n4JS.VersionedElement;
-
 import org.eclipse.n4js.transpiler.im.*;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
-
 import org.eclipse.n4js.ts.types.TypableElement;
 
 /**
@@ -195,7 +191,6 @@ public class ImSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseReferencingElementExpression_IM(identifierRef_IM);
 				if (result == null) result = casePrimaryExpression(identifierRef_IM);
 				if (result == null) result = caseStrictModeRelevant(identifierRef_IM);
-				if (result == null) result = caseVersionable(identifierRef_IM);
 				if (result == null) result = caseReferencingElement_IM(identifierRef_IM);
 				if (result == null) result = caseExpression(identifierRef_IM);
 				if (result == null) result = caseTypableElement(identifierRef_IM);
@@ -306,7 +301,6 @@ public class ImSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseNamedElement(delegatingMethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingMethodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(delegatingMethodDeclaration);
-				if (result == null) result = caseVersionedElement(delegatingMethodDeclaration);
 				if (result == null) result = caseAnnotableElement(delegatingMethodDeclaration);
 				if (result == null) result = caseTypableElement(delegatingMethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(delegatingMethodDeclaration);
@@ -736,21 +730,6 @@ public class ImSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Versionable</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Versionable</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseVersionable(Versionable object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Identifier Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1077,21 +1056,6 @@ public class ImSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseTypeDefiningElement(TypeDefiningElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Versioned Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Versioned Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseVersionedElement(VersionedElement object) {
 		return null;
 	}
 

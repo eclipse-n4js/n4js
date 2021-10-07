@@ -37,7 +37,6 @@ import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MultiImportedElementsMap
 import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 import org.eclipse.n4js.scoping.utils.UberParentScope
-import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TDynamicElement
@@ -368,11 +367,7 @@ class ImportedElementsScopingHelper {
 	 */
 	protected def boolean isAmbiguous(IEObjectDescription existing, IdentifiableElement element) {
 		// make sure ambiguity is only detected in case of the same imported version of a type
-		if (existing.getEObjectOrProxy instanceof Versionable && element instanceof Versionable) {
-			return (existing.getEObjectOrProxy as Versionable).version == (element as Versionable).version;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	private def IEObjectDescription putOrError(ImportedElementsMap result,
@@ -381,7 +376,7 @@ class ImportedElementsScopingHelper {
 		var IEObjectDescription ret = null;
 		val existing = result.getElements(importedName)
 
-		if (!existing.empty && existing.findFirst[isAmbiguous(it, element)] !== null) {
+		if (!existing.empty && existing.get(0) !== null) {
 			if (issueCode !== null) {
 				switch existing {
 					AmbiguousImportDescription: {

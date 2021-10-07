@@ -3763,7 +3763,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tFunctionEClass.getESuperTypes().add(this.getType());
 		typeEClass.getESuperTypes().add(this.getTExportableElement());
 		typeEClass.getESuperTypes().add(this.getTAnnotableElement());
-		typeEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
 		genericTypeEClass.getESuperTypes().add(this.getType());
 		containerTypeEClass.getESuperTypes().add(this.getGenericType());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getType());

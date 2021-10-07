@@ -198,8 +198,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: return createJSXSpreadAttribute();
 			case N4JSPackage.JSX_ELEMENT: return createJSXElement();
 			case N4JSPackage.JSX_FRAGMENT: return createJSXFragment();
-			case N4JSPackage.VERSIONED_IDENTIFIER_REF: return createVersionedIdentifierRef();
-			case N4JSPackage.MIGRATION_CONTEXT_VARIABLE: return createMigrationContextVariable();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -1713,28 +1711,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public JSXFragment createJSXFragment() {
 		JSXFragmentImpl jsxFragment = new JSXFragmentImpl();
 		return jsxFragment;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedIdentifierRef createVersionedIdentifierRef() {
-		VersionedIdentifierRefImpl versionedIdentifierRef = new VersionedIdentifierRefImpl();
-		return versionedIdentifierRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public MigrationContextVariable createMigrationContextVariable() {
-		MigrationContextVariableImpl migrationContextVariable = new MigrationContextVariableImpl();
-		return migrationContextVariable;
 	}
 
 	/**

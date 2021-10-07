@@ -30,7 +30,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNume
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNumericOperand;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isSymbol;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableTypeRef;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.migrationContextTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberTypeRef;
@@ -88,7 +87,6 @@ import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
-import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
@@ -1405,11 +1403,6 @@ import com.google.inject.Inject;
 				return unknown();
 			}
 			return ref(classifierReactElement);
-		}
-
-		@Override
-		public TypeRef caseMigrationContextVariable(MigrationContextVariable mcv) {
-			return migrationContextTypeRef(G);
 		}
 	}
 
