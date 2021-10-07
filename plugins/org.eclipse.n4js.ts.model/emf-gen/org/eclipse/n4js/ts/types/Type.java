@@ -66,8 +66,10 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns true if type actually is a polyfill or a static-polyfill. The flag is usually set via annotations and false for most types (only TClass can actually be
-	 * declared to be a polyfill).  (c.f. {@link Type#isStaticPolyfill()})
+	 * Returns true iff type is a (static or non-static) polyfill.
+	 * <p>
+	 * The flag is usually set via annotations and false for most types (only TClassifier can actually be declared to be a polyfill).
+	 * (c.f. {@link Type#isStaticPolyfill()})
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -79,8 +81,10 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns true if type actually is a static polyfill. The flag is usually set via annotations and false for most types (only TClass can actually be
-	 * declared to be a static polyfill).  (c.f. {@link Type#isPolyfill()})
+	 * Returns true iff type is a <em>static</em> polyfill (returns false for non-static polyfills).
+	 * <p>
+	 * The flag is usually set via annotations and false for most types (only TClass can actually be declared to be a static polyfill).
+	 * (c.f. {@link Type#isPolyfill()})
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

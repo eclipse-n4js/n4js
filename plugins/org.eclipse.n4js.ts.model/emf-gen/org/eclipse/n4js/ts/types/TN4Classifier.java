@@ -111,10 +111,6 @@ public interface TN4Classifier extends TClassifier, AccessibleTypeElement, Array
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Returns true iff the class is a polyfill.
-	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
