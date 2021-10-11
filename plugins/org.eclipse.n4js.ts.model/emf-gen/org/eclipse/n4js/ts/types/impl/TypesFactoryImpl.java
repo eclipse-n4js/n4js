@@ -93,7 +93,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.NULL_TYPE: return createNullType();
 			case TypesPackage.VOID_TYPE: return createVoidType();
 			case TypesPackage.TSTRUCTURAL_TYPE: return createTStructuralType();
-			case TypesPackage.TMIGRATION: return createTMigration();
 			case TypesPackage.TN4_CLASSIFIER: return createTN4Classifier();
 			case TypesPackage.TCLASS: return createTClass();
 			case TypesPackage.TINTERFACE: return createTInterface();
@@ -422,17 +421,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TStructuralType createTStructuralType() {
 		TStructuralTypeImpl tStructuralType = new TStructuralTypeImpl();
 		return tStructuralType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TMigration createTMigration() {
-		TMigrationImpl tMigration = new TMigrationImpl();
-		return tMigration;
 	}
 
 	/**

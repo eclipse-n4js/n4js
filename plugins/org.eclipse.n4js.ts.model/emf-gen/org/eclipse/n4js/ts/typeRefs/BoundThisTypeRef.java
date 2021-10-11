@@ -164,15 +164,4 @@ public interface BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 	 */
 	EList<TStructMember> getStructuralMembers();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Override VersionedElement#getVersion() to return the version of the actual this type reference.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	int getVersion();
-
 } // BoundThisTypeRef

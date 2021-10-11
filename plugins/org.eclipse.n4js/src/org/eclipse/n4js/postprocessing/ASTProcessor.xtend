@@ -16,13 +16,11 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.FormalParameter
-import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
@@ -33,7 +31,6 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
@@ -43,15 +40,11 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.n4idl.versioning.MigrationUtils
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.ts.types.TMigratable
-import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
@@ -92,8 +85,6 @@ public class ASTProcessor extends AbstractProcessor {
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
 	@Inject
 	private RuntimeDependencyProcessor runtimeDependencyProcessor;
-	@Inject
-	private JavaScriptVariantHelper variantHelper;
 
 	/**
 	 * Entry point for processing of the entire AST of the given resource.
@@ -428,12 +419,6 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 
 		runtimeDependencyProcessor.recordRuntimeReferencesInCache(node, cache);
-
-		// register migrations with their source types
-		if (node instanceof FunctionDeclaration && 
-			AnnotationDefinition.MIGRATION.hasAnnotation(node as FunctionDeclaration)) {
-			this.registerMigrationWithTypes((node as FunctionDeclaration).definedFunction as TMigration)
-		}
 	}
 
 
@@ -463,18 +448,6 @@ public class ASTProcessor extends AbstractProcessor {
 			ForStatement: {
 				// process expression before varDeclOrBindings
 				obj.eContents.bringToFront(obj.expression)
-			}
-			ParameterizedCallExpression case MigrationUtils.isMigrateCall(obj): {
-				// link and type migration arguments first 
-				obj.eContents.bringToFront(obj.arguments)
-			}
-			Script case variantHelper.allowVersionedTypes(obj): {
-				// For variants that support versioned types and therefore migrations,
-				// process the migrations first, since information about signatures of 
-				// all migrations will be required when processing migration calls.
-				obj.eContents.bringToFront(obj.scriptElements
-					.filter(FunctionDeclaration)
-					.filter[MigrationUtils.isMigrationDefinition(it)])
 			}
 			default: {
 				// standard case: order is insignificant (so we simply use the order provided by EMF)
@@ -528,31 +501,6 @@ public class ASTProcessor extends AbstractProcessor {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Registers the given {@link TMigration} with the corresponding
-	 * principal argument.
-	 */
-	def private void registerMigrationWithTypes(TMigration migration) {
-		// skip invalid migrations
-		if (null === migration) {
-			return;
-		}
-		// ignore (do not register) generic migrations for now
-		if (!migration.typeVars.empty) {
-			return;
-		}
-		
-		if (null !== migration.principalArgumentType) {
-			registerMigrationWithType(migration, migration.principalArgumentType);
-		}
-	}
-
-	def private void registerMigrationWithType(TMigration migration, TMigratable migratable) {
-		EcoreUtilN4.doWithDeliver(false, [
-					migratable.migrations += migration 
-		], migratable)
 	}
 
 	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject targetNode,

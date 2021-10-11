@@ -38,7 +38,6 @@ Iterable2 - builtin_n4.n4jsd, Iterable3 - builtin_n4.n4jsd, Iterable4 - builtin_
 Iterable6 - builtin_n4.n4jsd, Iterable7 - builtin_n4.n4jsd, Iterable8 - builtin_n4.n4jsd, Iterable9 - builtin_n4.n4jsd,
 Iterator - builtin_js.n4jsd, IteratorEntry - builtin_js.n4jsd,
 JSON - builtin_js.n4jsd, Math - builtin_js.n4jsd,
-MigrationContext - builtin_n4idl.n4jsd, MigrationController - builtin_n4idl.n4jsd,
 N4Accessor - builtin_n4.n4jsd,
 N4Annotation - builtin_n4.n4jsd, N4Class - builtin_n4.n4jsd, N4Classifier - builtin_n4.n4jsd,
 N4DataField - builtin_n4.n4jsd, N4Element - builtin_n4.n4jsd, N4Enum - builtin_n4.n4jsd,

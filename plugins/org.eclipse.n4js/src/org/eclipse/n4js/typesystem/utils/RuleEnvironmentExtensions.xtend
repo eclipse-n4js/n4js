@@ -647,16 +647,6 @@ class RuleEnvironmentExtensions {
 		G.errorType.createTypeRef
 	}
 
-	/* Returns built-in type {@code MigrationContext} */
-	public def static migrationContextType(RuleEnvironment G) {
-		G.getPredefinedTypes().builtInTypeScope.migrationContextType;
-	}
-	
-	/* Returns newly created reference to built-in type {@code MigrationContext} */
-	public def static migrationContextTypeRef(RuleEnvironment G) {
-		G.migrationContextType.createTypeRef;
-	}
-
 	/* Returns built-in type {@code Iterator<T>} */
 	public def static iteratorType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.iteratorType

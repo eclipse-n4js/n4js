@@ -11,7 +11,7 @@
 package org.eclipse.n4js.scoping.imports;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap;
+import org.eclipse.n4js.scoping.utils.MultiImportedElementsMap;
 import org.eclipse.n4js.validation.JavaScriptVariant;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.naming.QualifiedName;

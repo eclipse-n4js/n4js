@@ -40,9 +40,6 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.Variable;
-import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
-import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
-import org.eclipse.n4js.n4idl.versioning.VersionHelper;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -53,7 +50,6 @@ import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
-import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -61,7 +57,6 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
@@ -90,8 +85,6 @@ public class PreparationStep {
 					ImPackage.eINSTANCE.getIdentifierRef_IM())
 			.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
 					ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
-			.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
-					ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
 			.build();
 
 	private static final EReference[] REWIRED_REFERENCES = {
@@ -105,9 +98,6 @@ public class PreparationStep {
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
-
-	@Inject
-	private VersionHelper versionHelper;
 
 	/**
 	 * Creates and initializes the transpiler state. In particular, this will create the intermediate model as a copy of
@@ -255,16 +245,6 @@ public class PreparationStep {
 		}
 
 		@Override
-		protected EClass getTarget(EObject eObject) {
-			// special-handling for named import specifiers of versioned types
-			if (eObject instanceof NamedImportSpecifier &&
-					N4IDLTranspilerUtils.isVersionedImportSpecifier((NamedImportSpecifier) eObject)) {
-				return ImPackage.eINSTANCE.getVersionedNamedImportSpecifier_IM();
-			}
-			return super.getTarget(eObject);
-		}
-
-		@Override
 		protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
 			if (eReference == N4JSPackage.Literals.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST) {
 				// should always be 'null' in the intermediate model
@@ -339,16 +319,7 @@ public class PreparationStep {
 		 */
 		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
 			TExportableElement importedElement = getActualImportedElement(namedImportSpecifier);
-
-			if (importedElement instanceof Type) {
-				// add all versions of the type to the importedElements map
-				for (Type typeVersion : versionHelper.findTypeVersions((Type) importedElement)) {
-					importedElements.put(typeVersion, namedImportSpecifier);
-				}
-			} else {
-				// for non-type imports, there is no versions
-				importedElements.put(importedElement, namedImportSpecifier);
-			}
+			importedElements.put(importedElement, namedImportSpecifier);
 		}
 
 		/**
@@ -380,8 +351,6 @@ public class PreparationStep {
 					// name of a JSX element, e.g. the "div" in something like: <div prop='value'></div>
 					String tagName = ((IdentifierRef) eObject).getIdAsText();
 					((IdentifierRef_IM) copyEObject).setIdAsText(tagName);
-				} else if (MigrationUtils.isMigrateCall(eObject.eContainer())) {
-					// unresolved migrate-calls can still be transpiled
 				} else {
 					ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
 					LineAndColumn pos = node != null ? NodeModelUtils.getLineAndColumn(node, node.getOffset()) : null;
@@ -406,7 +375,7 @@ public class PreparationStep {
 			if (e != null)
 				return e;
 			if (create) {
-				String versionedName = N4IDLTranspilerUtils.getVersionedInternalName(elem);
+				String versionedName = elem.getName();
 				return createSymbolTableEntry(versionedName, elem);
 			}
 			return null;
@@ -443,21 +412,6 @@ public class PreparationStep {
 					String alias = ((NamedImportSpecifier) impSpec).getAlias();
 					if (null != alias) {
 						entry.setName(alias); // exported name is visible via operation entry#exportedName())
-					}
-					if (N4IDLTranspilerUtils.refersToVersionedType(entry)) {
-						// In this block, we may now assume that 'entry' is actually of type {@link
-						// VersionedNamedImportSpecifier_IM} (cf. {@link #getTarget(EObject)}).
-
-						// Add referenced type version to the list of imported type versions of the import specifier
-						// copy. This is only executed once per type version, as the returned STE of this method is
-						// cached.
-						((VersionedNamedImportSpecifier_IM) copy).getImportedTypeVersions().add(entry);
-
-						if (null != alias) {
-							// Make sure to compute the versioned internal name based on the alias
-							entry.setName(N4IDLTranspilerUtils.getVersionedInternalAlias(entry.getName(),
-									(TVersionable) entry.getOriginalTarget()));
-						}
 					}
 				}
 			}

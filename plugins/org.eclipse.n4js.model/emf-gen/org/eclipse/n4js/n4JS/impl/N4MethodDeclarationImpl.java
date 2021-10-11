@@ -16,8 +16,6 @@ import com.google.common.collect.Iterators;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.math.BigDecimal;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -63,7 +61,6 @@ import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
-import org.eclipse.n4js.n4JS.VersionedElement;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -92,7 +89,6 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getBody <em>Body</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#get_lok <em>lok</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDefinedType <em>Defined Type</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#isGenerator <em>Generator</em>}</li>
@@ -133,26 +129,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @ordered
 	 */
 	protected Type definedType;
-
-	/**
-	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final BigDecimal DECLARED_VERSION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected BigDecimal declaredVersion = DECLARED_VERSION_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getFpars() <em>Fpars</em>}' containment reference list.
@@ -381,29 +357,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		definedType = newDefinedType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE, oldDefinedType, definedType));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public BigDecimal getDeclaredVersion() {
-		return declaredVersion;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
-		BigDecimal oldDeclaredVersion = declaredVersion;
-		declaredVersion = newDeclaredVersion;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION, oldDeclaredVersion, declaredVersion));
 	}
 
 	/**
@@ -812,35 +765,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	@Override
-	public boolean hasDeclaredVersion() {
-		BigDecimal _declaredVersion = this.getDeclaredVersion();
-		return (_declaredVersion != null);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getDeclaredVersionOrZero() {
-		int _xifexpression = (int) 0;
-		boolean _hasDeclaredVersion = this.hasDeclaredVersion();
-		if (_hasDeclaredVersion) {
-			_xifexpression = this.getDeclaredVersion().intValue();
-		}
-		else {
-			_xifexpression = 0;
-		}
-		return _xifexpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public LocalArgumentsVariable getLocalArgumentsVariable() {
 		LocalArgumentsVariable __lok = this.get_lok();
 		boolean _tripleEquals = (__lok == null);
@@ -929,8 +853,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				if (resolve) return getDefinedType();
 				return basicGetDefinedType();
-			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION:
-				return getDeclaredVersion();
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return getFpars();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -964,9 +886,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)newValue);
-				return;
-			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION:
-				setDeclaredVersion((BigDecimal)newValue);
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
@@ -1009,9 +928,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)null);
 				return;
-			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION:
-				setDeclaredVersion(DECLARED_VERSION_EDEFAULT);
-				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
 				return;
@@ -1048,8 +964,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return _lok != null;
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				return definedType != null;
-			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION:
-				return DECLARED_VERSION_EDEFAULT == null ? declaredVersion != null : !DECLARED_VERSION_EDEFAULT.equals(declaredVersion);
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -1093,12 +1007,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		if (baseClass == TypeDefiningElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE: return N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE;
-				default: return -1;
-			}
-		}
-		if (baseClass == VersionedElement.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION: return N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION;
 				default: return -1;
 			}
 		}
@@ -1158,12 +1066,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		if (baseClass == TypeDefiningElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE: return N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE;
-				default: return -1;
-			}
-		}
-		if (baseClass == VersionedElement.class) {
-			switch (baseFeatureID) {
-				case N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION: return N4JSPackage.N4_METHOD_DECLARATION__DECLARED_VERSION;
 				default: return -1;
 			}
 		}
@@ -1246,13 +1148,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				default: return -1;
 			}
 		}
-		if (baseClass == VersionedElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.VERSIONED_ELEMENT___HAS_DECLARED_VERSION: return N4JSPackage.N4_METHOD_DECLARATION___HAS_DECLARED_VERSION;
-				case N4JSPackage.VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO: return N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_VERSION_OR_ZERO;
-				default: return -1;
-			}
-		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.FUNCTION_DEFINITION___IS_RETURN_VALUE_OPTIONAL: return N4JSPackage.N4_METHOD_DECLARATION___IS_RETURN_VALUE_OPTIONAL;
@@ -1323,10 +1218,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return isAsync();
 			case N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION:
 				return getDefinedFunction();
-			case N4JSPackage.N4_METHOD_DECLARATION___HAS_DECLARED_VERSION:
-				return hasDeclaredVersion();
-			case N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_VERSION_OR_ZERO:
-				return getDeclaredVersionOrZero();
 			case N4JSPackage.N4_METHOD_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE:
 				return getLocalArgumentsVariable();
 			case N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR:
@@ -1347,9 +1238,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredVersion: ");
-		result.append(declaredVersion);
-		result.append(", generator: ");
+		result.append(" (generator: ");
 		result.append(generator);
 		result.append(", declaredAsync: ");
 		result.append(declaredAsync);

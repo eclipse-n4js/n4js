@@ -31,9 +31,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.StrictModeRelevant;
 
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
-
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 
@@ -296,16 +293,6 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 	 * @generated
 	 */
 	@Override
-	public int getVersion() {
-		return 0;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.IDENTIFIER_REF__STRICT_MODE:
@@ -403,11 +390,6 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 				default: return -1;
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -421,11 +403,6 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 		if (baseClass == StrictModeRelevant.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.STRICT_MODE_RELEVANT__STRICT_MODE: return N4JSPackage.IDENTIFIER_REF__STRICT_MODE;
-				default: return -1;
-			}
-		}
-		if (baseClass == Versionable.class) {
-			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
@@ -450,12 +427,6 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 				default: return -1;
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return N4JSPackage.IDENTIFIER_REF___GET_VERSION;
-				default: return -1;
-			}
-		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -471,8 +442,6 @@ public class IdentifierRefImpl extends PrimaryExpressionImpl implements Identifi
 				return getTargetElement();
 			case N4JSPackage.IDENTIFIER_REF___IS_VALID_SIMPLE_ASSIGNMENT_TARGET:
 				return isValidSimpleAssignmentTarget();
-			case N4JSPackage.IDENTIFIER_REF___GET_VERSION:
-				return getVersion();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

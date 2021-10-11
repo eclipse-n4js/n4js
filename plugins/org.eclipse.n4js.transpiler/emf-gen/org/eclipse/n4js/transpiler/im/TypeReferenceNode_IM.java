@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -22,7 +23,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  *
  * <!-- begin-model-doc -->
  * SymbolTable-aware replacement for {@link TypeReferenceNode}.
- * Original properties {@link TypeReferenceNode.typeRefInAST} and {@link TypeReferenceNode.cachedProcessedTypeRef} are always {@code null}.
+ * Original properties {@link TypeReferenceNode#getTypeRefInAST()} and {@link TypeReferenceNode#getCachedProcessedTypeRef()} are always {@code null}.
  * <!-- end-model-doc -->
  *
  * <p>

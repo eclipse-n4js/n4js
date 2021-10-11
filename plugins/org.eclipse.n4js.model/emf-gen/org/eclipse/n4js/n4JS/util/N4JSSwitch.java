@@ -18,8 +18,6 @@ import org.eclipse.emf.ecore.util.Switch;
 import org.eclipse.n4js.n4JS.*;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
-import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -309,7 +307,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				T1 result = caseFunctionDefinition(functionDefinition);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDefinition);
 				if (result == null) result = caseTypeDefiningElement(functionDefinition);
-				if (result == null) result = caseVersionedElement(functionDefinition);
 				if (result == null) result = caseAnnotableElement(functionDefinition);
 				if (result == null) result = caseVariableEnvironmentElement(functionDefinition);
 				if (result == null) result = caseThisArgProvider(functionDefinition);
@@ -345,7 +342,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseControlFlowElement(functionDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDeclaration);
 				if (result == null) result = caseTypeDefiningElement(functionDeclaration);
-				if (result == null) result = caseVersionedElement(functionDeclaration);
 				if (result == null) result = caseAnnotableElement(functionDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(functionDeclaration);
 				if (result == null) result = caseThisArgProvider(functionDeclaration);
@@ -362,7 +358,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseNamedElement(functionExpression);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionExpression);
 				if (result == null) result = caseTypeDefiningElement(functionExpression);
-				if (result == null) result = caseVersionedElement(functionExpression);
 				if (result == null) result = caseExpression(functionExpression);
 				if (result == null) result = caseAnnotableElement(functionExpression);
 				if (result == null) result = caseVariableEnvironmentElement(functionExpression);
@@ -382,7 +377,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseNamedElement(arrowFunction);
 				if (result == null) result = caseFunctionOrFieldAccessor(arrowFunction);
 				if (result == null) result = caseTypeDefiningElement(arrowFunction);
-				if (result == null) result = caseVersionedElement(arrowFunction);
 				if (result == null) result = caseExpression(arrowFunction);
 				if (result == null) result = caseAnnotableElement(arrowFunction);
 				if (result == null) result = caseVariableEnvironmentElement(arrowFunction);
@@ -761,7 +755,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				T1 result = caseIdentifierRef(identifierRef);
 				if (result == null) result = casePrimaryExpression(identifierRef);
 				if (result == null) result = caseStrictModeRelevant(identifierRef);
-				if (result == null) result = caseVersionable(identifierRef);
 				if (result == null) result = caseExpression(identifierRef);
 				if (result == null) result = caseTypableElement(identifierRef);
 				if (result == null) result = caseControlFlowElement(identifierRef);
@@ -923,7 +916,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = casePropertyNameOwner(propertyMethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(propertyMethodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(propertyMethodDeclaration);
-				if (result == null) result = caseVersionedElement(propertyMethodDeclaration);
 				if (result == null) result = caseAnnotableElement(propertyMethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(propertyMethodDeclaration);
 				if (result == null) result = caseNamedElement(propertyMethodDeclaration);
@@ -1556,8 +1548,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				T1 result = caseN4ClassDeclaration(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassDefinition(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4ClassDeclaration);
-				if (result == null) result = caseVersionable(n4ClassDeclaration);
-				if (result == null) result = caseVersionedElement(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassifierDefinition(n4ClassDeclaration);
 				if (result == null) result = caseThisTarget(n4ClassDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4ClassDeclaration);
@@ -1596,8 +1586,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				N4InterfaceDeclaration n4InterfaceDeclaration = (N4InterfaceDeclaration)theEObject;
 				T1 result = caseN4InterfaceDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4InterfaceDeclaration);
-				if (result == null) result = caseVersionable(n4InterfaceDeclaration);
-				if (result == null) result = caseVersionedElement(n4InterfaceDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseN4ClassifierDefinition(n4InterfaceDeclaration);
 				if (result == null) result = caseGenericDeclaration(n4InterfaceDeclaration);
@@ -1618,8 +1606,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				N4EnumDeclaration n4EnumDeclaration = (N4EnumDeclaration)theEObject;
 				T1 result = caseN4EnumDeclaration(n4EnumDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4EnumDeclaration);
-				if (result == null) result = caseVersionable(n4EnumDeclaration);
-				if (result == null) result = caseVersionedElement(n4EnumDeclaration);
 				if (result == null) result = caseN4TypeDefinition(n4EnumDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(n4EnumDeclaration);
 				if (result == null) result = caseModifiableElement(n4EnumDeclaration);
@@ -1722,7 +1708,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = casePropertyNameOwner(methodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(methodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(methodDeclaration);
-				if (result == null) result = caseVersionedElement(methodDeclaration);
 				if (result == null) result = caseNamedElement(methodDeclaration);
 				if (result == null) result = caseAnnotableElement(methodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(methodDeclaration);
@@ -1744,7 +1729,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseNamedElement(n4MethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(n4MethodDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4MethodDeclaration);
-				if (result == null) result = caseVersionedElement(n4MethodDeclaration);
 				if (result == null) result = caseAnnotableElement(n4MethodDeclaration);
 				if (result == null) result = caseTypableElement(n4MethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(n4MethodDeclaration);
@@ -1927,38 +1911,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseExpression(jsxFragment);
 				if (result == null) result = caseTypableElement(jsxFragment);
 				if (result == null) result = caseControlFlowElement(jsxFragment);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4JSPackage.VERSIONED_ELEMENT: {
-				VersionedElement versionedElement = (VersionedElement)theEObject;
-				T1 result = caseVersionedElement(versionedElement);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4JSPackage.VERSIONED_IDENTIFIER_REF: {
-				VersionedIdentifierRef versionedIdentifierRef = (VersionedIdentifierRef)theEObject;
-				T1 result = caseVersionedIdentifierRef(versionedIdentifierRef);
-				if (result == null) result = caseIdentifierRef(versionedIdentifierRef);
-				if (result == null) result = caseVersionedReference(versionedIdentifierRef);
-				if (result == null) result = casePrimaryExpression(versionedIdentifierRef);
-				if (result == null) result = caseStrictModeRelevant(versionedIdentifierRef);
-				if (result == null) result = caseVersionable(versionedIdentifierRef);
-				if (result == null) result = caseExpression(versionedIdentifierRef);
-				if (result == null) result = caseTypableElement(versionedIdentifierRef);
-				if (result == null) result = caseControlFlowElement(versionedIdentifierRef);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4JSPackage.MIGRATION_CONTEXT_VARIABLE: {
-				MigrationContextVariable migrationContextVariable = (MigrationContextVariable)theEObject;
-				T1 result = caseMigrationContextVariable(migrationContextVariable);
-				if (result == null) result = caseVariable(migrationContextVariable);
-				if (result == null) result = caseTypedElement(migrationContextVariable);
-				if (result == null) result = caseIdentifiableElement(migrationContextVariable);
-				if (result == null) result = caseNamedElement(migrationContextVariable);
-				if (result == null) result = caseTypeProvidingElement(migrationContextVariable);
-				if (result == null) result = caseTypableElement(migrationContextVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -4637,51 +4589,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Versioned Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Versioned Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseVersionedElement(VersionedElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Versioned Identifier Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Versioned Identifier Ref</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseVersionedIdentifierRef(VersionedIdentifierRef object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Migration Context Variable</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Migration Context Variable</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseMigrationContextVariable(MigrationContextVariable object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Typable Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -4708,36 +4615,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseIdentifiableElement(IdentifiableElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Versionable</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Versionable</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseVersionable(Versionable object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Versioned Reference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseVersionedReference(VersionedReference object) {
 		return null;
 	}
 

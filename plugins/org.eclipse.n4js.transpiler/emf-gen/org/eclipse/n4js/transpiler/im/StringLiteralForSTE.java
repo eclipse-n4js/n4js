@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -13,9 +13,8 @@ package org.eclipse.n4js.transpiler.im;
 import org.eclipse.n4js.n4JS.StringLiteral;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>String Literal For STE</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>String Literal For STE</b></em>'. <!--
+ * end-user-doc -->
  *
  * <!-- begin-model-doc -->
  * This special kind of {@link StringLiteral} should be used if the name of a symbol table entry is required somewhere
@@ -45,8 +44,7 @@ import org.eclipse.n4js.n4JS.StringLiteral;
 public interface StringLiteralForSTE extends StringLiteral {
 	/**
 	 * Returns the value of the '<em><b>Entry</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the value of the '<em>Entry</em>' reference.
 	 * @see #setEntry(SymbolTableEntry)
 	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getStringLiteralForSTE_Entry()
@@ -57,8 +55,7 @@ public interface StringLiteralForSTE extends StringLiteral {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.StringLiteralForSTE#getEntry <em>Entry</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Entry</em>' reference.
 	 * @see #getEntry()
 	 * @generated
@@ -66,13 +63,10 @@ public interface StringLiteralForSTE extends StringLiteral {
 	void setEntry(SymbolTableEntry value);
 
 	/**
-	 * Returns the value of the '<em><b>Use Exported Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * If true, use the element's exported name instead of its actual name. If true, the {@link #entry}'s original
-	 * <!-- end-model-doc -->
+	 * Returns the value of the '<em><b>Use Exported Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * --> <!-- begin-model-doc --> * If true, use the element's exported name instead of its actual name. If true, the
+	 * {@link #getEntry()}'s original <!-- end-model-doc -->
+	 *
 	 * @return the value of the '<em>Use Exported Name</em>' attribute.
 	 * @see #setUseExportedName(boolean)
 	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getStringLiteralForSTE_UseExportedName()
@@ -83,8 +77,7 @@ public interface StringLiteralForSTE extends StringLiteral {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.StringLiteralForSTE#isUseExportedName <em>Use Exported Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Use Exported Name</em>' attribute.
 	 * @see #isUseExportedName()
 	 * @generated
@@ -92,11 +85,11 @@ public interface StringLiteralForSTE extends StringLiteral {
 	void setUseExportedName(boolean value);
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	@Override
 	String getValueAsString();
 
 } // StringLiteralForSTE

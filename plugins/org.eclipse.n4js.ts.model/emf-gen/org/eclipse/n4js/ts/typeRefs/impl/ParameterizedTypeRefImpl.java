@@ -456,33 +456,23 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			_rawTypeAsString=_declaredType.getRawTypeAsString();
 		}
 		String _xifexpression = null;
-		int _version = this.getVersion();
-		boolean _greaterThan = (_version > 0);
-		if (_greaterThan) {
-			int _version_1 = this.getVersion();
-			_xifexpression = ("#" + Integer.valueOf(_version_1));
+		boolean _isEmpty = this.getTypeArgs().isEmpty();
+		if (_isEmpty) {
+			_xifexpression = "";
 		}
 		else {
-			String _xifexpression_1 = null;
-			boolean _isEmpty = this.getTypeArgs().isEmpty();
-			if (_isEmpty) {
-				_xifexpression_1 = "";
-			}
-			else {
-				final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
-					public String apply(final TypeArgument it) {
-						return it.getTypeRefAsString();
-					}
-				};
-				String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getTypeArgs(), _function), ",");
-				String _plus = ("<" + _join);
-				_xifexpression_1 = (_plus + ">");
-			}
-			String _plus_1 = ("" + _xifexpression_1);
-			String _modifiersAsString = this.getModifiersAsString();
-			_xifexpression = (_plus_1 + _modifiersAsString);
+			final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
+				public String apply(final TypeArgument it) {
+					return it.getTypeRefAsString();
+				}
+			};
+			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getTypeArgs(), _function), ",");
+			String _plus = ("<" + _join);
+			_xifexpression = (_plus + ">");
 		}
-		return (_rawTypeAsString + _xifexpression);
+		String _plus_1 = (_rawTypeAsString + _xifexpression);
+		String _modifiersAsString = this.getModifiersAsString();
+		return (_plus_1 + _modifiersAsString);
 	}
 
 	/**

@@ -13,7 +13,6 @@ package org.eclipse.n4js.n4JS;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.TInterface;
 
@@ -33,7 +32,7 @@ import org.eclipse.n4js.ts.types.TInterface;
  * @model
  * @generated
  */
-public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, VersionedElement {
+public interface N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	/**
 	 * Returns the value of the '<em><b>Super Interface Refs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.TypeReferenceNode}<code>&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;</code>.
@@ -72,16 +71,5 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration, Version
 	 * @generated
 	 */
 	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	int getVersion();
 
 } // N4InterfaceDeclaration

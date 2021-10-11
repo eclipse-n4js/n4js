@@ -30,7 +30,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNume
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNumericOperand;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isSymbol;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableTypeRef;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.migrationContextTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.nullTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.numberTypeRef;
@@ -88,7 +87,6 @@ import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
-import org.eclipse.n4js.n4JS.MigrationContextVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
@@ -126,7 +124,6 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
 import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -712,8 +709,6 @@ import com.google.inject.Inject;
 				}
 			}
 
-			T = n4idlVersionResolver.resolveVersion(T, idref);
-
 			if (T != null
 					&& idref.eContainer() instanceof ParameterizedCallExpression
 					&& idref.eContainmentFeature() == N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET) {
@@ -747,7 +742,6 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseThisLiteral(ThisLiteral t) {
 			TypeRef rawT = typeSystemHelper.getThisTypeAtLocation(G, t);
-			rawT = n4idlVersionResolver.resolveVersion(rawT, rawT);
 			return rawT != null ? TypeUtils.enforceNominalTyping(rawT) : unknown();
 		}
 
@@ -1057,8 +1051,6 @@ import com.google.inject.Inject;
 				T = ts.substTypeVariablesWithPartialCapture(G2, T);
 			}
 
-			T = n4idlVersionResolver.resolveVersion(T, receiverTypeRef);
-
 			if (expr.getTarget() instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef) {
 				// super.foo(): this; cf. GHOLD-95
 				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) T;
@@ -1120,7 +1112,6 @@ import com.google.inject.Inject;
 					if (T == null) {
 						return unknown();
 					}
-					T = n4idlVersionResolver.resolveVersion(T, F);
 
 					if (T instanceof BoundThisTypeRef
 							&& !(expr.getReceiver() instanceof ThisLiteral
@@ -1143,9 +1134,6 @@ import com.google.inject.Inject;
 			} else if (targetTypeRef.getDeclaredType() == functionType(G)) {
 				return anyTypeRef(G);
 			} else if (targetTypeRef.isDynamic()) {
-				return anyTypeRefDynamic(G);
-			} else if (MigrationUtils.isMigrateCall(expr) && targetTypeRef instanceof UnknownTypeRef) {
-				// type unresolved 'migrate'-calls as any+
 				return anyTypeRefDynamic(G);
 			} else {
 				return unknown();
@@ -1415,11 +1403,6 @@ import com.google.inject.Inject;
 				return unknown();
 			}
 			return ref(classifierReactElement);
-		}
-
-		@Override
-		public TypeRef caseMigrationContextVariable(MigrationContextVariable mcv) {
-			return migrationContextTypeRef(G);
 		}
 	}
 

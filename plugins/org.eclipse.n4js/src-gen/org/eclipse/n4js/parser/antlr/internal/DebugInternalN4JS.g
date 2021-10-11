@@ -45,7 +45,6 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4ClassDeclaration
 		)
@@ -58,7 +57,6 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4InterfaceDeclaration
 		)
@@ -69,7 +67,6 @@ ruleScriptElement:
 			'enum'
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4EnumDeclaration
 		)
@@ -136,7 +133,6 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleVersionDeclaration?
 			ruleTypeParameters?
 			ruleClassExtendsImplements?
 			    |
@@ -146,7 +142,6 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleVersionDeclaration?
 			ruleTypeParameters?
 			ruleInterfaceExtendsList?
 		)
@@ -156,7 +151,6 @@ ruleAnnotatedScriptElement:
 		*
 		'enum'
 		ruleBindingIdentifier
-		ruleVersionDeclaration?
 		'{'
 		ruleN4EnumLiteral
 		(
@@ -263,7 +257,6 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4ClassDeclaration
 		)
@@ -276,7 +269,6 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4InterfaceDeclaration
 		)
@@ -287,7 +279,6 @@ ruleExportableElement:
 			'enum'
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4EnumDeclaration
 		)
@@ -642,7 +633,6 @@ ruleFunctionHeader:
 	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
-	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -655,7 +645,6 @@ norm1_FunctionHeader:
 	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
-	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -668,7 +657,6 @@ norm2_FunctionHeader:
 	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
-	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
@@ -681,7 +669,6 @@ norm3_FunctionHeader:
 	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
-	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
@@ -2790,22 +2777,12 @@ norm1_ParenExpression:
 
 // Rule IdentifierRef
 ruleIdentifierRef:
-	(
-		ruleBindingIdentifier
-		    |
-		ruleBindingIdentifier
-		ruleVersionRequest
-	)
+	ruleBindingIdentifier
 ;
 
 // Rule IdentifierRef
 norm1_IdentifierRef:
-	(
-		norm1_BindingIdentifier
-		    |
-		norm1_BindingIdentifier
-		ruleVersionRequest
-	)
+	norm1_BindingIdentifier
 ;
 
 // Rule SuperLiteral
@@ -6820,7 +6797,6 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6829,7 +6805,6 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 	)
 	ruleTypeParameters?
 	ruleClassExtendsImplements?
@@ -6951,7 +6926,6 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6960,7 +6934,6 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 	)
 	ruleTypeParameters?
 	ruleInterfaceExtendsList?
@@ -6989,14 +6962,12 @@ ruleN4EnumDeclaration:
 		'enum'
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
 		'enum'
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 	)
 	'{'
 	(
@@ -8806,11 +8777,6 @@ ruleJSXPropertyAttribute:
 	)?
 ;
 
-// Rule VersionDeclaration
-ruleVersionDeclaration:
-	RULE_VERSION
-;
-
 // Rule TypeRef
 ruleTypeRef:
 	ruleIntersectionTypeExpression
@@ -9151,12 +9117,7 @@ ruleParameterizedTypeRef:
 
 // Rule ParameterizedTypeRefNominal
 ruleParameterizedTypeRefNominal:
-	(
-		ruleTypeReference
-		    |
-		ruleTypeReference
-		ruleVersionRequest
-	)
+	ruleTypeReference
 	(
 		('<')=>
 		ruleTypeArguments
@@ -9165,14 +9126,8 @@ ruleParameterizedTypeRefNominal:
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
-	(
-		ruleTypingStrategyUseSiteOperator
-		ruleTypeReference
-		    |
-		ruleTypingStrategyUseSiteOperator
-		ruleTypeReference
-		ruleVersionRequest
-	)
+	ruleTypingStrategyUseSiteOperator
+	ruleTypeReference
 	(
 		('<')=>
 		ruleTypeArguments
@@ -9201,11 +9156,6 @@ ruleArrayNTypeExpression:
 // Rule EmptyIterableTypeExpressionTail
 ruleEmptyIterableTypeExpressionTail:
 	']'
-;
-
-// Rule VersionRequest
-ruleVersionRequest:
-	RULE_VERSION
 ;
 
 // Rule TypeArguments
@@ -9792,8 +9742,6 @@ fragment RULE_IDENTIFIER_START : (RULE_UNICODE_LETTER_FRAGMENT|'$'|'_'|RULE_UNIC
 fragment RULE_IDENTIFIER_PART : (RULE_UNICODE_LETTER_FRAGMENT|RULE_UNICODE_ESCAPE_FRAGMENT|'$'|RULE_UNICODE_COMBINING_MARK_FRAGMENT|RULE_UNICODE_DIGIT_FRAGMENT|RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT|RULE_ZWNJ|RULE_ZWJ);
 
 RULE_DOT_DOT : '..';
-
-RULE_VERSION : '#' RULE_WS* RULE_INT;
 
 fragment RULE_HEX_DIGIT : (RULE_DECIMAL_DIGIT_FRAGMENT|'a'..'f'|'A'..'F');
 

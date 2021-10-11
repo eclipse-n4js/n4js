@@ -29,7 +29,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike, TMigratable {
+public interface TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
 	/**
 	 * Returns the value of the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->

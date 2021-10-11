@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TGetter;
@@ -99,7 +98,7 @@ public class LabelCalculationHelper {
 		if (obj instanceof TClassifier) {
 			// name + optional type variables, e.g. A<T, U>
 			TClassifier tClassifier = (TClassifier) obj;
-			return tClassifier.getName() + getTypeVersionDescription(tClassifier) + getTypeVarDescriptions(tClassifier);
+			return tClassifier.getName() + getTypeVarDescriptions(tClassifier);
 		}
 		if (obj instanceof TGetter) {
 			TGetter tGetter = (TGetter) obj;
@@ -128,13 +127,6 @@ public class LabelCalculationHelper {
 		if (tClassifier.getTypeVars().size() > 0) {
 			String text = IterableExtensions.join(tClassifier.getTypeVars(), ", ", tv -> tv.getName());
 			return "<" + text + ">";
-		}
-		return "";
-	}
-
-	private String getTypeVersionDescription(TClassifier tClassifier) {
-		if (tClassifier.getDeclaredVersion() != 0) {
-			return N4IDLGlobals.VERSION_SEPARATOR + Integer.toString(tClassifier.getDeclaredVersion());
 		}
 		return "";
 	}

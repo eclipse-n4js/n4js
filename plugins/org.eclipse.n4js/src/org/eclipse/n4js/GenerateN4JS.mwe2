@@ -76,7 +76,7 @@ Workflow {
 
 		language = XtextGeneratorLanguage {
 			name = "org.eclipse.n4js.N4JS"
-			fileExtensions = "n4js,n4jsx,js,jsx,n4jsd,n4idl"
+			fileExtensions = "n4js,n4jsx,js,jsx,n4jsd"
 
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore.xcore.lib/model/XcoreLang.xcore"
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"

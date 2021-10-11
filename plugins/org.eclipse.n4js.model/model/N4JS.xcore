@@ -32,8 +32,6 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.Versionable
-import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
@@ -583,7 +581,7 @@ abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnviron
 /* A function definition is either a FunctionDeclaration, a FunctionExpression or a MethodDeclaration.
  * Note that, since an anonymous function expression has no name, the function definition is not a named element.
  */
-abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement, VersionedElement {
+abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
 	contains FormalParameter[] fpars
 	/*
 	 * Tells if the return value is optional.
@@ -679,22 +677,6 @@ class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Sta
 	 */
 	op boolean isExternal() {
 		declaredModifiers.contains(N4Modifier.EXTERNAL)
-	}
-	
-	
-	/** Transient {@code MigrationContext} arguments variable. Access through #getMigrationContextVariable()  */
-	contains transient MigrationContextVariable _migrationContext
-	/** Lazy initialized reference to transient localArgurmentsVariable */
-	op MigrationContextVariable getMigrationContextVariable() {
-		if (_migrationContext === null) {
-			val newMigrationContext = N4JSFactory::eINSTANCE.createMigrationContextVariable;
-			newMigrationContext.name = "context";
-			EcoreUtilN4.doWithDeliver(false,
-				[|
-					_migrationContext = newMigrationContext;
-				], this);
-		}
-		return _migrationContext;
 	}
 }
 
@@ -1141,7 +1123,7 @@ class ParenExpression extends PrimaryExpression {
 	}
 }
 
-class IdentifierRef extends PrimaryExpression, StrictModeRelevant, org.eclipse.n4js.ts.typeRefs.Versionable {
+class IdentifierRef extends PrimaryExpression, StrictModeRelevant {
 	refers IdentifiableElement ^id
 	transient String idAsText
 
@@ -2139,18 +2121,12 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	}
 }
 
-class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration, Versionable, VersionedElement {
+class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
 	/**
 	 * Returns true if the class is declared as abstract.
 	 */
 	op boolean isAbstract() {
 		declaredModifiers.contains(N4Modifier.ABSTRACT)
-	}
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return declaredVersionOrZero
 	}
 }
 
@@ -2161,7 +2137,7 @@ class N4ClassExpression extends N4ClassDefinition, PrimaryExpression, AnnotableE
 	String name
 }
 
-class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, VersionedElement {
+class N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	contains TypeReferenceNode<ParameterizedTypeRef>[] superInterfaceRefs
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
@@ -2175,28 +2151,15 @@ class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, Versi
 	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return declaredVersionOrZero
-	}
 }
 
-class N4EnumDeclaration extends N4TypeDeclaration, Versionable, VersionedElement {
+class N4EnumDeclaration extends N4TypeDeclaration {
 	contains N4EnumLiteral[] literals
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TEnum}.
 	 */
 	op TEnum getDefinedTypeAsEnum() {
 		return definedType as TEnum;
-	}
-
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return declaredVersionOrZero
 	}
 }
 
@@ -2524,44 +2487,4 @@ class JSXElement extends Expression, JSXChild, JSXAbstractElement {
 }
 
 class JSXFragment extends JSXChild, JSXAbstractElement {
-}
-
-// ****************************************************************************************************
-// N4IDL related model elements
-// ****************************************************************************************************
-
-/*
- * This is a base class for all AST nodes where the user can explicitly declare a specific version.
- */
-abstract class VersionedElement {
-	/*
-	 * The version as declared by the user in the source code. Unlike the requestedVersion attribute of class
-	 * VersionedReference, the value of this attribute is set by the parser and never changed by the type system.
-	 */
-	BigDecimal declaredVersion
-	/*
-	 * Indicates whether this type reference has an explicitly declared version.
-	 */
-	op boolean hasDeclaredVersion() {
-		return declaredVersion !== null
-	}
-	op int getDeclaredVersionOrZero() {
-		if (hasDeclaredVersion) declaredVersion.intValue else 0
-	}
-}
-
-class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return requestedVersionOrZero
-	}
-}
-
-/**  Implicit variable in migration bodies referencing the current {@code MigrationContext}. */
-class MigrationContextVariable extends Variable {
-	op String getName() {
-		return "context";
-	}
 }
