@@ -28,21 +28,21 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					import { Buffer } from "./buffer"
 
 					export interface Writable {}
-					export interface Writable2 extends Writable {} // TODO "extends" not yet supported by n4jsd-generator
+					export interface Writable2 extends Writable {}
 
 					export class Stream implements Writable {}
-					export class Stream2 extends Stream implements Writable2 {} // TODO "extends"/"implements" not yet supported by n4jsd-generator
+					export class Stream2 extends Stream implements Writable2 {}
 				`,
 				n4jsd: `
 					import { Buffer } from "buffer";
 
 					export external public interface ~Writable {}
 
-					export external public interface ~Writable2 {}
+					export external public interface ~Writable2 extends Writable {}
 
-					export external public class ~Stream {}
+					export external public class ~Stream implements Writable {}
 
-					export external public class ~Stream2 {}
+					export external public class ~Stream2 extends Stream implements Writable2 {}
 				`
 			}
 		);
@@ -278,7 +278,7 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 						get getter(): any+;
 					}
 
-					export external public class ~Stream {
+					export external public class ~Stream implements Writable {
 						public field: any+;
 						get fieldReadOnly(): any+;
 						public constructor(buff: any+); // further signatures were omitted

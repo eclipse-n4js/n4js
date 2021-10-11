@@ -20,7 +20,7 @@ export public class ConvertMultipleDeclarationsTest extends AbstractN4jsdGenerat
 	public testMultipleInterfaceDecls() {
 		this.assertConversion(
 			{
-				name: "buffer",
+				name: "main",
 				dts: `
 					export interface Ifc {
 						method1(): string;
