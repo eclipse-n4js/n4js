@@ -35,6 +35,9 @@ OPTIONS
 	out as 'any+'. When this option is given, type references will be copied over from the TypeScript source
 	code without change (might cause syntax errors, etc. on the N4JS side).
 
+--no-doc
+	Do not copy JSDoc comments from '.d.ts' to N4JSD files.
+
 --runtime-libs
 	The '.d.ts' files to convert represent runtime library definitions. This modifies compilation of the
 	input files and generation of the output code in various ways. Only intended for internal use.
@@ -60,6 +63,7 @@ export interface Options {
 	inputPaths: string[];
 	outputPath?: string;
 	copyTypeRefs: boolean;
+	noDoc: boolean;
 	runtimeLibs: boolean;
 	verbose: boolean;
 	force: boolean;
@@ -82,6 +86,7 @@ class Option {
 const OPT_FORCE          = new Option([ "--force", "-f" ],    false, (opts) => opts.force = true);
 const OPT_OUTPUT         = new Option([ "--output", "-o" ],   true,  (opts, arg) => opts.outputPath = arg);
 const OPT_COPY_TYPE_REFS = new Option([ "--copy-type-refs" ], false, (opts) => opts.copyTypeRefs = true);
+const OPT_NO_DOC         = new Option([ "--no-doc" ],         false, (opts) => opts.noDoc = true);
 const OPT_RUNTIME_LIBS   = new Option([ "--runtime-libs" ],   false, (opts) => opts.runtimeLibs = true);
 const OPT_VERBOSE        = new Option([ "--verbose", "-v" ],  false, (opts) => opts.verbose = true);
 
@@ -89,6 +94,7 @@ const allOptions = [
 	OPT_FORCE,
 	OPT_OUTPUT,
 	OPT_COPY_TYPE_REFS,
+	OPT_NO_DOC,
 	OPT_RUNTIME_LIBS,
 	OPT_VERBOSE
 ];

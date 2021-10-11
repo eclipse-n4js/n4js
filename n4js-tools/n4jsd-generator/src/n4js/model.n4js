@@ -689,6 +689,10 @@ class Emitter {
 	}
 
 	emitDocumentation(elem: NamedElement) {
+		if (getGlobalOptions()?.noDoc) {
+			// do not emit JSDoc comments
+			return false;
+		}
 		const doc = elem.jsdoc;
 		if (!doc) {
 			return false;
