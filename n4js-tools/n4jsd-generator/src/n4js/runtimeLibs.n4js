@@ -58,221 +58,234 @@ export public class RuntimeLibsError extends Error {}
  * @param scripts all scripts that were imported from '.d.ts' files.
  */
 export public function postProcessRuntimeLibs(scripts: model.Script[]) {
-	const scriptsOrdered = getScriptsOrderedAndAsserted(scripts);
-	for (const script of scriptsOrdered) {
-		postProcessRuntimeLib(script);
-	}
+	new RuntimeLibsProcessor(scripts).process();
 }
 
-function postProcessRuntimeLib(script: model.Script) {
-	removeMetaProperties(script);
-	removeIgnoredElements(script);
-	handleCtorInstanceTypePattern(script);
+class RuntimeLibsProcessor {
 
-	handleSimpleConfigurations(script);
-	handlePolyfills(script);
-}
+	@Final private scriptsOrdered: model.Script[];
+	@Final private knownCtorInstanceTypes = new Set<string>();
 
-function handleSimpleConfigurations(script: model.Script) {
-	const config = getGenConfig();
-	const fileConfig = config.files.get(script.tsFileName);
-	// script prefix/suffix
-	const preamble = config.preamble;
-	const prefix = fileConfig?.prefix;
-	if (preamble || prefix) {
-		script.prefix = utils.trimMultiLineString(preamble ?? "") + utils.trimMultiLineString(prefix ?? "");
+	constructor(scripts: model.Script[]) {
+		this.scriptsOrdered = getScriptsOrderedAndAsserted(scripts);
 	}
-	const suffix = fileConfig?.suffix;
-	if (suffix) {
-		script.suffix = utils.trimMultiLineString(suffix);
+
+	public process() {
+		for (const script of this.scriptsOrdered) {
+			this.processScript(script);
+		}
 	}
-	// member patching
-	const patchedMembers = fileConfig?.patchMembers;
-	if (patchedMembers && patchedMembers.size > 0) {
-		for (const elem of script.topLevelElements) {
-			if (!(elem instanceof model.Type)) {
-				continue;
-			}
-			const typeName = elem.name;
-			let idx = 0;
-			while (idx < elem.members.length) {
-				const member = elem.members[idx];
-				let memberName;
-				if (member.kind === model.MemberKind.CTOR) {
-					memberName = "constructor";
-				} else if (member.kind === model.MemberKind.CALLABLE_CTOR) {
-					memberName = "()";
-				} else {
-					memberName = member.name;
+
+	private processScript(script: model.Script) {
+		this.removeMetaProperties(script);
+		this.removeIgnoredElements(script);
+		this.handleCtorInstanceTypePattern(script);
+
+		this.handleSimpleConfigurations(script);
+		this.handlePolyfills(script);
+	}
+
+	private handleSimpleConfigurations(script: model.Script) {
+		const config = getGenConfig();
+		const fileConfig = config.files.get(script.tsFileName);
+		// script prefix/suffix
+		const preamble = config.preamble;
+		const prefix = fileConfig?.prefix;
+		if (preamble || prefix) {
+			script.prefix = utils.trimMultiLineString(preamble ?? "") + utils.trimMultiLineString(prefix ?? "");
+		}
+		const suffix = fileConfig?.suffix;
+		if (suffix) {
+			script.suffix = utils.trimMultiLineString(suffix);
+		}
+		// member patching
+		const patchedMembers = fileConfig?.patchMembers;
+		if (patchedMembers && patchedMembers.size > 0) {
+			for (const elem of script.topLevelElements) {
+				if (!(elem instanceof model.Type)) {
+					continue;
 				}
-				const key = typeName + "#" + memberName;
-				if (patchedMembers.has(key)) {
-					const replacement = patchedMembers.get(key);
-					if (replacement !== undefined && replacement !== null) {
-						member.replacementCode = utils.trimMultiLineString(replacement);
+				const typeName = elem.name;
+				let idx = 0;
+				while (idx < elem.members.length) {
+					const member = elem.members[idx];
+					let memberName;
+					if (member.kind === model.MemberKind.CTOR) {
+						memberName = "constructor";
+					} else if (member.kind === model.MemberKind.CALLABLE_CTOR) {
+						memberName = "()";
 					} else {
-						// null/undefined means: remove the member
-						elem.members.splice(idx, 1);
-						--idx;
+						memberName = member.name;
+					}
+					const key = typeName + "#" + memberName;
+					if (patchedMembers.has(key)) {
+						const replacement = patchedMembers.get(key);
+						if (replacement !== undefined && replacement !== null) {
+							member.replacementCode = utils.trimMultiLineString(replacement);
+						} else {
+							// null/undefined means: remove the member
+							elem.members.splice(idx, 1);
+							--idx;
+						}
+					}
+					++idx;
+				}
+			}
+		}
+		// additional code for types
+		const additionalCode = fileConfig?.appendCode;
+		if (additionalCode && additionalCode.size > 0) {
+			for (const elem of script.topLevelElements) {
+				if (!(elem instanceof model.Type)) {
+					continue;
+				}
+				const elemName = elem.name;
+				if (elemName && additionalCode.has(elemName)) {
+					const code = additionalCode.get(elemName);
+					if (code !== undefined && code !== null) {
+						elem.additionalCode.push(utils.trimMultiLineString(code));
 					}
 				}
-				++idx;
 			}
 		}
 	}
-	// additional code for types
-	const additionalCode = fileConfig?.appendCode;
-	if (additionalCode && additionalCode.size > 0) {
+
+	private removeMetaProperties(script: model.Script) {
+		for (const elem of script.topLevelElements) {
+			if (elem instanceof model.Type) {
+				const ms = elem.members;
+				let i = 0;
+				while (i < ms.length) {
+					const m = ms[i];
+					if ((m.name === "constructor" && m.kind !== model.MemberKind.CTOR)
+							|| m.name === "prototype") {
+						ms.splice(i, 1);
+					} else {
+						++i;
+					}
+				}
+			}
+		}
+	}
+
+	private removeIgnoredElements(script: model.Script) {
+		const fileConfig = getGenConfig().files.get(script.tsFileName);
+		const ignoredElems = fileConfig?.ignore;
+		if (!ignoredElems || ignoredElems.size === 0) {
+			return;
+		}
+		let i = 0;
+		const elems = script.topLevelElements;
+		while (i < elems.length) {
+			const elem = elems[i];
+			const elemName = elem.name;
+			if (elemName && ignoredElems.has(elemName)) {
+				elems.splice(i, 1);
+			} else {
+				++i;
+			}
+		}
+	}
+
+	private handleCtorInstanceTypePattern(script: model.Script) {
+		const elemsByName = new Map<string,model.ExportableElement[]>();
+		for (const elem of script.topLevelElements) {
+			const name = elem.name;
+			let arr = elemsByName.get(name);
+			if (!arr) {
+				arr = [];
+				elemsByName.set(name, arr);
+			}
+			arr.push(elem);
+		}
+
+		const topLevelElementsToBeRemoved = [] as model.ExportableElement[];
+
+		for (const elem of script.topLevelElements) {
+			if (elem instanceof model.Variable) {
+				this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementsToBeRemoved);
+			}
+		}
+
+		for (const elem of topLevelElementsToBeRemoved) {
+			const idx = script.topLevelElements.indexOf(elem);
+			if (idx >= 0) {
+				script.topLevelElements.splice(idx, 1);
+			}
+		}
+	}
+
+	private adjustCtorInstanceTypesForVarDecl(
+		varDecl: model.Variable,
+		elemsByName: Map<string,model.ExportableElement[]>,
+		topLevelElementsToBeRemoved: model.ExportableElement[]) {
+
+		const typeRefStr = varDecl.type?.tsSourceString;
+		if (!typeRefStr) {
+			return;
+		}
+		const types = elemsByName.get(typeRefStr)?.filter(elem => elem instanceof model.Type) as model.Type[];
+		if (!types || types.length === 0) {
+			return;
+		}
+		if (types.length > 1) {
+			// FIXME emit warning!!!
+			return;
+		}
+		const type = types[0];
+		if (type.kind !== model.TypeKind.INTERFACE) {
+			// FIXME emit warning!!!
+			return;
+		}
+		// look for a corresponding instance type
+		let instanceType: model.Type;
+		const typeName = type.name;
+		if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
+			const instanceTypeName = typeName.substring(0, typeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
+			const instanceTypes = elemsByName.get(instanceTypeName)?.filter(elem => elem instanceof model.Type) as model.Type[];
+			if (instanceTypes) {
+				for (const instanceTypeCandidate of instanceTypes) {
+					if (instanceTypeCandidate.kind === model.TypeKind.INTERFACE) {
+						instanceType = instanceTypeCandidate;
+						break;
+					}
+				}
+			}
+		}
+		// change "constructor type" to a class and make all members static
+		changeInterfaceToClass(type);
+		type.members.forEach(m => m.isStatic = true);
+		// merge the "constructor type" into the "instance type" (if any)
+		if (instanceType) {
+			// change "instance type" to a class
+			changeInterfaceToClass(instanceType);
+			// move all members of the "constructor type" into the "instance type"
+			type.members.forEach(m => instanceType.members.push(m));
+			type.members.length = 0;
+			// mark the "constructor type" as "to be removed"
+			topLevelElementsToBeRemoved.push(type);
+		}
+		// mark the variable declaration as "to be removed"
+		topLevelElementsToBeRemoved.push(varDecl);
+	}
+
+	public handlePolyfills(script: model.Script) {
+		const fileConfig = getGenConfig().files.get(script.tsFileName);
+		const polyfills = fileConfig?.polyfills;
+		if (!polyfills || polyfills.size === 0) {
+			return;
+		}
 		for (const elem of script.topLevelElements) {
 			if (!(elem instanceof model.Type)) {
 				continue;
 			}
 			const elemName = elem.name;
-			if (elemName && additionalCode.has(elemName)) {
-				const code = additionalCode.get(elemName);
-				if (code !== undefined && code !== null) {
-					elem.additionalCode.push(utils.trimMultiLineString(code));
-				}
+			if (elemName && polyfills.has(elemName)) {
+				elem.annotations.push(new model.Annotation("@Polyfill"));
+				elem.extends.length = 0;
+				elem.extends.push(new model.TypeRef(elemName));
+				elem.defSiteStructural = false;
 			}
-		}
-	}
-}
-
-function removeMetaProperties(script: model.Script) {
-	for (const elem of script.topLevelElements) {
-		if (elem instanceof model.Type) {
-			const ms = elem.members;
-			let i = 0;
-			while (i < ms.length) {
-				const m = ms[i];
-				if ((m.name === "constructor" && m.kind !== model.MemberKind.CTOR)
-						|| m.name === "prototype") {
-					ms.splice(i, 1);
-				} else {
-					++i;
-				}
-			}
-		}
-	}
-}
-
-function removeIgnoredElements(script: model.Script) {
-	const fileConfig = getGenConfig().files.get(script.tsFileName);
-	const ignoredElems = fileConfig?.ignore;
-	if (!ignoredElems || ignoredElems.size === 0) {
-		return;
-	}
-	let i = 0;
-	const elems = script.topLevelElements;
-	while (i < elems.length) {
-		const elem = elems[i];
-		const elemName = elem.name;
-		if (elemName && ignoredElems.has(elemName)) {
-			elems.splice(i, 1);
-		} else {
-			++i;
-		}
-	}
-}
-
-function handleCtorInstanceTypePattern(script: model.Script) {
-	const elemsByName = new Map<string,model.ExportableElement[]>();
-	for (const elem of script.topLevelElements) {
-		const name = elem.name;
-		let arr = elemsByName.get(name);
-		if (!arr) {
-			arr = [];
-			elemsByName.set(name, arr);
-		}
-		arr.push(elem);
-	}
-
-	const topLevelElementsToBeRemoved = [] as model.ExportableElement[];
-
-	for (const elem of script.topLevelElements) {
-		if (elem instanceof model.Variable) {
-			adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementsToBeRemoved);
-		}
-	}
-
-	for (const elem of topLevelElementsToBeRemoved) {
-		const idx = script.topLevelElements.indexOf(elem);
-		if (idx >= 0) {
-			script.topLevelElements.splice(idx, 1);
-		}
-	}
-}
-
-function adjustCtorInstanceTypesForVarDecl(
-	varDecl: model.Variable,
-	elemsByName: Map<string,model.ExportableElement[]>,
-	topLevelElementsToBeRemoved: model.ExportableElement[]) {
-
-	const typeRefStr = varDecl.type?.tsSourceString;
-	if (!typeRefStr) {
-		return;
-	}
-	const types = elemsByName.get(typeRefStr)?.filter(elem => elem instanceof model.Type) as model.Type[];
-	if (!types || types.length === 0) {
-		return;
-	}
-	if (types.length > 1) {
-		// FIXME emit warning!!!
-		return;
-	}
-	const type = types[0];
-	if (type.kind !== model.TypeKind.INTERFACE) {
-		// FIXME emit warning!!!
-		return;
-	}
-	// look for a corresponding instance type
-	let instanceType: model.Type;
-	const typeName = type.name;
-	if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
-		const instanceTypeName = typeName.substring(0, typeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
-		const instanceTypes = elemsByName.get(instanceTypeName)?.filter(elem => elem instanceof model.Type) as model.Type[];
-		if (instanceTypes) {
-			for (const instanceTypeCandidate of instanceTypes) {
-				if (instanceTypeCandidate.kind === model.TypeKind.INTERFACE) {
-					instanceType = instanceTypeCandidate;
-					break;
-				}
-			}
-		}
-	}
-	// change "constructor type" to a class and make all members static
-	changeInterfaceToClass(type);
-	type.members.forEach(m => m.isStatic = true);
-	// merge the "constructor type" into the "instance type" (if any)
-	if (instanceType) {
-		// change "instance type" to a class
-		changeInterfaceToClass(instanceType);
-		// move all members of the "constructor type" into the "instance type"
-		type.members.forEach(m => instanceType.members.push(m));
-		type.members.length = 0;
-		// mark the "constructor type" as "to be removed"
-		topLevelElementsToBeRemoved.push(type);
-	}
-	// mark the variable declaration as "to be removed"
-	topLevelElementsToBeRemoved.push(varDecl);
-}
-
-function handlePolyfills(script: model.Script) {
-	const fileConfig = getGenConfig().files.get(script.tsFileName);
-	const polyfills = fileConfig?.polyfills;
-	if (!polyfills || polyfills.size === 0) {
-		return;
-	}
-	for (const elem of script.topLevelElements) {
-		if (!(elem instanceof model.Type)) {
-			continue;
-		}
-		const elemName = elem.name;
-		if (elemName && polyfills.has(elemName)) {
-			elem.annotations.push(new model.Annotation("@Polyfill"));
-			elem.extends.length = 0;
-			elem.extends.push(new model.TypeRef(elemName));
-			elem.defSiteStructural = false;
 		}
 	}
 }
