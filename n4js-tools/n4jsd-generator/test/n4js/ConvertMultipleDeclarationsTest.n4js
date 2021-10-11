@@ -23,15 +23,104 @@ export public class ConvertMultipleDeclarationsTest extends AbstractN4jsdGenerat
 				name: "main",
 				dts: `
 					export interface Ifc {
+						field1: string;
 						method1(): string;
 					}
 					export interface Ifc {
+						field2: number;
 						method2(): number;
 					}
 				`,
 				n4jsd: `
 					export external public interface ~Ifc {
+						field1: any+;
 						method1(): any+;
+						field2: any+;
+						method2(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testInterfaceAmendsClass() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export class MyType {
+						method1(): string;
+						static method1(): number;
+					}
+					export interface MyType {
+						method2(): number;
+					}
+				`,
+				n4jsd: `
+					export external public class ~MyType {
+						method1(): any+;
+						static method1(): any+;
+						method2(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testClassAmendsInterface() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface MyType {
+						method1(): string;
+					}
+					export class MyType {
+						method2(): number;
+						static method2(): number;
+					}
+				`,
+				n4jsd: `
+					export external public class ~MyType {
+						method1(): any+;
+						method2(): any+;
+						static method2(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testDifferentKindsOfMembers() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						field1: string;
+						get getter1(): string;
+						set setter1(value: string);
+						method1(): string;
+					}
+					export interface Ifc {
+						field2: number;
+						get getter2(): string;
+						set setter2(value: string);
+						method2(): number;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						field1: any+;
+						get getter1(): any+;
+						set setter1(value: any+);
+						method1(): any+;
+						field2: any+;
+						get getter2(): any+;
+						set setter2(value: any+);
 						method2(): any+;
 					}
 				`

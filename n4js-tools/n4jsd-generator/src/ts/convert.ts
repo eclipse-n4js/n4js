@@ -14,6 +14,7 @@ import * as path_lib from "path";
 import * as model from "./model";
 import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
+import { ZlibReset } from "zlib";
 
 export type IgnorePredicate = (filePath: string, elementName: string) => boolean;
 
@@ -27,7 +28,7 @@ export class Converter {
 	private readonly checker: ts.TypeChecker;
 
 	private exportAssignment: ts.ExportAssignment;
-	private readonly convertedTypes: Set<ts.Symbol> = new Set<ts.Symbol>();
+	private readonly convertedTypes: Map<ts.Symbol, model.Type> = new Map<ts.Symbol, model.Type>();
 	private readonly suppressedTypes: Set<ts.Type> = new Set<ts.Type>();
 	private readonly issues: utils.Issue[] = [];
 
@@ -160,15 +161,15 @@ export class Converter {
 		} else if (ts.isVariableDeclarationList(node)) {
 			return this.convertVariableDeclList(node); // TODO can a VariableDeclarationList even appear here?
 		} else if (ts.isFunctionDeclaration(node)) {
-			return this.isToBeConverted(node) ? [ this.convertFunction(node) ] : [];
+			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertFunction(node));
 		} else if (ts.isEnumDeclaration(node)) {
-			return this.isToBeConverted(node) ? [ this.convertEnum(node) ] : [];
+			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertEnum(node));
 		} else if (ts.isInterfaceDeclaration(node)) {
-			return this.isToBeConverted(node) ? [ this.convertInterface(node) ] : [];
+			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertInterface(node));
 		} else if (ts.isClassDeclaration(node)) {
-			return this.isToBeConverted(node) ? [ this.convertClass(node) ] : [];
+			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertClass(node));
 		} else if (ts.isTypeAliasDeclaration(node)) {
-			return this.isToBeConverted(node) ? [ this.convertTypeAlias(node) ] : [];
+			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertTypeAlias(node));
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
 			if (children.length === 2
@@ -186,7 +187,7 @@ export class Converter {
 			if (!this.exportAssignment) {
 				return []; // FIXME!!!!! do not merge this to master
 			}
-			if (!this.isToBeConverted(node)) {
+			if (this.isIgnored(node)) {
 				return [];
 			}
 			const exportSymbol = this.checker.getSymbolAtLocation(this.exportAssignment.expression);
@@ -213,9 +214,10 @@ export class Converter {
 		const keyword = utils_ts.getVarDeclKeyword(node);
 		const result = [] as model.Variable[];
 		for (const varDecl of node.declarations) {
-			if (this.isToBeConverted(varDecl)) {
-				result.push(this.convertVariable(varDecl, keyword));
+			if (this.isIgnored(varDecl)) {
+				continue;
 			}
+			result.push(this.convertVariable(varDecl, keyword));
 		}
 		return result;
 	}
@@ -232,14 +234,11 @@ export class Converter {
 	}
 
 	private convertFunction(node: ts.FunctionDeclaration): model.Function {
-		const sym = this.checker.getSymbolAtLocation(node.name);
-		const funSigs = this.convertCallSignatures(sym);
-		
 		const result = new model.Function();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.jsdoc = utils_ts.getJSDocForNode(node);
-		const expOfModule = this.checker.getExportSymbolOfSymbol(sym);
-		
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		const funSigs = this.convertCallSignatures(sym);
 		result.signatures = funSigs;
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -294,31 +293,62 @@ export class Converter {
 	}
 
 	private convertInterface(node: ts.InterfaceDeclaration): model.Type {
-		const result = new model.Type();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
-		result.jsdoc = utils_ts.getJSDocForNode(node);
-		result.kind = model.TypeKind.INTERFACE;
+		const [result, isNew] = this.getOrCreateN4jsType(node);
+		if (result.kind === undefined) { // classes must not be changed to interfaces!
+			result.kind = model.TypeKind.INTERFACE;
+		}
 		result.defSiteStructural = true;
-		result.typeParams.push(...this.convertTypeParameters(node));
 		this.convertHeritageClauses(node, result);
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
-		return result;
+		return isNew ? result : undefined;
 	}
 
 	private convertClass(node: ts.ClassDeclaration): model.Type {
-		const result = new model.Type();
-		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
-		result.jsdoc = utils_ts.getJSDocForNode(node);
-		result.kind = model.TypeKind.CLASS;
+		const [result, isNew] = this.getOrCreateN4jsType(node);
+		result.kind = model.TypeKind.CLASS; // interfaces will be changed to classes!
 		result.defSiteStructural = true;
-		result.typeParams.push(...this.convertTypeParameters(node));
 		this.convertHeritageClauses(node, result);
 		result.members.push(...this.convertMembers(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
-		return result;
+		return isNew ? result : undefined;
+	}
+
+	/**
+	 * Creates a new model.Type or returns an already existing type (if one exists). The latter occurs only
+	 * in case of declaration merging.
+	 *
+	 * Since this method is invoked (only) from methods #convertInterface() and #convertClass(), an already
+	 * existing type returned by this method might be an interface or a class.
+	 */
+	private getOrCreateN4jsType(node: ts.InterfaceDeclaration | ts.ClassDeclaration): [model.Type, boolean] {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		// 1) actually get/create the type
+		let result = this.convertedTypes.get(sym);
+		let isNew = false;
+		if (!result) {
+			result = new model.Type();
+			result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
+			this.convertedTypes.set(sym, result);
+			isNew = true;
+		}
+		// 2) perform some updates/initializations that apply to all types
+		// 2.a) type parameters
+		// (in case of declaration merging, TypeScript enforces each declaration to
+		// have the identical type paramters (even names must be equal), so it is ok to do
+		// the following just once based on the first declaration)
+		if (isNew) {
+			result.typeParams.push(...this.convertTypeParameters(node));
+		}
+		// 2.b) JSDoc
+		// (we do not merge JSDoc across declarations; instead, we use the JSDoc of the first
+		// declaration that actually has a JSDoc)
+		if (!result.jsdoc) {
+			result.jsdoc = utils_ts.getJSDocForNode(node);
+		}
+		return [result, isNew];
 	}
 
 	private convertTypeParameters(node: ts.NamedDeclaration): string[] {
@@ -360,26 +390,13 @@ export class Converter {
 		}
 	}
 
-	private convertMembers(node: ts.NamedDeclaration): model.Member[] {
+	private convertMembers(node: ts.InterfaceDeclaration | ts.ClassDeclaration): model.Member[] {
 		const result = [] as model.Member[];
 		const sym = this.checker.getSymbolAtLocation(node.name);
-		// instance members
-		sym.members?.forEach((symMember, name) => {
-			const n4jsMember = this.convertMember(symMember, false, sym);
+		for (const m of node.members) {
+			const n4jsMember = this.convertMember(m, utils_ts.isStatic(m), sym);
 			if (n4jsMember !== undefined) {
 				result.push(n4jsMember);
-			}
-		});
-		// static members
-		if (ts.isClassLike(node)) {
-			for (const m of node.members) {
-				if (!utils_ts.isStatic(m)) {
-					continue;
-				}
-				const n4jsMember = this.convertMemberDeclInAST(m, true, sym);
-				if (n4jsMember !== undefined) {
-					result.push(n4jsMember);
-				}
 			}
 		}
 		return result;
@@ -388,7 +405,7 @@ export class Converter {
 	private convertMembersOfObjectType(node: ts.TypeLiteralNode): model.Member[] {
 		const result = [] as model.Member[];
 		for (const m of node.members) {
-			const n4jsMember = this.convertMemberDeclInAST(m, false, undefined);
+			const n4jsMember = this.convertMember(m, false, undefined);
 			if (n4jsMember !== undefined) {
 				result.push(n4jsMember);
 			}
@@ -396,35 +413,37 @@ export class Converter {
 		return result;
 	}
 
-	private convertMemberDeclInAST(member: ts.ClassElement | ts.TypeElement, isStatic: boolean, symOwner?: ts.Symbol): model.Member | undefined {
-		const symMember = this.checker.getSymbolAtLocation(member.name); // FIXME what happens for members that do not have a name???
-		return this.convertMember(symMember, isStatic, symOwner);
-	}
+	private convertMember(node: ts.ClassElement | ts.TypeElement, isStatic: boolean, symOwner?: ts.Symbol): model.Member | undefined {
+		// FIXME what happens for members that do not have a name???
+		// FIXME is there a better way to obtain the symbol, without requiring a cast to 'any'?
+		const symMember = this.checker.getSymbolAtLocation(node.name) ?? (node as any).symbol;
 
-	private convertMember(symMember: ts.Symbol, isStatic: boolean, symOwner?: ts.Symbol): model.Member | undefined {
-		// we need an AST node; in case of overloading there will be several declarations (one per signature)
-		// but because relevant properties (kind, accessibility, etc.) will be the same in all cases we can
-		// simply use the first one as representative:
-		const representativeNode = symMember.declarations[0] as ts.SignatureDeclaration;
+		if (symMember.declarations?.[0] !== node) {
+			// we were called for the AST node of a signature other than this member's first signature
+			// --> ignore this call, because we have handled all signatures in one go when we were
+			// called for the AST node of the first signature
+			return undefined;
+		}
 
 		const result = new model.Member();
-		result.jsdoc = utils_ts.getJSDocForNode(representativeNode);
-		result.accessibility = utils_ts.getAccessibility(representativeNode);
+		result.jsdoc = utils_ts.getJSDocForNode(node);
+		result.accessibility = utils_ts.getAccessibility(node);
 		result.isStatic = isStatic;
 
-		if (ts.isTypeParameterDeclaration(representativeNode)) {
+		if (ts.isTypeParameterDeclaration(node)) {
 			// type parameters of the containing classifier appear as members, but they are handled elsewhere
 			// -> so ignore them here:
 			return undefined;
 		}
 
 		// type parameters of 'symMember'
-		if (representativeNode.typeParameters) {
+		if ((node as ts.SignatureDeclaration).typeParameters) { // cases: CallSignatureDeclaration, IndexSignatureDeclaration, ConstructSignatureDeclaration
+			const nodeCasted = node as ts.SignatureDeclaration;
 			// is parameterization for this kind of member supported on N4JS side?
-			const typeParamsSupported = !ts.isCallSignatureDeclaration(representativeNode);
+			const typeParamsSupported = !ts.isCallSignatureDeclaration(node);
 			if (typeParamsSupported) {
 				// yes
-				for (const typeParam of representativeNode.typeParameters) {
+				for (const typeParam of nodeCasted.typeParameters) {
 					const typeParamName = typeParam.name.text;
 					if (typeParamName) {
 						result.typeParams.push(typeParamName);
@@ -433,53 +452,53 @@ export class Converter {
 			} else {
 				// no, type parameters are not supported on N4JS side for this member,
 				// so in the signature of this member we have to suppress all references to these type parameters:
-				this.suppressTypes([...representativeNode.typeParameters]);
+				this.suppressTypes([...nodeCasted.typeParameters]);
 			}
 		}
 
-		if (ts.isConstructorDeclaration(representativeNode)) {
+		if (ts.isConstructorDeclaration(node)) {
 			if (!symOwner) {
 				return undefined; // constructor declarations not supported if owner not given
 			}
 			result.kind = model.MemberKind.CTOR;
 			result.signatures = this.convertConstructSignatures(symOwner);
 			return result;
-		} else if (ts.isConstructSignatureDeclaration(representativeNode)) {
+		} else if (ts.isConstructSignatureDeclaration(node)) {
 			result.kind = model.MemberKind.CTOR;
 			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
-		} else if (ts.isCallSignatureDeclaration(representativeNode)) {
+		} else if (ts.isCallSignatureDeclaration(node)) {
 			result.kind = model.MemberKind.CALLABLE_CTOR;
 			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
-		} else if (ts.isIndexSignatureDeclaration(representativeNode)) {
+		} else if (ts.isIndexSignatureDeclaration(node)) {
 			result.kind = model.MemberKind.INDEX_SIGNATURE;
-			result.signatures = [ this.convertIndexSignatureDeclarationInAST(representativeNode) ];
+			result.signatures = [ this.convertIndexSignatureDeclarationInAST(node) ];
 			return result;
 		}
 
 		result.name = symMember.getName();
 
-		const isReadonly = utils_ts.isReadonly(representativeNode);
-		if ((!isReadonly && ts.isPropertyDeclaration(representativeNode))
-				|| (!isReadonly && ts.isPropertySignature(representativeNode))) {
+		const isReadonly = utils_ts.isReadonly(node);
+		if ((!isReadonly && ts.isPropertyDeclaration(node))
+				|| (!isReadonly && ts.isPropertySignature(node))) {
 			result.kind = model.MemberKind.FIELD;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
-		} else if (ts.isGetAccessorDeclaration(representativeNode)
-				|| (isReadonly && ts.isPropertyDeclaration(representativeNode))
-				|| (isReadonly && ts.isPropertySignature(representativeNode))) {
+		} else if (ts.isGetAccessorDeclaration(node)
+				|| (isReadonly && ts.isPropertyDeclaration(node))
+				|| (isReadonly && ts.isPropertySignature(node))) {
 			result.kind = model.MemberKind.GETTER;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
-		} else if (ts.isSetAccessorDeclaration(representativeNode)) {
+		} else if (ts.isSetAccessorDeclaration(node)) {
 			result.kind = model.MemberKind.SETTER;
-			result.type = this.convertTypeReferenceOfTypedDeclaration(representativeNode.parameters[0]);
-		} else if (ts.isMethodDeclaration(representativeNode)
-				|| ts.isMethodSignature(representativeNode)) {
+			result.type = this.convertTypeReferenceOfTypedDeclaration(node.parameters[0]);
+		} else if (ts.isMethodDeclaration(node)
+				|| ts.isMethodSignature(node)) {
 			const sigs = this.convertCallSignatures(symMember);
 			result.kind = model.MemberKind.METHOD;
 			result.signatures = sigs;
 		} else {
-			this.createErrorForUnsupportedNode(representativeNode, "member");
+			this.createErrorForUnsupportedNode(node, "member");
 			return undefined;
 		}
 		return result;
@@ -763,17 +782,6 @@ export class Converter {
 		return result;
 	}
 
-	private isToBeConverted(node: ts.NamedDeclaration) {
-		if (ts.isInterfaceDeclaration(node)) {
-			const sym = this.checker.getSymbolAtLocation(node.name);
-			if (this.convertedTypes.has(sym)) {
-				return false; // already converted
-			}
-			this.convertedTypes.add(sym);
-		}
-		return !this.isIgnored(node);
-	}
-
 	private isIgnored(node: ts.NamedDeclaration) {
 		if (!this.ignorePredicate) {
 			return false;
@@ -814,4 +822,8 @@ export class Converter {
 		const error = utils.issue(kind, msg + (contextStr ? " (in " + contextStr + ")" : "") + "\n" + offendingCode);
 		this.issues.push(error);
 	}
+}
+
+function inArrayIfDefined<T>(value: T): T[] {
+	return value !== undefined && value !== null ? [ value ] : [];
 }
