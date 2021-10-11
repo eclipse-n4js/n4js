@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4JS.JSXElementName
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
@@ -613,15 +613,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 				// handle special areas inside a polyfill that should *not* get the usual polyfill handling implemented
 				// in the above case for "TypeDefiningElement":
-				if (container instanceof N4ClassDeclaration) {
-					if (N4JSLanguageUtils.isPolyfill(container) || N4JSLanguageUtils.isStaticPolyfill(container)) {
+				if (container instanceof N4ClassifierDeclaration) {
+					if (N4JSLanguageUtils.isNonStaticPolyfill(container) || N4JSLanguageUtils.isStaticPolyfill(container)) {
 						if (container.typeVars.contains(context)) {
 							// area #1: upper/lower bound of type parameter of polyfill, e.g. the 2nd 'T' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T,S extends T> extends ToBeFilled<T,S> {}
 							val IScope parent = getTypeScopeInternal(context.eContainer, false);
 							return locallyKnownTypesScopingHelper.scopeWithTypeAndItsTypeVariables(parent, container.definedType, fromStaticContext);
-						} else if (container.superClassRef === context) {
+						} else if (container.superClassifierRefs.contains(context)) {
 							// area #2: super type reference of polyfill, e.g. everything after 'extends' in:
 							// @@StaticPolyfillModule
 							// @StaticPolyfill export public class ToBeFilled<T> extends ToBeFilled<T> {}

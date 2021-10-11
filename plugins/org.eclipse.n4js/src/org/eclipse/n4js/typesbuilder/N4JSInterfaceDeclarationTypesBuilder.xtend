@@ -15,6 +15,7 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
 	
@@ -44,6 +45,7 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 			})
 
 		interfaceType.setProvidedByRuntime(n4Interface, preLinkingPhase)
+		interfaceType.declaredNonStaticPolyfill = N4JSLanguageUtils.isNonStaticPolyfill(n4Interface);
 		interfaceType.declaredCovariantConstructor = n4Interface.isDeclaredCovariantConstructor;
 		interfaceType.addTypeParameters(n4Interface, preLinkingPhase)
 		interfaceType.addExtendedInterfaces(n4Interface, preLinkingPhase)

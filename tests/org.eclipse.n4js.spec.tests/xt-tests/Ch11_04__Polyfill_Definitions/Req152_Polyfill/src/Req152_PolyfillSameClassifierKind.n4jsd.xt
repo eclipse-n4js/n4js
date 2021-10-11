@@ -15,9 +15,6 @@
 		Project "PolyfillTest" {
 			Folder "src" {
 				ThisFile {}
-				File "F.n4jsd" {}
-				File "P1.n4jsd" {}
-				File "P2.n4jsd" {}
 			}
 			File "package.json" { from="../package.json" }
 		}
@@ -26,19 +23,18 @@
 	END_SETUP
  */
 
+// Test needs to be run in project configured as ProjectType: runtimeLibrary (i.e. need package.json in this or parent folder)
 
-class Sub extends F{}
-
-var f = new Sub();
-// XPECT noerrors --> "bind to original def"
-f.initialMethod();
-// XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
-f.additionalMethod();
-// XPECT noerrors --> "bind to polyfill in P1"
-f.additionalMethod1();
-// XPECT noerrors --> "bind to polyfill in P2"
-f.additionalMethod2();
+@@ProvidedByRuntime
+@@Global
 
 
-// XPECT noerrors --> "bind to polyfill in P1"
-Sub.addStatic();
+// XPECT errors --> "Polyfill for class Object must be a class, not an interface." at "Object"
+@Polyfill export external public interface Object extends Object {
+	additionalMethod();
+}
+
+// XPECT errors --> "Polyfill for interface IArguments must be an interface, not a class." at "IArguments"
+@Polyfill export external public class ~IArguments extends IArguments {
+	additionalMethod();
+}

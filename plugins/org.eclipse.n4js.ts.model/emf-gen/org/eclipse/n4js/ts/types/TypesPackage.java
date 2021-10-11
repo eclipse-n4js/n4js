@@ -4754,13 +4754,22 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE = TCLASSIFIER_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL = TCLASSIFIER_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Dynamizable</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__DYNAMIZABLE = TCLASSIFIER_FEATURE_COUNT + 3;
+	int TN4_CLASSIFIER__DYNAMIZABLE = TCLASSIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
@@ -4769,7 +4778,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__TYPING_STRATEGY = TCLASSIFIER_FEATURE_COUNT + 4;
+	int TN4_CLASSIFIER__TYPING_STRATEGY = TCLASSIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>TN4 Classifier</em>' class.
@@ -4778,7 +4787,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 5;
+	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4797,15 +4806,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___IS_ALIAS = TCLASSIFIER___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER___IS_POLYFILL = TCLASSIFIER___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -4997,13 +4997,22 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___GET_ELEMENT_TYPE = TCLASSIFIER_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Is Polyfill</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___IS_POLYFILL = TCLASSIFIER_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TN4 Classifier</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER_OPERATION_COUNT = TCLASSIFIER_OPERATION_COUNT + 4;
+	int TN4_CLASSIFIER_OPERATION_COUNT = TCLASSIFIER_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassImpl <em>TClass</em>}' class.
@@ -5124,6 +5133,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__DECLARED_ELEMENT_TYPE = TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS__DECLARED_NON_STATIC_POLYFILL = TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL;
+
+	/**
 	 * The feature id for the '<em><b>Dynamizable</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5178,22 +5196,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__DECLARED_FINAL = TN4_CLASSIFIER_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Declared Polyfill</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS__DECLARED_POLYFILL = TN4_CLASSIFIER_FEATURE_COUNT + 4;
-
-	/**
 	 * The feature id for the '<em><b>Declared Static Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__DECLARED_STATIC_POLYFILL = TN4_CLASSIFIER_FEATURE_COUNT + 5;
+	int TCLASS__DECLARED_STATIC_POLYFILL = TN4_CLASSIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Observable</b></em>' attribute.
@@ -5202,7 +5211,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__OBSERVABLE = TN4_CLASSIFIER_FEATURE_COUNT + 6;
+	int TCLASS__OBSERVABLE = TN4_CLASSIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Super Class Ref</b></em>' containment reference.
@@ -5211,7 +5220,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__SUPER_CLASS_REF = TN4_CLASSIFIER_FEATURE_COUNT + 7;
+	int TCLASS__SUPER_CLASS_REF = TN4_CLASSIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Implemented Interface Refs</b></em>' containment reference list.
@@ -5220,7 +5229,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__IMPLEMENTED_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 8;
+	int TCLASS__IMPLEMENTED_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>TClass</em>' class.
@@ -5229,7 +5238,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 9;
+	int TCLASS_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -5584,6 +5593,15 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__DECLARED_ELEMENT_TYPE = TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__DECLARED_NON_STATIC_POLYFILL = TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL;
+
+	/**
 	 * The feature id for the '<em><b>Dynamizable</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5645,15 +5663,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___IS_ALIAS = TN4_CLASSIFIER___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE___IS_POLYFILL = TN4_CLASSIFIER___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -5816,6 +5825,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_ELEMENT_TYPE = TN4_CLASSIFIER___GET_ELEMENT_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Polyfill</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___IS_POLYFILL = TN4_CLASSIFIER___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -12981,6 +12999,17 @@ public interface TypesPackage extends EPackage {
 	EClass getTN4Classifier();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TN4Classifier#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Declared Non Static Polyfill</em>'.
+	 * @see org.eclipse.n4js.ts.types.TN4Classifier#isDeclaredNonStaticPolyfill()
+	 * @see #getTN4Classifier()
+	 * @generated
+	 */
+	EAttribute getTN4Classifier_DeclaredNonStaticPolyfill();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TN4Classifier#isDynamizable <em>Dynamizable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13001,6 +13030,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTN4Classifier_TypingStrategy();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TN4Classifier#isPolyfill() <em>Is Polyfill</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Polyfill</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TN4Classifier#isPolyfill()
+	 * @generated
+	 */
+	EOperation getTN4Classifier__IsPolyfill();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TClass <em>TClass</em>}'.
@@ -13055,17 +13094,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTClass_DeclaredFinal();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredPolyfill <em>Declared Polyfill</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Declared Polyfill</em>'.
-	 * @see org.eclipse.n4js.ts.types.TClass#isDeclaredPolyfill()
-	 * @see #getTClass()
-	 * @generated
-	 */
-	EAttribute getTClass_DeclaredPolyfill();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredStaticPolyfill <em>Declared Static Polyfill</em>}'.
@@ -15584,6 +15612,14 @@ public interface TypesPackage extends EPackage {
 		EClass TN4_CLASSIFIER = eINSTANCE.getTN4Classifier();
 
 		/**
+		 * The meta object literal for the '<em><b>Declared Non Static Polyfill</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL = eINSTANCE.getTN4Classifier_DeclaredNonStaticPolyfill();
+
+		/**
 		 * The meta object literal for the '<em><b>Dynamizable</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -15598,6 +15634,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TN4_CLASSIFIER__TYPING_STRATEGY = eINSTANCE.getTN4Classifier_TypingStrategy();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Polyfill</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TN4_CLASSIFIER___IS_POLYFILL = eINSTANCE.getTN4Classifier__IsPolyfill();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TClassImpl <em>TClass</em>}' class.
@@ -15640,14 +15684,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TCLASS__DECLARED_FINAL = eINSTANCE.getTClass_DeclaredFinal();
-
-		/**
-		 * The meta object literal for the '<em><b>Declared Polyfill</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TCLASS__DECLARED_POLYFILL = eINSTANCE.getTClass_DeclaredPolyfill();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Static Polyfill</b></em>' attribute feature.
