@@ -78,9 +78,7 @@ class RuntimeLibsProcessor {
 
 	private processScript(script: model.Script) {
 		this.removeMetaProperties(script);
-		this.removeIgnoredElements(script);
 		this.handleCtorInstanceTypePattern(script);
-
 		this.handleSimpleConfigurations(script);
 		this.handlePolyfills(script);
 	}
@@ -164,25 +162,6 @@ class RuntimeLibsProcessor {
 						++i;
 					}
 				}
-			}
-		}
-	}
-
-	private removeIgnoredElements(script: model.Script) {
-		const fileConfig = getGenConfig().files.get(script.tsFileName);
-		const ignoredElems = fileConfig?.ignore;
-		if (!ignoredElems || ignoredElems.size === 0) {
-			return;
-		}
-		let i = 0;
-		const elems = script.topLevelElements;
-		while (i < elems.length) {
-			const elem = elems[i];
-			const elemName = elem.name;
-			if (elemName && ignoredElems.has(elemName)) {
-				elems.splice(i, 1);
-			} else {
-				++i;
 			}
 		}
 	}
@@ -281,10 +260,7 @@ class RuntimeLibsProcessor {
 			}
 			const elemName = elem.name;
 			if (elemName && polyfills.has(elemName)) {
-				elem.annotations.push(new model.Annotation("@Polyfill"));
-				elem.extends.length = 0;
-				elem.extends.push(new model.TypeRef(elemName));
-				elem.defSiteStructural = false;
+				changeToPolyfill(elem);
 			}
 		}
 	}
@@ -292,7 +268,7 @@ class RuntimeLibsProcessor {
 
 function changeInterfaceToClass(ifc: model.Type) {
 	if (ifc.kind !== model.TypeKind.INTERFACE) {
-		throw "ifc is expected to be an interface, but was: " + ifc.kind; // note: not a RuntimeLibsError!
+		return;
 	}
 	ifc.kind = model.TypeKind.CLASS;
 	ifc.defSiteStructural = false;
@@ -302,6 +278,17 @@ function changeInterfaceToClass(ifc: model.Type) {
 			m.accessibility = model.Accessibility.PUBLIC;
 		}
 	});
+}
+
+function changeToPolyfill(type: model.Type) {
+	const typeName = type.name;
+	if (!typeName) {
+		return;
+	}
+	type.annotations.push(new model.Annotation("@Polyfill"));
+	type.extends.length = 0;
+	type.extends.push(new model.TypeRef(typeName));
+	type.defSiteStructural = false;
 }
 
 /**
