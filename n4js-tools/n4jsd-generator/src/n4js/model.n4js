@@ -38,6 +38,8 @@ export interface AnnotatableElement {
 }
 
 export class Script {
+	tsFileName: string;
+	tsFilePath: string;
 	mode: DTSMode = DTSMode.NONE;
 	prefix?: string;
 	suffix?: string;

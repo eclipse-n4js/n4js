@@ -32,6 +32,8 @@ export interface AnnotatableElement {
 }
 
 export class Script {
+	tsFileName: string;
+	tsFilePath: string;
 	mode: DTSMode;
 	preamble?: string;
 	imports: Import[];

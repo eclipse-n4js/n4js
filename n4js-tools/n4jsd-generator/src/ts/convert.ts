@@ -90,6 +90,8 @@ export class Converter {
 		}
 
 		const result = new model.Script();
+		result.tsFileName = path_lib.basename(sourceFilePath);
+		result.tsFilePath = sourceFilePath;
 		result.mode = dtsMode;
 		sourceFile.forEachChild(node => {
 			if (ts.isImportDeclaration(node)) {

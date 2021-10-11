@@ -106,9 +106,14 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 
 	// perform adjustments for runtime libraries (if requested)
 	if (opts.runtimeLibs) {
-		for (const srcDtsPath of sourceDtsFilePaths) {
-			const script = scripts.get(srcDtsPath);
-			runtimeLibs.postProcessRuntimeLib(path_lib.basename(srcDtsPath), script);
+		try {
+			runtimeLibs.postProcessRuntimeLibs([...scripts.values()]);
+		} catch(err) {
+			if (err instanceof runtimeLibs.RuntimeLibsError) {
+				utils.logError(err.message);
+				return; // abort (even if opts.force is true)
+			}
+			throw err;
 		}
 	}
 

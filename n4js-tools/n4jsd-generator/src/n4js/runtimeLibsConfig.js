@@ -422,6 +422,7 @@ export default {
 					public get prototype(): Object;
 				`
 			}
-		}
+		},
+		"es2015.core.d.ts": {}
 	}
 };

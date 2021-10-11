@@ -47,27 +47,35 @@ const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
 
 export public function isIgnored(filePath: string, elementName: string): boolean {
 	const fileName = path_lib.basename(filePath);
-	return getConfig().files.get(fileName)?.ignore?.has(elementName);
+	return getGenConfig().files.get(fileName)?.ignore?.has(elementName);
 }
+
+export public class RuntimeLibsError extends Error {}
 
 /**
- * Invoked for each script iff in "--runtime-libs" mode. Will modify its top-level elements
- * in various ways (in place).
+ * Invoked iff in "--runtime-libs" mode. Will modify its top-level elements in various ways (in place).
  *
- * @param script the script to modify.
+ * @param scripts all scripts that were imported from '.d.ts' files.
  */
-export public function postProcessRuntimeLib(dtsFileName: string, script: model.Script) {
-	removeMetaProperties(script);
-	removeIgnoredElements(dtsFileName, script);
-	handleCtorInstanceTypePattern(script);
-
-	handleSimpleConfigurations(dtsFileName, script);
-	handlePolyfills(dtsFileName, script);
+export public function postProcessRuntimeLibs(scripts: model.Script[]) {
+	const scriptsOrdered = getScriptsOrderedAndAsserted(scripts);
+	for (const script of scriptsOrdered) {
+		postProcessRuntimeLib(script);
+	}
 }
 
-function handleSimpleConfigurations(dtsFileName: string, script: model.Script) {
-	const config = getConfig();
-	const fileConfig = config.files.get(dtsFileName);
+function postProcessRuntimeLib(script: model.Script) {
+	removeMetaProperties(script);
+	removeIgnoredElements(script);
+	handleCtorInstanceTypePattern(script);
+
+	handleSimpleConfigurations(script);
+	handlePolyfills(script);
+}
+
+function handleSimpleConfigurations(script: model.Script) {
+	const config = getGenConfig();
+	const fileConfig = config.files.get(script.tsFileName);
 	// script prefix/suffix
 	const preamble = config.preamble;
 	const prefix = fileConfig?.prefix;
@@ -148,8 +156,8 @@ function removeMetaProperties(script: model.Script) {
 	}
 }
 
-function removeIgnoredElements(dtsFileName: string, script: model.Script) {
-	const fileConfig = getConfig().files.get(dtsFileName);
+function removeIgnoredElements(script: model.Script) {
+	const fileConfig = getGenConfig().files.get(script.tsFileName);
 	const ignoredElems = fileConfig?.ignore;
 	if (!ignoredElems || ignoredElems.size === 0) {
 		return;
@@ -249,8 +257,8 @@ function adjustCtorInstanceTypesForVarDecl(
 	topLevelElementsToBeRemoved.push(varDecl);
 }
 
-function handlePolyfills(dtsFileName: string, script: model.Script) {
-	const fileConfig = getConfig().files.get(dtsFileName);
+function handlePolyfills(script: model.Script) {
+	const fileConfig = getGenConfig().files.get(script.tsFileName);
 	const polyfills = fileConfig?.polyfills;
 	if (!polyfills || polyfills.size === 0) {
 		return;
@@ -271,7 +279,7 @@ function handlePolyfills(dtsFileName: string, script: model.Script) {
 
 function changeInterfaceToClass(ifc: model.Type) {
 	if (ifc.kind !== model.TypeKind.INTERFACE) {
-		throw "ifc is expected to be an interface, but was: " + ifc.kind;
+		throw "ifc is expected to be an interface, but was: " + ifc.kind; // note: not a RuntimeLibsError!
 	}
 	ifc.kind = model.TypeKind.CLASS;
 	ifc.defSiteStructural = false;
@@ -283,14 +291,53 @@ function changeInterfaceToClass(ifc: model.Type) {
 	});
 }
 
-let __config: GenConfig;
-function getConfig(): GenConfig {
-	if (!__config) {
-		try {
-			__config = parseObject(configUnparsed, GenConfig, GEN_CONFIG_TYPE_INFO);
-		} catch (err) {
-			throw "error while parsing configuration file for runtime-libs conversion:\n    " + err;
+/**
+ * Returns the given scripts in the order their configuration was defined in GenConfig.
+ * In additions, this method performs two assertions:
+ * 1) that the GenConfig file contains file configurations for all input files.
+ * 2) that an input file exists for all file configurations given in the GenConfig file.
+ */
+function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
+	const fileConfigs = getGenConfig().files;
+
+	const scriptsWithoutGenConfig = [] as model.Script[];
+	for (const script of scripts) {
+		if (!fileConfigs.has(script.tsFileName)) {
+			scriptsWithoutGenConfig.push(script);
 		}
 	}
-	return __config;
+	if (scriptsWithoutGenConfig.length > 0) {
+		throw new RuntimeLibsError("no generator configuration in config property 'files' found for:\n    "
+			+ scriptsWithoutGenConfig.map(s => s.tsFileName + "  (at " + s.tsFilePath + ")").join("\n    "));
+	}
+
+	const result: model.Script[] = [];
+	const scriptsByName = new Map<string, model.Script>(scripts.map(s => [s.tsFileName, s]));
+	const namesWithoutScript = [] as string[];
+	for (const name of fileConfigs.keys()) {
+		const script = scriptsByName.get(name);
+		if (!script) {
+			namesWithoutScript.push(name);
+		} else {
+			result.push(script);
+		}
+	}
+	if (namesWithoutScript.length > 0) {
+		throw new RuntimeLibsError("no .d.ts input file found for generator configuration with name(s): "
+			+ namesWithoutScript.join(", "));
+	}
+
+	return result;
+}
+
+let _cachedGenConfig: GenConfig;
+function getGenConfig(): GenConfig {
+	if (!_cachedGenConfig) {
+		try {
+			_cachedGenConfig = parseObject(configUnparsed, GenConfig, GEN_CONFIG_TYPE_INFO);
+		} catch (err) {
+			throw new RuntimeLibsError("error while parsing configuration file for runtime-libs conversion:\n    " + err);
+		}
+	}
+	return _cachedGenConfig;
 }
