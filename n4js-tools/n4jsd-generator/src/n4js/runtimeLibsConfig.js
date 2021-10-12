@@ -423,6 +423,64 @@ export default {
 				`
 			}
 		},
-		"es2015.core.d.ts": {}
+		"es2015.core.d.ts": {
+			ignore: [
+				// read-only types:
+				"ReadonlyArray"
+			]
+		},
+		"es2015.collection.d.ts": {
+			suffix: `
+				type ReadonlySet<T> = Set<T>;
+				type ReadonlyMap<T> = Map<T>;
+			`,
+			ignore: [
+				// read-only types:
+				"ReadonlySet", "ReadonlyMap"
+			]
+		},
+		"es2015.symbol.d.ts": {},
+		"es2015.symbol.wellknown.d.ts": {},
+		"es2015.iterable.d.ts": {
+			ignore: [
+				// read-only types:
+				"ReadonlyArray", "ReadonlySet", "ReadonlyMap"
+			]
+		},
+		"es2015.generator.d.ts": {},
+		"es2015.promise.d.ts": {},
+		"es2015.proxy.d.ts": {},
+		"es2015.reflect.d.ts": {},
+		"es2016.array.include.d.ts": {
+			ignore: [
+				// read-only types:
+				"ReadonlyArray"
+			]
+		},
+		"es2017.string.d.ts": {},
+		"es2017.object.d.ts": {},
+		"es2017.sharedmemory.d.ts": {},
+		"es2017.typedarrays.d.ts": {},
+		"es2017.intl.d.ts": {},
+		"es2018.asynciterable.d.ts": {},
+		"es2018.asyncgenerator.d.ts": {},
+		"es2018.promise.d.ts": {},
+		"es2018.regexp.d.ts": {},
+		"es2018.intl.d.ts": {},
+		"es2019.string.d.ts": {},
+		"es2019.object.d.ts": {},
+		"es2019.array.d.ts": {
+			ignore: [
+				// read-only types:
+				"ReadonlyArray"
+			]
+		},
+		"es2019.symbol.d.ts": {},
+		"es2020.bigint.d.ts": {},
+		"es2020.string.d.ts": {},
+		"es2020.promise.d.ts": {},
+		"es2020.sharedmemory.d.ts": {},
+		"es2020.symbol.wellknown.d.ts": {},
+		"es2020.intl.d.ts": {},
 	}
 };
