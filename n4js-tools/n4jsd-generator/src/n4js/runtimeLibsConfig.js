@@ -431,8 +431,8 @@ export default {
 		},
 		"es2015.collection.d.ts": {
 			suffix: `
-				type ReadonlySet<T> = Set<T>;
-				type ReadonlyMap<T> = Map<T>;
+				export external public type ReadonlySet<T> = Set<T>;
+				export external public type ReadonlyMap<K,V> = Map<K,V>;
 			`,
 			ignore: [
 				// read-only types:
