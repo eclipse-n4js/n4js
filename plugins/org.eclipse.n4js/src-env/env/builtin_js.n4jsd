@@ -170,9 +170,9 @@ export external public class Date {
 	public toString(): string;
 	public toDateString(): string;
 	public toTimeString(): string;
-	public toLocaleString(): string; // further signatures were omitted
-	public toLocaleDateString(): string; // further signatures were omitted
-	public toLocaleTimeString(): string; // further signatures were omitted
+	public toLocaleString(...args: any+): any+; // overloading not supported
+	public toLocaleDateString(...args: any+): any+; // overloading not supported
+	public toLocaleTimeString(...args: any+): any+; // overloading not supported
 	public valueOf(): number;
 	public getTime(): number;
 	public getFullYear(): number;
@@ -237,7 +237,7 @@ export external public class RegExp {
 	public lastIndex: number;
 	public compile(pattern: string, flags: string = ): this;
 	public constructor(pattern: string = undefined, flags: string = undefined);
-	(pattern: RegExp | string): RegExp; // further signatures were omitted
+	(...args: any+): any+; // overloading not supported
 	public static $1: string;
 	public static $2: string;
 	public static $3: string;
@@ -332,7 +332,7 @@ export external public class Array<T> {
 	public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
 	public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
 	public constructor(first: union{number, T} = undefined, ...items: T);  // TODO: signature is type unsafe, allows to create arrays with elements of wrong type, new Array<string>(5, 'x', 'y'), but cannot write constructor(items : union {number, T... items} = undefined)
-	(arrayLength: number = ): Array<any>; // further signatures were omitted
+	(...args: any+): any+; // overloading not supported
 	public static isArray(arg: any): boolean;
 	public [Symbol.iterator](): Iterator<T>;
 	/**
@@ -421,8 +421,8 @@ export external public class Int8Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Int8Array)=>number, thisArg: any = ): Int8Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Int8Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Int8Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Int8Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Int8Array;
@@ -432,10 +432,10 @@ export external public class Int8Array {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Int8Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Int8Array;
-	public static from(arrayLike: ArrayLike<number>): Int8Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Uint8Array {
@@ -455,8 +455,8 @@ export external public class Uint8Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Uint8Array)=>number, thisArg: any = ): Uint8Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint8Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint8Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Uint8Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Uint8Array;
@@ -466,10 +466,10 @@ export external public class Uint8Array {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Uint8Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Uint8Array;
-	public static from(arrayLike: ArrayLike<number>): Uint8Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Uint8ClampedArray {
@@ -489,8 +489,8 @@ export external public class Uint8ClampedArray {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Uint8ClampedArray)=>number, thisArg: any = ): Uint8ClampedArray;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint8ClampedArray)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint8ClampedArray)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Uint8ClampedArray;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Uint8ClampedArray;
@@ -500,10 +500,10 @@ export external public class Uint8ClampedArray {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Uint8ClampedArray;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Uint8ClampedArray;
-	public static from(arrayLike: ArrayLike<number>): Uint8ClampedArray; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Int16Array {
@@ -523,8 +523,8 @@ export external public class Int16Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Int16Array)=>number, thisArg: any = ): Int16Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Int16Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Int16Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Int16Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Int16Array;
@@ -534,10 +534,10 @@ export external public class Int16Array {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Int16Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Int16Array;
-	public static from(arrayLike: ArrayLike<number>): Int16Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Uint16Array {
@@ -557,8 +557,8 @@ export external public class Uint16Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Uint16Array)=>number, thisArg: any = ): Uint16Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint16Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint16Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Uint16Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Uint16Array;
@@ -568,10 +568,10 @@ export external public class Uint16Array {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Uint16Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Uint16Array;
-	public static from(arrayLike: ArrayLike<number>): Uint16Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Int32Array {
@@ -591,8 +591,8 @@ export external public class Int32Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Int32Array)=>number, thisArg: any = ): Int32Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Int32Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Int32Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Int32Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Int32Array;
@@ -602,10 +602,10 @@ export external public class Int32Array {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Int32Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Int32Array;
-	public static from(arrayLike: ArrayLike<number>): Int32Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Uint32Array {
@@ -625,8 +625,8 @@ export external public class Uint32Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Uint32Array)=>number, thisArg: any = ): Uint32Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint32Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Uint32Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Uint32Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Uint32Array;
@@ -636,10 +636,10 @@ export external public class Uint32Array {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Uint32Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Uint32Array;
-	public static from(arrayLike: ArrayLike<number>): Uint32Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Float32Array {
@@ -659,8 +659,8 @@ export external public class Float32Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Float32Array)=>number, thisArg: any = ): Float32Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Float32Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Float32Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Float32Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Float32Array;
@@ -670,10 +670,10 @@ export external public class Float32Array {
 	public toLocaleString(): string;
 	public toString(): string;
 	public valueOf(): Float32Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Float32Array;
-	public static from(arrayLike: ArrayLike<number>): Float32Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 export external public class Float64Array {
@@ -693,8 +693,8 @@ export external public class Float64Array {
 	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
 	public get length(): number;
 	public map(callbackfn: (value: number, index: number, array: Float64Array)=>number, thisArg: any = ): Float64Array;
-	public reduce(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Float64Array)=>number): number; // further signatures were omitted
-	public reduceRight(callbackfn: (previousValue: number, currentValue: number, currentIndex: number, array: Float64Array)=>number): number; // further signatures were omitted
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
 	public reverse(): Float64Array;
 	public set(array: ArrayLike<number>, offset: number = ): void;
 	public slice(start: number = , end: number = ): Float64Array;
@@ -703,10 +703,10 @@ export external public class Float64Array {
 	public subarray(begin: number = , end: number = ): Float64Array;
 	public toString(): string;
 	public valueOf(): Float64Array;
-	public constructor(length: number); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: number): Float64Array;
-	public static from(arrayLike: ArrayLike<number>): Float64Array; // further signatures were omitted
+	public static from(...args: any+): any+; // overloading not supported
 }
 
 type ReadonlyArray<T> = Array<T>;

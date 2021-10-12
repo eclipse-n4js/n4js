@@ -37,7 +37,7 @@ export external public class Array<T> extends Array<T> {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<T>;
-	public static <T> from(iterable: Iterable<T> | ArrayLike<T>): Array<T>; // further signatures were omitted
+	public static <T> from(...args: any+): any+; // overloading not supported
 }
 
 export external public interface ~IArguments {

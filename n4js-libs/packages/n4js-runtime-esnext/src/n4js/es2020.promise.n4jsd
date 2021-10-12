@@ -14,5 +14,5 @@ export external public type PromiseSettledResult = PromiseFulfilledResult<T> | P
 
 @Polyfill
 export external public class Promise extends Promise {
-	public static <T> allSettled(values: T): Promise<Object+>; // further signatures were omitted
+	public static <T> allSettled(...args: any+): any+; // overloading not supported
 }

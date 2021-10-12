@@ -8,7 +8,7 @@ export external public class Map<K,V> {
 	public has(key: K): boolean;
 	public set(key: K, value: V): this;
 	public get size(): number;
-	public constructor(); // further signatures were omitted
+	public constructor(...args: any+); // overloading not supported
 }
 
 export external public class WeakMap<K,V> {
@@ -36,5 +36,5 @@ export external public class WeakSet<T> {
 	public constructor(values: Array<T> = );
 }
 
-type ReadonlySet<T> = Set<T>;
-type ReadonlyMap<T> = Map<T>;
+export external public type ReadonlySet<T> = Set<T>;
+export external public type ReadonlyMap<K,V> = Map<K,V>;

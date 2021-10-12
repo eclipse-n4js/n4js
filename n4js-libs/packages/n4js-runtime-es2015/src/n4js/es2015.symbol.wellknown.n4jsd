@@ -27,7 +27,7 @@ export external public class Array<T> extends Array<T> {
 
 @Polyfill
 export external public class Date extends Date {
-	public "__@toPrimitive@846"(hint: "default"): string; // further signatures were omitted
+	public "__@toPrimitive@846"(...args: any+): any+; // overloading not supported
 }
 
 @Polyfill
@@ -82,7 +82,7 @@ export external public interface ~PromiseConstructor {
 @Polyfill
 export external public class RegExp extends RegExp {
 	public "__@match@305"(string: string): RegExpMatchArray;
-	public "__@replace@307"(string: string, replaceValue: string): string; // further signatures were omitted
+	public "__@replace@307"(...args: any+): any+; // overloading not supported
 	public "__@search@310"(string: string): number;
 	public "__@split@312"(string: string, limit: number = ): Array<string>;
 	public static get "__@species@31"(): RegExpConstructor;
@@ -91,7 +91,7 @@ export external public class RegExp extends RegExp {
 @Polyfill
 export external public class String extends String {
 	public match(matcher: ~Object with { "__@match@305"(string: string): RegExpMatchArray; }): RegExpMatchArray;
-	public replace(searchValue: ~Object with { "__@replace@307"(string: string, replaceValue: string): string; }, replaceValue: string): string; // further signatures were omitted
+	public replace(...args: any+): any+; // overloading not supported
 	public search(searcher: ~Object with { "__@search@310"(string: string): number; }): number;
 	public split(splitter: ~Object with { "__@split@312"(string: string, limit: number = ): Array<string>; }, limit: number = ): Array<string>;
 }

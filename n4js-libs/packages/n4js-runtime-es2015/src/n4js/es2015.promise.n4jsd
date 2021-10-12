@@ -5,5 +5,5 @@ export external public class Promise {
 	public static <T> all(values: T): Promise<Object+>;
 	public static <T> race(values: T): Promise<Awaited<any+>>;
 	public static <T> reject(reason: any = ): Promise<T>;
-	public static resolve(): Promise<void>; // further signatures were omitted
+	public static resolve(...args: any+): any+; // overloading not supported
 }

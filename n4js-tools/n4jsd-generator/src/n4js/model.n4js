@@ -290,8 +290,11 @@ class Emitter {
 		buff.push("public ");
 		buff.push("function ");
 		buff.push(fun.name);
-		this.emitSignature(fun.signatures[0]);
+		this.emitSignatures(fun.signatures);
 		buff.push(";");
+		if (fun.signatures !== undefined && fun.signatures.length > 1) {
+			buff.push(" // overloading not supported");
+		}
 	}
 
 	emitType(type: Type) {
@@ -425,11 +428,11 @@ class Emitter {
 					buff.pushln();
 				}
 				buff.push("constructor");
-				this.emitSignature(member.signatures[0], true);
+				this.emitSignatures(member.signatures, true);
 				buff.push(";");
 				break;
 			case MemberKind.CALLABLE_CTOR:
-				this.emitSignature(member.signatures[0]);
+				this.emitSignatures(member.signatures);
 				buff.push(";");
 				break;
 			case MemberKind.FIELD:
@@ -453,14 +456,26 @@ class Emitter {
 				break;
 			case MemberKind.METHOD:
 				this.emitPropertyName(member.name);
-				this.emitSignature(member.signatures[0]);
+				this.emitSignatures(member.signatures);
 				buff.push(";");
 				break;
 			default:
 				throw "unknown kind of member: " + member.kind;
 		}
 		if (member.signatures !== undefined && member.signatures.length > 1) {
-			buff.push(" // further signatures were omitted");
+			buff.push(" // overloading not supported");
+		}
+	}
+
+	emitSignatures(signatures: Signature[], ignoreReturnType: boolean = false) {
+		const buff = this.buff;
+		if (signatures.length === 1) {
+			this.emitSignature(signatures[0], ignoreReturnType);
+		} else {
+			buff.push("(...args: any+)");
+			if (!ignoreReturnType) {
+				buff.push(": any+");
+			}
 		}
 	}
 

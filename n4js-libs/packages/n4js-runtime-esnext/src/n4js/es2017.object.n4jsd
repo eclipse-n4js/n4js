@@ -2,7 +2,7 @@
 
 @Polyfill
 export external public class Object extends Object {
-	public static <T> values(o: ~Object with {  } | ArrayLike<T>): Array<T>; // further signatures were omitted
-	public static <T> entries(o: ~Object with {  } | ArrayLike<T>): Array<any+>; // further signatures were omitted
+	public static <T> values(...args: any+): any+; // overloading not supported
+	public static <T> entries(...args: any+): any+; // overloading not supported
 	public static <T> getOwnPropertyDescriptors(o: T): Object+ & ~Object with {  };
 }

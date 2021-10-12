@@ -2,11 +2,11 @@
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
-	public <S> find(predicate: (_this: void, value: T, index: number, obj: Array<T>)=>boolean, thisArg: any = ): S; // further signatures were omitted
+	public <S> find(...args: any+): any+; // overloading not supported
 	public findIndex(predicate: (value: T, index: number, obj: Array<T>)=>any+, thisArg: any = ): number;
 	public fill(value: T, start: number = , end: number = ): this;
 	public copyWithin(target: number, start: number, end: number = ): this;
-	public static <T> from(arrayLike: ArrayLike<T>): Array<T>; // further signatures were omitted
+	public static <T> from(...args: any+): any+; // overloading not supported
 	public static <T> of(...items: T): Array<T>;
 }
 
@@ -56,7 +56,7 @@ export external public class Number extends Number {
 
 @Polyfill
 export external public class Object extends Object {
-	public static <T,U> assign(target: T, source: U): T & U; // further signatures were omitted
+	public static <T,U> assign(...args: any+): any+; // overloading not supported
 	public static getOwnPropertySymbols(o: any): Array<symbol>;
 	public static keys(o: ~Object with {  }): Array<string>;
 	public static is(value1: any, value2: any): boolean;
@@ -77,7 +77,7 @@ export external public class String extends String {
 	public codePointAt(pos: number): number;
 	public includes(searchString: string, position: number = ): boolean;
 	public endsWith(searchString: string, endPosition: number = ): boolean;
-	public normalize(form: "NFC" | "NFD" | "NFKC" | "NFKD"): string; // further signatures were omitted
+	public normalize(...args: any+): any+; // overloading not supported
 	public repeat(count: number): string;
 	public startsWith(searchString: string, position: number = ): boolean;
 	public anchor(name: string): string;
@@ -86,7 +86,7 @@ export external public class String extends String {
 	public bold(): string;
 	public fixed(): string;
 	public fontcolor(color: string): string;
-	public fontsize(size: number): string; // further signatures were omitted
+	public fontsize(...args: any+): any+; // overloading not supported
 	public italics(): string;
 	public link(url: string): string;
 	public small(): string;
