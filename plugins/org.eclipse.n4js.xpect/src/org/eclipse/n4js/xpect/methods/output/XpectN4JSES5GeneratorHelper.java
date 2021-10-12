@@ -20,8 +20,6 @@ import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.generator.ISubGenerator;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
-import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
-import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.XtextResource;
@@ -103,21 +101,14 @@ public class XpectN4JSES5GeneratorHelper {
 
 	/**
 	 * Returns the desired generator instance for the resource argument. For now, will always return an instance of
-	 * {@link EcmaScriptSubGenerator}, except for N4IDL resources an instance of {@link N4IDLSubGenerator} will be
-	 * returned.
+	 * {@link EcmaScriptSubGenerator}.
 	 * <p>
 	 * NOTE: it would be good to use {@link org.eclipse.n4js.generator.SubGeneratorRegistry}, here, but this registry is
 	 * not available in this code.
 	 */
 	private ISubGenerator getGeneratorForResource(Resource resource) {
 		checkState(resource instanceof XtextResource, "Expected XtextResource was " + resource);
-		ResourceType resourceType = ResourceType.getResourceType(resource);
-		Class<? extends ISubGenerator> generatorType;
-		if (resourceType == ResourceType.N4IDL) {
-			generatorType = N4IDLSubGenerator.class;
-		} else {
-			generatorType = EcmaScriptSubGenerator.class;
-		}
+		Class<? extends ISubGenerator> generatorType = EcmaScriptSubGenerator.class;
 		return ((XtextResource) resource).getResourceServiceProvider().get(generatorType);
 	}
 

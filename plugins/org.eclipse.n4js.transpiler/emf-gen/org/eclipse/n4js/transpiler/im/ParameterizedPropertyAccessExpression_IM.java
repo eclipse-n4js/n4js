@@ -21,7 +21,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  *
  * <!-- begin-model-doc -->
  * SymbolTable-aware replacement for {@link ParameterizedPropertyAccessExpression}.
- * Original property {@link ParameterizedPropertyAccessExpression.property} is always {@code null}.
+ * Original property {@link ParameterizedPropertyAccessExpression#getProperty()} is always {@code null}.
  * <!-- end-model-doc -->
  *
  * <p>

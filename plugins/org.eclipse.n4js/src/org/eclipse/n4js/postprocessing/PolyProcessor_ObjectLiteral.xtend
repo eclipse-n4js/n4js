@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
 import java.util.Map
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyAssignment
@@ -27,7 +28,6 @@ import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
-import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.InferenceVariable
@@ -86,7 +86,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		val List<TStructMember> tMembers = newArrayList;
 		// in standard mode: the following list will contain pairs from property assignments to inference variables
 		// in quick mode: the following list will contain pairs from property assignments to fallback types
-		val List<Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType = newArrayList;
+		val List<Pair<PropertyAssignment, ? extends EObject>> props2InfVarOrFallbackType = newArrayList;
 		processProperties(G, cache, infCtx, objLit, tMembers, quickMode, props2InfVarOrFallbackType);
 		linkGetterSetterPairs(infCtx, tMembers, quickMode);
 
@@ -107,7 +107,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	 */
 	def private void processProperties(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
 		ObjectLiteral objLit, List<TStructMember> tMembers,
-		boolean quickMode, List<Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType
+		boolean quickMode, List<Pair<PropertyAssignment, ? extends EObject>> props2InfVarOrFallbackType
 	) {
 		for (pa : objLit.propertyAssignments) {
 			if (pa !== null) {
@@ -143,7 +143,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	 */
 	def private void processNonMethodProperties(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
 		TStructMember tMember, PropertyAssignment propAssignm,
-		boolean quickMode, List<Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType
+		boolean quickMode, List<Pair<PropertyAssignment, ? extends EObject>> props2InfVarOrFallbackType
 	) {
 		if(tMember!==null) {
 			val originalMemberType = tMember.typeOfMember;
@@ -176,7 +176,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		} else {
 			// quick mode:
 			// compute a fall-back type
-			val fallbackType = switch (propAssignm) {
+			val TypeRef fallbackType = switch (propAssignm) {
 				PropertyNameValuePair case propAssignm.expression !== null:
 					polyProcessor.processExpr(G, propAssignm.expression, null, infCtx, cache)
 				PropertyGetterDeclaration:
@@ -245,7 +245,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	 * Writes final types to cache
 	 */
 	private def void handleOnSolved(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx, ObjectLiteral objLit,
-		boolean quickMode, List<? extends Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType,
+		boolean quickMode, List<? extends Pair<PropertyAssignment, ? extends EObject>> props2InfVarOrFallbackType,
 		Optional<Map<InferenceVariable, TypeRef>> solution
 	) {
 		for (propPair : props2InfVarOrFallbackType) {
@@ -289,7 +289,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	}
 
 	private def TypeRef getMemberType(RuleEnvironment G, InferenceContext infCtx, Optional<Map<InferenceVariable, TypeRef>> solution,
-		boolean quickMode, Pair<PropertyAssignment, ? extends Versionable> prop2InfVarOrFallbackType
+		boolean quickMode, Pair<PropertyAssignment, ? extends EObject> prop2InfVarOrFallbackType
 	) {
 		var TypeRef memberType = null;
 		val propAssignm = prop2InfVarOrFallbackType.key;
@@ -357,7 +357,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	 * </pre>
 	 */
 	private def TypeRef adjustMemberTypeToAvoidMisleadingLiteralTypes(RuleEnvironment G, InferenceContext infCtx,
-		boolean quickMode, Pair<PropertyAssignment, ? extends Versionable> prop2InfVarOrFallbackType, TypeRef memberType
+		boolean quickMode, Pair<PropertyAssignment, ? extends EObject> prop2InfVarOrFallbackType, TypeRef memberType
 	) {
 		if (!quickMode) {
 			if (memberType instanceof LiteralTypeRef) {

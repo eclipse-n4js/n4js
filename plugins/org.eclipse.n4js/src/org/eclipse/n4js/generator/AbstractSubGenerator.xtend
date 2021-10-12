@@ -449,7 +449,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	def protected boolean justCopy(Resource eResource) {
 		val resourceType = ResourceType.getResourceType(eResource);
 		return !(resourceType.equals(ResourceType.N4JS) || resourceType.equals(ResourceType.N4JSX)
-				|| resourceType.equals(ResourceType.N4JSD) || resourceType.equals(ResourceType.N4IDL));
+				|| resourceType.equals(ResourceType.N4JSD));
 	}
 
 	/**

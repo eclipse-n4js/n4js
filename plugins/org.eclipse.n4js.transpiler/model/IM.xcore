@@ -34,16 +34,13 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
-import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeReferenceNode
-import org.eclipse.n4js.n4JS.VersionedIdentifierRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TExportableElement
-import org.eclipse.n4js.ts.versions.VersionableUtils
 
 
 
@@ -254,7 +251,7 @@ abstract class ReferencingElementExpression_IM extends ReferencingElement_IM, Ex
 
 /*
  * SymbolTable-aware replacement for {@link IdentifierRef}.
- * Original property {@link IdentifierRef.id} is always {@code null}.
+ * Original property {@link IdentifierRef#getId()} is always {@code null}.
  */
 class IdentifierRef_IM extends IdentifierRef, ReferencingElementExpression_IM {
 
@@ -272,7 +269,7 @@ class IdentifierRef_IM extends IdentifierRef, ReferencingElementExpression_IM {
 
 /*
  * SymbolTable-aware replacement for {@link ParameterizedPropertyAccessExpression}.
- * Original property {@link ParameterizedPropertyAccessExpression.property} is always {@code null}.
+ * Original property {@link ParameterizedPropertyAccessExpression#getProperty()} is always {@code null}.
  */
 class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAccessExpression, ReferencingElementExpression_IM {
 
@@ -310,7 +307,7 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
 
 /*
  * SymbolTable-aware replacement for {@link TypeReferenceNode}.
- * Original properties {@link TypeReferenceNode.typeRefInAST} and {@link TypeReferenceNode.cachedProcessedTypeRef} are always {@code null}.
+ * Original properties {@link TypeReferenceNode#getTypeRefInAST()} and {@link TypeReferenceNode#getCachedProcessedTypeRef()} are always {@code null}.
  */
 class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
 
@@ -388,7 +385,7 @@ class DelegatingMethodDeclaration extends N4MethodDeclaration, DelegatingMember 
 class StringLiteralForSTE extends StringLiteral {
 	refers SymbolTableEntry entry
 	/**
-	 * If true, use the element's exported name instead of its actual name. If true, the {@link #entry}'s original
+	 * If true, use the element's exported name instead of its actual name. If true, the {@link #getEntry()}'s original
 	 */
 	boolean useExportedName
 
@@ -403,28 +400,3 @@ class StringLiteralForSTE extends StringLiteral {
 	}
 }
 
-// ****************************************************************************************************
-// N4IDL related model elements
-// ****************************************************************************************************
-
-/*
- * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class VersionedIdentifierRef_IM extends IdentifierRef_IM, VersionedIdentifierRef {}
-
-/**
- * Import specifier that is aware of multiple versions of the imported type.
- */
-class VersionedNamedImportSpecifier_IM extends NamedImportSpecifier {
-	refers SymbolTableEntryOriginal[] importedTypeVersions
-
-	/**
-	 * Returns {@code true} if this import specifiers imports a
-	 * versioned type.
-	 */
-	boolean versionedTypeImport get {
-		return importedTypeVersions.size > 0 && (importedTypeVersions.size > 1 /*shortcut*/ ||
-			VersionableUtils.isTVersionable(importedTypeVersions.get(0).originalTarget));
-	}
-}

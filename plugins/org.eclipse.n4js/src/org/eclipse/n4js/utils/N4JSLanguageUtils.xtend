@@ -273,8 +273,7 @@ public class N4JSLanguageUtils {
 			return OPAQUE_JS_MODULES; // JavaScript modules are not processed iff OPAQUE_JS_MODULES is true
 
 		} else if (resourceType === ResourceType.N4JS
-			|| resourceType === ResourceType.N4JSX
-			|| resourceType === ResourceType.N4IDL) {
+			|| resourceType === ResourceType.N4JSX) {
 
 			if (typeOfContainingProject === null) {
 				return false; // happens in tests

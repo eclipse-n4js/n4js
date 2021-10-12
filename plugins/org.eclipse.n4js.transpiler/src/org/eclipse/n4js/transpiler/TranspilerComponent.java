@@ -44,7 +44,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
-import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -293,7 +292,7 @@ public abstract class TranspilerComponent {
 
 	@SuppressWarnings("javadoc")
 	protected Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(
-			VersionedNamedImportSpecifier_IM importspec) {
+			NamedImportSpecifier importspec) {
 		return SymbolTableManagement.findSymbolTableEntriesForVersionedTypeImport(state, importspec);
 	}
 

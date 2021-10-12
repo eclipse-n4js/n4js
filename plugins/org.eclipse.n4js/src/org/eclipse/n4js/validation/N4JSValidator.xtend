@@ -18,8 +18,6 @@ import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.validators.IDEBUGValidator
-import org.eclipse.n4js.validation.validators.N4IDLMigrationValidator
-import org.eclipse.n4js.validation.validators.N4IDLValidator
 import org.eclipse.n4js.validation.validators.N4JSAccessModifierValidator
 import org.eclipse.n4js.validation.validators.N4JSAnnotationValidator
 import org.eclipse.n4js.validation.validators.N4JSClassValidator
@@ -101,8 +99,6 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSXValidator,
 	ThirdPartyValidator,
 	UnsupportedFeatureValidator,
-	N4IDLValidator,
-	N4IDLMigrationValidator,
 	RuntimeDependencyValidator
 ])
 @Log

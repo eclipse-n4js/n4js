@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.typeRefs.Versionable;
-
 import org.eclipse.n4js.ts.types.TEnum;
 
 /**
@@ -32,7 +30,7 @@ import org.eclipse.n4js.ts.types.TEnum;
  * @model
  * @generated
  */
-public interface N4EnumDeclaration extends N4TypeDeclaration, Versionable, VersionedElement {
+public interface N4EnumDeclaration extends N4TypeDeclaration {
 	/**
 	 * Returns the value of the '<em><b>Literals</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.N4EnumLiteral}.
@@ -55,16 +53,5 @@ public interface N4EnumDeclaration extends N4TypeDeclaration, Versionable, Versi
 	 * @generated
 	 */
 	TEnum getDefinedTypeAsEnum();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	int getVersion();
 
 } // N4EnumDeclaration

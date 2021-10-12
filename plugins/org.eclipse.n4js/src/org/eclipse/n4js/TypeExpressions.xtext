@@ -173,20 +173,12 @@ ParameterizedTypeRef returns ParameterizedTypeRef:
 	ParameterizedTypeRefNominal | ParameterizedTypeRefStructural;
 
 ParameterizedTypeRefNominal returns ParameterizedTypeRef:
-	(
-		TypeReference
-	|	{VersionedParameterizedTypeRef}
-		TypeReference VersionRequest
-	)
+	TypeReference
 	(-> TypeArguments)?
 ;
 
 ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
-	(
-		definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
-	|	{VersionedParameterizedTypeRefStructural}
-		definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference VersionRequest
-	)
+	definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
 	(-> TypeArguments)?
 	('with' TStructMemberList)?
 ;
@@ -200,8 +192,6 @@ ArrayNTypeExpression returns ParameterizedTypeRef:
 
 EmptyIterableTypeExpressionTail returns Wildcard:
 	{Wildcard} ']';
-
-fragment VersionRequest*: requestedVersion=VERSION;
 
 fragment TypeReference *:
 	declaredType=[Type|TypeReferenceName]
@@ -456,8 +446,4 @@ terminal fragment IDENTIFIER_PART:
 // the input contains an incomplete variadic?='...' keyword, e.g. ..)
 terminal DOT_DOT:
 	'..'
-;
-
-terminal VERSION returns ecore::EBigDecimal:
-	'#' WS* INT
 ;

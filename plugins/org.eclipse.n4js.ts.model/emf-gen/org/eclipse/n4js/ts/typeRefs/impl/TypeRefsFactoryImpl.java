@@ -86,9 +86,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF: return createNumericLiteralTypeRef();
 			case TypeRefsPackage.STRING_LITERAL_TYPE_REF: return createStringLiteralTypeRef();
 			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF: return createEnumLiteralTypeRef();
-			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF: return createVersionedParameterizedTypeRef();
-			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF: return createVersionedFunctionTypeRef();
-			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL: return createVersionedParameterizedTypeRefStructural();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -335,39 +332,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	public EnumLiteralTypeRef createEnumLiteralTypeRef() {
 		EnumLiteralTypeRefImpl enumLiteralTypeRef = new EnumLiteralTypeRefImpl();
 		return enumLiteralTypeRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedParameterizedTypeRef createVersionedParameterizedTypeRef() {
-		VersionedParameterizedTypeRefImpl versionedParameterizedTypeRef = new VersionedParameterizedTypeRefImpl();
-		return versionedParameterizedTypeRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedFunctionTypeRef createVersionedFunctionTypeRef() {
-		VersionedFunctionTypeRefImpl versionedFunctionTypeRef = new VersionedFunctionTypeRefImpl();
-		return versionedFunctionTypeRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedParameterizedTypeRefStructural createVersionedParameterizedTypeRefStructural() {
-		VersionedParameterizedTypeRefStructuralImpl versionedParameterizedTypeRefStructural = new VersionedParameterizedTypeRefStructuralImpl();
-		return versionedParameterizedTypeRefStructural;
 	}
 
 	/**

@@ -76,10 +76,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	protected TypeRefsSwitch<Adapter> modelSwitch =
 		new TypeRefsSwitch<Adapter>() {
 			@Override
-			public Adapter caseVersionable(Versionable object) {
-				return createVersionableAdapter();
-			}
-			@Override
 			public Adapter caseTypeArgument(TypeArgument object) {
 				return createTypeArgumentAdapter();
 			}
@@ -192,22 +188,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createEnumLiteralTypeRefAdapter();
 			}
 			@Override
-			public Adapter caseVersionedReference(VersionedReference object) {
-				return createVersionedReferenceAdapter();
-			}
-			@Override
-			public Adapter caseVersionedParameterizedTypeRef(VersionedParameterizedTypeRef object) {
-				return createVersionedParameterizedTypeRefAdapter();
-			}
-			@Override
-			public Adapter caseVersionedFunctionTypeRef(VersionedFunctionTypeRef object) {
-				return createVersionedFunctionTypeRefAdapter();
-			}
-			@Override
-			public Adapter caseVersionedParameterizedTypeRefStructural(VersionedParameterizedTypeRefStructural object) {
-				return createVersionedParameterizedTypeRefStructuralAdapter();
-			}
-			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -226,20 +206,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.Versionable <em>Versionable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.Versionable
-	 * @generated
-	 */
-	public Adapter createVersionableAdapter() {
-		return null;
-	}
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
@@ -630,62 +596,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEnumLiteralTypeRefAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference <em>Versioned Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference
-	 * @generated
-	 */
-	public Adapter createVersionedReferenceAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef <em>Versioned Parameterized Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
-	 * @generated
-	 */
-	public Adapter createVersionedParameterizedTypeRefAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef <em>Versioned Function Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef
-	 * @generated
-	 */
-	public Adapter createVersionedFunctionTypeRefAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural <em>Versioned Parameterized Type Ref Structural</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
-	 * @generated
-	 */
-	public Adapter createVersionedParameterizedTypeRefStructuralAdapter() {
 		return null;
 	}
 

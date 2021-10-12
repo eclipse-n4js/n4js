@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4idl.scoping.utils;
+package org.eclipse.n4js.scoping.utils;
 
 import org.eclipse.n4js.scoping.imports.ImportedElementsMap;
 import org.eclipse.xtext.naming.QualifiedName;

@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
-import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.tooling.tester.model.ID;
 import org.eclipse.n4js.tooling.tester.model.TestCase;
@@ -418,12 +417,7 @@ public class TestDiscoveryHelper {
 	 */
 	private String getTestCatalogNameFor(N4JSWorkspaceConfigSnapshot ws, TClass clazz) {
 		String classStr = "";
-		if (clazz.getDeclaredVersion() > 0) {
-			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
-					+ clazz.getDeclaredVersion();
-		} else {
-			classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz);
-		}
+		classStr = resourceNameComputer.getFullyQualifiedTypeName(clazz);
 
 		N4JSProjectConfigSnapshot project = ws.findProjectContaining(clazz.eResource().getURI());
 		if (project != null) {

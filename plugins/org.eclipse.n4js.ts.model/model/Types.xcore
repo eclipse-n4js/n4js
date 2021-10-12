@@ -35,7 +35,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.versions.MigratableUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
 
@@ -446,7 +445,7 @@ class InferenceVariable extends TypeVariable {}
  * Represents a function declaration. In JavaScript, functions are first-class objects, hence
  * a function declaration also is a type declaration.
  */
-class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable {
+class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement, Type {
 	boolean external
 	/*
 	 * Formal parameters
@@ -569,7 +568,7 @@ enum MemberAccessModifier {
  * </p>
  */
 //TODO why not abstract (doesn't work when it is abstract, but why?)
-class Type extends TExportableElement, TAnnotableElement, org.eclipse.n4js.ts.typeRefs.Versionable {
+class Type extends TExportableElement, TAnnotableElement {
 
 	/** Returns true iff this type is a type alias. */
 	op boolean isAlias() {
@@ -887,104 +886,10 @@ class TStructuralType extends ContainerType<TStructMember>, SyntaxRelatedTElemen
 	}
 }
 
-/**
- * Base class for all versionable types.
- */
-abstract class TVersionable extends Type {
-	/**
-	 * The declared version of the type. This is not used by N4JS at the moment but only
-	 * in derived languages such as N4IDL. It needs to be stored in the type model though as
-	 * it is required to be cached (i.e. stored in the Xtext index) for scoping etc.
-	 *
-	 * This is set by the N4IDL types builder.
-	 */
-	int declaredVersion
-
-	/*
-	 * Overrides default implementation of type, returns the actually declared version (which
-	 * is 0 in N4JS as it cannot be set there). Only used for derived languages such as N4IDL.
-	 */
-	op int getVersion() {
-		return declaredVersion;
-	}
-}
-
-/**
- * A migratable element represent a type that can be subject to N4IDL migrations.
- * 
- * @see TMigration
- */
-abstract class TMigratable {
-	/**
-	 * The declared migrations for this {@link TMigratable} element.
-	 */
-	refers TMigration[] migrations
-}
-
-/**
- * Represents an N4IDL migration.
- */
-class TMigration extends TFunction {
-	
-	/**
-	 * The source model version of this migration.
-	 */
-	int sourceVersion
-	/**
-	 * The target model version of this migration.
-	 */
-	int targetVersion
-	
-	/**
-	 * Returns {@code true} iff migration has an explicitly declared
-	 * source and target version.
-	 */
-	boolean hasDeclaredSourceAndTargetVersion
-	
-	/**
-	 * The source TypeRefs of this migration.
-	 */
-	refers TypeRef[] sourceTypeRefs
-	
-	/**
-	 * The target TypeRefs of this migration.
-	 */
-	refers TypeRef[] targetTypeRefs	
-	
-	
-	/** Transient principal argument type. Access through #getPrincipalArgumentType() */
-	refers transient TMigratable _principalArgumentType
-	
-	/**
-	 * The principal argument of this migration.
-	 */
-	op TMigratable getPrincipalArgumentType() {
-		if (_principalArgumentType === null) {
-			EcoreUtilN4.doWithDeliver(false,
-				[|
-					_principalArgumentType = MigratableUtils.findPrincipalMigrationArgument(sourceTypeRefs).orElse(null);
-				], this);
-		}
-		return _principalArgumentType;
-	}
-	
-	/**
-	 * Returns string representation of this migration.
-	 * 
-	 * This includes source types and target types.
-	 */
-	op String getMigrationAsString() {
-		return String.format("%s (%s) => (%s)",
-				this.name,
-				this.sourceTypeRefs.map[t | t.getTypeRefAsString()].join(", "),
-				this.targetTypeRefs.map[t | t.getTypeRefAsString()].join(", "));
-	}
-}
-
 /*
  * Base class for N4 specific classifiers, i.e., class, interface, or role.
  */
-abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, TVersionable {
+abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, Type {
 
 	/*
 	 * Tells if this classifier is itself annotated with <code>@CovariantConstructor</code> or if it has an owned
@@ -1058,7 +963,7 @@ abstract class ArrayLike {
 	op TypeRef getElementType()
 }
 
-class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike, TMigratable {
+class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
 
 	boolean declaredNonStaticPolyfill
 	/*
@@ -1655,7 +1560,7 @@ class TStructSetter extends TSetter, TStructMember {
  * Represents a user defined enumeration type. All enums implicitly (and transparently
  * to the user) inherit from N4Enum, which provides properties shared by all enums.
  */
-class TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable, TMigratable {
+class TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement {
 
 	boolean external
 	contains TEnumLiteral[] literals

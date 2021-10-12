@@ -158,24 +158,6 @@ public interface ImFactory extends EFactory {
 	StringLiteralForSTE createStringLiteralForSTE();
 
 	/**
-	 * Returns a new object of class '<em>Versioned Identifier Ref IM</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Identifier Ref IM</em>'.
-	 * @generated
-	 */
-	VersionedIdentifierRef_IM createVersionedIdentifierRef_IM();
-
-	/**
-	 * Returns a new object of class '<em>Versioned Named Import Specifier IM</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Named Import Specifier IM</em>'.
-	 * @generated
-	 */
-	VersionedNamedImportSpecifier_IM createVersionedNamedImportSpecifier_IM();
-
-	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

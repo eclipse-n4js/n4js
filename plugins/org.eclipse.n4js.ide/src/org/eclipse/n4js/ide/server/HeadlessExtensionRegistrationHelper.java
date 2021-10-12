@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.server;
 
 import static org.eclipse.n4js.N4JSGlobals.JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
-import static org.eclipse.n4js.N4JSGlobals.N4IDL_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
@@ -26,7 +25,6 @@ import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.resource.PackageJsonResourceDescriptionExtension;
 import org.eclipse.n4js.transpiler.dts.DtsSubGenerator;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
-import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
@@ -53,9 +51,6 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 	private DtsSubGenerator dtsSubGenerator;
 
 	@Inject
-	private N4IDLSubGenerator n4idlSubGenerator;
-
-	@Inject
 	private PackageJsonValidatorExtension packageJsonValidatorExtension;
 
 	@Inject
@@ -73,10 +68,9 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 		// Register file extensions
 		registerTestableFiles(N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION);
 		registerRunnableFiles(N4JS_FILE_EXTENSION, JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JSX_FILE_EXTENSION);
-		registerTranspilableFiles(N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION, JSX_FILE_EXTENSION,
-				N4IDL_FILE_EXTENSION);
+		registerTranspilableFiles(N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION, JSX_FILE_EXTENSION);
 		registerTypableFiles(N4JSD_FILE_EXTENSION, N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION,
-				JSX_FILE_EXTENSION, N4IDL_FILE_EXTENSION);
+				JSX_FILE_EXTENSION);
 		registerRawFiles(JS_FILE_EXTENSION, JSX_FILE_EXTENSION);
 
 		// Register d.ts subgenerator
@@ -89,8 +83,6 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSX_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, JSX_FILE_EXTENSION);
-
-		subGeneratorRegistry.register(n4idlSubGenerator, N4IDL_FILE_EXTENSION);
 
 		// register N4JS-specific package.json behavior with JSONExtensionRegistry
 		registerJSONLanguageExtension();

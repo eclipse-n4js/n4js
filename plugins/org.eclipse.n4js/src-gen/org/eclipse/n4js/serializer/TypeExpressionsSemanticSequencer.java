@@ -27,8 +27,6 @@ import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TAnonymousFormalParameter;
 import org.eclipse.n4js.ts.types.TFormalParameter;
@@ -272,55 +270,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getUnionTypeExpressionOLDRule()) {
 					sequence_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
-					return; 
-				}
-				else break;
-			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF:
-				if (rule == grammarAccess.getTypeRefRule()
-						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
-						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
-						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
-						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
-						|| rule == grammarAccess.getTypeRefWithModifiersRule()
-						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_ParameterizedTypeRefNominal_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()) {
-					sequence_ParameterizedTypeRefNominal_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
-						|| rule == grammarAccess.getTypeArgInTypeTypeRefRule()
-						|| rule == grammarAccess.getParameterizedTypeRefRule()
-						|| rule == grammarAccess.getParameterizedTypeRefNominalRule()) {
-					sequence_ParameterizedTypeRefNominal_TypeArguments_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRef) semanticObject); 
-					return; 
-				}
-				else break;
-			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL:
-				if (rule == grammarAccess.getTypeRefRule()
-						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
-						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
-						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefTypeArgsAction_2_1_0_0()
-						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
-						|| rule == grammarAccess.getTypeRefWithModifiersRule()
-						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRefStructural) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()) {
-					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRefStructural) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
-						|| rule == grammarAccess.getParameterizedTypeRefRule()
-						|| rule == grammarAccess.getParameterizedTypeRefStructuralRule()) {
-					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference_VersionRequest(context, (VersionedParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
 				else break;
@@ -724,59 +673,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
-	 *     TypeRef returns VersionedParameterizedTypeRef
-	 *     TypeRef.UnionTypeExpression_1_0 returns VersionedParameterizedTypeRef
-	 *     IntersectionTypeExpression returns VersionedParameterizedTypeRef
-	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns VersionedParameterizedTypeRef
-	 *     ArrayTypeExpression returns VersionedParameterizedTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns VersionedParameterizedTypeRef
-	 *     PrimaryTypeExpression returns VersionedParameterizedTypeRef
-	 *     TypeRefWithModifiers returns VersionedParameterizedTypeRef
-	 *     TypeArgument returns VersionedParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION 
-	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
-	 *         dynamic?='+'? 
-	 *         followedByQuestionMark?='?'?
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefNominal_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefWithoutModifiers returns VersionedParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (declaredType=[Type|TypeReferenceName] requestedVersion=VERSION (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? dynamic?='+'?)
-	 */
-	protected void sequence_ParameterizedTypeRefNominal_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefFunctionTypeExpression returns VersionedParameterizedTypeRef
-	 *     TypeArgInTypeTypeRef returns VersionedParameterizedTypeRef
-	 *     ParameterizedTypeRef returns VersionedParameterizedTypeRef
-	 *     ParameterizedTypeRefNominal returns VersionedParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (declaredType=[Type|TypeReferenceName] requestedVersion=VERSION (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?)
-	 */
-	protected void sequence_ParameterizedTypeRefNominal_TypeArguments_TypeReference_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     TypeRef returns ParameterizedTypeRefStructural
 	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRefStructural
 	 *     IntersectionTypeExpression returns ParameterizedTypeRefStructural
@@ -804,34 +700,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
-	 *     TypeRef returns VersionedParameterizedTypeRefStructural
-	 *     TypeRef.UnionTypeExpression_1_0 returns VersionedParameterizedTypeRefStructural
-	 *     IntersectionTypeExpression returns VersionedParameterizedTypeRefStructural
-	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns VersionedParameterizedTypeRefStructural
-	 *     ArrayTypeExpression returns VersionedParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns VersionedParameterizedTypeRefStructural
-	 *     PrimaryTypeExpression returns VersionedParameterizedTypeRefStructural
-	 *     TypeRefWithModifiers returns VersionedParameterizedTypeRefStructural
-	 *     TypeArgument returns VersionedParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION 
-	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember* 
-	 *         dynamic?='+'? 
-	 *         followedByQuestionMark?='?'?
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     TypeRefWithoutModifiers returns ParameterizedTypeRefStructural
 	 *
 	 * Constraint:
@@ -844,25 +712,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     )
 	 */
 	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefWithoutModifiers returns VersionedParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION 
-	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember* 
-	 *         dynamic?='+'?
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -882,26 +731,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     )
 	 */
 	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefFunctionTypeExpression returns VersionedParameterizedTypeRefStructural
-	 *     ParameterizedTypeRef returns VersionedParameterizedTypeRefStructural
-	 *     ParameterizedTypeRefStructural returns VersionedParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION 
-	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember*
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

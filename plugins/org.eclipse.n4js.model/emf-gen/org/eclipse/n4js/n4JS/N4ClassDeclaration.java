@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,7 +21,7 @@ import org.eclipse.n4js.ts.typeRefs.Versionable;
  * @model
  * @generated
  */
-public interface N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration, Versionable, VersionedElement {
+public interface N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -34,16 +33,5 @@ public interface N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDecla
 	 * @generated
 	 */
 	boolean isAbstract();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	int getVersion();
 
 } // N4ClassDeclaration

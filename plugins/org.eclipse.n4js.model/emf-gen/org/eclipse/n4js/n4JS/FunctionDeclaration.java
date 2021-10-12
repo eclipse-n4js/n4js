@@ -27,7 +27,6 @@ package org.eclipse.n4js.n4JS;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDeclaration#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.FunctionDeclaration#get_migrationContext <em>migration Context</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDeclaration()
@@ -62,31 +61,6 @@ public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableE
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>migration Context</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * * Transient {@code MigrationContext} arguments variable. Access through #getMigrationContextVariable()
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>migration Context</em>' containment reference.
-	 * @see #set_migrationContext(MigrationContextVariable)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDeclaration__migrationContext()
-	 * @model containment="true" transient="true"
-	 * @generated
-	 */
-	MigrationContextVariable get_migrationContext();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDeclaration#get_migrationContext <em>migration Context</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>migration Context</em>' containment reference.
-	 * @see #get_migrationContext()
-	 * @generated
-	 */
-	void set_migrationContext(MigrationContextVariable value);
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -97,16 +71,5 @@ public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableE
 	 * @generated
 	 */
 	boolean isExternal();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * * Lazy initialized reference to transient localArgurmentsVariable
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	MigrationContextVariable getMigrationContextVariable();
 
 } // FunctionDeclaration

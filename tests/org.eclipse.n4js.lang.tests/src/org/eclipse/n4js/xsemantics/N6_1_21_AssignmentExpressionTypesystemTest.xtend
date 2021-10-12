@@ -110,7 +110,7 @@ class N6_1_21_AssignmentExpressionTypesystemTest extends AbstractOperatorExpress
 	/** Returns {@code true} if the {@code variant} is considered 
 	 * type-aware in the context of this test. */
 	private def boolean isTypeAwareVariant(JavaScriptVariant variant) {
-		return #[JavaScriptVariant.n4js, JavaScriptVariant.n4idl].contains(variant);
+		return #[JavaScriptVariant.n4js].contains(variant);
 	}
 
 	@Test

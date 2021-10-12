@@ -20,7 +20,6 @@ Export-Package: org.eclipse.n4js.ts.typeRefs,
  org.eclipse.n4js.ts.types,
  org.eclipse.n4js.ts.types.impl,
  org.eclipse.n4js.ts.types.internal,
- org.eclipse.n4js.ts.types.util,
- org.eclipse.n4js.ts.versions
+ org.eclipse.n4js.ts.types.util
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.n4js.ts.model

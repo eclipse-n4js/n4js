@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
@@ -201,13 +200,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	private static final String EXPORT_DEFAULT_KEY = "EXPORTED_DEFAULT";
 	private static final boolean EXPORT_DEFAULT_DEFAULT = false;
 
-	/**
-	 * Version declared in {@link Versionable} types. Used by content assist to show version information. If this user
-	 * data is missing, no version information is shown.
-	 */
-	private static final String VERSION = "VERSION";
-	private static final int VERSION_DEFAULT = 0;
-
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
 
@@ -335,19 +327,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		return Boolean.parseBoolean(value);
 	}
 
-	/** @return the version number of the given description. */
-	public static int getVersion(IEObjectDescription description) {
-		try {
-			String userData = description.getUserData(VERSION);
-			if (userData == null) {
-				return VERSION_DEFAULT;
-			}
-			return Integer.parseInt(userData);
-		} catch (NumberFormatException e) {
-			return VERSION_DEFAULT;
-		}
-	}
-
 	private void internalCreateEObjectDescriptionForRoot(final TModule module,
 			IAcceptor<IEObjectDescription> acceptor) {
 		// user data: serialized representation
@@ -402,7 +381,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				Map<String, String> userData = new HashMap<>();
 				addLocationUserData(userData, type);
 				addAccessModifierUserData(userData, type.getTypeAccessModifier());
-				addVersionableVersion(userData, type);
 
 				// Add additional user data for descriptions representing a TClassifier
 				if (type instanceof TClassifier) {
@@ -457,14 +435,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		boolean isConst = element.isConst();
 		if (isConst != CONST_DEFAULT) {
 			userData.put(CONST_KEY, Boolean.toString(isConst));
-		}
-	}
-
-	/** Supplies the given userData map with the user data value for the access modifier. */
-	private void addVersionableVersion(Map<String, String> userData, Type type) {
-		int version = type.getVersion();
-		if (version != VERSION_DEFAULT) {
-			userData.put(VERSION, String.valueOf(version));
 		}
 	}
 

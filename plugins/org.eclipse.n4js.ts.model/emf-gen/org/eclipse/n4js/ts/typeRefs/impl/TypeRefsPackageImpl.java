@@ -51,11 +51,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
-import org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef;
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural;
-import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -69,13 +64,6 @@ import org.eclipse.n4js.ts.types.impl.TypesPackageImpl;
  * @generated
  */
 public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionableEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -277,34 +265,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass versionedReferenceEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedParameterizedTypeRefEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedFunctionTypeRefEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedParameterizedTypeRefStructuralEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EEnum optionalFieldStrategyEEnum = null;
 
 	/**
@@ -382,26 +342,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(TypeRefsPackage.eNS_URI, theTypeRefsPackage);
 		return theTypeRefsPackage;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionable() {
-		return versionableEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getVersionable__GetVersion() {
-		return versionableEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -742,16 +682,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	@Override
 	public EOperation getTypeRef__GetASTNodeOptionalFieldStrategy() {
 		return typeRefEClass.getEOperations().get(25);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getTypeRef__GetVersion() {
-		return typeRefEClass.getEOperations().get(26);
 	}
 
 	/**
@@ -1102,16 +1032,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	@Override
 	public EOperation getBoundThisTypeRef__GetStructuralMembers() {
 		return boundThisTypeRefEClass.getEOperations().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getBoundThisTypeRef__GetVersion() {
-		return boundThisTypeRefEClass.getEOperations().get(7);
 	}
 
 	/**
@@ -2170,86 +2090,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getVersionedReference() {
-		return versionedReferenceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getVersionedReference_RequestedVersion() {
-		return (EAttribute)versionedReferenceEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getVersionedReference__HasRequestedVersion() {
-		return versionedReferenceEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getVersionedReference__GetRequestedVersionOrZero() {
-		return versionedReferenceEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionedParameterizedTypeRef() {
-		return versionedParameterizedTypeRefEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getVersionedParameterizedTypeRef__GetVersion() {
-		return versionedParameterizedTypeRefEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionedFunctionTypeRef() {
-		return versionedFunctionTypeRefEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionedParameterizedTypeRefStructural() {
-		return versionedParameterizedTypeRefStructuralEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EEnum getOptionalFieldStrategy() {
 		return optionalFieldStrategyEEnum;
 	}
@@ -2293,9 +2133,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		isCreated = true;
 
 		// Create classes and their features
-		versionableEClass = createEClass(VERSIONABLE);
-		createEOperation(versionableEClass, VERSIONABLE___GET_VERSION);
-
 		typeArgumentEClass = createEClass(TYPE_ARGUMENT);
 		createEOperation(typeArgumentEClass, TYPE_ARGUMENT___IS_TYPE_REF);
 		createEOperation(typeArgumentEClass, TYPE_ARGUMENT___GET_DECLARED_TYPE);
@@ -2331,7 +2168,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(typeRefEClass, TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING);
 		createEOperation(typeRefEClass, TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING);
 		createEOperation(typeRefEClass, TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY);
-		createEOperation(typeRefEClass, TYPE_REF___GET_VERSION);
 
 		staticBaseTypeRefEClass = createEClass(STATIC_BASE_TYPE_REF);
 
@@ -2376,7 +2212,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(boundThisTypeRefEClass, BOUND_THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING);
 		createEOperation(boundThisTypeRefEClass, BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING);
 		createEOperation(boundThisTypeRefEClass, BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS);
-		createEOperation(boundThisTypeRefEClass, BOUND_THIS_TYPE_REF___GET_VERSION);
 
 		parameterizedTypeRefEClass = createEClass(PARAMETERIZED_TYPE_REF);
 		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
@@ -2500,18 +2335,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(enumLiteralTypeRefEClass, ENUM_LITERAL_TYPE_REF___GET_ENUM_TYPE);
 		createEOperation(enumLiteralTypeRefEClass, ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
-		versionedReferenceEClass = createEClass(VERSIONED_REFERENCE);
-		createEAttribute(versionedReferenceEClass, VERSIONED_REFERENCE__REQUESTED_VERSION);
-		createEOperation(versionedReferenceEClass, VERSIONED_REFERENCE___HAS_REQUESTED_VERSION);
-		createEOperation(versionedReferenceEClass, VERSIONED_REFERENCE___GET_REQUESTED_VERSION_OR_ZERO);
-
-		versionedParameterizedTypeRefEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF);
-		createEOperation(versionedParameterizedTypeRefEClass, VERSIONED_PARAMETERIZED_TYPE_REF___GET_VERSION);
-
-		versionedFunctionTypeRefEClass = createEClass(VERSIONED_FUNCTION_TYPE_REF);
-
-		versionedParameterizedTypeRefStructuralEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL);
-
 		// Create enums
 		optionalFieldStrategyEEnum = createEEnum(OPTIONAL_FIELD_STRATEGY);
 
@@ -2552,7 +2375,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		// Add supertypes to classes
 		typeRefEClass.getESuperTypes().add(this.getTypeArgument());
-		typeRefEClass.getESuperTypes().add(this.getVersionable());
 		staticBaseTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		baseTypeRefEClass.getESuperTypes().add(this.getStaticBaseTypeRef());
 		composedTypeRefEClass.getESuperTypes().add(this.getStaticBaseTypeRef());
@@ -2581,18 +2403,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		numericLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
 		stringLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
 		enumLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
-		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getParameterizedTypeRef());
-		versionedParameterizedTypeRefEClass.getESuperTypes().add(this.getVersionedReference());
-		versionedFunctionTypeRefEClass.getESuperTypes().add(this.getVersionedParameterizedTypeRef());
-		versionedFunctionTypeRefEClass.getESuperTypes().add(this.getFunctionTypeRef());
-		versionedParameterizedTypeRefStructuralEClass.getESuperTypes().add(this.getVersionedParameterizedTypeRef());
-		versionedParameterizedTypeRefStructuralEClass.getESuperTypes().add(this.getParameterizedTypeRefStructural());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(versionableEClass, Versionable.class, "Versionable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getVersionable__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(typeArgumentEClass, TypeArgument.class, "TypeArgument", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getTypeArgument__IsTypeRef(), theEcorePackage.getEBoolean(), "isTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -2658,8 +2470,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getTypeRef__IsDefSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isDefSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTypeRef__GetASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "getASTNodeOptionalFieldStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTypeRef__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(staticBaseTypeRefEClass, StaticBaseTypeRef.class, "StaticBaseTypeRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2727,8 +2537,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getBoundThisTypeRef__IsUseSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isUseSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getBoundThisTypeRef__GetStructuralMembers(), theTypesPackage.getTStructMember(), "getStructuralMembers", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getBoundThisTypeRef__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(parameterizedTypeRefEClass, ParameterizedTypeRef.class, "ParameterizedTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getParameterizedTypeRef_DeclaredType(), theTypesPackage.getType(), null, "declaredType", null, 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2909,21 +2717,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getEnumLiteralTypeRef__GetEnumType(), theTypesPackage.getTEnum(), "getEnumType", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getEnumLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(versionedReferenceEClass, VersionedReference.class, "VersionedReference", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getVersionedReference_RequestedVersion(), theEcorePackage.getEBigDecimal(), "requestedVersion", null, 0, 1, VersionedReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getVersionedReference__HasRequestedVersion(), theEcorePackage.getEBoolean(), "hasRequestedVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getVersionedReference__GetRequestedVersionOrZero(), theEcorePackage.getEInt(), "getRequestedVersionOrZero", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(versionedParameterizedTypeRefEClass, VersionedParameterizedTypeRef.class, "VersionedParameterizedTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getVersionedParameterizedTypeRef__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(versionedFunctionTypeRefEClass, VersionedFunctionTypeRef.class, "VersionedFunctionTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(versionedParameterizedTypeRefStructuralEClass, VersionedParameterizedTypeRefStructural.class, "VersionedParameterizedTypeRefStructural", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(optionalFieldStrategyEEnum, OptionalFieldStrategy.class, "OptionalFieldStrategy");

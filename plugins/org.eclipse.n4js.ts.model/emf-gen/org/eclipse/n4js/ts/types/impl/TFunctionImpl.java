@@ -33,8 +33,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -42,7 +40,6 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMethod;
-import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -63,7 +60,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getAstElement <em>Ast Element</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
@@ -126,26 +122,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @ordered
 	 */
 	protected EObject astElement;
-
-	/**
-	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final int DECLARED_VERSION_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected int declaredVersion = DECLARED_VERSION_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isExternal() <em>External</em>}' attribute.
@@ -380,29 +356,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		astElement = newAstElement;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__AST_ELEMENT, oldAstElement, astElement));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getDeclaredVersion() {
-		return declaredVersion;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDeclaredVersion(int newDeclaredVersion) {
-		int oldDeclaredVersion = declaredVersion;
-		declaredVersion = newDeclaredVersion;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__DECLARED_VERSION, oldDeclaredVersion, declaredVersion));
 	}
 
 	/**
@@ -731,16 +684,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @generated
 	 */
 	@Override
-	public int getVersion() {
-		return this.getDeclaredVersion();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -799,8 +742,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
-			case TypesPackage.TFUNCTION__DECLARED_VERSION:
-				return getDeclaredVersion();
 			case TypesPackage.TFUNCTION__EXTERNAL:
 				return isExternal();
 			case TypesPackage.TFUNCTION__FPARS:
@@ -838,9 +779,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return;
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				setAstElement((EObject)newValue);
-				return;
-			case TypesPackage.TFUNCTION__DECLARED_VERSION:
-				setDeclaredVersion((Integer)newValue);
 				return;
 			case TypesPackage.TFUNCTION__EXTERNAL:
 				setExternal((Boolean)newValue);
@@ -888,9 +826,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				setAstElement((EObject)null);
 				return;
-			case TypesPackage.TFUNCTION__DECLARED_VERSION:
-				setDeclaredVersion(DECLARED_VERSION_EDEFAULT);
-				return;
 			case TypesPackage.TFUNCTION__EXTERNAL:
 				setExternal(EXTERNAL_EDEFAULT);
 				return;
@@ -933,8 +868,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 			case TypesPackage.TFUNCTION__AST_ELEMENT:
 				return astElement != null;
-			case TypesPackage.TFUNCTION__DECLARED_VERSION:
-				return declaredVersion != DECLARED_VERSION_EDEFAULT;
 			case TypesPackage.TFUNCTION__EXTERNAL:
 				return external != EXTERNAL_EDEFAULT;
 			case TypesPackage.TFUNCTION__FPARS:
@@ -975,12 +908,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				default: return -1;
 			}
 		}
-		if (baseClass == TVersionable.class) {
-			switch (derivedFeatureID) {
-				case TypesPackage.TFUNCTION__DECLARED_VERSION: return TypesPackage.TVERSIONABLE__DECLARED_VERSION;
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -1004,12 +931,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				default: return -1;
 			}
 		}
-		if (baseClass == TVersionable.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.TVERSIONABLE__DECLARED_VERSION: return TypesPackage.TFUNCTION__DECLARED_VERSION;
-				default: return -1;
-			}
-		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
@@ -1020,18 +941,11 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == Versionable.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return TypesPackage.TFUNCTION___GET_VERSION;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TFUNCTION___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.TYPE___IS_FINAL: return TypesPackage.TFUNCTION___IS_FINAL;
 				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TFUNCTION___GET_TYPE_ACCESS_MODIFIER;
-				case TypesPackage.TYPE___GET_VERSION: return TypesPackage.TFUNCTION___GET_VERSION;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -1045,12 +959,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == TVersionable.class) {
-			switch (baseOperationID) {
-				case TypesPackage.TVERSIONABLE___GET_VERSION: return TypesPackage.TFUNCTION___GET_VERSION;
 				default: return -1;
 			}
 		}
@@ -1075,8 +983,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return getFunctionAsString();
 			case TypesPackage.TFUNCTION___IS_FINAL:
 				return isFinal();
-			case TypesPackage.TFUNCTION___GET_VERSION:
-				return getVersion();
 			case TypesPackage.TFUNCTION___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TFUNCTION___GET_TYPE_ACCESS_MODIFIER:
@@ -1099,8 +1005,6 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		result.append(declaredTypeAccessModifier);
 		result.append(", declaredProvidedByRuntime: ");
 		result.append(declaredProvidedByRuntime);
-		result.append(", declaredVersion: ");
-		result.append(declaredVersion);
 		result.append(", external: ");
 		result.append(external);
 		result.append(", returnValueMarkedOptional: ");

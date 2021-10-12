@@ -97,10 +97,6 @@ import org.eclipse.xtext.naming.QualifiedName;
 		if (t2 == null) {
 			return 1;
 		}
-		// before comparing FQNs, compare versions
-		if (t1.getVersion() != t2.getVersion()) {
-			return 1;
-		}
 		if (fqnProvider != null) {
 			// standard behavior relying on a fqnProvider
 			final QualifiedName name1 = fqnProvider.getFullyQualifiedName(t1);

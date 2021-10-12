@@ -84,14 +84,12 @@ AnnotatedScriptElement returns ScriptElement:
 				(declaredModifiers+=N4Modifier)*
 				'class' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
-				VersionDeclaration?
 				TypeParameters?
 				ClassExtendsImplements<Yield=false>?
 			|   {N4InterfaceDeclaration.annotationList=current}
 				(declaredModifiers+=N4Modifier)*
 				'interface' typingStrategy=TypingStrategyDefSiteOperator?
 				name=BindingIdentifier<Yield=false>
-				VersionDeclaration?
 				TypeParameters?
 				InterfaceExtendsList?
 			)
@@ -100,7 +98,6 @@ AnnotatedScriptElement returns ScriptElement:
 	|	{N4EnumDeclaration.annotationList=current}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield=false>
-		VersionDeclaration?
 		'{'
 			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
 		'}'
@@ -260,7 +257,6 @@ fragment FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>*:
 fragment FunctionHeader<Yield, Generator>*:
 	TypeParameters?
 	name=BindingIdentifier<Yield>?
-	VersionDeclaration?
 	StrictFormalParameters<Yield=Generator>
 	(-> ColonSepDeclaredReturnTypeRef)?
 ;
@@ -605,7 +601,6 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
-	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 ;
 
 SuperLiteral: {SuperLiteral} 'super';
@@ -1248,7 +1243,6 @@ N4ClassDeclaration <Yield>:
 		(declaredModifiers+=N4Modifier)*
 		'class' typingStrategy=TypingStrategyDefSiteOperator?
 		name=BindingIdentifier<Yield>?
-		VersionDeclaration?
 	)
 	TypeParameters?
 	ClassExtendsImplements<Yield>?
@@ -1295,7 +1289,6 @@ N4InterfaceDeclaration <Yield>:
 		(declaredModifiers+=N4Modifier)*
 		'interface' typingStrategy=TypingStrategyDefSiteOperator?
 		name=BindingIdentifier<Yield>?
-		VersionDeclaration?
 	)
 	TypeParameters?
 	InterfaceExtendsList?
@@ -1314,7 +1307,6 @@ N4EnumDeclaration <Yield>:
 		{N4EnumDeclaration}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield>?
-		VersionDeclaration?
 	)
 	'{'
 		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
@@ -1563,6 +1555,3 @@ JSXPropertyAttribute:
 			)
 	)?;
 
-
-/* Version (N4IDL) related rules */
-fragment VersionDeclaration*: declaredVersion=VERSION;

@@ -888,7 +888,7 @@ class LookAheadTest extends AbstractParserTest{
 		assertEquals(1, NodeModelUtils.getNode(exportDecl).lookAhead)
 		
 		val classDecl = exportDecl.exportedElement as N4ClassDeclaration
-		assertEquals(3, NodeModelUtils.getNode(classDecl).lookAhead)
+		assertEquals(2, NodeModelUtils.getNode(classDecl).lookAhead)
 		
 		var max = 0;
 		// Array<{function()}> _$listeners;

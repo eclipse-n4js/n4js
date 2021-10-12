@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler
 
 import java.util.Collection
-import java.util.stream.Collectors
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -27,7 +26,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
-import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.NameAndAccess
@@ -391,27 +389,11 @@ class SymbolTableManagement {
 	}
 
 	/**
-	 * Finds and returns all STEs that hold a reference to the given {@link VersionedNamedImportSpecifier_IM}
-	 *
-	 * In case of the import of an unversioned type, this method defaults
+	 * This method defaults
 	 * to {@link SymbolTableManagement.findSymbolTableEntryForNamedImport(TranspilerState, NamedImportSpecifier)}.
 	 */
-	def static public Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(TranspilerState state, VersionedNamedImportSpecifier_IM importspec) {
-		// avoid expensive computation for unversioned imports
-		if (!importspec.isVersionedTypeImport) {
-			return #[findSymbolTableEntryForNamedImport(state, importspec)];
-		}
-
-		// Since we need to know about the complete set of used versions of the
-		// imported type, we need to look at least at importspec.importedTypeVersion.size many
-		// distinct STEs with the importSpecifier set to importspec.
-		return state.steCache.mapOriginal.values().parallelStream()
-				.unordered // order is not of importance
-				.filter[getImportSpecifier() == importspec]
-				.distinct // This is comparatively expensive but allows us to exit earlier
-						  // due to the following limit-condition
-				.limit(importspec.importedTypeVersions.size)
-				.collect(Collectors.toList);
+	def static public Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(TranspilerState state, NamedImportSpecifier importspec) {
+		return #[findSymbolTableEntryForNamedImport(state, importspec)];
 	}
 
 

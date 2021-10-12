@@ -52,7 +52,7 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="n4js,n4idl"
+            extensions="n4js"
             id="org.eclipse.n4js.N4JS"
             name="N4JS Editor">
         </editor>

@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.math.BigDecimal;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -51,10 +49,6 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.n4JS.VersionedElement;
-
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypingStrategy;
@@ -72,7 +66,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl#getTypingStrategy <em>Typing Strategy</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl#getDeclaredVersion <em>Declared Version</em>}</li>
  * </ul>
  *
  * @generated
@@ -147,26 +140,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * @ordered
 	 */
 	protected TypingStrategy typingStrategy = TYPING_STRATEGY_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final BigDecimal DECLARED_VERSION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected BigDecimal declaredVersion = DECLARED_VERSION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -310,70 +283,8 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * @generated
 	 */
 	@Override
-	public BigDecimal getDeclaredVersion() {
-		return declaredVersion;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDeclaredVersion(BigDecimal newDeclaredVersion) {
-		BigDecimal oldDeclaredVersion = declaredVersion;
-		declaredVersion = newDeclaredVersion;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_CLASS_DECLARATION__DECLARED_VERSION, oldDeclaredVersion, declaredVersion));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isAbstract() {
 		return this.getDeclaredModifiers().contains(N4Modifier.ABSTRACT);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getVersion() {
-		return this.getDeclaredVersionOrZero();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean hasDeclaredVersion() {
-		BigDecimal _declaredVersion = this.getDeclaredVersion();
-		return (_declaredVersion != null);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getDeclaredVersionOrZero() {
-		int _xifexpression = (int) 0;
-		boolean _hasDeclaredVersion = this.hasDeclaredVersion();
-		if (_hasDeclaredVersion) {
-			_xifexpression = this.getDeclaredVersion().intValue();
-		}
-		else {
-			_xifexpression = 0;
-		}
-		return _xifexpression;
 	}
 
 	/**
@@ -512,8 +423,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				return getTypeVars();
 			case N4JSPackage.N4_CLASS_DECLARATION__TYPING_STRATEGY:
 				return getTypingStrategy();
-			case N4JSPackage.N4_CLASS_DECLARATION__DECLARED_VERSION:
-				return getDeclaredVersion();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -544,9 +453,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 			case N4JSPackage.N4_CLASS_DECLARATION__TYPING_STRATEGY:
 				setTypingStrategy((TypingStrategy)newValue);
 				return;
-			case N4JSPackage.N4_CLASS_DECLARATION__DECLARED_VERSION:
-				setDeclaredVersion((BigDecimal)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -574,9 +480,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 			case N4JSPackage.N4_CLASS_DECLARATION__TYPING_STRATEGY:
 				setTypingStrategy(TYPING_STRATEGY_EDEFAULT);
 				return;
-			case N4JSPackage.N4_CLASS_DECLARATION__DECLARED_VERSION:
-				setDeclaredVersion(DECLARED_VERSION_EDEFAULT);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -599,8 +502,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				return typeVars != null && !typeVars.isEmpty();
 			case N4JSPackage.N4_CLASS_DECLARATION__TYPING_STRATEGY:
 				return typingStrategy != TYPING_STRATEGY_EDEFAULT;
-			case N4JSPackage.N4_CLASS_DECLARATION__DECLARED_VERSION:
-				return DECLARED_VERSION_EDEFAULT == null ? declaredVersion != null : !DECLARED_VERSION_EDEFAULT.equals(declaredVersion);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -657,17 +558,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				default: return -1;
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == VersionedElement.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.N4_CLASS_DECLARATION__DECLARED_VERSION: return N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION;
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -720,17 +610,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 		if (baseClass == N4ClassifierDeclaration.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.N4_CLASSIFIER_DECLARATION__TYPING_STRATEGY: return N4JSPackage.N4_CLASS_DECLARATION__TYPING_STRATEGY;
-				default: return -1;
-			}
-		}
-		if (baseClass == Versionable.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == VersionedElement.class) {
-			switch (baseFeatureID) {
-				case N4JSPackage.VERSIONED_ELEMENT__DECLARED_VERSION: return N4JSPackage.N4_CLASS_DECLARATION__DECLARED_VERSION;
 				default: return -1;
 			}
 		}
@@ -803,19 +682,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				default: return -1;
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return N4JSPackage.N4_CLASS_DECLARATION___GET_VERSION;
-				default: return -1;
-			}
-		}
-		if (baseClass == VersionedElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.VERSIONED_ELEMENT___HAS_DECLARED_VERSION: return N4JSPackage.N4_CLASS_DECLARATION___HAS_DECLARED_VERSION;
-				case N4JSPackage.VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO: return N4JSPackage.N4_CLASS_DECLARATION___GET_DECLARED_VERSION_OR_ZERO;
-				default: return -1;
-			}
-		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -829,12 +695,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 		switch (operationID) {
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_ABSTRACT:
 				return isAbstract();
-			case N4JSPackage.N4_CLASS_DECLARATION___GET_VERSION:
-				return getVersion();
-			case N4JSPackage.N4_CLASS_DECLARATION___HAS_DECLARED_VERSION:
-				return hasDeclaredVersion();
-			case N4JSPackage.N4_CLASS_DECLARATION___GET_DECLARED_VERSION_OR_ZERO:
-				return getDeclaredVersionOrZero();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXTERNAL:
 				return isExternal();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXPORTED:
@@ -867,8 +727,6 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 		result.append(name);
 		result.append(", typingStrategy: ");
 		result.append(typingStrategy);
-		result.append(", declaredVersion: ");
-		result.append(declaredVersion);
 		result.append(')');
 		return result.toString();
 	}
