@@ -4,7 +4,7 @@ export external public interface ~AsyncGenerator<T,TReturn,TNext> extends AsyncI
 	next(...args: any+ | any+): Promise<IteratorResult<T,TReturn>>;
 	return(value: TReturn | PromiseLike<TReturn>): Promise<IteratorResult<T,TReturn>>;
 	throw(e: any): Promise<IteratorResult<T,TReturn>>;
-	"__@asyncIterator@1122"(): AsyncGenerator<T,TReturn,TNext>;
+	[Symbol.asyncIterator](): AsyncGenerator<T,TReturn,TNext>;
 }
 
 export external public interface ~AsyncGeneratorFunction {

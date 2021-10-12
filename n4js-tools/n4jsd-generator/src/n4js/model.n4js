@@ -689,6 +689,19 @@ class Emitter {
 
 	emitPropertyName(name: string) {
 		const buff = this.buff;
+		// special case: well-known symbol used as name
+		// FIXME implement better approach
+		if (name.startsWith("__@")) {
+			const idxEnd = name.lastIndexOf("@");
+			if (idxEnd > 2) {
+				const symbolName = name.substring(3, idxEnd);
+				buff.push("[Symbol.");
+				buff.push(symbolName);
+				buff.push("]");
+				return;
+			}
+		}
+		// ordinary names
 		const legal = utils.isLegalIdentifier(name);
 		if (!legal) {
 			buff.push('"');

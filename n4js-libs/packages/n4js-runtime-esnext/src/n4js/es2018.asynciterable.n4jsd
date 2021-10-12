@@ -12,9 +12,9 @@ export external public interface ~AsyncIterator<T,TReturn,TNext> {
 }
 
 export external public interface ~AsyncIterable<T> {
-	"__@asyncIterator@1122"(): AsyncIterator<T>;
+	[Symbol.asyncIterator](): AsyncIterator<T>;
 }
 
 export external public interface ~AsyncIterableIterator<T> extends AsyncIterator<T> {
-	"__@asyncIterator@1122"(): AsyncIterableIterator<T>;
+	[Symbol.asyncIterator](): AsyncIterableIterator<T>;
 }

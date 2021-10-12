@@ -22,7 +22,7 @@ export external public class BigInt {
 	public toString(radix: number = ): string;
 	public toLocaleString(locales: string = , options: BigIntToLocaleStringOptions = ): string;
 	public valueOf(): any+;
-	public get "__@toStringTag@8"(): "BigInt";
+	public get [Symbol.toStringTag](): "BigInt";
 	(value: any+ | boolean | number | string): any+;
 	public static asIntN(bits: number, int: any+): any+;
 	public static asUintN(bits: number, int: any+): any+;
@@ -60,8 +60,8 @@ export external public class BigInt64Array {
 	public toString(): string;
 	public valueOf(): BigInt64Array;
 	public values(): IterableIterator<any+>;
-	public "__@iterator@6"(): IterableIterator<any+>;
-	public get "__@toStringTag@8"(): "BigInt64Array";
+	public [Symbol.iterator](): IterableIterator<any+>;
+	public get [Symbol.toStringTag](): "BigInt64Array";
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: any+): BigInt64Array;
@@ -100,8 +100,8 @@ export external public class BigUint64Array {
 	public toString(): string;
 	public valueOf(): BigUint64Array;
 	public values(): IterableIterator<any+>;
-	public "__@iterator@6"(): IterableIterator<any+>;
-	public get "__@toStringTag@8"(): "BigUint64Array";
+	public [Symbol.iterator](): IterableIterator<any+>;
+	public get [Symbol.toStringTag](): "BigUint64Array";
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
 	public static of(...items: any+): BigUint64Array;

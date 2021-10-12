@@ -3,8 +3,8 @@
 export external public class SharedArrayBuffer {
 	public get byteLength(): number;
 	public slice(begin: number, end: number = ): SharedArrayBuffer;
-	public get "__@species@31"(): SharedArrayBuffer;
-	public get "__@toStringTag@8"(): "SharedArrayBuffer";
+	public get [Symbol.species](): SharedArrayBuffer;
+	public get [Symbol.toStringTag](): "SharedArrayBuffer";
 	public constructor(byteLength: number);
 }
 
@@ -25,5 +25,5 @@ export external public class Atomics {
 	public static wait(typedArray: Int32Array, index: number, value: number, timeout: number = ): "ok" | "not-equal" | "timed-out";
 	public static notify(typedArray: Int32Array, index: number, count: number = ): number;
 	public static xor(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
-	public static get "__@toStringTag@8"(): "Atomics";
+	public static get [Symbol.toStringTag](): "Atomics";
 }

@@ -15,139 +15,139 @@ export external public class Symbol extends Symbol {
 }
 
 export external public interface ~Symbol {
-	"__@toPrimitive@846"(hint: string): symbol;
-	get "__@toStringTag@8"(): string;
+	[Symbol.toPrimitive](hint: string): symbol;
+	get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
-	public "__@unscopables@122"(): ~Object with { copyWithin: boolean; entries: boolean; fill: boolean; find: boolean; findIndex: boolean; keys: boolean; values: boolean; };
-	public static get "__@species@31"(): ArrayConstructor;
+	public [Symbol.unscopables](): ~Object with { copyWithin: boolean; entries: boolean; fill: boolean; find: boolean; findIndex: boolean; keys: boolean; values: boolean; };
+	public static get [Symbol.species](): ArrayConstructor;
 }
 
 @Polyfill
 export external public class Date extends Date {
-	public "__@toPrimitive@846"(...args: any+): any+; // overloading not supported
+	public [Symbol.toPrimitive](...args: any+): any+; // overloading not supported
 }
 
 @Polyfill
 export external public class Map<K,V> extends Map<K,V> {
-	public get "__@toStringTag@8"(): string;
-	public static get "__@species@31"(): MapConstructor;
+	public get [Symbol.toStringTag](): string;
+	public static get [Symbol.species](): MapConstructor;
 }
 
 @Polyfill
 export external public class WeakMap<K,V> extends WeakMap<K,V> {
-	public get "__@toStringTag@8"(): string;
+	public get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
 export external public class Set<T> extends Set<T> {
-	public get "__@toStringTag@8"(): string;
-	public static get "__@species@31"(): SetConstructor;
+	public get [Symbol.toStringTag](): string;
+	public static get [Symbol.species](): SetConstructor;
 }
 
 @Polyfill
 export external public class WeakSet<T> extends WeakSet<T> {
-	public get "__@toStringTag@8"(): string;
+	public get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
 export external public class JSON extends JSON {
-	public static get "__@toStringTag@8"(): string;
+	public static get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
 export external public class Function extends Function {
-	public "__@hasInstance@226"(value: any): boolean;
+	public [Symbol.hasInstance](value: any): boolean;
 }
 
 export external public interface ~GeneratorFunction {
-	get "__@toStringTag@8"(): string;
+	get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
 export external public class Math extends Math {
-	public static get "__@toStringTag@8"(): string;
+	public static get [Symbol.toStringTag](): string;
 }
 
 export external public interface ~Promise<T> {
-	get "__@toStringTag@8"(): string;
+	get [Symbol.toStringTag](): string;
 }
 
 export external public interface ~PromiseConstructor {
-	get "__@species@31"(): PromiseConstructor;
+	get [Symbol.species](): PromiseConstructor;
 }
 
 @Polyfill
 export external public class RegExp extends RegExp {
-	public "__@match@305"(string: string): RegExpMatchArray;
-	public "__@replace@307"(...args: any+): any+; // overloading not supported
-	public "__@search@310"(string: string): number;
-	public "__@split@312"(string: string, limit: number = ): Array<string>;
-	public static get "__@species@31"(): RegExpConstructor;
+	public [Symbol.match](string: string): RegExpMatchArray;
+	public [Symbol.replace](...args: any+): any+; // overloading not supported
+	public [Symbol.search](string: string): number;
+	public [Symbol.split](string: string, limit: number = ): Array<string>;
+	public static get [Symbol.species](): RegExpConstructor;
 }
 
 @Polyfill
 export external public class String extends String {
-	public match(matcher: ~Object with { "__@match@305"(string: string): RegExpMatchArray; }): RegExpMatchArray;
+	public match(matcher: ~Object with { [Symbol.match](string: string): RegExpMatchArray; }): RegExpMatchArray;
 	public replace(...args: any+): any+; // overloading not supported
-	public search(searcher: ~Object with { "__@search@310"(string: string): number; }): number;
-	public split(splitter: ~Object with { "__@split@312"(string: string, limit: number = ): Array<string>; }, limit: number = ): Array<string>;
+	public search(searcher: ~Object with { [Symbol.search](string: string): number; }): number;
+	public split(splitter: ~Object with { [Symbol.split](string: string, limit: number = ): Array<string>; }, limit: number = ): Array<string>;
 }
 
 @Polyfill
 export external public class ArrayBuffer extends ArrayBuffer {
-	public get "__@toStringTag@8"(): string;
-	public static get "__@species@31"(): ArrayBufferConstructor;
+	public get [Symbol.toStringTag](): string;
+	public static get [Symbol.species](): ArrayBufferConstructor;
 }
 
 @Polyfill
 export external public class DataView extends DataView {
-	public get "__@toStringTag@8"(): string;
+	public get [Symbol.toStringTag](): string;
 }
 
 @Polyfill
 export external public class Int8Array extends Int8Array {
-	public get "__@toStringTag@8"(): "Int8Array";
+	public get [Symbol.toStringTag](): "Int8Array";
 }
 
 @Polyfill
 export external public class Uint8Array extends Uint8Array {
-	public get "__@toStringTag@8"(): "Uint8Array";
+	public get [Symbol.toStringTag](): "Uint8Array";
 }
 
 @Polyfill
 export external public class Uint8ClampedArray extends Uint8ClampedArray {
-	public get "__@toStringTag@8"(): "Uint8ClampedArray";
+	public get [Symbol.toStringTag](): "Uint8ClampedArray";
 }
 
 @Polyfill
 export external public class Int16Array extends Int16Array {
-	public get "__@toStringTag@8"(): "Int16Array";
+	public get [Symbol.toStringTag](): "Int16Array";
 }
 
 @Polyfill
 export external public class Uint16Array extends Uint16Array {
-	public get "__@toStringTag@8"(): "Uint16Array";
+	public get [Symbol.toStringTag](): "Uint16Array";
 }
 
 @Polyfill
 export external public class Int32Array extends Int32Array {
-	public get "__@toStringTag@8"(): "Int32Array";
+	public get [Symbol.toStringTag](): "Int32Array";
 }
 
 @Polyfill
 export external public class Uint32Array extends Uint32Array {
-	public get "__@toStringTag@8"(): "Uint32Array";
+	public get [Symbol.toStringTag](): "Uint32Array";
 }
 
 @Polyfill
 export external public class Float32Array extends Float32Array {
-	public get "__@toStringTag@8"(): "Float32Array";
+	public get [Symbol.toStringTag](): "Float32Array";
 }
 
 @Polyfill
 export external public class Float64Array extends Float64Array {
-	public get "__@toStringTag@8"(): "Float64Array";
+	public get [Symbol.toStringTag](): "Float64Array";
 }

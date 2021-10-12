@@ -7,5 +7,5 @@ export external public class Symbol extends Symbol {
 
 @Polyfill
 export external public class RegExp extends RegExp {
-	public "__@matchAll@314"(str: string): IterableIterator<RegExpMatchArray>;
+	public [Symbol.matchAll](str: string): IterableIterator<RegExpMatchArray>;
 }
