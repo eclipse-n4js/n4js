@@ -176,10 +176,6 @@ export class TypeRef {
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
 
-	constructor(tsSourceString: string =) {
-		this.tsSourceString = tsSourceString;
-	}
-
 	public isBuiltInUndefined(): boolean {
 		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "undefined";
 	}
@@ -752,6 +748,20 @@ export function simplifyUnion(typeRef: TypeRef): TypeRef {
 		}
 		return result;
 	}
+}
+
+export function createNamedTypeRef(targetType: Type | string): TypeRef {
+	const result = new TypeRef();
+	result.kind = TypeRefKind.NAMED;
+	if (targetType instanceof Type) {
+		result.targetTypeName = targetType.name;
+		for (const typeParam of targetType.typeParams) {
+			result.targetTypeArgs.push(createNamedTypeRef(typeParam));
+		}
+	} else {
+		result.targetTypeName = targetType;
+	}
+	return result;
 }
 
 export function createUndefined(): TypeRef {

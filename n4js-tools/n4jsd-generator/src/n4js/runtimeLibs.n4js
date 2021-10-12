@@ -64,7 +64,9 @@ export public function postProcessRuntimeLibs(scripts: model.Script[]) {
 class RuntimeLibsProcessor {
 
 	@Final private scriptsOrdered: model.Script[];
-	@Final private knownCtorInstanceTypes = new Set<string>();
+	@Final private knownCtorTypes = new Set<string>();
+	@Final private knownInstanceTypes = new Set<string>();
+	@Final private identifiedPolyfills = new Set<model.Type>();
 
 	constructor(scripts: model.Script[]) {
 		this.scriptsOrdered = getScriptsOrderedAndAsserted(scripts);
@@ -181,6 +183,28 @@ class RuntimeLibsProcessor {
 		const topLevelElementsToBeRemoved = [] as model.ExportableElement[];
 
 		for (const elem of script.topLevelElements) {
+			if (elem instanceof model.Type && elem.kind === model.TypeKind.INTERFACE) {
+				if (this.knownCtorTypes.has(elem.name)) {
+					const ctorType = elem;
+					let instanceType = this.findInstanceTypeForCtorType(ctorType, elemsByName);
+					if (instanceType && !this.knownInstanceTypes.has(instanceType.name)) {
+						instanceType = undefined;
+					}
+					const adjustedType = this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementsToBeRemoved);
+					this.identifiedPolyfills.add(adjustedType);
+				}
+			}
+		}
+		for (const elem of script.topLevelElements) {
+			if (elem instanceof model.Type && elem.kind === model.TypeKind.INTERFACE) {
+				if (this.knownInstanceTypes.has(elem.name)) {
+					const instanceType = elem;
+					const adjustedType = this.adjustCtorInstanceTypes(undefined, instanceType, elemsByName, topLevelElementsToBeRemoved);
+					this.identifiedPolyfills.add(adjustedType);
+				}
+			}
+		}
+		for (const elem of script.topLevelElements) {
 			if (elem instanceof model.Variable) {
 				this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementsToBeRemoved);
 			}
@@ -216,11 +240,60 @@ class RuntimeLibsProcessor {
 			// FIXME emit warning!!!
 			return;
 		}
+		// we have identified the ctor/instance type pattern for variable declaration 'varDecl' and interface 'type'
+		// --> so, adjust 'varDecl' and 'type' accordingly
+
+		const ctorType = type;
 		// look for a corresponding instance type
-		let instanceType: model.Type;
-		const typeName = type.name;
-		if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
-			const instanceTypeName = typeName.substring(0, typeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
+		let instanceType: model.Type = this.findInstanceTypeForCtorType(ctorType, elemsByName);
+		// remember ctorType/instanceType for processing of following files
+		this.knownCtorTypes.add(ctorType.name);
+		if (instanceType) {
+			this.knownInstanceTypes.add(instanceType.name);
+		}
+
+		// actually adjust the ctorType/instanceType
+		this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementsToBeRemoved);
+		// mark the variable declaration as "to be removed"
+		topLevelElementsToBeRemoved.push(varDecl);
+	}
+
+	private adjustCtorInstanceTypes(
+		ctorType: model.Type,
+		instanceType: model.Type,
+		elemsByName: Map<string,model.ExportableElement[]>,
+		topLevelElementsToBeRemoved: model.ExportableElement[]): model.Type {
+
+		// change "constructor type" to a class, strip CONSTRUCTOR_TYPE_SUFFIX from its name, and make all members static
+		if (ctorType) {
+			changeInterfaceToClass(ctorType);
+			const ctorTypeName = ctorType.name;
+			if (ctorTypeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
+				ctorType.name = ctorTypeName.substring(0, ctorTypeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
+			}
+			ctorType.members.forEach(m => m.isStatic = true);
+		}
+		// change "instance type" to a class
+		if (instanceType) {
+			changeInterfaceToClass(instanceType);
+		}
+		// merge the "constructor type" into the "instance type" (if both exist)
+		if (ctorType && instanceType) {
+			// move all members of the "constructor type" into the "instance type"
+			ctorType.members.forEach(m => instanceType.members.push(m));
+			ctorType.members.length = 0;
+			// mark the "constructor type" as "to be removed"
+			topLevelElementsToBeRemoved.push(ctorType);
+		}
+		// return the "surviving" type
+		return instanceType ? instanceType : ctorType;
+	}
+
+	private findInstanceTypeForCtorType(ctorType: model.Type, elemsByName: Map<string,model.ExportableElement[]>): model.Type {
+		let instanceType: model.Type = undefined;
+		const ctorTypeName = ctorType.name;
+		if (ctorTypeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
+			const instanceTypeName = ctorTypeName.substring(0, ctorTypeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
 			const instanceTypes = elemsByName.get(instanceTypeName)?.filter(elem => elem instanceof model.Type) as model.Type[];
 			if (instanceTypes) {
 				for (const instanceTypeCandidate of instanceTypes) {
@@ -231,27 +304,13 @@ class RuntimeLibsProcessor {
 				}
 			}
 		}
-		// change "constructor type" to a class and make all members static
-		changeInterfaceToClass(type);
-		type.members.forEach(m => m.isStatic = true);
-		// merge the "constructor type" into the "instance type" (if any)
-		if (instanceType) {
-			// change "instance type" to a class
-			changeInterfaceToClass(instanceType);
-			// move all members of the "constructor type" into the "instance type"
-			type.members.forEach(m => instanceType.members.push(m));
-			type.members.length = 0;
-			// mark the "constructor type" as "to be removed"
-			topLevelElementsToBeRemoved.push(type);
-		}
-		// mark the variable declaration as "to be removed"
-		topLevelElementsToBeRemoved.push(varDecl);
+		return instanceType;
 	}
 
-	public handlePolyfills(script: model.Script) {
+	private handlePolyfills(script: model.Script) {
 		const fileConfig = getGenConfig().files.get(script.tsFileName);
-		const polyfills = fileConfig?.polyfills;
-		if (!polyfills || polyfills.size === 0) {
+		const configuredPolyfills = fileConfig?.polyfills ?? new Set<string>();
+		if (this.identifiedPolyfills.size === 0 && configuredPolyfills.size === 0) {
 			return;
 		}
 		for (const elem of script.topLevelElements) {
@@ -259,7 +318,7 @@ class RuntimeLibsProcessor {
 				continue;
 			}
 			const elemName = elem.name;
-			if (elemName && polyfills.has(elemName)) {
+			if (elemName && (this.identifiedPolyfills.has(elem) || configuredPolyfills.has(elemName))) {
 				changeToPolyfill(elem);
 			}
 		}
@@ -287,8 +346,8 @@ function changeToPolyfill(type: model.Type) {
 	}
 	type.annotations.push(new model.Annotation("@Polyfill"));
 	type.extends.length = 0;
-	type.extends.push(new model.TypeRef(typeName));
-	type.defSiteStructural = false;
+	const superTypeRef = model.createNamedTypeRef(type);
+	type.extends.push(superTypeRef);
 }
 
 /**
