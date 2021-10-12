@@ -1,0 +1,11 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class Symbol extends Symbol {
+	public static get matchAll(): symbol;
+}
+
+@Polyfill
+export external public class RegExp extends RegExp {
+	public "__@matchAll@314"(str: string): IterableIterator<RegExpMatchArray>;
+}

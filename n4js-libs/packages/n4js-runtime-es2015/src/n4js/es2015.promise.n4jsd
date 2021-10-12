@@ -1,0 +1,9 @@
+@@Global @@ProvidedByRuntime
+
+export external public class Promise {
+	public constructor(executor: (resolve: (value: T | PromiseLike<T>)=>void, reject: (reason: any = )=>void)=>void);
+	public static <T> all(values: T): Promise<Object+>;
+	public static <T> race(values: T): Promise<Awaited<any+>>;
+	public static <T> reject(reason: any = ): Promise<T>;
+	public static resolve(): Promise<void>; // further signatures were omitted
+}

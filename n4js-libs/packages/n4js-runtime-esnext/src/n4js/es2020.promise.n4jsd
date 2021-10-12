@@ -1,0 +1,18 @@
+@@Global @@ProvidedByRuntime
+
+export external public interface ~PromiseFulfilledResult<T> {
+	status: "fulfilled";
+	value: T;
+}
+
+export external public interface ~PromiseRejectedResult {
+	status: "rejected";
+	reason: any;
+}
+
+export external public type PromiseSettledResult = PromiseFulfilledResult<T> | PromiseRejectedResult;
+
+@Polyfill
+export external public class Promise extends Promise {
+	public static <T> allSettled(values: T): Promise<Object+>; // further signatures were omitted
+}

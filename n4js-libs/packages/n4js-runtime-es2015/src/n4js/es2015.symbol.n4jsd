@@ -1,0 +1,7 @@
+@@Global @@ProvidedByRuntime
+
+export external public class Symbol {
+	(description: string | number = ): symbol;
+	public static for(key: string): symbol;
+	public static keyFor(sym: symbol): string;
+}

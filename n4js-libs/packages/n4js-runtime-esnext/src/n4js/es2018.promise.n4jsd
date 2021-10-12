@@ -1,0 +1,5 @@
+@@Global @@ProvidedByRuntime
+
+export external public interface ~Promise<T> {
+	finally(onfinally: (()=>void) = ): Promise<T>;
+}

@@ -1,0 +1,29 @@
+@@Global @@ProvidedByRuntime
+
+export external public class SharedArrayBuffer {
+	public get byteLength(): number;
+	public slice(begin: number, end: number = ): SharedArrayBuffer;
+	public get "__@species@31"(): SharedArrayBuffer;
+	public get "__@toStringTag@8"(): "SharedArrayBuffer";
+	public constructor(byteLength: number);
+}
+
+export external public interface ~ArrayBufferTypes {
+	SharedArrayBuffer: SharedArrayBuffer;
+}
+
+export external public class Atomics {
+	public static add(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
+	public static and(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
+	public static compareExchange(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, expectedValue: number, replacementValue: number): number;
+	public static exchange(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
+	public static isLockFree(size: number): boolean;
+	public static load(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number): number;
+	public static or(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
+	public static store(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
+	public static sub(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
+	public static wait(typedArray: Int32Array, index: number, value: number, timeout: number = ): "ok" | "not-equal" | "timed-out";
+	public static notify(typedArray: Int32Array, index: number, count: number = ): number;
+	public static xor(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
+	public static get "__@toStringTag@8"(): "Atomics";
+}

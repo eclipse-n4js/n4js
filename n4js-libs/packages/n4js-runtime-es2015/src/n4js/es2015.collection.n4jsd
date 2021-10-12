@@ -1,0 +1,40 @@
+@@Global @@ProvidedByRuntime
+
+export external public class Map<K,V> {
+	public clear(): void;
+	public delete(key: K): boolean;
+	public forEach(callbackfn: (value: V, key: K, map: Map<K,V>)=>void, thisArg: any = ): void;
+	public get(key: K): V;
+	public has(key: K): boolean;
+	public set(key: K, value: V): this;
+	public get size(): number;
+	public constructor(); // further signatures were omitted
+}
+
+export external public class WeakMap<K,V> {
+	public delete(key: K): boolean;
+	public get(key: K): V;
+	public has(key: K): boolean;
+	public set(key: K, value: V): this;
+	public constructor(entries: Array<any+> = );
+}
+
+export external public class Set<T> {
+	public add(value: T): this;
+	public clear(): void;
+	public delete(value: T): boolean;
+	public forEach(callbackfn: (value: T, value2: T, set: Set<T>)=>void, thisArg: any = ): void;
+	public has(value: T): boolean;
+	public get size(): number;
+	public constructor(values: Array<T> = );
+}
+
+export external public class WeakSet<T> {
+	public add(value: T): this;
+	public delete(value: T): boolean;
+	public has(value: T): boolean;
+	public constructor(values: Array<T> = );
+}
+
+type ReadonlySet<T> = Set<T>;
+type ReadonlyMap<T> = Map<T>;

@@ -131,6 +131,12 @@ export external public class Number {
 
 export external public interface ~ImportMeta {}
 
+export external public interface ~ImportCallOptions {
+	assert: ImportAssertions;
+}
+
+export external public interface ~ImportAssertions {}
+
 export external public class Math {
 	public static get E(): number;
 	public static get LN10(): number;
@@ -229,7 +235,7 @@ export external public class RegExp {
 	public get ignoreCase(): boolean;
 	public get multiline(): boolean;
 	public lastIndex: number;
-	public compile(): this;
+	public compile(pattern: string, flags: string = ): this;
 	public constructor(pattern: string = undefined, flags: string = undefined);
 	(pattern: RegExp | string): RegExp; // further signatures were omitted
 	public static $1: string;

@@ -1,0 +1,9 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class String extends String {
+	public trimEnd(): string;
+	public trimStart(): string;
+	public trimLeft(): string;
+	public trimRight(): string;
+}

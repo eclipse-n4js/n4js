@@ -1,0 +1,6 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class Object extends Object {
+	public static <T> fromEntries(entries: Iterable<any+>): ~Object with {  }; // further signatures were omitted
+}
