@@ -440,7 +440,14 @@ export default {
 			]
 		},
 		"es2015.symbol.d.ts": {},
-		"es2015.symbol.wellknown.d.ts": {},
+		"es2015.symbol.wellknown.d.ts": {
+			// patchMembers: {
+			// 	"String#match": undefined,
+			// 	"String#replace": undefined,
+			// 	"String#search": undefined,
+			// 	"String#split": undefined
+			// }
+		},
 		"es2015.iterable.d.ts": {
 			ignore: [
 				// read-only types:

@@ -240,7 +240,7 @@ export class Converter {
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.jsdoc = utils_ts.getJSDocForNode(node);
 		const sym = this.checker.getSymbolAtLocation(node.name);
-		const funSigs = this.convertCallSignatures(sym);
+		const funSigs = this.convertCallSignatures(node.getSourceFile(), sym);
 		result.signatures = funSigs;
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
@@ -394,9 +394,10 @@ export class Converter {
 
 	private convertMembers(node: ts.InterfaceDeclaration | ts.ClassDeclaration): model.Member[] {
 		const result = [] as model.Member[];
+		const sourceFile = node.getSourceFile();
 		const sym = this.checker.getSymbolAtLocation(node.name);
 		for (const m of node.members) {
-			const n4jsMember = this.convertMember(m, utils_ts.isStatic(m), sym);
+			const n4jsMember = this.convertMember(sourceFile, m, utils_ts.isStatic(m), sym);
 			if (n4jsMember !== undefined) {
 				result.push(n4jsMember);
 			}
@@ -406,8 +407,9 @@ export class Converter {
 
 	private convertMembersOfObjectType(node: ts.TypeLiteralNode): model.Member[] {
 		const result = [] as model.Member[];
+		const sourceFile = node.getSourceFile();
 		for (const m of node.members) {
-			const n4jsMember = this.convertMember(m, false, undefined);
+			const n4jsMember = this.convertMember(sourceFile, m, false, undefined);
 			if (n4jsMember !== undefined) {
 				result.push(n4jsMember);
 			}
@@ -415,12 +417,13 @@ export class Converter {
 		return result;
 	}
 
-	private convertMember(node: ts.ClassElement | ts.TypeElement, isStatic: boolean, symOwner?: ts.Symbol): model.Member | undefined {
+	private convertMember(sourceFile: ts.SourceFile, node: ts.ClassElement | ts.TypeElement, isStatic: boolean, symOwner?: ts.Symbol): model.Member | undefined {
 		// FIXME what happens for members that do not have a name???
 		// FIXME is there a better way to obtain the symbol, without requiring a cast to 'any'?
-		const symMember = this.checker.getSymbolAtLocation(node.name) ?? (node as any).symbol;
+		const symMember = this.checker.getSymbolAtLocation(node.name) ?? (node as any).symbol as ts.Symbol;
 
-		if (symMember.declarations?.[0] !== node) {
+		let firstDeclFromCurrentFile = symMember.declarations?.find(decl => decl?.getSourceFile() === sourceFile);
+		if (firstDeclFromCurrentFile !== node) {
 			// we were called for the AST node of a signature other than this member's first signature
 			// --> ignore this call, because we have handled all signatures in one go when we were
 			// called for the AST node of the first signature
@@ -463,7 +466,7 @@ export class Converter {
 				return undefined; // constructor declarations not supported if owner not given
 			}
 			result.kind = model.MemberKind.CTOR;
-			result.signatures = this.convertConstructSignatures(symOwner);
+			result.signatures = this.convertConstructSignatures(sourceFile, symOwner);
 			return result;
 		} else if (ts.isConstructSignatureDeclaration(node)) {
 			result.kind = model.MemberKind.CTOR;
@@ -496,7 +499,7 @@ export class Converter {
 			result.type = this.convertTypeReferenceOfTypedDeclaration(node.parameters[0]);
 		} else if (ts.isMethodDeclaration(node)
 				|| ts.isMethodSignature(node)) {
-			const sigs = this.convertCallSignatures(symMember);
+			const sigs = this.convertCallSignatures(sourceFile, symMember);
 			result.kind = model.MemberKind.METHOD;
 			result.signatures = sigs;
 		} else {
@@ -506,21 +509,24 @@ export class Converter {
 		return result;
 	}
 
-	private convertConstructSignatures(somethingWithCtors: ts.Symbol): model.Signature[] {
+	private convertConstructSignatures(sourceFile: ts.SourceFile, somethingWithCtors: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithCtors, somethingWithCtors.valueDeclaration!);
 		const constructSigs = type.getConstructSignatures();
-		return this.convertSignatures([...constructSigs]);
+		return this.convertSignatures(sourceFile, [...constructSigs]);
 	}
 
-	private convertCallSignatures(somethingWithSignatures: ts.Symbol): model.Signature[] {
+	private convertCallSignatures(sourceFile: ts.SourceFile, somethingWithSignatures: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithSignatures, somethingWithSignatures.valueDeclaration!);
 		const callSigs = type.getCallSignatures();
-		return this.convertSignatures([...callSigs]);
+		return this.convertSignatures(sourceFile, [...callSigs]);
 	}
 
-	private convertSignatures(signatures: ts.Signature[]): model.Signature[] {
+	private convertSignatures(sourceFile: ts.SourceFile, signatures: ts.Signature[]): model.Signature[] {
 		const results = [] as model.Signature[];
 		for (const sig of signatures) {
+			if (sig.declaration?.getSourceFile() !== sourceFile) {
+				continue; // ignore declarations from other source files
+			}
 			const result = new model.Signature();
 			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
 			result.returnType = this.convertTypeReferenceOfTypedDeclaration(sig.declaration);
