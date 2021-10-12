@@ -1,25 +1,6 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
-export external public class Symbol extends Symbol {
-	public static get hasInstance(): symbol;
-	public static get isConcatSpreadable(): symbol;
-	public static get match(): symbol;
-	public static get replace(): symbol;
-	public static get search(): symbol;
-	public static get species(): symbol;
-	public static get split(): symbol;
-	public static get toPrimitive(): symbol;
-	public static get toStringTag(): symbol;
-	public static get unscopables(): symbol;
-}
-
-export external public interface ~Symbol {
-	[Symbol.toPrimitive](hint: string): symbol;
-	get [Symbol.toStringTag](): string;
-}
-
-@Polyfill
 export external public class Array<T> extends Array<T> {
 	public [Symbol.unscopables](): ~Object with { copyWithin: boolean; entries: boolean; fill: boolean; find: boolean; findIndex: boolean; keys: boolean; values: boolean; };
 	public static get [Symbol.species](): ArrayConstructor;
@@ -90,10 +71,7 @@ export external public class RegExp extends RegExp {
 
 @Polyfill
 export external public class String extends String {
-	public match(matcher: ~Object with { [Symbol.match](string: string): RegExpMatchArray; }): RegExpMatchArray;
 	public replace(...args: any+): any+; // overloading not supported
-	public search(searcher: ~Object with { [Symbol.search](string: string): number; }): number;
-	public split(splitter: ~Object with { [Symbol.split](string: string, limit: number = ): Array<string>; }, limit: number = ): Array<string>;
 }
 
 @Polyfill

@@ -180,7 +180,7 @@ class RuntimeLibsProcessor {
 			arr.push(elem);
 		}
 
-		const topLevelElementsToBeRemoved = [] as model.ExportableElement[];
+		const topLevelElementModifications = new ElementModifications();
 
 		for (const elem of script.topLevelElements) {
 			if (elem instanceof model.Type && elem.kind === model.TypeKind.INTERFACE) {
@@ -190,7 +190,7 @@ class RuntimeLibsProcessor {
 					if (instanceType && !this.knownInstanceTypes.has(instanceType.name)) {
 						instanceType = undefined;
 					}
-					const adjustedType = this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementsToBeRemoved);
+					const adjustedType = this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementModifications);
 					this.identifiedPolyfills.add(adjustedType);
 				}
 			}
@@ -199,29 +199,24 @@ class RuntimeLibsProcessor {
 			if (elem instanceof model.Type && elem.kind === model.TypeKind.INTERFACE) {
 				if (this.knownInstanceTypes.has(elem.name)) {
 					const instanceType = elem;
-					const adjustedType = this.adjustCtorInstanceTypes(undefined, instanceType, elemsByName, topLevelElementsToBeRemoved);
+					const adjustedType = this.adjustCtorInstanceTypes(undefined, instanceType, elemsByName, topLevelElementModifications);
 					this.identifiedPolyfills.add(adjustedType);
 				}
 			}
 		}
 		for (const elem of script.topLevelElements) {
 			if (elem instanceof model.Variable) {
-				this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementsToBeRemoved);
+				this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementModifications);
 			}
 		}
 
-		for (const elem of topLevelElementsToBeRemoved) {
-			const idx = script.topLevelElements.indexOf(elem);
-			if (idx >= 0) {
-				script.topLevelElements.splice(idx, 1);
-			}
-		}
+		topLevelElementModifications.applyTo(script);
 	}
 
 	private adjustCtorInstanceTypesForVarDecl(
 		varDecl: model.Variable,
 		elemsByName: Map<string,model.ExportableElement[]>,
-		topLevelElementsToBeRemoved: model.ExportableElement[]) {
+		topLevelElementModifications: ElementModifications) {
 
 		const typeRefStr = varDecl.type?.tsSourceString;
 		if (!typeRefStr) {
@@ -253,16 +248,29 @@ class RuntimeLibsProcessor {
 		}
 
 		// actually adjust the ctorType/instanceType
-		this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementsToBeRemoved);
+		const originalCtorTypeName = ctorType.name;
+		this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementModifications);
 		// mark the variable declaration as "to be removed"
-		topLevelElementsToBeRemoved.push(varDecl);
+		topLevelElementModifications.toBeRemoved.add(varDecl);
+		// add type alias for original ctorType (if any)
+		if (ctorType
+				&& instanceType
+				&& topLevelElementModifications.toBeRemoved.has(ctorType)
+				&& instanceType.name !== originalCtorTypeName) {
+			const alias = new model.Type();
+			alias.kind = model.TypeKind.TYPE_ALIAS;
+			alias.exported = true;
+			alias.name = originalCtorTypeName;
+			alias.aliasedType = model.createNamedTypeRef("constructor{" + instanceType.name + "}");
+			topLevelElementModifications.toBeAdded.set(instanceType, alias);
+		}
 	}
 
 	private adjustCtorInstanceTypes(
 		ctorType: model.Type,
 		instanceType: model.Type,
 		elemsByName: Map<string,model.ExportableElement[]>,
-		topLevelElementsToBeRemoved: model.ExportableElement[]): model.Type {
+		topLevelElementModifications: ElementModifications): model.Type {
 
 		// change "constructor type" to a class, strip CONSTRUCTOR_TYPE_SUFFIX from its name, and make all members static
 		if (ctorType) {
@@ -283,7 +291,7 @@ class RuntimeLibsProcessor {
 			ctorType.members.forEach(m => instanceType.members.push(m));
 			ctorType.members.length = 0;
 			// mark the "constructor type" as "to be removed"
-			topLevelElementsToBeRemoved.push(ctorType);
+			topLevelElementModifications.toBeRemoved.add(ctorType);
 		}
 		// return the "surviving" type
 		return instanceType ? instanceType : ctorType;
@@ -399,4 +407,28 @@ function getGenConfig(): GenConfig {
 		}
 	}
 	return _cachedGenConfig;
+}
+
+class ElementModifications {
+	@Final public toBeRemoved = new Set<model.ExportableElement>();
+	/** Map from existing element to the elment that should be added after the existing element. */
+	@Final public toBeAdded = new Map<model.ExportableElement, model.ExportableElement>();
+
+	public applyTo(script: model.Script) {
+		const topLevelElems = script.topLevelElements;
+		let i = 0;
+		while (i < topLevelElems.length) {
+			const currElem = topLevelElems[i];
+			if (this.toBeRemoved.has(currElem)) {
+				topLevelElems.splice(i, 1);
+			} else {
+				++i;
+			}
+			const newElem = this.toBeAdded.get(currElem);
+			if (newElem) {
+				topLevelElems.splice(i, 0, newElem);
+				++i;
+			}
+		}
+	}
 }

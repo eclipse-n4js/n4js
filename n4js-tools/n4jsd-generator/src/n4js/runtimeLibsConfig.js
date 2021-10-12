@@ -44,6 +44,18 @@ export default {
 					 */
 					public const hasInstance: symbol
 
+					// FIXME well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
+					//public const hasInstance: symbol;
+					public const isConcatSpreadable: symbol;
+					public const match: symbol;
+					public const replace: symbol;
+					public const search: symbol;
+					public const species: symbol;
+					public const split: symbol;
+					public const toPrimitive: symbol;
+					public const toStringTag: symbol;
+					public const unscopables: symbol;
+
 					/**
 					 * Returns the shared symbol with the given key from the Javascript engine's shared symbol registry.
 					 * Creates a new symbol if not found.
@@ -439,14 +451,21 @@ export default {
 				"ReadonlySet", "ReadonlyMap"
 			]
 		},
-		"es2015.symbol.d.ts": {},
+		"es2015.symbol.d.ts": {
+			ignore: [
+				"Symbol", "SymbolConstructor" // Symbol was moved to es5.n4jsd (see above)
+			]
+		},
 		"es2015.symbol.wellknown.d.ts": {
-			// patchMembers: {
-			// 	"String#match": undefined,
-			// 	"String#replace": undefined,
-			// 	"String#search": undefined,
-			// 	"String#split": undefined
-			// }
+			ignore: [
+				"Symbol", "SymbolConstructor" // Symbol was moved to es5.n4jsd (see above)
+			],
+			patchMembers: {
+				// the signatures of the following members use computed property names inside ~Object with {}
+				"String#match": undefined,
+				"String#search": undefined,
+				"String#split": undefined
+			}
 		},
 		"es2015.iterable.d.ts": {
 			ignore: [

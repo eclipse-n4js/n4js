@@ -11,6 +11,8 @@ export external public class Map<K,V> {
 	public constructor(...args: any+); // overloading not supported
 }
 
+export external public type MapConstructor = constructor{Map};
+
 export external public class WeakMap<K,V> {
 	public delete(key: K): boolean;
 	public get(key: K): V;
@@ -18,6 +20,8 @@ export external public class WeakMap<K,V> {
 	public set(key: K, value: V): this;
 	public constructor(entries: Array<any+> = );
 }
+
+export external public type WeakMapConstructor = constructor{WeakMap};
 
 export external public class Set<T> {
 	public add(value: T): this;
@@ -29,12 +33,16 @@ export external public class Set<T> {
 	public constructor(values: Array<T> = );
 }
 
+export external public type SetConstructor = constructor{Set};
+
 export external public class WeakSet<T> {
 	public add(value: T): this;
 	public delete(value: T): boolean;
 	public has(value: T): boolean;
 	public constructor(values: Array<T> = );
 }
+
+export external public type WeakSetConstructor = constructor{WeakSet};
 
 export external public type ReadonlySet<T> = Set<T>;
 export external public type ReadonlyMap<K,V> = Map<K,V>;

@@ -8,6 +8,8 @@ export external public class SharedArrayBuffer {
 	public constructor(byteLength: number);
 }
 
+export external public type SharedArrayBufferConstructor = constructor{SharedArrayBuffer};
+
 export external public interface ~ArrayBufferTypes {
 	SharedArrayBuffer: SharedArrayBuffer;
 }

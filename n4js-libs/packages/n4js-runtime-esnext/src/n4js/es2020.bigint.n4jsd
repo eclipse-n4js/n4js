@@ -28,6 +28,8 @@ export external public class BigInt {
 	public static asUintN(bits: number, int: any+): any+;
 }
 
+export external public type BigIntConstructor = constructor{BigInt};
+
 export external public class BigInt64Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -68,6 +70,8 @@ export external public class BigInt64Array {
 	public static from(...args: any+): any+; // overloading not supported
 }
 
+export external public type BigInt64ArrayConstructor = constructor{BigInt64Array};
+
 export external public class BigUint64Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -107,6 +111,8 @@ export external public class BigUint64Array {
 	public static of(...items: any+): BigUint64Array;
 	public static from(...args: any+): any+; // overloading not supported
 }
+
+export external public type BigUint64ArrayConstructor = constructor{BigUint64Array};
 
 @Polyfill
 export external public class DataView extends DataView {

@@ -1,8 +1,7 @@
 @@Global @@ProvidedByRuntime
 
-@Polyfill
-export external public class Symbol extends Symbol {
-	public static get asyncIterator(): symbol;
+export external public interface ~SymbolConstructor {
+	get asyncIterator(): symbol;
 }
 
 export external public interface ~AsyncIterator<T,TReturn,TNext> {

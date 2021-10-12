@@ -47,6 +47,8 @@ export external public class Object {
 	public static get prototype(): Object;
 }
 
+export external public type ObjectConstructor = constructor{Object};
+
 export external public class Function {
 	public apply(thisArg: any, argArray: any = ): any;
 	public call(thisArg: any, ...argArray: any): any;
@@ -69,6 +71,8 @@ export external public class Function {
 	 */
 	public get prototype(): Object;
 }
+
+export external public type FunctionConstructor = constructor{Function};
 
 export external public interface ~IArguments {
 	length: number;
@@ -107,11 +111,15 @@ export external public class String {
 	public [Symbol.iterator](): Iterator<string>
 }
 
+export external public type StringConstructor = constructor{String};
+
 export external public class Boolean {
 	public valueOf(): boolean;
 	public constructor(value: any = );
 	(value: any+ = ): boolean;
 }
+
+export external public type BooleanConstructor = constructor{Boolean};
 
 export external public class Number {
 	public toString(radix: number = ): string;
@@ -128,6 +136,8 @@ export external public class Number {
 	public static get NEGATIVE_INFINITY(): number;
 	public static get POSITIVE_INFINITY(): number;
 }
+
+export external public type NumberConstructor = constructor{Number};
 
 export external public interface ~ImportMeta {}
 
@@ -217,6 +227,8 @@ export external public class Date {
 	public static now(): number;
 }
 
+export external public type DateConstructor = constructor{Date};
+
 export external public interface ~RegExpMatchArray extends Array<string> {
 	index: number;
 	input: string;
@@ -259,6 +271,8 @@ export external public class RegExp {
 	public static "$'": string;
 }
 
+export external public type RegExpConstructor = constructor{RegExp};
+
 export external public class Error {
 	public name: string;
 	public message: string;
@@ -267,35 +281,49 @@ export external public class Error {
 	(message: string = ): Error;
 }
 
+export external public type ErrorConstructor = constructor{Error};
+
 export external public class EvalError extends Error {
 	public constructor(message: string = );
 	(message: string = ): EvalError;
 }
+
+export external public type EvalErrorConstructor = constructor{EvalError};
 
 export external public class RangeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): RangeError;
 }
 
+export external public type RangeErrorConstructor = constructor{RangeError};
+
 export external public class ReferenceError extends Error {
 	public constructor(message: string = );
 	(message: string = ): ReferenceError;
 }
+
+export external public type ReferenceErrorConstructor = constructor{ReferenceError};
 
 export external public class SyntaxError extends Error {
 	public constructor(message: string = );
 	(message: string = ): SyntaxError;
 }
 
+export external public type SyntaxErrorConstructor = constructor{SyntaxError};
+
 export external public class TypeError extends Error {
 	public constructor(message: string = );
 	(message: string = ): TypeError;
 }
 
+export external public type TypeErrorConstructor = constructor{TypeError};
+
 export external public class URIError extends Error {
 	public constructor(message: string = );
 	(message: string = ): URIError;
 }
+
+export external public type URIErrorConstructor = constructor{URIError};
 
 export external public class JSON {
 	public static parse(text: string, reviver: (_this: any, key: string, value: any)=>any = ): any;
@@ -343,6 +371,8 @@ export external public class Array<T> {
 	@Override public static get prototype(): Array<? extends any>
 }
 
+export external public type ArrayConstructor = constructor{Array};
+
 export external public interface ~TypedPropertyDescriptor<T> {
 	enumerable: boolean;
 	configurable: boolean;
@@ -368,6 +398,8 @@ export external public class ArrayBuffer {
 	public constructor(byteLength: number);
 	public static isView(arg: any): boolean;
 }
+
+export external public type ArrayBufferConstructor = constructor{ArrayBuffer};
 
 export external public interface ~ArrayBufferTypes {
 	ArrayBuffer: ArrayBuffer;
@@ -404,6 +436,8 @@ export external public class DataView {
 	public constructor(buffer: ArrayBufferLike, byteOffset: number = , byteLength: number = );
 }
 
+export external public type DataViewConstructor = constructor{DataView};
+
 export external public class Int8Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -437,6 +471,8 @@ export external public class Int8Array {
 	public static of(...items: number): Int8Array;
 	public static from(...args: any+): any+; // overloading not supported
 }
+
+export external public type Int8ArrayConstructor = constructor{Int8Array};
 
 export external public class Uint8Array {
 	public get BYTES_PER_ELEMENT(): number;
@@ -472,6 +508,8 @@ export external public class Uint8Array {
 	public static from(...args: any+): any+; // overloading not supported
 }
 
+export external public type Uint8ArrayConstructor = constructor{Uint8Array};
+
 export external public class Uint8ClampedArray {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -505,6 +543,8 @@ export external public class Uint8ClampedArray {
 	public static of(...items: number): Uint8ClampedArray;
 	public static from(...args: any+): any+; // overloading not supported
 }
+
+export external public type Uint8ClampedArrayConstructor = constructor{Uint8ClampedArray};
 
 export external public class Int16Array {
 	public get BYTES_PER_ELEMENT(): number;
@@ -540,6 +580,8 @@ export external public class Int16Array {
 	public static from(...args: any+): any+; // overloading not supported
 }
 
+export external public type Int16ArrayConstructor = constructor{Int16Array};
+
 export external public class Uint16Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -573,6 +615,8 @@ export external public class Uint16Array {
 	public static of(...items: number): Uint16Array;
 	public static from(...args: any+): any+; // overloading not supported
 }
+
+export external public type Uint16ArrayConstructor = constructor{Uint16Array};
 
 export external public class Int32Array {
 	public get BYTES_PER_ELEMENT(): number;
@@ -608,6 +652,8 @@ export external public class Int32Array {
 	public static from(...args: any+): any+; // overloading not supported
 }
 
+export external public type Int32ArrayConstructor = constructor{Int32Array};
+
 export external public class Uint32Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -641,6 +687,8 @@ export external public class Uint32Array {
 	public static of(...items: number): Uint32Array;
 	public static from(...args: any+): any+; // overloading not supported
 }
+
+export external public type Uint32ArrayConstructor = constructor{Uint32Array};
 
 export external public class Float32Array {
 	public get BYTES_PER_ELEMENT(): number;
@@ -676,6 +724,8 @@ export external public class Float32Array {
 	public static from(...args: any+): any+; // overloading not supported
 }
 
+export external public type Float32ArrayConstructor = constructor{Float32Array};
+
 export external public class Float64Array {
 	public get BYTES_PER_ELEMENT(): number;
 	public get buffer(): ArrayBufferLike;
@@ -708,6 +758,8 @@ export external public class Float64Array {
 	public static of(...items: number): Float64Array;
 	public static from(...args: any+): any+; // overloading not supported
 }
+
+export external public type Float64ArrayConstructor = constructor{Float64Array};
 
 type ReadonlyArray<T> = Array<T>;
 
@@ -748,6 +800,18 @@ export external public class Symbol extends Object {
 	 * @see ES6, 19.4.2.2
 	 */
 	public const hasInstance: symbol
+
+	// FIXME well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
+	//public const hasInstance: symbol;
+	public const isConcatSpreadable: symbol;
+	public const match: symbol;
+	public const replace: symbol;
+	public const search: symbol;
+	public const species: symbol;
+	public const split: symbol;
+	public const toPrimitive: symbol;
+	public const toStringTag: symbol;
+	public const unscopables: symbol;
 
 	/**
 	 * Returns the shared symbol with the given key from the Javascript engine's shared symbol registry.
