@@ -175,6 +175,7 @@ export class TypeRef {
 	public isComposed(): boolean;
 }
 
+export function getSymbolNameFromPropertyName(propertyName: string): string;
 export function scriptToString(script: Script): string;
 export function createUndefined(): TypeRef;
 export function createAnyPlus(): TypeRef;

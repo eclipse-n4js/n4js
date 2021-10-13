@@ -16,27 +16,15 @@ export external public interface ~IteratorReturnResult<TReturn> {
 
 export external public type IteratorResult<T,TReturn> = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
 
-export external public interface ~Iterator<T,TReturn,TNext> {
-	next(...args: any+ | any+): IteratorResult<T,TReturn>;
-	return(value: TReturn = ): IteratorResult<T,TReturn>;
-	throw(e: any = ): IteratorResult<T,TReturn>;
-}
-
-export external public interface ~Iterable<T> {
-	[Symbol.iterator](): Iterator<T>;
-}
-
 export external public interface ~IterableIterator<T> extends Iterator<T> {
 	[Symbol.iterator](): IterableIterator<T>;
 }
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
-	public [Symbol.iterator](): IterableIterator<T>;
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<T>;
-	public static <T> from(...args: any+): any+; // overloading not supported
 }
 
 export external public interface ~IArguments {
@@ -49,13 +37,10 @@ export external public class Map<K,V> extends Map<K,V> {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<K>;
 	public values(): IterableIterator<V>;
-	public constructor(iterable: Iterable<any+>);
 }
 
 @Polyfill
-export external public class WeakMap<K,V> extends WeakMap<K,V> {
-	public constructor(iterable: Iterable<any+>);
-}
+export external public class WeakMap<K,V> extends WeakMap<K,V> {}
 
 @Polyfill
 export external public class Set<T> extends Set<T> {
@@ -63,25 +48,13 @@ export external public class Set<T> extends Set<T> {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<T>;
 	public values(): IterableIterator<T>;
-	public constructor(iterable: Iterable<T> = );
 }
 
 @Polyfill
-export external public class WeakSet<T> extends WeakSet<T> {
-	public constructor(iterable: Iterable<T>);
-}
-
-export external public interface ~Promise<T> {}
-
-export external public interface ~PromiseConstructor {
-	<T> all(values: Iterable<T | PromiseLike<T>>): Promise<Array<Awaited<T>>>;
-	<T> race(values: Iterable<T | PromiseLike<T>>): Promise<Awaited<T>>;
-}
+export external public class WeakSet<T> extends WeakSet<T> {}
 
 @Polyfill
-export external public class String extends String {
-	public [Symbol.iterator](): IterableIterator<string>;
-}
+export external public class String extends String {}
 
 @Polyfill
 export external public class Int8Array extends Int8Array {
@@ -89,8 +62,6 @@ export external public class Int8Array extends Int8Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Int8Array;
 }
 
 @Polyfill
@@ -99,8 +70,6 @@ export external public class Uint8Array extends Uint8Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Uint8Array;
 }
 
 @Polyfill
@@ -109,8 +78,6 @@ export external public class Uint8ClampedArray extends Uint8ClampedArray {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Uint8ClampedArray;
 }
 
 @Polyfill
@@ -119,8 +86,6 @@ export external public class Int16Array extends Int16Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Int16Array;
 }
 
 @Polyfill
@@ -129,8 +94,6 @@ export external public class Uint16Array extends Uint16Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Uint16Array;
 }
 
 @Polyfill
@@ -139,8 +102,6 @@ export external public class Int32Array extends Int32Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Int32Array;
 }
 
 @Polyfill
@@ -149,8 +110,6 @@ export external public class Uint32Array extends Uint32Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Uint32Array;
 }
 
 @Polyfill
@@ -159,8 +118,6 @@ export external public class Float32Array extends Float32Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Float32Array;
 }
 
 @Polyfill
@@ -169,6 +126,4 @@ export external public class Float64Array extends Float64Array {
 	public entries(): IterableIterator<any+>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
-	public constructor(elements: Iterable<number>);
-	public static from(arrayLike: Iterable<number>, mapfn: (v: number, k: number)=>number = , thisArg: any = ): Float64Array;
 }

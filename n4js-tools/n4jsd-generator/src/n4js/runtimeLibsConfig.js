@@ -475,9 +475,41 @@ export default {
 		},
 		"es2015.iterable.d.ts": {
 			ignore: [
+				"Iterator", // Iterator was moved to es5.n4jsd (see above)
+				"Iterable", // Iterable was moved to es5.n4jsd (see above)
+				"Promise", "PromiseConstructor", // Promise was moved to es5.n4jsd (see above)
 				// read-only types:
 				"ReadonlyArray", "ReadonlySet", "ReadonlyMap"
-			]
+			],
+			patchMembers: {
+				"Array#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
+				"Array#from": undefined,
+				"String#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
+				"Map#constructor": undefined,
+				"WeakMap#constructor": undefined,
+				"Set#constructor": undefined,
+				"WeakSet#constructor": undefined,
+				"Uint8ClampedArray#constructor": undefined,
+				"Uint8ClampedArray#from": undefined,
+				"Int8Array#constructor": undefined,
+				"Int8Array#from": undefined,
+				"Uint8Array#constructor": undefined,
+				"Uint8Array#from": undefined,
+				"Uint8Clampe#constructor": undefined,
+				"Uint8Clampe#from": undefined,
+				"Int16Array#constructor": undefined,
+				"Int16Array#from": undefined,
+				"Uint16Array#constructor": undefined,
+				"Uint16Array#from": undefined,
+				"Int32Array#constructor": undefined,
+				"Int32Array#from": undefined,
+				"Uint32Array#constructor": undefined,
+				"Uint32Array#from": undefined,
+				"Float32Array#constructor": undefined,
+				"Float32Array#from": undefined,
+				"Float64Array#constructor": undefined,
+				"Float64Array#from": undefined
+			}
 		},
 		"es2015.generator.d.ts": {},
 		"es2015.promise.d.ts": {},

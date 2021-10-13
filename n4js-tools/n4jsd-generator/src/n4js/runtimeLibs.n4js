@@ -114,13 +114,17 @@ class RuntimeLibsProcessor {
 				let idx = 0;
 				while (idx < elem.members.length) {
 					const member = elem.members[idx];
-					let memberName;
+					let memberName: string;
 					if (member.kind === model.MemberKind.CTOR) {
 						memberName = "constructor";
 					} else if (member.kind === model.MemberKind.CALLABLE_CTOR) {
 						memberName = "()";
 					} else {
 						memberName = member.name;
+						const symbolName = model.getSymbolNameFromPropertyName(memberName);
+						if (symbolName) {
+							memberName = "[Symbol." + symbolName + "]";
+						}
 					}
 					const key = typeName + "#" + memberName;
 					if (patchedMembers.has(key)) {
