@@ -337,6 +337,8 @@ export default {
 					public static <T> all(iterable: Iterable<union{Promise<T,?>, T}>): Promise<Array<T>, any>
 					public static <T> race(iterable: Iterable<union{Promise<T,?>, T}>): Promise<T, any>
 				}
+
+				export external public type PromiseConstructor = constructor{Promise};
 			`,
 			ignore: [
 				// temporarily ignored, because we need our own definition:
@@ -358,6 +360,9 @@ export default {
 			polyfills: [
 				// FIXME
 				// "Boolean", "Number", "String", "Symbol", "Object", "RegExp", "Function", "Array", "Date", "Math", "JSON", "Error"
+			],
+			ctorInstanceTypes: [
+				"Promise", "PromiseConstructor"
 			],
 			patchMembers: {
 				// required due to odd return types on TypeScript side
@@ -463,7 +468,8 @@ export default {
 		},
 		"es2015.symbol.wellknown.d.ts": {
 			ignore: [
-				"Symbol", "SymbolConstructor" // Symbol was moved to es5.n4jsd (see above)
+				"Symbol", "SymbolConstructor", // Symbol was moved to es5.n4jsd (see above)
+				"Promise", "PromiseConstructor" // FIXME this would work fine, except for different number of type parameters!!!
 			],
 			patchMembers: {
 				"String#replace": { addAnnotations: [ "@Override" ] },
@@ -511,8 +517,20 @@ export default {
 				"Float64Array#from": undefined
 			}
 		},
-		"es2015.generator.d.ts": {},
-		"es2015.promise.d.ts": {},
+		"es2015.generator.d.ts": {
+			ignore: [
+				"Generator" // Generator was moved to es5.n4jsd (see above)
+			],
+			patchMembers: {
+				"GeneratorFunction#()": undefined,
+				"GeneratorFunctionConstructor#()": undefined
+			}
+		},
+		"es2015.promise.d.ts": {
+			ignore: [
+				"Promise", "PromiseConstructor" // Promise was moved to es5.n4jsd (see above)
+			]
+		},
 		"es2015.proxy.d.ts": {},
 		"es2015.reflect.d.ts": {},
 		"es2016.array.include.d.ts": {

@@ -1,16 +1,8 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~Generator<T,TReturn,TNext> extends Iterator<T,TReturn,TNext> {
-	next(...args: any+ | any+): IteratorResult<T,TReturn>;
-	return(value: TReturn): IteratorResult<T,TReturn>;
-	throw(e: any): IteratorResult<T,TReturn>;
-	[Symbol.iterator](): Generator<T,TReturn,TNext>;
-}
-
 export external public interface ~GeneratorFunction {
 	@CovariantConstructor
 	constructor(...args: any);
-	(...args: any): Generator;
 	get length(): number;
 	get name(): string;
 }
@@ -18,7 +10,6 @@ export external public interface ~GeneratorFunction {
 export external public interface ~GeneratorFunctionConstructor {
 	@CovariantConstructor
 	constructor(...args: string);
-	(...args: string): GeneratorFunction;
 	get length(): number;
 	get name(): string;
 }

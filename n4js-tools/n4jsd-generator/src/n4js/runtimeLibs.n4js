@@ -33,6 +33,7 @@ class FileGenConfig {
 	public suffix: string;
 	public ignore = new Set<string>();
 	public polyfills = new Set<string>();
+	public ctorInstanceTypes = [] as string[];
 	public patchMembers = new Map<string, PatchMemberConfig>();
 	public appendCode = new Map<string, string>();
 }
@@ -41,11 +42,12 @@ class PatchMemberConfig {
 	public addAnnotations: string[];
 }
 const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
-	[ "GenConfig#files",                  new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ignore",             new PropertyTypeInfo({ type: String,            collectionType: Set }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#polyfills",          new PropertyTypeInfo({ type: String,            collectionType: Set }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#patchMembers",       new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#appendCode",         new PropertyTypeInfo({ type: String,            collectionType: Map }) ] as [string,PropertyTypeInfo],
+	[ "GenConfig#files",                  new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ignore",             new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#polyfills",          new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ctorInstanceTypes",  new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#patchMembers",       new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#appendCode",         new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
 	[ "PatchMemberConfig#addAnnotations", new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
 ]);
 
@@ -227,6 +229,16 @@ class RuntimeLibsProcessor {
 		}
 
 		topLevelElementModifications.applyTo(script);
+
+		// register additional known ctor/instance types, as requested by this file's FileGenConfig
+		const fileConfig = getGenConfig().files.get(script.tsFileName);
+		for (const typeName of fileConfig?.ctorInstanceTypes ?? []) {
+			if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
+				this.knownCtorTypes.add(typeName);
+			} else {
+				this.knownInstanceTypes.add(typeName);
+			}
+		}
 	}
 
 	private adjustCtorInstanceTypesForVarDecl(
@@ -361,6 +373,17 @@ function changeInterfaceToClass(ifc: model.Type) {
 			m.accessibility = model.Accessibility.PUBLIC;
 		}
 	});
+	// in TypeScript, a non-generic interface may have a generic construct signature,
+	// which we turn into a generic class:
+	for (const m of ifc.members) {
+		if (m.kind === model.MemberKind.CTOR) {
+			for (const paramName of m.typeParams) {
+				if (ifc.typeParams.indexOf(paramName) < 0) {
+					ifc.typeParams.push(paramName);
+				}
+			}
+		}
+	}
 }
 
 function changeToPolyfill(type: model.Type) {
@@ -390,8 +413,9 @@ function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
 		}
 	}
 	if (scriptsWithoutGenConfig.length > 0) {
-		throw new RuntimeLibsError("no generator configuration in config property 'files' found for:\n    "
-			+ scriptsWithoutGenConfig.map(s => s.tsFileName + "  (at " + s.tsFilePath + ")").join("\n    "));
+		// FIXME disabled for debugging
+		// throw new RuntimeLibsError("no generator configuration in config property 'files' found for:\n    "
+		// 	+ scriptsWithoutGenConfig.map(s => s.tsFileName + "  (at " + s.tsFilePath + ")").join("\n    "));
 	}
 
 	const result: model.Script[] = [];
@@ -406,8 +430,13 @@ function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
 		}
 	}
 	if (namesWithoutScript.length > 0) {
-		throw new RuntimeLibsError("no .d.ts input file found for generator configuration with name(s): "
-			+ namesWithoutScript.join(", "));
+		// FIXME disabled for debugging
+		// throw new RuntimeLibsError("no .d.ts input file found for generator configuration with name(s): "
+		// 	+ namesWithoutScript.join(", "));
+	}
+
+	for (const scriptWithoutGenConfig of scriptsWithoutGenConfig) {
+		result.push(scriptWithoutGenConfig);
 	}
 
 	return result;

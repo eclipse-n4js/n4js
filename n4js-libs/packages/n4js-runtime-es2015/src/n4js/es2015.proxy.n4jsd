@@ -16,7 +16,7 @@ export external public interface ~ProxyHandler<T> {
 	setPrototypeOf(target: T, v: Object): boolean;
 }
 
-export external public class Proxy {
+export external public class Proxy<T> {
 	public static <T> revocable(target: T, handler: ProxyHandler<T>): ~Object with { proxy: T; revoke: ()=>void; };
 	public constructor(target: T, handler: ProxyHandler<T>);
 }

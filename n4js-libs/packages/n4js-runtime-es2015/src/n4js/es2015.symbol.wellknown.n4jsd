@@ -52,14 +52,6 @@ export external public class Math extends Math {
 	public static get [Symbol.toStringTag](): string;
 }
 
-export external public interface ~Promise<T> {
-	get [Symbol.toStringTag](): string;
-}
-
-export external public interface ~PromiseConstructor {
-	get [Symbol.species](): PromiseConstructor;
-}
-
 @Polyfill
 export external public class RegExp extends RegExp {
 	public [Symbol.match](string: string): RegExpMatchArray;
