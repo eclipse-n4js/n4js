@@ -2,5 +2,5 @@
 
 @Polyfill
 export external public class Object extends Object {
-	public static <T> fromEntries(...args: any+): any+; // overloading not supported
+	public static fromEntries(...args: any+): any+; // overloading not supported
 }

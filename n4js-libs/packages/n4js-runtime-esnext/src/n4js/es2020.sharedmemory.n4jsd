@@ -1,16 +1,4 @@
 @@Global @@ProvidedByRuntime
 
 @Polyfill
-export external public class Atomics extends Atomics {
-	public static add(typedArray: BigInt64Array | BigUint64Array, index: number, value: any+): any+;
-	public static and(typedArray: BigInt64Array | BigUint64Array, index: number, value: any+): any+;
-	public static compareExchange(typedArray: BigInt64Array | BigUint64Array, index: number, expectedValue: any+, replacementValue: any+): any+;
-	public static exchange(typedArray: BigInt64Array | BigUint64Array, index: number, value: any+): any+;
-	public static load(typedArray: BigInt64Array | BigUint64Array, index: number): any+;
-	public static or(typedArray: BigInt64Array | BigUint64Array, index: number, value: any+): any+;
-	public static store(typedArray: BigInt64Array | BigUint64Array, index: number, value: any+): any+;
-	public static sub(typedArray: BigInt64Array | BigUint64Array, index: number, value: any+): any+;
-	public static wait(typedArray: BigInt64Array, index: number, value: any+, timeout: number = ): "ok" | "not-equal" | "timed-out";
-	public static notify(typedArray: BigInt64Array, index: number, count: number = ): number;
-	public static xor(typedArray: BigInt64Array | BigUint64Array, index: number, value: any+): any+;
-}
+export external public class Atomics extends Atomics {}

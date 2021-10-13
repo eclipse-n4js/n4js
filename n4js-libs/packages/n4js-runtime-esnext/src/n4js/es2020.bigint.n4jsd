@@ -19,8 +19,11 @@ export external public interface ~BigIntToLocaleStringOptions {
 }
 
 export external public class BigInt {
+	@Override
 	public toString(radix: number = ): string;
+	@Override
 	public toLocaleString(locales: string = , options: BigIntToLocaleStringOptions = ): string;
+	@Override
 	public valueOf(): any+;
 	public get [Symbol.toStringTag](): "BigInt";
 	(value: any+ | boolean | number | string): any+;
@@ -58,8 +61,11 @@ export external public class BigInt64Array {
 	public some(predicate: (value: any+, index: number, array: BigInt64Array)=>boolean, thisArg: any = ): boolean;
 	public sort(compareFn: (a: any+, b: any+)=>(number | any+) = ): this;
 	public subarray(begin: number = , end: number = ): BigInt64Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): BigInt64Array;
 	public values(): IterableIterator<any+>;
 	public [Symbol.iterator](): IterableIterator<any+>;
@@ -100,8 +106,11 @@ export external public class BigUint64Array {
 	public some(predicate: (value: any+, index: number, array: BigUint64Array)=>boolean, thisArg: any = ): boolean;
 	public sort(compareFn: (a: any+, b: any+)=>(number | any+) = ): this;
 	public subarray(begin: number = , end: number = ): BigUint64Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): BigUint64Array;
 	public values(): IterableIterator<any+>;
 	public [Symbol.iterator](): IterableIterator<any+>;

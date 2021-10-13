@@ -1,6 +1,6 @@
 @@Global @@ProvidedByRuntime
 
-export external public type FlatArray = any+;
+export external public type FlatArray<Arr,Depth> = any+;
 
 @Polyfill
 export external public class Array<T> extends Array<T> {

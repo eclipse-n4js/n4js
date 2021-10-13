@@ -1,18 +1,7 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~SymbolConstructor {
-	get asyncIterator(): symbol;
-}
-
-export external public interface ~AsyncIterator<T,TReturn,TNext> {
-	next(...args: any+ | any+): Promise<IteratorResult<T,TReturn>>;
-	return(value: TReturn | PromiseLike<TReturn> = ): Promise<IteratorResult<T,TReturn>>;
-	throw(e: any = ): Promise<IteratorResult<T,TReturn>>;
-}
-
-export external public interface ~AsyncIterable<T> {
-	[Symbol.asyncIterator](): AsyncIterator<T>;
-}
+@Polyfill
+export external public class Symbol extends Symbol {}
 
 export external public interface ~AsyncIterableIterator<T> extends AsyncIterator<T> {
 	[Symbol.asyncIterator](): AsyncIterableIterator<T>;

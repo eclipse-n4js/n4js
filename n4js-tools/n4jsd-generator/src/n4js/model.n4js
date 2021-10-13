@@ -416,9 +416,12 @@ class Emitter {
 				buff.push("static ");
 			}
 		}
-		if (member.typeParams.length > 0) {
-			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
-				buff.push("<", member.typeParams.join(","), "> ");
+		const isOverloaded = member.signatures && member.signatures.length > 1;
+		if (!isOverloaded) { // type parameters may differ between overloaded signatures, so do not emit type parameters in case of overloading
+			if (member.typeParams.length > 0) {
+				if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
+					buff.push("<", member.typeParams.join(","), "> ");
+				}
 			}
 		}
 		switch(member.kind) {
@@ -462,7 +465,7 @@ class Emitter {
 			default:
 				throw "unknown kind of member: " + member.kind;
 		}
-		if (member.signatures !== undefined && member.signatures.length > 1) {
+		if (isOverloaded) {
 			buff.push(" // overloading not supported");
 		}
 	}
@@ -472,6 +475,7 @@ class Emitter {
 		if (signatures.length === 1) {
 			this.emitSignature(signatures[0], ignoreReturnType);
 		} else {
+			// NOTE: when implementing support for overloading, also adjust code above that emits type parameters!
 			buff.push("(...args: any+)");
 			if (!ignoreReturnType) {
 				buff.push(": any+");

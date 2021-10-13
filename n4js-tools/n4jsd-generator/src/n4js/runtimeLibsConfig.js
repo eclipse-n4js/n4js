@@ -4,7 +4,7 @@ export default {
 		"es5.d.ts": {
 			prefix: ``,
 			suffix: `
-				type ReadonlyArray<T> = Array<T>;
+				export external public type ReadonlyArray<T> = Array<T>;
 
 				/**
 				 * See [ECMA6] Section 19.4.
@@ -55,6 +55,10 @@ export default {
 					public const toPrimitive: symbol;
 					public const toStringTag: symbol;
 					public const unscopables: symbol;
+					// FIXME well-known symbols moved here from file 'es2018.asynciterable.d.ts'
+					public const asyncIterator: symbol;
+					// FIXME well-known symbols moved here from file 'es2020.symbol.wellknown.d.ts'
+					public const matchAll: symbol;
 
 					/**
 					 * Returns the shared symbol with the given key from the Javascript engine's shared symbol registry.
@@ -362,6 +366,7 @@ export default {
 				// "Boolean", "Number", "String", "Symbol", "Object", "RegExp", "Function", "Array", "Date", "Math", "JSON", "Error"
 			],
 			ctorInstanceTypes: [
+				"Symbol", "SymbolConstructor",
 				"Promise", "PromiseConstructor"
 			],
 			patchMembers: {
@@ -488,6 +493,7 @@ export default {
 				"ReadonlyArray", "ReadonlySet", "ReadonlyMap"
 			],
 			patchMembers: {
+				"Symbol#iterator": undefined, // was moved to es5.n4jsd (see above)
 				"Array#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
 				"Array#from": undefined,
 				"String#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
@@ -522,8 +528,8 @@ export default {
 				"Generator" // Generator was moved to es5.n4jsd (see above)
 			],
 			patchMembers: {
-				"GeneratorFunction#()": undefined,
-				"GeneratorFunctionConstructor#()": undefined
+				"GeneratorFunction#()": undefined,           // callable ctor not supported in interface
+				"GeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
 			}
 		},
 		"es2015.promise.d.ts": {
@@ -544,10 +550,41 @@ export default {
 		"es2017.sharedmemory.d.ts": {},
 		"es2017.typedarrays.d.ts": {},
 		"es2017.intl.d.ts": {},
-		"es2018.asynciterable.d.ts": {},
-		"es2018.asyncgenerator.d.ts": {},
-		"es2018.promise.d.ts": {},
-		"es2018.regexp.d.ts": {},
+		"es2018.asynciterable.d.ts": {
+			ignore: [
+				"AsyncIterator", // AsyncIterator was moved to es5.n4jsd (see above)
+				"AsyncIterable" // AsyncIterable was moved to es5.n4jsd (see above)
+			],
+			patchMembers: {
+				"Symbol#asyncIterator": undefined // was moved to es5.n4jsd (see above)
+			}
+		},
+		"es2018.asyncgenerator.d.ts": {
+			ignore: [
+				"AsyncGenerator" // AsyncGenerator was moved to es5.n4jsd (see above)
+			],
+			patchMembers: {
+				"AsyncGeneratorFunction#()": undefined,           // callable ctor not supported in interface
+				"AsyncGeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
+			}
+		},
+		"es2018.promise.d.ts": {
+			ignore: [
+				"Promise", "PromiseConstructor" // FIXME this would work fine, except for different number of type parameters!!!
+			],
+			suffix: `
+				@Polyfill
+				export external public class Promise<out S, out F> extends Promise<S,F> {
+					public finally(onfinally: (()=>void) = ): Promise<S,F>;
+				}
+			`
+		},
+		"es2018.regexp.d.ts": {
+			polyfills: [
+				"RegExpMatchArray",
+				"RegExpExecArray"
+			]
+		},
 		"es2018.intl.d.ts": {},
 		"es2019.string.d.ts": {},
 		"es2019.object.d.ts": {},
@@ -558,11 +595,52 @@ export default {
 			]
 		},
 		"es2019.symbol.d.ts": {},
-		"es2020.bigint.d.ts": {},
+		"es2020.bigint.d.ts": {
+			patchMembers: {
+				"BigInt#toString": { addAnnotations: [ "@Override" ] },
+				"BigInt#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"BigInt#valueOf": { addAnnotations: [ "@Override" ] },
+				"BigInt64Array#toString": { addAnnotations: [ "@Override" ] },
+				"BigInt64Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"BigInt64Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"BigUint64Array#toString": { addAnnotations: [ "@Override" ] },
+				"BigUint64Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"BigUint64Array#valueOf": { addAnnotations: [ "@Override" ] }
+			}
+		},
 		"es2020.string.d.ts": {},
-		"es2020.promise.d.ts": {},
-		"es2020.sharedmemory.d.ts": {},
-		"es2020.symbol.wellknown.d.ts": {},
+		"es2020.promise.d.ts": {
+			ignore: [
+				"Promise", "PromiseConstructor" // FIXME this would work fine, except for different number of type parameters!!!
+			],
+			suffix: `
+				@Polyfill
+				export external public class Promise<out S, out F> extends Promise<S,F> {
+					public static allSettled(...args: any+): any+; // overloading not supported
+				}
+			`
+		},
+		"es2020.sharedmemory.d.ts": {
+			patchMembers: {
+				// these are cases of adding overloads to existing methods:
+				"Atomics#add": undefined,
+				"Atomics#and": undefined,
+				"Atomics#compareExchange": undefined,
+				"Atomics#exchange": undefined,
+				"Atomics#load": undefined,
+				"Atomics#or": undefined,
+				"Atomics#store": undefined,
+				"Atomics#sub": undefined,
+				"Atomics#wait": undefined,
+				"Atomics#notify": undefined,
+				"Atomics#xor": undefined
+			}
+		},
+		"es2020.symbol.wellknown.d.ts": {
+			patchMembers: {
+				"Symbol#matchAll": undefined // was moved to es5.n4jsd (see above)
+			}
+		},
 		"es2020.intl.d.ts": {},
 	}
 };

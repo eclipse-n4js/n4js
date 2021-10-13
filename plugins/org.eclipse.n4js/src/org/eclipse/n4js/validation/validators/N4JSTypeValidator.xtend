@@ -47,6 +47,7 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.members.TypingStrategyFilter
@@ -89,6 +90,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
@@ -121,6 +123,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+
+	@Inject
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * NEEDED
@@ -285,8 +290,21 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		val typeRef = tsh.resolveTypeAliasFlat(G, typeRefInAST);
 		if (typeRef.declaredType === bits.symbolObjectType) {
 			// we have a type reference to 'Symbol'
-			addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
+			val isAllowed = isExtendsClauseInRuntimeLibrary(typeRefInAST);
+			if (!isAllowed) {
+				addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
+			}
 		}
+	}
+
+	def private boolean isExtendsClauseInRuntimeLibrary(TypeRef typeRefInAST) {
+		if (typeRefInAST.eContainer?.eContainmentFeature === N4JSPackage.Literals.N4_CLASS_DEFINITION__SUPER_CLASS_REF) {
+			val project = workspaceAccess.findProjectContaining(typeRefInAST);
+			if (project !== null && project.type === ProjectType.RUNTIME_LIBRARY) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/*

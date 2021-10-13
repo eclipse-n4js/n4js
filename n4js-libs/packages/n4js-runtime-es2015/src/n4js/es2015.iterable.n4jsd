@@ -1,8 +1,7 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~SymbolConstructor {
-	get iterator(): symbol;
-}
+@Polyfill
+export external public class Symbol extends Symbol {}
 
 export external public interface ~IteratorYieldResult<TYield> {
 	done: false;

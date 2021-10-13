@@ -1,5 +1,6 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~Symbol {
-	get description(): string;
+@Polyfill
+export external public class Symbol extends Symbol {
+	public get description(): string;
 }

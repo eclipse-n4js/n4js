@@ -1,10 +1,12 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~RegExpMatchArray {
+@Polyfill
+export external public interface ~RegExpMatchArray extends RegExpMatchArray {
 	groups: ~Object with {  };
 }
 
-export external public interface ~RegExpExecArray {
+@Polyfill
+export external public interface ~RegExpExecArray extends RegExpExecArray {
 	groups: ~Object with {  };
 }
 

@@ -1,8 +1,7 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~SymbolConstructor {
-	get matchAll(): symbol;
-}
+@Polyfill
+export external public class Symbol extends Symbol {}
 
 @Polyfill
 export external public class RegExp extends RegExp {

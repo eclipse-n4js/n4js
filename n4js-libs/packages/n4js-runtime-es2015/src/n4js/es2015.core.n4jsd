@@ -2,11 +2,11 @@
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
-	public <S> find(...args: any+): any+; // overloading not supported
+	public find(...args: any+): any+; // overloading not supported
 	public findIndex(predicate: (value: T, index: number, obj: Array<T>)=>any+, thisArg: any = ): number;
 	public fill(value: T, start: number = , end: number = ): this;
 	public copyWithin(target: number, start: number, end: number = ): this;
-	public static <T> from(...args: any+): any+; // overloading not supported
+	public static from(...args: any+): any+; // overloading not supported
 	public static <T> of(...items: T): Array<T>;
 }
 
@@ -54,7 +54,7 @@ export external public class Number extends Number {
 
 @Polyfill
 export external public class Object extends Object {
-	public static <T,U> assign(...args: any+): any+; // overloading not supported
+	public static assign(...args: any+): any+; // overloading not supported
 	public static getOwnPropertySymbols(o: any): Array<symbol>;
 	@Override
 	public static keys(o: ~Object): Array<string>;

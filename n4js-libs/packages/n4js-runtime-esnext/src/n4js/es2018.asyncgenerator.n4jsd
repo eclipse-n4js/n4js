@@ -1,16 +1,8 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~AsyncGenerator<T,TReturn,TNext> extends AsyncIterator<T,TReturn,TNext> {
-	next(...args: any+ | any+): Promise<IteratorResult<T,TReturn>>;
-	return(value: TReturn | PromiseLike<TReturn>): Promise<IteratorResult<T,TReturn>>;
-	throw(e: any): Promise<IteratorResult<T,TReturn>>;
-	[Symbol.asyncIterator](): AsyncGenerator<T,TReturn,TNext>;
-}
-
 export external public interface ~AsyncGeneratorFunction {
 	@CovariantConstructor
 	constructor(...args: any);
-	(...args: any): AsyncGenerator;
 	get length(): number;
 	get name(): string;
 }
@@ -18,7 +10,6 @@ export external public interface ~AsyncGeneratorFunction {
 export external public interface ~AsyncGeneratorFunctionConstructor {
 	@CovariantConstructor
 	constructor(...args: string);
-	(...args: string): AsyncGeneratorFunction;
 	get length(): number;
 	get name(): string;
 }

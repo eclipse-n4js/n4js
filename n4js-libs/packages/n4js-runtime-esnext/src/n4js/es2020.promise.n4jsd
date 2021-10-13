@@ -10,9 +10,9 @@ export external public interface ~PromiseRejectedResult {
 	reason: any;
 }
 
-export external public type PromiseSettledResult = PromiseFulfilledResult<T> | PromiseRejectedResult;
+export external public type PromiseSettledResult<T> = PromiseFulfilledResult<T> | PromiseRejectedResult;
 
 @Polyfill
-export external public class Promise extends Promise {
-	public static <T> allSettled(...args: any+): any+; // overloading not supported
+export external public class Promise<out S, out F> extends Promise<S,F> {
+	public static allSettled(...args: any+): any+; // overloading not supported
 }

@@ -761,7 +761,7 @@ export external public class Float64Array {
 
 export external public type Float64ArrayConstructor = constructor{Float64Array};
 
-type ReadonlyArray<T> = Array<T>;
+export external public type ReadonlyArray<T> = Array<T>;
 
 /**
  * See [ECMA6] Section 19.4.
@@ -812,6 +812,10 @@ export external public class Symbol extends Object {
 	public const toPrimitive: symbol;
 	public const toStringTag: symbol;
 	public const unscopables: symbol;
+	// FIXME well-known symbols moved here from file 'es2018.asynciterable.d.ts'
+	public const asyncIterator: symbol;
+	// FIXME well-known symbols moved here from file 'es2020.symbol.wellknown.d.ts'
+	public const matchAll: symbol;
 
 	/**
 	 * Returns the shared symbol with the given key from the Javascript engine's shared symbol registry.

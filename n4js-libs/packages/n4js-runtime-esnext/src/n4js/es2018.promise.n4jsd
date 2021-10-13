@@ -1,5 +1,8 @@
 @@Global @@ProvidedByRuntime
 
-export external public interface ~Promise<T> {
-	finally(onfinally: (()=>void) = ): Promise<T>;
+
+
+@Polyfill
+export external public class Promise<out S, out F> extends Promise<S,F> {
+	public finally(onfinally: (()=>void) = ): Promise<S,F>;
 }
