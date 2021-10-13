@@ -594,9 +594,10 @@ export class Converter {
 
 	private convertTypeAlias(node: ts.TypeAliasDeclaration): model.Type {
 		const result = new model.Type();
+		result.kind = model.TypeKind.TYPE_ALIAS;
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.jsdoc = utils_ts.getJSDocForNode(node);
-		result.kind = model.TypeKind.TYPE_ALIAS;
+		result.typeParams.push(...(node.typeParameters ?? []).map((p: ts.TypeParameterDeclaration) => p.name.text));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		result.aliasedType = this.convertTypeReference(node.type);

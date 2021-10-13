@@ -14,7 +14,7 @@ export external public interface ~IteratorReturnResult<TReturn> {
 	value: TReturn;
 }
 
-export external public type IteratorResult = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
+export external public type IteratorResult<T,TReturn> = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
 
 export external public interface ~Iterator<T,TReturn,TNext> {
 	next(...args: any+ | any+): IteratorResult<T,TReturn>;
