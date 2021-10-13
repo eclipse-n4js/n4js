@@ -31,17 +31,22 @@ class GenConfig {
 class FileGenConfig {
 	public prefix: string;
 	public suffix: string;
-	public ignore: Set<string> = new Set<string>();
-	public polyfills: Set<string> = new Set<string>();
-	public patchMembers: Map<string,string> = new Map<string, string>();
-	public appendCode: Map<string,string> = new Map<string, string>();
+	public ignore = new Set<string>();
+	public polyfills = new Set<string>();
+	public patchMembers = new Map<string, PatchMemberConfig>();
+	public appendCode = new Map<string, string>();
+}
+class PatchMemberConfig {
+	public replaceBy: string;
+	public addAnnotations: string[];
 }
 const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
-	[ "GenConfig#files", { type: FileGenConfig, collectionType: Map } as PropertyTypeInfo ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ignore", { type: String, collectionType: Set } as PropertyTypeInfo ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#polyfills", { type: String, collectionType: Set } as PropertyTypeInfo ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#patchMembers", { type: String, collectionType: Map } as PropertyTypeInfo ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#appendCode", { type: String, collectionType: Map } as PropertyTypeInfo ] as [string,PropertyTypeInfo]
+	[ "GenConfig#files",                  new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ignore",             new PropertyTypeInfo({ type: String,            collectionType: Set }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#polyfills",          new PropertyTypeInfo({ type: String,            collectionType: Set }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#patchMembers",       new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#appendCode",         new PropertyTypeInfo({ type: String,            collectionType: Map }) ] as [string,PropertyTypeInfo],
+	[ "PatchMemberConfig#addAnnotations", new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
 ]);
 
 
@@ -119,11 +124,18 @@ class RuntimeLibsProcessor {
 					}
 					const key = typeName + "#" + memberName;
 					if (patchedMembers.has(key)) {
-						const replacement = patchedMembers.get(key);
-						if (replacement !== undefined && replacement !== null) {
-							member.replacementCode = utils.trimMultiLineString(replacement);
+						const patchConfig = patchedMembers.get(key);
+						if (patchConfig) {
+							const replacementStr = patchConfig.replaceBy;
+							if (replacementStr !== undefined && replacementStr !== null) {
+								member.replacementCode = utils.trimMultiLineString(replacementStr);
+							} else {
+								for (const annName of patchConfig.addAnnotations ?? []) {
+									member.annotations.push(new model.Annotation(annName));
+								}
+							}
 						} else {
-							// null/undefined means: remove the member
+							// null/undefined means: remove the member entirely
 							elem.members.splice(idx, 1);
 							--idx;
 						}

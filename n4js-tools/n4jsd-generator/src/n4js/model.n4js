@@ -649,9 +649,12 @@ class Emitter {
 			throw "not a TypeRef of kind TypeRefKind.OBJECT, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
-		buff.push("~Object with { ");
-		this.emitMembers(typeRef.members, undefined, false);
-		buff.push(" }");
+		buff.push("~Object");
+		if (typeRef.members.length > 0) {
+			buff.push(" with { ");
+			this.emitMembers(typeRef.members, undefined, false);
+			buff.push(" }");
+		}
 	}
 
 	emitComposedTypeRef(typeRefKind: TypeRefKind, memberTypeRefs: TypeRef[]) {

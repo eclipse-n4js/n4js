@@ -71,6 +71,7 @@ export external public class RegExp extends RegExp {
 
 @Polyfill
 export external public class String extends String {
+	@Override
 	public replace(...args: any+): any+; // overloading not supported
 }
 

@@ -11,9 +11,7 @@ export external public class Array<T> extends Array<T> {
 }
 
 @Polyfill
-export external public class Date extends Date {
-	public constructor(value: number | string | Date);
-}
+export external public class Date extends Date {}
 
 @Polyfill
 export external public class Function extends Function {
@@ -58,7 +56,8 @@ export external public class Number extends Number {
 export external public class Object extends Object {
 	public static <T,U> assign(...args: any+): any+; // overloading not supported
 	public static getOwnPropertySymbols(o: any): Array<symbol>;
-	public static keys(o: ~Object with {  }): Array<string>;
+	@Override
+	public static keys(o: ~Object): Array<string>;
 	public static is(value1: any, value2: any): boolean;
 	public static setPrototypeOf(o: any, proto: Object): any;
 }
@@ -68,7 +67,6 @@ export external public class RegExp extends RegExp {
 	public get flags(): string;
 	public get sticky(): boolean;
 	public get unicode(): boolean;
-	public constructor(pattern: RegExp | string, flags: string = );
 	(pattern: RegExp | string, flags: string = ): RegExp;
 }
 

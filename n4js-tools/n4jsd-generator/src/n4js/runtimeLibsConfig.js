@@ -361,30 +361,30 @@ export default {
 			],
 			patchMembers: {
 				// required due to odd return types on TypeScript side
-				"Function#bind": "public bind(thisArg: any, ...args: any): {function(... args: any): any}", // return type in .d.ts is 'any' instead of a function
-				"Object#valueOf": "public valueOf(): any", // return type in .d.ts is 'Object' causing errors when overridden to return a primitve type
-				"Object#getPrototypeOf": "public static getPrototypeOf(o: any): Object;", // return type in .d.ts is 'any' instead of 'Object'
+				"Function#bind": { replaceBy: "public bind(thisArg: any, ...args: any): {function(... args: any): any}" }, // return type in .d.ts is 'any' instead of a function
+				"Object#valueOf": { replaceBy: "public valueOf(): any" }, // return type in .d.ts is 'Object' causing errors when overridden to return a primitve type
+				"Object#getPrototypeOf": { replaceBy: "public static getPrototypeOf(o: any): Object;" }, // return type in .d.ts is 'any' instead of 'Object'
 				// required due to stricter type checking in N4JS (type of searchElement must be 'any' instead of 'T' on N4JS side)
-				"Array#indexOf": "public indexOf(searchElement: any, fromIndex: number = ): number;",
-				"Array#lastIndexOf": "public lastIndexOf(searchElement: any, fromIndex: number = ): number;",
+				"Array#indexOf": { replaceBy: "public indexOf(searchElement: any, fromIndex: number = ): number;" },
+				"Array#lastIndexOf": { replaceBy: "public lastIndexOf(searchElement: any, fromIndex: number = ): number;" },
 				// required due to different signature
-				"Array#map": "public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>;",
+				"Array#map": { replaceBy: "public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>;" },
 				// required due to overloading:
-				"Object#()": "(...args: any): Object;",
-				"Object#create": "public static create(proto: Object, props: Object = undefined): Object;",
-				"Object#freeze": "public static <T extends Object> freeze(obj: T): T;",
-				"String#localeCompare": "public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number;",
-				"String#replace": "public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string;",
-				"Array#constructor": "public constructor(first: union{number, T} = undefined, ...items: T);  // TODO: signature is type unsafe, allows to create arrays with elements of wrong type, new Array<string>(5, 'x', 'y'), but cannot write constructor(items : union {number, T... items} = undefined)",
-				"Array#concat": "public concat(...items: union {T, Array<? extends T>}): Array<T>;",
-				"Array#splice": "public splice(start: number = undefined, deleteCount: number = undefined, ...items: T): Array<T>;",
-				"Array#every": "public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;",
-				"Array#filter": "public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;",
-				"Array#reduce": "public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;",
-				"Array#reduceRight": "public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;",
-				"Date#constructor": "public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);",
-				"RegExp#constructor": "public constructor(pattern: string = undefined, flags: string = undefined);",
-				"JSON#stringify": "public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;",
+				"Object#()": { replaceBy: "(...args: any): Object;" },
+				"Object#create": { replaceBy: "public static create(proto: Object, props: Object = undefined): Object;" },
+				"Object#freeze": { replaceBy: "public static <T extends Object> freeze(obj: T): T;" },
+				"String#localeCompare": { replaceBy: "public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number;" },
+				"String#replace": { replaceBy: "public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string;" },
+				"Array#constructor": { replaceBy: "public constructor(first: union{number, T} = undefined, ...items: T);  // TODO: signature is type unsafe, allows to create arrays with elements of wrong type, new Array<string>(5, 'x', 'y'), but cannot write constructor(items : union {number, T... items} = undefined)" },
+				"Array#concat": { replaceBy: "public concat(...items: union {T, Array<? extends T>}): Array<T>;" },
+				"Array#splice": { replaceBy: "public splice(start: number = undefined, deleteCount: number = undefined, ...items: T): Array<T>;" },
+				"Array#every": { replaceBy: "public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;" },
+				"Array#filter": { replaceBy: "public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;" },
+				"Array#reduce": { replaceBy: "public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;" },
+				"Array#reduceRight": { replaceBy: "public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;" },
+				"Date#constructor": { replaceBy: "public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);" },
+				"RegExp#constructor": { replaceBy: "public constructor(pattern: string = undefined, flags: string = undefined);" },
+				"JSON#stringify": { replaceBy: "public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;" },
 				// other oddities:
 				"PropertyDescriptor#get": undefined,
 				"PropertyDescriptor#set": undefined
@@ -439,7 +439,12 @@ export default {
 			ignore: [
 				// read-only types:
 				"ReadonlyArray"
-			]
+			],
+			patchMembers: {
+				"Object#keys": { addAnnotations: [ "@Override" ] },
+				"Date#constructor": undefined,
+				"RegExp#constructor": undefined
+			}
 		},
 		"es2015.collection.d.ts": {
 			suffix: `
@@ -461,6 +466,7 @@ export default {
 				"Symbol", "SymbolConstructor" // Symbol was moved to es5.n4jsd (see above)
 			],
 			patchMembers: {
+				"String#replace": { addAnnotations: [ "@Override" ] },
 				// the signatures of the following members use computed property names inside ~Object with {}
 				"String#match": undefined,
 				"String#search": undefined,
