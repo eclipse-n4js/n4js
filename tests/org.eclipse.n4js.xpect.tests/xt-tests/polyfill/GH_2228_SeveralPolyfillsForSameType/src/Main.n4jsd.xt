@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2019 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "Test" {
+			Folder "src" {
+				File "Other.n4jsd" { from="./Other.n4jsd" }
+				ThisFile {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+
+   END_SETUP
+*/
+
+@@Global @@ProvidedByRuntime
+
+// XPECT noerrors -->
+@Polyfill export external public class Array<T> extends Array<T> {
+	// no members required here
+}
+
+// before the bug fix the following exception was thrown:
+//
+// Caused by: java.lang.IllegalArgumentException: name may not be null
+//    at org.eclipse.n4js.ts.types.util.NameStaticPair.<init>(NameStaticPair.java:48)
+//    at org.eclipse.n4js.ts.types.util.NameStaticPair.<init>(NameStaticPair.java:40)
+//    at org.eclipse.n4js.ts.types.util.NameStaticPair.of(NameStaticPair.java:33)
+//    at org.eclipse.n4js.validation.utils.MemberCube.addMembers(MemberCube.java:52)
+//    at org.eclipse.n4js.validation.utils.MemberCube.<init>(MemberCube.java:43)
+//    at org.eclipse.n4js.validation.validators.N4JSMemberRedefinitionValidator.createMemberValidationList(N4JSMemberRedefinitionValidator.java:1278)
+//    at org.eclipse.n4js.validation.validators.N4JSMemberRedefinitionValidator.checkMemberRedefinitions(N4JSMemberRedefinitionValidator.java:189)
+//    at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+//    at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+//    at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+//    at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+//    at org.eclipse.xtext.validation.AbstractDeclarativeValidator$MethodWrapper.invoke(AbstractDeclarativeValidator.java:129)
+//    at org.eclipse.n4js.validation.N4JSValidator$N4JSMethodWrapperCancelable.invoke(N4JSValidator.java:105)
+//    ... 32 more
