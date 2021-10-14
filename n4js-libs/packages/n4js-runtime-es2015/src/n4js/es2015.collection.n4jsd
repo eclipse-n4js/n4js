@@ -18,7 +18,7 @@ export external public class WeakMap<K,V> {
 	public get(key: K): V;
 	public has(key: K): boolean;
 	public set(key: K, value: V): this;
-	public constructor(entries: Array<any+> = );
+	public constructor(entries: Array<[K,V]> = );
 }
 
 export external public type WeakMapConstructor = constructor{WeakMap};

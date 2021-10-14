@@ -21,7 +21,7 @@ export external public interface ~IterableIterator<T> extends Iterator<T> {
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,T]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<T>;
 }
@@ -32,8 +32,8 @@ export external public interface ~IArguments {
 
 @Polyfill
 export external public class Map<K,V> extends Map<K,V> {
-	public [Symbol.iterator](): IterableIterator<any+>;
-	public entries(): IterableIterator<any+>;
+	public [Symbol.iterator](): IterableIterator<[K,V]>;
+	public entries(): IterableIterator<[K,V]>;
 	public keys(): IterableIterator<K>;
 	public values(): IterableIterator<V>;
 }
@@ -44,7 +44,7 @@ export external public class WeakMap<K,V> extends WeakMap<K,V> {}
 @Polyfill
 export external public class Set<T> extends Set<T> {
 	public [Symbol.iterator](): IterableIterator<T>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[T,T]>;
 	public keys(): IterableIterator<T>;
 	public values(): IterableIterator<T>;
 }
@@ -58,7 +58,7 @@ export external public class String extends String {}
 @Polyfill
 export external public class Int8Array extends Int8Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -66,7 +66,7 @@ export external public class Int8Array extends Int8Array {
 @Polyfill
 export external public class Uint8Array extends Uint8Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -74,7 +74,7 @@ export external public class Uint8Array extends Uint8Array {
 @Polyfill
 export external public class Uint8ClampedArray extends Uint8ClampedArray {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -82,7 +82,7 @@ export external public class Uint8ClampedArray extends Uint8ClampedArray {
 @Polyfill
 export external public class Int16Array extends Int16Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -90,7 +90,7 @@ export external public class Int16Array extends Int16Array {
 @Polyfill
 export external public class Uint16Array extends Uint16Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -98,7 +98,7 @@ export external public class Uint16Array extends Uint16Array {
 @Polyfill
 export external public class Int32Array extends Int32Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -106,7 +106,7 @@ export external public class Int32Array extends Int32Array {
 @Polyfill
 export external public class Uint32Array extends Uint32Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -114,7 +114,7 @@ export external public class Uint32Array extends Uint32Array {
 @Polyfill
 export external public class Float32Array extends Float32Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }
@@ -122,7 +122,7 @@ export external public class Float32Array extends Float32Array {
 @Polyfill
 export external public class Float64Array extends Float64Array {
 	public [Symbol.iterator](): IterableIterator<number>;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
 }

@@ -143,6 +143,8 @@ export enum TypeRefKind {
 	FUNCTION,
 	OBJECT,
 	THIS,
+	/** In this case, TypeRef#targetTypeName is either "Iterable*" or "Array*" and TypeRef#targetTypeArgs define the element types. */
+	TUPLE,
 	UNION,
 	INTERSECTION,
 	PARENTHESES,

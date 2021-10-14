@@ -750,6 +750,16 @@ export class Converter {
 			}
 			result.kind = isUnion ? model.TypeRefKind.UNION : model.TypeRefKind.INTERSECTION;
 			result.composedTypeRefs.push(...n4jsMemberTypeRefs);
+		} else if (ts.isTupleTypeNode(node)) {
+			result.kind = model.TypeRefKind.TUPLE;
+			result.targetTypeName = "Array";
+			for (let elemTypeNode of node.elements) {
+				if (ts.isNamedTupleMember(elemTypeNode)) {
+					elemTypeNode = elemTypeNode.type;
+				}
+				const n4jsElemTypeRef = this.convertTypeReference(elemTypeNode);
+				result.targetTypeArgs.push(n4jsElemTypeRef ?? model.createAnyPlus());
+			}
 		} else if (ts.isParenthesizedTypeNode(node)) {
 			result.kind = model.TypeRefKind.PARENTHESES;
 			result.parenthesizedTypeRef = this.convertTypeReference(node.type);
@@ -781,7 +791,6 @@ export class Converter {
 			// e.g. { [P in K]: T[P]; }
 			result.kind = model.TypeRefKind.MAPPED_TYPE;
 			this.createWarningForNode("mapped type will be replaced by Object+", node);
-		// } else if (ts.isTupleTypeNode(node)) {
 		} else {
 			this.createErrorForUnsupportedNode(node, "TypeNode (in #convertTypeReference())")
 			return model.createAnyPlus();

@@ -39,7 +39,7 @@ export external public class BigInt64Array {
 	public get byteLength(): number;
 	public get byteOffset(): number;
 	public copyWithin(target: number, start: number, end: number = ): this;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,any+]>;
 	public every(predicate: (value: any+, index: number, array: BigInt64Array)=>boolean, thisArg: any = ): boolean;
 	public fill(value: any+, start: number = , end: number = ): this;
 	public filter(predicate: (value: any+, index: number, array: BigInt64Array)=>any, thisArg: any = ): BigInt64Array;
@@ -84,7 +84,7 @@ export external public class BigUint64Array {
 	public get byteLength(): number;
 	public get byteOffset(): number;
 	public copyWithin(target: number, start: number, end: number = ): this;
-	public entries(): IterableIterator<any+>;
+	public entries(): IterableIterator<[number,any+]>;
 	public every(predicate: (value: any+, index: number, array: BigUint64Array)=>boolean, thisArg: any = ): boolean;
 	public fill(value: any+, start: number = , end: number = ): this;
 	public filter(predicate: (value: any+, index: number, array: BigUint64Array)=>any, thisArg: any = ): BigUint64Array;

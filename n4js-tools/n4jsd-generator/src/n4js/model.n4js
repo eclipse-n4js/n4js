@@ -148,6 +148,8 @@ export enum TypeRefKind {
 	FUNCTION,
 	OBJECT,
 	THIS,
+	/** In this case, TypeRef#targetTypeName is either "Iterable*" or "Array*" and TypeRef#targetTypeArgs define the element types. */
+	TUPLE,
 	UNION,
 	INTERSECTION,
 	PARENTHESES,
@@ -583,6 +585,9 @@ class Emitter {
 			case TypeRefKind.THIS:
 				buff.push("this");
 				break;
+			case TypeRefKind.TUPLE:
+				this.emitTupleTypeRef(typeRef);
+				break;
 			case TypeRefKind.UNION:
 			case TypeRefKind.INTERSECTION:
 				this.emitComposedTypeRef(typeRef.kind, typeRef.composedTypeRefs);
@@ -605,7 +610,7 @@ class Emitter {
 
 	emitNamedTypeRef(typeRef: TypeRef) {
 		if (typeRef.kind !== TypeRefKind.NAMED) {
-			throw "not a TypeRef of kind TypeRefKind.NAMED, but got: " + typeRef.kind;
+			throw "expected a TypeRef of kind TypeRefKind.NAMED, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
 		buff.push(typeRef.targetTypeName);
@@ -628,7 +633,7 @@ class Emitter {
 
 	emitFunctionTypeRef(typeRef: TypeRef) {
 		if (typeRef.kind !== TypeRefKind.FUNCTION) {
-			throw "not a TypeRef of kind TypeRefKind.FUNCTION, but got: " + typeRef.kind;
+			throw "expected a TypeRef of kind TypeRefKind.FUNCTION, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
 		this.emitSignature(typeRef.signature, true);
@@ -650,7 +655,7 @@ class Emitter {
 
 	emitObjectTypeRef(typeRef: TypeRef) {
 		if (typeRef.kind !== TypeRefKind.OBJECT) {
-			throw "not a TypeRef of kind TypeRefKind.OBJECT, but got: " + typeRef.kind;
+			throw "expected a TypeRef of kind TypeRefKind.OBJECT, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
 		buff.push("~Object");
@@ -658,6 +663,32 @@ class Emitter {
 			buff.push(" with { ");
 			this.emitMembers(typeRef.members, undefined, false);
 			buff.push(" }");
+		}
+	}
+
+	emitTupleTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.TUPLE) {
+			throw "expected a TypeRef of kind TypeRefKind.TUPLE, but got: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		const isArrayTuple = typeRef.targetTypeName.startsWith("Array");
+		if (isArrayTuple) {
+			buff.push("[");
+		} else {
+			buff.push("Iterable" + typeRef.targetTypeArgs.length + "<");
+		}
+		let isFirst = true;
+		for (const elemTypeRef of typeRef.targetTypeArgs) {
+			if (!isFirst) {
+				buff.push(",");
+			}
+			isFirst = false;
+			this.emitTypeRef(elemTypeRef);
+		}
+		if (isArrayTuple) {
+			buff.push("]");
+		} else {
+			buff.push(">");
 		}
 	}
 
