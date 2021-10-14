@@ -150,6 +150,7 @@ export enum TypeRefKind {
 	PARENTHESES,
 	// the following are not actually supported on N4JS side:
 	PREDICATE,
+	INDEXED_ACCESS_TYPE,
 	MAPPED_TYPE
 }
 

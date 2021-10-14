@@ -787,6 +787,10 @@ export class Converter {
 			// e.g. "this is Cls"
 			result.kind = model.TypeRefKind.PREDICATE;
 			this.createWarningForNode("type predicate will be replaced by boolean", node);
+		} else if (ts.isIndexedAccessTypeNode(node)) {
+			// e.g. "SomeType['someProperty']"
+			result.kind = model.TypeRefKind.INDEXED_ACCESS_TYPE;
+			this.createWarningForNode("indexed access type will be replaced by any+", node);
 		} else if (ts.isMappedTypeNode(node)) {
 			// e.g. { [P in K]: T[P]; }
 			result.kind = model.TypeRefKind.MAPPED_TYPE;

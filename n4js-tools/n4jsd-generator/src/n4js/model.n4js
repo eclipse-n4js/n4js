@@ -155,6 +155,7 @@ export enum TypeRefKind {
 	PARENTHESES,
 	// the following are not actually supported on N4JS side:
 	PREDICATE,
+	INDEXED_ACCESS_TYPE,
 	MAPPED_TYPE
 }
 
@@ -599,6 +600,9 @@ class Emitter {
 				break;
 			case TypeRefKind.PREDICATE:
 				buff.push("boolean");
+				break;
+			case TypeRefKind.INDEXED_ACCESS_TYPE:
+				buff.push("any+");
 				break;
 			case TypeRefKind.MAPPED_TYPE:
 				buff.push("Object+");
