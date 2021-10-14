@@ -6,7 +6,7 @@ export external public class Array<T> extends Array<T> {
 	public findIndex(predicate: (value: T, index: number, obj: Array<T>)=>any+, thisArg: any = ): number;
 	public fill(value: T, start: number = , end: number = ): this;
 	public copyWithin(target: number, start: number, end: number = ): this;
-	public static from(...args: any+): any+; // overloading not supported
+	public static <I> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>|string, mapFn: (I, int) => any=, thisArg: Object=): I[];
 	public static <T> of(...items: T): Array<T>;
 }
 

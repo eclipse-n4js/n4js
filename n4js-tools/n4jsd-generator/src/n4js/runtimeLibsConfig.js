@@ -436,7 +436,9 @@ export default {
 			patchMembers: {
 				"Object#keys": { addAnnotations: [ "@Override" ] },
 				"Date#constructor": undefined,
-				"RegExp#constructor": undefined
+				"RegExp#constructor": undefined,
+				// required due to overloading:
+				"Array#from": { replaceBy: "public static <I> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>|string, mapFn: (I, int) => any=, thisArg: Object=): I[];" }
 			}
 		},
 		"es2015.collection.d.ts": {
