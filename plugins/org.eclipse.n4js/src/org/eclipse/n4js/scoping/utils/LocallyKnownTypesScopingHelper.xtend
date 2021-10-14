@@ -117,7 +117,7 @@ class LocallyKnownTypesScopingHelper {
 		if (local === null || local.eIsProxy) {
 			return parent;
 		}
-		val eoDescrs = local.topLevelTypes.map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
+		val eoDescrs = local.topLevelTypes.filter[t | !t.polyfill ].map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
 		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
 	}
 
