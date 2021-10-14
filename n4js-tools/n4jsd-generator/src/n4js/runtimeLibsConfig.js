@@ -30,22 +30,8 @@ export default {
 					 */
 					public const iterator: symbol
 
-					/**
-					 * This "well-known" symbol may be used to define the default asynchronous iterator of an object.
-					 *
-					 * @see ES2018, 19.4.2.1
-					 */
-					public const asyncIterator: symbol
-
-					/**
-					 * This "well-known" symbol may be used to customize the behavior of the 'instanceof' operator.
-					 *
-					 * @see ES6, 19.4.2.2
-					 */
-					public const hasInstance: symbol
-
 					// FIXME well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
-					//public const hasInstance: symbol;
+					public const hasInstance: symbol;
 					public const isConcatSpreadable: symbol;
 					public const match: symbol;
 					public const replace: symbol;
@@ -361,10 +347,7 @@ export default {
 				// odd stuff:
 				"ThisParameterType", "OmitThisParameter", "CallableFunction", "NewableFunction", "PromiseConstructorLike"
 			],
-			polyfills: [
-				// FIXME
-				// "Boolean", "Number", "String", "Symbol", "Object", "RegExp", "Function", "Array", "Date", "Math", "JSON", "Error"
-			],
+			polyfills: [],
 			ctorInstanceTypes: [
 				"Symbol", "SymbolConstructor",
 				"Promise", "PromiseConstructor"
