@@ -217,7 +217,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 			return;
 		}
 
-		if (polyfillValidatorFragment.holdsPolyfill(this, n4Class)) {
+		if (polyfillValidatorFragment.holdsPolyfill(this, n4Class, getCancelIndicator())) {
 			val tClass = n4Class.definedType as TClass;
 			internalCheckAbstractFinal(tClass);
 
