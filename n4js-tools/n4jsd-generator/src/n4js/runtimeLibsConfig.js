@@ -546,7 +546,13 @@ export default {
 			]
 		},
 		"es2017.string.d.ts": {},
-		"es2017.object.d.ts": {},
+		"es2017.object.d.ts": {
+			patchMembers: {
+				// required due to overloading:
+				"Object#values": { replaceBy: "public static values(obj: Object): any[];" },
+				"Object#entries": { replaceBy: "public static entries(obj: Object): Iterable2<string, any>[];" }
+			}
+		},
 		"es2017.sharedmemory.d.ts": {},
 		"es2017.typedarrays.d.ts": {},
 		"es2017.intl.d.ts": {},

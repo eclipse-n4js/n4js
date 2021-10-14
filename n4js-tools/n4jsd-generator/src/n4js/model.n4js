@@ -663,7 +663,14 @@ class Emitter {
 		}
 		const buff = this.buff;
 		buff.push("~Object");
-		if (typeRef.members.length > 0) {
+		if (typeRef.members.length === 0) {
+			// no members -> nothing more to emit
+		} else if (typeRef.members.every(m => m.kind === MemberKind.INDEX_SIGNATURE)) {
+			// typical special case of an object type with only an index signature
+			// --> convert to "~Object+" instead of "~Object with {}"
+			buff.push("+");
+		} else {
+			// standard case
 			buff.push(" with { ");
 			this.emitMembers(typeRef.members, undefined, false);
 			buff.push(" }");

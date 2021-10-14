@@ -2,12 +2,12 @@
 
 @Polyfill
 export external public interface ~RegExpMatchArray extends RegExpMatchArray {
-	groups: ~Object with {  };
+	groups: ~Object+;
 }
 
 @Polyfill
 export external public interface ~RegExpExecArray extends RegExpExecArray {
-	groups: ~Object with {  };
+	groups: ~Object+;
 }
 
 @Polyfill
