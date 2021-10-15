@@ -101,12 +101,14 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		if (! holdsExternalOnlyInDefinitionFile(interfaceDecl, "Interfaces")) {
 			return;
 		}
-		val isStructural = TypeUtils.isStructural(interfaceDecl.typingStrategy);
-		val hasN4JSAnnotation = AnnotationDefinition.N4JS.hasAnnotation(interfaceDecl);
-		if (!isStructural && !hasN4JSAnnotation) {
-			val message = getMessageForCLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION()
-			addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION)
-			return;
+		if (jsVariantHelper.isExternalMode(interfaceDecl)) {
+			val isStructural = TypeUtils.isStructural(interfaceDecl.typingStrategy);
+			val hasN4JSAnnotation = AnnotationDefinition.N4JS.hasAnnotation(interfaceDecl);
+			if (!isStructural && !hasN4JSAnnotation) {
+				val message = getMessageForCLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION()
+				addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION)
+				return;
+			}
 		}
 	}
 

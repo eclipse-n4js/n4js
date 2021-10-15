@@ -46,6 +46,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewExpression
@@ -105,6 +106,7 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
@@ -125,7 +127,6 @@ import org.eclipse.xtext.scoping.IScope
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 
 /**
  * Intended for small, static utility methods that
@@ -1202,7 +1203,8 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
+		val isTypeAlias = element instanceof TypeAlias;
+		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
 	}
 
 	/**
