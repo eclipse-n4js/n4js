@@ -91,8 +91,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject SourceElementExtensions sourceElementExtensions;
 
-	@Inject
-	private JavaScriptVariantHelper jsVariantHelper;
+	@Inject JavaScriptVariantHelper jsVariantHelper;
+
 
 	public static val BASE_JS_TYPES = Sets.newHashSet(
 		#['Object', 'Function', 'Array', 'String', 'Boolean', 'Number', 'Math', 'Date', 'RegExp', 'Error', 'JSON']);
@@ -322,6 +322,17 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									 */
 									return;
 								} else {
+									if (baseEO instanceof Variable && dupeEO instanceof N4TypeDeclaration) {
+										if (!N4JSLanguageUtils.hasRuntimeRepresentation(dupeEO as N4TypeDeclaration, jsVariantHelper)) {
+											return;
+										}
+									}
+									if (dupeEO instanceof Variable && baseEO instanceof N4TypeDeclaration) {
+										if (!N4JSLanguageUtils.hasRuntimeRepresentation(baseEO as N4TypeDeclaration, jsVariantHelper)) {
+											return;
+										}
+									}
+									
 									if (!( // do not create issues for polyfills conflicting with imports, as they might fill them
 										dupeEO instanceof N4ClassifierDeclaration && baseEO instanceof ImportSpecifier &&
 										N4JSLanguageUtils.isNonStaticPolyfill(dupeEO as N4ClassDeclaration)
