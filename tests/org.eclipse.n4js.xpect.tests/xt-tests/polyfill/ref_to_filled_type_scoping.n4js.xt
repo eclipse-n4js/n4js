@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+    Workspace {
+   	 Project "ref-to-filled-type-scoping" {
+   	 	Folder "src" {
+   	 		 ThisFile { }
+   	 	}
+   	 	File "package.json" { from="ref_to_filled_type_scoping.package.json" }
+   	 }
+   }
+
+   END_SETUP
+ */
+
+
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class Array<T> extends Array<T> {
+	// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.2
+	member: Array<number>; // correctly scoped to Array in builtin_js.n4jsd
+}
+
+// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.2
+const K : Array<string> = null;
+
+class SomeClass {
+	// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.2
+	someMethod(): Array<string>; // make sure: not incorrectly scoped to Array in this module
+}
