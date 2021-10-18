@@ -11,7 +11,7 @@
 
 import * as model from "model";
 
-export external type IgnorePredicate = (filePath: string, elementName: string, memberName: string =, signatureIndex: int =) => boolean;
+export external type IgnorePredicate = (filePath: string, elementName: string =, memberName: string =, signatureIndex: int =) => boolean;
 
 export external public class Converter {
 

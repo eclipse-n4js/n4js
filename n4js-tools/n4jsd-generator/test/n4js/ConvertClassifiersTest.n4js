@@ -274,15 +274,15 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					export external public interface ~Writable {
 						field: any+;
 						get fieldReadOnly(): any+;
-						write(chunk: any+, fn: any+): any+; // further signatures were omitted
+						write(...args: any+): any+; // overloading not supported
 						get getter(): any+;
 					}
 
 					export external public class ~Stream implements Writable {
 						public field: any+;
 						get fieldReadOnly(): any+;
-						public constructor(buff: any+); // further signatures were omitted
-						public write(chunk: any+, fn: any+): any+; // further signatures were omitted
+						public constructor(...args: any+); // overloading not supported
+						public write(...args: any+): any+; // overloading not supported
 						get getter(): any+;
 						set setter(value: any+);
 					}
@@ -308,7 +308,7 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					export external public interface ~Ifc {
 						@CovariantConstructor
-						constructor(p: string); // further signatures were omitted
+						constructor(...args: any+); // overloading not supported
 					}
 				`
 			}
@@ -331,7 +331,7 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				`,
 				n4jsd: `
 					export external public interface ~Ifc {
-						(p: string): number; // further signatures were omitted
+						(...args: any+): any+; // overloading not supported
 					}
 				`
 			}

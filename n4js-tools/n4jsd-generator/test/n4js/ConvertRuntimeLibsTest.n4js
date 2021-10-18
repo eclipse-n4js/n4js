@@ -14,7 +14,7 @@ import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
 export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
-	public testCtorInstanceTypePattern() {
+	public testCtorInstanceTypePattern_flavor1() {
 		this.assertConversionWithOptions(
 			{
 				args: [ "--runtime-libs", "--copy-type-refs" ]
@@ -32,6 +32,39 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					}
 
 					declare var SomeType: SomeTypeConstructor;
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeType {
+						public someInstanceMethod(p: string): number;
+						public constructor(p: string);
+						public static someStaticMethod(p: string): number;
+					}
+
+					export external public type SomeTypeConstructor = constructor{SomeType};
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_flavor2() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ]
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeType {
+						someInstanceMethod(p: string): number;
+					}
+
+					declare var SomeType: {
+						new(p: string): SomeType;
+						someStaticMethod(p: string): number;
+					};
 				`,
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
@@ -74,6 +107,8 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 						public constructor(...elems: T);
 						public static someStaticMethod(p: string): number;
 					}
+
+					export external public type SomeGenTypeConstructor = constructor{SomeGenType};
 				`
 			}
 		);
@@ -101,7 +136,11 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 
 					export external public class SomeType {}
 
+					export external public type SomeTypeConstructor = constructor{SomeType};
+
 					export external public class SomeSubType extends SomeType {}
+
+					export external public type SomeSubTypeConstructor = constructor{SomeSubType};
 				`
 			}
 		);

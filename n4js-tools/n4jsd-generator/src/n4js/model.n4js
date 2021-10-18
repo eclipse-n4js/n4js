@@ -277,7 +277,9 @@ class Emitter {
 		const buff = this.buff;
 		this.emitDocumentation(variable);
 		this.emitExportKeywordIfNecessary(variable);
-		buff.push("public ");
+		if (variable.exported) {
+			buff.push("public ");
+		}
 		buff.push(variable.keyword.name.toLowerCase());
 		buff.push(" ");
 		buff.push(variable.name);
@@ -394,13 +396,13 @@ class Emitter {
 					buff.push(" ");
 				}
 			}
-			this.emitMember(m, onePerLine, parent);
+			this.emitMember(m, onePerLine, parent, onePerLine);
 			isFirst = false;
 		}
 		return !isFirst;
 	}
 
-	emitMember(member: Member, emitDocumentation: boolean, parent: Type =) {
+	emitMember(member: Member, emitDocumentation: boolean, parent: Type =, onePerLine: boolean = true) {
 		const buff = this.buff;
 		if (emitDocumentation) {
 			this.emitDocumentation(member);
@@ -426,7 +428,11 @@ class Emitter {
 			case MemberKind.CTOR:
 				if (parent && parent.kind === TypeKind.INTERFACE) {
 					buff.push("@CovariantConstructor");
-					buff.pushln();
+					if (onePerLine) {
+						buff.pushln();
+					} else {
+						buff.push(" ");
+					}
 				}
 				buff.push("constructor");
 				this.emitSignaturePart2(signature, true);
@@ -465,7 +471,11 @@ class Emitter {
 				throw "unknown kind of member: " + member.kind;
 		}
 		if (isOverloaded) {
-			buff.push(" // overloading not supported");
+			if (onePerLine) {
+				buff.push(" // overloading not supported");
+			} else {
+				buff.push(" /* <-- overloading not supported */");
+			}
 		}
 	}
 

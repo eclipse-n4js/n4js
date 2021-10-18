@@ -15,7 +15,7 @@ import * as model from "./model";
 import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
 
-export type IgnorePredicate = (filePath: string, elementName: string, memberName?: string, signatureIndex?: number) => boolean;
+export type IgnorePredicate = (filePath: string, elementName?: string, memberName?: string, signatureIndex?: number) => boolean;
 
 export class Converter {
 	private readonly projectPath?: string;
@@ -235,10 +235,19 @@ export class Converter {
 	}
 
 	private convertFunction(node: ts.FunctionDeclaration): model.Function {
+		const sym = this.checker.getSymbolAtLocation(node.name);
+		const sourceFile = node.getSourceFile();
+		let firstDeclFromCurrentFile = sym.declarations?.find(decl => decl?.getSourceFile() === sourceFile);
+		if (firstDeclFromCurrentFile !== node) {
+			// we were called for the AST node of a signature other than this function's first signature
+			// --> ignore this call, because we have handled all signatures in one go when we were
+			// called for the AST node of the first signature
+			return undefined;
+		}
+
 		const result = new model.Function();
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.jsdoc = utils_ts.getJSDocForNode(node);
-		const sym = this.checker.getSymbolAtLocation(node.name);
 		const funSigs = this.convertCallSignatures(node.getSourceFile(), sym);
 		result.signatures = funSigs;
 		result.exported = utils_ts.isExported(node);
@@ -462,10 +471,8 @@ export class Converter {
 		}
 
 		result.name = symMember.getName();
-		if (symContainingClassifier) {
-			if (this.isIgnoredMember(sourceFile, symContainingClassifier, symMember)) {
-				return undefined;
-			}
+		if (this.isIgnoredMember(sourceFile, symContainingClassifier, symMember)) {
+			return undefined;
 		}
 
 		const isReadonly = utils_ts.isReadonly(node);
@@ -833,11 +840,11 @@ export class Converter {
 		return this.ignorePredicate(filePath, elementName);
 	}
 
-	private isIgnoredMember(sourceFile: ts.SourceFile, classifierSym: ts.Symbol, memberSym: ts.Symbol) {
+	private isIgnoredMember(sourceFile: ts.SourceFile, classifierSym: ts.Symbol | undefined, memberSym: ts.Symbol) {
 		if (!this.ignorePredicate) {
 			return false;
 		}
-		return this.ignorePredicate(sourceFile.fileName, classifierSym.name, memberSym.name);
+		return this.ignorePredicate(sourceFile.fileName, classifierSym?.name, memberSym.name);
 	}
 
 	private isIgnoredSignature(sourceFile: ts.SourceFile, classifierSym: ts.Symbol, memberSym: ts.Symbol, signatureIndex: number) {

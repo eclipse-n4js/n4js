@@ -52,7 +52,7 @@ const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
 ]);
 
 
-export public function isIgnored(filePath: string, elementName: string, memberName: string =, signatureIndex: int =): boolean {
+export public function isIgnored(filePath: string, elementName: string =, memberName: string =, signatureIndex: int =): boolean {
 	const fileName = path_lib.basename(filePath);
 	const ignoreConfig = getGenConfig().files.get(fileName)?.ignore;
 	if (!ignoreConfig) {
@@ -65,8 +65,17 @@ export public function isIgnored(filePath: string, elementName: string, memberNa
 			elemQualifier += "#signature" + signatureIndex;
 		}
 	}
-	return ignoreConfig.has(elementName + elemQualifier)
-		|| ignoreConfig.has("*" + elemQualifier);
+	if (elementName) {
+		if (ignoreConfig.has(elementName + elemQualifier)) {
+			return true;
+		}
+	}
+	if (elemQualifier.length > 0) {
+		if (ignoreConfig.has("*" + elemQualifier)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 export public class RuntimeLibsError extends Error {}
@@ -220,7 +229,7 @@ class RuntimeLibsProcessor {
 					if (instanceType && !this.knownInstanceTypes.has(instanceType.name)) {
 						instanceType = undefined;
 					}
-					const adjustedType = this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementModifications);
+					const adjustedType = this.adjustCtorInstanceTypes(ctorType, [], instanceType, elemsByName, topLevelElementModifications);
 					this.identifiedPolyfills.add(adjustedType);
 				}
 			}
@@ -229,7 +238,7 @@ class RuntimeLibsProcessor {
 			if (elem instanceof model.Type && elem.kind === model.TypeKind.INTERFACE) {
 				if (this.knownInstanceTypes.has(elem.name)) {
 					const instanceType = elem;
-					const adjustedType = this.adjustCtorInstanceTypes(undefined, instanceType, elemsByName, topLevelElementModifications);
+					const adjustedType = this.adjustCtorInstanceTypes(undefined, [], instanceType, elemsByName, topLevelElementModifications);
 					this.identifiedPolyfills.add(adjustedType);
 				}
 			}
@@ -258,38 +267,94 @@ class RuntimeLibsProcessor {
 		elemsByName: Map<string,model.ExportableElement[]>,
 		topLevelElementModifications: ElementModifications) {
 
-		const typeRefStr = varDecl.type?.tsSourceString;
-		if (!typeRefStr) {
-			return;
-		}
-		const types = elemsByName.get(typeRefStr)?.filter(elem => elem instanceof model.Type) as model.Type[];
-		if (!types || types.length === 0) {
-			return;
-		}
-		if (types.length > 1) {
-			// FIXME emit warning!!!
-			return;
-		}
-		const type = types[0];
-		if (type.kind !== model.TypeKind.INTERFACE) {
-			// FIXME emit warning!!!
-			return;
-		}
-		// we have identified the ctor/instance type pattern for variable declaration 'varDecl' and interface 'type'
-		// --> so, adjust 'varDecl' and 'type' accordingly
+		/*
 
-		const ctorType = type;
-		// look for a corresponding instance type
-		let instanceType: model.Type = this.findInstanceTypeForCtorType(ctorType, elemsByName);
+Here we have to support two flavours of the ctor/instance pattern:
+
+interface MyType { // <--- this is optional!
+	// instance members
+}
+interface MyTypeConstructor {
+	// static members
+}
+var MyType: MyTypeConstructor;
+
+and
+
+interface MyType {
+	// instance members
+}
+var MyType: {
+	// static members
+};
+
+		*/
+
+		const varDeclType = varDecl.type;
+		if (!varDeclType) {
+			return;
+		}
+		let ctorType: model.Type;
+		let moreStaticMembers: model.Member[];
+		let instanceType: model.Type;
+		if (varDeclType.kind === model.TypeRefKind.NAMED) {
+			// could be flavour #1
+			const typeRefTargetName = varDecl.type?.tsSourceString;
+			if (!typeRefTargetName) {
+				return;
+			}
+			const types = elemsByName.get(typeRefTargetName)?.filter(elem => elem instanceof model.Type) as model.Type[];
+			if (!types || types.length === 0) {
+				return;
+			}
+			if (types.length > 1) {
+				// FIXME emit warning!!!
+				return;
+			}
+			const type = types[0];
+			if (type.kind !== model.TypeKind.INTERFACE) {
+				// FIXME emit warning!!!
+				return;
+			}
+			ctorType = type;
+			moreStaticMembers = undefined;
+			// look for a corresponding instance type (optional)
+			instanceType = this.findInstanceTypeForCtorType(ctorType, elemsByName);
+		} else if (varDeclType.kind === model.TypeRefKind.OBJECT) {
+			// could be flavour #2
+			const types = elemsByName.get(varDecl.name)?.filter(elem => elem instanceof model.Type) as model.Type[];
+			if (!types || types.length === 0) {
+				return;
+			}
+			if (types.length > 1) {
+				// FIXME emit warning!!!
+				return;
+			}
+			const type = types[0];
+			if (type.kind !== model.TypeKind.INTERFACE) {
+				// FIXME emit warning!!!
+				return;
+			}
+			ctorType = undefined;
+			moreStaticMembers = varDeclType.members;
+			instanceType = type;
+		} else {
+			return;
+		}
+		// we have identified the ctor/instance type pattern for variable declaration 'varDecl' and interface 'ctorType'
+		// --> so, adjust 'varDecl' and 'ctorType' accordingly
+
 		// remember ctorType/instanceType for processing of following files
-		this.knownCtorTypes.add(ctorType.name);
+		if (ctorType) {
+			this.knownCtorTypes.add(ctorType.name);
+		}
 		if (instanceType) {
 			this.knownInstanceTypes.add(instanceType.name);
 		}
 
 		// actually adjust the ctorType/instanceType
-		const originalCtorTypeName = ctorType.name;
-		this.adjustCtorInstanceTypes(ctorType, instanceType, elemsByName, topLevelElementModifications);
+		const originalCtorTypeName = ctorType?.name;
+		this.adjustCtorInstanceTypes(ctorType, moreStaticMembers, instanceType, elemsByName, topLevelElementModifications);
 		// mark the variable declaration as "to be removed"
 		topLevelElementModifications.toBeRemoved.add(varDecl);
 		// add type alias for original ctorType (if any)
@@ -308,6 +373,7 @@ class RuntimeLibsProcessor {
 
 	private adjustCtorInstanceTypes(
 		ctorType: model.Type,
+		moreStaticMembers: model.Member[],
 		instanceType: model.Type,
 		elemsByName: Map<string,model.ExportableElement[]>,
 		topLevelElementModifications: ElementModifications): model.Type {
@@ -332,6 +398,15 @@ class RuntimeLibsProcessor {
 			ctorType.members.length = 0;
 			// mark the "constructor type" as "to be removed"
 			topLevelElementModifications.toBeRemoved.add(ctorType);
+		}
+		if (moreStaticMembers && moreStaticMembers.length > 0 && instanceType) {
+			moreStaticMembers.forEach(m => {
+				if (m.accessibility === undefined) {
+					m.accessibility = model.Accessibility.PUBLIC;
+				}
+				m.isStatic = true; // enfore static
+				instanceType.members.push(m);
+			});
 		}
 		// return the "surviving" type
 		return instanceType ? instanceType : ctorType;
@@ -379,6 +454,16 @@ function changeInterfaceToClass(ifc: model.Type) {
 	}
 	ifc.kind = model.TypeKind.CLASS;
 	ifc.defSiteStructural = false;
+	if (ifc.extends.length > 1) {
+		// WARNING: since we cannot tell whether a target type is an interface or a class,
+		// we have to use the assumption that the first extended interface is the super class
+		// and all remaining extended interfaces are implemented interfaces:
+		const extendedIfcs = ifc.extends.splice(1, ifc.extends.length - 1);
+		let idx = -1;
+		for (const extendedIfc of extendedIfcs) {
+			ifc.implements.splice(++idx, 0, extendedIfc);
+		}
+	}
 	// due to different default accessibilities, we have to make accessibility PUBLIC explicit:
 	ifc.members.forEach(m => {
 		if (!m.accessibility) {
