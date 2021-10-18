@@ -122,7 +122,6 @@ export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
-	typeParams: string[] = [];
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
@@ -130,6 +129,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 }
 
 export class Signature {
+	typeParams: string[] = [];
 	parameters: Parameter[] = [];
 	/** Will be undefined iff this signature belongs to a constructor. */
 	returnType?: TypeRef;
@@ -292,10 +292,12 @@ class Emitter {
 		buff.push("external ");
 		buff.push("public ");
 		buff.push("function ");
+		const [isOverloading, signature] = chooseSignature(fun.signatures);
+		this.emitSignaturePart1(signature);
 		buff.push(fun.name);
-		this.emitSignatures(fun.signatures);
+		this.emitSignaturePart2(signature);
 		buff.push(";");
-		if (fun.signatures !== undefined && fun.signatures.length > 1) {
+		if (isOverloading) {
 			buff.push(" // overloading not supported");
 		}
 	}
@@ -419,14 +421,7 @@ class Emitter {
 				buff.push("static ");
 			}
 		}
-		const isOverloaded = member.signatures && member.signatures.length > 1;
-		if (!isOverloaded) { // type parameters may differ between overloaded signatures, so do not emit type parameters in case of overloading
-			if (member.typeParams.length > 0) {
-				if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
-					buff.push("<", member.typeParams.join(","), "> ");
-				}
-			}
-		}
+		const [isOverloaded, signature] = chooseSignature(member.signatures);
 		switch(member.kind) {
 			case MemberKind.CTOR:
 				if (parent && parent.kind === TypeKind.INTERFACE) {
@@ -434,11 +429,11 @@ class Emitter {
 					buff.pushln();
 				}
 				buff.push("constructor");
-				this.emitSignatures(member.signatures, true);
+				this.emitSignaturePart2(signature, true);
 				buff.push(";");
 				break;
 			case MemberKind.CALLABLE_CTOR:
-				this.emitSignatures(member.signatures);
+				this.emitSignaturePart2(signature);
 				buff.push(";");
 				break;
 			case MemberKind.FIELD:
@@ -461,8 +456,9 @@ class Emitter {
 				buff.push(");");
 				break;
 			case MemberKind.METHOD:
+				this.emitSignaturePart1(signature);
 				this.emitPropertyName(member.name);
-				this.emitSignatures(member.signatures);
+				this.emitSignaturePart2(signature);
 				buff.push(";");
 				break;
 			default:
@@ -473,20 +469,16 @@ class Emitter {
 		}
 	}
 
-	emitSignatures(signatures: Signature[], ignoreReturnType: boolean = false) {
+	/** Emits the first part of a signature, that will appear before the function's/method's name. */
+	emitSignaturePart1(sig: Signature) {
 		const buff = this.buff;
-		if (signatures.length === 1) {
-			this.emitSignature(signatures[0], ignoreReturnType);
-		} else {
-			// NOTE: when implementing support for overloading, also adjust code above that emits type parameters!
-			buff.push("(...args: any+)");
-			if (!ignoreReturnType) {
-				buff.push(": any+");
-			}
+		if (sig.typeParams.length > 0) {
+			buff.push("<", sig.typeParams.join(","), "> ");
 		}
 	}
 
-	emitSignature(sig: Signature, ignoreReturnType: boolean = false) {
+	/** Emits the second part of a signature, that will appear after the function's/method's name. */
+	emitSignaturePart2(sig: Signature, ignoreReturnType: boolean = false) {
 		const buff = this.buff;
 		buff.push("(");
 		let needSep = false;
@@ -640,7 +632,7 @@ class Emitter {
 			throw "expected a TypeRef of kind TypeRefKind.FUNCTION, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
-		this.emitSignature(typeRef.signature, true);
+		this.emitSignaturePart2(typeRef.signature, true);
 		buff.push("=>");
 		const returnType = typeRef.signature.returnType;
 		if (returnType) {
@@ -821,6 +813,24 @@ export function simplifyUnion(typeRef: TypeRef): TypeRef {
 		}
 		return result;
 	}
+}
+
+export function chooseSignature(signatures: Signature[]): [boolean, Signature] {
+	if (!signatures || signatures.length === 0) {
+		return [false, undefined];
+	} else if (signatures.length === 1) {
+		return [false, signatures[0]];
+	}
+	// overloading case
+	// --> create a fall-back signature
+	const result = new Signature();
+	const param = new Parameter();
+	param.name = "args";
+	param.isVariadic = true;
+	param.type = createAnyPlus();
+	result.parameters.push(param);
+	result.returnType = createAnyPlus();
+	return [true, result];
 }
 
 // FIXME implement better approach

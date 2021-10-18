@@ -117,7 +117,6 @@ export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
-	typeParams: string[];
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
@@ -125,6 +124,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 }
 
 export class Signature {
+	typeParams: string[];
 	parameters: Parameter[];
 	/** Will be undefined iff this signature belongs to a constructor. */
 	returnType?: TypeRef;
@@ -178,6 +178,7 @@ export class TypeRef {
 	public isComposed(): boolean;
 }
 
+export function chooseSignature(signatures: Signature[]): [boolean, Signature];
 export function getSymbolNameFromPropertyName(propertyName: string): string;
 export function scriptToString(script: Script): string;
 export function createUndefined(): TypeRef;

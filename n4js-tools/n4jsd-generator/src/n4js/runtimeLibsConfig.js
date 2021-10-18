@@ -633,5 +633,13 @@ export default {
 			}
 		},
 		"es2020.intl.d.ts": {},
+		"dom.generated.d.ts": {
+			ignore: [
+				"*#addEventListener#signature0",
+				"*#removeEventListener#signature0"
+			]
+		},
+		"dom.iterable.d.ts": {},
+		"dom.iterable.generated.d.ts": {}
 	}
 };

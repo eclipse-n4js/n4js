@@ -68,8 +68,8 @@ function processFileOrFolder(inputPath: string, opts: Options) {
 
 	let ignorePredicate: IgnorePredicate = undefined;
 	if (opts.runtimeLibs) {
-		ignorePredicate = (filePath, elementName) => {
-			return runtimeLibs.isIgnored(filePath, elementName);
+		ignorePredicate = (filePath, elementName, memberName, signatureIndex) => {
+			return runtimeLibs.isIgnored(filePath, elementName, memberName, signatureIndex);
 		};
 	}
 

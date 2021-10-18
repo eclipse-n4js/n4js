@@ -14,9 +14,8 @@ import * as path_lib from "path";
 import * as model from "./model";
 import * as utils from "./utils";
 import * as utils_ts from "./utils_ts";
-import { ZlibReset } from "zlib";
 
-export type IgnorePredicate = (filePath: string, elementName: string) => boolean;
+export type IgnorePredicate = (filePath: string, elementName: string, memberName?: string, signatureIndex?: number) => boolean;
 
 export class Converter {
 	private readonly projectPath?: string;
@@ -163,15 +162,15 @@ export class Converter {
 		} else if (ts.isVariableDeclarationList(node)) {
 			return this.convertVariableDeclList(node); // TODO can a VariableDeclarationList even appear here?
 		} else if (ts.isFunctionDeclaration(node)) {
-			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertFunction(node));
+			return this.isIgnoredTopLevelElement(node) ? [] : inArrayIfDefined(this.convertFunction(node));
 		} else if (ts.isEnumDeclaration(node)) {
-			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertEnum(node));
+			return this.isIgnoredTopLevelElement(node) ? [] : inArrayIfDefined(this.convertEnum(node));
 		} else if (ts.isInterfaceDeclaration(node)) {
-			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertInterface(node));
+			return this.isIgnoredTopLevelElement(node) ? [] : inArrayIfDefined(this.convertInterface(node));
 		} else if (ts.isClassDeclaration(node)) {
-			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertClass(node));
+			return this.isIgnoredTopLevelElement(node) ? [] : inArrayIfDefined(this.convertClass(node));
 		} else if (ts.isTypeAliasDeclaration(node)) {
-			return this.isIgnored(node) ? [] : inArrayIfDefined(this.convertTypeAlias(node));
+			return this.isIgnoredTopLevelElement(node) ? [] : inArrayIfDefined(this.convertTypeAlias(node));
 		} else if (node.kind === ts.SyntaxKind.FirstStatement) {
 			const children = utils_ts.getAllChildNodes(node);
 			if (children.length === 2
@@ -189,7 +188,7 @@ export class Converter {
 			if (!this.exportAssignment) {
 				return []; // FIXME!!!!! do not merge this to master
 			}
-			if (this.isIgnored(node)) {
+			if (this.isIgnoredTopLevelElement(node)) {
 				return [];
 			}
 			const exportSymbol = this.checker.getSymbolAtLocation(this.exportAssignment.expression);
@@ -216,7 +215,7 @@ export class Converter {
 		const keyword = utils_ts.getVarDeclKeyword(node);
 		const result = [] as model.Variable[];
 		for (const varDecl of node.declarations) {
-			if (this.isIgnored(varDecl)) {
+			if (this.isIgnoredTopLevelElement(varDecl)) {
 				continue;
 			}
 			result.push(this.convertVariable(varDecl, keyword));
@@ -417,7 +416,7 @@ export class Converter {
 		return result;
 	}
 
-	private convertMember(sourceFile: ts.SourceFile, node: ts.ClassElement | ts.TypeElement, isStatic: boolean, symOwner?: ts.Symbol): model.Member | undefined {
+	private convertMember(sourceFile: ts.SourceFile, node: ts.ClassElement | ts.TypeElement, isStatic: boolean, symContainingClassifier?: ts.Symbol): model.Member | undefined {
 		// FIXME what happens for members that do not have a name???
 		// FIXME is there a better way to obtain the symbol, without requiring a cast to 'any'?
 		const symMember = this.checker.getSymbolAtLocation(node.name) ?? (node as any).symbol as ts.Symbol;
@@ -441,32 +440,12 @@ export class Converter {
 			return undefined;
 		}
 
-		// type parameters of 'symMember'
-		if ((node as ts.SignatureDeclaration).typeParameters) { // cases: CallSignatureDeclaration, IndexSignatureDeclaration, ConstructSignatureDeclaration
-			const nodeCasted = node as ts.SignatureDeclaration;
-			// is parameterization for this kind of member supported on N4JS side?
-			const typeParamsSupported = !ts.isCallSignatureDeclaration(node);
-			if (typeParamsSupported) {
-				// yes
-				for (const typeParam of nodeCasted.typeParameters) {
-					const typeParamName = typeParam.name.text;
-					if (typeParamName) {
-						result.typeParams.push(typeParamName);
-					}
-				}
-			} else {
-				// no, type parameters are not supported on N4JS side for this member,
-				// so in the signature of this member we have to suppress all references to these type parameters:
-				this.suppressTypes([...nodeCasted.typeParameters]);
-			}
-		}
-
 		if (ts.isConstructorDeclaration(node)) {
-			if (!symOwner) {
-				return undefined; // constructor declarations not supported if owner not given
+			if (!symContainingClassifier) {
+				return undefined; // constructor declarations only supported in classifiers
 			}
 			result.kind = model.MemberKind.CTOR;
-			result.signatures = this.convertConstructSignatures(sourceFile, symOwner);
+			result.signatures = this.convertConstructSignatures(sourceFile, symContainingClassifier);
 			return result;
 		} else if (ts.isConstructSignatureDeclaration(node)) {
 			result.kind = model.MemberKind.CTOR;
@@ -483,6 +462,11 @@ export class Converter {
 		}
 
 		result.name = symMember.getName();
+		if (symContainingClassifier) {
+			if (this.isIgnoredMember(sourceFile, symContainingClassifier, symMember)) {
+				return undefined;
+			}
+		}
 
 		const isReadonly = utils_ts.isReadonly(node);
 		if ((!isReadonly && ts.isPropertyDeclaration(node))
@@ -499,7 +483,7 @@ export class Converter {
 			result.type = this.convertTypeReferenceOfTypedDeclaration(node.parameters[0]);
 		} else if (ts.isMethodDeclaration(node)
 				|| ts.isMethodSignature(node)) {
-			const sigs = this.convertCallSignatures(sourceFile, symMember);
+			const sigs = this.convertCallSignatures(sourceFile, symMember, symContainingClassifier);
 			result.kind = model.MemberKind.METHOD;
 			result.signatures = sigs;
 		} else {
@@ -512,25 +496,46 @@ export class Converter {
 	private convertConstructSignatures(sourceFile: ts.SourceFile, somethingWithCtors: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithCtors, somethingWithCtors.valueDeclaration!);
 		const constructSigs = type.getConstructSignatures();
-		return this.convertSignatures(sourceFile, [...constructSigs]);
+		return this.convertSignatures(sourceFile, somethingWithCtors, [...constructSigs]);
 	}
 
-	private convertCallSignatures(sourceFile: ts.SourceFile, somethingWithSignatures: ts.Symbol): model.Signature[] {
+	private convertCallSignatures(sourceFile: ts.SourceFile, somethingWithSignatures: ts.Symbol, symContainingClassifier?: ts.Symbol): model.Signature[] {
 		const type = this.checker.getTypeOfSymbolAtLocation(somethingWithSignatures, somethingWithSignatures.valueDeclaration!);
 		const callSigs = type.getCallSignatures();
-		return this.convertSignatures(sourceFile, [...callSigs]);
+		return this.convertSignatures(sourceFile, somethingWithSignatures, [...callSigs], symContainingClassifier);
 	}
 
-	private convertSignatures(sourceFile: ts.SourceFile, signatures: ts.Signature[]): model.Signature[] {
+	private convertSignatures(sourceFile: ts.SourceFile, somethingWithSignatures: ts.Symbol, signatures: ts.Signature[], symContainingClassifier?: ts.Symbol,
+		allowIgnore: boolean = true): model.Signature[] {
+
 		const results = [] as model.Signature[];
+		let sigIndex = -1;
+		let didIgnoreSignatures = false;
 		for (const sig of signatures) {
 			if (sig.declaration?.getSourceFile() !== sourceFile) {
-				continue; // ignore declarations from other source files
+				continue; // ignore declarations from other source files (and do not increment sigIndex for them!)
+			}
+			++sigIndex;
+			if (allowIgnore && symContainingClassifier) {
+				if (this.isIgnoredSignature(sourceFile, symContainingClassifier, somethingWithSignatures, sigIndex)) {
+					didIgnoreSignatures = true;
+					continue;
+				}
 			}
 			const result = new model.Signature();
+			if (sig.typeParameters) {
+				for (const typeParam of sig.typeParameters) {
+					result.typeParams.push(typeParam.symbol.name);
+				}
+			}
 			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
 			result.returnType = this.convertTypeReferenceOfTypedDeclaration(sig.declaration);
 			results.push(result);
+		}
+		if (allowIgnore && didIgnoreSignatures && results.length === 0) {
+			// ignoring one or more signatures led to all signatures being ignored, which is illegal
+			// --> try again with ignore functionality being disabled:
+			return this.convertSignatures(sourceFile, somethingWithSignatures, signatures, symContainingClassifier, false);
 		}
 		return results;
 	}
@@ -544,6 +549,20 @@ export class Converter {
 				|| ts.isIndexSignatureDeclaration(decl)
 				|| ts.isFunctionTypeNode(decl)) {
 				const result = new model.Signature();
+				if (decl.typeParameters) {
+					// is parameterization for this kind of member supported on N4JS side?
+					const typeParamsSupported = !ts.isCallSignatureDeclaration(decl);
+					if (typeParamsSupported) {
+						// yes
+						for (const typeParam of decl.typeParameters) {
+							result.typeParams.push(typeParam.name.text);
+						}
+					} else {
+						// no, type parameters are not supported on N4JS side for this member,
+						// so in the signature of this member we have to suppress all references to these type parameters:
+						this.suppressTypes([...decl.typeParameters]);
+					}
+				}
 				for (const param of decl.parameters) {
 					const paramSym = this.checker.getSymbolAtLocation(param.name);
 					if (paramSym) {
@@ -760,6 +779,7 @@ export class Converter {
 				const n4jsElemTypeRef = this.convertTypeReference(elemTypeNode);
 				result.targetTypeArgs.push(n4jsElemTypeRef ?? model.createAnyPlus());
 			}
+		// } else if (ts.isTypeQueryNode(node)) { // unsupported (for now)
 		} else if (ts.isParenthesizedTypeNode(node)) {
 			result.kind = model.TypeRefKind.PARENTHESES;
 			result.parenthesizedTypeRef = this.convertTypeReference(node.type);
@@ -804,13 +824,27 @@ export class Converter {
 		return result;
 	}
 
-	private isIgnored(node: ts.NamedDeclaration) {
+	private isIgnoredTopLevelElement(elemDeclNode: ts.NamedDeclaration) {
 		if (!this.ignorePredicate) {
 			return false;
 		}
-		const filePath = utils_ts.getFilePath(node);
-		const elementName = utils_ts.getLocalNameOfExportableElement(node as ts.NamedDeclaration, this.checker);
-		return this.ignorePredicate?.(filePath, elementName);
+		const filePath = utils_ts.getFilePath(elemDeclNode);
+		const elementName = utils_ts.getLocalNameOfExportableElement(elemDeclNode as ts.NamedDeclaration, this.checker);
+		return this.ignorePredicate(filePath, elementName);
+	}
+
+	private isIgnoredMember(sourceFile: ts.SourceFile, classifierSym: ts.Symbol, memberSym: ts.Symbol) {
+		if (!this.ignorePredicate) {
+			return false;
+		}
+		return this.ignorePredicate(sourceFile.fileName, classifierSym.name, memberSym.name);
+	}
+
+	private isIgnoredSignature(sourceFile: ts.SourceFile, classifierSym: ts.Symbol, memberSym: ts.Symbol, signatureIndex: number) {
+		if (!this.ignorePredicate) {
+			return false;
+		}
+		return this.ignorePredicate(sourceFile.fileName, classifierSym.name, memberSym.name, signatureIndex);
 	}
 
 	private suppressTypes(nodes: ts.NamedDeclaration[]): ts.Type[] {

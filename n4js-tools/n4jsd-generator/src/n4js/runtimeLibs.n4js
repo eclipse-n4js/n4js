@@ -52,9 +52,21 @@ const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
 ]);
 
 
-export public function isIgnored(filePath: string, elementName: string): boolean {
+export public function isIgnored(filePath: string, elementName: string, memberName: string =, signatureIndex: int =): boolean {
 	const fileName = path_lib.basename(filePath);
-	return getGenConfig().files.get(fileName)?.ignore?.has(elementName);
+	const ignoreConfig = getGenConfig().files.get(fileName)?.ignore;
+	if (!ignoreConfig) {
+		return false;
+	}
+	let elemQualifier = "";
+	if (memberName) {
+		elemQualifier += "#" + memberName;
+		if (signatureIndex !== undefined && signatureIndex >= 0) {
+			elemQualifier += "#signature" + signatureIndex;
+		}
+	}
+	return ignoreConfig.has(elementName + elemQualifier)
+		|| ignoreConfig.has("*" + elemQualifier);
 }
 
 export public class RuntimeLibsError extends Error {}
@@ -377,9 +389,12 @@ function changeInterfaceToClass(ifc: model.Type) {
 	// which we turn into a generic class:
 	for (const m of ifc.members) {
 		if (m.kind === model.MemberKind.CTOR) {
-			for (const paramName of m.typeParams) {
-				if (ifc.typeParams.indexOf(paramName) < 0) {
-					ifc.typeParams.push(paramName);
+			const sig = m.signatures?.[0];
+			if (sig) {
+				for (const paramName of sig.typeParams) {
+					if (ifc.typeParams.indexOf(paramName) < 0) {
+						ifc.typeParams.push(paramName);
+					}
 				}
 			}
 		}
