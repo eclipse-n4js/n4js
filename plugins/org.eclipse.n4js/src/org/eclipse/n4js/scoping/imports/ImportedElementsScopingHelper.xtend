@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.scoping.TopLevelElementsCollector
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
@@ -84,6 +85,9 @@ class ImportedElementsScopingHelper {
 
 	@Inject
 	private ScopeSnapshotHelper scopesHelper;
+	
+	@Inject
+	private TopLevelElementsCollector topLevelElementCollector
 
 
 
@@ -91,10 +95,10 @@ class ImportedElementsScopingHelper {
 		val IScope scriptScope = cache.get(script -> 'importedIdentifiables', script.eResource) [|
 			// TODO parentScope (usually global scope) arg is not part of cache key but used in value!
 			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
-			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet))
-			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope)
-			val globalObjectScope = getGlobalObjectProperties(uberParent, script)
-			val result = findImportedElements(script, globalObjectScope, true);
+			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet));
+			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope);
+			val globalObjectScope = getGlobalObjectProperties(uberParent, script);
+			val result = findImportedElements(script, globalObjectScope, true, true);
 			return result;
 		]
 		return scriptScope
@@ -102,7 +106,19 @@ class ImportedElementsScopingHelper {
 
 	def IScope getImportedTypes(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
-			return findImportedElements(script, parentScope, false);
+			return findImportedElements(script, parentScope, true, false);
+		]
+		return scriptScope
+	}
+
+	def IScope getImportedValues(IScope parentScope, Script script) {
+		val IScope scriptScope = cache.get(script -> 'importedValues', script.eResource) [|
+			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
+			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet));
+			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope);
+			val globalObjectScope = getGlobalObjectProperties(uberParent, script);
+			val result = findImportedElements(script, globalObjectScope, false, true);
+			return result;
 		]
 		return scriptScope
 	}
@@ -136,7 +152,7 @@ class ImportedElementsScopingHelper {
 		return QualifiedName.create(namespace, getImportedName(type));
 	}
 
-	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeVariables) {
+	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeHollows, boolean includeVariables) {
 		val contextResource = script.eResource;
 		val imports = script.scriptElements.filter(ImportDeclaration)
 
@@ -152,12 +168,17 @@ class ImportedElementsScopingHelper {
 		val originatorMap = new IEODesc2ISpec
 
 		for (imp : imports) {
-			if (imp?.module !== null) {
+			val module = imp?.module;
+			if (module !== null) {
+				
+				val topLevelElements = topLevelElementCollector.getTopLevelElements(module, contextResource, includeHollows, includeVariables);
+				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
+			
 				for (specifier : imp.importSpecifiers) {
 					switch (specifier) {
 						NamedImportSpecifier: {
 							processNamedImportSpecifier(specifier, imp, contextResource, originatorMap, validImports,
-								invalidImports, includeVariables)
+								invalidImports, includeVariables, tleScope)
 						}
 						NamespaceImportSpecifier: {
 							processNamespaceSpecifier(specifier, imp, script, contextResource, originatorMap, validImports,
@@ -177,14 +198,20 @@ class ImportedElementsScopingHelper {
 	}
 
 	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
-		Resource contextResource, IEODesc2ISpec originatorMap,
-		ImportedElementsMap validImports,
-		ImportedElementsMap invalidImports, boolean importVariables) {
+			Resource contextResource, IEODesc2ISpec originatorMap,
+			ImportedElementsMap validImports,
+			ImportedElementsMap invalidImports, boolean importVariables, IScope tleScope) {
 
 		val element = if (specifier.declaredDynamic) {
 			(specifier.eResource as N4JSResource).module.internalDynamicElements.findFirst[it.astElement === specifier];
 		} else {
-			specifier.importedElement
+			val name = QualifiedName.create(specifier.importedElementAsText);
+			val importedElem = tleScope.getSingleElement(name);
+			if (importedElem !== null && importedElem.EObjectOrProxy instanceof TExportableElement) {
+				importedElem.EObjectOrProxy as TExportableElement
+			} else {
+				null
+			}
 		};
 
 		if (element !== null && !element.eIsProxy) {

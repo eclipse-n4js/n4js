@@ -323,12 +323,12 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									return;
 								} else {
 									if (baseEO instanceof Variable && dupeEO instanceof N4TypeDeclaration) {
-										if (!N4JSLanguageUtils.hasRuntimeRepresentation(dupeEO as N4TypeDeclaration, jsVariantHelper)) {
+										if (N4JSLanguageUtils.isHollowElement(dupeEO as N4TypeDeclaration, jsVariantHelper)) {
 											return;
 										}
 									}
 									if (dupeEO instanceof Variable && baseEO instanceof N4TypeDeclaration) {
-										if (!N4JSLanguageUtils.hasRuntimeRepresentation(baseEO as N4TypeDeclaration, jsVariantHelper)) {
+										if (N4JSLanguageUtils.isHollowElement(baseEO as N4TypeDeclaration, jsVariantHelper)) {
 											return;
 										}
 									}

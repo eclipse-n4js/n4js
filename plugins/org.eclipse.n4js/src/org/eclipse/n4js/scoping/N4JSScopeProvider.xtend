@@ -459,7 +459,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			val Script script = EcoreUtil.getRootContainer(vee) as Script;
 			val IScope baseScope = getScriptBaseScope(script, context, reference);
 			// imported variables (added as second step to enable shadowing of imported elements)
-			scope = importedElementsScopingHelper.getImportedIdentifiables(baseScope, script);
+			scope = importedElementsScopingHelper.getImportedValues(baseScope, script);
 		}
 
 
@@ -509,7 +509,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		
 		// get regular top-level elements scope
 		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", importedModule, IScope.NULLSCOPE, false,
-			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
+			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource, true, true));
 		
 		return topLevelElementsScope;
 	}

@@ -1206,6 +1206,33 @@ public class N4JSLanguageUtils {
 		val isTypeAlias = element instanceof TypeAlias;
 		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
 	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
+			&& javaScriptVariantHelper.isExternalMode(typeDecl)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
+		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		return typeDecl !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
+			&& javaScriptVariantHelper.isExternalMode(element)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
+		val isTypeAlias = element instanceof TypeAlias;
+		// TODO: namespace
+		return element !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+	}
 
 	/**
 	 * Check if the interface is built-in or an external without N4JS annotation.
