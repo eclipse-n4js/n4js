@@ -740,6 +740,13 @@ export class Converter {
 		} else if (ts.isFunctionTypeNode(node)) {
 			result.kind = model.TypeRefKind.FUNCTION;
 			result.signature = this.convertSignatureDeclarationsInAST([node])[0];
+			const param0 = result.signature?.parameters?.[0];
+			if (param0 && param0.name === "this") {
+				result.signature.parameters.splice(0, 1);
+				const annThis = new model.Annotation("@This");
+				annThis.args.push(param0.type ?? model.createAnyPlus());
+				result.annotations.push(annThis);
+			}
 		} else if (ts.isArrayTypeNode(node)) {
 			result.kind = model.TypeRefKind.NAMED;
 			result.targetTypeName = "Array";

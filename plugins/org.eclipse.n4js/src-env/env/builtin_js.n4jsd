@@ -326,7 +326,7 @@ export external public class URIError extends Error {
 export external public type URIErrorConstructor = constructor{URIError};
 
 export external public class JSON {
-	public static parse(text: string, reviver: (_this: any, key: string, value: any)=>any = ): any;
+	public static parse(text: string, reviver: {@This(any) function(key: string, value: any): any} = ): any;
 	public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;
 }
 
@@ -406,12 +406,6 @@ export external public interface ~ArrayBufferTypes {
 }
 
 export external public type ArrayBufferLike = any+;
-
-export external public interface ~ArrayBufferView {
-	buffer: ArrayBufferLike;
-	byteLength: number;
-	byteOffset: number;
-}
 
 export external public class DataView {
 	public get buffer(): ArrayBuffer;
@@ -1086,3 +1080,21 @@ export external public class Promise<out S, out F> extends Object {
 }
 
 export external public type PromiseConstructor = constructor{Promise};
+
+
+export external public interface ~ArrayBufferView {
+	/**
+	 * The ArrayBuffer instance referenced by the array.
+	 */
+	get buffer(): ArrayBufferLike;
+
+	/**
+	 * The length in bytes of the array.
+	 */
+	get byteLength(): number;
+
+	/**
+	 * The offset in bytes of the array.
+	 */
+	get byteOffset(): number;
+}

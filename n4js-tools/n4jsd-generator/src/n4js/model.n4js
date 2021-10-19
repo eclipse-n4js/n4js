@@ -27,6 +27,7 @@ export enum Accessibility {
 
 export class Annotation {
 	name: string;
+	args: (string | TypeRef)[] = [];
 
 	constructor(name: string =) {
 		this.name = name;
@@ -168,7 +169,7 @@ export enum TypeRefOperator {
 	READONLY
 }
 
-export class TypeRef {
+export class TypeRef implements AnnotatableElement { // note: annotations only supported for TypeRefKind === FUNCTION
 	kind: TypeRefKind;
 	dynamic: boolean;
 	targetTypeName: string;
@@ -520,10 +521,6 @@ class Emitter {
 		if (param.isVariadic) {
 			buff.push("...");
 		}
-		if (param.name === "this") {
-			// TypeScript supports "this" as the name of a parameter, but N4JS does not:
-			buff.push("_");
-		}
 		buff.push(param.name);
 		this.emitTypeAnnotation(param.type);
 		if (param.isOptional) {
@@ -652,8 +649,18 @@ class Emitter {
 			throw "expected a TypeRef of kind TypeRefKind.FUNCTION, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
+		const useOldSyntax = typeRef.annotations.length > 0;
+		if (useOldSyntax) {
+			buff.push("{");
+			this.emitAnnotations(typeRef, false); // will emit a space at the end
+			buff.push("function");
+		}
 		this.emitSignaturePart2(typeRef.signature, true);
-		buff.push("=>");
+		if (useOldSyntax) {
+			buff.push(": ");
+		} else {
+			buff.push("=>");
+		}
 		const returnType = typeRef.signature.returnType;
 		if (returnType) {
 			const needParens = returnType.isComposed();
@@ -666,6 +673,9 @@ class Emitter {
 			}
 		} else {
 			buff.push("void");
+		}
+		if (useOldSyntax) {
+			buff.push("}");
 		}
 	}
 
@@ -741,6 +751,22 @@ class Emitter {
 			buff.push("@");
 		}
 		buff.push(name);
+		if (ann.args.length > 0) {
+			buff.push("(");
+			let isFirst = true;
+			for (const arg of ann.args) {
+				if (!isFirst) {
+					buff.push(", ");
+				}
+				isFirst = false;
+				if (arg instanceof TypeRef) {
+					this.emitTypeRef(arg);
+				} else {
+					buff.push(arg);
+				}
+			}
+			buff.push(")");
+		}
 		if (separateLine) {
 			buff.pushln();
 		} else {

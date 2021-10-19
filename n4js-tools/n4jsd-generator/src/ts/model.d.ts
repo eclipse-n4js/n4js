@@ -25,6 +25,9 @@ export enum Accessibility {
 
 export class Annotation {
 	name: string;
+	args: (string|TypeRef)[];
+
+	constructor(name?: string);
 }
 
 export interface AnnotatableElement {
@@ -163,7 +166,8 @@ export enum TypeRefOperator {
 	READONLY
 }
 
-export class TypeRef {
+export class TypeRef implements AnnotatableElement { // note: annotations only supported for TypeRefKind === FUNCTION
+	annotations: Annotation[];
 	kind: TypeRefKind;
 	dynamic: boolean;
 	targetTypeName: string;

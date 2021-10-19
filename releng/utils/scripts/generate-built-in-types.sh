@@ -48,16 +48,28 @@ mkdir -p "${BUILD_DIR}"
 cd "${BUILD_DIR}"
 
 
+# STEP #1: CLEAN UP
+
+# temporary work-around: remove this when deleting deprecated file Iterator.n4jsd in 'n4js-runtime-es2015'
+mv "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/Iterator.n4jsd "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/Iterator.n4jsd_
+
 rm -f "${REPO_ROOT_DIR}"/plugins/org.eclipse.n4js/src-env/env/builtin_js.n4jsd
 rm -f "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/*.n4jsd
 rm -f "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-esnext/src/n4js/*.n4jsd
 #rm -f "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-html5/src/n4js/*.n4jsd
+
+# temporary work-around: remove this when deleting deprecated file Iterator.n4jsd in 'n4js-runtime-es2015'
+mv "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/Iterator.n4jsd_ "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/Iterator.n4jsd
+
+
+# STEP #2: GENERATE .n4jsd FILES FROM .d.ts FILES
 
 rm -rf "src-dts"
 mkdir "src-dts"
 cp "${SOURCE_DIR}/es5.d.ts" "src-dts"
 cp "${SOURCE_DIR}"/es20*.d.ts "src-dts"
 #cp "${SOURCE_DIR}"/dom*.d.ts "src-dts"
+
 # delete some files we do not need/want to convert
 # (they only contain triple slash directives, for the most part):
 rm src-dts/*.full.d.ts
@@ -69,6 +81,9 @@ mkdir "out"
 pushd "${GENERATOR_DIR}" > /dev/null
 node -r esm "${GENERATOR_DIR}/bin/dts2n4jsd.js" --runtime-libs --copy-type-refs --no-doc --force --output "${BUILD_DIR}/out" "${BUILD_DIR}/src-dts"
 popd > /dev/null
+
+
+# STEP #3: DEPLOY .n4jsd FILES
 
 cd "out/@n4jsd/src-dts"
 cp es5.n4jsd "${REPO_ROOT_DIR}/plugins/org.eclipse.n4js/src-env/env/builtin_js.n4jsd"

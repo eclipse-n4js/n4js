@@ -4,6 +4,6 @@ export external public type FlatArray<Arr,Depth> = any+;
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
-	public <U,This> flatMap(callback: (_this: This, value: T, index: number, array: Array<T>)=>(U | ReadonlyArray<U>), thisArg: This = ): Array<U>;
+	public <U,This> flatMap(callback: {@This(This) function(value: T, index: number, array: Array<T>): (U | ReadonlyArray<U>)}, thisArg: This = ): Array<U>;
 	public <A,D> flat(depth: D = ): Array<FlatArray<A,D>>;
 }

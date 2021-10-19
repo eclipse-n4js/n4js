@@ -329,10 +329,32 @@ export default {
 				}
 
 				export external public type PromiseConstructor = constructor{Promise};
+
+
+				export external public interface ~ArrayBufferView {
+					/**
+					 * The ArrayBuffer instance referenced by the array.
+					 */
+					get buffer(): ArrayBufferLike;
+
+					/**
+					 * The length in bytes of the array.
+					 */
+					get byteLength(): number;
+
+					/**
+					 * The offset in bytes of the array.
+					 */
+					get byteOffset(): number;
+				}
 			`,
 			ignore: [
 				// temporarily ignored, because we need our own definition:
 				"Symbol", "Promise",
+				// unfortunately we have to replace ArrayBufferView by our own definition (see suffix above), because TypeScript is
+				// using writable fields in ArrayBufferView but the types expected to be subtypes (e.g. Uint8Array) only provide
+				// readonly fields / getters, meaning they would not actually be subtypes when applying strict subtype checking:
+				"ArrayBufferView",
 				// stuff defined in primitive_js.n4ts and global.n4jsd:
 				"NaN", "Infinity", "eval", "parseInt", "parseFloat", "isNaN", "isFinite", "decodeURI", "decodeURIComponent",
 				"encodeURI", "encodeURIComponent", "escape", "unescape",
@@ -582,7 +604,20 @@ export default {
 			}
 		},
 		"es2017.sharedmemory.d.ts": {},
-		"es2017.typedarrays.d.ts": {},
+		"es2017.typedarrays.d.ts": {
+			patchMembers: {
+				// cannot add overload signatures via polyfill:
+				"Int8Array#constructor": undefined,
+				"Uint8Array#constructor": undefined,
+				"Uint8ClampedArray#constructor": undefined,
+				"Int16Array#constructor": undefined,
+				"Uint16Array#constructor": undefined,
+				"Int32Array#constructor": undefined,
+				"Uint32Array#constructor": undefined,
+				"Float32Array#constructor": undefined,
+				"Float64Array#constructor": undefined
+			}
+		},
 		"es2017.intl.d.ts": {},
 		"es2018.asynciterable.d.ts": {
 			ignore: [
