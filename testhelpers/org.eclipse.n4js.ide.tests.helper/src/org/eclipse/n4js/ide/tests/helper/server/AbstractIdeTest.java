@@ -1489,7 +1489,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected List<Diagnostic> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
 		Stream<Diagnostic> issuesInFile = languageClient.getIssues(fileURI).stream();
 		if (!withIgnoredIssues) {
-			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode().getLeft()));
+			issuesInFile = issuesInFile.filter(
+					issue -> issue.getCode() == null || !getIgnoredIssueCodes().contains(issue.getCode().getLeft()));
 		}
 		return issuesInFile.collect(Collectors.toList());
 	}
