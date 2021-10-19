@@ -3,10 +3,10 @@
 export external public type PropertyKey = string | number | symbol;
 
 export external public interface ~PropertyDescriptor {
-	configurable: boolean;
-	enumerable: boolean;
-	value: any;
-	writable: boolean;
+	configurable?: boolean;
+	enumerable?: boolean;
+	value?: any;
+	writable?: boolean;
 }
 
 export external public interface ~PropertyDescriptorMap {}
@@ -142,7 +142,7 @@ export external public type NumberConstructor = constructor{Number};
 export external public interface ~ImportMeta {}
 
 export external public interface ~ImportCallOptions {
-	assert: ImportAssertions;
+	assert?: ImportAssertions;
 }
 
 export external public interface ~ImportAssertions {}
@@ -230,8 +230,8 @@ export external public class Date {
 export external public type DateConstructor = constructor{Date};
 
 export external public interface ~RegExpMatchArray extends Array<string> {
-	index: number;
-	input: string;
+	index?: number;
+	input?: string;
 }
 
 export external public interface ~RegExpExecArray extends Array<string> {
@@ -276,7 +276,7 @@ export external public type RegExpConstructor = constructor{RegExp};
 export external public class Error {
 	public name: string;
 	public message: string;
-	public stack: string;
+	public stack?: string;
 	public constructor(message: string = );
 	(message: string = ): Error;
 }
@@ -374,12 +374,12 @@ export external public class Array<T> {
 export external public type ArrayConstructor = constructor{Array};
 
 export external public interface ~TypedPropertyDescriptor<T> {
-	enumerable: boolean;
-	configurable: boolean;
-	writable: boolean;
-	value: T;
-	get: ()=>T;
-	set: (value: T)=>void;
+	enumerable?: boolean;
+	configurable?: boolean;
+	writable?: boolean;
+	value?: T;
+	get?: ()=>T;
+	set?: (value: T)=>void;
 }
 
 export external public interface ~PromiseLike<T> {

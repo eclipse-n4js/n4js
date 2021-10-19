@@ -4,7 +4,7 @@
 export external public class Symbol extends Symbol {}
 
 export external public interface ~IteratorYieldResult<TYield> {
-	done: false;
+	done?: false;
 	value: TYield;
 }
 
@@ -14,10 +14,6 @@ export external public interface ~IteratorReturnResult<TReturn> {
 }
 
 export external public type IteratorResult<T,TReturn> = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
-
-export external public interface ~IterableIterator<T> extends Iterator<T> {
-	[Symbol.iterator](): IterableIterator<T>;
-}
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
@@ -125,4 +121,9 @@ export external public class Float64Array extends Float64Array {
 	public entries(): IterableIterator<[number,number]>;
 	public keys(): IterableIterator<number>;
 	public values(): IterableIterator<number>;
+}
+
+export external public interface ~IterableIterator<out T> extends Iterator<T>, Iterable<T> {
+	@Override
+	[Symbol.iterator](): IterableIterator<T>;
 }

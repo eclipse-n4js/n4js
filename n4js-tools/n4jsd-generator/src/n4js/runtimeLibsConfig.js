@@ -1,6 +1,6 @@
 export default {
 	preamble: `@@Global @@ProvidedByRuntime`,
-	files: {
+	patchFiles: {
 		"es5.d.ts": {
 			prefix: ``,
 			suffix: `
@@ -438,18 +438,26 @@ export default {
 				"Date#constructor": undefined,
 				"RegExp#constructor": undefined,
 				// required due to overloading:
+				"Array#find": { replaceBy: "public find(predicate: (T, int=, T[]=) => boolean, thisArg: Object=): T;" },
 				"Array#from": { replaceBy: "public static <I> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>|string, mapFn: (I, int) => any=, thisArg: Object=): I[];" }
 			}
 		},
 		"es2015.collection.d.ts": {
-			suffix: `
-				export external public type ReadonlySet<T> = Set<T>;
-				export external public type ReadonlyMap<K,V> = Map<K,V>;
-			`,
 			ignore: [
 				// read-only types:
 				"ReadonlySet", "ReadonlyMap"
-			]
+			],
+			patchMembers: {
+				// TypeScript provides constructors accepting Iterables via overloading in file "es2015.iterable.d.ts" (which we do not support):
+				"Map#constructor": { replaceBy: "public constructor(entries: Iterable<Iterable2<K,V>> = );" },
+				"WeakMap#constructor": { replaceBy: "public constructor(entries: Iterable<Iterable2<K,V>> = );" },
+				"Set#constructor": { replaceBy: "public constructor(values: Iterable<T> = );" },
+				"WeakSet#constructor": { replaceBy: "public constructor(values: Iterable<T> = );" },
+			},
+			suffix: `
+				export external public type ReadonlySet<T> = Set<T>;
+				export external public type ReadonlyMap<K,V> = Map<K,V>;
+			`
 		},
 		"es2015.symbol.d.ts": {
 			ignore: [
@@ -462,8 +470,8 @@ export default {
 				"Promise", "PromiseConstructor" // FIXME this would work fine, except for different number of type parameters!!!
 			],
 			patchMembers: {
-				"String#replace": { addAnnotations: [ "@Override" ] },
 				// the signatures of the following members use computed property names inside ~Object with {}
+				"String#replace": undefined,
 				"String#match": undefined,
 				"String#search": undefined,
 				"String#split": undefined
@@ -471,6 +479,7 @@ export default {
 		},
 		"es2015.iterable.d.ts": {
 			ignore: [
+				"IterableIterator", // replaced by modified declaration in suffix below (see below for details)
 				"Iterator", // Iterator was moved to es5.n4jsd (see above)
 				"Iterable", // Iterable was moved to es5.n4jsd (see above)
 				"Promise", "PromiseConstructor", // Promise was moved to es5.n4jsd (see above)
@@ -482,10 +491,10 @@ export default {
 				"Array#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
 				"Array#from": undefined,
 				"String#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
-				"Map#constructor": undefined,
-				"WeakMap#constructor": undefined,
-				"Set#constructor": undefined,
-				"WeakSet#constructor": undefined,
+				"Map#constructor": undefined, // the signature added here via overloading was moved to "es2015.collection.d.ts" (see above)
+				"WeakMap#constructor": undefined, // the signature added here via overloading was moved to "es2015.collection.d.ts" (see above)
+				"Set#constructor": undefined, // the signature added here via overloading was moved to "es2015.collection.d.ts" (see above)
+				"WeakSet#constructor": undefined, // the signature added here via overloading was moved to "es2015.collection.d.ts" (see above)
 				"Uint8ClampedArray#constructor": undefined,
 				"Uint8ClampedArray#from": undefined,
 				"Int8Array#constructor": undefined,
@@ -506,7 +515,17 @@ export default {
 				"Float32Array#from": undefined,
 				"Float64Array#constructor": undefined,
 				"Float64Array#from": undefined
-			}
+			},
+			// we need to provide our own modified variant of IterableIterator, because
+			// 1) we must add "out" modifier to type parameter,
+			// 2) extend interface "Iterable" explicitly to avoid error message "All N4Objects must explicitly extend/implement definition site structural type Iterable<?>.",
+			// 3) due to 2), @Override annotation must be added.
+			suffix: `
+				export external public interface ~IterableIterator<out T> extends Iterator<T>, Iterable<T> {
+					@Override
+					[Symbol.iterator](): IterableIterator<T>;
+				}
+			`
 		},
 		"es2015.generator.d.ts": {
 			ignore: [
@@ -522,7 +541,31 @@ export default {
 				"Promise", "PromiseConstructor" // Promise was moved to es5.n4jsd (see above)
 			]
 		},
-		"es2015.proxy.d.ts": {},
+		"es2015.proxy.d.ts": {
+			ignore: [
+				// need to replace ProxyHandler entirely, because of
+				// 1) heavy use of optional methods (not supported in N4JS), and
+				// 2) use of unfortunate type 'any' instead of 'Object' for parameters "thisArg" and "receiver"
+				"ProxyHandler"
+			],
+			suffix: `
+				export external public interface ~ProxyHandler<T> {
+					apply?: (target: T, thisArg: Object, argArray: Array<any>) => any;
+					construct?: (target: T, argArray: Array<any>, newTarget: Function) => Object;
+					defineProperty?: (target: T, p: string | symbol, attributes: PropertyDescriptor) => boolean;
+					deleteProperty?: (target: T, p: string | symbol) => boolean;
+					get?: (target: T, p: string | symbol, receiver: Object) => any;
+					getOwnPropertyDescriptor?: (target: T, p: string | symbol) => PropertyDescriptor;
+					getPrototypeOf?: (target: T) => Object;
+					has?: (target: T, p: string | symbol) => boolean;
+					isExtensible?: (target: T) => boolean;
+					ownKeys?: (target: T) => ArrayLike<string | symbol>;
+					preventExtensions?: (target: T) => boolean;
+					set?: (target: T, p: string | symbol, value: any, receiver: Object) => boolean;
+					setPrototypeOf?: (target: T, v: Object) => boolean;
+				}
+			`
+		},
 		"es2015.reflect.d.ts": {},
 		"es2016.array.include.d.ts": {
 			ignore: [
@@ -1124,5 +1167,17 @@ export default {
 		},
 		"dom.iterable.d.ts": {},
 		"dom.iterable.generated.d.ts": {}
+	},
+	addFiles: {
+		"es2020.globalThis.n4jsd": `
+			@@Global @@ProvidedByRuntime
+			export external public const globalThis: Object+;
+
+			// Before this was defined in "globalThis.n4jsd" of "n4js-runtime-esnext" as follows:
+			//     @@Global @@ProvidedByRuntime
+			//     export external public const globalThis: Object+;
+			// and in "globalThis.n4jsd" of "n4js-runtime-html5" it was commented out as follows:
+			//     //export external public const globalThis: Window+;
+		`
 	}
 };

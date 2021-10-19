@@ -479,6 +479,7 @@ export class Converter {
 		if ((!isReadonly && ts.isPropertyDeclaration(node))
 				|| (!isReadonly && ts.isPropertySignature(node))) {
 			result.kind = model.MemberKind.FIELD;
+			result.isOptional = !!node.questionToken;
 			result.type = this.convertTypeReferenceOfTypedSymbol(symMember);
 		} else if (ts.isGetAccessorDeclaration(node)
 				|| (isReadonly && ts.isPropertyDeclaration(node))

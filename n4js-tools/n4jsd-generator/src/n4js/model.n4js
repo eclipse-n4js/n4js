@@ -45,6 +45,8 @@ export class Script {
 	suffix?: string;
 	imports: Import[] = [];
 	topLevelElements: ExportableElement[] = [];
+	/** If defined, all other properties will be ignored and this string will be emitted. */
+	replacementCode?: string;
 	issues: utils.Issue[] = [];
 }
 
@@ -122,6 +124,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
+	isOptional: boolean;
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
@@ -204,6 +207,10 @@ class Emitter {
 
 	emitScript(script: Script) {
 		const buff = this.buff;
+		if (script.replacementCode) {
+			buff.pushln(script.replacementCode);
+			return; // all other properties will be ignored in this case!
+		}
 		if (script.prefix) {
 			buff.pushln(script.prefix);
 			buff.pushln(); // separate prefix from main code by one empty line
@@ -444,6 +451,9 @@ class Emitter {
 				break;
 			case MemberKind.FIELD:
 				this.emitPropertyName(member.name);
+				if (member.isOptional) {
+					buff.push("?");
+				}
 				this.emitTypeAnnotation(member.type);
 				buff.push(";");
 				break;

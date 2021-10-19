@@ -62,10 +62,7 @@ export external public class RegExp extends RegExp {
 }
 
 @Polyfill
-export external public class String extends String {
-	@Override
-	public replace(...args: any+): any+; // overloading not supported
-}
+export external public class String extends String {}
 
 @Polyfill
 export external public class ArrayBuffer extends ArrayBuffer {

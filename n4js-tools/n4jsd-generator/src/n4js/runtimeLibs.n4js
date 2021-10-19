@@ -26,7 +26,8 @@ const CONSTRUCTOR_TYPE_SUFFIX = "Constructor";
 
 class GenConfig {
 	preamble: string;
-	files: Map<string, FileGenConfig> = new Map<string, FileGenConfig>();
+	patchFiles = new Map<string, FileGenConfig>();
+	addFiles = new Map<string, string>();
 }
 class FileGenConfig {
 	public prefix: string;
@@ -42,7 +43,8 @@ class PatchMemberConfig {
 	public addAnnotations: string[];
 }
 const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
-	[ "GenConfig#files",                  new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "GenConfig#patchFiles",             new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "GenConfig#addFiles",               new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#ignore",             new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#polyfills",          new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#ctorInstanceTypes",  new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
@@ -54,7 +56,7 @@ const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
 
 export public function isIgnored(filePath: string, elementName: string =, memberName: string =, signatureIndex: int =): boolean {
 	const fileName = path_lib.basename(filePath);
-	const ignoreConfig = getGenConfig().files.get(fileName)?.ignore;
+	const ignoreConfig = getGenConfig().patchFiles.get(fileName)?.ignore;
 	if (!ignoreConfig) {
 		return false;
 	}
@@ -81,15 +83,32 @@ export public function isIgnored(filePath: string, elementName: string =, member
 export public class RuntimeLibsError extends Error {}
 
 /**
- * Invoked iff in "--runtime-libs" mode. Will modify its top-level elements in various ways (in place).
+ * Invoked iff in "--runtime-libs" mode. Will modify the given scripts in various ways (in place)
+ * and may add additional scripts to the given array.
  *
  * @param scripts all scripts that were imported from '.d.ts' files.
  */
 export public function postProcessRuntimeLibs(scripts: model.Script[]) {
-	new RuntimeLibsProcessor(scripts).process();
+	// patch scripts loaded from .d.ts files
+	new RuntimeLibsPatcher(scripts).patch();
+	// add additional scripts
+	let path: string;
+	for (const [fileName, fileContent] of getGenConfig().addFiles.entries()) {
+		if (path === undefined) {
+			path = path_lib.dirname(scripts.find(s => s.tsFilePath !== undefined)?.tsFilePath ?? ".");
+			if (path === ".") {
+				throw "unable to obtain default path for added files";
+			}
+		}
+		const newScript = new model.Script();
+		newScript.tsFileName = (fileName.endsWith(".n4jsd") ? fileName.substring(0, fileName.length - 6) : fileName) + ".d.ts";
+		newScript.tsFilePath = path + "/" + newScript.tsFileName;
+		newScript.replacementCode = utils.trimMultiLineString(fileContent ?? "");
+		scripts.push(newScript);
+	}
 }
 
-class RuntimeLibsProcessor {
+class RuntimeLibsPatcher {
 
 	@Final private scriptsOrdered: model.Script[];
 	@Final private knownCtorTypes = new Set<string>();
@@ -100,13 +119,13 @@ class RuntimeLibsProcessor {
 		this.scriptsOrdered = getScriptsOrderedAndAsserted(scripts);
 	}
 
-	public process() {
+	public patch() {
 		for (const script of this.scriptsOrdered) {
-			this.processScript(script);
+			this.patchScript(script);
 		}
 	}
 
-	private processScript(script: model.Script) {
+	private patchScript(script: model.Script) {
 		this.removeMetaProperties(script);
 		this.handleCtorInstanceTypePattern(script);
 		this.handleSimpleConfigurations(script);
@@ -115,7 +134,7 @@ class RuntimeLibsProcessor {
 
 	private handleSimpleConfigurations(script: model.Script) {
 		const config = getGenConfig();
-		const fileConfig = config.files.get(script.tsFileName);
+		const fileConfig = config.patchFiles.get(script.tsFileName);
 		// script prefix/suffix
 		const preamble = config.preamble;
 		const prefix = fileConfig?.prefix;
@@ -252,7 +271,7 @@ class RuntimeLibsProcessor {
 		topLevelElementModifications.applyTo(script);
 
 		// register additional known ctor/instance types, as requested by this file's FileGenConfig
-		const fileConfig = getGenConfig().files.get(script.tsFileName);
+		const fileConfig = getGenConfig().patchFiles.get(script.tsFileName);
 		for (const typeName of fileConfig?.ctorInstanceTypes ?? []) {
 			if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
 				this.knownCtorTypes.add(typeName);
@@ -431,7 +450,7 @@ var MyType: {
 	}
 
 	private handlePolyfills(script: model.Script) {
-		const fileConfig = getGenConfig().files.get(script.tsFileName);
+		const fileConfig = getGenConfig().patchFiles.get(script.tsFileName);
 		const configuredPolyfills = fileConfig?.polyfills ?? new Set<string>();
 		if (this.identifiedPolyfills.size === 0 && configuredPolyfills.size === 0) {
 			return;
@@ -504,7 +523,7 @@ function changeToPolyfill(type: model.Type) {
  * 2) that an input file exists for all file configurations given in the GenConfig file.
  */
 function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
-	const fileConfigs = getGenConfig().files;
+	const fileConfigs = getGenConfig().patchFiles;
 
 	const scriptsWithoutGenConfig = [] as model.Script[];
 	for (const script of scripts) {

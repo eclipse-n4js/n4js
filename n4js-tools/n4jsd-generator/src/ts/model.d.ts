@@ -38,6 +38,8 @@ export class Script {
 	preamble?: string;
 	imports: Import[];
 	topLevelElements: ExportableElement[];
+	/** If defined, all other properties will be ignored and this string will be emitted. */
+	replacementCode?: string;
 	issues: utils.Issue[];
 }
 
@@ -117,6 +119,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
+	isOptional: boolean;
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
