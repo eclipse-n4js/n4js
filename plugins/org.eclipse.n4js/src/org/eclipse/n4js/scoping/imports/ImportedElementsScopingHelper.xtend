@@ -17,6 +17,7 @@ import java.util.HashMap
 import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -205,8 +206,11 @@ class ImportedElementsScopingHelper {
 		val element = if (specifier.declaredDynamic) {
 			(specifier.eResource as N4JSResource).module.internalDynamicElements.findFirst[it.astElement === specifier];
 		} else {
-			val name = QualifiedName.create(specifier.importedElementAsText);
-			val importedElem = tleScope.getSingleElement(name);
+			val name = if (specifier instanceof DefaultImportSpecifier)
+						"default" else specifier.importedElementAsText;
+			val qName = QualifiedName.create(name);
+						
+			val importedElem = tleScope.getSingleElement(qName);
 			if (importedElem !== null && importedElem.EObjectOrProxy instanceof TExportableElement) {
 				importedElem.EObjectOrProxy as TExportableElement
 			} else {

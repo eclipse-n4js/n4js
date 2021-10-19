@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
+import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
@@ -74,6 +75,8 @@ public class TopLevelElementsCollector {
 							new InvisibleTypeOrVariableDescription(createObjectDescription(type),
 									typeVisiblity.accessModifierSuggestion));
 				}
+			} else {
+				invisible.add(new HollowTypeOrValueDescription(createObjectDescription(type), "type"));
 			}
 		}
 
