@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+// Shapes and variables: OK
+export external interface ~I1 {}
+// XPECT noerrors -->
+export external const I1 : string;
+
+@StringBased
+export external enum ES1 { a }
+// XPECT noerrors -->
+export external const ES1 : string;
+
+@NumberBased
+export external enum EN1 { a }
+// XPECT noerrors -->
+export external const EN1 : string;
+
+export external type T1 = string;
+// XPECT noerrors -->
+export external const T1 : string;
+
+
+// Shapes and classes: ERROR
+export external interface ~I2 {}
+// XPECT errors --> "Class I2 duplicates interface I2 (line 45)." at "I2"
+export external class I2 {}
+
+@StringBased
+export external enum ES2 { a }
+// XPECT errors --> "Class ES2 duplicates enum ES2 (line 50)." at "ES2"
+export external class ES2 {}
+
+@NumberBased
+export external enum EN2 { a }
+// XPECT errors --> "Class EN2 duplicates enum EN2 (line 55)." at "EN2"
+export external class EN2 {}
+
+export external type T2 = string;
+// XPECT errors --> "Class T2 duplicates type alias T2 (line 59)." at "T2"
+export external class T2 {}
+
+
+// Shapes and Shapes: ERROR
+@StringBased
+export external enum ESI { a }
+// XPECT errors --> "Interface ESI duplicates enum ESI (line 66)." at "ESI"
+export external interface ~ESI {}
+
+@NumberBased
+export external enum ENT { a }
+// XPECT errors --> "Type alias ENT duplicates enum ENT (line 71)." at "ENT"
+export external type ENT = string;
+
+@StringBased
+export external enum ESEN { a }
+// XPECT errors --> "Enum ESEN duplicates enum ESEN (line 76)." at "ESEN"
+@NumberBased
+export external enum ESEN { a }
+
+
+// vars and classes: ERROR
+export external class C3 {}
+// XPECT errors --> "Variable C3 duplicates class C3 (line 83)." at "C3"
+export external const C3;
