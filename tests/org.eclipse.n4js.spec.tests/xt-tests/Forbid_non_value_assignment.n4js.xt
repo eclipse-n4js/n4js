@@ -20,6 +20,12 @@
 			File "package.json" { from="../package_default.json" }
 		}
 	}
+	
+
+	IssueConfiguration {
+		IssueCode "IMP_UNUSED_IMPORT" {enabled=false}
+	}
+	
 	END_SETUP
  */
 
