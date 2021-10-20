@@ -15,6 +15,16 @@ import * as utils from "./utils";
 
 // utilities related to TypeScript
 
+export function getFilePath(node: ts.Node): string | undefined {
+	while (node && !ts.isSourceFile(node)) {
+		node = node.parent;
+	}
+	if (node && ts.isSourceFile(node)) {
+		return node.fileName;
+	}
+	return undefined;
+}
+
 export function getAllChildNodes(node: ts.Node): ts.Node[] {
 	// for some reason, node.getChildren() does not do the trick in all cases, it seems
 	const result = [] as ts.Node[];
@@ -132,6 +142,11 @@ export function getTypeKind(decl: ts.Node): model.TypeKind {
 	return undefined;
 }
 
+export function isStatic(node: ts.Declaration): boolean {
+	const flags = ts.getCombinedModifierFlags(node);
+	return utils.testFlag(flags, ts.ModifierFlags.Static);
+}
+
 export function isReadonly(node: ts.Declaration): boolean {
 	const flags = ts.getCombinedModifierFlags(node);
 	return utils.testFlag(flags, ts.ModifierFlags.Readonly);
@@ -199,9 +214,9 @@ export function createEnumLiteralsFromValues(values: (string | number)[]): model
 	return results;
 }
 
-export function getSourceCodeForNode(node: ts.Node, indentStr: string = "  |"): string {
+export function getSourceCodeForNode(node: ts.Node, indentStr: string = "    |"): string {
 	const sourceFile = node.getSourceFile();
-	let offendingCode = sourceFile.text.substring(node.pos, node.end);
+	let offendingCode = sourceFile.text.substring(node.getStart(), node.getEnd());
 	offendingCode = offendingCode.trim();
 	if (offendingCode.length > 256) {
 		offendingCode = offendingCode.slice(0, 256) + " [...]";
@@ -209,4 +224,58 @@ export function getSourceCodeForNode(node: ts.Node, indentStr: string = "  |"): 
 	offendingCode = offendingCode.replace(/\r\n/gi, "\n");
 	offendingCode = indentStr + offendingCode.replace(/\n/gi, "\n" + indentStr);
 	return offendingCode;
+}
+
+export function getJSDocForNode(node: ts.Node): string | undefined {
+	const sourceFile = node.getSourceFile();
+	const leadingWhiteSpace = sourceFile.text.substring(node.pos, node.getStart());
+	// search last "/**" that is not immediately followed by "/"
+	const len = leadingWhiteSpace.length;
+	let idxStart = -1;
+	let idx = 0;
+	while (true) {
+		idx = leadingWhiteSpace.indexOf("/*", idx);
+		if (idx < 0) {
+			break;
+		} else if (idx + 3 < len
+			&& leadingWhiteSpace.charAt(idx + 2) === '*'
+			&& leadingWhiteSpace.charAt(idx + 3) !== '/') {
+			// start of a JSDoc comment
+			idxStart = idx;
+		}
+		idx += 2;
+	}
+	if (idxStart < 0) {
+		return undefined;
+	}
+	let idxEnd = leadingWhiteSpace.indexOf("*/", idxStart);
+	if (idxEnd < 0) {
+		return undefined;
+	}
+	// get rid of unnecessary white space in comment
+	let doc = leadingWhiteSpace.substring(idxStart, idxEnd + 2);
+	doc = doc.replace(/\r\n/gi, "\n");
+	doc = doc.replace(/\n\s+/gi, "\n");
+	doc = doc.replace(/\n\*/gi, "\n *");
+	return doc;
+}
+
+export function getContextForNode(node: ts.Node, checker: ts.TypeChecker): string | undefined {
+	let result = undefined;
+	node = node?.parent;
+	while (node && !ts.isSourceFile(node)) {
+		const name = node['name'];
+		let nameStr: string = undefined;
+		if (typeof name === "string") {
+			nameStr = name;
+		} else if (name) {
+			const sym = checker.getSymbolAtLocation(name);
+			nameStr = sym.getName();
+		}
+		if (nameStr) {
+			result = result ? nameStr + "." + result : nameStr;
+		}
+		node = node.parent;
+	}
+	return result;
 }

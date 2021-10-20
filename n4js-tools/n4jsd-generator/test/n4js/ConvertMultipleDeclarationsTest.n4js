@@ -1,0 +1,130 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+/**
+ * Tests for the case that multiple declarations are given for the same type.
+ */
+export public class ConvertMultipleDeclarationsTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testMultipleInterfaceDecls() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						field1: string;
+						method1(): string;
+					}
+					export interface Ifc {
+						field2: number;
+						method2(): number;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						field1: any+;
+						method1(): any+;
+						field2: any+;
+						method2(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testInterfaceAmendsClass() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export class MyType {
+						method1(): string;
+						static method1(): number;
+					}
+					export interface MyType {
+						method2(): number;
+					}
+				`,
+				n4jsd: `
+					export external public class ~MyType {
+						method1(): any+;
+						static method1(): any+;
+						method2(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testClassAmendsInterface() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface MyType {
+						method1(): string;
+					}
+					export class MyType {
+						method2(): number;
+						static method2(): number;
+					}
+				`,
+				n4jsd: `
+					export external public class ~MyType {
+						method1(): any+;
+						method2(): any+;
+						static method2(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testDifferentKindsOfMembers() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						field1: string;
+						get getter1(): string;
+						set setter1(value: string);
+						method1(): string;
+					}
+					export interface Ifc {
+						field2: number;
+						get getter2(): string;
+						set setter2(value: string);
+						method2(): number;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						field1: any+;
+						get getter1(): any+;
+						set setter1(value: any+);
+						method1(): any+;
+						field2: any+;
+						get getter2(): any+;
+						set setter2(value: any+);
+						method2(): any+;
+					}
+				`
+			}
+		);
+	}
+}

@@ -14,7 +14,7 @@
 // String.prototype.search()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
 
-function testinput(re, str : string){
+function testinput(re: RegExp, str : string){
   var midstring;
   if (str.search(re) != -1){
     midstring = " contains ";

@@ -18,12 +18,14 @@ Msg
 --- */
 
 var e = new Error();
-console.log("Name", e.name);
-console.log("Msg", e.message);
+console.log("Name", e.name); // name is optional, set to "Error" by default
+console.log("Msg", e.message); // message is optional, set to empty string by default
 
 // XPECT noerrors --> "all members are defined"
 var se2 : ~Error = { name: "n", message: "m"};
-// XPECT noerrors --> "message is optional, set to empty string by default"
+// message is optional in the constructor, but not in the type
+// XPECT errors --> "~Object with { name: string } is not a structural subtype of ~Error: missing field message." at "{ name: "n"}"
 var se1 : ~Error = { name: "n"};
-// XPECT noerrors --> "name is optional as well, set to error by default"
+// name is optional in the constructor, but not in the type
+// XPECT errors --> "~Object is not a structural subtype of ~Error: missing field message and 1 more." at "{}"
 var se0 : ~Error = {};

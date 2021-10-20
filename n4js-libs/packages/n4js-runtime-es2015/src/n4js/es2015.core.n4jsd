@@ -1,0 +1,96 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class Array<T> extends Array<T> {
+	public find(predicate: (T, int=, T[]=) => boolean, thisArg: Object=): T;
+	public findIndex(predicate: (value: T, index: number, obj: Array<T>)=>any+, thisArg: any = ): number;
+	public fill(value: T, start: number = , end: number = ): this;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public static <I> from(source: Iterable<I>|ArrayLike<I>|Iterator<I>|string, mapFn: (I, int) => any=, thisArg: Object=): I[];
+	public static <T> of(...items: T): Array<T>;
+}
+
+@Polyfill
+export external public class Date extends Date {}
+
+@Polyfill
+export external public class Function extends Function {
+	public get name(): string;
+}
+
+@Polyfill
+export external public class Math extends Math {
+	public static clz32(x: number): number;
+	public static imul(x: number, y: number): number;
+	public static sign(x: number): number;
+	public static log10(x: number): number;
+	public static log2(x: number): number;
+	public static log1p(x: number): number;
+	public static expm1(x: number): number;
+	public static cosh(x: number): number;
+	public static sinh(x: number): number;
+	public static tanh(x: number): number;
+	public static acosh(x: number): number;
+	public static asinh(x: number): number;
+	public static atanh(x: number): number;
+	public static hypot(...values: number): number;
+	public static trunc(x: number): number;
+	public static fround(x: number): number;
+	public static cbrt(x: number): number;
+}
+
+@Polyfill
+export external public class Number extends Number {
+	public static get EPSILON(): number;
+	public static isFinite(number: any+): boolean;
+	public static isInteger(number: any+): boolean;
+	public static isNaN(number: any+): boolean;
+	public static isSafeInteger(number: any+): boolean;
+	public static get MAX_SAFE_INTEGER(): number;
+	public static get MIN_SAFE_INTEGER(): number;
+	public static parseFloat(string: string): number;
+	public static parseInt(string: string, radix: number = ): number;
+}
+
+@Polyfill
+export external public class Object extends Object {
+	public static assign(...args: any+): any+; // overloading not supported
+	public static getOwnPropertySymbols(o: any): Array<symbol>;
+	@Override
+	public static keys(o: ~Object): Array<string>;
+	public static is(value1: any, value2: any): boolean;
+	public static setPrototypeOf(o: any, proto: Object): any;
+}
+
+@Polyfill
+export external public class RegExp extends RegExp {
+	public get flags(): string;
+	public get sticky(): boolean;
+	public get unicode(): boolean;
+	(pattern: RegExp | string, flags: string = ): RegExp;
+}
+
+@Polyfill
+export external public class String extends String {
+	public codePointAt(pos: number): number;
+	public includes(searchString: string, position: number = ): boolean;
+	public endsWith(searchString: string, endPosition: number = ): boolean;
+	public normalize(...args: any+): any+; // overloading not supported
+	public repeat(count: number): string;
+	public startsWith(searchString: string, position: number = ): boolean;
+	public anchor(name: string): string;
+	public big(): string;
+	public blink(): string;
+	public bold(): string;
+	public fixed(): string;
+	public fontcolor(color: string): string;
+	public fontsize(...args: any+): any+; // overloading not supported
+	public italics(): string;
+	public link(url: string): string;
+	public small(): string;
+	public strike(): string;
+	public sub(): string;
+	public sup(): string;
+	public static fromCodePoint(...codePoints: number): string;
+	public static raw(template: ~Object with { raw: Array<string> | ArrayLike<string>; }, ...substitutions: any): string;
+}

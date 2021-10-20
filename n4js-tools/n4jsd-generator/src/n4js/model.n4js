@@ -27,6 +27,7 @@ export enum Accessibility {
 
 export class Annotation {
 	name: string;
+	args: (string | TypeRef)[] = [];
 
 	constructor(name: string =) {
 		this.name = name;
@@ -38,10 +39,15 @@ export interface AnnotatableElement {
 }
 
 export class Script {
+	tsFileName: string;
+	tsFilePath: string;
 	mode: DTSMode = DTSMode.NONE;
-	preamble?: string;
+	prefix?: string;
+	suffix?: string;
 	imports: Import[] = [];
 	topLevelElements: ExportableElement[] = [];
+	/** If defined, all other properties will be ignored and this string will be emitted. */
+	replacementCode?: string;
 	issues: utils.Issue[] = [];
 }
 
@@ -64,6 +70,7 @@ export class NamedImport extends Import {
 
 export abstract class NamedElement {
 	name: string;
+	jsdoc?: string;
 }
 
 export abstract class ExportableElement extends NamedElement {
@@ -97,10 +104,12 @@ export class Type extends ExportableElement implements AnnotatableElement {
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
 	typeParams: string[] = [];
-	extends?: TypeRef;
+	extends: TypeRef[] = [];
+	implements: TypeRef[] = [];
 	members: Member[] = [];
 	literals: EnumLiteral[] = [];
 	aliasedType: TypeRef;
+	additionalCode: string[] = [];
 }
 
 export class EnumLiteral extends NamedElement {
@@ -108,19 +117,23 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, CALLABLE_CTOR, FIELD, GETTER, SETTER, METHOD
+	CTOR, CALLABLE_CTOR, INDEX_SIGNATURE,
+	FIELD, GETTER, SETTER, METHOD
 }
 
 export class Member extends NamedElement implements AnnotatableElement {
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
+	isOptional: boolean;
 	/** Will be defined iff this member is a data field or field accessor. */
 	type?: TypeRef;
 	signatures?: Signature[];
+	replacementCode?: string;
 }
 
 export class Signature {
+	typeParams: string[] = [];
 	parameters: Parameter[] = [];
 	/** Will be undefined iff this signature belongs to a constructor. */
 	returnType?: TypeRef;
@@ -132,12 +145,49 @@ export class Parameter extends NamedElement {
 	isVariadic: boolean;
 }
 
-export class TypeRef {
+export enum TypeRefKind {
+	/** Referring to a type by name or alias. Corresponds to ParameterizedTypeRef in N4JS. */
+	NAMED,
+	LITERAL,
+	FUNCTION,
+	OBJECT,
+	THIS,
+	/** In this case, TypeRef#targetTypeName is either "Iterable*" or "Array*" and TypeRef#targetTypeArgs define the element types. */
+	TUPLE,
+	UNION,
+	INTERSECTION,
+	PARENTHESES,
+	// the following are not actually supported on N4JS side:
+	PREDICATE,
+	INDEXED_ACCESS_TYPE,
+	MAPPED_TYPE
+}
+
+export enum TypeRefOperator {
+	KEYOF,
+	UNIQUE,
+	READONLY
+}
+
+export class TypeRef implements AnnotatableElement { // note: annotations only supported for TypeRefKind === FUNCTION
+	kind: TypeRefKind;
+	dynamic: boolean;
+	targetTypeName: string;
+	targetTypeArgs: TypeRef[] = [];
+	signature: Signature;
+	members: Member[] = [];
+	composedTypeRefs: TypeRef[] = [];
+	parenthesizedTypeRef: TypeRef;
+	/** The type operators that preceded this type reference on the TypeScript side. */
+	tsOperators: TypeRefOperator[] = [];
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
 
-	constructor(tsSourceString: string =) {
-		this.tsSourceString = tsSourceString;
+	public isBuiltInUndefined(): boolean {
+		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "undefined";
+	}
+	public isComposed(): boolean {
+		return this.kind === TypeRefKind.UNION || this.kind === TypeRefKind.INTERSECTION;
 	}
 }
 
@@ -158,8 +208,13 @@ class Emitter {
 
 	emitScript(script: Script) {
 		const buff = this.buff;
-		if (script.preamble) {
-			buff.pushln(script.preamble);
+		if (script.replacementCode) {
+			buff.pushln(script.replacementCode);
+			return; // all other properties will be ignored in this case!
+		}
+		if (script.prefix) {
+			buff.pushln(script.prefix);
+			buff.pushln(); // separate prefix from main code by one empty line
 		}
 		if (script.imports.length > 0) {
 			script.imports.forEach((elem, idx) => {
@@ -178,6 +233,11 @@ class Emitter {
 			}
 			this.emitExportableElement(elem);
 		});
+		buff.pushln();
+		if (script.suffix) {
+			buff.pushln(); // separate main code from suffix by one empty line
+			buff.pushln(script.suffix);
+		}
 	}
 
 	emitImport(elem: Import) {
@@ -223,8 +283,11 @@ class Emitter {
 
 	emitVariable(variable: Variable) {
 		const buff = this.buff;
+		this.emitDocumentation(variable);
 		this.emitExportKeywordIfNecessary(variable);
-		buff.push("public ");
+		if (variable.exported) {
+			buff.push("public ");
+		}
 		buff.push(variable.keyword.name.toLowerCase());
 		buff.push(" ");
 		buff.push(variable.name);
@@ -234,17 +297,24 @@ class Emitter {
 
 	emitFunction(fun: Function) {
 		const buff = this.buff;
+		this.emitDocumentation(fun);
 		this.emitExportKeywordIfNecessary(fun);
 		buff.push("external ");
 		buff.push("public ");
 		buff.push("function ");
+		const [isOverloading, signature] = chooseSignature(fun.signatures);
+		this.emitSignaturePart1(signature);
 		buff.push(fun.name);
-		this.emitSignature(fun.signatures[0]);
+		this.emitSignaturePart2(signature);
 		buff.push(";");
+		if (isOverloading) {
+			buff.push(" // overloading not supported");
+		}
 	}
 
 	emitType(type: Type) {
 		const buff = this.buff;
+		this.emitDocumentation(type);
 		this.emitAnnotations(type, true);
 		if (type.primitiveBased === PrimitiveBasedKind.STRING_BASED) {
 			buff.pushln("@StringBased");
@@ -262,34 +332,50 @@ class Emitter {
 		if (type.typeParams.length > 0) {
 			buff.push("<", type.typeParams.join(","), ">");
 		}
-		if (type.extends) {
+		if (type.extends.length > 0) {
 			buff.push(" extends ");
-			this.emitTypeRef(type.extends);
+			this.emitTypeRefs(type.extends, true);
+		}
+		if (type.implements.length > 0) {
+			buff.push(" implements ");
+			this.emitTypeRefs(type.implements, true);
 		}
 		if (type.kind === TypeKind.TYPE_ALIAS) {
 			buff.push(" = ");
 			this.emitTypeRef(type.aliasedType);
 			buff.push(";");
 		} else {
-			buff.pushln(" {");
+			buff.push(" {");
 			buff.indent();
+			let didEmit = false;
 			if (type.kind === TypeKind.INTERFACE || type.kind === TypeKind.CLASS) {
-				this.emitMembers(type, type.members);
+				didEmit = this.emitMembers(type.members, type);
 			} else if (type.kind === TypeKind.ENUM) {
-				this.emitEnumLiterals(type.literals, type.primitiveBased === PrimitiveBasedKind.STRING_BASED);
+				didEmit = this.emitEnumLiterals(type.literals, type.primitiveBased === PrimitiveBasedKind.STRING_BASED);
 			} else {
 				throw "unknown kind of type: " + type.kind;
 			}
+			for (const code of type.additionalCode) {
+				buff.pushln();
+				didEmit = this.emitCode(code) || didEmit;
+			}
 			buff.undent();
+			if (didEmit) {
+				buff.pushln();
+			}
 			buff.push("}");
 		}
 	}
 
-	emitEnumLiterals(literals: EnumLiteral[], isStringBased: boolean) {
+	emitEnumLiterals(literals: EnumLiteral[], isStringBased: boolean): boolean {
 		const buff = this.buff;
-		const len = literals.length;
-		for (let i = 0; i < len; i++) {
-			const lit = literals[i];
+		let isFirst = true;
+		for (const lit of literals) {
+			if (!isFirst) {
+				buff.push(",");
+			}
+			buff.pushln();
+			this.emitDocumentation(lit);
 			buff.push(lit.name);
 			if (lit.value !== undefined) {
 				buff.push(": ");
@@ -299,24 +385,40 @@ class Emitter {
 					buff.push("" + lit.value);
 				}
 			}
-			if (i + 1 < len) {
-				buff.pushln(",");
-			} else {
-				buff.pushln();
-			}
+			isFirst = false;
 		}
+		return !isFirst;
 	}
 
-	emitMembers(parent: Type, members: Member[]) {
+	emitMembers(members: Member[], parent: Type =, onePerLine: boolean = true): boolean {
 		const buff = this.buff;
+		let isFirst = true;
 		for (const m of members) {
-			this.emitMember(parent, m);
-			buff.pushln();
+			if (m.kind === MemberKind.INDEX_SIGNATURE) {
+				continue; // ignore index signatures, for now
+			}
+			if (onePerLine) {
+				buff.pushln();
+			} else {
+				if (!isFirst) {
+					buff.push(" ");
+				}
+			}
+			this.emitMember(m, onePerLine, parent, onePerLine);
+			isFirst = false;
 		}
+		return !isFirst;
 	}
 
-	emitMember(parent: Type, member: Member) {
+	emitMember(member: Member, emitDocumentation: boolean, parent: Type =, onePerLine: boolean = true) {
 		const buff = this.buff;
+		if (emitDocumentation) {
+			this.emitDocumentation(member);
+		}
+		if (member.replacementCode) {
+			this.emitCode(member.replacementCode);
+			return;
+		}
 		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
 			if (member.kind !== MemberKind.CALLABLE_CTOR) { // TODO how to define accessibility of a callable ctor?
@@ -329,22 +431,30 @@ class Emitter {
 				buff.push("static ");
 			}
 		}
+		const [isOverloaded, signature] = chooseSignature(member.signatures);
 		switch(member.kind) {
 			case MemberKind.CTOR:
 				if (parent && parent.kind === TypeKind.INTERFACE) {
 					buff.push("@CovariantConstructor");
-					buff.pushln();
+					if (onePerLine) {
+						buff.pushln();
+					} else {
+						buff.push(" ");
+					}
 				}
 				buff.push("constructor");
-				this.emitSignature(member.signatures[0], true);
+				this.emitSignaturePart2(signature, true);
 				buff.push(";");
 				break;
 			case MemberKind.CALLABLE_CTOR:
-				this.emitSignature(member.signatures[0]);
+				this.emitSignaturePart2(signature);
 				buff.push(";");
 				break;
 			case MemberKind.FIELD:
 				this.emitPropertyName(member.name);
+				if (member.isOptional) {
+					buff.push("?");
+				}
 				this.emitTypeAnnotation(member.type);
 				buff.push(";");
 				break;
@@ -363,19 +473,33 @@ class Emitter {
 				buff.push(");");
 				break;
 			case MemberKind.METHOD:
+				this.emitSignaturePart1(signature);
 				this.emitPropertyName(member.name);
-				this.emitSignature(member.signatures[0]);
+				this.emitSignaturePart2(signature);
 				buff.push(";");
 				break;
 			default:
 				throw "unknown kind of member: " + member.kind;
 		}
-		if (member.signatures !== undefined && member.signatures.length > 1) {
-			buff.push(" // further signatures were omitted");
+		if (isOverloaded) {
+			if (onePerLine) {
+				buff.push(" // overloading not supported");
+			} else {
+				buff.push(" /* <-- overloading not supported */");
+			}
 		}
 	}
 
-	emitSignature(sig: Signature, ignoreReturnType: boolean = false) {
+	/** Emits the first part of a signature, that will appear before the function's/method's name. */
+	emitSignaturePart1(sig: Signature) {
+		const buff = this.buff;
+		if (sig.typeParams.length > 0) {
+			buff.push("<", sig.typeParams.join(","), "> ");
+		}
+	}
+
+	/** Emits the second part of a signature, that will appear after the function's/method's name. */
+	emitSignaturePart2(sig: Signature, ignoreReturnType: boolean = false) {
 		const buff = this.buff;
 		buff.push("(");
 		let needSep = false;
@@ -388,7 +512,7 @@ class Emitter {
 		}
 		buff.push(")");
 		if (!ignoreReturnType) {
-			this.emitTypeAnnotation(sig.returnType);
+			this.emitTypeAnnotation(simplifyUnion(sig.returnType));
 		}
 	}
 
@@ -419,27 +543,198 @@ class Emitter {
 		}
 	}
 
-	emitTypeAnnotation(typeRef: TypeRef) {
+	emitTypeAnnotation(typeRef: TypeRef, separator: string = ": ") {
 		const buff = this.buff;
 		if (getGlobalOptions()?.copyTypeRefs) {
 			if (typeRef) {
-				buff.push(": ");
+				buff.push(separator);
 				this.emitTypeRef(typeRef);
+			} else {
+				buff.push(separator, "any+");
 			}
 		} else {
 			// note: in "any+ mode" we write out "any+" even in case
 			// the type was undeclared on the TypeScript side, because
 			// N4JS would infer the type to "any" instead of "any+":
-			buff.push(": ", "any+");
+			buff.push(separator, "any+");
 		}
 	}
 
-	emitTypeRef(typeRef: TypeRef) {
+	emitTypeRefs(typeRefs: TypeRef[], emitAlways: boolean = false): boolean {
 		const buff = this.buff;
-		if (getGlobalOptions()?.copyTypeRefs && typeRef) {
-			buff.push(typeRef.tsSourceString);
-		} else {
+		let isFirst = true;
+		for (const typeRef of typeRefs) {
+			if (!isFirst) {
+				buff.push(", ");
+			}
+			this.emitTypeRef(typeRef, emitAlways);
+			isFirst = false;
+		}
+		return !isFirst;
+	}
+
+	emitTypeRef(typeRef: TypeRef, emitAlways: boolean = false) {
+		const buff = this.buff;
+		if (!(emitAlways || getGlobalOptions()?.copyTypeRefs) || !typeRef) {
 			buff.push("any+");
+			return;
+		}
+		switch(typeRef.kind) {
+			case TypeRefKind.NAMED:
+				this.emitNamedTypeRef(typeRef);
+				break;
+			case TypeRefKind.LITERAL:
+				buff.push(typeRef.tsSourceString);
+				break;
+			case TypeRefKind.FUNCTION:
+				this.emitFunctionTypeRef(typeRef);
+				break;
+			case TypeRefKind.OBJECT:
+				this.emitObjectTypeRef(typeRef);
+				break;
+			case TypeRefKind.THIS:
+				buff.push("this");
+				break;
+			case TypeRefKind.TUPLE:
+				this.emitTupleTypeRef(typeRef);
+				break;
+			case TypeRefKind.UNION:
+			case TypeRefKind.INTERSECTION:
+				this.emitComposedTypeRef(typeRef.kind, typeRef.composedTypeRefs);
+				break;
+			case TypeRefKind.PARENTHESES:
+				buff.push("(");
+				this.emitTypeRef(typeRef.parenthesizedTypeRef);
+				buff.push(")");
+				break;
+			case TypeRefKind.PREDICATE:
+				buff.push("boolean");
+				break;
+			case TypeRefKind.INDEXED_ACCESS_TYPE:
+				buff.push("any+");
+				break;
+			case TypeRefKind.MAPPED_TYPE:
+				buff.push("Object+");
+				break;
+			default:
+				throw "unsupported TypeRefKind: " + typeRef.kind
+		}
+	}
+
+	emitNamedTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.NAMED) {
+			throw "expected a TypeRef of kind TypeRefKind.NAMED, but got: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		buff.push(typeRef.targetTypeName);
+		if (typeRef.targetTypeArgs.length > 0) {
+			buff.push("<");
+			let isFirst = true;
+			for (const currTypeArg of typeRef.targetTypeArgs) {
+				if (!isFirst) {
+					buff.push(",");
+				}
+				this.emitTypeRef(currTypeArg);
+				isFirst = false;
+			}
+			buff.push(">");
+		}
+		if (typeRef.dynamic) {
+			buff.push("+");
+		}
+	}
+
+	emitFunctionTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.FUNCTION) {
+			throw "expected a TypeRef of kind TypeRefKind.FUNCTION, but got: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		const useOldSyntax = typeRef.annotations.length > 0;
+		if (useOldSyntax) {
+			buff.push("{");
+			this.emitAnnotations(typeRef, false); // will emit a space at the end
+			buff.push("function");
+		}
+		this.emitSignaturePart2(typeRef.signature, true);
+		if (useOldSyntax) {
+			buff.push(": ");
+		} else {
+			buff.push("=>");
+		}
+		const returnType = typeRef.signature.returnType;
+		if (returnType) {
+			const needParens = returnType.isComposed();
+			if (needParens) {
+				buff.push("(");
+			}
+			this.emitTypeRef(returnType);
+			if (needParens) {
+				buff.push(")");
+			}
+		} else {
+			buff.push("void");
+		}
+		if (useOldSyntax) {
+			buff.push("}");
+		}
+	}
+
+	emitObjectTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.OBJECT) {
+			throw "expected a TypeRef of kind TypeRefKind.OBJECT, but got: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		buff.push("~Object");
+		if (typeRef.members.length === 0) {
+			// no members -> nothing more to emit
+		} else if (typeRef.members.every(m => m.kind === MemberKind.INDEX_SIGNATURE)) {
+			// typical special case of an object type with only an index signature
+			// --> convert to "~Object+" instead of "~Object with {}"
+			buff.push("+");
+		} else {
+			// standard case
+			buff.push(" with { ");
+			this.emitMembers(typeRef.members, undefined, false);
+			buff.push(" }");
+		}
+	}
+
+	emitTupleTypeRef(typeRef: TypeRef) {
+		if (typeRef.kind !== TypeRefKind.TUPLE) {
+			throw "expected a TypeRef of kind TypeRefKind.TUPLE, but got: " + typeRef.kind;
+		}
+		const buff = this.buff;
+		const isArrayTuple = typeRef.targetTypeName.startsWith("Array");
+		if (isArrayTuple) {
+			buff.push("[");
+		} else {
+			buff.push("Iterable" + typeRef.targetTypeArgs.length + "<");
+		}
+		let isFirst = true;
+		for (const elemTypeRef of typeRef.targetTypeArgs) {
+			if (!isFirst) {
+				buff.push(",");
+			}
+			isFirst = false;
+			this.emitTypeRef(elemTypeRef);
+		}
+		if (isArrayTuple) {
+			buff.push("]");
+		} else {
+			buff.push(">");
+		}
+	}
+
+	emitComposedTypeRef(typeRefKind: TypeRefKind, memberTypeRefs: TypeRef[]) {
+		const buff = this.buff;
+		const spearator = typeRefKind === TypeRefKind.UNION ? " | " : " & ";
+		let isFirst = true;
+		for (const memberTypeRef of memberTypeRefs) {
+			if (!isFirst) {
+				buff.push(spearator);
+			}
+			isFirst = false;
+			this.emitTypeRef(memberTypeRef);
 		}
 	}
 
@@ -456,6 +751,22 @@ class Emitter {
 			buff.push("@");
 		}
 		buff.push(name);
+		if (ann.args.length > 0) {
+			buff.push("(");
+			let isFirst = true;
+			for (const arg of ann.args) {
+				if (!isFirst) {
+					buff.push(", ");
+				}
+				isFirst = false;
+				if (arg instanceof TypeRef) {
+					this.emitTypeRef(arg);
+				} else {
+					buff.push(arg);
+				}
+			}
+			buff.push(")");
+		}
 		if (separateLine) {
 			buff.pushln();
 		} else {
@@ -465,6 +776,15 @@ class Emitter {
 
 	emitPropertyName(name: string) {
 		const buff = this.buff;
+		// special case: well-known symbol used as name
+		const symbolName = getSymbolNameFromPropertyName(name);
+		if (symbolName) {
+			buff.push("[Symbol.");
+			buff.push(symbolName);
+			buff.push("]");
+			return;
+		}
+		// ordinary names
 		const legal = utils.isLegalIdentifier(name);
 		if (!legal) {
 			buff.push('"');
@@ -476,4 +796,126 @@ class Emitter {
 			buff.push('"');
 		}
 	}
+
+	emitDocumentation(elem: NamedElement) {
+		if (getGlobalOptions()?.noDoc) {
+			// do not emit JSDoc comments
+			return false;
+		}
+		const doc = elem.jsdoc;
+		if (!doc) {
+			return false;
+		}
+		if (this.emitCode(doc)) {
+			this.buff.pushln();
+			return true;
+		}
+		return false;
+	}
+
+	emitCode(code: string): boolean {
+		if (code === undefined || code === null) {
+			return false;
+		}
+		const buff = this.buff;
+		const codeLines = code.split("\n");
+		let isFirst = true;
+		for (const line of codeLines) {
+			if (!isFirst) {
+				buff.pushln();
+			}
+			buff.push(line);
+			isFirst = false;
+		}
+		return !isFirst;
+	}
+}
+
+
+export function simplifyUnion(typeRef: TypeRef): TypeRef {
+	if (typeRef?.kind !== TypeRefKind.UNION) {
+		return typeRef;
+	}
+	let idx = 0;
+	const typeRefs = [...typeRef.composedTypeRefs];
+	while (idx < typeRefs.length) {
+		const curr = typeRefs[idx];
+		if (curr.isBuiltInUndefined()) {
+			typeRefs.splice(idx,1);
+		} else {
+			++idx;
+		}
+	}
+	const len = typeRefs.length;
+	if (len === 0) {
+		return createUndefined();
+	} else if (len === 1) {
+		return typeRefs[0];
+	} else {
+		const result = new TypeRef();
+		result.kind = TypeRefKind.UNION;
+		for (const typeRef of typeRefs) {
+			result.composedTypeRefs.push(typeRef);
+		}
+		return result;
+	}
+}
+
+export function chooseSignature(signatures: Signature[]): [boolean, Signature] {
+	if (!signatures || signatures.length === 0) {
+		return [false, undefined];
+	} else if (signatures.length === 1) {
+		return [false, signatures[0]];
+	}
+	// overloading case
+	// --> create a fall-back signature
+	const result = new Signature();
+	const param = new Parameter();
+	param.name = "args";
+	param.isVariadic = true;
+	param.type = createAnyPlus();
+	result.parameters.push(param);
+	result.returnType = createAnyPlus();
+	return [true, result];
+}
+
+// TODO try to find a better approach
+export function getSymbolNameFromPropertyName(propertyName: string): string {
+	if (propertyName && propertyName.startsWith("__@")) {
+		const idxEnd = propertyName.lastIndexOf("@");
+		if (idxEnd > 2) {
+			const symbolName = propertyName.substring(3, idxEnd);
+			return symbolName;
+		}
+	}
+	return undefined; // not a symbol
+}
+
+export function createNamedTypeRef(targetType: Type | string): TypeRef {
+	const result = new TypeRef();
+	result.kind = TypeRefKind.NAMED;
+	if (targetType instanceof Type) {
+		result.targetTypeName = targetType.name;
+		for (const typeParam of targetType.typeParams) {
+			result.targetTypeArgs.push(createNamedTypeRef(typeParam));
+		}
+	} else {
+		result.targetTypeName = targetType;
+	}
+	return result;
+}
+
+export function createUndefined(): TypeRef {
+	const result = new TypeRef();
+	result.kind = TypeRefKind.NAMED;
+	result.targetTypeName = "undefined";
+	return result;
+}
+
+export function createAnyPlus(): TypeRef {
+	const result = new TypeRef();
+	result.kind = TypeRefKind.NAMED;
+	result.targetTypeName = "any";
+	result.dynamic = true;
+	return result;
 }

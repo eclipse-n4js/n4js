@@ -28,25 +28,48 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					import { Buffer } from "./buffer"
 
 					export interface Writable {}
-					export interface Writable2 extends Writable {} // TODO "extends" not yet supported by n4jsd-generator
+					export interface Writable2 extends Writable {}
 
 					export class Stream implements Writable {}
-					export class Stream2 extends Stream implements Writable2 {} // TODO "extends"/"implements" not yet supported by n4jsd-generator
+					export class Stream2 extends Stream implements Writable2 {}
 				`,
 				n4jsd: `
 					import { Buffer } from "buffer";
 
-					export external public interface ~Writable {
-					}
+					export external public interface ~Writable {}
 
-					export external public interface ~Writable2 {
-					}
+					export external public interface ~Writable2 extends Writable {}
 
-					export external public class ~Stream {
-					}
+					export external public class ~Stream implements Writable {}
 
-					export external public class ~Stream2 {
-					}
+					export external public class ~Stream2 extends Stream implements Writable2 {}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testClassifiersInheritance() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {}
+					export interface IfcOther {}
+					export interface SubIfc extends Ifc, IfcOther {}
+					export class Cls implements Ifc {}
+					export class SubCls extends Cls implements SubIfc, IfcOther {}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {}
+
+					export external public interface ~IfcOther {}
+
+					export external public interface ~SubIfc extends Ifc, IfcOther {}
+
+					export external public class ~Cls implements Ifc {}
+
+					export external public class ~SubCls extends Cls implements SubIfc, IfcOther {}
 				`
 			}
 		);
@@ -62,10 +85,40 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					export class Cls<T1,T2> {}
 				`,
 				n4jsd: `
-					export external public interface ~Ifc<T1,T2> {
+					export external public interface ~Ifc<T1,T2> {}
+
+					export external public class ~Cls<T1,T2> {}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testGenericMembers() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						m<T>(p: T): T;
+						// no static members in interfaces
+					}
+					export class Cls {
+						public m<T>(p: T): T;
+						public static sm<T>(p: T): T;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						<T> m(p: T): T;
 					}
 
-					export external public class ~Cls<T1,T2> {
+					export external public class ~Cls {
+						public <T> m(p: T): T;
+						public static <T> sm(p: T): T;
 					}
 				`
 			}
@@ -74,6 +127,110 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 
 	@Test
 	public testMembers() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						field: string;
+						get getter(): string;
+						set setter(p: string);
+						method1(): void;
+						method2(p1: string, p2: number): string;
+					}
+					
+					export class Cls {
+						field: string;
+						get getter(): string;
+						set setter(p: string);
+						method1(): void;
+						method2(p1: string, p2: number): string;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						field: any+;
+						get getter(): any+;
+						set setter(value: any+);
+						method1(): any+;
+						method2(p1: any+, p2: any+): any+;
+					}
+					
+					export external public class ~Cls {
+						field: any+;
+						get getter(): any+;
+						set setter(value: any+);
+						method1(): any+;
+						method2(p1: any+, p2: any+): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersStatic() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					// static members in interfaces not supported by TypeScript
+
+					export class Cls {
+						static field: string;
+						static get getter(): string;
+						static set setter(p: string);
+						static method1(): void;
+						static method2(p1: string, p2: number): string;
+					}
+				`,
+				n4jsd: `
+					export external public class ~Cls {
+						static field: any+;
+						static get getter(): any+;
+						static set setter(value: any+);
+						static method1(): any+;
+						static method2(p1: any+, p2: any+): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersAccesibility() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface SomeInterface {
+						m1(): void; // accesibility modifiers not allowed here!
+					}
+					export class SomeClass {
+						m1(): void;
+						public m2(): void;
+						protected m3(): void;
+						private m4(): void;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~SomeInterface {
+						m1(): any+;
+					}
+
+					export external public class ~SomeClass {
+						m1(): any+;
+						public m2(): any+;
+						protected m3(): any+;
+						private m4(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersUseCase() {
 		this.assertConversion(
 			{
 				name: "buffer",
@@ -117,49 +274,17 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 					export external public interface ~Writable {
 						field: any+;
 						get fieldReadOnly(): any+;
-						write(chunk: any+, fn: any+): any+; // further signatures were omitted
+						write(...args: any+): any+; // overloading not supported
 						get getter(): any+;
 					}
 
-					export external public class ~Stream {
+					export external public class ~Stream implements Writable {
 						public field: any+;
 						get fieldReadOnly(): any+;
-						public constructor(buff: any+); // further signatures were omitted
-						public write(chunk: any+, fn: any+): any+; // further signatures were omitted
+						public constructor(...args: any+); // overloading not supported
+						public write(...args: any+): any+; // overloading not supported
 						get getter(): any+;
 						set setter(value: any+);
-					}
-				`
-			}
-		);
-	}
-
-	@Test
-	public testMembersAccesibility() {
-		this.assertConversion(
-			{
-				name: "main",
-				dts: `
-					export interface SomeInterface {
-						m1(): void; // accesibility modifiers not allowed here!
-					}
-					export class SomeClass {
-						m1(): void;
-						public m2(): void;
-						protected m3(): void;
-						private m4(): void;
-					}
-				`,
-				n4jsd: `
-					export external public interface ~SomeInterface {
-						m1(): any+;
-					}
-
-					export external public class ~SomeClass {
-						m1(): any+;
-						public m2(): any+;
-						protected m3(): any+;
-						private m4(): any+;
 					}
 				`
 			}
@@ -183,7 +308,7 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					export external public interface ~Ifc {
 						@CovariantConstructor
-						constructor(p: string); // further signatures were omitted
+						constructor(...args: any+); // overloading not supported
 					}
 				`
 			}
@@ -206,7 +331,29 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				`,
 				n4jsd: `
 					export external public interface ~Ifc {
-						(p: string): number; // further signatures were omitted
+						(...args: any+): any+; // overloading not supported
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCallSignatures_genericsUnsupported() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						<T>(value: T): boolean;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						(value: any+): boolean;
 					}
 				`
 			}

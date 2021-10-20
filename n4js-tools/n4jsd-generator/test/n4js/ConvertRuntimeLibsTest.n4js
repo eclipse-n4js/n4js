@@ -1,0 +1,216 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testCtorInstanceTypePattern_flavor1() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeType {
+						someInstanceMethod(p: string): number;
+					}
+
+					interface SomeTypeConstructor {
+						new(p: string): SomeType;
+						someStaticMethod(p: string): number;
+					}
+
+					declare var SomeType: SomeTypeConstructor;
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeType {
+						public someInstanceMethod(p: string): number;
+						public constructor(p: string);
+						public static someStaticMethod(p: string): number;
+					}
+
+					export external public type SomeTypeConstructor = constructor{SomeType};
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_flavor2() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeType {
+						someInstanceMethod(p: string): number;
+					}
+
+					declare var SomeType: {
+						new(p: string): SomeType;
+						someStaticMethod(p: string): number;
+					};
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeType {
+						public someInstanceMethod(p: string): number;
+						public constructor(p: string);
+						public static someStaticMethod(p: string): number;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_withGenerics() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeGenType<T> {
+						someInstanceMethod(p: string): T;
+					}
+
+					interface SomeGenTypeConstructor {
+						new <T>(...elems: T[]): SomeGenType<T>;
+						someStaticMethod(p: string): number;
+					}
+
+					declare var SomeGenType: SomeGenTypeConstructor;
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeGenType<T> {
+						public someInstanceMethod(p: string): T;
+						public constructor(...elems: T);
+						public static someStaticMethod(p: string): number;
+					}
+
+					export external public type SomeGenTypeConstructor = constructor{SomeGenType};
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_inheritance() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeType {}
+					interface SomeTypeConstructor {}
+					declare var SomeType: SomeTypeConstructor;
+
+					interface SomeSubType extends SomeType {}
+					interface SomeSubTypeConstructor extends SomeTypeConstructor {}
+					declare var SomeSubType: SomeSubTypeConstructor;
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeType {}
+
+					export external public type SomeTypeConstructor = constructor{SomeType};
+
+					export external public class SomeSubType extends SomeType {}
+
+					export external public type SomeSubTypeConstructor = constructor{SomeSubType};
+				`
+			}
+		);
+	}
+
+	@Test
+	public testPolyfill() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {
+							polyfills: [
+								"Object",
+								"Math"
+							]
+						}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					export class Object {
+						public someMemberAddedToObject(): string;
+					}
+					export class Math {
+						public someMemberAddedToMath(): string;
+					}
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					@Polyfill
+					export external public class ~Object extends Object {
+						public someMemberAddedToObject(): string;
+					}
+
+					@Polyfill
+					export external public class ~Math extends Math {
+						public someMemberAddedToMath(): string;
+					}
+				`
+			}
+		);
+	}
+}

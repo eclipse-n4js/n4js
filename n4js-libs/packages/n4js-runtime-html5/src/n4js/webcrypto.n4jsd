@@ -4,14 +4,14 @@ export external public const crypto: Crypto;
 
 export external public interface Crypto {
     public get subtle(): SubtleCrypto;
-    public getRandomValues(typedArray: TypedArray);
+    public getRandomValues(typedArray: ArrayBufferView);
 }
 
 export external public interface SubtleCrypto {
-    public decrypt(algorithm: CryptoEncryptDecryptAlgorithm, key: CryptoKey, data: ArrayBuffer|TypedArray): Promise<string, ?>;
+    public decrypt(algorithm: CryptoEncryptDecryptAlgorithm, key: CryptoKey, data: ArrayBuffer|ArrayBufferView): Promise<string, ?>;
     public deriveKey(algorithm: CryptoDeriveKeyAlgorithm, masterKey: CryptoKey, derivedKeyAlgorithm: CryptoAlgorithm, extractable: boolean, keyUsages: string /* CryptoKeyUsage */[]): Promise<CryptoKey|CryptoKeyPair, ?>;
     public digest(algorithm: string, buffer: ArrayBuffer|ArrayBufferView): Promise<ArrayBuffer, ?>;
-    public encrypt(algorithm: CryptoEncryptDecryptAlgorithm, key: CryptoKey, data: ArrayBuffer|TypedArray): Promise<ArrayBuffer, ?>;
+    public encrypt(algorithm: CryptoEncryptDecryptAlgorithm, key: CryptoKey, data: ArrayBuffer|ArrayBufferView): Promise<ArrayBuffer, ?>;
     public exportKey(format: string /* CryptoKeyFormat */, key: CryptoKey): Promise<?, ?>
     public generateKey(algorithm: CryptoGenerateKeyAlgorithm, extractable: boolean, keyUsages: string /* CryptoKeyUsage */[]): Promise<CryptoKey|CryptoKeyPair, ?>;
     public importKey(format: string /* CryptoKeyFormat */, keyData: ArrayBuffer|string, algorithm: CryptoGenerateKeyAlgorithm, extractable: boolean, usages: string /* CryptoKeyUsage */[]): Promise<CryptoKey, ?>;
