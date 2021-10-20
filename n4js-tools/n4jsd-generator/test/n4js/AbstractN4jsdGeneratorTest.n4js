@@ -13,6 +13,7 @@ import * as fs_lib from "fs";
 import * as path_lib from "path";
 import * as utils from "utils";
 import {runN4jsdGenerator} from "generator";
+import * as runtimeLibs from "runtimeLibs";
 import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
 
 // must use '_' as prefix of following constants to avoid N4JS warning
@@ -27,6 +28,11 @@ export public interface ~ConversionOptions {
 	args?: string[];
 	/** Expected errors reported by the generator. */
 	expectedErrors?: string[];
+	/**
+	 * Custom configuration for the runtime library generation that will replace
+	 * the default configuration of file "runtimeLibsConfig.js".
+	 */
+	runtimeLibsConfig?: Object;
 }
 
 export public interface ~ModuleDesc {
@@ -177,6 +183,8 @@ export public class AbstractN4jsdGeneratorTest {
 		Assert.isTrue(modules.length > 0, "at least one module description must be given");
 		const additionalArgs = options.args ?? [];
 		const expectedErrors = options.expectedErrors ?? [];
+		const runtimeLibsConfig = options.runtimeLibsConfig;
+
 		const projectName = "TestProject";
 		this.createProject("input", projectName);
 		for (const currModule of modules) {
@@ -191,10 +199,17 @@ export public class AbstractN4jsdGeneratorTest {
 		}
 		args.push(_ROOT + "/input/" + projectName);
 
-		if (expectedErrors.length === 0) {
-			this.doRunN4jsdGenerator(args, []);
-		} else {
-			this.doRunN4jsdGenerator(args, expectedErrors);
+		try {
+			if (runtimeLibsConfig) {
+				runtimeLibs.setTemporaryGenConfig(runtimeLibsConfig);
+			}
+			if (expectedErrors.length === 0) {
+				this.doRunN4jsdGenerator(args, []);
+			} else {
+				this.doRunN4jsdGenerator(args, expectedErrors);
+			}
+		} finally {
+			runtimeLibs.setTemporaryGenConfig(undefined);
 		}
 		for (const currModule of modules) {
 			if (!currModule.n4jsd) {

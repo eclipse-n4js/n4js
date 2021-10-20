@@ -17,7 +17,13 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 	public testCtorInstanceTypePattern_flavor1() {
 		this.assertConversionWithOptions(
 			{
-				args: [ "--runtime-libs", "--copy-type-refs" ]
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
 			},
 			{
 				name: "es5test",
@@ -52,7 +58,13 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 	public testCtorInstanceTypePattern_flavor2() {
 		this.assertConversionWithOptions(
 			{
-				args: [ "--runtime-libs", "--copy-type-refs" ]
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
 			},
 			{
 				name: "es5test",
@@ -83,7 +95,13 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 	public testCtorInstanceTypePattern_withGenerics() {
 		this.assertConversionWithOptions(
 			{
-				args: [ "--runtime-libs", "--copy-type-refs" ]
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
 			},
 			{
 				name: "es5test",
@@ -118,7 +136,13 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 	public testCtorInstanceTypePattern_inheritance() {
 		this.assertConversionWithOptions(
 			{
-				args: [ "--runtime-libs", "--copy-type-refs" ]
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {}
+					}
+				}
 			},
 			{
 				name: "es5test",
@@ -146,15 +170,25 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 		);
 	}
 
-	@Ignore // FIXME cannot be tested at the moment (because no types in current example input that use polyfilling)
 	@Test
 	public testPolyfill() {
 		this.assertConversionWithOptions(
 			{
-				args: [ "--runtime-libs", "--copy-type-refs" ]
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {
+							polyfills: [
+								"Object",
+								"Math"
+							]
+						}
+					}
+				}
 			},
 			{
-				name: "es5",
+				name: "es5test",
 				dts: `
 					export class Object {
 						public someMemberAddedToObject(): string;
@@ -167,13 +201,12 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					@@Global @@ProvidedByRuntime
 
 					@Polyfill
-					export external public class Object extends Object {
+					export external public class ~Object extends Object {
 						public someMemberAddedToObject(): string;
 					}
 
 					@Polyfill
-					@Final
-					export external public class Math extends Math {
+					export external public class ~Math extends Math {
 						public someMemberAddedToMath(): string;
 					}
 				`

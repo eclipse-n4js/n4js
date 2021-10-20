@@ -1,7 +1,7 @@
 @@Global @@ProvidedByRuntime
 export external public const globalThis: Object+;
 
-// Before this was defined in "globalThis.n4jsd" of "n4js-runtime-esnext" as follows:
+// Before, this was defined in "globalThis.n4jsd" of "n4js-runtime-esnext" as follows:
 //     @@Global @@ProvidedByRuntime
 //     export external public const globalThis: Object+;
 // and in "globalThis.n4jsd" of "n4js-runtime-html5" it was commented out as follows:

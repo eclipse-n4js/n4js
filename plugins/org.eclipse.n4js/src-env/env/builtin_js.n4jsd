@@ -821,7 +821,7 @@ export external public class Symbol extends Object {
 	 */
 	public const iterator: symbol
 
-	// FIXME well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
+	// well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
 	public const hasInstance: symbol;
 	public const isConcatSpreadable: symbol;
 	public const match: symbol;
@@ -832,9 +832,9 @@ export external public class Symbol extends Object {
 	public const toPrimitive: symbol;
 	public const toStringTag: symbol;
 	public const unscopables: symbol;
-	// FIXME well-known symbols moved here from file 'es2018.asynciterable.d.ts'
+	// well-known symbols moved here from file 'es2018.asynciterable.d.ts'
 	public const asyncIterator: symbol;
-	// FIXME well-known symbols moved here from file 'es2020.symbol.wellknown.d.ts'
+	// well-known symbols moved here from file 'es2020.symbol.wellknown.d.ts'
 	public const matchAll: symbol;
 
 	/**

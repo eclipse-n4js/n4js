@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 NumberFour AG.
+ * Copyright (c) 2021 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -532,7 +532,7 @@ function changeToPolyfill(type: model.Type) {
 
 /**
  * Returns the given scripts in the order their configuration was defined in GenConfig.
- * In additions, this method performs two assertions:
+ * In addition, this method performs two assertions:
  * 1) that the GenConfig file contains file configurations for all input files.
  * 2) that an input file exists for all file configurations given in the GenConfig file.
  */
@@ -546,9 +546,8 @@ function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
 		}
 	}
 	if (scriptsWithoutGenConfig.length > 0) {
-		// FIXME disabled for debugging
-		// throw new RuntimeLibsError("no generator configuration in config property 'files' found for:\n    "
-		// 	+ scriptsWithoutGenConfig.map(s => s.tsFileName + "  (at " + s.tsFilePath + ")").join("\n    "));
+		throw new RuntimeLibsError("no generator configuration in config property 'files' found for:\n    "
+			+ scriptsWithoutGenConfig.map(s => s.tsFileName + "  (at " + s.tsFilePath + ")").join("\n    "));
 	}
 
 	const result: model.Script[] = [];
@@ -563,9 +562,8 @@ function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
 		}
 	}
 	if (namesWithoutScript.length > 0) {
-		// FIXME disabled for debugging
-		// throw new RuntimeLibsError("no .d.ts input file found for generator configuration with name(s): "
-		// 	+ namesWithoutScript.join(", "));
+		throw new RuntimeLibsError("no .d.ts input file found for generator configuration with name(s): "
+			+ namesWithoutScript.join(", "));
 	}
 
 	for (const scriptWithoutGenConfig of scriptsWithoutGenConfig) {
@@ -576,15 +574,36 @@ function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
 }
 
 let _cachedGenConfig: GenConfig;
+/** see setTemporaryGenConfig() */
+let _temporaryGenConfig: GenConfig;
 function getGenConfig(): GenConfig {
+	if (_temporaryGenConfig) {
+		return _temporaryGenConfig;
+	}
 	if (!_cachedGenConfig) {
 		try {
 			_cachedGenConfig = parseObject(configUnparsed, GenConfig, GEN_CONFIG_TYPE_INFO);
 		} catch (err) {
-			throw new RuntimeLibsError("error while parsing configuration file for runtime-libs conversion:\n    " + err);
+			throw new RuntimeLibsError("error while parsing default configuration file for runtime-libs conversion:\n    " + err);
 		}
 	}
 	return _cachedGenConfig;
+}
+/**
+ * Sets a custom configuration for the runtime library generation that will replace
+ * the default configuration of file "runtimeLibsConfig.js". Pass in 'undefined' to
+ * switch back to the default configuration.
+ */
+export public function setTemporaryGenConfig(config: Object) {
+	if (config) {
+		try {
+			_temporaryGenConfig = parseObject(config, GenConfig, GEN_CONFIG_TYPE_INFO);
+		} catch (err) {
+			throw new RuntimeLibsError("error while parsing temporary configuration for runtime-libs conversion:\n    " + err);
+		}
+	} else {
+		_temporaryGenConfig = undefined;
+	}
 }
 
 class ElementModifications {

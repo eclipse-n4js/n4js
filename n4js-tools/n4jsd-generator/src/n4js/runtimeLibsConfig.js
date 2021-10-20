@@ -758,6 +758,7 @@ export default {
 			}
 		},
 		"es2020.intl.d.ts": {},
+		/*
 		"dom.generated.d.ts": {
 			ignore: [
 				"*#prototype",
@@ -1249,13 +1250,14 @@ export default {
 		},
 		"dom.iterable.d.ts": {},
 		"dom.iterable.generated.d.ts": {}
+		*/
 	},
 	addFiles: {
 		"es2020.globalThis.n4jsd": `
 			@@Global @@ProvidedByRuntime
 			export external public const globalThis: Object+;
 
-			// Before this was defined in "globalThis.n4jsd" of "n4js-runtime-esnext" as follows:
+			// Before, this was defined in "globalThis.n4jsd" of "n4js-runtime-esnext" as follows:
 			//     @@Global @@ProvidedByRuntime
 			//     export external public const globalThis: Object+;
 			// and in "globalThis.n4jsd" of "n4js-runtime-html5" it was commented out as follows:
