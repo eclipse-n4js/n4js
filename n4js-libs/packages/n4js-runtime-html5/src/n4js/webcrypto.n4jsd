@@ -2,12 +2,12 @@
 
 export external public const crypto: Crypto;
 
-export external public interface Crypto {
+export external public interface ~Crypto {
     public get subtle(): SubtleCrypto;
     public getRandomValues(typedArray: ArrayBufferView);
 }
 
-export external public interface SubtleCrypto {
+export external public interface ~SubtleCrypto {
     public decrypt(algorithm: CryptoEncryptDecryptAlgorithm, key: CryptoKey, data: ArrayBuffer|ArrayBufferView): Promise<string, ?>;
     public deriveKey(algorithm: CryptoDeriveKeyAlgorithm, masterKey: CryptoKey, derivedKeyAlgorithm: CryptoAlgorithm, extractable: boolean, keyUsages: string /* CryptoKeyUsage */[]): Promise<CryptoKey|CryptoKeyPair, ?>;
     public digest(algorithm: string, buffer: ArrayBuffer|ArrayBufferView): Promise<ArrayBuffer, ?>;
@@ -21,14 +21,14 @@ export external public interface SubtleCrypto {
     public wrapKey(format: string /* CryptoKeyFormat */, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: string): Promise<?, ?>
 }
 
-export external public interface CryptoKey {
+export external public interface ~CryptoKey {
     public get type(): string /* CryptoKeyType */;
     public get extractable(): boolean;
     public get algorithm(): any;
     public get usages(): string /* CryptoKeyUsage */[];
 }
 
-export external public interface CryptoKeyPair {
+export external public interface ~CryptoKeyPair {
     public get publicKey(): CryptoKey;
     public get privateKey(): CryptoKey;
 }

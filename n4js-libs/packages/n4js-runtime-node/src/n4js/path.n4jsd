@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export external interface PathObject {
+export external interface ~PathObject {
     root: string;
     dir: string;
     base: string;

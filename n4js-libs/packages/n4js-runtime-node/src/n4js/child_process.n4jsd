@@ -13,7 +13,7 @@
 import {IEventEmitter} from "events";
 import {IReadableStream} from "stream";
 import {IWritableStream} from "stream";
-export external public interface ChildProcess extends IEventEmitter {
+export external public interface ~ChildProcess extends IEventEmitter {
     public pid: int;
     public connected: boolean;
     public disconnect(): void;
