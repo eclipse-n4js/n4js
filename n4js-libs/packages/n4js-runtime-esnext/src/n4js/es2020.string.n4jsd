@@ -1,0 +1,6 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class String extends String {
+	public matchAll(regexp: RegExp): IterableIterator<RegExpMatchArray>;
+}

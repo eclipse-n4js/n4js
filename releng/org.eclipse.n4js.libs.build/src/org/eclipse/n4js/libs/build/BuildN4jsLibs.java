@@ -25,6 +25,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.CliTools.CliException;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
@@ -92,6 +93,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 	}
 
 	private static void compile(Path n4jsLibsRootPath) {
+		CliCompileResult compileResult = new CliCompileResult();
 		try {
 			CliTools cliTools = new CliTools();
 			cliTools.setInheritIO(true);
@@ -99,10 +101,16 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 
 			cliTools.yarnInstall(n4jsLibsRootPath);
 
-			CliCompileResult compileResult = new CliCompileResult();
 			cliTools.callN4jscInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
-
 		} catch (Exception e) {
+			if (e instanceof CliException && compileResult.getErrs() > 0) {
+				// this happens when there are compile errors in the n4js-libs
+				// --> the below code would emit the entire output of n4jsc several times leading to excessive output
+				// (also, the compile errors were already reported by n4jsc to the console), so we exit early in this
+				// case:
+				throw new RuntimeException("errors while compiling n4js-libs");
+			}
+
 			println("EXCEPTION while compiling n4js-libs:");
 			e.printStackTrace();
 

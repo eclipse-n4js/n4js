@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 NumberFour AG.
+ * Copyright (c) 2021 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-@@Global @@ProvidedByRuntime
 
-@Polyfill export external public class Object extends Object {
-    public static values(obj: Object): any[];
-    public static entries(obj: Object): Iterable2<string, any>[];
+@@StaticPolyfillAware
+
+export public class A {
+	public methodA() : void {}
 }
 
+
+export public class B {
+	public methodB() : void {}
+}

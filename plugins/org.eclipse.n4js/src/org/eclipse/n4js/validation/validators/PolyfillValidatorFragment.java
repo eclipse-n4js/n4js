@@ -53,6 +53,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -60,6 +61,7 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -81,6 +83,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Joiner;
@@ -114,6 +117,7 @@ public class PolyfillValidatorFragment {
 	private static class PolyfillValidationState {
 		/** A {@link N4JSClassValidator} or {@link N4JSInterfaceValidator}, used for adding issues. */
 		PolyfillValidatorHost host;
+		CancelIndicator cancelIndicator;
 		N4ClassifierDeclaration n4Classifier;
 		TypeReferenceNode<ParameterizedTypeRef> superClassifierNode;
 		TN4Classifier polyType;
@@ -129,11 +133,13 @@ public class PolyfillValidatorFragment {
 	 * Checks polyfill constraints on given class declaration using validator to issue errors. Constraints (Polyfill
 	 * Class) 156: Polyfill
 	 */
-	public boolean holdsPolyfill(PolyfillValidatorHost validator, N4ClassifierDeclaration n4Classifier) {
+	public boolean holdsPolyfill(PolyfillValidatorHost validator, N4ClassifierDeclaration n4Classifier,
+			CancelIndicator cancelIndicator) {
 		boolean isStaticPolyFill = N4JSLanguageUtils.isStaticPolyfill(n4Classifier);
 		if (isStaticPolyFill || N4JSLanguageUtils.isNonStaticPolyfill(n4Classifier)) {
 			PolyfillValidationState state = new PolyfillValidationState();
 			state.host = validator;
+			state.cancelIndicator = cancelIndicator;
 			state.n4Classifier = n4Classifier;
 			state.name = n4Classifier.getName();
 
@@ -447,6 +453,12 @@ public class PolyfillValidatorFragment {
 			// Resolve
 			if (eob.eIsProxy()) {
 				eob = EcoreUtil.resolve(eob, res);
+				if (!eob.eIsProxy()) {
+					Resource filledResource = eob.eResource();
+					if (filledResource instanceof N4JSResource) {
+						((N4JSResource) filledResource).performPostProcessing(state.cancelIndicator);
+					}
+				}
 			}
 
 			if (eob == state.polyType) {

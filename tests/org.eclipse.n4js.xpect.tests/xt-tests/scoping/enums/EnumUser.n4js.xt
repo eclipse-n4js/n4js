@@ -40,7 +40,7 @@ import { MyEnum } from "scoping/enums/MyEnum"
 	toLocaleString, toString, valueOf,
 	create, defineProperties, defineProperty,
 	freeze, getOwnPropertyDescriptor, getOwnPropertyNames,
-	getPrototypeOf, is, isExtensible,
+	getPrototypeOf, isExtensible,
 	isFrozen, isSealed, keys,
 	preventExtensions, prototype, seal	
 --- */

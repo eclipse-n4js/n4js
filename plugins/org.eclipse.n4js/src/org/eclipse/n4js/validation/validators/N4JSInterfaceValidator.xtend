@@ -56,7 +56,7 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements
 			return;
 		}
 
-		if (polyfillValidatorFragment.holdsPolyfill(this, n4Interface)) {
+		if (polyfillValidatorFragment.holdsPolyfill(this, n4Interface, getCancelIndicator())) {
 
 			holdsNoCyclicInheritance(n4Interface)
 

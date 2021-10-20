@@ -1,0 +1,144 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import * as utils from "utils";
+
+/** Defines the type of a configuration property. */
+export public class PropertyTypeInfo {
+	/** Supported types are: Boolean, Number, String, and subclasses of N4Object. */
+	public type: constructor{? extends Object};
+	/** Defined iff the property has more than one value. Supported collection types are: Array, Set, and Map. */
+	public collectionType?: constructor{? extends Object};
+
+	constructor(@Spec spec: ~i~this) {}
+}
+
+
+export public function <T extends N4Object> parseObject(
+	obj: Object,
+	type: constructor{T},
+	typeInfo: Map<string,PropertyTypeInfo>): T {
+
+	const result = new ObjectParser<T>(type, typeInfo).parse(obj);
+	return result;
+}
+
+
+class ObjectParser<T extends N4Object> {
+
+	@Final private entryType: constructor{T};
+	@Final private typeInfo: Map<string,PropertyTypeInfo>;
+
+	constructor(entryType: constructor{T}, typeInfo: Map<string,PropertyTypeInfo>) {
+		this.entryType = entryType;
+		this.typeInfo = typeInfo;
+	}
+
+	public parse(obj: Object): T {
+		return this.parseObject(obj, this.entryType, "");
+	}
+
+	private <T2 extends N4Object> parseObject(obj: Object, type: constructor{? extends T2}, propertyPath: string): T2 {
+		const n4Type = type.n4type;
+		const result = new (type as constructor{Object})() as T2;
+		for (const field of n4Type.dataFields(true, true)) {
+			const fieldValue = obj[field.name];
+			if (fieldValue === undefined || fieldValue === null) {
+				continue;
+			}
+			const fieldPropPath = propertyPath + "." + (utils.isLegalIdentifier(field.name) ? field.name : '"' + field.name + '"');
+			const fieldId = n4Type.name + "#" + field.name;
+			const fieldTypeInfo = this.typeInfo.get(fieldId) ?? {
+				type: String,
+				collectionType: undefined
+			} as PropertyTypeInfo;
+			const fieldCollectionType = fieldTypeInfo.collectionType;
+			let fieldValueParsed;
+			if (fieldCollectionType === undefined || fieldCollectionType === null) {
+				fieldValueParsed = this.parseValue(fieldValue, fieldTypeInfo.type, fieldPropPath);
+			} else if (fieldCollectionType === Array || fieldCollectionType === Set) {
+				const isIterable = typeof fieldValue === "object" && (fieldValue as Object)[Symbol.iterator];
+				if (!isIterable) {
+					throw "expected an Iterable at path " + fieldPropPath + "; but got: " + fieldValue;
+				}
+				const elements = [];
+				let idx = 0;
+				for (const elem of fieldValue as Iterable<?>) {
+					elements.push(this.parseValue(elem, fieldTypeInfo.type, fieldPropPath + "[" + (++idx) + "]"));
+				}
+				if (fieldCollectionType === Array) {
+					const coll = [];
+					for (const elem of elements) {
+						coll.push(elem);
+					}
+					fieldValueParsed = coll;
+				} else if (fieldCollectionType === Set) {
+					const coll = new Set<any>();
+					for (const elem of elements) {
+						coll.add(elem);
+					}
+					fieldValueParsed = coll;
+				}
+			} else if (fieldCollectionType === Map) {
+				if (typeof fieldValue !== "object") {
+					throw "expected an Object at path " + fieldPropPath + "; but got: " + fieldValue;
+				}
+				const coll = new Map<string,any>();
+				for (const propName of Object.getOwnPropertyNames(fieldValue as Object)) {
+					const propValue = (fieldValue as Object)[propName];
+					const propPropPath = fieldPropPath + "." + (utils.isLegalIdentifier(propName) ? propName : '"' + propName + '"');
+					const propValueParsed = this.parseValue(propValue, fieldTypeInfo.type, propPropPath);
+					coll.set(propName, propValueParsed);
+				}
+				fieldValueParsed = coll;
+			} else {
+				throw "unsupported collectionType in TypeInfo for field " + fieldId + ": " + fieldCollectionType.name;
+			}
+			(result as Object)[field.name] = fieldValueParsed;
+		}
+		return result;
+	}
+
+	private parseValue(value: any, type: constructor{? extends Object}, propertyPath: string): any {
+		if (value === undefined || value === null) {
+			return value;
+		} else if (type === Boolean) {
+			if (!(typeof value === "boolean")) {
+				throw "expected a boolean at path " + propertyPath + "; but got: " + value;
+			}
+			return value;
+		} else if (type === Number) {
+			if (!(typeof value === "number")) {
+				throw "expected a number at path " + propertyPath + "; but got: " + value;
+			}
+			return value;
+		} else if (type === String) {
+			if (!(typeof value === "string")) {
+				throw "expected a string at path " + propertyPath + "; but got: " + value;
+			}
+			return value;
+		} else if (isConstructorOfN4Object(type)) {
+			if (!(typeof value === "object")) {
+				throw "expected an object at path " + propertyPath + "; but got: " + value;
+			}
+			return this.<N4Object>parseObject(value as Object, type as constructor{? extends N4Object}, propertyPath);
+		} else {
+			throw "unsupported type in TypeInfo (must be Boolean, Number, String, or subclass of N4Object): " + type.name;
+		}
+	}
+}
+
+function isConstructorOfN4Object(value: any) {
+	while (value !== undefined && value !== N4Object) {
+		value = Object.getPrototypeOf(value as Object);
+	}
+	return value === N4Object;
+}

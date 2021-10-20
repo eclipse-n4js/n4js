@@ -1,0 +1,15 @@
+@@Global @@ProvidedByRuntime
+
+export external public interface ~AsyncGeneratorFunction {
+	@CovariantConstructor
+	constructor(...args: any);
+	get length(): number;
+	get name(): string;
+}
+
+export external public interface ~AsyncGeneratorFunctionConstructor {
+	@CovariantConstructor
+	constructor(...args: string);
+	get length(): number;
+	get name(): string;
+}

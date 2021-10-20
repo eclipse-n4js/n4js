@@ -1,0 +1,16 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class ~RegExpMatchArray extends RegExpMatchArray {
+	public groups?: ~Object+;
+}
+
+@Polyfill
+export external public class ~RegExpExecArray extends RegExpExecArray {
+	public groups?: ~Object+;
+}
+
+@Polyfill
+export external public class RegExp extends RegExp {
+	public get dotAll(): boolean;
+}

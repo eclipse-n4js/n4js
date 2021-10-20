@@ -28,10 +28,13 @@ export class Issue {
 	}
 }
 export function error(msg: string): Issue {
-	return new Issue(msg, IssueKind.ERROR);
+	return issue(IssueKind.ERROR, msg);
 }
 export function warning(msg: string): Issue {
-	return new Issue(msg, IssueKind.WARNING);
+	return issue(IssueKind.WARNING, msg);
+}
+export function issue(kind: IssueKind, msg: string): Issue {
+	return new Issue(msg, kind);
 }
 
 

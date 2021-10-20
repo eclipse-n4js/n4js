@@ -1,0 +1,4 @@
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class Atomics extends Atomics {}
