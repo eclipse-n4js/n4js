@@ -879,7 +879,7 @@ export function chooseSignature(signatures: Signature[]): [boolean, Signature] {
 	return [true, result];
 }
 
-// FIXME implement better approach
+// TODO try to find a better approach
 export function getSymbolNameFromPropertyName(propertyName: string): string {
 	if (propertyName && propertyName.startsWith("__@")) {
 		const idxEnd = propertyName.lastIndexOf("@");

@@ -338,12 +338,10 @@ class RuntimeLibsPatcher {
 				return;
 			}
 			if (types.length > 1) {
-				// FIXME emit warning!!!
 				return;
 			}
 			const type = types[0];
 			if (type.kind !== model.TypeKind.INTERFACE) {
-				// FIXME emit warning!!!
 				return;
 			}
 			ctorType = type;
@@ -357,12 +355,10 @@ class RuntimeLibsPatcher {
 				return;
 			}
 			if (types.length > 1) {
-				// FIXME emit warning!!!
 				return;
 			}
 			const type = types[0];
 			if (type.kind !== model.TypeKind.INTERFACE) {
-				// FIXME emit warning!!!
 				return;
 			}
 			ctorType = undefined;

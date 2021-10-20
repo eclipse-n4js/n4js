@@ -185,11 +185,12 @@ export class Converter {
 				return result;
 			}
 		} else if (ts.isModuleDeclaration(node)) {
-			if (!this.exportAssignment) {
-				return []; // FIXME!!!!! do not merge this to master
-			}
 			if (this.isIgnoredTopLevelElement(node)) {
 				return [];
+			}
+			if (!this.exportAssignment) {
+				// we are *not* in legacy mode
+				return this.convertModuleDeclaration(node);
 			}
 			const exportSymbol = this.checker.getSymbolAtLocation(this.exportAssignment.expression);
 
@@ -208,6 +209,11 @@ export class Converter {
 			}
 		}
 		this.createErrorForUnsupportedNode(node);
+		return [];
+	}
+
+	private convertModuleDeclaration(node: ts.ModuleDeclaration): model.ExportableElement[] {
+		// TODO implement support for namespaces
 		return [];
 	}
 
@@ -426,9 +432,9 @@ export class Converter {
 	}
 
 	private convertMember(sourceFile: ts.SourceFile, node: ts.ClassElement | ts.TypeElement, isStatic: boolean, symContainingClassifier?: ts.Symbol): model.Member | undefined {
-		// FIXME what happens for members that do not have a name???
-		// FIXME is there a better way to obtain the symbol, without requiring a cast to 'any'?
-		const symMember = this.checker.getSymbolAtLocation(node.name) ?? (node as any).symbol as ts.Symbol;
+		const symMember = (node.name
+			? this.checker.getSymbolAtLocation(node.name)
+			: this.checker.getSymbolAtLocation(node)) ?? (node as any).symbol as ts.Symbol;
 
 		let firstDeclFromCurrentFile = symMember.declarations?.find(decl => decl?.getSourceFile() === sourceFile);
 		if (firstDeclFromCurrentFile !== node) {
