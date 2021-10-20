@@ -41,7 +41,7 @@ console.log(JSON.stringify(o));
 // Example of an object property added with defineProperty with an accessor property descriptor
 var bValue = 38;
 Object.defineProperty(o, "b", {get : function(){ return bValue; },
-                               set : function(newValue : number){ bValue = newValue; },
+                               set : function(newValue : any){ bValue = newValue as number; },
                                // IDE-2140 XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"
                                enumerable : true as boolean,
                                // IDE-2140 XPECT warnings --> "Unnecessary cast from true to boolean" at "true as boolean"

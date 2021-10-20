@@ -35,7 +35,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	/**
 	 * Zero-based line number of getter "length" in type "String" in file "builtin_js.n4jsd".
 	 */
-	public static final int STRING_LENGTH_LINE = 100;
+	public static final int STRING_LENGTH_LINE = 104;
 
 	/***/
 	@Test
