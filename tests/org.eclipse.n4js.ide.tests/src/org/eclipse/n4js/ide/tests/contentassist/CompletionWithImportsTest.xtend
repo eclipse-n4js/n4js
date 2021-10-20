@@ -238,6 +238,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			Obj<|>
 		''', ''' 
 			(Object, Class, Object, , , 00000, , , , ([0:0 - 0:3], Object), [], [], , )
+			(ObjectConstructor, Text, ObjectConstructor, , , 00001, , , , ([0:0 - 0:3], ObjectConstructor), [], [], , )
 		''');
 	}
 
@@ -278,9 +279,16 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(Array7, Class, Array7, , , 00010, , , , ([0:8 - 0:9], Array7), [], [], , )
 			(Array8, Class, Array8, , , 00011, , , , ([0:8 - 0:9], Array8), [], [], , )
 			(Array9, Class, Array9, , , 00012, , , , ([0:8 - 0:9], Array9), [], [], , )
-			(AsyncGenerator, Interface, AsyncGenerator, , , 00013, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
-			(AsyncIterable, Interface, AsyncIterable, , , 00014, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
-			(AsyncIterator, Interface, AsyncIterator, , , 00015, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
+			(ArrayBuffer, Class, ArrayBuffer, , , 00013, , , , ([0:8 - 0:9], ArrayBuffer), [], [], , )
+			(ArrayBufferConstructor, Text, ArrayBufferConstructor, , , 00014, , , , ([0:8 - 0:9], ArrayBufferConstructor), [], [], , )
+			(ArrayBufferLike, Text, ArrayBufferLike, , , 00015, , , , ([0:8 - 0:9], ArrayBufferLike), [], [], , )
+			(ArrayBufferTypes, Interface, ArrayBufferTypes, , , 00016, , , , ([0:8 - 0:9], ArrayBufferTypes), [], [], , )
+			(ArrayBufferView, Interface, ArrayBufferView, , , 00017, , , , ([0:8 - 0:9], ArrayBufferView), [], [], , )
+			(ArrayConstructor, Text, ArrayConstructor, , , 00018, , , , ([0:8 - 0:9], ArrayConstructor), [], [], , )
+			(ArrayLike, Interface, ArrayLike, , , 00019, , , , ([0:8 - 0:9], ArrayLike), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00020, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00021, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00022, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 
@@ -302,9 +310,16 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(Array7, Class, Array7, , , 00010, , , , ([0:8 - 0:9], Array7), [], [], , )
 			(Array8, Class, Array8, , , 00011, , , , ([0:8 - 0:9], Array8), [], [], , )
 			(Array9, Class, Array9, , , 00012, , , , ([0:8 - 0:9], Array9), [], [], , )
-			(AsyncGenerator, Interface, AsyncGenerator, , , 00013, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
-			(AsyncIterable, Interface, AsyncIterable, , , 00014, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
-			(AsyncIterator, Interface, AsyncIterator, , , 00015, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
+			(ArrayBuffer, Class, ArrayBuffer, , , 00013, , , , ([0:8 - 0:9], ArrayBuffer), [], [], , )
+			(ArrayBufferConstructor, Text, ArrayBufferConstructor, , , 00014, , , , ([0:8 - 0:9], ArrayBufferConstructor), [], [], , )
+			(ArrayBufferLike, Text, ArrayBufferLike, , , 00015, , , , ([0:8 - 0:9], ArrayBufferLike), [], [], , )
+			(ArrayBufferTypes, Interface, ArrayBufferTypes, , , 00016, , , , ([0:8 - 0:9], ArrayBufferTypes), [], [], , )
+			(ArrayBufferView, Interface, ArrayBufferView, , , 00017, , , , ([0:8 - 0:9], ArrayBufferView), [], [], , )
+			(ArrayConstructor, Text, ArrayConstructor, , , 00018, , , , ([0:8 - 0:9], ArrayConstructor), [], [], , )
+			(ArrayLike, Interface, ArrayLike, , , 00019, , , , ([0:8 - 0:9], ArrayLike), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00020, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00021, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00022, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 

@@ -82,7 +82,7 @@ class ClassesGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest {
 
 
 		assertTSetter(phase, tClass, newN4jsResource, "c", "newC", "/1/@topLevelTypes.4")
-		assertTSetter(phase, tClass, newN4jsResource, "d", "newD", "/1/@topLevelTypes.3")
+		assertTSetter(phase, tClass, newN4jsResource, "d", "newD", "/1/@topLevelTypes.8")
 	}
 
 	def private assertTField(String phase, TClass tClass, Resource newN4jsResource, String expectedName, String expectedTypeFragmentURI) {
@@ -127,7 +127,7 @@ class ClassesGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest {
 		assertN4Getter(phase, n4Class, resource, "d", "/1/@topLevelTypes.4")
 
 		assertN4Setter(phase, n4Class, resource, "c", "newC", "/1/@topLevelTypes.4")
-		assertN4Setter(phase, n4Class, resource, "d", "newD", "/1/@topLevelTypes.3")
+		assertN4Setter(phase, n4Class, resource, "d", "newD", "/1/@topLevelTypes.8")
 	}
 
 	def private void assertN4Field(String phase, N4ClassDeclaration n4Class, Resource resource, String expectedName, String expectedTypeFragmentURI) {

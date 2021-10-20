@@ -21,7 +21,7 @@ console.log(tempestString.split(" "));
 console.log(tempestString.split(" ", 4));
 
 // Complex example
-function splitString(stringToSplit : string, separator) {
+function splitString(stringToSplit : string, separator : string) {
   var arrayOfStrings = stringToSplit.split(separator);
 
   console.log('The original string is: "' + stringToSplit + '"');

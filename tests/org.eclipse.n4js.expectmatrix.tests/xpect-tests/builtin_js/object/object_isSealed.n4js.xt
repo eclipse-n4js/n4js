@@ -30,7 +30,8 @@ Object.preventExtensions(hasProp);
 console.log("2 not sealed = " + (Object.isSealed(hasProp) === false));
 
 // But make them all non-configurable and the object becomes sealed.
-Object.defineProperty(hasProp, "foo", { configurable: false });
+// IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
+Object.defineProperty(hasProp, "foo", { configurable: false as boolean });
 
 console.log("3 sealed = " + (Object.isSealed(hasProp) === true));
 

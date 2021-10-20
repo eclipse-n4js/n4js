@@ -27,7 +27,7 @@ myConstr = myObject1.constructor
 
 var myFunction : Function = function myFun(a : number, b : number) { return a + b; }
 /* XPECT scope at 'myFunction.|apply' ---
-	__proto__, apply, arguments, bind, call, constructor, hasOwnProperty, isPrototypeOf,
+	__proto__, apply, arguments, bind, call, caller, constructor, hasOwnProperty, isPrototypeOf,
 	length, propertyIsEnumerable, prototype, toLocaleString, toString, valueOf
 --- */
 var myResult : any = myFunction.apply(null, [1, 2])
@@ -35,25 +35,25 @@ var myResult : any = myFunction.apply(null, [1, 2])
 var myArray : Array<string> = new Array<string>()
 /* XPECT scope at 'myArray.|concat' ---
 	#iterator, __proto__, concat, constructor, every, filter, forEach, hasOwnProperty,
-	indexOf, isPrototypeOf, join, lastIndexOf, length, length, map, pop,
+	indexOf, isPrototypeOf, join, lastIndexOf, length, map, pop,
 	propertyIsEnumerable, push, reduce, reduceRight, reverse, shift, slice, some, sort, splice,
 	toLocaleString, toString, unshift, valueOf
 --- */
 var myFilledArray : Array<?> = myArray.concat("1", "2", "3")
 
 /* XPECT scope at 'Array.|isArray' ---
-	__proto__, apply, arguments, bind, call, constructor, create, defineProperties,
+	__proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 	defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
-	hasOwnProperty, is, isArray, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length,
+	hasOwnProperty, isArray, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length,
 	preventExtensions, propertyIsEnumerable, prototype, prototype, seal, toLocaleString, toString,
 	valueOf
 --- */
 var myIsArray : boolean = Array.isArray(myFilledArray)
 
 /* XPECT scope at 'String.|fromCharCode' ---
-	__proto__, apply, arguments, bind, call, constructor, create, defineProperties,
+	__proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 	defineProperty, freeze, fromCharCode, getOwnPropertyDescriptor, getOwnPropertyNames,
-	getPrototypeOf, hasOwnProperty, is, isExtensible, isFrozen, isPrototypeOf, isSealed, keys,
+	getPrototypeOf, hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys,
 	length, preventExtensions, propertyIsEnumerable, prototype, prototype, seal,
 	toLocaleString, toString, valueOf
 --- */
@@ -61,7 +61,7 @@ var myString : string = String.fromCharCode(10)
 /* XPECT scope at 'myString.|charAt' ---
 	#iterator, __proto__, charAt, charCodeAt, concat, constructor, hasOwnProperty, indexOf,
 	isPrototypeOf, lastIndexOf, length, localeCompare, match, propertyIsEnumerable,
-	replace, search, slice, split, substring, toLocaleLowerCase, toLocaleString,
+	replace, search, slice, split, substr, substring, toLocaleLowerCase, toLocaleString,
 	toLocaleUpperCase, toLowerCase, toString, toUpperCase, trim, valueOf
 --- */
 var myCharacterFound : string = myString.charAt(0)
@@ -69,15 +69,15 @@ var myCharacterFound : string = myString.charAt(0)
 /* XPECT scope at 'myCharacterFound.|charAt' ---
 	#iterator, __proto__, charAt, charCodeAt, concat, constructor, hasOwnProperty, indexOf,
 	isPrototypeOf, lastIndexOf, length, localeCompare, match, propertyIsEnumerable,
-	replace, search, slice, split, substring, toLocaleLowerCase, toLocaleString,
+	replace, search, slice, split, substr, substring, toLocaleLowerCase, toLocaleString,
 	toLocaleUpperCase, toLowerCase, toString, toUpperCase, trim, valueOf
 --- */
 myCharacterFound = myCharacterFound.charAt(0)
 
 /* XPECT scope at 'String.|fromCharCode' ---
-__proto__, apply, arguments, bind, call, constructor, create, defineProperties,
+__proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 defineProperty, freeze, fromCharCode, getOwnPropertyDescriptor, getOwnPropertyNames,
-getPrototypeOf, hasOwnProperty, is, isExtensible, isFrozen, isPrototypeOf, isSealed, keys,
+getPrototypeOf, hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys,
 length, preventExtensions, propertyIsEnumerable, prototype, prototype, seal,
 toLocaleString, toString, valueOf
 --- */
@@ -106,8 +106,8 @@ var myFixedNumber : string = myMaxValue.toFixed()
 
 /* XPECT scope at 'Number.|MAX_VALUE' ---
 __proto__, MAX_VALUE, MIN_VALUE, NEGATIVE_INFINITY, NaN, POSITIVE_INFINITY, apply,
-arguments, bind, call, constructor, create, defineProperties, defineProperty, freeze,
-getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf, hasOwnProperty, is, isExtensible,
+arguments, bind, call, caller, constructor, create, defineProperties, defineProperty, freeze,
+getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf, hasOwnProperty, isExtensible,
 isFrozen, isPrototypeOf, isSealed, keys, length, preventExtensions, propertyIsEnumerable,
 prototype, prototype, seal, toLocaleString, toString, valueOf
 --- */
@@ -115,9 +115,9 @@ Number.MAX_VALUE
 
 /* XPECT scope at 'Math.|abs' ---
 	__proto__, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2, abs, acos, apply, arguments,
-	asin, atan, atan2, bind, call, ceil, constructor, cos, create, defineProperties,
+	asin, atan, atan2, bind, call, caller, ceil, constructor, cos, create, defineProperties,
 	defineProperty, exp, floor, freeze, getOwnPropertyDescriptor, getOwnPropertyNames,
-	getPrototypeOf, hasOwnProperty, is, isExtensible, isFrozen, isPrototypeOf, isSealed, keys,
+	getPrototypeOf, hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys,
 	length, log, max, min, pow, preventExtensions, propertyIsEnumerable, prototype,
 	prototype, random, round, seal, sin, sqrt, tan, toLocaleString, toString, valueOf
 --- */
@@ -146,9 +146,9 @@ var myDate : Date = new Date(Date.now())
 var myDateAsNumber : number = myDate.getDate()
 
 /* XPECT scope at 'Date.|parse' ---
-__proto__, UTC, apply, arguments, bind, call, constructor, create, defineProperties,
+__proto__, UTC, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
-hasOwnProperty, is, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, now, parse,
+hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, now, parse,
 preventExtensions, propertyIsEnumerable, prototype, prototype, seal, toLocaleString, toString,
 valueOf
 --- */
@@ -156,7 +156,7 @@ Date.parse("04.02.2014")
 
 var myRegexp : RegExp = new RegExp()
 /* XPECT scope at 'myRegexp.|global' ---
-	__proto__, constructor, exec, global, hasOwnProperty, ignoreCase, isPrototypeOf,
+	__proto__, constructor, compile, exec, global, hasOwnProperty, ignoreCase, isPrototypeOf,
 	lastIndex, multiline, propertyIsEnumerable, source, test,
 	toLocaleString, toString, valueOf
 --- */
@@ -164,57 +164,57 @@ myRegexp.global
 
 var myError : Error = new Error()
 /* XPECT scope at 'myError.|message' ---
-	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name,
+	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name, stack,
 	propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 var myErrorMessage : string = myError.message
 
 var myEvalError : EvalError = new EvalError()
 /* XPECT scope at 'myEvalError.|message' ---
-	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name,
+	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name, stack,
 	propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 var myEvalErrorMessage : string = myEvalError.message
 
 var myRangeError : RangeError = new RangeError()
 /* XPECT scope at 'myRangeError.|message' ---
-	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name,
+	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name, stack,
 	propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 var myRangeErrorMessage : string = myRangeError.message
 
 var myReferenceError : ReferenceError = new ReferenceError()
 /* XPECT scope at 'myReferenceError.|message' ---
-	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name,
+	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name, stack,
 	propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 var myReferenceErrorMessage : string = myReferenceError.message
 
 var mySyntaxError : SyntaxError = new SyntaxError()
 /* XPECT scope at 'mySyntaxError.|message' ---
-	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name,
+	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name, stack,
 	propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 var mySyntaxErrorMessage : string = mySyntaxError.message
 
 var myTypeError : TypeError = new TypeError()
 /* XPECT scope at 'myTypeError.|message' ---
-	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name,
+	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name, stack,
 	propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 var myTypeErrorMessage : string = myTypeError.message
 
 var myUriError : URIError = new URIError()
 /* XPECT scope at 'myUriError.|message' ---
-	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name,
+	__proto__, constructor, hasOwnProperty, isPrototypeOf, message, name, stack,
 	propertyIsEnumerable, toLocaleString, toString, valueOf
 --- */
 var myUriErrorMessage : string = myUriError.message
 
 /* XPECT scope at 'JSON.|parse("bla")' ---
-	__proto__, apply, arguments, bind, call, constructor, create, defineProperties,
+	__proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 	defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
-	hasOwnProperty, is, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, parse,
+	hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, parse,
 	preventExtensions, propertyIsEnumerable, prototype, prototype, seal, stringify, toLocaleString,
 	toString, valueOf
 --- */
@@ -227,9 +227,9 @@ var someJson : JSON;
 someJson.constructor
 
 /* XPECT scope at 'JSON.|parse' ---
-__proto__, apply, arguments, bind, call, constructor, create, defineProperties,
+__proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
-hasOwnProperty, is, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, parse,
+hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, parse,
 preventExtensions, propertyIsEnumerable, prototype, prototype, seal, stringify, toLocaleString,
 toString, valueOf
 --- */
@@ -241,7 +241,7 @@ var myTypeNamePrimitive : typeName<MyType> = "MyType"
 /* XPECT scope at 'myTypeNamePrimitive.|toString' ---
 	#iterator, __proto__, charAt, charCodeAt, concat, constructor, hasOwnProperty, indexOf,
 	isPrototypeOf, lastIndexOf, length, localeCompare, match, propertyIsEnumerable,
-	replace, search, slice, split, substring, toLocaleLowerCase, toLocaleString,
+	replace, search, slice, split, substr, substring, toLocaleLowerCase, toLocaleString,
 	toLocaleUpperCase, toLowerCase, toString, toUpperCase, trim, valueOf
 --- */
 var myTypeNameStr = myTypeNamePrimitive.toString()
@@ -252,7 +252,7 @@ var myPathSelectorPrimitive : pathSelector<Object> = "a/b/c[x]"
 /* XPECT scope at 'myPathSelectorPrimitive.|toString' ---
 	#iterator, __proto__, charAt, charCodeAt, concat, constructor, hasOwnProperty, indexOf,
 	isPrototypeOf, lastIndexOf, length, localeCompare, match, propertyIsEnumerable,
-	replace, search, slice, split, substring, toLocaleLowerCase, toLocaleString,
+	replace, search, slice, split, substr, substring, toLocaleLowerCase, toLocaleString,
 	toLocaleUpperCase, toLowerCase, toString, toUpperCase, trim, valueOf
 --- */
 var myPathSelectorStr = myPathSelectorPrimitive.toString()
@@ -263,7 +263,7 @@ var myI18NKeyPrimitive : i18nKey = "bundle.message"
 /* XPECT scope at 'myI18NKeyPrimitive.|toString' ---
 	#iterator, __proto__, charAt, charCodeAt, concat, constructor, hasOwnProperty, indexOf,
 	isPrototypeOf, lastIndexOf, length, localeCompare, match, propertyIsEnumerable,
-	replace, search, slice, split, substring, toLocaleLowerCase, toLocaleString,
+	replace, search, slice, split, substr, substring, toLocaleLowerCase, toLocaleString,
 	toLocaleUpperCase, toLowerCase, toString, toUpperCase, trim, valueOf
 --- */
 var myI18NKeyStr = myI18NKeyPrimitive.toString()
@@ -277,9 +277,9 @@ var myN4Object : N4Object = new N4Object()
 var myN4ObjectStr = myN4Object.toString()
 
 /* XPECT scope at 'N4Object.|isFrozen' ---
-__proto__, apply, arguments, bind, call, constructor, create, defineProperties,
+__proto__, apply, arguments, bind, call, caller, constructor, create, defineProperties,
 defineProperty, freeze, getOwnPropertyDescriptor, getOwnPropertyNames, getPrototypeOf,
-hasOwnProperty, is, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, n4type,
+hasOwnProperty, isExtensible, isFrozen, isPrototypeOf, isSealed, keys, length, n4type,
 preventExtensions, propertyIsEnumerable, prototype, prototype, seal, toLocaleString, toString,
 valueOf
 --- */
