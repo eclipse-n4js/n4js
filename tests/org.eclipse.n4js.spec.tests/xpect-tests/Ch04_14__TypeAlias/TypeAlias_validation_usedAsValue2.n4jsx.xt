@@ -18,14 +18,14 @@ class Cls {}
 
 type A = Cls;
 
-// XPECT errors --> "A type alias may not be used as a value." at "A"
+// XPECT errors --> "Type alias cannot be used as a value." at "A"
 A;
-// XPECT errors --> "A type alias may not be used as a value." at "A"
+// XPECT errors --> "Type alias cannot be used as a value." at "A"
 new A();
-// XPECT errors --> "A type alias may not be used as a value." at "A"
+// XPECT errors --> "Type alias cannot be used as a value." at "A"
 foo(A);
 // XPECT errors ---
-// "A type alias may not be used as a value." at "A"
+// "Type alias cannot be used as a value." at "A"
 // "Cannot resolve JSX implementation." at "<A/>"
 // ---
 <A/>;

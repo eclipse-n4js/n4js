@@ -19,7 +19,7 @@ external class Point {
 
 //	relaxed by IDEBUG-561:
 // XPECT noerrors --> "External elements have to be exported." at "Clonable"
-external interface Clonable {
+external interface ~Clonable {
 
 }
 

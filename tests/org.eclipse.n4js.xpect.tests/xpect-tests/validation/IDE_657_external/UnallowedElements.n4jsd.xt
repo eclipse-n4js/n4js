@@ -15,7 +15,7 @@
 export external public class Point {
 }
 
-export external public interface Clonable {
+export external public interface ~Clonable {
 }
 
 export public interface ~Line {
@@ -57,7 +57,7 @@ export interface InternalClonable {
 /* XPECT errors ---
 "A interface with visibility public must be marked as exported." at "InternalClonable2"
 --- */
-external public interface InternalClonable2 {
+external public interface ~InternalClonable2 {
 }
 
 
@@ -66,7 +66,7 @@ external public interface InternalClonable2 {
 /* XPECT noerrors ---
 "External interfaces have to be marked as public (and without @Internal)." at "InternalClonable3"
  --- */
-export external public interface InternalClonable3 {
+export external public interface ~InternalClonable3 {
 }
 
 // XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "NonStructuralTypedLine"

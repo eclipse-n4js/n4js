@@ -24,7 +24,7 @@ export external public class C {
 }
 
 
-export external public interface K {
+export external public interface ~K {
 	// XPECT errors --> "@ProvidesInitializer must only be used in classifiers annotated with @N4JS." at "foo"
 	@ProvidesInitializer foo;
 }

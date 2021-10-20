@@ -54,6 +54,7 @@ export external public interface ~SomeInterface extends SomeInterface {
 }
 
 @Polyfill
+@N4JS
 // XPECT errors --> "Polyfill SomeStructInterface cannot be declared nominal, must be defined definition-site structural just as the filled interface." at "SomeStructInterface"
 export external public interface SomeStructInterface extends SomeStructInterface {
 	additionalMethod();

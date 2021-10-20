@@ -41,7 +41,7 @@ export external public class Cls<S>
 
 @Polyfill
 // XPECT errors --> "Polyfill Ifc must declare same type parameters as the filled interface." at "Ifc"
-export external public interface Ifc<S>
+export external public interface ~Ifc<S>
 	// XPECT errors --> "Couldn't resolve reference to Type 'T'." at "T"
 	extends Ifc<T> {
 

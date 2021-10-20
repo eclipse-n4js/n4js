@@ -39,7 +39,7 @@ export external public class Cls<T> extends Cls<T> {
 
 @Polyfill
 // XPECT noerrors --> "T equals T"
-export external public interface Ifc<T> extends Ifc<T> {
+export external public interface ~Ifc<T> extends Ifc<T> {
 
 	// XPECT noerrors --> "and we can use T"
 	genMethod(t : T) : T;

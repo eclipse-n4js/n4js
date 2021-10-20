@@ -14,7 +14,7 @@
 
 type A = string;
 
-// XPECT errors --> "A type alias may not be used as a value." at "A"
+// XPECT errors --> "Type alias cannot be used as a value." at "A"
 A;
 
 // note: this might be allowed in the future, depending on the actualTypeRef of the alias

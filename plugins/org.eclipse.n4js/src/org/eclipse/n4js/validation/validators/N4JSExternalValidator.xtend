@@ -101,7 +101,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		if (! holdsExternalOnlyInDefinitionFile(interfaceDecl, "Interfaces")) {
 			return;
 		}
-		if (jsVariantHelper.isExternalMode(interfaceDecl)) {
+		if (interfaceDecl.external && jsVariantHelper.isExternalMode(interfaceDecl)) {
 			val isStructural = TypeUtils.isStructural(interfaceDecl.typingStrategy);
 			val hasN4JSAnnotation = AnnotationDefinition.N4JS.hasAnnotation(interfaceDecl);
 			if (!isStructural && !hasN4JSAnnotation) {
