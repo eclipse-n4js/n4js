@@ -425,16 +425,6 @@ public class ContainerTypesHelper {
 						throw new IllegalStateException("unexpected proxy");
 					}
 				}
-
-				// ensure we do not use types from resources that are only partially resolved
-				Resource polyfillResource = polyfillType.eResource();
-				if (polyfillResource instanceof N4JSResource) {
-					// Note: the following call will be a no-op if
-					// 1) the resource was already post-processed, or
-					// 2) the resource was loaded from the index.
-					((N4JSResource) polyfillResource).performPostProcessing();
-				}
-
 				types.add(polyfillType);
 			}
 			// }
