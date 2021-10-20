@@ -404,6 +404,9 @@ export default {
 				"Date#constructor": { replaceBy: "public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);" },
 				"RegExp#constructor": { replaceBy: "public constructor(pattern: string = undefined, flags: string = undefined);" },
 				"JSON#stringify": { replaceBy: "public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;" },
+				// required because optional methods used in .d.ts and not supported in N4JS
+				"PropertyDescriptor#get": { replaceBy: "get?: ()=>any;" },
+				"PropertyDescriptor#set": { replaceBy: "set?: (value: any)=>void;" },
 				// missing @Override annotations for methods #valueOf(), #toString(), #toLocaleString()
 				"Function#toString": { addAnnotations: [ "@Override" ] },
 				"String#valueOf": { addAnnotations: [ "@Override" ] },
@@ -442,10 +445,7 @@ export default {
 				"Float32Array#toString": { addAnnotations: [ "@Override" ] },
 				"Float32Array#toLocaleString": { addAnnotations: [ "@Override" ] },
 				"Float64Array#valueOf": { addAnnotations: [ "@Override" ] },
-				"Float64Array#toString": { addAnnotations: [ "@Override" ] },
-				// other oddities:
-				"PropertyDescriptor#get": undefined,
-				"PropertyDescriptor#set": undefined
+				"Float64Array#toString": { addAnnotations: [ "@Override" ] }
 			},
 			appendCode: {
 				"Object": `

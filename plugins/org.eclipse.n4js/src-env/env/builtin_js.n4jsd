@@ -7,6 +7,8 @@ export external public interface ~PropertyDescriptor {
 	enumerable?: boolean;
 	value?: any;
 	writable?: boolean;
+	get?: ()=>any;
+	set?: (value: any)=>void;
 }
 
 export external public interface ~PropertyDescriptorMap {}

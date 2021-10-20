@@ -493,6 +493,7 @@ export class Converter {
 				|| ts.isMethodSignature(node)) {
 			const sigs = this.convertCallSignatures(sourceFile, symMember, symContainingClassifier);
 			result.kind = model.MemberKind.METHOD;
+			result.isOptional = !!node.questionToken;
 			result.signatures = sigs;
 		} else {
 			this.createErrorForUnsupportedNode(node, "member");
