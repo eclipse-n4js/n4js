@@ -53,6 +53,7 @@ export external public class Function {
 	public apply(thisArg: any, argArray: any = ): any;
 	public call(thisArg: any, ...argArray: any): any;
 	public bind(thisArg: any, ...args: any): {function(... args: any): any}
+	@Override
 	public toString(): string;
 	public get length(): number;
 	public arguments: any;
@@ -80,6 +81,7 @@ export external public interface ~IArguments {
 }
 
 export external public class String {
+	@Override
 	public toString(): string;
 	public charAt(pos: number): string;
 	public charCodeAt(index: number): number;
@@ -100,6 +102,7 @@ export external public class String {
 	public trim(): string;
 	public get length(): number;
 	public substr(from: number, length: number = ): string;
+	@Override
 	public valueOf(): string;
 	public constructor(value: any = );
 	(value: any = ): string;
@@ -114,6 +117,7 @@ export external public class String {
 export external public type StringConstructor = constructor{String};
 
 export external public class Boolean {
+	@Override
 	public valueOf(): boolean;
 	public constructor(value: any = );
 	(value: any+ = ): boolean;
@@ -122,11 +126,14 @@ export external public class Boolean {
 export external public type BooleanConstructor = constructor{Boolean};
 
 export external public class Number {
+	@Override
 	public toString(radix: number = ): string;
 	public toFixed(fractionDigits: number = ): string;
 	public toExponential(fractionDigits: number = ): string;
 	public toPrecision(precision: number = ): string;
+	@Override
 	public valueOf(): number;
+	@Override
 	public toLocaleString(locales: string | Array<string> = , options: Object = ): string;
 	public constructor(value: any = );
 	(value: any = ): number;
@@ -177,12 +184,15 @@ export external public class Math {
 }
 
 export external public class Date {
+	@Override
 	public toString(): string;
 	public toDateString(): string;
 	public toTimeString(): string;
+	@Override
 	public toLocaleString(...args: any+): any+; // overloading not supported
 	public toLocaleDateString(...args: any+): any+; // overloading not supported
 	public toLocaleTimeString(...args: any+): any+; // overloading not supported
+	@Override
 	public valueOf(): number;
 	public getTime(): number;
 	public getFullYear(): number;
@@ -229,14 +239,14 @@ export external public class Date {
 
 export external public type DateConstructor = constructor{Date};
 
-export external public interface ~RegExpMatchArray extends Array<string> {
-	index?: number;
-	input?: string;
+export external public class ~RegExpMatchArray extends Array<string> {
+	public index?: number;
+	public input?: string;
 }
 
-export external public interface ~RegExpExecArray extends Array<string> {
-	index: number;
-	input: string;
+export external public class ~RegExpExecArray extends Array<string> {
+	public index: number;
+	public input: string;
 }
 
 export external public class RegExp {
@@ -338,7 +348,9 @@ export external public interface ~ConcatArray<T> {
 
 export external public class Array<T> {
 	public length: number;
+	@Override
 	public toString(): string;
+	@Override
 	public toLocaleString(): string;
 	public pop(): T;
 	public push(...items: T): number;
@@ -457,8 +469,11 @@ export external public class Int8Array {
 	public some(predicate: (value: number, index: number, array: Int8Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Int8Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Int8Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -493,8 +508,11 @@ export external public class Uint8Array {
 	public some(predicate: (value: number, index: number, array: Uint8Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Uint8Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Uint8Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -529,8 +547,11 @@ export external public class Uint8ClampedArray {
 	public some(predicate: (value: number, index: number, array: Uint8ClampedArray)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Uint8ClampedArray;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Uint8ClampedArray;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -565,8 +586,11 @@ export external public class Int16Array {
 	public some(predicate: (value: number, index: number, array: Int16Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Int16Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Int16Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -601,8 +625,11 @@ export external public class Uint16Array {
 	public some(predicate: (value: number, index: number, array: Uint16Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Uint16Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Uint16Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -637,8 +664,11 @@ export external public class Int32Array {
 	public some(predicate: (value: number, index: number, array: Int32Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Int32Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Int32Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -673,8 +703,11 @@ export external public class Uint32Array {
 	public some(predicate: (value: number, index: number, array: Uint32Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Uint32Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Uint32Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -709,8 +742,11 @@ export external public class Float32Array {
 	public some(predicate: (value: number, index: number, array: Float32Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Float32Array;
+	@Override
 	public toLocaleString(): string;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Float32Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;
@@ -745,7 +781,9 @@ export external public class Float64Array {
 	public some(predicate: (value: number, index: number, array: Float64Array)=>any+, thisArg: any = ): boolean;
 	public sort(compareFn: (a: number, b: number)=>number = ): this;
 	public subarray(begin: number = , end: number = ): Float64Array;
+	@Override
 	public toString(): string;
+	@Override
 	public valueOf(): Float64Array;
 	public constructor(...args: any+); // overloading not supported
 	public static get BYTES_PER_ELEMENT(): number;

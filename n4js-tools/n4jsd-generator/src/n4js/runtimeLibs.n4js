@@ -34,6 +34,7 @@ class FileGenConfig {
 	public suffix: string;
 	public ignore = new Set<string>();
 	public polyfills = new Set<string>();
+	public changeToClass = new Set<string>();
 	public ctorInstanceTypes = [] as string[];
 	public patchMembers = new Map<string, PatchMemberConfig>();
 	public appendCode = new Map<string, string>();
@@ -47,6 +48,7 @@ const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
 	[ "GenConfig#addFiles",               new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#ignore",             new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#polyfills",          new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#changeToClass",      new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#ctorInstanceTypes",  new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#patchMembers",       new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#appendCode",         new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
@@ -144,6 +146,17 @@ class RuntimeLibsPatcher {
 		const suffix = fileConfig?.suffix;
 		if (suffix) {
 			script.suffix = utils.trimMultiLineString(suffix);
+		}
+		// change to class
+		const changeToClass = fileConfig?.changeToClass;
+		if (changeToClass && changeToClass.size > 0) {
+			for (const elem of script.topLevelElements) {
+				if (elem instanceof model.Type
+						&& elem.kind === model.TypeKind.INTERFACE
+						&& changeToClass.has(elem.name)) {
+					changeInterfaceToClass(elem);
+				}
+			}
 		}
 		// member patching
 		const patchedMembers = fileConfig?.patchMembers;
@@ -287,26 +300,24 @@ class RuntimeLibsPatcher {
 		topLevelElementModifications: ElementModifications) {
 
 		/*
+		Here we have to support two flavours of the ctor/instance pattern:
 
-Here we have to support two flavours of the ctor/instance pattern:
+		interface MyType { // <--- this is optional!
+		    // instance members
+		}
+		interface MyTypeConstructor {
+		    // static members
+		}
+		var MyType: MyTypeConstructor;
 
-interface MyType { // <--- this is optional!
-	// instance members
-}
-interface MyTypeConstructor {
-	// static members
-}
-var MyType: MyTypeConstructor;
+		and
 
-and
-
-interface MyType {
-	// instance members
-}
-var MyType: {
-	// static members
-};
-
+		interface MyType {
+		    // instance members
+		}
+		var MyType: {
+		    // static members
+		};
 		*/
 
 		const varDeclType = varDecl.type;
@@ -399,7 +410,7 @@ var MyType: {
 
 		// change "constructor type" to a class, strip CONSTRUCTOR_TYPE_SUFFIX from its name, and make all members static
 		if (ctorType) {
-			changeInterfaceToClass(ctorType);
+			changeInterfaceToClass(ctorType, false);
 			const ctorTypeName = ctorType.name;
 			if (ctorTypeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
 				ctorType.name = ctorTypeName.substring(0, ctorTypeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
@@ -408,7 +419,7 @@ var MyType: {
 		}
 		// change "instance type" to a class
 		if (instanceType) {
-			changeInterfaceToClass(instanceType);
+			changeInterfaceToClass(instanceType, false);
 		}
 		// merge the "constructor type" into the "instance type" (if both exist)
 		if (ctorType && instanceType) {
@@ -467,12 +478,11 @@ var MyType: {
 	}
 }
 
-function changeInterfaceToClass(ifc: model.Type) {
+function changeInterfaceToClass(ifc: model.Type, defSiteStructural: boolean | undefined = undefined) {
 	if (ifc.kind !== model.TypeKind.INTERFACE) {
 		return;
 	}
 	ifc.kind = model.TypeKind.CLASS;
-	ifc.defSiteStructural = false;
 	if (ifc.extends.length > 1) {
 		// WARNING: since we cannot tell whether a target type is an interface or a class,
 		// we have to use the assumption that the first extended interface is the super class
@@ -502,6 +512,10 @@ function changeInterfaceToClass(ifc: model.Type) {
 				}
 			}
 		}
+	}
+	// set 'defSiteStructural', if requested
+	if (defSiteStructural !== undefined) {
+		ifc.defSiteStructural = defSiteStructural;
 	}
 }
 

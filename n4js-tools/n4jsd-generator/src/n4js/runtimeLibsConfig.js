@@ -370,6 +370,10 @@ export default {
 				"ThisParameterType", "OmitThisParameter", "CallableFunction", "NewableFunction", "PromiseConstructorLike"
 			],
 			polyfills: [],
+			changeToClass: [
+				"RegExpMatchArray",
+				"RegExpExecArray"
+			],
 			ctorInstanceTypes: [
 				"Symbol", "SymbolConstructor",
 				"Promise", "PromiseConstructor"
@@ -400,6 +404,45 @@ export default {
 				"Date#constructor": { replaceBy: "public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);" },
 				"RegExp#constructor": { replaceBy: "public constructor(pattern: string = undefined, flags: string = undefined);" },
 				"JSON#stringify": { replaceBy: "public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;" },
+				// missing @Override annotations for methods #valueOf(), #toString(), #toLocaleString()
+				"Function#toString": { addAnnotations: [ "@Override" ] },
+				"String#valueOf": { addAnnotations: [ "@Override" ] },
+				"String#toString": { addAnnotations: [ "@Override" ] },
+				"Boolean#valueOf": { addAnnotations: [ "@Override" ] },
+				"Number#valueOf": { addAnnotations: [ "@Override" ] },
+				"Number#toString": { addAnnotations: [ "@Override" ] },
+				"Number#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Date#valueOf": { addAnnotations: [ "@Override" ] },
+				"Date#toString": { addAnnotations: [ "@Override" ] },
+				"Date#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Array#toString": { addAnnotations: [ "@Override" ] },
+				"Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Int8Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Int8Array#toString": { addAnnotations: [ "@Override" ] },
+				"Int8Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Uint8Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Uint8Array#toString": { addAnnotations: [ "@Override" ] },
+				"Uint8Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Uint8ClampedArray#valueOf": { addAnnotations: [ "@Override" ] },
+				"Uint8ClampedArray#toString": { addAnnotations: [ "@Override" ] },
+				"Uint8ClampedArray#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Int16Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Int16Array#toString": { addAnnotations: [ "@Override" ] },
+				"Int16Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Uint16Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Uint16Array#toString": { addAnnotations: [ "@Override" ] },
+				"Uint16Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Int32Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Int32Array#toString": { addAnnotations: [ "@Override" ] },
+				"Int32Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Uint32Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Uint32Array#toString": { addAnnotations: [ "@Override" ] },
+				"Uint32Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Float32Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Float32Array#toString": { addAnnotations: [ "@Override" ] },
+				"Float32Array#toLocaleString": { addAnnotations: [ "@Override" ] },
+				"Float64Array#valueOf": { addAnnotations: [ "@Override" ] },
+				"Float64Array#toString": { addAnnotations: [ "@Override" ] },
 				// other oddities:
 				"PropertyDescriptor#get": undefined,
 				"PropertyDescriptor#set": undefined
@@ -652,7 +695,11 @@ export default {
 			polyfills: [
 				"RegExpMatchArray",
 				"RegExpExecArray"
-			]
+			],
+			changeToClass: [
+				"RegExpMatchArray",
+				"RegExpExecArray"
+			],
 		},
 		"es2018.intl.d.ts": {},
 		"es2019.string.d.ts": {},
