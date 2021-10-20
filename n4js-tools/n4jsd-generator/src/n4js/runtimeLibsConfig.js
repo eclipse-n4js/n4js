@@ -30,7 +30,7 @@ export default {
 					 */
 					public const iterator: symbol
 
-					// FIXME well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
+					// well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
 					public const hasInstance: symbol;
 					public const isConcatSpreadable: symbol;
 					public const match: symbol;
@@ -41,9 +41,9 @@ export default {
 					public const toPrimitive: symbol;
 					public const toStringTag: symbol;
 					public const unscopables: symbol;
-					// FIXME well-known symbols moved here from file 'es2018.asynciterable.d.ts'
+					// well-known symbols moved here from file 'es2018.asynciterable.d.ts'
 					public const asyncIterator: symbol;
-					// FIXME well-known symbols moved here from file 'es2020.symbol.wellknown.d.ts'
+					// well-known symbols moved here from file 'es2020.symbol.wellknown.d.ts'
 					public const matchAll: symbol;
 
 					/**
@@ -532,7 +532,7 @@ export default {
 		"es2015.symbol.wellknown.d.ts": {
 			ignore: [
 				"Symbol", "SymbolConstructor", // Symbol was moved to es5.n4jsd (see above)
-				"Promise", "PromiseConstructor" // FIXME this would work fine, except for different number of type parameters!!!
+				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
 			patchMembers: {
 				// the signatures of the following members use computed property names inside ~Object with {}
@@ -682,7 +682,7 @@ export default {
 		},
 		"es2018.promise.d.ts": {
 			ignore: [
-				"Promise", "PromiseConstructor" // FIXME this would work fine, except for different number of type parameters!!!
+				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
 			suffix: `
 				@Polyfill
@@ -727,7 +727,7 @@ export default {
 		"es2020.string.d.ts": {},
 		"es2020.promise.d.ts": {
 			ignore: [
-				"Promise", "PromiseConstructor" // FIXME this would work fine, except for different number of type parameters!!!
+				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
 			suffix: `
 				@Polyfill
