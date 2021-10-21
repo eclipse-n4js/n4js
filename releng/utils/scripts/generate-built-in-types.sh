@@ -66,6 +66,7 @@ if [[ ! -d "${TS_REPO_FOLDER}" ]]; then
 	# unfortunately this downloads the entire repository (without history) even though we only need a few files
 	curl -L "https://api.github.com/repos/microsoft/TypeScript/zipball/${TS_COMMIT_ID}" -o "typescript-repo.zip"
 	unzip "typescript-repo.zip" "*/src/lib/*"
+	rm "typescript-repo.zip"
 	mv microsoft-TypeScript-*/src .
 	rmdir microsoft-TypeScript-*
 	popd
