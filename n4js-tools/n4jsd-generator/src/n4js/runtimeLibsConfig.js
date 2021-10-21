@@ -589,7 +589,8 @@ export default {
 			},
 			// we need to provide our own modified variant of IterableIterator, because
 			// 1) we must add "out" modifier to type parameter,
-			// 2) extend interface "Iterable" explicitly to avoid error message "All N4Objects must explicitly extend/implement definition site structural type Iterable<?>.",
+			// 2) extend interface "Iterable" explicitly to avoid error message "All N4Objects must explicitly extend/implement definition site structural type Iterable<?>."
+			//    in classes that only explicitly implement IterableIterator (but not Iterable),
 			// 3) due to 2), @Override annotation must be added.
 			suffix: `
 				export external public interface ~IterableIterator<out T> extends Iterator<T>, Iterable<T> {
