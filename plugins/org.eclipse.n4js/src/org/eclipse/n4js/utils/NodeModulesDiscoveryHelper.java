@@ -122,7 +122,15 @@ public class NodeModulesDiscoveryHelper {
 		}
 
 		final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
-		return new NodeModulesFolder(false, false, false, nodeModulesPath.toFile(), null);
+		File parentNMF = null;
+		Path parent = projectLocation.getParent();
+		if (parent != null && parent.getName(parent.getNameCount() - 1).startsWith("@")) {
+			parent = parent.getParent();
+		}
+		if (parent != null && parent.endsWith(N4JSGlobals.NODE_MODULES)) {
+			parentNMF = parent.toFile();
+		}
+		return new NodeModulesFolder(false, false, false, nodeModulesPath.toFile(), parentNMF);
 	}
 
 	/** Same as {@link #findNodeModulesFolders(Collection, Map)} without cache */

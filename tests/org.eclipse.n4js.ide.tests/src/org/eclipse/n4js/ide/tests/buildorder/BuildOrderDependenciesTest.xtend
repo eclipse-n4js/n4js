@@ -20,9 +20,9 @@ class BuildOrderDependenciesTest extends AbstractBuildOrderTest {
 	@Test
 	def void testSingleDependency1() {
 		testProject(
-					"test-project/node_modules/D2," +
-					"test-project/node_modules/D1," +
 					"test-project/node_modules/n4js-runtime, " +
+					"test-project/node_modules/D2, " +
+					"test-project/node_modules/D1, " +
 					"test-project", 
 
 			CFG_DEPENDENCIES -> "D1",
