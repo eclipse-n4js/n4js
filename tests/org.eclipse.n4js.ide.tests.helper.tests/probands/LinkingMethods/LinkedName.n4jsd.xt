@@ -28,17 +28,17 @@ export external public class MySuperDuperClass {
 }
 
 /* pos 4 */
-export external public interface MyRole {
+export external public interface ~MyRole {
 
 }
 
 /* pos 5 */
-export external public interface Comparable {
+export external public interface ~Comparable {
 
 }
 
 /* pos 6 */
-export external public interface MyInterface {
+export external public interface ~MyInterface {
 
 }
 
