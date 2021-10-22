@@ -38,4 +38,26 @@ class BuildOrderDependenciesTest extends AbstractBuildOrderTest {
 			
 		);
 	}
+
+	@Test
+	def void testSingleDependency2() {
+		testProject(
+					"test-project/node_modules/n4js-runtime, " +
+					"test-project/node_modules/@scope/D2, " +
+					"test-project/node_modules/D1, " +
+					"test-project", 
+
+			CFG_DEPENDENCIES -> "D1",
+			CFG_NODE_MODULES + "n4js-runtime" -> "",
+			CFG_NODE_MODULES + "D1" + CFG_SRC + "index" -> '''
+					const i = 1;
+				''',
+			CFG_NODE_MODULES + "D1" + CFG_DEPENDENCIES -> "@scope/D2",
+			CFG_NODE_MODULES + "@scope/D2" + CFG_SRC + "index" -> '''
+					const i = 2;
+				''',
+			CFG_NODE_MODULES + "@scope/D2" + CFG_NODE_MODULES + "n4js-runtime" -> ""
+			
+		);
+	}
 }
