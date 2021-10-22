@@ -50,6 +50,7 @@ public class NodeModulesDiscoveryHelper {
 		final public boolean isYarnWorkspaceDependency;
 		/** node_modules folder of the given project or <code>null</code> if it doesn't have one */
 		final public File localNodeModulesFolder;
+		// TODO: Deal with arbitrarily nested node_modules folders
 		/** node_modules folder of the related yarn workspace project */
 		final public File workspaceNodeModulesFolder;
 
@@ -122,7 +123,15 @@ public class NodeModulesDiscoveryHelper {
 		}
 
 		final Path nodeModulesPath = projectLocation.resolve(N4JSGlobals.NODE_MODULES);
-		return new NodeModulesFolder(false, false, false, nodeModulesPath.toFile(), null);
+		File parentNMF = null;
+		Path parent = projectLocation.getParent();
+		if (parent != null && parent.getName(parent.getNameCount() - 1).toString().startsWith("@")) {
+			parent = parent.getParent();
+		}
+		if (parent != null && parent.endsWith(N4JSGlobals.NODE_MODULES)) {
+			parentNMF = parent.toFile();
+		}
+		return new NodeModulesFolder(false, false, false, nodeModulesPath.toFile(), parentNMF);
 	}
 
 	/** Same as {@link #findNodeModulesFolders(Collection, Map)} without cache */
