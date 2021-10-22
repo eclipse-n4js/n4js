@@ -57,6 +57,7 @@ import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
+import org.eclipse.n4js.scoping.TopLevelElementsCollector
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
@@ -78,6 +79,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
+import org.eclipse.n4js.scoping.validation.VeeScopeValidator
 
 /**
  */
@@ -90,6 +92,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject WorkspaceAccess workspaceAccess;
 
 	@Inject SourceElementExtensions sourceElementExtensions;
+
+	@Inject TopLevelElementsCollector topLevelElementsCollector;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
 
@@ -194,36 +198,36 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Recursive call is passing set of used names in current scope, allowing child scope to perform proper comparison checks.
 	 * Only names are passed, actual {@link EObject}s are resolved only if name clash is detected.
 	 */
-	def private void checkNameConflicts(VariableEnvironmentElement scope, Set<String> outerNames) {
-		val List<String> localNames = scope.declaredNames.toList;
+	def private void checkNameConflicts(VariableEnvironmentElement vee, Set<String> outerNames) {
+		val List<String> localNames = vee.declaredNames.toList;
 
-		scope.checkGlobalNamesConflict(scope.declaredNamesForGlobalScopeComparison.toList);
+		vee.checkGlobalNamesConflict(vee.declaredNamesForGlobalScopeComparison.toList);
 
 		val Set<String> localNamesNoDuplicates = new HashSet(localNames);
 
-		scope.checkLocalScopeNamesConflict(localNames, localNamesNoDuplicates)
+		vee.checkLocalScopeNamesConflict(localNames, localNamesNoDuplicates)
 
 		val Set<String> allNamesNoDuplicates = new HashSet(outerNames); // copy 'outerNames', do not change it!
 		allNamesNoDuplicates.addAll(localNamesNoDuplicates);
 
-		scope.checkOuterScopesNamesConflict(localNames, localNamesNoDuplicates, allNamesNoDuplicates, outerNames)
+		vee.checkOuterScopesNamesConflict(localNames, localNamesNoDuplicates, allNamesNoDuplicates, outerNames)
 
-		scope.nestedScopes.forEach[checkNameConflicts(allNamesNoDuplicates)]; // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
+		vee.nestedScopes.forEach[checkNameConflicts(allNamesNoDuplicates)]; // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
 	}
 
 	/**
 	 * checks if provided localNames of given scope are not conflicting with names in global object
 	 */
-	def private checkGlobalNamesConflict(VariableEnvironmentElement scope, List<String> localNames) {
-		val List<String> globalNames = findGlobalNames(scope.eResource)
+	def private checkGlobalNamesConflict(VariableEnvironmentElement vee, List<String> localNames) {
+		val List<String> globalNames = findGlobalNames(vee.eResource)
 		val Set<String> globalNamesConflicts = new HashSet(globalNames)
 
 		if (globalNamesConflicts.retainAll(localNames)) {
-			scope.getNameDeclarations.filter[globalNamesConflicts.contains(it.declaredNameForGlobalScopeComparision)].forEach [
+			vee.getNameDeclarations.filter[globalNamesConflicts.contains(it.declaredNameForGlobalScopeComparision)].forEach [
 				val innerScopeObject = it;
 				val name = innerScopeObject.declaredNameForGlobalScopeComparision
 				if (name != 'eval') { // already validated by the AST Structure validator
-					val globalObjectMemeber = findGlobalMembers(scope.eResource).findFirst[m|name.equals(m.name)]
+					val globalObjectMemeber = findGlobalMembers(vee.eResource).findFirst[m|name.equals(m.name)]
 					addIssue(
 						StringExtensions.toFirstUpper(
 							getMessageForAST_GLOBAL_NAME_SHADOW_ERR(
@@ -239,13 +243,13 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * check (pre-computed) localNames of the given scope against each other. When conflict is found EObjects
 	 * that create conflict are analyzed and if appropriate error marker is issued.
 	 */
-	def private checkLocalScopeNamesConflict(VariableEnvironmentElement scope, List<String> localNames,
+	def private checkLocalScopeNamesConflict(VariableEnvironmentElement vee, List<String> localNames,
 		Set<String> localNamesNoDuplicates) {
 
-		if(scope instanceof Block
-				&& scope.eContainer instanceof FunctionOrFieldAccessor
-				&& (scope.eContainer as FunctionOrFieldAccessor).body === scope) {
-			checkLocalScopeNamesConflict_letConstSpecialCase(scope.eContainer as FunctionOrFieldAccessor);
+		if(vee instanceof Block
+				&& vee.eContainer instanceof FunctionOrFieldAccessor
+				&& (vee.eContainer as FunctionOrFieldAccessor).body === vee) {
+			checkLocalScopeNamesConflict_letConstSpecialCase(vee.eContainer as FunctionOrFieldAccessor);
 		}
 
 		// search for duplicates in local scope
@@ -257,7 +261,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			localNamesNoDuplicates.forEach[temp.remove(it)] // removes only the first occurrence of each name => duplicates will be left
 			val Set<String> localNamesDuplicatesLocally = new HashSet(temp); // turn into a set again, because we may still have a single name more than once in temp (if the same name is used more than twice)
 			for (n : localNamesDuplicatesLocally) {
-				scope.getNameDeclarations(n).toList.stream.collect(Collectors.groupingBy([it.declaredName])).filter[name, lstEO|
+				vee.getNameDeclarations(n).toList.stream.collect(Collectors.groupingBy([it.declaredName])).filter[name, lstEO|
 					lstEO.size > 1].forEach[name, lstEO|
 					//appearance order
 					lstEO.sort(
@@ -284,7 +288,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 								// in case of when we duplicate element creating given scope (like function names)
 								// then we issue shadowing
-								if (baseEO.equals(scope)) {
+								if (baseEO.equals(vee)) {
 
 									if (dupeEO instanceof FormalParameter) {
 										addIssue(
@@ -557,14 +561,27 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		// in some cases, the scopes we obtain from ordinary scoping are not sufficient for the purpose of this
 		// validation, so add a few additional elements:
 		switch(scope) {
-			Script:
+			Script: {
 				namedEOs += scope.eAllContents.filter(ImportSpecifier).toList
+				
+				val tops = topLevelElementsCollector.getTopLevelElements(scope.module, resource, true, false);
+				val hollows = tops
+					.map[it.EObjectOrProxy]
+					.filter[it instanceof IdentifiableElement && N4JSLanguageUtils.isHollowElement(it as IdentifiableElement, jsVariantHelper)]
+					.map[(it as SyntaxRelatedTElement).astElement];
+				//namedEOs += hollows;
+			}
+				
 			FunctionOrFieldAccessor:
 				namedEOs += scope.localArgumentsVariable
 		}
 
 		// add all elements from the scope as computed by ordinary scoping:
-		namedEOs += sourceElementExtensions.collectVisibleIdentifiableElements(scope).map[backToAST(resource)];
+		//val vsv = new VeeScopeValidator(null, jsVariantHelper);
+		namedEOs += sourceElementExtensions.collectVisibleIdentifiableElements(scope)
+			//.filter[!N4JSLanguageUtils.isHollowElement(it, jsVariantHelper)]
+			.map[backToAST(resource)];
+	
 
 		return namedEOs.filter[!it.declaredName.nullOrEmpty];
 	}

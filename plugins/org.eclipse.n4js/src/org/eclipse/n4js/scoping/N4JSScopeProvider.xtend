@@ -89,6 +89,7 @@ import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.scoping.validation.VeeScopeValidator
 
 /**
  * This class contains custom scoping description.
@@ -464,8 +465,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 
 		scope = scopeSnapshotHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
+		
+		val scopeInfo = new ScopeInfo(scope, scope, new VeeScopeValidator(context, jsVariantHelper));
 
-		return scope;
+		return scopeInfo;
 	}
 
 	private def IScope getScriptBaseScope(Script script, EObject context, EReference ref) {

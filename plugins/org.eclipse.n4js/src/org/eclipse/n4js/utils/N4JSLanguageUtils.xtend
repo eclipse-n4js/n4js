@@ -1217,6 +1217,7 @@ public class N4JSLanguageUtils {
 			&& javaScriptVariantHelper.isExternalMode(typeDecl)
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
 		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		// TODO: namespace
 		return typeDecl !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
 	}
 	

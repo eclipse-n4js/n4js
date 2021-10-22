@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+// Hollows and variables: OK
+type T1 = string;
+// XPECT noerrors -->
+const T1 : string = "";
+// XPECT noerrors -->
+let t1a : T1 = null;
+// XPECT noerrors -->
+let t1b = T1;
+
+
+// reverse order
+const T2 : string = "";
+// XPECT noerrors -->
+type T2 = string;
+// XPECT noerrors -->
+let t2a : T2 = null;
+// XPECT noerrors -->
+let t2b = T2;
