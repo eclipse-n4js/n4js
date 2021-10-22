@@ -16,7 +16,7 @@
 
 // Hollows and variables: OK
 type T1 = string;
-// XPECT noerrors -->
+// XPECT errors --> "Variable T1 duplicates type alias T1 (line 18)." at "T1"
 const T1 : string = "";
 // XPECT noerrors -->
 let t1a : T1 = null;
@@ -26,7 +26,7 @@ let t1b = T1;
 
 // reverse order
 const T2 : string = "";
-// XPECT noerrors -->
+// XPECT errors --> "Type alias T2 duplicates variable T2 (line 28)." at "T2"
 type T2 = string;
 // XPECT noerrors -->
 let t2a : T2 = null;

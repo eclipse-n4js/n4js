@@ -78,6 +78,8 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
+import org.eclipse.n4js.ts.types.TVariable
+import org.eclipse.n4js.ts.types.Type
 
 /**
  */
@@ -322,16 +324,13 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									 */
 									return;
 								} else {
-									if (baseEO instanceof Variable && dupeEO instanceof N4TypeDeclaration) {
-										if (N4JSLanguageUtils.isHollowElement(dupeEO as N4TypeDeclaration, jsVariantHelper)) {
+									if (jsVariantHelper.isExternalMode(baseEO)) {
+										// allow name sharing only in N4JSD files
+										if (!isEqualNameDuplicate(baseEO, dupeEO)) {
 											return;
 										}
 									}
-									if (dupeEO instanceof Variable && baseEO instanceof N4TypeDeclaration) {
-										if (N4JSLanguageUtils.isHollowElement(baseEO as N4TypeDeclaration, jsVariantHelper)) {
-											return;
-										}
-									}
+									
 									
 									if (!( // do not create issues for polyfills conflicting with imports, as they might fill them
 										dupeEO instanceof N4ClassifierDeclaration && baseEO instanceof ImportSpecifier &&
@@ -351,6 +350,28 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 					)]
 			}
 		}
+	}
+	
+	def private boolean isEqualNameDuplicate(EObject baseEO, EObject dupeEO) {
+		if (isVariable(baseEO) && isHollow(dupeEO)) {
+			return false;
+		} else if (isVariable(dupeEO) && isHollow(baseEO)) {
+			return false;
+		}
+		return true;
+	}
+	
+	def private boolean isVariable(EObject eo) {
+		return eo instanceof Variable
+			|| (eo instanceof NamedImportSpecifier && (eo as NamedImportSpecifier).importedElement instanceof TVariable);
+	}
+	
+	def private boolean isHollow(EObject eo) {
+		return (eo instanceof N4TypeDeclaration && N4JSLanguageUtils.isHollowElement(eo as N4TypeDeclaration, jsVariantHelper))
+			|| (eo instanceof NamedImportSpecifier
+				&& (eo as NamedImportSpecifier).importedElement instanceof Type
+				&& N4JSLanguageUtils.isHollowElement((eo as NamedImportSpecifier).importedElement as Type, jsVariantHelper)
+			);
 	}
 
 	/**
