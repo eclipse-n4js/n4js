@@ -34,9 +34,9 @@ import {IS} from "Forbid_non_value_assignment_other"
 
 type MyString = string;
 
-// XPECT errors --> "Type alias cannot be used as a value." at "MyString"
+// XPECT errors --> "MyString cannot be used as a value." at "MyString"
 let myString = MyString;
 
-// XPECT errors --> "External interface cannot be used as a value." at "IS"
+// XPECT errors --> "IS cannot be used as a value." at "IS"
 let is = IS;
 

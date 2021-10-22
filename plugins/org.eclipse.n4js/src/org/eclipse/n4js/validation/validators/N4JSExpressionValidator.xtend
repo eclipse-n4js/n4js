@@ -111,7 +111,6 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -168,23 +167,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override register(EValidatorRegistrar registrar) {
 		// nop
-	}
-	
-	
-	/** Disallow use of elements without runtime representation as values. */
-	@Check
-	def checkPureTypeAsValue(IdentifierRef idRef) {
-		val id = idRef.getId();
-		if (!N4JSLanguageUtils.hasRuntimeRepresentation(id, jsVariantHelper)) {
-			var kind = "Unknown element";
-			switch (id) {
-				TypeAlias:  kind = "Type alias"
-				TInterface: kind = "External interface"
-				TEnum: 		return // Validation for enums handled here: N4JSEnumValidator
-			}
-			val msg = IssueCodes.getMessageForAST_VALUE_MISSING_RUNTIME_REPRESENTATION(kind);
-			addIssue(msg, idRef, IssueCodes.AST_VALUE_MISSING_RUNTIME_REPRESENTATION);
-		}
 	}
 
 	@Check

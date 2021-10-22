@@ -57,7 +57,6 @@ import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
-import org.eclipse.n4js.scoping.TopLevelElementsCollector
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
@@ -79,7 +78,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
-import org.eclipse.n4js.scoping.validation.VeeScopeValidator
 
 /**
  */
@@ -92,8 +90,6 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject WorkspaceAccess workspaceAccess;
 
 	@Inject SourceElementExtensions sourceElementExtensions;
-
-	@Inject TopLevelElementsCollector topLevelElementsCollector;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
 
@@ -561,27 +557,14 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		// in some cases, the scopes we obtain from ordinary scoping are not sufficient for the purpose of this
 		// validation, so add a few additional elements:
 		switch(scope) {
-			Script: {
+			Script: 
 				namedEOs += scope.eAllContents.filter(ImportSpecifier).toList
-				
-				val tops = topLevelElementsCollector.getTopLevelElements(scope.module, resource, true, false);
-				val hollows = tops
-					.map[it.EObjectOrProxy]
-					.filter[it instanceof IdentifiableElement && N4JSLanguageUtils.isHollowElement(it as IdentifiableElement, jsVariantHelper)]
-					.map[(it as SyntaxRelatedTElement).astElement];
-				//namedEOs += hollows;
-			}
-				
 			FunctionOrFieldAccessor:
 				namedEOs += scope.localArgumentsVariable
 		}
 
 		// add all elements from the scope as computed by ordinary scoping:
-		//val vsv = new VeeScopeValidator(null, jsVariantHelper);
-		namedEOs += sourceElementExtensions.collectVisibleIdentifiableElements(scope)
-			//.filter[!N4JSLanguageUtils.isHollowElement(it, jsVariantHelper)]
-			.map[backToAST(resource)];
-	
+		namedEOs += sourceElementExtensions.collectVisibleIdentifiableElements(scope).map[backToAST(resource)];
 
 		return namedEOs.filter[!it.declaredName.nullOrEmpty];
 	}
