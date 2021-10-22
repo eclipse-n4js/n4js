@@ -49,7 +49,7 @@ public class NodeModulesDiscoveryHelper {
 		/** <code>true</code> iff the given project is contained in a node_modules folder of a yarn workspace */
 		final public boolean isYarnWorkspaceDependency;
 		/** node_modules folder of the given project or <code>null</code> if it doesn't have one */
-		final public File localNodeModulesFolder;
+		final public File localNodeModulesFolder; // TODO: Deal with arbitrarily nested node_modules folders
 		/** node_modules folder of the related yarn workspace project */
 		final public File workspaceNodeModulesFolder;
 
