@@ -19431,7 +19431,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4TypeVariable returns N4TypeVariable
 	 *
 	 * Constraint:
-	 *     ((declaredCovariant?='out' | declaredContravariant?='in')? name=IdentifierOrThis declaredUpperBoundNode=TypeReferenceNode?)
+	 *     (
+	 *         (declaredCovariant?='out' | declaredContravariant?='in')? 
+	 *         name=IdentifierOrThis 
+	 *         declaredUpperBoundNode=TypeReferenceNode? 
+	 *         defaultArgumentNode=TypeReferenceNode?
+	 *     )
 	 */
 	protected void sequence_N4TypeVariable(ISerializationContext context, N4TypeVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

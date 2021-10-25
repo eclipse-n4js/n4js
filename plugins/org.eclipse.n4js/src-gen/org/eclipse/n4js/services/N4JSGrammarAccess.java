@@ -2443,15 +2443,25 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cExtendsKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cDeclaredUpperBoundNodeAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
 		private final RuleCall cDeclaredUpperBoundNodeTypeReferenceNodeParserRuleCall_2_1_0 = (RuleCall)cDeclaredUpperBoundNodeAssignment_2_1.eContents().get(0);
+		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
+		private final Keyword cEqualsSignKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cDefaultArgumentNodeAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0 = (RuleCall)cDefaultArgumentNodeAssignment_3_1.eContents().get(0);
 		
 		//N4TypeVariable:
 		//    (declaredCovariant?='out' | declaredContravariant?='in')?
 		//    name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
+		//    // difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
+		//    // because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
+		//    ('=' defaultArgumentNode=TypeReferenceNode)?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//(declaredCovariant?='out' | declaredContravariant?='in')?
 		//name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
+		//// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
+		//// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
+		//('=' defaultArgumentNode=TypeReferenceNode)?
 		public Group getGroup() { return cGroup; }
 		
 		//(declaredCovariant?='out' | declaredContravariant?='in')?
@@ -2486,6 +2496,20 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//TypeReferenceNode
 		public RuleCall getDeclaredUpperBoundNodeTypeReferenceNodeParserRuleCall_2_1_0() { return cDeclaredUpperBoundNodeTypeReferenceNodeParserRuleCall_2_1_0; }
+		
+		//// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
+		//// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
+		//('=' defaultArgumentNode=TypeReferenceNode)?
+		public Group getGroup_3() { return cGroup_3; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_3_0() { return cEqualsSignKeyword_3_0; }
+		
+		//defaultArgumentNode=TypeReferenceNode
+		public Assignment getDefaultArgumentNodeAssignment_3_1() { return cDefaultArgumentNodeAssignment_3_1; }
+		
+		//TypeReferenceNode
+		public RuleCall getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0() { return cDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0; }
 	}
 	public class FormalParameterElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FormalParameter");
@@ -12691,6 +12715,9 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//N4TypeVariable:
 	//    (declaredCovariant?='out' | declaredContravariant?='in')?
 	//    name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
+	//    // difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
+	//    // because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
+	//    ('=' defaultArgumentNode=TypeReferenceNode)?
 	//;
 	public N4TypeVariableElements getN4TypeVariableAccess() {
 		return pN4TypeVariable;

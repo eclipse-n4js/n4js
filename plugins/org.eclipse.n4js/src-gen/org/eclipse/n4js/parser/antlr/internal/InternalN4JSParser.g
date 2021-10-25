@@ -5947,6 +5947,31 @@ ruleN4TypeVariable returns [EObject current=null]
 				)
 			)
 		)?
+		(
+			otherlv_5=EqualsSign
+			{
+				newLeafNode(otherlv_5, grammarAccess.getN4TypeVariableAccess().getEqualsSignKeyword_3_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0());
+					}
+					lv_defaultArgumentNode_6_0=ruleTypeReferenceNode
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getN4TypeVariableRule());
+						}
+						set(
+							$current,
+							"defaultArgumentNode",
+							lv_defaultArgumentNode_6_0,
+							"org.eclipse.n4js.N4JS.TypeReferenceNode");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
 	)
 ;
 
