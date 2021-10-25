@@ -35,7 +35,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeAsText <em>Declared Type As Text</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
@@ -93,16 +93,20 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setDeclaredTypeAsText(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Type Args</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.TypeArgument}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Type Args</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_TypeArgs()
+	 * <!-- begin-model-doc -->
+	 * The type arguments provided with this type reference, <b>NOT</b> including defaults for optional type parameters.
+	 * Use {@link ParameterizedTypeRef#getTypeArgsWithDefaults() #getTypeArgsWithDefaults()} to also obtain those defaults.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Declared Type Args</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_DeclaredTypeArgs()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TypeArgument> getTypeArgs();
+	EList<TypeArgument> getDeclaredTypeArgs();
 
 	/**
 	 * Returns the value of the '<em><b>Array Type Expression</b></em>' attribute.
@@ -259,6 +263,18 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * Returns all type arguments: those given in this type reference as well as
+	 * default arguments of optional type parameters for which the argument is omitted.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<TypeArgument> getTypeArgsWithDefaults();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
@@ -281,7 +297,7 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Delegates to {@link Type.isGeneric()}
+	 * Delegates to {@link Type#isGeneric()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -292,7 +308,9 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Overrides {@link TypeRef#isRaw()}.
+	 * Returns true iff the given type reference is "raw", i.e. if it points to a generic type and has fewer type
+	 * arguments than the generic type has mandatory(!) type parameters.
+	 * 	 * Overrides {@link TypeRef#isRaw()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

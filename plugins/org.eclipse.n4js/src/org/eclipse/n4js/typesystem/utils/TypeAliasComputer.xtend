@@ -62,7 +62,7 @@ package class TypeAliasComputer extends TypeSystemHelperStrategy {
 
 			// if we have a parameterized type reference to a generic type alias, we have to substitute
 			// to not lose the bindings defined by the type arguments in 'typeRef':
-			if (!currTypeRef.typeArgs.empty) {
+			if (currTypeRef.generic) {
 				val G_temp = RuleEnvironmentExtensions.wrap(G);
 				tsh.addSubstitutions(G_temp, currTypeRef);
 				resolvedTypeRef = ts.substTypeVariables(G_temp, resolvedTypeRef);

@@ -15366,9 +15366,9 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//ArrayTypeExpression returns TypeRef:
-	//      ({ParameterizedTypeRef} typeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*)
-	//    | ({ParameterizedTypeRef} '(' typeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*)
-	//    | PrimaryTypeExpression =>({ParameterizedTypeRef.typeArgs+=current} arrayTypeExpression?='[' ']')*;
+	//      ({ParameterizedTypeRef} declaredTypeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
+	//    | ({ParameterizedTypeRef} '(' declaredTypeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
+	//    | PrimaryTypeExpression =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*;
 	public TypeExpressionsGrammarAccess.ArrayTypeExpressionElements getArrayTypeExpressionAccess() {
 		return gaTypeExpressions.getArrayTypeExpressionAccess();
 	}
@@ -15671,8 +15671,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//ArrayNTypeExpression returns ParameterizedTypeRef:
 	//    arrayNTypeExpression?='['
 	//    (
-	//        typeArgs+=EmptyIterableTypeExpressionTail
-	//    |    typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* ']'
+	//        declaredTypeArgs+=EmptyIterableTypeExpressionTail
+	//    |    declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
 	//    );
 	public TypeExpressionsGrammarAccess.ArrayNTypeExpressionElements getArrayNTypeExpressionAccess() {
 		return gaTypeExpressions.getArrayNTypeExpressionAccess();
@@ -15693,7 +15693,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//fragment TypeArguments *:
-	//    '<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'
+	//    '<' declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* '>'
 	//;
 	public TypeExpressionsGrammarAccess.TypeArgumentsElements getTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeArgumentsAccess();

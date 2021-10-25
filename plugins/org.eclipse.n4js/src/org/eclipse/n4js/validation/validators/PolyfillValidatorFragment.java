@@ -23,6 +23,7 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_NAME
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_TYPEPARS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_EXTEND_MISSING;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_INCOMPLETE_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_IMPLEMENTS;
@@ -38,6 +39,7 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_D
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_EXTEND_MISSING;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_INCOMPLETE_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_IMPLEMENTS;
@@ -87,6 +89,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.inject.Inject;
@@ -403,9 +406,18 @@ public class PolyfillValidatorFragment {
 
 		final TypeReferenceNode<ParameterizedTypeRef> superClassifierRefInAST = state.superClassifierNode;
 		final TypeRef superClassRef = superClassifierRefInAST != null ? superClassifierRefInAST.getTypeRef() : null;
-		List<TypeArgument> args = superClassRef != null ? superClassRef.getTypeArgs() : Collections.emptyList();
-		if (args.size() != state.polyType.getTypeVars().size()) {
+		final List<TypeArgument> args = superClassRef != null ? superClassRef.getDeclaredTypeArgs()
+				: Collections.emptyList();
+		final int expectedTypeParamCountMax = state.polyType.getTypeVars().size();
+		final int expectedTypeParamCountMin = FluentIterable.from(state.polyType.getTypeVars())
+				.filter(tv -> !tv.isOptional())
+				.size();
+		if (args.size() < expectedTypeParamCountMin || args.size() > expectedTypeParamCountMax) {
 			return true; // consequential error
+		} else if (args.size() != expectedTypeParamCountMax) {
+			final String msg = getMessageForCLF_POLYFILL_INCOMPLETE_TYPEARGS(state.name);
+			addIssue(state, msg, CLF_POLYFILL_INCOMPLETE_TYPEARGS);
+			return false;
 		}
 		for (int i = state.polyType.getTypeVars().size() - 1; i >= 0; i--) {
 			TypeArgument arg = args.get(i);
@@ -417,7 +429,6 @@ public class PolyfillValidatorFragment {
 				addIssue(state, msg, CLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS);
 				return false;
 			}
-
 		}
 
 		return true;

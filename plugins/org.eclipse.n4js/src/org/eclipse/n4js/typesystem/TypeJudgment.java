@@ -860,14 +860,14 @@ import com.google.inject.Inject;
 			if (exprType.getDeclaredType() == promiseType(G)) {
 				// standard case: use await on a promise
 				// --> result will be upper bound of first type argument
-				T = ts.upperBound(G, exprType.getTypeArgs().get(0));
+				T = ts.upperBound(G, exprType.getDeclaredTypeArgs().get(0));
 			} else if (promisifyHelper.isPromisifiableExpression(e.getExpression())) {
 				// "auto-promisify" case (i.e. an "await <expr>" that is a short-syntax for "await @Promisify <expr>")
 				final TypeRef promisifiedReturnTypeRef = promisifyHelper
 						.extractPromisifiedReturnType(e.getExpression());
 				if (promisifiedReturnTypeRef.getDeclaredType() == promiseType(G)) {
 					// --> result will be upper bound of first type argument
-					T = ts.upperBound(G, promisifiedReturnTypeRef.getTypeArgs().get(0));
+					T = ts.upperBound(G, promisifiedReturnTypeRef.getDeclaredTypeArgs().get(0));
 				} else {
 					T = promisifiedReturnTypeRef;
 				}
@@ -908,7 +908,7 @@ import com.google.inject.Inject;
 
 			final TypeRef T;
 			if (indexIsNumeric && (targetTypeRef.isArrayLike() || targetIsLiteralOfStringBasedEnum)) {
-				if (targetDeclType.isGeneric() && targetTypeRef.getTypeArgs().isEmpty()) {
+				if (targetDeclType.isGeneric() && targetTypeRef.getTypeArgsWithDefaults().isEmpty()) {
 					// later: evaluate name if possible, we may even want to return smth like intersect(allProperties)
 					T = anyTypeRef(G);
 				} else {

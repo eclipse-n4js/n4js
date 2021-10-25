@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ts.types;
 
-import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,12 +22,4 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface BuiltInType extends Type {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	EList<TypeVariable> getTypeVars();
-
 } // BuiltInType

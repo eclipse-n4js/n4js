@@ -478,15 +478,15 @@ import com.google.common.collect.Iterables;
 				return failure();
 			}
 		} else if (leftDeclType == rightDeclType) {
-			final List<TypeArgument> leftArgs = left.getTypeArgs();
-			final List<TypeArgument> rightArgs = right.getTypeArgs();
+			final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
+			final List<TypeArgument> rightArgs = right.getTypeArgsWithDefaults();
 			final int leftArgsCount = leftArgs.size();
 			final int rightArgsCount = rightArgs.size();
 			if (leftArgsCount > 0 && leftArgsCount <= rightArgsCount) { // ignore raw types
 				final int len = Math.min(Math.min(leftArgsCount, rightArgsCount), rightDeclType.getTypeVars().size());
 				for (int i = 0; i < len; i++) {
-					final TypeArgument leftArg = left.getTypeArgs().get(i);
-					final TypeArgument rightArg = right.getTypeArgs().get(i);
+					final TypeArgument leftArg = leftArgs.get(i);
+					final TypeArgument rightArg = rightArgs.get(i);
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
 					final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,

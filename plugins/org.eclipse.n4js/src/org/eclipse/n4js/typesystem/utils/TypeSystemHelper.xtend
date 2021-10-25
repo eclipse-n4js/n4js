@@ -526,10 +526,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	 */
 	def TypeRef getGeneratorTYield(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef yieldTypeRef = null;
-		if (generatorTypeRef.typeArgs.length === 3) {
-			val yieldTypeArg = generatorTypeRef.typeArgs.get(0);
+		if (generatorTypeRef.declaredTypeArgs.size >= 1) {
+			val yieldTypeArg = generatorTypeRef.declaredTypeArgs.get(0);
 			if (yieldTypeArg !== null)
 				yieldTypeRef = ts.upperBound(G, yieldTypeArg); // take upper bound to get rid of Wildcard, etc.
+		} else {
+			yieldTypeRef = G.generatorType.typeVars.get(0).defaultArgument;
 		}
 		return yieldTypeRef;
 	}
@@ -539,10 +541,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	 */
 	def TypeRef getGeneratorTReturn(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef returnTypeRef = null;
-		if (generatorTypeRef.typeArgs.length === 3) {
-			val returnTypeArg = generatorTypeRef.typeArgs.get(1);
+		if (generatorTypeRef.declaredTypeArgs.size >= 2) {
+			val returnTypeArg = generatorTypeRef.declaredTypeArgs.get(1);
 			if (returnTypeArg !== null)
 				returnTypeRef = ts.upperBound(G, returnTypeArg); // take upper bound to get rid of Wildcard, etc.
+		} else {
+			returnTypeRef = G.generatorType.typeVars.get(1).defaultArgument;
 		}
 		return returnTypeRef;
 	}
@@ -552,10 +556,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	 */
 	def TypeRef getGeneratorTNext(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef nextTypeRef = null;
-		if (generatorTypeRef.typeArgs.length === 3) {
-			val nextTypeArg = generatorTypeRef.typeArgs.get(2);
+		if (generatorTypeRef.declaredTypeArgs.size >= 3) {
+			val nextTypeArg = generatorTypeRef.declaredTypeArgs.get(2);
 			if (nextTypeArg !== null)
 				nextTypeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
+		} else {
+			nextTypeRef = G.generatorType.typeVars.get(2).defaultArgument;
 		}
 		return nextTypeRef;
 	}

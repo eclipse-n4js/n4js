@@ -150,7 +150,19 @@ public class FunctionTypeRefImpl extends ParameterizedTypeRefImpl implements Fun
 	 */
 	@Override
 	public boolean isRaw() {
-		return (this.isGeneric() && (this.getTypeArgs().size() < this.getTypeVars().size()));
+		boolean _isGeneric = this.isGeneric();
+		if (_isGeneric) {
+			final Function1<TypeVariable, Boolean> _function = new Function1<TypeVariable, Boolean>() {
+				public Boolean apply(final TypeVariable it) {
+					boolean _isOptional = it.isOptional();
+					return Boolean.valueOf((!_isOptional));
+				}
+			};
+			final int mandatoryTypeParamsCount = IterableExtensions.size(IterableExtensions.<TypeVariable>filter(this.getTypeVars(), _function));
+			int _size = this.getDeclaredTypeArgs().size();
+			return (_size < mandatoryTypeParamsCount);
+		}
+		return false;
 	}
 
 	/**

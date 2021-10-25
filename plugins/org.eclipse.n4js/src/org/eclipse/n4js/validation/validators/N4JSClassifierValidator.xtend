@@ -76,7 +76,7 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 			N4InterfaceDeclaration: n4ClassifierDef.superInterfaceRefs
 		}.filterNull.map[typeRefInAST].filterNull;
 		for(typeRefInAST : superTypeRefs) {
-			for(typeArgInAST : typeRefInAST.typeArgs) {
+			for(typeArgInAST : typeRefInAST.declaredTypeArgs) {
 				if(typeArgInAST instanceof Wildcard) {
 					addIssue(getMessageForCLF_IMPLEMENT_EXTEND_WITH_WILDCARD, typeArgInAST, CLF_IMPLEMENT_EXTEND_WITH_WILDCARD);
 				}

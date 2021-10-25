@@ -252,7 +252,13 @@ abstract class TypeRef extends TypeArgument {
 	/*
 	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
 	 */
-	op TypeArgument[] getTypeArgs() {
+	op TypeArgument[] getDeclaredTypeArgs() {
+		return emptyEList
+	}
+	/*
+	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
+	 */
+	op TypeArgument[] getTypeArgsWithDefaults() {
 		return emptyEList
 	}
 	/* See {@link TypeArgument#getTypeRefAsString()}. */
@@ -545,7 +551,11 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
 	transient String declaredTypeAsText
-	contains TypeArgument[] typeArgs
+	/*
+	 * The type arguments provided with this type reference, <b>NOT</b> including defaults for optional type parameters.
+	 * Use {@link ParameterizedTypeRef#getTypeArgsWithDefaults() #getTypeArgsWithDefaults()} to also obtain those defaults.
+	 */
+	contains TypeArgument[] declaredTypeArgs
 	/* An array type in the AST, i.e. something like {@code let x: string[];}. Don't confuse with {@link ParameterizedTypeRef#isArrayNTypeExpression() arrayNTypeExpression}. */
 	boolean arrayTypeExpression = "false"
 	/* An ArrayN type in the AST, i.e. something like {@code let x: [string,number];}. Don't confuse with {@link ParameterizedTypeRef#isArrayTypeExpression() arrayTypeExpression}. */
@@ -583,15 +593,43 @@ class ParameterizedTypeRef extends BaseTypeRef {
 		}
 		return definedTypingStrategy
 	}
+
+	/*
+	 * Returns all type arguments: those given in this type reference as well as
+	 * default arguments of optional type parameters for which the argument is omitted.
+	 */
+	op TypeArgument[] getTypeArgsWithDefaults() {
+		val declType = this.getDeclaredType();
+		if (declType !== null && declType.generic) {
+			val declTypeArgs = this.getDeclaredTypeArgs();
+			val declTypeArgsCount = declTypeArgs.size;
+			val typeParams = declType.typeVars;
+			val typeParamCount = typeParams.size;
+			if (typeParamCount > declTypeArgsCount) {
+				val args = <TypeArgument>newArrayOfSize(typeParamCount);
+				for (var i = 0; i < typeParamCount; i++) {
+					val arg = if (i < declTypeArgsCount) {
+						declTypeArgs.get(i);
+					} else {
+						typeParams.get(i)?.defaultArgument ?: TypeRefsFactory.eINSTANCE.createUnknownTypeRef
+					}
+					args.set(i, arg);
+				}
+				return newImmutableEList(args);
+			}
+		}
+		return declaredTypeArgs;
+	}
+
 	/*
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
 	op String internalGetTypeRefAsString() {
 		return declaredType?.rawTypeAsString
-		+ (if (typeArgs.empty) {
+		+ (if (declaredTypeArgs.empty) {
 			""
 		} else {
-			"<" + typeArgs.map[typeRefAsString].join(",") + ">"
+			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
 		})
 		+ getModifiersAsString();
 	}
@@ -599,19 +637,26 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 * Convenience method, returns true if type reference contains type arguments.
 	 */
 	op boolean isParameterized() {
-		return ! typeArgs.empty;
+		return ! declaredTypeArgs.empty; // FIXME
 	}
 	/*
-	 * Delegates to {@link Type.isGeneric()}
+	 * Delegates to {@link Type#isGeneric()}
 	 */
 	op boolean isGeneric() {
 		return declaredType!==null && declaredType.generic;
 	}
 	/*
+	 * Returns true iff the given type reference is "raw", i.e. if it points to a generic type and has fewer type
+	 * arguments than the generic type has mandatory(!) type parameters.
+	 *
 	 * Overrides {@link TypeRef#isRaw()}.
 	 */
 	op boolean isRaw() {
-		return isGeneric() && typeArgs.size<declaredType.typeVars.size;
+		if (isGeneric()) {
+			val mandatoryTypeParamsCount = declaredType.typeVars.filter[!optional].size;
+			return declaredTypeArgs.size < mandatoryTypeParamsCount;
+		}
+		return false;
 	}
 
 	/*
@@ -762,10 +807,10 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
 	op String internalGetTypeRefAsString() {
-		return typingStrategy + declaredType?.rawTypeAsString + (if (typeArgs.empty) {
+		return typingStrategy + declaredType?.rawTypeAsString + (if (declaredTypeArgs.empty) {
 			""
 		} else {
-			"<" + typeArgs.map[typeRefAsString].join(",") + ">"
+			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
 		}) + (if (structuralMembers.empty) {
 			""
 		} else {
@@ -946,7 +991,7 @@ class Wildcard extends TypeArgument {
 		// try to compute implicit upper bound from corresponding type parameter (without resolving proxies!)
 		val parent = eContainer;
 		if (parent instanceof ParameterizedTypeRef) {
-			val typeArgIndex = parent.getTypeArgs().indexOf(this);
+			val typeArgIndex = parent.declaredTypeArgs.indexOf(this);
 			if (typeArgIndex >= 0) {
 				val declType = parent.eGet(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(), false);
 				if (declType instanceof ContainerType<?>) {
@@ -1030,7 +1075,11 @@ abstract class FunctionTypeExprOrRef extends StaticBaseTypeRef {
 	 * Overrides {@link TypeRef#isRaw()}.
 	 */
 	op boolean isRaw() {
-		return isGeneric() && typeArgs.size<typeVars.size;
+		if (isGeneric()) {
+			val mandatoryTypeParamsCount = typeVars.filter[!optional].size;
+			return declaredTypeArgs.size < mandatoryTypeParamsCount;
+		}
+		return false;
 	}
 	/**
 	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call

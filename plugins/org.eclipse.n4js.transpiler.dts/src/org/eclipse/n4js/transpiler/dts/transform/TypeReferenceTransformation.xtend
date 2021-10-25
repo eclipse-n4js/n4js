@@ -337,7 +337,7 @@ class TypeReferenceTransformation extends Transformation {
 	}
 
 	def private void convertTypeArguments(ParameterizedTypeRef typeRef, String prefix, String suffix) {
-		var List<TypeArgument> typeArgs = typeRef.getTypeArgs();
+		var List<TypeArgument> typeArgs = typeRef.getTypeArgsWithDefaults();
 		if (typeArgs.isEmpty()) {
 			return;
 		}
