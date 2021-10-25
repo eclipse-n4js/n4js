@@ -32,7 +32,9 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -46,6 +48,8 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
 
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+
 /**
  * Validation of rules that apply to all classifiers w/o examining members of the classifiers.<p>
  */
@@ -55,6 +59,8 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 	private extension IQualifiedNameProvider qualifiedNameProvider;
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter
+	@Inject
+	private N4JSTypeSystem ts;
 
 	/**
 	 * NEEEDED
@@ -223,6 +229,47 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 				}
 			}
 		}
+	}
+
+	@Check
+	def void checkTypeParameters(N4ClassifierDeclaration n4ClassifierDecl) {
+		if (holdsCorrectOptionality(n4ClassifierDecl)) {
+			holdsDefaultArgumentsComplyToBounds(n4ClassifierDecl);
+		}
+	}
+
+	def private boolean holdsCorrectOptionality(N4ClassifierDeclaration n4ClassifierDecl) {
+		var haveOptional = false;
+		for (n4TypeParam : n4ClassifierDecl.typeVars) {
+			if (haveOptional && !n4TypeParam.optional) {
+				val message = messageForCLF_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL;
+				addIssue(message, n4TypeParam, TypesPackage.eINSTANCE.identifiableElement_Name, CLF_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL);
+				return false;
+			}
+			haveOptional = haveOptional || n4TypeParam.optional;
+		}
+		return true;
+	}
+
+	def private boolean holdsDefaultArgumentsComplyToBounds(N4ClassifierDeclaration n4ClassifierDecl) {
+		val G = n4ClassifierDecl.newRuleEnvironment;
+		var haveInvalidDefault = false;
+		for (n4TypeParam : n4ClassifierDecl.typeVars) {
+			if (n4TypeParam.name !== null) {
+				val defaultArgInAST = n4TypeParam.defaultArgumentNode?.typeRefInAST;
+				val defaultArg = n4TypeParam.defaultArgumentNode?.typeRef;
+				val ub = n4TypeParam.declaredUpperBound;
+				if (defaultArgInAST !== null && defaultArg !== null && ub !== null) {
+					val result = ts.subtype(G, defaultArg, ub);
+					if (result.failure) {
+						val message = getMessageForCLF_TYPE_PARAM_INVALID_DEFAULT(n4TypeParam.name, result.compiledFailureMessage);
+						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE, CLF_TYPE_PARAM_INVALID_DEFAULT);
+						haveInvalidDefault = true;
+					}
+				}
+			}
+		}
+		return !haveInvalidDefault;
 	}
 
 	@Check

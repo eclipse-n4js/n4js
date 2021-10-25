@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class X {}
+
+
+// XPECT errors --> "Mandatory type parameters may not follow optional type parameters." at "T2"
+class G0<T0,T1=any,T2> {
+
+	// XPECT errors --> "Only type parameters of classes and interfaces may be declared optional." at "any"
+	<TM0=any,TM1> method(p0: TM0, p1: TM1) {}
+}
+
+
+// XPECT noerrors -->
+class G1<T extends A = A> {}
+
+// XPECT noerrors -->
+class G2<T extends A = B> {}
+
+/* XPECT errors ---
+"Default argument of optional type parameter T0 must comply to its upper bound, but: X is not a subtype of A." at "X"
+"Default argument of optional type parameter T0 must comply to its upper bound, but: number is not a subtype of A." at "number"
+--- */
+class G3<T0 extends A = X, T0 extends A = number> {}
