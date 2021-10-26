@@ -209,7 +209,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		val tooMany = typeArgumentCount > typeParameterCount;
 		if (tooFew || tooMany) {
 			val expectationStr = if (mandatoryTypeParameterCount === typeParameterCount) {
-				"exactly " + typeParameterCount
+				"" + typeParameterCount
 			} else if (tooFew) {
 				"at least " + mandatoryTypeParameterCount
 			} else {
