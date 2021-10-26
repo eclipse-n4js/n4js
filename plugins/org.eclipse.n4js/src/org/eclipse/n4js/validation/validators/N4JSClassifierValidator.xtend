@@ -22,7 +22,9 @@ import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeVariable
+import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TClass
@@ -34,9 +36,11 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
@@ -234,7 +238,9 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkTypeParameters(N4ClassifierDeclaration n4ClassifierDecl) {
 		if (holdsCorrectOptionality(n4ClassifierDecl)) {
-			holdsDefaultArgumentsComplyToBounds(n4ClassifierDecl);
+			if (holdsDefaultArgumentsDoNotContainForwardReferences(n4ClassifierDecl)) {
+				holdsDefaultArgumentsComplyToBounds(n4ClassifierDecl);
+			}
 		}
 	}
 
@@ -247,6 +253,41 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 				return false;
 			}
 			haveOptional = haveOptional || n4TypeParam.optional;
+		}
+		return true;
+	}
+
+	def private boolean holdsDefaultArgumentsDoNotContainForwardReferences(N4ClassifierDeclaration n4ClassifierDecl) {
+		// find forward references to type parameters declared after the current type parameter
+		val badTypeVars = n4ClassifierDecl.typeVars.map[definedTypeVariable].filterNull.toSet;
+		if (badTypeVars.size < n4ClassifierDecl.typeVars.size) {
+			return true; // syntax error
+		}
+		val badReferences = <ParameterizedTypeRef>newArrayList;
+		for (n4TypeParam : n4ClassifierDecl.typeVars) {
+			val defaultArgInAST = n4TypeParam.defaultArgumentNode?.typeRefInAST;
+			if (defaultArgInAST !== null) {
+				TypeUtils.forAllTypeRefs(defaultArgInAST, ParameterizedTypeRef, true, false, null, [ptr|
+					val declType = ptr.declaredType;
+					if (declType instanceof TypeVariable && badTypeVars.contains(declType)) {
+						val isContainedInAST = EcoreUtil2.getContainerOfType(ptr, Script) !== null;
+						if (isContainedInAST) {
+							badReferences.add(ptr);
+						}
+					}
+					return true; // continue with traversal
+				], null);
+			}
+			// from now on, the current type variable may be referenced in the default argument of all following type variables:
+			badTypeVars.remove(n4TypeParam.definedTypeVariable);
+		}
+		// create error markers
+		if (!badReferences.empty) {
+			for (badRef : badReferences) {
+				val message = messageForCLF_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM;
+				addIssue(message, badRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM);
+			}
+			return false;
 		}
 		return true;
 	}
