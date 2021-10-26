@@ -34,9 +34,7 @@ import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TStructuralType;
@@ -463,28 +461,15 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			if ((typeParamCount > declTypeArgsCount)) {
 				final TypeArgument[] args = new TypeArgument[typeParamCount];
 				for (int i = 0; (i < typeParamCount); i++) {
-					{
-						TypeArgument _xifexpression = null;
-						if ((i < declTypeArgsCount)) {
-							_xifexpression = declTypeArgs.get(i);
+					if ((i < declTypeArgsCount)) {
+						args[i] = declTypeArgs.get(i);
+					}
+					else {
+						final TypeRef defArg = typeParams.get(i).getDefaultArgument();
+						if ((defArg == null)) {
+							return declTypeArgs;
 						}
-						else {
-							TypeRef _elvis = null;
-							TypeVariable _get = typeParams.get(i);
-							TypeRef _defaultArgument = null;
-							if (_get!=null) {
-								_defaultArgument=_get.getDefaultArgument();
-							}
-							if (_defaultArgument != null) {
-								_elvis = _defaultArgument;
-							} else {
-								UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-								_elvis = _createUnknownTypeRef;
-							}
-							_xifexpression = _elvis;
-						}
-						final TypeArgument arg = _xifexpression;
-						args[i] = arg;
+						args[i] = defArg;
 					}
 				}
 				return XcoreCollectionLiterals.<TypeArgument>newImmutableEList(args);

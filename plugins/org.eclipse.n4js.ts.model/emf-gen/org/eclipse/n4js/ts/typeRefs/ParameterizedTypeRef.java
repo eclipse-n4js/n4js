@@ -263,8 +263,15 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Returns all type arguments: those given in this type reference as well as
-	 * default arguments of optional type parameters for which the argument is omitted.
+	 * Returns all type arguments: those given in this type reference as well as default arguments
+	 * of <em>optional</em> type parameters for which the argument is omitted.
+	 * <p>
+	 * If a type argument is missing in this type reference for a <em>mandatory</em> type parameter
+	 * (i.e. this type reference is a {@link ParameterizedTypeRef#isRaw() raw type reference}) then
+	 * nothing will be added and only the type arguments actually given in this type reference will
+	 * be returned (i.e. same return value as {@link ParameterizedTypeRef#getDeclaredTypeArgs() #getDeclaredTypeArgs()}).
+	 * This is to ensure consistent behavior of this method and {@code #getDeclaredTypeArgs()} with
+	 * respect to raw type references.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
