@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+class A {}
+
+class G1<T0 extends A,T1 extends G1<T0,?>> {}
+
+class G2<T0=A,T1=G2<T0,string>> {}
+
+
+/* XPECT generated_dts ---
+declare class A {}
+declare class G1<T0 extends A, T1 extends G1<T0, any>> {}
+declare class G2<T0 = A, T1 = G2<T0, string>> {}
+--- */

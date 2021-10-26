@@ -27,13 +27,13 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.TypeReferenceNode
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.dts.utils.DtsUtils
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
-import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
@@ -337,7 +337,7 @@ class TypeReferenceTransformation extends Transformation {
 	}
 
 	def private void convertTypeArguments(ParameterizedTypeRef typeRef, String prefix, String suffix) {
-		var List<TypeArgument> typeArgs = typeRef.getTypeArgsWithDefaults();
+		var List<TypeArgument> typeArgs = typeRef.getDeclaredTypeArgs();
 		if (typeArgs.isEmpty()) {
 			return;
 		}
@@ -356,7 +356,7 @@ class TypeReferenceTransformation extends Transformation {
 
 	def private void convertTypeArgument(TypeArgument typeArg) {
 		if (typeArg instanceof Wildcard) {
-			val upperBound = typeArg.getDeclaredOrImplicitUpperBound();
+			val upperBound = typeArg.getDeclaredUpperBound();
 			if (upperBound !== null) {
 				convertTypeArgument(upperBound);
 			} else {
