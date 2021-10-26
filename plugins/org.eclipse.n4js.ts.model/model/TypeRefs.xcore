@@ -650,7 +650,7 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 * Convenience method, returns true if type reference contains type arguments.
 	 */
 	op boolean isParameterized() {
-		return ! declaredTypeArgs.empty; // FIXME
+		return ! declaredTypeArgs.empty;
 	}
 	/*
 	 * Delegates to {@link Type#isGeneric()}

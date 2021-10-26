@@ -509,13 +509,27 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			internalCheckSuperfluousPropertiesInObjectLiteral(expectedTypeRef, expression);
 
 		} else if (expression instanceof ArrayLiteral) {
-			if (!expectedTypeRef.declaredTypeArgs.empty) {
-				// FIXME
-				val arrayElementType = expectedTypeRef.declaredTypeArgs.get(0);
-				val typeArgTypeRef = ts.upperBoundWithReopenAndResolveTypeVars(G, arrayElementType);
-				for (arrElem : expression.elements) {
-					val arrExpr = arrElem.expression;
-					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
+			val expectedElemTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
+			if (!expectedElemTypeRefs.empty) {
+				// we have Iterable, Array, IterableN, ArrayN or a subtype thereof
+				var cachedLastElementTypeRefUB = null as TypeRef;
+				val expectedElemTypeRefsCount = expectedElemTypeRefs.size;
+				val elems = expression.elements;
+				val elemsCount = elems.size;
+				for (var i = 0; i < elemsCount; i++) {
+					val currElemExpr = elems.get(i)?.expression;
+					val currExpectedElemTypeRefUB = if (i < expectedElemTypeRefsCount - 1) {
+						ts.upperBoundWithReopenAndResolveTypeVars(G, expectedElemTypeRefs.get(i))
+					} else {
+						if (cachedLastElementTypeRefUB === null) {
+							cachedLastElementTypeRefUB = ts.upperBoundWithReopenAndResolveTypeVars(G,
+								expectedElemTypeRefs.get(expectedElemTypeRefsCount - 1));
+						}
+						cachedLastElementTypeRefUB
+					};
+					if (currElemExpr !== null) {
+						internalCheckSuperfluousPropertiesInObjectLiteralRek(G, currExpectedElemTypeRefUB, currElemExpr);
+					}
 				}
 			}
 		}
