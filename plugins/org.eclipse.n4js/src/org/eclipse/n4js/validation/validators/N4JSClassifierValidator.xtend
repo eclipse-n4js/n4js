@@ -237,14 +237,14 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkTypeParameters(N4ClassifierDeclaration n4ClassifierDecl) {
-		if (holdsCorrectOptionality(n4ClassifierDecl)) {
-			if (holdsDefaultArgumentsDoNotContainForwardReferences(n4ClassifierDecl)) {
+		if (holdsCorrectTypeParameterOptionality(n4ClassifierDecl)) {
+			if (holdsDefaultArgumentsContainValidReferences(n4ClassifierDecl)) {
 				holdsDefaultArgumentsComplyToBounds(n4ClassifierDecl);
 			}
 		}
 	}
 
-	def private boolean holdsCorrectOptionality(N4ClassifierDeclaration n4ClassifierDecl) {
+	def private boolean holdsCorrectTypeParameterOptionality(N4ClassifierDeclaration n4ClassifierDecl) {
 		var haveOptional = false;
 		for (n4TypeParam : n4ClassifierDecl.typeVars) {
 			if (haveOptional && !n4TypeParam.optional) {
@@ -257,13 +257,17 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	def private boolean holdsDefaultArgumentsDoNotContainForwardReferences(N4ClassifierDeclaration n4ClassifierDecl) {
+	/**
+	 * Currently this method only checks for forward references in default arguments (e.g. <code>G&lt;T1=T2,T2=any> {}</code>).
+	 * In the future, we might also check for cyclic default arguments.
+	 */
+	def private boolean holdsDefaultArgumentsContainValidReferences(N4ClassifierDeclaration n4ClassifierDecl) {
 		// find forward references to type parameters declared after the current type parameter
 		val badTypeVars = n4ClassifierDecl.typeVars.map[definedTypeVariable].filterNull.toSet;
 		if (badTypeVars.size < n4ClassifierDecl.typeVars.size) {
 			return true; // syntax error
 		}
-		val badReferences = <ParameterizedTypeRef>newArrayList;
+		val forwardReferences = <ParameterizedTypeRef>newArrayList;
 		for (n4TypeParam : n4ClassifierDecl.typeVars) {
 			val defaultArgInAST = n4TypeParam.defaultArgumentNode?.typeRefInAST;
 			if (defaultArgInAST !== null) {
@@ -272,7 +276,7 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 					if (declType instanceof TypeVariable && badTypeVars.contains(declType)) {
 						val isContainedInAST = EcoreUtil2.getContainerOfType(ptr, Script) !== null;
 						if (isContainedInAST) {
-							badReferences.add(ptr);
+							forwardReferences.add(ptr);
 						}
 					}
 					return true; // continue with traversal
@@ -282,8 +286,8 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 			badTypeVars.remove(n4TypeParam.definedTypeVariable);
 		}
 		// create error markers
-		if (!badReferences.empty) {
-			for (badRef : badReferences) {
+		if (!forwardReferences.empty) {
+			for (badRef : forwardReferences) {
 				val message = messageForCLF_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM;
 				addIssue(message, badRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM);
 			}
@@ -303,8 +307,8 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 				if (defaultArgInAST !== null && defaultArg !== null && ub !== null) {
 					val result = ts.subtype(G, defaultArg, ub);
 					if (result.failure) {
-						val message = getMessageForCLF_TYPE_PARAM_INVALID_DEFAULT(n4TypeParam.name, result.compiledFailureMessage);
-						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE, CLF_TYPE_PARAM_INVALID_DEFAULT);
+						val message = getMessageForCLF_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND(n4TypeParam.name, result.compiledFailureMessage);
+						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE, CLF_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND);
 						haveInvalidDefault = true;
 					}
 				}
