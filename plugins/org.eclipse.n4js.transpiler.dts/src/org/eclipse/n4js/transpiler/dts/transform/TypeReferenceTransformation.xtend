@@ -356,7 +356,7 @@ class TypeReferenceTransformation extends Transformation {
 
 	def private void convertTypeArgument(TypeArgument typeArg) {
 		if (typeArg instanceof Wildcard) {
-			val upperBound = typeArg.getDeclaredUpperBound();
+			val upperBound = typeArg.getDeclaredOrImplicitUpperBound();
 			if (upperBound !== null) {
 				convertTypeArgument(upperBound);
 			} else {
