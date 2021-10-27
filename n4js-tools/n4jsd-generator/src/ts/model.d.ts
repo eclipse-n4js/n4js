@@ -155,7 +155,8 @@ export enum TypeRefKind {
 	INTERSECTION,
 	PARENTHESES,
 	// the following are not actually supported on N4JS side:
-	PREDICATE,
+	TYPE_PREDICATE,
+	TYPE_QUERY,
 	INDEXED_ACCESS_TYPE,
 	MAPPED_TYPE
 }

@@ -827,8 +827,12 @@ export class Converter {
 			return resultNested;
 		} else if (ts.isTypePredicateNode(node)) {
 			// e.g. "this is Cls"
-			result.kind = model.TypeRefKind.PREDICATE;
+			result.kind = model.TypeRefKind.TYPE_PREDICATE;
 			this.createWarningForNode("type predicate will be replaced by boolean", node);
+		} else if (ts.isTypeQueryNode(node)) {
+			// e.g. "typeof x" (with x being a variable, etc.)
+			result.kind = model.TypeRefKind.TYPE_QUERY;
+			this.createWarningForNode("type query will be replaced by any+", node);
 		} else if (ts.isIndexedAccessTypeNode(node)) {
 			// e.g. "SomeType['someProperty']"
 			result.kind = model.TypeRefKind.INDEXED_ACCESS_TYPE;

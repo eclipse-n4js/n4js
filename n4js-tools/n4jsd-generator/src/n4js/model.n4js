@@ -158,7 +158,8 @@ export enum TypeRefKind {
 	INTERSECTION,
 	PARENTHESES,
 	// the following are not actually supported on N4JS side:
-	PREDICATE,
+	TYPE_PREDICATE,
+	TYPE_QUERY,
 	INDEXED_ACCESS_TYPE,
 	MAPPED_TYPE
 }
@@ -607,8 +608,11 @@ class Emitter {
 				this.emitTypeRef(typeRef.parenthesizedTypeRef);
 				buff.push(")");
 				break;
-			case TypeRefKind.PREDICATE:
+			case TypeRefKind.TYPE_PREDICATE:
 				buff.push("boolean");
+				break;
+			case TypeRefKind.TYPE_QUERY:
+				buff.push("any+");
 				break;
 			case TypeRefKind.INDEXED_ACCESS_TYPE:
 				buff.push("any+");
