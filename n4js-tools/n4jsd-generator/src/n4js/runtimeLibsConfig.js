@@ -1,5 +1,10 @@
 export default {
-	preamble: `@@Global @@ProvidedByRuntime`,
+	preamble: `
+		// generated from https://github.com/microsoft/TypeScript/blob/<<COMMIT_ID>>/src/lib/$TS_FILE_NAME
+		// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+		@@Global @@ProvidedByRuntime
+	`,
 	patchFiles: {
 		"es5.d.ts": {
 			prefix: ``,
@@ -404,6 +409,8 @@ export default {
 				"Date#constructor": { replaceBy: "public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);" },
 				"RegExp#constructor": { replaceBy: "public constructor(pattern: string = undefined, flags: string = undefined);" },
 				"JSON#stringify": { replaceBy: "public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;" },
+				// required due to use of Intl.NumberFormatOptions as type of parameter "options"
+				"Number#toLocaleString": { replaceBy: "@Override public toLocaleString(locales: string | Array<string> = , options: Object = ): string;" },
 				// required because optional methods used in .d.ts and not supported in N4JS
 				"PropertyDescriptor#get": { replaceBy: "get?: ()=>any;" },
 				"PropertyDescriptor#set": { replaceBy: "set?: (value: any)=>void;" },
@@ -414,7 +421,6 @@ export default {
 				"Boolean#valueOf": { addAnnotations: [ "@Override" ] },
 				"Number#valueOf": { addAnnotations: [ "@Override" ] },
 				"Number#toString": { addAnnotations: [ "@Override" ] },
-				"Number#toLocaleString": { addAnnotations: [ "@Override" ] },
 				"Date#valueOf": { addAnnotations: [ "@Override" ] },
 				"Date#toString": { addAnnotations: [ "@Override" ] },
 				"Date#toLocaleString": { addAnnotations: [ "@Override" ] },
@@ -583,7 +589,8 @@ export default {
 			},
 			// we need to provide our own modified variant of IterableIterator, because
 			// 1) we must add "out" modifier to type parameter,
-			// 2) extend interface "Iterable" explicitly to avoid error message "All N4Objects must explicitly extend/implement definition site structural type Iterable<?>.",
+			// 2) extend interface "Iterable" explicitly to avoid error message "All N4Objects must explicitly extend/implement definition site structural type Iterable<?>."
+			//    in classes that only explicitly implement IterableIterator (but not Iterable),
 			// 3) due to 2), @Override annotation must be added.
 			suffix: `
 				export external public interface ~IterableIterator<out T> extends Iterator<T>, Iterable<T> {

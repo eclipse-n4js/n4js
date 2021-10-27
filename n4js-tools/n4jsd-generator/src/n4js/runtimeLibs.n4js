@@ -138,7 +138,11 @@ class RuntimeLibsPatcher {
 		const config = getGenConfig();
 		const fileConfig = config.patchFiles.get(script.tsFileName);
 		// script prefix/suffix
-		const preamble = config.preamble;
+		let preamble = config.preamble;
+		if (preamble) {
+			preamble = preamble.replace("$TS_FILE_NAME", script.tsFileName);
+			preamble = preamble.replace("$TS_FILE_PATH", script.tsFilePath);
+		}
 		const prefix = fileConfig?.prefix;
 		if (preamble || prefix) {
 			script.prefix = utils.trimMultiLineString(preamble ?? "") + utils.trimMultiLineString(prefix ?? "");
