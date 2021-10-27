@@ -12,18 +12,29 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
-class A0 {}
-class A1 {}
-class X0 {}
+interface A {}
+interface X {}
 
-class G<T0=A0,T1=A1> {
-	getT0(): T0 { return undefined; }
-	getT1(): T1 { return undefined; }
+interface I<T=A> {
+	getTinI(): T
+}
+interface J<T=I> {
+	getTinJ(): T
+}
+interface K1<T=J> {
+	getTinK(): T
 }
 
-let g = new G<X0>();
+let k1: K1;
+// XPECT noerrors -->
+// XPECT type of 'test01' --> A
+let test01 = k1.getTinK().getTinJ().getTinI();
 
-// XPECT type of 'g0' --> X0
-let g0 = g.getT0();
-// XPECT type of 'g1' --> A1
-let g1 = g.getT1();
+
+interface K2<T=J<I<X>>> {
+	getTinK(): T
+}
+let k2: K2;
+// XPECT noerrors -->
+// XPECT type of 'test02' --> X
+let test02 = k2.getTinK().getTinJ().getTinI();
