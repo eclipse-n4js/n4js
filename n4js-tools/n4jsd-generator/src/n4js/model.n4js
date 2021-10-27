@@ -99,11 +99,18 @@ export enum PrimitiveBasedKind {
 	STRING_BASED, NUMBER_BASED
 }
 
-export class Type extends ExportableElement implements AnnotatableElement {
+export interface GenericElement {
+	typeParams: TypeParameter[] = [];
+}
+
+export class TypeParameter extends NamedElement {
+	defaultArgument?: TypeRef;
+}
+
+export class Type extends ExportableElement implements AnnotatableElement, GenericElement {
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
-	typeParams: string[] = [];
 	extends: TypeRef[] = [];
 	implements: TypeRef[] = [];
 	members: Member[] = [];
@@ -132,8 +139,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	replacementCode?: string;
 }
 
-export class Signature {
-	typeParams: string[] = [];
+export class Signature implements GenericElement {
 	parameters: Parameter[] = [];
 	/** Will be undefined iff this signature belongs to a constructor. */
 	returnType?: TypeRef;
@@ -330,9 +336,8 @@ class Emitter {
 			buff.push("~");
 		}
 		buff.push(type.name);
-		if (type.typeParams.length > 0) {
-			buff.push("<", type.typeParams.join(","), ">");
-		}
+		const supportsOptionalTypeParams = type.kind === TypeKind.INTERFACE || type.kind === TypeKind.CLASS;
+		this.emitTypeParameters(type, supportsOptionalTypeParams);
 		if (type.extends.length > 0) {
 			buff.push(" extends ");
 			this.emitTypeRefs(type.extends, true);
@@ -365,6 +370,26 @@ class Emitter {
 				buff.pushln();
 			}
 			buff.push("}");
+		}
+	}
+
+	emitTypeParameters(genericElem: GenericElement, allowOptionalParams: boolean) {
+		const buff = this.buff;
+		if (genericElem.typeParams.length > 0) {
+			buff.push("<");
+			let isFirst = true;
+			for (const typeParam of genericElem.typeParams) {
+				if (!isFirst) {
+					buff.push(",");
+				}
+				buff.push(typeParam.name);
+				if (allowOptionalParams && typeParam.defaultArgument) {
+					buff.push("=");
+					this.emitTypeRef(typeParam.defaultArgument);
+				}
+				isFirst = false;
+			}
+			buff.push(">");
 		}
 	}
 
@@ -495,7 +520,8 @@ class Emitter {
 	emitSignaturePart1(sig: Signature) {
 		const buff = this.buff;
 		if (sig.typeParams.length > 0) {
-			buff.push("<", sig.typeParams.join(","), "> ");
+			this.emitTypeParameters(sig, false);
+			buff.push(" ");
 		}
 	}
 
@@ -901,7 +927,7 @@ export function createNamedTypeRef(targetType: Type | string): TypeRef {
 	if (targetType instanceof Type) {
 		result.targetTypeName = targetType.name;
 		for (const typeParam of targetType.typeParams) {
-			result.targetTypeArgs.push(createNamedTypeRef(typeParam));
+			result.targetTypeArgs.push(createNamedTypeRef(typeParam.name));
 		}
 	} else {
 		result.targetTypeName = targetType;

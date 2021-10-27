@@ -130,7 +130,7 @@ export external public class MediaList extends MediaList {
 }
 
 @Polyfill
-export external public class MessageEvent<T> extends MessageEvent<T> {
+export external public class MessageEvent<T=any> extends MessageEvent<T> {
 	public initMessageEvent(type: string, bubbles: boolean = , cancelable: boolean = , data: any = , origin: string = , lastEventId: string = , source: MessageEventSource = , ports: Iterable<MessagePort> = ): void;
 }
 
@@ -179,7 +179,7 @@ export external public class PluginArray extends PluginArray {
 export external public class RTCStatsReport extends RTCStatsReport {}
 
 @Polyfill
-export external public class ReadableStream<R> extends ReadableStream<R> {
+export external public class ReadableStream<R=any> extends ReadableStream<R> {
 	public [Symbol.iterator](): IterableIterator<any>;
 	public entries(): IterableIterator<[number,any]>;
 	public keys(): IterableIterator<number>;

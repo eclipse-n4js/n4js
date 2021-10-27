@@ -268,7 +268,7 @@ export external public interface ~CryptoKeyPair {
 	publicKey?: CryptoKey;
 }
 
-export external public interface ~CustomEventInit<T> extends EventInit {
+export external public interface ~CustomEventInit<T=any> extends EventInit {
 	detail?: T;
 }
 
@@ -851,7 +851,7 @@ export external public interface ~MediaTrackSupportedConstraints {
 	width?: boolean;
 }
 
-export external public interface ~MessageEventInit<T> extends EventInit {
+export external public interface ~MessageEventInit<T=any> extends EventInit {
 	data?: T;
 	lastEventId?: string;
 	origin?: string;
@@ -1143,7 +1143,7 @@ export external public interface ~PushSubscriptionOptionsInit {
 	userVisibleOnly?: boolean;
 }
 
-export external public interface ~QueuingStrategy<T> {
+export external public interface ~QueuingStrategy<T=any> {
 	highWaterMark?: number;
 	size?: QueuingStrategySize<T>;
 }
@@ -1400,7 +1400,7 @@ export external public interface ~ReadableStreamDefaultReadValueResult<T> {
 	value: T;
 }
 
-export external public interface ~ReadableWritablePair<R,W> {
+export external public interface ~ReadableWritablePair<R=any,W=any> {
 	readable: ReadableStream<R>;
 	writable: WritableStream<W>;
 }
@@ -1615,7 +1615,7 @@ export external public interface ~TrackEventInit extends EventInit {
 	track?: TextTrack;
 }
 
-export external public interface ~Transformer<I,O> {
+export external public interface ~Transformer<I=any,O=any> {
 	flush?: TransformerFlushCallback<O>;
 	readableType?: undefined;
 	start?: TransformerStartCallback<O>;
@@ -1640,7 +1640,7 @@ export external public interface ~ULongRange {
 	min?: number;
 }
 
-export external public interface ~UnderlyingSink<W> {
+export external public interface ~UnderlyingSink<W=any> {
 	abort?: UnderlyingSinkAbortCallback;
 	close?: UnderlyingSinkCloseCallback;
 	start?: UnderlyingSinkStartCallback;
@@ -1648,7 +1648,7 @@ export external public interface ~UnderlyingSink<W> {
 	write?: UnderlyingSinkWriteCallback<W>;
 }
 
-export external public interface ~UnderlyingSource<R> {
+export external public interface ~UnderlyingSource<R=any> {
 	cancel?: UnderlyingSourceCancelCallback;
 	pull?: UnderlyingSourcePullCallback<R>;
 	start?: UnderlyingSourceStartCallback<R>;
@@ -3030,7 +3030,7 @@ export external public class CustomElementRegistry {
 	public constructor();
 }
 
-export external public class CustomEvent<T> extends Event {
+export external public class CustomEvent<T=any> extends Event {
 	public get detail(): T;
 	public initCustomEvent(type: string, bubbles: boolean = , cancelable: boolean = , detail: T = ): void;
 	public constructor(type: string, eventInitDict: CustomEventInit<T> = );
@@ -5596,7 +5596,7 @@ export external public interface ~IDBRequestEventMap {
 	success: Event;
 }
 
-export external public class IDBRequest<T> extends EventTarget {
+export external public class IDBRequest<T=any> extends EventTarget {
 	public get error(): DOMException;
 	public onerror: ({@This(IDBRequest<T>) function(ev: Event): any});
 	public onsuccess: ({@This(IDBRequest<T>) function(ev: Event): any});
@@ -6078,7 +6078,7 @@ export external public class MessageChannel {
 	public constructor();
 }
 
-export external public class MessageEvent<T> extends Event {
+export external public class MessageEvent<T=any> extends Event {
 	public get data(): T;
 	public get lastEventId(): string;
 	public get origin(): string;
@@ -6815,7 +6815,7 @@ export external public class ProcessingInstruction extends CharacterData impleme
 	public constructor();
 }
 
-export external public class ProgressEvent<T> extends Event {
+export external public class ProgressEvent<T=EventTarget> extends Event {
 	public get lengthComputable(): boolean;
 	public get loaded(): number;
 	public get target(): T;
@@ -7135,7 +7135,7 @@ export external public class Range extends AbstractRange {
 	public static toString(): string;
 }
 
-export external public class ReadableStream<R> {
+export external public class ReadableStream<R=any> {
 	public get locked(): boolean;
 	public cancel(reason: any = ): Promise<void>;
 	public getReader(): ReadableStreamDefaultReader<R>;
@@ -7146,7 +7146,7 @@ export external public class ReadableStream<R> {
 	public constructor(underlyingSource: UnderlyingSource<R> = , strategy: QueuingStrategy<R> = );
 }
 
-export external public class ReadableStreamDefaultController<R> {
+export external public class ReadableStreamDefaultController<R=any> {
 	public get desiredSize(): number;
 	public close(): void;
 	public enqueue(chunk: R = ): void;
@@ -7154,7 +7154,7 @@ export external public class ReadableStreamDefaultController<R> {
 	public constructor();
 }
 
-export external public class ReadableStreamDefaultReader<R> extends ReadableStreamGenericReader {
+export external public class ReadableStreamDefaultReader<R=any> extends ReadableStreamGenericReader {
 	public read(): Promise<ReadableStreamDefaultReadResult<R>>;
 	public releaseLock(): void;
 	public constructor(stream: ReadableStream<R>);
@@ -9045,13 +9045,13 @@ export external public class TrackEvent extends Event {
 	public constructor(type: string, eventInitDict: TrackEventInit = );
 }
 
-export external public class TransformStream<I,O> {
+export external public class TransformStream<I=any,O=any> {
 	public get readable(): ReadableStream<O>;
 	public get writable(): WritableStream<I>;
 	public constructor(transformer: Transformer<I,O> = , writableStrategy: QueuingStrategy<I> = , readableStrategy: QueuingStrategy<O> = );
 }
 
-export external public class TransformStreamDefaultController<O> {
+export external public class TransformStreamDefaultController<O=any> {
 	public get desiredSize(): number;
 	public enqueue(chunk: O = ): void;
 	public error(reason: any = ): void;
@@ -11321,7 +11321,7 @@ export external public class Worklet {
 	public constructor();
 }
 
-export external public class WritableStream<W> {
+export external public class WritableStream<W=any> {
 	public get locked(): boolean;
 	public abort(reason: any = ): Promise<void>;
 	public close(): Promise<void>;
@@ -11334,7 +11334,7 @@ export external public class WritableStreamDefaultController {
 	public constructor();
 }
 
-export external public class WritableStreamDefaultWriter<W> {
+export external public class WritableStreamDefaultWriter<W=any> {
 	public get closed(): Promise<undefined>;
 	public get desiredSize(): number;
 	public get ready(): Promise<undefined>;
@@ -11596,7 +11596,7 @@ export external public interface ~PositionErrorCallback {
 	(positionError: GeolocationPositionError): void;
 }
 
-export external public interface ~QueuingStrategySize<T> {
+export external public interface ~QueuingStrategySize<T=any> {
 	(chunk: T = ): number;
 }
 

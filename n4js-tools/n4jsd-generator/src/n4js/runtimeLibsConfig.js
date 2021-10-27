@@ -302,7 +302,7 @@ export default {
 				 * encapsulates. A rejected promise indicates erroneous or abnormal completion
 				 * of the process.
 				 */
-				export external public class Promise<out S, out F> extends Object {
+				export external public class Promise<out S, out F = any> extends Object {
 
 					public constructor(
 						executor: {function(
@@ -693,7 +693,7 @@ export default {
 			],
 			suffix: `
 				@Polyfill
-				export external public class Promise<out S, out F> extends Promise<S,F> {
+				export external public class Promise<out S, out F = any> extends Promise<S,F> {
 					public finally(onfinally: (()=>void) = ): Promise<S,F>;
 				}
 			`
@@ -738,7 +738,7 @@ export default {
 			],
 			suffix: `
 				@Polyfill
-				export external public class Promise<out S, out F> extends Promise<S,F> {
+				export external public class Promise<out S, out F = any> extends Promise<S,F> {
 					public static allSettled(...args: any+): any+; // overloading not supported
 				}
 			`

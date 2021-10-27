@@ -1090,7 +1090,7 @@ export external public interface ~AsyncGenerator<out TYield, out TReturn, in TNe
  * encapsulates. A rejected promise indicates erroneous or abnormal completion
  * of the process.
  */
-export external public class Promise<out S, out F> extends Object {
+export external public class Promise<out S, out F = any> extends Object {
 
 	public constructor(
 		executor: {function(

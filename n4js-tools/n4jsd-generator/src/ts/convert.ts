@@ -367,15 +367,21 @@ export class Converter {
 		return [result, isNew];
 	}
 
-	private convertTypeParameters(node: ts.NamedDeclaration): string[] {
-		const sym = this.checker.getSymbolAtLocation(node.name);
-		const result = [];
-		sym.members?.forEach((symMember, name) => {
-			const representativeNode = symMember.declarations[0] as ts.NamedDeclaration;
-			if (ts.isTypeParameterDeclaration(representativeNode)) {
-				result.push(symMember.name);
-			}
-		});
+	private convertTypeParameters(node: ts.ClassDeclaration | ts.InterfaceDeclaration | ts.TypeAliasDeclaration | ts.SignatureDeclaration | ts.ConstructSignatureDeclaration | ts.IndexSignatureDeclaration | ts.FunctionTypeNode): model.TypeParameter[] {
+		const result = [] as model.TypeParameter[];
+		for (const typeParam of node.typeParameters ?? []) {
+			const n4jsTypeParam = this.convertTypeParameter(typeParam);
+			result.push(n4jsTypeParam);
+		}
+		return result;
+	}
+
+	private convertTypeParameter(node: ts.TypeParameterDeclaration): model.TypeParameter {
+		const result = new model.TypeParameter();
+		result.name = node.name.text;
+		if (node.default) {
+			result.defaultArgument = this.convertTypeReference(node.default);
+		}
 		return result;
 	}
 
@@ -539,8 +545,9 @@ export class Converter {
 			}
 			const result = new model.Signature();
 			if (sig.typeParameters) {
-				for (const typeParam of sig.typeParameters) {
-					result.typeParams.push(typeParam.symbol.name);
+				const sigDecl = sig.declaration;
+				if (sigDecl && !ts.isJSDocSignature(sigDecl)) { // note: there is no "ts.is...()" method for ts.SignatureDeclaration!
+					result.typeParams.push(...this.convertTypeParameters(sigDecl));
 				}
 			}
 			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
@@ -569,9 +576,7 @@ export class Converter {
 					const typeParamsSupported = !ts.isCallSignatureDeclaration(decl);
 					if (typeParamsSupported) {
 						// yes
-						for (const typeParam of decl.typeParameters) {
-							result.typeParams.push(typeParam.name.text);
-						}
+						result.typeParams.push(...this.convertTypeParameters(decl));
 					} else {
 						// no, type parameters are not supported on N4JS side for this member,
 						// so in the signature of this member we have to suppress all references to these type parameters:
@@ -631,7 +636,7 @@ export class Converter {
 		result.kind = model.TypeKind.TYPE_ALIAS;
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.jsdoc = utils_ts.getJSDocForNode(node);
-		result.typeParams.push(...(node.typeParameters ?? []).map((p: ts.TypeParameterDeclaration) => p.name.text));
+		result.typeParams.push(...this.convertTypeParameters(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		result.aliasedType = this.convertTypeReference(node.type);
