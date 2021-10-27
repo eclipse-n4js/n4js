@@ -1,0 +1,58 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/dom.iterable.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class DOMTokenList extends DOMTokenList {
+	public [Symbol.iterator](): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class Headers extends Headers {
+	public [Symbol.iterator](): IterableIterator<[string,string]>;
+	public entries(): IterableIterator<[string,string]>;
+	public keys(): IterableIterator<string>;
+	public values(): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class NodeList extends NodeList {
+	public entries(): IterableIterator<[number,Node]>;
+	public forEach(callbackfn: (value: Node, index: number, listObj: NodeList)=>void, thisArg: any = ): void;
+	public keys(): IterableIterator<number>;
+	public values(): IterableIterator<Node>;
+	public [Symbol.iterator](): IterableIterator<Node>;
+}
+
+export external public interface ~NodeListOf<TNode> {
+	entries(): IterableIterator<[number,TNode]>;
+	forEach(callbackfn: (value: TNode, index: number, listObj: NodeListOf<TNode>)=>void, thisArg: any = ): void;
+	keys(): IterableIterator<number>;
+	values(): IterableIterator<TNode>;
+	[Symbol.iterator](): IterableIterator<TNode>;
+}
+
+export external public interface ~HTMLCollectionBase {
+	[Symbol.iterator](): IterableIterator<Element>;
+}
+
+export external public interface ~HTMLCollectionOf<T> {
+	[Symbol.iterator](): IterableIterator<T>;
+}
+
+@Polyfill
+export external public class FormData extends FormData {
+	public entries(): IterableIterator<[string,string | File]>;
+	public keys(): IterableIterator<string>;
+	public values(): IterableIterator<string | File>;
+	public [Symbol.iterator](): IterableIterator<string | File>;
+}
+
+@Polyfill
+export external public class URLSearchParams extends URLSearchParams {
+	public entries(): IterableIterator<[string,string]>;
+	public keys(): IterableIterator<string>;
+	public values(): IterableIterator<string>;
+	public [Symbol.iterator](): IterableIterator<[string,string]>;
+}

@@ -1,0 +1,326 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/dom.iterable.generated.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class AudioParam extends AudioParam {
+	public setValueCurveAtTime(values: Iterable<number>, startTime: number, duration: number): AudioParam;
+}
+
+@Polyfill
+export external public class AudioParamMap extends AudioParamMap {}
+
+@Polyfill
+export external public class BaseAudioContext extends BaseAudioContext {
+	public createIIRFilter(feedforward: Iterable<number>, feedback: Iterable<number>): IIRFilterNode;
+	public createPeriodicWave(real: Iterable<number>, imag: Iterable<number>, constraints: PeriodicWaveConstraints = ): PeriodicWave;
+}
+
+@Polyfill
+export external public class CSSRuleList extends CSSRuleList {
+	public [Symbol.iterator](): IterableIterator<CSSRule>;
+}
+
+@Polyfill
+export external public class CSSStyleDeclaration extends CSSStyleDeclaration {
+	public [Symbol.iterator](): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class Cache extends Cache {
+	public addAll(requests: Iterable<RequestInfo>): Promise<void>;
+}
+
+export external public interface ~CanvasPathDrawingStyles {
+	setLineDash(segments: Iterable<number>): void;
+}
+
+@Polyfill
+export external public class DOMRectList extends DOMRectList {
+	public [Symbol.iterator](): IterableIterator<DOMRect>;
+}
+
+@Polyfill
+export external public class DOMStringList extends DOMStringList {
+	public [Symbol.iterator](): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class DOMTokenList extends DOMTokenList {
+	public [Symbol.iterator](): IterableIterator<string>;
+	public entries(): IterableIterator<[number,string]>;
+	public keys(): IterableIterator<number>;
+	public values(): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class DataTransferItemList extends DataTransferItemList {
+	public [Symbol.iterator](): IterableIterator<DataTransferItem>;
+}
+
+@Polyfill
+export external public class FileList extends FileList {
+	public [Symbol.iterator](): IterableIterator<File>;
+}
+
+@Polyfill
+export external public class FontFaceSet extends FontFaceSet {}
+
+@Polyfill
+export external public class FormData extends FormData {
+	public [Symbol.iterator](): IterableIterator<[string,FormDataEntryValue]>;
+	public entries(): IterableIterator<[string,FormDataEntryValue]>;
+	public keys(): IterableIterator<string>;
+	public values(): IterableIterator<FormDataEntryValue>;
+}
+
+@Polyfill
+export external public class HTMLAllCollection extends HTMLAllCollection {
+	public [Symbol.iterator](): IterableIterator<Element>;
+}
+
+export external public interface ~HTMLCollectionBase {
+	[Symbol.iterator](): IterableIterator<Element>;
+}
+
+export external public interface ~HTMLCollectionOf<T> {
+	[Symbol.iterator](): IterableIterator<T>;
+}
+
+@Polyfill
+export external public class HTMLFormElement extends HTMLFormElement {
+	public [Symbol.iterator](): IterableIterator<Element>;
+}
+
+@Polyfill
+export external public class HTMLSelectElement extends HTMLSelectElement {
+	public [Symbol.iterator](): IterableIterator<HTMLOptionElement>;
+}
+
+@Polyfill
+export external public class Headers extends Headers {
+	public [Symbol.iterator](): IterableIterator<[string,string]>;
+	public entries(): IterableIterator<[string,string]>;
+	public keys(): IterableIterator<string>;
+	public values(): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class IDBDatabase extends IDBDatabase {
+	public transaction(storeNames: string | Iterable<string>, mode: IDBTransactionMode = ): IDBTransaction;
+}
+
+@Polyfill
+export external public class IDBObjectStore extends IDBObjectStore {
+	public createIndex(name: string, keyPath: string | Iterable<string>, options: IDBIndexParameters = ): IDBIndex;
+}
+
+@Polyfill
+export external public class MediaKeyStatusMap extends MediaKeyStatusMap {
+	public [Symbol.iterator](): IterableIterator<[BufferSource,MediaKeyStatus]>;
+	public entries(): IterableIterator<[BufferSource,MediaKeyStatus]>;
+	public keys(): IterableIterator<BufferSource>;
+	public values(): IterableIterator<MediaKeyStatus>;
+}
+
+@Polyfill
+export external public class MediaList extends MediaList {
+	public [Symbol.iterator](): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class MessageEvent<T> extends MessageEvent<T> {
+	public initMessageEvent(type: string, bubbles: boolean = , cancelable: boolean = , data: any = , origin: string = , lastEventId: string = , source: MessageEventSource = , ports: Iterable<MessagePort> = ): void;
+}
+
+@Polyfill
+export external public class MimeTypeArray extends MimeTypeArray {
+	public [Symbol.iterator](): IterableIterator<MimeType>;
+}
+
+@Polyfill
+export external public class NamedNodeMap extends NamedNodeMap {
+	public [Symbol.iterator](): IterableIterator<Attr>;
+}
+
+@Polyfill
+export external public class Navigator extends Navigator {
+	public requestMediaKeySystemAccess(keySystem: string, supportedConfigurations: Iterable<MediaKeySystemConfiguration>): Promise<MediaKeySystemAccess>;
+	public vibrate(pattern: Iterable<number>): boolean;
+}
+
+@Polyfill
+export external public class NodeList extends NodeList {
+	public [Symbol.iterator](): IterableIterator<Node>;
+	public entries(): IterableIterator<[number,Node]>;
+	public keys(): IterableIterator<number>;
+	public values(): IterableIterator<Node>;
+}
+
+export external public interface ~NodeListOf<TNode> {
+	[Symbol.iterator](): IterableIterator<TNode>;
+	entries(): IterableIterator<[number,TNode]>;
+	keys(): IterableIterator<number>;
+	values(): IterableIterator<TNode>;
+}
+
+@Polyfill
+export external public class Plugin extends Plugin {
+	public [Symbol.iterator](): IterableIterator<MimeType>;
+}
+
+@Polyfill
+export external public class PluginArray extends PluginArray {
+	public [Symbol.iterator](): IterableIterator<Plugin>;
+}
+
+@Polyfill
+export external public class RTCStatsReport extends RTCStatsReport {}
+
+@Polyfill
+export external public class ReadableStream<R> extends ReadableStream<R> {
+	public [Symbol.iterator](): IterableIterator<any>;
+	public entries(): IterableIterator<[number,any]>;
+	public keys(): IterableIterator<number>;
+	public values(): IterableIterator<any>;
+}
+
+@Polyfill
+export external public class SVGLengthList extends SVGLengthList {
+	public [Symbol.iterator](): IterableIterator<SVGLength>;
+}
+
+@Polyfill
+export external public class SVGNumberList extends SVGNumberList {
+	public [Symbol.iterator](): IterableIterator<SVGNumber>;
+}
+
+@Polyfill
+export external public class SVGPointList extends SVGPointList {
+	public [Symbol.iterator](): IterableIterator<DOMPoint>;
+}
+
+@Polyfill
+export external public class SVGStringList extends SVGStringList {
+	public [Symbol.iterator](): IterableIterator<string>;
+}
+
+@Polyfill
+export external public class SVGTransformList extends SVGTransformList {
+	public [Symbol.iterator](): IterableIterator<SVGTransform>;
+}
+
+@Polyfill
+export external public class SourceBufferList extends SourceBufferList {
+	public [Symbol.iterator](): IterableIterator<SourceBuffer>;
+}
+
+@Polyfill
+export external public class SpeechRecognitionResult extends SpeechRecognitionResult {
+	public [Symbol.iterator](): IterableIterator<SpeechRecognitionAlternative>;
+}
+
+@Polyfill
+export external public class SpeechRecognitionResultList extends SpeechRecognitionResultList {
+	public [Symbol.iterator](): IterableIterator<SpeechRecognitionResult>;
+}
+
+@Polyfill
+export external public class StyleSheetList extends StyleSheetList {
+	public [Symbol.iterator](): IterableIterator<CSSStyleSheet>;
+}
+
+@Polyfill
+export external public class SubtleCrypto extends SubtleCrypto {
+	public deriveKey(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams | HkdfParams | Pbkdf2Params, extractable: boolean, keyUsages: Iterable<KeyUsage>): Promise<CryptoKey>;
+	public generateKey(...args: any+): any+; // overloading not supported
+	public importKey(...args: any+): any+; // overloading not supported
+	public unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesGcmParams, unwrappedKeyAlgorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | AesKeyAlgorithm, extractable: boolean, keyUsages: Iterable<KeyUsage>): Promise<CryptoKey>;
+}
+
+@Polyfill
+export external public class TextTrackCueList extends TextTrackCueList {
+	public [Symbol.iterator](): IterableIterator<TextTrackCue>;
+}
+
+@Polyfill
+export external public class TextTrackList extends TextTrackList {
+	public [Symbol.iterator](): IterableIterator<TextTrack>;
+}
+
+@Polyfill
+export external public class TouchList extends TouchList {
+	public [Symbol.iterator](): IterableIterator<Touch>;
+}
+
+@Polyfill
+export external public class URLSearchParams extends URLSearchParams {
+	public [Symbol.iterator](): IterableIterator<[string,string]>;
+	public entries(): IterableIterator<[string,string]>;
+	public keys(): IterableIterator<string>;
+	public values(): IterableIterator<string>;
+}
+
+export external public interface ~WEBGL_draw_buffers {
+	drawBuffersWEBGL(buffers: Iterable<GLenum>): void;
+}
+
+export external public interface ~WebGL2RenderingContextBase {
+	clearBufferfv(buffer: GLenum, drawbuffer: GLint, values: Iterable<GLfloat>, srcOffset: GLuint = ): void;
+	clearBufferiv(buffer: GLenum, drawbuffer: GLint, values: Iterable<GLint>, srcOffset: GLuint = ): void;
+	clearBufferuiv(buffer: GLenum, drawbuffer: GLint, values: Iterable<GLuint>, srcOffset: GLuint = ): void;
+	drawBuffers(buffers: Iterable<GLenum>): void;
+	getActiveUniforms(program: WebGLProgram, uniformIndices: Iterable<GLuint>, pname: GLenum): any;
+	getUniformIndices(program: WebGLProgram, uniformNames: Iterable<string>): Iterable<GLuint>;
+	invalidateFramebuffer(target: GLenum, attachments: Iterable<GLenum>): void;
+	invalidateSubFramebuffer(target: GLenum, attachments: Iterable<GLenum>, x: GLint, y: GLint, width: GLsizei, height: GLsizei): void;
+	transformFeedbackVaryings(program: WebGLProgram, varyings: Iterable<string>, bufferMode: GLenum): void;
+	uniform1uiv(location: WebGLUniformLocation, data: Iterable<GLuint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform2uiv(location: WebGLUniformLocation, data: Iterable<GLuint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform3uiv(location: WebGLUniformLocation, data: Iterable<GLuint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform4uiv(location: WebGLUniformLocation, data: Iterable<GLuint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix2x3fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix2x4fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix3x2fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix3x4fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix4x2fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix4x3fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	vertexAttribI4iv(index: GLuint, values: Iterable<GLint>): void;
+	vertexAttribI4uiv(index: GLuint, values: Iterable<GLuint>): void;
+}
+
+export external public interface ~WebGL2RenderingContextOverloads {
+	uniform1fv(location: WebGLUniformLocation, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform1iv(location: WebGLUniformLocation, data: Iterable<GLint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform2fv(location: WebGLUniformLocation, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform2iv(location: WebGLUniformLocation, data: Iterable<GLint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform3fv(location: WebGLUniformLocation, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform3iv(location: WebGLUniformLocation, data: Iterable<GLint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform4fv(location: WebGLUniformLocation, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniform4iv(location: WebGLUniformLocation, data: Iterable<GLint>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix2fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix3fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+	uniformMatrix4fv(location: WebGLUniformLocation, transpose: GLboolean, data: Iterable<GLfloat>, srcOffset: GLuint = , srcLength: GLuint = ): void;
+}
+
+export external public interface ~WebGLRenderingContextBase {
+	vertexAttrib1fv(index: GLuint, values: Iterable<GLfloat>): void;
+	vertexAttrib2fv(index: GLuint, values: Iterable<GLfloat>): void;
+	vertexAttrib3fv(index: GLuint, values: Iterable<GLfloat>): void;
+	vertexAttrib4fv(index: GLuint, values: Iterable<GLfloat>): void;
+}
+
+export external public interface ~WebGLRenderingContextOverloads {
+	uniform1fv(location: WebGLUniformLocation, v: Iterable<GLfloat>): void;
+	uniform1iv(location: WebGLUniformLocation, v: Iterable<GLint>): void;
+	uniform2fv(location: WebGLUniformLocation, v: Iterable<GLfloat>): void;
+	uniform2iv(location: WebGLUniformLocation, v: Iterable<GLint>): void;
+	uniform3fv(location: WebGLUniformLocation, v: Iterable<GLfloat>): void;
+	uniform3iv(location: WebGLUniformLocation, v: Iterable<GLint>): void;
+	uniform4fv(location: WebGLUniformLocation, v: Iterable<GLfloat>): void;
+	uniform4iv(location: WebGLUniformLocation, v: Iterable<GLint>): void;
+	uniformMatrix2fv(location: WebGLUniformLocation, transpose: GLboolean, value: Iterable<GLfloat>): void;
+	uniformMatrix3fv(location: WebGLUniformLocation, transpose: GLboolean, value: Iterable<GLfloat>): void;
+	uniformMatrix4fv(location: WebGLUniformLocation, transpose: GLboolean, value: Iterable<GLfloat>): void;
+}
