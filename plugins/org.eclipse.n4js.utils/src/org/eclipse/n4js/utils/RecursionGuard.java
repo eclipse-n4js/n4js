@@ -106,6 +106,14 @@ public class RecursionGuard<T> {
 	}
 
 	/**
+	 * Tells whether this recursion guard is empty, i.e. does not contain any elements for which {@link #tryNext(Object)
+	 * tryNext()} has been called without a later call to {@link #done(Object) done()}.
+	 */
+	public boolean isEmpty() {
+		return head == null;
+	}
+
+	/**
 	 * Returns a new {@link Stack} instance with all elements for which {@link #tryNext(Object) tryNext()} has been
 	 * called without a later call to {@link #done(Object) done()}.
 	 * <p>

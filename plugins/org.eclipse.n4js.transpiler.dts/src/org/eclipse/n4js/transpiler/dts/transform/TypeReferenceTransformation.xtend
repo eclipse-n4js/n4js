@@ -62,6 +62,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
+import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 
@@ -82,6 +83,8 @@ class TypeReferenceTransformation extends Transformation {
 	private StringBuilder currStringBuilder = null;
 
 	private final Map<Type, String> referenceCache = new HashMap();
+
+	private final RecursionGuard<Wildcard> convertWildcardRecursionGuard = new RecursionGuard();
 
 	@Inject
 	private TypeAssistant typeAssistant;
@@ -244,12 +247,12 @@ class TypeReferenceTransformation extends Transformation {
 			return;
 		}
 		val declType = typeRef.getDeclaredType();
-		
+
 		if (state.G.isArrayN(declType)) {
 			convertTypeArguments(typeRef, "[", "]");
 			return;
 		}
-		
+
 		val hasStructMembers = typeRef instanceof ParameterizedTypeRefStructural
 				&& !typeRef.getStructuralMembers().isEmpty();
 		val showDeclaredType = !hasStructMembers
@@ -356,15 +359,9 @@ class TypeReferenceTransformation extends Transformation {
 
 	def private void convertTypeArgument(TypeArgument typeArg) {
 		if (typeArg instanceof Wildcard) {
-			val upperBound = typeArg.getDeclaredOrImplicitUpperBound();
-			if (upperBound !== null) {
-				convertTypeArgument(upperBound);
-			} else {
-				write("any"); // TypeScript does not support lower bounds
-			}
+			convertWildcard(typeArg);
 			return;
 		}
-
 		val typeRef = typeArg as TypeRef;
 
 		// type 'undefined' used as type argument in N4JS, corresponds to 'void' in TypeScript:
@@ -379,6 +376,44 @@ class TypeReferenceTransformation extends Transformation {
 
 		convertTypeRef(typeRef);
 	}
+
+	def private void convertWildcard(Wildcard wildcard) {
+		val enteringWildcardConversion = convertWildcardRecursionGuard.empty;
+		val buffLen = currStringBuilder.length;
+		try {
+			doConvertWildcard(wildcard);
+		} catch(RecursiveTypeBoundException e) {
+			if (enteringWildcardConversion) {
+				// we were the entry point of wildcard conversion
+				// -> output replacement for cyclic implicit upper bounds
+				currStringBuilder.length = buffLen; // rewind buffer
+				write("any");
+			} else {
+				// wildcard conversion was in progress before we were called
+				// -> outer invocation of #convertWildcard() responsible for rewinding buffer
+				throw e;
+			}
+		}
+	}
+
+	def private void doConvertWildcard(Wildcard wildcard) {
+		if (convertWildcardRecursionGuard.tryNext(wildcard)) {
+			try {
+				val upperBound = wildcard.getDeclaredOrImplicitUpperBound();
+				if (upperBound !== null) {
+					convertTypeArgument(upperBound);
+				} else {
+					write("any"); // TypeScript does not support lower bounds
+				}
+			} finally {
+				convertWildcardRecursionGuard.done(wildcard);
+			}
+		} else {
+			throw new RecursiveTypeBoundException();
+		}
+	}
+
+	private static final class RecursiveTypeBoundException extends RuntimeException {}
 
 	def private void convertTFormalParameters(Iterable<? extends TFormalParameter> fpars) {
 		write(fpars, [convertTFormalParameter], ", ");
