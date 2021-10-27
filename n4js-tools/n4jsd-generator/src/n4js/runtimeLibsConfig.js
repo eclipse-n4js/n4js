@@ -765,7 +765,6 @@ export default {
 			}
 		},
 		"es2020.intl.d.ts": {},
-		/*
 		"dom.generated.d.ts": {
 			ignore: [
 				"*#prototype",
@@ -1257,7 +1256,6 @@ export default {
 		},
 		"dom.iterable.d.ts": {},
 		"dom.iterable.generated.d.ts": {}
-		*/
 	},
 	addFiles: {
 		"es2020.globalThis.n4jsd": `
