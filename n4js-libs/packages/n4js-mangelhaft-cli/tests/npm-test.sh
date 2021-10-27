@@ -22,6 +22,7 @@ echo "Run Mangelhaft"
 		--xunitReportFile $REPORT_NAME \
 		--xunitReportName test-report \
 		--xunitReportPackage n4js-libs-report \
+		--nycCoveragePath ./build/coverage.json \
 		$@
 
 echo "Saved test report at: ${REPORT_NAME}"
