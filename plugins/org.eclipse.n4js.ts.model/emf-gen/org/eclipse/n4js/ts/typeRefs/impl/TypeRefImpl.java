@@ -318,7 +318,17 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
-	public EList<TypeArgument> getTypeArgs() {
+	public EList<TypeArgument> getDeclaredTypeArgs() {
+		return XcoreCollectionLiterals.<TypeArgument>emptyEList();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TypeArgument> getTypeArgsWithDefaults() {
 		return XcoreCollectionLiterals.<TypeArgument>emptyEList();
 	}
 
@@ -569,8 +579,10 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getDeclaredUpperBound();
 			case TypeRefsPackage.TYPE_REF___GET_DECLARED_LOWER_BOUND:
 				return getDeclaredLowerBound();
-			case TypeRefsPackage.TYPE_REF___GET_TYPE_ARGS:
-				return getTypeArgs();
+			case TypeRefsPackage.TYPE_REF___GET_DECLARED_TYPE_ARGS:
+				return getDeclaredTypeArgs();
+			case TypeRefsPackage.TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS:
+				return getTypeArgsWithDefaults();
 			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING:
 				return getTypeRefAsString();
 			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION:

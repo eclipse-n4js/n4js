@@ -231,7 +231,7 @@ class DependencyInjectionTransformation extends Transformation {
 			return #[
 				_PropertyGetterDecl(propertyName, _ReturnStmnt(__NSSafe_IdentRef(declaredTypeSTE))),
 				_PropertyNameValuePair("typeVar", _ObjLit(
-					typeRef.typeArgs.filter(TypeRef).head.generateTypeInfo
+					typeRef.declaredTypeArgs.filter(TypeRef).head.generateTypeInfo
 				))
 			];
 		} else {

@@ -189,7 +189,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRefInAST);
 		} else {
-			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.typeArgs, Optional.absent, false,
+			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.declaredTypeArgs, Optional.absent, false,
 				declaredType, paramTypeRefInAST, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
 		}
 		internalCheckDynamic(paramTypeRefInAST);
@@ -209,7 +209,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private void internalCheckValidTypeInTypeTypeRef(ParameterizedTypeRef paramTypeRefInAST) {
 		// IDE-785 uses ParamterizedTypeRefs in ClassifierTypeRefs. Currently Type Arguments are not supported in ClassifierTypeRefs, so
 		// we actively forbid them here. Will be loosened for IDE-1310
-		if (! paramTypeRefInAST.typeArgs.isEmpty) {
+		if (!paramTypeRefInAST.declaredTypeArgs.isEmpty) {
 			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF)
 		} else if (paramTypeRefInAST instanceof FunctionTypeRef) {
@@ -509,12 +509,27 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			internalCheckSuperfluousPropertiesInObjectLiteral(expectedTypeRef, expression);
 
 		} else if (expression instanceof ArrayLiteral) {
-			if (!expectedTypeRef.typeArgs.empty) {
-				val arrayElementType = expectedTypeRef.typeArgs.get(0);
-				val typeArgTypeRef = ts.upperBoundWithReopenAndResolveTypeVars(G, arrayElementType);
-				for (arrElem : expression.elements) {
-					val arrExpr = arrElem.expression;
-					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
+			val expectedElemTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
+			if (!expectedElemTypeRefs.empty) {
+				// we have Iterable, Array, IterableN, ArrayN or a subtype thereof
+				var cachedLastElementTypeRefUB = null as TypeRef;
+				val expectedElemTypeRefsCount = expectedElemTypeRefs.size;
+				val elems = expression.elements;
+				val elemsCount = elems.size;
+				for (var i = 0; i < elemsCount; i++) {
+					val currElemExpr = elems.get(i)?.expression;
+					val currExpectedElemTypeRefUB = if (i < expectedElemTypeRefsCount - 1) {
+						ts.upperBoundWithReopenAndResolveTypeVars(G, expectedElemTypeRefs.get(i))
+					} else {
+						if (cachedLastElementTypeRefUB === null) {
+							cachedLastElementTypeRefUB = ts.upperBoundWithReopenAndResolveTypeVars(G,
+								expectedElemTypeRefs.get(expectedElemTypeRefsCount - 1));
+						}
+						cachedLastElementTypeRefUB
+					};
+					if (currElemExpr !== null) {
+						internalCheckSuperfluousPropertiesInObjectLiteralRek(G, currExpectedElemTypeRefUB, currElemExpr);
+					}
 				}
 			}
 		}
@@ -815,7 +830,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 							val typeArgsPerVariable = 
 								extractNonStructTypeRefs(ptrs.map[
 									ptr|
-									val ta = ptr.typeArgs.get(vIndex);
+									val ta = ptr.declaredTypeArgs.get(vIndex);
 									var TypeRef upper;
 									if (ta instanceof TypeRef) {
 										upper = ta; 
@@ -833,7 +848,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						}
 						
 						// all type args use super:
-					} else if (ptrs.forall[ptr | ptr.typeArgs.forall(ta| ta instanceof Wildcard &&
+					} else if (ptrs.forall[ptr | ptr.declaredTypeArgs.forall(ta| ta instanceof Wildcard &&
 							(ta as Wildcard).declaredLowerBound !== null)]) {
 						// all common super types, at least Object, as type arg would work! no warning.
 					} else {
@@ -855,7 +870,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		for (var i=0; i<length; i++) {
 			if (! typeVars.get(i).declaredCovariant) {
 				for (TypeRef ref: refs) {
-					val ta = ref.typeArgs.get(i);
+					val ta = ref.declaredTypeArgs.get(i);
 					if (ta instanceof Wildcard) {
 						if (ta.declaredUpperBound===null) {
 							return false;

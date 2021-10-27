@@ -870,6 +870,11 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			write(" extends ");
 			processTypeRefNode(ub);
 		}
+		TypeReferenceNode<TypeRef> defArg = typeVar.getDefaultArgumentNode();
+		if (defArg != null) {
+			write(" = ");
+			processTypeRefNode(defArg);
+		}
 		return DONE;
 	}
 

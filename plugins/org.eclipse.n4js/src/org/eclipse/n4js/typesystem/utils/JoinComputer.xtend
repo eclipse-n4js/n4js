@@ -204,22 +204,22 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 						commonSuperTypesParameterized.add(TypeUtils.copyIfContained(parameterizedSuperTypes.head));
 					} else {
 						val TypeRef merged = TypeUtils.copy(parameterizedSuperTypes.head);
-						merged.typeArgs.clear();
+						merged.declaredTypeArgs.clear();
 						var i = 0;
 						while (i < merged.declaredType.typeVars.size) {
 							val currentIndex = i;
 							val upperBound = join(G,
 								parameterizedSuperTypes.map [
 									// (typeArgs.get(currentIndex) as TypeRef).declaredUpperBound
-									ts.upperBound(G, (typeArgs.get(currentIndex)))
+									ts.upperBound(G, (declaredTypeArgs.get(currentIndex)))
 								])
 							val lowerBound = tsh.meet(G,
 								parameterizedSuperTypes.map [
 									// (typeArgs.get(currentIndex) as TypeRef).declaredLowerBound
-									ts.lowerBound(G, (typeArgs.get(currentIndex)))
+									ts.lowerBound(G, (declaredTypeArgs.get(currentIndex)))
 								])
 							if (compare(upperBound, lowerBound) == 0) {
-								merged.typeArgs.add(TypeUtils.copyIfContained(upperBound))
+								merged.declaredTypeArgs.add(TypeUtils.copyIfContained(upperBound))
 							} else {
 								val wildcard = TypeRefsFactory.eINSTANCE.createWildcard;
 								if (upperBound.topType && ! lowerBound.bottomType) {
@@ -231,7 +231,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 								} else {
 									wildcard.declaredUpperBound = TypeUtils.copyIfContained(upperBound);
 								}
-								merged.typeArgs.add(wildcard)
+								merged.declaredTypeArgs.add(wildcard)
 							}
 							i = i + 1;
 						}
@@ -260,7 +260,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 					}
 				ptrs.definedTypingStrategy = typingStrategy
 				ptrs.declaredType = trTemplate.declaredType;
-				ptrs.typeArgs.addAll(trTemplate.typeArgs);
+				ptrs.declaredTypeArgs.addAll(trTemplate.declaredTypeArgs);
 
 				val filter = new TypingStrategyFilter(typingStrategy);
 				val structuralMembersByName = new HashMap<String, TMember>();
@@ -691,7 +691,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 			val declType = typeArg.declaredType;
 			return declType instanceof TypeVariable // ok, that's simple
 			|| (!typeArg.parameterized && declType.generic) // no type args, type variable is indirectly referenced from raw type
-			|| typeArg.typeArgs.exists[containsUnboundTypeVariables(it)] // transitively
+			|| typeArg.declaredTypeArgs.exists[containsUnboundTypeVariables(it)] // transitively
 		}
 		return false;
 	}

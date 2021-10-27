@@ -78,10 +78,10 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		val declType = typeRef?.declaredType;
 		if(declType===iterableType || (includeIterableN && G.isIterableN(declType))) {
 			// simple: typeRef directly points to Iterable<> or an IterableN<>
-			result = typeRef.typeArgs.convertTypeArgsToRefs;
+			result = typeRef.declaredTypeArgs.convertTypeArgsToRefs;
 		} else if(declType===G.arrayType || (includeIterableN && G.isArrayN(declType))) {
 			// simple: typeRef directly points to Array<> or an ArrayN<>
-			result = typeRef.typeArgs.convertTypeArgsToRefs;
+			result = typeRef.declaredTypeArgs.convertTypeArgsToRefs;
 		} else if(declType instanceof PrimitiveType) {
 			// note: the 'elementType' property we read in the next line is also used with certain instances of TClass
 			// (e.g. upper-case 'String'), but we need not and should not handle those within this block, because those
@@ -119,7 +119,7 @@ class IterableComputer extends TypeSystemHelperStrategy {
 					val isContainedInIterableN = G.isIterableN(superTypeRef.eContainer);
 					val isContainedInArrayN = G.isArrayN(superTypeRef.eContainer);
 					if(!(includeIterableN && (isContainedInIterableN || isContainedInArrayN))) {
-						results.add(superTypeRef.typeArgs.convertTypeArgsToRefs);
+						results.add(superTypeRef.declaredTypeArgs.convertTypeArgsToRefs);
 					}
 				}
 			}
@@ -144,10 +144,10 @@ class IterableComputer extends TypeSystemHelperStrategy {
 					};
 					val m = containerTypesHelper.fromContext(res).findMember(declType,memberName,false,false);
 					if(m instanceof TMethod) {
-						result = m.returnTypeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
+						result = m.returnTypeRef?.declaredTypeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 					else if(m instanceof TGetter) {
-						result = m.typeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
+						result = m.typeRef?.declaredTypeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 				}
 				else {

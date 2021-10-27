@@ -1117,6 +1117,10 @@ ruleN4TypeVariable:
 		'extends'
 		ruleTypeReferenceNode
 	)?
+	(
+		'='
+		ruleTypeReferenceNode
+	)?
 ;
 
 // Rule FormalParameter

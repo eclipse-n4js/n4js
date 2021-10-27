@@ -80,7 +80,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			&& STRUCTURAL_FIELD_INITIALIZER !== leftStrategy && STRUCTURAL_FIELD_INITIALIZER !== rightStrategy
 			&& left.declaredType === right.declaredType
 			&& left.structuralMembers.empty && right.structuralMembers.empty
-			&& left.typeArgs.empty) {
+			&& !left.generic) {
 			return result(left, right, emptyList, emptyList);
 		}
 

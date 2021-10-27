@@ -11220,13 +11220,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Default Argument Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>N4 Type Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE_FEATURE_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
+	int N4_TYPE_VARIABLE_FEATURE_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -11256,13 +11265,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_VARIABLE___GET_DECLARED_UPPER_BOUND = TypesPackage.IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Optional</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_VARIABLE___IS_OPTIONAL = TypesPackage.IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>N4 Type Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE_OPERATION_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+	int N4_TYPE_VARIABLE_OPERATION_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4TypeDefinitionImpl <em>N4 Type Definition</em>}' class.
@@ -21115,6 +21133,17 @@ public interface N4JSPackage extends EPackage {
 	EReference getN4TypeVariable_DeclaredUpperBoundNode();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode <em>Default Argument Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Default Argument Node</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode()
+	 * @see #getN4TypeVariable()
+	 * @generated
+	 */
+	EReference getN4TypeVariable_DefaultArgumentNode();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBound() <em>Get Declared Upper Bound</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -21123,6 +21152,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getN4TypeVariable__GetDeclaredUpperBound();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#isOptional() <em>Is Optional</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Optional</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4TypeVariable#isOptional()
+	 * @generated
+	 */
+	EOperation getN4TypeVariable__IsOptional();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4TypeDefinition <em>N4 Type Definition</em>}'.
@@ -26484,12 +26523,28 @@ public interface N4JSPackage extends EPackage {
 		EReference N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE = eINSTANCE.getN4TypeVariable_DeclaredUpperBoundNode();
 
 		/**
+		 * The meta object literal for the '<em><b>Default Argument Node</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE = eINSTANCE.getN4TypeVariable_DefaultArgumentNode();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Declared Upper Bound</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EOperation N4_TYPE_VARIABLE___GET_DECLARED_UPPER_BOUND = eINSTANCE.getN4TypeVariable__GetDeclaredUpperBound();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Optional</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_TYPE_VARIABLE___IS_OPTIONAL = eINSTANCE.getN4TypeVariable__IsOptional();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4TypeDefinitionImpl <em>N4 Type Definition</em>}' class.

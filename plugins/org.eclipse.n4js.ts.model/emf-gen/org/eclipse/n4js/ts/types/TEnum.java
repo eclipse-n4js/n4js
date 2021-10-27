@@ -69,12 +69,4 @@ public interface TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElemen
 	 */
 	EList<TEnumLiteral> getLiterals();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	EList<TypeVariable> getTypeVars();
-
 } // TEnum

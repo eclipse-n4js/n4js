@@ -660,7 +660,7 @@ public class N4JSLanguageUtils {
 				var Variance vFactor = null;
 				// case #1: curr is nested in parent's type arguments
 				val parentDeclType = parent.declaredType;
-				val parentTypeArgs = parent.typeArgs;
+				val parentTypeArgs = parent.declaredTypeArgs;
 				val parentTypeArgsSize = parentTypeArgs.size;
 				for(var idx=0;vFactor===null && idx<parentTypeArgsSize;idx++) {
 					val arg = parentTypeArgs.get(idx);
