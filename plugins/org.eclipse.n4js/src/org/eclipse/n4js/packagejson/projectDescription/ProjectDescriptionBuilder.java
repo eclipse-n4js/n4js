@@ -50,6 +50,7 @@ public class ProjectDescriptionBuilder {
 	private boolean nestedNodeModulesFolder;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
+	private boolean isGeneratorEnabledSourceMaps;
 	private boolean isGeneratorEnabledDts;
 	private final List<String> workspaces = new ArrayList<>();
 
@@ -63,7 +64,7 @@ public class ProjectDescriptionBuilder {
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage, nestedNodeModulesFolder,
-				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts, workspaces);
+				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, workspaces);
 	}
 
 	public String computeProjectID() {
@@ -307,6 +308,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setYarnWorkspaceRoot(boolean yarnWorkspaceRoot) {
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
+		return this;
+	}
+
+	public boolean isGeneratorEnabledSourceMaps() {
+		return isGeneratorEnabledSourceMaps;
+	}
+
+	public ProjectDescriptionBuilder setGeneratorEnabledSourceMaps(boolean isGeneratorEnabledSourceMaps) {
+		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
 		return this;
 	}
 

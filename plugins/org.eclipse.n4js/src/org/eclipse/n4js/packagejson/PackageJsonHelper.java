@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.packagejson;
 
-import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asBooleanOrFalse;
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asBooleanOrDefault;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
@@ -214,8 +214,13 @@ public class PackageJsonHelper {
 			case GENERATOR:
 				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
 				break;
+			case GENERATOR_SOURCE_MAPS:
+				target.setGeneratorEnabledSourceMaps(
+						asBooleanOrDefault(value, (Boolean) PackageJsonProperties.GENERATOR_SOURCE_MAPS.defaultValue));
+				break;
 			case GENERATOR_DTS:
-				target.setGeneratorEnabledDts(asBooleanOrFalse(value));
+				target.setGeneratorEnabledDts(
+						asBooleanOrDefault(value, (Boolean) PackageJsonProperties.GENERATOR_DTS.defaultValue));
 				break;
 			default:
 				break;
@@ -311,7 +316,7 @@ public class PackageJsonHelper {
 		if (!target.hasN4JSNature() || target.getType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
-			target.setType(parseProjectType(PROJECT_TYPE.defaultValue));
+			target.setType(parseProjectType((String) PROJECT_TYPE.defaultValue));
 		}
 		if (target.getPackageName() == null) {
 			target.setPackageName(defaultProjectName);
@@ -320,15 +325,15 @@ public class PackageJsonHelper {
 			target.setVersion(createDefaultVersionNumber());
 		}
 		if (target.getVendorId() == null) {
-			target.setVendorId(VENDOR_ID.defaultValue);
+			target.setVendorId((String) VENDOR_ID.defaultValue);
 		}
 		if (target.getMainModule() == null) {
-			target.setMainModule(MAIN_MODULE.defaultValue);
+			target.setMainModule((String) MAIN_MODULE.defaultValue);
 		}
 		if (target.getOutputPath() == null) {
 			// note that in case the project is a yarn workspace project and there is a 'clean build' running
 			// the entire contents will be deleted.
-			target.setOutputPath(OUTPUT.defaultValue);
+			target.setOutputPath((String) OUTPUT.defaultValue);
 		}
 
 		// if no source containers are defined (no matter what type),
@@ -354,7 +359,7 @@ public class PackageJsonHelper {
 		}
 		sourceContainers.add(new SourceContainerDescription(
 				SourceContainerType.SOURCE,
-				Collections.singleton(OUTPUT.defaultValue)));
+				Collections.singleton((String) OUTPUT.defaultValue)));
 	}
 
 	private VersionNumber asVersionNumberOrNull(JSONValue value) {
@@ -364,7 +369,7 @@ public class PackageJsonHelper {
 
 	private VersionNumber createDefaultVersionNumber() {
 		if (cachedDefaultVersionNumber == null) {
-			cachedDefaultVersionNumber = semverHelper.parseVersionNumber(VERSION.defaultValue);
+			cachedDefaultVersionNumber = semverHelper.parseVersionNumber((String) VERSION.defaultValue);
 		}
 		return EcoreUtil.copy(cachedDefaultVersionNumber);
 	}

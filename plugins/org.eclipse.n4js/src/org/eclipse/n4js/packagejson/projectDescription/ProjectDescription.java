@@ -59,6 +59,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final boolean nestedNodeModulesFolder;
 	private final boolean n4jsNature;
 	private final boolean yarnWorkspaceRoot;
+	private final boolean isGeneratorEnabledSourceMaps;
 	private final boolean isGeneratorEnabledDts;
 	private final ImmutableList<String> workspaces;
 
@@ -71,7 +72,7 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> implementedProjects, String outputPath,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
-			boolean n4jsNature, boolean yarnWorkspaceRoot,
+			boolean n4jsNature, boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps,
 			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
 
 		this.location = location;
@@ -98,6 +99,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.nestedNodeModulesFolder = nestedNodeModulesFolder;
 		this.n4jsNature = n4jsNature;
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
+		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
 		this.workspaces = ImmutableList.copyOf(workspaces);
 	}
@@ -127,6 +129,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.nestedNodeModulesFolder = template.nestedNodeModulesFolder;
 		this.n4jsNature = template.n4jsNature;
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
+		this.isGeneratorEnabledSourceMaps = template.isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = template.isGeneratorEnabledDts;
 		this.workspaces = template.workspaces;
 	}
@@ -292,6 +295,11 @@ public class ProjectDescription extends ImmutableDataClass {
 		return yarnWorkspaceRoot;
 	}
 
+	/** Returns true iff source maps should be emitted. */
+	public boolean isGeneratorEnabledSourceMaps() {
+		return isGeneratorEnabledSourceMaps;
+	}
+
 	/**
 	 * IMPORTANT: most clients should use {@link N4JSLanguageUtils#isDtsGenerationActive(ProjectDescription)} instead!
 	 */
@@ -333,6 +341,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				nestedNodeModulesFolder,
 				n4jsNature,
 				yarnWorkspaceRoot,
+				isGeneratorEnabledSourceMaps,
 				isGeneratorEnabledDts,
 				workspaces);
 	}
@@ -364,6 +373,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& nestedNodeModulesFolder == other.nestedNodeModulesFolder
 				&& n4jsNature == other.n4jsNature
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
+				&& isGeneratorEnabledSourceMaps == other.isGeneratorEnabledSourceMaps
 				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
 				&& Objects.equals(workspaces, other.workspaces);
 	}
