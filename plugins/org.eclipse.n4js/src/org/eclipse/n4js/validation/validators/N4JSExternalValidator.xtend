@@ -43,6 +43,7 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -99,6 +100,15 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	def checkExternalInterfacesDefinedInN4JSDFile(N4InterfaceDeclaration interfaceDecl) {
 		if (! holdsExternalOnlyInDefinitionFile(interfaceDecl, "Interfaces")) {
 			return;
+		}
+		if (interfaceDecl.external && jsVariantHelper.isExternalMode(interfaceDecl)) {
+			val isStructural = TypeUtils.isStructural(interfaceDecl.typingStrategy);
+			val hasN4JSAnnotation = AnnotationDefinition.N4JS.hasAnnotation(interfaceDecl);
+			if (!isStructural && !hasN4JSAnnotation) {
+				val message = getMessageForCLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION()
+				addIssue(message, interfaceDecl, N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME, CLF_EXT_NOMI_INTF_MISSING_N4JS_ANNOTATION)
+				return;
+			}
 		}
 	}
 
@@ -212,7 +222,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkAllowedElementsInN4JSDFile(EObject eo) {
 		if (jsVariantHelper.isExternalMode(eo) && eo.eContainer instanceof Script) {
-			val found = eo.findUnallowedElement
+			val found = eo.isUnallowedElement
 			if (found) {
 				handleUnallowedElement(eo)
 			} else if (eo instanceof ExportDeclaration) {
@@ -251,6 +261,10 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	def private handleN4InterfaceDeclaration(ExportDeclaration eo, N4InterfaceDeclaration exported) {
 		if (exported.typingStrategy == TypingStrategy.NOMINAL || exported.typingStrategy == TypingStrategy.DEFAULT) {
 			validateClassifierIsExternal(exported.external, "interfaces", eo)
+		}
+
+		if (N4JSLanguageUtils.isHollowElement(exported, jsVariantHelper)) {
+			validateNoStaticMember(exported, "interfaces");
 		}
 		validateNoObservableAtClassifier(eo, exported, "interfaces")
 		validateMembers(exported, "interfaces")
@@ -317,6 +331,13 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			val message = getMessageForCLF_EXT_NO_OBSERV_ANNO(classesOrRolesOrInterface)
 			val eObjectToNameFeature = declaration.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_NO_OBSERV_ANNO)
+		}
+	}
+
+	private def validateNoStaticMember(N4ClassifierDeclaration declaration, String classesOrRolesOrInterface) {
+		for (member : declaration.ownedMembers.filter[it.static]) {
+			val message = getMessageForCLF_EXT_NO_STATIC_MEMBER(classesOrRolesOrInterface)
+			addIssue(message, member, N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_EXT_NO_STATIC_MEMBER)
 		}
 	}
 
@@ -418,7 +439,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		return null
 	}
 
-	def private boolean findUnallowedElement(EObject eo) {
+	def private boolean isUnallowedElement(EObject eo) {
 		if (eo instanceof EmptyStatement) {
 			return false;
 		}
@@ -429,7 +450,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			return false; // concrete annotations are handled in N4JSAnnotationValidation
 		}
 		if (eo instanceof ExportDeclaration) {
-			return findUnallowedElement(eo.exportedElement);
+			return isUnallowedElement(eo.exportedElement);
 		}
 		if (eo instanceof N4ClassDeclaration) {
 			if (eo.external) {

@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
@@ -23,7 +22,6 @@ import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -127,15 +125,6 @@ public class N4JSTypeAliasValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		return null;
-	}
-
-	/** Disallow use of type aliases as values (for now). */
-	@Check
-	public void checkAliasAsValue(IdentifierRef idRef) {
-		IdentifiableElement id = idRef.getId();
-		if (id != null && id instanceof Type && ((Type) id).isAlias()) {
-			addIssue(IssueCodes.getMessageForALI_TYPE_ALIAS_AS_VALUE(), idRef, IssueCodes.ALI_TYPE_ALIAS_AS_VALUE);
-		}
 	}
 
 	/**

@@ -139,7 +139,7 @@ class LocallyKnownTypesScopingHelper {
 		val IScope localTypesScope = scopeSnapshotHelper.scopeFor("scopeWithLocallyKnownTypesForPolyfillSuperRef", script, importScope, eoDescrs);
 
 		// type variables of polyfill
-		if (polyfillType.generic) {
+		if (polyfillType !== null && polyfillType.generic) {
 			return scopeSnapshotHelper.scopeForEObjects("scopeWithLocallyKnownTypesForPolyfillSuperRef-polyfillType", polyfillType, localTypesScope, polyfillType.typeVars);
 		}
 

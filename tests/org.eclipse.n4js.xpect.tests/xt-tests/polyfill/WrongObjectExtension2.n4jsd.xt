@@ -53,7 +53,7 @@ export external public class MObject extends MObject {
 
 @ProvidedByRuntime
 @Polyfill
-export external public interface MIfc extends MIfc {
+export external public interface ~MIfc extends MIfc {
 	// XPECT errors ---
 	//	"Polyfills in g/ObjectExtension2 and g/WrongObjectExtension2 provide member MIfc.mi - only one provider per member is allowed." at "mi"
 	//	"Signature of method MIfc.mi (line 61) does not conform to implemented method MIfc.mi (line 27): {function():number} is not a subtype of {function():string}." at "mi"

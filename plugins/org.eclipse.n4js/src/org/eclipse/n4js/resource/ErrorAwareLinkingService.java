@@ -119,12 +119,21 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 				if (!scopeInfo.isValid(eObjectDescription) && resource != null
 						&& !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 
-					List<ScopeElementIssue> issues = scopeInfo.getIssues(eObjectDescription);
-					for (ScopeElementIssue issue : issues) {
-						addIssue(context, node, issue);
+					Iterable<IEObjectDescription> elements = scopeInfo.getScope().getElements(qualifiedLinkName);
+					for (IEObjectDescription elem : elements) {
+						if (scopeInfo.isValid(elem)) {
+							eObjectDescription = elem;
+						}
 					}
-					if (issues.isEmpty()) {
-						eObjectDescription = null;
+
+					if (!scopeInfo.isValid(eObjectDescription)) {
+						List<ScopeElementIssue> issues = scopeInfo.getIssues(eObjectDescription);
+						for (ScopeElementIssue issue : issues) {
+							addIssue(context, node, issue);
+						}
+						if (issues.isEmpty()) {
+							eObjectDescription = null;
+						}
 					}
 				}
 			}

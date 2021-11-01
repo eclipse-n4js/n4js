@@ -11,10 +11,6 @@
 @@Global @@ProvidedByRuntime
 
 export external public interface ~GlobalFetch {
-    public const Request: constructor{Request};
-    public const Response: constructor{Response};
-    public const Headers: constructor{Headers};
-
     public async fetch(input: union{string, Request}, init: RequestInit=): Response;
 }
 

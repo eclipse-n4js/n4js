@@ -9,29 +9,15 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
-   GENERATE_DTS
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
    END_SETUP
  */
 
 
-export external interface ~I1 {
-	public field: number;
-}
-export external class C1 {
-	field: number;
-}
-export external function f1()
+export external interface ~I1 {}
+export external const I1 : string;
 
 
+export external type T1 = string;
+export external const T1 : string;
 
-
-/* XPECT generated_dts ---
-export interface I1 {
-	field: number;
-}
-export class C1 {
-	field: number;
-}
-export function f1(): void;
---- */

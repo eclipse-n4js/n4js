@@ -102,14 +102,23 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 			cliTools.yarnInstall(n4jsLibsRootPath);
 
 			cliTools.callN4jscInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
-		} catch (Exception e) {
-			if (e instanceof CliException && compileResult.getErrs() > 0) {
+
+		} catch (CliException e) {
+			if (compileResult.getException() != null) {
+				throw new RuntimeException(compileResult.getException());
+
+			} else if (compileResult.getErrs() > 0) {
 				// this happens when there are compile errors in the n4js-libs
 				// --> the below code would emit the entire output of n4jsc several times leading to excessive output
 				// (also, the compile errors were already reported by n4jsc to the console), so we exit early in this
 				// case:
-				throw new RuntimeException("errors while compiling n4js-libs");
+				throw new RuntimeException("Errors while compiling n4js-libs");
+
+			} else {
+				throw new RuntimeException(e);
 			}
+
+		} catch (Exception e) {
 
 			println("EXCEPTION while compiling n4js-libs:");
 			e.printStackTrace();

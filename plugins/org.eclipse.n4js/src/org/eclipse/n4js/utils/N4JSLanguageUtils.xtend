@@ -46,6 +46,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewExpression
@@ -105,6 +106,7 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
@@ -1184,7 +1186,8 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
 		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
-		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
+		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
 	}
 
 	/**
@@ -1200,7 +1203,36 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
+		val isTypeAlias = element instanceof TypeAlias;
+		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
+	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
+			&& javaScriptVariantHelper.isExternalMode(typeDecl)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
+		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		// TODO: namespace
+		return typeDecl !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
+			&& javaScriptVariantHelper.isExternalMode(element)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
+		val isTypeAlias = element instanceof TypeAlias;
+		// TODO: namespace
+		return element !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
 	}
 
 	/**

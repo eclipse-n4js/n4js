@@ -18,6 +18,6 @@ export external public class MObject {
 }
 
 @ProvidedByRuntime
-export external public interface MIfc {
+export external public interface ~MIfc {
 	public k(n : number) : number
 }
