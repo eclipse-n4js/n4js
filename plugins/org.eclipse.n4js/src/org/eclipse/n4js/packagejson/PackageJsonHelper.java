@@ -16,6 +16,8 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringO
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringsInArrayOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_DTS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_SOURCE_MAPS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
@@ -334,6 +336,12 @@ public class PackageJsonHelper {
 			// note that in case the project is a yarn workspace project and there is a 'clean build' running
 			// the entire contents will be deleted.
 			target.setOutputPath((String) OUTPUT.defaultValue);
+		}
+		if (target.isGeneratorEnabledSourceMaps() == null) {
+			target.setGeneratorEnabledSourceMaps((Boolean) GENERATOR_SOURCE_MAPS.defaultValue);
+		}
+		if (target.isGeneratorEnabledDts() == null) {
+			target.setGeneratorEnabledDts((Boolean) GENERATOR_DTS.defaultValue);
 		}
 
 		// if no source containers are defined (no matter what type),

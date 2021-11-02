@@ -50,8 +50,8 @@ public class ProjectDescriptionBuilder {
 	private boolean nestedNodeModulesFolder;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
-	private boolean isGeneratorEnabledSourceMaps;
-	private boolean isGeneratorEnabledDts;
+	private Boolean isGeneratorEnabledSourceMaps;
+	private Boolean isGeneratorEnabledDts;
 	private final List<String> workspaces = new ArrayList<>();
 
 	public ProjectDescriptionBuilder() {
@@ -311,7 +311,7 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public boolean isGeneratorEnabledSourceMaps() {
+	public Boolean isGeneratorEnabledSourceMaps() {
 		return isGeneratorEnabledSourceMaps;
 	}
 
@@ -320,7 +320,7 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public boolean isGeneratorEnabledDts() {
+	public Boolean isGeneratorEnabledDts() {
 		return isGeneratorEnabledDts;
 	}
 
