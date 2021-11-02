@@ -60,6 +60,9 @@ public class ProjectDescriptionBuilder {
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
 		id = id == null ? computeProjectID() : id;
+		isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps == null ? false : isGeneratorEnabledSourceMaps;
+		isGeneratorEnabledDts = isGeneratorEnabledDts == null ? false : isGeneratorEnabledDts;
+
 		return new ProjectDescription(location, relatedRootLocation, id,
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
