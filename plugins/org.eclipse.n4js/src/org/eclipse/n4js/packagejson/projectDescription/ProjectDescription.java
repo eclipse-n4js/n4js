@@ -164,6 +164,8 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setNestedNodeModulesFolder(nestedNodeModulesFolder);
 		builder.setN4JSNature(n4jsNature);
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
+		builder.setGeneratorEnabledSourceMaps(isGeneratorEnabledSourceMaps);
+		builder.setGeneratorEnabledDts(isGeneratorEnabledDts);
 		builder.getWorkspaces().addAll(workspaces);
 		return builder;
 	}
