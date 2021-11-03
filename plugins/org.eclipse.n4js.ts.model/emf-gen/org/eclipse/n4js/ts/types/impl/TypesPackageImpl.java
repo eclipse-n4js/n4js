@@ -1206,6 +1206,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getTypeVariable_DefaultArgument() {
+		return (EReference)typeVariableEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getTypeVariable__GetVariance() {
 		return typeVariableEClass.getEOperations().get(0);
 	}
@@ -1216,7 +1226,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeVariable__GetTypeVars() {
+	public EOperation getTypeVariable__IsOptional() {
 		return typeVariableEClass.getEOperations().get(1);
 	}
 
@@ -1778,16 +1788,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EClass getBuiltInType() {
 		return builtInTypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getBuiltInType__GetTypeVars() {
-		return builtInTypeEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -3106,16 +3106,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTEnum__GetTypeVars() {
-		return tEnumEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getTEnumLiteral() {
 		return tEnumLiteralEClass;
 	}
@@ -3461,8 +3451,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(typeVariableEClass, TYPE_VARIABLE__DECLARED_COVARIANT);
 		createEAttribute(typeVariableEClass, TYPE_VARIABLE__DECLARED_CONTRAVARIANT);
 		createEReference(typeVariableEClass, TYPE_VARIABLE__DECLARED_UPPER_BOUND);
+		createEReference(typeVariableEClass, TYPE_VARIABLE__DEFAULT_ARGUMENT);
 		createEOperation(typeVariableEClass, TYPE_VARIABLE___GET_VARIANCE);
-		createEOperation(typeVariableEClass, TYPE_VARIABLE___GET_TYPE_VARS);
+		createEOperation(typeVariableEClass, TYPE_VARIABLE___IS_OPTIONAL);
 		createEOperation(typeVariableEClass, TYPE_VARIABLE___GET_TYPE_AS_STRING);
 		createEOperation(typeVariableEClass, TYPE_VARIABLE___GET_TYPE_VARIABLE_AS_STRING__TYPEREF);
 
@@ -3528,7 +3519,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(primitiveTypeEClass, PRIMITIVE_TYPE__AUTOBOXED_TYPE);
 
 		builtInTypeEClass = createEClass(BUILT_IN_TYPE);
-		createEOperation(builtInTypeEClass, BUILT_IN_TYPE___GET_TYPE_VARS);
 
 		anyTypeEClass = createEClass(ANY_TYPE);
 		createEOperation(anyTypeEClass, ANY_TYPE___IS_FINAL);
@@ -3685,7 +3675,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tEnumEClass = createEClass(TENUM);
 		createEAttribute(tEnumEClass, TENUM__EXTERNAL);
 		createEReference(tEnumEClass, TENUM__LITERALS);
-		createEOperation(tEnumEClass, TENUM___GET_TYPE_VARS);
 
 		tEnumLiteralEClass = createEClass(TENUM_LITERAL);
 		createEAttribute(tEnumLiteralEClass, TENUM_LITERAL__VALUE_STRING);
@@ -3929,10 +3918,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTypeVariable_DeclaredCovariant(), theEcorePackage.getEBoolean(), "declaredCovariant", null, 0, 1, TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTypeVariable_DeclaredContravariant(), theEcorePackage.getEBoolean(), "declaredContravariant", null, 0, 1, TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTypeVariable_DeclaredUpperBound(), theTypeRefsPackage.getTypeRef(), null, "declaredUpperBound", null, 0, 1, TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypeVariable_DefaultArgument(), theTypeRefsPackage.getTypeRef(), null, "defaultArgument", null, 0, 1, TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTypeVariable__GetVariance(), this.getVariance(), "getVariance", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getTypeVariable__GetTypeVars(), this.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getTypeVariable__IsOptional(), theEcorePackage.getEBoolean(), "isOptional", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTypeVariable__GetTypeAsString(), theEcorePackage.getEString(), "getTypeAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4050,8 +4040,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getPrimitiveType_AutoboxedType(), this.getTClassifier(), null, "autoboxedType", null, 0, 1, PrimitiveType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(builtInTypeEClass, BuiltInType.class, "BuiltInType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getBuiltInType__GetTypeVars(), this.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(anyTypeEClass, AnyType.class, "AnyType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -4280,8 +4268,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(tEnumEClass, TEnum.class, "TEnum", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTEnum_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TEnum.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTEnum_Literals(), this.getTEnumLiteral(), null, "literals", null, 0, -1, TEnum.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getTEnum__GetTypeVars(), this.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tEnumLiteralEClass, TEnumLiteral.class, "TEnumLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTEnumLiteral_ValueString(), theEcorePackage.getEString(), "valueString", null, 0, 1, TEnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

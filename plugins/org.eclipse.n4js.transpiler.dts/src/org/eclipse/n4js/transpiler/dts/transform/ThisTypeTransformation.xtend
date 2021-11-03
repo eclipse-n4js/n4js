@@ -80,17 +80,18 @@ class ThisTypeTransformation extends Transformation {
 					ctor = method;
 				} else if (method.isStatic) {
 					methodNamesCurClass += method.name;
-					// special handling for return type 'this' of static methods 
+					// special handling for return type 'this' of static methods
 					val retTR = state.info.getOriginalProcessedTypeRef(method.declaredReturnTypeRefNode);
 					if (retTR instanceof ThisTypeRef) {
 						val methodOrig = state.tracer.getOriginalASTNodeOfSameType(method, false);
 						var typeRef = tsh.bindAndSubstituteThisTypeRef(state.G, methodOrig, retTR);
 						typeRef = ts.upperBoundWithReopen(state.G, typeRef);
-						if (!typeRef.typeArgs.isEmpty) {
-							val newTypeArgs = typeRef.typeArgs.size;
-							typeRef.typeArgs.clear; // only 'any' allowed here by TypeScript
-							for (var i = 0; i<newTypeArgs; i++) {
-								typeRef.typeArgs.add(TypeRefsFactory.eINSTANCE.createWildcard);
+						if (typeRef.generic) {
+							typeRef = TypeUtils.copyIfContained(typeRef);
+							val newTypeArgsCount = typeRef.declaredType.typeVars.size;
+							typeRef.declaredTypeArgs.clear; // only 'any' allowed here by TypeScript
+							for (var i = 0; i < newTypeArgsCount; i++) {
+								typeRef.declaredTypeArgs.add(TypeRefsFactory.eINSTANCE.createWildcard);
 							}
 						}
 						state.info.setOriginalProcessedTypeRef(method.declaredReturnTypeRefNode, typeRef);

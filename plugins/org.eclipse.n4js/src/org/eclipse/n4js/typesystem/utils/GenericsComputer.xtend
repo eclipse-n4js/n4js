@@ -121,11 +121,12 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	 */
 	private def void primAddSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof ParameterizedTypeRef) {
-			if (!typeRef.typeArgs.empty) {
+			val typeRefTypeArgs = typeRef.typeArgsWithDefaults;
+			if (!typeRefTypeArgs.empty) {
 				val declType = typeRef.declaredType
 				if (declType instanceof GenericType) {
 					val varIter = declType.typeVars.iterator
-					for (typeArg : typeRef.typeArgs) {
+					for (typeArg : typeRefTypeArgs) {
 						if (varIter.hasNext) {
 							val typeVar = varIter.next;
 							addSubstitution(G, typeVar, typeArg);
@@ -541,7 +542,10 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 						val typeVar = typeRef.declaredType.typeVars.get(i)
 						val boundType = G.get(typeVar) as TypeRef;
 						if (boundType !== null) {
-							ptr.typeArgs.set(i, TypeUtils.copy(boundType))
+							while (ptr.declaredTypeArgs.size <= i) {
+								ptr.declaredTypeArgs += null;
+							}
+							ptr.declaredTypeArgs.set(i, TypeUtils.copy(boundType))
 						}
 						i = i + 1;
 					}

@@ -93,13 +93,13 @@ class GenericsTest extends AbstractTypesystemTest {
 		val G = newRuleEnvironment(script);
 
 		val w1 = ((script.scriptElements.get(3) as VariableStatement).varDecl.head.declaredTypeRef as ParameterizedTypeRef).
-			typeArgs.get(0)
+			declaredTypeArgs.get(0)
 		val w2 = ((script.scriptElements.get(4) as VariableStatement).varDecl.head.declaredTypeRef as ParameterizedTypeRef).
-			typeArgs.get(0)
+			declaredTypeArgs.get(0)
 		val w3 = ((script.scriptElements.get(5) as VariableStatement).varDecl.head.declaredTypeRef as ParameterizedTypeRef).
-			typeArgs.get(0)
+			declaredTypeArgs.get(0)
 		val w4 = ((script.scriptElements.get(6) as VariableStatement).varDecl.head.declaredTypeRef as ParameterizedTypeRef).
-			typeArgs.get(0)
+			declaredTypeArgs.get(0)
 
 		val A = (script.scriptElements.get(0) as N4ClassDeclaration).definedType
 		val bot = G.predefinedTypes.builtInTypeScope.undefinedType

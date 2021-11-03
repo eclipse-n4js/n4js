@@ -211,7 +211,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 		if (ref1 instanceof ParameterizedTypeRef) {
 			final ParameterizedTypeRef pref1 = (ParameterizedTypeRef) ref1;
 			final ParameterizedTypeRef pref2 = (ParameterizedTypeRef) ref2;
-			c = compareTypeArguments(fqnProvider, pref1.getTypeArgs(), pref2.getTypeArgs());
+			c = compareTypeArguments(fqnProvider, pref1.getTypeArgsWithDefaults(), pref2.getTypeArgsWithDefaults());
 			if (c != 0) {
 				return c;
 			}

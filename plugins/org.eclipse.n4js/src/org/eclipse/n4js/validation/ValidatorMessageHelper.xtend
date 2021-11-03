@@ -373,7 +373,7 @@ class ValidatorMessageHelper {
 			}
 
 			val ptr = tfunction.returnTypeRef as ParameterizedTypeRef;
-			val asyncReturnType = ptr.typeArgs.get(0);
+			val asyncReturnType = ptr.declaredTypeArgs.get(0);
 			if (asyncReturnType !== null) {
 				if (TypeUtils.isUndefined(asyncReturnType)) {
 					strb.append("void");

@@ -910,7 +910,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		if (declType.providerType) {
 			// a (subtype of) Provider without type-args is itself injectable
 			// a Provider-of-T is injectable only if T is injectable
-			var targs = typeRef.typeArgs.filter(TypeRef)
+			var targs = typeRef.declaredTypeArgs.filter(TypeRef)
 			if (targs.size === 1) {
 				if (targs.head.injectableType) {
 					return true;

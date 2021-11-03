@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode <em>Default Argument Node</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable()
@@ -124,11 +125,44 @@ public interface N4TypeVariable extends IdentifiableElement, NamedElement {
 	void setDeclaredUpperBoundNode(TypeReferenceNode<TypeRef> value);
 
 	/**
+	 * Returns the value of the '<em><b>Default Argument Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  The default type argument or {@code null} iff this type parameter is non-optional.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Default Argument Node</em>' containment reference.
+	 * @see #setDefaultArgumentNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DefaultArgumentNode()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypeReferenceNode<TypeRef> getDefaultArgumentNode();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode <em>Default Argument Node</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Default Argument Node</em>' containment reference.
+	 * @see #getDefaultArgumentNode()
+	 * @generated
+	 */
+	void setDefaultArgumentNode(TypeReferenceNode<TypeRef> value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	TypeRef getDeclaredUpperBound();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isOptional();
 
 } // N4TypeVariable

@@ -195,6 +195,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		EObject source, EStructuralFeature feature) {
 
 		val typeParameterCount = typeVars.size
+		val mandatoryTypeParameterCount = typeVars.filter[!optional].size
 		val typeArgumentCount = typeArgsInAST.size
 
 		// if the AST location supports auto-inference of type arguments, allow for
@@ -204,7 +205,16 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		}
 
 		// check for correct number of type arguments
-		if (typeParameterCount !== typeArgumentCount) {
+		val tooFew = typeArgumentCount < mandatoryTypeParameterCount;
+		val tooMany = typeArgumentCount > typeParameterCount;
+		if (tooFew || tooMany) {
+			val expectationStr = if (mandatoryTypeParameterCount === typeParameterCount) {
+				"" + typeParameterCount
+			} else if (tooFew) {
+				"at least " + mandatoryTypeParameterCount
+			} else {
+				"not more than " + typeParameterCount
+			};
 			if (source instanceof ParameterizedTypeRef && (source as ParameterizedTypeRef).isArrayNTypeExpression) {
 				val message = IssueCodes.
 					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ITERABLE_N_SYNTAX(BuiltInTypeScope.ITERABLE_N__MAX_LEN);
@@ -212,11 +222,11 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 			} else if (parameterizedElement !== null && parameterizedElement.name !== null) {
 				val message = IssueCodes.
 					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ELEMENT(parameterizedElement.keyword,
-						parameterizedElement.name, typeParameterCount, typeArgumentCount);
+						parameterizedElement.name, expectationStr, typeArgumentCount);
 				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS_FOR_ELEMENT);
 			} else {
 				val message = IssueCodes.
-					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS(typeParameterCount, typeArgumentCount);
+					getMessageForEXP_WRONG_NUMBER_OF_TYPEARGS(expectationStr, typeArgumentCount);
 				addIssue(message, source, feature, IssueCodes.EXP_WRONG_NUMBER_OF_TYPEARGS);
 			}
 			return;
