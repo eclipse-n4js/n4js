@@ -31,10 +31,10 @@ function f01() {
 function f02() {
 	let a: 1 | 2 | 3 | 4;
 	if (a === 1 || a === 2) {
-		// X PECT type of 'a' --> union{1,2}
+		// XPECT type of 'a' --> union{1,2}
 		a;
 	} else {
-		// X PECT type of 'a' --> union{3,4}
+		// XPECT type of 'a' --> union{3,4}
 		a;
 	}
 }
