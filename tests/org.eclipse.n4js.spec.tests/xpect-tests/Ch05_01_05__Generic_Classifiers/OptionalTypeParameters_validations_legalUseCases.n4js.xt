@@ -43,3 +43,11 @@ let obj: ~Object with {
 	// XPECT errors --> "Only type parameters of classes, interfaces, and type aliases may be declared optional." at "any"
 	<T=any> m(p:T):T;
 };
+
+
+// in contrast to the previous two cases, the following is legal:
+
+// XPECT noerrors -->
+type AliasFn<T=any> = {function<T>(p:T):T};
+// XPECT noerrors -->
+type AliasObj<T=any> = ~Object with { <T> m(p:T):T; };
