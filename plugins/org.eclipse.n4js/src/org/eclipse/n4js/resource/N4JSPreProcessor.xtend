@@ -65,7 +65,7 @@ package final class N4JSPreProcessor {
 		if (typeRef.isArrayTypeExpression) {
 			typeRef.declaredType = builtInTypes.arrayType;
 		} else if (typeRef.isArrayNTypeExpression) {
-			val n = typeRef.typeArgs.size;
+			val n = typeRef.declaredTypeArgs.size;
 			if (n < 2) {
 				typeRef.declaredType = builtInTypes.arrayType;
 			} else if (n <= BuiltInTypeScope.ITERABLE_N__MAX_LEN) {

@@ -1335,12 +1335,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				val ptrT = T as ParameterizedTypeRef;
 				val ptrS = S as ParameterizedTypeRef;
 				if (ptrS.declaredType == ptrT.declaredType) {
-					val to = ptrS.typeArgs.size;
-					if (to === ptrT.typeArgs.size) {
+					val to = ptrS.declaredTypeArgs.size;
+					if (to === ptrT.declaredTypeArgs.size) {
 						var int i = 0;
 						while (i < to && (
 
-							ts.subtypeSucceeded(G, ptrT.typeArgs.get(i), ptrS.typeArgs.get(i))
+							ts.subtypeSucceeded(G, ptrT.declaredTypeArgs.get(i), ptrS.declaredTypeArgs.get(i))
 							)
 							) {
 							i++;
@@ -1350,7 +1350,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 						} else {
 							i = 0;
 							while (i < to &&
-								ts.subtypeSucceeded(G, ptrS.typeArgs.get(i), ptrT.typeArgs.get(i))) {
+								ts.subtypeSucceeded(G, ptrS.declaredTypeArgs.get(i), ptrT.declaredTypeArgs.get(i))) {
 								i++;
 							}
 							castOK = i == to;

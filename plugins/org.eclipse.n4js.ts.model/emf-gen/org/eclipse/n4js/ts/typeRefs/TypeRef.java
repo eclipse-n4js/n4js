@@ -294,7 +294,18 @@ public interface TypeRef extends TypeArgument {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	EList<TypeArgument> getTypeArgs();
+	EList<TypeArgument> getDeclaredTypeArgs();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<TypeArgument> getTypeArgsWithDefaults();
 
 	/**
 	 * <!-- begin-user-doc -->

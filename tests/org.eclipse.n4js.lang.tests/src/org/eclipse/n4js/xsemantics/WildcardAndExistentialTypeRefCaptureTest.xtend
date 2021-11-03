@@ -112,15 +112,15 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 		val typeRefCaptureFull = ts.substTypeVariablesWithFullCapture(G2, typeRef);
 		val typeRefCapturePartial = ts.substTypeVariablesWithPartialCapture(G2, typeRef);
 
-		val typeArgsOfCaptureNone = (typeRefCaptureNone as ParameterizedTypeRef).typeArgs;
+		val typeArgsOfCaptureNone = (typeRefCaptureNone as ParameterizedTypeRef).declaredTypeArgs;
 		assertTrue(typeArgsOfCaptureNone.get(0) instanceof Wildcard);
 		assertTrue(isReopenedExistentialTypeRef(typeArgsOfCaptureNone.get(1))); // this reopened existential will act like a wildcard (was converted only for technical reasons)
 
-		val typeArgsOfCaptureFull = (typeRefCaptureFull as ParameterizedTypeRef).typeArgs;
+		val typeArgsOfCaptureFull = (typeRefCaptureFull as ParameterizedTypeRef).declaredTypeArgs;
 		assertTrue(isClosedExistentialTypeRef(typeArgsOfCaptureFull.get(0)));
 		assertTrue(isClosedExistentialTypeRef(typeArgsOfCaptureFull.get(1)));
 
-		val typeArgsOfCapturePartial = (typeRefCapturePartial as ParameterizedTypeRef).typeArgs;
+		val typeArgsOfCapturePartial = (typeRefCapturePartial as ParameterizedTypeRef).declaredTypeArgs;
 		assertTrue(typeArgsOfCapturePartial.get(0) instanceof Wildcard);
 		assertTrue(isClosedExistentialTypeRef(typeArgsOfCapturePartial.get(1)));
 	}
@@ -131,12 +131,12 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 		val typeRefCaptured = ts.substTypeVariablesWithFullCapture(G, typeRef);
 
 		// the higher-level wildcard must have been captured
-		val typeArg1 = (typeRefCaptured as ParameterizedTypeRef).typeArgs.get(0);
+		val typeArg1 = (typeRefCaptured as ParameterizedTypeRef).declaredTypeArgs.get(0);
 		assertEquals("higher-level type argument should be an ExistentialTypeRef", TypeRefsPackage.eINSTANCE.existentialTypeRef, typeArg1.eClass);
 		assertFalse("higher-level type argument should be closed, i.e. not reopened", (typeArg1 as ExistentialTypeRef).reopened);
 		// the lower-level wildcard must *not* have been captured
 		val upperBoundOfTypeArg1 = (typeArg1 as ExistentialTypeRef).wildcard.declaredUpperBound;
-		val typeArg2 = (upperBoundOfTypeArg1 as ParameterizedTypeRef).typeArgs.get(0);
+		val typeArg2 = (upperBoundOfTypeArg1 as ParameterizedTypeRef).declaredTypeArgs.get(0);
 		assertEquals("lower-level type argument should still be a wildcard", TypeRefsPackage.eINSTANCE.wildcard, typeArg2.eClass);
 	}
 
@@ -146,12 +146,12 @@ class WildcardAndExistentialTypeRefCaptureTest extends AbstractTypesystemTest {
 		val typeRefCaptured = ts.substTypeVariablesWithFullCapture(G, typeRef);
 
 		// the higher-level wildcard must have been captured
-		val typeArg1 = (typeRefCaptured as ParameterizedTypeRef).typeArgs.get(0);
+		val typeArg1 = (typeRefCaptured as ParameterizedTypeRef).declaredTypeArgs.get(0);
 		assertEquals("higher-level type argument should be an ExistentialTypeRef", TypeRefsPackage.eINSTANCE.existentialTypeRef, typeArg1.eClass);
 		assertFalse("higher-level type argument should be closed, i.e. not reopened", (typeArg1 as ExistentialTypeRef).reopened);
 		// the lower-level wildcard must *not* have been captured
 		val lowerBoundOfTypeArg1 = (typeArg1 as ExistentialTypeRef).wildcard.declaredLowerBound;
-		val typeArg2 = (lowerBoundOfTypeArg1 as ParameterizedTypeRef).typeArgs.get(0);
+		val typeArg2 = (lowerBoundOfTypeArg1 as ParameterizedTypeRef).declaredTypeArgs.get(0);
 		assertEquals("lower-level type argument should still be a wildcard", TypeRefsPackage.eINSTANCE.wildcard, typeArg2.eClass);
 	}
 

@@ -91,7 +91,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		if (tFun instanceof TFunction) {
 			val actualReturnTypeRef = getAndResolveOuterReturnType(G, tFun);
 			if (TypeUtils.isPromise(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
-				val firstTypeArg = actualReturnTypeRef.typeArgs.head;
+				val firstTypeArg = actualReturnTypeRef.declaredTypeArgs.head;
 				if (firstTypeArg !== null)
 					return ts.upperBound(G, firstTypeArg); // take upper bound to get rid of Wildcard, etc.
 			}

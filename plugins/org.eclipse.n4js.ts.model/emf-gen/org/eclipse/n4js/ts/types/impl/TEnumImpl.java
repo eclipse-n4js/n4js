@@ -30,15 +30,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
-
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -286,16 +283,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 	 * @generated
 	 */
 	@Override
-	public EList<TypeVariable> getTypeVars() {
-		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -493,7 +480,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 			switch (baseOperationID) {
 				case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TENUM___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TENUM___GET_TYPE_ACCESS_MODIFIER;
-				case TypesPackage.TYPE___GET_TYPE_VARS: return TypesPackage.TENUM___GET_TYPE_VARS;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -521,8 +507,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TENUM___GET_TYPE_VARS:
-				return getTypeVars();
 			case TypesPackage.TENUM___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TENUM___GET_TYPE_ACCESS_MODIFIER:

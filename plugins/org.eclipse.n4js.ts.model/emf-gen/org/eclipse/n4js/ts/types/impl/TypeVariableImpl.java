@@ -22,8 +22,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.Type;
@@ -43,6 +41,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl#getDefaultArgument <em>Default Argument</em>}</li>
  * </ul>
  *
  * @generated
@@ -97,6 +96,16 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * @ordered
 	 */
 	protected TypeRef declaredUpperBound;
+
+	/**
+	 * The cached value of the '{@link #getDefaultArgument() <em>Default Argument</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefaultArgument()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef defaultArgument;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -214,6 +223,51 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * @generated
 	 */
 	@Override
+	public TypeRef getDefaultArgument() {
+		return defaultArgument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDefaultArgument(TypeRef newDefaultArgument, NotificationChain msgs) {
+		TypeRef oldDefaultArgument = defaultArgument;
+		defaultArgument = newDefaultArgument;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT, oldDefaultArgument, newDefaultArgument);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefaultArgument(TypeRef newDefaultArgument) {
+		if (newDefaultArgument != defaultArgument) {
+			NotificationChain msgs = null;
+			if (defaultArgument != null)
+				msgs = ((InternalEObject)defaultArgument).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT, null, msgs);
+			if (newDefaultArgument != null)
+				msgs = ((InternalEObject)newDefaultArgument).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT, null, msgs);
+			msgs = basicSetDefaultArgument(newDefaultArgument, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT, newDefaultArgument, newDefaultArgument));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Variance getVariance() {
 		final boolean co = this.isDeclaredCovariant();
 		final boolean contra = this.isDeclaredContravariant();
@@ -236,8 +290,9 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * @generated
 	 */
 	@Override
-	public EList<TypeVariable> getTypeVars() {
-		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
+	public boolean isOptional() {
+		TypeRef _defaultArgument = this.getDefaultArgument();
+		return (_defaultArgument != null);
 	}
 
 	/**
@@ -283,7 +338,18 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 		else {
 			_xifexpression_2 = "";
 		}
-		return (_plus + _xifexpression_2);
+		String _plus_1 = (_plus + _xifexpression_2);
+		String _xifexpression_3 = null;
+		TypeRef _defaultArgument = this.getDefaultArgument();
+		boolean _tripleNotEquals = (_defaultArgument != null);
+		if (_tripleNotEquals) {
+			String _typeRefAsString_1 = this.getDefaultArgument().getTypeRefAsString();
+			_xifexpression_3 = (" = " + _typeRefAsString_1);
+		}
+		else {
+			_xifexpression_3 = "";
+		}
+		return (_plus_1 + _xifexpression_3);
 	}
 
 	/**
@@ -296,6 +362,8 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 		switch (featureID) {
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				return basicSetDeclaredUpperBound(null, msgs);
+			case TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT:
+				return basicSetDefaultArgument(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -314,6 +382,8 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 				return isDeclaredContravariant();
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				return getDeclaredUpperBound();
+			case TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT:
+				return getDefaultArgument();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -334,6 +404,9 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 				return;
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				setDeclaredUpperBound((TypeRef)newValue);
+				return;
+			case TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT:
+				setDefaultArgument((TypeRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -356,6 +429,9 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				setDeclaredUpperBound((TypeRef)null);
 				return;
+			case TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT:
+				setDefaultArgument((TypeRef)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -374,6 +450,8 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 				return declaredContravariant != DECLARED_CONTRAVARIANT_EDEFAULT;
 			case TypesPackage.TYPE_VARIABLE__DECLARED_UPPER_BOUND:
 				return declaredUpperBound != null;
+			case TypesPackage.TYPE_VARIABLE__DEFAULT_ARGUMENT:
+				return defaultArgument != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -387,7 +465,6 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
-				case TypesPackage.TYPE___GET_TYPE_VARS: return TypesPackage.TYPE_VARIABLE___GET_TYPE_VARS;
 				case TypesPackage.TYPE___GET_TYPE_AS_STRING: return TypesPackage.TYPE_VARIABLE___GET_TYPE_AS_STRING;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -405,8 +482,8 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 		switch (operationID) {
 			case TypesPackage.TYPE_VARIABLE___GET_VARIANCE:
 				return getVariance();
-			case TypesPackage.TYPE_VARIABLE___GET_TYPE_VARS:
-				return getTypeVars();
+			case TypesPackage.TYPE_VARIABLE___IS_OPTIONAL:
+				return isOptional();
 			case TypesPackage.TYPE_VARIABLE___GET_TYPE_AS_STRING:
 				return getTypeAsString();
 			case TypesPackage.TYPE_VARIABLE___GET_TYPE_VARIABLE_AS_STRING__TYPEREF:
