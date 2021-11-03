@@ -18,11 +18,7 @@ class X {}
 
 
 // XPECT errors --> "Mandatory type parameters may not follow optional type parameters." at "T2"
-class G0<T0,T1=any,T2> {
-
-	// XPECT errors --> "Only type parameters of classes and interfaces may be declared optional." at "any"
-	<TM0=any,TM1> method(p0: TM0, p1: TM1) {}
-}
+class G0<T0,T1=any,T2> {}
 
 
 // XPECT noerrors -->

@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class Cls {
+	// XPECT errors --> "Only type parameters of classes and interfaces may be declared optional." at "any"
+	<T0=any,T1> method(p0: T0, p1: T1) {}
+}
+
+// XPECT errors --> "Only type parameters of classes and interfaces may be declared optional." at "any"
+function <T=any> foo(p: T): T {
+	return p;
+}
+
+// XPECT errors --> "Only type parameters of classes and interfaces may be declared optional." at "any"
+let fn: {function<T=any>(p:T):T};
+
+let obj: ~Object with {
+	// XPECT errors --> "Only type parameters of classes and interfaces may be declared optional." at "any"
+	<T=any> m(p:T):T;
+};

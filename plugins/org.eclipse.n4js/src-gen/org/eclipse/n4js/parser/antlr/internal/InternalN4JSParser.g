@@ -37991,7 +37991,21 @@ ruleTStructMember returns [EObject current=null]
 				(
 				)
 				(
-					ruleTypeVariables[null]
+					LessThanSign
+					(
+						(
+							ruleTypeVariable
+						)
+					)
+					(
+						Comma
+						(
+							(
+								ruleTypeVariable
+							)
+						)
+					)*
+					GreaterThanSign
 				)?
 				(
 					(
@@ -38043,7 +38057,21 @@ ruleTStructMethod returns [EObject current=null]
 				(
 				)
 				(
-					ruleTypeVariables[null]
+					LessThanSign
+					(
+						(
+							ruleTypeVariable
+						)
+					)
+					(
+						Comma
+						(
+							(
+								ruleTypeVariable
+							)
+						)
+					)*
+					GreaterThanSign
 				)?
 				(
 					(
@@ -38062,16 +38090,57 @@ ruleTStructMethod returns [EObject current=null]
 					}
 				)
 				(
+					otherlv_1=LessThanSign
 					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getTStructMethodRule());
-						}
-						newCompositeNode(grammarAccess.getTStructMethodAccess().getTypeVariablesParserRuleCall_0_0_1());
+						newLeafNode(otherlv_1, grammarAccess.getTStructMethodAccess().getLessThanSignKeyword_0_0_1_0());
 					}
-					this_TypeVariables_1=ruleTypeVariables[$current]
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getTStructMethodAccess().getTypeVarsTypeVariableParserRuleCall_0_0_1_1_0());
+							}
+							lv_typeVars_2_0=ruleTypeVariable
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getTStructMethodRule());
+								}
+								add(
+									$current,
+									"typeVars",
+									lv_typeVars_2_0,
+									"org.eclipse.n4js.TypeExpressions.TypeVariable");
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+					(
+						otherlv_3=Comma
+						{
+							newLeafNode(otherlv_3, grammarAccess.getTStructMethodAccess().getCommaKeyword_0_0_1_2_0());
+						}
+						(
+							(
+								{
+									newCompositeNode(grammarAccess.getTStructMethodAccess().getTypeVarsTypeVariableParserRuleCall_0_0_1_2_1_0());
+								}
+								lv_typeVars_4_0=ruleTypeVariable
+								{
+									if ($current==null) {
+										$current = createModelElementForParent(grammarAccess.getTStructMethodRule());
+									}
+									add(
+										$current,
+										"typeVars",
+										lv_typeVars_4_0,
+										"org.eclipse.n4js.TypeExpressions.TypeVariable");
+									afterParserOrEnumRuleCall();
+								}
+							)
+						)
+					)*
+					otherlv_5=GreaterThanSign
 					{
-						$current = $this_TypeVariables_1.current;
-						afterParserOrEnumRuleCall();
+						newLeafNode(otherlv_5, grammarAccess.getTStructMethodAccess().getGreaterThanSignKeyword_0_0_1_3());
 					}
 				)?
 				(
@@ -38079,7 +38148,7 @@ ruleTStructMethod returns [EObject current=null]
 						{
 							newCompositeNode(grammarAccess.getTStructMethodAccess().getNameIdentifierNameParserRuleCall_0_0_2_0());
 						}
-						lv_name_2_0=ruleIdentifierName
+						lv_name_6_0=ruleIdentifierName
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getTStructMethodRule());
@@ -38087,15 +38156,15 @@ ruleTStructMethod returns [EObject current=null]
 							set(
 								$current,
 								"name",
-								lv_name_2_0,
+								lv_name_6_0,
 								"org.eclipse.n4js.TypeExpressions.IdentifierName");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
-				otherlv_3=LeftParenthesis
+				otherlv_7=LeftParenthesis
 				{
-					newLeafNode(otherlv_3, grammarAccess.getTStructMethodAccess().getLeftParenthesisKeyword_0_0_3());
+					newLeafNode(otherlv_7, grammarAccess.getTStructMethodAccess().getLeftParenthesisKeyword_0_0_3());
 				}
 			)
 		)
@@ -38105,14 +38174,14 @@ ruleTStructMethod returns [EObject current=null]
 			}
 			newCompositeNode(grammarAccess.getTStructMethodAccess().getTAnonymousFormalParameterListParserRuleCall_1());
 		}
-		this_TAnonymousFormalParameterList_4=ruleTAnonymousFormalParameterList[$current]
+		this_TAnonymousFormalParameterList_8=ruleTAnonymousFormalParameterList[$current]
 		{
-			$current = $this_TAnonymousFormalParameterList_4.current;
+			$current = $this_TAnonymousFormalParameterList_8.current;
 			afterParserOrEnumRuleCall();
 		}
-		otherlv_5=RightParenthesis
+		otherlv_9=RightParenthesis
 		{
-			newLeafNode(otherlv_5, grammarAccess.getTStructMethodAccess().getRightParenthesisKeyword_2());
+			newLeafNode(otherlv_9, grammarAccess.getTStructMethodAccess().getRightParenthesisKeyword_2());
 		}
 		(
 			{
@@ -38121,77 +38190,12 @@ ruleTStructMethod returns [EObject current=null]
 				}
 				newCompositeNode(grammarAccess.getTStructMethodAccess().getColonSepReturnTypeRefParserRuleCall_3());
 			}
-			this_ColonSepReturnTypeRef_6=ruleColonSepReturnTypeRef[$current]
+			this_ColonSepReturnTypeRef_10=ruleColonSepReturnTypeRef[$current]
 			{
-				$current = $this_ColonSepReturnTypeRef_6.current;
+				$current = $this_ColonSepReturnTypeRef_10.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
-	)
-;
-
-
-// Rule TypeVariables
-ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		otherlv_0=LessThanSign
-		{
-			newLeafNode(otherlv_0, grammarAccess.getTypeVariablesAccess().getLessThanSignKeyword_0());
-		}
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getTypeVariablesAccess().getTypeVarsTypeVariableParserRuleCall_1_0());
-				}
-				lv_typeVars_1_0=ruleTypeVariable
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getTypeVariablesRule());
-					}
-					add(
-						$current,
-						"typeVars",
-						lv_typeVars_1_0,
-						"org.eclipse.n4js.TypeExpressions.TypeVariable");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		(
-			otherlv_2=Comma
-			{
-				newLeafNode(otherlv_2, grammarAccess.getTypeVariablesAccess().getCommaKeyword_2_0());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getTypeVariablesAccess().getTypeVarsTypeVariableParserRuleCall_2_1_0());
-					}
-					lv_typeVars_3_0=ruleTypeVariable
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getTypeVariablesRule());
-						}
-						add(
-							$current,
-							"typeVars",
-							lv_typeVars_3_0,
-							"org.eclipse.n4js.TypeExpressions.TypeVariable");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)*
-		otherlv_4=GreaterThanSign
-		{
-			newLeafNode(otherlv_4, grammarAccess.getTypeVariablesAccess().getGreaterThanSignKeyword_3());
-		}
 	)
 ;
 
@@ -39048,6 +39052,31 @@ ruleTypeVariable returns [EObject current=null]
 							$current,
 							"declaredUpperBound",
 							lv_declaredUpperBound_4_0,
+							"org.eclipse.n4js.TypeExpressions.TypeRef");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
+		(
+			otherlv_5=EqualsSign
+			{
+				newLeafNode(otherlv_5, grammarAccess.getTypeVariableAccess().getEqualsSignKeyword_3_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getTypeVariableAccess().getDefaultArgumentTypeRefParserRuleCall_3_1_0());
+					}
+					lv_defaultArgument_6_0=ruleTypeRef
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getTypeVariableRule());
+						}
+						set(
+							$current,
+							"defaultArgument",
+							lv_defaultArgument_6_0,
 							"org.eclipse.n4js.TypeExpressions.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
