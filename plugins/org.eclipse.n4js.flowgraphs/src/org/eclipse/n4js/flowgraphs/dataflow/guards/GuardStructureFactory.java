@@ -61,13 +61,16 @@ public class GuardStructureFactory {
 		Node previousNode = edge.start;
 		ControlFlowElement previousCFE = previousNode.getControlFlowElement();
 
+		if (previousCFE instanceof BinaryLogicalExpression) {
+			// we reached this via short circuit evaluation
+			BinaryLogicalExpression ble = (BinaryLogicalExpression) previousCFE;
+			condition = ble.getLhs();
+			return condition;
+		}
+
 		if (previousCFE instanceof ConditionalExpression) {
 			ConditionalExpression ce = (ConditionalExpression) previousCFE;
 			condition = ce.getExpression();
-
-		} else if (previousCFE instanceof BinaryLogicalExpression) {
-			BinaryLogicalExpression ble = (BinaryLogicalExpression) previousCFE;
-			condition = ble.getLhs();
 
 		} else if (previousCFE instanceof IfStatement) {
 			IfStatement is = (IfStatement) previousCFE;
@@ -85,6 +88,13 @@ public class GuardStructureFactory {
 			ForStatement ws = (ForStatement) previousCFE;
 			condition = ws.getExpression();
 		}
+		// we reached this via normal control flow of an condition evaluation
+
+		while (condition instanceof BinaryLogicalExpression) {
+			BinaryLogicalExpression ble = (BinaryLogicalExpression) condition;
+			condition = ble.getRhs();
+		}
+
 		return condition;
 	}
 

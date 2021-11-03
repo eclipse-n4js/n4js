@@ -639,22 +639,29 @@ import com.google.inject.Inject;
 					if (ioGuard.symbolCFE instanceof IdentifierRef) {
 						final IdentifiableElement guardedElement = ((IdentifierRef) ioGuard.symbolCFE).getId();
 						if (guardedElement != null && idref.getId() == guardedElement) {
-							final Expression typeIdentifier = ioGuard.typeIdentifier;
-							TypeRef instanceofType = ts.type(G, typeIdentifier);
+							List<TypeRef> disjTypes = new ArrayList<>();
+							for (Expression typeIdentifier : ioGuard.typeIdentifiers) {
+								TypeRef instanceofType = ts.type(G, typeIdentifier);
 
-							if (instanceofType instanceof TypeTypeRef) {
-								final TypeTypeRef ttRef = (TypeTypeRef) instanceofType;
-								final TypeArgument typeArg = ttRef.getTypeArg();
-								if (typeArg instanceof TypeRef) {
-									instanceofType = (TypeRef) typeArg;
+								if (instanceofType instanceof TypeTypeRef) {
+									final TypeTypeRef ttRef = (TypeTypeRef) instanceofType;
+									final TypeArgument typeArg = ttRef.getTypeArg();
+									if (typeArg instanceof TypeRef) {
+										instanceofType = (TypeRef) typeArg;
+									}
 								}
+
+								TypeUtils.sanitizeRawTypeRef(instanceofType);
+								disjTypes.add(instanceofType);
 							}
 
-							TypeUtils.sanitizeRawTypeRef(instanceofType);
+							TypeRef type = disjTypes.size() == 1 ? disjTypes.get(0)
+									: TypeUtils.createNonSimplifiedUnionType(disjTypes);
+
 							if (ioGuard.asserts == GuardAssertion.AlwaysHolds) {
-								allTypes.add(instanceofType);
+								allTypes.add(type);
 							} else if (ioGuard.asserts == GuardAssertion.NeverHolds) {
-								excludedTypes.add(instanceofType);
+								excludedTypes.add(type);
 							}
 						}
 					}

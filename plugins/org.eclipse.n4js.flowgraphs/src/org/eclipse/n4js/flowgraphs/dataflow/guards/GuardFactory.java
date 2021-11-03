@@ -57,6 +57,55 @@ public class GuardFactory {
 				return createGuardForInstanceof(topContainer, negateTree, re);
 			}
 
+			// } else if (expr instanceof BinaryLogicalExpression) {
+			// if (expr.eContainer() instanceof BinaryLogicalExpression
+			// && ((BinaryLogicalExpression) expr.eContainer()).getOp() == BinaryLogicalOperator.OR) {
+			// return null;
+			// }
+			// // check that this is an OR and that all leaves are instanceof expressions
+			// List<RelationalExpression> instanceofExpressions = new ArrayList<>();
+			// List<Expression> worklist = new ArrayList<>();
+			// worklist.add(expr);
+			// while (!worklist.isEmpty()) {
+			// Expression expression = worklist.remove(0);
+			// if (expression instanceof BinaryLogicalExpression) {
+			// BinaryLogicalExpression ble = (BinaryLogicalExpression) expr;
+			// if (ble.getOp() != BinaryLogicalOperator.OR) {
+			// return null;
+			// }
+			// worklist.add(ble.getLhs());
+			// worklist.add(ble.getRhs());
+			// } else if (expression instanceof RelationalExpression) {
+			// RelationalExpression relex = (RelationalExpression) expression;
+			// if (relex.getOp() == RelationalOperator.INSTANCEOF) {
+			// instanceofExpressions.add(relex);
+			// } else {
+			// return null;
+			// }
+			// } else {
+			// return null;
+			// }
+			// }
+			// // simple check that the symbols are equal
+			// List<Expression> typeExpressions = new ArrayList<>();
+			// String idAsText = null;
+			// IdentifierRef idRef = null;
+			// for (RelationalExpression rel : instanceofExpressions) {
+			// typeExpressions.add(rel.getRhs());
+			// Expression lhs = rel.getLhs();
+			// if (!(lhs instanceof IdentifierRef)) {
+			// return null;
+			// }
+			// idRef = (IdentifierRef) lhs;
+			// if (idAsText == null) {
+			// idAsText = idRef.getIdAsText();
+			// } else if (!Objects.equal(idAsText, idRef.getIdAsText())) {
+			// return null;
+			// }
+			// }
+			// Expression[] teArray = typeExpressions.toArray(new Expression[typeExpressions.size()]);
+			// return createGuardForInstanceof(topContainer, negateTree, false, expr, idRef, teArray);
+
 		} else if (expr instanceof ParameterizedCallExpression) {
 			// TODO: implement GuardType.InState here
 
@@ -74,15 +123,15 @@ public class GuardFactory {
 	}
 
 	static private Guard createGuardForInstanceof(EObject topContainer, boolean negateTree, RelationalExpression re) {
-		return createGuardForInstanceof(topContainer, negateTree, re, re.getLhs(), re.getRhs());
+		return createGuardForInstanceof(topContainer, negateTree, false, re, re.getLhs(), re.getRhs());
 	}
 
-	static private Guard createGuardForInstanceof(EObject topContainer, boolean negateTree, Expression condition,
-			ControlFlowElement symbolExpr, Expression typeIdentifierRef) {
+	static private Guard createGuardForInstanceof(EObject topContainer, boolean negateTree, boolean negateEqe,
+			Expression condition, ControlFlowElement symbolExpr, Expression... typeIdentifierRefs) {
 
 		if (SymbolFactory.canCreate(symbolExpr)) {
-			GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, condition, negateTree, false);
-			Guard guard = createInstanceofGuard(condition, asserts, symbolExpr, typeIdentifierRef);
+			GuardAssertion asserts = FlowAssertionFactory.getGuard(topContainer, condition, negateTree, negateEqe);
+			Guard guard = createInstanceofGuard(condition, asserts, symbolExpr, typeIdentifierRefs);
 			return guard;
 		}
 		return null;
@@ -148,10 +197,10 @@ public class GuardFactory {
 		// TODO should also support v == <arbitrary expression of literal type>, e.g. v == fooReturningLiteral()
 		if (rhs instanceof BooleanLiteral || rhs instanceof NumericLiteral || rhs instanceof StringLiteral
 				|| isEnumLiteral(rhs)) {
-			return createGuardForInstanceof(topContainer, negateTree ^ sameEqualNot, eqe, lhs, rhs);
+			return createGuardForInstanceof(topContainer, negateTree, sameEqualNot, eqe, lhs, rhs);
 		} else if (lhs instanceof BooleanLiteral || lhs instanceof NumericLiteral || lhs instanceof StringLiteral
 				|| isEnumLiteral(lhs)) {
-			return createGuardForInstanceof(topContainer, negateTree ^ sameEqualNot, eqe, rhs, lhs);
+			return createGuardForInstanceof(topContainer, negateTree, sameEqualNot, eqe, rhs, lhs);
 		}
 
 		return null;
@@ -242,9 +291,9 @@ public class GuardFactory {
 	}
 
 	static private Guard createInstanceofGuard(Expression expr, GuardAssertion asserts, ControlFlowElement symoblExpr,
-			Expression typeIdentifier) {
+			Expression... typeIdentifiers) {
 
-		return new InstanceofGuard(expr, asserts, symoblExpr, typeIdentifier);
+		return new InstanceofGuard(expr, asserts, symoblExpr, typeIdentifiers);
 	}
 
 	static private boolean isEnumLiteral(Expression expr) {

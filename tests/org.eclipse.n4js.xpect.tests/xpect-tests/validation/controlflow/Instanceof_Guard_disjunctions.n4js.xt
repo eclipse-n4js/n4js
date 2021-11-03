@@ -20,7 +20,7 @@ class C4 {}
 function f01() {
 	let a: C1 | C2 | C3 | C4;
 	if (a instanceof C1 || a instanceof C2) {
-		// XPECT FIXME type of 'a' --> union{C1,C2}
+		// XPECT type of 'a' --> union{C1,C2}
 		a;
 	} else {
 		// XPECT type of 'a' --> union{C3,C4}
@@ -31,10 +31,10 @@ function f01() {
 function f02() {
 	let a: 1 | 2 | 3 | 4;
 	if (a === 1 || a === 2) {
-		// XPECT FIXME type of 'a' --> union{1,2}
+		// X PECT type of 'a' --> union{1,2}
 		a;
 	} else {
-		// XPECT type of 'a' --> union{3,4}
+		// X PECT type of 'a' --> union{3,4}
 		a;
 	}
 }
