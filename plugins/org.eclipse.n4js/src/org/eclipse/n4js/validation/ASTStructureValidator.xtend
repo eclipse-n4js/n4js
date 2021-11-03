@@ -58,7 +58,6 @@ import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -1845,14 +1844,12 @@ class ASTStructureValidator {
 		Constraints constraints
 	) {
 		if (model.optional) {
-			val container = model.eContainer;
-			val isTypeParamOfClassifier = model.eContainmentFeature === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
-				&& (container instanceof N4ClassifierDefinition || container instanceof N4TypeAliasDeclaration);
-			if (!isTypeParamOfClassifier) {
+			if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(model.eContainer, model.eContainmentFeature)) {
 				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DefaultArgumentNode).head;
 				producer.addDiagnostic(
 					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS), IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS),
+						IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
 			}
 		}
 
@@ -1871,10 +1868,13 @@ class ASTStructureValidator {
 		Constraints constraints
 	) {
 		if (model.optional) {
-			producer.node = NodeModelUtils.findNodesForFeature(model, TypesPackage.eINSTANCE.typeVariable_DefaultArgument).head;
-			producer.addDiagnostic(
-				new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
-					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS), IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
+			if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(model.eContainer, model.eContainmentFeature)) {
+				producer.node = NodeModelUtils.findNodesForFeature(model, TypesPackage.eINSTANCE.typeVariable_DefaultArgument).head;
+				producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS),
+						IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
+			}
 		}
 
 		recursiveValidateASTStructure(

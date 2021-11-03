@@ -103,7 +103,6 @@ import static org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals.PARAMETERIZE
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 
 /**
  * Class for validating the N4JS types.
@@ -901,7 +900,10 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkTypeParameters(GenericDeclaration genDecl) {
-		if (!(genDecl instanceof N4ClassifierDeclaration || genDecl instanceof N4TypeAliasDeclaration)) {
+		if (genDecl.typeVars.empty) {
+			return; // nothing to check
+		}
+		if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(genDecl, N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS)) {
 			return; // avoid duplicate error messages
 		}
 		if (holdsOptionalTypeParameterNotFollowedByMandatory(genDecl)) {
