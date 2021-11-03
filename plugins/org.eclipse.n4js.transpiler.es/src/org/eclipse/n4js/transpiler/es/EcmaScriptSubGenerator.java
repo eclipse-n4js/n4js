@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -123,7 +124,9 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 			final Path relativeNavigationToSrc = calculateNavigationFromOutputToSourcePath(ws, fsa, getCompilerID(),
 					resourceCasted);
 
-			boolean createSourceMap = true;
+			final N4JSProjectConfigSnapshot project = ws.findProjectContaining(resource.getURI());
+
+			boolean createSourceMap = project.getProjectDescription().isGeneratorEnabledSourceMaps();
 
 			if (filename != null) {
 				final EObject root = rootElement(resource);

@@ -50,7 +50,8 @@ public class ProjectDescriptionBuilder {
 	private boolean nestedNodeModulesFolder;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
-	private boolean isGeneratorEnabledDts;
+	private Boolean isGeneratorEnabledSourceMaps;
+	private Boolean isGeneratorEnabledDts;
 	private final List<String> workspaces = new ArrayList<>();
 
 	public ProjectDescriptionBuilder() {
@@ -59,11 +60,14 @@ public class ProjectDescriptionBuilder {
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
 		id = id == null ? computeProjectID() : id;
+		isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps == null ? false : isGeneratorEnabledSourceMaps;
+		isGeneratorEnabledDts = isGeneratorEnabledDts == null ? false : isGeneratorEnabledDts;
+
 		return new ProjectDescription(location, relatedRootLocation, id,
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage, nestedNodeModulesFolder,
-				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledDts, workspaces);
+				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, workspaces);
 	}
 
 	public String computeProjectID() {
@@ -310,7 +314,16 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public boolean isGeneratorEnabledDts() {
+	public Boolean isGeneratorEnabledSourceMaps() {
+		return isGeneratorEnabledSourceMaps;
+	}
+
+	public ProjectDescriptionBuilder setGeneratorEnabledSourceMaps(boolean isGeneratorEnabledSourceMaps) {
+		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
+		return this;
+	}
+
+	public Boolean isGeneratorEnabledDts() {
 		return isGeneratorEnabledDts;
 	}
 
