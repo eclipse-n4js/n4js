@@ -13,7 +13,7 @@
 		"minimist": "~1.2.2",
 		"normalize-url": "~4.5.1",
 		"path-parse": "~1.0.7",
-		"tar": "^4.4.15",
+		"tar": "^4.4.19",
 		"trim-newlines": "~3.0.1",
 		"underscore": "^1.12.1"
 	},
