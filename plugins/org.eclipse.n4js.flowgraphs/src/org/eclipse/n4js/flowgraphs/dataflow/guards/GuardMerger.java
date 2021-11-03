@@ -23,10 +23,11 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- *
+ * Merges guards when merging branches while walking through the control flow graph
  */
 public class GuardMerger {
 
+	/** Merges two sets of {@link InstanceofGuard}s */
 	static public Collection<InstanceofGuard> mergeInstanceofGuards(SymbolFactory symbolFactory,
 			Collection<InstanceofGuard> guards1, Collection<InstanceofGuard> guards2) {
 
