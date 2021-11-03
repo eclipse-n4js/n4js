@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B {}
+class C {}
+
+class G<T> {
+	gimmeT(): T {
+		return null;
+	}
+}
+
+type Alias1 = G<A>;
+type Alias2<T=B> = G<T>;
+
+let test01: Alias1;
+let test02: Alias2;
+let test03: Alias2<C>;
+
+// XPECT type of 'result01' --> A
+let result01 = test01.gimmeT();
+// XPECT type of 'result02' --> B
+let result02 = test02.gimmeT();
+// XPECT type of 'result03' --> C
+let result03 = test03.gimmeT();
+
+
+// more tests can be found in OptionalTypeParameters_substitution_acrossTypeAliases.n4js.xt
+// (and other files in the folder containing that file)

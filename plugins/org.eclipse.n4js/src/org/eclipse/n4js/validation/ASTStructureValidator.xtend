@@ -58,6 +58,7 @@ import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -1844,8 +1845,9 @@ class ASTStructureValidator {
 		Constraints constraints
 	) {
 		if (model.optional) {
+			val container = model.eContainer;
 			val isTypeParamOfClassifier = model.eContainmentFeature === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
-				&& model.eContainer instanceof N4ClassifierDefinition;
+				&& (container instanceof N4ClassifierDefinition || container instanceof N4TypeAliasDeclaration);
 			if (!isTypeParamOfClassifier) {
 				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DefaultArgumentNode).head;
 				producer.addDiagnostic(
