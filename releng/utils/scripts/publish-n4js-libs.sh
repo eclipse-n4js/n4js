@@ -21,7 +21,7 @@ if [ -z "$1" ]; then
 else
     export DESTINATION=$1
     if [ "$DESTINATION" = "public" ]; then
-        export NPM_REGISTRY="http://registry.npmjs.org"
+        export NPM_REGISTRY="https://registry.npmjs.org"
     elif [ "$DESTINATION" = "staging" ]; then
         export NPM_REGISTRY="http://n4ide1-nexus.service.cd-dev.consul/repository/npm-internal"
     elif [ "$DESTINATION" = "local" ]; then
