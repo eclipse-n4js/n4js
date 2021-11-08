@@ -36,29 +36,32 @@ public class JSTokenList extends ArrayList<Token> {
 	@Override
 	public boolean add(Token tok) {
 		super.add(tok);
-		int type = tok.getType();
-		// if (type == InternalN4JSParser.EqualsSignGreaterThanSign) {
-		// // The arrow expression may not follow a semicolon thus we promote those here
-		// // to the default channel if they precede the arrow => operator
-		// for (int i = size() - 2; i >= 0; i--) {
-		// Token prev = get(i);
-		// if (prev.getChannel() == Token.HIDDEN_CHANNEL) {
-		// if (SemicolonInjectionHelper.isSemicolonEquivalent(prev)) {
-		// prev.setChannel(Token.DEFAULT_CHANNEL);
-		// break;
-		// }
-		// } else {
-		// break;
-		// }
-		// }
-		// }
-		// else
 
-		if (type == InternalN4JSParser.RULE_EOL
+		int type = tok.getType();
+		if (type == InternalN4JSParser.GreaterThanSign && size() > 2) {
+			Token prev = get(size() - 2); // must be equals sign
+			if (prev.getType() == InternalN4JSParser.EqualsSign) {
+				// The arrow expression may not follow a semicolon thus we promote those here
+				// to the default channel if they precede the arrow => operator
+				for (int i = size() - 3; i >= 0; i--) {
+					prev = get(i);
+					if (prev.getChannel() == Token.HIDDEN_CHANNEL) {
+						if (SemicolonInjectionHelper.isSemicolonEquivalent(prev)) {
+							prev.setChannel(Token.DEFAULT_CHANNEL);
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+			}
+
+		} else if (type == InternalN4JSParser.RULE_EOL
 				|| type == InternalN4JSParser.RULE_ML_COMMENT
 				|| type == InternalN4JSParser.RULE_WS
 				|| type == InternalN4JSParser.RULE_SL_COMMENT) {
 			tok.setChannel(Token.HIDDEN_CHANNEL);
+
 		} else {
 			tok.setChannel(Token.DEFAULT_CHANNEL);
 		}
