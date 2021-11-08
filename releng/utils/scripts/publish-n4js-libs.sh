@@ -128,10 +128,10 @@ rm -f "packages/n4js-cli/bin/n4jsc.jar"
 cp "../target/n4jsc.jar" "packages/n4js-cli/bin"
 
 
-echo "==== STEP 4/7: run mangelhaft tests of n4js-libs"
+echo "==== STEP 4/7: run tests of n4js-libs"
 # run tests defined in the individual packages
 lerna run test
-# run mangelhaft tests
+# run mangelhaft tests for all packages in the yarn workspace
 REPORT_NAME="./build/report.xml"
 echo "Run mangelhaft ..."
 packages/n4js-mangelhaft-cli/bin/n4js-mangelhaft-cli.js . \
