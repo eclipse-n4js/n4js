@@ -19,6 +19,8 @@ import org.eclipse.xtext.parser.antlr.ITokenDefProvider;
 import org.eclipse.xtext.parser.antlr.Lexer;
 import org.eclipse.xtext.parser.antlr.XtextTokenStream;
 
+import com.google.common.base.Preconditions;
+
 /**
  * <p>
  * A specialized {@link XtextTokenStream} that does not fill the complete token buffer up-front but waits on each
@@ -187,14 +189,122 @@ public class LazyTokenStream extends XtextTokenStream {
 		}
 	}
 
+	/////////// START FEATURE 'hidden()'
+
+	@Override
+	protected int skipOffTokenChannels(int i) {
+		if (forbidHiddenTokens) {
+			return i;
+		} else {
+			return super.skipOffTokenChannels(i);
+		}
+	}
+
+	@Override
+	protected int skipOffTokenChannelsReverse(int i) {
+		if (forbidHiddenTokens) {
+			return i;
+		} else {
+			return super.skipOffTokenChannelsReverse(i);
+		}
+	}
+
+	boolean forbidHiddenTokens = false;
+
+	@Override
+	protected void doSetHiddenTokens(String... lexerRules) {
+		super.doSetHiddenTokens(lexerRules);
+		if (lexerRules == null || lexerRules.length == 0) {
+			Preconditions.checkArgument(lexerRules == null || lexerRules.length == 0,
+					"Setting the hidden channel dynamically is only allowed for empty list of arguments");
+			forbidHiddenTokens = true;
+		}
+	}
+
+	@Override
+	public HiddenTokens setHiddenTokens(String... lexerRules) {
+		return new MyHiddenTokens2(super.setHiddenTokens(lexerRules));
+	}
+
+	// copied from CommonTokenStream#MyHiddenTokens to add 'forbidHiddenTokens = false'
+	private class MyHiddenTokens2 implements HiddenTokens {
+		final HiddenTokens delegate;
+
+		private MyHiddenTokens2(HiddenTokens delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public void restore() {
+			delegate.restore();
+			forbidHiddenTokens = false;
+		}
+	}
+
+	// copied from CommonTokenStream#LT(int)
+	Token supersuperLT(int k) {
+		if (p == -1) {
+			fillBuffer();
+		}
+		if (k == 0) {
+			return null;
+		}
+		if (k < 0) {
+			return LB(-k);
+		}
+		// System.out.print("LT(p="+p+","+k+")=");
+		if ((p + k - 1) >= tokens.size()) {
+			return Token.EOF_TOKEN;
+		}
+		// System.out.println(tokens.get(p+k-1));
+		int i = p;
+		int n = 1;
+		// find k good tokens
+		while (n < k) {
+			// skip off-channel tokens
+			i = skipOffTokenChannels(i + 1); // leave p on valid token
+			n++;
+		}
+		if (i >= tokens.size()) {
+			return Token.EOF_TOKEN;
+		}
+		return (Token) tokens.get(i);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Token LT(int k) {
 		fillBuffer(k);
-		return super.LT(k);
+		Token result = supersuperLT(k);
+		if (k == 1 && (!forbidHiddenTokens && result.getChannel() != channel)) {
+			// copied from XtextTokenStream#LT(int)
+			int k_ = k + 1;
+			if ((p + k_ - 1) >= tokens.size()) {
+				return Token.EOF_TOKEN;
+			}
+			int i = p;
+			int n = 1;
+			// find k good tokens
+			while (n < k_) {
+				// skip off-channel tokens
+				i = skipOffTokenChannels(i + 1); // leave p to a valid pointer
+													// SZ: prev. comment from superclass
+													// is irritating because p is not set
+													// in skipOffTokenChannels(...)
+				n++;
+			}
+			if (i >= tokens.size()) {
+				return Token.EOF_TOKEN;
+			}
+			p = i; // adjust p to the valid pointer
+			result = (Token) tokens.get(i);
+		}
+		return result;
 	}
+
+	/////////// END FEATURE 'hidden()'
 
 	/**
 	 * {@inheritDoc}

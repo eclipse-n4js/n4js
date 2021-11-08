@@ -23,6 +23,7 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
+import org.antlr.runtime.UnwantedTokenException;
 import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
@@ -304,6 +305,19 @@ public class InternalSemicolonInjectingParser extends InternalN4JSParser impleme
 					return false;
 				}).findFirst();
 		return findField.map(Field::getName).orElse("NN");
+	}
+
+	@Override
+	public Object match(IntStream is, int ttype, BitSet follow) throws RecognitionException {
+		LazyTokenStream lts = (LazyTokenStream) is;
+		Token token = lts.LT(1);
+
+		if (lts.forbidHiddenTokens && token != null
+				&& token.getChannel() == Token.HIDDEN_CHANNEL) {
+
+			throw new UnwantedTokenException(ttype, is);
+		}
+		return super.match(is, ttype, follow);
 	}
 
 }
