@@ -11211,13 +11211,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Declared Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_VARIABLE__DECLARED_OPTIONAL = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Declared Upper Bound Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Default Argument Node</b></em>' containment reference.
@@ -11226,7 +11235,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
+	int N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>N4 Type Variable</em>' class.
@@ -11235,7 +11244,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE_FEATURE_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
+	int N4_TYPE_VARIABLE_FEATURE_COUNT = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -21122,6 +21131,17 @@ public interface N4JSPackage extends EPackage {
 	EAttribute getN4TypeVariable_DeclaredContravariant();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredOptional <em>Declared Optional</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Declared Optional</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredOptional()
+	 * @see #getN4TypeVariable()
+	 * @generated
+	 */
+	EAttribute getN4TypeVariable_DeclaredOptional();
+
+	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26513,6 +26533,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT = eINSTANCE.getN4TypeVariable_DeclaredContravariant();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Optional</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute N4_TYPE_VARIABLE__DECLARED_OPTIONAL = eINSTANCE.getN4TypeVariable_DeclaredOptional();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Upper Bound Node</b></em>' containment reference feature.

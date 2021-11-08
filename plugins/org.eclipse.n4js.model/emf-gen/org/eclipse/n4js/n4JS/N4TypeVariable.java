@@ -27,6 +27,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredOptional <em>Declared Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode <em>Default Argument Node</em>}</li>
  * </ul>
@@ -103,6 +104,28 @@ public interface N4TypeVariable extends IdentifiableElement, NamedElement {
 	void setDeclaredContravariant(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Declared Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Declared Optional</em>' attribute.
+	 * @see #setDeclaredOptional(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DeclaredOptional()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDeclaredOptional();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredOptional <em>Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Optional</em>' attribute.
+	 * @see #isDeclaredOptional()
+	 * @generated
+	 */
+	void setDeclaredOptional(boolean value);
+
+	/**
 	 * Returns the value of the '<em><b>Declared Upper Bound Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -129,7 +152,7 @@ public interface N4TypeVariable extends IdentifiableElement, NamedElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  The default type argument or {@code null} iff this type parameter is non-optional.
+	 *  The default type argument or {@code null}.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Default Argument Node</em>' containment reference.
 	 * @see #setDefaultArgumentNode(TypeReferenceNode)

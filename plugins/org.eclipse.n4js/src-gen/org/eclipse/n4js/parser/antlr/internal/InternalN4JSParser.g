@@ -4258,7 +4258,7 @@ ruleArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			(
@@ -4379,9 +4379,12 @@ ruleArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				otherlv_7=EqualsSignGreaterThanSign
 				{
-					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
+					newCompositeNode(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1());
+				}
+				ruleArrow
+				{
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -4506,7 +4509,7 @@ norm1_ArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			(
@@ -4627,9 +4630,12 @@ norm1_ArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				otherlv_7=EqualsSignGreaterThanSign
 				{
-					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
+					newCompositeNode(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1());
+				}
+				ruleArrow
+				{
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -4754,7 +4760,7 @@ norm2_ArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			(
@@ -4875,9 +4881,12 @@ norm2_ArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				otherlv_7=EqualsSignGreaterThanSign
 				{
-					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
+					newCompositeNode(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1());
+				}
+				ruleArrow
+				{
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -5002,7 +5011,7 @@ norm3_ArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			(
@@ -5123,9 +5132,12 @@ norm3_ArrowExpression returns [EObject current=null]
 						)
 					)
 				)
-				otherlv_7=EqualsSignGreaterThanSign
 				{
-					newLeafNode(otherlv_7, grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1());
+					newCompositeNode(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1());
+				}
+				ruleArrow
+				{
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -5948,10 +5960,20 @@ ruleN4TypeVariable returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_5=EqualsSign
-			{
-				newLeafNode(otherlv_5, grammarAccess.getN4TypeVariableAccess().getEqualsSignKeyword_3_0());
-			}
+			(
+				(
+					lv_declaredOptional_5_0=EqualsSign
+					{
+						newLeafNode(lv_declaredOptional_5_0, grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalEqualsSignKeyword_3_0_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getN4TypeVariableRule());
+						}
+						setWithLastConsumed($current, "declaredOptional", lv_declaredOptional_5_0 != null, "=");
+					}
+				)
+			)
 			(
 				(
 					{
@@ -5970,7 +5992,7 @@ ruleN4TypeVariable returns [EObject current=null]
 						afterParserOrEnumRuleCall();
 					}
 				)
-			)
+			)?
 		)?
 	)
 ;
@@ -22190,16 +22212,22 @@ norm3_RelationalExpression returns [EObject current=null]
 ;
 
 // Entry rule entryRuleRelationalOperator
-entryRuleRelationalOperator returns [String current=null]:
+entryRuleRelationalOperator returns [String current=null]@init {
+	HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
+}:
 	{ newCompositeNode(grammarAccess.getRelationalOperatorRule()); }
 	iv_ruleRelationalOperator=ruleRelationalOperator
 	{ $current=$iv_ruleRelationalOperator.current.getText(); }
 	EOF;
+finally {
+	myHiddenTokenState.restore();
+}
 
 // Rule RelationalOperator
 ruleRelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 @init {
 	enterRule();
+	HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
 }
 @after {
 	leaveRule();
@@ -22239,12 +22267,16 @@ ruleRelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDatatype
 		}
 	)
 ;
+finally {
+	myHiddenTokenState.restore();
+}
 
 
 // Rule RelationalOperator
 norm1_RelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
 @init {
 	enterRule();
+	HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
 }
 @after {
 	leaveRule();
@@ -22290,6 +22322,9 @@ norm1_RelationalOperator returns [AntlrDatatypeRuleToken current=new AntlrDataty
 		}
 	)
 ;
+finally {
+	myHiddenTokenState.restore();
+}
 
 // Entry rule entryRuleEqualityExpression
 entryRuleEqualityExpression returns [EObject current=null]:
@@ -25110,7 +25145,7 @@ ruleAssignmentExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			{
@@ -25288,7 +25323,7 @@ norm1_AssignmentExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			{
@@ -25466,7 +25501,7 @@ norm2_AssignmentExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			{
@@ -25653,7 +25688,7 @@ norm3_AssignmentExpression returns [EObject current=null]
 						)
 					)
 				)
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			{
@@ -36153,7 +36188,7 @@ rulePrimaryTypeExpression returns [EObject current=null]
 				LeftParenthesis
 				ruleTAnonymousFormalParameterList[null]
 				RightParenthesis
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			{
@@ -37076,7 +37111,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 				LeftParenthesis
 				ruleTAnonymousFormalParameterList[null]
 				RightParenthesis
-				EqualsSignGreaterThanSign
+				ruleArrow
 			)
 			)=>
 			(
@@ -37106,9 +37141,12 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 				{
 					newLeafNode(otherlv_3, grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_3());
 				}
-				otherlv_4=EqualsSignGreaterThanSign
 				{
-					newLeafNode(otherlv_4, grammarAccess.getArrowFunctionTypeExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_4());
+					newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_4());
+				}
+				ruleArrow
+				{
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -39586,6 +39624,44 @@ ruleN4Keyword returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 		}
 	)
 ;
+
+// Entry rule entryRuleArrow
+entryRuleArrow returns [String current=null]@init {
+	HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
+}:
+	{ newCompositeNode(grammarAccess.getArrowRule()); }
+	iv_ruleArrow=ruleArrow
+	{ $current=$iv_ruleArrow.current.getText(); }
+	EOF;
+finally {
+	myHiddenTokenState.restore();
+}
+
+// Rule Arrow
+ruleArrow returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+	HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
+}
+@after {
+	leaveRule();
+}:
+	(
+		kw=EqualsSign
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getArrowAccess().getEqualsSignKeyword_0());
+		}
+		kw=GreaterThanSign
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getArrowAccess().getGreaterThanSignKeyword_1());
+		}
+	)
+;
+finally {
+	myHiddenTokenState.restore();
+}
 
 // Rule VariableStatementKeyword
 ruleVariableStatementKeyword returns [Enumerator current=null]

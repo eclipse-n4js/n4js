@@ -43,6 +43,7 @@ import org.eclipse.n4js.ts.types.impl.IdentifiableElementImpl;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredOptional <em>Declared Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDefaultArgumentNode <em>Default Argument Node</em>}</li>
  * </ul>
@@ -99,6 +100,26 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 * @ordered
 	 */
 	protected boolean declaredContravariant = DECLARED_CONTRAVARIANT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDeclaredOptional() <em>Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredOptional()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DECLARED_OPTIONAL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDeclaredOptional() <em>Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredOptional()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean declaredOptional = DECLARED_OPTIONAL_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getDeclaredUpperBoundNode() <em>Declared Upper Bound Node</em>}' containment reference.
@@ -231,6 +252,29 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredOptional() {
+		return declaredOptional;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredOptional(boolean newDeclaredOptional) {
+		boolean oldDeclaredOptional = declaredOptional;
+		declaredOptional = newDeclaredOptional;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DECLARED_OPTIONAL, oldDeclaredOptional, declaredOptional));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TypeReferenceNode<TypeRef> getDeclaredUpperBoundNode() {
 		return declaredUpperBoundNode;
 	}
@@ -337,8 +381,7 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 */
 	@Override
 	public boolean isOptional() {
-		TypeReferenceNode<TypeRef> _defaultArgumentNode = this.getDefaultArgumentNode();
-		return (_defaultArgumentNode != null);
+		return this.isDeclaredOptional();
 	}
 
 	/**
@@ -372,6 +415,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 				return isDeclaredCovariant();
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				return isDeclaredContravariant();
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_OPTIONAL:
+				return isDeclaredOptional();
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
 				return getDeclaredUpperBoundNode();
 			case N4JSPackage.N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE:
@@ -397,6 +442,9 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 				return;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				setDeclaredContravariant((Boolean)newValue);
+				return;
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_OPTIONAL:
+				setDeclaredOptional((Boolean)newValue);
 				return;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
 				setDeclaredUpperBoundNode((TypeReferenceNode<TypeRef>)newValue);
@@ -425,6 +473,9 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				setDeclaredContravariant(DECLARED_CONTRAVARIANT_EDEFAULT);
 				return;
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_OPTIONAL:
+				setDeclaredOptional(DECLARED_OPTIONAL_EDEFAULT);
+				return;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
 				setDeclaredUpperBoundNode((TypeReferenceNode<TypeRef>)null);
 				return;
@@ -449,6 +500,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 				return declaredCovariant != DECLARED_COVARIANT_EDEFAULT;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
 				return declaredContravariant != DECLARED_CONTRAVARIANT_EDEFAULT;
+			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_OPTIONAL:
+				return declaredOptional != DECLARED_OPTIONAL_EDEFAULT;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE:
 				return declaredUpperBoundNode != null;
 			case N4JSPackage.N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE:
@@ -487,6 +540,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 		result.append(declaredCovariant);
 		result.append(", declaredContravariant: ");
 		result.append(declaredContravariant);
+		result.append(", declaredOptional: ");
+		result.append(declaredOptional);
 		result.append(')');
 		return result.toString();
 	}

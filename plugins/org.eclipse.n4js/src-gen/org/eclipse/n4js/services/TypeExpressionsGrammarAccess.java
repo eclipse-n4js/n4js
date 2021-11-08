@@ -886,21 +886,21 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cLeftParenthesisKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
 		private final RuleCall cTAnonymousFormalParameterListParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
 		private final Keyword cRightParenthesisKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
-		private final Keyword cEqualsSignGreaterThanSignKeyword_0_0_4 = (Keyword)cGroup_0_0.eContents().get(4);
+		private final RuleCall cArrowParserRuleCall_0_0_4 = (RuleCall)cGroup_0_0.eContents().get(4);
 		private final Assignment cReturnTypeRefAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_0 = (RuleCall)cReturnTypeRefAssignment_1.eContents().get(0);
 		
 		//ArrowFunctionTypeExpression returns FunctionTypeExpression:
-		//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression;
+		//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow) returnTypeRef=PrimaryTypeExpression;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression
+		//=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow) returnTypeRef=PrimaryTypeExpression
 		public Group getGroup() { return cGroup; }
 		
-		//=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>')
+		//=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>'
+		//{FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{FunctionTypeExpression}
@@ -915,8 +915,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//')'
 		public Keyword getRightParenthesisKeyword_0_0_3() { return cRightParenthesisKeyword_0_0_3; }
 		
-		//'=>'
-		public Keyword getEqualsSignGreaterThanSignKeyword_0_0_4() { return cEqualsSignGreaterThanSignKeyword_0_0_4; }
+		//Arrow
+		public RuleCall getArrowParserRuleCall_0_0_4() { return cArrowParserRuleCall_0_0_4; }
 		
 		//returnTypeRef=PrimaryTypeExpression
 		public Assignment getReturnTypeRefAssignment_1() { return cReturnTypeRefAssignment_1; }
@@ -2595,6 +2595,28 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'out'
 		public Keyword getOutKeyword_24() { return cOutKeyword_24; }
 	}
+	public class ArrowElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.Arrow");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cEqualsSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
+		//    '=' '>'
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//// "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
+		//   '=' '>'
+		public Group getGroup() { return cGroup; }
+		
+		//// "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
+		//   '='
+		public Keyword getEqualsSignKeyword_0() { return cEqualsSignKeyword_0; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_1() { return cGreaterThanSignKeyword_1; }
+	}
 	
 	
 	private final TypeRefElements pTypeRef;
@@ -2651,6 +2673,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final IdentifierNameElements pIdentifierName;
 	private final ReservedWordElements pReservedWord;
 	private final N4KeywordElements pN4Keyword;
+	private final ArrowElements pArrow;
 	private final TerminalRule tIDENTIFIER;
 	private final TerminalRule tINT;
 	private final TerminalRule tDOUBLE;
@@ -2737,6 +2760,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pIdentifierName = new IdentifierNameElements();
 		this.pReservedWord = new ReservedWordElements();
 		this.pN4Keyword = new N4KeywordElements();
+		this.pArrow = new ArrowElements();
 		this.tIDENTIFIER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.IDENTIFIER");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.INT");
 		this.tDOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.DOUBLE");
@@ -3011,7 +3035,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression;
+	//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow) returnTypeRef=PrimaryTypeExpression;
 	public ArrowFunctionTypeExpressionElements getArrowFunctionTypeExpressionAccess() {
 		return pArrowFunctionTypeExpression;
 	}
@@ -3486,6 +3510,17 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	public ParserRule getN4KeywordRule() {
 		return getN4KeywordAccess().getRule();
+	}
+	
+	//Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
+	//    '=' '>'
+	//;
+	public ArrowElements getArrowAccess() {
+		return pArrow;
+	}
+	
+	public ParserRule getArrowRule() {
+		return getArrowAccess().getRule();
 	}
 	
 	//terminal IDENTIFIER:

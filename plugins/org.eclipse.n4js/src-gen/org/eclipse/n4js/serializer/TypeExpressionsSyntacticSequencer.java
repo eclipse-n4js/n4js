@@ -47,9 +47,20 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (ruleCall.getRule() == grammarAccess.getArrowRule())
+			return getArrowToken(semanticObject, ruleCall, node);
 		return "";
 	}
 	
+	/**
+	 * Arrow hidden(): 	'=' '>'
+	 * ;
+	 */
+	protected String getArrowToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "= >";
+	}
 	
 	@Override
 	protected void emitUnassignedTokens(EObject semanticObject, ISynTransition transition, INode fromNode, INode toNode) {
@@ -111,7 +122,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '(' ')' '=>' returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
 	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) (ambiguity) '+'? astValue=BINARY_INT
 	 *     (rule start) (ambiguity) '+'? astValue=DOUBLE
