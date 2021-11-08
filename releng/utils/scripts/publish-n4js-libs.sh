@@ -168,11 +168,7 @@ lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
 
 echo "==== STEP 7/7: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"
-if [ "${NPM_REGISTRY}" = "http://localhost:4873" ]; then
-    lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_REGISTRY}" --exact --yes --dist-tag="${DIST_TAG}" "${PUBLISH_VERSION}"
-else
-    echo "DISABLED"
-fi
+lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_REGISTRY}" --exact --yes --dist-tag="${DIST_TAG}" "${PUBLISH_VERSION}"
 
 
 echo "==== PUBLISH N4JS-LIBS - DONE"
