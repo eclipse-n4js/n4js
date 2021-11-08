@@ -1990,17 +1990,18 @@ class N4TypeVariable extends IdentifiableElement, NamedElement {
 
 	boolean declaredCovariant
 	boolean declaredContravariant
+	boolean declaredOptional
 
 	contains TypeReferenceNode<TypeRef> declaredUpperBoundNode
 
-	/* The default type argument or {@code null} iff this type parameter is non-optional. */
+	/* The default type argument or {@code null}. */
 	contains TypeReferenceNode<TypeRef> defaultArgumentNode
 
 	op TypeRef getDeclaredUpperBound() {
 		return declaredUpperBoundNode?.typeRef;
 	}
 	op boolean isOptional() {
-		return defaultArgumentNode !== null;
+		return declaredOptional;
 	}
 }
 
