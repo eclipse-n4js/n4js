@@ -111,6 +111,7 @@ echo "==== STEP 2/7: prepare environment variables and .npmrc"
 # prepare .npmrc for credentials
 if [ "$DESTINATION" != "local" ]; then
     # we made sure above that NPM_TOKEN is set
+    git checkout HEAD -- './.npmrc'
     echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> .npmrc
     echo '//localhost:4873/:_authToken=${NPM_TOKEN}' >> .npmrc
     echo '//localhost:4874/:_authToken=${NPM_TOKEN}' >> .npmrc
@@ -160,6 +161,8 @@ lerna exec -- json -I -f package.json -e $SCRIPT
 
 
 echo "==== STEP 6/7: Appending version information to README.md files ..."
+# reset README.md files to avoid appending version info multiple times in case script is run more than once
+find ./packages -name "README.md" -exec git checkout HEAD -- {} \;
 export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\nCompiled with an N4JS compiler built from commit [${N4JS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_COMMIT_ID_LOCAL}).\n\n"
 lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
