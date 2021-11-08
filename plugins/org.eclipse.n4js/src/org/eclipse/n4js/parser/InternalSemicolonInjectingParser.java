@@ -23,7 +23,6 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
-import org.antlr.runtime.UnwantedTokenException;
 import org.eclipse.n4js.parser.antlr.internal.InternalN4JSParser;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
@@ -315,7 +314,13 @@ public class InternalSemicolonInjectingParser extends InternalN4JSParser impleme
 		if (lts.forbidHiddenTokens && token != null
 				&& token.getChannel() == Token.HIDDEN_CHANNEL) {
 
-			throw new UnwantedTokenException(ttype, is);
+			Object matchedSymbol = getCurrentInputSymbol(input);
+			if (state.backtracking > 0) {
+				state.failed = true;
+				return matchedSymbol;
+			}
+			matchedSymbol = recoverFromMismatchedToken(input, ttype, follow);
+			return matchedSymbol;
 		}
 		return super.match(is, ttype, follow);
 	}
