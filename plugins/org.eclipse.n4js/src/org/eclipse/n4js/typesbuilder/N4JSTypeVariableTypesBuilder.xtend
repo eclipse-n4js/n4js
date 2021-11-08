@@ -57,7 +57,11 @@ package class N4JSTypeVariableTypesBuilder {
 				var typeRef = n4TypeVar.defaultArgumentNode?.typeRefInAST;
 				if (typeRef === null) {
 					val G = RuleEnvironmentExtensions.newRuleEnvironment(n4TypeVar);
-					typeRef = RuleEnvironmentExtensions.anyTypeRef(G);
+					if (typeVar.declaredUpperBound === null) {
+						typeRef = RuleEnvironmentExtensions.anyTypeRef(G);
+					} else {
+						typeRef = typeVar.declaredUpperBound;
+					}
 				}
 				typeVar.defaultArgument = TypeUtils.copyWithProxies(typeRef);
 			}
