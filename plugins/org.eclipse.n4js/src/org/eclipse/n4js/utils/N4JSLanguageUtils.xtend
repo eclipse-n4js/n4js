@@ -16,6 +16,7 @@ import java.math.BigDecimal
 import java.util.Properties
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -37,12 +38,14 @@ import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
@@ -1320,6 +1323,14 @@ public class N4JSLanguageUtils {
 	def static boolean isValidLocationForAwait(EObject astNode) {
 		val containingFunDef = EcoreUtil2.getContainerOfType(astNode, FunctionDefinition);
 		return containingFunDef !== null && containingFunDef.async;
+	}
+
+	/** Tells whether the given AST node and EReference is a valid location for an optional type parameter. */
+	def static boolean isValidLocationForOptionalTypeParameter(EObject astNode, EReference reference) {
+		// for now, type parameters may be optional only in class, interface, and type alias declarations
+		// (not in function/method declarations or in FunctionTypeExpression or TStructMethod):
+		return reference === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
+			&& (astNode instanceof N4ClassifierDefinition || astNode instanceof N4TypeAliasDeclaration);
 	}
 
 	/** Tells whether the given type may be referenced structurally, i.e. with modifiers '~', '~~', '~r~', etc. */

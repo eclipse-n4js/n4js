@@ -18,30 +18,40 @@ class X {}
 
 
 // XPECT errors --> "Mandatory type parameters may not follow optional type parameters." at "T2"
-class G0<T0,T1=any,T2> {
-
-	// XPECT errors --> "Only type parameters of classes and interfaces may be declared optional." at "any"
-	<TM0=any,TM1> method(p0: TM0, p1: TM1) {}
-}
+class G0<T0,T1=any,T2> {}
+// XPECT errors --> "Mandatory type parameters may not follow optional type parameters." at "T2"
+type Alias0<T0,T1=any,T2> = X;
 
 
 // XPECT noerrors -->
 class G1<T extends A = A> {}
+// XPECT noerrors -->
+type Alias1<T extends A = A> = X;
 
 // XPECT noerrors -->
 class G2<T extends A = B> {}
+// XPECT noerrors -->
+type Alias2<T extends A = B> = X;
 
 /* XPECT errors ---
 "Default argument of optional type parameter T0 must comply to its upper bound, but: X is not a subtype of A." at "X"
 "Default argument of optional type parameter T0 must comply to its upper bound, but: number is not a subtype of A." at "number"
 --- */
 class G3<T0 extends A = X, T0 extends A = number> {}
+/* XPECT errors ---
+"Default argument of optional type parameter T0 must comply to its upper bound, but: X is not a subtype of A." at "X"
+"Default argument of optional type parameter T0 must comply to its upper bound, but: number is not a subtype of A." at "number"
+--- */
+type Alias3<T0 extends A = X, T0 extends A = number> = X;
 
 
 // however, the default argument is not an upper bound:
 class G4<T = A> {}
 // XPECT noerrors -->
 new G4<X>();
+type Alias4<T = A> = X;
+// XPECT noerrors -->
+let alias4: Alias4<X>;
 
 
 // bounds checking in heritage clauses:
@@ -55,3 +65,16 @@ class H1b<T> extends G1<T> {}
 class H1c<T=B> extends G1<T> {}
 // XPECT noerrors -->
 class H1d<T extends B> extends G1<T> {}
+
+
+// bounds checking within type aliases:
+
+// XPECT noerrors -->
+type Alias5a<T> = G1;
+// XPECT errors --> "T is not a subtype of A." at "T"
+type Alias5b<T> = G1<T>;
+// also in this case the default argument does not serve as an upper bound:
+// XPECT errors --> "T is not a subtype of A." at "T"
+type Alias5c<T=B> = G1<T>;
+// XPECT noerrors -->
+type Alias5d<T extends B> = G1<T>;

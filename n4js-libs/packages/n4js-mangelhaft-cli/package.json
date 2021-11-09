@@ -11,9 +11,6 @@
     "url": "https://github.com/eclipse/n4js"
   },
   "description": "Node.js runner used to compile and launch the mangelhaft tests from command line.",
-  "scripts": {
-    "test": "./tests/npm-test.sh"
-  },
   "bin": {
     "n4js-mangelhaft": "./bin/n4js-mangelhaft-cli.js"
   },

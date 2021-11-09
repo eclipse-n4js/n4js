@@ -15741,7 +15741,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//TStructMethod:
 	//    =>
 	//    ({TStructMethod}
-	//        TypeVariables?
+	//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
 	//        name=IdentifierName '('
 	//    )
 	//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
@@ -15752,17 +15752,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getTStructMethodRule() {
 		return getTStructMethodAccess().getRule();
-	}
-	
-	//fragment TypeVariables*:
-	//    '<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
-	//;
-	public TypeExpressionsGrammarAccess.TypeVariablesElements getTypeVariablesAccess() {
-		return gaTypeExpressions.getTypeVariablesAccess();
-	}
-	
-	public ParserRule getTypeVariablesRule() {
-		return getTypeVariablesAccess().getRule();
 	}
 	
 	//fragment ColonSepTypeRef*:
@@ -15922,7 +15911,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//TypeVariable returns TypeVariable:
 	//    (declaredCovariant?='out' | declaredContravariant?='in')?
-	//    name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
+	//    name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?
+	//    // the following is disallowed by ASTStructureValidator for all uses of this grammar rule
+	//    // (only added here to obtain a better error message)
+	//    ('=' defaultArgument=TypeRef)?;
 	public TypeExpressionsGrammarAccess.TypeVariableElements getTypeVariableAccess() {
 		return gaTypeExpressions.getTypeVariableAccess();
 	}
