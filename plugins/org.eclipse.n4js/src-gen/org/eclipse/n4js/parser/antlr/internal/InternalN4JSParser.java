@@ -9026,7 +9026,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         Token lv_declaredOptional_5_0=null;
         AntlrDatatypeRuleToken lv_name_2_0 = null;
         EObject lv_declaredUpperBoundNode_4_0 = null;
-        EObject lv_defaultArgumentNode_6_0 = null;
+        EObject lv_declaredDefaultArgumentNode_6_0 = null;
         	enterRule();
         try {
             {
@@ -9168,10 +9168,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                             {
                             {
                             if ( state.backtracking==0 ) {
-                              						newCompositeNode(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0());
+                              						newCompositeNode(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0());
                             }
                             pushFollow(FOLLOW_2);
-                            lv_defaultArgumentNode_6_0=ruleTypeReferenceNode();
+                            lv_declaredDefaultArgumentNode_6_0=ruleTypeReferenceNode();
                             state._fsp--;
                             if (state.failed) return current;
                             if ( state.backtracking==0 ) {
@@ -9180,8 +9180,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                               						}
                               						set(
                               							current,
-                              							"defaultArgumentNode",
-                              							lv_defaultArgumentNode_6_0,
+                              							"declaredDefaultArgumentNode",
+                              							lv_declaredDefaultArgumentNode_6_0,
                               							"org.eclipse.n4js.N4JS.TypeReferenceNode");
                               						afterParserOrEnumRuleCall();
                             }

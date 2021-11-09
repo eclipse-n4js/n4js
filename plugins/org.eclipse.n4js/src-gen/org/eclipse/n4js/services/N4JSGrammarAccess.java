@@ -2446,15 +2446,15 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
 		private final Assignment cDeclaredOptionalAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
 		private final Keyword cDeclaredOptionalEqualsSignKeyword_3_0_0 = (Keyword)cDeclaredOptionalAssignment_3_0.eContents().get(0);
-		private final Assignment cDefaultArgumentNodeAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
-		private final RuleCall cDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0 = (RuleCall)cDefaultArgumentNodeAssignment_3_1.eContents().get(0);
+		private final Assignment cDeclaredDefaultArgumentNodeAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0 = (RuleCall)cDeclaredDefaultArgumentNodeAssignment_3_1.eContents().get(0);
 		
 		//N4TypeVariable:
 		//    (declaredCovariant?='out' | declaredContravariant?='in')?
 		//    name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 		//    // difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 		//    // because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-		//    (declaredOptional?='=' defaultArgumentNode=TypeReferenceNode? )?
+		//    (declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2462,7 +2462,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 		//// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 		//// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-		//(declaredOptional?='=' defaultArgumentNode=TypeReferenceNode? )?
+		//(declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 		public Group getGroup() { return cGroup; }
 		
 		//(declaredCovariant?='out' | declaredContravariant?='in')?
@@ -2500,7 +2500,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 		//// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-		//(declaredOptional?='=' defaultArgumentNode=TypeReferenceNode? )?
+		//(declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 		public Group getGroup_3() { return cGroup_3; }
 		
 		//declaredOptional?='='
@@ -2509,11 +2509,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'='
 		public Keyword getDeclaredOptionalEqualsSignKeyword_3_0_0() { return cDeclaredOptionalEqualsSignKeyword_3_0_0; }
 		
-		//defaultArgumentNode=TypeReferenceNode?
-		public Assignment getDefaultArgumentNodeAssignment_3_1() { return cDefaultArgumentNodeAssignment_3_1; }
+		//declaredDefaultArgumentNode=TypeReferenceNode?
+		public Assignment getDeclaredDefaultArgumentNodeAssignment_3_1() { return cDeclaredDefaultArgumentNodeAssignment_3_1; }
 		
 		//TypeReferenceNode
-		public RuleCall getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0() { return cDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0; }
+		public RuleCall getDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0() { return cDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0; }
 	}
 	public class FormalParameterElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FormalParameter");
@@ -12725,7 +12725,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 	//    // difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 	//    // because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-	//    (declaredOptional?='=' defaultArgumentNode=TypeReferenceNode? )?
+	//    (declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 	//;
 	public N4TypeVariableElements getN4TypeVariableAccess() {
 		return pN4TypeVariable;

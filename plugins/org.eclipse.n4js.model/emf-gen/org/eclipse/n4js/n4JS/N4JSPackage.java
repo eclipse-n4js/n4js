@@ -11229,13 +11229,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Default Argument Node</b></em>' containment reference.
+	 * The feature id for the '<em><b>Declared Default Argument Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
+	int N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE = TypesPackage.IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>N4 Type Variable</em>' class.
@@ -21153,15 +21153,15 @@ public interface N4JSPackage extends EPackage {
 	EReference getN4TypeVariable_DeclaredUpperBoundNode();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode <em>Default Argument Node</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredDefaultArgumentNode <em>Declared Default Argument Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Default Argument Node</em>'.
-	 * @see org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode()
+	 * @return the meta object for the containment reference '<em>Declared Default Argument Node</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredDefaultArgumentNode()
 	 * @see #getN4TypeVariable()
 	 * @generated
 	 */
-	EReference getN4TypeVariable_DefaultArgumentNode();
+	EReference getN4TypeVariable_DeclaredDefaultArgumentNode();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBound() <em>Get Declared Upper Bound</em>}' operation.
@@ -26551,12 +26551,12 @@ public interface N4JSPackage extends EPackage {
 		EReference N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE = eINSTANCE.getN4TypeVariable_DeclaredUpperBoundNode();
 
 		/**
-		 * The meta object literal for the '<em><b>Default Argument Node</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Declared Default Argument Node</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE = eINSTANCE.getN4TypeVariable_DefaultArgumentNode();
+		EReference N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE = eINSTANCE.getN4TypeVariable_DeclaredDefaultArgumentNode();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Declared Upper Bound</b></em>' operation.

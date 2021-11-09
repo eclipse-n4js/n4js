@@ -6182,7 +6182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getN4TypeVariable_DefaultArgumentNode() {
+	public EReference getN4TypeVariable_DeclaredDefaultArgumentNode() {
 		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -8246,7 +8246,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT);
 		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_OPTIONAL);
 		createEReference(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_UPPER_BOUND_NODE);
-		createEReference(n4TypeVariableEClass, N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE);
+		createEReference(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE);
 		createEOperation(n4TypeVariableEClass, N4_TYPE_VARIABLE___GET_DECLARED_UPPER_BOUND);
 		createEOperation(n4TypeVariableEClass, N4_TYPE_VARIABLE___IS_OPTIONAL);
 
@@ -9471,7 +9471,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		g1 = createEGenericType(this.getTypeReferenceNode());
 		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
 		g1.getETypeArguments().add(g2);
-		initEReference(getN4TypeVariable_DefaultArgumentNode(), g1, null, "defaultArgumentNode", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getN4TypeVariable_DeclaredDefaultArgumentNode(), g1, null, "declaredDefaultArgumentNode", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4TypeVariable__GetDeclaredUpperBound(), theTypeRefsPackage.getTypeRef(), "getDeclaredUpperBound", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

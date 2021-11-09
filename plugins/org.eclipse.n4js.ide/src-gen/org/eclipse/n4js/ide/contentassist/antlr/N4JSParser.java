@@ -723,7 +723,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4TypeVariableAccess().getNameAssignment_1(), "rule__N4TypeVariable__NameAssignment_1");
 			builder.put(grammarAccess.getN4TypeVariableAccess().getDeclaredUpperBoundNodeAssignment_2_1(), "rule__N4TypeVariable__DeclaredUpperBoundNodeAssignment_2_1");
 			builder.put(grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalAssignment_3_0(), "rule__N4TypeVariable__DeclaredOptionalAssignment_3_0");
-			builder.put(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeAssignment_3_1(), "rule__N4TypeVariable__DefaultArgumentNodeAssignment_3_1");
+			builder.put(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeAssignment_3_1(), "rule__N4TypeVariable__DeclaredDefaultArgumentNodeAssignment_3_1");
 			builder.put(grammarAccess.getBindingElementFragmentAccess().getBindingPatternAssignment_0_0(), "rule__BindingElementFragment__BindingPatternAssignment_0_0");
 			builder.put(grammarAccess.getBindingElementFragmentAccess().getAnnotationsAssignment_0_1_0(), "rule__BindingElementFragment__AnnotationsAssignment_0_1_0");
 			builder.put(grammarAccess.getBindingElementFragmentAccess().getVariadicAssignment_0_1_1(), "rule__BindingElementFragment__VariadicAssignment_0_1_1");

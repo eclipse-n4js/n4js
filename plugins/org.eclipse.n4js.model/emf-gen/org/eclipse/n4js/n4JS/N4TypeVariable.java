@@ -29,7 +29,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredOptional <em>Declared Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredUpperBoundNode <em>Declared Upper Bound Node</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode <em>Default Argument Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredDefaultArgumentNode <em>Declared Default Argument Node</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable()
@@ -148,29 +148,29 @@ public interface N4TypeVariable extends IdentifiableElement, NamedElement {
 	void setDeclaredUpperBoundNode(TypeReferenceNode<TypeRef> value);
 
 	/**
-	 * Returns the value of the '<em><b>Default Argument Node</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Declared Default Argument Node</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 *  The default type argument or {@code null}.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Default Argument Node</em>' containment reference.
-	 * @see #setDefaultArgumentNode(TypeReferenceNode)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DefaultArgumentNode()
+	 * @return the value of the '<em>Declared Default Argument Node</em>' containment reference.
+	 * @see #setDeclaredDefaultArgumentNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_DeclaredDefaultArgumentNode()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TypeReferenceNode<TypeRef> getDefaultArgumentNode();
+	TypeReferenceNode<TypeRef> getDeclaredDefaultArgumentNode();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefaultArgumentNode <em>Default Argument Node</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDeclaredDefaultArgumentNode <em>Declared Default Argument Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Default Argument Node</em>' containment reference.
-	 * @see #getDefaultArgumentNode()
+	 * @param value the new value of the '<em>Declared Default Argument Node</em>' containment reference.
+	 * @see #getDeclaredDefaultArgumentNode()
 	 * @generated
 	 */
-	void setDefaultArgumentNode(TypeReferenceNode<TypeRef> value);
+	void setDeclaredDefaultArgumentNode(TypeReferenceNode<TypeRef> value);
 
 	/**
 	 * <!-- begin-user-doc -->

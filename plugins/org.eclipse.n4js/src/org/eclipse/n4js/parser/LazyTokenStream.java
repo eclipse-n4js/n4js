@@ -215,9 +215,10 @@ public class LazyTokenStream extends XtextTokenStream {
 	protected void doSetHiddenTokens(String... lexerRules) {
 		super.doSetHiddenTokens(lexerRules);
 		if (lexerRules == null || lexerRules.length == 0) {
-			Preconditions.checkArgument(lexerRules == null || lexerRules.length == 0,
-					"Setting the hidden channel dynamically is only allowed for empty list of arguments");
 			forbidHiddenTokens = true;
+		} else {
+			Preconditions.checkArgument(false,
+					"Setting the hidden channel dynamically is only allowed for empty list of arguments");
 		}
 	}
 

@@ -69,7 +69,7 @@ class OptionalTypeParameterParserTest extends AbstractParserTest {
 	def private void assertOptionalTypeParam(GenericDeclaration genDecl) {
 		assertNotNull(genDecl);
 		assertEquals(1, genDecl.typeVars.size);
-		assertNotNull(genDecl.typeVars.head.defaultArgumentNode);
-		assertTrue(genDecl.typeVars.head.defaultArgumentNode.typeRefInAST instanceof ParameterizedTypeRef);
+		assertNotNull(genDecl.typeVars.head.getDeclaredDefaultArgumentNode);
+		assertTrue(genDecl.typeVars.head.getDeclaredDefaultArgumentNode.typeRefInAST instanceof ParameterizedTypeRef);
 	}
 }

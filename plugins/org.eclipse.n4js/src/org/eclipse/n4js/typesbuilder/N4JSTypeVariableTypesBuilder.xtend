@@ -54,10 +54,10 @@ package class N4JSTypeVariableTypesBuilder {
 		if (!preLinkingPhase) {
 			typeVar.declaredUpperBound = TypeUtils.copyWithProxies(n4TypeVar.declaredUpperBoundNode?.typeRefInAST);
 			if (n4TypeVar.isOptional) {
-				var typeRef = n4TypeVar.defaultArgumentNode?.typeRefInAST;
+				var typeRef = n4TypeVar.getDeclaredDefaultArgumentNode?.typeRefInAST;
 				if (typeRef === null) {
-					val G = RuleEnvironmentExtensions.newRuleEnvironment(n4TypeVar);
 					if (typeVar.declaredUpperBound === null) {
+						val G = RuleEnvironmentExtensions.newRuleEnvironment(n4TypeVar);
 						typeRef = RuleEnvironmentExtensions.anyTypeRef(G);
 					} else {
 						typeRef = typeVar.declaredUpperBound;

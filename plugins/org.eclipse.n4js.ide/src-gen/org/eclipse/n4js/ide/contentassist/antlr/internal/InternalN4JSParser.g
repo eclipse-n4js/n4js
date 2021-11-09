@@ -25368,9 +25368,9 @@ rule__N4TypeVariable__Group_3__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeAssignment_3_1()); }
-	(rule__N4TypeVariable__DefaultArgumentNodeAssignment_3_1)?
-	{ after(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeAssignment_3_1()); }
+	{ before(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeAssignment_3_1()); }
+	(rule__N4TypeVariable__DeclaredDefaultArgumentNodeAssignment_3_1)?
+	{ after(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeAssignment_3_1()); }
 )
 ;
 finally {
@@ -79716,15 +79716,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__N4TypeVariable__DefaultArgumentNodeAssignment_3_1
+rule__N4TypeVariable__DeclaredDefaultArgumentNodeAssignment_3_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
+		{ before(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
 		ruleTypeReferenceNode
-		{ after(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
+		{ after(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
 	)
 ;
 finally {

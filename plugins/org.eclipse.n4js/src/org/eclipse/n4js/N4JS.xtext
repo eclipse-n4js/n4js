@@ -343,7 +343,7 @@ N4TypeVariable:
 	name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 	// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 	// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-	(declaredOptional?='=' defaultArgumentNode=TypeReferenceNode? )?
+	(declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 ;
 
 FormalParameter <Yield>:

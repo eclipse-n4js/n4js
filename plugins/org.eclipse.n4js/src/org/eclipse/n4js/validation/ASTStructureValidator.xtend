@@ -1846,7 +1846,7 @@ class ASTStructureValidator {
 			val isTypeParamOfClassifier = model.eContainmentFeature === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
 				&& model.eContainer instanceof N4ClassifierDefinition;
 			if (!isTypeParamOfClassifier) {
-				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DefaultArgumentNode).head;
+				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredDefaultArgumentNode).head;
 				producer.addDiagnostic(
 					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
 						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS), IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
