@@ -17,7 +17,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.utils.UserDataAwareScope;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.ProjectSet;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
@@ -181,6 +184,57 @@ public class WorkspaceAccess {
 		}
 		IResourceDescriptions result = resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
 		return Optional.fromNullable(result);
+	}
+
+	/**
+	 * Convenience method. When looking up several objects, prefer method
+	 * {@link #loadEObjectFromIndex(IResourceDescriptions, ResourceSet, URI, boolean)} (for performance reasons).
+	 */
+	public EObject loadEObjectFromIndex(ResourceSet resourceSet, URI eObjectURI, boolean allowFullLoad) {
+		Optional<IResourceDescriptions> index = getXtextIndex(resourceSet);
+		if (!index.isPresent()) {
+			return null;
+		}
+		return loadEObjectFromIndex(index.get(), resourceSet, eObjectURI, allowFullLoad);
+	}
+
+	/**
+	 * Loads a TModule element from the user data of the Xtext index. Returns <code>null</code> in case of error. If the
+	 * given <code>eObjectURI</code> does not point to a TModule element, this method will avoid a "load from source"
+	 * and instead return <code>null</code>.
+	 * <p>
+	 * Normally the "load from index" behavior should happen automatically (via {@link UserDataAwareScope} and/or
+	 * {@link ProxyResolvingEObjectImpl}), so this method should only be used in rare special cases if there is a good
+	 * reason for the automatic "load from index" being unavailable.
+	 *
+	 * @param index
+	 *            the Xtext index to use.
+	 * @param resourceSet
+	 *            the resource set to used as context and as container for the newly created resource containing the
+	 *            target object. This resource set may be changed!
+	 * @param eObjectURI
+	 *            the URI of the target object to load.
+	 * @param allowFullLoad
+	 *            see
+	 * @return the object loaded or <code>null</code>.
+	 */
+	public EObject loadEObjectFromIndex(IResourceDescriptions index, ResourceSet resourceSet, URI eObjectURI,
+			boolean allowFullLoad) {
+		URI targetResourceURI = eObjectURI.trimFragment();
+		ResourceType targetResourceType = ResourceType.getResourceType(targetResourceURI);
+		String targetFragment = eObjectURI.fragment();
+		if (!targetResourceType.isN4JS()
+				|| targetFragment == null
+				|| !(targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
+			// eObjectURI does not point to an EObject in the TModule of an N4JS resource
+			return null;
+		}
+		IResourceDescription targetResourceDesc = index.getResourceDescription(targetResourceURI);
+		TModule targetModule = targetResourceDesc != null
+				? loadModuleFromIndex(resourceSet, targetResourceDesc, allowFullLoad)
+				: null;
+		Resource targetResource = targetModule != null ? targetModule.eResource() : null;
+		return targetResource != null ? targetResource.getEObject(targetFragment) : null;
 	}
 
 	/**

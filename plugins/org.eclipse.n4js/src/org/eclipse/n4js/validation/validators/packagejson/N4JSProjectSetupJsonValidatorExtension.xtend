@@ -245,20 +245,15 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 					var eoPolyFiller = prov.ieoDescrOfPolyfill.EObjectOrProxy
 
 					if (eoPolyFiller instanceof TClassifier) {
+						// WARNING: simply doing
+						//     val resolvedEoPolyFiller = EcoreUtil.resolve(eoPolyFiller, document.eResource);
+						// here would result in the resource of eoPolyFiller being loaded from source, because
+						// we are in the context of a package.json file (not an N4JSResource, etc.) and therefore
+						// do not get automatic "load from index" behavior!
 						var resolvedEoPolyFiller = eoPolyFiller;
 						if (resolvedEoPolyFiller.eIsProxy) {
-							// WARNING: simply doing
-							//     val resolvedEoPolyFiller = EcoreUtil.resolve(eoPolyFiller, document.eResource)
-							// here would result in the resource of eoPolyFiller being loaded from source, because
-							// we are in the context of a package.json file (not an N4JSResource, etc.) and therefore
-							// do not get automatic "load from index" behavior!
 							val targetObjectURI = prov.ieoDescrOfPolyfill.EObjectURI;
-							val targetResourceURI = targetObjectURI.trimFragment;
-							val targetResourceDesc = xtextIndex.getResourceDescription(targetResourceURI);
-							val targetResource = if (targetResourceDesc !== null) {
-								workspaceAccess.loadModuleFromIndex(contextResourceSet, targetResourceDesc, false)?.eResource
-							};
-							resolvedEoPolyFiller = targetResource?.getEObject(targetObjectURI.fragment) as TClassifier;
+							resolvedEoPolyFiller = workspaceAccess.loadEObjectFromIndex(xtextIndex, contextResourceSet, targetObjectURI, false) as TClassifier;
 						}
 						if (resolvedEoPolyFiller === null || resolvedEoPolyFiller.eIsProxy) {
 							// unable to resolve -> ignore
