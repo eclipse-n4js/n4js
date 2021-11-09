@@ -310,7 +310,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 				sequence_ColonSepTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
-				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod_TypeVariables(context, (TStructMethod) semanticObject); 
+				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(context, (TStructMethod) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_SETTER:
 				sequence_TStructSetter(context, (TStructSetter) semanticObject); 
@@ -536,7 +536,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         returnTypeRef=TypeRef?
 	 *     )
 	 */
-	protected void sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod_TypeVariables(ISerializationContext context, TStructMethod semanticObject) {
+	protected void sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(ISerializationContext context, TStructMethod semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -999,7 +999,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeVariable returns TypeVariable
 	 *
 	 * Constraint:
-	 *     ((declaredCovariant?='out' | declaredContravariant?='in')? name=IDENTIFIER declaredUpperBound=TypeRef?)
+	 *     ((declaredCovariant?='out' | declaredContravariant?='in')? name=IDENTIFIER declaredUpperBound=TypeRef? defaultArgument=TypeRef?)
 	 */
 	protected void sequence_TypeVariable(ISerializationContext context, TypeVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

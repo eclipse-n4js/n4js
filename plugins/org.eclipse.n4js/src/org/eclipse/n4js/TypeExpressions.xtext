@@ -216,14 +216,10 @@ TStructMember:
 TStructMethod:
 	=>
 	({TStructMethod}
-		TypeVariables?
+		('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
 	    name=IdentifierName '('
 	)
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
-;
-
-fragment TypeVariables*:
-	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
 ;
 
 fragment ColonSepTypeRef*:
@@ -292,7 +288,10 @@ WildcardNewNotation returns Wildcard:
 
 TypeVariable returns TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
-	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
+	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?
+	// the following is disallowed by ASTStructureValidator for all uses of this grammar rule
+	// (only added here to obtain a better error message)
+	('=' defaultArgument=TypeRef)?;
 
 /*
  * [ECM11] (7.6, pp. 17)

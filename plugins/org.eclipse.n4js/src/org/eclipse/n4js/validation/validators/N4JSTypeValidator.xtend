@@ -77,6 +77,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareHelper
@@ -896,6 +897,96 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(message, tClassR, INTER_REDUNDANT_SUPERTYPE);
 		}
 	}
+
+	@Check
+	def void checkTypeParameters(GenericDeclaration genDecl) {
+		if (genDecl.typeVars.empty) {
+			return; // nothing to check
+		}
+		if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(genDecl, N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS)) {
+			return; // avoid duplicate error messages
+		}
+		if (holdsOptionalTypeParameterNotFollowedByMandatory(genDecl)) {
+			if (holdsDefaultArgumentsContainValidReferences(genDecl)) {
+				holdsDefaultArgumentsComplyToBounds(genDecl);
+			}
+		}
+	}
+
+	def private boolean holdsOptionalTypeParameterNotFollowedByMandatory(GenericDeclaration genDecl) {
+		var haveOptional = false;
+		for (n4TypeParam : genDecl.typeVars) {
+			if (haveOptional && !n4TypeParam.optional) {
+				val message = messageForTYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL;
+				addIssue(message, n4TypeParam, TypesPackage.eINSTANCE.identifiableElement_Name, TYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL);
+				return false;
+			}
+			haveOptional = haveOptional || n4TypeParam.optional;
+		}
+		return true;
+	}
+
+	/**
+	 * Currently this method only checks for forward references in default arguments (e.g. <code>G&lt;T1=T2,T2=any> {}</code>).
+	 * In the future, we might also check for cyclic default arguments.
+	 */
+	def private boolean holdsDefaultArgumentsContainValidReferences(GenericDeclaration genDecl) {
+		// find forward references to type parameters declared after the current type parameter
+		val badTypeVars = genDecl.typeVars.map[definedTypeVariable].filterNull.toSet;
+		if (badTypeVars.size < genDecl.typeVars.size) {
+			return true; // syntax error
+		}
+		val forwardReferences = <ParameterizedTypeRef>newArrayList;
+		for (n4TypeParam : genDecl.typeVars) {
+			val defaultArgInAST = n4TypeParam.defaultArgumentNode?.typeRefInAST;
+			if (defaultArgInAST !== null) {
+				TypeUtils.forAllTypeRefs(defaultArgInAST, ParameterizedTypeRef, true, false, null, [ptr|
+					val declType = ptr.declaredType;
+					if (declType instanceof TypeVariable && badTypeVars.contains(declType)) {
+						val isContainedInAST = EcoreUtil2.getContainerOfType(ptr, Script) !== null;
+						if (isContainedInAST) {
+							forwardReferences.add(ptr);
+						}
+					}
+					return true; // continue with traversal
+				], null);
+			}
+			// from now on, the current type variable may be referenced in the default argument of all following type variables:
+			badTypeVars.remove(n4TypeParam.definedTypeVariable);
+		}
+		// create error markers
+		if (!forwardReferences.empty) {
+			for (badRef : forwardReferences) {
+				val message = messageForTYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM;
+				addIssue(message, badRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, TYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM);
+			}
+			return false;
+		}
+		return true;
+	}
+
+	def private boolean holdsDefaultArgumentsComplyToBounds(GenericDeclaration genDecl) {
+		val G = genDecl.newRuleEnvironment;
+		var haveInvalidDefault = false;
+		for (n4TypeParam : genDecl.typeVars) {
+			if (n4TypeParam.name !== null) {
+				val defaultArgInAST = n4TypeParam.defaultArgumentNode?.typeRefInAST;
+				val defaultArg = n4TypeParam.defaultArgumentNode?.typeRef;
+				val ub = n4TypeParam.declaredUpperBound;
+				if (defaultArgInAST !== null && defaultArg !== null && ub !== null) {
+					val result = ts.subtype(G, defaultArg, ub);
+					if (result.failure) {
+						val message = getMessageForTYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND(n4TypeParam.name, result.compiledFailureMessage);
+						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE, TYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND);
+						haveInvalidDefault = true;
+					}
+				}
+			}
+		}
+		return !haveInvalidDefault;
+	}
+
+
 
 	def private List<TypeRef> extractNonStructTypeRefs(ComposedTypeRef ctr) {
 		val typeRefs = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);

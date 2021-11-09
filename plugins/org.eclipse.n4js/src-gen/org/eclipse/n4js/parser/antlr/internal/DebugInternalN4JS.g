@@ -9205,7 +9205,15 @@ ruleTStructMember:
 		)
 		    |
 		(
-			(ruleTypeVariables?
+			((
+				'<'
+				ruleTypeVariable
+				(
+					','
+					ruleTypeVariable
+				)*
+				'>'
+			)?
 			ruleIdentifierName
 			'('
 			)=>
@@ -9219,28 +9227,33 @@ ruleTStructMember:
 // Rule TStructMethod
 ruleTStructMethod:
 	(
-		(ruleTypeVariables?
+		((
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		ruleIdentifierName
 		'('
 		)=>
-		ruleTypeVariables?
+		(
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		ruleIdentifierName
 		'('
 	)
 	ruleTAnonymousFormalParameterList
 	')'
 	ruleColonSepReturnTypeRef?
-;
-
-// Rule TypeVariables
-ruleTypeVariables:
-	'<'
-	ruleTypeVariable
-	(
-		','
-		ruleTypeVariable
-	)*
-	'>'
 ;
 
 // Rule ColonSepTypeRef
@@ -9386,6 +9399,10 @@ ruleTypeVariable:
 	RULE_IDENTIFIER
 	(
 		'extends'
+		ruleTypeRef
+	)?
+	(
+		'='
 		ruleTypeRef
 	)?
 ;
