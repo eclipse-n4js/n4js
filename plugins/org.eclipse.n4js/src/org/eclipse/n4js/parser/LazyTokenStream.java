@@ -211,6 +211,12 @@ public class LazyTokenStream extends XtextTokenStream {
 
 	boolean forbidHiddenTokens = false;
 
+	// overridden to avoid Preconditions check in #doSetHiddenTokens
+	@Override
+	public void setInitialHiddenTokens(String... lexerRules) {
+		super.doSetHiddenTokens(lexerRules);
+	}
+
 	@Override
 	protected void doSetHiddenTokens(String... lexerRules) {
 		super.doSetHiddenTokens(lexerRules);
