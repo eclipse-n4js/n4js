@@ -121,8 +121,8 @@ class OptionalTypeParameterParserTest extends AbstractParserTest {
 		val typeParam = genDecl.typeVars.head;
 		val isASTNode = EcoreUtil2.getContainerOfType(typeParam, Script) !== null;
 		assertTrue(isASTNode);
-		assertNotNull(typeParam.defaultArgumentNode);
-		assertTrue(typeParam.defaultArgumentNode.typeRefInAST instanceof ParameterizedTypeRef);
+		assertNotNull(typeParam.declaredDefaultArgumentNode);
+		assertTrue(typeParam.declaredDefaultArgumentNode.typeRefInAST instanceof ParameterizedTypeRef);
 	}
 
 	def private void assertOptionalTypeParam(Collection<? extends TypeVariable> typeParamsInAST) {

@@ -491,8 +491,6 @@ LessThanSignEqualsSign : '<=';
 
 EqualsSignEqualsSign : '==';
 
-EqualsSignGreaterThanSign : '=>';
-
 QuestionMarkFullStop : '?.';
 
 QuestionMarkQuestionMark : '??';

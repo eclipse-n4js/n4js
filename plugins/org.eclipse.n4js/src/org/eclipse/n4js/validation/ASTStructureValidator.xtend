@@ -1836,7 +1836,6 @@ class ASTStructureValidator {
 
 		}
 	}
-
 	def private dispatch void validateASTStructure(
 		N4TypeVariable model,
 		ASTStructureDiagnosticProducer producer,
@@ -1845,7 +1844,7 @@ class ASTStructureValidator {
 	) {
 		if (model.optional) {
 			if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(model.eContainer, model.eContainmentFeature)) {
-				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DefaultArgumentNode).head;
+				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredDefaultArgumentNode).head;
 				producer.addDiagnostic(
 					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
 						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS),

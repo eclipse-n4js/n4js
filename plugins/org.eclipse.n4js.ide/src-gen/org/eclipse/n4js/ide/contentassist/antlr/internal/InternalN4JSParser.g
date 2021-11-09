@@ -76,7 +76,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 		tokenNameToValue.put("LessThanSignLessThanSign", "'<<'");
 		tokenNameToValue.put("LessThanSignEqualsSign", "'<='");
 		tokenNameToValue.put("EqualsSignEqualsSign", "'=='");
-		tokenNameToValue.put("EqualsSignGreaterThanSign", "'=>'");
 		tokenNameToValue.put("QuestionMarkFullStop", "'?.'");
 		tokenNameToValue.put("QuestionMarkQuestionMark", "'??'");
 		tokenNameToValue.put("CommercialAtCommercialAt", "'@@'");
@@ -5146,16 +5145,23 @@ finally {
 
 // Entry rule entryRuleRelationalOperator
 entryRuleRelationalOperator
+@init { 
+	HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
+}
 :
 { before(grammarAccess.getRelationalOperatorRule()); }
 	 ruleRelationalOperator
 { after(grammarAccess.getRelationalOperatorRule()); } 
 	 EOF 
 ;
+finally {
+	myHiddenTokenState.restore();
+}
 
 // Rule RelationalOperator
 ruleRelationalOperator 
 	@init {
+		HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
 		int stackSize = keepStackSize();
 	}
 	:
@@ -5169,12 +5175,14 @@ ruleRelationalOperator
 ;
 finally {
 	restoreStackSize(stackSize);
+	myHiddenTokenState.restore();
 }
 
 
 // Rule RelationalOperator
 norm1_RelationalOperator 
 	@init {
+		HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
 		int stackSize = keepStackSize();
 	}
 	:
@@ -5188,6 +5196,7 @@ norm1_RelationalOperator
 ;
 finally {
 	restoreStackSize(stackSize);
+	myHiddenTokenState.restore();
 }
 
 // Entry rule entryRuleEqualityExpression
@@ -10132,6 +10141,39 @@ ruleN4Keyword
 ;
 finally {
 	restoreStackSize(stackSize);
+}
+
+// Entry rule entryRuleArrow
+entryRuleArrow
+@init { 
+	HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
+}
+:
+{ before(grammarAccess.getArrowRule()); }
+	 ruleArrow
+{ after(grammarAccess.getArrowRule()); } 
+	 EOF 
+;
+finally {
+	myHiddenTokenState.restore();
+}
+
+// Rule Arrow
+ruleArrow 
+	@init {
+		HiddenTokens myHiddenTokenState = ((XtextTokenStream)input).setHiddenTokens();
+		int stackSize = keepStackSize();
+	}
+	:
+	(
+		{ before(grammarAccess.getArrowAccess().getGroup()); }
+		(rule__Arrow__Group__0)
+		{ after(grammarAccess.getArrowAccess().getGroup()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+	myHiddenTokenState.restore();
 }
 
 // Rule VariableStatementKeyword
@@ -22366,9 +22408,9 @@ rule__ArrowExpression__Group_0_0__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
-	EqualsSignGreaterThanSign
-	{ after(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
+	{ before(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
+	ruleArrow
+	{ after(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
 )
 ;
 finally {
@@ -22798,9 +22840,9 @@ norm1_ArrowExpression__Group_0_0__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
-	EqualsSignGreaterThanSign
-	{ after(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
+	{ before(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
+	ruleArrow
+	{ after(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
 )
 ;
 finally {
@@ -23230,9 +23272,9 @@ norm2_ArrowExpression__Group_0_0__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
-	EqualsSignGreaterThanSign
-	{ after(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
+	{ before(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
+	ruleArrow
+	{ after(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
 )
 ;
 finally {
@@ -23662,9 +23704,9 @@ norm3_ArrowExpression__Group_0_0__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
-	EqualsSignGreaterThanSign
-	{ after(grammarAccess.getArrowExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_1()); }
+	{ before(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
+	ruleArrow
+	{ after(grammarAccess.getArrowExpressionAccess().getArrowParserRuleCall_0_0_1()); }
 )
 ;
 finally {
@@ -25283,9 +25325,9 @@ rule__N4TypeVariable__Group_3__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4TypeVariableAccess().getEqualsSignKeyword_3_0()); }
-	EqualsSign
-	{ after(grammarAccess.getN4TypeVariableAccess().getEqualsSignKeyword_3_0()); }
+	{ before(grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalAssignment_3_0()); }
+	(rule__N4TypeVariable__DeclaredOptionalAssignment_3_0)
+	{ after(grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalAssignment_3_0()); }
 )
 ;
 finally {
@@ -25309,9 +25351,9 @@ rule__N4TypeVariable__Group_3__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeAssignment_3_1()); }
-	(rule__N4TypeVariable__DefaultArgumentNodeAssignment_3_1)
-	{ after(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeAssignment_3_1()); }
+	{ before(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeAssignment_3_1()); }
+	(rule__N4TypeVariable__DeclaredDefaultArgumentNodeAssignment_3_1)?
+	{ after(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeAssignment_3_1()); }
 )
 ;
 finally {
@@ -74295,9 +74337,9 @@ rule__ArrowFunctionTypeExpression__Group_0_0__4__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_4()); }
-	EqualsSignGreaterThanSign
-	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getEqualsSignGreaterThanSignKeyword_0_0_4()); }
+	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_4()); }
+	ruleArrow
+	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_4()); }
 )
 ;
 finally {
@@ -77707,6 +77749,60 @@ finally {
 }
 
 
+rule__Arrow__Group__0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__Arrow__Group__0__Impl
+	rule__Arrow__Group__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Arrow__Group__0__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getArrowAccess().getEqualsSignKeyword_0()); }
+	EqualsSign
+	{ after(grammarAccess.getArrowAccess().getEqualsSignKeyword_0()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Arrow__Group__1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__Arrow__Group__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Arrow__Group__1__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getArrowAccess().getGreaterThanSignKeyword_1()); }
+	GreaterThanSign
+	{ after(grammarAccess.getArrowAccess().getGreaterThanSignKeyword_1()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 rule__Script__HashbangAssignment_1
 	@init {
 		int stackSize = keepStackSize();
@@ -79665,15 +79761,34 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__N4TypeVariable__DefaultArgumentNodeAssignment_3_1
+rule__N4TypeVariable__DeclaredOptionalAssignment_3_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
+		{ before(grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalEqualsSignKeyword_3_0_0()); }
+		(
+			{ before(grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalEqualsSignKeyword_3_0_0()); }
+			EqualsSign
+			{ after(grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalEqualsSignKeyword_3_0_0()); }
+		)
+		{ after(grammarAccess.getN4TypeVariableAccess().getDeclaredOptionalEqualsSignKeyword_3_0_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__N4TypeVariable__DeclaredDefaultArgumentNodeAssignment_3_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
 		ruleTypeReferenceNode
-		{ after(grammarAccess.getN4TypeVariableAccess().getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
+		{ after(grammarAccess.getN4TypeVariableAccess().getDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0()); }
 	)
 ;
 finally {

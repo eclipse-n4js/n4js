@@ -938,7 +938,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val forwardReferences = <ParameterizedTypeRef>newArrayList;
 		for (n4TypeParam : genDecl.typeVars) {
-			val defaultArgInAST = n4TypeParam.defaultArgumentNode?.typeRefInAST;
+			val defaultArgInAST = n4TypeParam.declaredDefaultArgumentNode?.typeRefInAST;
 			if (defaultArgInAST !== null) {
 				TypeUtils.forAllTypeRefs(defaultArgInAST, ParameterizedTypeRef, true, false, null, [ptr|
 					val declType = ptr.declaredType;
@@ -970,14 +970,14 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		var haveInvalidDefault = false;
 		for (n4TypeParam : genDecl.typeVars) {
 			if (n4TypeParam.name !== null) {
-				val defaultArgInAST = n4TypeParam.defaultArgumentNode?.typeRefInAST;
-				val defaultArg = n4TypeParam.defaultArgumentNode?.typeRef;
+				val defaultArgInAST = n4TypeParam.declaredDefaultArgumentNode?.typeRefInAST;
+				val defaultArg = n4TypeParam.declaredDefaultArgumentNode?.typeRef;
 				val ub = n4TypeParam.declaredUpperBound;
 				if (defaultArgInAST !== null && defaultArg !== null && ub !== null) {
 					val result = ts.subtype(G, defaultArg, ub);
 					if (result.failure) {
 						val message = getMessageForTYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND(n4TypeParam.name, result.compiledFailureMessage);
-						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DEFAULT_ARGUMENT_NODE, TYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND);
+						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE, TYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND);
 						haveInvalidDefault = true;
 					}
 				}
