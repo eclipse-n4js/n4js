@@ -13,6 +13,7 @@ package org.eclipse.n4js.workspace;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
@@ -204,8 +205,9 @@ public class WorkspaceAccess {
 	 * and instead return <code>null</code>.
 	 * <p>
 	 * Normally the "load from index" behavior should happen automatically (via {@link UserDataAwareScope} and/or
-	 * {@link ProxyResolvingEObjectImpl}), so this method should only be used in rare special cases if there is a good
-	 * reason for the automatic "load from index" being unavailable.
+	 * {@link ProxyResolvingEObjectImpl} with {@link N4JSResource#doResolveProxy(InternalEObject, EObject)}), so this
+	 * method should only be used in rare special cases if there is a good reason for the automatic "load from index"
+	 * behavior being unavailable.
 	 *
 	 * @param index
 	 *            the Xtext index to use.
