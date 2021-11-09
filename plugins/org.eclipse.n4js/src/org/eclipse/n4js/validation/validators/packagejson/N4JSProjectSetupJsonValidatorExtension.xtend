@@ -34,7 +34,6 @@ import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.json.JSON.JSONArray
 import org.eclipse.n4js.json.JSON.JSONDocument
@@ -71,6 +70,7 @@ import org.eclipse.n4js.validation.helper.SourceContainerAwareDependencyProvider
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.IContainer
@@ -87,7 +87,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.packagejson.ProjectTypePredicate.*
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.workspace.utils.N4JSPackageName
 
 /**
  * A JSON validator extension that validates {@code package.json} resources in the context
@@ -225,6 +224,12 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			}
 		}
 
+		val xtextIndex = workspaceAccess.getXtextIndex(document).orNull;
+		val contextResourceSet = document.eResource?.resourceSet;
+		if (xtextIndex === null || contextResourceSet === null) {
+			return;
+		}
+
 		// Search for clashes in Polyfill:
 		// markermap: {lib1,lib2,...}->"filledname"
 		val Multimap<Set<JSONStringLiteral>, String> markerMapLibs2FilledName = LinkedListMultimap.create // Value is QualifiedName of polyfill_Element
@@ -240,8 +245,24 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 					var eoPolyFiller = prov.ieoDescrOfPolyfill.EObjectOrProxy
 
 					if (eoPolyFiller instanceof TClassifier) {
-						val resolvedEoPolyFiller = EcoreUtil.resolve(eoPolyFiller, document.eResource) as TClassifier
-						if (!resolvedEoPolyFiller.isPolyfill) {
+						var resolvedEoPolyFiller = eoPolyFiller;
+						if (resolvedEoPolyFiller.eIsProxy) {
+							// WARNING: simply doing
+							//     val resolvedEoPolyFiller = EcoreUtil.resolve(eoPolyFiller, document.eResource)
+							// here would result in the resource of eoPolyFiller being loaded from source, because
+							// we are in the context of a package.json file (not an N4JSResource, etc.) and therefore
+							// do not get automatic "load from index" behavior!
+							val targetObjectURI = prov.ieoDescrOfPolyfill.EObjectURI;
+							val targetResourceURI = targetObjectURI.trimFragment;
+							val targetResourceDesc = xtextIndex.getResourceDescription(targetResourceURI);
+							val targetResource = if (targetResourceDesc !== null) {
+								workspaceAccess.loadModuleFromIndex(contextResourceSet, targetResourceDesc, false)?.eResource
+							};
+							resolvedEoPolyFiller = targetResource?.getEObject(targetObjectURI.fragment) as TClassifier;
+						}
+						if (resolvedEoPolyFiller === null || resolvedEoPolyFiller.eIsProxy) {
+							// unable to resolve -> ignore
+						} else if (!resolvedEoPolyFiller.isPolyfill) {
 							throw new IllegalStateException(
 								"Expected a polyfill, but wasn't: " + resolvedEoPolyFiller.name)
 						} else { // yes, it's an polyfiller.
