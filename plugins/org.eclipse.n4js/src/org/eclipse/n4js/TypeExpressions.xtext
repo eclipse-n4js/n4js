@@ -8,6 +8,8 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+
+// NOTE: hidden(...) has no effect since it is overwritten in JSTokenList#add
 grammar org.eclipse.n4js.TypeExpressions with org.eclipse.n4js.common.unicode.Unicode hidden(WS, ML_COMMENT, SL_COMMENT, EOL)
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
@@ -128,7 +130,7 @@ FunctionTypeExpressionOLD returns FunctionTypeExpression:
 	'}';
 
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression;
+	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow) returnTypeRef=PrimaryTypeExpression;
 
 // TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 fragment TAnonymousFormalParameterList* :
@@ -216,14 +218,10 @@ TStructMember:
 TStructMethod:
 	=>
 	({TStructMethod}
-		TypeVariables?
+		('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
 	    name=IdentifierName '('
 	)
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
-;
-
-fragment TypeVariables*:
-	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
 ;
 
 fragment ColonSepTypeRef*:
@@ -292,7 +290,10 @@ WildcardNewNotation returns Wildcard:
 
 TypeVariable returns TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
-	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
+	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?
+	// the following is disallowed by ASTStructureValidator for all uses of this grammar rule
+	// (only added here to obtain a better error message)
+	('=' defaultArgument=TypeRef)?;
 
 /*
  * [ECM11] (7.6, pp. 17)
@@ -341,6 +342,10 @@ N4Keyword:
 	| 'private' | 'protected' | 'public' // package not used in N4JS
 	// definition-site variance
 	| 'out'
+;
+
+Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
+	'=' '>'
 ;
 
 terminal IDENTIFIER:

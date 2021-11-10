@@ -16,6 +16,7 @@ import java.math.BigDecimal
 import java.util.Properties
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -37,15 +38,18 @@ import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewExpression
@@ -105,6 +109,7 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
@@ -1184,7 +1189,8 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
 		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
-		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
+		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
 	}
 
 	/**
@@ -1200,7 +1206,36 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
+		val isTypeAlias = element instanceof TypeAlias;
+		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
+	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
+			&& javaScriptVariantHelper.isExternalMode(typeDecl)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
+		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		// TODO: namespace
+		return typeDecl !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
+			&& javaScriptVariantHelper.isExternalMode(element)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
+		val isTypeAlias = element instanceof TypeAlias;
+		// TODO: namespace
+		return element !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
 	}
 
 	/**
@@ -1288,6 +1323,14 @@ public class N4JSLanguageUtils {
 	def static boolean isValidLocationForAwait(EObject astNode) {
 		val containingFunDef = EcoreUtil2.getContainerOfType(astNode, FunctionDefinition);
 		return containingFunDef !== null && containingFunDef.async;
+	}
+
+	/** Tells whether the given AST node and EReference is a valid location for an optional type parameter. */
+	def static boolean isValidLocationForOptionalTypeParameter(EObject astNode, EReference reference) {
+		// for now, type parameters may be optional only in class, interface, and type alias declarations
+		// (not in function/method declarations or in FunctionTypeExpression or TStructMethod):
+		return reference === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
+			&& (astNode instanceof N4ClassifierDefinition || astNode instanceof N4TypeAliasDeclaration);
 	}
 
 	/** Tells whether the given type may be referenced structurally, i.e. with modifiers '~', '~~', '~r~', etc. */

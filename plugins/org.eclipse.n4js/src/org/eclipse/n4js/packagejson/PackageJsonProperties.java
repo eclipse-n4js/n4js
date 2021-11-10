@@ -113,9 +113,12 @@ public enum PackageJsonProperties {
 	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES),
 
 	/** Key of package.json property "generator". */
-	GENERATOR("generator", "", JSONObject.class, N4JS),
+	GENERATOR("generator", "Configurations for the generator", JSONObject.class, N4JS),
+	/** Key of package.json property "generator"/"source-maps". */
+	GENERATOR_SOURCE_MAPS("source-maps", "Turn on/off generation of source maps", JSONBooleanLiteral.class, true,
+			N4JS, GENERATOR),
 	/** Key of package.json property "generator"/"d.ts". */
-	GENERATOR_DTS("d.ts", "", JSONBooleanLiteral.class, N4JS, GENERATOR),
+	GENERATOR_DTS("d.ts", "Turn on/off generation of d.ts files", JSONBooleanLiteral.class, false, N4JS, GENERATOR),
 
 	;
 
@@ -126,7 +129,7 @@ public enum PackageJsonProperties {
 	/** description of the property */
 	final public String description;
 	/** default value of the property if the property is missing or null */
-	final public String defaultValue;
+	final public Object defaultValue;
 	/** json value type of the property */
 	final public Class<? extends JSONValue> valueType;
 
@@ -147,7 +150,7 @@ public enum PackageJsonProperties {
 	}
 
 	private PackageJsonProperties(String name, String description, Class<? extends JSONValue> valueType,
-			String defaultValue, PackageJsonProperties... parents) {
+			Object defaultValue, PackageJsonProperties... parents) {
 
 		this.parents = parents;
 		this.name = name;

@@ -1649,7 +1649,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ColonSepTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
-				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod_TypeVariables(context, (TStructMethod) semanticObject); 
+				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(context, (TStructMethod) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_SETTER:
 				sequence_TStructSetter(context, (TStructSetter) semanticObject); 
@@ -19445,7 +19445,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (declaredCovariant?='out' | declaredContravariant?='in')? 
 	 *         name=IdentifierOrThis 
 	 *         declaredUpperBoundNode=TypeReferenceNode? 
-	 *         defaultArgumentNode=TypeReferenceNode?
+	 *         (declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode?)?
 	 *     )
 	 */
 	protected void sequence_N4TypeVariable(ISerializationContext context, N4TypeVariable semanticObject) {

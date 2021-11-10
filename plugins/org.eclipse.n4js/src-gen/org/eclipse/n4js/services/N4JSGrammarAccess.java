@@ -2068,7 +2068,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cColonSepDeclaredReturnTypeRefParserRuleCall_0_0_0_1_1 = (RuleCall)cGroup_0_0_0_1.eContents().get(1);
 		private final Assignment cFparsAssignment_0_0_0_2 = (Assignment)cAlternatives_0_0_0.eContents().get(2);
 		private final RuleCall cFparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0 = (RuleCall)cFparsAssignment_0_0_0_2.eContents().get(0);
-		private final Keyword cEqualsSignGreaterThanSignKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
+		private final RuleCall cArrowParserRuleCall_0_0_1 = (RuleCall)cGroup_0_0.eContents().get(1);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
 		private final Assignment cHasBracesAroundBodyAssignment_1_0_0 = (Assignment)cGroup_1_0.eContents().get(0);
@@ -2088,7 +2088,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//                |    =>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 		//                |     fpars+=BindingIdentifierAsFormalParameter<Yield>
 		//            )
-		//            /* no line terminator here, guaranteed implicitly */ '=>'
+		//            /* no line terminator here, guaranteed implicitly */ Arrow
 		//        )
 		//        (-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>)
 		//;
@@ -2102,7 +2102,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//            |    =>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 		//            |     fpars+=BindingIdentifierAsFormalParameter<Yield>
 		//        )
-		//        /* no line terminator here, guaranteed implicitly */ '=>'
+		//        /* no line terminator here, guaranteed implicitly */ Arrow
 		//    )
 		//    (-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>)
 		public Group getGroup() { return cGroup; }
@@ -2115,7 +2115,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//            |    =>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 		//            |     fpars+=BindingIdentifierAsFormalParameter<Yield>
 		//        )
-		//        /* no line terminator here, guaranteed implicitly */ '=>'
+		//        /* no line terminator here, guaranteed implicitly */ Arrow
 		//    )
 		public Group getGroup_0() { return cGroup_0; }
 		
@@ -2126,7 +2126,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    |    =>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 		//    |     fpars+=BindingIdentifierAsFormalParameter<Yield>
 		//)
-		///* no line terminator here, guaranteed implicitly */ '=>'
+		///* no line terminator here, guaranteed implicitly */ Arrow
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//(
@@ -2181,8 +2181,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//BindingIdentifierAsFormalParameter<Yield>
 		public RuleCall getFparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0() { return cFparsBindingIdentifierAsFormalParameterParserRuleCall_0_0_0_2_0; }
 		
-		///* no line terminator here, guaranteed implicitly */ '=>'
-		public Keyword getEqualsSignGreaterThanSignKeyword_0_0_1() { return cEqualsSignGreaterThanSignKeyword_0_0_1; }
+		///* no line terminator here, guaranteed implicitly */ Arrow
+		public RuleCall getArrowParserRuleCall_0_0_1() { return cArrowParserRuleCall_0_0_1; }
 		
 		//(-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -2444,16 +2444,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cDeclaredUpperBoundNodeAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
 		private final RuleCall cDeclaredUpperBoundNodeTypeReferenceNodeParserRuleCall_2_1_0 = (RuleCall)cDeclaredUpperBoundNodeAssignment_2_1.eContents().get(0);
 		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Keyword cEqualsSignKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
-		private final Assignment cDefaultArgumentNodeAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
-		private final RuleCall cDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0 = (RuleCall)cDefaultArgumentNodeAssignment_3_1.eContents().get(0);
+		private final Assignment cDeclaredOptionalAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
+		private final Keyword cDeclaredOptionalEqualsSignKeyword_3_0_0 = (Keyword)cDeclaredOptionalAssignment_3_0.eContents().get(0);
+		private final Assignment cDeclaredDefaultArgumentNodeAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0 = (RuleCall)cDeclaredDefaultArgumentNodeAssignment_3_1.eContents().get(0);
 		
 		//N4TypeVariable:
 		//    (declaredCovariant?='out' | declaredContravariant?='in')?
 		//    name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 		//    // difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 		//    // because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-		//    ('=' defaultArgumentNode=TypeReferenceNode)?
+		//    (declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2461,7 +2462,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 		//// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 		//// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-		//('=' defaultArgumentNode=TypeReferenceNode)?
+		//(declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 		public Group getGroup() { return cGroup; }
 		
 		//(declaredCovariant?='out' | declaredContravariant?='in')?
@@ -2499,17 +2500,20 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 		//// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-		//('=' defaultArgumentNode=TypeReferenceNode)?
+		//(declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 		public Group getGroup_3() { return cGroup_3; }
 		
-		//'='
-		public Keyword getEqualsSignKeyword_3_0() { return cEqualsSignKeyword_3_0; }
+		//declaredOptional?='='
+		public Assignment getDeclaredOptionalAssignment_3_0() { return cDeclaredOptionalAssignment_3_0; }
 		
-		//defaultArgumentNode=TypeReferenceNode
-		public Assignment getDefaultArgumentNodeAssignment_3_1() { return cDefaultArgumentNodeAssignment_3_1; }
+		//'='
+		public Keyword getDeclaredOptionalEqualsSignKeyword_3_0_0() { return cDeclaredOptionalEqualsSignKeyword_3_0_0; }
+		
+		//declaredDefaultArgumentNode=TypeReferenceNode?
+		public Assignment getDeclaredDefaultArgumentNodeAssignment_3_1() { return cDeclaredDefaultArgumentNodeAssignment_3_1; }
 		
 		//TypeReferenceNode
-		public RuleCall getDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0() { return cDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0; }
+		public RuleCall getDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0() { return cDeclaredDefaultArgumentNodeTypeReferenceNodeParserRuleCall_3_1_0; }
 	}
 	public class FormalParameterElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FormalParameter");
@@ -7019,14 +7023,18 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
 		private final Keyword cInKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		
-		//RelationalOperator <In> returns RelationalOperator:
-		//    '<' | '>' '='? | '<=' | 'instanceof' | <In> 'in';
+		//RelationalOperator <In> returns RelationalOperator hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens():
+		//      '<'  | '>' '='? // hidden() will forbid whitespace between tokens '>' and '='
+		//    | '<=' | 'instanceof' | <In> 'in';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'<' | '>' '='? | '<=' | 'instanceof' | <In> 'in'
+		//// "hidden()" works due to LazyTokenStream#doSetHiddenTokens():
+		//     '<'  | '>' '='? // hidden() will forbid whitespace between tokens '>' and '='
+		//   | '<=' | 'instanceof' | <In> 'in'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//'<'
+		//// "hidden()" works due to LazyTokenStream#doSetHiddenTokens():
+		//     '<'
 		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
 		
 		//'>' '='?
@@ -12626,7 +12634,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//                |    =>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 	//                |     fpars+=BindingIdentifierAsFormalParameter<Yield>
 	//            )
-	//            /* no line terminator here, guaranteed implicitly */ '=>'
+	//            /* no line terminator here, guaranteed implicitly */ Arrow
 	//        )
 	//        (-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>)
 	//;
@@ -12717,7 +12725,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
 	//    // difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
 	//    // because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
-	//    ('=' defaultArgumentNode=TypeReferenceNode)?
+	//    (declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 	//;
 	public N4TypeVariableElements getN4TypeVariableAccess() {
 		return pN4TypeVariable;
@@ -13870,8 +13878,9 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getRelationalExpressionAccess().getRule();
 	}
 	
-	//RelationalOperator <In> returns RelationalOperator:
-	//    '<' | '>' '='? | '<=' | 'instanceof' | <In> 'in';
+	//RelationalOperator <In> returns RelationalOperator hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens():
+	//      '<'  | '>' '='? // hidden() will forbid whitespace between tokens '>' and '='
+	//    | '<=' | 'instanceof' | <In> 'in';
 	public RelationalOperatorElements getRelationalOperatorAccess() {
 		return pRelationalOperator;
 	}
@@ -15543,7 +15552,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression;
+	//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow) returnTypeRef=PrimaryTypeExpression;
 	public TypeExpressionsGrammarAccess.ArrowFunctionTypeExpressionElements getArrowFunctionTypeExpressionAccess() {
 		return gaTypeExpressions.getArrowFunctionTypeExpressionAccess();
 	}
@@ -15732,7 +15741,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//TStructMethod:
 	//    =>
 	//    ({TStructMethod}
-	//        TypeVariables?
+	//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
 	//        name=IdentifierName '('
 	//    )
 	//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
@@ -15743,17 +15752,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getTStructMethodRule() {
 		return getTStructMethodAccess().getRule();
-	}
-	
-	//fragment TypeVariables*:
-	//    '<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
-	//;
-	public TypeExpressionsGrammarAccess.TypeVariablesElements getTypeVariablesAccess() {
-		return gaTypeExpressions.getTypeVariablesAccess();
-	}
-	
-	public ParserRule getTypeVariablesRule() {
-		return getTypeVariablesAccess().getRule();
 	}
 	
 	//fragment ColonSepTypeRef*:
@@ -15913,7 +15911,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//TypeVariable returns TypeVariable:
 	//    (declaredCovariant?='out' | declaredContravariant?='in')?
-	//    name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
+	//    name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?
+	//    // the following is disallowed by ASTStructureValidator for all uses of this grammar rule
+	//    // (only added here to obtain a better error message)
+	//    ('=' defaultArgument=TypeRef)?;
 	public TypeExpressionsGrammarAccess.TypeVariableElements getTypeVariableAccess() {
 		return gaTypeExpressions.getTypeVariableAccess();
 	}
@@ -15997,6 +15998,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getN4KeywordRule() {
 		return getN4KeywordAccess().getRule();
+	}
+	
+	//Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
+	//    '=' '>'
+	//;
+	public TypeExpressionsGrammarAccess.ArrowElements getArrowAccess() {
+		return gaTypeExpressions.getArrowAccess();
+	}
+	
+	public ParserRule getArrowRule() {
+		return getArrowAccess().getRule();
 	}
 	
 	//terminal IDENTIFIER:

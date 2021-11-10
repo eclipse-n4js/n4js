@@ -50,6 +50,6 @@ export external public class String extends String {
 }
 
 // XPECT errors --> "Name of polyfill IArgumentsShim must equal name of filled interface IArguments." at "IArgumentsShim"
-@Polyfill export external public interface IArgumentsShim extends IArguments {
+@Polyfill export external public interface ~IArgumentsShim extends IArguments {
 	timezone();
 }

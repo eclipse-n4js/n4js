@@ -196,26 +196,22 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 			"Def.n4jsd" -> '''
 				export external public class C {}
 				@N4JS export external public interface I1 {}
-				export external public interface I2 {}
 				export external public interface ~I3 {}
 			''',
 			"Main1.n4js" -> '''
 				import {C} from "Def"
 				import {I1} from "Def"
-				import {I2} from "Def"
 				import {I3} from "Def"
 				
-				C, I1, I2, I3;
+				C, I1;
 			''',
 			"Main2.n4js" -> '''
 				import {C} from "Def"
 				import {I1} from "Def"
-				import {I2} from "Def"
 				import {I3} from "Def"
 				
 				class T0 extends C {}
 				class T1 implements I1 {}
-				class T2 implements I2 {}
 				class T3 implements I3 {}
 			'''
 		].parseAndValidateSuccessfullyMany;
@@ -223,23 +219,19 @@ class ImportRetainedAtRuntimeTest extends AbstractN4JSTest {
 		val main1 = resourceSet.findScript("Main1.n4js");
 		val importDeclC_in1 = main1.scriptElements.filter(ImportDeclaration).get(0);
 		val importDeclI1_in1 = main1.scriptElements.filter(ImportDeclaration).get(1);
-		val importDeclI2_in1 = main1.scriptElements.filter(ImportDeclaration).get(2);
-		val importDeclI3_in1 = main1.scriptElements.filter(ImportDeclaration).get(3);
+		val importDeclI3_in1 = main1.scriptElements.filter(ImportDeclaration).get(2);
 
 		assertTrue(importDeclC_in1.retainedAtRuntime);
 		assertTrue(importDeclI1_in1.retainedAtRuntime);
-		assertFalse(importDeclI2_in1.retainedAtRuntime);
 		assertFalse(importDeclI3_in1.retainedAtRuntime);
 
 		val main2 = resourceSet.findScript("Main2.n4js");
 		val importDeclC_in2 = main2.scriptElements.filter(ImportDeclaration).get(0);
 		val importDeclI1_in2 = main2.scriptElements.filter(ImportDeclaration).get(1);
-		val importDeclI2_in2 = main2.scriptElements.filter(ImportDeclaration).get(2);
-		val importDeclI3_in2 = main2.scriptElements.filter(ImportDeclaration).get(3);
+		val importDeclI3_in2 = main2.scriptElements.filter(ImportDeclaration).get(2);
 
 		assertTrue(importDeclC_in2.retainedAtRuntime);
 		assertTrue(importDeclI1_in2.retainedAtRuntime);
-		assertFalse(importDeclI2_in2.retainedAtRuntime);
 		assertFalse(importDeclI3_in2.retainedAtRuntime);
 	}
 

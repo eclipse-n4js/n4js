@@ -29,7 +29,7 @@ export external public class MyObject2 extends string {
 /* XPECT errors ---
 "External interfaces must not have the Observable annotation." at "MyRole"
  --- */
-export external public interface MyRole {
+export external public interface ~MyRole {
 	@Observable
 // XPECT errors --> "Fields in external interfaces must not have the Observable annotation." at "field1"
 	field1 : String;

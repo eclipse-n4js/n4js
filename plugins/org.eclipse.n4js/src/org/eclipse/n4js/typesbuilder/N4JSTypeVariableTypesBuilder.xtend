@@ -18,6 +18,8 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
 
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
+
 package class N4JSTypeVariableTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
@@ -51,7 +53,18 @@ package class N4JSTypeVariableTypesBuilder {
 		typeVar.declaredContravariant = n4TypeVar.declaredContravariant;
 		if (!preLinkingPhase) {
 			typeVar.declaredUpperBound = TypeUtils.copyWithProxies(n4TypeVar.declaredUpperBoundNode?.typeRefInAST);
-			typeVar.defaultArgument = TypeUtils.copyWithProxies(n4TypeVar.defaultArgumentNode?.typeRefInAST);
+			if (n4TypeVar.isOptional) {
+				var typeRef = n4TypeVar.getDeclaredDefaultArgumentNode?.typeRefInAST;
+				if (typeRef === null) {
+					if (typeVar.declaredUpperBound === null) {
+						val G = RuleEnvironmentExtensions.newRuleEnvironment(n4TypeVar);
+						typeRef = RuleEnvironmentExtensions.anyTypeRef(G);
+					} else {
+						typeRef = typeVar.declaredUpperBound;
+					}
+				}
+				typeVar.defaultArgument = TypeUtils.copyWithProxies(typeRef);
+			}
 		}
 
 		n4TypeVar.definedTypeVariable = typeVar;

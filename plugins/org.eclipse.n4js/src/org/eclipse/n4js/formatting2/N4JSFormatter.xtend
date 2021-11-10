@@ -787,7 +787,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 
 	def dispatch void format(ArrowFunction arrowF, extension IFormattableDocument document) {
 		arrowF.configureCommas(document);
-		arrowF.regionFor.keyword("=>").surround[oneSpace];
+		arrowF.regionFor.ruleCallTo(arrowRule).surround[oneSpace];
 		arrowF.regionFor.keywordPairs("(",")").head?.interior[noSpace];
 		// too lax: arrowF.fpars.configureFormalParameters(document,[/*NTD*/]);
 

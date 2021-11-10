@@ -89,6 +89,7 @@ import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.scoping.validation.VeeScopeValidator
 
 /**
  * This class contains custom scoping description.
@@ -459,13 +460,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			val Script script = EcoreUtil.getRootContainer(vee) as Script;
 			val IScope baseScope = getScriptBaseScope(script, context, reference);
 			// imported variables (added as second step to enable shadowing of imported elements)
-			scope = importedElementsScopingHelper.getImportedIdentifiables(baseScope, script);
+			scope = importedElementsScopingHelper.getImportedValues(baseScope, script);
 		}
 
 
 		scope = scopeSnapshotHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
+		
+		val scopeInfo = new ScopeInfo(scope, scope, new VeeScopeValidator(context, jsVariantHelper));
 
-		return scope;
+		return scopeInfo;
 	}
 
 	private def IScope getScriptBaseScope(Script script, EObject context, EReference ref) {
@@ -509,7 +512,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		
 		// get regular top-level elements scope
 		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", importedModule, IScope.NULLSCOPE, false,
-			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource));
+			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource, true, true));
 		
 		return topLevelElementsScope;
 	}

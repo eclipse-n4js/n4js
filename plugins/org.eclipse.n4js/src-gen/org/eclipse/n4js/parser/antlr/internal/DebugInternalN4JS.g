@@ -794,7 +794,7 @@ ruleArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			ruleStrictFormalParameters
@@ -816,7 +816,7 @@ ruleArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -853,7 +853,7 @@ norm1_ArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			ruleStrictFormalParameters
@@ -875,7 +875,7 @@ norm1_ArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -912,7 +912,7 @@ norm2_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			norm1_StrictFormalParameters
@@ -934,7 +934,7 @@ norm2_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -971,7 +971,7 @@ norm3_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			norm1_StrictFormalParameters
@@ -993,7 +993,7 @@ norm3_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -1120,6 +1120,7 @@ ruleN4TypeVariable:
 	(
 		'='
 		ruleTypeReferenceNode
+		?
 	)?
 ;
 
@@ -6056,7 +6057,7 @@ ruleAssignmentExpression:
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			ruleArrowExpression
 		)
@@ -6110,7 +6111,7 @@ norm1_AssignmentExpression:
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			norm1_ArrowExpression
 		)
@@ -6164,7 +6165,7 @@ norm2_AssignmentExpression:
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			norm2_ArrowExpression
 		)
@@ -6220,7 +6221,7 @@ norm3_AssignmentExpression:
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			norm3_ArrowExpression
 		)
@@ -8850,7 +8851,7 @@ rulePrimaryTypeExpression:
 			('('
 			ruleTAnonymousFormalParameterList
 			')'
-			'=>'
+			ruleArrow
 			)=>
 			ruleArrowFunctionTypeExpression
 		)
@@ -9035,12 +9036,12 @@ ruleArrowFunctionTypeExpression:
 		('('
 		ruleTAnonymousFormalParameterList
 		')'
-		'=>'
+		ruleArrow
 		)=>
 		'('
 		ruleTAnonymousFormalParameterList
 		')'
-		'=>'
+		ruleArrow
 	)
 	rulePrimaryTypeExpression
 ;
@@ -9205,7 +9206,15 @@ ruleTStructMember:
 		)
 		    |
 		(
-			(ruleTypeVariables?
+			((
+				'<'
+				ruleTypeVariable
+				(
+					','
+					ruleTypeVariable
+				)*
+				'>'
+			)?
 			ruleIdentifierName
 			'('
 			)=>
@@ -9219,28 +9228,33 @@ ruleTStructMember:
 // Rule TStructMethod
 ruleTStructMethod:
 	(
-		(ruleTypeVariables?
+		((
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		ruleIdentifierName
 		'('
 		)=>
-		ruleTypeVariables?
+		(
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		ruleIdentifierName
 		'('
 	)
 	ruleTAnonymousFormalParameterList
 	')'
 	ruleColonSepReturnTypeRef?
-;
-
-// Rule TypeVariables
-ruleTypeVariables:
-	'<'
-	ruleTypeVariable
-	(
-		','
-		ruleTypeVariable
-	)*
-	'>'
 ;
 
 // Rule ColonSepTypeRef
@@ -9386,6 +9400,10 @@ ruleTypeVariable:
 	RULE_IDENTIFIER
 	(
 		'extends'
+		ruleTypeRef
+	)?
+	(
+		'='
 		ruleTypeRef
 	)?
 ;
@@ -9553,6 +9571,12 @@ ruleN4Keyword:
 		    |
 		'out'
 	)
+;
+
+// Rule Arrow
+ruleArrow:
+	'='
+	'>'
 ;
 
 // Rule VariableStatementKeyword

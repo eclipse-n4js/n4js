@@ -12,4 +12,5 @@
 import { IteratorExt } from 'Iterator';
 
 // first Error
+@N4JS
 export external public interface Ii<T> extends IteratorExt<T> { }

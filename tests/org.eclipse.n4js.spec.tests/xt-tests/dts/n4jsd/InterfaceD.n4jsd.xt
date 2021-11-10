@@ -15,7 +15,7 @@
  */
 
 
-export external interface I1 {
+export external interface ~I1 {
 	public field: number;
 }
 export external class C1 {

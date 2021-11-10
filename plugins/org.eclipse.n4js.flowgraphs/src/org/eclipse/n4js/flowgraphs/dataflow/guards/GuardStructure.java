@@ -22,7 +22,7 @@ import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IfStatement;
-import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.n4js.utils.EcoreUtilN4;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -89,7 +89,9 @@ public class GuardStructure {
 
 	private List<Guard> getGuardList() {
 		LinkedList<Guard> gList = new LinkedList<>();
-		List<Expression> allExpressions = EcoreUtil2.getAllContentsOfType(condition, Expression.class);
+		List<Expression> allExpressions = EcoreUtilN4.getAllContentsOfTypeStopAt(false, condition, Expression.class,
+				BinaryLogicalExpression.class);
+
 		allExpressions.add(condition);
 		EObject conditionContainer = condition.eContainer();
 

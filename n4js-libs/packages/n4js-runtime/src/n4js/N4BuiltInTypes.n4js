@@ -270,25 +270,17 @@ interface ~N4Provider<out T> {
 
 class N4ApiNotImplementedError extends Error {}
 
-interface MigrationController {
 
-	public abstract <TargetType extends Object> migrate(args : Array<?>) : TargetType
 
-	public abstract <TargetType extends Object> migrateWith(migration: Function, args : Array<?>) : TargetType
-	
-	public abstract get context() : MigrationContext
-}
+export project interface Iterable2<out T1,out T2> extends Iterable<union{T1,T2}> {}
+export project interface Iterable3<out T1,out T2,out T3> extends Iterable2<T1,union{T2,T3}> {}
+export project interface Iterable4<out T1,out T2,out T3,out T4> extends Iterable3<T1,T2,union{T3,T4}> {}
+export project interface Iterable5<out T1,out T2,out T3,out T4,out T5> extends Iterable4<T1,T2,T3,union{T4,T5}> {}
+export project interface Iterable6<out T1,out T2,out T3,out T4,out T5,out T6> extends Iterable5<T1,T2,T3,T4,union{T5,T6}> {}
+export project interface Iterable7<out T1,out T2,out T3,out T4,out T5,out T6,out T7> extends Iterable6<T1,T2,T3,T4,T5,union{T6,T7}> {}
+export project interface Iterable8<out T1,out T2,out T3,out T4,out T5,out T6,out T7,out T8> extends Iterable7<T1,T2,T3,T4,T5,T6,union{T7,T8}> {}
+export project interface Iterable9<out T1,out T2,out T3,out T4,out T5,out T6,out T7,out T8,out T9> extends Iterable8<T1,T2,T3,T4,T5,T6,T7,union{T8,T9}> {}
 
-interface MigrationContext {
-
-	public abstract getTrace(argument : Object) : Array<?>
-	
-	public abstract isModified(obj : Object, property : string = undefined) : boolean
-	
-	public abstract setUserData(key : string, value : any) : void
-	
-	public abstract getUserData(key : string) : any 
-}
 
 
 // add above types to the global object
@@ -309,5 +301,11 @@ _globalThis.N4StringBasedEnum = N4StringBasedEnum;
 _globalThis.N4Annotation = N4Annotation;
 _globalThis.N4Provider = N4Provider;
 _globalThis.N4ApiNotImplementedError = N4ApiNotImplementedError;
-_globalThis.MigrationController = MigrationController;
-_globalThis.MigrationContext = MigrationContext;
+_globalThis.Iterable2 = Iterable2;
+_globalThis.Iterable3 = Iterable3;
+_globalThis.Iterable4 = Iterable4;
+_globalThis.Iterable5 = Iterable5;
+_globalThis.Iterable6 = Iterable6;
+_globalThis.Iterable7 = Iterable7;
+_globalThis.Iterable8 = Iterable8;
+_globalThis.Iterable9 = Iterable9;

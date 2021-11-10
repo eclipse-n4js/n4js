@@ -16,6 +16,6 @@ export external public class Cls<T> {
 	initialMethod() : T;
 }
 
-export external public interface Ifc<T> {
+export external public interface ~Ifc<T> {
 	initialMethod() : T;
 }
