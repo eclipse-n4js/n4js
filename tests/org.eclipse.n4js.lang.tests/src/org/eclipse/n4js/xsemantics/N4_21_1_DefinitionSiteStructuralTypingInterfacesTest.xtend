@@ -87,7 +87,8 @@ class N4_21_1_DefinitionSiteStructuralTypingInterfacesTest extends AbstractTypes
 
 		// class A{}
 		val script = createAndValidateScript(JavaScriptVariant.external, '''
-			external interface Nominal{
+			@N4JS
+			export external interface Nominal{
 				public s: string;
 				public foo(): void
 			}

@@ -16,18 +16,25 @@ function foo(p: constructor{?}) {}
 
 class Cls {}
 
+interface Intf {}
+
 type A = Cls;
 
-// XPECT errors --> "A type alias may not be used as a value." at "A"
+type B = Intf;
+
+let s = "";
+
+// XPECT errors --> "A cannot be used as a value." at "A"
 A;
-// XPECT errors --> "A type alias may not be used as a value." at "A"
+// XPECT noerrors --> "A cannot be used as a value." at "A"
 new A();
-// XPECT errors --> "A type alias may not be used as a value." at "A"
+// XPECT errors --> "Cannot instantiate B." at "B"
+new B();
+// XPECT errors --> "A cannot be used as a value." at "A"
 foo(A);
-// XPECT errors ---
-// "A type alias may not be used as a value." at "A"
-// "Cannot resolve JSX implementation." at "<A/>"
-// ---
+// XPECT errors --> "Cannot resolve JSX implementation." at "<A/>"
 <A/>;
+// XPECT errors --> "A cannot be used as a value." at "A"
+(s instanceof A);
 
 // note: the above also tests that we do not get unnecessary duplicate error messages.

@@ -787,7 +787,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 
 	def dispatch void format(ArrowFunction arrowF, extension IFormattableDocument document) {
 		arrowF.configureCommas(document);
-		arrowF.regionFor.keyword("=>").surround[oneSpace];
+		arrowF.regionFor.ruleCallTo(arrowRule).surround[oneSpace];
 		arrowF.regionFor.keywordPairs("(",")").head?.interior[noSpace];
 		// too lax: arrowF.fpars.configureFormalParameters(document,[/*NTD*/]);
 
@@ -1358,11 +1358,11 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 
 	/** formats type argument section including outside border. */
 	def void formatTypeArguments(ParameterizedTypeRef semObject, extension IFormattableDocument document) {
-		if( semObject.typeArgs.isEmpty ) return;
+		if( semObject.declaredTypeArgs.isEmpty ) return;
 		// to "<":
 		semObject.regionFor.keyword("<").append[noSpace].prepend[noSpace; newLines=0; lowPriority];
 		semObject.regionFor.keyword(">").prepend[noSpace].append[noSpace; newLines=0; lowPriority];
-		for( typeArg: semObject.typeArgs ){
+		for( typeArg: semObject.declaredTypeArgs ){
 			typeArg.append[noSpace].immediatelyFollowing.keyword(",").append[oneSpace];
 			typeArg.format(document);
 		}

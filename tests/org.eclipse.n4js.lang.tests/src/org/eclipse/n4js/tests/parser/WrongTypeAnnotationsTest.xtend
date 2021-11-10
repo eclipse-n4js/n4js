@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.tests.parser
 
-import org.junit.Test
-import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.VariableStatement
+import org.junit.Test
 
 /**
  */
@@ -35,7 +35,7 @@ class WrongTypeAnnotationsTest extends AbstractParserTest {
 	 * ... foo(union{A,B} p) ...
 	 * </pre>
 	 * is a correct declaration with the old syntax. So no problems there.
-	 * Now with the colon seperated type annotations, the parser completely messes up:
+	 * Now with the colon separated type annotations, the parser completely messes up:
 	 * It interprets the code as follows:
 	 * <pre>
 	 * ... foo(union) { A,B } ...
@@ -73,9 +73,9 @@ class WrongTypeAnnotationsTest extends AbstractParserTest {
 		assertEquals('fun', varDecl.name)
 		assertNotNull(varDecl.expression)
 		val exprStmt = elements.last as ExpressionStatement
-		val identifierRef = exprStmt.expression as IdentifierRef
+		val expr = exprStmt.expression as ParameterizedPropertyAccessExpression
 		// this is really bad error recovery
-		assertEquals('sort', identifierRef.idAsText)
+		assertEquals('sort', expr.propertyAsText)
 	}
 	
 }

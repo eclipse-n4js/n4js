@@ -32,7 +32,7 @@ export external public class IntersectionObserver {
     public takeRecords(): Iterable<IntersectionObserverEntry> 
 }
 
-export external public interface IntersectionObserverEntry {
+export external public interface ~IntersectionObserverEntry {
     public time: number;
     public rootBounds: ClientRect;
     public boundingClientRect: ClientRect;

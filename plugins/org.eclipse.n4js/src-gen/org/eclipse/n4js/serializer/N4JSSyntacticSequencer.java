@@ -83,13 +83,25 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (ruleCall.getRule() == grammarAccess.getNO_LINE_TERMINATORRule())
+		if (ruleCall.getRule() == grammarAccess.getArrowRule())
+			return getArrowToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getNO_LINE_TERMINATORRule())
 			return getNO_LINE_TERMINATORToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getSemiRule())
 			return getSemiToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getTemplateExpressionEndRule())
 			return getTemplateExpressionEndToken(semanticObject, ruleCall, node);
 		return "";
+	}
+	
+	/**
+	 * Arrow hidden(): 	'=' '>'
+	 * ;
+	 */
+	protected String getArrowToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "= >";
 	}
 	
 	/**
@@ -393,8 +405,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
-	 *     declaredAsync?='async' (ambiguity) '(' ')' '=>' body=ExpressionDisguisedAsBlock
-	 *     declaredAsync?='async' (ambiguity) '(' ')' '=>' hasBracesAroundBody?='{'
+	 *     declaredAsync?='async' (ambiguity) '(' ')' Arrow body=ExpressionDisguisedAsBlock
+	 *     declaredAsync?='async' (ambiguity) '(' ')' Arrow hasBracesAroundBody?='{'
 	 *     declaredAsync?='async' (ambiguity) '(' fpars+=FormalParameter
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' (rule end)
@@ -451,8 +463,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '(' ')' '=>' returnTypeRef=PrimaryTypeExpression
-	 *     (rule start) (ambiguity) '(' typeArgs+=Wildcard
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) (ambiguity) '+'? astValue=BINARY_INT
 	 *     (rule start) (ambiguity) '+'? astValue=DOUBLE
 	 *     (rule start) (ambiguity) '+'? astValue=HEX_INT
@@ -480,10 +492,10 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) astValue=STRING
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
+	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
-	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
-	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -495,10 +507,10 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     '('+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '(' typeArgs+=Wildcard
-	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
-	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

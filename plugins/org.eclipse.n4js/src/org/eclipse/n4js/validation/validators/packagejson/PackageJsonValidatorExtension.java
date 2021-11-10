@@ -689,7 +689,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 					Optional.fromNullable(outputPathValue));
 		} else {
 			// otherwise, run check with default value for output folder
-			internalCheckOutput(OUTPUT.defaultValue, Optional.absent());
+			internalCheckOutput((String) OUTPUT.defaultValue, Optional.absent());
 		}
 	}
 

@@ -23,7 +23,7 @@ external class C {
 	const continue: any;
 	const finally: any;
 }
-external interface I {
+external interface ~I {
 	const break: any;
 	static case(): void {}
     static get null(): number {return 0;}

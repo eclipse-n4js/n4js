@@ -44,8 +44,8 @@ public class ScopeInfo implements IScope /* LEGACY SUPPORT */ {
 	}
 
 	/** Constructor */
-	public ScopeInfo(IScope scope, IScope legacyDelegte, IScopeValidator... validators) {
-		this(scope, validators == null ? Collections.emptyList() : List.of(validators), legacyDelegte);
+	public ScopeInfo(IScope scope, IScope legacyDelegate, IScopeValidator... validators) {
+		this(scope, validators == null ? Collections.emptyList() : List.of(validators), legacyDelegate);
 	}
 
 	/** Returns the scope */

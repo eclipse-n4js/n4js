@@ -30,7 +30,7 @@
 
 
 // XPECT errors --> "Polyfill for class Object must be a class, not an interface." at "Object"
-@Polyfill export external public interface Object extends Object {
+@Polyfill export external public interface ~Object extends Object {
 	additionalMethod();
 }
 

@@ -10,17 +10,9 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
-
 import org.eclipse.n4js.ts.types.BuiltInType;
-import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -48,46 +40,6 @@ public class BuiltInTypeImpl extends TypeImpl implements BuiltInType {
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.BUILT_IN_TYPE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<TypeVariable> getTypeVars() {
-		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == Type.class) {
-			switch (baseOperationID) {
-				case TypesPackage.TYPE___GET_TYPE_VARS: return TypesPackage.BUILT_IN_TYPE___GET_TYPE_VARS;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
-		return super.eDerivedOperationID(baseOperationID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case TypesPackage.BUILT_IN_TYPE___GET_TYPE_VARS:
-				return getTypeVars();
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 } //BuiltInTypeImpl

@@ -77,6 +77,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareHelper
@@ -189,7 +190,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRefInAST);
 		} else {
-			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.typeArgs, Optional.absent, false,
+			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.declaredTypeArgs, Optional.absent, false,
 				declaredType, paramTypeRefInAST, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
 		}
 		internalCheckDynamic(paramTypeRefInAST);
@@ -209,7 +210,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private void internalCheckValidTypeInTypeTypeRef(ParameterizedTypeRef paramTypeRefInAST) {
 		// IDE-785 uses ParamterizedTypeRefs in ClassifierTypeRefs. Currently Type Arguments are not supported in ClassifierTypeRefs, so
 		// we actively forbid them here. Will be loosened for IDE-1310
-		if (! paramTypeRefInAST.typeArgs.isEmpty) {
+		if (!paramTypeRefInAST.declaredTypeArgs.isEmpty) {
 			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF)
 		} else if (paramTypeRefInAST instanceof FunctionTypeRef) {
@@ -509,12 +510,27 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			internalCheckSuperfluousPropertiesInObjectLiteral(expectedTypeRef, expression);
 
 		} else if (expression instanceof ArrayLiteral) {
-			if (!expectedTypeRef.typeArgs.empty) {
-				val arrayElementType = expectedTypeRef.typeArgs.get(0);
-				val typeArgTypeRef = ts.upperBoundWithReopenAndResolveTypeVars(G, arrayElementType);
-				for (arrElem : expression.elements) {
-					val arrExpr = arrElem.expression;
-					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
+			val expectedElemTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
+			if (!expectedElemTypeRefs.empty) {
+				// we have Iterable, Array, IterableN, ArrayN or a subtype thereof
+				var cachedLastElementTypeRefUB = null as TypeRef;
+				val expectedElemTypeRefsCount = expectedElemTypeRefs.size;
+				val elems = expression.elements;
+				val elemsCount = elems.size;
+				for (var i = 0; i < elemsCount; i++) {
+					val currElemExpr = elems.get(i)?.expression;
+					val currExpectedElemTypeRefUB = if (i < expectedElemTypeRefsCount - 1) {
+						ts.upperBoundWithReopenAndResolveTypeVars(G, expectedElemTypeRefs.get(i))
+					} else {
+						if (cachedLastElementTypeRefUB === null) {
+							cachedLastElementTypeRefUB = ts.upperBoundWithReopenAndResolveTypeVars(G,
+								expectedElemTypeRefs.get(expectedElemTypeRefsCount - 1));
+						}
+						cachedLastElementTypeRefUB
+					};
+					if (currElemExpr !== null) {
+						internalCheckSuperfluousPropertiesInObjectLiteralRek(G, currExpectedElemTypeRefUB, currElemExpr);
+					}
 				}
 			}
 		}
@@ -815,7 +831,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 							val typeArgsPerVariable = 
 								extractNonStructTypeRefs(ptrs.map[
 									ptr|
-									val ta = ptr.typeArgs.get(vIndex);
+									val ta = ptr.declaredTypeArgs.get(vIndex);
 									var TypeRef upper;
 									if (ta instanceof TypeRef) {
 										upper = ta; 
@@ -833,7 +849,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						}
 						
 						// all type args use super:
-					} else if (ptrs.forall[ptr | ptr.typeArgs.forall(ta| ta instanceof Wildcard &&
+					} else if (ptrs.forall[ptr | ptr.declaredTypeArgs.forall(ta| ta instanceof Wildcard &&
 							(ta as Wildcard).declaredLowerBound !== null)]) {
 						// all common super types, at least Object, as type arg would work! no warning.
 					} else {
@@ -855,7 +871,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		for (var i=0; i<length; i++) {
 			if (! typeVars.get(i).declaredCovariant) {
 				for (TypeRef ref: refs) {
-					val ta = ref.typeArgs.get(i);
+					val ta = ref.declaredTypeArgs.get(i);
 					if (ta instanceof Wildcard) {
 						if (ta.declaredUpperBound===null) {
 							return false;
@@ -881,6 +897,96 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(message, tClassR, INTER_REDUNDANT_SUPERTYPE);
 		}
 	}
+
+	@Check
+	def void checkTypeParameters(GenericDeclaration genDecl) {
+		if (genDecl.typeVars.empty) {
+			return; // nothing to check
+		}
+		if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(genDecl, N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS)) {
+			return; // avoid duplicate error messages
+		}
+		if (holdsOptionalTypeParameterNotFollowedByMandatory(genDecl)) {
+			if (holdsDefaultArgumentsContainValidReferences(genDecl)) {
+				holdsDefaultArgumentsComplyToBounds(genDecl);
+			}
+		}
+	}
+
+	def private boolean holdsOptionalTypeParameterNotFollowedByMandatory(GenericDeclaration genDecl) {
+		var haveOptional = false;
+		for (n4TypeParam : genDecl.typeVars) {
+			if (haveOptional && !n4TypeParam.optional) {
+				val message = messageForTYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL;
+				addIssue(message, n4TypeParam, TypesPackage.eINSTANCE.identifiableElement_Name, TYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL);
+				return false;
+			}
+			haveOptional = haveOptional || n4TypeParam.optional;
+		}
+		return true;
+	}
+
+	/**
+	 * Currently this method only checks for forward references in default arguments (e.g. <code>G&lt;T1=T2,T2=any> {}</code>).
+	 * In the future, we might also check for cyclic default arguments.
+	 */
+	def private boolean holdsDefaultArgumentsContainValidReferences(GenericDeclaration genDecl) {
+		// find forward references to type parameters declared after the current type parameter
+		val badTypeVars = genDecl.typeVars.map[definedTypeVariable].filterNull.toSet;
+		if (badTypeVars.size < genDecl.typeVars.size) {
+			return true; // syntax error
+		}
+		val forwardReferences = <ParameterizedTypeRef>newArrayList;
+		for (n4TypeParam : genDecl.typeVars) {
+			val defaultArgInAST = n4TypeParam.declaredDefaultArgumentNode?.typeRefInAST;
+			if (defaultArgInAST !== null) {
+				TypeUtils.forAllTypeRefs(defaultArgInAST, ParameterizedTypeRef, true, false, null, [ptr|
+					val declType = ptr.declaredType;
+					if (declType instanceof TypeVariable && badTypeVars.contains(declType)) {
+						val isContainedInAST = EcoreUtil2.getContainerOfType(ptr, Script) !== null;
+						if (isContainedInAST) {
+							forwardReferences.add(ptr);
+						}
+					}
+					return true; // continue with traversal
+				], null);
+			}
+			// from now on, the current type variable may be referenced in the default argument of all following type variables:
+			badTypeVars.remove(n4TypeParam.definedTypeVariable);
+		}
+		// create error markers
+		if (!forwardReferences.empty) {
+			for (badRef : forwardReferences) {
+				val message = messageForTYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM;
+				addIssue(message, badRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, TYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM);
+			}
+			return false;
+		}
+		return true;
+	}
+
+	def private boolean holdsDefaultArgumentsComplyToBounds(GenericDeclaration genDecl) {
+		val G = genDecl.newRuleEnvironment;
+		var haveInvalidDefault = false;
+		for (n4TypeParam : genDecl.typeVars) {
+			if (n4TypeParam.name !== null) {
+				val defaultArgInAST = n4TypeParam.declaredDefaultArgumentNode?.typeRefInAST;
+				val defaultArg = n4TypeParam.declaredDefaultArgumentNode?.typeRef;
+				val ub = n4TypeParam.declaredUpperBound;
+				if (defaultArgInAST !== null && defaultArg !== null && ub !== null) {
+					val result = ts.subtype(G, defaultArg, ub);
+					if (result.failure) {
+						val message = getMessageForTYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND(n4TypeParam.name, result.compiledFailureMessage);
+						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE, TYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND);
+						haveInvalidDefault = true;
+					}
+				}
+			}
+		}
+		return !haveInvalidDefault;
+	}
+
+
 
 	def private List<TypeRef> extractNonStructTypeRefs(ComposedTypeRef ctr) {
 		val typeRefs = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);

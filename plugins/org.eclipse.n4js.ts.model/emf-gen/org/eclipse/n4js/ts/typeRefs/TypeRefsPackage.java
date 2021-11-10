@@ -314,13 +314,22 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 13;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 14;
+	int TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 14;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_ARGUMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -329,7 +338,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 15;
+	int TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
@@ -338,7 +347,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_ARGUMENT_OPERATION_COUNT + 16;
+	int TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_ARGUMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -347,7 +356,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 17;
+	int TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -356,7 +365,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 18;
+	int TYPE_REF___TO_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Is Top Type</em>' operation.
@@ -365,7 +374,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 19;
+	int TYPE_REF___IS_TOP_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Is Bottom Type</em>' operation.
@@ -374,7 +383,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 20;
+	int TYPE_REF___IS_BOTTOM_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -383,7 +392,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 21;
+	int TYPE_REF___GET_TYPING_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -392,7 +401,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 22;
+	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 23;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -401,7 +410,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 23;
+	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 24;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -410,7 +419,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 24;
+	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 25;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -419,7 +428,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 25;
+	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 26;
 
 	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
@@ -428,7 +437,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 26;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 27;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -603,13 +612,22 @@ public interface TypeRefsPackage extends EPackage {
 	int STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STATIC_BASE_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -892,13 +910,22 @@ public interface TypeRefsPackage extends EPackage {
 	int BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND = STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_TYPE_REF___GET_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS;
+	int BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -1190,13 +1217,22 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF___GET_DECLARED_LOWER_BOUND = STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF___GET_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS;
+	int COMPOSED_TYPE_REF___GET_DECLARED_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -1488,13 +1524,22 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION___GET_DECLARED_LOWER_BOUND = COMPOSED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_TYPE_EXPRESSION___GET_TYPE_ARGS = COMPOSED_TYPE_REF___GET_TYPE_ARGS;
+	int UNION_TYPE_EXPRESSION___GET_DECLARED_TYPE_ARGS = COMPOSED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___GET_TYPE_ARGS_WITH_DEFAULTS = COMPOSED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -1786,13 +1831,22 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___GET_DECLARED_LOWER_BOUND = COMPOSED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_ARGS = COMPOSED_TYPE_REF___GET_TYPE_ARGS;
+	int INTERSECTION_TYPE_EXPRESSION___GET_DECLARED_TYPE_ARGS = COMPOSED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_ARGS_WITH_DEFAULTS = COMPOSED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -2084,13 +2138,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND = BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF___GET_TYPE_ARGS = BASE_TYPE_REF___GET_TYPE_ARGS;
+	int THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS = BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -2382,13 +2445,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_LOWER_BOUND = THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_NOMINAL___GET_TYPE_ARGS = THIS_TYPE_REF___GET_TYPE_ARGS;
+	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_TYPE_ARGS = THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_ARGS_WITH_DEFAULTS = THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -2725,13 +2797,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_LOWER_BOUND = THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS = THIS_TYPE_REF___GET_TYPE_ARGS;
+	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE_ARGS = THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS_WITH_DEFAULTS = THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -3086,13 +3167,22 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND = THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_TYPE_ARGS = THIS_TYPE_REF___GET_TYPE_ARGS;
+	int BOUND_THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS = THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -3294,13 +3384,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = BASE_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
@@ -3456,13 +3546,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND = BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS = BASE_TYPE_REF___GET_TYPE_ARGS;
+	int PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE_ARGS = BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -3546,13 +3636,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = BASE_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 1;
+	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -3561,7 +3660,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -3570,7 +3669,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -3579,7 +3678,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3588,7 +3687,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3597,7 +3696,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref</em>' class.
@@ -3606,7 +3705,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StructuralTypeRefImpl <em>Structural Type Ref</em>}' class.
@@ -3764,13 +3863,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
@@ -3962,13 +4061,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -4032,6 +4131,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS_WITH_DEFAULTS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -4305,13 +4413,22 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int EXISTENTIAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -4612,13 +4729,22 @@ public interface TypeRefsPackage extends EPackage {
 	int UNKNOWN_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int UNKNOWN_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -4928,13 +5054,22 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_TYPE_REF___GET_DECLARED_LOWER_BOUND = BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_TYPE_REF___GET_TYPE_ARGS = BASE_TYPE_REF___GET_TYPE_ARGS;
+	int TYPE_TYPE_REF___GET_DECLARED_TYPE_ARGS = BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -5317,13 +5452,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_LOWER_BOUND = STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS;
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS_WITH_DEFAULTS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -5579,13 +5723,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
+	int FUNCTION_TYPE_REF__DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
@@ -5741,13 +5885,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
+	int FUNCTION_TYPE_REF___GET_DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -5829,6 +5973,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_REF___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -6201,13 +6354,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION___GET_DECLARED_LOWER_BOUND = FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_ARGS = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS;
+	int FUNCTION_TYPE_EXPRESSION___GET_DECLARED_TYPE_ARGS = FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_ARGS_WITH_DEFAULTS = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -6580,13 +6742,22 @@ public interface TypeRefsPackage extends EPackage {
 	int DEFERRED_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DEFERRED_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int DEFERRED_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -6924,13 +7095,22 @@ public interface TypeRefsPackage extends EPackage {
 	int LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LITERAL_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -7240,13 +7420,22 @@ public interface TypeRefsPackage extends EPackage {
 	int BOOLEAN_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_ARGS = LITERAL_TYPE_REF___GET_TYPE_ARGS;
+	int BOOLEAN_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -7565,13 +7754,22 @@ public interface TypeRefsPackage extends EPackage {
 	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_ARGS = LITERAL_TYPE_REF___GET_TYPE_ARGS;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -7881,13 +8079,22 @@ public interface TypeRefsPackage extends EPackage {
 	int STRING_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_LITERAL_TYPE_REF___GET_TYPE_ARGS = LITERAL_TYPE_REF___GET_TYPE_ARGS;
+	int STRING_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -8197,13 +8404,22 @@ public interface TypeRefsPackage extends EPackage {
 	int ENUM_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENUM_LITERAL_TYPE_REF___GET_TYPE_ARGS = LITERAL_TYPE_REF___GET_TYPE_ARGS;
+	int ENUM_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -8575,14 +8791,24 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getTypeRef__GetDeclaredLowerBound();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgs() <em>Get Type Args</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getDeclaredTypeArgs() <em>Get Declared Type Args</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Args</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgs()
+	 * @return the meta object for the '<em>Get Declared Type Args</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getDeclaredTypeArgs()
 	 * @generated
 	 */
-	EOperation getTypeRef__GetTypeArgs();
+	EOperation getTypeRef__GetDeclaredTypeArgs();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgsWithDefaults() <em>Get Type Args With Defaults</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Args With Defaults</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgsWithDefaults()
+	 * @generated
+	 */
+	EOperation getTypeRef__GetTypeArgsWithDefaults();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsString() <em>Get Type Ref As String</em>}' operation.
@@ -9082,15 +9308,15 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_DeclaredTypeAsText();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs <em>Declared Type Args</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Type Args</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs()
+	 * @return the meta object for the containment reference list '<em>Declared Type Args</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EReference getParameterizedTypeRef_TypeArgs();
+	EReference getParameterizedTypeRef_DeclaredTypeArgs();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}'.
@@ -9156,6 +9382,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getParameterizedTypeRef__GetTypingStrategy();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgsWithDefaults() <em>Get Type Args With Defaults</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Args With Defaults</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgsWithDefaults()
+	 * @generated
+	 */
+	EOperation getParameterizedTypeRef__GetTypeArgsWithDefaults();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
@@ -10361,12 +10597,20 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation TYPE_REF___GET_DECLARED_LOWER_BOUND = eINSTANCE.getTypeRef__GetDeclaredLowerBound();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Type Args</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Declared Type Args</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_REF___GET_TYPE_ARGS = eINSTANCE.getTypeRef__GetTypeArgs();
+		EOperation TYPE_REF___GET_DECLARED_TYPE_ARGS = eINSTANCE.getTypeRef__GetDeclaredTypeArgs();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Args With Defaults</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = eINSTANCE.getTypeRef__GetTypeArgsWithDefaults();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type Ref As String</b></em>' operation.
@@ -10781,12 +11025,12 @@ public interface TypeRefsPackage extends EPackage {
 		EAttribute PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = eINSTANCE.getParameterizedTypeRef_DeclaredTypeAsText();
 
 		/**
-		 * The meta object literal for the '<em><b>Type Args</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Declared Type Args</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PARAMETERIZED_TYPE_REF__TYPE_ARGS = eINSTANCE.getParameterizedTypeRef_TypeArgs();
+		EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS = eINSTANCE.getParameterizedTypeRef_DeclaredTypeArgs();
 
 		/**
 		 * The meta object literal for the '<em><b>Array Type Expression</b></em>' attribute feature.
@@ -10835,6 +11079,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = eINSTANCE.getParameterizedTypeRef__GetTypingStrategy();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Args With Defaults</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = eINSTANCE.getParameterizedTypeRef__GetTypeArgsWithDefaults();
 
 		/**
 		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.

@@ -306,4 +306,23 @@ public class InternalSemicolonInjectingParser extends InternalN4JSParser impleme
 		return findField.map(Field::getName).orElse("NN");
 	}
 
+	@Override
+	public Object match(IntStream is, int ttype, BitSet follow) throws RecognitionException {
+		LazyTokenStream lts = (LazyTokenStream) is;
+		Token token = lts.LT(1);
+
+		if (lts.forbidHiddenTokens && token != null
+				&& token.getChannel() == Token.HIDDEN_CHANNEL) {
+
+			Object matchedSymbol = getCurrentInputSymbol(input);
+			if (state.backtracking > 0) {
+				state.failed = true;
+				return matchedSymbol;
+			}
+			matchedSymbol = recoverFromMismatchedToken(input, ttype, follow);
+			return matchedSymbol;
+		}
+		return super.match(is, ttype, follow);
+	}
+
 }

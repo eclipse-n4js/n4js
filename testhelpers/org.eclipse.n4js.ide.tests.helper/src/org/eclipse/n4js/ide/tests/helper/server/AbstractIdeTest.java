@@ -14,7 +14,9 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -1489,7 +1491,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected List<Diagnostic> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
 		Stream<Diagnostic> issuesInFile = languageClient.getIssues(fileURI).stream();
 		if (!withIgnoredIssues) {
-			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode().getLeft()));
+			issuesInFile = issuesInFile.filter(
+					issue -> issue.getCode() == null || !getIgnoredIssueCodes().contains(issue.getCode().getLeft()));
 		}
 		return issuesInFile.collect(Collectors.toList());
 	}
@@ -1695,6 +1698,28 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				expectedOutput.toString().trim(), result.getStdOut().trim());
 		assertEquals("stderr was non-empty after running: " + fileToRun,
 				"", result.getErrOut().trim());
+	}
+
+	/** Asserts the workspace contains the given file. {@link #getFileURIFromModuleName(String)} */
+	protected void assertFile(String moduleName) {
+		try {
+			FileURI file = getFileURIFromModuleName(moduleName);
+			assertNotNull(file);
+		} catch (Exception e) {
+			fail();
+		}
+	}
+
+	/** Asserts the workspace does not contain the given file. {@link #getFileURIFromModuleName(String)} */
+	protected void assertNoFile(String moduleName) {
+		try {
+			getFileURIFromModuleName(moduleName);
+			fail();
+		} catch (IllegalStateException e) {
+			// pass
+		} catch (Exception e) {
+			fail();
+		}
 	}
 
 	/** Asserts the workspace contains the given project ids. */

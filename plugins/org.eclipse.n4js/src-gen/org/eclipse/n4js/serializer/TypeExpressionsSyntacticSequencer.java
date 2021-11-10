@@ -47,9 +47,20 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (ruleCall.getRule() == grammarAccess.getArrowRule())
+			return getArrowToken(semanticObject, ruleCall, node);
 		return "";
 	}
 	
+	/**
+	 * Arrow hidden(): 	'=' '>'
+	 * ;
+	 */
+	protected String getArrowToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "= >";
+	}
 	
 	@Override
 	protected void emitUnassignedTokens(EObject semanticObject, ISynTransition transition, INode fromNode, INode toNode) {
@@ -111,8 +122,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '(' ')' '=>' returnTypeRef=PrimaryTypeExpression
-	 *     (rule start) (ambiguity) '(' typeArgs+=Wildcard
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) (ambiguity) '+'? astValue=BINARY_INT
 	 *     (rule start) (ambiguity) '+'? astValue=DOUBLE
 	 *     (rule start) (ambiguity) '+'? astValue=HEX_INT
@@ -139,10 +150,10 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) astValue=STRING
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
+	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
-	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
-	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -154,10 +165,10 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     '('+
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '(' typeArgs+=Wildcard
-	 *     (rule start) (ambiguity) typeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
-	 *     (rule start) (ambiguity) {ParameterizedTypeRef.typeArgs+=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

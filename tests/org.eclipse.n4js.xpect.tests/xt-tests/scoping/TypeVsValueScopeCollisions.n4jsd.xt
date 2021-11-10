@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+// Hollows and variables: OK
+export external interface ~I1 {}
+// XPECT noerrors -->
+export external const I1 : string;
+
+export external type T1 = string;
+// XPECT noerrors -->
+export external const T1 : string;
+
+
+
+// Runtime-Representationless and variables: ERROR
+@StringBased
+export external enum ES1 { a }
+// XPECT errors --> "Variable ES1 duplicates enum ES1 (line 30)." at "ES1"
+export external const ES1 : string;
+
+@NumberBased
+export external enum EN1 { a }
+// XPECT errors --> "Variable EN1 duplicates enum EN1 (line 35)." at "EN1"
+export external const EN1 : string;
+
+
+
+// Hollows and classes: ERROR
+export external interface ~I2 {}
+// XPECT errors --> "Class I2 duplicates interface I2 (line 42)." at "I2"
+export external class I2 {}
+
+export external type T2 = string;
+// XPECT errors --> "Class T2 duplicates type alias T2 (line 46)." at "T2"
+export external class T2 {}
+
+
+
+// Hollows and Hollows: ERROR
+export external interface ~IT {}
+// XPECT errors --> "Type alias IT duplicates interface IT (line 53)." at "IT"
+export external type IT = string;
+
+
+
+// vars and classes: ERROR
+export external class C3 {}
+// XPECT errors --> "Variable C3 duplicates class C3 (line 60)." at "C3"
+export external const C3;

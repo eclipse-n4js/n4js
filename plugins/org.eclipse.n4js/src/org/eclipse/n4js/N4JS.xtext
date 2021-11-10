@@ -301,7 +301,7 @@ ArrowExpression <In, Yield> returns ArrowFunction:
 				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
 				| 	fpars+=BindingIdentifierAsFormalParameter<Yield>
 			)
-			/* no line terminator here, guaranteed implicitly */ '=>'
+			/* no line terminator here, guaranteed implicitly */ Arrow
 		)
 		(-> hasBracesAroundBody?='{' body=BlockMinusBraces<Yield> '}' | body=ExpressionDisguisedAsBlock<In>)
 ;
@@ -341,6 +341,9 @@ AnnotatedExpression <Yield> returns Expression:
 N4TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
 	name=IdentifierOrThis ('extends' declaredUpperBoundNode=TypeReferenceNode)?
+	// difference to optional formal parameters: we here do not allow the default to be omitted (e.g. "class C<T=> {}"),
+	// because this would lead to a tricky grammar due to the '=>' of arrow function type expressions
+	(declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode? )?
 ;
 
 FormalParameter <Yield>:
@@ -890,8 +893,9 @@ ShiftOperator returns ShiftOperator:
 RelationalExpression <In, Yield> returns Expression: ShiftExpression<Yield>
 	=>({RelationalExpression.lhs=current} op=RelationalOperator<In> ->rhs=ShiftExpression<Yield>)*;
 
-RelationalOperator <In> returns RelationalOperator:
-	'<' | '>' '='? | '<=' | 'instanceof' | <In> 'in';
+RelationalOperator <In> returns RelationalOperator hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens():
+	  '<'  | '>' '='? // hidden() will forbid whitespace between tokens '>' and '='
+	| '<=' | 'instanceof' | <In> 'in';
 
 	// Equality operators (11.9)
 EqualityExpression <In, Yield> returns Expression: RelationalExpression<In,Yield>

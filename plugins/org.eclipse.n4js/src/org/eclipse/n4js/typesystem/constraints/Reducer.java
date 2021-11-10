@@ -633,8 +633,12 @@ import com.google.common.collect.Sets;
 		// e.g., ⟨ Iterable3<int,string,int> :> Array<α> ⟩ should be reduced to ⟨ int >: α ⟩ and ⟨ string >: α ⟩
 		if ((variance == CO && isSpecialCaseOfArraySubtypeIterableN(left, right))
 				|| (variance == CONTRA && isSpecialCaseOfArraySubtypeIterableN(right, left))) {
-			final List<TypeArgument> typeArgsOfArray = variance == CO ? left.getTypeArgs() : right.getTypeArgs();
-			final List<TypeArgument> typeArgsOfIterableN = variance == CO ? right.getTypeArgs() : left.getTypeArgs();
+			// since the type parameters of Array and IterableN are non-optional, we
+			// can safely use 'declaredTypeArgs' instead of 'typeArgsWithDefaults':
+			final List<TypeArgument> typeArgsOfArray = variance == CO ? left.getDeclaredTypeArgs()
+					: right.getDeclaredTypeArgs();
+			final List<TypeArgument> typeArgsOfIterableN = variance == CO ? right.getDeclaredTypeArgs()
+					: left.getDeclaredTypeArgs();
 			final List<TypeVariable> typeParamsOfIterableN = variance == CO ? right.getDeclaredType().getTypeVars()
 					: left.getDeclaredType().getTypeVars();
 			final TypeArgument singleTypeArgOfArray = !typeArgsOfArray.isEmpty() ? typeArgsOfArray.get(0) : null;
@@ -705,7 +709,7 @@ import com.google.common.collect.Sets;
 		final RuleEnvironment Gx = RuleEnvironmentExtensions.newRuleEnvironment(G);
 		tsh.addSubstitutions(Gx, right);
 		final Type leftType = left.getDeclaredType();
-		final List<TypeArgument> leftArgs = left.getTypeArgs();
+		final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
 		final List<TypeVariable> leftParams = leftType.getTypeVars();
 		final int len = Math.min(leftArgs.size(), leftParams.size());
 		for (int idx = 0; idx < len; ++idx) {

@@ -24,7 +24,7 @@ N4JS_LIBS_REPRESENTATIVE="n4js-runtime"
 
 # the public npm registry (used to obtain the version number / commit ID of the latest published
 # version of the n4js-libs packages)
-NPM_REGISTRY="http://registry.npmjs.org"
+NPM_REGISTRY="https://registry.npmjs.org"
 
 # option -i of sed is incompatible between GNU and BSD unix, hence we provide
 # our own function for in-place modification of files:

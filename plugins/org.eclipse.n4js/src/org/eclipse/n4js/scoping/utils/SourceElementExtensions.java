@@ -41,6 +41,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -55,6 +56,9 @@ public class SourceElementExtensions {
 
 	@Inject
 	IResourceScopeCache cache;
+
+	@Inject
+	JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * Collects all elements visible from the given element. This will include the element itself, if it is either a
@@ -134,29 +138,34 @@ public class SourceElementExtensions {
 	private List<IdentifiableElement> doCollectVisibleIdentifiableElementsUncached(VariableEnvironmentElement start,
 			EObject element, boolean includeBlockScopedElements) {
 
-		List<IdentifiableElement> result = new ArrayList<>();
+		List<IdentifiableElement> validIEs = new ArrayList<>();
+		List<IdentifiableElement> invalidIEs = new ArrayList<>();
 		TreeIterator<EObject> allContents = element.eAllContents();
-		VEESwitch veeSwitch = new VEESwitch(start, includeBlockScopedElements, allContents, result);
+		VEESwitch veeSwitch = new VEESwitch(start, includeBlockScopedElements, allContents, validIEs, invalidIEs);
 		while (allContents.hasNext()) {
 			EObject next = allContents.next();
 			veeSwitch.doSwitch(next);
 		}
-		return result;
+		validIEs.addAll(invalidIEs);
+		return validIEs;
 	}
 
 	private class VEESwitch extends N4JSSwitch<Boolean> {
 		final VariableEnvironmentElement start;
 		final boolean includeBlockScopedElements;
 		final TreeIterator<EObject> allContents;
-		final List<? super IdentifiableElement> addHere;
+		final List<? super IdentifiableElement> validIEs;
+		final List<? super IdentifiableElement> invalidIEs;
 
 		VEESwitch(VariableEnvironmentElement start, boolean includeBlockScopedElements,
-				TreeIterator<EObject> allContents, List<? super IdentifiableElement> addHere) {
+				TreeIterator<EObject> allContents, List<? super IdentifiableElement> validIEs,
+				List<? super IdentifiableElement> invalidIEs) {
 
 			this.start = start;
 			this.includeBlockScopedElements = includeBlockScopedElements;
 			this.allContents = allContents;
-			this.addHere = addHere;
+			this.validIEs = validIEs;
+			this.invalidIEs = invalidIEs;
 		}
 
 		@Override
@@ -165,9 +174,9 @@ public class SourceElementExtensions {
 			Type polyfilledOrOriginalType = getTypeOrPolyfilledType(feature);
 			if (polyfilledOrOriginalType instanceof TClass) {
 				TClass polyfilledOrOriginalTypeCasted = (TClass) polyfilledOrOriginalType;
-				addHere.add(polyfilledOrOriginalTypeCasted);
+				validIEs.add(polyfilledOrOriginalTypeCasted);
 			} else {
-				collectVisibleTypedElement(nonNullClassDecl, addHere);
+				collectVisibleTypedElement(nonNullClassDecl, validIEs);
 			}
 
 			allContents.prune();
@@ -176,28 +185,28 @@ public class SourceElementExtensions {
 
 		@Override
 		public Boolean caseN4InterfaceDeclaration(N4InterfaceDeclaration feature) {
-			collectVisibleTypedElement(feature, addHere);
+			collectVisibleTypedElement(feature, invalidIEs); // shapes will be validated to errors in VeeScopeValidator
 			allContents.prune();
 			return true;
 		}
 
 		@Override
 		public Boolean caseN4EnumDeclaration(N4EnumDeclaration feature) {
-			collectVisibleTypedElement(feature, addHere);
+			collectVisibleTypedElement(feature, validIEs);
 			allContents.prune();
 			return true;
 		}
 
 		@Override
 		public Boolean caseN4TypeAliasDeclaration(N4TypeAliasDeclaration feature) {
-			collectVisibleTypedElement(feature, addHere);
+			collectVisibleTypedElement(feature, invalidIEs); // will be validated to errors in VeeScopeValidator
 			allContents.prune();
 			return true;
 		}
 
 		@Override
 		public Boolean caseFunctionDeclaration(FunctionDeclaration feature) {
-			collectVisibleTypedElement(feature, addHere);
+			collectVisibleTypedElement(feature, validIEs);
 			allContents.prune();
 			return true;
 		}
@@ -211,7 +220,7 @@ public class SourceElementExtensions {
 			// this special case is required (in addition to case for IdentifiableElement below), to make sure
 			// the TModule element is added to 'addHere', not the AST node (as is done for non-exported or
 			// non-top-level variables)
-			collectVisibleVariable(feature, addHere);
+			collectVisibleVariable(feature, validIEs);
 			allContents.prune();
 			return true;
 		}
@@ -227,12 +236,12 @@ public class SourceElementExtensions {
 			if (N4JSASTUtils.isBlockScoped(feature)) {
 				// let, const
 				if (includeBlockScopedElements) {
-					addHere.add(feature);
+					validIEs.add(feature);
 				}
 			} else {
 				// var
 				if (belongsToScope(feature, start)) {
-					addHere.add(feature);
+					validIEs.add(feature);
 				}
 			}
 			allContents.prune();
@@ -243,7 +252,7 @@ public class SourceElementExtensions {
 		public Boolean caseBlock(Block feature) {
 			// continue inside block, but without adding block-scoped elements
 			if (includeBlockScopedElements) {
-				addHere.addAll(doCollectVisibleIdentifiableElements(start, feature, false));
+				validIEs.addAll(doCollectVisibleIdentifiableElements(start, feature, false));
 				allContents.prune();
 			}
 			return true;
@@ -255,7 +264,7 @@ public class SourceElementExtensions {
 			// a new, nested variable environment starts at this point
 			// -> continue with children, but without adding block-scoped elements
 			if (includeBlockScopedElements) {
-				addHere.addAll(doCollectVisibleIdentifiableElements(start, feature, false));
+				validIEs.addAll(doCollectVisibleIdentifiableElements(start, feature, false));
 				allContents.prune();
 			}
 			return true;

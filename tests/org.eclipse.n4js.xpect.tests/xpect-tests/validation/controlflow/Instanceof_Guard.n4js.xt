@@ -132,7 +132,7 @@ function f11() {
 function f12() {
 	let a = 2;
 	if (a instanceof Number || a instanceof Object) {
-		// XPECT instanceofguard of 'a' -->
+		// XPECT instanceofguard of 'a' --> a<:Number|Object
 		a;
 	}
 }

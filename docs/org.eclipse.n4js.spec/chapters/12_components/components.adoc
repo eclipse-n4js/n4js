@@ -341,6 +341,13 @@ providedRuntimeLibraries::
 definesPackage::
   (string) The name of the package this component provides type definitions for. Only components of project type "definition" may declare this property.
 
+generator::
+  (object) Defines various properties of the n4js generator.
+source-maps:::
+  (boolean) Iff false, no source maps will be emitted.
+d.ts:::
+  (boolean) Iff true, TypeScript d.ts files will be created for all n4js files.
+
 
 All properties described above are optional. The following default values apply:
 
@@ -353,6 +360,8 @@ All properties described above are optional. The following default values apply:
 | mainModule  | "index"
 | output      | "."
 | sources     | a single source-container of type "source" with path "." (except for yarn workspace roots, see below)
+| source-maps | true
+| d.ts        | false
 |===
 
 All other properties are undefined if not given in the `package.json` file. The default source folder of "." does not

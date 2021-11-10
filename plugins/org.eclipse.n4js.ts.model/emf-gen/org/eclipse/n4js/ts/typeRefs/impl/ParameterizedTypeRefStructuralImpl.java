@@ -279,7 +279,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 		}
 		String _plus = (_typingStrategy + _rawTypeAsString);
 		String _xifexpression = null;
-		boolean _isEmpty = this.getTypeArgs().isEmpty();
+		boolean _isEmpty = this.getDeclaredTypeArgs().isEmpty();
 		if (_isEmpty) {
 			_xifexpression = "";
 		}
@@ -289,7 +289,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 					return it.getTypeRefAsString();
 				}
 			};
-			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getTypeArgs(), _function), ",");
+			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getDeclaredTypeArgs(), _function), ",");
 			String _plus_1 = ("<" + _join);
 			_xifexpression = (_plus_1 + ">");
 		}

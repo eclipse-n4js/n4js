@@ -210,14 +210,14 @@ public class TypeUtils {
 		}
 		ref.setDefinedTypingStrategy(typingStrategy);
 		ref.setDeclaredType(declaredType);
-		final EList<TypeArgument> refTypeArgs = ref.getTypeArgs();
+		final EList<TypeArgument> refDeclTypeArgs = ref.getDeclaredTypeArgs();
 		for (TypeArgument typeArg : typeArgs) {
 			if (typeArg != null) {
-				refTypeArgs.add(TypeUtils.copyIfContained(typeArg));
+				refDeclTypeArgs.add(TypeUtils.copyIfContained(typeArg));
 			} else {
 				// 'null' here is invalid (most likely caused by a syntax error) and EMF would throw an exception;
 				// to keep indices of any following type arguments valid, we create and add an UnknownTypeRef:
-				refTypeArgs.add(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
+				refDeclTypeArgs.add(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
 			}
 		}
 		if (autoCreateTypeArgs) {
@@ -305,7 +305,7 @@ public class TypeUtils {
 			FunctionTypeRef ref = TypeRefsFactory.eINSTANCE.createFunctionTypeRef();
 			ref.setDeclaredType(declaredType);
 			for (TypeArgument typeArg : typeArgs) {
-				ref.getTypeArgs().add(TypeUtils.copyIfContained(typeArg));
+				ref.getDeclaredTypeArgs().add(TypeUtils.copyIfContained(typeArg));
 			}
 			typeRef = ref;
 		} else if (declaredType instanceof TClassifier) {
@@ -547,7 +547,7 @@ public class TypeUtils {
 		if (boundThisTypeRef.getActualThisTypeRef() == null) {
 			throw new NullPointerException("Actual this type of the provided bound this type must not be null!");
 		}
-		final List<TypeArgument> targsAsList = boundThisTypeRef.getActualThisTypeRef().getTypeArgs();
+		final List<TypeArgument> targsAsList = boundThisTypeRef.getActualThisTypeRef().getDeclaredTypeArgs();
 		final TypeArgument[] targs = targsAsList.toArray(new TypeArgument[targsAsList.size()]);
 		final ParameterizedTypeRef resolvedTypeRef = createTypeRef(
 				boundThisTypeRef.getActualThisTypeRef().getDeclaredType(),
@@ -1331,14 +1331,10 @@ public class TypeUtils {
 
 	/**
 	 * Returns true iff the given type reference is "raw", i.e. if it points to a generic type and has fewer type
-	 * arguments than the generic type has type parameters.
+	 * arguments than the generic type has mandatory(!) type parameters.
 	 */
 	public static boolean isRawTypeRef(TypeRef typeRef) {
-		if (typeRef instanceof ParameterizedTypeRef) {
-			final Type declType = typeRef.getDeclaredType();
-			return declType != null && declType.getTypeVars().size() > typeRef.getTypeArgs().size();
-		}
-		return false;
+		return typeRef.isRaw();
 	}
 
 	/**
@@ -1351,7 +1347,7 @@ public class TypeUtils {
 			if (type != null) {
 				final int n = type.getTypeVars().size();
 				if (n > 0) {
-					final List<TypeArgument> l = typeRef.getTypeArgs();
+					final List<TypeArgument> l = typeRef.getDeclaredTypeArgs();
 					while (l.size() < n) {
 						l.add(TypeRefsFactory.eINSTANCE.createWildcard());
 					}

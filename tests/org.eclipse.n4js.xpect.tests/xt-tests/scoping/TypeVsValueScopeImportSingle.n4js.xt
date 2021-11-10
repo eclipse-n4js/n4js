@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   
+
+	Workspace {
+		JavaProject "N4JSXpectTests" {
+			Folder "model" {
+				ThisFile {}
+				File "TypeVsValueScopeExportSingle.n4jsd" {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+   
+   
+   END_SETUP
+ */
+
+
+import {I1, T1, K1} from "TypeVsValueScopeExportSingle"
+
+// use imported elements
+// XPECT noerrors -->
+let i1 : I1;
+// XPECT noerrors -->
+let t1 : T1;
+// XPECT noerrors -->
+let k1 = K1;
+
+
+// define non-collisioning elements
+// XPECT errors --> "Variable I1 duplicates named import I1 (line 30)." at "I1"
+// XPECT warnings --> "Variable names should start with lower case letter." at "I1"
+let I1 = 0;
+// XPECT errors --> "Variable T1 duplicates named import T1 (line 30)." at "T1"
+// XPECT warnings --> "Variable names should start with lower case letter." at "T1"
+let T1 = "e";
+// XPECT errors --> "Type alias K1 duplicates named import K1 (line 30)." at "K1"
+type K1 = number;
+
+
+// use non-collisioning elements
+// XPECT noerrors -->
+let ii1 = I1;
+// XPECT noerrors -->
+let tt1 = T1;
+// XPECT noerrors -->
+let kk1 : K1;

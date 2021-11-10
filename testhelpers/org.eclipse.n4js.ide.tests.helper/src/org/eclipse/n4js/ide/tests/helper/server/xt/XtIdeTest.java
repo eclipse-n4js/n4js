@@ -288,7 +288,6 @@ public class XtIdeTest extends AbstractIdeTest {
 			succs(testMethodData);
 			break;
 		// unsupported test methods
-		case "migration":
 		case "typeSwitch":
 		case "typeSwitchTypeRef":
 		case "version":

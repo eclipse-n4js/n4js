@@ -186,7 +186,7 @@ class TypeUtilsTest {
 		val cpy2 = TypeUtils.copy(paramTypeRef);
 
 		// make sure we can obtain the implicit upper bound from the parent's child wildcard
-		val copiedWildcardInCpy2 = cpy2.typeArgs.get(0) as Wildcard;
+		val copiedWildcardInCpy2 = cpy2.declaredTypeArgs.get(0) as Wildcard;
 		assertEquals(
 			expectedImplicitUpperBoundOfLastWildcard,
 			copiedWildcardInCpy2.declaredOrImplicitUpperBound?.typeRefAsString);

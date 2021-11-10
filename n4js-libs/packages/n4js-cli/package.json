@@ -8,7 +8,6 @@
   "description": "N4JS compiler and command line tools.",
   "scripts": {
     "postinstall": "node -r esm ./npm-postinstall.js",
-    "build": "./npm-build.sh",
     "test": "mocha -r esm tests"
   },
   "main": "src-gen/index.js",

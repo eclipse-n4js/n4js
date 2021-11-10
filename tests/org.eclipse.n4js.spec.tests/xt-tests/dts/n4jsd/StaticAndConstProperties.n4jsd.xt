@@ -23,7 +23,7 @@ external class C {
     static get g(): number;
     static set s(v: number);
 }
-external interface I {
+external interface ~I {
 	static field1: any;
 	const field2: any;
 	static f(): void {}

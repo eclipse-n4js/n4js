@@ -406,6 +406,7 @@ class TypeVariable extends Type {
 	boolean declaredCovariant
 	boolean declaredContravariant
 	contains TypeRef declaredUpperBound
+	contains TypeRef defaultArgument
 
 	/*
 	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns
@@ -422,16 +423,18 @@ class TypeVariable extends Type {
 			return Variance.INV;
 		}
 	}
-	op TypeVariable[] getTypeVars() {
-		return emptyEList();
+	op boolean isOptional() {
+		return defaultArgument !== null;
 	}
+
 	op String getTypeAsString() {
 		return getTypeVariableAsString(declaredUpperBound);
 	}
 	op String getTypeVariableAsString(TypeRef upperBound) {
 		return (if(declaredCovariant) "out " else if(declaredContravariant) "in " else "")
 			+ name
-			+ (if (upperBound!==null) " extends " + upperBound.typeRefAsString else "");
+			+ (if (upperBound!==null) " extends " + upperBound.typeRefAsString else "")
+			+ (if (defaultArgument!==null) " = " + defaultArgument.typeRefAsString else "");
 	}
 }
 
@@ -838,12 +841,7 @@ class PrimitiveType extends GenericType, ArrayLike {
 }
 
 // SZ: update documentation below, maybe ContainerType?
-class BuiltInType extends Type {
-
-	op TypeVariable[] getTypeVars() {
-		return emptyEList();
-	}
-}
+class BuiltInType extends Type {}
 
 class AnyType extends BuiltInType {
 	/**
@@ -1564,10 +1562,6 @@ class TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement {
 
 	boolean external
 	contains TEnumLiteral[] literals
-	
-	op TypeVariable[] getTypeVars() {
-		return emptyEList();
-	}
 }
 
 /*

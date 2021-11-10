@@ -1210,13 +1210,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Default Argument</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE__DEFAULT_ARGUMENT = TYPE_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Type Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 3;
+	int TYPE_VARIABLE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -1327,6 +1336,15 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE___IS_GENERIC = TYPE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1354,13 +1372,13 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE___GET_VARIANCE = TYPE_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * The operation id for the '<em>Is Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_VARIABLE___GET_TYPE_VARS = TYPE_OPERATION_COUNT + 1;
+	int TYPE_VARIABLE___IS_OPTIONAL = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -1452,6 +1470,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int INFERENCE_VARIABLE__DECLARED_UPPER_BOUND = TYPE_VARIABLE__DECLARED_UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Default Argument</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE__DEFAULT_ARGUMENT = TYPE_VARIABLE__DEFAULT_ARGUMENT;
 
 	/**
 	 * The number of structural features of the '<em>Inference Variable</em>' class.
@@ -1571,6 +1598,15 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___IS_GENERIC = TYPE_VARIABLE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___GET_TYPE_VARS = TYPE_VARIABLE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1598,13 +1634,13 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___GET_VARIANCE = TYPE_VARIABLE___GET_VARIANCE;
 
 	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * The operation id for the '<em>Is Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INFERENCE_VARIABLE___GET_TYPE_VARS = TYPE_VARIABLE___GET_TYPE_VARS;
+	int INFERENCE_VARIABLE___IS_OPTIONAL = TYPE_VARIABLE___IS_OPTIONAL;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -3144,6 +3180,15 @@ public interface TypesPackage extends EPackage {
 	int BUILT_IN_TYPE___IS_GENERIC = TYPE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3171,22 +3216,13 @@ public interface TypesPackage extends EPackage {
 	int BUILT_IN_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BUILT_IN_TYPE___GET_TYPE_VARS = TYPE_OPERATION_COUNT + 0;
-
-	/**
 	 * The number of operations of the '<em>Built In Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BUILT_IN_TYPE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 1;
+	int BUILT_IN_TYPE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AnyTypeImpl <em>Any Type</em>}' class.
@@ -3334,6 +3370,15 @@ public interface TypesPackage extends EPackage {
 	int ANY_TYPE___IS_GENERIC = BUILT_IN_TYPE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3359,15 +3404,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANY_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ANY_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -3542,6 +3578,15 @@ public interface TypesPackage extends EPackage {
 	int UNDEFINED_TYPE___IS_GENERIC = BUILT_IN_TYPE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3567,15 +3612,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNDEFINED_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNDEFINED_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The number of operations of the '<em>Undefined Type</em>' class.
@@ -3741,6 +3777,15 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___IS_GENERIC = BUILT_IN_TYPE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3766,15 +3811,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int NULL_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NULL_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The number of operations of the '<em>Null Type</em>' class.
@@ -3940,6 +3976,15 @@ public interface TypesPackage extends EPackage {
 	int VOID_TYPE___IS_GENERIC = BUILT_IN_TYPE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3965,15 +4010,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VOID_TYPE___GET_TYPE_VARS = BUILT_IN_TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The number of operations of the '<em>Void Type</em>' class.
@@ -10864,6 +10900,15 @@ public interface TypesPackage extends EPackage {
 	int TENUM___IS_GENERIC = TYPE___IS_GENERIC;
 
 	/**
+	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
+
+	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10918,22 +10963,13 @@ public interface TypesPackage extends EPackage {
 	int TENUM___IS_EXPORTED = TYPE_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM___GET_TYPE_VARS = TYPE_OPERATION_COUNT + 3;
-
-	/**
 	 * The number of operations of the '<em>TEnum</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
+	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl <em>TEnum Literal</em>}' class.
@@ -12209,6 +12245,17 @@ public interface TypesPackage extends EPackage {
 	EReference getTypeVariable_DeclaredUpperBound();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TypeVariable#getDefaultArgument <em>Default Argument</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Default Argument</em>'.
+	 * @see org.eclipse.n4js.ts.types.TypeVariable#getDefaultArgument()
+	 * @see #getTypeVariable()
+	 * @generated
+	 */
+	EReference getTypeVariable_DefaultArgument();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeVariable#getVariance() <em>Get Variance</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12219,14 +12266,14 @@ public interface TypesPackage extends EPackage {
 	EOperation getTypeVariable__GetVariance();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeVariable#getTypeVars() <em>Get Type Vars</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeVariable#isOptional() <em>Is Optional</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Vars</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TypeVariable#getTypeVars()
+	 * @return the meta object for the '<em>Is Optional</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TypeVariable#isOptional()
 	 * @generated
 	 */
-	EOperation getTypeVariable__GetTypeVars();
+	EOperation getTypeVariable__IsOptional();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeVariable#getTypeAsString() <em>Get Type As String</em>}' operation.
@@ -12805,16 +12852,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getBuiltInType();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.BuiltInType#getTypeVars() <em>Get Type Vars</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Vars</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.BuiltInType#getTypeVars()
-	 * @generated
-	 */
-	EOperation getBuiltInType__GetTypeVars();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.AnyType <em>Any Type</em>}'.
@@ -14165,16 +14202,6 @@ public interface TypesPackage extends EPackage {
 	EReference getTEnum_Literals();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TEnum#getTypeVars() <em>Get Type Vars</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Vars</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TEnum#getTypeVars()
-	 * @generated
-	 */
-	EOperation getTEnum__GetTypeVars();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TEnumLiteral <em>TEnum Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14962,6 +14989,14 @@ public interface TypesPackage extends EPackage {
 		EReference TYPE_VARIABLE__DECLARED_UPPER_BOUND = eINSTANCE.getTypeVariable_DeclaredUpperBound();
 
 		/**
+		 * The meta object literal for the '<em><b>Default Argument</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TYPE_VARIABLE__DEFAULT_ARGUMENT = eINSTANCE.getTypeVariable_DefaultArgument();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Variance</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -14970,12 +15005,12 @@ public interface TypesPackage extends EPackage {
 		EOperation TYPE_VARIABLE___GET_VARIANCE = eINSTANCE.getTypeVariable__GetVariance();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Type Vars</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Optional</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_VARIABLE___GET_TYPE_VARS = eINSTANCE.getTypeVariable__GetTypeVars();
+		EOperation TYPE_VARIABLE___IS_OPTIONAL = eINSTANCE.getTypeVariable__IsOptional();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type As String</b></em>' operation.
@@ -15442,14 +15477,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass BUILT_IN_TYPE = eINSTANCE.getBuiltInType();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Type Vars</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation BUILT_IN_TYPE___GET_TYPE_VARS = eINSTANCE.getBuiltInType__GetTypeVars();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.AnyTypeImpl <em>Any Type</em>}' class.
@@ -16548,14 +16575,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TENUM__LITERALS = eINSTANCE.getTEnum_Literals();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Type Vars</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TENUM___GET_TYPE_VARS = eINSTANCE.getTEnum__GetTypeVars();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl <em>TEnum Literal</em>}' class.

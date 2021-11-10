@@ -16,11 +16,16 @@ import java.util.List;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
+import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.collect.Iterables;
@@ -41,6 +46,9 @@ public class TopLevelElementsCollector {
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker;
 
+	@Inject
+	private JavaScriptVariantHelper variantHelper;
+
 	/**
 	 * Returns an iterable of all top-level elements of the given module, given that they are accessed from the given
 	 * context resource.
@@ -50,31 +58,40 @@ public class TopLevelElementsCollector {
 	 * @param contextResource
 	 *            The context resource
 	 */
-	public Iterable<IEObjectDescription> getTopLevelElements(TModule module, Resource contextResource) {
+	public Iterable<IEObjectDescription> getTopLevelElements(TModule module, Resource contextResource,
+			boolean includeHollows, boolean includeVariables) {
+
 		List<IEObjectDescription> visible = new ArrayList<>();
 		List<IEObjectDescription> invisible = new ArrayList<>();
 
-		module.getTopLevelTypes().forEach(it -> {
-			TypeVisibility typeVisiblity = typeVisibilityChecker.isVisible(contextResource, it);
-			if (typeVisiblity.visibility) {
-				visible.add(createObjectDescription(it));
+		for (Type type : module.getTopLevelTypes()) {
+			boolean include = includeHollows || !N4JSLanguageUtils.isHollowElement(type, variantHelper);
+			if (include) {
+				TypeVisibility typeVisiblity = typeVisibilityChecker.isVisible(contextResource, type);
+				if (typeVisiblity.visibility) {
+					visible.add(createObjectDescription(type));
+				} else {
+					invisible.add(
+							new InvisibleTypeOrVariableDescription(createObjectDescription(type),
+									typeVisiblity.accessModifierSuggestion));
+				}
 			} else {
-				invisible.add(
-						new InvisibleTypeOrVariableDescription(createObjectDescription(it),
-								typeVisiblity.accessModifierSuggestion));
+				invisible.add(new HollowTypeOrValueDescription(createObjectDescription(type), "type"));
 			}
-		});
+		}
 
-		module.getVariables().forEach(it -> {
-			TypeVisibility typeVisiblity = variableVisibilityChecker.isVisible(contextResource, it);
-			if (typeVisiblity.visibility) {
-				visible.add(createObjectDescription(it));
-			} else {
-				invisible.add(
-						new InvisibleTypeOrVariableDescription(createObjectDescription(it),
-								typeVisiblity.accessModifierSuggestion));
+		if (includeVariables) {
+			for (TVariable var : module.getVariables()) {
+				TypeVisibility typeVisiblity = variableVisibilityChecker.isVisible(contextResource, var);
+				if (typeVisiblity.visibility) {
+					visible.add(createObjectDescription(var));
+				} else {
+					invisible.add(
+							new InvisibleTypeOrVariableDescription(createObjectDescription(var),
+									typeVisiblity.accessModifierSuggestion));
+				}
 			}
-		});
+		}
 
 		return Iterables.concat(visible, invisible);
 	}

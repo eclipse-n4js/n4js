@@ -239,7 +239,7 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 		}
 		final EObject parent = this.eContainer();
 		if ((parent instanceof ParameterizedTypeRef)) {
-			final int typeArgIndex = ((ParameterizedTypeRef)parent).getTypeArgs().indexOf(this);
+			final int typeArgIndex = ((ParameterizedTypeRef)parent).getDeclaredTypeArgs().indexOf(this);
 			if ((typeArgIndex >= 0)) {
 				final Object declType = ((ParameterizedTypeRef)parent).eGet(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(), false);
 				if ((declType instanceof ContainerType<?>)) {
