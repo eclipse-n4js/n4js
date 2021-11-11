@@ -51,4 +51,4 @@ docker run -d -it --rm \
 
 # populate verdaccio: publish n4js-libs into verdaccio after starting it
 # (use dist-tag "latest" to make sure tests will install this version by default)
-./releng/utils/scripts/publish-n4js-libs.sh local 0.0.1 latest
+../releng/utils/scripts/publish-n4js-libs.sh local 0.0.1 latest
