@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli.frontend.tests;
+package org.eclipse.n4js.integration.tests.cli.frontend;
 
 import org.eclipse.n4js.cli.helper.AbstractCliTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
