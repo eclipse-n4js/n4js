@@ -23,12 +23,14 @@ import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscMain;
+import org.eclipse.n4js.cli.N4jscTestOptions;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.CliTools.CliException;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 
 /**
@@ -101,7 +103,12 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 
 			cliTools.yarnInstall(n4jsLibsRootPath);
 
-			cliTools.callN4jscInprocess(COMPILE(n4jsLibsRootPath.toFile()), false, compileResult);
+			// we want '--clean' but *not* '--noPersist'
+			N4jscTestOptions options = COMPILE(false, n4jsLibsRootPath.toFile()).clean();
+			Preconditions.checkState(options.isClean());
+			Preconditions.checkState(!options.isNoPersist());
+
+			cliTools.callN4jscInprocess(options, false, compileResult);
 
 		} catch (CliException e) {
 			if (compileResult.getException() != null) {
