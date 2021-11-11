@@ -23,7 +23,7 @@ VERDACCIO_CONFIG_FILE="${REPO_ROOT_DIR}/releng/org.eclipse.n4js.libs.build/verda
 
 
 # start verdaccio
-docker rm -f n4js-test-verdaccio
+docker rm -f n4js-test-verdaccio || true
 docker run -d -it --rm \
 	--name n4js-test-verdaccio \
 	-p 4873:4873 \

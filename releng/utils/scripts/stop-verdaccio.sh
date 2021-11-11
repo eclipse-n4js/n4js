@@ -22,4 +22,4 @@ REPO_ROOT_DIR=`pwd -P`
 
 
 # stop verdaccio
-docker rm -f n4js-test-verdaccio
+docker rm -f n4js-test-verdaccio || true
