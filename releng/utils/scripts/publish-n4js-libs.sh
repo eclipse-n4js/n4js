@@ -82,14 +82,6 @@ if [ ! -f "./packages/n4js-runtime/.n4js.projectstate" ]; then
     echo "ERROR: n4js-libs must have been compiled before running this script!"
     exit 1
 fi
-if [ ! -f "./packages/n4js-cli/bin/n4jsc.jar" ]; then
-    echo "ERROR: n4jsc.jar missing from n4js-cli/bin!"
-    exit 1
-fi
-if ! cmp -s "../target/n4jsc.jar" "./packages/n4js-cli/bin/n4jsc.jar"; then
-    echo "ERROR: 'n4js-cli/bin/n4jsc.jar' is different from 'target/n4jsc.jar'!"
-    exit 1
-fi
 # check NPM_TOKEN
 if [ "$DESTINATION" != "local" ]; then
     if [ -z "$NPM_TOKEN" ]; then
