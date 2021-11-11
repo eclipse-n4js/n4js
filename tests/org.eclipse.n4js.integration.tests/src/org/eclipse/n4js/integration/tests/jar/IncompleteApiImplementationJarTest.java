@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.jar;
+package org.eclipse.n4js.integration.tests.jar;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertEquals;
@@ -32,7 +32,7 @@ public class IncompleteApiImplementationJarTest extends AbstractCliJarTest {
 
 	/***/
 	public IncompleteApiImplementationJarTest() {
-		super("IncompleteApiImplementationJarTest");
+		super("probands/IncompleteApiImplementation");
 	}
 
 	/**

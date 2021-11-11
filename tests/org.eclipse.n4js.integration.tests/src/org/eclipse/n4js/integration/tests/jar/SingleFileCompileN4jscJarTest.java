@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.jar;
+package org.eclipse.n4js.integration.tests.jar;
 
 import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
@@ -34,7 +34,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractCliJarTest {
 
 	/***/
 	public SingleFileCompileN4jscJarTest() {
-		super("fixture");
+		super("probands/SingleFileCompile");
 	}
 
 	/** Test help command */

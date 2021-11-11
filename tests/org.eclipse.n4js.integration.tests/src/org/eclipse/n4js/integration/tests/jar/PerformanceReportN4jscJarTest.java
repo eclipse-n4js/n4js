@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.jar;
+package org.eclipse.n4js.integration.tests.jar;
 
 import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
@@ -47,7 +47,7 @@ public class PerformanceReportN4jscJarTest extends AbstractCliJarTest {
 
 	/** Initializes test workspace data. */
 	public PerformanceReportN4jscJarTest() {
-		super("probands/GH-1062", false);
+		super("probands/PerformanceReport", false);
 	}
 
 	/** Clean report file */
