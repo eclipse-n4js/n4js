@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.eclipse.n4js.ide.tests.jar</name>
+	<name>org.eclipse.n4js.integration.tests</name>
 	<comment></comment>
 	<projects>
 	</projects>

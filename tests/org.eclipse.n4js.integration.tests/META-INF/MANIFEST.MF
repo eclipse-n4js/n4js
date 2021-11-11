@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
-Bundle-SymbolicName: org.eclipse.n4js.ide.tests.jar
+Bundle-SymbolicName: org.eclipse.n4js.integration.tests
 Export-Package: org.eclipse.n4js.ide.tests.jar
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.utils,
@@ -17,4 +17,4 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.cli.tests.helper,
  org.eclipse.n4js.smith
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Automatic-Module-Name: org.eclipse.n4js.ide.tests.jar
+Automatic-Module-Name: org.eclipse.n4js.integration.tests

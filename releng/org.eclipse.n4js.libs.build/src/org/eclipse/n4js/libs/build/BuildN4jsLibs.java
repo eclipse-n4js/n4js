@@ -111,7 +111,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 				// this happens when there are compile errors in the n4js-libs
 				// --> the below code would emit the entire output of n4jsc several times leading to excessive output
 				// (also, the compile errors were already reported by n4jsc to the console), so we exit early in this
-				// case:
+				// case to suppress further error reporting:
 				throw new RuntimeException("Errors while compiling n4js-libs");
 
 			} else {
