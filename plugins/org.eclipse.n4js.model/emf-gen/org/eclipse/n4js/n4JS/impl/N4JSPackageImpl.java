@@ -145,6 +145,7 @@ import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
@@ -152,6 +153,7 @@ import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
@@ -1259,6 +1261,20 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass n4ClassDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass n4NamespaceDeclarationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass namespaceElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6462,6 +6478,56 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getN4NamespaceDeclaration() {
+		return n4NamespaceDeclarationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getN4NamespaceDeclaration_Name() {
+		return (EAttribute)n4NamespaceDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getN4NamespaceDeclaration_OwnedElementsRaw() {
+		return (EReference)n4NamespaceDeclarationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4NamespaceDeclaration__IsExternal() {
+		return n4NamespaceDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getNamespaceElement() {
+		return namespaceElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getN4ClassDeclaration() {
 		return n4ClassDeclarationEClass;
 	}
@@ -8280,6 +8346,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4ClassDefinitionEClass, N4_CLASS_DEFINITION___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(n4ClassDefinitionEClass, N4_CLASS_DEFINITION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
 
+		n4NamespaceDeclarationEClass = createEClass(N4_NAMESPACE_DECLARATION);
+		createEAttribute(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION__NAME);
+		createEReference(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
+		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_EXTERNAL);
+
+		namespaceElementEClass = createEClass(NAMESPACE_ELEMENT);
+
 		n4ClassDeclarationEClass = createEClass(N4_CLASS_DECLARATION);
 		createEOperation(n4ClassDeclarationEClass, N4_CLASS_DECLARATION___IS_ABSTRACT);
 
@@ -8668,6 +8741,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4ClassifierDefinitionEClass.getESuperTypes().add(this.getN4TypeDefinition());
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getN4ClassifierDefinition());
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getThisTarget());
+		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getN4TypeDefinition());
+		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getScriptElement());
+		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
+		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getExportableElement());
+		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getNamedElement());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassDefinition());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassifierDeclaration());
 		n4ClassExpressionEClass.getESuperTypes().add(this.getN4ClassDefinition());
@@ -9526,6 +9604,14 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getN4ClassDefinition__GetSuperClassifierRefs(), this.getParameterizedTypeRefNodeIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefNodeIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(n4NamespaceDeclarationEClass, N4NamespaceDeclaration.class, "N4NamespaceDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getN4NamespaceDeclaration_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4NamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getN4NamespaceDeclaration_OwnedElementsRaw(), this.getScriptElement(), null, "ownedElementsRaw", null, 0, -1, N4NamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getN4NamespaceDeclaration__IsExternal(), theEcorePackage.getEBoolean(), "isExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(namespaceElementEClass, NamespaceElement.class, "NamespaceElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(n4ClassDeclarationEClass, N4ClassDeclaration.class, "N4ClassDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

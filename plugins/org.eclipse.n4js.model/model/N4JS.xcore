@@ -2130,6 +2130,23 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	}
 }
 
+
+class N4NamespaceDeclaration extends N4TypeDefinition, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
+	String name
+	contains ScriptElement[] ownedElementsRaw
+	
+	/**
+	 * Returns true if type is declared as external.
+	 */
+	op boolean isExternal() {
+		declaredModifiers.contains(N4Modifier.EXTERNAL)
+	}
+}
+
+class NamespaceElement {
+	
+}
+
 class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
 	/**
 	 * Returns true if the class is declared as abstract.

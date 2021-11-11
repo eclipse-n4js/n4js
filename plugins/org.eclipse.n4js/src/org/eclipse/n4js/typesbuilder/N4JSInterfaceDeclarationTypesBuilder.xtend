@@ -11,6 +11,7 @@
 package org.eclipse.n4js.typesbuilder
 
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
@@ -29,7 +30,7 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		return true;
 	}
 
-	def protected TInterface createTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase) {
+	def protected TInterface createTInterface(N4InterfaceDeclaration n4Interface, AbstractNamespace target, boolean preLinkingPhase) {
 		if (n4Interface.name === null) {
 			return null;
 		}

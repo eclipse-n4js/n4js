@@ -77,6 +77,7 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.TMODULE: {
 				TModule tModule = (TModule)theEObject;
 				T result = caseTModule(tModule);
+				if (result == null) result = caseAbstractNamespace(tModule);
 				if (result == null) result = caseSyntaxRelatedTElement(tModule);
 				if (result == null) result = caseTAnnotableElement(tModule);
 				if (result == null) result = defaultCase(theEObject);
@@ -237,6 +238,26 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTAnnotableElement(containerType);
 				if (result == null) result = caseIdentifiableElement(containerType);
 				if (result == null) result = caseTypableElement(containerType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.ABSTRACT_NAMESPACE: {
+				AbstractNamespace abstractNamespace = (AbstractNamespace)theEObject;
+				T result = caseAbstractNamespace(abstractNamespace);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.TNAMESPACE: {
+				TNamespace tNamespace = (TNamespace)theEObject;
+				T result = caseTNamespace(tNamespace);
+				if (result == null) result = caseAbstractNamespace(tNamespace);
+				if (result == null) result = caseType(tNamespace);
+				if (result == null) result = caseAccessibleTypeElement(tNamespace);
+				if (result == null) result = caseSyntaxRelatedTElement(tNamespace);
+				if (result == null) result = caseTExportableElement(tNamespace);
+				if (result == null) result = caseTAnnotableElement(tNamespace);
+				if (result == null) result = caseIdentifiableElement(tNamespace);
+				if (result == null) result = caseTypableElement(tNamespace);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -964,6 +985,36 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public <MT extends TMember> T caseContainerType(ContainerType<MT> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Abstract Namespace</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Abstract Namespace</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAbstractNamespace(AbstractNamespace object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TNamespace</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TNamespace</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTNamespace(TNamespace object) {
 		return null;
 	}
 

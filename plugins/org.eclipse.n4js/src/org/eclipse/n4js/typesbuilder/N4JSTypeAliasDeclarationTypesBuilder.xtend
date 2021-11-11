@@ -12,7 +12,7 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
-import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -22,7 +22,7 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 	@Inject extension N4JSTypeVariableTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
-	def protected boolean relinkTypeAlias(N4TypeAliasDeclaration n4TypeAlias, TModule target, boolean preLinkingPhase, int idx) {
+	def protected boolean relinkTypeAlias(N4TypeAliasDeclaration n4TypeAlias, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		if (n4TypeAlias.name === null) { // may be null due to syntax errors
 			return false;
 		}
@@ -36,7 +36,7 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 		return true;
 	}
 
-	def package void createTypeAlias(N4TypeAliasDeclaration n4TypeAlias, TModule target, boolean preLinkingPhase) {
+	def package void createTypeAlias(N4TypeAliasDeclaration n4TypeAlias, AbstractNamespace target, boolean preLinkingPhase) {
 		if(n4TypeAlias.name === null) { // may be null due to syntax errors
 			return;
 		}

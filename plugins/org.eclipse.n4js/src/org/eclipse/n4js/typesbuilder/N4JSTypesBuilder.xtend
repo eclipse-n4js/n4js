@@ -46,6 +46,9 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
+import org.eclipse.n4js.ts.types.TNamespace
+import org.eclipse.n4js.ts.types.AbstractNamespace
 
 /**
  * This class with its {@link N4JSTypesBuilder#createTModuleFromSource(DerivedStateAwareResource,boolean) createTModuleFromSource()}
@@ -67,6 +70,7 @@ public class N4JSTypesBuilder {
 
 	@Inject(optional=true) TypesFactory typesFactory = TypesFactory.eINSTANCE
 	@Inject extension N4JSTypesBuilderHelper
+	@Inject extension N4JSNamespaceDeclarationTypesBuilder
 	@Inject extension N4JSClassDeclarationTypesBuilder
 	@Inject extension N4JSInterfaceDeclarationTypesBuilder
 	@Inject extension N4JSEnumDeclarationTypesBuilder
@@ -345,9 +349,14 @@ public class N4JSTypesBuilder {
 		return n4VariableStatement.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
 
-	def private void buildTypes(Script script, TModule target, boolean preLinkingPhase) {
-		for (n : script.eAllContents.toIterable) {
+	def private void buildTypes(Script script, AbstractNamespace target, boolean preLinkingPhase) {
+		for (n : script.eContents) {
 			switch n {
+				N4NamespaceDeclaration: {
+					n.createType(target, preLinkingPhase);
+					val namespaceType = n.definedType as TNamespace;
+					buildTypes(script, namespaceType, preLinkingPhase);
+				}
 				TypeDefiningElement:
 					n.createType(target, preLinkingPhase)
 				ExportedVariableStatement:
@@ -356,55 +365,59 @@ public class N4JSTypesBuilder {
 		}
 	}
 
-	def protected dispatch void createType(TypeDefiningElement other, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(TypeDefiningElement other, AbstractNamespace target, boolean preLinkingPhase) {
 		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: " + other?.eClass.name);
 	}
 
-	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, TModule target,
+	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target,
 		boolean preLinkingPhase) {
 		// already handled up-front in #buildNamespacesTypesFromModuleImports()
 	}
 
-	def protected dispatch void createType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase) {
+		n4Namespace.createTNamespace(target, preLinkingPhase)
+	}
+
+	def protected dispatch void createType(N4ClassDeclaration n4Class, AbstractNamespace target, boolean preLinkingPhase) {
 		n4Class.createTClass(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(N4ClassExpression n4Class, AbstractNamespace target, boolean preLinkingPhase) {
 		n4Class.createTClass(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(N4InterfaceDeclaration n4Interface, TModule target,
+	def protected dispatch void createType(N4InterfaceDeclaration n4Interface, AbstractNamespace target,
 		boolean preLinkingPhase) {
 		n4Interface.createTInterface(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(N4EnumDeclaration n4Enum, AbstractNamespace target, boolean preLinkingPhase) {
 		n4Enum.createTEnum(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(N4TypeAliasDeclaration n4TypeAliasDecl, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(N4TypeAliasDeclaration n4TypeAliasDecl, AbstractNamespace target, boolean preLinkingPhase) {
 		n4TypeAliasDecl.createTypeAlias(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(ObjectLiteral objectLiteral, AbstractNamespace target, boolean preLinkingPhase) {
 		objectLiteral.createObjectLiteral(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(MethodDeclaration n4MethodDecl, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(MethodDeclaration n4MethodDecl, AbstractNamespace target, boolean preLinkingPhase) {
 		// methods are handled in their containing class/interface -> ignore them here
 	}
 
-	def protected dispatch void createType(FunctionDeclaration n4FunctionDecl, TModule target,
+	def protected dispatch void createType(FunctionDeclaration n4FunctionDecl, AbstractNamespace target,
 		boolean preLinkingPhase) {
 		n4FunctionDecl.createTFunction(target, preLinkingPhase)
 	}
 
 	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
-	def protected dispatch void createType(FunctionExpression n4FunctionExpr, TModule target, boolean preLinkingPhase) {
+	def protected dispatch void createType(FunctionExpression n4FunctionExpr, AbstractNamespace target, boolean preLinkingPhase) {
 		n4FunctionExpr.createTFunction(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, TModule target,
+	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, AbstractNamespace target,
 		boolean preLinkingPhase) {
 		n4VariableStatement.createVariableTypes(target, preLinkingPhase)
 	}

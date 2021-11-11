@@ -40,6 +40,16 @@ ruleScriptElement:
 		(
 			(ruleN4Modifier
 			*
+			'namespace'
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4NamespaceDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
 			'class'
 			ruleTypingStrategyDefSiteOperator
 			?
@@ -89,6 +99,196 @@ ruleScriptElement:
 		ruleExportDeclaration
 		    |
 		ruleRootStatement
+	)
+;
+
+// Rule N4NamespaceDeclaration
+ruleN4NamespaceDeclaration:
+	(
+		(ruleN4Modifier
+		*
+		'namespace'
+		ruleBindingIdentifier
+		?
+		)=>
+		ruleN4Modifier
+		*
+		'namespace'
+		ruleBindingIdentifier
+		?
+	)
+	'{'
+	ruleNamespaceElement
+	*
+	'}'
+;
+
+// Rule N4NamespaceDeclaration
+norm1_N4NamespaceDeclaration:
+	(
+		(ruleN4Modifier
+		*
+		'namespace'
+		norm1_BindingIdentifier
+		?
+		)=>
+		ruleN4Modifier
+		*
+		'namespace'
+		norm1_BindingIdentifier
+		?
+	)
+	'{'
+	norm1_NamespaceElement
+	*
+	'}'
+;
+
+// Rule NamespaceElement
+ruleNamespaceElement:
+	(
+		(
+			('@'
+			(
+				'This'
+				    |
+				'target'
+				    |
+				RULE_IDENTIFIER
+			)
+			)=>
+			ruleAnnotatedScriptElement
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'namespace'
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4NamespaceDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'class'
+			ruleTypingStrategyDefSiteOperator
+			?
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4ClassDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'interface'
+			ruleTypingStrategyDefSiteOperator
+			?
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4InterfaceDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'enum'
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4EnumDeclaration
+		)
+		    |
+		(
+			(ruleN4ModifierWithoutConst
+			*
+			'type'
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4TypeAliasDeclaration
+		)
+		    |
+		ruleExportDeclaration
+	)
+;
+
+// Rule NamespaceElement
+norm1_NamespaceElement:
+	(
+		(
+			('@'
+			(
+				'This'
+				    |
+				'target'
+				    |
+				RULE_IDENTIFIER
+			)
+			)=>
+			ruleAnnotatedScriptElement
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'namespace'
+			norm1_BindingIdentifier
+			?
+			)=>
+			norm1_N4NamespaceDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'class'
+			ruleTypingStrategyDefSiteOperator
+			?
+			norm1_BindingIdentifier
+			?
+			)=>
+			norm1_N4ClassDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'interface'
+			ruleTypingStrategyDefSiteOperator
+			?
+			norm1_BindingIdentifier
+			?
+			)=>
+			norm1_N4InterfaceDeclaration
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'enum'
+			norm1_BindingIdentifier
+			?
+			)=>
+			norm1_N4EnumDeclaration
+		)
+		    |
+		(
+			(ruleN4ModifierWithoutConst
+			*
+			'type'
+			norm1_BindingIdentifier
+			?
+			)=>
+			norm1_N4TypeAliasDeclaration
+		)
+		    |
+		ruleExportDeclaration
 	)
 ;
 
@@ -194,7 +394,7 @@ ruleExportDeclarationImpl:
 		'default'
 		(
 			(
-				('@' | 'private' | 'project' | 'protected' | 'public' | 'external' | 'abstract' | 'static' | 'const' | 'class' | 'interface' | 'enum' | 'type' | 'async' | 'function' | 'var' | 'let')=>
+				('@' | 'private' | 'project' | 'protected' | 'public' | 'external' | 'abstract' | 'static' | 'const' | 'namespace' | 'class' | 'interface' | 'enum' | 'type' | 'async' | 'function' | 'var' | 'let')=>
 				ruleExportableElement
 			)
 			    |
@@ -247,6 +447,16 @@ ruleExportableElement:
 			)
 			)=>
 			ruleAnnotatedExportableElement
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'namespace'
+			ruleBindingIdentifier
+			?
+			)=>
+			ruleN4NamespaceDeclaration
 		)
 		    |
 		(
@@ -6816,6 +7026,30 @@ ruleN4ClassDeclaration:
 	ruleMembers
 ;
 
+// Rule N4ClassDeclaration
+norm1_N4ClassDeclaration:
+	(
+		(ruleN4Modifier
+		*
+		'class'
+		ruleTypingStrategyDefSiteOperator
+		?
+		norm1_BindingIdentifier
+		?
+		)=>
+		ruleN4Modifier
+		*
+		'class'
+		ruleTypingStrategyDefSiteOperator
+		?
+		norm1_BindingIdentifier
+		?
+	)
+	ruleTypeParameters?
+	norm1_ClassExtendsImplements?
+	norm1_Members
+;
+
 // Rule TypeParameters
 ruleTypeParameters:
 	'<'
@@ -6945,6 +7179,30 @@ ruleN4InterfaceDeclaration:
 	ruleMembers
 ;
 
+// Rule N4InterfaceDeclaration
+norm1_N4InterfaceDeclaration:
+	(
+		(ruleN4Modifier
+		*
+		'interface'
+		ruleTypingStrategyDefSiteOperator
+		?
+		norm1_BindingIdentifier
+		?
+		)=>
+		ruleN4Modifier
+		*
+		'interface'
+		ruleTypingStrategyDefSiteOperator
+		?
+		norm1_BindingIdentifier
+		?
+	)
+	ruleTypeParameters?
+	ruleInterfaceExtendsList?
+	norm1_Members
+;
+
 // Rule InterfaceExtendsList
 ruleInterfaceExtendsList:
 	(
@@ -6985,6 +7243,32 @@ ruleN4EnumDeclaration:
 	'}'
 ;
 
+// Rule N4EnumDeclaration
+norm1_N4EnumDeclaration:
+	(
+		(ruleN4Modifier
+		*
+		'enum'
+		norm1_BindingIdentifier
+		?
+		)=>
+		ruleN4Modifier
+		*
+		'enum'
+		norm1_BindingIdentifier
+		?
+	)
+	'{'
+	(
+		ruleN4EnumLiteral
+		(
+			','
+			ruleN4EnumLiteral
+		)*
+	)?
+	'}'
+;
+
 // Rule N4EnumLiteral
 ruleN4EnumLiteral:
 	ruleIdentifierName
@@ -7007,6 +7291,27 @@ ruleN4TypeAliasDeclaration:
 		*
 		'type'
 		ruleBindingIdentifier
+		?
+	)
+	ruleTypeParameters?
+	'='
+	ruleTypeReferenceNode
+	ruleSemi
+;
+
+// Rule N4TypeAliasDeclaration
+norm1_N4TypeAliasDeclaration:
+	(
+		(ruleN4ModifierWithoutConst
+		*
+		'type'
+		norm1_BindingIdentifier
+		?
+		)=>
+		ruleN4ModifierWithoutConst
+		*
+		'type'
+		norm1_BindingIdentifier
 		?
 	)
 	ruleTypeParameters?

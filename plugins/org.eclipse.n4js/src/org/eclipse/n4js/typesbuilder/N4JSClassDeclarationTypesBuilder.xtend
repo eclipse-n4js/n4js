@@ -14,6 +14,7 @@ import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassExpression
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
@@ -34,13 +35,12 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		return true;
 	}
 
-	def protected TClass createTClass(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase) {
+	def protected TClass createTClass(N4ClassDeclaration n4Class, AbstractNamespace target, boolean preLinkingPhase) {
 		if (n4Class.name === null) { // may be null due to syntax errors
 			return null;
 		}
 
 		val TClass tclass = n4Class.createTClass;
-
 		// modifiers
 		tclass.setTypeAccessModifier(n4Class);
 		tclass.setProvidedByRuntime(n4Class, preLinkingPhase);
@@ -73,7 +73,7 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		return tclass;
 	}
 	
-	def package createTClass(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase) {
+	def package createTClass(N4ClassExpression n4Class, AbstractNamespace target, boolean preLinkingPhase) {
 		val tclass = n4Class.createTClass;
 
 		// super types etc
@@ -94,7 +94,7 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 		n4Class.definedType = tclass;
 
-		target.internalTypes += tclass;
+		target.containingModule.internalTypes += tclass;
 	}
 
 	def private createTClass(N4ClassDeclaration classDecl) {

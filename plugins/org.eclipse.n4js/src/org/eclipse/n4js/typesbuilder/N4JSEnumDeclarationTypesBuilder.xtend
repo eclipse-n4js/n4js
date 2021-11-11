@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import java.math.BigDecimal
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TModule
@@ -57,7 +58,7 @@ public class N4JSEnumDeclarationTypesBuilder {
 		return true;
 	}
 
-	def protected TEnum createTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase) {
+	def protected TEnum createTEnum(N4EnumDeclaration n4Enum, AbstractNamespace target, boolean preLinkingPhase) {
 		if (n4Enum.name === null) {
 			return null;
 		}

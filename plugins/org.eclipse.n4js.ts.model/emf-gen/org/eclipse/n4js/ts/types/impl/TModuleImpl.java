@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -18,6 +20,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -26,13 +29,14 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.RuntimeDependency;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -44,6 +48,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstElement <em>Ast Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getQualifiedName <em>Qualified Name</em>}</li>
@@ -60,8 +65,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getCyclicModulesRuntime <em>Cyclic Modules Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getCyclicModulesLoadtimeForInheritance <em>Cyclic Modules Loadtime For Inheritance</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTopLevelTypes <em>Top Level Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
@@ -73,7 +76,17 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *
  * @generated
  */
-public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
+public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
+	/**
+	 * The cached value of the '{@link #getAstElement() <em>Ast Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAstElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject astElement;
+
 	/**
 	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -345,26 +358,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	protected EList<TModule> runtimeCyclicLoadtimeDependents;
 
 	/**
-	 * The cached value of the '{@link #getTopLevelTypes() <em>Top Level Types</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTopLevelTypes()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Type> topLevelTypes;
-
-	/**
-	 * The cached value of the '{@link #getVariables() <em>Variables</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getVariables()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<TVariable> variables;
-
-	/**
 	 * The cached value of the '{@link #getInternalTypes() <em>Internal Types</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -461,6 +454,46 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TMODULE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EObject getAstElement() {
+		if (astElement != null && astElement.eIsProxy()) {
+			InternalEObject oldAstElement = (InternalEObject)astElement;
+			astElement = eResolveProxy(oldAstElement);
+			if (astElement != oldAstElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.TMODULE__AST_ELEMENT, oldAstElement, astElement));
+			}
+		}
+		return astElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EObject basicGetAstElement() {
+		return astElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAstElement(EObject newAstElement) {
+		EObject oldAstElement = astElement;
+		astElement = newAstElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__AST_ELEMENT, oldAstElement, astElement));
 	}
 
 	/**
@@ -787,32 +820,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public EList<Type> getTopLevelTypes() {
-		if (topLevelTypes == null) {
-			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TOP_LEVEL_TYPES);
-		}
-		return topLevelTypes;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<TVariable> getVariables() {
-		if (variables == null) {
-			variables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.TMODULE__VARIABLES);
-		}
-		return variables;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EList<Type> getInternalTypes() {
 		if (internalTypes == null) {
 			internalTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__INTERNAL_TYPES);
@@ -911,16 +918,22 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public TModule getContainingModule() {
+		return this;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__DEPENDENCIES_RUNTIME:
 				return ((InternalEList<?>)getDependenciesRuntime()).basicRemove(otherEnd, msgs);
-			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
-				return ((InternalEList<?>)getTopLevelTypes()).basicRemove(otherEnd, msgs);
-			case TypesPackage.TMODULE__VARIABLES:
-				return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				return ((InternalEList<?>)getInternalTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
@@ -943,6 +956,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.TMODULE__AST_ELEMENT:
+				if (resolve) return getAstElement();
+				return basicGetAstElement();
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				return getAnnotations();
 			case TypesPackage.TMODULE__SIMPLE_NAME:
@@ -975,10 +991,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getCyclicModulesLoadtimeForInheritance();
 			case TypesPackage.TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS:
 				return getRuntimeCyclicLoadtimeDependents();
-			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
-				return getTopLevelTypes();
-			case TypesPackage.TMODULE__VARIABLES:
-				return getVariables();
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				return getInternalTypes();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
@@ -1006,6 +1018,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.TMODULE__AST_ELEMENT:
+				setAstElement((EObject)newValue);
+				return;
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				getAnnotations().clear();
 				getAnnotations().addAll((Collection<? extends TAnnotation>)newValue);
@@ -1059,14 +1074,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				getRuntimeCyclicLoadtimeDependents().clear();
 				getRuntimeCyclicLoadtimeDependents().addAll((Collection<? extends TModule>)newValue);
 				return;
-			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
-				getTopLevelTypes().clear();
-				getTopLevelTypes().addAll((Collection<? extends Type>)newValue);
-				return;
-			case TypesPackage.TMODULE__VARIABLES:
-				getVariables().clear();
-				getVariables().addAll((Collection<? extends TVariable>)newValue);
-				return;
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				getInternalTypes().clear();
 				getInternalTypes().addAll((Collection<? extends Type>)newValue);
@@ -1102,6 +1109,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TMODULE__AST_ELEMENT:
+				setAstElement((EObject)null);
+				return;
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				getAnnotations().clear();
 				return;
@@ -1150,12 +1160,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS:
 				getRuntimeCyclicLoadtimeDependents().clear();
 				return;
-			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
-				getTopLevelTypes().clear();
-				return;
-			case TypesPackage.TMODULE__VARIABLES:
-				getVariables().clear();
-				return;
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				getInternalTypes().clear();
 				return;
@@ -1186,6 +1190,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TMODULE__AST_ELEMENT:
+				return astElement != null;
 			case TypesPackage.TMODULE__ANNOTATIONS:
 				return annotations != null && !annotations.isEmpty();
 			case TypesPackage.TMODULE__SIMPLE_NAME:
@@ -1218,10 +1224,6 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return cyclicModulesLoadtimeForInheritance != null && !cyclicModulesLoadtimeForInheritance.isEmpty();
 			case TypesPackage.TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS:
 				return runtimeCyclicLoadtimeDependents != null && !runtimeCyclicLoadtimeDependents.isEmpty();
-			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
-				return topLevelTypes != null && !topLevelTypes.isEmpty();
-			case TypesPackage.TMODULE__VARIABLES:
-				return variables != null && !variables.isEmpty();
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				return internalTypes != null && !internalTypes.isEmpty();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
@@ -1247,6 +1249,12 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == SyntaxRelatedTElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TMODULE__AST_ELEMENT: return TypesPackage.SYNTAX_RELATED_TELEMENT__AST_ELEMENT;
+				default: return -1;
+			}
+		}
 		if (baseClass == TAnnotableElement.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TMODULE__ANNOTATIONS: return TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS;
@@ -1263,6 +1271,12 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == SyntaxRelatedTElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT__AST_ELEMENT: return TypesPackage.TMODULE__AST_ELEMENT;
+				default: return -1;
+			}
+		}
 		if (baseClass == TAnnotableElement.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS: return TypesPackage.TMODULE__ANNOTATIONS;
@@ -1270,6 +1284,46 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == AbstractNamespace.class) {
+			switch (baseOperationID) {
+				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE: return TypesPackage.TMODULE___GET_CONTAINING_MODULE;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == SyntaxRelatedTElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TMODULE___GET_CONTAINING_MODULE:
+				return getContainingModule();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

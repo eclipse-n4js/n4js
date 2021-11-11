@@ -17,6 +17,7 @@ import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
@@ -47,7 +48,7 @@ package class N4JSVariableStatementTypesBuilder {
 		return true
 	}
 
-	def package void createVariableTypes(VariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase) {
+	def package void createVariableTypes(VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase) {
 		val variables = n4VariableStatement.createVariables(preLinkingPhase)
 		target.variables += variables
 	}

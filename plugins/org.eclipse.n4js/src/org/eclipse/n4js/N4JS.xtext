@@ -54,6 +54,7 @@ Script: {Script}
  */
 ScriptElement:
 	  AnnotatedScriptElement
+	| N4NamespaceDeclaration<Yield=false>
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
@@ -61,6 +62,31 @@ ScriptElement:
 	| => ImportDeclaration // syntactic predicate required due to RootStatement > ExpressionStatement > ... > ImportCallExpression
 	| ExportDeclaration
 	| RootStatement<Yield=false>
+;
+
+
+// cf. N4JSSpec §
+N4NamespaceDeclaration <Yield> returns N4NamespaceDeclaration:
+	=>(
+		{N4NamespaceDeclaration}
+		(declaredModifiers+=N4Modifier)*
+		'namespace'
+		name=BindingIdentifier<Yield>?
+	)
+	'{'
+		ownedElementsRaw+=NamespaceElement<Yield>*
+	'}'
+;
+
+
+NamespaceElement<Yield> returns ScriptElement : 
+	AnnotatedScriptElement
+	| N4NamespaceDeclaration<Yield>
+	| N4ClassDeclaration<Yield>
+	| N4InterfaceDeclaration<Yield>
+	| N4EnumDeclaration<Yield>
+	| N4TypeAliasDeclaration<Yield>
+	| ExportDeclaration
 ;
 
 
@@ -140,6 +166,7 @@ ExportSpecifier:
 
 ExportableElement:
 	  AnnotatedExportableElement<Yield=false>
+	| N4NamespaceDeclaration<Yield=false>
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>

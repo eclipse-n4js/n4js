@@ -45,7 +45,7 @@ type Variance wraps Variance
 /**
  * The TModule is the representation of the script on the type level.
  */
-class TModule extends SyntaxRelatedTElement, TAnnotableElement {
+class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
 	/**
 	 * The module's simple name, i.e. the last segment of its qualified name.
 	 */
@@ -130,24 +130,6 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	refers TModule[] runtimeCyclicLoadtimeDependents
 
-	// TODO jvp: what does that mean:
-	// TODO: make sure these are only top level types in the script
-	// (ß): currently these may also contain nested types since the traversal
-	// in the types builder processes the complete AST
-	/*
-	 * A list of all types declarations in the script on the top level.
-	 * These include the exported classes, interfaces, function as well
-	 * as the types inferred from type defining elements that are not marked as exported.
-	 * This allows for better validation messages and diagnostics in later stages
-	 * of the processing.
-	 */
-	contains Type[] topLevelTypes
-	/*
-	 * A list of all top level variables in the script.
-	 * These include the exported variables as well as the internal variables.
-	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
-	 */
-	contains TVariable[] variables
 	/*
 	 * Internal types may be populated incrementally by the type checker. Typically these
 	 * are types derived from nested structures of the AST.
@@ -226,6 +208,14 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	derived String moduleSpecifier get {
 		return qualifiedName
+	}
+	
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+	op TModule getContainingModule() {
+		return this;
 	}
 }
 
@@ -798,6 +788,46 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 		}
 		return ownedMembersByNameAndAccess;
 	}
+}
+
+class AbstractNamespace {
+	// TODO jvp: what does that mean:
+	// TODO: make sure these are only top level types in the script
+	// (ß): currently these may also contain nested types since the traversal
+	// in the types builder processes the complete AST
+	/*
+	 * A list of all types declarations in the script on the top level.
+	 * These include the exported classes, interfaces, function as well
+	 * as the types inferred from type defining elements that are not marked as exported.
+	 * This allows for better validation messages and diagnostics in later stages
+	 * of the processing.
+	 */
+	contains Type[] topLevelTypes
+	/*
+	 * A list of all top level variables in the script.
+	 * These include the exported variables as well as the internal variables.
+	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
+	 */
+	contains TVariable[] variables
+	/*
+	 * A list of all top level namespaces in the script.
+	 * These include the exported namespaces as well as the internal namespaces.
+	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
+	 */
+	contains TNamespace[] namespaces
+	
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+	op TModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this,TModule);
+	}
+}
+
+class TNamespace extends AbstractNamespace, Type, AccessibleTypeElement, SyntaxRelatedTElement {
+	boolean external
+	
 }
 
 /*

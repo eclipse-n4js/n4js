@@ -41,8 +41,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesRuntime <em>Cyclic Modules Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadtimeForInheritance <em>Cyclic Modules Loadtime For Inheritance</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
@@ -56,7 +54,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
+public interface TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
 	/**
 	 * Returns the value of the '<em><b>Simple Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -425,42 +423,6 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	EList<TModule> getRuntimeCyclicLoadtimeDependents();
 
 	/**
-	 * Returns the value of the '<em><b>Top Level Types</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * A list of all types declarations in the script on the top level.
-	 * These include the exported classes, interfaces, function as well
-	 * as the types inferred from type defining elements that are not marked as exported.
-	 * This allows for better validation messages and diagnostics in later stages
-	 * of the processing.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Top Level Types</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_TopLevelTypes()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Type> getTopLevelTypes();
-
-	/**
-	 * Returns the value of the '<em><b>Variables</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TVariable}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * A list of all top level variables in the script.
-	 * These include the exported variables as well as the internal variables.
-	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Variables</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_Variables()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<TVariable> getVariables();
-
-	/**
 	 * Returns the value of the '<em><b>Internal Types</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.
 	 * <!-- begin-user-doc -->
@@ -621,5 +583,18 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	String getModuleSpecifier();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TModule getContainingModule();
 
 } // TModule

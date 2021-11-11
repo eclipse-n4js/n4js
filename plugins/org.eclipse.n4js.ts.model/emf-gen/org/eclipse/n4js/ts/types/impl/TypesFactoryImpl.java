@@ -85,6 +85,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.INFERENCE_VARIABLE: return createInferenceVariable();
 			case TypesPackage.TFUNCTION: return createTFunction();
 			case TypesPackage.TYPE: return createType();
+			case TypesPackage.ABSTRACT_NAMESPACE: return createAbstractNamespace();
+			case TypesPackage.TNAMESPACE: return createTNamespace();
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE: return createModuleNamespaceVirtualType();
 			case TypesPackage.PRIMITIVE_TYPE: return createPrimitiveType();
 			case TypesPackage.BUILT_IN_TYPE: return createBuiltInType();
@@ -333,6 +335,28 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public Type createType() {
 		TypeImpl type = new TypeImpl();
 		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public AbstractNamespace createAbstractNamespace() {
+		AbstractNamespaceImpl abstractNamespace = new AbstractNamespaceImpl();
+		return abstractNamespace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TNamespace createTNamespace() {
+		TNamespaceImpl tNamespace = new TNamespaceImpl();
+		return tNamespace;
 	}
 
 	/**

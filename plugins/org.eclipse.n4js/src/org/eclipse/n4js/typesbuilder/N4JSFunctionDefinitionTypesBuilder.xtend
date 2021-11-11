@@ -18,6 +18,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
@@ -61,7 +62,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * @param functionDecl declaration for which the TFunction is created, must not be linked to a TFunction yet (i.e. its defined type must be null).
 	 * @param target the module to which the newly created TFunction is added
 	 */
-	def package void createTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase) {
+	def package void createTFunction(FunctionDeclaration functionDecl, AbstractNamespace target, boolean preLinkingPhase) {
 		val functionDefinedType = functionDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
 		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
@@ -108,7 +109,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 *     here, because we call judgment 'expectedTypeIn' and not 'type').
 	 * </ol>
 	 */
-	def package void createTFunction(FunctionExpression functionExpr, TModule target, boolean preLinkingPhase) {
+	def package void createTFunction(FunctionExpression functionExpr, AbstractNamespace target, boolean preLinkingPhase) {
 		val functionDefinedType = functionExpr.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
 		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionExpression");
@@ -125,7 +126,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.copyAnnotations(functionExpr, preLinkingPhase)
 
 		// set container
-		target.internalTypes += functionType
+		target.containingModule.internalTypes += functionType
 	}
 
 	/**

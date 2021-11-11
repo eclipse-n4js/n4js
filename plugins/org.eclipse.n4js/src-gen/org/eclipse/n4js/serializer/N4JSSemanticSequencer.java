@@ -89,6 +89,7 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
@@ -367,7 +368,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedScriptElement_ExportClause_ExportDeclarationImpl_ExportFromClause(context, (ExportDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getScriptElementRule()) {
+				else if (rule == grammarAccess.getScriptElementRule()
+						|| rule == grammarAccess.getNamespaceElementRule()) {
 					sequence_AnnotatedScriptElement_ExportClause_ExportDeclaration_ExportDeclarationImpl_ExportFromClause(context, (ExportDeclaration) semanticObject); 
 					return; 
 				}
@@ -452,7 +454,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
+				else if (rule == grammarAccess.getNamespaceElementRule()
+						|| rule == grammarAccess.getAnnotatedScriptElementRule()) {
 					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
@@ -583,7 +586,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_Arguments(context, (ImportCallExpression) semanticObject); 
 				return; 
 			case N4JSPackage.IMPORT_DECLARATION:
-				if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
+				if (rule == grammarAccess.getNamespaceElementRule()
+						|| rule == grammarAccess.getAnnotatedScriptElementRule()) {
 					sequence_AnnotatedScriptElement_ImportClause_ImportDeclarationImpl_ImportSpecifiersExceptDefault(context, (ImportDeclaration) semanticObject); 
 					return; 
 				}
@@ -704,7 +708,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedExportableElement_ClassExtendsClause_ClassImplementsList_Members_TypeParameters(context, (N4ClassDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getScriptElementRule()) {
+				else if (rule == grammarAccess.getScriptElementRule()
+						|| rule == grammarAccess.getNamespaceElementRule()) {
 					sequence_AnnotatedScriptElement_ClassExtendsClause_ClassImplementsList_Members_N4ClassDeclaration_TypeParameters(context, (N4ClassDeclaration) semanticObject); 
 					return; 
 				}
@@ -783,7 +788,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedScriptElement(context, (N4EnumDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getScriptElementRule()) {
+				else if (rule == grammarAccess.getScriptElementRule()
+						|| rule == grammarAccess.getNamespaceElementRule()) {
 					sequence_AnnotatedScriptElement_N4EnumDeclaration(context, (N4EnumDeclaration) semanticObject); 
 					return; 
 				}
@@ -832,7 +838,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedExportableElement_InterfaceExtendsList_Members_TypeParameters(context, (N4InterfaceDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getScriptElementRule()) {
+				else if (rule == grammarAccess.getScriptElementRule()
+						|| rule == grammarAccess.getNamespaceElementRule()) {
 					sequence_AnnotatedScriptElement_InterfaceExtendsList_Members_N4InterfaceDeclaration_TypeParameters(context, (N4InterfaceDeclaration) semanticObject); 
 					return; 
 				}
@@ -866,6 +873,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
+			case N4JSPackage.N4_NAMESPACE_DECLARATION:
+				sequence_N4NamespaceDeclaration(context, (N4NamespaceDeclaration) semanticObject); 
+				return; 
 			case N4JSPackage.N4_SETTER_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
 					sequence_AnnotatedN4MemberDeclaration(context, (N4SetterDeclaration) semanticObject); 
@@ -889,7 +899,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedExportableElement_TypeParameters(context, (N4TypeAliasDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getScriptElementRule()) {
+				else if (rule == grammarAccess.getScriptElementRule()
+						|| rule == grammarAccess.getNamespaceElementRule()) {
 					sequence_AnnotatedScriptElement_N4TypeAliasDeclaration_TypeParameters(context, (N4TypeAliasDeclaration) semanticObject); 
 					return; 
 				}
@@ -4164,6 +4175,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     NamespaceElement<Yield> returns FunctionDeclaration
+	 *     NamespaceElement returns FunctionDeclaration
 	 *     AnnotatedScriptElement returns FunctionDeclaration
 	 *
 	 * Constraint:
@@ -4187,6 +4200,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns N4ClassDeclaration
+	 *     NamespaceElement<Yield> returns N4ClassDeclaration
+	 *     NamespaceElement returns N4ClassDeclaration
 	 *
 	 * Constraint:
 	 *     (
@@ -4272,6 +4287,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns ExportDeclaration
+	 *     NamespaceElement<Yield> returns ExportDeclaration
+	 *     NamespaceElement returns ExportDeclaration
 	 *
 	 * Constraint:
 	 *     (
@@ -4291,6 +4308,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     NamespaceElement<Yield> returns ImportDeclaration
+	 *     NamespaceElement returns ImportDeclaration
 	 *     AnnotatedScriptElement returns ImportDeclaration
 	 *
 	 * Constraint:
@@ -4332,6 +4351,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns N4InterfaceDeclaration
+	 *     NamespaceElement<Yield> returns N4InterfaceDeclaration
+	 *     NamespaceElement returns N4InterfaceDeclaration
 	 *
 	 * Constraint:
 	 *     (
@@ -4395,6 +4416,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns N4EnumDeclaration
+	 *     NamespaceElement<Yield> returns N4EnumDeclaration
+	 *     NamespaceElement returns N4EnumDeclaration
 	 *
 	 * Constraint:
 	 *     (
@@ -4416,6 +4439,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns N4TypeAliasDeclaration
+	 *     NamespaceElement<Yield> returns N4TypeAliasDeclaration
+	 *     NamespaceElement returns N4TypeAliasDeclaration
 	 *
 	 * Constraint:
 	 *     (
@@ -4462,12 +4487,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedScriptElement.ExportDeclaration_1_0_0<NamespaceElement.Yield> returns AnnotationList
 	 *     AnnotatedScriptElement.ExportDeclaration_1_0_0 returns AnnotationList
+	 *     AnnotatedScriptElement.ImportDeclaration_1_1_0<NamespaceElement.Yield> returns AnnotationList
 	 *     AnnotatedScriptElement.ImportDeclaration_1_1_0 returns AnnotationList
+	 *     AnnotatedScriptElement.FunctionDeclaration_1_2_0<NamespaceElement.Yield> returns AnnotationList
 	 *     AnnotatedScriptElement.FunctionDeclaration_1_2_0 returns AnnotationList
+	 *     AnnotatedScriptElement.N4ClassDeclaration_1_3_0_0_0<NamespaceElement.Yield> returns AnnotationList
 	 *     AnnotatedScriptElement.N4ClassDeclaration_1_3_0_0_0 returns AnnotationList
+	 *     AnnotatedScriptElement.N4InterfaceDeclaration_1_3_0_1_0<NamespaceElement.Yield> returns AnnotationList
 	 *     AnnotatedScriptElement.N4InterfaceDeclaration_1_3_0_1_0 returns AnnotationList
+	 *     AnnotatedScriptElement.N4EnumDeclaration_1_4_0<NamespaceElement.Yield> returns AnnotationList
 	 *     AnnotatedScriptElement.N4EnumDeclaration_1_4_0 returns AnnotationList
+	 *     AnnotatedScriptElement.N4TypeAliasDeclaration_1_5_0<NamespaceElement.Yield> returns AnnotationList
 	 *     AnnotatedScriptElement.N4TypeAliasDeclaration_1_5_0 returns AnnotationList
 	 *     AnnotatedExportableElement.FunctionDeclaration_1_0_0<Yield> returns AnnotationList
 	 *     AnnotatedExportableElement.FunctionDeclaration_1_0_0 returns AnnotationList
@@ -19401,6 +19433,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     annotations+=Annotation+
 	 */
 	protected void sequence_N4MemberAnnotationList(ISerializationContext context, N4MemberAnnotationList semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ScriptElement returns N4NamespaceDeclaration
+	 *     N4NamespaceDeclaration<Yield> returns N4NamespaceDeclaration
+	 *     N4NamespaceDeclaration returns N4NamespaceDeclaration
+	 *     NamespaceElement<Yield> returns N4NamespaceDeclaration
+	 *     NamespaceElement returns N4NamespaceDeclaration
+	 *     ExportableElement returns N4NamespaceDeclaration
+	 *
+	 * Constraint:
+	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier? ownedElementsRaw+=NamespaceElement*)
+	 */
+	protected void sequence_N4NamespaceDeclaration(ISerializationContext context, N4NamespaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
