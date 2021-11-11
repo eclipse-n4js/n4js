@@ -825,7 +825,8 @@ class AbstractNamespace {
 	}
 }
 
-class TNamespace extends AbstractNamespace, Type, AccessibleTypeElement, SyntaxRelatedTElement {
+class TNamespace extends Type /* must be first to generate 'isExported' */,
+							AbstractNamespace, AccessibleTypeElement, SyntaxRelatedTElement {
 	boolean external
 	
 }

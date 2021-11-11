@@ -2620,40 +2620,13 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE = 21;
 
 	/**
-	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE__TOP_LEVEL_TYPES = ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES;
-
-	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE__VARIABLES = ABSTRACT_NAMESPACE__VARIABLES;
-
-	/**
-	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE__NAMESPACES = ABSTRACT_NAMESPACE__NAMESPACES;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 0;
+	int TNAMESPACE__NAME = TYPE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
@@ -2662,7 +2635,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXPORTED_NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 1;
+	int TNAMESPACE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2671,7 +2644,34 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__ANNOTATIONS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 2;
+	int TNAMESPACE__ANNOTATIONS = TYPE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__TOP_LEVEL_TYPES = TYPE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__VARIABLES = TYPE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2680,7 +2680,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = ABSTRACT_NAMESPACE_FEATURE_COUNT + 3;
+	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
@@ -2689,7 +2689,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 4;
+	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -2698,7 +2698,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__AST_ELEMENT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 5;
+	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -2707,7 +2707,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXTERNAL = ABSTRACT_NAMESPACE_FEATURE_COUNT + 6;
+	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace</em>' class.
@@ -2716,16 +2716,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 7;
-
-	/**
-	 * The operation id for the '<em>Get Containing Module</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE___GET_CONTAINING_MODULE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -2734,7 +2725,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_ALIAS = ABSTRACT_NAMESPACE_OPERATION_COUNT + 2;
+	int TNAMESPACE___IS_ALIAS = TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -2743,7 +2734,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_POLYFILL = ABSTRACT_NAMESPACE_OPERATION_COUNT + 4;
+	int TNAMESPACE___IS_POLYFILL = TYPE___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -2752,7 +2743,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_STATIC_POLYFILL = ABSTRACT_NAMESPACE_OPERATION_COUNT + 5;
+	int TNAMESPACE___IS_STATIC_POLYFILL = TYPE___IS_STATIC_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2761,7 +2752,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_FINAL = ABSTRACT_NAMESPACE_OPERATION_COUNT + 6;
+	int TNAMESPACE___IS_FINAL = TYPE___IS_FINAL;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -2770,7 +2761,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_DYNAMIZABLE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 7;
+	int TNAMESPACE___IS_DYNAMIZABLE = TYPE___IS_DYNAMIZABLE;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -2779,7 +2770,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_ARRAY_LIKE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 8;
+	int TNAMESPACE___IS_ARRAY_LIKE = TYPE___IS_ARRAY_LIKE;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -2788,7 +2779,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_ELEMENT_TYPE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 9;
+	int TNAMESPACE___GET_ELEMENT_TYPE = TYPE___GET_ELEMENT_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -2797,7 +2788,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_GENERIC = ABSTRACT_NAMESPACE_OPERATION_COUNT + 11;
+	int TNAMESPACE___IS_GENERIC = TYPE___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -2806,7 +2797,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_VARS = ABSTRACT_NAMESPACE_OPERATION_COUNT + 12;
+	int TNAMESPACE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -2815,7 +2806,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_VARIANCE_OF_TYPE_VAR__INT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 13;
+	int TNAMESPACE___GET_VARIANCE_OF_TYPE_VAR__INT = TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -2824,7 +2815,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_RAW_TYPE_AS_STRING = ABSTRACT_NAMESPACE_OPERATION_COUNT + 14;
+	int TNAMESPACE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -2833,7 +2824,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_AS_STRING = ABSTRACT_NAMESPACE_OPERATION_COUNT + 15;
+	int TNAMESPACE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -2842,7 +2842,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = ABSTRACT_NAMESPACE_OPERATION_COUNT + 16;
+	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -2851,7 +2851,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = ABSTRACT_NAMESPACE_OPERATION_COUNT + 17;
+	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -2860,7 +2860,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_EXPORTED = ABSTRACT_NAMESPACE_OPERATION_COUNT + 18;
+	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>TNamespace</em>' class.
@@ -2869,7 +2869,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 19;
+	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ModuleNamespaceVirtualTypeImpl <em>Module Namespace Virtual Type</em>}' class.

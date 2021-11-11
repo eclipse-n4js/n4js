@@ -29,6 +29,10 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
+
+import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
@@ -39,6 +43,7 @@ import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
+import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
@@ -182,6 +187,16 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
+	public EList<Annotation> getAnnotations() {
+		return XcoreCollectionLiterals.<Annotation>emptyEList();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -244,6 +259,16 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		}
 		EObject _eContainer_2 = this.eContainer();
 		return (_eContainer_2 instanceof Script);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean appliesOnlyToBlockScopedElements() {
+		return false;
 	}
 
 	/**
@@ -348,6 +373,11 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == VariableEnvironmentElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == ScriptElement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
@@ -379,6 +409,11 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == VariableEnvironmentElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == ScriptElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
@@ -410,10 +445,22 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == AnnotableElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == N4TypeDefinition.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_TYPE_DEFINITION___IS_EXTERNAL: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXTERNAL;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == VariableEnvironmentElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.VARIABLE_ENVIRONMENT_ELEMENT___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS: return N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS;
+				default: return -1;
 			}
 		}
 		if (baseClass == ScriptElement.class) {
@@ -454,6 +501,8 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		switch (operationID) {
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXTERNAL:
 				return isExternal();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS:
+				return getAnnotations();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT:
@@ -462,6 +511,8 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return getExportedName();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS:
+				return appliesOnlyToBlockScopedElements();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

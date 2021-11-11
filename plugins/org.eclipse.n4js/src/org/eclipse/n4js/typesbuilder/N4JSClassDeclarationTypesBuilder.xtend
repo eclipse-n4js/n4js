@@ -16,7 +16,6 @@ import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -24,7 +23,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
 
-	def protected boolean relinkTClass(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
+	def protected boolean relinkTClass(N4ClassDeclaration n4Class, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		if (n4Class.name === null) { // may be null due to syntax errors
 			return false;
 		}

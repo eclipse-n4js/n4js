@@ -27,7 +27,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TNamespace extends AbstractNamespace, Type, AccessibleTypeElement, SyntaxRelatedTElement {
+public interface TNamespace extends Type, AbstractNamespace, AccessibleTypeElement, SyntaxRelatedTElement {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->

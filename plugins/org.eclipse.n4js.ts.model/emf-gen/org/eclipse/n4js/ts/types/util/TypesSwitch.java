@@ -250,8 +250,8 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.TNAMESPACE: {
 				TNamespace tNamespace = (TNamespace)theEObject;
 				T result = caseTNamespace(tNamespace);
-				if (result == null) result = caseAbstractNamespace(tNamespace);
 				if (result == null) result = caseType(tNamespace);
+				if (result == null) result = caseAbstractNamespace(tNamespace);
 				if (result == null) result = caseAccessibleTypeElement(tNamespace);
 				if (result == null) result = caseSyntaxRelatedTElement(tNamespace);
 				if (result == null) result = caseTExportableElement(tNamespace);

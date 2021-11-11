@@ -1547,6 +1547,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				N4NamespaceDeclaration n4NamespaceDeclaration = (N4NamespaceDeclaration)theEObject;
 				T1 result = caseN4NamespaceDeclaration(n4NamespaceDeclaration);
 				if (result == null) result = caseN4TypeDefinition(n4NamespaceDeclaration);
+				if (result == null) result = caseVariableEnvironmentElement(n4NamespaceDeclaration);
 				if (result == null) result = caseScriptElement(n4NamespaceDeclaration);
 				if (result == null) result = caseModifiableElement(n4NamespaceDeclaration);
 				if (result == null) result = caseExportableElement(n4NamespaceDeclaration);

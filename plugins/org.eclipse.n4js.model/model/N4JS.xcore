@@ -2131,7 +2131,7 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 }
 
 
-class N4NamespaceDeclaration extends N4TypeDefinition, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
+class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
 	contains ScriptElement[] ownedElementsRaw
 	
@@ -2140,6 +2140,13 @@ class N4NamespaceDeclaration extends N4TypeDefinition, ScriptElement, Modifiable
 	 */
 	op boolean isExternal() {
 		declaredModifiers.contains(N4Modifier.EXTERNAL)
+	}
+	
+	/**
+	 * Namespaces do not have annotations
+	 */
+	op Annotation[] getAnnotations() {
+		emptyEList
 	}
 }
 

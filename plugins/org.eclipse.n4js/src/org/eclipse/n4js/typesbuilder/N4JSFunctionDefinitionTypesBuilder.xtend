@@ -20,7 +20,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TFunction
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
 
@@ -35,7 +34,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	@Inject extension N4JSTypeVariableTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean relinkTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase, int idx) {
+	def package boolean relinkTFunction(FunctionDeclaration functionDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		val functionDefinedType = functionDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
 		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
