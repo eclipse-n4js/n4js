@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.integration.tests
-Export-Package: org.eclipse.n4js.integration.tests.jar
+Export-Package: org.eclipse.n4js.integration.tests.cli.jar
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.utils,
  org.junit,

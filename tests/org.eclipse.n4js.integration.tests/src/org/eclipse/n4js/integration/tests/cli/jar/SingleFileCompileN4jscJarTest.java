@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.integration.tests.jar;
+package org.eclipse.n4js.integration.tests.cli.jar;
 
 import static org.eclipse.n4js.cli.N4jscExitCode.VALIDATION_ERRORS;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
