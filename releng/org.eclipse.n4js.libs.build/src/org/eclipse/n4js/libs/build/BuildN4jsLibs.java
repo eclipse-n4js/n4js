@@ -12,12 +12,14 @@ package org.eclipse.n4js.libs.build;
 
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
@@ -64,13 +66,12 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		println("==== Running BUILD N4JS-LIBS ====");
 
 		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
-		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
-		final File n4jsLibsRoot = n4jsLibsRootPath.toFile();
+		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JSGlobals.N4JS_LIBS_FOLDER_NAME);
 
 		// step 1: clean
 		println("==== STEP 1/2: remove all node_modules folders below top-level folder \""
 				+ N4JSGlobals.N4JS_LIBS_FOLDER_NAME + "\" in n4js repository:");
-		removeNodeModulesFolders(n4jsLibsRoot);
+		removeNodeModulesFolders(n4jsLibsRootPath);
 
 		// step 2: compile projects under top-level folder "n4js-libs"
 		println("==== STEP 2/2: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
@@ -80,17 +81,21 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		println("==== BUILD N4JS-LIBS finished ====");
 	}
 
-	private static void removeNodeModulesFolders(File... foldersContainingProjectFolders) throws IOException {
-		// remove all node_modules folders
-		for (File folder : foldersContainingProjectFolders) {
-			List<File> nodeModulesFolders = Files.walk(folder.toPath())
-					.map(path -> path.toFile())
-					.filter(file -> file.isDirectory() && file.getName().equals(N4JSGlobals.NODE_MODULES))
-					.collect(Collectors.toList());
-			for (File nodeModulesFolder : nodeModulesFolders) {
-				println("Deleting node_modules folder: " + nodeModulesFolder);
-				FileDeleter.delete(nodeModulesFolder);
+	private static void removeNodeModulesFolders(Path folder) throws IOException {
+		final List<Path> nodeModulesFolders = new ArrayList<>();
+		Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				if (N4JSGlobals.NODE_MODULES.equals(dir.getFileName().toString())) {
+					nodeModulesFolders.add(dir);
+					return FileVisitResult.SKIP_SUBTREE;
+				}
+				return FileVisitResult.CONTINUE;
 			}
+		});
+		for (Path nodeModulesFolder : nodeModulesFolders) {
+			println("Deleting node_modules folder: " + nodeModulesFolder);
+			FileDeleter.delete(nodeModulesFolder);
 		}
 	}
 
