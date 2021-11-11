@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli.projectdiscovery.tests;
+package org.eclipse.n4js.ide.tests.projectdiscovery;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.n4js.cli.N4jscFactory;
-import org.eclipse.n4js.cli.projectdiscovery.tests.CreateProjectStructureUtils.ProjectDiscoveryTestData;
+import org.eclipse.n4js.ide.tests.projectdiscovery.CreateProjectStructureUtils.ProjectDiscoveryTestData;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.utils.ProjectDiscoveryHelper;
 import org.eclipse.n4js.utils.io.FileUtils;

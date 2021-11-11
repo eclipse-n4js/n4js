@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.cli.projectdiscovery.tests;
+package org.eclipse.n4js.ide.tests.projectdiscovery;
 
 import java.io.BufferedReader;
 import java.io.File;
