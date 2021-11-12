@@ -57,7 +57,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		int startIndex = accessModifier.getValue();
 
 		boolean visibility = false;
-		String firstVisible = "PUBLIC";
+		String firstVisible = TypeAccessModifier.PUBLIC.getName().toUpperCase();
 
 		for (int i = startIndex; i < TypeAccessModifier.values().length; i++) {
 

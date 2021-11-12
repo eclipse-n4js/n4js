@@ -90,6 +90,8 @@ import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 import org.eclipse.n4js.scoping.validation.VeeScopeValidator
+import org.eclipse.n4js.ts.types.TNamespace
+import org.eclipse.n4js.ts.types.AbstractNamespace
 
 /**
  * This class contains custom scoping description.
@@ -220,6 +222,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			return new FilteringScope(getTypeScope(context, false), [
 				TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
 				|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
+				|| TypesPackage.Literals.TNAMESPACE.isSuperTypeOf(it.getEClass)
 			]);
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
@@ -385,7 +388,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	protected def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		val declaration = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
-		return scope_AllTopLevelElementsFromModule(declaration.module, declaration);
+		return scope_AllTopLevelElementsFromAbstractNamespace(declaration.module, declaration);
 	}
 
 	/**
@@ -496,23 +499,23 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	/**
-	 * Creates IScope with all top level elements (variables and types, including functions), from target module.
+	 * Creates IScope with all top level elements (variables and types, including functions), from target module or namespace.
 	 * Provided resource is used to check visibility of module elements. Not visible elements are imported too, which
 	 * allows better error handling and quick fixes, as links are not broken.
 	 *
-	 * Used for elements imported with named import and to access elements vi namespace import.
+	 * Used for elements imported with named import and to access elements via namespace import.
 	 *
 	 * @param importedModule target {@link TModule} from which elements are imported
 	 * @param contextResource Receiver context {@link EObject} which is importing elements
 	 */
-	private def IScope scope_AllTopLevelElementsFromModule(TModule importedModule, EObject context) {
-		if (importedModule === null) {
+	private def IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context) {
+		if (ns === null) {
 			return IScope.NULLSCOPE;
 		}
 		
 		// get regular top-level elements scope
-		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", importedModule, IScope.NULLSCOPE, false,
-			topLevelElementCollector.getTopLevelElements(importedModule, context.eResource, true, true));
+		val tlElems = topLevelElementCollector.getTopLevelElements(ns, context.eResource, true, true);
+		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", ns, IScope.NULLSCOPE, false, tlElems);
 		
 		return topLevelElementsScope;
 	}
@@ -527,8 +530,18 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		// if accessing namespace import
 		if (receiver instanceof IdentifierRef) {
 			val id = receiver.id;
+			if (id instanceof TNamespace) {
+				return scope_AllTopLevelElementsFromAbstractNamespace(id, propertyAccess);
+			}
 			if (id instanceof ModuleNamespaceVirtualType) {
 				return createScopeForNamespaceAccess(id, propertyAccess);
+			}
+		}
+		
+		if (receiver instanceof ParameterizedPropertyAccessExpression) {
+			val prop = receiver.property;
+			if (prop instanceof TNamespace) {
+				return scope_AllTopLevelElementsFromAbstractNamespace(prop, propertyAccess)
 			}
 		}
 
@@ -543,11 +556,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val checkVisibility = true;
 		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
 	}
+	
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context) {
 		val module = namespace.module;
 		val result = if (module !== null && !module.eIsProxy) {
-				scope_AllTopLevelElementsFromModule(module, context)
+				scope_AllTopLevelElementsFromAbstractNamespace(module, context)
 			} else {
 				// error cases
 				if (namespace.eIsProxy) {

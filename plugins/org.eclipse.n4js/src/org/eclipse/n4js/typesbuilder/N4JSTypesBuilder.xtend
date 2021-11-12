@@ -296,7 +296,9 @@ public class N4JSTypesBuilder {
 					variableIndex = n.relinkType(target, preLinkingPhase, variableIndex)
 				}
 			}
-			relinkTypes(n, target, preLinkingPhase)
+			if (!(n instanceof N4NamespaceDeclaration)) {
+				relinkTypes(n, target, preLinkingPhase)
+			}
 		}
 	}
 
@@ -391,7 +393,9 @@ public class N4JSTypesBuilder {
 				ExportedVariableStatement:
 					n.createType(target, preLinkingPhase)
 			}
-			buildTypes(n, target, preLinkingPhase)
+			if (!(n instanceof N4NamespaceDeclaration)) {
+				buildTypes(n, target, preLinkingPhase)
+			}
 		}
 	}
 

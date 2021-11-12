@@ -20,8 +20,8 @@ import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.TExportableElement;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -58,13 +58,14 @@ public class TopLevelElementsCollector {
 	 * @param contextResource
 	 *            The context resource
 	 */
-	public Iterable<IEObjectDescription> getTopLevelElements(TModule module, Resource contextResource,
+	public Iterable<IEObjectDescription> getTopLevelElements(AbstractNamespace module, Resource contextResource,
 			boolean includeHollows, boolean includeVariables) {
 
 		List<IEObjectDescription> visible = new ArrayList<>();
 		List<IEObjectDescription> invisible = new ArrayList<>();
 
-		for (Type type : module.getTopLevelTypes()) {
+		Iterable<Type> tltAndNamespaces = Iterables.concat(module.getTopLevelTypes(), module.getNamespaces());
+		for (Type type : tltAndNamespaces) {
 			boolean include = includeHollows || !N4JSLanguageUtils.isHollowElement(type, variantHelper);
 			if (include) {
 				TypeVisibility typeVisiblity = typeVisibilityChecker.isVisible(contextResource, type);

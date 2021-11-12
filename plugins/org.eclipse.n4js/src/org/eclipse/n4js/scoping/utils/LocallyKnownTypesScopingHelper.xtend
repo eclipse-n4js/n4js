@@ -24,6 +24,7 @@ import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import com.google.common.collect.Iterables
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider} using
@@ -117,7 +118,8 @@ class LocallyKnownTypesScopingHelper {
 		if (local === null || local.eIsProxy) {
 			return parent;
 		}
-		val eoDescrs = local.topLevelTypes.filter[t | !t.polyfill ].map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
+		val tleAndNamespaces = Iterables.concat(local.topLevelTypes, local.namespaces);
+		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
 		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
 	}
 
