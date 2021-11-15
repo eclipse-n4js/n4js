@@ -21,7 +21,6 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.n4js.utils.io.FileCopier;
 import org.junit.Test;
 
 /**
@@ -33,8 +32,6 @@ public class N4jsLibsTest {
 	@Test
 	public void testN4jsLibs() throws IOException {
 		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
-		copyJarToN4jsCli(n4jsRootPath);
-
 		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JSGlobals.N4JS_LIBS_FOLDER_NAME);
 		final Path testReportPath = n4jsLibsRootPath.resolve("build").resolve("report.xml");
 
@@ -46,22 +43,5 @@ public class N4jsLibsTest {
 
 		assertEquals("non-zero exit code", 0, result.getExitCode());
 		assertTrue("test report not found", Files.isRegularFile(testReportPath));
-	}
-
-	/**
-	 * In order to be able to execute the tests in "n4js-cli", we have to copy the <code>n4jsc.jar</code> from folder
-	 * "target" to "n4js-cli/bin".
-	 * <p>
-	 * The publishing script will do the same right before actually publishing the npm packages.
-	 */
-	private void copyJarToN4jsCli(Path n4jsRootPath) throws IOException {
-		final Path n4jscJarPath = n4jsRootPath.resolve(N4JSGlobals.TARGET).resolve(N4JSGlobals.N4JSC_JAR);
-		assertTrue(N4JSGlobals.N4JSC_JAR + " not found", Files.isRegularFile(n4jscJarPath));
-		final Path n4jscJarInN4jsCliPath = n4jsRootPath.resolve(N4JSGlobals.N4JS_LIBS_SOURCES_PATH)
-				.resolve(N4JSGlobals.N4JS_CLI.getRawName())
-				.resolve("bin")
-				.resolve(N4JSGlobals.N4JSC_JAR);
-		Files.deleteIfExists(n4jscJarInN4jsCliPath);
-		FileCopier.copy(n4jscJarPath, n4jscJarInN4jsCliPath);
 	}
 }

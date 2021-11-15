@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.libs.build;
 
+import static org.eclipse.n4js.N4JSGlobals.N4JSC_JAR;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_CLI;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_LIBS_FOLDER_NAME;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_LIBS_SOURCES_PATH;
+import static org.eclipse.n4js.N4JSGlobals.NODE_MODULES;
+import static org.eclipse.n4js.N4JSGlobals.TARGET;
 import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 
 import java.io.IOException;
@@ -23,13 +29,13 @@ import java.util.List;
 
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowComponent;
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscTestOptions;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.CliTools.CliException;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.base.Preconditions;
@@ -66,17 +72,25 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		println("==== Running BUILD N4JS-LIBS ====");
 
 		final Path n4jsRootPath = UtilN4.findN4jsRepoRootPath();
-		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JSGlobals.N4JS_LIBS_FOLDER_NAME);
+		final Path n4jsLibsRootPath = n4jsRootPath.resolve(N4JS_LIBS_FOLDER_NAME);
 
 		// step 1: clean
-		println("==== STEP 1/2: remove all node_modules folders below top-level folder \""
-				+ N4JSGlobals.N4JS_LIBS_FOLDER_NAME + "\" in n4js repository:");
+		println("==== STEP 1/4: removing all node_modules folders below top-level folder \"" + N4JS_LIBS_FOLDER_NAME
+				+ "\" in n4js repository:");
 		removeNodeModulesFolders(n4jsLibsRootPath);
 
+		// step 2: install dependencies
+		println("==== STEP 2/4: installing dependencies of " + N4JS_LIBS_FOLDER_NAME);
+		installDependencies(n4jsLibsRootPath);
+
 		// step 2: compile projects under top-level folder "n4js-libs"
-		println("==== STEP 2/2: compiling code under top-level folder \"" + N4JSGlobals.N4JS_LIBS_FOLDER_NAME
-				+ "\" in n4js repository:");
+		println("==== STEP 3/4: compiling code under top-level folder \"" + N4JS_LIBS_FOLDER_NAME
+				+ "\" in n4js repository");
 		compile(n4jsLibsRootPath);
+
+		// step 3: deploy n4jsc.jar (optional)
+		println("==== STEP 4/4: deploying \"" + N4JSC_JAR + "\" to \"" + N4JS_CLI + "\" (optional)");
+		deployN4jscJar(n4jsRootPath);
 
 		println("==== BUILD N4JS-LIBS finished ====");
 	}
@@ -86,7 +100,7 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-				if (N4JSGlobals.NODE_MODULES.equals(dir.getFileName().toString())) {
+				if (NODE_MODULES.equals(dir.getFileName().toString())) {
 					nodeModulesFolders.add(dir);
 					return FileVisitResult.SKIP_SUBTREE;
 				}
@@ -99,14 +113,19 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 		}
 	}
 
+	private static void installDependencies(Path n4jsLibsRootPath) {
+		CliTools cliTools = new CliTools();
+		cliTools.setInheritIO(true);
+		cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
+
+		cliTools.yarnInstall(n4jsLibsRootPath);
+	}
+
 	private static void compile(Path n4jsLibsRootPath) {
 		CliCompileResult compileResult = new CliCompileResult();
 		try {
 			CliTools cliTools = new CliTools();
 			cliTools.setInheritIO(true);
-			cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
-
-			cliTools.yarnInstall(n4jsLibsRootPath);
 
 			// we want '--clean' but *not* '--noPersist'
 			N4jscTestOptions options = COMPILE(false, n4jsLibsRootPath.toFile()).clean();
@@ -143,6 +162,28 @@ public class BuildN4jsLibs implements IWorkflowComponent {
 
 			Throwables.throwIfUnchecked(e);
 			throw new RuntimeException(e);
+		}
+	}
+
+	private static void deployN4jscJar(Path n4jsRootPath) throws IOException {
+		final Path n4jscJarPath = n4jsRootPath.resolve(TARGET).resolve(N4JSC_JAR);
+		final Path n4jscJarInN4jsCliPath = n4jsRootPath.resolve(N4JS_LIBS_SOURCES_PATH)
+				.resolve(N4JS_CLI.getRawName()).resolve("bin").resolve(N4JSC_JAR);
+
+		if (Files.exists(n4jscJarInN4jsCliPath)) {
+			println("Deleting old \"" + N4JSC_JAR + "\" at: " + n4jscJarInN4jsCliPath);
+			Files.delete(n4jscJarInN4jsCliPath);
+		}
+
+		if (Files.exists(n4jscJarPath)) {
+			Preconditions.checkState(Files.isRegularFile(n4jscJarPath),
+					"\"" + N4JSC_JAR + "\" in target folder is not a regular file");
+			println("Copying file \"" + N4JSC_JAR + "\" ...");
+			println("  from: " + n4jscJarPath.getParent());
+			println("    to: " + n4jscJarInN4jsCliPath.getParent());
+			FileCopier.copy(n4jscJarPath, n4jscJarInN4jsCliPath);
+		} else {
+			println("Skipped (no file \"" + N4JSC_JAR + "\" found in target folder).");
 		}
 	}
 

@@ -27,16 +27,24 @@ cd n4js-libs
 
 # check that everything was prepared (n4jsc.jar available; 'yarn install' in n4js-libs; building of n4js-libs)
 if [ ! -f "../target/n4jsc.jar" ]; then
-    echo "ERROR: n4jsc.jar must have been built and copied to folder 'target' before running this script!"
-    exit 1
+	echo "ERROR: n4jsc.jar must have been built and copied to folder 'target' before running this script!"
+	exit 1
 fi
 if [ ! -f "./node_modules/.bin/n4jsc" ]; then
-    echo "ERROR: 'yarn install' must have been executed before running this script!"
-    exit 1
+	echo "ERROR: 'yarn install' must have been executed before running this script!"
+	exit 1
 fi
 if [ ! -f "./packages/n4js-runtime/.n4js.projectstate" ]; then
-    echo "ERROR: n4js-libs must have been compiled before running this script!"
-    exit 1
+	echo "ERROR: n4js-libs must have been compiled before running this script!"
+	exit 1
+fi
+if [ ! -f "./packages/n4js-cli/bin/n4jsc.jar" ]; then
+	echo "ERROR: n4jsc.jar missing from n4js-cli/bin!"
+	exit 1
+fi
+if ! cmp -s "../target/n4jsc.jar" "./packages/n4js-cli/bin/n4jsc.jar"; then
+	echo "ERROR: 'n4js-cli/bin/n4jsc.jar' is different from 'target/n4jsc.jar'!"
+	exit 1
 fi
 
 
